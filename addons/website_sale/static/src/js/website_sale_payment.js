@@ -29,8 +29,9 @@ $(document).ready(function () {
       if (! acquirer_id) {
         return false;
       }
-      ajax.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {}).then(function () {
-        $form.submit();
+      ajax.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {}).then(function (data) {
+          $form.html(data);
+          $form.submit();
       });
    });
 

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-01-02 07:17+0000\n"
+"PO-Revision-Date: 2016-03-02 17:24+0000\n"
 "Last-Translator: Eneldo Serrata <eneldoserrata@gmail.com>\n"
 "Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/odoo-9/language/es_DO/)\n"
 "MIME-Version: 1.0\n"
@@ -462,6 +462,11 @@ msgid "Click to define a new product."
 msgstr "Haga clic aquí para agregar un nuevo producto."
 
 #. module: purchase
+#: model:web.tip,description:purchase.purchase_tip_1
+msgid "Click to mark products as received."
+msgstr "Haga clic para marcar los productos que se recibió."
+
+#. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
 msgid "Click to record a vendor bill related to this purchase."
 msgstr "Pulse para grabar una nueva factura de proveedor."
@@ -596,6 +601,11 @@ msgid "Description"
 msgstr "Descripción"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_default_location_dest_id_usage
+msgid "Destination Location Type"
+msgstr "Tipo de destino de la ubicacion"
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_display_name
@@ -683,6 +693,11 @@ msgid "Get 2 levels of approvals to confirm a purchase order"
 msgstr "Consigue 2 niveles de aprobaciones para confirmar una orden de compra"
 
 #. module: purchase
+#: model:web.tip,description:purchase.purchase_tip_3
+msgid "Get all the shipments related to this order."
+msgstr "Obtener todos los envíos relacionados con esta orden."
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -701,6 +716,13 @@ msgstr "Ocultar líneas canceladas"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_id
 msgid "ID"
 msgstr "ID (identificación)"
+
+#. module: purchase
+#: model:web.tip,description:purchase.purchase_tip_2
+msgid ""
+"If a product has been broken or damaged during the transport, you can scrap "
+"it with this button."
+msgstr "Si un producto ha sido roto o dañado durante el transporte, se puede desechar con este botón."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1140,6 +1162,11 @@ msgid "Provide a double validation mechanism for purchases"
 msgstr "Proporcionar un mecanismo de doble validación de las compras"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_mail_mail_website_published
+msgid "Published"
+msgstr "Publicado"
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
 msgid "Purchase"
 msgstr "Compra"
@@ -1502,6 +1529,11 @@ msgid "Taxes"
 msgstr "Impuestos"
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_default_location_dest_id_usage
+msgid "Technical field used to display the Drop Ship Address"
+msgstr "Campo técnico usado para mostrar la dirección del Drop Ship."
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_notes
 msgid "Terms and Conditions"
 msgstr "Términos y condiciones"
@@ -1728,6 +1760,11 @@ msgid ""
 msgstr "Facturas de los proveedores pueden ser pre-generados en base a purchase\npedidos o recibos. Esto le permite controlar bills\nque recibe de su proveedor de acuerdo con la draft\ndocumento en Odoo."
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_mail_mail_website_published
+msgid "Visible on the website as a comment"
+msgstr "Visible en el sitio web como un comentario"
+
+#. module: purchase
 #: selection:purchase.order,invoice_status:0
 msgid "Waiting Invoices"
 msgstr "Las facturas en espera"
@@ -1784,3 +1821,8 @@ msgstr "Parámetros de configuración contable"
 #: model:ir.model,name:purchase.model_purchase_config_settings
 msgid "purchase.config.settings"
 msgstr "Parámetros de configuración de compra"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_mail_mail_description
+msgid "unknown"
+msgstr "desconocido"

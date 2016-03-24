@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-21 09:19+0000\n"
-"PO-Revision-Date: 2016-02-12 13:35+0000\n"
+"PO-Revision-Date: 2016-03-17 20:40+0000\n"
 "Last-Translator: Bogdan\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -102,6 +102,11 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "! You can"
+msgstr ""
+
+#. module: website_quote
 #: model:mail.template,report_name:website_quote.email_template_edi_sale
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
@@ -120,7 +125,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
 msgid "% discount"
-msgstr ""
+msgstr "% знижки"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
@@ -131,7 +136,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "&amp;times;"
-msgstr "&разів;"
+msgstr "&amp;times;"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
@@ -575,7 +580,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Description"
-msgstr "Description"
+msgstr "Опис"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_product_template_quote_description
@@ -756,7 +761,7 @@ msgstr "ID"
 msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
-msgstr ""
+msgstr "При збереженні Ваших платіжних реквізитів на нашому сервері, абонентська плата зніматиметься автоматично."
 
 #. module: website_quote
 #: selection:sale.order,require_payment:0
@@ -918,7 +923,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "My Account"
-msgstr ""
+msgstr "Мій обліковий запис"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1088,7 +1093,7 @@ msgstr ""
 #: code:addons/website_quote/controllers/main.py:64
 #, python-format
 msgid "Pay & Confirm"
-msgstr ""
+msgstr "Оплатити і підтвердити"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_require_payment
@@ -1105,6 +1110,13 @@ msgstr ""
 #: model:ir.model,name:website_quote.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Платіжні операції"
+
+#. module: website_quote
+#: model:web.tip,description:website_quote.quotation_tip_1
+msgid ""
+"Preview the online quotation. You'll be able to edit the quotation content "
+"before send it to the customer."
+msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
@@ -1127,7 +1139,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Print"
-msgstr "Print"
+msgstr "Друк"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_product_id
@@ -1412,7 +1424,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_note
 msgid "Terms and conditions"
-msgstr ""
+msgstr "Терміни та умови"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -1435,6 +1447,11 @@ msgid ""
 " recorded webinars and live sessions by our senior instructors. At the end "
 "of the training, you can pass the Odoo Certification exam in one of the "
 "5000+ Pearson VUE test centers worldwide."
+msgstr ""
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "This order"
 msgstr ""
 
 #. module: website_quote
@@ -1497,7 +1514,7 @@ msgstr "Ціна за одиницю"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_product_uom_id
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_uom_id
 msgid "Unit of Measure "
-msgstr ""
+msgstr "Одиниця виміру"
 
 #. module: website_quote
 #: model:ir.actions.act_window,help:website_quote.action_sale_quotation_template
@@ -1667,6 +1684,21 @@ msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "has already been cancelled"
+msgstr ""
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "has already been validated"
+msgstr ""
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "has not yet been sent"
+msgstr ""
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "if you want a new one."
 msgstr ""
 
@@ -1674,7 +1706,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_quote.chatter
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "or"
-msgstr "or"
+msgstr "або"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2

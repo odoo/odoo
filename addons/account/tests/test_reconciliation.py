@@ -101,6 +101,9 @@ class TestReconciliation(AccountingTestCase):
                     if aml_dict[move_line.account_id.id].get('currency_diff') == 0:
                         if currency_diff_line.account_id.id == move_line.account_id.id:
                             self.assertAlmostEquals(currency_diff_line.amount_currency, aml_dict[move_line.account_id.id].get('amount_currency_diff'))
+                    if aml_dict[move_line.account_id.id].get('currency_diff') == 0:
+                        if currency_diff_line.account_id.id == move_line.account_id.id:
+                            self.assertAlmostEquals(currency_diff_line.amount_currency, aml_dict[move_line.account_id.id].get('amount_currency_diff'))
                     if aml_dict[move_line.account_id.id].get('currency_diff') > 0:
                         if currency_diff_line.account_id.id == move_line.account_id.id:
                             self.assertAlmostEquals(currency_diff_line.debit, aml_dict[move_line.account_id.id].get('currency_diff'))

@@ -90,7 +90,7 @@ class product_pricelist(report_sxw.rml_parse):
         if price_dict[pricelist_id]:
             price = self.formatLang(price_dict[pricelist_id], digits=sale_price_digits, currency_obj=pricelist.currency_id)
         else:
-            res = self.pool.get('product.product').read(self.cr, self.uid, [product_id])
+            res = self.pool.get('product.product').read(self.cr, self.uid, [product_id], ['list_price'])
             price =  self.formatLang(res[0]['list_price'], digits=sale_price_digits, currency_obj=pricelist.currency_id)
         return price
 

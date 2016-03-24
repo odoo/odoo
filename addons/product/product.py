@@ -350,8 +350,10 @@ class product_attribute_line(osv.osv):
     }
 
     def _check_valid_attribute(self, cr, uid, ids, context=None):
-        obj_pal = self.browse(cr, uid, ids[0], context=context)
-        return obj_pal.value_ids <= obj_pal.attribute_id.value_ids
+        for obj_pal in self.browse(cr, uid, ids, context=context):
+            if not (obj_pal.value_ids <= obj_pal.attribute_id.value_ids):
+                return False
+        return True
 
     _constraints = [
         (_check_valid_attribute, 'Error ! You cannot use this attribute with the following value.', ['attribute_id'])
@@ -422,6 +424,7 @@ class product_template(osv.osv):
         return product.write({'list_price': value})
 
     def _product_currency(self, cr, uid, ids, name, arg, context=None):
+        uid = SUPERUSER_ID
         try:
             main_company = self.pool['ir.model.data'].get_object(cr, uid, 'base', 'main_company')
         except ValueError:
@@ -642,7 +645,7 @@ class product_template(osv.osv):
             for variant_id in variant_alone:
                 product_ids = []
                 for product_id in tmpl_id.product_variant_ids:
-                    if variant_id.id not in map(int, product_id.attribute_value_ids):
+                    if not variant_id.attribute_id <= product_id.mapped('attribute_value_ids').mapped('attribute_id'):
                         product_ids.append(product_id.id)
                 product_obj.write(cr, uid, product_ids, {'attribute_value_ids': [(4, variant_id.id)]}, context=ctx)
 

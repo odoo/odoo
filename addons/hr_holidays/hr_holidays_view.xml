@@ -86,7 +86,7 @@
                 <header>
                     <button string="Confirm" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
-                    <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_manager" class="oe_highlight"/>
                     <button string="Refuse" name="refuse" states="confirm,validate,validate1" type="workflow" groups="base.group_hr_user"/>
                     <button string="Reset to Draft" name="reset" type="workflow"
                             attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
@@ -146,7 +146,8 @@
                     <field name="number_of_days" string="Allocated Days" sum="Remaining Days"/>
                     <field name="manager_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
-                    <field name="date_from" invisible="1"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="state"/>
                 </tree>

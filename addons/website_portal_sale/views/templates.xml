@@ -43,7 +43,7 @@
                             <span class="label label-default"><i class="fa fa-fw fa-clock-o"/> Expired</span>
                           </t>
                         </td>
-                        <td><span t-esc="quotation.amount_total" t-esc-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
+                        <td><span t-field="quotation.amount_total" t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
                         </td>
                     </tr>
                 </t>
@@ -86,7 +86,7 @@
                                 <span class="label label-default"><i class="fa fa-fw fa-check"/> Done</span>
                             </t>
                         </td>
-                        <td><span t-esc="order.amount_total" t-esc-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/></td>
+                        <td><span t-field="order.amount_total" t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/></td>
                     </tr>
                 </t>
                 <tr t-att-class="'hidden' if len(orders) &lt; 5 else ''">
@@ -134,7 +134,7 @@
                         <td>
                           <a t-if="invoice.state == 'open'" t-attf-href="/website_payment/pay?reference=#{invoice.number}&amp;amount=#{invoice.amount_total}&amp;currency_id=#{invoice.currency_id.id}&amp;country_id=#{invoice.partner_id.country_id.id}" alt="Pay Now" class="btn btn-xs btn-primary"><i class="fa fa-arrow-circle-right"/> Pay Now</a>
                         </td>
-                        <td><span t-esc="invoice.amount_total" t-esc-options='{"widget": "monetary", "display_currency": "invoice.currency_id"}'/></td>
+                        <td><span t-field="invoice.amount_total" t-field-options='{"widget": "monetary", "display_currency": "invoice.currency_id"}'/></td>
                     </tr>
                 </t>
                 <tr t-att-class="'hidden' if len(invoices) &lt; 5 else ''">

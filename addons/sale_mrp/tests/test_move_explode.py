@@ -59,7 +59,7 @@ class TestMoveExplode(common.TransactionCase):
             'order_line': [(0, 0, {'name': self.product_bom.name, 'product_id': self.product_bom.id, 'product_uom_qty': 1, 'product_uom': self.product_bom.uom_id.id})],
             'pricelist_id': self.pricelist.id,
         }
-        self.so = self.SaleOrder.create(vals=so_vals)
+        self.so = self.SaleOrder.create(so_vals)
         #confirm sale order
         self.so.action_confirm()
         #get all move associated to that sale_order

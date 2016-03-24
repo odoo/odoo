@@ -3,14 +3,16 @@
 # * auth_signup
 # 
 # Translators:
+# ANDRES FELIPE NEGRETE GOMEZ <psi@nubark.com>, 2016
+# Esteban Echeverry <tebanep@nubark.com>, 2016
 # Mateo Tibaquirá <nestormateo@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-06 07:13+0000\n"
-"PO-Revision-Date: 2016-01-06 08:54+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-02-18 01:19+0000\n"
+"Last-Translator: Esteban Echeverry <tebanep@nubark.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,7 +48,7 @@ msgid ""
 "                    </pre>\n"
 "                \n"
 "            "
-msgstr ""
+msgstr "\n                \n                    <p>\n                        ${object.name},\n                    </p>\n                    <p>\n                        Le han invitado a conectarse a \"${object.company_id.name}\"  para tener acceso a sus documentos en Odoo.\n                    </p>\n                    <p>\n                        Para aceptar la invitación haga clic en el siguiente enlace:\n                    </p>\n                    <ul>\n                        <li><a href=\"${object.signup_url}\">Aceptar la invitación de \"${object.company_id.name}\"</a></li>\n                    </ul>\n                    <p>\n                        Gracias,\n                    </p>\n                    <pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n                    </pre>\n                \n            "
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.reset_password_email
@@ -76,7 +78,7 @@ msgstr "<strong>Un cambio de contraseña ha sido solicitado para este usuario. U
 msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
-msgstr ""
+msgstr "<strong>Se ha enviado un correo electrónico de invitación conteniendo el siguiente enlace de suscripción:</strong>"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
@@ -93,7 +95,7 @@ msgstr "Un correo electrónico ha sido enviado con las credenciales para restabl
 #: code:addons/auth_signup/controllers/main.py:40
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr ""
+msgstr "Otro usuario se ha registrado usando este dirección de correo electrónico."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:115
@@ -111,7 +113,7 @@ msgstr "Volver al Inicio de Sesión"
 #: code:addons/auth_signup/res_users.py:277
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
+msgstr "No se puede enviar el correo electrónico: el usuario %s no tiene dirección de correo electrónico."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -132,7 +134,7 @@ msgstr "Conectado"
 #: code:addons/auth_signup/controllers/main.py:43
 #, python-format
 msgid "Could not create a new account."
-msgstr ""
+msgstr "No se ha podido crear una cuenta nueva."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:66

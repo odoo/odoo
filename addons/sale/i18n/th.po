@@ -3,13 +3,14 @@
 # * sale
 # 
 # Translators:
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-02-10 10:38+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-03-17 11:52+0000\n"
+"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -94,7 +95,7 @@ msgstr "# การขาย"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_invoice_count
 msgid "# of Invoices"
-msgstr "# of Invoices"
+msgstr "# ของใบแจ้งหนี้"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_nbr
@@ -168,7 +169,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>ทั้งหมด</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -316,7 +317,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_commercial_partner_id
 msgid "Commercial Entity"
-msgstr "Commercial Entity"
+msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
@@ -344,7 +345,7 @@ msgstr "สร้างใบแจ้งหนี้"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create Invoices"
-msgstr "สร้างใบวางบิล"
+msgstr "สร้างใบแจ้งหนี้"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -370,7 +371,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_create_uid
 msgid "Created by"
-msgstr "จัดทำโดย"
+msgstr "สร้างโดย"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_create_date
@@ -404,6 +405,7 @@ msgid "Customer Reference"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_taxes_id
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_taxes_id
 msgid "Customer Taxes"
 msgstr "ภาษีของลูกค้า"
@@ -533,7 +535,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_display_name
 #: model:ir.model.fields,field_description:sale.field_sale_report_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ชื่อที่ใช้แสดง"
 
 #. module: sale
 #: model:res.groups,name:sale.group_display_incoterm
@@ -598,6 +600,11 @@ msgid "Enable customer portal to track orders, delivery and invoices"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_property_account_expense_id
+msgid "Expense Account"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_validity_date
 msgid "Expiration Date"
 msgstr ""
@@ -628,12 +635,12 @@ msgstr "ผู้ติดตาม"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "ผู้ติดตาม (ช่องทาง)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "ผู้ติดตาม (คู่ค้า)"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -683,6 +690,7 @@ msgid "If checked, new messages require your attention."
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_property_account_income_id
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Income Account"
 msgstr "บัญชีรายได้"
@@ -884,7 +892,7 @@ msgstr "วันที่ข้อความล่าสุด"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_report___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_write_uid
@@ -938,6 +946,12 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.settings,auto_done_setting:0
 msgid "Never allow to modify a confirmed sale order"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:96
+#, python-format
+msgid "New"
 msgstr ""
 
 #. module: sale
@@ -1124,12 +1138,6 @@ msgid "Please define an accounting sale journal for this company."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:316
-#, python-format
-msgid "There is no invoicable line."
-msgstr ""
-
-#. module: sale
 #: code:addons/sale/sale.py:654
 #, python-format
 msgid ""
@@ -1190,7 +1198,7 @@ msgstr "จัดซื้อจัดจ้าง"
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_id
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Product"
-msgstr "ผลิตภัณฑ์"
+msgstr "สินค้า"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_categ_id
@@ -1518,7 +1526,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send by Email"
-msgstr "ส่งทางอีเมล์"
+msgstr "ส่งทางอีเมล"
 
 #. module: sale
 #: selection:sale.config.settings,module_website_quote:0
@@ -1677,8 +1685,35 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/sale.py:316
+#, python-format
+msgid "There is no invoicable line."
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "This Year"
+msgstr "ปีนี้"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_product_product_property_account_expense_id
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product."
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_product_product_property_account_income_id
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product."
+msgstr ""
+
+#. module: sale
+#: model:web.tip,description:sale.sale_tip_1
+msgid ""
+"This progress bar shows the stages your quotation will go through.\n"
+"                Use buttons on the left to move forward to the next stages."
 msgstr ""
 
 #. module: sale
@@ -1784,6 +1819,11 @@ msgid "Untaxed Amount"
 msgstr "Base"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_report_price_subtotal
+msgid "Untaxed Total Price"
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Upselling"
 msgstr ""
@@ -1792,6 +1832,13 @@ msgstr ""
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Upselling Opportunity"
+msgstr ""
+
+#. module: sale
+#: model:web.tip,description:sale.sale_tip_2
+msgid ""
+"Use pivot and graph views to analyze your sales pipeline.\n"
+"                Select measures, filter and group dimensions to get the perfect report according to your needs."
 msgstr ""
 
 #. module: sale
@@ -1867,7 +1914,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings
 msgid "account.config.settings"
-msgstr ""
+msgstr "account.config.settings"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form

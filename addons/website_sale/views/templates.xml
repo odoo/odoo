@@ -92,7 +92,7 @@
               <t t-if="(compute_currency(product.lst_price) - product.price) &gt; 0.1">
                 <del class="text-danger mr8" style="white-space: nowrap;" t-field="product.lst_price" t-field-options='{
                   "widget": "monetary",
-                  "from_currency": "product.company_id.currency_id",
+                  "from_currency": "product.currency_id",
                   "display_currency": "website.currency_id"
                 }'/>
               </t>
@@ -422,7 +422,7 @@
             t-field="product.lst_price"
             t-field-options='{
               "widget": "monetary",
-              "from_currency": "product.company_id.currency_id",
+              "from_currency": "product.currency_id",
               "display_currency": "website.currency_id"
            }'/>
           <b class="oe_price" style="white-space: nowrap;"
@@ -438,7 +438,7 @@
         <span t-field="product.lst_price"
             t-field-options='{
                "widget": "monetary",
-               "display_currency": "website.pricelist_id.currency_id"
+               "display_currency": "product.currency_id"
            }'/>
       </h4>
       <h4 class="hidden oe_not_available bg-warning">Product not available</h4>
@@ -458,7 +458,7 @@
         <span class="badge" t-if="variant_id.price_extra">
           <t t-esc="variant_id.price_extra > 0 and '+' or ''"/><span t-field="variant_id.price_extra" style="white-space: nowrap;" t-field-options='{
                 "widget": "monetary",
-                "from_currency": "product.company_id.currency_id",
+                "from_currency": "product.currency_id",
                 "display_currency": "website.currency_id"
               }'/>
         </span>
@@ -483,7 +483,7 @@
                   <span t-if="value_id.price_extra">
                       <t t-esc="value_id.price_extra > 0 and '+' or ''"/><span t-field="value_id.price_extra" style="white-space: nowrap;" t-field-options='{
                                "widget": "monetary",
-                                "from_currency": "product.company_id.currency_id",
+                                "from_currency": "product.currency_id",
                                "display_currency": "website.currency_id"
                            }'/>
                   </span>
@@ -503,7 +503,7 @@
                           <span class="badge" t-if="value_id.price_extra">
                               <t t-esc="value_id.price_extra > 0 and '+' or ''"/><span t-field="value_id.price_extra" style="white-space: nowrap;" t-field-options='{
                                       "widget": "monetary",
-                                      "from_currency": "product.company_id.currency_id",
+                                      "from_currency": "product.currency_id",
                                       "display_currency": "website.currency_id"
                                    }'/>
                           </span>
@@ -541,13 +541,13 @@
       <div class="container mt32" t-if="product.alternative_product_ids">
           <h3>Suggested alternatives:</h3>
           <div class='row mt16' style="">
-          <t t-foreach="product.alternative_product_ids" t-as="product">
+          <t t-foreach="product.alternative_product_ids" t-as="alt_product">
               <div class='col-md-2 thumbnail' style='width: 170px; height:130px; float:left; display:inline; margin-right: 10px; overflow:hidden;'>
                   <div class='mt16 text-center' style="height: 100%;">
-                      <div t-field="product.image_small" t-field-options='{"widget": "image", "class": "img-rounded shadow o_alternative_product" }'/>
+                      <div t-field="alt_product.image_small" t-field-options='{"widget": "image", "class": "img-rounded shadow o_alternative_product" }'/>
                       <h5>
-                          <a t-attf-href="/shop/product/#{ slug(product) }" style="display: block">
-                              <span t-att-title='product.name' t-field='product.name' style="display: block;"/>
+                          <a t-attf-href="/shop/product/#{ slug(alt_product) }" style="display: block">
+                              <span t-att-title='alt_product.name' t-field='alt_product.name' style="display: block;"/>
                           </a>
                       </h5>
                   </div>
@@ -899,7 +899,7 @@
                         <del class="text-danger mr8" style="white-space: nowrap;"
                           t-field="product.lst_price" t-field-options='{
                               "widget": "monetary",
-                              "from_currency": "product.company_id.currency_id",
+                              "from_currency": "product.currency_id",
                               "display_currency": "website.currency_id"
                           }'/>
                       </t>
@@ -1202,7 +1202,7 @@
                           <img class="media-object" style="width: 60px; display: inline-block;"
                               t-att-title="acquirer.name"
                               t-att-src="'/payment_%s/static/src/img/%s_icon.png' % (acquirer.provider, acquirer.provider)"/>
-                              <span t-field="acquirer.name"/>
+                              <span t-field="acquirer.name"/> <span t-if="acquirer.fees_active">(extra fees apply)</span>
                       </label>
                     </li>
                   </ul>
@@ -1376,7 +1376,7 @@
     <t t-if="tx_ids and state == 'cancel'">
       <p>The payment seems to have been canceled.</p>
     </t>
-    <t t-if="tx_ids and state == 'pending' and validation == 'manual'">
+    <t t-if="tx_ids and state == 'pending' and validation">
       <p>Your transaction is waiting a manual confirmation.</p><br />
       <t t-if="tx_post_msg">
         <div class="hidden-print"><t t-raw="tx_post_msg"/></div>
@@ -1426,8 +1426,11 @@
 <!-- payment acquirer information -->
 <template id="payment_confirmation_status">
     <t t-if="order.payment_acquirer_id.auto_confirm == 'none'">
-      <div class="alert alert-info" role="alert">
-        <t t-raw="order.payment_acquirer_id.pending_msg"/>
+      <div class="panel panel-info">
+        <div class="panel-heading" t-raw="order.payment_acquirer_id.pending_msg" />
+        <div class="panel-body" t-if="order.payment_acquirer_id.post_msg">
+            <t t-raw="order.payment_acquirer_id.post_msg"/>
+        </div>
       </div>
     </t>
     <t t-if="order.payment_acquirer_id.auto_confirm == 'at_pay_confirm'">

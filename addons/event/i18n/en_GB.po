@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2015-11-22 02:05+0000\n"
+"PO-Revision-Date: 2016-02-20 10:37+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/odoo/odoo-9/language/en_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -537,6 +537,13 @@ msgid "Course Summary"
 msgstr ""
 
 #. module: event
+#: model:web.tip,description:event.event_tip_1
+msgid ""
+"Create and manage registrations for this event, send emails to attendees and"
+" print identification badges."
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_create_uid
 #: model:ir.model.fields,field_description:event.field_event_confirm_create_uid
 #: model:ir.model.fields,field_description:event.field_event_event_create_uid
@@ -1019,12 +1026,6 @@ msgstr ""
 #: selection:event.mail,interval_unit:0
 msgid "Immediately"
 msgstr ""
-
-#. module: event
-#: model:ir.ui.view,arch_db:event.view_event_search
-#: model:ir.ui.view,arch_db:event.view_registration_search
-msgid "Important Messages"
-msgstr "Important Messages"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1762,6 +1763,8 @@ msgstr "Unlimited"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_message_unread
 #: model:ir.model.fields,field_description:event.field_event_registration_message_unread
+#: model:ir.ui.view,arch_db:event.view_event_search
+#: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unread Messages"
 msgstr "Unread Messages"
 
@@ -1809,6 +1812,16 @@ msgstr "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
 msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
 "sure you want to confirm it?"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event_website_message_ids
+msgid "Website communication history"
 msgstr ""
 
 #. module: event

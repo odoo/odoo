@@ -118,16 +118,13 @@ class website_sale(http.Controller):
         visible_attrs = set(l.attribute_id.id
                                 for l in product.attribute_line_ids
                                     if len(l.value_ids) > 1)
-        if request.website.pricelist_id.id != context['pricelist']:
-            website_currency_id = request.website.currency_id.id
-            currency_id = self.get_pricelist().currency_id.id
+        if request.website.currency_id != product.currency_id:
             for p in product.product_variant_ids:
-                price = currency_obj.compute(cr, uid, website_currency_id, currency_id, p.lst_price)
+                price = currency_obj.compute(cr, uid, product.currency_id.id, request.website.currency_id.id, p.lst_price)
                 attribute_value_ids.append([p.id, [v.id for v in p.attribute_value_ids if v.attribute_id.id in visible_attrs], p.price, price])
         else:
             attribute_value_ids = [[p.id, [v.id for v in p.attribute_value_ids if v.attribute_id.id in visible_attrs], p.price, p.lst_price]
                 for p in product.product_variant_ids]
-
         return attribute_value_ids
 
     @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True)
@@ -633,7 +630,8 @@ class website_sale(http.Controller):
                 shipping_info['lang'] = partner_lang
             shipping_info['parent_id'] = partner_id
             checkout['shipping_id'] = orm_partner.create(cr, SUPERUSER_ID, shipping_info, context)
-            order.write({'partner_shipping_id': checkout.get('shipping_id')})
+        if checkout.get('shipping_id'):
+            order.write({'partner_shipping_id': checkout['shipping_id']})
 
         order_obj.onchange_partner_shipping_id(cr, SUPERUSER_ID, [order.id], context=context)
         order.order_line._compute_tax_id()
@@ -766,15 +764,13 @@ class website_sale(http.Controller):
         values.update(sale_order_obj._get_website_data(cr, uid, order, context))
 
         if not values['errors']:
-            # find an already existing transaction
-            tx = request.website.sale_get_transaction()
             acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True), ('company_id', '=', order.company_id.id)], context=context)
             values['acquirers'] = list(payment_obj.browse(cr, uid, acquirer_ids, context=context))
             render_ctx = dict(context, submit_class='btn btn-primary', submit_txt=_('Pay Now'))
             for acquirer in values['acquirers']:
                 acquirer.button = payment_obj.render(
                     cr, SUPERUSER_ID, acquirer.id,
-                    tx and tx.reference or request.env['payment.transaction'].get_next_reference(order.name),
+                    '/',
                     order.amount_total,
                     order.pricelist_id.currency_id.id,
                     values={
@@ -797,6 +793,7 @@ class website_sale(http.Controller):
                                 user is redirected to the checkout page
         """
         cr, uid, context = request.cr, request.uid, request.context
+        payment_obj = request.registry.get('payment.acquirer')
         transaction_obj = request.registry.get('payment.transaction')
         order = request.website.sale_get_order(context=context)
 
@@ -813,9 +810,7 @@ class website_sale(http.Controller):
                 tx = False
                 tx_id = False
             elif tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
-                tx.write({
-                    'amount': order.amount_total,
-                })
+                tx.write(dict(transaction_obj.on_change_partner_id(cr, uid, None, order.partner_id.id, context=context).get('value', {}), amount=order.amount_total))
         if not tx:
             tx_id = transaction_obj.create(cr, SUPERUSER_ID, {
                 'acquirer_id': acquirer_id,
@@ -841,7 +836,17 @@ class website_sale(http.Controller):
         if tx.acquirer_id.auto_confirm == 'at_pay_now':
             request.registry['sale.order'].action_confirm(cr, SUPERUSER_ID, [order.id], context=dict(request.context, send_email=True))
 
-        return tx_id
+        return payment_obj.render(
+            request.cr, SUPERUSER_ID, tx.acquirer_id.id,
+            tx.reference,
+            order.amount_total,
+            order.pricelist_id.currency_id.id,
+            values={
+                'return_url': '/shop/payment/validate',
+                'partner_id': order.partner_shipping_id.id or order.partner_invoice_id.id,
+                'billing_partner_id': order.partner_invoice_id.id,
+            },
+            context=dict(context, submit_class='btn btn-primary', submit_txt=_('Pay Now')))
 
     @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True)
     def payment_get_status(self, sale_order_id, **post):
@@ -1050,9 +1055,6 @@ class website_sale(http.Controller):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         products = pool['product.product'].browse(cr, uid, product_ids, context=context)
         partner = pool['res.users'].browse(cr, uid, uid, context=context).partner_id
-        if use_order_pricelist:
-            pricelist_id = request.website.get_current_pricelist(context=context).id
-        else:
-            pricelist_id = partner.property_product_pricelist.id
+        pricelist_id = request.website.get_current_pricelist(context=context).id
         prices = pool['product.pricelist'].price_rule_get_multi(cr, uid, [pricelist_id], [(product, add_qty, partner) for product in products], context=context)
         return {product_id: prices[product_id][pricelist_id][0] for product_id in product_ids}

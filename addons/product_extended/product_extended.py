@@ -89,9 +89,16 @@ class product_template(osv.osv):
 
 class product_bom(osv.osv):
     _inherit = 'mrp.bom'
+
+    def _get_variant_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for bom in self.browse(cr, uid, ids, context=context):
+            res[bom.id] = bom.product_tmpl_id.product_variant_count
+        return res
             
     _columns = {
-        'standard_price': fields.related('product_tmpl_id','standard_price',type="float",relation="product.product",string="Standard Price",store=False)
+        'standard_price': fields.related('product_tmpl_id','standard_price',type="float",relation="product.product",string="Standard Price",store=False),
+        'get_variant_count': fields.function(_get_variant_count, type='integer', string='Number of variant for the product'),
     }
 
 product_bom()

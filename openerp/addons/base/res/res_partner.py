@@ -15,34 +15,12 @@ from odoo.modules import get_module_resource
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
 
-ADDRESS_FORMAT_LAYOUTS = {
-    '%(city)s %(state_code)s\n%(zip)s': """
-        <div class="address_format">
-            <field name="city" placeholder="%(city)s" style="width: 50%%"/>
-            <field name="state_id" class="oe_no_button" placeholder="%(state)s" style="width: 47%%" options='{"no_open": true}'/>
-            <br/>
-            <field name="zip" placeholder="%(zip)s"/>
-        </div>
-    """,
-    '%(zip)s %(city)s': """
-        <div class="address_format">
-            <field name="zip" placeholder="%(zip)s" style="width: 40%%"/>
-            <field name="city" placeholder="%(city)s" style="width: 57%%"/>
-            <br/>
-            <field name="state_id" class="oe_no_button" placeholder="%(state)s" options='{"no_open": true}'/>
-        </div>
-    """,
-    '%(city)s\n%(state_name)s\n%(zip)s': """
-        <div class="address_format">
-            <field name="city" placeholder="%(city)s"/>
-            <field name="state_id" class="oe_no_button" placeholder="%(state)s" options='{"no_open": true}'/>
-            <field name="zip" placeholder="%(zip)s"/>
-        </div>
-    """
+ADDRESS_FORMAT_CLASSES = {
+    '%(city)s %(state_code)s\n%(zip)s': 'o_city_state',
+    '%(zip)s %(city)s': 'o_zip_city'
 }
 
 ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
-
 @api.model
 def _lang_get(self):
     return self.env['res.lang'].get_installed()
@@ -56,17 +34,19 @@ def _tz_get(self):
 class FormatAddress(object):
     @api.model
     def fields_view_get_address(self, arch):
-        fmt = self.env.user.company_id.country_id.address_format or ''
-        for k, v in ADDRESS_FORMAT_LAYOUTS.items():
-            if k in fmt:
+        address_format = self.env.user.company_id.country_id.address_format or ''
+        for format_pattern, format_class in ADDRESS_FORMAT_CLASSES.iteritems():
+            if format_pattern in address_format:
                 doc = etree.fromstring(arch)
-                for node in doc.xpath("//div[@class='address_format']"):
-                    tree = etree.fromstring(v % {'city': _('City'), 'zip': _('ZIP'), 'state': _('State')})
-                    for child in node.xpath("//field"):
-                        if child.attrib.get('modifiers'):
-                            for field in tree.xpath("//field[@name='%s']" % child.attrib.get('name')):
-                                field.attrib['modifiers'] = child.attrib.get('modifiers')
-                    node.getparent().replace(node, tree)
+                for address_node in doc.xpath("//div[@class='o_address_format']"):
+                    # add address format class to address block
+                    address_node.attrib['class'] += ' ' + format_class
+                    if format_class.startswith('o_zip'):
+                        zip_fields = address_node.xpath("//field[@name='zip']")
+                        city_fields = address_node.xpath("//field[@name='city']")
+                        if zip_fields and city_fields:
+                            # move zip field before city field
+                            city_fields[0].addprevious(zip_fields[0])
                 arch = etree.tostring(doc)
                 break
         return arch
@@ -280,7 +260,8 @@ class Partner(models.Model, FormatAddress):
         colorize, img_path, image = False, False, False
 
         if partner_type in ['contact', 'other'] and parent_id:
-            image = self.browse(parent_id).image.decode('base64')
+            parent_image = self.browse(parent_id).image
+            image = parent_image and parent_image.decode('base64') or None
 
         if not image and partner_type == 'invoice':
             img_path = get_module_resource('base', 'static/src/img', 'money.png')
@@ -511,8 +492,6 @@ class Partner(models.Model, FormatAddress):
 
     @api.model
     def create(self, vals):
-        if vals.get('type') and not self._context.get('partner_type'):
-            self = self.with_context(partner_type=vals['type'])
         if vals.get('website'):
             vals['website'] = self._clean_website(vals['website'])
         # compute default image in create, because computing gravatar in the onchange

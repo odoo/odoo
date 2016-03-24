@@ -95,7 +95,7 @@ class AccountMove(models.Model):
 
     @api.model
     def create(self, vals):
-        move = super(AccountMove, self.with_context(check_move_validity=False)).create(vals)
+        move = super(AccountMove, self.with_context(check_move_validity=False, partner_id=vals.get('partner_id'))).create(vals)
         move.assert_balanced()
         return move
 
@@ -210,7 +210,7 @@ class AccountMove(models.Model):
             reversed_moves._post_validate()
             reversed_moves.post()
             return [x.id for x in reversed_moves]
-        return True
+        return []
 
     @api.multi
     def open_reconcile_view(self):
@@ -912,7 +912,8 @@ class AccountMoveLine(models.Model):
         MoveObj = self.env['account.move']
         context = dict(self._context or {})
         amount = vals.get('debit', 0.0) - vals.get('credit', 0.0)
-
+        if not vals.get('partner_id') and context.get('partner_id'):
+            vals['partner_id'] = context.get('partner_id')
         if vals.get('move_id', False):
             move = MoveObj.browse(vals['move_id'])
             if move.date and not vals.get('date'):

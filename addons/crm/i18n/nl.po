@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-02-06 11:02+0000\n"
+"PO-Revision-Date: 2016-03-11 12:44+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -176,7 +176,7 @@ msgstr "<span class=\"oe_form_field\" attrs=\"{'invisible': ['|', ('next_activit
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "<span class=\"oe_grey\"> at </span>"
-msgstr "<span class=\"oe_grey\"> bij </span>"
+msgstr "<span class=\"oe_grey\"> met </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -309,6 +309,22 @@ msgid ""
 "<span class=\"panel-title\"><span data-icon=\"&#57463;\"/><strong> Exercise 2</strong></span>\n"
 "                                    <span>(Sales Manager)</span>"
 msgstr "<span class=\"panel-title\"><span data-icon=\"&#57463;\"/><strong> Oefening 2</strong></span>\n                                    <span>(Verkoopmanager)</span>"
+
+#. module: crm
+#: model:web.tip,description:crm.crm_tip_4
+msgid ""
+"<span><b>This is a business opportunity.</b> Drag and drop it to another "
+"column while you move forward in the sales cycle. Click to zoom in the "
+"opportunity.</span>"
+msgstr "<span><b>Dit is een prospect.</b> Sleep de prospect naar een andere kolom bij vooruitgang in het verkoopproces. Klik op de prospect om de details van de prospect te bekijken.</span>"
+
+#. module: crm
+#: model:web.tip,description:crm.crm_tip_6
+msgid ""
+"<span><strong>Click to register a new business opportunity</strong>. Once "
+"the opportunity is created, you will be able to drag and drop it in your "
+"sales pipeline.</span>"
+msgstr "<span><strong>Klik om een nieuwe prospect aan te maken</strong>. Zodra de prospect is aangemaakt kun je deze slepen naar een andere kolom van je verkoop pijplijn.</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -958,6 +974,11 @@ msgstr "Klik om een nieuw verkooplabel toe te voegen."
 #: model:ir.actions.act_window,help:crm.crm_lead_stage_act
 msgid "Click to set a new stage in your lead/opportunity pipeline."
 msgstr "Klik om een nieuwe fase in uw pijplijn voor leads/prospects toe te voegen."
+
+#. module: crm
+#: model:web.tip,description:crm.crm_tip_2
+msgid "Click to view the opportunities related to this customer."
+msgstr "Klik om de prospects van deze klant te bekijken."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -2034,6 +2055,14 @@ msgid "Lead Created"
 msgstr "Lead aangemaakt"
 
 #. module: crm
+#: model:ir.actions.act_window,name:crm.crm_lead_tag_action
+#: model:ir.ui.menu,name:crm.menu_crm_lead_categ
+#: model:ir.ui.view,arch_db:crm.crm_lead_tag_form
+#: model:ir.ui.view,arch_db:crm.crm_lead_tag_tree
+msgid "Lead Tags"
+msgstr "Lead labels"
+
+#. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
 msgid "Lead To Opportunity Partner"
 msgstr "Lead naar prospectrelatie"
@@ -2156,7 +2185,7 @@ msgstr "Licenties"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_line_ids
 msgid "Lines"
-msgstr "Lijnen"
+msgstr "Regels"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_team_ids
@@ -2253,6 +2282,8 @@ msgstr "Maximum van de contactengroep"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_medium_id
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_medium_id
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Medium"
 msgstr "Gemiddeld"
 
@@ -2435,6 +2466,11 @@ msgstr "Maand"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Motivation letter from the management"
 msgstr "Motivatiebrief vanuit de directie"
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+msgid "My Leads"
+msgstr "Mijn leads"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -3397,6 +3433,13 @@ msgstr "Verstuur"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Subscription Management"
 msgstr "Beheer abonnementen"
+
+#. module: crm
+#: model:web.tip,description:crm.crm_tip_5
+msgid ""
+"Switch to the graph view to get a clear reporting on your opportunities "
+"pipeline."
+msgstr "Schakel over naar de grafiekweergave om een rapportage te krijgen van je prospects in de verkoop pijplijn."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
