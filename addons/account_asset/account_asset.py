@@ -418,8 +418,8 @@ class AccountAssetDepreciationLine(models.Model):
             move_line_1 = {
                 'name': asset_name,
                 'account_id': credit_account,
-                'debit': 0.0,
-                'credit': amount,
+                'debit': 0.0 if amount > 0.0 else -amount,
+                'credit': amount if amount > 0.0 else 0.0,
                 'journal_id': journal_id,
                 'partner_id': partner_id,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
@@ -430,8 +430,8 @@ class AccountAssetDepreciationLine(models.Model):
             move_line_2 = {
                 'name': asset_name,
                 'account_id': debit_account,
-                'credit': 0.0,
-                'debit': amount,
+                'credit': 0 if amount > 0.0 else -amount,
+                'debit': amount if amount > 0.0 else 0.0,
                 'journal_id': journal_id,
                 'partner_id': partner_id,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
