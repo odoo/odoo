@@ -3128,10 +3128,10 @@ class BaseModel(object):
         if isinstance(self, Model):
             # set up field triggers (on database-persisted models only)
             for field in cls._fields.itervalues():
-            # dependencies of custom fields may not exist; ignore that case
-            exceptions = (Exception,) if field.manual else ()
-            with tools.ignore(*exceptions):
-                field.setup_triggers(self.env)
+                # dependencies of custom fields may not exist; ignore that case
+                exceptions = (Exception,) if field.manual else ()
+                with tools.ignore(*exceptions):
+                    field.setup_triggers(self.env)
 
             # add invalidation triggers on model dependencies
             if cls._depends:
