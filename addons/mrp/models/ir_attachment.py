@@ -16,5 +16,6 @@ AVAILABLE_PRIORITIES = [
 
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
+    _order = "priority desc"
 
     priority = fields.Selection(AVAILABLE_PRIORITIES, help="Gives the sequence order when displaying a list of tasks.")

@@ -289,7 +289,7 @@
                     <field name="name"/>
                     <field name="color"/>
                     <field name="nb_orders"/>
-                     <field name="stage_id"/>
+                    <field name="working_state"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="#{kanban_color(record.color.raw_value)}">
@@ -340,19 +340,19 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-6 o_kanban_primary_left" style="position:absolute;" name="wc_stages">
-                                            <t t-if="record.stage_id.raw_value == 'normal'">
+                                            <t t-if="record.working_state.raw_value == 'normal'">
                                                 <t t-set="status" t-value="'No work order in progress'"/>
                                             </t>
-                                            <t t-if="record.stage_id.raw_value == 'blocked'">
+                                            <t t-if="record.working_state.raw_value == 'blocked'">
                                                 <t t-set="status" t-value="'Work orders is blocked'"/>
                                             </t>
-                                            <t t-if="record.stage_id.raw_value == 'done'">
+                                            <t t-if="record.working_state.raw_value == 'done'">
                                                 <t t-set="status" t-value="'Work orders is running'"/>
                                             </t>
                                             <div t-att-title="status">
-                                                <field name="stage_id" widget="kanban_state_selection"/>
+                                                <field name="working_state"/><!--  widget="kanban_state_selection"/>-->
                                             </div>
-                                        </div>
+                                        </div> 
                                     </div>
                                 </div><div class="container o_kanban_card_manage_pane o_invisible">
                                     <div class="row">
@@ -814,7 +814,7 @@
                 </header>
                 <sheet>
                     <field name="post_visible" invisible="1"/>
-                    <div class="oe_button_box">
+                    <div class="oe_button_box" name="button_box">
                         <button name="%(action_mrp_workorder_production_specific)d" type="action" attrs="{'invisible': [('nb_orders', '=', 0)]}" class="oe_stat_button" icon="fa-play-circle-o">
                             <div class="o_form_field o_stat_info">
                                 <span class="o_stat_value"><field name="nb_done" widget="statinfo" nolabel="1"/> / <field name="nb_orders" widget="statinfo" nolabel="1"/></span>
@@ -829,15 +829,15 @@
                     </div>
                     <group>
                         <group>
-                            <field name="is_move_raw" invisible="1"/>
+                            <field name="has_moves" invisible="1"/>
                             <field name="availability" invisible="1"/>
                             <field name="check_to_done" invisible="1"/>
-                            <field name="product_id" attrs="{'readonly': [('is_move_raw', '=', True)]}" domain="[('bom_ids', '!=', [])]"/>
+                            <field name="product_id" attrs="{'readonly': [('has_moves', '=', True)]}" domain="[('bom_ids', '!=', [])]"/>
                             <field name="product_tmpl_id" invisible="1"/>
                             <label for="product_qty"/>
                             <div class="o_row">
-                                <field name="product_qty" attrs="{'readonly': [('is_move_raw', '=', True)]}"/>
-                                <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom" attrs="{'readonly': [('is_move_raw', '=', True)]}"/>
+                                <field name="product_qty" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                                <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom" attrs="{'readonly': [('has_moves', '=', True)]}"/>
                                 <button type="action"
                                     name="%(mrp.action_change_production_qty)d"
                                     string="Update" states="confirmed,planned,progress" class="oe_link" attrs="{'invisible': [('state','=','done')]}"/>
@@ -849,15 +849,15 @@
                                                 ('product_tmpl_id.product_variant_ids','=',product_id),
                                                 ('product_id','=',False),
                                                 ('bom_type', '=', 'normal')]"
-                                context="{'default_product_tmpl_id': product_tmpl_id}" required="1" attrs="{'readonly': [('is_move_raw', '=', True)]}"/>
+                                context="{'default_product_tmpl_id': product_tmpl_id}" required="1" attrs="{'readonly': [('has_moves', '=', True)]}"/>
                             <field name="routing_id" groups="mrp.group_mrp_routings"/>
                         </group>
                         <group>
-                            <field name="date_planned" attrs="{'readonly': [('is_move_raw', '=', True)]}"/>
-                            <field name="user_id" attrs="{'readonly': [('is_move_raw', '=', True)]}"/>
-                            <field name="origin" attrs="{'readonly': [('is_move_raw', '=', True)]}"/>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('is_move_raw', '=', True)]}"/>
-                            <field name="move_prod_id" groups="base.group_no_one" attrs="{'readonly': [('is_move_raw', '=', True)]}"/>
+                            <field name="date_planned" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                            <field name="user_id" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                            <field name="origin" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                            <field name="move_prod_id" groups="base.group_no_one" attrs="{'readonly': [('has_moves', '=', True)]}"/>
                         </group>
                     </group>
                     <notebook>
@@ -902,9 +902,9 @@
                         <page string="Miscellaneous">
                             <group>
                                 <group groups="stock.group_stock_multi_locations">
-                                    <field name="picking_type_id" attrs="{'readonly': [('is_move_raw', '=', True)]}"/>
-                                    <field name="location_src_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('is_move_raw', '=', True)]}"/>
-                                    <field name="location_dest_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('is_move_raw', '=', True)]}"/>
+                                    <field name="picking_type_id" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                                    <field name="location_src_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                                    <field name="location_dest_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('has_moves', '=', True)]}"/>
                                 </group>
                             </group>
                         </page>
@@ -1269,20 +1269,23 @@
         <field name="arch" type="xml">
             <form string="Production Workcenter" delete="0" create="0">
             <header>
-                <button name="button_finish" type="object" string="Finish Order" attrs="{'invisible': ['|',('state', '!=', 'progress'), ('is_produced', '=', False)]}" class="btn-info"/>
-                <button name="button_start" type="object" string="Start Working" attrs="{'invisible': [('state', '!=', 'pending')]}"/>
-                <button name="button_start" type="object" string="Start Working" attrs="{'invisible': [('state', '!=', 'ready')]}" class="btn-success"/>
-                <button name="record_production" type="object" string="Record Production" class="btn-success" attrs="{'invisible': ['|', '|', ('state', '!=', 'progress'), ('show_state', '=', False)]}"/>
+                <button name="button_finish" type="object" string="Finish Order" attrs="{'invisible': ['|', ('state', '!=', 'progress'), ('is_produced', '=', False)]}" class="btn-info"/>
+                <button name="button_start" type="object" string="Start Working" attrs="{'invisible': ['|', ('blocked', '=', True), ('state', '!=', 'pending')]}"/>
+                <button name="button_start" type="object" string="Start Working" attrs="{'invisible': ['|', ('blocked', '=', True), ('state', '!=', 'ready')]}" class="btn-success"/>
+                <button name="record_production" type="object" string="Record Production" class="btn-success" attrs="{'invisible': ['|', ('state', '!=', 'progress'), ('show_state', '=', False)]}"/>
                 <button name="button_pending" type="object" string="Pause" class="btn-warning" attrs="{'invisible': ['|', ('state', 'in', ('done', 'pending', 'ready')), ('show_state', '=', False)]}"><span>(<field name="delay" widget="float_time" class="oe_inline"/>)</span></button>
-                <button name="button_block" type="object" string="Blocked" class="btn-danger" attrs="{'invisible': ['|', ('state', 'in', ('done', 'pending', 'ready')), ('show_state', '=', False)]}"/>
-                <button name="button_start" type="object" string="Continue Production" class="btn-warning" attrs="{'invisible': ['|', ('show_state', '=', True), ('state', 'in', ('done', 'pending', 'ready'))]}"></button>
-                <button name="button_start" type="object" string="Continue Production" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                <button name="button_block" type="object" string="Block" class="btn-danger" attrs="{'invisible': ['|', ('state', 'in', ('done', 'pending', 'ready')), ('show_state', '=', False)]}"/>
+                <button name="button_unblock" type="object" string="Unblock" class="btn-danger" attrs="{'invisible': [('blocked', '=', False)]}"/>
+                <button name="button_start" type="object" string="Continue Production" class="btn-warning" attrs="{'invisible': ['|', '|', ('blocked', '=', True), ('show_state', '=', True), ('state', 'in', ('done', 'pending', 'ready'))]}"></button>
+                <button name="button_start" type="object" string="Continue Production" attrs="{'invisible': ['|', ('blocked', '=', True), ('state', '!=', 'done')]}"/>
                 <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('confirmed', 'cancel'))]}"/>
                 <field name="availability" nolabel="1" widget="bullet_state" options="{'classes': {'assigned': 'success', 'waiting': 'danger'}}"/>
                 <field name="state" widget="statusbar" statusbar_visible="pending,ready,progress,done"/>
                 <field name="show_state" invisible="1"/>
+                <field name="blocked" invisible="1"/>
             </header>
             <sheet>
+                <div class="oe_button_box" name="button_box"/>
                 <group>
                     <group>
                         <field name="product" string="To Produce"/>
@@ -1920,46 +1923,4 @@
           parent="menu_mrp_manufacturing"
           action="action_inventory_message"
           sequence="26"/>
-          
-          
-    <!-- Files -->
-    <record model="ir.ui.view" id="view_document_file_kanban_mrp">
-        <field name="name">ir.attachment kanban.mrp</field>
-        <field name="model">ir.attachment</field>
-        <field name="arch" type="xml">
-            <kanban>
-                <field name="id"/>
-                <field name="mimetype"/>
-                <field name="type"/>
-                <field name="datas_fname"/>
-                <field name="name"/>
-                <field name="priority"/>
-                <templates>
-                    <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
-                            <div class="oe_kanban_vignette">
-                                <div class="oe_attachment">
-                                    <div class="oe_name">
-                                        <field name="name"/>
-                                    </div>
-                                    <div t-if="record.type.raw_value == 'binary'">
-                                        <a t-attf-href="/web/content/#{record.id.value}?download=1">
-                                            <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
-                                            <div t-if="!webimage" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
-                                            <div t-if="webimage" class="o_kanban_attachment_image">
-                                                <img t-attf-src="/web/image/#{record.id.value}?download=1"/>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="oe_kanban_bottom_left">
-                                        <field name="priority" widget="priority"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>
-        </field>
-    </record>
 </odoo>

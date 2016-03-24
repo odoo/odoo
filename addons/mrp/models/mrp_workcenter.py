@@ -26,17 +26,28 @@ class MrpWorkcenter(models.Model):
     color = fields.Integer('Color')
     count_ready_order = fields.Integer(compute='_compute_orders', string="Total Ready Orders")
     count_progress_order = fields.Integer(compute='_compute_orders', string="Total Running Orders")
-    stage_id = fields.Selection([('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'In Progress')], string='Status', default="normal", store=True, compute="_compute_stages")
+    blocked = fields.Boolean('Blocked')
+    working_state = fields.Selection([('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'In Progress')], string='Status', default="normal", store=True, 
+                                compute="_compute_working_state", inverse='_set_blocked')
+
+    @api.one
+    def _set_blocked(self):
+        if self.working_state == 'blocked':
+            #Stop all timers
+            self.order_ids.end_all()
+        self.blocked = (self.working_state == 'blocked')
 
     @api.multi
-    @api.depends('order_ids', 'order_ids.state')
-    def _compute_stages(self):
+    @api.depends('order_ids', 'order_ids.state', 'blocked')
+    def _compute_working_state(self):
         for workcenter in self:
+            if workcenter.blocked:
+                workcenter.working_state = 'blocked'
+                continue
             if workcenter.count_progress_order:
-                workcenter.stage_id = 'done'
+                workcenter.working_state = 'done'
             else:
-                workcenter.stage_id = 'normal'
-
+                workcenter.working_state = 'normal'
 
     @api.depends('order_ids')
     def _compute_orders(self):

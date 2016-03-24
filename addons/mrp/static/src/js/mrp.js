@@ -19,7 +19,7 @@ var SetBulletStatus = common.AbstractField.extend(common.ReinitializeFieldMixin,
                 this.$el.attr('title', title);
                 this.$el
                     .removeClass('text-success text-danger text-default')
-                this.$el.html($('<span>' + title + '</span>').addClass('label label-' + bullet_class));
+                this.$el.replaceWith("<span title='" + title + "' class='o_form_field label label-" + bullet_class + "'>" + title + "</span>");
             }
         }
     },
