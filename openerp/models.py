@@ -5580,10 +5580,11 @@ class BaseModel(object):
             The new environment will not benefit from the current
             environment's data cache, so later data access may incur extra
             delays while re-fetching from the database.
+            The returned recordset has the same prefetch object as ``self``.
 
         :type env: :class:`~openerp.api.Environment`
         """
-        return self._browse(self._ids, env)
+        return self._browse(self._ids, env, self._prefetch)
 
     def sudo(self, user=SUPERUSER_ID):
         """ sudo([user=SUPERUSER])
@@ -5611,6 +5612,7 @@ class BaseModel(object):
             re-evaluated, the new recordset will not benefit from the current
             environment's data cache, so later data access may incur extra
             delays while re-fetching from the database.
+            The returned recordset has the same prefetch object as ``self``.
 
         """
         return self.with_env(self.env(user=user))
@@ -5630,6 +5632,10 @@ class BaseModel(object):
             # -> r2._context is {'key2': True}
             r2 = records.with_context(key2=True)
             # -> r2._context is {'key1': True, 'key2': True}
+
+        .. note:
+
+            The returned recordset has the same prefetch object as ``self``.
         """
         context = dict(args[0] if args else self._context, **kwargs)
         return self.with_env(self.env(context=context))

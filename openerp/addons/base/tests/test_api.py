@@ -366,6 +366,11 @@ class TestAPI(common.TransactionCase):
         diff_prefetch(partners, partners[0])
         diff_prefetch(partners, partners[:10])
 
+        # the recordset operations below should pass the prefetch object
+        same_prefetch(partners, partners.sudo(self.env.ref('base.user_demo')))
+        same_prefetch(partners, partners.with_context(active_test=False))
+        same_prefetch(partners, partners[:10].with_prefetch(partners._prefetch))
+
         # iterating and reading relational fields should pass the prefetch object
         self.assertEqual(type(partners).country_id.type, 'many2one')
         self.assertEqual(type(partners).bank_ids.type, 'one2many')
