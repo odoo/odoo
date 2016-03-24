@@ -43,26 +43,22 @@ var RTE_Translate = rte.Class.extend({
         this.__saved[key] = true;
 
         if ($el.data('oe-translation-id')) {
-            var translation_content = this.getEscapedElement($el).html();
-
             return ajax.jsonRpc('/web/dataset/call', 'call', {
                 model: 'ir.translation',
                 method: 'write',
                 args: [
                     [+$el.data('oe-translation-id')],
-                    {'value': translation_content, 'state': 'translated'},
+                    {'value': $el.html().replace(/&nbsp;/g, '\u00A0'), 'state': 'translated'},
                     context || base.get_context()
                 ],
             });
         } else {
-            var markup = this.getEscapedElement($el).prop('outerHTML');
-
             return ajax.jsonRpc('/web/dataset/call', 'call', {
                 model: 'ir.ui.view',
                 method: 'save',
                 args: [
                     $el.data('oe-id'),
-                    markup,
+                    this.getEscapedElement($el).prop('outerHTML'),
                     $el.data('oe-xpath') || null,
                     context || base.get_context()
                 ],
