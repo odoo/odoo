@@ -85,28 +85,32 @@ class product_product(osv.osv):
         operator = context.get('compute_child', True) and 'child_of' or 'in'
         domain = context.get('force_company', False) and ['&', ('company_id', '=', context['force_company'])] or []
         locations = location_obj.browse(cr, uid, location_ids, context=context)
-        if operator == "child_of" and locations and locations[0].parent_left != 0:
-            loc_domain = []
-            dest_loc_domain = []
-            for loc in locations:
-                if loc_domain:
-                    loc_domain = ['|'] + loc_domain  + ['&', ('location_id.parent_left', '>=', loc.parent_left), ('location_id.parent_left', '<', loc.parent_right)]
-                    dest_loc_domain = ['|'] + dest_loc_domain + ['&', ('location_dest_id.parent_left', '>=', loc.parent_left), ('location_dest_id.parent_left', '<', loc.parent_right)]
-                else:
-                    loc_domain += ['&', ('location_id.parent_left', '>=', loc.parent_left), ('location_id.parent_left', '<', loc.parent_right)]
-                    dest_loc_domain += ['&', ('location_dest_id.parent_left', '>=', loc.parent_left), ('location_dest_id.parent_left', '<', loc.parent_right)]
-
-            return (
-                domain + loc_domain,
-                domain + ['&'] + dest_loc_domain + ['!'] + loc_domain,
-                domain + ['&'] + loc_domain + ['!'] + dest_loc_domain
-            )
-        else:
-            return (
-                domain + [('location_id', operator, location_ids)],
-                domain + ['&', ('location_dest_id', operator, location_ids), '!', ('location_id', operator, location_ids)],
-                domain + ['&', ('location_id', operator, location_ids), '!', ('location_dest_id', operator, location_ids)]
-            )
+        # TDE FIXME: should move the support of child_of + auto_join directly in expression
+        # The code has been modified because having one location with parent_left being
+        # 0 make the whole domain unusable
+        hierarchical_locations = [location for location in locations if location.parent_left != 0 and operator == "child_of"]
+        other_locations = [location for location in locations if location not in hierarchical_locations]
+        loc_domain = []
+        dest_loc_domain = []
+        for location in hierarchical_locations:
+            loc_domain = loc_domain and ['|'] + loc_domain or loc_domain
+            loc_domain += ['&',
+                           ('location_id.parent_left', '>=', location.parent_left),
+                           ('location_id.parent_left', '<', location.parent_right)]
+            dest_loc_domain = dest_loc_domain and ['|'] + dest_loc_domain or dest_loc_domain
+            dest_loc_domain += ['&',
+                                ('location_dest_id.parent_left', '>=', location.parent_left),
+                                ('location_dest_id.parent_left', '<', location.parent_right)]
+        if other_locations:
+            loc_domain = loc_domain and ['|'] + loc_domain or loc_domain
+            loc_domain = loc_domain + [('location_id', operator, [location.id for location in other_locations])]
+            dest_loc_domain = dest_loc_domain and ['|'] + dest_loc_domain or dest_loc_domain
+            dest_loc_domain = dest_loc_domain + [('location_dest_id', operator, [location.id for location in other_locations])]
+        return (
+            domain + loc_domain,
+            domain + ['&'] + dest_loc_domain + ['!'] + loc_domain,
+            domain + ['&'] + loc_domain + ['!'] + dest_loc_domain
+        )
 
     def _get_domain_dates(self, cr, uid, ids, context):
         from_date = context.get('from_date', False)
