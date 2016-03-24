@@ -1129,6 +1129,7 @@ class pos_order(osv.osv):
             }
             invoice = inv_ref.new(cr, uid, inv)
             invoice._onchange_partner_id()
+            invoice.fiscal_position_id = order.fiscal_position_id
 
             inv = invoice._convert_to_write(invoice._cache)
             if not inv.get('account_id', None):
