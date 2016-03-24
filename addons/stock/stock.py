@@ -2452,8 +2452,6 @@ class stock_move(osv.osv):
                             move_qty -= qty
 
         for move in todo_moves:
-            if move.linked_move_operation_ids:
-                continue
             #then if the move isn't totally assigned, try to find quants without any specific domain
             if move.state != 'assigned':
                 qty_already_assigned = move.reserved_availability
