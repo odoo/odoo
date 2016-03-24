@@ -174,7 +174,7 @@ class TestSaleStock(TestSale):
         """
         # intial so
         self.partner = self.env.ref('base.res_partner_1')
-        self.product = self.env.ref('product.product_product_47')
+        self.product = self.env.ref('product.product_delivery_01')
         so_vals = {
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
