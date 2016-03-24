@@ -1710,10 +1710,8 @@ class Many2one(_Relational):
             # many2one field value (id and name) depends on the current record's
             # access rights, and not the value's access rights.
             try:
-                # performance trick: make sure that all records prefetched with
-                # value will be prefetched with value_sudo
-                value_sudo = value.sudo().with_prefetch(value._prefetch)
-                return value_sudo.name_get()[0]
+                # performance: value.sudo() prefetches the same records as value
+                return value.sudo().name_get()[0]
             except MissingError:
                 # Should not happen, unless the foreign key is missing.
                 return False
