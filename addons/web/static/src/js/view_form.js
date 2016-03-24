@@ -5229,6 +5229,7 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
             $img.css("margin-top", "" + (self.options.size[1] - $img.height()) / 2 + "px");
         });
         $img.on('error', function() {
+            self.on_clear();
             $img.attr('src', self.placeholder);
             instance.webclient.notification.warn(_t("Image"), _t("Could not display the selected image."));
         });
