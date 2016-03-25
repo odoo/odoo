@@ -1005,7 +1005,7 @@ class Field(object):
                 # we would simply lose their values during an onchange!
                 continue
 
-            target = env[field.model_name]
+            target = env[field.model_name].sudo()
             computed = target.browse(env.computed[field])
             if path == 'id':
                 target = records - computed
