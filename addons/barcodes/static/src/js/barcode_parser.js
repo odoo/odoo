@@ -131,7 +131,6 @@ var BarcodeParser = Class.extend({
         for (var i = 0; i < barcode.length; i++) {
             if (pattern[i] == '.') {
                 serie += barcode[i];
-                previous_dot = true;
             } else {
                 if (serie != "") {
                     match.variable_strings.push(serie);
