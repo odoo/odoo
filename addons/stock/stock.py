@@ -2794,9 +2794,7 @@ class stock_move(osv.osv):
             if move.state == 'done' and scrap_move.location_id.usage not in ('supplier', 'inventory', 'production'):
                 domain = [('qty', '>', 0), ('history_ids', 'in', [move.id])]
                 # We use scrap_move data since a reservation makes sense for a move not already done
-                quants = quant_obj.quants_get_preferred_domain(cr, uid, scrap_move.location_id,
-                        scrap_move.product_id, quantity, domain=domain, preferred_domain_list=[],
-                        restrict_lot_id=scrap_move.restrict_lot_id.id, restrict_partner_id=scrap_move.restrict_partner_id.id, context=context)
+                quants = quant_obj.quants_get_preferred_domain(cr, uid, quantity, scrap_move, domain=domain, context=context)
                 quant_obj.quants_reserve(cr, uid, quants, scrap_move, context=context)
         self.action_done(cr, uid, res, context=context)
         return res
