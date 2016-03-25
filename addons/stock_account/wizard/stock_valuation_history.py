@@ -128,9 +128,9 @@ class stock_history(osv.osv):
                 product_template_id,
                 SUM(quantity) as quantity,
                 date,
-                price_unit_on_quant,
+                SUM(price_unit_on_quant * quantity) / SUM(quantity) as price_unit_on_quant,
                 source,
-                serial_number
+                string_agg(DISTINCT serial_number, ', ' ORDER BY serial_number) AS serial_number
                 FROM
                 ((SELECT
                     stock_move.id AS id,
@@ -205,5 +205,5 @@ class stock_history(osv.osv):
                     dest_location.usage not in ('internal', 'transit'))
                 ))
                 AS foo
-                GROUP BY move_id, location_id, company_id, product_id, product_categ_id, date, price_unit_on_quant, source, product_template_id, serial_number
+                GROUP BY move_id, location_id, company_id, product_id, product_categ_id, date, source, product_template_id
             )""")

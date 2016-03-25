@@ -3,6 +3,8 @@
 
 import logging
 import serial
+import subprocess
+from os.path import isfile
 from os import listdir
 from threading import Thread, Lock
 
@@ -37,7 +39,7 @@ class Blackbox(Thread):
     # request. The first device to give an answer that makes sense
     # wins.
     def _find_device_path_by_probing(self):
-        path = "/dev/serial/by-id/"
+        path = "/dev/serial/by-path/"
         probe_message = self._wrap_low_level_message_around("S000")
 
         try:
@@ -148,15 +150,20 @@ class Blackbox(Thread):
             ser.close()
             return ""
 
-blackbox_thread = Blackbox()
-hw_proxy.drivers['fiscal_data_module'] = blackbox_thread
+if isfile("/home/pi/registered_blackbox_be"):
+    blackbox_thread = Blackbox()
+    hw_proxy.drivers['fiscal_data_module'] = blackbox_thread
 
-class BlackboxDriver(hw_proxy.Proxy):
-    @http.route('/hw_proxy/request_blackbox/', type='json', auth='none', cors='*')
-    def request_blackbox(self, high_level_message, response_size):
-        to_send = blackbox_thread._wrap_low_level_message_around(high_level_message)
+    class BlackboxDriver(hw_proxy.Proxy):
+        @http.route('/hw_proxy/request_blackbox/', type='json', auth='none', cors='*')
+        def request_blackbox(self, high_level_message, response_size):
+            to_send = blackbox_thread._wrap_low_level_message_around(high_level_message)
 
-        with blackbox_thread.blackbox_lock:
-            response = blackbox_thread._send_to_blackbox(to_send, response_size, blackbox_thread.device_path)
+            with blackbox_thread.blackbox_lock:
+                response = blackbox_thread._send_to_blackbox(to_send, response_size, blackbox_thread.device_path)
 
-        return response
+            return response
+
+        @http.route('/hw_proxy/request_serial/', type='json', auth='none', cors='*')
+        def request_serial(self):
+            return subprocess.check_output("ifconfig eth0 | grep -o 'HWaddr.*' | sed 's/HWaddr \\(.*\\)/\\1/' | sed 's/://g'", shell=True).rstrip()[-7:]

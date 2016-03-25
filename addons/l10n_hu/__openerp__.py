@@ -5,7 +5,7 @@
 
 {
     'name': 'Hungarian - Accounting',
-    'version': '1.0',
+    'version': '2.0',
     'category': 'Localization/Account Charts',
     'description': """
 
@@ -17,7 +17,6 @@ This module consists :
  - Generic Hungarian chart of accounts
  - Hungarian taxes
  - Hungarian Bank information
- 
  """,
     'author': 'InnOpen Group Kft',
     'website': 'http://www.innopen.eu',

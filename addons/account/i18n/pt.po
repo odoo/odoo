@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-01-18 07:25+0000\n"
-"Last-Translator: Manuela Silva <h_manuela_rodsilva@gmail.com>\n"
+"PO-Revision-Date: 2016-02-27 10:43+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1644,9 +1644,8 @@ msgstr "Pedir reembolso"
 msgid ""
 "Asset management: This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "\n"
-"Revenue recognition: This allows you to manage the Revenue recognition on selling product. It keeps track of the installment occurred on those revenue recognition, and creates account move for those installment lines.\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr "Permite-lhe gerir os activos de pertencentes a uma empresa ou de uma pessoa. \nMantém o controle da amortização ocorrida nesses activos, e cria movimentos para essas linhas de amortização.\n\nReconhecimento de Receita: Permite que consiga gerir o reconhecimento de receita na venda do produto. Mantém o controle da parcela que ocorreu naqueles reconhecimentos de receitas, e cria movimentos para essas linhas.\n\n- Isto instala o módulo account_asset . Se não marcar esta caixa, vai ser capaz de gerir a facturação e pagamentos, mas não Contabilidade (Itens Jornal, Plano de Contas, ...)"
+msgstr ""
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -1655,8 +1654,8 @@ msgstr "Ativos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_asset
-msgid "Assets management & Revenue recognition"
-msgstr "Gestão de Ativos e Realização de Receitas"
+msgid "Assets management"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_account_ids
@@ -4363,14 +4362,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "If you want to do it yourself:"
 msgstr "Se quiser fazê-lo você mesmo:"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.account_planner
-msgid ""
-"If you'd like some assistance on any of the above, please do not hesitate \n"
-"                        to contact our accounting experts by using the \n"
-"                        <span class=\"fa fa-question-circle\"/> icon on the top bar."
-msgstr ""
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -9233,6 +9224,14 @@ msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
 msgstr "Não pode fazer esta modificação num movimento reconciliado. Pode mudar alguns dados ou pode desreconciliar primeiro.\n%s."
+
+#. module: account
+#: code:addons/account/models/account.py:329
+#, python-format
+msgid ""
+"You cannot empty the account number once set.\n"
+"If you would like to delete the account number, you can do it from the Bank Accounts list."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:96

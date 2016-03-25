@@ -20,7 +20,7 @@ class sale_order_line(osv.osv):
         """Retrieve the price before applying the pricelist"""
         item_obj = self.pool['product.pricelist.item']
         product_obj = self.pool['product.product']
-        field_name = 'list_price'
+        field_name = 'lst_price'
         currency_id = None
         if res_dict.get(pricelist):
             rule_id = res_dict[pricelist][1]
@@ -30,16 +30,26 @@ class sale_order_line(osv.osv):
             item = item_obj.browse(cr, uid, rule_id, context=context)
             if item.base == 'standard_price':
                 field_name = 'standard_price'
-            currency_id = item.pricelist_id.currency_id.id
+            currency_id = item.pricelist_id.currency_id
 
         product = product_obj.browse(cr, uid, product_id, context=context)
         if not currency_id:
-            currency_id = product.company_id.currency_id.id
-        factor = 1.0
-        if uom and uom != product.uom_id.id:
+            currency_id = product.company_id.currency_id
+            cur_factor = 1.0
+        else:
+            if currency_id.id == product.company_id.currency_id.id:
+                cur_factor = 1.0
+            else:
+                cur_factor = self.pool['res.currency']._get_conversion_rate(cr, uid, product.company_id.currency_id, currency_id, context=context)
+
+        product_uom = context and context.get('uom') or product.uom_id.id
+        if uom and uom != product_uom:
             # the unit price is in a different uom
-            factor = self.pool['product.uom']._compute_price(cr, uid, uom, 1.0, product.uom_id.id)
-        return product[field_name] * factor, currency_id
+            uom_factor = self.pool['product.uom']._compute_price(cr, uid, product.uom_id.id, 1.0, uom)
+        else:
+            uom_factor = 1.0
+
+        return product[field_name] * uom_factor * cur_factor, currency_id.id
 
     @api.multi
     @api.onchange('product_id')

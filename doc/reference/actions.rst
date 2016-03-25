@@ -208,7 +208,7 @@ field:
         <field name="name">Res Partner Server Action</field>
         <field name="model_id" ref="model_res_partner"/>
         <field name="code">
-            print self, object
+raise Warning(object.name)
         </field>
     </record>
 

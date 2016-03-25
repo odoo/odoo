@@ -468,7 +468,7 @@ function autoresize ($textarea, options) {
     var $fixed_text_area;
     var min_height = (options && options.min_height) || 50;
     if (!$fixed_text_area) {
-        $fixed_text_area = $('<textarea>').css({
+        $fixed_text_area = $('<textarea disabled>').css({
             position: 'absolute',
             opacity: 0,
             height: 10,

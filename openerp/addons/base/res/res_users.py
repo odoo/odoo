@@ -336,6 +336,7 @@ class res_users(osv.osv):
     def create(self, cr, uid, vals, context=None):
         user_id = super(res_users, self).create(cr, uid, vals, context=context)
         user = self.browse(cr, uid, user_id, context=context)
+        user.partner_id.active = user.active
         if user.partner_id.company_id: 
             user.partner_id.write({'company_id': user.company_id.id})
         return user_id
@@ -944,7 +945,7 @@ class users_view(osv.osv):
         # add reified groups fields
         if not self.pool['res.users']._is_admin(cr, uid, [uid]):
             return res
-        for app, kind, gs in self.pool['res.groups'].get_groups_by_application(cr, uid, context):
+        for app, kind, gs in self.pool['res.groups'].get_groups_by_application(cr, SUPERUSER_ID, context):
             if kind == 'selection':
                 # selection group field
                 tips = ['%s: %s' % (g.name, g.comment) for g in gs if g.comment]

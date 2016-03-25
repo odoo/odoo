@@ -275,11 +275,16 @@ var PivotView = View.extend({
             col_domain = this.headers[col_id].domain,
             context = _.omit(_.clone(this.context), 'group_by');
 
+        var views = [
+            [this.options.action_views_ids.list || false, 'list'],
+            [this.options.action_views_ids.form || false, 'form']
+        ];
+
         return this.do_action({
             type: 'ir.actions.act_window',
             name: this.title,
             res_model: this.model.name,
-            views: [[false, 'list'], [false, 'form']],
+            views: views,
             view_type : "list",
             view_mode : "list",
             target: 'current',

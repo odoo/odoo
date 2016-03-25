@@ -12,14 +12,14 @@
         <t t-if="options.display_empty_channel">
             <t t-call="mail.EmptyChannel" />
         </t>
-        <t t-if="options.display_no_match">
+        <div t-if="options.display_no_match" class="o_mail_no_content">
             <div class="o_thread_title">No matches found</div>
             <div>No message matches your search. Try to change your search filters.</div>
-        </t>
+        </div>
     </t>
 
     <!-- When a channel is empty-->
-    <div t-name="mail.EmptyChannel">
+    <div t-name="mail.EmptyChannel" class="o_mail_no_content">
         <t t-if="options.channel_id==='channel_inbox'">
             <div class="o_thread_title">Congratulations, your inbox is empty</div>
             <div>New messages appear here.</div>
@@ -100,12 +100,12 @@
                         <i t-if="options.display_stars &amp;&amp; !message.is_system_notification"
                             t-att-class="'fa fa-lg o_thread_message_star ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
                             t-att-data-message-id="message.id" title="Mark as Todo"/>
-                        <i t-if="message.is_needaction &amp;&amp; options.display_needactions"
-                           class="fa fa-check o_thread_message_needaction"
-                           t-att-data-message-id="message.id" title="Mark as Read"/>
                        <i t-if="message.record_name &amp;&amp; message.model != 'mail.channel' &amp;&amp; options.display_reply_icon"
                            class="fa fa-reply o_thread_message_reply"
                            t-att-data-message-id="message.id" title="Reply"/>
+                        <i t-if="message.is_needaction &amp;&amp; options.display_needactions"
+                           class="fa fa-check o_thread_message_needaction"
+                           t-att-data-message-id="message.id" title="Mark as Read"/>
                     </span>
                 </p>
                 <t t-if="message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0">

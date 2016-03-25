@@ -2,11 +2,27 @@
 
 import werkzeug
 
-from openerp import http, SUPERUSER_ID
+from openerp import http, SUPERUSER_ID, _
 from openerp.http import request
 
 
 class MassMailController(http.Controller):
+
+    @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='public')
+    def mailing(self, mailing_id, email=None, res_id=None, **post):
+        mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
+        if mailing.exists():
+            res_ids = []
+            if mailing.mailing_model == 'mail.mass_mailing.contact':
+                contacts = request.env['mail.mass_mailing.contact'].sudo().search([
+                    ('email', '=', email),
+                    ('list_id', 'in', [mailing_list.id for mailing_list in mailing.contact_list_ids])
+                ])
+                res_ids = contacts.ids
+            else:
+                res_ids = [res_id]
+            mailing.update_opt_out(mailing_id, email, res_ids, True)
+            return _('You have been unsubscribed successfully')
 
     @http.route('/mail/track/<int:mail_id>/blank.gif', type='http', auth='none')
     def track_mail_open(self, mail_id, **post):

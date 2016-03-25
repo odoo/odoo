@@ -155,7 +155,7 @@ var Thread = Widget.extend({
             msg.expanded = true;
         }
 
-        msg.display_subject = message.subject && !message.is_system_notification;
+        msg.display_subject = message.subject && message.message_type !== 'notification' && !(message.model && (message.model !== 'mail.channel'));
         msg.is_selected = msg.id === this.selected_id;
         return msg;
     },

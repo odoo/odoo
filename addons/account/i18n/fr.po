@@ -19,7 +19,7 @@
 # Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
 # Maxime Solinas <msolinas@t2o.ca>, 2015
 # Melanie Bernard <mbe@odoo.com>, 2015
-# Mickaël Audigane <mickael@olackim.net>, 2015
+# Mickaël Audigane <maudigane@teclib.com>, 2015
 # Nacim ABOURA <nacim.aboura@gmail.com>, 2015
 # Nancy Bolognesi <nb@microcom.ca>, 2015
 # Nicolas JEUDY <nicolas@sudokeys.com>, 2015
@@ -31,14 +31,15 @@
 # Sébastien LANGE <sebastien.lange@syleam.fr>, 2016
 # Stanislas Sodonon <stanislas.sodonon@gmail.com>, 2015
 # Symons Xavier <xsy@openerp.com>, 2015
+# Tony Barbou <tonybarbou@live.fr>, 2016
 # zoe <yann.hoareau@migs.re>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-01-19 15:28+0000\n"
-"Last-Translator: Sébastien LANGE <sebastien.lange@syleam.fr>\n"
+"PO-Revision-Date: 2016-02-27 10:43+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1668,9 +1669,8 @@ msgstr "Demander un avoir"
 msgid ""
 "Asset management: This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "\n"
-"Revenue recognition: This allows you to manage the Revenue recognition on selling product. It keeps track of the installment occurred on those revenue recognition, and creates account move for those installment lines.\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr "Gestion d'actifs : Ceci vous permet de gérer les actifs possédés par une société ou une personne. Il garde une trace des dévalorisations survenus sur ces actifs, et crée une pièce comptable pour ces lignes de dévalorisation.\n\nReconnaissance de revenu : Cela vous permet de gérer la reconnaissance de revenu lors de la vente d'article. Il garde une trace des acomptes pour la reconnaissance des revenus et crée une pièce comptable pour les lignes de l'acompte.\n- Ceci install le module account_asset. Si vous ne cochez pas cette case, vous serez capable de faire votre facturation et vos paiements, mais pas votre comptabilité (pièces comptables, charte de comptes, ...)"
+msgstr "Gestion d'actifs : Ceci vous permet de gérer les actifs possédés par une société ou une personne. \nIl garde une trace des dévalorisations survenues sur ces actifs et crée un mouvement de compte pour ces lignes de dévalorisation.\n-Ceci installe le module account_asset. Si vous ne cochez pas cette case, vous serez capable de faire la facturation et les paiements, mais pas la comptabilité (Articles de Journal, Plan comptable, ...)"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -1679,8 +1679,8 @@ msgstr "Immobilisations"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_asset
-msgid "Assets management & Revenue recognition"
-msgstr "Gestion des immobilisations & reconnaissance des revenus"
+msgid "Assets management"
+msgstr "Gestion d'actifs"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_account_ids
@@ -4387,14 +4387,6 @@ msgstr "Si vous voulez être capable d'envoyer à vos clients leurs relevés\n  
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "If you want to do it yourself:"
 msgstr "Pour le faire soi-même :"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.account_planner
-msgid ""
-"If you'd like some assistance on any of the above, please do not hesitate \n"
-"                        to contact our accounting experts by using the \n"
-"                        <span class=\"fa fa-question-circle\"/> icon on the top bar."
-msgstr "Si vous souhaitez de l'aide sur ce qui précède, n'esitez pas à contacter nos experts comptables en utilisant \n<span class=\"fa fa-question-circle\"/> l'icône dans la barre du haut."
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -9257,6 +9249,14 @@ msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
 msgstr "Vous ne pouvez pas effectuer cette modification sur une écriture lettrée. Vous pouvez uniquement changer certains champs légalement libres, ou bien vous devez d'abord annuler le lettrage l'entrée.\n%s."
+
+#. module: account
+#: code:addons/account/models/account.py:329
+#, python-format
+msgid ""
+"You cannot empty the account number once set.\n"
+"If you would like to delete the account number, you can do it from the Bank Accounts list."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:96

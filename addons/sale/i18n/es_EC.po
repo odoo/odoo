@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-01-15 05:50+0000\n"
+"PO-Revision-Date: 2016-03-11 06:16+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/language/es_EC/)\n"
 "MIME-Version: 1.0\n"
@@ -222,7 +222,7 @@ msgstr "Permite descuentos en líneas de ordenes de ventas"
 msgid ""
 "Allow to edit sales order from the 'Sales Order' menu (not from the "
 "Quotation menu)"
-msgstr "Permite editar ordenes de ventas desde el menú 'Ordenes de Venta' (no desde el menú de Pro-formas)"
+msgstr "Permite editar ordenes de ventas desde el menú 'Ordenes de Venta' (no desde el menú de Cotizaciones)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_sale_pricelist
@@ -307,7 +307,7 @@ msgstr "Marcar esta opción para gestionar las facturas para este equipo de vent
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_use_quotations
 msgid "Check this box to manage quotations in this sales team."
-msgstr "Marque esta casilla para gestionar pro-formas de este equipo de ventas."
+msgstr "Marque esta casilla para gestionar cotización de este equipo de ventas."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
@@ -330,7 +330,7 @@ msgstr "Compañías"
 #: model:ir.model.fields,field_description:sale.field_sale_report_company_id
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Company"
-msgstr "Company"
+msgstr "Compañía"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -354,7 +354,7 @@ msgstr "Crear facturas"
 #: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid "Create a Quotation, the first step of a new sale."
-msgstr "Crear una pro-forma, el primer paso de una nueva venta."
+msgstr "Crear una cotización, el primer paso de una nueva venta."
 
 #. module: sale
 #: selection:product.template,track_service:0
@@ -405,6 +405,7 @@ msgid "Customer Reference"
 msgstr "Referencia del cliente"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_taxes_id
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_taxes_id
 msgid "Customer Taxes"
 msgstr "Impuestos cliente"
@@ -544,7 +545,7 @@ msgstr "Mostrar incoterms en pedidos de venta y facturas relacionadas"
 #. module: sale
 #: selection:sale.config.settings,module_sale_margin:0
 msgid "Display margins on quotations and sales orders"
-msgstr "Mostrar márgenes de pro-formas y órdenes de venta"
+msgstr "Mostrar márgenes de cotización y órdenes de venta"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -586,7 +587,7 @@ msgstr "Depósito de %s%%"
 #. module: sale
 #: selection:sale.report,state:0
 msgid "Draft Quotation"
-msgstr "Pro-forma en borrador"
+msgstr "Cotización en borrador"
 
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
@@ -597,6 +598,11 @@ msgstr "Asistente para composición de Email"
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
 msgid "Enable customer portal to track orders, delivery and invoices"
 msgstr "Habilitar portal del cliente para rastrear pedidos, entrega y facturas"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_property_account_expense_id
+msgid "Expense Account"
+msgstr "Cuenta de Gasto"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_validity_date
@@ -684,11 +690,7 @@ msgid "If checked, new messages require your attention."
 msgstr "Si esta habilitado, los nuevos mensajes deben ser revisados"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-msgid "Important Messages"
-msgstr "Mensajes Importantes"
-
-#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_property_account_income_id
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Income Account"
 msgstr "Cuenta de Ingreso"
@@ -841,6 +843,7 @@ msgstr "Facturas pueden ser creadas en borrador para que usted pueda actualizarl
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
+#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
 msgstr "Facturación"
@@ -946,6 +949,12 @@ msgid "Never allow to modify a confirmed sale order"
 msgstr "Nunca permita modificar un orden de ventas"
 
 #. module: sale
+#: code:addons/sale/sale.py:96
+#, python-format
+msgid "New"
+msgstr "Nuevo"
+
+#. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
 msgid "New Quotation"
 msgstr "Nuevo Presupuesto"
@@ -1013,7 +1022,7 @@ msgstr "Número de mensajes no leídos"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_quote
 msgid "Online Quotations"
-msgstr "Pro-formas en línea"
+msgstr "Cotización en línea"
 
 #. module: sale
 #. openerp-web
@@ -1312,7 +1321,7 @@ msgstr "Presupuesto enviado"
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Quotations"
-msgstr "Peticiones"
+msgstr "Cotizaciones"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -1676,9 +1685,36 @@ msgid ""
 msgstr "No hay cuenta de ingresos definida para el producto: \"%s\". Puede que tenga que instalar un plan de cuentas de la contabilidad desde el menú  de Aplicaciones."
 
 #. module: sale
+#: code:addons/sale/sale.py:316
+#, python-format
+msgid "There is no invoicable line."
+msgstr "No existe una línea facturable"
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "This Year"
 msgstr "Este Año"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_product_product_property_account_expense_id
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product."
+msgstr "Esta cuenta se utilizará para las facturas en lugar de la opción predeterminada para el valor de los gastos para el producto actual."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_product_product_property_account_income_id
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product."
+msgstr "Esta cuenta se utilizará para las facturas en lugar de la opción predeterminada para el valor de los ingresos para el producto actual."
+
+#. module: sale
+#: model:web.tip,description:sale.sale_tip_1
+msgid ""
+"This progress bar shows the stages your quotation will go through.\n"
+"                Use buttons on the left to move forward to the next stages."
+msgstr "Esta barra de progreso muestra las etapas que su cotización atraviesan.\nUtilice los botones de la izquierda para avanzar a las siguientes etapas."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -1768,6 +1804,7 @@ msgstr "Unidades de Medida"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_unread
+#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Unread Messages"
 msgstr "Mensajes no leídos"
 
@@ -1782,6 +1819,11 @@ msgid "Untaxed Amount"
 msgstr "Base imponible"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_report_price_subtotal
+msgid "Untaxed Total Price"
+msgstr "Total sin impuestos"
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Upselling"
 msgstr "Inducir ventas"
@@ -1791,6 +1833,13 @@ msgstr "Inducir ventas"
 #: selection:sale.order.line,invoice_status:0
 msgid "Upselling Opportunity"
 msgstr "Oportunidad de inducir ventas"
+
+#. module: sale
+#: model:web.tip,description:sale.sale_tip_2
+msgid ""
+"Use pivot and graph views to analyze your sales pipeline.\n"
+"                Select measures, filter and group dimensions to get the perfect report according to your needs."
+msgstr "Utilice las vistas de Tabla Dinámica y Gráficos para analizar el flujo de ventas.\nSeleccione opciones  por medidas, filtros y agrupe dimensiones para obtener el informe perfecto de acuerdo a sus necesidades."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_pricelist
@@ -1860,7 +1909,7 @@ msgstr "Su siguiente acción muestra la eficiencia del flujo: convierta el presu
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation to a Sale "
 "Order, then create the Invoice and collect the Payment."
-msgstr "Sus próximas acciones deben fluir de manera eficiente: convertir la Pro-forma en una Orden de Venta, a continuación, crear la factura y efectuar el cobro."
+msgstr "Sus próximas acciones deben fluir de manera eficiente: convertir la cotización en una Orden de Venta, a continuación, crear la factura y efectuar el cobro."
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings

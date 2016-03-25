@@ -15,6 +15,16 @@ class AccountConfigSettings(models.TransientModel):
     _name = 'account.config.settings'
     _inherit = 'res.config.settings'
 
+    @api.one
+    @api.depends('company_id')
+    def _get_currency_id(self):
+        self.currency_id = self.company_id.currency_id
+
+    @api.one
+    def _set_currency_id(self):
+        if self.currency_id != self.company_id.currency_id:
+            self.company_id.currency_id = self.currency_id
+
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.user.company_id)
     has_default_company = fields.Boolean(readonly=True,
@@ -22,7 +32,7 @@ class AccountConfigSettings(models.TransientModel):
     expects_chart_of_accounts = fields.Boolean(related='company_id.expects_chart_of_accounts',
         string='This company has its own chart of accounts',
         help='Check this box if this company is a legal entity.')
-    currency_id = fields.Many2one('res.currency', related='company_id.currency_id', required=True,
+    currency_id = fields.Many2one('res.currency', compute='_get_currency_id', inverse='_set_currency_id', required=True,
         string='Default company currency', help="Main currency of the company.")
     paypal_account = fields.Char(related='company_id.paypal_account', size=128, string='Paypal account',
         help="""Paypal account (email) for receiving online payments (credit card, etc.)
@@ -82,11 +92,9 @@ class AccountConfigSettings(models.TransientModel):
     currency_exchange_journal_id = fields.Many2one('account.journal',
         related='company_id.currency_exchange_journal_id',
         string="Rate Difference Journal",)
-    module_account_asset = fields.Boolean(string='Assets management & Revenue recognition',
+    module_account_asset = fields.Boolean(string='Assets management',
         help='Asset management: This allows you to manage the assets owned by a company or a person. '
                  'It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n\n'
-                 'Revenue recognition: This allows you to manage the Revenue recognition on selling product. '
-                 'It keeps track of the installment occurred on those revenue recognition, and creates account move for those installment lines.\n'
              '-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, '
              'but not accounting (Journal Items, Chart of Accounts, ...)')
     module_account_budget = fields.Boolean(string='Budget management',

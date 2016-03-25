@@ -520,28 +520,24 @@ class pos_session(osv.osv):
             journal_proxy.write(cr, SUPERUSER_ID, cashids, {'journal_user': True})
             jobj.write(cr, SUPERUSER_ID, [pos_config.id], {'journal_ids': [(6,0, cashids)]})
 
-
-        pos_config = jobj.browse(cr, uid, config_id, context=context)
-
-        statements = [(0, 0, {
-            'journal_id': journal.id,
-            'user_id': uid,
-            'company_id': pos_config.company_id.id
-        }) for journal in pos_config.journal_ids]
+        statements = []
+        create_statement = partial(self.pool['account.bank.statement'].create, cr, uid)
+        for journal in pos_config.journal_ids:
+            # set the journal_id which should be used by
+            # account.bank.statement to set the opening balance of the
+            # newly created bank statement
+            context['journal_id'] = journal.id if pos_config.cash_control and journal.type == 'cash' else False
+            st_values = {
+                'journal_id': journal.id,
+                'user_id': uid,
+            }
+            statements.append(create_statement(st_values, context=context))
 
         values.update({
             'name': self.pool['ir.sequence'].next_by_code(cr, uid, 'pos.session', context=context),
-            'statement_ids': statements,
+            'statement_ids': [(6, 0, statements)],
             'config_id': config_id
         })
-
-        # set the journal_id which should be used by
-        # account.bank.statement to set the opening balance of the
-        # newly created bank statement
-        if pos_config.cash_control:
-            for journal in pos_config.journal_ids:
-                if journal.type == 'cash':
-                    context.update({'journal_id': journal.id})
 
         return super(pos_session, self).create(cr, uid, values, context=context)
 
@@ -1136,6 +1132,7 @@ class pos_order(osv.osv):
             }
             invoice = inv_ref.new(cr, uid, inv)
             invoice._onchange_partner_id()
+            invoice.fiscal_position_id = order.fiscal_position_id
 
             inv = invoice._convert_to_write(invoice._cache)
             if not inv.get('account_id', None):
@@ -1251,7 +1248,6 @@ class pos_order(osv.osv):
                     'journal_id' : sale_journal_id,
                     'date' : fields.date.context_today(self, cr, uid, context=context),
                     'move_id' : move_id,
-                    'company_id': current_company.id,
                 })
 
                 if data_type == 'product':
@@ -1400,6 +1396,7 @@ class pos_order_line(osv.osv):
     def _amount_line_all(self, cr, uid, ids, field_names, arg, context=None):
         res = dict([(i, {}) for i in ids])
         account_tax_obj = self.pool.get('account.tax')
+        cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids, context=context):
             cur = line.order_id.pricelist_id.currency_id
             taxes = [ tax for tax in line.tax_ids if tax.company_id.id == line.order_id.company_id.id ]
@@ -1413,6 +1410,10 @@ class pos_order_line(osv.osv):
                 taxes = account_tax_obj.browse(cr, uid, taxes_ids, context).compute_all(price, cur, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
                 res[line.id]['price_subtotal'] = taxes['total_excluded']
                 res[line.id]['price_subtotal_incl'] = taxes['total_included']
+
+            res[line.id]['price_subtotal'] = cur_obj.round(cr, uid, cur, res[line.id]['price_subtotal'])
+            res[line.id]['price_subtotal_incl'] = cur_obj.round(cr, uid, cur, res[line.id]['price_subtotal_incl'])
+
         return res
 
     def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False, context=None):

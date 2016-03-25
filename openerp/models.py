@@ -689,6 +689,7 @@ class BaseModel(object):
             attrs = {
                 'manual': True,
                 'string': field['field_description'],
+                'help': field['help'],
                 'index': bool(field['index']),
                 'copy': bool(field['copy']),
                 'related': field['related'],
@@ -909,10 +910,10 @@ class BaseModel(object):
                         if lines2:
                             # merge first line with record's main line
                             for j, val in enumerate(lines2[0]):
-                                if val:
+                                if val or isinstance(val, bool):
                                     current[j] = val
                             # check value of current field
-                            if not current[i]:
+                            if not current[i] and not isinstance(current[i], bool):
                                 # assign xml_ids, and forget about remaining lines
                                 xml_ids = [item[1] for item in value.name_get()]
                                 current[i] = ','.join(xml_ids)
@@ -2084,7 +2085,7 @@ class BaseModel(object):
             self._inherits_join_calc(cr, uid, self._table, f, query, context=context),
             f,
         )
-        select_terms = ["%s(%s) AS %s" % field_formatter(f) for f in aggregated_fields]
+        select_terms = ['%s(%s) AS "%s" ' % field_formatter(f) for f in aggregated_fields]
 
         for gb in annotated_groupbys:
             select_terms.append('%s as "%s" ' % (gb['qualified_field'], gb['groupby']))
@@ -3059,7 +3060,10 @@ class BaseModel(object):
 
         # set up field triggers
         for field in cls._fields.itervalues():
-            field.setup_triggers(self.env)
+            # dependencies of custom fields may not exist; ignore that case
+            exceptions = (Exception,) if field.manual else ()
+            with tools.ignore(*exceptions):
+                field.setup_triggers(self.env)
 
         # add invalidation triggers on model dependencies
         if cls._depends:
@@ -3907,7 +3911,7 @@ class BaseModel(object):
                 if column._classic_write and not hasattr(column, '_fnct_inv'):
                     if not (has_trans and column.translate and not callable(column.translate)):
                         # vals[field] is not a translation: update the table
-                        updates.append((field, '%s', column._symbol_set[1](vals[field])))
+                        updates.append((field, column._symbol_set[0], column._symbol_set[1](vals[field])))
                     direct.append(field)
                 else:
                     upd_todo.append(field)
@@ -4227,7 +4231,7 @@ class BaseModel(object):
         for field in vals:
             current_field = self._columns[field]
             if current_field._classic_write:
-                updates.append((field, '%s', current_field._symbol_set[1](vals[field])))
+                updates.append((field, current_field._symbol_set[0], current_field._symbol_set[1](vals[field])))
 
                 #for the function fields that receive a value, we set them directly in the database
                 #(they may be required), but we also need to trigger the _fct_inv()
@@ -4453,7 +4457,7 @@ class BaseModel(object):
                                 value[v] = value[v][0]
                             except:
                                 pass
-                        updates.append((v, '%s', column._symbol_set[1](value[v])))
+                        updates.append((v, column._symbol_set[0], column._symbol_set[1](value[v])))
                     if updates:
                         query = 'UPDATE "%s" SET %s WHERE id = %%s' % (
                             self._table, ','.join('"%s"=%s' % u[:2] for u in updates),
@@ -4477,8 +4481,8 @@ class BaseModel(object):
                                 value = value[0]
                             except:
                                 pass
-                        query = 'UPDATE "%s" SET "%s"=%%s WHERE id = %%s' % (
-                            self._table, f,
+                        query = 'UPDATE "%s" SET "%s"=%s WHERE id = %%s' % (
+                            self._table, f, column._symbol_set[0],
                         )
                         cr.execute(query, (column._symbol_set[1](value), id))
 
@@ -4585,7 +4589,7 @@ class BaseModel(object):
         :return: the qualified field name (or expression) to use for ``field``
         """
         lang = self._context.get('lang')
-        if lang and lang != 'en_US':
+        if lang:
             # Sub-select to return at most one translation per record.
             # Even if it shoud probably not be the case,
             # this is possible to have multiple translations for a same record in the same language.

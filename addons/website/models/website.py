@@ -47,13 +47,13 @@ def url_for(path_or_uri, lang=None):
             if ps[1] in langs:
                 # Replace the language only if we explicitly provide a language to url_for
                 if force_lang:
-                    ps[1] = lang
+                    ps[1] = lang.encode('utf-8')
                 # Remove the default language unless it's explicitly provided
                 elif ps[1] == request.website.default_lang_code:
                     ps.pop(1)
             # Insert the context language or the provided language
             elif lang != request.website.default_lang_code or force_lang:
-                ps.insert(1, lang)
+                ps.insert(1, lang.encode('utf-8'))
             location = '/'.join(ps)
 
     return location.decode('utf-8')
@@ -179,7 +179,7 @@ class website(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID,'base.main_company'),
         'compress_html': False,
         'cdn_activated': False,
-        'cdn_url': '//localhost:8069/',
+        'cdn_url': '',
         'cdn_filters': '\n'.join(DEFAULT_CDN_FILTERS),
     }
 
@@ -353,14 +353,22 @@ class website(osv.osv):
         if req is None:
             req = request.httprequest
         default = self.get_current_website(cr, uid, context=context).default_lang_code
-        uri = req.path
-        if req.query_string:
-            uri += '?' + req.query_string
         shorts = []
+
+        def get_url_localized(router, lang):
+            arguments = dict(request.endpoint_arguments)
+            for k, v in arguments.items():
+                if isinstance(v, orm.browse_record):
+                    arguments[k] = v.with_context(lang=lang)
+            return router.build(request.endpoint, arguments)
+        router = request.httprequest.app.get_db_router(request.db).bind('')
         for code, name in self.get_languages(cr, uid, ids, context=context):
             lg_path = ('/' + code) if code != default else ''
             lg = code.split('_')
             shorts.append(lg[0])
+            uri = request.endpoint and get_url_localized(router, code) or request.httprequest.path
+            if req.query_string:
+                uri += '?' + req.query_string
             lang = {
                 'hreflang': ('-'.join(lg)).lower(),
                 'short': lg[0],
@@ -374,11 +382,8 @@ class website(osv.osv):
 
     @openerp.tools.ormcache('domain_name')
     def _get_current_website_id(self, cr, uid, domain_name, context=None):
-        ids = self.search(cr, uid, [('name', '=', domain_name)], limit=1, context=context)
-        if ids:
-            return ids[0]
-        else:
-            return self.search(cr, uid, [], limit=1)[0]
+        ids = self.search(cr, uid, [('domain', '=', domain_name)], limit=1, context=context)
+        return ids and ids[0] or self.search(cr, uid, [], limit=1)[0]
 
     def get_current_website(self, cr, uid, context=None):
         domain_name = request.httprequest.environ.get('HTTP_HOST', '').split(':')[0]
@@ -396,10 +401,13 @@ class website(osv.osv):
         return Access.check(cr, uid, 'ir.ui.menu', 'read', False, context=context)
 
     def get_template(self, cr, uid, ids, template, context=None):
-        if not isinstance(template, (int, long)) and '.' not in template:
-            template = 'website.%s' % template
         View = self.pool['ir.ui.view']
-        view_id = View.get_view_id(cr, uid, template, context=context)
+        if isinstance(template, (int, long)):
+            view_id = template
+        else:
+            if '.' not in template:
+                template = 'website.%s' % template
+            view_id = View.get_view_id(cr, uid, template, context=context)
         if not view_id:
             raise NotFound
         return View.browse(cr, uid, view_id, context=context)
@@ -505,7 +513,7 @@ class website(osv.osv):
         """
         router = request.httprequest.app.get_db_router(request.db)
         # Force enumeration to be performed as public user
-        url_list = []
+        url_set = set()
         for rule in router.iter_rules():
             if not self.rule_is_enumerable(rule):
                 continue
@@ -537,9 +545,9 @@ class website(osv.osv):
                         page[key[2:]] = val
                 if url in ('/sitemap.xml',):
                     continue
-                if url in url_list:
+                if url in url_set:
                     continue
-                url_list.append(url)
+                url_set.add(url)
 
                 yield page
 

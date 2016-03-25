@@ -15,47 +15,27 @@ from openerp.osv.expression import get_unaccent_wrapper
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
-ADDRESS_FORMAT_LAYOUTS = {
-    '%(city)s %(state_code)s\n%(zip)s': """
-        <div class="address_format">
-            <field name="city" placeholder="%(city)s" style="width: 50%%"/>
-            <field name="state_id" class="oe_no_button" placeholder="%(state)s" style="width: 47%%" options='{"no_open": true}'/>
-            <br/>
-            <field name="zip" placeholder="%(zip)s"/>
-        </div>
-    """,
-    '%(zip)s %(city)s': """
-        <div class="address_format">
-            <field name="zip" placeholder="%(zip)s" style="width: 40%%"/>
-            <field name="city" placeholder="%(city)s" style="width: 57%%"/>
-            <br/>
-            <field name="state_id" class="oe_no_button" placeholder="%(state)s" options='{"no_open": true}'/>
-        </div>
-    """,
-    '%(city)s\n%(state_name)s\n%(zip)s': """
-        <div class="address_format">
-            <field name="city" placeholder="%(city)s"/>
-            <field name="state_id" class="oe_no_button" placeholder="%(state)s" options='{"no_open": true}'/>
-            <field name="zip" placeholder="%(zip)s"/>
-        </div>
-    """
+ADDRESS_FORMAT_CLASSES = {
+    '%(city)s %(state_code)s\n%(zip)s': 'o_city_state',
+    '%(zip)s %(city)s': 'o_zip_city'
 }
-
 
 class format_address(object):
     @api.model
     def fields_view_get_address(self, arch):
-        fmt = self.env.user.company_id.country_id.address_format or ''
-        for k, v in ADDRESS_FORMAT_LAYOUTS.items():
-            if k in fmt:
+        address_format = self.env.user.company_id.country_id.address_format or ''
+        for format_pattern, format_class in ADDRESS_FORMAT_CLASSES.iteritems():
+            if format_pattern in address_format:
                 doc = etree.fromstring(arch)
-                for node in doc.xpath("//div[@class='address_format']"):
-                    tree = etree.fromstring(v % {'city': _('City'), 'zip': _('ZIP'), 'state': _('State')})
-                    for child in node.xpath("//field"):
-                        if child.attrib.get('modifiers'):
-                            for field in tree.xpath("//field[@name='%s']" % child.attrib.get('name')):
-                                field.attrib['modifiers'] = child.attrib.get('modifiers')
-                    node.getparent().replace(node, tree)
+                for address_node in doc.xpath("//div[@class='o_address_format']"):
+                    # add address format class to address block
+                    address_node.attrib['class'] += ' ' + format_class
+                    if format_class.startswith('o_zip'):
+                        zip_fields = address_node.xpath("//field[@name='zip']")
+                        city_fields = address_node.xpath("//field[@name='city']")
+                        if zip_fields and city_fields:
+                            # move zip field before city field
+                            city_fields[0].addprevious(zip_fields[0])
                 arch = etree.tostring(doc)
                 break
         return arch
@@ -307,8 +287,13 @@ class res_partner(osv.Model, format_address):
         if getattr(threading.currentThread(), 'testing', False) or self.env.context.get('install_mode'):
             return False
 
-        img_path = openerp.modules.get_module_resource(
-            'base', 'static/src/img', 'company_image.png' if is_company else 'avatar.png')
+        if self.env.context.get('partner_type') == 'delivery':
+            img_path = openerp.modules.get_module_resource('base', 'static/src/img', 'truck.png')
+        elif self.env.context.get('partner_type') == 'invoice':
+            img_path = openerp.modules.get_module_resource('base', 'static/src/img', 'money.png')
+        else:
+            img_path = openerp.modules.get_module_resource(
+                'base', 'static/src/img', 'company_image.png' if is_company else 'avatar.png')
         with open(img_path, 'rb') as f:
             image = f.read()
 
@@ -544,6 +529,9 @@ class res_partner(osv.Model, format_address):
 
     @api.model
     def create(self, vals):
+        if vals.get('type') in ['delivery', 'invoice'] and not vals.get('image'):
+            # force no colorize for images with no transparency
+            vals['image'] = self.with_context(partner_type=vals['type'])._get_default_image(False, False)
         if vals.get('website'):
             vals['website'] = self._clean_website(vals['website'])
         # function field not correctly triggered at create -> remove me when

@@ -21,6 +21,7 @@
 # Manuel Gómez <nuelgoz@gmail.com>, 2015
 # Martin Trigaux, 2015
 # Martin Trigaux, 2015
+# Nhomar Hernández <nhomar@vauxoo.com>, 2016
 # Oihane Crucelaegui <oihanecruce@gmail.com>, 2015
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2015
 msgid ""
@@ -28,8 +29,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-01-21 21:56+0000\n"
-"Last-Translator: Glen Sojo <glen.sojo@clearcorp.co.cr>\n"
+"PO-Revision-Date: 2016-02-27 10:43+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1659,9 +1660,8 @@ msgstr "Pedir reembolso"
 msgid ""
 "Asset management: This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "\n"
-"Revenue recognition: This allows you to manage the Revenue recognition on selling product. It keeps track of the installment occurred on those revenue recognition, and creates account move for those installment lines.\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr "Administración de activos: le permite administrar los activos pertenecientes a una compañía o persona. Realiza un seguimiento de la depreciación de dichos activos y crea movimientos contables de dicha depreciación.\n\nReconocimiento de ingresos: le permite administrar los ingresos al vender productos. Realiza un seguimiento de los plazos de dichos ingresos y crea los movimientos contables correspondientes.\n- Se instalará el módulo account_asset. Si no marca la casilla será capaz de hacer facturas y pagos, pero no contabilizarlos (Diarios, Planes contables, ...)"
+msgstr "Gestión de activos fijos: Ésta permite gestionar los activos fijos que le pertenecen a una compañía o a una persona. Y mantiene registro de sus depreciaciones, crea los asientos contables correspondientes a dicha depreciación.\n\n- Instla el módulo account_asset. Si no sleccionas esta caja, serás capáz de Facturar y Pagar pero no de ver la contabilidad (Asientos contables, Catálogo de cuentas, ...)"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -1670,8 +1670,8 @@ msgstr "Activos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_asset
-msgid "Assets management & Revenue recognition"
-msgstr "Administración de activos y reconocimiento de ingresos"
+msgid "Assets management"
+msgstr "Gestión de activos fijos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_account_ids
@@ -4378,14 +4378,6 @@ msgstr "Si quiere enviar extractos a sus clientes desde Odoo,\n primero necesita
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "If you want to do it yourself:"
 msgstr "Si desea hacerlo usted mismo:"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.account_planner
-msgid ""
-"If you'd like some assistance on any of the above, please do not hesitate \n"
-"                        to contact our accounting experts by using the \n"
-"                        <span class=\"fa fa-question-circle\"/> icon on the top bar."
-msgstr "Si necesita ayuda, por favor no dude\nen contactar con nuestros expertos contables a través del\n<span class=\"fa fa-question-circle\"/> icono en la barra superior."
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -9248,6 +9240,14 @@ msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
 msgstr "No puede realizar esta modificación en un asiento conciliado. Sólo puede cambiar algunos campos no legales o tiene que anular la conciliación antes.\n%s."
+
+#. module: account
+#: code:addons/account/models/account.py:329
+#, python-format
+msgid ""
+"You cannot empty the account number once set.\n"
+"If you would like to delete the account number, you can do it from the Bank Accounts list."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:96

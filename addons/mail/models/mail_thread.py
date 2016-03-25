@@ -176,8 +176,10 @@ class MailThread(models.AbstractModel):
                              RIGHT JOIN mail_message_mail_channel_rel rel
                              ON rel.mail_message_id = msg.id
                              RIGHT JOIN mail_channel_partner cp
-                             ON (cp.channel_id = rel.mail_channel_id AND cp.partner_id = %s AND (cp.seen_message_id < msg.id))
-                             WHERE msg.model = %s AND msg.res_id in %s AND msg.author_id != %s AND
+                             ON (cp.channel_id = rel.mail_channel_id AND cp.partner_id = %s AND
+                                (cp.seen_message_id IS NULL OR cp.seen_message_id < msg.id))
+                             WHERE msg.model = %s AND msg.res_id in %s AND
+                                   (msg.author_id IS NULL OR msg.author_id != %s) AND
                                    (msg.message_type != 'notification' OR msg.model != 'mail.channel')""",
                          (partner_id, self._name, tuple(self.ids), partner_id,))
         for result in self._cr.fetchall():
@@ -578,13 +580,14 @@ class MailThread(models.AbstractModel):
         Example: having defined a group_hr_user entry, store HR users and
         officers. """
         # TDE note: recipients is normally sudo-ed
+        group_user = self.env['ir.model.data'].xmlid_to_res_id('base.group_user')
         for recipient in recipients:
             if recipient.id in done_ids:
                 continue
-            if not recipient.user_ids:
-                group_data['partner'] |= recipient
-            else:
+            if recipient.user_ids and group_user in recipient.user_ids[0].groups_id.ids:
                 group_data['user'] |= recipient
+            else:
+                group_data['partner'] |= recipient
         return group_data
 
     @api.multi
@@ -703,8 +706,11 @@ class MailThread(models.AbstractModel):
                     ('alias_parent_model_id.model', '=', model_name),
                     ('alias_parent_thread_id', 'in', res_ids),
                     ('alias_name', '!=', False)])
-                aliases.update(
-                    dict((alias.alias_parent_thread_id, '%s@%s' % (alias.alias_name, alias_domain)) for alias in mail_aliases))
+                # take only first found alias for each thread_id, to match
+                # order (1 found -> limit=1 for each res_id)
+                for alias in mail_aliases:
+                    if alias.alias_parent_thread_id not in aliases:
+                        aliases[alias.alias_parent_thread_id] = '%s@%s' % (alias.alias_name, alias_domain)
                 doc_names.update(
                     dict((ng_res[0], ng_res[1])
                          for ng_res in self.env[model_name].sudo().browse(aliases.keys()).name_get()))
@@ -1804,7 +1810,7 @@ class MailThread(models.AbstractModel):
         gen, part = self.env['mail.followers']._add_follower_command(self._name, self.ids, partner_data, channel_data, force=force)
         self.sudo().write({'message_follower_ids': gen})
         for record in self.filtered(lambda self: self.id in part):
-            record.write(part[record.id])
+            record.write({'message_follower_ids': part[record.id]})
 
         self.invalidate_cache()
         return True
@@ -1954,10 +1960,10 @@ class MailThread(models.AbstractModel):
 
         for pid, subtypes in new_partners.items():
             subtypes = list(subtypes) if subtypes is not None else None
-            self.message_subscribe(partner_ids=[pid], subtype_ids=subtypes)
+            self.message_subscribe(partner_ids=[pid], subtype_ids=subtypes, force=(subtypes != None))
         for cid, subtypes in new_channels.items():
             subtypes = list(subtypes) if subtypes is not None else None
-            self.message_subscribe(channel_ids=[cid], subtype_ids=subtypes)
+            self.message_subscribe(channel_ids=[cid], subtype_ids=subtypes, force=(subtypes != None))
 
         # remove the current user from the needaction partner to avoid to notify the author of the message
         user_pids = [user_pid for user_pid in user_pids if user_pid != self.env.user.partner_id.id]

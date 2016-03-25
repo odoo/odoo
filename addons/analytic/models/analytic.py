@@ -77,6 +77,8 @@ class account_analytic_account(models.Model):
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
+        if operator not in ('ilike', 'like', '=', '=like', '=ilike'):
+            return super(account_analytic_account, self).name_search(name, args, operator, limit)
         args = args or []
         domain = ['|', ('code', operator, name), ('name', operator, name)]
         partners = self.env['res.partner'].search([('name', operator, name)], limit=limit)

@@ -200,6 +200,10 @@ class ImLivechatChannel(models.Model):
             info['options']["default_username"] = username
         return info
 
+    # FIXME: to remove in master
+    @api.model
+    def match_rules(self, request, channel_id, username='Visitor'):
+        pass
 
 class ImLivechatChannelRule(models.Model):
     """ Channel Rules

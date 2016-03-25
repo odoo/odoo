@@ -1961,6 +1961,12 @@ return {
     NumpadWidget: NumpadWidget,
     ProductScreenWidget: ProductScreenWidget,
     ProductListWidget: ProductListWidget,
+    ClientListScreenWidget: ClientListScreenWidget,
+    ActionpadWidget: ActionpadWidget,
+    DomCache: DomCache,
+    ProductCategoriesWidget: ProductCategoriesWidget,
+    ScaleScreenWidget: ScaleScreenWidget,
+    set_fiscal_position_button: set_fiscal_position_button,
 };
 
 });

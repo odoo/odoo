@@ -325,6 +325,8 @@ class AccountJournal(models.Model):
                     self.default_debit_account_id.currency_id = vals['currency_id']
                 if not 'default_credit_account_id' in vals and self.default_credit_account_id:
                     self.default_credit_account_id.currency_id = vals['currency_id']
+            if 'bank_acc_number' in vals and not vals.get('bank_acc_number') and journal.bank_account_id:
+                raise UserError(_('You cannot empty the account number once set.\nIf you would like to delete the account number, you can do it from the Bank Accounts list.'))
         result = super(AccountJournal, self).write(vals)
 
         # Create the bank_account_id if necessary
@@ -653,25 +655,24 @@ class AccountTax(models.Model):
             else:
                 tax_amount = currency.round(tax_amount)
 
-            if tax_amount:
-                if tax.price_include:
-                    total_excluded -= tax_amount
-                    base -= tax_amount
-                else:
-                    total_included += tax_amount
+            if tax.price_include:
+                total_excluded -= tax_amount
+                base -= tax_amount
+            else:
+                total_included += tax_amount
 
-                if tax.include_base_amount:
-                    base += tax_amount
+            if tax.include_base_amount:
+                base += tax_amount
 
-                taxes.append({
-                    'id': tax.id,
-                    'name': tax.name,
-                    'amount': tax_amount,
-                    'sequence': tax.sequence,
-                    'account_id': tax.account_id.id,
-                    'refund_account_id': tax.refund_account_id.id,
-                    'analytic': tax.analytic,
-                })
+            taxes.append({
+                'id': tax.id,
+                'name': tax.name,
+                'amount': tax_amount,
+                'sequence': tax.sequence,
+                'account_id': tax.account_id.id,
+                'refund_account_id': tax.refund_account_id.id,
+                'analytic': tax.analytic,
+            })
 
         return {
             'taxes': sorted(taxes, key=lambda k: k['sequence']),
@@ -687,7 +688,7 @@ class AccountTax(models.Model):
         partner = partner_id and self.pool.get('res.partner').browse(cr, uid, partner_id, context=context) or None
         ids = isinstance(ids, (int, long)) and [ids] or ids
         recs = self.browse(cr, uid, ids, context=context)
-        return recs.compute_all(price_unit, currency, quantity, product, partner)
+        return AccountTax.compute_all(recs, price_unit, currency, quantity, product, partner)
 
     @api.model
     def _fix_tax_included_price(self, price, prod_taxes, line_taxes):

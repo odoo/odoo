@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-01-23 14:45+0000\n"
+"PO-Revision-Date: 2016-03-08 16:01+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -412,7 +412,7 @@ msgstr "\nDeze module is gebruikt voor online bank synchronisatie. Het biedt sta
 msgid ""
 "\n"
 "        Track employees' equipment and manage maintenance requests."
-msgstr "\n        Beheer de uitrusting van het personeel en en de onderhoudsaanvragen. "
+msgstr "\n\nBeheer de apparatuur van het personeel en en de onderhoudsaanvragen. "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_plaid
@@ -975,7 +975,7 @@ msgid ""
 "is updated accordingly. For example, if this procurement corresponds to a sale\n"
 "order line, the sale order line will be considered delivered when the task is\n"
 "completed.\n"
-msgstr "\nMaakt automatisch projecttaken aan van verwervingsregels.\n===========================================================\n\nDeze module maakt automatisch een nieuwe taak aan voor elke order verwervingsregel\n(bijvoorbeeld voor verkooporderlijnen), als het overeenkomende product voldoet aan de volgende\neigenschappen:\n\n* Product type = Dienst\n* Maak automatisch taak aan = Waar\n\nAls daar bovenop een project gespecificeerd is op het productformulier (in het wervingen\ntabblad) wordt de nieuwe taak aangemaakt in het gespecificeerde project. Anders zal\nde nieuwe taak niet aan een project worden gekoppeld kan het manueel gekoppeld worden\nlater.\n\nWanneer de project taak voltooid is of geannuleerd is zal de overeenkomende verwerving\nautomatisch geüpdatet worden. Bijvoorbeeld, als deze verwerving overeenkomt met een verkoop\norderlijn zal de overeenkomende verkooporderlijnen geleverd worden wanneer de taak\nvoltooid is.\n"
+msgstr "\nMaakt automatisch projecttaken aan van verwervingsregels.\n===========================================================\n\nDeze module maakt automatisch een nieuwe taak aan voor elke order verwervingsregel\n(bijvoorbeeld voor verkooporderregels), als het overeenkomende product voldoet aan de volgende\neigenschappen:\n\n* Product type = Dienst\n* Maak automatisch taak aan = Waar\n\nAls daar bovenop een project gespecificeerd is op het productformulier (in het wervingen\ntabblad) wordt de nieuwe taak aangemaakt in het gespecificeerde project. Anders zal\nde nieuwe taak niet aan een project worden gekoppeld kan het manueel gekoppeld worden\nlater.\n\nWanneer de project taak voltooid is of geannuleerd is zal de overeenkomende verwerving\nautomatisch geüpdatet worden. Bijvoorbeeld, als deze verwerving overeenkomt met een verkoop\norderlijn zal de overeenkomende verkooporderregels geleverd worden wanneer de taak\nvoltooid is.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_scanner
@@ -3878,7 +3878,7 @@ msgid ""
 "    If the check box is unchecked, we will have on Sale Order and Invoice lines:\n"
 "    Unit price=225, Discount=0,00, Net price=225.\n"
 "    "
-msgstr "\nDeze module laat u kortingen berekenen op verkooporderlijnen en factuurlijnen gebaseerd op de relatie zijn prijslijst.\n===============================================================================================================\nEr wordt een checkbox genaamd 'Zichtbare korting' toegevoegd op het prijslijstformulier.\n\n**Bijvoorbeeld:**\nVoor het product PC1 en de relatie \"Asustek\": Als de lijstprijs 450 is en de prijs\nberekend vanuit de Asustek prijslijst is 225. Als de checkbox is aangevinkt, hebben we op\nde verkooporderregels: Eenheidsprijs=450, korting=50,00, Netto prijs=225.\nAls de checkbox niet is aangevinkt hebben we op de verkooporder en factuurregels:\nEenheidsprijs=225, Korting=0,00, Netto prijs=225."
+msgstr "\nDeze module laat u kortingen berekenen op verkooporderregels en factuurregels gebaseerd op de relatie zijn prijslijst.\n===============================================================================================================\nEr wordt een checkbox genaamd 'Zichtbare korting' toegevoegd op het prijslijstformulier.\n\n**Bijvoorbeeld:**\nVoor het product PC1 en de relatie \"Asustek\": Als de lijstprijs 450 is en de prijs\nberekend vanuit de Asustek prijslijst is 225. Als de checkbox is aangevinkt, hebben we op\nde verkooporderregels: Eenheidsprijs=450, korting=50,00, Netto prijs=225.\nAls de checkbox niet is aangevinkt hebben we op de verkooporder en factuurregels:\nEenheidsprijs=225, Korting=0,00, Netto prijs=225."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_printing
@@ -4153,7 +4153,7 @@ msgid ""
 "------------------------------------------------------\n"
 "* Stock Inventory Value at given date (support dates in the past)\n"
 "    "
-msgstr "\nWMS boekhoudmodule\n======================\nDeze module maakt de link tussen 'voorraad' en 'boekhouding' modules en staat u toe om financiële boekingen te maken om uw stock mutaties te waarderen\n\nHoofd eigenschappen\n------------\n* Stockwaardering (periodiek of automatisch)\n* Factuur vanuit levering\n\nDashboard / Rapportages van magazijnen bevatten:\n------------------------------------------------------\nStockvoorraad waarde op een gegeven datum (ondersteund datums in de geschiedenis)"
+msgstr "\nWMS boekhoudmodule\n======================\nDeze module maakt de link tussen 'voorraad' en 'boekhouding' modules en staat u toe om financiële boekingen te maken om uw voorraad te waarderen\n\nHoofd eigenschappen\n------------\n* Stockwaardering (periodiek of automatisch)\n* Factuur vanuit levering\n\nDashboard / Rapportages van magazijnen bevatten:\n------------------------------------------------------\nStockvoorraad waarde op een gegeven datum (ondersteund datums in de geschiedenis)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_gengo
@@ -8302,14 +8302,6 @@ msgid "Enable Light Multi Company"
 msgstr "Eenvoudig beheer van meerdere bedrijven aanzetten"
 
 #. module: base
-#: code:addons/base/res/res_config.py:479
-#, python-format
-msgid ""
-"Enabling this feature will install the following paying application(s) : \n"
-"%s"
-msgstr "Indien u deze optie aanvinkt, worden volgende betalende module(s) geïnstalleerd: \n%s"
-
-#. module: base
 #: selection:base.language.install,lang:0
 msgid "English (AU)"
 msgstr "Engels (AU)"
@@ -8339,17 +8331,17 @@ msgstr "Equatoriaal-Guinea"
 #. module: base
 #: model:res.groups,name:base.group_equipment_manager
 msgid "Equipment Manager"
-msgstr "Uitrusting beheerder"
+msgstr "Apparatuur beheerder"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_equipment
 msgid "Equipments"
-msgstr "Uitrustingen"
+msgstr "Apparatuur"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_equipment
 msgid "Equipments, Assets, Internal Hardware, Allocation Tracking"
-msgstr "Uitrustingen, IT-assets, interne hardware en opvolgen van de toewijzing ervan"
+msgstr "Apparatuur, IT-assets, interne hardware en opvolgen van de toewijzing ervan"
 
 #. module: base
 #: model:res.country,name:base.er
@@ -14539,7 +14531,7 @@ msgstr "Het instellen van een leeg wachtwoord is om veiligheidsredenen niet toeg
 #: model:ir.ui.menu,name:base.menu_sale_general_settings
 #: model:res.groups,name:base.group_system
 msgid "Settings"
-msgstr "Instellingen"
+msgstr "Algemene instellingen"
 
 #. module: base
 #: model:res.country,name:base.sc
@@ -14972,7 +14964,7 @@ msgstr "Start configuratie"
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
 #, python-format
 msgid "State"
-msgstr "Status"
+msgstr "Staat/Provincie"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state_code
@@ -15840,7 +15832,7 @@ msgstr "De gebruiker waarvoor het filter privé is. Wanneer u dit leeg laat is h
 #. module: base
 #: model:res.groups,comment:base.group_equipment_manager
 msgid "The user will be able to manage equipments."
-msgstr "De gebruiker zal uitrustingen kunnen beheren."
+msgstr "De gebruiker kan apparatuur beheren."
 
 #. module: base
 #: code:addons/models.py:6160
@@ -17509,7 +17501,7 @@ msgstr "U kan de gebruiker waarmee u bent aangemeld niet deactiveren."
 #: code:addons/base/ir/ir_values.py:428
 #, python-format
 msgid "You do not have the permission to perform this operation!!!"
-msgstr "U heeft niet de rechten om deze operatie uit te voeren!"
+msgstr "U heeft niet de rechten om deze bewerking uit te voeren!"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.open_module_tree

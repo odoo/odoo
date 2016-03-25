@@ -46,7 +46,7 @@ class stock_landed_cost(osv.osv):
                 volume = move.product_id and move.product_id.volume * move.product_qty
                 for quant in move.quant_ids:
                     total_cost += quant.cost * quant.qty
-                vals = dict(product_id=move.product_id.id, move_id=move.id, quantity=move.product_uom_qty, former_cost=total_cost, weight=weight, volume=volume)
+                vals = dict(product_id=move.product_id.id, move_id=move.id, quantity=move.product_qty, former_cost=total_cost, weight=weight, volume=volume)
                 lines.append(vals)
         if not lines:
             raise UserError(_('The selected picking does not contain any move that would be impacted by landed costs. Landed costs are only possible for products configured in real time valuation with real price costing method. Please make sure it is the case, or you selected the correct picking'))
@@ -97,6 +97,7 @@ class stock_landed_cost(osv.osv):
         Afterwards, for the goods that are already out of stock, we should create the out moves
         """
         aml_obj = self.pool.get('account.move.line')
+        user_obj = self.pool.get('res.users')
         if context is None:
             context = {}
         ctx = context.copy()
@@ -122,11 +123,11 @@ class stock_landed_cost(osv.osv):
         
         #Create account move lines for quants already out of stock
         if qty_out > 0:
-            debit_line = dict(debit_line,
+            debit_line = dict(base_line,
                               name=(line.name + ": " + str(qty_out) + _(' already out')),
                               quantity=qty_out,
                               account_id=already_out_account_id)
-            credit_line = dict(credit_line,
+            credit_line = dict(base_line,
                               name=(line.name + ": " + str(qty_out) + _(' already out')),
                               quantity=qty_out,
                               account_id=debit_account_id)
@@ -140,6 +141,27 @@ class stock_landed_cost(osv.osv):
                 credit_line['debit'] = -diff
             aml_obj.create(cr, uid, debit_line, context=ctx)
             aml_obj.create(cr, uid, credit_line, context=ctx)
+
+            if user_obj.browse(cr, uid, [uid], context=context).company_id.anglo_saxon_accounting:
+                debit_line = dict(base_line,
+                                  name=(line.name + ": " + str(qty_out) + _(' already out')),
+                                  quantity=qty_out,
+                                  account_id=credit_account_id)
+                credit_line = dict(base_line,
+                                  name=(line.name + ": " + str(qty_out) + _(' already out')),
+                                  quantity=qty_out,
+                                  account_id=already_out_account_id)
+
+                if diff > 0:
+                    debit_line['debit'] = diff
+                    credit_line['credit'] = diff
+                else:
+                    # negative cost, reverse the entry
+                    debit_line['credit'] = -diff
+                    credit_line['debit'] = -diff
+                aml_obj.create(cr, uid, debit_line, context=ctx)
+                aml_obj.create(cr, uid, credit_line, context=ctx)
+
         self.pool.get('account.move').assert_balanced(cr, uid, [move_id], context=context)
         return True
 

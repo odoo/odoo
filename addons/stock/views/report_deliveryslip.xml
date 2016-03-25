@@ -15,21 +15,6 @@
                                 <div t-field="o.partner_id"
                                    t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
                             </div>
-                        </div>
-                        <div class="col-xs-5 col-xs-offset-1">
-                            <div>
-                                <span><strong>Contact Address:</strong></span>
-                            </div>
-                            <div t-if="o.move_lines and o.move_lines[0].partner_id and o.move_lines[0].partner_id.id != o.partner_id.id">
-                                <div>
-                                    <div t-field="o.move_lines[0].partner_id"
-                                        t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
-                                </div>
-                            </div>
-                            <div t-if="(o.move_lines and o.move_lines[0].partner_id and o.move_lines[0].partner_id.id == o.partner_id.id) or o.move_lines and not o.move_lines[0].partner_id">
-                                <div t-field="o.partner_id"
-                                   t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
-                            </div>
                         </div>    
                     </div>
                     <h2>
@@ -115,7 +100,14 @@
                                     <td t-if="not pack_operation.pack_lot_ids"/>
                                 </t>
                                 <td>
-                                    <span t-field="pack_operation.picking_id.move_lines[pack_operation_index].state"/>
+                                    <t t-set="mls" t-value="pack_operation.picking_id.move_lines"/>
+                                    <t t-set="check" t-value="True"/>
+                                    <t t-foreach="mls" t-as="ml">
+                                        <t t-if="ml.product_id.id == pack_operation.product_id.id and check">
+                                            <t t-set="check" t-value="False"/>
+                                            <span t-field="ml.state"/>
+                                        </t>
+                                    </t>
                                 </td>
                                 <td>
                                     <span t-field="pack_operation.location_id"/>

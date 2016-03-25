@@ -985,6 +985,10 @@ class expression(object):
                             call_null = False
                             o2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
                             push(create_substitution_leaf(leaf, ('id', o2m_op, ids1), model))
+                        elif operator in ('like', 'ilike', 'in', '='):
+                            # no match found with positive search operator => no result (FALSE_LEAF)
+                            call_null = False
+                            push(create_substitution_leaf(leaf, FALSE_LEAF, model))
 
                 if call_null:
                     o2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'

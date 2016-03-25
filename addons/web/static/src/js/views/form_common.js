@@ -154,9 +154,11 @@ var ReinitializeWidgetMixin =  {
 var ReinitializeFieldMixin =  _.extend({}, ReinitializeWidgetMixin, {
     reinitialize: function() {
         ReinitializeWidgetMixin.reinitialize.call(this);
-        var res = this.render_value();
-        if (this.view && this.view.render_value_defs){
-            this.view.render_value_defs.push(res);
+        if (!this.no_rerender) {
+            var res = this.render_value();
+            if (this.view && this.view.render_value_defs){
+                this.view.render_value_defs.push(res);
+            }
         }
     },
 });
@@ -630,12 +632,6 @@ var FieldInterface = {
         the field to save its value before reading it using get_value(). Must return a promise.
     */
     commit_value: function() {},
-    /*
-        The form view call before_save before save data and if before_save return a deferred, 
-        the form view wait that all deferred are resolve or fail.
-        If the deferred is rejected, the field is invalidate
-    */
-    before_save: function() {},
 };
 
 /**
@@ -867,7 +863,7 @@ var FormViewDialog = ViewDialog.extend({
             ];
 
             if(!readonly) {
-                options.buttons.splice(0, 0, {text: _t("Save") + ((multi_select)? _t(" & Close") : ""), classes: "btn-primary o_formdialog_save", click: function() { // o_formdialog_save class for web_tests!
+                options.buttons.splice(0, 0, {text: _t("Save") + ((multi_select)? " " + _t(" & Close") : ""), classes: "btn-primary o_formdialog_save", click: function() { // o_formdialog_save class for web_tests!
                         self.view_form.onchanges_mutex.def.then(function() {
                             if (!self.view_form.warning_displayed) {
                                 $.when(self.view_form.save()).done(function() {

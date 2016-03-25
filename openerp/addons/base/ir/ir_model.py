@@ -328,6 +328,26 @@ class ir_model_fields(osv.osv):
             self.readonly = True
             self.copy = False
 
+    @api.constrains('depends')
+    def _check_depends(self):
+        """ Check whether all fields in dependencies are valid. """
+        for record in self:
+            if not record.depends:
+                continue
+            for seq in record.depends.split(","):
+                if not seq.strip():
+                    raise UserError(_("Empty dependency in %r") % (record.depends))
+                model = self.env[record.model]
+                names = seq.strip().split(".")
+                last = len(names) - 1
+                for index, name in enumerate(names):
+                    field = model._fields.get(name)
+                    if field is None:
+                        raise UserError(_("Unknown field %r in dependency %r") % (name, seq.strip()))
+                    if index < last and not field.relational:
+                        raise UserError(_("Non-relational field %r in dependency %r") % (name, seq.strip()))
+                    model = model[name]
+
     @api.onchange('compute')
     def _onchange_compute(self):
         if self.compute:
@@ -597,7 +617,9 @@ class ir_model_constraint(Model):
         ids.reverse()
         for data in self.browse(cr, uid, ids, context):
             model = data.model.model
-            model_obj = self.pool[model]
+            model_obj = self.pool.get(model)
+            if not model_obj:
+                continue
             name = openerp.tools.ustr(data.name)
             typ = data.type
 
@@ -969,7 +991,7 @@ class ir_model_data(osv.osv):
 
     def xmlid_to_object(self, cr, uid, xmlid, raise_if_not_found=False, context=None):
         """ Return a browse_record
-        if not found and raise_if_not_found is True return None
+        if not found and raise_if_not_found is False return None
         """ 
         t = self.xmlid_to_res_model_res_id(cr, uid, xmlid, raise_if_not_found)
         res_model, res_id = t
@@ -1099,22 +1121,23 @@ class ir_model_data(osv.osv):
         else:
             if mode=='init' or (mode=='update' and xml_id):
                 inherit_xml_ids = []
-                for table, field_name in model_obj._inherits.items():
-                    xml_ids = self.pool['ir.model.data'].search(cr, uid, [
-                        ('module', '=', module),
-                        ('name', '=', xml_id + '_' + table.replace('.', '_')),
-                    ], context=context)
-                    # XML ID found in the database, try to recover an existing record
-                    if xml_ids:
-                        found_xml_id = self.pool['ir.model.data'].browse(cr, uid, xml_ids[0], context=context)
-                        record = self.pool[found_xml_id.model].browse(cr, uid, [found_xml_id.res_id], context=context)[0]
-                        # The record exists, store the id and don't recreate the XML ID
-                        if record.exists():
-                            inherit_xml_ids.append(found_xml_id.model)
-                            values[field_name] = found_xml_id.res_id
-                        # Orphan XML ID, delete it
-                        else:
-                            found_xml_id.unlink()
+                if xml_id:
+                    for table, field_name in model_obj._inherits.items():
+                        xml_ids = self.pool['ir.model.data'].search(cr, uid, [
+                            ('module', '=', module),
+                            ('name', '=', xml_id + '_' + table.replace('.', '_')),
+                        ], context=context)
+                        # XML ID found in the database, try to recover an existing record
+                        if xml_ids:
+                            found_xml_id = self.pool['ir.model.data'].browse(cr, uid, xml_ids[0], context=context)
+                            record = self.pool[found_xml_id.model].browse(cr, uid, [found_xml_id.res_id], context=context)[0]
+                            # The record exists, store the id and don't recreate the XML ID
+                            if record.exists():
+                                inherit_xml_ids.append(found_xml_id.model)
+                                values[field_name] = found_xml_id.res_id
+                            # Orphan XML ID, delete it
+                            else:
+                                found_xml_id.unlink()
 
                 res_id = model_obj.create(cr, uid, values, context=context)
                 if xml_id:
@@ -1213,7 +1236,7 @@ class ir_model_data(osv.osv):
                         _logger.info('Deleting orphan external_ids %s', external_ids)
                         self.unlink(cr, uid, external_ids)
                         continue
-                    if field.name in openerp.models.LOG_ACCESS_COLUMNS and self.pool[field.model]._log_access:
+                    if field.name in openerp.models.LOG_ACCESS_COLUMNS and field.model in self.pool and self.pool[field.model]._log_access:
                         continue
                     if field.name == 'id':
                         continue

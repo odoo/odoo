@@ -4,13 +4,14 @@
 # 
 # Translators:
 # David Hernandez <davidhernandez.ctam@gmail.com>, 2016
+# Jérémy Kersten <jke@openerp.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2016-01-27 20:02+0000\n"
-"Last-Translator: David Hernandez <davidhernandez.ctam@gmail.com>\n"
+"PO-Revision-Date: 2016-03-10 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-9/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgid ""
 "            </p>\n"
 "            <p>Please welcome him/her and help him/her finding his/her marks.</p>\n"
 "            "
-msgstr "\n<p>\n%if object.department_id:\nEstoy muy contento de anunciar que <strong> ${object.name} </strong> se unirá a nosotros como ${object.job_id.name}\nen ${object.department_id.name}.\n%else:\nEstoy muy contento de anunciar que <strong> ${object.name} </strong> se unirá a nosotros como a ${object.job_id.name}.\n%terminara si\n</p>\n<p>Por favor, darle la bienvenida / ella y ayudar a él / ella la búsqueda de su / sus marcas.</p>"
+msgstr "\n<p>\n%if object.department_id:\nEstoy muy contento de anunciar que <strong> ${object.name} </strong> se unirá a nosotros como ${object.job_id.name}\nen ${object.department_id.name}.\n%else:\nEstoy muy contento de anunciar que <strong> ${object.name} </strong> se unirá a nosotros como a ${object.job_id.name}.\n%endif\n</p>\n<p>Por favor, darle la bienvenida / ella y ayudar a él / ella la búsqueda de su / sus marcas.</p>"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_1
@@ -519,7 +520,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid ""
-"Create email and url for each distinct source. <br/>\n"
+"Create email and url for each distinct source. <br>\n"
 "                When the applicant will arrive, you will know from wich source the Job position is coming."
 msgstr ""
 

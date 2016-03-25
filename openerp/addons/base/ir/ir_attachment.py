@@ -8,60 +8,14 @@ import mimetypes
 import os
 import re
 
-from openerp import tools
-from openerp.tools.translate import _
+from openerp import SUPERUSER_ID, tools
 from openerp.exceptions import AccessError
 from openerp.osv import fields,osv
-from openerp import SUPERUSER_ID
-from openerp.exceptions import UserError
 from openerp.tools.translate import _
 from openerp.tools.misc import ustr
+from openerp.tools.mimetypes import guess_mimetype
 
 _logger = logging.getLogger(__name__)
-
-try:
-    import magic
-except ImportError:
-    magic = None
-
-# We define our own guess_mimetype implementation and if magic is available we
-# use it instead.
-
-# However there are 2 python libs named 'magic' with incompatible api.
-# magic from pypi https://pypi.python.org/pypi/python-magic/
-# magic from file(1) https://packages.debian.org/squeeze/python-magic
-
-def guess_mimetype(bin_data):
-    # by default, guess the type using the magic number of file hex signature (like magic, but more limited)
-    # see http://www.filesignatures.net/ for file signatures
-    mapping = (
-        # pdf
-        ('application/pdf', ['%PDF']),
-        # jpg, jpeg, png, gif
-        ('image/jpeg', ['\xFF\xD8\xFF\xE0', '\xFF\xD8\xFF\xE2', '\xFF\xD8\xFF\xE3', '\xFF\xD8\xFF\xE1']),
-        ('image/png', ['\x89\x50\x4E\x47\x0D\x0A\x1A\x0A']),
-        ('image/gif', ['GIF87a', '\x47\x49\x46\x38\x37\x61', 'GIF89a', '\x47\x49\x46\x38\x39\x61']),
-        # docx, odt, doc, xls
-        ('application/msword', ['PK\x03\x04', '\xCF\x11\xE0\xA1\xB1\x1A\xE1\x00', '\xEC\xA5\xC1\x00', '\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1', '\x0D\x44\x4F\x43']),
-        # zip, but will include jar, odt, ods, odp, docx, xlsx, pptx, apk
-        ('application/zip', ['PK']),
-        ('application/vnd.ms-excel', ['\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1', '\x09\x08\x10\x00\x00\x06\x05\x00', '\xFD\xFF\xFF\xFF\x10', '\xFD\xFF\xFF\xFF\x1F', '\xFD\xFF\xFF\xFF\x23', '\xFD\xFF\xFF\xFF\x28', '\xFD\xFF\xFF\xFF\x29']),
-    )
-    for mimetype, signatures in mapping:
-        for signature in signatures:
-            if bin_data.startswith(signature):
-                return mimetype
-    return 'application/octet-stream'
-
-# if available adapt magic from pypi
-if hasattr(magic,'from_buffer'):
-    guess_mimetype = lambda bin_data: magic.from_buffer(bin_data, mime=True)
-# or if available adapt magic from file(1)
-elif hasattr(magic,'open'):
-    ms = magic.open(magic.MAGIC_MIME_TYPE)
-    ms.load()
-    guess_mimetype = ms.buffer
-
 
 class ir_attachment(osv.osv):
     """Attachments are used to link binary files or url to any openerp document.
@@ -211,7 +165,7 @@ class ir_attachment(osv.osv):
         fname_to_delete = attach.store_fname
         location = self._storage(cr, uid, context)
         # compute the index_content field
-        vals['index_content'] = self._index(cr, SUPERUSER_ID, bin_data, attach.datas_fname, attach.mimetype),
+        vals['index_content'] = self._index(cr, SUPERUSER_ID, bin_data, attach.datas_fname, attach.mimetype)
         if location != 'db':
             # create the file
             fname = self._file_write(cr, uid, value, checksum)
@@ -292,7 +246,7 @@ class ir_attachment(osv.osv):
         'file_size': fields.integer('File Size', readonly=True),
         'checksum': fields.char("Checksum/SHA1", size=40, select=True, readonly=True),
         'mimetype': fields.char('Mime Type', readonly=True),
-        'index_content': fields.text('Indexed Content', readonly=True),
+        'index_content': fields.text('Indexed Content', readonly=True, _prefetch=False),
         'public': fields.boolean('Is public document'),
     }
 
@@ -443,9 +397,8 @@ class ir_attachment(osv.osv):
         # database allowed it. Helps avoid errors when concurrent transactions
         # are deleting the same file, and some of the transactions are
         # rolled back by PostgreSQL (due to concurrent updates detection).
-        to_delete = [a.store_fname
-                        for a in self.browse(cr, uid, ids, context=context)
-                            if a.store_fname]
+        to_delete = set([a.store_fname for a in self.browse(cr, uid, ids, context=context)
+                         if a.store_fname])
         res = super(ir_attachment, self).unlink(cr, uid, ids, context)
         for file_path in to_delete:
             self._file_delete(cr, uid, file_path)

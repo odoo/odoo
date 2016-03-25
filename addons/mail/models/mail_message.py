@@ -7,6 +7,7 @@ import logging
 from openerp import _, api, fields, models, SUPERUSER_ID
 from openerp import tools
 from openerp.exceptions import UserError, AccessError
+from openerp.osv import expression
 
 
 _logger = logging.getLogger(__name__)
@@ -109,7 +110,7 @@ class Message(models.Model):
         help='Answers do not go in the original document discussion thread. This has an impact on the generated message-id.')
     message_id = fields.Char('Message-Id', help='Message unique identifier', select=1, readonly=1, copy=False)
     reply_to = fields.Char('Reply-To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
-    mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server', readonly=1)
+    mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
 
     @api.multi
     def _get_needaction(self):
@@ -147,34 +148,36 @@ class Message(models.Model):
     #------------------------------------------------------
 
     @api.model
-    def mark_all_as_read(self, channel_ids=None):
+    def mark_all_as_read(self, channel_ids=None, domain=None):
         """ Remove all needactions of the current partner. If channel_ids is
             given, restrict to messages written in one of those channels. """
         partner_id = self.env.user.partner_id.id
-        # possibly horribly inefficient method:
-        # it does one db request for the search, and one for each message in
-        # the result set to remove the current user from the relation.
-        # domain = [('needaction_partner_ids', 'in', partner_id)]
-        # if channel_ids:
-        #     domain += [('channel_ids', 'in', channel_ids)]
-        # unread_messages = self.search(domain)
-        # unread_messages.write({'needaction_partner_ids': [(3, partner_id)]})
+        if domain is None:
+            query = "DELETE FROM mail_message_res_partner_needaction_rel WHERE res_partner_id IN %s"
+            args = [(partner_id,)]
+            if channel_ids:
+                query += """
+                    AND mail_message_id in
+                        (SELECT mail_message_id
+                        FROM mail_message_mail_channel_rel
+                        WHERE mail_channel_id in %s)"""
+                args += [tuple(channel_ids)]
+            query += " RETURNING mail_message_id as id"
+            self._cr.execute(query, args)
+            self.invalidate_cache()
 
-        # a much faster way to do this is in pure sql:
-        query = "DELETE FROM mail_message_res_partner_needaction_rel WHERE res_partner_id IN %s"
-        args = [(partner_id,)]
-        if channel_ids:
-            query += """
-                AND mail_message_id in
-                    (SELECT mail_message_id
-                    FROM mail_message_mail_channel_rel
-                    WHERE mail_channel_id in %s)"""
-            args += [tuple(channel_ids)]
-        query += " RETURNING mail_message_id as id"
-        self._cr.execute(query, args)
-        self.invalidate_cache()
+            ids = [m['id'] for m in self._cr.dictfetchall()]
+        else:
+            # not really efficient method: it does one db request for the
+            # search, and one for each message in the result set to remove the
+            # current user from the relation.
+            msg_domain = [('needaction_partner_ids', 'in', partner_id)]
+            if channel_ids:
+                msg_domain += [('channel_ids', 'in', channel_ids)]
+            unread_messages = self.search(expression.AND([msg_domain, domain]))
+            unread_messages.sudo().write({'needaction_partner_ids': [(3, partner_id)]})
+            ids = unread_messages.mapped('id')
 
-        ids = [m['id'] for m in self._cr.dictfetchall()]
         notification = {'type': 'mark_as_read', 'message_ids': ids, 'channel_ids': channel_ids}
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
 

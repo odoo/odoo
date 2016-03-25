@@ -53,16 +53,9 @@ can take the following attributes:
 ``attachment``
     python expression that defines the name of the report; the record is
     acessible as the variable ``object``
-
-.. warning::
-
-   The paper format cannot currently be declared via the ``<report>``
-   shortcut, it must be added afterwards using a ``<record>`` extension on the
-   report action itself::
-
-       <record id="<report_id>" model="ir.actions.report.xml">
-           <field name="paperformat_id" ref="<paperformat>"/>
-       </record>
+``paperformat``
+    external id of the paperformat you wish to use (defaults to the company's
+    paperformat if not specified)
 
 Example::
 

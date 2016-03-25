@@ -33,7 +33,6 @@ var Followers = form_common.AbstractField.extend({
         this.image = this.node.attrs.image || 'image_small';
         this.comment = this.node.attrs.help || false;
         this.ds_model = new data.DataSetSearch(this, this.view.model);
-        this.ds_users = new data.DataSetSearch(this, 'res.users');
 
         this.value = [];
         this.followers = [];
@@ -191,23 +190,9 @@ var Followers = form_common.AbstractField.extend({
     fetch_followers: function (value_) {
         this.value = value_ || [];
         return ajax.jsonRpc('/mail/read_followers', 'call', {'follower_ids': this.value})
-            .then(this.proxy('display_followers'), this.proxy('fetch_generic'))
+            .then(this.proxy('display_followers'), this.proxy('display_generic'))
             .then(this.proxy('display_buttons'))
             .then(this.proxy('fetch_subtypes'));
-    },
-
-    /** Read on res.partner failed: fall back on a generic case
-        - fetch current user partner_id (call because no other smart solution currently) FIXME
-        - then display a generic message about followers */
-    fetch_generic: function () {
-        var self = this;
-
-        return this.ds_users.call('read', [[session.uid], ['partner_id']])
-            .then(function (results) {
-                var pid = results[0].partner_id[0];
-                self.message_is_follower = (_.indexOf(self.value, pid) !== -1);
-            })
-            .then(self.proxy('display_generic'));
     },
 
     _format_followers: function (count){
@@ -222,9 +207,11 @@ var Followers = form_common.AbstractField.extend({
         return str;
     },
 
-    /* Display generic info about follower, for people not having access to res_partner */
+    /** Read on res.partner failed: only display the number of followers */
     display_generic: function () {
-        this.$('.o_followers_list').empty();
+        this.$('.o_followers_actions').hide();
+        this.$('.o_followers_list').hide();
+        this.$('.o_followers_title_box > button').prop('disabled', true);
         this.$('.o_followers_count').html(this._format_followers(this.value.length));
     },
 
@@ -686,7 +673,7 @@ var ChatterComposer = composer.BasicComposer.extend({
                     var parent = self.getParent();
                     chat_manager.get_messages({model: parent.model, res_id: parent.res_id});
                 },
-            });
+            }).then(self.trigger.bind(self, 'close_composer'));
         });
     }
 });
@@ -927,12 +914,14 @@ var Chatter = form_common.AbstractField.extend({
             }
             self.composer.on('post_message', self, self.on_post_message);
             self.composer.on('need_refresh', self, self.refresh_followers);
+            self.composer.on('close_composer', null, self.close_composer.bind(self, true));
         });
         this.mute_new_message_button(true);
     },
-    close_composer: function () {
-        if (this.composer.is_empty()) {
+    close_composer: function (force) {
+        if (this.composer.is_empty() || force) {
             this.composer.do_hide();
+            this.composer.$input.val('');
             this.mute_new_message_button(false);
         }
     },
