@@ -969,7 +969,7 @@ class ProductProduct(models.Model):
     @api.multi
     def _purchase_count(self):
         domain = [
-            ('state', 'in', ['confirmed', 'approved', 'done']),
+            ('state', 'in', ['purchase', 'done']),
             ('product_id', 'in', self.mapped('id')),
         ]
         r = {}
