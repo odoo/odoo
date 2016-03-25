@@ -9,6 +9,7 @@ var FilterMenu = require('web.FilterMenu');
 var GroupByMenu = require('web.GroupByMenu');
 var pyeval = require('web.pyeval');
 var search_inputs = require('web.search_inputs');
+var utils = require('web.utils');
 var View = require('web.View');
 var Widget = require('web.Widget');
 
