@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-<template id="report_invoice_layouted" inherit_id="account.report_invoice_document">
+<template id="report_invoice_layouted" inherit_id="account.report_invoice_document" groups="sale.group_sale_layout">
     <xpath expr="//table" position="replace">
         <t t-foreach="o.order_lines_layouted()" t-as="page">
             <table class="table table-condensed">
