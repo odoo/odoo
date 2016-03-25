@@ -765,7 +765,8 @@ class Field(object):
     def convert_to_cache(self, value, record, validate=True):
         """ Convert ``value`` to the cache format; ``value`` may come from an
         assignment, or have the format of methods :meth:`BaseModel.read` or
-        :meth:`BaseModel.write`.
+        :meth:`BaseModel.write`. If the value represents a recordset, it should
+        be added for prefetching on ``record``.
 
         :param bool validate: when True, field-specific validation of ``value``
             will be performed
@@ -1574,10 +1575,10 @@ class Reference(Selection):
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, BaseModel):
             if not validate or (value._name in self.get_values(record.env) and len(value) <= 1):
-                return value.with_env(record.env) or False
+                return value.with_env(record.env).with_prefetch(record._prefetch) or False
         elif isinstance(value, basestring):
             res_model, res_id = value.split(',')
-            return record.env[res_model].browse(int(res_id))
+            return record.env[res_model].browse(int(res_id), record._prefetch)
         elif not value:
             return False
         raise ValueError("Wrong value for %s: %r" % (self, value))
@@ -1689,13 +1690,13 @@ class Many2one(_Relational):
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, (NoneType, int, long)):
-            return record.env[self.comodel_name].browse(value)
+            return record.env[self.comodel_name].browse(value, record._prefetch)
         if isinstance(value, BaseModel):
             if not validate or (value._name == self.comodel_name and len(value) <= 1):
-                return value.with_env(record.env)
+                return value.with_env(record.env).with_prefetch(record._prefetch)
             raise ValueError("Wrong value for %s: %r" % (self, value))
         elif isinstance(value, tuple):
-            return record.env[self.comodel_name].browse(value[0])
+            return record.env[self.comodel_name].browse(value[0], record._prefetch)
         elif isinstance(value, dict):
             return record.env[self.comodel_name].new(value)
         else:
@@ -1758,7 +1759,7 @@ class _RelationalMulti(_Relational):
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, BaseModel):
             if not validate or (value._name == self.comodel_name):
-                return value.with_env(record.env)
+                return value.with_env(record.env).with_prefetch(record._prefetch)
         elif isinstance(value, list):
             # value is a list of record ids or commands
             comodel = record.env[self.comodel_name]
@@ -1788,7 +1789,7 @@ class _RelationalMulti(_Relational):
                 else:
                     ids.add(command)
             # return result as a recordset
-            return comodel.browse(list(ids))
+            return comodel.browse(list(ids), record._prefetch)
         elif not value:
             return record.env[self.comodel_name]
         raise ValueError("Wrong value for %s: %s" % (self, value))

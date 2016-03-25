@@ -3380,7 +3380,8 @@ class BaseModel(object):
             else:
                 _logger.warning("%s.read() with unknown field '%s'", self._name, name)
 
-        # fetch stored fields from the database to the cache
+        # fetch stored fields from the database to the cache; this should feed
+        # the prefetching of secondary records
         self._read_from_database(stored, inherited)
 
         # retrieve results from records; this takes values from the cache and
@@ -3449,6 +3450,7 @@ class BaseModel(object):
 
         # fetch records with read()
         assert self in records and field in fs
+        records = records.with_prefetch(self._prefetch)
         result = []
         try:
             result = records.read([f.name for f in fs], load='_classic_write')
@@ -3459,7 +3461,7 @@ class BaseModel(object):
         # check the cache, and update it if necessary
         if field not in self._cache:
             for values in result:
-                record = self.browse(values.pop('id'))
+                record = self.browse(values.pop('id'), self._prefetch)
                 record._cache.update(record._convert_to_cache(values, validate=False))
             if not self._cache.contains(field):
                 e = AccessError("No value found for %s.%s" % (self, field.name))
@@ -3545,7 +3547,7 @@ class BaseModel(object):
 
             # store result in cache for POST fields
             for vals in result:
-                record = self.browse(vals['id'])
+                record = self.browse(vals['id'], self._prefetch)
                 record._cache.update(record._convert_to_cache(vals, validate=False))
 
             # determine the fields that must be processed now;
@@ -3587,7 +3589,7 @@ class BaseModel(object):
 
         # store result in cache
         for vals in result:
-            record = self.browse(vals.pop('id'))
+            record = self.browse(vals.pop('id'), self._prefetch)
             record._cache.update(record._convert_to_cache(vals, validate=False))
 
         # store failed values in cache for the records that could not be read
@@ -5656,7 +5658,7 @@ class BaseModel(object):
             :param validate: whether values must be checked
         """
         fields = self._fields
-        target = self if update else self.browse()
+        target = self if update else self.browse([], self._prefetch)
         return {
             name: fields[name].convert_to_cache(value, target, validate=validate)
             for name, value in values.iteritems()
