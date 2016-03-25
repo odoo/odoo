@@ -197,6 +197,8 @@ class ir_import(orm.TransientModel):
 
     def _read_xls(self, record, options):
         book = xlrd.open_workbook(file_contents=record.file)
+        return self._read_xls_book(book)
+    def _read_xls_book(self, book):
         sheet = book.sheet_by_index(0)
         # emulate Sheet.get_rows for pre-0.9.4
         for row in itertools.imap(sheet.row, range(sheet.nrows)):

@@ -394,6 +394,12 @@ class project_issue(osv.Model):
             through message_process.
             This override updates the document according to the email.
         """
+        # remove default author when going through the mail gateway. Indeed we
+        # do not want to explicitly set user_id to False; however we do not
+        # want the gateway user to be responsible if no other responsible is
+        # found.
+        create_context = dict(context or {})
+        create_context['default_user_id'] = False
         if custom_values is None:
             custom_values = {}
         context = dict(context or {}, state_to='draft')
@@ -402,11 +408,10 @@ class project_issue(osv.Model):
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'partner_id': msg.get('author_id', False),
-            'user_id': False,
         }
         defaults.update(custom_values)
 
-        res_id = super(project_issue, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
+        res_id = super(project_issue, self).message_new(cr, uid, msg, custom_values=defaults, context=create_context)
         email_list = self.email_split(cr, uid, [res_id], msg, context=context)
         partner_ids = filter(None, self._find_partner_from_emails(cr, uid, [res_id], email_list, force_create=False, context=context))
         self.message_subscribe(cr, uid, [res_id], partner_ids, context=context)

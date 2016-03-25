@@ -706,8 +706,11 @@ class MailThread(models.AbstractModel):
                     ('alias_parent_model_id.model', '=', model_name),
                     ('alias_parent_thread_id', 'in', res_ids),
                     ('alias_name', '!=', False)])
-                aliases.update(
-                    dict((alias.alias_parent_thread_id, '%s@%s' % (alias.alias_name, alias_domain)) for alias in mail_aliases))
+                # take only first found alias for each thread_id, to match
+                # order (1 found -> limit=1 for each res_id)
+                for alias in mail_aliases:
+                    if alias.alias_parent_thread_id not in aliases:
+                        aliases[alias.alias_parent_thread_id] = '%s@%s' % (alias.alias_name, alias_domain)
                 doc_names.update(
                     dict((ng_res[0], ng_res[1])
                          for ng_res in self.env[model_name].sudo().browse(aliases.keys()).name_get()))
