@@ -237,14 +237,13 @@ class Message(models.Model):
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
 
     @api.multi
-    def set_message_starred(self, starred):
-        """ Set messages as (un)starred. Technically, the notifications related
+    def toggle_message_starred(self):
+        """ Toggle messages as (un)starred. Technically, the notifications related
             to uid are set to (un)starred.
-
-            :param bool starred: set notification as (un)starred
         """
         # a user should always be able to star a message he can read
         self.check_access_rule('read')
+        starred = not self.starred
         if starred:
             self.sudo().write({'starred_partner_ids': [(4, self.env.user.partner_id.id)]})
         else:

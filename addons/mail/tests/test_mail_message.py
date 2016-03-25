@@ -240,14 +240,14 @@ class TestMailMessage(TestMail):
         msg_emp = self.env['mail.message'].sudo(self.user_employee).browse(msg.id)
 
         # Admin set as starred
-        msg.set_message_starred(True)
+        msg.toggle_message_starred()
         self.assertTrue(msg.starred)
 
         # Employee set as starred
-        msg_emp.set_message_starred(True)
+        msg_emp.toggle_message_starred()
         self.assertTrue(msg_emp.starred)
 
         # Do: Admin unstars msg
-        msg.set_message_starred(False)
+        msg.toggle_message_starred()
         self.assertFalse(msg.starred)
         self.assertTrue(msg_emp.starred)
