@@ -272,9 +272,22 @@ class AccountChartTemplate(models.Model):
             tmp1, tmp2 = self.parent_id._install_template(company, code_digits=code_digits, transfer_account_id=transfer_account_id, acc_ref=acc_ref, taxes_ref=taxes_ref)
             acc_ref.update(tmp1)
             taxes_ref.update(tmp2)
+            tmp1, tmp2 = self._load_template(company, code_digits=code_digits, transfer_account_id=transfer_account_id, account_ref=acc_ref, taxes_ref=taxes_ref)
+            acc_ref.update(tmp1)
+            taxes_ref.update(tmp2)
+            return acc_ref, taxes_ref
+
         tmp1, tmp2 = self._load_template(company, code_digits=code_digits, transfer_account_id=transfer_account_id, account_ref=acc_ref, taxes_ref=taxes_ref)
         acc_ref.update(tmp1)
         taxes_ref.update(tmp2)
+
+        # Create Journals
+        self.generate_journals(acc_ref, company)
+        # generate properties function
+        self.generate_properties(acc_ref, company)
+        # Generate Fiscal Position , Fiscal Position Accounts and Fiscal Position Taxes from templates
+        self.generate_fiscal_position(taxes_ref, acc_ref, company)
+
         return acc_ref, taxes_ref
 
     @api.multi
@@ -319,15 +332,6 @@ class AccountChartTemplate(models.Model):
                     'refund_account_id': account_ref.get(value['refund_account_id'], False),
                     'account_id': account_ref.get(value['account_id'], False),
                 })
-
-        # Create Journals
-        self.generate_journals(account_ref, company)
-
-        # generate properties function
-        self.generate_properties(account_ref, company)
-
-        # Generate Fiscal Position , Fiscal Position Accounts and Fiscal Position Taxes from templates
-        self.generate_fiscal_position(taxes_ref, account_ref, company)
 
         return account_ref, taxes_ref
 
@@ -600,6 +604,24 @@ class WizardMultiChartsAccounts(models.TransientModel):
     def onchange_tax_rate(self):
         self.purchase_tax_rate = self.sale_tax_rate or False
 
+    @api.model
+    def recursive_chart_template(self, chart_template):
+        if chart_template.parent_id:
+            res = self.recursive_chart_template(chart_template.parent_id)
+            res.update({
+                'transfer_account_id': chart_template.transfer_account_id or res.get('transfer_account_id'),
+                'bank_account_code_prefix': chart_template.bank_account_code_prefix or res.get('bank_account_code_prefix'),
+                'cash_account_code_prefix': chart_template.cash_account_code_prefix or res.get('cash_account_code_prefix'),
+                'code_digits': chart_template.code_digits or res.get('code_digits')
+            })
+            return res
+        return {
+            'transfer_account_id': chart_template.transfer_account_id,
+            'bank_account_code_prefix': chart_template.bank_account_code_prefix,
+            'cash_account_code_prefix': chart_template.cash_account_code_prefix,
+            'code_digits': chart_template.code_digits
+        }
+
     @api.onchange('chart_template_id')
     def onchange_chart_template_id(self):
         res = {}
@@ -621,14 +643,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
                 res.setdefault('domain', {})
                 res['domain']['sale_tax_id'] = repr(sale_tax_domain)
                 res['domain']['purchase_tax_id'] = repr(purchase_tax_domain)
-            if self.chart_template_id.transfer_account_id:
-                self.transfer_account_id = self.chart_template_id.transfer_account_id.id
-            if self.chart_template_id.code_digits:
-                self.code_digits = self.chart_template_id.code_digits
-            if self.chart_template_id.bank_account_code_prefix:
-                self.bank_account_code_prefix = self.chart_template_id.bank_account_code_prefix
-            if self.chart_template_id.cash_account_code_prefix:
-                self.cash_account_code_prefix = self.chart_template_id.cash_account_code_prefix
+            self.update(self.env['wizard.multi.charts.accounts'].recursive_chart_template(self.chart_template_id))
         return res
 
     @api.model
