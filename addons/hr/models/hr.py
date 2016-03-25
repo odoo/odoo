@@ -269,13 +269,8 @@ class hr_department(osv.osv):
     _description = "Department"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
-    def _dept_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = self.name_get(cr, uid, ids, context=context)
-        return dict(res)
-
     _columns = {
         'name': fields.char('Department Name', required=True),
-        'complete_name': fields.function(_dept_name_get_fnc, type="char", string='Name'),
         'active': fields.boolean('Active'),
         'company_id': fields.many2one('res.company', 'Company', select=True, required=False),
         'parent_id': fields.many2one('hr.department', 'Parent Department', select=True),
