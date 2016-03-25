@@ -24,7 +24,6 @@ var PosDB = core.Class.extend({
 
         this.product_by_id = {};
         this.product_by_barcode = {};
-        this.product_by_default_code = {};
         this.product_by_category_id = {};
         this.product_by_default_code = {};
 
