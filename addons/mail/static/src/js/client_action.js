@@ -262,6 +262,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 });
                 chat_manager.bus.on('unsubscribe_from_channel', self, self.render_sidebar);
                 chat_manager.bus.on('update_needaction', self, self.throttled_render_sidebar);
+                chat_manager.bus.on('update_starred', self, self.throttled_render_sidebar);
                 chat_manager.bus.on('update_channel_unread_counter', self, self.throttled_render_sidebar);
                 chat_manager.bus.on('update_dm_presence', self, self.throttled_render_sidebar);
                 self.thread.$el.on("scroll", null, _.debounce(function () {
@@ -303,6 +304,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             active_channel_id: this.channel ? this.channel.id: undefined,
             channels: chat_manager.get_channels(),
             needaction_counter: chat_manager.get_needaction_counter(),
+            starred_counter: chat_manager.get_starred_counter(),
         }));
         this.$(".o_mail_chat_sidebar").html($sidebar.contents());
 

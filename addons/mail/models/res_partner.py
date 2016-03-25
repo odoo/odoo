@@ -228,6 +228,18 @@ class Partner(models.Model):
         return 0
 
     @api.model
+    def get_starred_count(self):
+        """ compute the number of starred of the current user """
+        if self.env.user.partner_id:
+            self.env.cr.execute("""
+                SELECT count(*) as starred_count
+                FROM mail_message_res_partner_starred_rel R
+                WHERE R.res_partner_id = %s """, (self.env.user.partner_id.id,))
+            return self.env.cr.dictfetchall()[0].get('starred_count')
+        _logger.error('Call to starred_count without partner_id')
+        return 0
+
+    @api.model
     def get_static_mention_suggestions(self):
         """ To be overwritten to return the id, name and email of partners used as static mention
             suggestions loaded once at webclient initialization and stored client side. """

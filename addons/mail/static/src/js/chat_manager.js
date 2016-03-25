@@ -31,6 +31,7 @@ var unread_conversation_counter = 0;
 var emojis = [];
 var emoji_substitutions = {};
 var needaction_counter = 0;
+var starred_counter = 0;
 var mention_partner_suggestions = [];
 var discuss_menu_id;
 var global_unread_counter = 0;
@@ -498,14 +499,17 @@ function on_toggle_star_notification (data) {
             message.is_starred = data.starred;
             if (!message.is_starred) {
                 remove_message_from_channel("channel_starred", message);
+                starred_counter--;
             } else {
                 add_to_cache(message, []);
                 var channel_starred = chat_manager.get_channel('channel_starred');
                 channel_starred.cache = _.pick(channel_starred.cache, "[]");
+                starred_counter++;
             }
             chat_manager.bus.trigger('update_message', message);
         }
     });
+    chat_manager.bus.trigger('update_starred', starred_counter);
 }
 
 function on_mark_as_read_notification (data) {
@@ -684,7 +688,7 @@ var chat_manager = {
     toggle_star_status: function (message_id) {
         var msg = _.findWhere(messages, { id: message_id });
 
-        return MessageModel.call('set_message_starred', [[message_id], !msg.is_starred]);
+        return MessageModel.call('toggle_message_starred', [[message_id]]);
     },
     unstar_all: function () {
         return MessageModel.call('unstar_all', [[]], {});
@@ -760,6 +764,9 @@ var chat_manager = {
 
     get_needaction_counter: function () {
         return needaction_counter;
+    },
+    get_starred_counter: function () {
+        return starred_counter;
     },
     get_chat_unread_counter: function () {
         return chat_unread_counter;
@@ -968,6 +975,7 @@ function init () {
             _.each(channels, add_channel);
         });
         needaction_counter = result.needaction_inbox_counter;
+        starred_counter = result.starred_counter;
         mention_partner_suggestions = result.mention_partner_suggestions;
         emojis = result.emoji;
         _.each(emojis, function(emoji) {
