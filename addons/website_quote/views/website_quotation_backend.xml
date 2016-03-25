@@ -18,11 +18,13 @@
                             <tree string="Sales Quotation Template Lines" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id"/>
+                                    <field name="layout_category_id" groups="sale.group_sale_layout"/>
                                     <field name="name"/>
                                     <field name="quantity"/>
                                     <field name="uom_id" groups="product.group_uom"/>
                                     <field name="price_unit"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
+                                    <button name="button_add_to_order" class="oe_link" icon="fa-shopping-cart" string="Add to order lines" type="object"/>
                                     <field name="website_description" invisible="1"/>
                             </tree>
                         </field>
@@ -72,6 +74,7 @@
                                     <group>
                                         <group>
                                             <field name="product_id" on_change="on_change_product_id(product_id, product_uom_id)"/>
+                                            <field name="layout_category_id" groups="sale.group_sale_layout"/>
                                             <label for="product_uom_qty"/>
                                             <div>
                                                 <field
@@ -96,6 +99,7 @@
                                 <tree string="Sales Quotation Template Lines" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" on_change="on_change_product_id(product_id, product_uom_id)"/>
+                                    <field name="layout_category_id" groups="sale.group_sale_layout"/>
                                     <field name="name"/>
                                     <field name="product_uom_qty"/>
                                     <field name="product_uom_id" groups="product.group_uom" on_change="product_uom_change(product_id, product_uom_id"/>
@@ -103,6 +107,20 @@
                                     <field name="price_unit"/>
                                     <field name="website_description" invisible="1"/>
                                 </tree>
+                            </field>
+                        </page>
+                        <page string="Suggested Products">
+                            <field name="options">
+                              <tree string="Sales Quotation Template Lines" editable="bottom">
+                                <field name="product_id"/>
+                                <field name="layout_category_id" groups="sale.group_sale_layout"/>
+                                <field name="name"/>
+                                <field name="quantity"/>
+                                <field name="uom_id" groups="product.group_uom"/>
+                                <field name="price_unit"/>
+                                <field name="discount" groups="sale.group_discount_per_so_line"/>
+                                <field name="website_description" invisible="1"/>
+                              </tree>
                             </field>
                         </page>
                         <page string="Suggested Products">
@@ -163,10 +181,10 @@
               <p class="oe_view_nocontent_create">
                 Create a Quotation, the first step of a new sale.
               </p><p>
-                Your next actions should flow efficiently: confirm the Quotation 
+                Your next actions should flow efficiently: confirm the Quotation
                 to a Sale Order, then create the Invoice and collect the Payment.
               </p><p>
-                Note that once a Quotation becomes a Sale Order, it will be moved 
+                Note that once a Quotation becomes a Sale Order, it will be moved
                 from the Quotations list to the Sales Order list.
               </p>
             </field>
