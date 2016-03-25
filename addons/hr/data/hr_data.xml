@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
         <!-- notify all employees of module installation -->
-        <record model="mail.message" id="module_install_notification">
+        <record id="module_install_notification" model="mail.message">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="mail.channel_all_employees"/>
             <field name="message_type">notification</field>
@@ -16,9 +16,10 @@ Leave Management (keep track of employee leaves), Expense Management (manage emp
         <record id="dep_administration" model="hr.department">
           <field name="name">Administration</field>
         </record>
+
         <record id="dep_sales" model="hr.department">
           <field name="name">Sales</field>
         </record>
 
     </data>
-</openerp>
+</odoo>

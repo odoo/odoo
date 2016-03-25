@@ -1,17 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
 
         <!-- Top menu item -->
-        <menuitem name="Employees"
+        <menuitem
             id="menu_hr_root"
+            name="Employees"
             groups="base.group_hr_manager,base.group_hr_user,base.group_user"
             icon="fa-user"
             web_icon="hr,static/description/icon.png"
             sequence="75"/>
-        <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
-        <menuitem id="menu_hr_reporting_timesheet" name="Reports" parent="menu_hr_root" sequence="99" groups="base.group_hr_manager,base.group_hr_user"/>
-        <menuitem id="menu_human_resources_configuration" name="Configuration" parent="menu_hr_root" sequence="100" groups="base.group_hr_manager"/>
+
+        <menuitem
+            id="menu_hr_main"
+            name="Human Resources"
+            parent="menu_hr_root"
+            sequence="0"/>
+
+        <menuitem
+            id="menu_hr_reporting_timesheet"
+            name="Reports"
+            parent="menu_hr_root"
+            groups="base.group_hr_manager,base.group_hr_user"
+            sequence="99"/>
+
+        <menuitem
+            id="menu_human_resources_configuration"
+            name="Configuration"
+            parent="menu_hr_root"
+            groups="base.group_hr_manager"
+            sequence="100"/>
 
         <!-- Employee -->
         <record id="view_employee_form" model="ir.ui.view">
@@ -39,7 +57,7 @@
                             <page name="public" string="Public Information">
                                 <group>
                                     <group string="Contact Information">
-                                        <field name="address_id" on_change="onchange_address_id(address_id)"
+                                        <field name="address_id"
                                             context="{'show_address': 1}"
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
                                         <field name="mobile_phone"/>
@@ -48,7 +66,7 @@
                                         <field name="work_phone"/>
                                     </group>
                                     <group string="Position">
-                                        <field name="department_id" on_change="onchange_department_id(department_id)"/>
+                                        <field name="department_id"/>
                                         <field name="job_id"/>
                                         <field name="parent_id"/>
                                         <field name="coach_id"/>
@@ -82,8 +100,8 @@
                             <page string="HR Settings" groups="base.group_hr_user">
                                 <group>
                                     <group string='Status' name="active_group">
-                                        <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
-                                        <field name="user_id" on_change="onchange_user(name, image, user_id)" string="Related User"/>
+                                        <field name="company_id" groups="base.group_multi_company"/>
+                                        <field name="user_id" string="Related User"/>
                                     </group>
                                 </group>
                             </page>
@@ -116,7 +134,7 @@
         </record>
 
         <record id="view_employee_filter" model="ir.ui.view">
-            <field name="name">Employees</field>
+            <field name="name">hr.employee.search</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
                 <search string="Employees">
@@ -137,8 +155,8 @@
              </field>
          </record>
 
-    <record model="ir.ui.view" id="hr_kanban_view_employees">
-        <field name="name">HR - Employess Kanban</field>
+    <record id="hr_kanban_view_employees" model="ir.ui.view">
+        <field name="name">hr.employee.kanban</field>
         <field name="model">hr.employee</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
@@ -229,14 +247,18 @@
             </field>
         </record>
 
-        <menuitem action="open_view_employee_list_my" id="menu_open_view_employee_list_my" sequence="3" parent="menu_hr_root"/>
+        <menuitem
+            id="menu_open_view_employee_list_my"
+            action="open_view_employee_list_my"
+            parent="menu_hr_root"
+            sequence="3"/>
 
         <!-- Employee tree by manager -->
         <record id="view_partner_tree2" model="ir.ui.view">
             <field name="name">hr.employee.tree</field>
             <field name="model">hr.employee</field>
             <field name="field_parent">child_ids</field>
-            <field eval="20" name="priority"/>
+            <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <tree string="Employees">
                     <field name="name"/>
@@ -281,6 +303,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_employee_category_list" model="ir.ui.view">
             <field name="name">hr.employee.category.list</field>
             <field name="model">hr.employee.category</field>
@@ -291,14 +314,20 @@
                 </tree>
             </field>
         </record>
+
         <record id="open_view_categ_form" model="ir.actions.act_window">
             <field name="name">Employee Tags</field>
             <field name="res_model">hr.employee.category</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="open_view_categ_form" id="menu_view_employee_category_form"
-            parent="menu_human_resources_configuration" sequence="1" groups="base.group_no_one"/>
+
+        <menuitem
+            id="menu_view_employee_category_form"
+            action="open_view_categ_form"
+            parent="menu_human_resources_configuration"
+            groups="base.group_no_one"
+            sequence="1"/>
 
         <!-- hr.job -->
         <record id="view_hr_job_form" model="ir.ui.view">
@@ -354,7 +383,7 @@
         </record>
 
         <record id="view_job_filter" model="ir.ui.view">
-            <field name="name">Job</field>
+            <field name="name">hr.job.search</field>
             <field name="model">hr.job</field>
             <field name="arch" type="xml">
                 <search string="Jobs">
@@ -373,7 +402,7 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_hr_job">
+        <record id="action_hr_job" model="ir.actions.act_window">
             <field name="name">Job Positions</field>
             <field name="res_model">hr.job</field>
             <field name="view_type">form</field>
@@ -396,7 +425,7 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="act_employee_from_department">
+        <record id="act_employee_from_department" model="ir.actions.act_window">
             <field name="name">Employees</field>
             <field name="res_model">hr.employee</field>
             <field name="view_type">form</field>
@@ -561,4 +590,4 @@
             groups="base.group_hr_user"/>
 
     </data>
-</openerp>
+</odoo>
