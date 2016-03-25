@@ -148,10 +148,12 @@ class sale_quote(http.Controller):
             'name': option.name,
             'order_id': order.id,
             'product_id': option.product_id.id,
+            'layout_category_id': option.layout_category_id.id,
             'product_uom_qty': option.quantity,
             'product_uom': option.uom_id.id,
             'discount': option.discount,
         }
+
         line = request.registry.get('sale.order.line').create(request.cr, SUPERUSER_ID, vals, context=request.context)
         request.registry.get('sale.order.line')._compute_tax_id(request.cr, SUPERUSER_ID, [line], context=request.context)
         option_obj.write(request.cr, SUPERUSER_ID, [option.id], {'line_id': line}, context=request.context)
