@@ -19,7 +19,8 @@ LDAP account that is used to verify if a user exists before attempting to
 authenticate it.
 
 Securing the connection with STARTTLS is available for LDAP servers supporting
-it, by enabling the TLS option in the LDAP configuration.
+it, by enabling the TLS option in the LDAP configuration. Also, there is an option
+for allowing SSL connections (i.e. typically on port 636).
 
 For further options configuring the LDAP settings, refer to the ldap.conf
 manpage: manpage:`ldap.conf(5)`.
