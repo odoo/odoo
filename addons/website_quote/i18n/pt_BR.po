@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:09+0000\n"
-"PO-Revision-Date: 2015-10-19 10:28+0000\n"
-"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
+"POT-Creation-Date: 2016-03-25 13:43+0000\n"
+"PO-Revision-Date: 2016-03-26 08:57+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,21 +45,17 @@ msgid ""
 "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
-"\n"
-"    <% set signup_url = object.get_signup_url() %>\n"
-"    % if signup_url:\n"
 "    <p>\n"
-"    You can access this document and pay online via our Customer Portal:\n"
+"        You can view your quotation online:\n"
 "    </p>\n"
-"        <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
-"           href=\"${signup_url}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
-"    % endif\n"
+"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
+"        href=\"/quote/${object.id}/${object.access_token}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
 "\n"
 "    % if object.paypal_url:\n"
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "\n"
@@ -101,7 +97,12 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n\n    <p>Hello ${object.partner_id.name},</p>\n\n    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} from ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n       % endif\n       % if object.client_order_ref:\n       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n\n    <% set signup_url = object.get_signup_url() %>\n    % if signup_url:\n    <p>\n    You can access this document and pay online via our Customer Portal:\n    </p>\n        <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n           href=\"${signup_url}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n    % endif\n\n    % if object.paypal_url:\n    <br/>\n    <p>It is also possible to directly pay with Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n\n    <br/>\n    <p>If you have any question, do not hesitate to contact us.</p>\n    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Phone:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        % endif\n        <p></p>\n    </div>\n</div>\n            "
+msgstr ""
+
+#. module: website_quote
+#: view:website:website_quote.so_quotation
+msgid "! You can"
+msgstr ""
 
 #. module: website_quote
 #: model:email.template,report_name:website_quote.email_template_edi_sale
@@ -470,7 +471,7 @@ msgid ""
 "                            <h2>Structure of the Training</h2>\n"
 "                        </div>\n"
 "                        <div class=\"col-md-5 col-md-offset-1 mt16 mb16\">\n"
-"                            <img class=\"img img-responsive\" src=\"https://www.openerp.com/saas_master/static/site_new/img/layout/online_training.png\">\n"
+"                            <img class=\"img img-responsive\" src=\"/website_quote/static/src/img/online_training.png\">\n"
 "                        </div>\n"
 "                        <div class=\"col-md-6 mt32\">\n"
 "                            <h4><strong>There are three components to the training</strong></h4>\n"
@@ -483,7 +484,7 @@ msgid ""
 "                    </div>\n"
 "                </section>\n"
 "            "
-msgstr "<section data-snippet-id=\"title\">\n                    <h1>Treinamento on-line + Certificação</h1>\n                </section>\n                <section data-snippet-id=\"text-image\">\n                    <div class=\"row\">\n                        <div class=\"col-md-12 mb32\">\n                            <p>Estes cursos apresentam o mesmo conteúdo do curso de alta qualidade encontrados em nossos treinamentos em sala de aula tradicional, complementado com sessões modulares e laboratórios baseados em nuvem. Muitos de nossos cursos de aprendizagem on-line também incluem dezenas de webinars gravados e sessões ao vivo por nossos instrutores seniores. No final do treinamento, você pode passar o exame de Certificação Openerp em um dos centros de teste de 5000 da Pearson VUE em todo o mundo.</p>\n                        </div>\n                        <div class=\"col-md-offset-1\">\n                            <h3>Suas vantagens</h3>\n                            <ul>\n                                <li>Abordagem modular aplicada com o método de aprendizagem</li>\n                                <li>Nova experiência de aprendizado interativo</li>\n                                <li>Orçamento de formação inferior para os mesmos cursos de qualidade</li>\n                                <li>Melhor conforto para facilitar o seu processo de aprendizagem</li>\n                            </ul>\n                        </div>\n                        <div class=\"col-md-12\">\n                            <h2>Estrutura do Treinamento</h2>\n                        </div>\n                        <div class=\"col-md-5 col-md-offset-1 mt16 mb16\">\n                            <img class=\"img img-responsive\" src=\"https://www.openerp.com/saas_master/static/site_new/img/layout/online_training.png\">\n                        </div>\n                        <div class=\"col-md-6 mt32\">\n                            <h4><strong>Existem três componentes para o treinamento</strong></h4>\n                            <ul>\n                                <li>Vídeos com demonstrações detalhadas</li>\n                                <li>Exercícios práticos e suas soluções</li>\n                                <li>Sessões ao vivo de Perguntas e Respostas com um instrutor</li>\n                            </ul>\n                        </div>\n                    </div>\n                </section>\n            "
+msgstr ""
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
@@ -1088,6 +1089,11 @@ msgstr "Esta oferta expira em"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
+msgid "This order has already been"
+msgstr ""
+
+#. module: website_quote
+#: view:website:website_quote.so_quotation
 msgid ""
 "This order has been validated. Thanks for your trust\n"
 "                          and do not hesitate to"
@@ -1146,6 +1152,12 @@ msgid "Website Description"
 msgstr "Descrição do site"
 
 #. module: website_quote
+#: code:addons/website_quote/controllers/main.py:148
+#, python-format
+msgid "You cannot add options to a confirmed order."
+msgstr ""
+
+#. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your Contact:"
 msgstr "Seu contato:"
@@ -1189,6 +1201,11 @@ msgstr "Sua mensagem foi enviada com sucesso!"
 #: view:website:website_quote.so_template
 msgid "and"
 msgstr "e"
+
+#. module: website_quote
+#: view:website:website_quote.so_quotation
+msgid "cancelled"
+msgstr ""
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1240,6 +1257,11 @@ msgstr "este conteúdo\nirá aparecer em todas as cotações usando este\nmodelo
 #: field:sale.order.option,line_id:0
 msgid "unknown"
 msgstr "desconhecido"
+
+#. module: website_quote
+#: view:website:website_quote.so_quotation
+msgid "validated"
+msgstr ""
 
 #. module: website_quote
 #: view:website:website_quote.so_template
