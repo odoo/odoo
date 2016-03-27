@@ -869,9 +869,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 			var inc_tax_amount = 0;
 			_(taxes).each(function(tax) {
                 if (tax.price_include) {
-                    if (tax.type === "percent") {
-						inc_tax_amount = inc_tax_amount + tax.amount;
-					}
+                    inc_tax_amount = inc_tax_amount + tax.amount;
 				}
 			});
 			
