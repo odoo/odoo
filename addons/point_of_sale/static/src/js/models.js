@@ -866,14 +866,19 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                currency_rounding = currency_rounding * 0.00001;
             }
             var base = price_unit;
-			var inc_tax_amount = 0;
+			var inc_tax_per = 0;
+            var inc_tax_fix_amount = 0;
 			_(taxes).each(function(tax) {
                 if (tax.price_include) {
-                    inc_tax_amount = inc_tax_amount + tax.amount;
+                    if (tax.type === "percent") {
+                        inc_tax_per = inc_tax_per + tax.amount;
+                    } else if (tax.type === "fixed") {
+                        inc_tax_fix_amount = inc_tax_fix_amount + tax.amount;
+                    }
 				}
 			});
 			
-			var base_price = round_pr((base - round_pr((base * inc_tax_amount / (1 + inc_tax_amount)),currency_rounding)),currency_rounding);
+			var base_price = round_pr((base - (base * inc_tax_per / (1 + inc_tax_per)) - inc_tax_fix_amount),currency_rounding);
 
             _(taxes).each(function(tax) {
                 if (tax.price_include) {
