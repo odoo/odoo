@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:09+0000\n"
-"PO-Revision-Date: 2015-07-17 08:20+0000\n"
+"POT-Creation-Date: 2016-03-25 13:43+0000\n"
+"PO-Revision-Date: 2016-03-26 08:57+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-8/language/mk/)\n"
 "MIME-Version: 1.0\n"
@@ -43,21 +43,17 @@ msgid ""
 "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
-"\n"
-"    <% set signup_url = object.get_signup_url() %>\n"
-"    % if signup_url:\n"
 "    <p>\n"
-"    You can access this document and pay online via our Customer Portal:\n"
+"        You can view your quotation online:\n"
 "    </p>\n"
-"        <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
-"           href=\"${signup_url}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
-"    % endif\n"
+"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
+"        href=\"/quote/${object.id}/${object.access_token}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
 "\n"
 "    % if object.paypal_url:\n"
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "\n"
@@ -99,6 +95,11 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
+msgstr ""
+
+#. module: website_quote
+#: view:website:website_quote.so_quotation
+msgid "! You can"
 msgstr ""
 
 #. module: website_quote
@@ -468,7 +469,7 @@ msgid ""
 "                            <h2>Structure of the Training</h2>\n"
 "                        </div>\n"
 "                        <div class=\"col-md-5 col-md-offset-1 mt16 mb16\">\n"
-"                            <img class=\"img img-responsive\" src=\"https://www.openerp.com/saas_master/static/site_new/img/layout/online_training.png\">\n"
+"                            <img class=\"img img-responsive\" src=\"/website_quote/static/src/img/online_training.png\">\n"
 "                        </div>\n"
 "                        <div class=\"col-md-6 mt32\">\n"
 "                            <h4><strong>There are three components to the training</strong></h4>\n"
@@ -481,7 +482,7 @@ msgid ""
 "                    </div>\n"
 "                </section>\n"
 "            "
-msgstr "<section data-snippet-id=\"title\">\n                    <h1>Тренинг преку интернет + Сертификација</h1>\n                </section>\n                <section data-snippet-id=\"text-image\">\n                    <div class=\"row\">\n                        <div class=\"col-md-12 mb32\">\n                            <p>Овие курсеви се со исти висок квалитет како и курсеви што се одржуваат во традиционалните училници за тренинг, опремени со модуларни сесии и cloud лабаратории. Многу од нашите куѕрсеви за учење преку интернет исто така вклучуваат повеќе снимени вебинари и сесии во живо од нашите постари инструктори. На крајот од тренингот, можете да го положите Odoo испитот за Сертификација во еден од 5000+ Pearson VUE тест центери низ целиот свет.</p>\n                        </div>\n                        <div class=\"col-md-offset-1\">\n                            <h3>Ваши предности</h3>\n                            <ul>\n                                <li>Модуларен пристап применет врз методот на учење</li>\n                                <li>Ново интерактивно искуство на учење</li>\n                                <li>Помал буџет за тренирање за истите квалитетни курсеви</li>\n                                <li>Подобар комфор за време на вашиот процес на учење</li>\n                            </ul>\n                        </div>\n                        <div class=\"col-md-12\">\n                            <h2>Структура на тренинг</h2>\n                        </div>\n                        <div class=\"col-md-5 col-md-offset-1 mt16 mb16\">\n                            <img class=\"img img-responsive\" src=\"https://www.openerp.com/saas_master/static/site_new/img/layout/online_training.png\">\n                        </div>\n                        <div class=\"col-md-6 mt32\">\n                            <h4><strong>Тренингот има три компоненти</strong></h4>\n                            <ul>\n                                <li>Видеа со детални демо-а</li>\n                                <li>Применети вежби и нивните решенија</li>\n                                <li>Прашања и одговори во живо со тренер</li>\n                            </ul>\n                        </div>\n                    </div>\n                </section>\n            "
+msgstr ""
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
@@ -1086,6 +1087,11 @@ msgstr "Оваа понуда истекува на"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
+msgid "This order has already been"
+msgstr ""
+
+#. module: website_quote
+#: view:website:website_quote.so_quotation
 msgid ""
 "This order has been validated. Thanks for your trust\n"
 "                          and do not hesitate to"
@@ -1144,6 +1150,12 @@ msgid "Website Description"
 msgstr "Опис на вебсајт"
 
 #. module: website_quote
+#: code:addons/website_quote/controllers/main.py:148
+#, python-format
+msgid "You cannot add options to a confirmed order."
+msgstr ""
+
+#. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your Contact:"
 msgstr "Ваш контакт:"
@@ -1187,6 +1199,11 @@ msgstr "Вашата порака е успешно испратена!"
 #: view:website:website_quote.so_template
 msgid "and"
 msgstr "и"
+
+#. module: website_quote
+#: view:website:website_quote.so_quotation
+msgid "cancelled"
+msgstr ""
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1238,6 +1255,11 @@ msgstr "оваа содржина\n                                ќе се п�
 #: field:sale.order.option,line_id:0
 msgid "unknown"
 msgstr "непознато"
+
+#. module: website_quote
+#: view:website:website_quote.so_quotation
+msgid "validated"
+msgstr ""
 
 #. module: website_quote
 #: view:website:website_quote.so_template
