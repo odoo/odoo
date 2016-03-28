@@ -631,6 +631,7 @@ class PosOrder(models.Model):
                 'name': order.name + _(' REFUND'),
                 'session_id': current_session.id,
                 'date_order': fields.Datetime.now(),
+                'pos_reference': order.pos_reference,
             })
             PosOrder += clone
 
