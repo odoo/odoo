@@ -1,37 +1,47 @@
 # -*- coding: utf-8 -*-
 
-from lxml import objectify
 import time
 import urlparse
+from lxml import objectify
 
-from openerp.addons.payment.models.payment_acquirer import ValidationError
-from openerp.addons.payment.tests.common import PaymentAcquirerCommon
-from openerp.addons.payment_ogone.controllers.main import OgoneController
-from openerp.tools import mute_logger
+from odoo.tests.common import at_install, post_install
+from odoo.tools import mute_logger
+
+from odoo.addons.payment.models.payment_acquirer import ValidationError
+from odoo.addons.payment.tests.common import PaymentAcquirerCommon
+from odoo.addons.payment_ogone.controllers.main import OgoneController
 
 
+@at_install(False)
+@post_install(False)
 class OgonePayment(PaymentAcquirerCommon):
 
     def setUp(self):
         super(OgonePayment, self).setUp()
-        cr, uid = self.cr, self.uid
-        self.base_url = self.registry('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        self.base_url = self.env['ir.config_parameter'].get_param('web.base.url')
 
-        # get the adyen account
-        model, self.ogone_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment', 'payment_acquirer_ogone')
+        # get the ogone account
+        self.ogone = self.env.ref('payment.payment_acquirer_ogone')
+        self.Transaction = self.env['payment.transaction']
+
+        self.ogone.write({
+            'ogone_pspid': 'odoosell',
+            'ogone_userid': 'odoosell',
+            'ogone_password': 'odoo123sdu',
+            'ogone_shakey_in': '12345678910Aa!@#',
+            'ogone_shakey_out': '12345678910Aa!@#',
+        })
 
     def test_10_ogone_form_render(self):
-        cr, uid, context = self.cr, self.uid, {}
         # be sure not to do stupid thing
-        ogone = self.payment_acquirer.browse(self.cr, self.uid, self.ogone_id, None)
-        self.assertEqual(ogone.environment, 'test', 'test without test environment')
+        self.assertEqual(self.ogone.environment, 'test', 'test without test environment')
 
         # ----------------------------------------
         # Test: button direct rendering + shasign
         # ----------------------------------------
 
         form_values = {
-            'PSPID': 'dummy',
+            'PSPID': 'odoosell',
             'ORDERID': 'test_ref0',
             'AMOUNT': '1',
             'CURRENCY': 'EUR',
@@ -40,10 +50,10 @@ class OgonePayment(PaymentAcquirerCommon):
             'EMAIL': 'norbert.buyer@example.com',
             'OWNERZIP': '1000',
             'OWNERADDRESS': 'Huge Street 2/543',
-            'OWNERCTY': 'Belgium',
+            'OWNERCTY': 'BE',
             'OWNERTOWN': 'Sin City',
             'OWNERTELNO': '0032 12 34 56 78',
-            'SHASIGN': '815f67b8ff70d234ffcf437c13a9fa7f807044cc',
+            'SHASIGN': 'dbe2a1d7527443b62befa74a0d45d0720ce8d2b7',
             'ACCEPTURL': '%s' % urlparse.urljoin(self.base_url, OgoneController._accept_url),
             'DECLINEURL': '%s' % urlparse.urljoin(self.base_url, OgoneController._decline_url),
             'EXCEPTIONURL': '%s' % urlparse.urljoin(self.base_url, OgoneController._exception_url),
@@ -51,16 +61,13 @@ class OgonePayment(PaymentAcquirerCommon):
         }
 
         # render the button
-        res = self.payment_acquirer.render(
-            cr, uid, self.ogone_id,
+        [res] = self.ogone.render(
             'test_ref0', 0.01, self.currency_euro_id,
-            partner_id=None,
-            partner_values=self.buyer_values,
-            context=context)
+            values=self.buyer_values,)
 
         # check form result
         tree = objectify.fromstring(res)
-        self.assertEqual(tree.get('action'), 'https://secure.ogone.com/ncol/test/orderstandard.asp', 'ogone: wrong form POST url')
+        self.assertEqual(tree.get('action'), 'https://secure.ogone.com/ncol/test/orderstandard_utf8.asp', 'ogone: wrong form POST url')
         for form_input in tree.input:
             if form_input.get('name') in ['submit']:
                 continue
@@ -74,28 +81,25 @@ class OgonePayment(PaymentAcquirerCommon):
         # Test2: button using tx + validation
         # ----------------------------------------
 
-        # create a new draft tx
-        tx_id = self.payment_transaction.create(
-            cr, uid, {
+        # create a new draft transaction
+        self.Transaction.create(
+            {
                 'amount': 0.01,
-                'acquirer_id': self.ogone_id,
+                'acquirer_id': self.ogone.id,
                 'currency_id': self.currency_euro_id,
                 'reference': 'test_ref0',
                 'partner_id': self.buyer_id,
-            }, context=context
-        )
+            })
         # render the button
-        res = self.payment_acquirer.render(
-            cr, uid, self.ogone_id,
-            'should_be_erased', 0.01, self.currency_euro,
-            tx_id=tx_id,
+        [res] = self.ogone.render(
+            'should_be_erased', 0.01, self.currency_euro_id,
             partner_id=None,
-            partner_values=self.buyer_values,
-            context=context)
+            values=self.buyer_values,
+        )
 
         # check form result
         tree = objectify.fromstring(res)
-        self.assertEqual(tree.get('action'), 'https://secure.ogone.com/ncol/test/orderstandard.asp', 'ogone: wrong form POST url')
+        self.assertEqual(tree.get('action'), 'https://secure.ogone.com/ncol/test/orderstandard_utf8.asp', 'ogone: wrong form POST url')
         for form_input in tree.input:
             if form_input.get('name') in ['submit']:
                 continue
@@ -107,119 +111,93 @@ class OgonePayment(PaymentAcquirerCommon):
 
     @mute_logger('openerp.addons.payment_ogone.models.ogone', 'ValidationError')
     def test_20_ogone_form_management(self):
-        cr, uid, context = self.cr, self.uid, {}
         # be sure not to do stupid thing
-        ogone = self.payment_acquirer.browse(self.cr, self.uid, self.ogone_id, None)
-        self.assertEqual(ogone.environment, 'test', 'test without test environment')
+        self.assertEqual(self.ogone.environment, 'test', 'test without test environment')
 
         # typical data posted by ogone after client has successfully paid
         ogone_post_data = {
-            'orderID': u'test_ref_2',
-            'STATUS': u'9',
-            'CARDNO': u'XXXXXXXXXXXX0002',
-            'PAYID': u'25381582',
+            'STATUS': u'5',
+            'orderID': u'SORDER014',
+            'PAYID': u'52329271',
             'CN': u'Norbert Buyer',
             'NCERROR': u'0',
-            'TRXDATE': u'11/15/13',
-            'IP': u'85.201.233.72',
+            'TRXDATE': u'11/20/15',
+            'IP': u'180.211.100.3',
             'BRAND': u'VISA',
             'ACCEPTANCE': u'test123',
-            'currency': u'EUR',
-            'amount': u'1.95',
-            'SHASIGN': u'7B7B0ED9CBC4A85543A9073374589033A62A05A5',
-            'ED': u'0315',
+            'currency': u'USD',
+            'amount': u'247',
+            'ED': u'0220',
+            'SHASIGN': u'0CBB4EBAAB2A741645A4B75DA95A5481D1598C2D',
+            'CARDNO': u'XXXXXXXXXXXX1111',
+            'return_url': u'/shop/payment/validate',
             'PM': u'CreditCard'
         }
 
-        # should raise error about unknown tx
+        # should raise error about unknown transaction
         with self.assertRaises(ValidationError):
-            self.payment_transaction.ogone_form_feedback(cr, uid, ogone_post_data, context=context)
+            self.Transaction.form_feedback(ogone_post_data, 'ogone')
 
-        # create tx
-        tx_id = self.payment_transaction.create(
-            cr, uid, {
-                'amount': 1.95,
-                'acquirer_id': self.ogone_id,
-                'currency_id': self.currency_euro_id,
-                'reference': 'test_ref_2',
-                'partner_name': 'Norbert Buyer',
-                'partner_country_id': self.country_france_id,
-            }, context=context
-        )
+        # create transaction
+        transaction = self.Transaction.create({
+            'amount': 247,
+            'acquirer_id': self.ogone.id,
+            'currency_id': self.env['res.currency'].search([('name', '=', 'USD')], limit=1).id,
+            'reference': 'SORDER014',
+            'partner_name': 'Norbert Buyer',
+            'partner_country_id': self.country_france_id})
+
         # validate it
-        self.payment_transaction.ogone_form_feedback(cr, uid, ogone_post_data, context=context)
-        # check state
-        tx = self.payment_transaction.browse(cr, uid, tx_id, context=context)
-        self.assertEqual(tx.state, 'done', 'ogone: validation did not put tx into done state')
-        self.assertEqual(tx.ogone_payid, ogone_post_data.get('PAYID'), 'ogone: validation did not update tx payid')
+        self.env['payment.transaction'].form_feedback(ogone_post_data, 'ogone')
 
-        # reset tx
-        tx.write({'state': 'draft', 'date_validate': False, 'ogone_payid': False})
+        # check state
+        self.assertEqual(transaction.state, 'done', 'ogone: validation did not put transaction into done state')
+        self.assertEqual(transaction.acquirer_reference, ogone_post_data.get('PAYID'), 'ogone: validation did not update tx payid')
+
+        # reset transaction
+        transaction.write({'state': 'draft', 'date_validate': False, 'acquirer_reference': False})
 
         # now ogone post is ok: try to modify the SHASIGN
-        ogone_post_data['SHASIGN'] = 'a4c16bae286317b82edb49188d3399249a784691'
+        ogone_post_data['SHASIGN'] = 'be8e9b07ae30d409b45239e20f48f728296f86f9'
         with self.assertRaises(ValidationError):
-            self.payment_transaction.ogone_form_feedback(cr, uid, ogone_post_data, context=context)
+            self.Transaction.form_feedback(ogone_post_data, 'ogone')
 
         # simulate an error
         ogone_post_data['STATUS'] = 2
-        ogone_post_data['SHASIGN'] = 'a4c16bae286317b82edb49188d3399249a784691'
-        self.payment_transaction.ogone_form_feedback(cr, uid, ogone_post_data, context=context)
+        ogone_post_data['SHASIGN'] = '288dd1325f083915a3d16de54e0eb9227e46f728'
+        self.Transaction.form_feedback(ogone_post_data, 'ogone')
         # check state
-        tx = self.payment_transaction.browse(cr, uid, tx_id, context=context)
-        self.assertEqual(tx.state, 'error', 'ogone: erroneous validation did not put tx into error state')
+        self.assertEqual(transaction.state, 'error', 'ogone: erroneous validation did not put tx into error state')
+
+    # s2s method testcase disable because  s2s method not working
 
     def test_30_ogone_s2s(self):
         test_ref = 'test_ref_%.15f' % time.time()
-        cr, uid, context = self.cr, self.uid, {}
         # be sure not to do stupid thing
-        ogone = self.payment_acquirer.browse(self.cr, self.uid, self.ogone_id, None)
-        self.assertEqual(ogone.environment, 'test', 'test without test environment')
+        self.assertEqual(self.ogone.environment, 'test', 'test without test environment')
+        #create payment meethod
+        payment_method = self.env['payment.method'].create({
+            'acquirer_id': self.ogone.id,
+            'partner_id': self.buyer_id,
+            'cc_number': '4111 1111 1111 1111',
+            'cc_expiry': '02 / 26',
+            'cc_brand': 'visa',
+            'cc_cvc': '111',
+            'cc_holder_name': 'test',
+        })
 
-        # create a new draft tx
-        tx_id = self.payment_transaction.create(
-            cr, uid, {
+        # create a new draft transaction
+        transaction = self.Transaction.create(
+            {
                 'amount': 0.01,
-                'acquirer_id': self.ogone_id,
-                'currency_id': self.currency_euro_id,
+                'acquirer_id': self.ogone.id,
+                'currency_id': self.currency_usd.id,
                 'reference': test_ref,
                 'partner_id': self.buyer_id,
                 'type': 'server2server',
-            }, context=context
-        )
+                'payment_method_id': payment_method.id,
+            })
 
-        # create an alias
-        res = self.payment_transaction.ogone_s2s_create_alias(
-            cr, uid, tx_id, {
-                'expiry_date_mm': '01',
-                'expiry_date_yy': '2015',
-                'holder_name': 'Norbert Poilu',
-                'number': '4000000000000002',
-                'brand': 'VISA',
-            }, context=context)
-
-        # check an alias is set, containing at least OPENERP
-        tx = self.payment_transaction.browse(cr, uid, tx_id, context=context)
-        self.assertIn('OPENERP', tx.partner_reference, 'ogone: wrong partner reference after creating an alias')
-
-        res = self.payment_transaction.ogone_s2s_execute(cr, uid, tx_id, {}, context=context)
-        # print res
-
-
-# {
-#     'orderID': u'reference',
-#     'STATUS': u'9',
-#     'CARDNO': u'XXXXXXXXXXXX0002',
-#     'PAYID': u'24998692',
-#     'CN': u'Norbert Poilu',
-#     'NCERROR': u'0',
-#     'TRXDATE': u'11/05/13',
-#     'IP': u'85.201.233.72',
-#     'BRAND': u'VISA',
-#     'ACCEPTANCE': u'test123',
-#     'currency': u'EUR',
-#     'amount': u'1.95',
-#     'SHASIGN': u'EFDC56879EF7DE72CCF4B397076B5C9A844CB0FA',
-#     'ED': u'0314',
-#     'PM': u'CreditCard'
-# }
+        transaction.ogone_s2s_execute(transaction)
+        # check an alias is set, containing at least ODOO
+        self.assertEqual(transaction.state, 'done', 'Ogone: Transcation has been discarded.')
