@@ -1,32 +1,21 @@
 # -*- coding: utf-'8' "-*-"
 
-import datetime
-from hashlib import sha1
-import logging
-from lxml import etree, objectify
-from openerp.tools.translate import _
-from pprint import pformat
 import time
-from urllib import urlencode
-import urllib2
 import urlparse
+from hashlib import sha1
 
-from openerp import SUPERUSER_ID
-from openerp.addons.payment.models.payment_acquirer import ValidationError
-from openerp.addons.payment_ogone.controllers.main import OgoneController
-from openerp.addons.payment_ogone.data import ogone
-from openerp.osv import osv, fields
-from openerp.tools import float_round, DEFAULT_SERVER_DATE_FORMAT
-from openerp.tools.float_utils import float_compare, float_repr
-from openerp.tools.safe_eval import safe_eval
+from odoo import api, fields, models
+from odoo.tools import float_round
+from odoo.tools.float_utils import float_repr
 
-_logger = logging.getLogger(__name__)
+from odoo.addons.payment_ogone.controllers.main import OgoneController
 
 
-class PaymentAcquirerOgone(osv.Model):
+class PaymentAcquirer(models.Model):
     _inherit = 'payment.acquirer'
 
-    def _get_ogone_urls(self, cr, uid, environment, context=None):
+    @api.model
+    def _get_ogone_urls(self, environment):
         """ Ogone URLS:
 
          - standard order: POST address for form-based
@@ -40,38 +29,43 @@ class PaymentAcquirerOgone(osv.Model):
             'ogone_afu_agree_url': 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % (environment,),
         }
 
-    def _get_providers(self, cr, uid, context=None):
-        providers = super(PaymentAcquirerOgone, self)._get_providers(cr, uid, context=context)
+    @api.model
+    def _get_providers(self):
+        providers = super(PaymentAcquirer, self)._get_providers()
         providers.append(['ogone', 'Ogone'])
         return providers
 
-    _columns = {
-        'ogone_pspid': fields.char('PSPID', required_if_provider='ogone'),
-        'ogone_userid': fields.char('API User ID', required_if_provider='ogone'),
-        'ogone_password': fields.char('API User Password', required_if_provider='ogone'),
-        'ogone_shakey_in': fields.char('SHA Key IN', size=32, required_if_provider='ogone'),
-        'ogone_shakey_out': fields.char('SHA Key OUT', size=32, required_if_provider='ogone'),
-        'ogone_alias_usage': fields.char('Alias Usage', help="""If you want to use Ogone Aliases,
-                                                                this default Alias Usage will be presented to
-                                                                the customer as the reason you want to
-                                                                keep his payment data""")
-    }
+    ogone_pspid = fields.Char(string='PSPID', required_if_provider='ogone')
+    ogone_userid = fields.Char(string='API User ID', required_if_provider='ogone')
+    ogone_password = fields.Char(string='API User Password', required_if_provider='ogone')
+    ogone_shakey_in = fields.Char(string='SHA Key IN', required_if_provider='ogone')
+    ogone_shakey_out = fields.Char(string='SHA Key OUT', required_if_provider='ogone')
+    ogone_alias_usage = fields.Char(string='Alias Usage', help="""If you want to use Ogone Aliases,
+                                                                  this default Alias Usage will be presented to
+                                                                  the customer as the reason you want to
+                                                                  keep his payment data""")
 
+    @api.v7
     def _ogone_generate_shasign(self, acquirer, inout, values):
+        return PaymentAcquirer._ogone_generate_shasign(acquirer, inout, values)
+
+    @api.v8
+    def _ogone_generate_shasign(self, inout, values):
         """ Generate the shasign for incoming or outgoing communications.
 
-        :param browse acquirer: the payment.acquirer browse record. It should
-                                have a shakey in shaky out
-        :param string inout: 'in' (openerp contacting ogone) or 'out' (ogone
-                             contacting openerp). In this last case only some
+        :param recordset self: the payment.acquirer recordset. It should
+                                have a shakey in shakey out
+        :param string inout: 'in' (odoo contacting ogone) or 'out' (ogone
+                             contacting odoo). In this last case only some
                              fields should be contained (see e-Commerce basic)
         :param dict values: transaction values
 
         :return string: shasign
         """
+        self.ensure_one()
         assert inout in ('in', 'out')
-        assert acquirer.provider == 'ogone'
-        key = getattr(acquirer, 'ogone_shakey_' + inout)
+        assert self.provider == 'ogone'
+        key = getattr(self, 'ogone_shakey_' + inout)
 
         def filter_key(key):
             if inout == 'in':
@@ -142,15 +136,15 @@ class PaymentAcquirerOgone(osv.Model):
         items = sorted((k.upper(), v) for k, v in values.items())
         sign = ''.join('%s=%s%s' % (k, v, key) for k, v in items if v and filter_key(k))
         sign = sign.encode("utf-8")
-        shasign = sha1(sign).hexdigest()
-        return shasign
+        return sha1(sign).hexdigest()
 
-    def ogone_form_generate_values(self, cr, uid, id, values, context=None):
-        base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
-        acquirer = self.browse(cr, uid, id, context=context)
+    @api.multi
+    def ogone_form_generate_values(self, values):
+        self.ensure_one()
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         ogone_tx_values = dict(values)
         temp_ogone_tx_values = {
-            'PSPID': acquirer.ogone_pspid,
+            'PSPID': self.ogone_pspid,
             'ORDERID': values['reference'],
             'AMOUNT': float_repr(float_round(values['amount'], 2) * 100, 0),
             'CURRENCY': values['currency'] and values['currency'].name or '',
@@ -171,30 +165,29 @@ class PaymentAcquirerOgone(osv.Model):
         if values.get('type') == 'form_save':
             temp_ogone_tx_values.update({
                 'ALIAS': 'ODOO-NEW-ALIAS-%s' % time.time(),    # something unique,
-                'ALIASUSAGE': values.get('alias_usage') or acquirer.ogone_alias_usage,
+                'ALIASUSAGE': values.get('alias_usage') or self.ogone_alias_usage
             })
-        shasign = self._ogone_generate_shasign(acquirer, 'in', temp_ogone_tx_values)
-        temp_ogone_tx_values['SHASIGN'] = shasign
+        temp_ogone_tx_values['SHASIGN'] = self._ogone_generate_shasign('in', temp_ogone_tx_values)
         ogone_tx_values.update(temp_ogone_tx_values)
         return ogone_tx_values
 
-    def ogone_get_form_action_url(self, cr, uid, id, context=None):
-        acquirer = self.browse(cr, uid, id, context=context)
-        return self._get_ogone_urls(cr, uid, acquirer.environment, context=context)['ogone_standard_order_url']
+    @api.multi
+    def ogone_get_form_action_url(self):
+        self.ensure_one()
+        return self._get_ogone_urls(self.environment)['ogone_standard_order_url']
 
-    def ogone_s2s_form_validate(self, cr, uid, id, data, context=None):
-        error = dict()
-        error_message = []
+    @api.multi
+    def ogone_s2s_form_validate(self, data):
 
         mandatory_fields = ["cc_number", "cc_cvc", "cc_holder_name", "cc_expiry", "cc_brand"]
         # Validation
         for field_name in mandatory_fields:
             if not data.get(field_name):
-                error[field_name] = 'missing'
+                return False
+        return True
 
-        return False if error else True
-
-    def ogone_s2s_form_process(self, cr, uid, data, context=None):
+    @api.model
+    def ogone_s2s_form_process(self, data):
         values = {
             'cc_number': data.get('cc_number'),
             'cc_cvc': int(data.get('cc_cvc')),
@@ -204,5 +197,4 @@ class PaymentAcquirerOgone(osv.Model):
             'acquirer_id': int(data.get('acquirer_id')),
             'partner_id': int(data.get('partner_id'))
         }
-        pm_id = self.pool['payment.method'].create(cr, SUPERUSER_ID, values, context=context)
-        return pm_id
+        return self.env['payment.method'].sudo().create(values).id

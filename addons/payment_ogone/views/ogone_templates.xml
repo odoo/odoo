@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <template id="ogone_acquirer_button">
             <form t-if="acquirer" t-att-action="tx_url" method="post" target="_self">
@@ -25,16 +24,6 @@
                 </t>
                 <!-- before payment verification -->
                 <input type='hidden' name='SHASIGN' t-att-value='SHASIGN'/>
-                <!-- look and print -->
-                <!-- <input type='hidden' name='TITLE' t-att-value='tx_dict["currency_name"]'/>
-                <input type='hidden' name='BGCOLOR' t-att-value='tx_dict["currency_name"]'/>
-                <input type='hidden' name='TXTCOLOR' t-att-value='tx_dict["currency_name"]'/>
-                <input type='hidden' name='TBLBGCOLOR' t-att-value='tx_dict["currency_name"]'/>
-                <input type='hidden' name='TBLTXTCOLOR' t-att-value='tx_dict["currency_name"]'/>
-                <input type='hidden' name='BUTTONBGCOLOR' t-att-value='tx_dict["currency_name"]'/>
-                <input type='hidden' name='BUTTONTXTCOLOR' t-att-value='tx_dict["currency_name"]'/>
-                <input type='hidden' name='LOGO' t-att-value='tx_dict["currency_name"]'/>
-                <input type='hidden' name='FONTTYPE' t-att-value='tx_dict["currency_name"]'/> -->
                 <!-- after payment parameters -->
                 <t t-if='PARAMPLUS'>
                     <input type='hidden' name="PARAMPLUS" t-att-value='PARAMPLUS'/>
@@ -87,6 +76,4 @@
                 </button>
             </form>
         </template>
-
-    </data>
-</openerp>
+</odoo>

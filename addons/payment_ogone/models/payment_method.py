@@ -1,25 +1,26 @@
 # -*- coding: utf-'8' "-*-"
 
-import logging
-from lxml import etree, objectify
 import time
+import logging
+import urllib2
+from lxml import etree, objectify
 from unicodedata import normalize
 from urllib import urlencode
-import urllib2
 
-from openerp.osv import osv
+from odoo import api, models
 
 _logger = logging.getLogger(__name__)
 
 
-class PaymentMethod(osv.Model):
+class PaymentMethod(models.Model):
     _inherit = 'payment.method'
 
-    def ogone_create(self, cr, uid, values, context=None):
+    @api.model
+    def ogone_create(self, values):
         if values.get('cc_number'):
             # create a alias via batch
             values['cc_number'] = values['cc_number'].replace(' ', '')
-            acquirer = self.pool['payment.acquirer'].browse(cr, uid, values['acquirer_id'])
+            acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
             alias = 'ODOO-NEW-ALIAS-%s' % time.time()
 
             expiry = str(values['cc_expiry'][:2]) + str(values['cc_expiry'][-2:])
