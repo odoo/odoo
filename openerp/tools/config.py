@@ -273,6 +273,10 @@ class configmanager(object):
             group.add_option("--limit-time-real", dest="limit_time_real", my_default=120,
                              help="Maximum allowed Real time per request (default 120).",
                              type="int")
+            group.add_option("--limit-time-real-cron", dest="limit_time_real_cron", my_default=-1,
+                             help="Maximum allowed Real time per cron job. (default: --limit-time-real). "
+                                  "Set to 0 for no limit. ",
+                             type="int")
             group.add_option("--limit-request", dest="limit_request", my_default=8192,
                              help="Maximum number of request to be processed per worker (default 8192).",
                              type="int")
@@ -395,7 +399,7 @@ class configmanager(object):
         posix_keys = [
             'workers',
             'limit_memory_hard', 'limit_memory_soft',
-            'limit_time_cpu', 'limit_time_real', 'limit_request',
+            'limit_time_cpu', 'limit_time_real', 'limit_request', 'limit_time_real_cron'
         ]
 
         if os.name == 'posix':
