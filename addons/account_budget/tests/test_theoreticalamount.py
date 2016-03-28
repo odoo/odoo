@@ -35,7 +35,7 @@ class TestTheoreticalAmount(TransactionCase):
         })
         self.line = crossovered_budget_line_id
 
-        self.patcher = patch('openerp.addons.account_budget.account_budget.fields.Datetime', wraps=Datetime)
+        self.patcher = patch('openerp.addons.account_budget.models.account_budget.fields.Datetime', wraps=Datetime)
         self.mock_datetime = self.patcher.start()
 
     def test_01(self):
