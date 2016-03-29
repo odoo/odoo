@@ -51,7 +51,7 @@ class AccountInvoiceLine(models.Model):
 
     @api.one
     def asset_create(self):
-        if self.asset_category_id and self.asset_category_id.method_number > 1:
+        if self.asset_category_id:
             vals = {
                 'name': self.name,
                 'code': self.invoice_id.number or False,
