@@ -640,7 +640,7 @@ Model Reference
 
     .. automethod:: read
 
-    .. rubric:: Research
+    .. rubric:: Searching
 
     .. automethod:: search
     .. automethod:: search_count
