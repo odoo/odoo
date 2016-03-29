@@ -50,6 +50,9 @@ openerp.web_calendar = function(instance) {
             dayNames: moment.weekdays(),
             dayNamesShort: moment.weekdaysShort(),
             firstDay: moment._locale._week.dow,
+            weekNumberCalculation: function(date) {
+                return moment(date).week();
+            },
             weekNumbers: true,
             axisFormat : shortTimeformat.replace(/:mm/,'(:mm)'),
             timeFormat : {
