@@ -110,7 +110,7 @@
                     <th>Due Date</th>
                     <th></th>
                     <th></th>
-                    <th>Total</th>
+                    <th>Amount Due</th>
                   </tr>
                 </thead>
                 <t t-foreach="invoices" t-as="invoice">
@@ -132,9 +132,9 @@
                             </t>
                         </td>
                         <td>
-                          <a t-if="invoice.state == 'open'" t-attf-href="/website_payment/pay?reference=#{invoice.number}&amp;amount=#{invoice.amount_total}&amp;currency_id=#{invoice.currency_id.id}&amp;country_id=#{invoice.partner_id.country_id.id}" alt="Pay Now" class="btn btn-xs btn-primary"><i class="fa fa-arrow-circle-right"/> Pay Now</a>
+                          <a t-if="invoice.state == 'open'" t-attf-href="/website_payment/pay?reference=#{invoice.number}&amp;amount=#{invoice.residual}&amp;currency_id=#{invoice.currency_id.id}&amp;country_id=#{invoice.partner_id.country_id.id}" alt="Pay Now" class="btn btn-xs btn-primary"><i class="fa fa-arrow-circle-right"/> Pay Now</a>
                         </td>
-                        <td><span t-field="invoice.amount_total" t-field-options='{"widget": "monetary", "display_currency": "invoice.currency_id"}'/></td>
+                        <td><span t-field="invoice.residual" t-field-options='{"widget": "monetary", "display_currency": "invoice.currency_id"}'/></td>
                     </tr>
                 </t>
                 <tr t-att-class="'hidden' if len(invoices) &lt; 5 else ''">
