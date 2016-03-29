@@ -566,8 +566,8 @@ function summernote_mouseup (event) {
     }
     // don't rerange if simple click
     if (initial_data.event) {
-        var dx = event.clientX - (event.shiftKey ? initial_data.rect.left : initial_data.event.clientX);
-        var dy = event.clientY - (event.shiftKey ? initial_data.rect.top : initial_data.event.clientY);
+        var dx = event.clientX - (event.shiftKey && initial_data.rect ? initial_data.rect.left : initial_data.event.clientX);
+        var dy = event.clientY - (event.shiftKey && initial_data.rect ? initial_data.rect.top : initial_data.event.clientY);
         if (10 < Math.pow(dx, 2)+Math.pow(dy, 2)) {
             reRangeSelect(event, dx, dy);
         }
