@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp_operations
-# 
+#
 # Translators:
 # jeffery chen fan <jeffery9@gmail.com>, 2016
 # 卓忆科技 <zhanghao@jointd.com>, 2015
@@ -10,14 +10,15 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2016-03-12 02:28+0000\n"
+"PO-Revision-Date: 2016-03-29 08:38+0800\n"
 "Last-Translator: Joroy <13637815@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
+"Content-Transfer-Encoding: 8bit\n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 1.8.7\n"
 
 #. module: mrp_operations
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_nbr
@@ -32,7 +33,12 @@ msgid ""
 "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n"
 "* When the user cancels the work order it will be set in 'Canceled' status.\n"
 "* When order is completely processed that time it is set in 'Finished' status."
-msgstr "* 工单被创建时，“草稿“状态。\n* 从工单被用户进入开始模式后，设为”在进行中“模式。\n* 当工单是运行模式，在此期间，如果用户要停止或作出改变，可设置为”挂起“状态。\n* 当用户取消工单，设置为”取消状态“。\n* 从工单被完成的时候开始，设置为”完成“状态。"
+msgstr ""
+"* 工单被创建时，“草稿“状态。\n"
+"* 从工单被用户进入开始模式后，设为”在进行中“模式。\n"
+"* 当工单是运行模式，在此期间，如果用户要停止或作出改变，可设置为”挂起“状态。\n"
+"* 当用户取消工单，设置为”取消状态“。\n"
+"* 从工单被完成的时候开始，设置为”完成“状态。"
 
 #. module: mrp_operations
 #: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -65,17 +71,13 @@ msgid "Canceled"
 msgstr "已作废"
 
 #. module: mrp_operations
-#: selection:mrp.production.workcenter.line,state:0
-#: selection:mrp.workorder,state:0
-#: selection:mrp_operations.operation.code,start_stop:0
+#: selection:mrp.production.workcenter.line,state:0 selection:mrp.workorder,state:0 selection:mrp_operations.operation.code,start_stop:0
 msgid "Cancelled"
 msgstr "已取消"
 
 #. module: mrp_operations
 #: model:ir.model.fields,help:mrp_operations.field_mrp_production_allow_reorder
-msgid ""
-"Check this to be able to move independently all production orders, without "
-"moving dependent ones."
+msgid "Check this to be able to move independently all production orders, without moving dependent ones."
 msgstr "选中这里就不会按工作中心工作时间重排生产单日期。"
 
 #. module: mrp_operations
@@ -140,17 +142,14 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: mrp_operations
-#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
-#: selection:mrp.production.workcenter.line,production_state:0
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter selection:mrp.production.workcenter.line,production_state:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Done"
 msgstr "完成"
 
 #. module: mrp_operations
 #: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
-#: selection:mrp.production.workcenter.line,production_state:0
-#: selection:mrp.production.workcenter.line,state:0
-#: selection:mrp.workorder,state:0
+#: selection:mrp.production.workcenter.line,production_state:0 selection:mrp.production.workcenter.line,state:0 selection:mrp.workorder,state:0
 msgid "Draft"
 msgstr "草稿"
 
@@ -174,8 +173,7 @@ msgstr "完成工单"
 #. module: mrp_operations
 #: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
 #: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
-#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
-#: selection:mrp.production.workcenter.line,state:0
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
 msgid "Finished"
 msgstr "已完成"
@@ -214,8 +212,7 @@ msgid "In Production"
 msgstr "生产中"
 
 #. module: mrp_operations
-#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
-#: selection:mrp.production.workcenter.line,state:0
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
 msgid "In Progress"
 msgstr "进行中"
@@ -223,15 +220,13 @@ msgstr "进行中"
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:438
 #, python-format
-msgid ""
-"In order to Finish the operation, it must be in the Start or Resume state!"
+msgid "In order to Finish the operation, it must be in the Start or Resume state!"
 msgstr "要完成工单，它必须处于开始或重新开始状态。"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:429
 #, python-format
-msgid ""
-"In order to Pause the operation, it must be in the Start or Resume state!"
+msgid "In order to Pause the operation, it must be in the Start or Resume state!"
 msgstr "要暂停工单，必须在开始或重启状态。"
 
 #. module: mrp_operations
@@ -299,9 +294,7 @@ msgstr "作业名称"
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:425
 #, python-format
-msgid ""
-"Operation has already started! You can either Pause/Finish/Cancel the "
-"operation."
+msgid "Operation has already started! You can either Pause/Finish/Cancel the operation."
 msgstr "操作已经开始！你可以 暂停/完成/取消 这个操作。"
 
 #. module: mrp_operations
@@ -324,8 +317,7 @@ msgstr "操作还未开始！"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
-#: model:ir.ui.view,arch_db:mrp_operations.workcenter_line_calendar
-#: model:ir.ui.view,arch_db:mrp_operations.workcenter_line_gantt
+#: model:ir.ui.view,arch_db:mrp_operations.workcenter_line_calendar model:ir.ui.view,arch_db:mrp_operations.workcenter_line_gantt
 msgid "Operations"
 msgstr "作业"
 
@@ -335,8 +327,7 @@ msgid "Order Date"
 msgstr "单据日期"
 
 #. module: mrp_operations
-#: selection:mrp.workorder,state:0
-#: selection:mrp_operations.operation.code,start_stop:0
+#: selection:mrp.workorder,state:0 selection:mrp_operations.operation.code,start_stop:0
 msgid "Pause"
 msgstr "暂停"
 
@@ -349,8 +340,7 @@ msgstr "暂停工单"
 #: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
 #: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
 #: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
-#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
-#: selection:mrp.production.workcenter.line,state:0
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter selection:mrp.production.workcenter.line,state:0
 msgid "Pending"
 msgstr "暂停"
 
@@ -405,8 +395,7 @@ msgid "Production Operation"
 msgstr "生产工单"
 
 #. module: mrp_operations
-#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_code_form_view
-#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_code_tree_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_code_form_view model:ir.ui.view,arch_db:mrp_operations.mrp_production_code_tree_view
 msgid "Production Operation Code"
 msgstr "工单编号"
 
@@ -453,8 +442,7 @@ msgstr "负责人"
 #. module: mrp_operations
 #: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
 #: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
-#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
-#: selection:mrp_operations.operation.code,start_stop:0
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit selection:mrp_operations.operation.code,start_stop:0
 msgid "Resume"
 msgstr "重新开始"
 
@@ -508,8 +496,7 @@ msgstr "设为草稿"
 #. module: mrp_operations
 #: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
 #: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
-#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
-#: selection:mrp_operations.operation.code,start_stop:0
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit selection:mrp_operations.operation.code,start_stop:0
 msgid "Start"
 msgstr "开始"
 
@@ -556,7 +543,12 @@ msgid ""
 "            Manufacturing operations are often called Work Orders. The various\n"
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload."
-msgstr "要生产或者组装产品，使用原料\n完成产品您也必须处理生产操作。\n生产操作经常被叫做工单。\n各种操作对生产成本有不同的影响，\n生产和计划取决于可用的工作量。"
+msgstr ""
+"要生产或者组装产品，使用原料\n"
+"完成产品您也必须处理生产操作。\n"
+"生产操作经常被叫做工单。\n"
+"各种操作对生产成本有不同的影响，\n"
+"生产和计划取决于可用的工作量。"
 
 #. module: mrp_operations
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_total_cycles
@@ -600,12 +592,12 @@ msgstr "工作中心条码"
 #: model:ir.actions.act_window,name:mrp_operations.action_report_mrp_workorder
 #: model:ir.model,name:mrp_operations.model_mrp_production_workcenter_line
 msgid "Work Order"
-msgstr "工票"
+msgstr "工单"
 
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_workorder
 msgid "Work Order Report"
-msgstr "工票报表"
+msgstr "工单报表"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
@@ -616,7 +608,7 @@ msgstr "工票报表"
 #: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_graph
 #: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_pivot
 msgid "Work Orders"
-msgstr "工票"
+msgstr "工单"
 
 #. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
@@ -637,7 +629,13 @@ msgid ""
 "            marked as started. Once you finish the latest operation of a\n"
 "            manufacturing order, the MO is automatically done and the related\n"
 "            products are produced."
-msgstr "工单是每个生产订单要被执行的操作列表。\n当您启动生产订单的第一个工单，\n生产订单将被自动标记为启动。\n当您完成了生产订单的最后一个操作，\n生成订单被自动完成并且相关的产品\n被制造完成。"
+msgstr ""
+"工单是每个生产订单要被执行的操作列表。\n"
+"当您启动生产订单的第一个工单，\n"
+"生产订单将被自动标记为启动。\n"
+"当您完成了生产订单的最后一个操作，\n"
+"生成订单被自动完成并且相关的产品\n"
+"被制造完成。"
 
 #. module: mrp_operations
 #: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_delay

@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp_byproduct
-# 
+#
 # Translators:
 # Joroy <13637815@qq.com>, 2016
 msgid ""
@@ -9,14 +9,15 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-03-12 01:56+0000\n"
+"PO-Revision-Date: 2016-03-29 08:36+0800\n"
 "Last-Translator: Joroy <13637815@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
+"Content-Transfer-Encoding: 8bit\n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 1.8.7\n"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_bom
@@ -34,8 +35,7 @@ msgid "Byproduct"
 msgstr "副产品"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_bom_sub_products
-#: model:ir.ui.view,arch_db:mrp_byproduct.mrp_subproduct_view
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_bom_sub_products model:ir.ui.view,arch_db:mrp_byproduct.mrp_subproduct_view
 msgid "Byproducts"
 msgstr "副产品"
 
@@ -57,14 +57,14 @@ msgstr "创建于"
 #. module: mrp_byproduct
 #: model:ir.model.fields,help:mrp_byproduct.field_mrp_subproduct_subproduct_type
 msgid ""
-"Define how the quantity of byproducts will be set on the production orders "
-"using this BoM.  'Fixed' depicts a situation where the quantity of created "
-"byproduct is always equal to the quantity set on the BoM, regardless of how "
-"many are created in the production order.  By opposition, 'Variable' means "
-"that the quantity will be computed as    '(quantity of byproduct set on the "
-"BoM / quantity of manufactured product set on the BoM * quantity of "
-"manufactured product in the production order.)'"
-msgstr "使用BoM定义在生产订单上有多少数量的副产品。\r\n“固定的” 描绘了生成的副产品的数量总是等于 BoM设置的，无论生产订单生产了多少产品。\r\n相对的，“可变的”意味着数量是要被计算的：BoM设置的副产品数量 / BoM 上设置的产品生产数量 * 在生产订单中的成品数量。)'"
+"Define how the quantity of byproducts will be set on the production orders using this BoM.  'Fixed' depicts a situation where the quantity of "
+"created byproduct is always equal to the quantity set on the BoM, regardless of how many are created in the production order.  By opposition, "
+"'Variable' means that the quantity will be computed as    '(quantity of byproduct set on the BoM / quantity of manufactured product set on the BoM "
+"* quantity of manufactured product in the production order.)'"
+msgstr ""
+"使用BoM定义在生产订单上有多少数量的副产品。\r\n"
+"“固定的” 描绘了生成的副产品的数量总是等于 BoM设置的，无论生产订单生产了多少产品。\r\n"
+"相对的，“可变的”意味着数量是要被计算的：BoM设置的副产品数量 / BoM 上设置的产品生产数量 * 在生产订单中的成品数量。)'"
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_display_name
@@ -74,7 +74,7 @@ msgstr "显示名称"
 #. module: mrp_byproduct
 #: selection:mrp.subproduct,subproduct_type:0
 msgid "Fixed"
-msgstr "固定的"
+msgstr "固定"
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_id
@@ -99,7 +99,7 @@ msgstr "最后更新"
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_production
 msgid "Manufacturing Order"
-msgstr "制造订单"
+msgstr "生产单"
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_id
@@ -124,9 +124,7 @@ msgstr "数量类型"
 #. module: mrp_byproduct
 #: code:addons/mrp_byproduct/mrp_byproduct.py:45
 #, python-format
-msgid ""
-"The Product Unit of Measure you chose has a different category than in the "
-"product form."
+msgid "The Product Unit of Measure you chose has a different category than in the product form."
 msgstr "你选择的计量单位跟产品表单的计量单位在不同的类别。"
 
 #. module: mrp_byproduct
