@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+       <record model="ir.ui.view" id="trinh_product_template_form_view_invoice_policy">
+            <field name="name">trinh.product.template.invoice.policy</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="sale.product_template_form_view_invoice_policy"/>
+            <field name="arch" type="xml">
+                <field name="invoice_policy" position="replace">
+                    <field name="invoice_policy" widget="radio" invisible="1"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
