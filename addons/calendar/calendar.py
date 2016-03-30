@@ -1682,7 +1682,7 @@ class calendar_event(osv.Model):
             if r['class'] == 'private':
                 for f in r.keys():
                     recurrent_fields = self._get_recurrent_fields(cr, uid, context=context)
-                    public_fields = list(set(recurrent_fields + ['id', 'allday', 'start', 'stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date', 'rrule']))
+                    public_fields = list(set(recurrent_fields + ['id', 'allday', 'start', 'stop', 'display_start', 'display_stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date', 'rrule']))
                     if f not in public_fields:
                         if isinstance(r[f], list):
                             r[f] = []
