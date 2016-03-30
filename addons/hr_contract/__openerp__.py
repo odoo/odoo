@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
 {
     'name': 'Employee Contracts',
     'version': '1.0',
@@ -21,9 +20,9 @@ You can assign several contracts per employee.
     'depends': ['base_action_rule', 'hr'],
     'data': [
         'security/ir.model.access.csv',
-        'views/hr_contract_views.xml',
         'data/hr_contract_data.xml',
         'views/base_action_rule_views.xml',
+        'views/hr_contract_views.xml',
     ],
     'demo': [],
     'test': ['test/test_hr_contract.yml'],
