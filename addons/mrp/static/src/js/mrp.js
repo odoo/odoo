@@ -16,10 +16,10 @@ var SetBulletStatus = common.AbstractField.extend(common.ReinitializeFieldMixin,
             var bullet_class = this.classes[this.get('value')] || 'default';
             if (this.get('value')){
                 title = this.get('value') == 'waiting'? _t('Waiting Raw Materials.') : _t('Ready to produce.'),
-                this.$el.attr('title', title);
+                this.$el.attr({'title': title, 'style': 'display:inline'});
                 this.$el
                     .removeClass('text-success text-danger text-default')
-                this.$el.replaceWith("<span title='" + title + "' class='o_form_field label label-" + bullet_class + "'>" + title + "</span>");
+                this.$el.html($('<span>' + title + '</span>').addClass('label label-' + bullet_class));
             }
         }
     },

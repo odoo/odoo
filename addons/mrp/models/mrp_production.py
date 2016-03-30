@@ -401,6 +401,16 @@ class MrpProduction(models.Model):
             'target': 'new',
         }
 
+    @api.multi
+    def button_scrapped_moves(self):
+        self.ensure_one()
+        action_rec = self.env.ref('stock.action_move_form2')
+        scrap_moves = self.env['stock.move'].search([('production_id', '=', self.id), ('scrapped', '=', True), ('state', '=', 'done')])
+        if action_rec:
+            action = action_rec.read([])[0]
+            action['domain'] = [('id', 'in', scrap_moves.ids)]
+            return action
+
 
 class MrpProductionWorkcenterLine(models.Model):
     _name = 'mrp.production.work.order'
@@ -434,8 +444,9 @@ class MrpProductionWorkcenterLine(models.Model):
         for workorder in self:
             domain = [
                 ('picking_type_id', '=', workorder.production_id.picking_type_id.id), '|',
-                ('bom_id', '=', workorder.production_id.bom_id.id),
+                ('bom_id', '=', workorder.production_id.bom_id.id), '|',
                 ('workcenter_id', '=', workorder.workcenter_id.id),
+                ('routing_id', '=', workorder.operation_id.routing_id.id),
                 ('valid_until', '>=', fields.Date.today())
             ]
             messages = InventoryMessage.search(domain).mapped('message')
@@ -535,14 +546,13 @@ class MrpProductionWorkcenterLine(models.Model):
             raise UserError(_('Please set the quantity you produced in the Current Qty field. It can not be 0!'))
 
         # Update quantities done on each raw material line
-        raw_moves = self.move_raw_ids.filtered(lambda x: (x.has_tracking == 'none') and (x.state not in ('done', 'cancel')))
+        raw_moves = self.move_raw_ids.filtered(lambda x: (x.has_tracking == 'none') and (x.state not in ('done', 'cancel')) and x.bom_line_id)
         for move in raw_moves:
             factor = 1.0
             #if it's a finished product, we use factor 1 as no bom_line
             if move.bom_line_id:
                 factor = move.bom_line_id.bom_id.product_qty * move.bom_line_id.product_qty
-            move.quantity_done += self.qty_producing / factor
-
+            move.quantity_done += factor * self.qty_producing
         # One a piece is produced, you can launch the next work order
         if self.next_work_order_id.state=='pending':
             self.next_work_order_id.state='ready'
@@ -570,7 +580,7 @@ class MrpProductionWorkcenterLine(models.Model):
                                      'workorder_id': self.id
                                      })
             else:
-                production_move.product_uom_qty += self.qty_producing #TODO: UoM conversion?
+                production_move.quantity_done += self.qty_producing #TODO: UoM conversion?
         # Update workorder quantity produced
         self.qty_produced += self.qty_producing
         self.qty_producing = 1.0
@@ -862,10 +872,11 @@ class InventoryMessage(models.Model):
     message = fields.Html(required=True)
     picking_type_id = fields.Many2one('stock.picking.type', string="Alert on Operation", required=True)
     code = fields.Selection(related='picking_type_id.code', store=True)
-    product_id = fields.Many2one('product.product', string="Product", required=True)
+    product_id = fields.Many2one('product.product', string="Product")
     bom_id = fields.Many2one('mrp.bom', 'Bill of Material')
     workcenter_id = fields.Many2one('mrp.workcenter', string='Work Center')
     valid_until = fields.Date(default=_default_valid_until, required=True)
+    routing_id = fields.Many2one('mrp.routing', string='Routing')
 
     @api.onchange('product_id')
     def onchange_product_id(self):

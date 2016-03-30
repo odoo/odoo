@@ -1761,6 +1761,14 @@ class stock_picking(models.Model):
             'target': 'new',
         }
 
+    def button_scrapped_moves(self, cr, uid, ids, context=None):
+        action_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'stock.action_move_form2')
+        scrap_moves = self.pool['stock.move'].search(cr, uid, [('picking_id', '=', ids[0]), ('scrapped', '=', True), ('state', '=', 'done')], context=context)
+        if action_id:
+            action = self.pool['ir.actions.act_window'].read(cr, uid, action_id, [], context=context)
+            action['domain'] = [('id', 'in', scrap_moves)]
+            return action
+
 
 class stock_production_lot(osv.osv):
     _name = 'stock.production.lot'

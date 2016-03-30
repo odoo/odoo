@@ -107,7 +107,7 @@ var KanbanSelection = AbstractField.extend({
     prepare_dropdown_selection: function() {
         var self = this;
         var _data = [];
-        var stage_id = self.parent.values.stage_id.value[0];
+        var stage_id = self.parent.values.stage_id && self.parent.values.stage_id.value[0] || false;
         var stage_data = {
             id: stage_id,
             legend_normal: self.parent.values.legend_normal ? self.parent.values.legend_normal.value : undefined,

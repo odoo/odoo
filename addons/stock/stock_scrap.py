@@ -37,6 +37,8 @@ class StockScrap(models.Model):
     def do_scrap(self):
         self.ensure_one()
         StockMove = self.env['stock.move']
+        if self.env.context.get('active_model') == 'stock.picking':
+            picking_id = self.env.context.get('active_id')
         default_val = {
             'name': self.name,
             'product_id': self.product_id.id,
@@ -45,6 +47,7 @@ class StockScrap(models.Model):
             'location_id': self.location_id.id,
             'scrapped': True,
             'location_dest_id': self.scrap_location_id.id,
+            'picking_id': picking_id,
         }
         move = StockMove.create(default_val)
         new_move = move.action_scrap(self.scrap_qty, self.scrap_location_id.id)

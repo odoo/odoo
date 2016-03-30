@@ -298,3 +298,35 @@ class StockPickingType(models.Model):
     count_mo_todo = fields.Integer(compute='_get_mo_count')
     count_mo_waiting = fields.Integer(compute='_get_mo_count')
     count_mo_late = fields.Integer(compute='_get_mo_count')
+
+
+class StockScrap(models.Model):
+    _inherit = 'stock.scrap'
+
+    production_id = fields.Many2one('mrp.production', 'Manufacturing Order', states={'done': [('readonly', True)]})
+
+    @api.multi
+    def do_scrap(self):
+        self.ensure_one()
+        StockMove = self.env['stock.move']
+        production_id = False
+        picking_id = False
+        if self.env.context.get('active_model') == 'mrp.production':
+            production_id = self.env.context.get('active_id')
+        if self.env.context.get('active_model') == 'stock.picking':
+            picking_id = self.env.context.get('active_id')
+        default_val = {
+            'name': self.name,
+            'product_id': self.product_id.id,
+            'product_uom': self.product_uom_id.id,
+            'product_uom_qty': self.scrap_qty,
+            'location_id': self.location_id.id,
+            'scrapped': True,
+            'location_dest_id': self.scrap_location_id.id,
+            'production_id': production_id,
+            'picking_id': picking_id,
+        }
+        move = StockMove.create(default_val)
+        new_move = move.action_scrap(self.scrap_qty, self.scrap_location_id.id)
+        self.write({'move_id': move.id, 'state': 'done'})
+        return True
