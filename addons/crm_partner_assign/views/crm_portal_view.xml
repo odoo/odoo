@@ -1,7 +1,7 @@
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
     <!-- lead views-->
-        <record model="ir.ui.view" id="crm_lead_portal_tree">
+        <record id="crm_lead_portal_tree" model="ir.ui.view">
             <field name="name">partner lead</field>
             <field name="model">crm.lead</field>
             <field name="priority" eval="32"/>
@@ -25,7 +25,7 @@
             </tree>
             </field>
         </record>
-        <record model= "ir.ui.view" id="crm_lead_portal_form">
+        <record id="crm_lead_portal_form" model= "ir.ui.view">
             <field name="name">crm_portal_form</field>
             <field name="model">crm.lead</field>
             <field name="priority" eval="32"/>
@@ -67,7 +67,7 @@
             </field>
         </record>
         <!-- opportunity views-->
-        <record model="ir.ui.view" id="crm_opportunity_portal_tree">
+        <record id="crm_opportunity_portal_tree" model="ir.ui.view">
             <field name="name">partner lead</field>
             <field name="model">crm.lead</field>
             <field name="priority" eval="32"/>
@@ -89,7 +89,7 @@
                </tree>
             </field>
         </record>
-        <record model= "ir.ui.view" id="crm_opportunity_portal_form">
+        <record id="crm_opportunity_portal_form" model= "ir.ui.view" >
             <field name="name">crm_portal_form</field>
             <field name="model">crm.lead</field>
             <field name="priority" eval="32"/>
@@ -210,6 +210,4 @@
       <menuitem name="Leads &amp; Opportunities" id="portal_leads" parent="portal.portal_menu" sequence="25"/>
       <menuitem action="action_portal_leads" sequence="0" id="openerp_portal_menu_sales_leads_current" parent="portal_leads"/>
       <menuitem action="action_portal_opportunities" sequence="1" id="openerp_portal_menu_sales_leads_current1" parent="portal_leads"/>
-
-    </data>
-</openerp>
+</odoo>

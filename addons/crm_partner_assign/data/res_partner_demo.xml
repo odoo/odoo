@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
-    <data>
+<odoo>
         <record id="res_partner_grade_platinium" model="res.partner.grade">
             <field name="name">Platinum</field>
             <field name="sequence">4</field>
@@ -22,7 +21,7 @@
             <field name="grade_id" ref="res_partner_grade_bronze"/>
             <field name="partner_weight">10</field>
         </record>
-        <record model="res.partner" id="base.res_partner_2">
+        <record  id="base.res_partner_2" model="res.partner">
             <field name="assigned_partner_id" eval="ref('base.res_partner_3')"/>
         </record>
        <record id="base.res_partner_4" model="res.partner">
@@ -69,41 +68,40 @@
             <field name="partner_weight">10</field>
         </record>
 
-        <record model="res.partner" id="base.res_partner_10">
+        <record id="base.res_partner_10" model="res.partner">
             <field name="assigned_partner_id" eval="ref('base.res_partner_4')"/>
         </record>
-        <record model="res.partner" id="base.res_partner_12">
+        <record  id="base.res_partner_12" model="res.partner">
             <field name="assigned_partner_id" eval="ref('base.res_partner_10')"/>
         </record>
-        <record model="res.partner" id="base.res_partner_4">
+        <record  id="base.res_partner_4" model="res.partner">
             <field name="assigned_partner_id" eval="ref('base.res_partner_4')"/>
         </record>
-        <record model="res.partner" id="base.res_partner_10">
+        <record  id="base.res_partner_10" model="res.partner">
             <field name="assigned_partner_id" eval="ref('base.res_partner_12')"/>
         </record>
-        <record model="res.partner" id="base.res_partner_3">
+        <record  id="base.res_partner_3" model="res.partner">
             <field name="assigned_partner_id" eval="ref('base.res_partner_3')"/>
         </record>
-        <record model="res.partner" id="base.res_partner_2">
+        <record  id="base.res_partner_2" model="res.partner">
             <field name="assigned_partner_id" eval="ref('base.res_partner_1')"/>
         </record>
-        <record model="res.partner" id="base.res_partner_4">
+        <record id="base.res_partner_4" model="res.partner">
             <field name="assigned_partner_id" eval="ref('base.res_partner_18')"/>
         </record>
-        <record model="res.partner" id="base.res_partner_4">
+        <record  id="base.res_partner_4" model="res.partner">
             <field name="assigned_partner_id" eval="ref('base.res_partner_3')"/>
         </record>
-        <record model="res.partner" id="base.res_partner_1">
+        <record id="base.res_partner_1" model="res.partner" >
             <field name="assigned_partner_id" eval="ref('base.res_partner_12')"/>
         </record>
-        <record model="res.partner" id="base.res_partner_1">
+        <record id="base.res_partner_1" model="res.partner">
             <field name="assigned_partner_id" eval="ref('base.res_partner_2')"/>
         </record>
-        <record model="res.partner" id="base.res_partner_1">
+        <record id="base.res_partner_1" model="res.partner">
             <field name="assigned_partner_id" eval="ref('base.res_partner_2')"/>
         </record>
-        <record model="res.partner" id="base.res_partner_12">
+        <record  id="base.res_partner_12" model="res.partner">
             <field name="assigned_partner_id" eval="ref('base.res_partner_12')"/>
         </record>
-    </data>
-</openerp>
+</odoo>
