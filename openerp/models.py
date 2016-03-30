@@ -5665,6 +5665,15 @@ class BaseModel(object):
             if name in fields
         }
 
+    def _convert_to_record(self, values):
+        """ Convert the ``values`` dictionary from the cache format to the
+        record format.
+        """
+        return {
+            name: self._fields[name].convert_to_record(value, self)
+            for name, value in values.iteritems()
+        }
+
     def _convert_to_write(self, values):
         """ Convert the ``values`` dictionary into the format of :meth:`write`. """
         fields = self._fields
@@ -6099,7 +6108,7 @@ class BaseModel(object):
                 return
             if res.get('value'):
                 res['value'].pop('id', None)
-                self.update(self._convert_to_cache(res['value'], validate=False))
+                self.update(res['value'])
             if res.get('domain'):
                 result.setdefault('domain', {}).update(res['domain'])
             if res.get('warning'):
@@ -6188,7 +6197,7 @@ class BaseModel(object):
         # create a new record with values, and attach ``self`` to it
         with env.do_in_onchange():
             record = self.new(values)
-            values = dict(record._cache)
+            values = {name: record[name] for name in record._cache}
             # attach ``self`` with a different context (for cache consistency)
             record._origin = self.with_context(__onchange=True)
 

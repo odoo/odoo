@@ -52,11 +52,12 @@ def copy_cache(records, env):
         if record not in done:
             done.add(record)
             target = record.with_env(env)
-            for name, value in record._cache.iteritems():
+            for name in record._cache:
+                field = record._fields[name]
+                value = record[name]
                 if isinstance(value, BaseModel):
                     todo.update(value)
-                    value = value.with_env(env)
-                target._cache[name] = value
+                target._cache[name] = field.convert_to_cache(value, target, validate=False)
 
 
 def resolve_mro(model, name, predicate):
@@ -88,12 +89,9 @@ def default_new_to_old(field, value):
 def default_old_to_new(field, value):
     """ Convert the old-API default ``value`` to the new API. """
     if callable(value):
-        return lambda model: field.convert_to_cache(
-            value(model._model, model._cr, model._uid, model._context),
-            model, validate=False,
-        )
+        return lambda model: value(model._model, model._cr, model._uid, model._context)
     else:
-        return lambda model: field.convert_to_cache(value, model, validate=False)
+        return lambda model: value
 
 def default_old_to_old(field, value):
     """ Convert the old-API default ``value`` to the old API. """
@@ -860,7 +858,7 @@ class Field(object):
             record._cache[self] = value
             if env.in_onchange:
                 for invf in record._field_inverses[self]:
-                    invf._update(value, record)
+                    invf._update(record[self.name], record)
                 record._set_dirty(self.name)
 
             # determine more dependent fields, and invalidate them
@@ -1685,8 +1683,11 @@ class Many2one(_Relational):
     _column_auto_join = property(attrgetter('auto_join'))
 
     def _update(self, records, value):
-        """ Update the cached value of ``self`` for ``records`` with ``value``. """
-        records._cache[self] = value
+        """ Update the cached value of ``self`` for ``records`` with ``value``.
+        This is used to reflect the assignment ``value[name] = records``, where
+        ``name`` is the inverse field of ``self``.
+        """
+        records._cache[self] = self.convert_to_cache(value, records, validate=False)
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, (NoneType, int, long)):
@@ -1741,8 +1742,9 @@ class UnionUpdate(SpecialValue):
         # in order to read the current field's value, remove self from cache
         del record._cache[field]
         # read the current field's value, and update it in cache only
-        record._cache[field] = new_value = record[field.name] | value
-        return new_value
+        value = field.convert_to_cache(record[field.name] | value, record, validate=False)
+        record._cache[field] = value
+        return value
 
 
 class _RelationalMulti(_Relational):
@@ -1752,9 +1754,10 @@ class _RelationalMulti(_Relational):
         """ Update the cached value of ``self`` for ``records`` with ``value``. """
         for record in records:
             if self in record._cache:
-                record._cache[self] = record[self.name] | value
+                value = self.convert_to_cache(record[self.name] | value, record, validate=False)
             else:
-                record._cache[self] = UnionUpdate(self, record, value)
+                value = UnionUpdate(self, record, value)
+            record._cache[self] = value
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, BaseModel):
@@ -1805,7 +1808,7 @@ class _RelationalMulti(_Relational):
         result = [(5,)]
         for record in value:
             if not record.id:
-                values = dict(record._cache)
+                values = {name: record[name] for name in record._cache}
                 values = record._convert_to_write(values)
                 result.append((0, 0, values))
             elif record._is_dirty():
