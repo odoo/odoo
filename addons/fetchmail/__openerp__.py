@@ -2,9 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name' : 'Email Gateway',
-    'version' : '1.0',
-    'depends' : ['mail'],
+    'name': 'Email Gateway',
+    'version': '1.0',
+    'depends': ['mail'],
     'category': 'Tools',
     'description': """
 Retrieve incoming email on POP/IMAP servers.

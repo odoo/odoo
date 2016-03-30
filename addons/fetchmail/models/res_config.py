@@ -1,22 +1,20 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
+from odoo import api, fields, models
 
-class fetchmail_config_settings(osv.osv_memory):
+
+class FetchmailConfigSettings(models.TransientModel):
     """ This wizard can be inherited in conjunction with 'res.config.settings', in order to
         define fields that configure a fetchmail server.
 
         It relies on the following convention on the object::
 
-            class my_config_settings(osv.osv_memory):
+            class MyConfigSettings(models.TransientModel):
                 _name = 'my.settings'
                 _inherit = ['res.config.settings', 'fetchmail.config.settings']
 
-                _columns = {
-                    'fetchmail_stuff': fields.boolean(...,
-                        fetchmail_model='my.stuff', fetchmail_name='Incoming Stuff'),
-                }
+                fetchmail_stuff = fields.Boolean(..., fetchmail_model='my.stuff', fetchmail_name='Incoming Stuff'),
 
                 def configure_fetchmail_stuff(self, cr, uid, ids, context=None):
                     return self.configure_fetchmail(cr, uid, 'fetchmail_stuff', context)
