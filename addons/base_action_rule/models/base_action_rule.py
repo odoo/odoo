@@ -287,7 +287,7 @@ class BaseActionRule(models.Model):
                     if res:
                         if 'value' in res:
                             res['value'].pop('id', None)
-                            self.update(self._convert_to_cache(res['value'], validate=False))
+                            self.update(res['value'])
                         if 'domain' in res:
                             result.setdefault('domain', {}).update(res['domain'])
                         if 'warning' in res:

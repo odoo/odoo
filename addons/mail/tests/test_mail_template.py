@@ -52,7 +52,7 @@ class TestMailTemplate(TestMail):
 
         values = composer.onchange_template_id(self.email_template.id, 'comment', 'mail.channel', self.group_pigs.id)['value']
         # use _convert_to_cache to return a browse record list from command list or id list for x2many fields
-        values = self.env['mail.compose.message']._convert_to_cache(values)
+        values = composer._convert_to_record(composer._convert_to_cache(values))
         recipients = values['partner_ids']
         attachments = values['attachment_ids']
 

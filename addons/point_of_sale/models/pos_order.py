@@ -156,7 +156,7 @@ class PosOrder(models.Model):
         invoice_line.invoice_line_tax_ids = invoice_line.invoice_line_tax_ids.ids
         # We convert a new id object back to a dictionary to write to
         # bridge between old and new api
-        inv_line = invoice_line._convert_to_write(invoice_line._cache)
+        inv_line = invoice_line._convert_to_write({name: invoice_line[name] for name in invoice_line._cache})
         inv_line.update(price_unit=line.price_unit, discount=line.discount)
         return InvoiceLine.sudo().create(inv_line)
 
@@ -410,7 +410,7 @@ class PosOrder(models.Model):
             invoice._onchange_partner_id()
             invoice.fiscal_position_id = order.fiscal_position_id
 
-            inv = invoice._convert_to_write(invoice._cache)
+            inv = invoice._convert_to_write({name: invoice[name] for name in invoice._cache})
             new_invoice = Invoice.with_context(local_context).sudo().create(inv)
             order.write({'invoice_id': new_invoice.id, 'state': 'invoiced'})
             Invoice += new_invoice
