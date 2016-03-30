@@ -22,7 +22,7 @@ This wizard will activate the CRON job and the Scheduler and will start the auto
         'res_company_view.xml',
         'wizard/base_gengo_translations_view.xml',
     ],
-    'demo': [],
+    'demo': ['data/res_company_demo.xml'],
     'test': [],
     'installable': True,
     'auto_install': False,
