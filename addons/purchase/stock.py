@@ -89,8 +89,12 @@ class stock_picking(osv.osv):
             if move_line.purchase_line_id.order_id.invoice_method == 'picking':
                 price_unit = move_line.price_unit
                 order = move_line.purchase_line_id.order_id
-                if order.currency_id.id != order.company_id.currency_id.id:
-                    price_unit =  self.pool.get('res.currency').compute(cursor, user,
+                if move_line.product_id.cost_method == 'average' and move_line.price_currency_id:
+                    if move_line.price_currency_id.id != order.currency_id.id:
+                        price_unit = self.pool.get('res.currency').compute(cursor, user,
+                            move_line.price_currency_id.id, order.currency_id.id, move_line.price_unit, round=False, context=dict({}, date=order.date_order))
+                elif order.currency_id.id != order.company_id.currency_id.id:
+                    price_unit = self.pool.get('res.currency').compute(cursor, user,
                         order.company_id.currency_id.id, order.currency_id.id, move_line.price_unit, round=False, context=dict({}, date=order.date_order))
                 return price_unit
             else:
