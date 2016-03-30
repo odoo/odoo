@@ -26,16 +26,25 @@ class base_gengo_translations(osv.osv_memory):
     GROUPS = ['base.group_system']
 
     _name = 'base.gengo.translations'
+
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(base_gengo_translations, self).default_get(cr, uid, fields, context=context)
+        res['authorized_credentials'], gengo = self.gengo_authentication(cr, uid, context=context)
+        if 'lang_id' in fields:
+            res['lang_id'] = self.pool['res.lang'].search(cr, uid, [('code', '=', context.get('lang', 'en_US'))], limit=1, context=context)
+        return res
+
     _columns = {
         'sync_type': fields.selection([('send', 'Send New Terms'),
                                        ('receive', 'Receive Translation'),
                                        ('both', 'Both')], "Sync Type", required=True),
         'lang_id': fields.many2one('res.lang', 'Language', required=True),
         'sync_limit': fields.integer("No. of terms to sync"),
+        'authorized_credentials': fields.boolean('The private and public keys are valid'),
     }
     _defaults = {
         'sync_type': 'both',
-        'sync_limit': 20
+        'sync_limit': 20,
     }
 
     def init(self, cr):
@@ -46,6 +55,17 @@ class base_gengo_translations(osv.osv_memory):
     def get_gengo_key(self, cr):
         icp = self.pool['ir.config_parameter']
         return icp.get_param(cr, SUPERUSER_ID, self.GENGO_KEY, default="Undefined")
+
+    def open_company(self, cr, uid, ids, context=None):
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'res.company',
+            'res_id': user.company_id.id,
+            'target': 'current',
+            }
 
     def gengo_authentication(self, cr, uid, context=None):
         '''
