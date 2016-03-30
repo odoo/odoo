@@ -1036,6 +1036,8 @@ class Environment(object):
 
     def check_cache(self):
         """ Check the cache consistency. """
+        from openerp.fields import SpecialValue
+
         # make a full copy of the cache, and invalidate it
         cache_dump = dict(
             (field, dict(field_cache))
@@ -1051,9 +1053,11 @@ class Environment(object):
             for record in records:
                 try:
                     cached = field_dump[record.id]
+                    cached = cached.get() if isinstance(cached, SpecialValue) else cached
+                    value = field.convert_to_record(cached, record)
                     fetched = record[field.name]
-                    if fetched != cached:
-                        info = {'cached': cached, 'fetched': fetched}
+                    if fetched != value:
+                        info = {'cached': value, 'fetched': fetched}
                         invalids.append((field, record, info))
                 except (AccessError, MissingError):
                     pass
