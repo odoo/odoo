@@ -1168,6 +1168,16 @@ class TestStockFlow(TestStockCommon):
         total_qty = sum([quant.qty for quant in quants])
         self.assertEqual(total_qty, 0, 'Expecting 0 units lot of lotproduct, but we got %.4f on location stock!' % (total_qty))
 
+        # create inventory with product domain
+
+        inventory3 = self.InvObj.create({'name': 'Test Partial',
+                                        'filter': 'partial',
+                                        'location_id': self.stock_location,
+                                        'product_domain': [('id', 'in', [self.UnitA.id])]})
+        inventory3.prepare_inventory()
+        self.assertEqual(len(inventory3.line_ids), 1, "One inventory line should be created.")
+        self.assertEqual(inventory3.line_ids.product_id.id, self.UnitA.id, "Inventory line should be created for product %s" % (self.UnitA.name))
+
 
     def test_30_check_with_no_incoming_lot(self):
         """ Picking in without lots and picking out with"""

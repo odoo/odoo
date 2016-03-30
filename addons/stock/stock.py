@@ -10,6 +10,7 @@ import sets
 import openerp
 from openerp.osv import fields, osv
 from openerp.tools.float_utils import float_compare, float_round
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from openerp import SUPERUSER_ID, api, models
@@ -2961,6 +2962,7 @@ class stock_inventory(osv.osv):
                                       "(e.g. Cycle Counting) you can choose 'Manual Selection of Products' and the system won't propose anything.  You can also let the "\
                                       "system propose for a single product / lot /... "),
         'total_qty': fields.function(_get_total_qty, type="float"),
+        'product_domain': fields.char('Product Domain'),
     }
 
     def _default_stock_location(self, cr, uid, context=None):
@@ -3036,7 +3038,7 @@ class stock_inventory(osv.osv):
         for inventory in self.browse(cr, uid, ids, context=context):
             # If there are inventory lines already (e.g. from import), respect those and set their theoretical qty
             line_ids = [line.id for line in inventory.line_ids]
-            if not line_ids and inventory.filter != 'partial':
+            if not line_ids:
                 #compute the inventory lines and create them
                 vals = self._get_inventory_lines(cr, uid, inventory, context=context)
                 for product_line in vals:
@@ -3061,13 +3063,20 @@ class stock_inventory(osv.osv):
         if inventory.package_id:
             domain += ' and package_id = %s'
             args += (inventory.package_id.id,)
-
+        if inventory.product_domain:
+            prod_domain = eval(inventory.product_domain)
+            product_ids = product_obj.search(cr, uid, prod_domain, context=context)
+            domain += ' and product_id in %s'
+            args += (tuple(product_ids),)
+        vals = []
+        if inventory.filter == 'partial' and not inventory.product_domain:
+            return vals
         cr.execute('''
            SELECT product_id, sum(qty) as product_qty, location_id, lot_id as prod_lot_id, package_id, owner_id as partner_id
            FROM stock_quant WHERE''' + domain + '''
            GROUP BY product_id, location_id, lot_id, package_id, partner_id
         ''', args)
-        vals = []
+
         for product_line in cr.dictfetchall():
             #replace the None the dictionary by False, because falsy values are tested later on
             for key, value in product_line.items():
@@ -3105,6 +3114,8 @@ class stock_inventory(osv.osv):
             to_clean['value']['partner_id'] = False
         if filter != 'pack':
             to_clean['value']['package_id'] = False
+        if filter != 'partial':
+            to_clean['value']['product_domain'] = False
         return to_clean
 
     _constraints = [

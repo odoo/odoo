@@ -278,6 +278,7 @@ class product_product(osv.osv):
         'nbr_reordering_rules': fields.function(_compute_nbr_reordering_rules, string='Reordering Rules', type='integer', multi=True),
         'reordering_min_qty': fields.function(_compute_nbr_reordering_rules, type='float', multi=True),
         'reordering_max_qty': fields.function(_compute_nbr_reordering_rules, type='float', multi=True),
+        'category_id': fields.related('product_tmpl_id', 'categ_id', relation='product.category', type='many2one', string='Product Category', store=True),
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
