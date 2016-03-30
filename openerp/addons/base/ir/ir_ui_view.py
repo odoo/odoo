@@ -398,7 +398,7 @@ class view(osv.osv):
     def inherit_branding(self, specs_tree, view_id, root_id):
         for node in specs_tree.iterchildren(tag=etree.Element):
             xpath = node.getroottree().getpath(node)
-            if node.tag == 'data' or node.tag == 'xpath':
+            if node.tag == 'data' or node.tag == 'xpath' or node.get('position') or node.get('t-field'):
                 self.inherit_branding(node, view_id, root_id)
             else:
                 node.set('data-oe-id', str(view_id))
