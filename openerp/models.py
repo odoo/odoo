@@ -6108,7 +6108,7 @@ class BaseModel(object):
                 return
             if res.get('value'):
                 res['value'].pop('id', None)
-                self.update(res['value'])
+                self.update({key: val for key, val in res['value'].iteritems() if key in self._fields})
             if res.get('domain'):
                 result.setdefault('domain', {}).update(res['domain'])
             if res.get('warning'):

@@ -287,7 +287,7 @@ class BaseActionRule(models.Model):
                     if res:
                         if 'value' in res:
                             res['value'].pop('id', None)
-                            self.update(res['value'])
+                            self.update({key: val for key, val in res['value'].iteritems() if key in self._fields})
                         if 'domain' in res:
                             result.setdefault('domain', {}).update(res['domain'])
                         if 'warning' in res:
