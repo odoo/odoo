@@ -2082,7 +2082,7 @@ var ColumnUrl = Column.extend({
         if (value) {
             return _.template("<a href='<%-href%>' target='_blank'><%-text%></a>")({
                 href: value.trim().replace(this.PROTOCOL_REGEX, '//'),
-                text: value
+                text: this.text || value
             });
         }
         return this._super(row_data, options);
