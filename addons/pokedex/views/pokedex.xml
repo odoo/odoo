@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+<menuitem name='Pokédex' id='menu_pokedex_top' sequence='1' web_icon='pokedex,static/description/icon.png'/>
+<menuitem name='Pokédex' id='menu_pokedex_left' parent='menu_pokedex_top' sequence='1'/>
+
+<record model='ir.ui.view' id='pokemon_kanban'>
+    <field name="name">Pokemon Kanban</field>
+    <field name="model">pokedex.pokemon</field>
+    <field name="arch" type="xml">
+        <kanban>
+            <field name="sequence"/>
+            <field name="name"/>
+            <field name="image"/>
+            <field name="color"/>
+            <field name="captured"/>
+            <templates>
+                <t t-name="kanban-box">
+                    <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+
+                        <div class="o_dropdown_kanban dropdown">
+                            <a class="dropdown-toggle btn" data-toggle="dropdown" href="#">
+                                <span class="fa fa-bars fa-lg"/>
+                            </a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                <t t-if="widget.editable">
+                                    <li>
+                                        <a data-type="edit" href="#" class=" oe_kanban_action oe_kanban_action_a">
+                                            Edit Pokemon
+                                        </a>
+                                    </li>
+                                </t>
+                                <t t-if="widget.deletable">
+                                    <li>
+                                        <a data-type="delete" href="#" class=" oe_kanban_action oe_kanban_action_a">
+                                            Delete
+                                        </a>
+                                    </li>
+                                </t>
+                                <li>
+                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="o_kanban_image">
+                            <img t-att-src="kanban_image('pokedex.pokemon', 'image', record.id.value)"/>
+                        </div>
+                        <div class="oe_kanban_details">
+                            <strong>
+                            #<t t-esc="record.sequence.value"/> <t t-esc="record.name.value"/>
+                            </strong>
+                        </div>
+                        <div class="oe_kanban_bottom_left">
+                            <field name="captured" widget="priority"/>
+                        </div>
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+    </field>
+</record>
+
+<record model='ir.ui.view' id='pokemon_tree'>
+    <field name="name">Pokemon Tree</field>
+    <field name="model">pokedex.pokemon</field>
+    <field name="arch" type="xml">
+        <tree string="Pokémons">
+            <field name="sequence"/>
+            <field name="name"/>
+            <field name="types_ids" widget="many2many_tags"/>
+            <field name="parent_id"/>
+            <field name="height"/>
+            <field name="weight"/>
+        </tree>
+    </field>
+</record>
+
+<record model='ir.ui.view' id='pokemon_form'>
+    <field name="name">Pokemon Form</field>
+    <field name="model">pokedex.pokemon</field>
+    <field name="arch" type="xml">
+        <form string="Pokémons">
+            <sheet>
+                <field name="image" widget="image" class="oe_avatar" />
+                <div class="oe_title">
+                    <h1 class="o_row">
+                        <field name="captured" widget="priority"/>
+                        <field name="sequence"/> <field name="name"/>
+                    </h1>
+                </div>
+                <group>
+                    <field name="types_ids" widget="many2many_tags" placeholder="Types..." nolabel="1"/>
+                </group>
+                <notebook>
+                    <page string="Family">
+                        <group>
+                            <field name="parent_id"/>
+                            <field name="children_ids" mode="kanban"/>
+                        </group>
+                    </page>
+                    <page string="Characteristics">
+                        <group>
+                            <field name="height"/>
+                            <field name="weight"/>
+                        </group>
+                    </page>
+                </notebook>
+           </sheet>
+        </form>
+    </field>
+</record>
+
+<record model='ir.actions.act_window' id='action_pokemons'>
+    <field name='name'>Pokémons</field>
+    <field name='res_model'>pokedex.pokemon</field>
+    <field name='view_mode'>kanban,tree,form</field>
+</record>
+
+<menuitem name='Pokémons' id='menu_pokemons' parent='menu_pokedex_left' action='action_pokemons' sequence='10'/>
+
+<record model='ir.actions.act_window' id='action_pokemons_types'>
+    <field name='name'>Pokémons</field>
+    <field name='res_model'>pokedex.type</field>
+    <field name='view_mode'>tree</field>
+</record>
+
+<menuitem name='Pokémon Types' id='menu_pokemons_types' parent='menu_pokedex_left' action='action_pokemons_types' groups="base.group_no_one" sequence='20'/>
+
+</odoo>
