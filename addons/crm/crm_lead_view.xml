@@ -317,7 +317,7 @@
                                         <t t-if="record.planned_revenue.raw_value"><field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/></t> <span t-if="record.partner_id.value"> - <t t-esc="record.partner_id.value"/></span>
                                     </div>
                                     <div class="text-muted">
-                                        <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                        <t t-if="record.date_action.raw_value and record.date_action.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
                                         <span t-attf-class="#{red || ''}">
                                             <field name="date_action"/>
                                             <t t-if="record.date_action.raw_value"> : </t>

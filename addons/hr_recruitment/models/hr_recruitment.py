@@ -392,13 +392,17 @@ class Applicant(models.Model):
             through message_process.
             This override updates the document according to the email.
         """
+        # remove default author when going through the mail gateway. Indeed we
+        # do not want to explicitly set user_id to False; however we do not
+        # want the gateway user to be responsible if no other responsible is
+        # found.
+        self = self.with_context(default_user_id=False)
         val = msg.get('from').split('<')[0]
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
             'partner_name': val,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
-            'user_id': False,
             'partner_id': msg.get('author_id', False),
         }
         if msg.get('priority'):
