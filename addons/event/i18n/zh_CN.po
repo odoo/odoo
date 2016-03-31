@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event
-# 
+#
 # Translators:
 # fausthuang, 2015
 # fausthuang, 2015-2016
@@ -15,14 +15,15 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2016-03-12 02:06+0000\n"
+"PO-Revision-Date: 2016-03-31 16:50+0800\n"
 "Last-Translator: Joroy <13637815@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
+"Content-Transfer-Encoding: 8bit\n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 1.8.7\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_cancel_state
@@ -50,16 +51,13 @@ msgid "3 Intensive Days"
 msgstr "紧张的3天"
 
 #. module: event
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "5 Intensive Days"
 msgstr "紧张的5天"
 
 #. module: event
 #: model:event.event,description:event.event_2
-msgid ""
-"<em>(Chamber Works reserves the right to cancel, re-name or re-"
-"locate<br/>the event or change the dates on which it is held.)</em>"
+msgid "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br/>the event or change the dates on which it is held.)</em>"
 msgstr "<em>(Chamber Works 保留取消的权利,重命名或者重定位<br/>该事件或者更改举办的日期)</em>"
 
 #. module: event
@@ -67,36 +65,27 @@ msgstr "<em>(Chamber Works 保留取消的权利,重命名或者重定位<br/>�
 msgid ""
 "<i class=\"fa fa-clock-o\"/>\n"
 "                                        <b>To</b>"
-msgstr "<i class=\"fa fa-clock-o\"/>\n<b>To</b>"
+msgstr ""
+"<i class=\"fa fa-clock-o\"/>\n"
+"<b>To</b>"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"<i>You will be able to create dynamic page interacting with the ORM.</i>"
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
+msgid "<i>You will be able to create dynamic page interacting with the ORM.</i>"
 msgstr "<i>你将能够创建和ORM相互作用的动态页面</i>"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"<i>You will be able to develop a full application with backend and user "
-"interface.</i>"
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
+msgid "<i>You will be able to develop a full application with backend and user interface.</i>"
 msgstr "<i>你将能够开发出一个完整的带有后台和前端界面的应用</i>"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"<i>You will be able to develop simple dynamic components in HTML pages.</i>"
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
+msgid "<i>You will be able to develop simple dynamic components in HTML pages.</i>"
 msgstr "<i>你将能够在Html页面开发出冬夜组件.</i>"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.event_event_report_template_badge
-#: model:ir.ui.view,arch_db:event.event_registration_report_template_badge
+#: model:ir.ui.view,arch_db:event.event_event_report_template_badge model:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "<i>to</i>"
 msgstr "<i>到</i>"
 
@@ -108,7 +97,12 @@ msgid ""
 "For any further information please contact our event department.</p>\n"
 "<p>Thank you for your participation!</p>\n"
 "<p>Best regards</p>"
-msgstr "<p>您好${object.name},</p>\n<p>这是一个提醒邮件${object.event_id.name} 您的注册已经确认并且被保存从 ${object.event_id.date_begin_located} 到 ${object.event_id.date_end_located}.\n如想进一步咨询，请联系我们的活动相关部门</p>\n<p>多谢您的参与!</p>\n<p>此致</p>"
+msgstr ""
+"<p>您好${object.name},</p>\n"
+"<p>这是一个提醒邮件${object.event_id.name} 您的注册已经确认并且被保存从 ${object.event_id.date_begin_located} 到 ${object.event_id.date_end_located}.\n"
+"如想进一步咨询，请联系我们的活动相关部门</p>\n"
+"<p>多谢您的参与!</p>\n"
+"<p>此致</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -118,7 +112,12 @@ msgid ""
 "Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
 "<p>Thank you for your participation!</p>\n"
 "<p>Best regards</p>"
-msgstr "<p>你好 ${object.name},</p>\n<p>我们在此通知您对我们活动的订阅 ${object.event_id.name} 已经记录好了\n请查看本邮件相关附件<b>Event Badge</b> </p>\n<p>多谢您的参与!</p>\n<p>此致</p>"
+msgstr ""
+"<p>你好 ${object.name},</p>\n"
+"<p>我们在此通知您对我们活动的订阅 ${object.event_id.name} 已经记录好了\n"
+"请查看本邮件相关附件<b>Event Badge</b> </p>\n"
+"<p>多谢您的参与!</p>\n"
+"<p>此致</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -128,7 +127,12 @@ msgid ""
 "You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
 "<p>Thank you for your participation!</p>\n"
 "<p>Best regards</p>"
-msgstr "<p>你好 ${object.name},</p>\n<p>我们在此通知您对我们活动的订阅 ${object.event_id.name} 已经记录好了\n你将自动的收到相关的邮件(例如计划,排程...) 在活动确认之后</p>\n<p>多谢您的参与!</p>\n<p>此致</p>"
+msgstr ""
+"<p>你好 ${object.name},</p>\n"
+"<p>我们在此通知您对我们活动的订阅 ${object.event_id.name} 已经记录好了\n"
+"你将自动的收到相关的邮件(例如计划,排程...) 在活动确认之后</p>\n"
+"<p>多谢您的参与!</p>\n"
+"<p>此致</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_thanks
@@ -142,12 +146,19 @@ msgid ""
 "        <strong>${object.event_id.organizer_id.name}</strong>\n"
 "    % endif\n"
 "</p>"
-msgstr "<p>你好 ${object.name},</p>\n<p>非常感谢你能出席我们的活动${object.event_id.name}.\n<br/><br/>\n% if object.event_id.organizer_id and object.event_id.organizer_id.is_company:\n<strong>该 ${object.event_id.organizer_id.name} 团队</strong>\n% elif object.event_id.organizer_id:\n<strong>${object.event_id.organizer_id.name}</strong>\n% endif\n</p>"
+msgstr ""
+"<p>你好 ${object.name},</p>\n"
+"<p>非常感谢你能出席我们的活动${object.event_id.name}.\n"
+"<br/><br/>\n"
+"% if object.event_id.organizer_id and object.event_id.organizer_id.is_company:\n"
+"<strong>该 ${object.event_id.organizer_id.name} 团队</strong>\n"
+"% elif object.event_id.organizer_id:\n"
+"<strong>${object.event_id.organizer_id.name}</strong>\n"
+"% endif\n"
+"</p>"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "<small>John Doe, CEO</small>"
 msgstr "<small>John Doe, CEO</small>"
 
@@ -157,17 +168,14 @@ msgid ""
 "<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
 "                                                to \n"
 "                                            </span>"
-msgstr "<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n到\n</span>"
+msgstr ""
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
+"到\n"
+"</span>"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"<span style=\"text-align: -webkit-center; \">This course is dedicated to "
-"developers who need to grasp knowledge of the <strong>business applications "
-"development </strong>process. This course is for new developers or for IT "
-"professionals eager to learn more about technical aspects.</span>"
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
+msgid "<span style=\"text-align: -webkit-center; \">This course is dedicated to developers who need to grasp knowledge of the <strong>business applications development </strong>process. This course is for new developers or for IT professionals eager to learn more about technical aspects.</span>"
 msgstr "<span style=\"text-align: -webkit-center; \">本课程是专门为那些需要掌握 <strong>业务应用发展 </strong>的开发者。本课程是针对新的开发人员，或者是专为专业人士，希望更多地了解技术方面的内容。</span>"
 
 #. module: event
@@ -176,26 +184,17 @@ msgid "<strong>Conference on Business Apps</strong>"
 msgstr "<strong>商务应用会议</strong>"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"<strong>Having attended this course, participants should be able "
-"to:</strong>"
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
+msgid "<strong>Having attended this course, participants should be able to:</strong>"
 msgstr "<strong>已参加过这次课程的学员应该能够：</strong>"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_2
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_2 model:event.event,description:event.event_3
 msgid "<strong>Objectives:</strong>"
 msgstr "<strong>目标:</strong>"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "<strong>Our prices include:</strong>"
 msgstr "<strong>我们的价格包括:</strong>"
 
@@ -205,9 +204,7 @@ msgid "<strong>Program:</strong>"
 msgstr "<strong>程序:</strong>"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "<strong>Requirements:</strong>"
 msgstr "<strong>需求:</strong>"
 
@@ -217,8 +214,7 @@ msgid "<strong>Where to find us:</strong>"
 msgstr "<strong>能找到我们的地方:</strong>"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_needaction
-#: model:ir.model.fields,field_description:event.field_event_registration_message_needaction
+#: model:ir.model.fields,field_description:event.field_event_event_message_needaction model:ir.model.fields,field_description:event.field_event_registration_message_needaction
 msgid "Action Needed"
 msgstr "所需行动"
 
@@ -228,9 +224,7 @@ msgid "Active"
 msgstr "有效"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Advanced JQuery"
 msgstr "高级的 JQuery"
 
@@ -275,16 +269,12 @@ msgid "Archived"
 msgstr "存档"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Arrays"
 msgstr "阵列"
 
 #. module: event
-#: selection:event.registration,state:0
-#: model:ir.ui.view,arch_db:event.view_event_registration_form
-#: selection:report.event.registration,registration_state:0
+#: selection:event.registration,state:0 model:ir.ui.view,arch_db:event.view_event_registration_form selection:report.event.registration,registration_state:0
 msgid "Attended"
 msgstr "参加"
 
@@ -299,9 +289,7 @@ msgid "Attended the Event"
 msgstr "参加活动"
 
 #. module: event
-#: model:ir.model,name:event.model_event_registration
-#: model:ir.model.fields,field_description:event.field_event_mail_registration_registration_id
-#: model:ir.ui.view,arch_db:event.view_event_registration_form
+#: model:ir.model,name:event.model_event_registration model:ir.model.fields,field_description:event.field_event_mail_registration_registration_id model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Attendee"
 msgstr "参与者"
 
@@ -311,17 +299,12 @@ msgid "Attendee / Contact"
 msgstr "与会者 / 联系人"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_registration_name
-#: model:ir.ui.view,arch_db:event.event_event_report_template_badge
+#: model:ir.model.fields,field_description:event.field_event_registration_name model:ir.ui.view,arch_db:event.event_event_report_template_badge
 msgid "Attendee Name"
 msgstr "与会者姓名"
 
 #. module: event
-#: model:ir.actions.act_window,name:event.act_event_registration_from_event
-#: model:ir.actions.act_window,name:event.action_registration
-#: model:ir.model.fields,field_description:event.field_event_event_registration_ids
-#: model:ir.ui.menu,name:event.menu_action_registration
-#: model:ir.ui.view,arch_db:event.view_event_form
+#: model:ir.actions.act_window,name:event.act_event_registration_from_event model:ir.actions.act_window,name:event.action_registration model:ir.model.fields,field_description:event.field_event_event_registration_ids model:ir.ui.menu,name:event.menu_action_registration model:ir.ui.view,arch_db:event.view_event_form
 msgid "Attendees"
 msgstr "出席"
 
@@ -351,9 +334,7 @@ msgid "Badge Innner Left"
 msgstr "内部左面标记"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Banner Odoo Image"
 msgstr "Odoo横幅图像"
 
@@ -368,36 +349,27 @@ msgid "Best regards,"
 msgstr "最诚挚的问候，"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Bootstrap CSS"
 msgstr "Bootstrap CSS"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Bring your own laptop."
 msgstr "带上你自己的笔记本电脑"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Building a Full Application"
 msgstr "创建一个完整的应用"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Calling the ORM"
 msgstr "呼叫ORM"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_configuration
-#: model:ir.ui.view,arch_db:event.view_event_confirm
+#: model:ir.ui.view,arch_db:event.view_event_configuration model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Cancel"
 msgstr "取消"
 
@@ -407,15 +379,12 @@ msgid "Cancel Event"
 msgstr "取消活动"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_registration_form
-#: model:ir.ui.view,arch_db:event.view_event_registration_tree
+#: model:ir.ui.view,arch_db:event.view_event_registration_form model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Cancel Registration"
 msgstr "取消登记记录"
 
 #. module: event
-#: selection:event.event,state:0 selection:event.registration,state:0
-#: selection:report.event.registration,event_state:0
-#: selection:report.event.registration,registration_state:0
+#: selection:event.event,state:0 selection:event.registration,state:0 selection:report.event.registration,event_state:0 selection:report.event.registration,registration_state:0
 msgid "Cancelled"
 msgstr "已取消"
 
@@ -441,10 +410,7 @@ msgid "Closing Date cannot be set before Beginning Date."
 msgstr "结束日期不能在开始日期前。"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_company_id
-#: model:ir.model.fields,field_description:event.field_event_registration_company_id
-#: model:ir.model.fields,field_description:event.field_report_event_registration_company_id
-#: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+#: model:ir.model.fields,field_description:event.field_event_event_company_id model:ir.model.fields,field_description:event.field_event_registration_company_id model:ir.model.fields,field_description:event.field_report_event_registration_company_id model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Company"
 msgstr "公司"
 
@@ -475,8 +441,7 @@ msgid "Configure Event"
 msgstr "配置事件"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_registration_form
-#: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+#: model:ir.ui.view,arch_db:event.view_event_registration_form model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Confirm"
 msgstr "确认"
 
@@ -501,10 +466,7 @@ msgid "Confirmation not required"
 msgstr "不需要确认"
 
 #. module: event
-#: selection:event.event,state:0 selection:event.registration,state:0
-#: model:ir.ui.view,arch_db:event.view_event_search
-#: selection:report.event.registration,event_state:0
-#: selection:report.event.registration,registration_state:0
+#: selection:event.event,state:0 selection:event.registration,state:0 model:ir.ui.view,arch_db:event.view_event_search selection:report.event.registration,event_state:0 selection:report.event.registration,registration_state:0
 msgid "Confirmed"
 msgstr "已确认"
 
@@ -524,9 +486,7 @@ msgid "Contact"
 msgstr "联系人"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Controlers and Views"
 msgstr "控制器和视图"
 
@@ -536,38 +496,24 @@ msgid "Country"
 msgstr "国家"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Course Summary"
 msgstr "课程总结"
 
 #. module: event
 #: model:web.tip,description:event.event_tip_1
-msgid ""
-"Create and manage registrations for this event, send emails to attendees and"
-" print identification badges."
+msgid "Create and manage registrations for this event, send emails to attendees and print identification badges."
 msgstr ""
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_config_settings_create_uid
-#: model:ir.model.fields,field_description:event.field_event_confirm_create_uid
-#: model:ir.model.fields,field_description:event.field_event_event_create_uid
-#: model:ir.model.fields,field_description:event.field_event_mail_create_uid
-#: model:ir.model.fields,field_description:event.field_event_mail_registration_create_uid
-#: model:ir.model.fields,field_description:event.field_event_registration_create_uid
-#: model:ir.model.fields,field_description:event.field_event_type_create_uid
+#: model:ir.model.fields,field_description:event.field_event_config_settings_create_uid model:ir.model.fields,field_description:event.field_event_confirm_create_uid model:ir.model.fields,field_description:event.field_event_event_create_uid model:ir.model.fields,field_description:event.field_event_mail_create_uid
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_create_uid model:ir.model.fields,field_description:event.field_event_registration_create_uid model:ir.model.fields,field_description:event.field_event_type_create_uid
 msgid "Created by"
 msgstr "创建者"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_config_settings_create_date
-#: model:ir.model.fields,field_description:event.field_event_confirm_create_date
-#: model:ir.model.fields,field_description:event.field_event_event_create_date
-#: model:ir.model.fields,field_description:event.field_event_mail_create_date
-#: model:ir.model.fields,field_description:event.field_event_mail_registration_create_date
-#: model:ir.model.fields,field_description:event.field_event_registration_create_date
-#: model:ir.model.fields,field_description:event.field_event_type_create_date
+#: model:ir.model.fields,field_description:event.field_event_config_settings_create_date model:ir.model.fields,field_description:event.field_event_confirm_create_date model:ir.model.fields,field_description:event.field_event_event_create_date model:ir.model.fields,field_description:event.field_event_mail_create_date
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_create_date model:ir.model.fields,field_description:event.field_event_registration_create_date model:ir.model.fields,field_description:event.field_event_type_create_date
 msgid "Created on"
 msgstr "创建于"
 
@@ -589,29 +535,22 @@ msgid "Customer Email"
 msgstr "客户邮件"
 
 #. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_last_post
-#: model:ir.model.fields,help:event.field_event_registration_message_last_post
+#: model:ir.model.fields,help:event.field_event_event_message_last_post model:ir.model.fields,help:event.field_event_registration_message_last_post
 msgid "Date of the last message posted on the record."
 msgstr "发布到记录上的最后消息的日期"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Day 1"
 msgstr "Day 1"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Day 2"
 msgstr "Day 2"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Day 3"
 msgstr "Day 3"
 
@@ -641,20 +580,13 @@ msgid "Description"
 msgstr "说明"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Develop a new module for a particular application."
 msgstr "为定制的应用开发一个新的模块"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_config_settings_display_name
-#: model:ir.model.fields,field_description:event.field_event_confirm_display_name
-#: model:ir.model.fields,field_description:event.field_event_event_display_name
-#: model:ir.model.fields,field_description:event.field_event_mail_display_name
-#: model:ir.model.fields,field_description:event.field_event_mail_registration_display_name
-#: model:ir.model.fields,field_description:event.field_event_registration_display_name
-#: model:ir.model.fields,field_description:event.field_event_type_display_name
+#: model:ir.model.fields,field_description:event.field_event_config_settings_display_name model:ir.model.fields,field_description:event.field_event_confirm_display_name model:ir.model.fields,field_description:event.field_event_event_display_name model:ir.model.fields,field_description:event.field_event_mail_display_name
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_display_name model:ir.model.fields,field_description:event.field_event_registration_display_name model:ir.model.fields,field_description:event.field_event_type_display_name
 #: model:ir.model.fields,field_description:event.field_report_event_registration_display_name
 msgid "Display Name"
 msgstr "显示名称"
@@ -665,29 +597,23 @@ msgid "Display order"
 msgstr "显示排序"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Dive into Strings"
 msgstr "深入到琴弦中"
 
 #. module: event
-#: selection:event.event,state:0
-#: selection:report.event.registration,event_state:0
+#: selection:event.event,state:0 selection:report.event.registration,event_state:0
 msgid "Done"
 msgstr "完成"
 
 #. module: event
-#: selection:report.event.registration,event_state:0
-#: selection:report.event.registration,registration_state:0
+#: selection:report.event.registration,event_state:0 selection:report.event.registration,registration_state:0
 msgid "Draft"
 msgstr "草稿"
 
 #. module: event
 #: model:event.event,description:event.event_2
-msgid ""
-"During this conference, our team will give a detailed overview of our "
-"business applications. You’ll know all the benefits of using it."
+msgid "During this conference, our team will give a detailed overview of our business applications. You’ll know all the benefits of using it."
 msgstr "在该会议中，我们的团队将会非常详细的介绍该应用，你也会了解到该应用的优点"
 
 #. module: event
@@ -721,12 +647,8 @@ msgid "End Date Located"
 msgstr "定位最后日期"
 
 #. module: event
-#: model:ir.model,name:event.model_event_event
-#: model:ir.model.fields,field_description:event.field_event_mail_event_id
-#: model:ir.model.fields,field_description:event.field_event_registration_event_id
-#: model:ir.model.fields,field_description:event.field_report_event_registration_event_id
-#: model:ir.ui.view,arch_db:event.view_registration_search
-#: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+#: model:ir.model,name:event.model_event_event model:ir.model.fields,field_description:event.field_event_mail_event_id model:ir.model.fields,field_description:event.field_event_registration_event_id model:ir.model.fields,field_description:event.field_report_event_registration_event_id
+#: model:ir.ui.view,arch_db:event.view_registration_search model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event"
 msgstr "活动"
 
@@ -741,8 +663,7 @@ msgid "Event Beginning Date"
 msgstr "活动开始日期"
 
 #. module: event
-#: model:ir.actions.act_window,name:event.action_event_confirm
-#: model:ir.ui.view,arch_db:event.view_event_confirm
+#: model:ir.actions.act_window,name:event.action_event_confirm model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Event Confirmation"
 msgstr "活动确认"
 
@@ -782,8 +703,7 @@ msgid "Event Month"
 msgstr "活动月份"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_name
-#: model:ir.ui.view,arch_db:event.view_event_form
+#: model:ir.model.fields,field_description:event.field_event_event_name model:ir.ui.view,arch_db:event.view_event_form
 msgid "Event Name"
 msgstr "活动名称"
 
@@ -793,9 +713,7 @@ msgid "Event Organization"
 msgstr "活动组织机构"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_registration_calendar
-#: model:ir.ui.view,arch_db:event.view_event_registration_form
-#: model:ir.ui.view,arch_db:event.view_registration_search
+#: model:ir.ui.view,arch_db:event.view_event_registration_calendar model:ir.ui.view,arch_db:event.view_event_registration_form model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Registration"
 msgstr "事件记录"
 
@@ -810,38 +728,24 @@ msgid "Event Start Date"
 msgstr "活动开始日期"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_report_event_registration_event_state
-#: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+#: model:ir.model.fields,field_description:event.field_report_event_registration_event_state model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event State"
 msgstr "活动状态"
 
 #. module: event
-#: model:ir.model,name:event.model_event_type
-#: model:ir.model.fields,field_description:event.field_event_type_name
-#: model:ir.model.fields,field_description:event.field_report_event_registration_event_type_id
-#: model:ir.ui.view,arch_db:event.view_event_search
-#: model:ir.ui.view,arch_db:event.view_event_type_form
-#: model:ir.ui.view,arch_db:event.view_event_type_tree
-#: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+#: model:ir.model,name:event.model_event_type model:ir.model.fields,field_description:event.field_event_type_name model:ir.model.fields,field_description:event.field_report_event_registration_event_type_id model:ir.ui.view,arch_db:event.view_event_search model:ir.ui.view,arch_db:event.view_event_type_form
+#: model:ir.ui.view,arch_db:event.view_event_type_tree model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event Type"
 msgstr "活动类型"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.report_event_registration_graph
-#: model:ir.ui.view,arch_db:event.report_event_registration_pivot
-#: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+#: model:ir.ui.view,arch_db:event.report_event_registration_graph model:ir.ui.view,arch_db:event.report_event_registration_pivot model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event on Registration"
 msgstr "登记记录的活动"
 
 #. module: event
-#: model:ir.actions.act_window,name:event.action_event_view
-#: model:ir.ui.menu,name:event.event_main_menu
-#: model:ir.ui.menu,name:event.menu_event_event
-#: model:ir.ui.menu,name:event.menu_report_event_registration
-#: model:ir.ui.view,arch_db:event.view_event_configuration
-#: model:ir.ui.view,arch_db:event.view_event_form
-#: model:ir.ui.view,arch_db:event.view_event_search
-#: model:ir.ui.view,arch_db:event.view_event_tree
+#: model:ir.actions.act_window,name:event.action_event_view model:ir.ui.menu,name:event.event_main_menu model:ir.ui.menu,name:event.menu_event_event model:ir.ui.menu,name:event.menu_report_event_registration model:ir.ui.view,arch_db:event.view_event_configuration model:ir.ui.view,arch_db:event.view_event_form
+#: model:ir.ui.view,arch_db:event.view_event_search model:ir.ui.view,arch_db:event.view_event_tree
 msgid "Events"
 msgstr "活动"
 
@@ -901,20 +805,17 @@ msgid "Finish Event"
 msgstr "结束活动"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_follower_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_follower_ids
+#: model:ir.model.fields,field_description:event.field_event_event_message_follower_ids model:ir.model.fields,field_description:event.field_event_registration_message_follower_ids
 msgid "Followers"
 msgstr "关注者"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_channel_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_channel_ids
+#: model:ir.model.fields,field_description:event.field_event_event_message_channel_ids model:ir.model.fields,field_description:event.field_event_registration_message_channel_ids
 msgid "Followers (Channels)"
 msgstr "关注者(频道)"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_partner_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_partner_ids
+#: model:ir.model.fields,field_description:event.field_event_event_message_partner_ids model:ir.model.fields,field_description:event.field_event_registration_message_partner_ids
 msgid "Followers (Partners)"
 msgstr "关注者（合作伙伴）"
 
@@ -925,17 +826,12 @@ msgstr "对于任何额外的信息，请和我们取得联系"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_seats_max
-msgid ""
-"For each event you can define a maximum registration of seats(number of "
-"attendees), above this numbers the registrations are not accepted."
+msgid "For each event you can define a maximum registration of seats(number of attendees), above this numbers the registrations are not accepted."
 msgstr "对于每一个事件，你可以定义一个注册人数的最大值（与会者的人数），高于这个数字的注册将不被接受。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_seats_min
-msgid ""
-"For each event you can define a minimum reserved seats (number of "
-"attendees), if it does not reach the mentioned registrations the event can "
-"not be confirmed (keep 0 to ignore this rule)"
+msgid "For each event you can define a minimum reserved seats (number of attendees), if it does not reach the mentioned registrations the event can not be confirmed (keep 0 to ignore this rule)"
 msgstr "对于每一个事件你都可以定义一个最小的座位数（与会者）如果注册的人数没有达到这个数目，该时间讲不被确认（最小值设为0将不受该条件限制）"
 
 #. module: event
@@ -949,16 +845,12 @@ msgid "Functional flow of the main applications;"
 msgstr "主要应用的业务流程"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Functions"
 msgstr "功能"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_search
-#: model:ir.ui.view,arch_db:event.view_registration_search
-#: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+#: model:ir.ui.view,arch_db:event.view_event_search model:ir.ui.view,arch_db:event.view_registration_search model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Group By"
 msgstr "分组"
 
@@ -968,9 +860,7 @@ msgid "Having attended this conference, participants should be able to:"
 msgstr "已出席本次会议的参加者应能："
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Hello World"
 msgstr "Hello World"
 
@@ -980,52 +870,34 @@ msgid "Hour(s)"
 msgstr "小时"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "How to Debug"
 msgstr "怎样Debug"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"I did not expect such a great learning experience. I feel like I can develop"
-" anything now."
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
+msgid "I did not expect such a great learning experience. I feel like I can develop anything now."
 msgstr "过去我没有预计到会有如此美妙的学习经验，现在我觉得我可以开发所有的东西"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_config_settings_id
-#: model:ir.model.fields,field_description:event.field_event_confirm_id
-#: model:ir.model.fields,field_description:event.field_event_event_id
-#: model:ir.model.fields,field_description:event.field_event_mail_id
-#: model:ir.model.fields,field_description:event.field_event_mail_registration_id
-#: model:ir.model.fields,field_description:event.field_event_registration_id
-#: model:ir.model.fields,field_description:event.field_event_type_id
-#: model:ir.model.fields,field_description:event.field_report_event_registration_id
+#: model:ir.model.fields,field_description:event.field_event_config_settings_id model:ir.model.fields,field_description:event.field_event_confirm_id model:ir.model.fields,field_description:event.field_event_event_id model:ir.model.fields,field_description:event.field_event_mail_id
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_id model:ir.model.fields,field_description:event.field_event_registration_id model:ir.model.fields,field_description:event.field_event_type_id model:ir.model.fields,field_description:event.field_report_event_registration_id
 msgid "ID"
 msgstr "ID"
 
 #. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_unread
-#: model:ir.model.fields,help:event.field_event_registration_message_unread
+#: model:ir.model.fields,help:event.field_event_event_message_unread model:ir.model.fields,help:event.field_event_registration_message_unread
 msgid "If checked new messages require your attention."
 msgstr "查看是否有需要留意的新信息。"
 
 #. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_needaction
-#: model:ir.model.fields,help:event.field_event_registration_message_needaction
+#: model:ir.model.fields,help:event.field_event_event_message_needaction model:ir.model.fields,help:event.field_event_registration_message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "确认后, 会出现新消息."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_state
-msgid ""
-"If event is created, the status is 'Draft'. If event is confirmed for the "
-"particular dates the status is set to 'Confirmed'. If the event is over, the"
-" status is set to 'Done'. If event is cancelled the status is set to "
-"'Cancelled'."
+msgid "If event is created, the status is 'Draft'. If event is confirmed for the particular dates the status is set to 'Confirmed'. If the event is over, the status is set to 'Done'. If event is cancelled the status is set to 'Cancelled'."
 msgstr "如果活动被创建，则状态变为“草稿”。如果活动日期确定，则状态变为为“已确认”。如果活动结束，则状态变为“完成”。如果活动被取消，则状态变为“已取消”。"
 
 #. module: event
@@ -1034,9 +906,7 @@ msgid "Immediately"
 msgstr "马上"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Install and administer your own server;"
 msgstr "安装并管理自己的服务器"
 
@@ -1056,9 +926,7 @@ msgid "Install the website_event_questions module"
 msgstr "安装website_event_questions模块"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Integrated Help"
 msgstr "帮助集成"
 
@@ -1068,23 +936,17 @@ msgid "Interval"
 msgstr "间隔"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Introduction to JQuery"
 msgstr "JQuery介绍"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Introduction to Javascript"
 msgstr "Javascript介绍"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Introduction to QWeb"
 msgstr "Qweb介绍"
 
@@ -1094,8 +956,7 @@ msgid "Introduction, CRM, Sales Management"
 msgstr "简介，CRM，销售管理"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_is_follower
-#: model:ir.model.fields,field_description:event.field_event_registration_message_is_follower
+#: model:ir.model.fields,field_description:event.field_event_event_message_is_follower model:ir.model.fields,field_description:event.field_event_registration_message_is_follower
 msgid "Is Follower"
 msgstr "是否为关注者"
 
@@ -1115,42 +976,26 @@ msgid "Kanban Color Index"
 msgstr "看板颜色索引"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_last_post
-#: model:ir.model.fields,field_description:event.field_event_registration_message_last_post
+#: model:ir.model.fields,field_description:event.field_event_event_message_last_post model:ir.model.fields,field_description:event.field_event_registration_message_last_post
 msgid "Last Message Date"
 msgstr "最后消息日期"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_config_settings___last_update
-#: model:ir.model.fields,field_description:event.field_event_confirm___last_update
-#: model:ir.model.fields,field_description:event.field_event_event___last_update
-#: model:ir.model.fields,field_description:event.field_event_mail___last_update
-#: model:ir.model.fields,field_description:event.field_event_mail_registration___last_update
-#: model:ir.model.fields,field_description:event.field_event_registration___last_update
-#: model:ir.model.fields,field_description:event.field_event_type___last_update
+#: model:ir.model.fields,field_description:event.field_event_config_settings___last_update model:ir.model.fields,field_description:event.field_event_confirm___last_update model:ir.model.fields,field_description:event.field_event_event___last_update model:ir.model.fields,field_description:event.field_event_mail___last_update
+#: model:ir.model.fields,field_description:event.field_event_mail_registration___last_update model:ir.model.fields,field_description:event.field_event_registration___last_update model:ir.model.fields,field_description:event.field_event_type___last_update
 #: model:ir.model.fields,field_description:event.field_report_event_registration___last_update
 msgid "Last Modified on"
 msgstr "最后修改日"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_config_settings_write_uid
-#: model:ir.model.fields,field_description:event.field_event_confirm_write_uid
-#: model:ir.model.fields,field_description:event.field_event_event_write_uid
-#: model:ir.model.fields,field_description:event.field_event_mail_registration_write_uid
-#: model:ir.model.fields,field_description:event.field_event_mail_write_uid
-#: model:ir.model.fields,field_description:event.field_event_registration_write_uid
-#: model:ir.model.fields,field_description:event.field_event_type_write_uid
+#: model:ir.model.fields,field_description:event.field_event_config_settings_write_uid model:ir.model.fields,field_description:event.field_event_confirm_write_uid model:ir.model.fields,field_description:event.field_event_event_write_uid model:ir.model.fields,field_description:event.field_event_mail_registration_write_uid
+#: model:ir.model.fields,field_description:event.field_event_mail_write_uid model:ir.model.fields,field_description:event.field_event_registration_write_uid model:ir.model.fields,field_description:event.field_event_type_write_uid
 msgid "Last Updated by"
 msgstr "最后更新"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_config_settings_write_date
-#: model:ir.model.fields,field_description:event.field_event_confirm_write_date
-#: model:ir.model.fields,field_description:event.field_event_event_write_date
-#: model:ir.model.fields,field_description:event.field_event_mail_registration_write_date
-#: model:ir.model.fields,field_description:event.field_event_mail_write_date
-#: model:ir.model.fields,field_description:event.field_event_registration_write_date
-#: model:ir.model.fields,field_description:event.field_event_type_write_date
+#: model:ir.model.fields,field_description:event.field_event_config_settings_write_date model:ir.model.fields,field_description:event.field_event_confirm_write_date model:ir.model.fields,field_description:event.field_event_event_write_date model:ir.model.fields,field_description:event.field_event_mail_registration_write_date
+#: model:ir.model.fields,field_description:event.field_event_mail_write_date model:ir.model.fields,field_description:event.field_event_registration_write_date model:ir.model.fields,field_description:event.field_event_type_write_date
 msgid "Last Updated on"
 msgstr "最后更新"
 
@@ -1165,9 +1010,7 @@ msgid "Location"
 msgstr "地点"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Loops"
 msgstr "循环"
 
@@ -1222,8 +1065,7 @@ msgid "Max Seats"
 msgstr "最多席位"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_seats_availability
-#: model:ir.model.fields,field_description:event.field_event_event_seats_available
+#: model:ir.model.fields,field_description:event.field_event_event_seats_availability model:ir.model.fields,field_description:event.field_event_event_seats_available
 msgid "Maximum Attendees"
 msgstr "与会者最多人数"
 
@@ -1233,14 +1075,12 @@ msgid "Maximum Attendees Number"
 msgstr "与会者最多人数"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_ids
-#: model:ir.model.fields,field_description:event.field_event_registration_message_ids
+#: model:ir.model.fields,field_description:event.field_event_event_message_ids model:ir.model.fields,field_description:event.field_event_registration_message_ids
 msgid "Messages"
 msgstr "消息"
 
 #. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_ids
-#: model:ir.model.fields,help:event.field_event_registration_message_ids
+#: model:ir.model.fields,help:event.field_event_event_message_ids model:ir.model.fields,help:event.field_event_registration_message_ids
 msgid "Messages and communication history"
 msgstr "消息和通信历史"
 
@@ -1250,9 +1090,7 @@ msgid "Minimum Attendees"
 msgstr "与会者最少数量"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Modules"
 msgstr "模块"
 
@@ -1304,8 +1142,7 @@ msgid "No validation step on subscription"
 msgstr "该订阅没有审批步骤"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_needaction_counter
-#: model:ir.model.fields,field_description:event.field_event_registration_message_needaction_counter
+#: model:ir.model.fields,field_description:event.field_event_event_message_needaction_counter model:ir.model.fields,field_description:event.field_event_registration_message_needaction_counter
 msgid "Number of Actions"
 msgstr "动作的序列号"
 
@@ -1330,28 +1167,22 @@ msgid "Number of Registrations"
 msgstr "登记数量"
 
 #. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_needaction_counter
-#: model:ir.model.fields,help:event.field_event_registration_message_needaction_counter
+#: model:ir.model.fields,help:event.field_event_event_message_needaction_counter model:ir.model.fields,help:event.field_event_registration_message_needaction_counter
 msgid "Number of messages which requires an action"
 msgstr "需要动作的消息编号"
 
 #. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_unread_counter
-#: model:ir.model.fields,help:event.field_event_registration_message_unread_counter
+#: model:ir.model.fields,help:event.field_event_event_message_unread_counter model:ir.model.fields,help:event.field_event_registration_message_unread_counter
 msgid "Number of unread messages"
 msgstr "未读电子邮件的数量"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Odoo Official Website"
 msgstr "Odoo官方网站"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Odoo Web Client"
 msgstr "ODoo 的Web客户端"
 
@@ -1361,12 +1192,14 @@ msgid ""
 "Odoo helps you schedule and efficiently organize your events:\n"
 "    track subscriptions and participations, automate the confirmation emails,\n"
 "    sell tickets, etc."
-msgstr "Odoo帮你计划和有效氯的组织你的事件\n跟踪订阅和参与，自动确认邮件，卖票等等"
+msgstr ""
+"Odoo帮你计划和有效率的组织你的事件\n"
+"跟踪订阅和参与，自动确认邮件，卖票等等"
 
 #. module: event
 #: model:event.event,name:event.event_0
 msgid "Open Days in Los Angeles"
-msgstr "洛杉矶的开源大会"
+msgstr "洛杉矶开放日"
 
 #. module: event
 #: model:ir.actions.client,name:event.action_client_event_menu
@@ -1389,21 +1222,13 @@ msgid "Participant / Contact Name"
 msgstr "参与者/联系人名称"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"Participants are expected to have some knowledge in programming. A basic "
-"knowledge of the Python programming is recommended."
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
+msgid "Participants are expected to have some knowledge in programming. A basic knowledge of the Python programming is recommended."
 msgstr "参与者需要有一定的变成知识，最好懂Python"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"Participants preferably have a functional knowledge of our software (see "
-"Functional Training)."
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
+msgid "Participants preferably have a functional knowledge of our software (see Functional Training)."
 msgstr "参与者最好最我们的系统的业务流程比较了解（参照功能培训）"
 
 #. module: event
@@ -1432,24 +1257,18 @@ msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
 msgstr "采购，销售和采购管理，财务会计"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Python Objects"
 msgstr "Python 对象"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Read Great Contents"
 msgstr "阅读伟大的内容"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_registration_origin
-msgid ""
-"Reference of the document that created the registration, for example a sale "
-"order"
+msgid "Reference of the document that created the registration, for example a sale order"
 msgstr "创建了登记的该文档的参照，例如销售订单"
 
 #. module: event
@@ -1458,10 +1277,7 @@ msgid "Register with this event"
 msgstr "注册这次活动"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_registration_form
-#: model:ir.ui.view,arch_db:event.view_event_registration_graph
-#: model:ir.ui.view,arch_db:event.view_event_registration_pivot
-#: model:ir.ui.view,arch_db:event.view_event_registration_tree
+#: model:ir.ui.view,arch_db:event.view_event_registration_form model:ir.ui.view,arch_db:event.view_event_registration_graph model:ir.ui.view,arch_db:event.view_event_registration_pivot model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Registration"
 msgstr "登记记录"
 
@@ -1536,9 +1352,7 @@ msgid "Reply-To Email"
 msgstr "回复Email"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Report Engine"
 msgstr "报表引擎"
 
@@ -1548,9 +1362,7 @@ msgid "Reports"
 msgstr "报告"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Requirements"
 msgstr "要求"
 
@@ -1560,8 +1372,7 @@ msgid "Reserved Seats"
 msgstr "预订席位"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_user_id
-#: model:ir.ui.view,arch_db:event.view_event_search
+#: model:ir.model.fields,field_description:event.field_event_event_user_id model:ir.ui.view,arch_db:event.view_event_search
 msgid "Responsible"
 msgstr "负责人"
 
@@ -1641,10 +1452,7 @@ msgid "Start Month"
 msgstr "开始月份"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_state
-#: model:ir.model.fields,field_description:event.field_event_registration_state
-#: model:ir.ui.view,arch_db:event.view_event_search
-#: model:ir.ui.view,arch_db:event.view_registration_search
+#: model:ir.model.fields,field_description:event.field_event_event_state model:ir.model.fields,field_description:event.field_event_registration_state model:ir.ui.view,arch_db:event.view_event_search model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Status"
 msgstr "状态"
 
@@ -1670,26 +1478,17 @@ msgstr "多谢你的出席${object.event_id.name}"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_reply_to
-msgid ""
-"The email address of the organizer is likely to be put here, with the effect"
-" to be in the 'Reply-To' of the mails sent automatically at event or "
-"registrations confirmation. You can also put the email address of your mail "
-"gateway if you use one."
+msgid "The email address of the organizer is likely to be put here, with the effect to be in the 'Reply-To' of the mails sent automatically at event or registrations confirmation. You can also put the email address of your mail gateway if you use one."
 msgstr "在这里添写组织者的邮件地址,当活动或注册确认时，它会自动出现在在邮件的‘回复给’一栏里。如果你电子邮件地址使用的不是默认网关的话，则需要添写邮件网关。"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"This course help me build my first application within a month. Definetly "
-"worth its price."
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
+msgid "This course help me build my first application within a month. Definetly worth its price."
 msgstr "该课程帮助我们在一个月内创建第一个应用，肯定值这个价格"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail_template_id
-msgid ""
-"This field contains the template of the mail that will be automatically sent"
+msgid "This field contains the template of the mail that will be automatically sent"
 msgstr "这个字段包含自动发送的邮件模板"
 
 #. module: event
@@ -1703,9 +1502,7 @@ msgid "Timezone"
 msgstr "时区"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "To get more information, visit the"
 msgstr "要看更多信息，请前往"
 
@@ -1720,15 +1517,12 @@ msgid "Training"
 msgstr "培训"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Training Center Module"
 msgstr "培训中心模块"
 
 #. module: event
-#: selection:event.event,state:0 selection:event.registration,state:0
-#: model:ir.ui.view,arch_db:event.view_event_search
+#: selection:event.event,state:0 selection:event.registration,state:0 model:ir.ui.view,arch_db:event.view_event_search
 msgid "Unconfirmed"
 msgstr "未确认"
 
@@ -1738,16 +1532,12 @@ msgid "Unconfirmed Seat Reservations"
 msgstr "未最后确认的预订席位"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Underscore"
 msgstr "强调"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Understand the development concepts and architecture;"
 msgstr "了解开发概念和结构"
 
@@ -1767,23 +1557,18 @@ msgid "Unlimited"
 msgstr "无限制的"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_unread
-#: model:ir.model.fields,field_description:event.field_event_registration_message_unread
-#: model:ir.ui.view,arch_db:event.view_event_search
-#: model:ir.ui.view,arch_db:event.view_registration_search
+#: model:ir.model.fields,field_description:event.field_event_event_message_unread model:ir.model.fields,field_description:event.field_event_registration_message_unread model:ir.ui.view,arch_db:event.view_event_search model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unread Messages"
 msgstr "未读消息"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_message_unread_counter
-#: model:ir.model.fields,field_description:event.field_event_registration_message_unread_counter
+#: model:ir.model.fields,field_description:event.field_event_event_message_unread_counter model:ir.model.fields,field_description:event.field_event_registration_message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "未读消息计数器"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_auto_confirmation
-msgid ""
-"Unselect this option to manually manage draft event and draft subscription"
+msgid "Unselect this option to manually manage draft event and draft subscription"
 msgstr "取消该选项去手工的管理草稿事件和草稿订阅"
 
 #. module: event
@@ -1802,9 +1587,7 @@ msgid "User"
 msgstr "用户"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Variables &amp; Operators"
 msgstr "变量和操作"
 
@@ -1815,9 +1598,7 @@ msgstr "仓库管理，制造（MRP）& 销售。导入/导出"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
-msgid ""
-"Warning: This Event has not reached its Minimum Registration Limit. Are you "
-"sure you want to confirm it?"
+msgid "Warning: This Event has not reached its Minimum Registration Limit. Are you sure you want to confirm it?"
 msgstr "警告：这活动没有达到最低登记记录的规定，你肯定要确认它？"
 
 #. module: event
@@ -1836,16 +1617,12 @@ msgid "Week(s)"
 msgstr "周"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "What do people say about this course?"
 msgstr "人们怎么评价这个课程"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "What you will learn?"
 msgstr "你要学些什么"
 
@@ -1855,18 +1632,14 @@ msgid "When to Run "
 msgstr "当运行的时候"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "Workflows"
 msgstr "工作流"
 
 #. module: event
 #: code:addons/event/models/event.py:230
 #, python-format
-msgid ""
-"You have already set a registration for this event as 'Attended'. Please "
-"reset it to draft if you want to cancel this event."
+msgid "You have already set a registration for this event as 'Attended'. Please reset it to draft if you want to cancel this event."
 msgstr "鉴于你已经注册该事件为“参加”。如果你想取消这次活动。请首先将其状态改为草稿。"
 
 #. module: event
@@ -1877,9 +1650,7 @@ msgstr "你必须等待活动开始才能做这些动作"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_group_email_scheduling
-msgid ""
-"You will be able to configure emails, and to schedule them to be "
-"automatically sent to the attendees on subscription and/or attendance"
+msgid "You will be able to configure emails, and to schedule them to be automatically sent to the attendees on subscription and/or attendance"
 msgstr "你将能来可能要配置电子邮件，并设置邮件能按计划将它们自动发送到订阅者或与会者"
 
 #. module: event
@@ -1898,9 +1669,7 @@ msgid "badge_of_${(object.event_id.name or '').replace('/','_')}"
 msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "drinks and lunch;"
 msgstr "饮料和午餐"
 
@@ -1945,8 +1714,6 @@ msgid "to learn technical aspects"
 msgstr "学习技术方面"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
+#: model:event.event,description:event.event_0 model:event.event,description:event.event_1 model:event.event,description:event.event_3
 msgid "training material."
 msgstr "培训资料"
