@@ -391,7 +391,7 @@ class mrp_repair(osv.osv):
                             'price_subtotal': fee.product_uom_qty * fee.price_unit
                         })
                         repair_fee_obj.write(cr, uid, [fee.id], {'invoiced': True, 'invoice_line_id': invoice_fee_id})
-                #inv_obj.button_reset_taxes(cr, uid, inv_id, context=context)
+                inv_obj.browse(cr, uid, inv_id, context=context)._onchange_invoice_line_ids()
                 res[repair.id] = inv_id
         return res
 
