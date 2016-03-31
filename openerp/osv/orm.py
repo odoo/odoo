@@ -4513,7 +4513,7 @@ class BaseModel(object):
         if lang and lang != 'en_US':
             translate_subselect = '''
             select value from ir_translation
-            where name = %%s and lang = %%s and value != %%s and res_id = "%s".id
+            where name = %%s and lang = %%s and value != %%s and res_id = "%s".id limit 1
             ''' % (table_alias)
             # prepare the params to be sent to the cr.execute() method (called just after get_sql() by ORM)
             query.where_clause_params.append('%s,%s' % (table_obj._name, field))
