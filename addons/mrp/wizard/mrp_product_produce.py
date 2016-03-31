@@ -13,10 +13,10 @@ class MrpProductProduce(models.TransientModel):
         res = super(MrpProductProduce, self).default_get(fields)
         if self._context and self._context.get('active_id'):
             production = self.env['mrp.production'].browse(self._context['active_id'])
-            serial_raw = production.move_raw_ids.filtered(lambda x: x.product_id.tracking == 'serial')
+            #serial_raw = production.move_raw_ids.filtered(lambda x: x.product_id.tracking == 'serial')
             serial_finished = production.move_finished_ids.filtered(lambda x: x.product_id.tracking == 'serial')
-            serial = bool(serial_raw or serial_finished)
-            if serial_raw or serial_finished:
+            serial = bool(serial_finished)
+            if serial_finished:
                 quantity = 1.0
             else:
                 quantity = production.product_qty - sum(production.move_finished_ids.mapped('quantity_done'))
@@ -26,7 +26,7 @@ class MrpProductProduce(models.TransientModel):
             for move in production.move_raw_ids.filtered(lambda x: (x.product_id.tracking != 'none') and x.state not in ('done', 'cancel')):
                 if not move.move_lot_ids:
                     qty = quantity / move.bom_line_id.bom_id.product_qty * move.bom_line_id.product_qty
-                    if production._check_serial():
+                    if move.product_id.tracking == 'serial':
                         while qty > 0.000001:
                             lines.append({
                                 'move_id': move.id,

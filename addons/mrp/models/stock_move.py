@@ -20,16 +20,17 @@ class StockMoveLots(models.Model):
             else:
                 movelot.plus_visible = (movelot.quantity == 0.0) or (movelot.quantity_done < movelot.quantity)
 
-    move_id = fields.Many2one('stock.move', string='Inventory Move', required=True)
+    move_id = fields.Many2one('stock.move', string='Move')
     workorder_id = fields.Many2one('mrp.production.work.order', string='Work Order')
     production_id = fields.Many2one('mrp.production')
-    lot_id = fields.Many2one('stock.production.lot', string='Lot')
+    lot_id = fields.Many2one('stock.production.lot', string='Lot', domain="[('product_id', '=', product_id)]")
     lot_produced_id = fields.Many2one('stock.production.lot', string='Finished Lot')
     lot_produced_qty = fields.Float('Quantity Finished Product')
     quantity = fields.Float('Quantity', default=1.0)
     quantity_done = fields.Float('Done')
-    product_id = fields.Many2one('product.product', related="move_id.product_id")
-    done = fields.Boolean('Done', default=False)
+    product_id = fields.Many2one('product.product', related="move_id.product_id", store=True, readonly=True)
+    done_wo = fields.Boolean('Done for Work Order', default=True)
+    done_move = fields.Boolean('Move Done', related='move_id.is_done', store=True)
     plus_visible = fields.Boolean(compute='_compute_plus', string="Plus Visible")
 
     @api.multi
@@ -59,7 +60,7 @@ class StockMove(models.Model):
     quantity_done_store = fields.Float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'))
     quantity_done = fields.Float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'),
         compute='_qty_done_compute', inverse='_qty_done_set')
-    move_lot_ids = fields.One2many('stock.move.lots', 'move_id', string='Lots')
+    move_lot_ids = fields.One2many('stock.move.lots', 'move_id', domain=[('done_wo', '=', True)], string='Lots')
     bom_line_id = fields.Many2one('mrp.bom.line', string="BoM Line")
     is_done = fields.Boolean('Done', compute='_compute_is_done', help='Technical Field to order moves', store=True)
 

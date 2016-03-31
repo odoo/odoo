@@ -1314,17 +1314,19 @@
                 <page string="Current Production">
                     <group>
                         <group>
-                            <field name="qty_producing" string="Current Qty"/>
-                            <field name="final_lot_id" context="{'default_product_id': product}" attrs="{'invisible': [('has_tracking', '=', 'none')], 'required': [('has_tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
+                            <field name="qty_producing" string="Current Qty" attrs="{'readonly': [('has_tracking', '=', 'serial')]}"/>
+                            <field name="final_lot_id" context="{'default_product_id': product}" attrs="{'invisible': [('has_tracking', '=', 'none')]}" groups="stock.group_production_lot"/>
                             <field name="has_tracking" invisible="1"/>
                         </group>
                     </group>
-                    <field name="active_move_traceability_ids" attrs="{'invisible': [('active_move_traceability_ids', '=', [])]}">
-                        <tree editable="bottom">
+                    <field name="move_raw_ids" invisible="1"/>
+                    <field name="active_move_lot_ids" attrs="{'invisible': [('active_move_lot_ids', '=', [])]}">
+                        <tree editable="bottom" create="0" delete="0">
                             <field name="product_id"/>
-                            <field name="quantity"/>
-                            <field name="done" invisible="1"/>
+                            <field name="quantity" readonly="1"/>
                             <field name="lot_id" context="{'default_product_id': product_id}"/>
+                            <field name="quantity_done"/>
+                            <field name="done_wo" invisible="1"/>
                         </tree>
                     </field>
                 </page>
@@ -1383,8 +1385,8 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="workcenter_id"/>
-                            <field name="production_id"/>
+                            <field name="workcenter_id" readonly="1"/>
+                            <field name="production_id" readonly="1"/>
                         </group>
                     </group>
                 </page>
