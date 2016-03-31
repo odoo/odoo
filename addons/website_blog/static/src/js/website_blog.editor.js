@@ -92,7 +92,7 @@ odoo.define('website_blog.editor', function (require) {
             this.src = null;
             this.$cover.css({"background-image": '', 'min-height': ''});
             this.$image.removeAttr("src");
-            this.$target.removeClass('cover cover_full');
+            this.$target.removeClass('cover cover_full cover_narrow');
         },
         change : function(type, value, $li) {
             if (type !== 'click') return;

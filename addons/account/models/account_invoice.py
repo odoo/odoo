@@ -498,6 +498,14 @@ class AccountInvoice(models.Model):
         return True
 
     @api.multi
+    def get_formview_id(self):
+        """ Update form view id of action to open the invoice """
+        if self.type == 'in_invoice':
+            return self.env.ref('account.invoice_supplier_form').id
+        else:
+            return self.env.ref('account.invoice_form').id
+
+    @api.multi
     def get_taxes_values(self):
         tax_grouped = {}
         for line in self.invoice_line_ids:

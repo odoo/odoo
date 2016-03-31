@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-11-08 17:05+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-03-21 01:59+0000\n"
+"Last-Translator: Juliano Henriquez <juliano@consultoriahenca.com>\n"
 "Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/odoo-9/language/es_DO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +54,7 @@ msgid ""
 "                </p>\n"
 "            \n"
 "            "
-msgstr ""
+msgstr "\n\t             <p>\n                    Estimados $ {object.user_id.name or ''},\n                </p>\n                <p>\n                    Se le ha dado acceso a ${user.company_id.name}'s ${object.wizard_id.portal_id.name} .\n                </p>\n                <p>\n                    Sus datos de acceso a la cuenta son:\n                </p>\n                <ul>\n                    <li> Nombre de usuario: $ {object.user_id.login or ''} </ li>\n                </ul>\n                <ul>\n                    <li> Portal: <a href=\"${'portal_url' en ctx and ctx['portal_url'] o''}\"> ${ 'portal_url' in ctx and ctx[ 'portal_url'] or ''}</ a></ li>\n                </ul>\n                <ul>\n                \t<li>Base de datos: $ { 'dbname' in ctx and ctx [ 'dbname'] or ''} </li>\n                </ul>\n                <p>\n               \tPuede establecer o cambiar la contraseña a través de la siguiente dirección:\n                </p>\n                <ul>\n                    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n                </ul>\n                <p>\n               \t ${object.wizard_id.welcome_message or ''}\n                </p>\n                <p> --- <br /> \n                    Odoo - Aplicaciones Open Source para Negocios <br />\n                    http://www.odoo.com <br />\n                </p>"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_groups
@@ -64,7 +64,7 @@ msgstr "Grupos de acceso"
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_after_sales
 msgid "After Sale Services"
-msgstr ""
+msgstr "Servicio de postventa"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -123,17 +123,17 @@ msgstr "ID"
 #. module: portal
 #: model:ir.model.fields,help:portal.field_res_groups_is_portal
 msgid "If checked, this group is usable as a portal."
-msgstr ""
+msgstr "Si cotejado, este grupo es usable como un portal. "
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_in_portal
 msgid "In Portal"
-msgstr ""
+msgstr "En el Portal"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_welcome_message
 msgid "Invitation Message"
-msgstr ""
+msgstr "Mensaje de Invitacion"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard___last_update
@@ -156,12 +156,12 @@ msgstr "Última actualización en"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_user_id
 msgid "Login User"
-msgstr ""
+msgstr "Entrar como usuario"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.group_search_view
 msgid "Non-Portal Groups"
-msgstr ""
+msgstr "Grupos no-Portal"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
@@ -175,22 +175,22 @@ msgstr "Portal"
 #: model:ir.model,name:portal.model_portal_wizard
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Portal Access Management"
-msgstr ""
+msgstr "Gestión de acceso portal"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.group_search_view
 msgid "Portal Groups"
-msgstr ""
+msgstr "Grupos del portal"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
 msgid "Portal User Config"
-msgstr ""
+msgstr "Configuración del usuario portal"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_projects
 msgid "Projects"
-msgstr ""
+msgstr "Proyectos"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -198,40 +198,40 @@ msgid ""
 "Select which contacts should belong to the portal in the list below.\n"
 "                        The email address of each selected contact must be valid and unique.\n"
 "                        If necessary, you can fix any contact's email address directly in the list."
-msgstr ""
+msgstr "Seleccione los contactos que deben pertenecer al portal en la siguiente lista.\n                        La dirección de email de cada contacto seleccionado debe ser válida y única.\n                        Si es necesario, puede corregir la dirección de correo electrónico de contacto directamente en la lista."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:114
 #, python-format
 msgid "Several contacts have the same email: "
-msgstr ""
+msgstr "Varios contactos tienen el mismo correo:"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:111
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr ""
+msgstr "Algunos contactos no tienen un email válido:"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:117
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
-msgstr ""
+msgstr "Algunos contactos tienen el mismo correo de un usuario del portal existente:"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
 msgid "The portal that users can be added in or removed from."
-msgstr ""
+msgstr "El portal que los usuarios pueden ser añadidos o removidos."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
-msgstr ""
+msgstr "Este texto está incluido en el correo electrónico enviado a los usuarios del portal nuevo."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_welcome_message
 msgid "This text is included in the email sent to new users of the portal."
-msgstr ""
+msgstr "Este texto está incluido en el correo electrónico enviado a los nuevos usuarios del portal."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:120
@@ -240,7 +240,7 @@ msgid ""
 "To resolve this error, you can: \n"
 "- Correct the emails of the relevant contacts\n"
 "- Grant access only to contacts with unique emails"
-msgstr ""
+msgstr "Para resolver este error, usted puede: - corregir los coreos de los contactos pertinentes - conceder acceso sólo a los contactos con correos electrónicos únicos"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_ids
@@ -257,9 +257,9 @@ msgstr "Asistente"
 #, python-format
 msgid ""
 "You must have an email address in your User Preferences to send emails."
-msgstr ""
+msgstr "Debe tener una dirección de correo electrónico en las preferencias de usuario para enviar mensajes de correo electrónico."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
 msgid "Your Odoo account at ${user.company_id.name|safe}"
-msgstr ""
+msgstr "Su cuenta de Odoo en ${user.company_id.name|safe}"

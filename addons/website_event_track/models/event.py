@@ -53,15 +53,7 @@ class event_track(models.Model):
         ('0', 'Low'), ('1', 'Medium'),
         ('2', 'High'), ('3', 'Highest')],
         'Priority', required=True, default='1')
-    image = fields.Binary('Image', compute='_compute_image', store=True, attachment=True)
-
-    @api.one
-    @api.depends('speaker_ids.image')
-    def _compute_image(self):
-        if self.speaker_ids:
-            self.image = self.speaker_ids[0].image
-        else:
-            self.image = False
+    image = fields.Binary('Image', related='speaker_ids.image_medium', store=True, attachment=True)
 
     @api.model
     def create(self, vals):

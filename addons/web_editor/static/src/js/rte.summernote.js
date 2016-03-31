@@ -295,11 +295,12 @@ eventHandler.modules.handle.update = function ($handle, oStyle, isAirMode) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* hack for image and link editor */
 
-function getImgTarget () {
-  return $(".note-control-selection").data('target');
+function getImgTarget ($editable) {
+    var $handle = $editable ? dom.makeLayoutInfo($editable).handle() : undefined;
+    return $(".note-control-selection", $handle).data('target');
 }
 eventHandler.modules.editor.padding = function ($editable, sValue) {
-    var $target = $(getImgTarget());
+    var $target = $(getImgTarget($editable));
     var paddings = "small medium large xl".split(/\s+/);
     $editable.data('NoteHistory').recordUndo();
     if (sValue.length) {
@@ -309,16 +310,16 @@ eventHandler.modules.editor.padding = function ($editable, sValue) {
     $target.removeClass("padding-" + paddings.join(" padding-"));
 };
 eventHandler.modules.editor.resize = function ($editable, sValue) {
-    var $target = $(getImgTarget());
+    var $target = $(getImgTarget($editable));
     $editable.data('NoteHistory').recordUndo();
     var width = ($target.attr('style') || '').match(/(^|;|\s)width:\s*([0-9]+)%/);
     if (width) {
         width = width[2]/100;
     }
-    $(getImgTarget()).css('width', width != sValue ? (sValue * 100) + '%' : '');
+    $target.css('width', width != sValue ? (sValue * 100) + '%' : '');
 };
 eventHandler.modules.editor.resizefa = function ($editable, sValue) {
-    var $target = $(getImgTarget());
+    var $target = $(getImgTarget($editable));
     $editable.data('NoteHistory').recordUndo();
     $target.attr('class', $target.attr('class').replace(/\s*fa-[0-9]+x/g, ''));
     if (+sValue > 1) {
@@ -326,7 +327,7 @@ eventHandler.modules.editor.resizefa = function ($editable, sValue) {
     }
 };
 eventHandler.modules.editor.floatMe = function ($editable, sValue) {
-    var $target = $(getImgTarget());
+    var $target = $(getImgTarget($editable));
     $editable.data('NoteHistory').recordUndo();
     switch (sValue) {
         case 'center': $target.toggleClass('center-block').removeClass('pull-right pull-left'); break;
@@ -335,7 +336,7 @@ eventHandler.modules.editor.floatMe = function ($editable, sValue) {
     }
 };
 eventHandler.modules.editor.imageShape = function ($editable, sValue) {
-    var $target = $(getImgTarget());
+    var $target = $(getImgTarget($editable));
     $editable.data('NoteHistory').recordUndo();
     $target.toggleClass(sValue);
 };
@@ -565,8 +566,8 @@ function summernote_mouseup (event) {
     }
     // don't rerange if simple click
     if (initial_data.event) {
-        var dx = event.clientX - (event.shiftKey ? initial_data.rect.left : initial_data.event.clientX);
-        var dy = event.clientY - (event.shiftKey ? initial_data.rect.top : initial_data.event.clientY);
+        var dx = event.clientX - (event.shiftKey && initial_data.rect ? initial_data.rect.left : initial_data.event.clientX);
+        var dy = event.clientY - (event.shiftKey && initial_data.rect ? initial_data.rect.top : initial_data.event.clientY);
         if (10 < Math.pow(dx, 2)+Math.pow(dy, 2)) {
             reRangeSelect(event, dx, dy);
         }
