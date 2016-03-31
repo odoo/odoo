@@ -4,7 +4,6 @@ import time
 import math
 
 from openerp.osv import expression
-from openerp.tools.float_utils import float_round as round
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.exceptions import UserError, ValidationError
 from openerp import api, fields, models, _
@@ -630,14 +629,13 @@ class AccountTax(models.Model):
         # PO/SO/invoice line and then these rounded amounts will be
         # summed, leading to the total amount for that tax. But, if the
         # company has tax_calculation_rounding_method = round_globally,
-        # we still follow the same method, but we use a much larger
-        # precision when we round the tax amount for each line (we use
-        # the 'Account' decimal precision + 5), and that way it's like
-        # rounding after the sum of the tax amounts of each line
-        prec = currency.decimal_places
-        if company_id.tax_calculation_rounding_method == 'round_globally':
-            prec += 5
-        total_excluded = total_included = base = round(price_unit * quantity, prec)
+        # we still follow the same method, but we don't round and that
+        # way it's like rounding after the sum of the tax amounts of each
+        # line
+        total = price_unit * quantity
+        base = currency.with_context(amount_name=self._name + '.base').round(total)
+        total_excluded = currency.with_context(amount_name=self._name + '.total_excluded').round(total)
+        total_included = currency.with_context(amount_name=self._name + '.total_included').round(total)
 
         for tax in self:
             if tax.amount_type == 'group':
@@ -650,15 +648,14 @@ class AccountTax(models.Model):
                 continue
 
             tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
-            if company_id.tax_calculation_rounding_method == 'round_globally':
-                tax_amount = round(tax_amount, prec)
-            else:
-                tax_amount = currency.round(tax_amount)
 
             if tax.price_include:
+                tax_amount = currency.with_context(amount_name=self._name + '.tax_amount').round(tax_amount)
                 total_excluded -= tax_amount
                 base -= tax_amount
             else:
+                if not company_id.tax_calculation_rounding_method == 'round_globally':
+                    tax_amount = currency.with_context(amount_name=self._name + '.tax_amount').round(tax_amount)
                 total_included += tax_amount
 
             if tax.include_base_amount:
@@ -676,9 +673,9 @@ class AccountTax(models.Model):
 
         return {
             'taxes': sorted(taxes, key=lambda k: k['sequence']),
-            'total_excluded': currency.round(total_excluded),
-            'total_included': currency.round(total_included),
-            'base': base,
+            'total_excluded': currency.with_context(amount_name=self._name + '.total_excluded').round(total_excluded),
+            'total_included': currency.with_context(amount_name=self._name + '.total_included').round(total_included),
+            'base': currency.with_context(amount_name=self._name + '.base').round(base),
         }
 
     @api.v7

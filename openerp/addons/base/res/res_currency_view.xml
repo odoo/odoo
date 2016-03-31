@@ -75,15 +75,36 @@
                             <field name="active"/>
                         </group>
 
-                        <group groups="base.group_no_one">
-                            <group string="Price Accuracy">
-                                <field name="rounding"/>
-                                <field name="decimal_places"/>
+                        <group col="1" groups="base.group_no_one">
+                            <group col="4">
+                                <group string="Display">
+                                    <field name="symbol"/>
+                                    <field name="position"/>
+                                </group>
+
+                                <group string="Default Decimal Precision">
+                                    <field name="rounding"/>
+                                    <field name="decimal_places"/>
+                                </group>
                             </group>
 
-                            <group string="Display">
-                                <field name="symbol"/>
-                                <field name="position"/>
+                            <group string="Fine tune Decimal Precision" col="1">
+                                <field name="precision_ids">
+                                    <tree editable="top">
+                                        <field name="name"/>
+                                        <field name="rounding"/>
+                                        <field name="decimal_places"/>
+                                    </tree>
+                                </field>
+                                <div>
+                                    Rounding Factor is for internal use and database store.
+                                    <br/>Decimal Places is for decimal display.
+                                    <br/>Samples of available Amount Name :
+                                    <ul>
+                                        <li><strong>default</strong>: define precision to be used by default</li>
+                                        <li><strong>account.invoice.line.price_unit</strong>: define precision for invoices price unit</li>
+                                    </ul>
+                                </div>
                             </group>
                         </group>
                     </sheet>

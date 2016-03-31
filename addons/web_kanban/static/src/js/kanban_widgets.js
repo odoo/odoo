@@ -248,7 +248,9 @@ var KanbanMonetary = AbstractField.extend({
         var currency_field = (this.options && this.options.currency_field) || 'currency_id';
         var currency_id = kanban_view.values[currency_field].value[0];
         var currency = session.get_currency(currency_id);
-        var digits_precision = this.options.digits || (currency && currency.digits);
+        var amount_name = kanban_view.model + '.' + this.$node.attr('name');
+        console.log("amount_name =" + amount_name);
+        var digits_precision = this.options.digits || (currency && currency.precisions[amount_name] && currency.precisions[amount_name].digits) || (currency && currency.default_digits);
         var value = formats.format_value(this.field.raw_value || 0, {type: this.field.type, digits: digits_precision});
         if (currency) {
             if (currency.position === "after") {
