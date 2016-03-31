@@ -91,8 +91,9 @@ var KanbanView = View.extend({
 
     willStart: function() {
         // add qweb templates
+        var fvg = $.extend(true, {}, this.fields_view);
         for (var i=0, ii=this.fields_view.arch.children.length; i < ii; i++) {
-            var child = this.fields_view.arch.children[i];
+            var child = fvg.arch.children[i];
             if (child.tag === "templates") {
                 transform_qweb_template(child, this.fields_view, this.many2manys);
                 this.qweb.add_template(utils.json_node_to_xml(child));
