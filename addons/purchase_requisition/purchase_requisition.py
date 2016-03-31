@@ -431,6 +431,7 @@ class procurement_order(osv.osv):
                 self.message_post(cr, uid, [procurement.id], body=_("Purchase Requisition created"), context=context)
                 procurement.write({'requisition_id': requisition_id})
                 req_ids += [procurement.id]
+                res += [procurement.id]
         set_others = set(ids) - set(req_ids)
         if set_others:
             res += super(procurement_order, self).make_po(cr, uid, list(set_others), context=context)

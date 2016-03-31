@@ -904,7 +904,8 @@ class ProcurementOrder(models.Model):
                         po.write({'origin': po.origin})
                 else:
                     po.write({'origin': procurement.origin})
-            res += po.ids
+            if po:
+                res += [procurement.id]
 
             # Create Line
             po_line = False
