@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2015-07-30 13:30+0000\n"
+"PO-Revision-Date: 2016-03-17 10:13+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-7/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -36,12 +36,12 @@ msgstr ""
 #. module: anonymization
 #: field:ir.model.fields.anonymization.migration.fix,target_version:0
 msgid "Target Version"
-msgstr ""
+msgstr "النسخة المستهدفة"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.migration.fix,query_type:0
 msgid "sql"
-msgstr ""
+msgstr "sql"
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:91
@@ -50,7 +50,7 @@ msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to create, write or delete fields."
-msgstr ""
+msgstr "إخفاء الهوية في قاعدة البيانات حالياً في وضع غير مستقر. بعض الحقول تم إخفاء الهوية فيها بينما البعض الآخر لم يجري عليه الأمر. يجدر بك محاولة حل هذه المشكلة قبل محاولة إنشاء، تغيير أو حذف أي حقول."
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization,field_name:0
@@ -84,7 +84,7 @@ msgstr "نموذج.حقول.إخفاء الهوية"
 msgid ""
 "Before executing the anonymization process, you should make a backup of your"
 " database."
-msgstr ""
+msgstr "قبل بدء عملية إخفاء الهوية، يجب أن تحتفظ بنسخة احتياطية من قاعدة البيانات."
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.history,state:0
@@ -129,7 +129,7 @@ msgstr "مجهول"
 #: code:addons/anonymization/anonymization.py:448
 #, python-format
 msgid "Anonymized value is None. This cannot happens."
-msgstr ""
+msgstr "قيمة مجهولة المصدر غير موجوده. هذا لا يمكن أن يحدث."
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.history,filepath:0
@@ -141,7 +141,7 @@ msgstr "مسار الملف"
 msgid ""
 "This is the file created by the anonymization process. It should have the "
 "'.pickle' extention."
-msgstr ""
+msgstr "هذا هو الملف التي تم إنشاؤه بواسطة عملية إخفاء الهوية. يجب أن يكون امتداده .pickle"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.history,date:0
@@ -164,7 +164,7 @@ msgstr "اعكس تجهيل قاعدة البيانات"
 msgid ""
 "Cannot anonymize fields of these types: binary, many2many, many2one, "
 "one2many, reference."
-msgstr ""
+msgstr "لا يمكن إخفاء هوية الحقول من الأنواع التالية: binary, many2many, many2one, one2many, reference."
 
 #. module: anonymization
 #: view:ir.model.fields.anonymize.wizard:0
@@ -179,7 +179,7 @@ msgstr "قاعدة بيانات التجهيل"
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.migration.fix,query_type:0
 msgid "python"
-msgstr ""
+msgstr "python"
 
 #. module: anonymization
 #: view:ir.model.fields.anonymization.history:0
@@ -199,7 +199,7 @@ msgstr "مسح"
 msgid ""
 "It is not possible to reverse the anonymization process without supplying "
 "the anonymization export file."
-msgstr ""
+msgstr "لا يمكن عكس عملية إخفاء الهوية دون توفير الملف الذي تم تصديره لهذا الأمر."
 
 #. module: anonymization
 #: field:ir.model.fields.anonymize.wizard,summary:0
@@ -219,7 +219,7 @@ msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything."
-msgstr ""
+msgstr "إخفاء الهوية في قاعدة البيانات حالياً في وضع غير مستقر. بعض الحقول تم إخفاء الهوية فيها بينما البعض الآخر لم يجري عليه الأمر. يجدر بك محاولة حل هذه المشكلة قبل أن تحاول فعل أي شيء."
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymize.wizard,state:0
@@ -265,14 +265,14 @@ msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything else."
-msgstr ""
+msgstr "إخفاء الهوية في قاعدة البيانات حالياً في وضع غير مستقر. بعض الحقول تم إخفاء الهوية فيها بينما البعض الآخر لم يجري عليه الأمر. يجدر بك محاولة حل هذه المشكلة قبل محاولة إنشاء، تغيير أو حذف أي حقول."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:389
 #: code:addons/anonymization/anonymization.py:448
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "خطأ !"
 
 #. module: anonymization
 #: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymize_wizard
@@ -304,7 +304,7 @@ msgstr "بدئت"
 #: code:addons/anonymization/anonymization.py:389
 #, python-format
 msgid "The database is currently anonymized, you cannot anonymize it again."
-msgstr ""
+msgstr "تم إخفاء الهوية في قاعدة البيانات الحالية، ولا يمكنك تكرار الأمر عليها."
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0

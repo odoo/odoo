@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-09-30 18:05+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-03-31 07:33+0000\n"
+"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-7/language/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +20,7 @@ msgstr ""
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
 msgid "Inventory Move"
-msgstr ""
+msgstr "การเคลื่อนย้ายสินค้าคงคลัง"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -36,12 +36,12 @@ msgstr "สร้างใบแจ้งหนี้ใหม่"
 #: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
 #: view:mrp.repair.cancel:0
 msgid "Cancel Repair Order"
-msgstr ""
+msgstr "ยกเลิกคำสั่งซ่อม"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,to_invoice:0 field:mrp.repair.line,to_invoice:0
 msgid "To Invoice"
-msgstr ""
+msgstr "ไปยังใบแจ้งหนี้"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -87,12 +87,12 @@ msgstr "ยกเว้นใบแจ้งหนี้"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Serial Number"
-msgstr ""
+msgstr "เลขซีเรียล"
 
 #. module: mrp_repair
 #: field:mrp.repair,address_id:0
 msgid "Delivery Address"
-msgstr ""
+msgstr "ที่อยู่จัดส่ง"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -113,7 +113,7 @@ msgstr "ที่อยู่ใบแจ้งหนี้ :"
 #. module: mrp_repair
 #: help:mrp.repair,partner_id:0
 msgid "Choose partner for whom the order will be invoiced and delivered."
-msgstr ""
+msgstr "เลือกคู่ค้าที่จะวางบิลและจัดส่ง"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -162,7 +162,7 @@ msgstr "ถ้าการตรวจสอบข้อความใหม่
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Operations"
-msgstr ""
+msgstr "การดำเนินการ"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
@@ -179,7 +179,7 @@ msgid ""
 "                customer or not.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                คลิกเพื่อสร้างคำสั่งซ่อม\n              </p><p>\n                ในคำสั่งซ่อม คุณสามารถให้รายละเอียด การนำออก การเพิ่ม หรือการเปลี่ยนชิ้นส่วน และบันทึกเวลาที่ให้ในแต่ละปฏิบัติการ\n              </p><p>\n                คำสั่งซ่อมใช้วันรับประกันบน Serial Number เพื่อให้ทราบว่าการซ่อมควรวางบิลลูกค้าหรือไม่\n              </p>\n            "
 
 #. module: mrp_repair
 #: help:mrp.repair.line,state:0
@@ -204,7 +204,7 @@ msgstr "ภาษี"
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
 #: model:ir.ui.menu,name:mrp_repair.menu_repair_order
 msgid "Repair Orders"
-msgstr ""
+msgstr "คำสั่งซ่อม"
 
 #. module: mrp_repair
 #: model:ir.actions.report.xml,name:mrp_repair.report_mrp_repair
@@ -216,7 +216,7 @@ msgstr "ใบเสนอราคา / สั่งซื้อ"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "ยึดติดสรุปตัวแชท (จำนวนของข้อความ., …) สรุปนี้จะถูกจัดในรูปแบบ html โดยตรงเพื่อที่จะถูกใส่ในมุมมองคัมบัง"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -268,13 +268,13 @@ msgstr ""
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Repairs order"
-msgstr ""
+msgstr "คำสั่งซ่อม"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:341
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
-msgstr ""
+msgstr "ต้องใช้เลขซีเรียลสำหรับรายการดำเนินงานกับสินค้า \"%s\""
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -285,7 +285,7 @@ msgstr ""
 #: field:mrp.repair,prodlot_id:0 field:mrp.repair.line,prodlot_id:0
 #: report:repair.order:0
 msgid "Lot Number"
-msgstr ""
+msgstr "หมายเลขล็อต"
 
 #. module: mrp_repair
 #: field:mrp.repair,message_follower_ids:0
@@ -305,12 +305,12 @@ msgstr "ประเภท"
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Fees Line(s)"
-msgstr ""
+msgstr "รายการค่าบริการ"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "To be Invoiced"
-msgstr ""
+msgstr "ที่จะถูกวางบิล"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -337,7 +337,7 @@ msgstr "รายการราคา"
 #. module: mrp_repair
 #: field:mrp.repair,quotation_notes:0
 msgid "Quotation Notes"
-msgstr ""
+msgstr "บันทึกย่อใบเสนอราคา"
 
 #. module: mrp_repair
 #: view:mrp.repair:0 field:mrp.repair,state:0 field:mrp.repair.line,state:0
@@ -347,17 +347,17 @@ msgstr "สถานะ"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Search Reair Orders"
-msgstr ""
+msgstr "ค้นหาคำสั่งซ่อม"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "(Add)"
-msgstr ""
+msgstr "(เพิ่ม)"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_line view:mrp.repair:0
 msgid "Repair Line"
-msgstr ""
+msgstr "รายการซ่อม"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -367,17 +367,17 @@ msgstr ""
 #. module: mrp_repair
 #: field:mrp.repair,invoice_method:0
 msgid "Invoice Method"
-msgstr ""
+msgstr "วิธีวางบิล"
 
 #. module: mrp_repair
 #: field:mrp.repair,repaired:0 selection:mrp.repair,state:0
 msgid "Repaired"
-msgstr ""
+msgstr "ซ่อมแล้ว"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Add internal notes..."
-msgstr ""
+msgstr "เพิ่มบันทึกย่อภายใน"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,invoice_line_id:0
@@ -388,12 +388,12 @@ msgstr "รายการในใบแจ้งหนี้"
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "Before Repair"
-msgstr ""
+msgstr "หลังซ่อม"
 
 #. module: mrp_repair
 #: field:mrp.repair,location_id:0
 msgid "Current Location"
-msgstr ""
+msgstr "ตำแหน่งปัจจุบัน"
 
 #. module: mrp_repair
 #: view:mrp.repair.cancel:0
@@ -414,7 +414,7 @@ msgstr "แจ้งหนี้แล้ว"
 #. module: mrp_repair
 #: field:mrp.repair.fee,product_uom:0 field:mrp.repair.line,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "หน่วยการวัดสินค้า"
 
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:0
@@ -439,22 +439,22 @@ msgstr "ร่าง"
 #. module: mrp_repair
 #: field:mrp.repair,name:0
 msgid "Repair Reference"
-msgstr ""
+msgstr "อ้างอิงการซ่อม"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair view:mrp.repair:0
 msgid "Repair Order"
-msgstr ""
+msgstr "คำสั่งซ่อม"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Under Repair"
-msgstr ""
+msgstr "กำลังซ่อม"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Ready To Repair"
-msgstr ""
+msgstr "พร้อมซ่อม"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_untaxed:0
@@ -467,12 +467,12 @@ msgid ""
 "Selecting 'Before Repair' or 'After Repair' will allow you to generate "
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
-msgstr ""
+msgstr "เลือก \"ก่อนซ่อม\" จะอนุญาติให้คุณสร้างใบวางบิลก่อนการซ่อม\n\"หลังซ่อม\" จะอนุญาติให้คุณสร้างใบวางบิลหลังการซ่อมเสร็จสิ้น\n\"ไม่วางบิล\" หมายความว่าคุณไม่ต้องการว่าบิลคำสั่งซ่อมนี้"
 
 #. module: mrp_repair
 #: field:mrp.repair,guarantee_limit:0
 msgid "Warranty Expiration"
-msgstr ""
+msgstr "วันหมดอายุการรับประกัน"
 
 #. module: mrp_repair
 #: help:mrp.repair,pricelist_id:0
@@ -492,12 +492,12 @@ msgstr "ไม่ทราบ"
 #. module: mrp_repair
 #: field:mrp.repair,product_id:0 report:repair.order:0
 msgid "Product to Repair"
-msgstr ""
+msgstr "สินค้าที่ซ่อม"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "After Repair"
-msgstr ""
+msgstr "ก่อนซ่อม"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/cancel_repair.py:41
@@ -519,12 +519,12 @@ msgstr "วันที่"
 #: code:addons/mrp_repair/mrp_repair.py:377
 #, python-format
 msgid "No partner!"
-msgstr ""
+msgstr "ไม่มีคู่ค้า!"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_fee
 msgid "Repair Fees Line"
-msgstr ""
+msgstr "รายการค่าบริการซ่อม"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -534,7 +534,7 @@ msgstr "ใบเสนอราคา"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Confirm Repair"
-msgstr ""
+msgstr "ยืนยันการซ่อม"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -549,7 +549,7 @@ msgstr "สรุป"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "End Repair"
-msgstr ""
+msgstr "สิ้นสุดการซ่อม"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:419
@@ -572,17 +572,17 @@ msgstr "จำนวน"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Product Information"
-msgstr ""
+msgstr "ข้อมูลสินค้า"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
 msgid "Make Invoice"
-msgstr ""
+msgstr "ทำใบแจ้งหนี้"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Start Repair"
-msgstr ""
+msgstr "เริ่มซ่อม"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:377
@@ -609,7 +609,7 @@ msgstr "ใบแจ้งหนี้"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Fees"
-msgstr ""
+msgstr "ค่าธรรมเนียม"
 
 #. module: mrp_repair
 #: view:mrp.repair.cancel:0 view:mrp.repair.make_invoice:0
@@ -619,22 +619,22 @@ msgstr "ยกเลิก"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Add quotation notes..."
-msgstr ""
+msgstr "เพิ่มบันทึกย่อใบเสนอราคา"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,location_dest_id:0
 msgid "Dest. Location"
-msgstr ""
+msgstr "ตำแหน่งปลายทาง"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Operation Line(s)"
-msgstr ""
+msgstr "รายการดำเนินการ"
 
 #. module: mrp_repair
 #: field:mrp.repair,location_dest_id:0
 msgid "Delivery Location"
-msgstr ""
+msgstr "ตำแหน่งจัดส่ง"
 
 #. module: mrp_repair
 #: help:mrp.repair,deliver_bool:0
@@ -662,7 +662,7 @@ msgstr "สร้างใบแจ้งหนี้"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Reair Orders"
-msgstr ""
+msgstr "คำสั่งซ่อม"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,name:0 field:mrp.repair.line,name:0
@@ -673,7 +673,7 @@ msgstr "รายละเอียด"
 #. module: mrp_repair
 #: field:mrp.repair,operations:0
 msgid "Operation Lines"
-msgstr ""
+msgstr "รายการดำเนินการ"
 
 #. module: mrp_repair
 #: view:mrp.repair:0 field:mrp.repair.fee,product_id:0
@@ -684,7 +684,7 @@ msgstr "ผลิตภัณฑ์"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Invoice Corrected"
-msgstr ""
+msgstr "วางบิลถูกต้อง"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -715,28 +715,28 @@ msgstr "คุณต้องการสร้างใบแจ้งหนี
 #: code:addons/mrp_repair/mrp_repair.py:354
 #, python-format
 msgid "Repair order is already invoiced."
-msgstr ""
+msgstr "คำสั่งซ่อมถูกแจ้งหนี้แล้ว"
 
 #. module: mrp_repair
 #: field:mrp.repair,picking_id:0
 msgid "Picking"
-msgstr ""
+msgstr "การหยิบสินค้า"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Untaxed amount"
-msgstr ""
+msgstr "จำนวนไม่รวมภาษี"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,repair_id:0 field:mrp.repair.line,repair_id:0
 msgid "Repair Order Reference"
-msgstr ""
+msgstr "อ้างอิงคำสั่งซ่อม"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Repair order is not invoiced."
-msgstr ""
+msgstr "คำสั่งซ่อมไม่ถูกแจ้งหนี้"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -751,7 +751,7 @@ msgstr "ลบออก"
 #. module: mrp_repair
 #: field:mrp.repair,partner_invoice_id:0
 msgid "Invoicing Address"
-msgstr ""
+msgstr "ที่อยู่วางบิล"
 
 #. module: mrp_repair
 #: help:mrp.repair,message_ids:0
@@ -766,17 +766,17 @@ msgstr "การแจ้งหนี้"
 #. module: mrp_repair
 #: field:mrp.repair.line,location_id:0
 msgid "Source Location"
-msgstr ""
+msgstr "ตำแหน่งที่มา"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_cancel view:mrp.repair:0
 msgid "Cancel Repair"
-msgstr ""
+msgstr "ยกเลิกการซ่อม"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "No Invoice"
-msgstr ""
+msgstr "ไม่วางบิล"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_total:0
@@ -786,4 +786,4 @@ msgstr "รวม"
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Ready to Repair"
-msgstr ""
+msgstr "พร้อมซ่อม"

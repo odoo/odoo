@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-06-24 12:57+0000\n"
+"PO-Revision-Date: 2016-03-17 10:29+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-7/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -76,7 +76,7 @@ msgstr "حجم"
 #: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid matching for this carrier!"
-msgstr ""
+msgstr "لا توجد شبكة شحن لشركة الشحن هذه!"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -86,7 +86,7 @@ msgstr "خط التسليم"
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
 msgid "The partner that is doing the delivery service."
-msgstr ""
+msgstr "الشريك الذي يقدم خدمة الشحن."
 
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
@@ -107,7 +107,7 @@ msgstr "اختيار ما تريد عمل له فاتورة"
 #. module: delivery
 #: field:delivery.carrier,pricelist_ids:0
 msgid "Advanced Pricing"
-msgstr ""
+msgstr "تسعير متقدم"
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
@@ -132,7 +132,7 @@ msgid ""
 "                country defined by a postal code range.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإنشاء قائمة أسعار التوصيل لمنطقة معينة.\n</p><p>\nتسمح لك قائمة أسعار التوصيل بحساب تكاليف التوصيل وأسعار\nالشحن وفقاً لوزن المنتجات واشتراطات أخرى. يمكنك تعريف عدة\nقوائم أسعار لكل طريقة شحن: حسب الدولة أو منطقة معينة في\nالدولة، أو حسب شريحة من الرموز البريدية.\n</p>"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -152,7 +152,7 @@ msgstr "المقدار"
 #. module: delivery
 #: view:sale.order:0
 msgid "Add in Quote"
-msgstr ""
+msgstr "إضافة إلى عرض السعر"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -230,12 +230,12 @@ msgstr "أوامر التوصيل"
 msgid ""
 "If you don't 'Add in Quote', the exact price will be computed when invoicing"
 " based on delivery order(s)."
-msgstr ""
+msgstr "إذا لم تقم بإضافة تكاليف الشحن إلى عرض السعر، فسيتم احتساب القيمة بدقة عند إصدار الفاتورة اعتماداً على أوامر التسليم."
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Transport Company"
-msgstr ""
+msgstr "شركة النقل"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -262,19 +262,19 @@ msgstr "الاسم"
 msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
-msgstr ""
+msgstr "إذا كان مبلغ الأمر أكبر من حد معين، فيمكن للعميل أن يستفيد من الشحن المجاني"
 
 #. module: delivery
 #: help:delivery.carrier,amount:0
 msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
-msgstr ""
+msgstr "كمية الطلبات المستفيدة من الشحن المجاني، معبر عنه بعملة الشركة"
 
 #. module: delivery
 #: field:delivery.carrier,free_if_more_than:0
 msgid "Free If Order Total Amount Is More Than"
-msgstr ""
+msgstr "مجاني إذا كان إجمالي المبلغ أكبر من"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -335,13 +335,13 @@ msgstr "الوزن"
 msgid ""
 "Check this box if you want to manage delivery prices that depends on the "
 "destination, the weight, the total of the order, etc."
-msgstr ""
+msgstr "حدد هذا الاختيار إذا كنت ترغب في إدارة قوائم أسعار الشحن اعتماداً على العنوان المرسل إليه، وزن المنتج، إجمالي مبلغ البيع، إلخ."
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
-msgstr ""
+msgstr "اتركه فارغاً إذا كان التسعير يعتمد على عنوان الشحن."
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -382,7 +382,7 @@ msgstr "سعر التكلفة"
 #: code:addons/delivery/sale.py:57
 #, python-format
 msgid "Order not in Draft State!"
-msgstr ""
+msgstr "الأمر ليس في حالة مسودة!"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0 field:delivery.grid.line,type:0
@@ -436,13 +436,13 @@ msgstr "اكمل هذا الحقل اذا كنت تخطط لعمل فاتورة 
 #: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No Grid Available!"
-msgstr ""
+msgstr "لا توجد شبكة شحن!"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:136
 #, python-format
 msgid "Free if more than %.2f"
-msgstr ""
+msgstr "مجاناً إذا كان أكثر من %.2f"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_in
@@ -458,7 +458,7 @@ msgstr "<="
 #: help:stock.picking,weight_uom_id:0 help:stock.picking.in,weight_uom_id:0
 #: help:stock.picking.out,weight_uom_id:0
 msgid "Unit of measurement for Weight"
-msgstr ""
+msgstr "وحدة قياس الوزن"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -560,7 +560,7 @@ msgstr "حالات"
 #: help:stock.move,weight_uom_id:0
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
-msgstr ""
+msgstr "وحدة القياس (و.ق) المستخدمة في قياس الوزن."
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
