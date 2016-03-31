@@ -106,7 +106,7 @@ class account_invoice(osv.osv):
         return []
 
     def _prepare_refund(self, cr, uid, invoice, date_invoice=None, date=None, description=None, journal_id=None, context=None):
-        invoice_data = super(account_invoice, self)._prepare_refund(cr, uid, invoice, date, date,
+        invoice_data = super(account_invoice, self)._prepare_refund(cr, uid, invoice, date_invoice, date,
                                                                     description, journal_id, context=context)
         #for anglo-saxon accounting
         if invoice.company_id.anglo_saxon_accounting and invoice.type == 'in_invoice':
