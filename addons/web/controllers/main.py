@@ -1373,7 +1373,7 @@ class CSVExport(ExportFormat, http.Controller):
                 if d is False: d = None
 
                 # Spreadsheet apps tend to detect formulas on leading =, + and -
-                if type(d) is str and d.startswith('=', '-', '+'):
+                if type(d) is str and d.startswith(('=', '-', '+')):
                     d = "'" + d
 
                 row.append(d)
