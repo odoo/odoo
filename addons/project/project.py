@@ -454,12 +454,12 @@ class task(osv.osv):
         'stage_id': fields.many2one('project.task.type', 'Stage', track_visibility='onchange', select=True,
                         domain="[('project_ids', '=', project_id)]", copy=False),
         'tag_ids': fields.many2many('project.tags', string='Tags', oldname='categ_ids'),
-        'kanban_state': fields.selection([('normal', 'In Progress'),('done', 'Ready for next stage'),('blocked', 'Blocked')], 'Kanban State',
+        'kanban_state': fields.selection([('normal', 'Grey'),('done', 'Green'),('blocked', 'Red')], 'Kanban State',
                                          track_visibility='onchange',
                                          help="A task's kanban state indicates special situations affecting it:\n"
-                                              " * Normal is the default situation\n"
-                                              " * Blocked indicates something is preventing the progress of this task\n"
-                                              " * Ready for next stage indicates the task is ready to be pulled to the next stage",
+                                              " * Grey is the default situation\n"
+                                              " * Red indicates something is preventing the progress of this task\n"
+                                              " * Green indicates the task is ready to be pulled to the next stage",
                                          required=True, copy=False),
         'create_date': fields.datetime('Create Date', readonly=True, select=True),
         'write_date': fields.datetime('Last Modification Date', readonly=True, select=True), #not displayed in the view but it might be useful with base_action_rule module (and it needs to be defined first for that)
