@@ -3,12 +3,13 @@
 # * hr_recruitment
 # 
 # Translators:
+# Martin Trigaux, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2016-01-20 10:29+0000\n"
+"PO-Revision-Date: 2016-03-10 13:15+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/id/)\n"
 "MIME-Version: 1.0\n"
@@ -99,7 +100,7 @@ msgid ""
 "        <p>Kind regards,</p>\n"
 "        <br/>\n"
 "         ${object.user_id.signature | safe}"
-msgstr "<p> terhormat $ {object.partner_name atau 'pemohon'}, </ p>\n        <p> Congrats! Resume Anda punya kepentingan kita!\n        Saya akan menghubungi Anda sesegera mungkin untuk membuat sebuah wawancara 10 menit telepon dan merencanakan pertemuan pertama. </ P>\n        <p> Jika kita tidak bisa menghubungi Anda atau jika Anda melewatkan panggilan kami, jangan ragu untuk menghubungi saya kembali pada jumlah 001 312 349 3030\n        Jika saya tidak menjawab, tolong beritahu saya pesan dengan beberapa jadwal untuk menelepon Anda kembali. </ P>\n        <p> Kind regards, </ p>\n        <br/>\n         $ {object.user_id.signature | aman}"
+msgstr "<p> terhormat $ {object.partner_name atau 'pemohon'}, </p>\n        <p> Congrats! Resume Anda punya kepentingan kita!\n        Saya akan menghubungi Anda sesegera mungkin untuk membuat sebuah wawancara 10 menit telepon dan merencanakan pertemuan pertama. </p>\n        <p> Jika kita tidak bisa menghubungi Anda atau jika Anda melewatkan panggilan kami, jangan ragu untuk menghubungi saya kembali pada jumlah 001 312 349 3030\n        Jika saya tidak menjawab, tolong beritahu saya pesan dengan beberapa jadwal untuk menelepon Anda kembali. </p>\n        <p> Kind regards, </p>\n        <br/>\n         $ {object.user_id.signature | safe}"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.applicant_refuse
@@ -112,7 +113,7 @@ msgid ""
 "        <p>Kind regards,</p>\n"
 "        <br/>\n"
 "         ${object.user_id and object.user_id.signature | safe or ''}"
-msgstr "<p> Sayang $ {object.partner_name atau 'pemohon'}, </p><p> Kami berterima kasih atas minat Anda pada perusahaan kami dan untuk aplikasi Anda. Sayangnya, profil Anda tidak cocok dengan kebutuhan kita atau kampanye rekrutmen kami telah mencapai masa tugasnya. </p><p> Jika Anda ingin lebih detail, jangan ragu untuk menghubungi kami melalui telepon. </p><p> Salam, </p><br/> $ {object.user_id dan object.user_id.signature | aman atau ''}"
+msgstr "<p> Sayang $ {object.partner_name or 'pemohon'}, </p>\n<p> Kami berterima kasih atas minat Anda pada perusahaan kami dan untuk aplikasi Anda. Sayangnya, profil Anda tidak cocok dengan kebutuhan kita atau kampanye rekrutmen kami telah mencapai masa tugasnya. </p><p> Jika Anda ingin lebih detail, jangan ragu untuk menghubungi kami melalui telepon. </p>\n<p> Salam, </p>\n<br/>\n${object.user_id and object.user_id.signature | safe or ''}"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -518,7 +519,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid ""
-"Create email and url for each distinct source. <br/>\n"
+"Create email and url for each distinct source. <br>\n"
 "                When the applicant will arrive, you will know from wich source the Job position is coming."
 msgstr ""
 

@@ -1032,6 +1032,19 @@ class IrActionsTodo(models.Model):
     def name_get(self):
         return [(record.id, record.action_id.name) for record in self]
 
+    @api.multi
+    def unlink(self):
+        if self:
+            try:
+                todo_open_menu = self.env.ref('base.open_menu')
+                # don't remove base.open_menu todo but set its original action
+                if todo_open_menu in self:
+                    todo_open_menu.action_id = self.env.ref('base.action_client_base_menu').id
+                    self -= todo_open_menu
+            except ValueError:
+                pass
+        return super(IrActionsTodo, self).unlink()
+
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
         if args is None:

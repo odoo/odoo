@@ -191,7 +191,6 @@ class PosOrder(models.Model):
                     'journal_id': order.sale_journal.id,
                     'date': fields.Date.context_today(self),
                     'move_id': move.id,
-                    'company_id': current_company.id,
                 })
 
                 if data_type == 'product':
@@ -664,6 +663,9 @@ class PosOrderLine(models.Model):
                 taxes = taxes.compute_all(price, currency, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
                 line.price_subtotal = taxes['total_excluded']
                 line.price_subtotal_incl = taxes['total_included']
+
+            line.price_subtotal = currency.round(line.price_subtotal)
+            line.price_subtotal_incl = currency.round(line.price_subtotal_incl)
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

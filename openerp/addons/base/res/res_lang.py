@@ -172,13 +172,16 @@ class Lang(models.Model):
                 partner.write({'lang': lang_code})
         return True
 
-    @api.model
-    @api.returns('self', lambda value: value.id)
     @tools.ormcache('code')
-    def _lang_get(self, code):
+    def _lang_get_id(self, code):
         return (self.search([('code', '=', code)]) or
                 self.search([('code', '=', 'en_US')]) or
-                self.search([], limit=1))
+                self.search([], limit=1)).id
+
+    @api.model
+    @api.returns('self', lambda value: value.id)
+    def _lang_get(self, code):
+        return self.browse(self._lang_get_id(code))
 
     @api.v7
     def _lang_data_get(self, cr, uid, lang, monetary=False):

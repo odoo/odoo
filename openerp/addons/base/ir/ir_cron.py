@@ -72,7 +72,7 @@ class ir_cron(models.Model):
     @api.multi
     def method_direct_trigger(self):
         for cron in self:
-            self._callback(cron.model, cron.function, cron.args, cron.id)
+            self.sudo(user=cron.user_id.id)._callback(cron.model, cron.function, cron.args, cron.id)
         return True
 
     @api.model

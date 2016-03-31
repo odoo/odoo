@@ -198,7 +198,6 @@ var Followers = form_common.AbstractField.extend({
         return ajax.jsonRpc('/mail/read_followers', 'call', {
             follower_ids: this.value,
             res_model: this.view.model,
-            res_id: this.view.datarecord.id,
         });
     },
 

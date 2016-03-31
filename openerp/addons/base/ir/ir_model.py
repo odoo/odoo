@@ -291,6 +291,26 @@ class IrModelFields(models.Model):
             self.readonly = True
             self.copy = False
 
+    @api.constrains('depends')
+    def _check_depends(self):
+        """ Check whether all fields in dependencies are valid. """
+        for record in self:
+            if not record.depends:
+                continue
+            for seq in record.depends.split(","):
+                if not seq.strip():
+                    raise UserError(_("Empty dependency in %r") % (record.depends))
+                model = self.env[record.model]
+                names = seq.strip().split(".")
+                last = len(names) - 1
+                for index, name in enumerate(names):
+                    field = model._fields.get(name)
+                    if field is None:
+                        raise UserError(_("Unknown field %r in dependency %r") % (name, seq.strip()))
+                    if index < last and not field.relational:
+                        raise UserError(_("Non-relational field %r in dependency %r") % (name, seq.strip()))
+                    model = model[name]
+
     @api.onchange('compute')
     def _onchange_compute(self):
         if self.compute:
@@ -549,8 +569,12 @@ class IrModelConstraint(models.Model):
 
         ids_set = set(self.ids)
         for data in self.sorted(key='id', reverse=True):
+            if data.model.model not in self.env:
+                continue
             model = self.env[data.model.model]
             name = tools.ustr(data.name)
+            if not model_obj:
+                continue
             typ = data.type
 
             # double-check we are really going to delete all the owners of this schema element
@@ -898,7 +922,7 @@ class IrModelData(models.Model):
     @api.model
     def xmlid_to_object(self, xmlid, raise_if_not_found=False):
         """ Return a browse_record
-        if not found and raise_if_not_found is True return None
+        if not found and raise_if_not_found is False return None
         """
         t = self.xmlid_to_res_model_res_id(xmlid, raise_if_not_found)
         res_model, res_id = t
@@ -1135,7 +1159,7 @@ class IrModelData(models.Model):
                         _logger.info('Deleting orphan external_ids %s', external_ids)
                         external_ids.unlink()
                         continue
-                    if field.name in models.LOG_ACCESS_COLUMNS and self.env[field.model]._log_access:
+                    if field.name in models.LOG_ACCESS_COLUMNS and field.model in self.env and self.env[field.model]._log_access:
                         continue
                     if field.name == 'id':
                         continue

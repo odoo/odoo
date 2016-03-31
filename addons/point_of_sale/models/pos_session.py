@@ -143,21 +143,27 @@ class PosSession(models.Model):
                     journals = Journal.with_context(ctx).search([('journal_user', '=', True)])
             journals.sudo().write({'journal_user': True})
             pos_config.sudo().write({'journal_ids': [(6, 0, journals.ids)]})
-        statements = [(0, 0, {
-            'journal_id': journal.id,
-            'user_id': self.env.uid,
-            'company_id': pos_config.company_id.id
-        }) for journal in pos_config.journal_ids]
+
+        statements = []
+        ABS = self.env['account.bank.statement']
+        for journal in pos_config.journal_ids:
+            # set the journal_id which should be used by
+            # account.bank.statement to set the opening balance of the
+            # newly created bank statement
+            ctx['journal_id'] = journal.id if pos_config.cash_control and journal.type == 'cash' else False
+            st_values = {
+                'journal_id': journal.id,
+                'user_id': self.env.user.id,
+            }
+
+            statements.append(ABS.with_context(ctx).create(st_values).id)
+
         values.update({
             'name': self.env['ir.sequence'].with_context(ctx).next_by_code('pos.session'),
-            'statement_ids': statements,
+            'statement_ids': [(6, 0, statements)],
             'config_id': config_id
         })
-        # set the journal_id which should be used by
-        # account.bank.statement to set the opening balance of the newly created bank statement
-        if pos_config.cash_control:
-            for journal in pos_config.journal_ids.filtered(lambda j: j.type == 'cash'):
-                ctx.update({'journal_id': journal.id})
+
         return super(PosSession, self.with_context(ctx)).create(values)
 
     @api.multi

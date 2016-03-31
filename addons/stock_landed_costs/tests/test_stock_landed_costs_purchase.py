@@ -177,7 +177,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         account_entry = self.env['account.move.line'].read_group(
             [('move_id', '=', stock_negative_landed_cost.account_move_id.id)], ['debit', 'credit', 'move_id'], ['move_id'])[0]
         self.assertEqual(account_entry['debit'], account_entry['credit'], 'Debit and credit are not equal')
-        self.assertEqual(account_entry['debit'], 122.168, 'Wrong Account Entry')
+        self.assertEqual(account_entry['debit'], 134.336, 'Wrong Account Entry')
 
     def _process_incoming_shipment(self):
         """ Two product incoming shipment. """

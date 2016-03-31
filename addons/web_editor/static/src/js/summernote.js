@@ -1062,8 +1062,8 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
         }
     }
 
+    var node = dom.node(r.sc);
     var exist = r.sc.childNodes[r.so] || r.sc;
-    var node = dom.node(exist);
     exist = dom.isVisibleText(exist) || dom.isBR(exist) ? exist : dom.hasContentAfter(exist) || (dom.hasContentBefore(exist) || exist);
 
     // table: add a tr

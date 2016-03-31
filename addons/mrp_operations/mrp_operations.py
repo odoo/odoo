@@ -3,6 +3,7 @@
 
 from openerp.osv import fields
 from openerp.osv import osv
+import operator
 import time
 from datetime import datetime
 from openerp.tools.translate import _
@@ -54,6 +55,32 @@ class mrp_production_workcenter_line(osv.osv):
         }
         return {'value': result}
 
+    def _search_date_planned_end(self, cr, uid, obj, name, args, context=None):
+        op_mapping = {
+            '<': operator.lt,
+            '>': operator.gt,
+            '<=': operator.le,
+            '>=': operator.ge,
+            '=': operator.eq,
+            '!=': operator.ne,
+        }
+        res = []
+        for field, op, value in args:
+            assert field in ['date_planned_end'], 'Invalid domain left operand'
+            assert op in op_mapping.keys(), 'Invalid domain operator'
+            assert isinstance(value, basestring) or isinstance(value, bool), 'Invalid domain right operand'
+
+            ids = []
+            workcenter_line_ids = self.search(cr, uid, [], context=context)
+            for line in self.browse(cr, uid, workcenter_line_ids, context=context):
+                if isinstance(value, bool) and op_mapping[op](bool(line[field]), value):
+                    ids.append(line.id)
+                elif isinstance(value, basestring) and op_mapping[op](str(line[field])[:len(value)], value):
+                    ids.append(line.id)
+            res.append(('id', 'in', ids))
+
+        return res
+
     _inherit = 'mrp.production.workcenter.line'
     _order = "sequence, date_planned"
 
@@ -65,7 +92,7 @@ class mrp_production_workcenter_line(osv.osv):
                                        "* When the user cancels the work order it will be set in 'Canceled' status.\n" \
                                        "* When order is completely processed that time it is set in 'Finished' status."),
        'date_planned': fields.datetime('Scheduled Date', select=True),
-       'date_planned_end': fields.function(_get_date_end, string='End Date', type='datetime'),
+       'date_planned_end': fields.function(_get_date_end, string='End Date', type='datetime', fnct_search=_search_date_planned_end),
        'date_start': fields.datetime('Start Date'),
        'date_finished': fields.datetime('End Date'),
        'delay': fields.float('Working Hours',help="The elapsed time between operation start and stop in this Work Center",readonly=True),

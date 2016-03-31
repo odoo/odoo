@@ -406,7 +406,7 @@ class AccountAssetDepreciationLine(models.Model):
             depreciation_date = self.env.context.get('depreciation_date') or line.depreciation_date or fields.Date.context_today(self)
             company_currency = line.asset_id.company_id.currency_id
             current_currency = line.asset_id.currency_id
-            amount = company_currency.compute(line.amount, current_currency)
+            amount = current_currency.compute(line.amount, company_currency)
             sign = (line.asset_id.category_id.journal_id.type == 'purchase' or line.asset_id.category_id.journal_id.type == 'sale' and 1) or -1
             asset_name = line.asset_id.name + ' (%s/%s)' % (line.sequence, line.asset_id.method_number)
             reference = line.asset_id.code
@@ -422,7 +422,7 @@ class AccountAssetDepreciationLine(models.Model):
                 'credit': amount,
                 'journal_id': journal_id,
                 'partner_id': partner_id,
-                'currency_id': company_currency != current_currency and current_currency or False,
+                'currency_id': company_currency != current_currency and current_currency.id or False,
                 'amount_currency': company_currency != current_currency and - sign * line.amount or 0.0,
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id if categ_type == 'sale' else False,
                 'date': depreciation_date,
@@ -434,7 +434,7 @@ class AccountAssetDepreciationLine(models.Model):
                 'debit': amount,
                 'journal_id': journal_id,
                 'partner_id': partner_id,
-                'currency_id': company_currency != current_currency and current_currency or False,
+                'currency_id': company_currency != current_currency and current_currency.id or False,
                 'amount_currency': company_currency != current_currency and sign * line.amount or 0.0,
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id if categ_type == 'purchase' else False,
                 'date': depreciation_date,

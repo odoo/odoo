@@ -144,8 +144,8 @@ class Website(models.Model):
         for website in self:
             website.pricelist_id = website.with_context(website_id=website.id).get_current_pricelist()
 
-    @tools.ormcache('self.env.uid', 'country_code', 'show_visible', 'website_pl', 'current_pl', 'all_pl')
-    def _get_pl(self, country_code, show_visible, website_pl, current_pl, all_pl):
+    @tools.ormcache('self.env.uid', 'country_code', 'show_visible', 'website_pl', 'current_pl', 'all_pl', 'partner_pl', 'order_pl')
+    def _get_pl_partner_order(self, country_code, show_visible, website_pl, current_pl, all_pl, partner_pl=False, order_pl=False):
         """ Return the list of pricelists that can be used on website for the current user.
         :param str country_code: code iso or False, If set, we search only price list available for this country
         :param bool show_visible: if True, we don't display pricelist where selectable is False (Eg: Code promo)
@@ -153,17 +153,19 @@ class Website(models.Model):
         :param int current_pl: The current pricelist used on the website
                                (If not selectable but the current pricelist we had this pricelist anyway)
         :param list all_pl: List of all pricelist available for this website
+        :param int partner_pl: the partner pricelist
+        :param int order_pl: the current cart pricelist
         :returns: list of pricelist ids
         """
         pricelists = self.env['product.pricelist']
         if country_code:
             for cgroup in self.env['res.country.group'].search([('country_ids.code', '=', country_code)]):
                 for group_pricelists in cgroup.website_pricelist_ids:
-                    if not show_visible or group_pricelists.selectable or group_pricelists.pricelist_id.id == current_pl:
+                    if not show_visible or group_pricelists.selectable or group_pricelists.pricelist_id.id in (current_pl, order_pl):
                         pricelists |= group_pricelists.pricelist_id
 
         if not pricelists:  # no pricelist for this country, or no GeoIP
-            pricelists |= all_pl.filtered(lambda pl: not show_visible or pl.selectable or pl.pricelist_id.id == current_pl).mapped('pricelist_id')
+            pricelists |= all_pl.filtered(lambda pl: not show_visible or pl.selectable or pl.pricelist_id.id in (current_pl, order_pl)).mapped('pricelist_id')
 
         partner = self.env.user.partner_id
         if not pricelists or partner.property_product_pricelist.id != website_pl:
@@ -171,7 +173,12 @@ class Website(models.Model):
 
         return pricelists.sorted(lambda pl: pl.name)
 
+    @tools.ormcache('self.env.uid', 'country_code', 'show_visible', 'website_pl', 'current_pl', 'all_pl')
+    def _get_pl(self, country_code, show_visible, website_pl, current_pl, all_pl):
+        return self._get_pl_partner_order(country_code, show_visible, website_pl, current_pl, all_pl)
+
     def get_pricelist_available(self, show_visible=False):
+
         """ Return the list of pricelists that can be used on website for the current user.
         Country restrictions will be detected with GeoIP (if installed).
         :param bool show_visible: if True, we don't display pricelist where selectable is False (Eg: Code promo)
@@ -184,10 +191,15 @@ class Website(models.Model):
             else:
                 website = self.search([], limit=1)
         isocountry = request.session.geoip and request.session.geoip.get('country_code') or False
-        pricelists = website._get_pl(isocountry, show_visible,
-                              website.user_id.partner_id.property_product_pricelist.id,
-                              request.session.get('website_sale_current_pl'),
-                              website.website_pricelist_ids)
+        partner = self.env.user.partner_id
+        order_pl = partner.last_website_so_id and partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
+        partner_pl = partner.property_product_pricelist
+        pricelists = website._get_pl_partner_order(isocountry, show_visible,
+                                                   website.user_id.partner_id.property_product_pricelist.id,
+                                                   request.session.get('website_sale_current_pl'),
+                                                   website.website_pricelist_ids,
+                                                   partner_pl=partner_pl and partner_pl.id or None,
+                                                   order_pl=order_pl and order_pl.id or None)
         return pricelists
 
     def is_pricelist_available(self, pl_id):
@@ -206,12 +218,16 @@ class Website(models.Model):
         # If the user is signed in, and has a pricelist set different than the public user pricelist
         # then this pricelist will always be considered as available
         available_pricelists = self.get_pricelist_available()
+        pl = None
         if request.session.get('website_sale_current_pl'):
             # `website_sale_current_pl` is set only if the user specifically chose it:
             #  - Either, he chose it from the pricelist selection
             #  - Either, he entered a coupon code
-            return self.env['product.pricelist'].browse(request.session['website_sale_current_pl'])
-        else:
+            pl = self.env['product.pricelist'].browse(request.session['website_sale_current_pl'])
+            if pl not in available_pricelists:
+                pl = None
+                request.session.pop('website_sale_current_pl')
+        if not pl:
             partner = self.env.user.partner_id
             # If the user has a saved cart, it take the pricelist of this cart, except if
             # the order is no longer draft (It has already been confirmed, or cancelled, ...)
@@ -229,7 +245,7 @@ class Website(models.Model):
                 # then this special pricelist is amongs these available pricelists, and therefore it won't fall in this case.
                 pl = available_pricelists[0]
 
-            return pl
+        return pl
 
     @api.multi
     def sale_product_domain(self):
@@ -382,6 +398,7 @@ class WebsitePricelist(models.Model):
         # we change the config of website price list to force to recompute.
         website = self.env['website']
         website._get_pl.clear_cache(website)
+        website._get_pl_partner_order.clear_cache(website)
 
     @api.multi
     def _get_display_name(self):

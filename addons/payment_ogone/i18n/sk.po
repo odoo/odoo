@@ -1,0 +1,179 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_ogone
+# 
+# Translators:
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2016-03-08 06:05+0000\n"
+"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
+"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sk\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/ogone.py:239
+#, python-format
+msgid "; multiple order found"
+msgstr "; viacnásobná objednávka nájdená"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/ogone.py:237
+#, python-format
+msgid "; no order found"
+msgstr "; žiadna objednávka nájdená"
+
+#. module: payment_ogone
+#: model:payment.acquirer,cancel_msg:payment_ogone.payment_acquirer_ogone
+msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
+msgstr "<span><i>Zruśiť,</i> Vaša platba bola zrušená.</span>"
+
+#. module: payment_ogone
+#: model:payment.acquirer,done_msg:payment_ogone.payment_acquirer_ogone
+msgid ""
+"<span><i>Done,</i> Your online payment has been successfully processed. "
+"Thank you for your order.</span>"
+msgstr "<span><i>Hotovo,</i> Vaša online platba bola úspešne spracovaná. Ďakujeme za objednávku.</span>"
+
+#. module: payment_ogone
+#: model:payment.acquirer,error_msg:payment_ogone.payment_acquirer_ogone
+msgid ""
+"<span><i>Error,</i> Please be aware that an error occurred during the "
+"transaction. The order has been confirmed but won't be paid. Don't hesitate "
+"to contact us if you have any questions on the status of your order.</span>"
+msgstr "<span><i>Chyba,</i> Upozorňujeme, že počas transakcie došlo k chybe. Objednávka bola potvrdená ale nebude zaplatená. Neváhajte nás kontaktovať ak máte otázky ohľadom stavu vašej objednávky.</span>"
+
+#. module: payment_ogone
+#: model:payment.acquirer,pending_msg:payment_ogone.payment_acquirer_ogone
+msgid ""
+"<span><i>Pending,</i> Your online payment has been successfully processed. "
+"But your order is not validated yet.</span>"
+msgstr "<span><i>Čakajúce,</i> Vaša online platba bola úspešne spracovaná. Ale vaša objednávka nebola ešte potvrdená.</span>"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_userid
+msgid "API User ID"
+msgstr "API ID používateľa"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_password
+msgid "API User Password"
+msgstr "API heslo používateľa"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_alias_usage
+msgid "Alias Usage"
+msgstr "Použitie alias"
+
+#. module: payment_ogone
+#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+msgid "CVC"
+msgstr "CVC"
+
+#. module: payment_ogone
+#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+msgid "Card number"
+msgstr "Číslo karty"
+
+#. module: payment_ogone
+#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+msgid "Confirm <span class=\"fa fa-long-arrow-right\"/>"
+msgstr "Potvrdiť <span class=\"fa fa-long-arrow-right\"/>"
+
+#. module: payment_ogone
+#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+msgid "Expires"
+msgstr "Vyprší"
+
+#. module: payment_ogone
+#: model:ir.ui.view,arch_db:payment_ogone.acquirer_form_ogone
+msgid "How to configure your Ogone account?"
+msgstr "Ako konfigurovať váš Ogone účet?"
+
+#. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer_ogone_alias_usage
+msgid ""
+"If you want to use Ogone Aliases,\n"
+"                                                                this default Alias Usage will be presented to\n"
+"                                                                the customer as the reason you want to\n"
+"                                                                keep his payment data"
+msgstr "Ak chcete použiť Ogone aliasy,\ntoto predvolené Použitie alias bude predložené\nzákazníkovi ako dôvod prečo si chcete\nponechať jeho platobné údaje"
+
+#. module: payment_ogone
+#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+msgid "MM / YY"
+msgstr "MM / RR"
+
+#. module: payment_ogone
+#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+msgid "Name"
+msgstr "Meno"
+
+#. module: payment_ogone
+#: model:payment.acquirer,name:payment_ogone.payment_acquirer_ogone
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/ogone.py:247
+#, python-format
+msgid "Ogone: invalid shasign, received %s, computed %s, for data %s"
+msgstr "Ogone: nesprávný shasign, obdržané %s, vyrátané %s pre dáta %s"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/ogone.py:235
+#, python-format
+msgid "Ogone: received data for reference %s"
+msgstr "Ogone: obdržané dáta pre referenciu %s"
+
+#. module: payment_ogone
+#: code:addons/payment_ogone/models/ogone.py:228
+#, python-format
+msgid ""
+"Ogone: received data with missing reference (%s) or pay_id (%s) or shasign "
+"(%s)"
+msgstr "Ogone: obdržané dáta s chýbajucou referenciou (%s) alebo pay_id (%s) alebo shasign (%s)"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_pspid
+msgid "PSPID"
+msgstr "PSPID"
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Nadobúdateľ platby "
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Platobná transakcia"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_shakey_in
+msgid "SHA Key IN"
+msgstr "SHA kľúč IN"
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_shakey_out
+msgid "SHA Key OUT"
+msgstr "SHA kľúč OUT"
+
+#. module: payment_ogone
+#: model:payment.acquirer,pre_msg:payment_ogone.payment_acquirer_ogone
+msgid ""
+"You will be redirected to the Ogone website after clicking on the payment "
+"button."
+msgstr "Po kliknutí na tlačidlo platby budete presmerovaný na webstránku Ogone."
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_method
+msgid "payment.method"
+msgstr "payment.method"

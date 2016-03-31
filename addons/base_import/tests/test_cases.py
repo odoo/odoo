@@ -1,4 +1,7 @@
 # -*- encoding: utf-8 -*-
+
+import csv
+import io
 import unittest
 
 from openerp.tests.common import TransactionCase, can_import
@@ -485,6 +488,31 @@ class test_convert_import_data(TransactionCase):
             Import._convert_import_data,
             record, [False, False, False],
             {'quoting': '"', 'separator': ',', 'headers': True,})
+
+    def test_newline_import(self):
+        """
+        Ensure importing keep newlines
+        """
+        Import = self.registry('base_import.import')
+        output = io.BytesIO()
+        writer = csv.writer(output, quoting=csv.QUOTE_ALL)
+
+        data_row = ("\tfoo\n\tbar", " \"hello\" \n\n 'world' ")
+
+        writer.writerow(["name", "Some Value"])
+        writer.writerow(data_row)
+
+        id = Import.create(self.cr, self.uid, {
+            'res_model': 'base_import.tests.models.preview',
+            'file': output.getvalue(),
+            'file_type': 'text/csv',
+        })
+        record = Import.browse(self.cr, self.uid, id)
+        data, _ = Import._convert_import_data(
+            record, ['name', 'somevalue'],
+            {'quoting': '"', 'separator': ',', 'headers': True,})
+
+        self.assertItemsEqual(data, [data_row])
 
 class test_failures(TransactionCase):
     def test_big_attachments(self):
