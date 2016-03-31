@@ -9,7 +9,7 @@ class stock_picking(osv.osv):
     _inherit = 'stock.picking'
     _columns = {
         'purchase_id': fields.related('move_lines', 'purchase_line_id', 'order_id', string="Purchase Orders",
-            readonly=True, relation="many2one"),
+            readonly=True, type="many2one", relation="purchase.order"),
     }
 
     def _prepare_values_extra_move(self, cr, uid, op, product, remaining_qty, context=None):

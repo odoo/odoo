@@ -8,7 +8,7 @@
 Partners Geolocation
 ========================
     """,
-    'depends': ['crm'],
+    'depends': ['base'],
     'data': [
         'views/res_partner_views.xml',
     ],

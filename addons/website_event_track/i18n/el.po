@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:12+0000\n"
-"PO-Revision-Date: 2016-01-02 22:27+0000\n"
+"PO-Revision-Date: 2016-03-16 08:35+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgstr "<strong>Ημερομηνία</strong><br/>"
 msgid ""
 "<br/>\n"
 "                            <b>Duration</b><br/>"
-msgstr ""
+msgstr "<br/>\n<b>Διάρκεια</b><br/>"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -402,11 +402,6 @@ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζοντ�
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_image
 msgid "Image"
 msgstr "Εικόνα"
-
-#. module: website_event_track
-#: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
-msgid "Important Messages"
-msgstr "Σημαντικά Μηνύματα "
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -798,6 +793,11 @@ msgid "Submit Proposal"
 msgstr ""
 
 #. module: website_event_track
+#: model:web.tip,description:website_event_track.event_track_tip_1
+msgid "Switch to the calendar view to see the availability of each room."
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_name
 msgid "Tag"
 msgstr "Εικέτα"
@@ -948,6 +948,7 @@ msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_message_unread
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Unread Messages"
 msgstr "Αδιάβαστα Μηνύματα"
 

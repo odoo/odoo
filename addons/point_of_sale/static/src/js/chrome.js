@@ -478,8 +478,6 @@ var Chrome = PosBaseWidget.extend({
     build_chrome: function() { 
         var self = this;
         FastClick.attach(document.body);
-        core.bus.trigger('set_full_screen', true);
-
         this.renderElement();
 
         this.$('.pos-logo').click(function(){
@@ -752,14 +750,19 @@ var Chrome = PosBaseWidget.extend({
 
     destroy: function() {
         this.pos.destroy();
-        core.bus.trigger('set_full_screen', false);
         this._super();
     }
 });
 
 return {
     Chrome: Chrome,
+    DebugWidget: DebugWidget,
+    HeaderButtonWidget: HeaderButtonWidget,
     OrderSelectorWidget: OrderSelectorWidget,
+    ProxyStatusWidget: ProxyStatusWidget,
+    StatusWidget: StatusWidget,
+    SynchNotificationWidget: SynchNotificationWidget,
+    UsernameWidget: UsernameWidget,
 };
 });
 

@@ -53,7 +53,7 @@
 
 {
     'name': 'Deutschland SKR03 - Accounting',
-    'version': '1.0',
+    'version': '2.0',
     'author': 'openbig.org',
     'website': 'http://www.openbig.org',
     'category': 'Localization/Account Charts',

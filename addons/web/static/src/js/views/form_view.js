@@ -52,6 +52,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
         this.has_been_loaded = $.Deferred();
         this.translatable_fields = [];
         this.is_initialized = $.Deferred();
+        this.record_loaded = $.Deferred();
         this.mutating_mutex = new utils.Mutex();
         this.save_list = [];
         this.render_value_defs = [];
@@ -324,6 +325,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
         this._actualize_mode();
         this.set({ 'title' : record.id ? record.display_name : _t("New") });
 
+        this.record_loaded = $.Deferred();
         _(this.fields).each(function (field, f) {
             field._dirty_flag = false;
             field._inhibit_on_change_flag = true;
@@ -339,6 +341,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
             self.on_form_changed();
             self.rendering_engine.init_fields();
             self.is_initialized.resolve();
+            self.record_loaded.resolve();
             self.do_update_pager(record.id === null || record.id === undefined);
             if (self.sidebar) {
                self.sidebar.do_attachement_update(self.dataset, self.datarecord.id);
@@ -547,9 +550,8 @@ var FormView = View.extend(common.FieldManagerMixin, {
             field.node.attrs.domain = domain;
         });
 
-        if (!_.isEmpty(result.value)) {
-            this._internal_set_values(result.value);
-        }
+        var def = $.when(!_.isEmpty(result.value) && this._internal_set_values(result.value));
+
         // FIXME XXX a list of warnings?
         if (!_.isEmpty(result.warning)) {
             this.warning_displayed = true;
@@ -564,7 +566,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
             });
         }
 
-        return $.Deferred().resolve();
+        return def;
         } catch(e) {
             console.error(e);
             crash_manager.show_message(e);
@@ -574,18 +576,18 @@ var FormView = View.extend(common.FieldManagerMixin, {
     _process_operations: function() {
         var self = this;
         return this.mutating_mutex.exec(function() {
+            function onchanges_mutex () {return self.onchanges_mutex.def;}
             function iterate() {
-
                 var mutex = new utils.Mutex();
+                mutex.exec(onchanges_mutex);
                 _.each(self.fields, function(field) {
-                    self.onchanges_mutex.def.then(function(){
-                        mutex.exec(function(){
-                            return field.commit_value();
-                        });
+                    mutex.exec(function(){
+                        return field.commit_value();
                     });
+                    mutex.exec(onchanges_mutex);
                 });
 
-                return mutex.def.then(function () { return self.onchanges_mutex.def; }).then(function() {
+                return mutex.def.then(function() {
                     var save_obj = self.save_list.pop();
                     if (save_obj) {
                         return self._process_save(save_obj).then(function() {
@@ -688,9 +690,20 @@ var FormView = View.extend(common.FieldManagerMixin, {
             }
         }
     },
+    disable_button: function () {
+        this.$('.oe_form_buttons').add(this.$buttons).find('button').addClass('o_disabled').prop('disabled', true);
+        this.is_disabled = true;
+    },
+    enable_button: function () {
+        this.$('.oe_form_buttons').add(this.$buttons).find('button.o_disabled').removeClass('o_disabled').prop('disabled', false);
+        this.is_disabled = false;
+    },
     on_button_save: function(e) {
         var self = this;
-        $(e.target).attr("disabled", true);
+        if (this.is_disabled) {
+            return;
+        }
+        this.disable_button();
         return this.save().done(function(result) {
             self.trigger("save", result);
             self.reload().then(function() {
@@ -699,7 +712,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 core.bus.trigger('form_view_saved', self);
             });
         }).always(function(){
-            $(e.target).attr("disabled", false);
+            self.enable_button();
         });
     },
     on_button_cancel: function(event) {
@@ -816,19 +829,6 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 first_invalid_field = null,
                 readonly_values = {},
                 deferred = [];
-
-            _.each(self.fields, function (f) {
-                var res = f.before_save();
-                if (res) {
-                    deferred.push(res);
-                    res.fail(function () {
-                        form_invalid = true;
-                        if (!first_invalid_field) {
-                            first_invalid_field = f;
-                        }
-                    });
-                }
-            });
 
             $.when.apply($, deferred).always(function () {
 

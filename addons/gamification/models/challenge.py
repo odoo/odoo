@@ -259,7 +259,7 @@ class gamification_challenge(osv.Model):
         # close scheduled challenges
         planned_challenge_ids = self.search(cr, uid, [
             ('state', '=', 'inprogress'),
-            ('end_date', '>=', fields.date.today())])
+            ('end_date', '<', fields.date.today())])
         if planned_challenge_ids:
             self.write(cr, uid, planned_challenge_ids, {'state': 'done'}, context=context)
 

@@ -813,6 +813,8 @@ actual arch.
             self.raise_view_error(_('Model not found: %(model)s') % dict(model=model), view_id)
         Model = self.env[model]
 
+        is_base_model = self.env.context.get('base_model_name', model) == model
+
         if node.tag == 'diagram':
             if node.getchildren()[0].tag == 'node':
                 node_model = self.env[node.getchildren()[0].get('object')]
@@ -820,7 +822,7 @@ actual arch.
                 fields.update(node_fields)
                 if (not node.get("create") and
                         not node_model.check_access_rights('create', raise_exception=False) or
-                        not self._context.get("create", True)):
+                        not self._context.get("create", True) and is_base_model):
                     node.set("create", 'false')
             if node.getchildren()[1].tag == 'arrow':
                 arrow_fields = self.env[node.getchildren()[1].get('object')].fields_get(None)
@@ -835,7 +837,7 @@ actual arch.
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
                 if (not node.get(action) and
                         not Model.check_access_rights(operation, raise_exception=False) or
-                        not self._context.get(action, True)):
+                        not self._context.get(action, True) and is_base_model):
                     node.set(action, 'false')
         if node.tag in ('kanban',):
             group_by_name = node.get('default_group_by')
@@ -846,7 +848,7 @@ actual arch.
                     for action, operation in (('group_create', 'create'), ('group_delete', 'unlink'), ('group_edit', 'write')):
                         if (not node.get(action) and
                                 not group_by_model.check_access_rights(operation, raise_exception=False) or
-                                not self._context.get(action, True)):
+                                not self._context.get(action, True) and is_base_model):
                             node.set(action, 'false')
 
         arch = etree.tostring(node, encoding="utf-8").replace('\t', '')

@@ -111,18 +111,15 @@ class WebsiteSale(http.Controller):
         """
         # product attributes with at least two choices
         visible_attrs_ids = product.mapped('attribute_line_ids.attribute_id').filtered(lambda attr: len(attr.value_ids) > 1).ids
-        if request.website.pricelist_id.id != request.env.context.get('pricelist'):
-            attribute_value_ids = []
-            to_currency = request.website.get_current_pricelist().currency_id
-            for variant in product.product_variant_ids:
-                pricelist_price = request.website.currency_id.compute(variant.lst_price, to_currency)
-                visible_attribute_ids = [v.id for v in variant.attribute_value_ids if v.attribute_id.id in visible_attrs_ids]
-                attribute_value_ids.append([variant.id, visible_attribute_ids, variant.price, pricelist_price])
-        else:
+        to_currency = request.website.get_current_pricelist().currency_id
+        attribute_value_ids = []
+        for variant in product.product_variant_ids:
+            if to_currency != product.currency_id:
+                price = variant.currency_id.compute(variant.lst_price, to_currency)
+            else:
+                price = variant.lst_price
             visible_attribute_ids = [v.id for v in variant.attribute_value_ids if v.attribute_id.id in visible_attrs_ids]
-            attribute_value_ids = [[variant.id, visible_attribute_ids, variant.price, variant.lst_price]
-                                   for variant in product.product_variant_ids]
-
+            attribute_value_ids.append([variant.id, visible_attribute_ids, variant.price, price])
         return attribute_value_ids
 
     @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True)
@@ -587,7 +584,8 @@ class WebsiteSale(http.Controller):
                 shipping_info['lang'] = partner_lang
             shipping_info['parent_id'] = partner.id
             checkout['shipping_id'] = Partner.sudo().create(shipping_info).id
-            order.write({'partner_shipping_id': checkout.get('shipping_id')})
+        if checkout.get('shipping_id'):
+            order.write({'partner_shipping_id': checkout['shipping_id']})
 
         order.onchange_partner_shipping_id()
         order.order_line._compute_tax_id()
@@ -713,14 +711,12 @@ class WebsiteSale(http.Controller):
         values['errors'] = SaleOrder._get_errors(order)
         values.update(SaleOrder._get_website_data(order))
         if not values['errors']:
-            # find an already existing transaction
-            tx = request.website.sale_get_transaction()
             acquirers = request.env['payment.acquirer'].search(
                 [('website_published', '=', True), ('company_id', '=', order.company_id.id)]
             )
             values['acquirers'] = list(acquirers)
             acquirer_buttons = acquirers.with_context(submit_class='btn btn-primary', submit_txt=_('Pay Now')).sudo().render(
-                tx and tx.reference or request.env['payment.transaction'].get_next_reference(order.name),
+                '/',
                 order.amount_total,
                 order.pricelist_id.currency_id.id,
                 values={
@@ -744,7 +740,7 @@ class WebsiteSale(http.Controller):
         :param int acquirer_id: id of a payment.acquirer record. If not set the
                                 user is redirected to the checkout page
         """
-        Transaction = request.env['payment.transaction']
+        Transaction = request.env['payment.transaction'].sudo()
         order = request.website.sale_get_order()
 
         if not order or not order.order_line or acquirer_id is None:
@@ -758,11 +754,9 @@ class WebsiteSale(http.Controller):
             if tx.sale_order_id.id != order.id or tx.state in ['error', 'cancel'] or tx.acquirer_id.id != acquirer_id:
                 tx = False
             elif tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
-                tx.write({
-                    'amount': order.amount_total,
-                })
+                tx.write(dict(Transaction.on_change_partner_id(order.partner_id.id).get('value', {}), amount=order.amount_total))
         if not tx:
-            tx = Transaction.sudo().create({
+            tx = Transaction.create({
                 'acquirer_id': acquirer_id,
                 'type': 'form',
                 'amount': order.amount_total,
@@ -784,7 +778,16 @@ class WebsiteSale(http.Controller):
         if tx.acquirer_id.auto_confirm == 'at_pay_now':
             order.with_context(send_email=True).action_confirm()
 
-        return tx.id
+        return tx.acquirer_id.with_context(submit_class='btn btn-primary', submit_txt=_('Pay Now')).sudo().render(
+            tx.reference,
+            order.amount_total,
+            order.pricelist_id.currency_id.id,
+            values={
+                'return_url': '/shop/payment/validate',
+                'partner_id': order.partner_shipping_id.id or order.partner_invoice_id.id,
+                'billing_partner_id': order.partner_invoice_id.id,
+            },
+        )[0]
 
     @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True)
     def payment_get_status(self, sale_order_id, **post):
@@ -976,9 +979,6 @@ class WebsiteSale(http.Controller):
     def get_unit_price(self, product_ids, add_qty, use_order_pricelist=False, **kw):
         products = request.env['product.product'].browse(product_ids)
         partner = request.env.user.partner_id
-        if use_order_pricelist:
-            pricelist = request.website.get_current_pricelist()
-        else:
-            pricelist = partner.property_product_pricelist
+        pricelist = request.website.get_current_pricelist()
         prices = pricelist.price_rule_get_multi([(product, add_qty, partner) for product in products])
         return {product_id: prices[product_id][pricelist.id][0] for product_id in product_ids}

@@ -178,3 +178,55 @@ class TestSaleStock(TestSale):
         self.inv_2 = self.so.invoice_ids.filtered(lambda r: r.state == 'draft')
         self.assertEqual(self.inv_2.invoice_line_ids[0].quantity, 2.0, 'Sale Stock: refund quantity on the invoice should be 2.0 instead of "%s".' % self.inv_2.invoice_line_ids[0].quantity)
         self.assertEqual(self.so.invoice_status, 'no', 'Sale Stock: so invoice_status should be "no" instead of "%s" after invoicing the return' % self.so.invoice_status)
+
+    def test_03_sale_stock_delivery_partial(self):
+        """
+        Test a SO with a product invoiced on delivery. Deliver partially and invoice the SO, when
+        the SO is set on 'done', the SO should be fully invoiced.
+        """
+        # intial so
+        self.partner = self.env.ref('base.res_partner_1')
+        self.product = self.env.ref('product.product_delivery_01')
+        so_vals = {
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+            'order_line': [(0, 0, {
+                'name': self.product.name,
+                'product_id': self.product.id,
+                'product_uom_qty': 5.0,
+                'product_uom': self.product.uom_id.id,
+                'price_unit': self.product.list_price})],
+            'pricelist_id': self.env.ref('product.list0').id,
+        }
+        self.so = self.env['sale.order'].create(so_vals)
+
+        # confirm our standard so, check the picking
+        self.so.action_confirm()
+        self.assertTrue(self.so.picking_ids, 'Sale Stock: no picking created for "invoice on delivery" stockable products')
+
+        # invoice in on delivery, nothing should be invoiced
+        self.assertEqual(self.so.invoice_status, 'no', 'Sale Stock: so invoice_status should be "nothing to invoice"')
+
+        # deliver partially
+        pick = self.so.picking_ids
+        pick.force_assign()
+        pick.pack_operation_product_ids.write({'qty_done': 4})
+        backorder_wiz_id = pick.do_new_transfer()['res_id']
+        backorder_wiz = self.env['stock.backorder.confirmation'].browse([backorder_wiz_id])
+        backorder_wiz.process_cancel_backorder()
+
+        # Check quantity delivered
+        del_qty = sum(sol.qty_delivered for sol in self.so.order_line)
+        self.assertEqual(del_qty, 4.0, 'Sale Stock: delivered quantity should be 4.0 after partial delivery')
+
+        # Check invoice
+        self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" before invoicing')
+        inv_1_id = self.so.action_invoice_create()
+        self.assertEqual(self.so.invoice_status, 'no', 'Sale Stock: so invoice_status should be "no" after invoicing')
+        self.assertEqual(len(inv_1_id), 1, 'Sale Stock: only one invoice should be created')
+        self.inv_1 = self.env['account.invoice'].browse(inv_1_id)
+        self.assertEqual(self.inv_1.amount_untaxed, self.inv_1.amount_untaxed, 'Sale Stock: amount in SO and invoice should be the same')
+
+        self.so.action_done()
+        self.assertEqual(self.so.invoice_status, 'invoiced', 'Sale Stock: so invoice_status should be "invoiced" when set to done')

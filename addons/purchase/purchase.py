@@ -457,7 +457,7 @@ class PurchaseOrderLine(models.Model):
                 continue
             bom_delivered = self.sudo()._get_bom_delivered(line.sudo())
             if bom_delivered and any(bom_delivered.values()):
-                total = self.product_qty
+                total = line.product_qty
             elif bom_delivered:
                 total = 0.0
             else:
@@ -482,12 +482,13 @@ class PurchaseOrderLine(models.Model):
                 if bom.type != 'phantom':
                     continue
                 bom_delivered[bom.id] = False
-                bom_exploded = self.env['mrp.bom']._bom_explode(bom, line.product_id, line.product_qty)[0]
+                product_uom_qty_bom = self.env['product.uom']._compute_qty_obj(line.product_uom, line.product_qty, bom.product_uom)
+                bom_exploded = self.env['mrp.bom']._bom_explode(bom, line.product_id, product_uom_qty_bom)[0]
                 for bom_line in bom_exploded:
                     qty = 0.0
                     for move in line.move_ids:
                         if move.state == 'done' and move.product_id.id == bom_line.get('product_id', False):
-                            qty += self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
+                            qty += self.env['product.uom']._compute_qty(move.product_uom.id, move.product_uom_qty, bom_line['product_uom'])
                     if float_compare(qty, bom_line['product_qty'], precision_digits=precision) < 0:
                         bom_delivered[bom.id] = False
                         break
@@ -802,10 +803,9 @@ class ProcurementOrder(models.Model):
 
         taxes = self.product_id.supplier_taxes_id
         fpos = po.fiscal_position_id
-        taxes_id = fpos.map_tax(taxes) if fpos else self.env['account.tax'].browse()
+        taxes_id = fpos.map_tax(taxes) if fpos else taxes
         if taxes_id:
-            companies = self.env['res.company'].search([('id', 'child_of', self.company_id.id)])
-            taxes_id = taxes_id.filtered(lambda x: x.company_id in companies)
+            taxes_id = taxes_id.filtered(lambda x: x.company_id.id == self.company_id.id)
 
         price_unit = self.env['account.tax']._fix_tax_included_price(seller.price, self.product_id.supplier_taxes_id, taxes_id) if seller else 0.0
         if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:

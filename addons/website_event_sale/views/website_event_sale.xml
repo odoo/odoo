@@ -80,6 +80,9 @@
         <button type="submit" t-if="event.state == 'confirm' and (event.seats_available or event.seats_availability == 'unlimited')"
             class="btn btn-primary btn-lg pull-right a-submit" t-attf-id="#{event.id}">Order Now</button>
     </xpath>
+    <xpath expr="//form[@id='registration_form']" position="attributes">
+        <attribute name="t-if">event.event_ticket_ids</attribute>
+    </xpath>
 </template>
 
 <template id="cart" inherit_id="website_sale.cart_lines" name="Hide product reduction for event tickets">
