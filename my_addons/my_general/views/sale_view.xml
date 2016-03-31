@@ -15,5 +15,17 @@
                 </field>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="trinh_product_template_form_view_inventory">
+            <field name="name">trinh.product.template.inventory</field>
+            <field name="model">product.template</field>
+            <field name="priority">101</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[@name='inventory']" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </xpath>
+            </field>
+        </record>
     </data>
 </openerp>
