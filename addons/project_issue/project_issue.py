@@ -483,7 +483,7 @@ class project(osv.Model):
     _columns = {
         'issue_count': fields.function(_issue_count, type='integer', string="Issues",),
         'issue_ids': fields.one2many('project.issue', 'project_id', string="Issues",
-                                    domain=[('stage_id.fold', '=', False)]),
+                                    domain=['|', ('stage_id.fold', '=', False), ('stage_id', '=', False)]),
         'issue_needaction_count': fields.function(_issue_needaction_count, type='integer', string="Issues",),
     }
 
