@@ -534,7 +534,10 @@ class res_partner(osv.osv, format_address):
                     if len(user_companies) > 1 or vals['company_id'] not in user_companies:
                         raise osv.except_osv(_("Warning"),_("You can not change the company as the partner/user has multiple user linked with different companies."))
         result = super(res_partner,self).write(cr, uid, ids, vals, context=context)
+        res_users = self.pool['res.users']
         for partner in self.browse(cr, uid, ids, context=context):
+            if any(res_users.has_group(cr, u.id, 'base.group_user') for u in partner.user_ids):
+                res_users.check_access_rights(cr, uid, 'write')
             self._fields_sync(cr, uid, partner, vals, context)
         return result
 
