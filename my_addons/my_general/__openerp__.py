@@ -9,13 +9,20 @@
     'summary': 'Trinh general customize',
     'description': """
     To:
-    -- invisible invoicing_policy, to_weight
-        fields in product form
+    -- invisible in Product Form:
+        Fields:
+            invoicing_policy
+            to_weight fields
+        Tabs:
+            Inventory tab
+            Accounting
+            Notes
     """,
     'website': 'https://www.odoo.com',
-    'depends': ['sale'],
+    'depends': ['sale', 'product', 'account'],
     'data': [
         'views/sale_view.xml',
+        'views/account_view.xml',
     ],
     'demo': [],
     'css': [],

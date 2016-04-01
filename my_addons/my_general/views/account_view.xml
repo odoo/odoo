@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="trinh_product_template_form_view_accounting">
+            <field name="name">trinh.product.template.accounting</field>
+            <field name="model">product.template</field>
+            <field name="priority">101</field>
+            <field name="inherit_id" ref="account.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[@name='accounting']" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
