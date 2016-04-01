@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from openerp.addons.website_event.controllers.main import website_event
+from openerp.addons.website_event.controllers.main import WebsiteEventController
 
 
-class website_event(website_event):
+class website_event(WebsiteEventController):
 
     def _process_registration_details(self, details):
         ''' Process data posted from the attendee details form. '''

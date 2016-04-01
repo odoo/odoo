@@ -4,11 +4,11 @@
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website_event.controllers.main import website_event
+from openerp.addons.website_event.controllers.main import WebsiteEventController
 from openerp.tools.translate import _
 
 
-class website_event(website_event):
+class website_event(WebsiteEventController):
 
     @http.route(['/event/<model("event.event"):event>/register'], type='http', auth="public", website=True)
     def event_register(self, event, **post):
