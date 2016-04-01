@@ -142,7 +142,7 @@ class account_invoice(osv.osv):
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
 
-    def onchange_partner_id(self, cr, uid, ids, partner_id=None, context=None):
+    def onchange_picking_type(self, cr, uid, ids, picking_type_id, partner_id, context=None):
         if not partner_id:
             return {}
         partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
@@ -167,11 +167,19 @@ class stock_picking(osv.osv):
             if partner.picking_warn == 'block':
                 return {'value': {'partner_id': False}, 'warning': warning}
 
-        result = {'value': {}}
+        result = super(stock_picking, self).onchange_picking_type(cr, uid, ids, picking_type_id, partner_id, context=context)
+        if result.get('warning', False):
+            warning['title'] = title and title + ' & '+ result['warning']['title'] or result['warning']['title']
+            warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
 
         if warning:
             result['warning'] = warning
         return result
+
+    # FORWARD-PORT UP TO SAAS-10, REMOVE THIS METHOD IN MASTER
+    def onchange_partner_id(self, cr, uid, ids, partner_id=None, context=None):
+        return self.onchange_picking_type(cr, uid, ids, False, partner_id, context=context)
+
 
 class product_product(osv.osv):
     _inherit = 'product.template'
