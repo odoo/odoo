@@ -220,7 +220,7 @@ class partner_vat_list(osv.osv_memory):
             'city': city,
             'country': country,
             'email': email,
-            'phone': phone,
+            'phone': phone.replace('.','').replace('/','').replace('(','').replace(')','').replace(' ',''),
             'SenderId': SenderId,
             'period': context['year'],
             'comments': data['comments'] or ''
