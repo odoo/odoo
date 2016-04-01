@@ -3,14 +3,15 @@
 # * event
 # 
 # Translators:
+# Viktor Pogrebniak <vp@aifil.ru>, 2016
 # Вадим Кунгурцев <kvadim@aport.ru>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2016-02-22 16:45+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-03-24 23:16+0000\n"
+"Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -102,7 +103,7 @@ msgid ""
 "For any further information please contact our event department.</p>\n"
 "<p>Thank you for your participation!</p>\n"
 "<p>Best regards</p>"
-msgstr ""
+msgstr "<p>Здравствуйте, ${object.name},</p>\n<p>Высылаем вам подтверждение о том, что мероприятие \"${object.event_id.name}\", на которое вы зарегистрировались, будет проходить с ${object.event_id.date_begin_located} до ${object.event_id.date_end_located}.\nДля более подробной информации, пожалуйста, свяжитесь с нашим отделом проведения мероприятий.</p>\n<p>Благодарим за участие!</p>\n<p>С уважением,</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -112,7 +113,7 @@ msgid ""
 "Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
 "<p>Thank you for your participation!</p>\n"
 "<p>Best regards</p>"
-msgstr ""
+msgstr "<p>Здравствуйте, ${object.name},</p>\n<p>Теперь вы подписаны на рассылку мероприятия \"${object.event_id.name}\".\nВаш <b>бэйдж участника</b> находится в приложении к данному сообщению.</p>\n<p>Благодарим за участие!</p>\n<p>С уважением,</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -122,7 +123,7 @@ msgid ""
 "You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
 "<p>Thank you for your participation!</p>\n"
 "<p>Best regards</p>"
-msgstr ""
+msgstr "<p>Здравствуйте, ${object.name},</p>\n<p>Теперь вы подписаны на рассылку мероприятия \"${object.event_id.name}\". Мы отправим вам письмо с более подробной информацией (расписание, план мероприятия...), как только мероприятие будет подтверждено.</p>\n<p>Благодарим за участие!</p>\n<p>С уважением,</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_thanks
@@ -231,12 +232,12 @@ msgstr ""
 #. module: event
 #: selection:event.mail,interval_type:0
 msgid "After each subscription"
-msgstr ""
+msgstr "Каждому новому подписчику"
 
 #. module: event
 #: selection:event.mail,interval_type:0
 msgid "After the event"
-msgstr ""
+msgstr "После мероприятия"
 
 #. module: event
 #: selection:event.config.settings,module_event_sale:0
@@ -322,7 +323,7 @@ msgstr "Участники"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_auto_confirmation
 msgid "Auto Confirmation"
-msgstr ""
+msgstr "Автоматическое подтверждение"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_back
@@ -354,7 +355,7 @@ msgstr "Изображение баннера Odoo"
 #. module: event
 #: selection:event.mail,interval_type:0
 msgid "Before the event"
-msgstr ""
+msgstr "Перед мероприятием"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -426,7 +427,7 @@ msgstr ""
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
 msgid "Click to add a new event."
-msgstr ""
+msgstr "Нажмите для добавления нового мероприятия."
 
 #. module: event
 #: code:addons/event/models/event.py:204
@@ -492,7 +493,7 @@ msgstr "Подтвердить регистрацию"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_auto_confirm
 msgid "Confirmation not required"
-msgstr ""
+msgstr "Подтверждение не требуется"
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
@@ -541,7 +542,7 @@ msgstr ""
 msgid ""
 "Create and manage registrations for this event, send emails to attendees and"
 " print identification badges."
-msgstr ""
+msgstr "Создавайте и управляйте регистрацией на это мероприятие, отправляйте письма участникам и печатайте бэйджи."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_create_uid
@@ -702,7 +703,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_template_id
 msgid "Email to Send"
-msgstr ""
+msgstr "Сообщение для отправки"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end
@@ -847,7 +848,7 @@ msgstr "Анализ мероприятий"
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
-msgstr ""
+msgstr "Мероприятия: планировщики почты"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
@@ -922,7 +923,7 @@ msgstr ""
 msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
-msgstr ""
+msgstr "Для любого мероприятия можно определить максимальное число мест (число участников), и после достижения этого уровня регистрация будет закрыта."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_seats_min
@@ -930,7 +931,7 @@ msgid ""
 "For each event you can define a minimum reserved seats (number of "
 "attendees), if it does not reach the mentioned registrations the event can "
 "not be confirmed (keep 0 to ignore this rule)"
-msgstr ""
+msgstr "Для каждого мероприятия можно выделить минимальное число мест (число участников), и если зарегистрируется меньшее количество людей, мероприятие будет отменено (оставьте \"0\", чтобы не применять это правило)"
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -1025,7 +1026,7 @@ msgstr "Когда событие создано, статус - 'Заплани
 #. module: event
 #: selection:event.mail,interval_unit:0
 msgid "Immediately"
-msgstr ""
+msgstr "Сейчас"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1151,7 +1152,7 @@ msgstr "Последний раз обновлено"
 #. module: event
 #: selection:event.event,seats_availability:0
 msgid "Limited"
-msgstr ""
+msgstr "Ограничено"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_address_id
@@ -1183,17 +1184,17 @@ msgstr ""
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_type
 msgid "Mail Schedulers"
-msgstr ""
+msgstr "Планировщики почты"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_mail_sent
 msgid "Mail Sent"
-msgstr ""
+msgstr "Время отправки"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_mail_sent
 msgid "Mail Sent on Event"
-msgstr ""
+msgstr "Отправка по событию"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_mail_registration_ids
@@ -1219,12 +1220,12 @@ msgstr "Максимальное количество посадочных ме�
 #: model:ir.model.fields,field_description:event.field_event_event_seats_availability
 #: model:ir.model.fields,field_description:event.field_event_event_seats_available
 msgid "Maximum Attendees"
-msgstr ""
+msgstr "Максимальное число участников"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_max
 msgid "Maximum Attendees Number"
-msgstr ""
+msgstr "Максимальное число участников"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_message_ids
@@ -1241,7 +1242,7 @@ msgstr "Сообщения и история общения"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_min
 msgid "Minimum Attendees"
-msgstr ""
+msgstr "Минимальное число участников"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1355,7 +1356,7 @@ msgid ""
 "Odoo helps you schedule and efficiently organize your events:\n"
 "    track subscriptions and participations, automate the confirmation emails,\n"
 "    sell tickets, etc."
-msgstr ""
+msgstr "Odoo помогает вам эффективно организовать мероприятия: следить за подписками и посещением, автоматизировать рассылку подтверждений, продавать билеты и т. д."
 
 #. module: event
 #: model:event.event,name:event.event_0
@@ -1462,7 +1463,7 @@ msgstr "Регистрация"
 #. module: event
 #: model:ir.actions.report.xml,name:event.report_event_registration_badge
 msgid "Registration Badge"
-msgstr ""
+msgstr "бэйдж участника"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_date_open
@@ -1487,7 +1488,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration Mails"
-msgstr ""
+msgstr "Заявки на регистрацию"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
@@ -1517,7 +1518,7 @@ msgstr "Регистрации"
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "Reminder of event ${object.event_id.name}"
-msgstr ""
+msgstr "Напоминание о мероприятии: ${object.event_id.name}"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_default_reply_to
@@ -1572,7 +1573,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_scheduled_date
 msgid "Scheduled Sent Mail"
-msgstr ""
+msgstr "Планируемое время отправки"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_scheduled_date
@@ -1660,7 +1661,7 @@ msgstr "Техническое обучение"
 #. module: event
 #: model:mail.template,subject:event.event_thanks
 msgid "Thanks for attending ${object.event_id.name}"
-msgstr ""
+msgstr "Спасибо за участие в \"${object.event_id.name}\""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_reply_to
@@ -1669,7 +1670,7 @@ msgid ""
 " to be in the 'Reply-To' of the mails sent automatically at event or "
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
-msgstr "Предполагается, что адрес электронной почты организатора будет помещен здесь с той целью, чтобы быть в списке адресов электронной почты 'Ответить', на которые будет автоматически отправлено письмо при подтверждении регистрации или события. Вы можете также поместить адрес электронной почты своего почтового шлюза, если у вас таковой имеется."
+msgstr "Разумно написать здесь адрес электронной почты организатора, чтобы он был в поле 'Ответить' у автоматически отправленных писем с информацией о событии и у подтверждений регистрации. Вы можете также поместить адрес электронной почты своего почтового шлюза, если у вас таковой имеется."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1684,7 +1685,7 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_event_mail_template_id
 msgid ""
 "This field contains the template of the mail that will be automatically sent"
-msgstr ""
+msgstr "Это поле содержит шаблон автоматически отправляемого письма."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_event_sale
@@ -1758,7 +1759,7 @@ msgstr "Ед."
 #. module: event
 #: selection:event.event,seats_availability:0
 msgid "Unlimited"
-msgstr "Неограниченно"
+msgstr "Неограничено"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_message_unread
@@ -1778,7 +1779,7 @@ msgstr "Счетчик непрочтённых сообщений"
 #: model:ir.model.fields,help:event.field_event_config_settings_auto_confirmation
 msgid ""
 "Unselect this option to manually manage draft event and draft subscription"
-msgstr ""
+msgstr "Отключите эту опцию, чтобы вручную управлять черновиком мероприятия и черновиком подписки"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1846,7 +1847,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_type
 msgid "When to Run "
-msgstr ""
+msgstr "Момент отправки"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1874,7 +1875,7 @@ msgstr "Чтобы выполнить это действие, вы должны
 msgid ""
 "You will be able to configure emails, and to schedule them to be "
 "automatically sent to the attendees on subscription and/or attendance"
-msgstr ""
+msgstr "Вы сможете настраивать сообщения и ставить их на автоматическую отправку подписчикам и/или участникам"
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
@@ -1884,7 +1885,7 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_subscription
 msgid "Your subscription at ${object.event_id.name}"
-msgstr ""
+msgstr "Ваша подписка на \"${object.event_id.name}\""
 
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge

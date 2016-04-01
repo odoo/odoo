@@ -3368,7 +3368,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="refund_account_id" ref="vat_refund_low"/>
             <field name="account_id" ref="vat_refund_low"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_5')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
         </record>
         <record id="btw_21_buy" model="account.tax.template">
             <field name="sequence">5</field>
@@ -3393,7 +3393,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="refund_account_id" ref="vat_refund_high"/>
             <field name="account_id" ref="vat_refund_high"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_6')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
         </record>
         <record id="btw_overig_buy" model="account.tax.template">
             <field name="sequence">15</field>

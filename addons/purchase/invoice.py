@@ -58,7 +58,7 @@ class AccountInvoice(models.Model):
                 'uom_id': line.product_uom.id,
                 'product_id': line.product_id.id,
                 'account_id': self.env['account.invoice.line'].with_context({'journal_id': self.journal_id.id, 'type': 'in_invoice'})._default_account(),
-                'price_unit': line.order_id.currency_id.compute(line.price_unit, self.currency_id),
+                'price_unit': line.order_id.currency_id.compute(line.price_unit, self.currency_id, round=False),
                 'quantity': qty,
                 'discount': 0.0,
                 'account_analytic_id': line.account_analytic_id.id,
@@ -79,7 +79,7 @@ class AccountInvoice(models.Model):
     def _onchange_currency_id(self):
         if self.currency_id:
             for line in self.invoice_line_ids.filtered(lambda r: r.purchase_line_id):
-                line.price_unit = line.purchase_id.currency_id.compute(line.purchase_line_id.price_unit, self.currency_id)
+                line.price_unit = line.purchase_id.currency_id.compute(line.purchase_line_id.price_unit, self.currency_id, round=False)
 
     @api.onchange('invoice_line_ids')
     def _onchange_origin(self):
@@ -126,9 +126,14 @@ class AccountInvoice(models.Model):
                     if i_line.product_id.cost_method != 'standard' and i_line.purchase_line_id:
                         #for average/fifo/lifo costing method, fetch real cost price from incomming moves
                         stock_move_obj = self.env['stock.move']
-                        valuation_stock_move = stock_move_obj.search([('purchase_line_id', '=', i_line.purchase_line_id.id)], limit=1)
+                        valuation_stock_move = stock_move_obj.search([('purchase_line_id', '=', i_line.purchase_line_id.id), ('state', '=', 'done')])
                         if valuation_stock_move:
-                            valuation_price_unit = valuation_stock_move[0].price_unit
+                            valuation_price_unit_total = 0
+                            valuation_total_qty = 0
+                            for val_stock_move in valuation_stock_move:
+                                valuation_price_unit_total += val_stock_move.price_unit * val_stock_move.product_qty
+                                valuation_total_qty += val_stock_move.product_qty
+                            valuation_price_unit = valuation_price_unit_total / valuation_total_qty
                     if inv.currency_id.id != company_currency.id:
                             valuation_price_unit = company_currency.with_context(date=inv.date_invoice).compute(valuation_price_unit, inv.currency_id)
                     if valuation_price_unit != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:
