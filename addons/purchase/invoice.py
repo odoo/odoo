@@ -128,9 +128,14 @@ class AccountInvoice(models.Model):
                         if i_line.product_id.cost_method != 'standard' and i_line.purchase_line_id:
                             #for average/fifo/lifo costing method, fetch real cost price from incomming moves
                             stock_move_obj = self.env['stock.move']
-                            valuation_stock_move = stock_move_obj.search([('purchase_line_id', '=', i_line.purchase_line_id.id)], limit=1)
+                            valuation_stock_move = stock_move_obj.search([('purchase_line_id', '=', i_line.purchase_line_id.id), ('state', '=', 'done')])
                             if valuation_stock_move:
-                                valuation_price_unit = valuation_stock_move[0].price_unit
+                                valuation_price_unit_total = 0
+                                valuation_total_qty = 0
+                                for val_stock_move in valuation_stock_move:
+                                    valuation_price_unit_total += val_stock_move.price_unit * val_stock_move.product_qty
+                                    valuation_total_qty += val_stock_move.product_qty
+                                valuation_price_unit = valuation_price_unit_total / valuation_total_qty
                         if inv.currency_id.id != company_currency.id:
                             valuation_price_unit = company_currency.with_context(date=inv.date_invoice).compute(valuation_price_unit, inv.currency_id, round=False)
                         if float_compare(valuation_price_unit, i_line.price_unit, precision_digits=product_prec) != 0\
