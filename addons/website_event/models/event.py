@@ -47,8 +47,10 @@ class event(models.Model):
                                     " of the event on the website.", store=True)
     menu_id = fields.Many2one('website.menu', 'Event Menu', copy=False)
 
-    @api.one
+    @api.multi
     def _get_new_menu_pages(self):
+        """ Retuns a list of tuple ('Page name', 'relative page url') for the event """
+        self.ensure_one()
         todo = [
             (_('Introduction'), 'website_event.template_intro'),
             (_('Location'), 'website_event.template_location')
@@ -62,27 +64,29 @@ class event(models.Model):
         result.append((_('Register'), '/event/%s/register' % slug(self)))
         return result
 
-    @api.one
+    @api.multi
     def _set_show_menu(self):
-        if self.menu_id and not self.show_menu:
-            self.menu_id.unlink()
-        elif self.show_menu and not self.menu_id:
-            root_menu = self.env['website.menu'].create({'name': self.name})
-            to_create_menus = self._get_new_menu_pages()[0]  # TDE CHECK api.one -> returns a list with one item ?
-            seq = 0
-            for name, url in to_create_menus:
-                self.env['website.menu'].create({
-                    'name': name,
-                    'url': url,
-                    'parent_id': root_menu.id,
-                    'sequence': seq,
-                })
-                seq += 1
-            self.menu_id = root_menu
+        for event in self:
+            if event.menu_id and not event.show_menu:
+                event.menu_id.unlink()
+            elif event.show_menu and not event.menu_id:
+                root_menu = self.env['website.menu'].create({'name': event.name})
+                to_create_menus = event._get_new_menu_pages()
+                seq = 0
+                for name, url in to_create_menus:
+                    self.env['website.menu'].create({
+                        'name': name,
+                        'url': url,
+                        'parent_id': root_menu.id,
+                        'sequence': seq,
+                    })
+                    seq += 1
+                event.menu_id = root_menu
 
-    @api.one
+    @api.multi
     def _get_show_menu(self):
-        self.show_menu = bool(self.menu_id)
+        for event in self:
+            event.show_menu = bool(event.menu_id)
 
     def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
         event = self.browse(cr, uid, ids[0], context=context)

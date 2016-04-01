@@ -153,9 +153,10 @@ class event_event(models.Model):
     tracks_tag_ids = fields.Many2many('event.track.tag', relation='event_track_tags_rel', string='Track Tags', compute='_get_tracks_tag_ids', store=True)
     count_sponsor = fields.Integer('# Sponsors', compute='_count_sponsor')
 
-    @api.one
+    @api.multi
     def _get_new_menu_pages(self):
-        result = super(event_event, self)._get_new_menu_pages()[0]  # TDE CHECK api.one -> returns a list with one item ?
+        self.ensure_one()
+        result = super(event_event, self)._get_new_menu_pages()
         if self.show_tracks:
             result.append((_('Talks'), '/event/%s/track' % slug(self)))
             result.append((_('Agenda'), '/event/%s/agenda' % slug(self)))
@@ -163,14 +164,15 @@ class event_event(models.Model):
             result.append((_('Talk Proposals'), '/event/%s/track_proposal' % slug(self)))
         return result
 
-    @api.one
+    @api.multi
     def _set_show_menu(self):
-        # if the number of menu items have changed, then menu items must be regenerated
-        if self.menu_id:
-            nbr_menu_items = len(self._get_new_menu_pages()[0])
-            if nbr_menu_items != len(self.menu_id.child_id):
-                self.menu_id.unlink()
-        return super(event_event, self)._set_show_menu()[0]
+        for event in self:
+            # if the number of menu items have changed, then menu items must be regenerated
+            if event.menu_id:
+                nbr_menu_items = len(event._get_new_menu_pages())
+                if nbr_menu_items != len(event.menu_id.child_id):
+                    event.menu_id.unlink()
+        return super(event_event, self)._set_show_menu()
 
 
 class event_sponsors_type(models.Model):
