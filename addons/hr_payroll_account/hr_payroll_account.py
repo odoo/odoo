@@ -3,6 +3,7 @@
 import time
 from datetime import date, datetime, timedelta
 
+from openerp import api
 from openerp.osv import fields, osv
 from openerp.tools import float_compare, float_is_zero
 from openerp.tools.translate import _
@@ -69,6 +70,12 @@ class hr_payslip(osv.osv):
         journal_id = contract_id and contract_obj.browse(cr, uid, contract_id, context=context).journal_id.id or (not contract_id and self._get_default_journal(cr, uid, context=None))
         res['value'].update({'journal_id': journal_id})
         return res
+
+    @api.onchange('contract_id')
+    def onchange_contract(self):
+        super(hr_payslip, self).onchange_contract()
+        self.journal_id = self.contract_id and self.contract_id.journal_id.id or (not self.contract_id and self._get_default_journal())
+        return
 
     def cancel_sheet(self, cr, uid, ids, context=None):
         move_pool = self.pool.get('account.move')
