@@ -528,18 +528,25 @@ class PurchaseOrderLine(models.Model):
     procurement_ids = fields.One2many('procurement.order', 'purchase_line_id', string='Associated Procurements', copy=False)
 
     @api.multi
+    def _get_stock_move_price_unit(self):
+        self.ensure_one()
+        line = self[0]
+        order = line.order_id
+        price_unit = line.price_unit
+        if line.taxes_id:
+            price_unit = line.taxes_id.with_context(round=False).compute_all(price_unit, currency=line.order_id.currency_id, quantity=1.0)['total_excluded']
+        if line.product_uom.id != line.product_id.uom_id.id:
+            price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
+        if order.currency_id != order.company_id.currency_id:
+            price_unit = order.currency_id.compute(price_unit, order.company_id.currency_id, round=False)
+        return price_unit
+
+    @api.multi
     def _create_stock_moves(self, picking):
         moves = self.env['stock.move']
         done = self.env['stock.move'].browse()
         for line in self:
-            order = line.order_id
-            price_unit = line.price_unit
-            if line.taxes_id:
-                price_unit = line.taxes_id.compute_all(price_unit, currency=line.order_id.currency_id, quantity=1.0)['total_excluded']
-            if line.product_uom.id != line.product_id.uom_id.id:
-                price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
-            if order.currency_id != order.company_id.currency_id:
-                price_unit = order.currency_id.compute(price_unit, order.company_id.currency_id, round=False)
+            price_unit = line._get_stock_move_price_unit()
 
             template = {
                 'name': line.name or '',

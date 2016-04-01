@@ -308,6 +308,8 @@ class sale_order(osv.osv):
             values = dict(template_values, **values)
         return super(sale_order, self).create(cr, uid, values, context=context)
 
+    def _get_payment_type(self, cr, uid, ids, context=None):
+        return 'form'
 
 class sale_quote_option(osv.osv):
     _name = "sale.quote.option"
