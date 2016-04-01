@@ -12,7 +12,7 @@ from openerp import SUPERUSER_ID, tools
 from openerp.exceptions import AccessError
 from openerp.osv import fields,osv
 from openerp.tools.translate import _
-from openerp.tools.misc import ustr
+from openerp.tools.misc import ustr, html_escape
 from openerp.tools.mimetypes import guess_mimetype
 
 _logger = logging.getLogger(__name__)
@@ -199,14 +199,26 @@ class ir_attachment(osv.osv):
             :param values : dict of values to create or write an ir_attachment
             :return mime : string indicating the mimetype, or application/octet-stream by default
         """
-        mimetype = 'application/octet-stream'
-        if values.get('datas_fname'):
+        mimetype = None
+        if values.get('mimetype'):
+            mimetype = values['mimetype']
+        if not mimetype and values.get('datas_fname'):
             mimetype = mimetypes.guess_type(values['datas_fname'])[0]
-        if values.get('url'):
+        if not mimetype and values.get('url'):
             mimetype = mimetypes.guess_type(values['url'])[0]
         if values.get('datas') and (not mimetype or mimetype == 'application/octet-stream'):
             mimetype = guess_mimetype(values['datas'].decode('base64'))
-        return mimetype
+        return mimetype or 'application/octet-stream'
+
+    def _check_contents(self, cr, uid, values, context=None):
+        mimetype = values['mimetype'] = self._compute_mimetype(values)
+        needs_escape = 'htm' in mimetype or '/ht' in mimetype # hta, html, xhtml, etc.
+        if needs_escape and not self.pool['res.users']._is_admin(cr, uid, [uid]):
+            if 'datas' in values:
+                values['datas'] = html_escape(values['datas'].decode('base64')).encode('base64')
+            else:
+                values['mimetype'] = 'text/plain'
+        return values
 
     def _index(self, cr, uid, bin_data, datas_fname, file_type):
         """ compute the index content of the given filename, or binary data.
@@ -382,6 +394,8 @@ class ir_attachment(osv.osv):
         # remove computed field depending of datas
         for field in ['file_size', 'checksum']:
             vals.pop(field, False)
+        if 'mimetype' in vals or 'datas' in vals:
+            vals = self._check_contents(cr, uid, vals, context=context)
         return super(ir_attachment, self).write(cr, uid, ids, vals, context)
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -409,9 +423,7 @@ class ir_attachment(osv.osv):
         # remove computed field depending of datas
         for field in ['file_size', 'checksum']:
             values.pop(field, False)
-        # if mimetype not given, compute it !
-        if 'mimetype' not in values:
-            values['mimetype'] = self._compute_mimetype(values)
+        values = self._check_contents(cr, uid, values, context=context)
         self.check(cr, uid, [], mode='write', context=context, values=values)
         return super(ir_attachment, self).create(cr, uid, values, context)
 
