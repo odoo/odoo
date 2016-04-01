@@ -72,8 +72,8 @@ class analytic_account_budget_report(report_sxw.rml_parse):
                 for line in line_id:
                     if line.id in b_line_ids:
                         theo = pract = 0.00
-                        theo = c_b_lines_obj._theo_amt(self.cr, self.uid, [line.id], context)[line.id]
-                        pract = c_b_lines_obj._prac_amt(self.cr, self.uid, [line.id], context)[line.id]
+                        theo = line.theoritical_amount
+                        pract = line.practical_amount
                         if line.general_budget_id.id in done_budget:
                             for record in result:
                                if record['b_id'] == line.general_budget_id.id  and record['a_id'] == line.analytic_account_id.id:
