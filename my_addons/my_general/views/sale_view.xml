@@ -7,11 +7,11 @@
             <field name="priority">100</field>
             <field name="inherit_id" ref="sale.product_template_form_view_invoice_policy"/>
             <field name="arch" type="xml">
-                <field name="invoice_policy" position="replace">
-                    <field name="invoice_policy" widget="radio" invisible="1"/>
+                <field name="invoice_policy" position="attributes">
+                    <attribute name='invisible'>1</attribute>
                 </field>
-                <field name="to_weight" position="replace">
-                    <field name="to_weight" invisible="1"/>
+                <field name="to_weight" position="attributes">
+                    <attribute name='invisible'>1</attribute>
                 </field>
             </field>
         </record>
