@@ -264,13 +264,6 @@ class QWeb(orm.AbstractModel):
             else:
                 _logger.warning("@t-debug in template '%s' is only available in --dev mode" % qwebcontext['__template__'])
 
-        # remove branding attributes from inherit
-        if element.attrib.get('data-oe-id') and [key for key in element.attrib.keys() if key.startswith("t-")]:
-            element.attrib.pop("data-oe-id", False)
-            element.attrib.pop("data-oe-xpath", False)
-            element.attrib.pop("data-oe-model", False)
-            element.attrib.pop("data-oe-field", False)
-
         for (attribute_name, attribute_value) in element.attrib.iteritems():
             attribute_name = unicode(attribute_name)
             if attribute_name == "groups":
