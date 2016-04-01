@@ -322,7 +322,7 @@ class account_voucher_line(models.Model):
     account_id = fields.Many2one('account.account', string='Account',
         required=True, domain=[('deprecated', '=', False)],
         help="The income or expense account related to the selected product.")
-    price_unit = fields.Monetary(string='Unit Price', required=True, oldname='amount')
+    price_unit = fields.Float(string='Unit Price', required=True, digits=dp.get_precision('Product Price'), oldname='amount')
     price_subtotal = fields.Monetary(string='Amount',
         store=True, readonly=True, compute='_compute_subtotal')
     quantity = fields.Float(digits=dp.get_precision('Product Unit of Measure'),
