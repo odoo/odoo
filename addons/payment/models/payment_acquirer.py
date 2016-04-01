@@ -3,7 +3,7 @@ import logging
 
 import openerp
 from openerp.osv import osv, fields
-from openerp.tools import float_round, float_repr, image_get_resized_images, image_resize_image_big
+from openerp.tools import float_round, float_repr, image_resize_images
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -97,30 +97,14 @@ class PaymentAcquirer(osv.Model):
 
     image = openerp.fields.Binary("Image", attachment=True,
         help="This field holds the image used for this provider, limited to 1024x1024px")
-    image_medium = openerp.fields.Binary("Medium-sized image",
-        compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
+    image_medium = openerp.fields.Binary("Medium-sized image", attachment=True,
         help="Medium-sized image of this provider. It is automatically "\
              "resized as a 128x128px image, with aspect ratio preserved. "\
              "Use this field in form views or some kanban views.")
-    image_small = openerp.fields.Binary("Small-sized image",
-        compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
+    image_small = openerp.fields.Binary("Small-sized image", attachment=True,
         help="Small-sized image of this provider. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
-
-    @openerp.api.depends('image')
-    def _compute_images(self):
-        for rec in self:
-            rec.image_medium = openerp.tools.image_resize_image_medium(rec.image)
-            rec.image_small = openerp.tools.image_resize_image_small(rec.image)
-
-    def _inverse_image_medium(self):
-        for rec in self:
-            rec.image = openerp.tools.image_resize_image_big(rec.image_medium)
-
-    def _inverse_image_small(self):
-        for rec in self:
-            rec.image = openerp.tools.image_resize_image_big(rec.image_small)
 
     _defaults = {
         'company_id': lambda self, cr, uid, obj, ctx=None: self.pool['res.users'].browse(cr, uid, uid).company_id.id,
@@ -144,6 +128,16 @@ class PaymentAcquirer(osv.Model):
     _constraints = [
         (_check_required_if_provider, 'Required fields not filled', ['required for this provider']),
     ]
+
+    @openerp.api.model
+    def create(self, vals):
+        image_resize_images(vals)
+        return super(PaymentAcquirer, self).create(vals)
+
+    @openerp.api.multi
+    def write(self, vals):
+        image_resize_images(vals)
+        return super(PaymentAcquirer, self).write(vals)
 
     def get_form_action_url(self, cr, uid, id, context=None):
         """ Returns the form action URL, for form-based acquirer implementations. """
