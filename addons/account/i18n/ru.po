@@ -10,14 +10,15 @@
 # Max Belyanin <maxbelyanin@gmail.com>, 2015
 # Sergey Vilizhanin <sv@grimmette.ru>, 2016
 # Sergey Vilizhanin <sv@grimmette.ru>, 2015-2016
-# Viktor Pogrebniak <avtomaton@gmail.com>, 2015
+# Viktor Pogrebniak <vp@aifil.ru>, 2015
+# Viktor Pogrebniak <vp@aifil.ru>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-02-27 16:58+0000\n"
-"Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>\n"
+"PO-Revision-Date: 2016-03-24 23:39+0000\n"
+"Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,7 +92,7 @@ msgid ""
 " * The 'Open' status is used when user create invoice, an invoice number is generated. Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr "Когда пользователь создаёт новый неподтвержденный счёт, то используется статус \"Черновик\".\nКогда у счёта нет номера, используется статус \"Проформа\".\nКогда пользователь создаёт счёт, для которого генерируется номер, используется \"Открытый\" статус. Этот статус сохраняется до тех пор пока пользователь не оплатит счёт.\nСтатус \"Оплачен\" устанавливается автоматически после оплаты счёта. Синхронизация соответствующих записей в журнале не гарантирована.\nСтатус \"Отменён\" используется, когда пользователь отменяет счёт."
+msgstr "Когда пользователь создаёт новый неподтвержденный счёт, то используется статус \"Черновик\".\nКогда у счёта нет номера, используется статус \"Проформа\".\nКогда пользователь создаёт счёт, для которого генерируется номер, используется статус \"Открыт\". Этот статус сохраняется до тех пор пока пользователь не оплатит счёт.\nСтатус \"Оплачен\" устанавливается автоматически после оплаты счёта. Синхронизация соответствующих записей в журнале не гарантирована.\nСтатус \"Отменён\" используется, когда пользователь отменяет счёт."
 
 #. module: account
 #. openerp-web
@@ -150,7 +151,7 @@ msgstr "&amp;bull;"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ", if accounting or purchase is installed"
-msgstr ", если установлен модуль \"Бухгалтерский. учёт\" или \"Закупки\""
+msgstr ", если установлен модуль \"Бухгалтерский учёт\" или \"Закупки\""
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:321
@@ -297,7 +298,7 @@ msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <strong>Pay your bills</strong>\n"
 "                                    </span>"
-msgstr "<span class=\"panel-title\">\n<strong>Оплатить ваши счета-фактуры</strong>\n</span>"
+msgstr "<span class=\"panel-title\">\n<strong>Оплатить ваши счета</strong>\n</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -313,7 +314,7 @@ msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <strong>Record your Bills</strong>\n"
 "                                    </span>"
-msgstr "<span class=\"panel-title\">\n<strong>Записать ваши Счета-фактуры</strong>\n</span>"
+msgstr "<span class=\"panel-title\">\n<strong>Записать ваши счета</strong>\n</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -353,7 +354,7 @@ msgstr "<span>Новый счёт-проформа</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>New</span>"
-msgstr "<span>Новый</span>"
+msgstr "<span>Создать</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -472,7 +473,7 @@ msgstr "<strong>Создать заявку на депозит</strong><br/>\n�
 msgid ""
 "<strong>Create the bill in Odoo</strong><br/> with a proper due date, and "
 "create the vendor if it doesnt' exist yet."
-msgstr "<strong>Создать счёт-фактуру в Odoo</strong><br/> с верной датой оплаты, и создать поставщика, если он ещё не представлен в системе."
+msgstr "<strong>Создать счёт в Odoo</strong><br/> с верной датой оплаты, и создать поставщика, если он ещё не представлен в системе."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -1917,7 +1918,7 @@ msgstr "Дата выставления Счета"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bill Refund"
-msgstr "Счет Возврата"
+msgstr "Счет возврата"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -1932,7 +1933,7 @@ msgstr "Биллинг"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills &amp; Refunds"
-msgstr "Счета и Возвраты"
+msgstr "Счета и возвраты"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1988,7 +1989,7 @@ msgstr "По Категории Продукта"
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_refund
 msgid "By Refund"
-msgstr "По Возврату"
+msgstr "По возврату"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_salespersons
@@ -3427,7 +3428,7 @@ msgstr "Черновик"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Draft Bill"
-msgstr "Черновик Счета"
+msgstr "Черновик счета"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -4359,7 +4360,7 @@ msgid ""
 "                        from Odoo, you first need to record all outstanding transactions \n"
 "                        in the payable and receivable accounts. These would be invoices \n"
 "                        that have not been paid or payments that have not been reconciled."
-msgstr "Если вы хотите иметь возможность отправлять Вашим клиентам их \nведомость из Odoo, сначала надо записать все невыполненные \nтранзакции с кредиторской и дебиторской задолженностью. Это \nбудут счета-фактуры которые не были оплачены или платежи, \nкоторые не были согласованы."
+msgstr "Если вы хотите иметь возможность отправлять Вашим клиентам их \nведомости из Odoo, сначала надо записать все невыполненные \nтранзакции с кредиторской и дебиторской задолженностью. Это \nбудут неоплаченные счета или ещё не согласованные платежи."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4540,7 +4541,7 @@ msgstr "Внутренние примечания"
 #: selection:account.payment,payment_type:0
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Internal Transfer"
-msgstr "Внутренний Перевод"
+msgstr "Внутренний перевод"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_template_form
@@ -4684,7 +4685,7 @@ msgstr "Счета"
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:2095
 #, python-format
 msgid "Invoices & Payments Matching"
-msgstr "Счета и Платежи Согласованы"
+msgstr "Сверка платежей и инвойсов"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5490,7 +5491,7 @@ msgstr "Еще"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr "Больше<i class=\"fa fa-caret-down\"/>"
+msgstr "Подробности<i class=\"fa fa-caret-down\"/>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5576,7 +5577,7 @@ msgstr "Позиции Чистого Налога"
 #. module: account
 #: selection:account.bank.statement,state:0
 msgid "New"
-msgstr "Новый"
+msgstr "Создать"
 
 #. module: account
 #. openerp-web
@@ -5588,12 +5589,12 @@ msgstr "Новая Операция"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "New Statement"
-msgstr "Новая Выписка"
+msgstr "Новая выписка"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "New Transactions"
-msgstr "Новые Транзакции"
+msgstr "Новые транзакции"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1004
@@ -5711,7 +5712,7 @@ msgstr "Примечания"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Nothing to Reconcile"
-msgstr "Ничего нет для Согласования"
+msgstr "Сверка не требуется"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -6337,7 +6338,7 @@ msgstr "Платежи"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Payments Matching"
-msgstr "Платежи Согласованы"
+msgstr "Сверка платежей"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_payments
@@ -6790,7 +6791,7 @@ msgstr "Счета Дебиторской и Кредиторской задол
 #: selection:account.register.payments,payment_type:0
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Receive Money"
-msgstr "Получать Деньги"
+msgstr "Получить перевод"
 
 #. module: account
 #. openerp-web
@@ -7070,7 +7071,7 @@ msgstr "Отчеты"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Reset to Draft"
-msgstr "Переустановить в Черновик"
+msgstr "Переместить в черновики"
 
 #. module: account
 #. openerp-web
@@ -7242,7 +7243,7 @@ msgstr "Искать Перемещение"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Search Operations"
-msgstr "Искать Операции"
+msgstr "Поиск операций"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -7305,7 +7306,7 @@ msgstr "Выбранная счет-фактура(ы) не может быть 
 #: selection:account.register.payments,payment_type:0
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Send Money"
-msgstr "Отправить Деньги"
+msgstr "Отправить перевод"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -8166,7 +8167,7 @@ msgstr "Нет пунктов журнала в статусе черновик�
 #: code:addons/account/static/src/xml/account_reconciliation.xml:315
 #, python-format
 msgid "There is nothing to reconcile."
-msgstr "Ничего нет для Согласования"
+msgstr "Нет документов для сверки"
 
 #. module: account
 #. openerp-web
@@ -8334,7 +8335,7 @@ msgstr "Это руководство поможет вам начать раб�
 msgid ""
 "This is the accounting dashboard. If you have not yet\n"
 "                installed a chart of account, please install one first."
-msgstr "Это информационная панель финансового учета. Если вы не установили план счетов, пожалуйста, установите один в первую очередь."
+msgstr "Это информационная панель финансового учета. Если у вас ещё не установлен план счетов, пожалуйста, сначала установите его."
 
 #. module: account
 #: code:addons/account/models/account.py:304
@@ -8896,7 +8897,7 @@ msgstr "Стоимость"
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model:ir.ui.view,arch_db:account.view_account_supplier_payment_tree
 msgid "Vendor"
-msgstr "Вендор"
+msgstr "Производитель"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
@@ -8914,7 +8915,7 @@ msgstr "Счет Поставщика"
 #: model:ir.ui.view,arch_db:account.account_planner
 #, python-format
 msgid "Vendor Bills"
-msgstr "Счета Поставщиков"
+msgstr "Счета от поставщиков"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8936,7 +8937,7 @@ msgstr "Условия Оплаты Поставщику"
 #: model:ir.model.fields,field_description:account.field_account_invoice_reference
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Vendor Reference"
-msgstr "Производитель Ссылка"
+msgstr "Обозначение производителя"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0

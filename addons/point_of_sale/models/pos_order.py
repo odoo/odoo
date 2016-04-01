@@ -408,6 +408,7 @@ class PosOrder(models.Model):
 
             invoice = Invoice.new(order._prepare_invoice())
             invoice._onchange_partner_id()
+            invoice.fiscal_position_id = order.fiscal_position_id
 
             inv = invoice._convert_to_write(invoice._cache)
             new_invoice = Invoice.with_context(local_context).sudo().create(inv)

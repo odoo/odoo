@@ -295,7 +295,7 @@ class sale_order(osv.osv):
         if tx and tx.state == 'done':
             if order.state in ['draft', 'sent']:
                 self.action_confirm(cr, SUPERUSER_ID, order.id, context=context)
-            message = _('Order payed by %s. Transaction: %s. Amount: %s.') % (tx.partner_id.name, tx.acquirer_reference, tx.amount)
+            message = _('Order paid by %s. Transaction: %s. Amount: %s.') % (tx.partner_id.name, tx.acquirer_reference, tx.amount)
             self.message_post(cr, uid, order_id, body=message, context=context)
             return True
         return False
@@ -314,6 +314,8 @@ class sale_order(osv.osv):
                 self.pool['mail.template'].send_mail(cr, uid, order.template_id.mail_template_id.id, order.id, context=context)
         return res
 
+    def _get_payment_type(self, cr, uid, ids, context=None):
+        return 'form'
 
 class sale_quote_option(osv.osv):
     _name = "sale.quote.option"

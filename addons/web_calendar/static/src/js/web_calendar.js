@@ -36,6 +36,9 @@ function get_fc_defaultOptions() {
         dayNames: moment.weekdays(),
         dayNamesShort: moment.weekdaysShort(),
         firstDay: moment._locale._week.dow,
+        weekNumberCalculation: function(date) {
+            return moment(date).week();
+        },
         weekNumbers: true,
         titleFormat: {
             month: 'MMMM yyyy',

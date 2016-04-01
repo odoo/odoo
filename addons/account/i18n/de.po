@@ -28,6 +28,7 @@
 # Rudolf Schnapka <rs@techno-flex.de>, 2015-2016
 # Sören Prilop <mail@soeren-prilop.de>, 2015
 # Tina Rittmüller <tr@ife.de>, 2015-2016
+# Winfried Grieb <wigrieb@gmx.de>, 2016
 # Wolfgang Taferner, 2015
 # Wolfgang Taferner, 2015-2016
 msgid ""
@@ -35,8 +36,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-03-13 11:31+0000\n"
-"Last-Translator: Wolfgang Taferner\n"
+"PO-Revision-Date: 2016-03-25 19:03+0000\n"
+"Last-Translator: Winfried Grieb <wigrieb@gmx.de>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6560,17 +6561,17 @@ msgstr "Buchungssätze"
 #: model:ir.model.fields,field_description:account.field_account_chart_template_bank_account_code_prefix
 #: model:ir.model.fields,field_description:account.field_res_company_bank_account_code_prefix
 msgid "Prefix of the bank accounts"
-msgstr ""
+msgstr "Prefix des Bankkontos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_cash_account_code_prefix
 msgid "Prefix of the cash accounts"
-msgstr ""
+msgstr "Prefix des Bargeld Kontos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_cash_account_code_prefix
 msgid "Prefix of the main cash accounts"
-msgstr ""
+msgstr "Prefix des Haupt Bargeld Kontos"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_prepayments
@@ -6587,7 +6588,7 @@ msgstr "Saldo mit existierendem Vorzeichen"
 #: model:ir.model,name:account.model_account_operation_template
 msgid ""
 "Preset to create journal entries during a invoices and payments matching"
-msgstr ""
+msgstr "Voreinstellungen um Journal Einträge zu erstellen, wahrend eines Rechnungs- und Zahlungsabgleichs."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -6687,7 +6688,7 @@ msgstr "Proforma"
 msgid ""
 "Programmation error : domain_maker_move_line_amount requires comparator '=' "
 "or '<'"
-msgstr ""
+msgstr "Programmation error : domain_maker_move_line_amount requires comparator '=' or '<'"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:117
@@ -6695,7 +6696,7 @@ msgstr ""
 msgid ""
 "Programmation error: the expected model for this action is "
 "'account.invoice'. The provided one is '%d'."
-msgstr ""
+msgstr "Programmation error: the expected model for this action is 'account.invoice'. The provided one is '%d'."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:115
@@ -6703,7 +6704,7 @@ msgstr ""
 msgid ""
 "Programmation error: wizard action executed without active_model or "
 "active_ids in context."
-msgstr ""
+msgstr "Programmation error: wizard action executed without active_model or active_ids in context."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_form
@@ -6765,7 +6766,7 @@ msgstr "Anzahl"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_currency_exchange_journal_id
 msgid "Rate Difference Journal"
-msgstr ""
+msgstr "Kursdifferenz Journal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_description
@@ -7032,12 +7033,12 @@ msgstr "Regulär"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual_company_signed
 msgid "Remaining amount due in the currency of the company."
-msgstr ""
+msgstr "Übriger Betrag in der Währung des Unternehmens."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual_signed
 msgid "Remaining amount due in the currency of the invoice."
-msgstr ""
+msgstr "Übriger Betrag in der Währung der Rechnung."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual
@@ -7160,7 +7161,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Review the list of available currencies (from the"
-msgstr ""
+msgstr "Betrachte die Liste verfügbarer Währungen"
 
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
@@ -7295,7 +7296,7 @@ msgstr "Partner wählen"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:234
 #, python-format
 msgid "Select a partner or choose a counterpart"
-msgstr ""
+msgstr "Wähle einen Partner oder Kollegen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line_value
@@ -7308,7 +7309,7 @@ msgstr ""
 msgid ""
 "Selected invoice(s) cannot be cancelled as they are already in 'Cancelled' "
 "or 'Done' state."
-msgstr ""
+msgstr "Die gewählte(n) Rechnung(en) kann/können nicht abgebrochen werden, da sie sich bereits im Status 'Abgebrochen' oder 'Abgeschlossen' befinden."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:21
@@ -7316,7 +7317,7 @@ msgstr ""
 msgid ""
 "Selected invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-"
 "Forma' state."
-msgstr ""
+msgstr "Die gewählte(n) Rechnung(en) kann/können nicht bestätigt werden, da sie sich nicht im Status 'Entwurf' oder 'Pro-Forma' befinden."
 
 #. module: account
 #: selection:account.abstract.payment,payment_type:0
@@ -7336,7 +7337,7 @@ msgstr "Per E-Mail versenden"
 msgid ""
 "Sending customer statements (outstanding invoices) manually during the "
 "transition period"
-msgstr ""
+msgstr "Versende Kunden Angaben (ausstehende Rechnungen) während der Frist."
 
 #. module: account
 #: selection:account.payment,state:0
@@ -7369,12 +7370,12 @@ msgstr "Reihenfolge"
 #: model:ir.model.fields,help:account.field_account_tax_active
 #: model:ir.model.fields,help:account.field_account_tax_template_active
 msgid "Set active to false to hide the tax without removing it."
-msgstr ""
+msgstr "Setze die Anzeige der Steuer von aktiv auf inaktiv, ohne sie zu enfernen."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Set the default Sales and Purchase taxes"
-msgstr ""
+msgstr "Lege die Standard Steuern für Verkauf/Einkauf fest"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_visible

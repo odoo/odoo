@@ -32,6 +32,17 @@ class stock_move(osv.osv):
     def get_price_unit(self, cr, uid, move, context=None):
         """ Returns the unit price to store on the quant """
         if move.purchase_line_id:
+            order = move.purchase_line_id.order_id
+            #if the currency of the PO is different than the company one, the price_unit on the move must be reevaluated
+            #(was created at the rate of the PO confirmation, but must be valuated at the rate of stock move execution)
+            if order.currency_id != move.company_id.currency_id:
+                #we don't pass the move.date in the compute() for the currency rate on purpose because
+                # 1) get_price_unit() is supposed to be called only through move.action_done(),
+                # 2) the move hasn't yet the correct date (currently it is the expected date, after
+                #    completion of action_done() it will be now() )
+                price_unit = move.purchase_line_id._get_stock_move_price_unit()
+                move.write({'price_unit': price_unit})
+                return price_unit
             return move.price_unit
         return super(stock_move, self).get_price_unit(cr, uid, move, context=context)
 
