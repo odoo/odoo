@@ -379,6 +379,7 @@ class Website(openerp.addons.web.controllers.main.Home):
 #------------------------------------------------------
 class WebsiteBinary(openerp.http.Controller):
     @http.route([
+        '/website/image',
         '/website/image/<xmlid>',
         '/website/image/<xmlid>/<int:width>x<int:height>',
         '/website/image/<xmlid>/<field>',

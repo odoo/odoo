@@ -877,7 +877,7 @@ class UsersView(models.Model):
         # add reified groups fields
         if not self.env.user._is_admin():
             return res
-        for app, kind, gs in self.env['res.groups'].get_groups_by_application():
+        for app, kind, gs in self.env['res.groups'].sudo().get_groups_by_application():
             if kind == 'selection':
                 # selection group field
                 tips = ['%s: %s' % (g.name, g.comment) for g in gs if g.comment]

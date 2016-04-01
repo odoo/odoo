@@ -475,7 +475,8 @@ class account_payment(models.Model):
             if invoice:
                 name += ': '
                 for inv in invoice:
-                    name += inv.number+', '
+                    if inv.move_id:
+                        name += inv.number + ', '
                 name = name[:len(name)-2] 
         return {
             'name': name,

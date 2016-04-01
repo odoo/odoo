@@ -196,7 +196,7 @@ class sale_quote(http.Controller):
         if not tx:
             tx_id = transaction_obj.create(cr, SUPERUSER_ID, {
                 'acquirer_id': acquirer_id,
-                'type': 'form',
+                'type': order._get_payment_type(),
                 'amount': order.amount_total,
                 'currency_id': order.pricelist_id.currency_id.id,
                 'partner_id': order.partner_id.id,
@@ -223,7 +223,7 @@ class sale_quote(http.Controller):
             order.pricelist_id.currency_id.id,
             values={
                 'return_url': '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
-                'type': 'form',
+                'type': order._get_payment_type(),
                 'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
                 'partner_id': order.partner_shipping_id.id or order.partner_invoice_id.id,
                 'billing_partner_id': order.partner_invoice_id.id,
