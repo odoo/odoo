@@ -172,30 +172,14 @@ class hr_employee(osv.osv):
     # image: all image fields are base64 encoded and PIL-supported
     image = openerp.fields.Binary("Photo", attachment=True,
         help="This field holds the image used as photo for the employee, limited to 1024x1024px.")
-    image_medium = openerp.fields.Binary("Medium-sized photo",
-        compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
+    image_medium = openerp.fields.Binary("Medium-sized photo", attachment=True,
         help="Medium-sized photo of the employee. It is automatically "\
              "resized as a 128x128px image, with aspect ratio preserved. "\
              "Use this field in form views or some kanban views.")
-    image_small = openerp.fields.Binary("Small-sized photo",
-        compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
+    image_small = openerp.fields.Binary("Small-sized photo", attachment=True,
         help="Small-sized photo of the employee. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
-
-    @api.depends('image')
-    def _compute_images(self):
-        for rec in self:
-            rec.image_medium = tools.image_resize_image_medium(rec.image)
-            rec.image_small = tools.image_resize_image_small(rec.image)
-
-    def _inverse_image_medium(self):
-        for rec in self:
-            rec.image = tools.image_resize_image_big(rec.image_medium)
-
-    def _inverse_image_small(self):
-        for rec in self:
-            rec.image = tools.image_resize_image_big(rec.image_small)
 
     def _get_default_image(self, cr, uid, context=None):
         image_path = get_module_resource('hr', 'static/src/img', 'default_image.png')
@@ -206,6 +190,16 @@ class hr_employee(osv.osv):
         'image': _get_default_image,
         'color': 0,
     }
+
+    @api.model
+    def create(self, vals):
+        tools.image_resize_images(vals)
+        return super(hr_employee, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        tools.image_resize_images(vals)
+        return super(hr_employee, self).write(vals)
 
     def unlink(self, cr, uid, ids, context=None):
         resource_ids = []
