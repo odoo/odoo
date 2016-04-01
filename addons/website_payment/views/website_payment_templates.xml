@@ -78,12 +78,6 @@
         </t>
     </template>
 
-    <template id="pay_meth_link" inherit_id="website_portal.account">
-        <xpath expr="//div[@class='o_my_details']" position="inside">
-            <a href="/my/payment_method">Manage your payment methods</a>
-        </xpath>
-    </template>
-
     <template id="pay">
         <t t-call="website.layout">
             <t t-set="additional_title">Payment</t>
