@@ -213,6 +213,7 @@ class HrEquipmentRequest(models.Model):
     _name = 'hr.equipment.request'
     _inherit = ['mail.thread']
     _description = 'Maintenance Requests'
+    _order = "id desc"
 
     @api.returns('self')
     def _default_employee_get(self):
