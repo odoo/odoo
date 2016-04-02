@@ -12,7 +12,7 @@ from openerp.report import report_sxw
 class pos_details(report_sxw.rml_parse):
 
     def _get_invoice(self, inv_id):
-        res={}
+        res = {}
         if inv_id:
             self.cr.execute("select number from account_invoice as ac where id = %s", (inv_id,))
             res = self.cr.fetchone()
@@ -52,13 +52,13 @@ class pos_details(report_sxw.rml_parse):
                 result = {
                     'code': pol.product_id.default_code,
                     'name': pol.product_id.name,
-                    'invoice_id': pos.invoice_id.id, 
-                    'price_unit': pol.price_unit, 
-                    'qty': pol.qty, 
-                    'discount': pol.discount, 
-                    'total': (pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)), 
-                    'date_order': pos.date_order, 
-                    'pos_name': pos.name, 
+                    'invoice_id': pos.invoice_id.id,
+                    'price_unit': pol.price_unit,
+                    'qty': pol.qty,
+                    'discount': pol.discount,
+                    'total': (pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)),
+                    'date_order': pos.date_order,
+                    'pos_name': pos.name,
                     'uom': pol.product_id.uom_id.name
                 }
                 data.append(result)
@@ -81,7 +81,21 @@ class pos_details(report_sxw.rml_parse):
         user_obj = self.pool.get('res.users')
         user_ids = form['user_ids'] or self._get_all_users()
         company_id = user_obj.browse(self.cr, self.uid, self.uid).company_id.id
-        pos_ids = pos_obj.search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('user_id','in',user_ids),('company_id','=',company_id),('invoice_id','<>',False)])
+        user = self.pool['res.users'].browse(self.cr, self.uid, self.uid)
+        tz_name = user.tz or self.localcontext.get('tz') or 'UTC'
+        user_tz = pytz.timezone(tz_name)
+        between_dates = {}
+        for date_field, delta in {'date_start': {'days': 0}, 'date_end': {'days': 1}}.items():
+            timestamp = datetime.datetime.strptime(form[date_field] + ' 00:00:00', tools.DEFAULT_SERVER_DATETIME_FORMAT) + datetime.timedelta(**delta)
+            timestamp = user_tz.localize(timestamp).astimezone(pytz.utc)
+            between_dates[date_field] = timestamp.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        pos_ids = pos_obj.search(self.cr, self.uid, [
+            ('date_order', '>=', between_dates['date_start']),
+            ('date_order', '<', between_dates['date_end']),
+            ('user_id', 'in', user_ids),
+            ('state', 'in', ['done', 'paid', 'invoiced']),
+            ('company_id', '=', company_id)
+        ])
         for pos in pos_obj.browse(self.cr, self.uid, pos_ids):
             for pol in pos.lines:
                 self.total_invoiced += (pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0))
@@ -99,7 +113,21 @@ class pos_details(report_sxw.rml_parse):
         user_obj = self.pool.get('res.users')
         user_ids = form['user_ids'] or self._get_all_users()
         company_id = user_obj.browse(self.cr, self.uid, self.uid).company_id.id
-        pos_ids = pos_obj.search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('user_id','in',user_ids),('company_id','=',company_id)])
+        user = self.pool['res.users'].browse(self.cr, self.uid, self.uid)
+        tz_name = user.tz or self.localcontext.get('tz') or 'UTC'
+        user_tz = pytz.timezone(tz_name)
+        between_dates = {}
+        for date_field, delta in {'date_start': {'days': 0}, 'date_end': {'days': 1}}.items():
+            timestamp = datetime.datetime.strptime(form[date_field] + ' 00:00:00', tools.DEFAULT_SERVER_DATETIME_FORMAT) + datetime.timedelta(**delta)
+            timestamp = user_tz.localize(timestamp).astimezone(pytz.utc)
+            between_dates[date_field] = timestamp.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        pos_ids = pos_obj.search(self.cr, self.uid, [
+            ('date_order', '>=', between_dates['date_start']),
+            ('date_order', '<', between_dates['date_end']),
+            ('user_id', 'in', user_ids),
+            ('state', 'in', ['done', 'paid', 'invoiced']),
+            ('company_id', '=', company_id)
+        ])
         for pos in pos_obj.browse(self.cr, self.uid, pos_ids):
             for pol in pos.lines:
                 self.total_discount += ((pol.price_unit * pol.qty) * (pol.discount / 100))
@@ -107,11 +135,25 @@ class pos_details(report_sxw.rml_parse):
 
     def _get_payments(self, form):
         statement_line_obj = self.pool.get("account.bank.statement.line")
-        pos_order_obj = self.pool.get("pos.order")
+        pos_obj = self.pool.get('pos.order')
         user_ids = form['user_ids'] or self._get_all_users()
         company_id = self.pool['res.users'].browse(self.cr, self.uid, self.uid).company_id.id
-        pos_ids = pos_order_obj.search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('state','in',['paid','invoiced','done']),('user_id','in',user_ids), ('company_id', '=', company_id)])
+        user = self.pool['res.users'].browse(self.cr, self.uid, self.uid)
+        tz_name = user.tz or self.localcontext.get('tz') or 'UTC'
+        user_tz = pytz.timezone(tz_name)
+        between_dates = {}
         data={}
+        for date_field, delta in {'date_start': {'days': 0}, 'date_end': {'days': 1}}.items():
+            timestamp = datetime.datetime.strptime(form[date_field] + ' 00:00:00', tools.DEFAULT_SERVER_DATETIME_FORMAT) + datetime.timedelta(**delta)
+            timestamp = user_tz.localize(timestamp).astimezone(pytz.utc)
+            between_dates[date_field] = timestamp.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        pos_ids = pos_obj.search(self.cr, self.uid, [
+            ('date_order', '>=', between_dates['date_start']),
+            ('date_order', '<', between_dates['date_end']),
+            ('user_id', 'in', user_ids),
+            ('state', 'in', ['done', 'paid', 'invoiced']),
+            ('company_id', '=', company_id)
+        ])
         if pos_ids:
             st_line_ids = statement_line_obj.search(self.cr, self.uid, [('pos_statement_id', 'in', pos_ids)])
             if st_line_ids:
@@ -133,9 +175,9 @@ class pos_details(report_sxw.rml_parse):
 
     def _sum_invoice(self, objects):
         return reduce(lambda acc, obj:
-                        acc + obj.invoice_id.amount_total,
-                        [o for o in objects if o.invoice_id and o.invoice_id.number],
-                        0.0)
+                      acc + obj.invoice_id.amount_total,
+                      [o for o in objects if o.invoice_id and o.invoice_id.number],
+                      0.0)
 
     def _ellipsis(self, orig_str, maxlen=100, ellipsis='...'):
         maxlen = maxlen - len(ellipsis)
@@ -151,10 +193,24 @@ class pos_details(report_sxw.rml_parse):
         taxes = {}
         account_tax_obj = self.pool.get('account.tax')
         user_ids = form['user_ids'] or self._get_all_users()
-        pos_order_obj = self.pool.get('pos.order')
+        pos_obj = self.pool.get('pos.order')
         company_id = self.pool['res.users'].browse(self.cr, self.uid, self.uid).company_id.id
-        pos_ids = pos_order_obj.search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('state','in',['paid','invoiced','done']),('user_id','in',user_ids), ('company_id', '=', company_id)])
-        for order in pos_order_obj.browse(self.cr, self.uid, pos_ids):
+        user = self.pool['res.users'].browse(self.cr, self.uid, self.uid)
+        tz_name = user.tz or self.localcontext.get('tz') or 'UTC'
+        user_tz = pytz.timezone(tz_name)
+        between_dates = {}
+        for date_field, delta in {'date_start': {'days': 0}, 'date_end': {'days': 1}}.items():
+            timestamp = datetime.datetime.strptime(form[date_field] + ' 00:00:00', tools.DEFAULT_SERVER_DATETIME_FORMAT) + datetime.timedelta(**delta)
+            timestamp = user_tz.localize(timestamp).astimezone(pytz.utc)
+            between_dates[date_field] = timestamp.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        pos_ids = pos_obj.search(self.cr, self.uid, [
+            ('date_order', '>=', between_dates['date_start']),
+            ('date_order', '<', between_dates['date_end']),
+            ('user_id', 'in', user_ids),
+            ('state', 'in', ['done', 'paid', 'invoiced']),
+            ('company_id', '=', company_id)
+        ])
+        for order in pos_obj.browse(self.cr, self.uid, pos_ids):
             currency = order.session_id.currency_id
             for line in order.lines:
                 if line.product_id.taxes_id:
