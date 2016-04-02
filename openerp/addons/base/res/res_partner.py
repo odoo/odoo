@@ -252,30 +252,14 @@ class res_partner(osv.Model, format_address):
     image = openerp.fields.Binary("Image", attachment=True,
         help="This field holds the image used as avatar for this contact, limited to 1024x1024px",
         default=lambda self: self._get_default_image(False, True))
-    image_medium = openerp.fields.Binary("Medium-sized image",
-        compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
+    image_medium = openerp.fields.Binary("Medium-sized image", attachment=True,
         help="Medium-sized image of this contact. It is automatically "\
              "resized as a 128x128px image, with aspect ratio preserved. "\
              "Use this field in form views or some kanban views.")
-    image_small = openerp.fields.Binary("Small-sized image",
-        compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
+    image_small = openerp.fields.Binary("Small-sized image", attachment=True,
         help="Small-sized image of this contact. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
-
-    @api.depends('image')
-    def _compute_images(self):
-        for rec in self:
-            rec.image_medium = tools.image_resize_image_medium(rec.image)
-            rec.image_small = tools.image_resize_image_small(rec.image)
-
-    def _inverse_image_medium(self):
-        for rec in self:
-            rec.image = tools.image_resize_image_big(rec.image_medium)
-
-    def _inverse_image_small(self):
-        for rec in self:
-            rec.image = tools.image_resize_image_big(rec.image_small)
 
     @api.model
     def _default_category(self):
@@ -521,9 +505,12 @@ class res_partner(osv.Model, format_address):
             vals['is_company'] = c_type == 'company'
         elif 'is_company' in vals:
             vals['company_type'] = is_company and 'company' or 'person'
+        tools.image_resize_images(vals)
 
         result = super(res_partner, self).write(vals)
         for partner in self:
+            if any(u.has_group('base.group_user') for u in partner.user_ids):
+                self.env['res.users'].check_access_rights('write')
             self._fields_sync(partner, vals)
         return result
 
@@ -542,6 +529,7 @@ class res_partner(osv.Model, format_address):
             vals['is_company'] = c_type == 'company'
         else:
             vals['company_type'] = is_company and 'company' or 'person'
+        tools.image_resize_images(vals)
         partner = super(res_partner, self).create(vals)
         self._fields_sync(partner, vals)
         self._handle_first_contact_creation(partner)
