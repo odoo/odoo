@@ -1656,7 +1656,10 @@ class stock_move(osv.osv):
         uom_obj = self.pool.get('product.uom')
         res = {}
         for m in self.browse(cr, uid, ids, context=context):
-            res[m.id] = uom_obj._compute_qty_obj(cr, uid, m.product_uom, m.product_uom_qty, m.product_id.uom_id, context=context)
+            try:
+                res[m.id] = uom_obj._compute_qty_obj(cr, uid, m.product_uom, m.product_uom_qty, m.product_id.uom_id, context=context)
+            except Exception:
+                pass
         return res
 
     def _get_remaining_qty(self, cr, uid, ids, field_name, args, context=None):
