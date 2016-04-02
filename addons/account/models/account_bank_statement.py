@@ -804,7 +804,9 @@ class AccountBankStatementLine(models.Model):
                 aml_dict['tax_ids'] = map(lambda id: (4, id, None), aml_dict['tax_ids'])
 
         # Fully reconciled moves are just linked to the bank statement
+        total = self.amount
         for aml_rec in payment_aml_rec:
+            total -= aml_rec.debit-aml_rec.credit
             aml_rec.write({'statement_id': self.statement_id.id})
             aml_rec.move_id.write({'statement_line_id': self.id})
             counterpart_moves = (counterpart_moves | aml_rec.move_id)
@@ -820,6 +822,34 @@ class AccountBankStatementLine(models.Model):
             move_vals = self._prepare_reconciliation_move(move_name)
             move = self.env['account.move'].create(move_vals)
             counterpart_moves = (counterpart_moves | move)
+
+            # Create The payment
+            payment_id = False
+            if abs(total)>0.00001:
+                partner_id = self.partner_id and self.partner_id.id or False
+                partner_type = False
+                if partner_id:
+                    if total < 0:
+                        partner_type = 'supplier'
+                    else:
+                        partner_type = 'customer'
+
+                payment_methods = (total>0) and self.journal_id.inbound_payment_method_ids or self.journal_id.outbound_payment_method_ids
+                currency = self.journal_id.currency_id or self.company_id.currency_id
+                payment_id = self.env['account.payment'].create({
+                    'statement_line_id': self.id,
+                    'payment_method_id': payment_methods and payment_methods[0].id or False,
+                    'payment_type': total >0 and 'inbound' or 'outbound',
+                    'partner_id': self.partner_id and self.partner_id.id or False,
+                    'partner_type': partner_type,
+                    'journal_id': self.statement_id.journal_id.id,
+                    'payment_date': self.date,
+                    'state': 'reconciled',
+                    'currency_id': currency.id,
+                    'amount': abs(total),
+                    'communication': self.name or '',
+                    'name': self.statement_id.name,
+                }).id
 
             # Complete dicts to create both counterpart move lines and write-offs
             to_create = (counterpart_aml_dicts + new_aml_dicts)
@@ -852,10 +882,13 @@ class AccountBankStatementLine(models.Model):
             # Create the move line for the statement line using the total credit/debit of the counterpart
             # This leaves out the amount already reconciled and avoids rounding errors from currency conversion
             st_line_amount = sum(aml_dict['credit'] - aml_dict['debit'] for aml_dict in to_create)
-            aml_obj.with_context(check_move_validity=False).create(self._prepare_reconciliation_move_line(move, st_line_amount))
+            aml_dict = self._prepare_reconciliation_move_line(move, st_line_amount)
+            aml_dict['payment_id'] = payment_id
+            aml_obj.with_context(check_move_validity=False).create(aml_dict)
 
             # Create write-offs
             for aml_dict in new_aml_dicts:
+                aml_dict['payment_id'] = payment_id
                 aml_obj.with_context(check_move_validity=False).create(aml_dict)
 
             # Create counterpart move lines and reconcile them
@@ -863,6 +896,7 @@ class AccountBankStatementLine(models.Model):
                 if aml_dict['move_line'].partner_id.id:
                     aml_dict['partner_id'] = aml_dict['move_line'].partner_id.id
                 aml_dict['account_id'] = aml_dict['move_line'].account_id.id
+                aml_dict['payment_id'] = payment_id
 
                 counterpart_move_line = aml_dict.pop('move_line')
                 if counterpart_move_line.currency_id and counterpart_move_line.currency_id != company_currency and not aml_dict.get('currency_id'):
