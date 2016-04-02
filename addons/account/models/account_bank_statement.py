@@ -502,12 +502,12 @@ class AccountBankStatementLine(models.Model):
             :param additional_domain:
             :param overlook_partner:
         """
-        # Domain to fetch registered payments (use case where you encode the payment before you get the bank statement)
+        # Blue lines = payment on bank account not assigned to a statement yet
         reconciliation_aml_accounts = [self.journal_id.default_credit_account_id.id, self.journal_id.default_debit_account_id.id]
-        domain_reconciliation = ['&', ('statement_id', '=', False), ('account_id', 'in', reconciliation_aml_accounts)]
+        domain_reconciliation = ['&', '&', ('statement_id', '=', False), ('account_id', 'in', reconciliation_aml_accounts), ('payment_id','<>', False)]
 
-        # Domain to fetch unreconciled payables/receivables (use case where you close invoices/refunds by reconciling your bank statements)
-        domain_matching = [('reconciled', '=', False)]
+        # Black lines = unreconciled & (not linked to a payment or open balance created by statement
+        domain_matching = ['&', ('reconciled', '=', False), '|', ('payment_id','=',False), ('statement_id', '<>', False)]
         if self.partner_id.id or overlook_partner:
             domain_matching = expression.AND([domain_matching, [('account_id.internal_type', 'in', ['payable', 'receivable'])]])
         else:
