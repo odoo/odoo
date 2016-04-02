@@ -1,37 +1,46 @@
-# Estonian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_margin
+# 
+# Translators:
+# Arma Gedonsky <armagedonsky@hot.ee>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2010-06-25 18:17+0000\n"
-"Last-Translator: lyyser <Unknown>\n"
-"Language-Team: Estonian <et@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2016-03-12 20:21+0000\n"
+"Last-Translator: Arma Gedonsky <armagedonsky@hot.ee>\n"
+"Language-Team: Estonian (http://www.transifex.com/odoo/odoo-9/language/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:27+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: et\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_margin
-#: field:sale.order.line,purchase_price:0
-msgid "Cost Price"
-msgstr "Ostuhind"
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line_purchase_price
+msgid "Cost"
+msgstr "Maksumus"
+
+#. module: sale_margin
+#: model:ir.model.fields,help:sale_margin.field_sale_order_margin
+msgid ""
+"It gives profitability by calculating the difference between the Unit Price "
+"and the cost."
+msgstr ""
+
+#. module: sale_margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line_margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_report_margin
+msgid "Margin"
+msgstr "Kate"
 
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_order
 msgid "Sales Order"
-msgstr "Müügikorraldus"
-
-#. module: sale_margin
-#: field:sale.order,margin:0
-#: field:sale.order.line,margin:0
-msgid "Margin"
-msgstr "Kate"
+msgstr "Müügitellimus"
 
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_order_line
@@ -39,139 +48,6 @@ msgid "Sales Order Line"
 msgstr "Müügikorralduse rida"
 
 #. module: sale_margin
-#: help:sale.order,margin:0
-msgid ""
-"It gives profitability by calculating the difference between the Unit Price "
-"and the cost price."
-msgstr ""
-
-#~ msgid "Create invoices"
-#~ msgstr "Loo arved"
-
-#~ msgid "Supplier Invoice"
-#~ msgstr "Tarnija arve"
-
-#~ msgid "Customer Refund"
-#~ msgstr "Kliendi tagasimakse"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
-
-#~ msgid "Customer Invoice"
-#~ msgstr "Kliendi arve"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Vigane XML vaate arhitektuurile!"
-
-#~ msgid "Destination Journal"
-#~ msgstr "Sihtkoha päevik"
-
-#~ msgid "Type"
-#~ msgstr "Tüüp"
-
-#~ msgid "All Months"
-#~ msgstr "Kõik kuud"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Vigane mudeli nimi toimingu definitsioonis."
-
-#~ msgid "Draft"
-#~ msgstr "Mustand"
-
-#~ msgid "Create Invoice"
-#~ msgstr "Loo arve"
-
-#~ msgid "Product"
-#~ msgstr "Toode"
-
-#~ msgid "Supplier Invoices"
-#~ msgstr "Tarnija arved"
-
-#~ msgid "This Month"
-#~ msgstr "See kuu"
-
-#~ msgid "Create invoice"
-#~ msgstr "Loo arve"
-
-#~ msgid "Invoices by category"
-#~ msgstr "Arved kategooria järgi"
-
-#~ msgid "Paid"
-#~ msgstr "Makstud"
-
-#~ msgid "Categories"
-#~ msgstr "Kategooriad"
-
-#~ msgid "Group by partner"
-#~ msgstr "Grupeeri partneri järgi"
-
-#~ msgid "Quantity"
-#~ msgstr "Kogus"
-
-#~ msgid "Supplier Refund"
-#~ msgstr "Tarnija tagasimakse"
-
-#~ msgid "Amount"
-#~ msgstr "Hulk"
-
-#~ msgid "Invoiced date"
-#~ msgstr "Arve kuupäeva"
-
-#~ msgid "Invoices"
-#~ msgstr "Arved"
-
-#~ msgid "Month"
-#~ msgstr "Kuu"
-
-#~ msgid "Canceled"
-#~ msgstr "Katkestatud"
-
-#~ msgid "Invoice"
-#~ msgstr "Arve"
-
-#~ msgid "Cancel"
-#~ msgstr "Katkesta"
-
-#~ msgid "Partner"
-#~ msgstr "Partner"
-
-#~ msgid "Pro-forma"
-#~ msgstr "Pro-forma"
-
-#~ msgid "Open"
-#~ msgstr "Ava"
-
-#~ msgid "Picking List"
-#~ msgstr "Noppeleht"
-
-#~ msgid "Current"
-#~ msgstr "Praegune"
-
-#~ msgid "Group By..."
-#~ msgstr "Grupeeri..."
-
-#~ msgid "Category"
-#~ msgstr "Kategooria"
-
-#~ msgid "February"
-#~ msgstr "Veebruar"
-
-#~ msgid "State"
-#~ msgstr "Olek"
-
-#~ msgid "August"
-#~ msgstr "August"
-
-#~ msgid "June"
-#~ msgstr "juuni"
-
-#~ msgid "May"
-#~ msgstr "Mai"
-
-#~ msgid "Date"
-#~ msgstr "Kuupäev"
-
-#~ msgid "July"
-#~ msgstr "Juuli"
+#: model:ir.model,name:sale_margin.model_sale_report
+msgid "Sales Orders Statistics"
+msgstr "Müügitellimuste statistika"

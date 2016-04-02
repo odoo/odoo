@@ -20,7 +20,13 @@
         margin-left: auto
         margin-right: auto
 
+.oe_website_sale ul ul
+    margin-left: 1.5em
+
 /* ---- Default Styles ---- */
+
+.o_alternative_product
+    margin: auto
 
 .oe_product
     position: relative
@@ -47,7 +53,7 @@
         right: 0
         bottom: 0
         overflow: hidden
-        padding: 0 15px 24px 0
+        padding: 0 15px 24px 10px
         min-height: 56px
         border-top: 1px solid rgba(255,255,255,0.2)
         background: rgba(255, 255, 255, 0.75)
@@ -114,28 +120,94 @@
 
 /* ---- Product Sizes ---- */
 
-.col-md-12
-    .oe-height-1
-        height: 75px
-    .oe-height-2
-        height: 150px
-    .oe-height-4
-        height: 300px
-    .oe-height-6
-        height: 450px
-    .oe-height-8
-        height: 600px
-.col-md-9
-    .oe-height-1
-        height: 70px
-    .oe-height-2
-        height: 140px
-    .oe-height-4
-        height: 280px
-    .oe-height-6
-        height: 420px
-    .oe-height-8
-        height: 560px
+#products_grid
+    > table tr:not(:first-child) > td
+        height: 100%
+    &.col-md-12, &.col-md-9
+        > table > tbody > tr > td:empty
+            height: 0
+
+    &.col-md-12
+        .oe-height-1
+            height: 75px
+        .oe-height-2
+            height: 150px
+        .oe-height-4
+            height: 300px
+        .oe-height-6
+            height: 450px
+        .oe-height-8
+            height: 600px
+    &.col-md-9
+        .oe-height-1
+            height: 70px
+        .oe-height-2
+            height: 140px
+        .oe-height-4
+            height: 280px
+        .oe-height-6
+            height: 420px
+        .oe-height-8
+            height: 560px
+
+    .oe_product.oe_grid .oe_subdescription
+        max-height: 40px
+
+@media (min-width: 992px)
+    #products_grid
+        &.col-md-12
+            .oe-height-1
+                height: 95px
+            .oe-height-2
+                height: 190px
+            .oe-height-4
+                height: 380px
+            .oe-height-6
+                height: 570px
+            .oe-height-8
+                height: 760px
+
+            .oe_product.oe_grid .oe_subdescription
+                max-height: 70px
+        &.col-md-9
+            .oe-height-1
+                height: 72px
+            .oe-height-2
+                height: 144px
+            .oe-height-4
+                height: 288px
+            .oe-height-6
+                height: 432px
+            .oe-height-8
+                height: 576px
+
+@media (min-width: 1200px)
+    #products_grid
+        &.col-md-12
+            .oe-height-1
+                height: 125px
+            .oe-height-2
+                height: 250px
+            .oe-height-4
+                height: 500px
+            .oe-height-6
+                height: 750px
+            .oe-height-8
+                height: 1000px
+        &.col-md-9
+            .oe-height-1
+                height: 95px
+            .oe-height-2
+                height: 190px
+            .oe-height-4
+                height: 380px
+            .oe-height-6
+                height: 570px
+            .oe-height-8
+                height: 760px
+
+        .oe_product.oe_grid .oe_subdescription
+            max-height: 120px
 
 @media (max-width: 768px)
     #products_grid
@@ -146,8 +218,13 @@
         .oe_product
             float: left
             width: 100%
-            height: 300px
             display: inline-block
+            &.oe_grid
+                height: 400px
+            &.oe_grid section
+                background: rgba(100, 100, 100, 0.2)
+            .oe_subdescription
+                max-height: 200px
     .products_pager
         .pagination
             margin: 5px auto !important
@@ -155,9 +232,12 @@
 @media (max-width: 400px)
     #products_grid
         .oe_product
-            height: 270px
-            section
-                background: rgba(100, 100, 100, 0.2)
+            &.oe_grid
+                height: 270px
+            &.oe_list
+                height: 200px
+                section
+                    background: rgba(100, 100, 100, 0.2)
             .oe_product_image
                 top: 0
                 bottom: 65px
@@ -166,55 +246,56 @@
             .oe_product_image
                 bottom: 50px
 
+/* ---- Cart ---- */
+.oe_cart, #modal_optional_products
+    a span.visible-xs-inline
+        display: none !important
+.oe_cart, #modal_optional_products
+    a span.hidden-xs
+        display: inline !important
 
-@media (min-width: 992px)
-    .col-md-12
-        .oe-height-1
-            height: 95px
-        .oe-height-2
-            height: 190px
-        .oe-height-4
-            height: 380px
-        .oe-height-6
-            height: 570px
-        .oe-height-8
-            height: 760px
-    .col-md-9
-        .oe-height-1
-            height: 72px
-        .oe-height-2
-            height: 144px
-        .oe-height-4
-            height: 288px
-        .oe-height-6
-            height: 432px
-        .oe-height-8
-            height: 576px
+.oe_cart table td:first-child
+    min-width: 76px
 
-@media (min-width: 1200px)
-    .col-md-12
-        .oe-height-1
-            height: 125px
-        .oe-height-2
-            height: 250px
-        .oe-height-4
-            height: 500px
-        .oe-height-6
-            height: 750px
-        .oe-height-8
-            height: 1000px
-    .col-md-9
-        .oe-height-1
-            height: 95px
-        .oe-height-2
-            height: 190px
-        .oe-height-4
-            height: 380px
-        .oe-height-6
-            height: 570px
-        .oe-height-8
-            height: 760px
-
+@media (max-width: 992px)
+    #modal_optional_products table:last-child
+        td:last-child
+            overflow: hidden
+        td:nth-child(2)
+            width: 50%
+        td:nth-child(3)
+            width: 20%
+        td:last-child, td:nth-last-child(2)
+            width: 15%
+@media (max-width: 500px)
+    .oe_cart table, #modal_optional_products table
+        display: inline-block
+        thead
+            display: none
+        tbody, tr, td
+            float: left
+            width: 100% !important
+            display: inline-block
+        td:first-child
+            display: none
+        td:nth-child(2)
+            border-top-style: double
+            border-top-width: 6px
+        td:last-child
+            margin-bottom: 16px
+        &:last-child tr:last-child td:last-child
+            margin-bottom: 0
+        td:last-child, td:nth-last-child(2)
+            width: 50% !important
+            height: 46px
+            text-align: center
+    #modal_optional_products table:last-child td:nth-child(3) > div
+        float: none !important
+    .oe_cart a, #modal_optional_products a
+        span.hidden-xs
+            display: none !important
+        span.visible-xs-inline
+            display: inline !important
 /* ---- Product list style ---- */
 
 @media (min-width: 400px)
@@ -257,13 +338,24 @@
     &.active input
         margin: 6px
 
-.js_add_cart_variants
-    option.css_not_available
-        color: #ccc
-    label.css_not_available
-        opacity: 0.3
-        input
-            opacity: 0
+.css_not_available_msg
+    display: none
+.css_not_available.js_product
+    > *:nth-child(4) > *
+        display: none
+    .product_price, .css_quantity
+        display: none
+    .css_not_available_msg
+        display: block
+
+option.css_not_available
+    color: #ccc
+label.css_not_available
+    opacity: 0.6
+label.css_attribute_color.css_not_available
+    opacity: 1
+    background-image: url('/website_sale/static/src/img/redcross.png')
+    background-size: cover
 
 .product_detail_img
     margin-left: auto
@@ -271,18 +363,20 @@
     display: block
     max-height: 500px
 
+.oe_default_price
+    display: none
+.discount .oe_default_price
+    display: block
+
+.oe_website_sale input.js_quantity
+    min-width: 48px
+    text-align: center
+
 /* ---- Publish managment and options ---- */
 
-#products_grid .css_options
-    display: none
-    position: absolute
-    top: -6px
-    left: 50%
-    z-index: 10
+.oe_overlay_options
     .dropdown
-        position: relative
-        left: -50%
-        [name="size"]
+        ul[name="size"]
             table
                 margin-left: 20px
             td
@@ -299,10 +393,6 @@
             table.oe_hover td.select
                 background-color: #B1D4F1
 
-.cke_editable
-    #products_grid .oe_product_cart:hover > .css_options
-        display: block
-
 /* Wizard */
 
 
@@ -317,7 +407,7 @@ ul.wizard
     -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.065)
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.065)
 
-ul.wizard li 
+ul.wizard li
     border: 1px solid #d4d4d4
     border-right-width: 0
     position: relative
@@ -362,3 +452,24 @@ ul.wizard li.text-primary .chevron:before
 ul.wizard li:first-child
     padding-left: 15px
     border-radius: 4px 0 0 4px
+
+/* Shipping & Billing */
+.label-optional
+    font-weight: normal
+
+/* Collapse category */
+#o_shop_collapse_category li
+    a
+        display: inline-block
+        width: 80%
+        padding-left: 3px
+
+    i.fa
+        cursor: pointer
+
+.mycart-popover
+    max-width: 500px
+    min-width: 250px
+
+    .cart_line
+        border-bottom: 1px #EEE solid

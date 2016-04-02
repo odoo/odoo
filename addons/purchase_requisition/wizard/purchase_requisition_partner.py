@@ -1,32 +1,15 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class purchase_requisition_partner(osv.osv_memory):
     _name = "purchase.requisition.partner"
     _description = "Purchase Requisition Partner"
     _columns = {
-        'partner_id': fields.many2one('res.partner', 'Supplier', required=True,domain=[('supplier', '=', True)]),
+        'partner_ids': fields.many2many('res.partner', 'purchase_requisition_supplier_rel', 'requisition_id', 'partner_id', string='Vendors', required=True, domain=[('supplier', '=', True)])
     }
 
     def view_init(self, cr, uid, fields_list, context=None):
@@ -36,14 +19,13 @@ class purchase_requisition_partner(osv.osv_memory):
         record_id = context and context.get('active_id', False) or False
         tender = self.pool.get('purchase.requisition').browse(cr, uid, record_id, context=context)
         if not tender.line_ids:
-            raise osv.except_osv(_('Error!'), _('Define product(s) you want to include in the call for bids.'))
+            raise UserError(_('Define product(s) you want to include in the call for tenders.'))
         return res
 
     def create_order(self, cr, uid, ids, context=None):
         active_ids = context and context.get('active_ids', [])
-        data =  self.browse(cr, uid, ids, context=context)[0]
-        self.pool.get('purchase.requisition').make_purchase_order(cr, uid, active_ids, data.partner_id.id, context=context)
+        purchase_requisition = self.pool.get('purchase.requisition')
+        for wizard in self.browse(cr, uid, ids, context=context):
+            for partner_id in wizard.partner_ids:
+                purchase_requisition.make_purchase_order(cr, uid, active_ids, partner_id.id, context=context)
         return {'type': 'ir.actions.act_window_close'}
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

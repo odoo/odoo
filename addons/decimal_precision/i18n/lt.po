@@ -1,26 +1,34 @@
-# Lithuanian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * decimal_precision
+# 
+# Translators:
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-03-09 15:34+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Lithuanian <lt@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-11-09 10:31+0000\n"
+"Last-Translator: Audrius Palenskis <audrius.palenskis@gmail.com>\n"
+"Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:29+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: lt\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: decimal_precision
-#: field:decimal.precision,digits:0
-msgid "Digits"
-msgstr "Skaitmenys"
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_create_uid
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_create_uid
+msgid "Created by"
+msgstr "Sukūrė"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_create_date
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_create_date
+msgid "Created on"
+msgstr "Sukurta"
 
 #. module: decimal_precision
 #: model:ir.actions.act_window,name:decimal_precision.action_decimal_precision_form
@@ -29,9 +37,45 @@ msgid "Decimal Accuracy"
 msgstr "Dešimtainis tikslumas"
 
 #. module: decimal_precision
-#: field:decimal.precision,name:0
-msgid "Usage"
-msgstr "Naudojimas"
+#: model:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_form
+#: model:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_tree
+msgid "Decimal Precision"
+msgstr "Dešimtainis tikslumas"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_digits
+msgid "Digits"
+msgstr "Skaitmenys"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_display_name
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_display_name
+msgid "Display Name"
+msgstr "Vaizduojamas pavadinimas"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_id
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_id
+msgid "ID"
+msgstr "ID"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision___last_update
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test___last_update
+msgid "Last Modified on"
+msgstr "Paskutinį kartą keista"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_write_uid
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_write_uid
+msgid "Last Updated by"
+msgstr "Paskutinį kartą atnaujino"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_write_date
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_write_date
+msgid "Last Updated on"
+msgstr "Paskutinį kartą atnaujinta"
 
 #. module: decimal_precision
 #: sql_constraint:decimal.precision:0
@@ -39,11 +83,28 @@ msgid "Only one value can be defined for each given usage!"
 msgstr "Tik po vieną reikšmę galima priskirti kiekvienam panaudojimo atvejui"
 
 #. module: decimal_precision
-#: view:decimal.precision:0
-msgid "Decimal Precision"
-msgstr "Dešimtainis tikslumas"
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_name
+msgid "Usage"
+msgstr "Naudojimas"
 
 #. module: decimal_precision
 #: model:ir.model,name:decimal_precision.model_decimal_precision
 msgid "decimal.precision"
 msgstr "decimal.precision"
+
+#. module: decimal_precision
+#: model:ir.model,name:decimal_precision.model_decimal_precision_test
+msgid "decimal.precision.test"
+msgstr "decimal.precision.test"
+
+#. module: decimal_precision
+#: model:ir.model,name:decimal_precision.model_ir_qweb_field_float
+msgid "ir.qweb.field.float"
+msgstr "ir.qweb.field.float"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float_2
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float_4
+msgid "unknown"
+msgstr "nežinomas"

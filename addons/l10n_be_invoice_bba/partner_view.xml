@@ -6,14 +6,14 @@
     <record id="view_partner_inv_comm_type_form" model="ir.ui.view">
       <field name="name">res.partner.inv_comm_type.form.inherit</field>
       <field name="model">res.partner</field>
-      <field name="inherit_id" ref="base.view_partner_form"/>
+      <field name="inherit_id" ref="account.view_partner_property_form"/>
       <field name="arch" type="xml">
-        <field name="last_reconciliation_date" position="after">
+        <group name="acc_sale" position="inside">
           <field name="out_inv_comm_type"/>
           <field name="out_inv_comm_algorithm" attrs="{'invisible':[('out_inv_comm_type','!=','bba')]}"/>
-        </field>
+        </group>
       </field>
-    </record>    
+    </record>
 
   </data>
 </openerp>

@@ -8,8 +8,6 @@ This module allows authorized users to import a custom data module (.xml files a
 for customization purpose.
 """,
     'category': 'Uncategorized',
-    'website': 'http://www.openerp.com',
-    'author': 'OpenERP SA',
     'depends': ['web'],
     'installable': True,
     'auto_install': False,

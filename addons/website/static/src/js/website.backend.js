@@ -1,32 +1,38 @@
-openerp.website = function(instance) {
-var _t = instance.web._t;
+odoo.define('website.backend', function (require) {
+"use strict";
 
-instance.web.form.WidgetWebsiteButton = instance.web.form.AbstractField.extend({
+var core = require('web.core');
+var form_common = require('web.form_common');
+var form_widgets = require('web.form_widgets'); // required to guarantee
+                                                //  that the overrride of fieldtexthtml works
+var _t = core._t;
+
+var WidgetWebsiteButton = form_common.AbstractField.extend({
     template: 'WidgetWebsiteButton',
-    render_value: function() {
-        this._super();
-        this.$("button:first")
-            .toggleClass("btn-success", this.get_value())
-            .toggleClass("btn-danger", !this.get_value());
-        this.$("a:first").attr("href", this.view.datarecord.website_url || "/" );
-        if (this.node.attrs.class) {
+    render_value: function () {
+        this._super.apply(this, arguments);
+
+        var $value = this.$('.o_value');
+
+        if(this.get_value() === true) {
+            $value.html(_t('Published'))
+                  .removeClass('text-danger')
+                  .addClass('text-success');
+        } else {
+            $value.html(_t('Not Published'))
+                  .removeClass('text-success')
+                  .addClass('text-danger');
+        }
+
+        if(this.node.attrs.class) {
             this.$el.addClass(this.node.attrs.class);
         }
     },
-    start: function() {
-        var self = this;
-        this._super.apply(this, arguments);
-
-        this.$("button:first").on("click", function () {
-            console.log("click", !!$(this).hasClass("btn-danger"));
-            self.set_value(!!$(this).hasClass("btn-danger"));
-            return self.view.recursive_save();
-        });
+    is_false: function () {
+        return false;
     },
 });
 
-instance.web.form.widgets = instance.web.form.widgets.extend({
-    'website_button': 'instance.web.form.WidgetWebsiteButton',
-});
+core.form_widget_registry.add('website_button', WidgetWebsiteButton);
 
-};
+});

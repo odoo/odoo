@@ -1,63 +1,44 @@
-(function() {
+odoo.define('website.website', function (require) {
     "use strict";
 
-    var website = {};
-    openerp.website = website;
+    var ajax = require('web.ajax');
+    var core = require('web.core');
+    var Widget = require('web.Widget');
+    var session = require('web.session');
+    var base = require('web_editor.base');
+    var Tour = require('web.Tour');
 
-    website.translatable = !!$('html').data('translatable');
-    website.is_editable = !!$('html').data('editable');
+    var qweb = core.qweb;
+    var _t = core._t;
+    base.url_translations = '/website/translations';
+
+    /* --- Set the browser into the dom for css selectors --- */
+    var browser;
+    if ($.browser.webkit) browser = "webkit";
+    else if ($.browser.safari) browser = "safari";
+    else if ($.browser.opera) browser = "opera";
+    else if ($.browser.msie || ($.browser.mozilla && +$.browser.version.replace(/^([0-9]+\.[0-9]+).*/, '\$1') < 20)) browser = "msie";
+    else if ($.browser.mozilla) browser = "mozilla";
+    browser += ","+$.browser.version;
+    if (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase())) browser += ",mobile";
+    document.documentElement.setAttribute('data-browser', browser);
+
 
     /* ----------------------------------------------------
        Helpers
-       ---------------------------------------------------- */ 
-    website.get_context = function (dict) {
+       ---------------------------------------------------- */
+    var get_context = base.get_context;
+    base.get_context = base.get_context = function (dict) {
         var html = document.documentElement;
         return _.extend({
-            lang: html.getAttribute('lang').replace('-', '_'),
-            website_id: html.getAttribute('data-website-id')|0
-        }, dict);
-    };
-
-    website.parseQS = function (qs) {
-        var match,
-            params = {},
-            pl     = /\+/g,  // Regex for replacing addition symbol with a space
-            search = /([^&=]+)=?([^&]*)/g;
-
-        while ((match = search.exec(qs))) {
-            var name = decodeURIComponent(match[1].replace(pl, " "));
-            var value = decodeURIComponent(match[2].replace(pl, " "));
-            params[name] = value;
-        }
-        return params;
-    };
-
-    var parsedSearch;
-    website.parseSearch = function () {
-        if (!parsedSearch) {
-            parsedSearch = website.parseQS(window.location.search.substring(1));
-        }
-        return parsedSearch;
-    };
-
-    website.parseHash = function () {
-        return website.parseQS(window.location.hash.substring(1));
-    };
-
-    website.reload = function () {
-        location.hash = "scrollTop=" + window.document.body.scrollTop;
-        if (location.search.indexOf("enable_editor") > -1) {
-            window.location.href = window.location.href.replace(/enable_editor(=[^&]*)?/g, '');
-        } else {
-            window.location.reload();
-        }
+            'website_id': html.getAttribute('data-website-id')|0
+        }, get_context(dict), dict);
     };
 
     /* ----------------------------------------------------
        Widgets
        ---------------------------------------------------- */ 
-
-    website.prompt = function (options) {
+    var prompt = function (options, _qweb) {
         /**
          * A bootstrapped version of prompt() albeit asynchronous
          * This was built to quickly prompt the user with a single field.
@@ -71,7 +52,7 @@
          *
          * website.prompt({
          *     select: "Please choose your destiny",
-         *     init: function() {
+         *     init: function () {
          *         return [ [0, "Sub-Zero"], [1, "Robo-Ky"] ];
          *     }
          * }).then(function (answer) {
@@ -91,23 +72,26 @@
                 text: options
             };
         }
+        if (_.isUndefined(_qweb)) {
+            _qweb = 'website.prompt';
+        }
         options = _.extend({
             window_title: '',
             field_name: '',
-            default: '',
-            init: function() {}
+            'default': '', // dict notation for IE<9
+            init: function () {},
         }, options || {});
 
         var type = _.intersection(Object.keys(options), ['input', 'textarea', 'select']);
-        type = type.length ? type[0] : 'text';
+        type = type.length ? type[0] : 'input';
         options.field_type = type;
         options.field_name = options.field_name || options[type];
 
         var def = $.Deferred();
-        var dialog = $(openerp.qweb.render('website.prompt', options)).appendTo("body");
+        var dialog = $(qweb.render(_qweb, options)).appendTo("body");
         options.$dialog = dialog;
         var field = dialog.find(options.field_type).first();
-        field.val(options.default);
+        field.val(options['default']); // dict notation for IE<9
         field.fillWith = function (data) {
             if (field.is('select')) {
                 var select = field[0];
@@ -126,15 +110,17 @@
             dialog.modal('show');
             field.focus();
             dialog.on('click', '.btn-primary', function () {
+                    var backdrop = $('.modal-backdrop');
                 def.resolve(field.val(), field, dialog);
-                dialog.remove();
-                $('.modal-backdrop').remove();
+                dialog.modal('hide').remove();
+                    backdrop.remove();
             });
         });
         dialog.on('hidden.bs.modal', function () {
+                var backdrop = $('.modal-backdrop');
             def.reject();
             dialog.remove();
-            $('.modal-backdrop').remove();
+                backdrop.remove();
         });
         if (field.is('input[type="text"], select')) {
             field.keypress(function (e) {
@@ -147,168 +133,148 @@
         return def;
     };
 
-    website.error = function(data, url) {
-        var $error = $(openerp.qweb.render('website.error_dialog', {
-            'title': data.data ? data.data.arguments[0] : "",
-            'message': data.data ? data.data.arguments[1] : data.statusText,
-            'backend_url': url
-        }));
-        $error.appendTo("body");
-        $error.modal('show');
+    var error = function (title, message, url) {
+        return new Dialog(null, {
+            title: data.data ? data.data.arguments[0] : "",
+            $content: $(qweb.render('website.error_dialog', {
+                message: data.data ? data.data.arguments[1] : data.statusText,
+                backend_url: url,
+            })),
+        }).open();
     };
 
-    website.form = function (url, method, params) {
+    function _add_input(form, name, value) {
+        var param = document.createElement('input');
+        param.setAttribute('type', 'hidden');
+        param.setAttribute('name', name);
+        param.setAttribute('value', value);
+        form.appendChild(param);
+    }
+    var form = function (url, method, params) {
         var form = document.createElement('form');
         form.setAttribute('action', url);
         form.setAttribute('method', method);
+
+        if (core.csrf_token) {
+            _add_input(form, 'csrf_token', core.csrf_token);
+        }
         _.each(params, function (v, k) {
-            var param = document.createElement('input');
-            param.setAttribute('type', 'hidden');
-            param.setAttribute('name', k);
-            param.setAttribute('value', v);
-            form.appendChild(param);
+            _add_input(form, k, v);
         });
         document.body.appendChild(form);
         form.submit();
     };
 
-    website.init_kanban = function ($kanban) {
-        $('.js_kanban_col', $kanban).each(function () {
-            var $col = $(this);
-            var $pagination = $('.pagination', $col);
-            if(!$pagination.size()) {
-                return;
-            }
 
-            var page_count =  $col.data('page_count');
-            var scope = $pagination.last().find("li").size()-2;
-            var kanban_url_col = $pagination.find("li a:first").attr("href").replace(/[0-9]+$/, '');
-
-            var data = {
-                'domain': $col.data('domain'),
-                'model': $col.data('model'),
-                'template': $col.data('template'),
-                'step': $col.data('step'),
-                'orderby': $col.data('orderby')
-            };
-
-            $pagination.on('click', 'a', function (ev) {
-                ev.preventDefault();
-                var $a = $(ev.target);
-                if($a.parent().hasClass('active')) {
-                    return;
-                }
-
-                var page = +$a.attr("href").split(",").pop().split('-')[1];
-                data['page'] = page;
-
-                $.post('/website/kanban', data, function (col) {
-                    $col.find("> .thumbnail").remove();
-                    $pagination.last().before(col);
-                });
-
-                var page_start = page - parseInt(Math.floor((scope-1)/2), 10);
-                if (page_start < 1 ) page_start = 1;
-                var page_end = page_start + (scope-1);
-                if (page_end > page_count ) page_end = page_count;
-
-                if (page_end - page_start < scope) {
-                    page_start = page_end - scope > 0 ? page_end - scope : 1;
-                }
-
-                $pagination.find('li.prev a').attr("href", kanban_url_col+(page-1 > 0 ? page-1 : 1));
-                $pagination.find('li.next a').attr("href", kanban_url_col+(page < page_end ? page+1 : page_end));
-                for(var i=0; i < scope; i++) {
-                    $pagination.find('li:not(.prev):not(.next):eq('+i+') a').attr("href", kanban_url_col+(page_start+i)).html(page_start+i);
-                }
-                $pagination.find('li.active').removeClass('active');
-                $pagination.find('li:has(a[href="'+kanban_url_col+page+'"])').addClass('active');
-
-            });
-
-        });
-    };
-
-    /* ----------------------------------------------------
-       Async Ready and Template loading
-       ---------------------------------------------------- */ 
-    var templates_def = $.Deferred().resolve();
-    website.add_template_file = function(template) {
-        templates_def = templates_def.then(function() {
-            var def = $.Deferred();
-            openerp.qweb.add_template(template, function(err) {
-                if (err) {
-                    def.reject(err);
-                } else {
-                    def.resolve();
-                }
-            });
-            return def;
-        });
-    };
-
-    if (website.is_editable) {
-        website.add_template_file('/website/static/src/xml/website.xml');
-    }
-
-    website.dom_ready = $.Deferred();
-    $(document).ready(function () {
-        website.is_editable_button= website.is_editable_button || $('html').data('editable');
-        website.dom_ready.resolve();
-        // fix for ie
-        if($.fn.placeholder) $('input, textarea').placeholder();
+    ajax.loadXML('/website/static/src/xml/website.xml', qweb);
+    ajax.loadXML('/web/static/src/xml/base_common.xml', qweb);
+    
+    base.ready().then(function () {
+        data.topBar = new TopBar();
+        return data.topBar.attachTo($("#oe_main_menu_navbar"));
     });
 
-    var all_ready = null;
-    /**
-     * Returns a deferred resolved when the templates are loaded
-     * and the Widgets can be instanciated.
-     */
-    website.ready = function() {
-        if (!all_ready) {
-            all_ready = website.dom_ready.then(function () {
-                return templates_def;
-            }).then(function () {
-                if (website.is_editable) {
-                    website.id = $('html').data('website-id');
-                    website.session = new openerp.Session();
-                    var modules = ['website'];
-                    return openerp._t.database.load_translations(website.session, modules, website.get_context().lang);
-                }
-            }).promise();
+    /* ----- PUBLISHING STUFF ---- */
+    $(document).on('click', '.js_publish_management .js_publish_btn', function () {
+        var $data = $(this).parents(".js_publish_management:first");
+        var self=this;
+        ajax.jsonRpc($data.data('controller') || '/website/publish', 'call', {'id': +$data.data('id'), 'object': $data.data('object')})
+            .then(function (result) {
+                $data.toggleClass("css_unpublished css_published");
+                $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
+            }).fail(function (err, data) {
+                error(data.data ? data.data.arguments[0] : "", data.data ? data.data.arguments[1] : data.statusText, '/web#return_label=Website&model='+$data.data('object')+'&id='+$data.data('id'));
+            });
+        });
+
+        if (!$('.js_change_lang').length) {
+            // in case template is not up to date...
+            var links = $('ul.js_language_selector li a:not([data-oe-id])');
+            var m = $(_.min(links, function (l) { return $(l).attr('href').length; })).attr('href');
+            links.each(function () {
+                var t = $(this).attr('href');
+                var l = (t === m) ? "default" : t.split('/')[1];
+                $(this).data('lang', l).addClass('js_change_lang');
+            });
         }
-        return all_ready;
-    };
 
-    website.inject_tour = function() {
-        // if a tour is active inject tour js
-    }
+        $(document).on('click', '.js_change_lang', function (e) {
+            e.preventDefault();
 
-    website.dom_ready.then(function () {
-        /* ----- PUBLISHING STUFF ---- */
-        $(document).on('click', '.js_publish_management .js_publish_btn', function () {
-            var $data = $(this).parents(".js_publish_management:first");
-            var self=this;
-            openerp.jsonRpc($data.data('controller') || '/website/publish', 'call', {'id': +$data.data('id'), 'object': $data.data('object')})
-                .then(function (result) {
-                    $data.toggleClass("css_unpublished css_published");
-                    $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
-                }).fail(function (err, data) {
-                    website.error(data, '/web#return_label=Website&model='+$data.data('object')+'&id='+$data.data('id'));
-                });
-        });
-
-        /* ----- KANBAN WEBSITE ---- */
-        $('.js_kanban').each(function () {
-            website.init_kanban(this);
-        });
-
-        setTimeout(function () {
-            if (window.location.hash.indexOf("scrollTop=") > -1) {
-                window.document.body.scrollTop = +location.hash.match(/scrollTop=([0-9]+)/)[1];
-            }
-        },0);
+            var self = $(this);
+            // retrieve the hash before the redirect
+            var redirect = {
+                lang: self.data('lang'),
+                url: encodeURIComponent(self.attr('href').replace(/[&?]edit_translations[^&?]+/, '')),
+                hash: encodeURIComponent(location.hash)
+            };
+            location.href = _.str.sprintf("/website/lang/%(lang)s?r=%(url)s%(hash)s", redirect);
     });
 
-    return website;
-})();
+    /* ----- KANBAN WEBSITE ---- */
+    $('.js_kanban').each(function () {
+        init_kanban(this);
+    });
+
+    $('.js_website_submit_form').on('submit', function () {
+        var $buttons = $(this).find('button[type="submit"], a.a-submit');
+        _.each($buttons, function (btn) {
+            $(btn).attr('data-loading-text', '<i class="fa fa-spinner fa-spin"></i> ' + $(btn).text()).button('loading');
+        });
+    });
+
+    _.defer(function () {
+        if (window.location.hash.indexOf("scrollTop=") > -1) {
+            window.document.body.scrollTop = +location.hash.match(/scrollTop=([0-9]+)/)[1];
+        }
+    });
+
+    // display image thumbnail
+    $(".o_image[data-mimetype^='image']").each(function () {
+        var $img = $(this);
+        if (/gif|jpe|jpg|png/.test($img.data('mimetype')) && $img.data('src')) {
+            $img.css('background-image', "url('" + $img.data('src') + "')");
+        }
+    });
+
+    /**
+     * Object who contains all method and bind for the top bar, the template is create server side.
+     */
+    var TopBar = Widget.extend({
+        start: function () {
+            var $collapse = this.$('#oe_applications ul.dropdown-menu').clone()
+                    .attr("id", "oe_applications_collapse")
+                    .attr("class", "nav navbar-nav navbar-left navbar-collapse collapse");
+            this.$('#oe_applications').before($collapse);
+            $collapse.wrap('<div class="visible-xs"/>');
+            this.$('[data-target="#oe_applications"]').attr("data-target", "#oe_applications_collapse");
+
+            var self = this;
+            this.$el.on('mouseover', '> ul > li.dropdown:not(.open)', function (e) {
+                var $opened = self.$('> ul > li.dropdown.open');
+                if($opened.length) {
+                    $opened.removeClass('open');
+                    $(e.currentTarget).find('.dropdown-toggle').mousedown().focus().mouseup().click();
+                }
+            });
+
+            this.$el.on('click', '.o_mobile_menu_toggle', function (ev) {
+                self.$el.parent().toggleClass('o_mobile_menu_opened');
+            });
+
+            return this._super.apply(this, arguments);
+        }
+    });
+
+    var data = {
+        prompt: prompt,
+        error: error,
+        form: form,
+        TopBar: TopBar,
+        ready: function () {
+            console.warn("website.ready is deprecated: Please use require('web_editor.base').ready()");
+            return base.ready();
+        },
+    };
+    return data;
+});

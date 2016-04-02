@@ -1,4 +1,4 @@
-import unittest2
+import unittest
 
 import openerp.tests.common as common
 
@@ -39,5 +39,3 @@ class test_res_lang(common.TransactionCase):
         assert intersperse("abc12", [3], '.') == ('abc12', 0)
         assert intersperse("abc12", [2], '.') == ('abc12', 0)
         assert intersperse("abc12", [1], '.') == ('abc1.2', 1)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

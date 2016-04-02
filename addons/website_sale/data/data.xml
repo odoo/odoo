@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data noupdate="1">
+<odoo noupdate="1">
 
         <record id="menu_shop" model="website.menu">
             <field name="name">Shop</field>
@@ -27,16 +26,22 @@
             <field name="html_class">oe_image_full</field>
         </record>
 
-        <record model="crm.case.section" id="website.salesteam_website_sales">
+        <record model="crm.team" id="website.salesteam_website_sales">
             <field name="name">Website Sales</field>
             <field name="code">WS</field>
-            <field name="member_ids" eval="[(4, ref('base.user_root'))]"/>
             <field name="use_quotations" eval="False"/>
         </record>
 
-        <!-- Product Public Categories -->
-        <record id="categ_others" model="product.public.category">
-            <field name="name">Others</field>
+        <record model="website" id="website.default_website">
+            <field name="salesteam_id" ref="website.salesteam_website_sales"/>
         </record>
-    </data>
-</openerp>
+
+        <record id="wlist0" model="website_pricelist">
+            <field name="selectable" eval="True" />
+            <field name="website_id" ref="website.default_website" />
+            <field name="pricelist_id" ref='product.list0' />
+            <field name="country_group_ids" eval="[(6,0,[ref('base.europe')])]" />
+
+        </record>
+
+</odoo>

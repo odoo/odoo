@@ -14,7 +14,7 @@
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp_production_test1"), context=context)
-    assert len(order.product_lines) == 5, "Production lines are not generated proper."
+    assert len(order.product_lines) == 7, "Production lines are not generated proper."
 -
   Now I check workcenter lines.
 -
@@ -42,9 +42,6 @@
     assert move.product_id.id == order.product_id.id, "Product does not correspond."
     assert move.product_uom.id == order.product_uom.id, "UOM does not correspond."
     assert move.product_qty == order.product_qty, "Qty does not correspond."
-    assert move.product_uos_qty == order.product_uos and order.product_uos_qty or order.product_qty, "UOS qty does not correspond."
-    if order.product_uos:
-        assert move.product_uos.id == order.product_uos.id, "UOS does not correspond."
     assert move.location_id.id == source_location_id, "Source Location does not correspond."
     assert move.location_dest_id.id == order.location_dest_id.id, "Destination Location does not correspond."
     routing_loc = None
@@ -59,9 +56,6 @@
             assert move_line.date == date_planned, "Planned date does not correspond in 'To consume line'."
             assert move_line.product_qty == order_line.product_qty, "Qty does not correspond in 'To consume line'."
             assert move_line.product_uom.id == order_line.product_uom.id, "UOM does not correspond in 'To consume line'."
-            assert move_line.product_uos_qty == order_line.product_uos and order_line.product_uos_qty or order_line.product_qty, "UOS qty is not correspond in 'To consume line'."
-            if order_line.product_uos:
-              assert move_line.product_uos.id == order_line.product_uos.id, "UOS is not correspond in 'To consume line'."
             assert move_line.location_id.id == routing_loc or order.location_src_id.id, "Source location is not correspond in 'To consume line'."
             assert move_line.location_dest_id.id == source_location_id, "Destination Location is not correspond in 'To consume line'."
 -
@@ -91,14 +85,11 @@
           assert proc.product_qty == order_line.product_qty, "Qty does not correspond"
           assert proc.location_id.id == order.location_src_id.id, "Input location and procurement location do not correspond"
           assert proc.product_uom.id == order_line.product_uom.id, "UOM does not correspond in procurement."
-          assert proc.product_uos_qty == order_line.product_uos and order_line.product_uos_qty or order_line.product_qty, "UOS qty does not correspond in procurement."
           # procurement state should be `confirmed` at this stage, except if procurement_jit is installed, in which
           # case it could already be in `running` or `exception` state (not enough stock)
           expected_states = ('confirmed', 'running', 'exception')
           assert proc.state in expected_states, 'Procurement state is `%s` for %s, expected one of %s' % \
               (proc.state, proc.product_id.name, expected_states)
-          if order_line.product_uos:
-            assert proc.product_uos.id == order_line.product_uos.id, "UOS is not correspond in procurement."
 -
   I change production qty with 3 PC Assemble SC349.
 -
@@ -184,7 +175,7 @@
         accounts = [wc.costs_hour_account_id, wc.costs_cycle_account_id]
         cost_per_cyle = wc_line.cycle * wc.costs_cycle
         cost_per_hours = wc_line.hour * wc.costs_hour
-        if accounts and wc.costs_journal_id and wc.costs_general_account_id and (cost_per_cyle or cost_per_hours):
+        if accounts and wc.costs_general_account_id and (cost_per_cyle or cost_per_hours):
             line_ids = account_analytic_line.search(cr, uid, [('name','ilike',wc_line.name)])
             assert line_ids, 'Costs lines are not generated.'
             for line in account_analytic_line.browse(cr, uid, line_ids, context=context):
@@ -197,15 +188,5 @@
                 else:
                     raise AssertionError('unknown cost line: %s' % line)
                 assert line.general_account_id.id == wc.costs_general_account_id.id, "General Account is not correspond."
-                assert line.journal_id.id == wc.costs_journal_id.id, "Account Journal is not correspond."
                 assert line.product_id.id == wc.product_id.id, "Product does not correspond."
                 assert line.product_uom_id.id == wc.product_id.uom_id.id, "UOM does not correspond."
--
-  I print "Work Center Load Report".
--
-  !python {model: mrp.workcenter}: |
-    ctx = context.copy()
-    ctx.update({'model': 'mrp.workcenter','active_ids': [ref('mrp_workcenter_0'),ref('mrp_workcenter_1')]})
-    data_dict = {'time_unit': 'day', 'measure_unit': 'hours'}
-    from openerp.tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_mrp_workcenter_load_wizard',wiz_data=data_dict, context=ctx, our_module='mrp')

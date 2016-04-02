@@ -1,405 +1,604 @@
-# Latvian translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * crm_partner_assign
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-01-13 23:07+0000\n"
-"Last-Translator: Vladimirs Kuzmins <Unknown>\n"
-"Language-Team: Latvian <lv@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-14 10:27+0000\n"
+"PO-Revision-Date: 2015-09-14 09:06+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Latvian (http://www.transifex.com/odoo/odoo-9/language/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:41+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: lv\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
 #. module: crm_partner_assign
-#: field:crm.lead.report.assign,delay_close:0
-msgid "Delay to Close"
-msgstr "Aizkave līdz slēgšanai"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,author_id:0
-msgid "Author"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,planned_revenue:0
-msgid "Planned Revenue"
-msgstr "Plānotie ieņēmumi"
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,type:0
+#: model:mail.template,body_html:crm_partner_assign.email_template_lead_forward_mail
 msgid ""
-"Message type: email for email message, notification for system message, "
-"comment for other messages such as user replies"
+"\n"
+"            \n"
+"<p>Hello,</p>\n"
+"\n"
+"\n"
+"<p>We have been contacted by those prospects that are in your region. Thus, the following leads have been assigned to ${ctx['partner_id'].name}:</p>\n"
+"\n"
+"<ol>\n"
+"% for lead in ctx['partner_leads']:\n"
+"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n"
+"% endfor\n"
+"</ol>\n"
+"\n"
+"% if ctx.get('partner_in_portal'):\n"
+"<p>Please connect to your <a href=\"${object.get_portal_url()}\">Partner Portal</a> to get details. On each lead are two buttons on the top left corner that you should press after having contacted the lead: \"I'm interested\" & \"I'm not interested\".</p>\n"
+"% else:\n"
+"<p>\n"
+"    You do not have yet a portal access to our database. Please contact \n"
+"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.\n"
+"</p>\n"
+"% endif\n"
+"<p>The lead will be sent to another partner if you do not contact the lead before 20 days.</p>\n"
+"\n"
+"<p>Thanks,</p>\n"
+"\n"
+"<pre>\n"
+"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n"
+"</pre>\n"
+"% if not ctx['partner_id'].user_id:\n"
+"PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
+"% endif\n"
+"            "
 msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.lead.report.assign,nbr:0
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_nbr
 msgid "# of Cases"
-msgstr "Lietu skaits"
+msgstr "Pieprasījumu skaits"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: view:crm.partner.report.assign:0
-msgid "Group By..."
-msgstr "Grupēt pēc..."
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_opp
+msgid "# of Opportunity"
+msgstr ""
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,body:0
+#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:30
+#, python-format
+msgid "<p>I am interested by this lead.</p>"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:35
+#, python-format
+msgid "<p>I am not interested by this lead. I contacted the lead.</p>"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:37
+#, python-format
+msgid ""
+"<p>I am not interested by this lead. I have not contacted the lead.</p>"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
+msgid ""
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">N </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
+msgid ""
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;=',0)]}\">E </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">W </span>\n"
+"                                <span class=\"oe_grey\">) </span>"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_activation
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation
+#: model:ir.ui.view,arch_db:crm_partner_assign.res_partner_activation_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.res_partner_activation_tree
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_res_partner_filter_assign
+msgid "Activation"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_active
+msgid "Active"
+msgstr "Aktīvs Sistēmā"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_date_assign
+msgid "Assign Date"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_filter
+msgid "Assign Month"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.actions.server,name:crm_partner_assign.action_assign_salesman_according_assigned_partner
+msgid "Assign salesman of assigned partner"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_date_assign
+msgid "Assignation Date"
+msgstr "Uzticēšanas datums"
+
+#. module: crm_partner_assign
+#: model:crm.stage,name:crm_partner_assign.stage_portal_lead_assigned
+msgid "Assigned"
+msgstr "Piešķirts"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_partner_assign_form
+msgid "Assigned Opportunities"
+msgstr "Uzticētas izdevības"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_partner_assigned_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_partner_assigned_id
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_partner_filter
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_partner_filter
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
+msgid "Assigned Partner"
+msgstr "Partneris, kam uzticēts"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
+msgid "Automatic Assignation"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_forward_to_partner_body
 msgid "Automatically sanitized HTML contents"
 msgstr ""
 
 #. module: crm_partner_assign
-#: view:crm.lead:0
-msgid "Forward"
-msgstr "Pārsūtīt"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_probability
+msgid "Avg Probability"
+msgstr "Vidējā iespējamība"
 
 #. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Geo Localize"
-msgstr "Ģeo. lokalizācija"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,starred:0
-msgid "Starred"
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_tree
+msgid "Avg. of Probability"
 msgstr ""
 
 #. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-msgid "Body"
+#: model:ir.model,name:crm_partner_assign.model_crm_lead_report_assign
+msgid "CRM Lead Report"
+msgstr "CRM pavedienu atskaite"
+
+#. module: crm_partner_assign
+#: model:ir.model,name:crm_partner_assign.model_crm_partner_report_assign
+msgid "CRM Partner Report"
 msgstr ""
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,email_from:0
-msgid ""
-"Email address of the sender. This field is set when no matching partner is "
-"found for incoming emails."
-msgstr ""
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_forward_to_partner_form
+msgid "Cancel"
+msgstr "Atcelt"
 
 #. module: crm_partner_assign
-#: view:crm.partner.report.assign:0
-msgid "Date Partnership"
-msgstr ""
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_form
+msgid "Categorization"
+msgstr "Kategorizācija"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.report.assign,type:0
-msgid "Lead"
-msgstr "Pavediens"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_date_closed
+msgid "Close Date"
+msgstr "Slēgšanas Datums"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Delay to close"
-msgstr "Aizkave pirms slēgšanas"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_comment
+msgid "Comment"
+msgstr "Komentārs"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history_mode:0
-msgid "Whole Story"
-msgstr "Viss stāsts"
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_form
+msgid "Communication"
+msgstr "Saziņa"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,company_id:0
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_company_id
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_filter
 msgid "Company"
 msgstr "Uzņēmums"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,notification_ids:0
-msgid "Notifications"
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
+msgid "Confirm"
+msgstr "Apstiprināt"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_form
+msgid "Contact"
+msgstr "Kontakts"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_body
+msgid "Contents"
+msgstr "Saturs"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_country_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_country_id
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_filter
+msgid "Country"
+msgstr "Valsts"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_create_date
+msgid "Create Date"
+msgstr "Izveidošanas datums"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_create_uid
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_create_uid
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_create_uid
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation_create_uid
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_create_uid
+msgid "Created by"
+msgstr "Izveidoja"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_create_date
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_create_date
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_create_date
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation_create_date
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_create_date
+msgid "Created on"
+msgstr "Izveidots"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_partner_id
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_tree
+msgid "Customer"
+msgstr "Klients"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_form
+msgid "Customer Name"
+msgstr "Klienta nosaukums"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_partner_assign_filter
+msgid "Date Partnership"
 msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.lead.report.assign,date_assign:0
-msgid "Partner Date"
-msgstr "Partnera datums"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: view:crm.partner.report.assign:0
-#: view:res.partner:0
-msgid "Salesperson"
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_partner_assign_filter
+msgid "Date Review"
 msgstr ""
 
 #. module: crm_partner_assign
-#: selection:crm.lead.report.assign,priority:0
-msgid "Highest"
-msgstr "Augstākā"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,day:0
-msgid "Day"
-msgstr "Diena"
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,message_id:0
-msgid "Message unique identifier"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_delay_open
+msgid "Delay to Assign"
 msgstr ""
 
 #. module: crm_partner_assign
-#: field:res.partner,date_review_next:0
-msgid "Next Partner Review"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_delay_close
+msgid "Delay to Close"
+msgstr "Kavēt Slēgšanu"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_form
+msgid "Details"
+msgstr "Sīkāka informācija"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_contacted
+msgid "Did you contact the lead?"
 msgstr ""
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history_mode:0
-msgid "Latest email"
-msgstr "Pēdējais e-pasts"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_display_name
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_display_name
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_display_name
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_display_name
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_display_name
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation_display_name
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.lead,partner_latitude:0
-#: field:res.partner,partner_latitude:0
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
+msgid "Do you have contacted the customer?"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_forward_to_partner_form
+msgid "Email Template"
+msgstr "E-pasta sagatave"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_tree
+msgid "Expected Revenues"
+msgstr "Sagaidāmie ieņēmumi"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_filter
+msgid "Extended Filters..."
+msgstr "Paplašinātie filtri..."
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_partner_id
+msgid "Forward Leads To"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_forward_type
+msgid "Forward selected leads to"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.actions.act_window,name:crm_partner_assign.action_crm_send_mass_forward
+#: model:ir.actions.act_window,name:crm_partner_assign.crm_lead_forward_to_partner_act
+msgid "Forward to Partner"
+msgstr "Pārsūtīt partnerim"
+
+#. module: crm_partner_assign
+#: model:mail.template,subject:crm_partner_assign.email_template_lead_forward_mail
+msgid "Fwd: Lead: ${ctx['partner_id'].name}"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_partner_latitude
 msgid "Geo Latitude"
 msgstr "Ģeo. platums"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.report.assign,state:0
-msgid "Cancelled"
-msgstr "Atcelts"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_partner_longitude
+msgid "Geo Longitude"
+msgstr "Geo. garums"
 
 #. module: crm_partner_assign
-#: view:crm.lead:0
-msgid "Geo Assignation"
-msgstr "Ģeo. noteikšana"
-
-#. module: crm_partner_assign
-#: model:ir.model,name:crm_partner_assign.model_crm_lead_forward_to_partner
-msgid "Email composition wizard"
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
+msgid "Geolocation"
 msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.partner.report.assign,turnover:0
-msgid "Turnover"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,date_closed:0
-msgid "Close Date"
-msgstr "Slēgšanas datums"
-
-#. module: crm_partner_assign
-#: help:res.partner,partner_weight:0
+#: model:ir.model.fields,help:crm_partner_assign.field_res_partner_grade_partner_weight
+#: model:ir.model.fields,help:crm_partner_assign.field_res_partner_partner_weight
 msgid ""
 "Gives the probability to assign a lead to this partner. (0 means no "
 "assignation.)"
 msgstr ""
 
 #. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Partner Activation"
-msgstr ""
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_grade_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_grade_id
+msgid "Grade"
+msgstr "Novērtējums"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,type:0
-msgid "System notification"
-msgstr ""
-
-#. module: crm_partner_assign
-#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:74
-#, python-format
-msgid "Lead forward"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,probability:0
-msgid "Avg Probability"
-msgstr "Vidējā iespējamība"
-
-#. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Previous"
-msgstr "Iepriekšējais"
-
-#. module: crm_partner_assign
-#: code:addons/crm_partner_assign/partner_geo_assign.py:36
-#, python-format
-msgid "Network error"
-msgstr "Tīkla kļūda"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,email_from:0
-msgid "From"
-msgstr "No"
-
-#. module: crm_partner_assign
-#: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
-#: model:ir.ui.menu,name:crm_partner_assign.menu_res_partner_grade_action
-#: view:res.partner.grade:0
-msgid "Partner Grade"
-msgstr "Partnera novērtējums"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: view:crm.partner.report.assign:0
-msgid "Section"
-msgstr "Sadaļa"
-
-#. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-msgid "Send"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Next"
-msgstr "Nākamais"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,priority:0
-msgid "Priority"
-msgstr "Prioritāte"
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,delay_expected:0
-msgid "Overpassed Deadline"
-msgstr "Noilgušais termiņš"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,type:0
-#: field:crm.lead.report.assign,type:0
-msgid "Type"
-msgstr "Tips"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,type:0
-msgid "Email"
-msgstr ""
-
-#. module: crm_partner_assign
-#: help:crm.lead,partner_assigned_id:0
-msgid "Partner this case has been forwarded/assigned to."
-msgstr "Partneris, kuram šī lieta tika nodota/uzticēta."
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_filter
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_partner_assign_filter
+msgid "Group By"
+msgstr "Grupēt pēc"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
-msgid "Lowest"
-msgstr "Zemākā"
+msgid "High"
+msgstr "Augsts"
 
 #. module: crm_partner_assign
-#: view:crm.partner.report.assign:0
-msgid "Date Invoice"
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_tree
+msgid "I'm interested"
 msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,template_id:0
-msgid "Template"
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_tree
+msgid "I'm not interested"
 msgstr ""
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Assign Date"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_id
+msgid "ID"
+msgstr "ID"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_implemented_partner_ids
+msgid "Implementation References"
 msgstr ""
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_assigned_partner_id
+msgid "Implemented by"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_interested
+msgid "Interested by this lead"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_date
+msgid "Invoice Account Date"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation___last_update
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested___last_update
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner___last_update
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign___last_update
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign___last_update
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation___last_update
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade___last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_write_uid
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_write_uid
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_write_uid
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation_write_uid
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_write_uid
+msgid "Last Updated by"
+msgstr "Pēdējo reizi atjaunoja"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_write_date
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_write_date
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_write_date
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation_write_date
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_write_date
+msgid "Last Updated on"
+msgstr "Pēdējās izmaiņas"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_date_assign
+msgid "Last date this case was forwarded/assigned to a partner"
+msgstr "Pēdējais datums, kad šī lieta tika pārsūtīta/uzticēta partnerim"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_date_review
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_date_review
+msgid "Latest Partner Review"
+msgstr ""
+
+#. module: crm_partner_assign
+#: selection:crm.lead.report.assign,type:0
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_lead_id
+msgid "Lead"
+msgstr "Potenciālie Klienti"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_lead_link
+msgid "Lead  Single Links"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_graph
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_pivot
+msgid "Lead Assign"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.actions.act_window,name:crm_partner_assign.crm_lead_channel_interested_act
+msgid "Lead Feedback"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_lead_location
+msgid "Lead Location"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.model,name:crm_partner_assign.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.actions.act_window,name:crm_partner_assign.action_portal_leads
+#: model:ir.ui.menu,name:crm_partner_assign.openerp_portal_menu_sales_leads_current
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_tree
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_tree
+msgid "Leads"
+msgstr "Pavedieni"
+
+#. module: crm_partner_assign
+#: model:ir.ui.menu,name:crm_partner_assign.portal_leads
+msgid "Leads & Opportunities"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_filter
 msgid "Leads Analysis"
 msgstr "Pavedienu analīze"
 
 #. module: crm_partner_assign
-#: field:crm.lead.report.assign,creation_date:0
-msgid "Creation Date"
-msgstr "Izveidošanas datums"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_id_9621
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_partner_grade_form
+msgid "Level"
+msgstr "Līmenis"
 
 #. module: crm_partner_assign
-#: model:ir.model,name:crm_partner_assign.model_res_partner_activation
-msgid "res.partner.activation"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_name
+msgid "Level Name"
 msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,parent_id:0
-msgid "Parent Message"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_partner_weight
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_partner_weight
+msgid "Level Weight"
 msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,res_id:0
-msgid "Related Document ID"
+#: selection:crm.lead.report.assign,priority:0
+msgid "Low"
+msgstr "Zems"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_probability_max
+msgid "Max Probability"
+msgstr "Maks. iespējamība"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_partner_filter
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_partner_filter
+msgid "My Assigned Partners"
 msgstr ""
 
 #. module: crm_partner_assign
-#: selection:crm.lead.report.assign,state:0
-msgid "Pending"
-msgstr "Neizlemts"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation_name
+msgid "Name"
+msgstr "Nosaukums"
 
 #. module: crm_partner_assign
-#: view:crm.lead:0
-msgid "Partner Assignation"
-msgstr "Partnera uzticēšana"
-
-#. module: crm_partner_assign
-#: help:crm.lead.report.assign,type:0
-msgid "Type is used to separate Leads and Opportunities"
-msgstr "Tips tiek lietots, lai atdalītu pavedienus no izdevībām"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "July"
-msgstr "Jūlijs"
-
-#. module: crm_partner_assign
-#: view:crm.partner.report.assign:0
-msgid "Date Review"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_date_review_next
+msgid "Next Partner Review"
 msgstr ""
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,stage_id:0
-msgid "Stage"
-msgstr "Posms"
+#: selection:crm.lead.report.assign,priority:0
+msgid "Normal"
+msgstr "Standarta"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,state:0
-msgid "Status"
+#: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_report_assign_delay_close
+msgid "Number of Days to close the case"
+msgstr "Dienu skaits līdz pieprasījuma slēgšanai"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_report_assign_delay_open
+msgid "Number of Days to open the case"
+msgstr "Dienu skaits līdz lietas atvēršanai"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
+msgid "Once the lead is processed, it will be in your \"Opportunities\" menu."
 msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,to_read:0
-msgid "To read"
-msgstr ""
-
-#. module: crm_partner_assign
-#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:74
-#, python-format
-msgid "Fwd"
-msgstr "Pārs."
-
-#. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Geo Localization"
-msgstr "Geo. lokalizācoja"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: view:crm.partner.report.assign:0
-msgid "Opportunities Assignment Analysis"
-msgstr "Izdevību uzticēšanas analīze"
-
-#. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-#: view:res.partner:0
-msgid "Cancel"
-msgstr "Atcelt"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,history_mode:0
-msgid "Send history"
-msgstr "Sūtīt vēsturi"
-
-#. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Close"
-msgstr "Aizvērt"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "March"
-msgstr "Marts"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_opening_date
+msgid "Opening Date"
+msgstr "Atvēršanas datums"
 
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.action_report_crm_opportunity_assign
@@ -408,407 +607,39 @@ msgid "Opp. Assignment Analysis"
 msgstr "Izdevību uzticēšanas analīze"
 
 #. module: crm_partner_assign
-#: help:crm.lead.report.assign,delay_close:0
-msgid "Number of Days to close the case"
-msgstr "Dienu skaits līdz lietas slēgšanai"
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,notified_partner_ids:0
-msgid ""
-"Partners that have a notification pushing this message in their mailboxes"
-msgstr ""
-
-#. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,type:0
-msgid "Comment"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:res.partner,partner_weight:0
-msgid "Weight"
-msgstr "Svars"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "April"
-msgstr "Aprīlis"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,grade_id:0
-#: view:crm.partner.report.assign:0
-#: field:crm.partner.report.assign,grade_id:0
-msgid "Grade"
-msgstr "Novērtējums"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "December"
-msgstr "Decembris"
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,vote_user_ids:0
-msgid "Users that voted for this message"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,month:0
-msgid "Month"
-msgstr "Mēnesis"
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,opening_date:0
-msgid "Opening Date"
-msgstr "Atvēršanas datums"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,child_ids:0
-msgid "Child Messages"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.partner.report.assign,date_review:0
-#: field:res.partner,date_review:0
-msgid "Latest Partner Review"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,subject:0
-msgid "Subject"
-msgstr "Temats"
-
-#. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-msgid "or"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,body:0
-msgid "Contents"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,vote_user_ids:0
-msgid "Votes"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "#Opportunities"
-msgstr "Izdevību skaits"
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,starred:0
-msgid "Current user has a starred notification linked to this message"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.partner.report.assign,date_partnership:0
-#: field:res.partner,date_partnership:0
-msgid "Partnership Date"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:crm.lead:0
-msgid "Team"
-msgstr ""
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,state:0
-msgid "Draft"
-msgstr "Melnraksts"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,priority:0
-msgid "Low"
-msgstr "Zema"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: selection:crm.lead.report.assign,state:0
-msgid "Closed"
-msgstr "Slēgts"
-
-#. module: crm_partner_assign
-#: model:ir.actions.act_window,name:crm_partner_assign.action_crm_send_mass_forward
-msgid "Mass forward to partner"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:res.partner:0
-#: field:res.partner,opportunity_assigned_ids:0
-msgid "Assigned Opportunities"
-msgstr "Uzticētas izdevības"
-
-#. module: crm_partner_assign
-#: field:crm.lead,date_assign:0
-msgid "Assignation Date"
-msgstr "Uzticēšanas datums"
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,probability_max:0
-msgid "Max Probability"
-msgstr "Maks. iespējamība"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "August"
-msgstr "Augusts"
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,record_name:0
-msgid "Name get of the related document."
-msgstr ""
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,priority:0
-msgid "Normal"
-msgstr "Normāla"
-
-#. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Escalate"
-msgstr "Eskalēt"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "June"
-msgstr "Jūnijs"
-
-#. module: crm_partner_assign
-#: help:crm.lead.report.assign,delay_open:0
-msgid "Number of Days to open the case"
-msgstr "Dienu skaits līdz lietas atvēršanai"
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,delay_open:0
-msgid "Delay to Open"
-msgstr "Aizkave līdz atvēršanai"
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,user_id:0
-#: field:crm.partner.report.assign,user_id:0
-msgid "User"
-msgstr "Lietotājs"
-
-#. module: crm_partner_assign
-#: field:res.partner.grade,active:0
-msgid "Active"
-msgstr "Aktīvs"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "November"
-msgstr "Novembris"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Extended Filters..."
-msgstr "Paplašinātie filtri..."
-
-#. module: crm_partner_assign
-#: field:crm.lead,partner_longitude:0
-#: field:res.partner,partner_longitude:0
-msgid "Geo Longitude"
-msgstr "Geo. garums"
-
-#. module: crm_partner_assign
-#: field:crm.partner.report.assign,opp:0
-msgid "# of Opportunity"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Lead Assign"
-msgstr ""
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "October"
-msgstr "Oktobris"
-
-#. module: crm_partner_assign
-#: view:crm.lead:0
-msgid "Assignation"
-msgstr "Uzticēšana"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "January"
-msgstr "Janvāris"
-
-#. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-msgid "Send Mail"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,date:0
-msgid "Date"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Planned Revenues"
-msgstr "Plānotie ieņēmumi"
-
-#. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Partner Review"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.partner.report.assign,period_id:0
-msgid "Invoice Period"
-msgstr ""
-
-#. module: crm_partner_assign
-#: model:ir.model,name:crm_partner_assign.model_res_partner_grade
-msgid "res.partner.grade"
-msgstr "res.partner.grade"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,message_id:0
-msgid "Message-Id"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-#: field:crm.lead.forward.to.partner,attachment_ids:0
-msgid "Attachments"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,record_name:0
-msgid "Message Record Name"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:res.partner.activation,sequence:0
-#: field:res.partner.grade,sequence:0
-msgid "Sequence"
-msgstr "Secība"
-
-#. module: crm_partner_assign
-#: code:addons/crm_partner_assign/partner_geo_assign.py:37
-#, python-format
-msgid ""
-"Cannot contact geolocation servers. Please make sure that your internet "
-"connection is up and running (%s)."
-msgstr ""
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "September"
-msgstr "Septembris"
-
-#. module: crm_partner_assign
-#: field:res.partner.grade,name:0
-msgid "Grade Name"
-msgstr "Novērtējuma nosaukums"
-
-#. module: crm_partner_assign
-#: help:crm.lead,date_assign:0
-msgid "Last date this case was forwarded/assigned to a partner"
-msgstr "Pēdējais datums, kad šī lieta tika pārsūtīta/uzticēta partnerim"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,state:0
-#: view:res.partner:0
-msgid "Open"
-msgstr "Atvērts"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,subtype_id:0
-msgid "Subtype"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:res.partner,date_localization:0
-msgid "Geo Localization Date"
-msgstr "Ģeo. lokalizācijas datums"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Current"
-msgstr "Pašreizējs"
-
-#. module: crm_partner_assign
-#: model:ir.model,name:crm_partner_assign.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,notified_partner_ids:0
-msgid "Notified partners"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-#: model:ir.actions.act_window,name:crm_partner_assign.crm_lead_forward_to_partner_act
-msgid "Forward to Partner"
-msgstr "Pārsūtīt partnerim"
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,section_id:0
-#: field:crm.partner.report.assign,section_id:0
-msgid "Sales Team"
-msgstr "Pārdošanas komanda"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "May"
-msgstr "Maijs"
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,probable_revenue:0
-msgid "Probable Revenue"
-msgstr "Iespējamie ieņēmumi"
-
-#. module: crm_partner_assign
-#: view:crm.partner.report.assign:0
-#: field:crm.partner.report.assign,activation:0
-#: view:res.partner:0
-#: field:res.partner,activation:0
-#: view:res.partner.activation:0
-msgid "Activation"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:crm.lead:0
-#: field:crm.lead,partner_assigned_id:0
-msgid "Assigned Partner"
-msgstr "Partneris, kam uzticēts"
-
-#. module: crm_partner_assign
-#: field:res.partner,grade_id:0
-msgid "Partner Level"
-msgstr ""
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,to_read:0
-msgid "Current user has an unread notification linked to this message"
-msgstr ""
+#: model:ir.actions.act_window,name:crm_partner_assign.action_portal_opportunities
+#: model:ir.ui.menu,name:crm_partner_assign.openerp_portal_menu_sales_leads_current1
+msgid "Opportunities"
+msgstr "Iespējas"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_partner_assign_graph
+msgid "Opportunities Assignment Analysis"
+msgstr "Izdevību uzticēšanas analīze"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,type:0
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_tree
 msgid "Opportunity"
-msgstr "Izdevība"
+msgstr "Potenciālais darījums"
 
 #. module: crm_partner_assign
-#: field:crm.lead.report.assign,partner_id:0
-msgid "Customer"
-msgstr "Klients"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_delay_expected
+msgid "Overpassed Deadline"
+msgstr "Kavēts termiņš"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "February"
-msgstr "Februāris"
+#: model:ir.model,name:crm_partner_assign.model_res_partner
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_partner_assigned_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_partner_id
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_partner_assign_filter
+msgid "Partner"
+msgstr "Partneris"
 
 #. module: crm_partner_assign
-#: field:res.partner.activation,name:0
-msgid "Name"
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_partner_assign_form
+msgid "Partner Activation"
 msgstr ""
 
 #. module: crm_partner_assign
@@ -818,190 +649,249 @@ msgid "Partner Activations"
 msgstr ""
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,country_id:0
-#: view:crm.partner.report.assign:0
-#: field:crm.partner.report.assign,country_id:0
-msgid "Country"
-msgstr "Valsts"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_forward_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_assignation_lines
+msgid "Partner Assignation"
+msgstr "Partnera uzticēšana"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,year:0
-msgid "Year"
-msgstr "Gads"
-
-#. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Convert to Opportunity"
-msgstr "Pārveidot par izdevību"
-
-#. module: crm_partner_assign
-#: view:crm.lead:0
-msgid "Geo Assign"
-msgstr "Ģeo. uzt."
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Delay to open"
-msgstr "Aizkave līdz atvēršanai"
-
-#. module: crm_partner_assign
-#: model:ir.actions.act_window,name:crm_partner_assign.action_report_crm_partner_assign
-#: model:ir.ui.menu,name:crm_partner_assign.menu_report_crm_partner_assign_tree
-msgid "Partnership Analysis"
+#: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
+#: model:ir.ui.menu,name:crm_partner_assign.menu_res_partner_grade_action
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_partner_grade_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_partner_grade_tree
+msgid "Partner Level"
 msgstr ""
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,notification_ids:0
-msgid ""
-"Technical field holding the message notifications. Use notified_partner_ids "
-"to access notified partners."
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_partner_location
+msgid "Partner Location"
 msgstr ""
 
 #. module: crm_partner_assign
-#: view:crm.partner.report.assign:0
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_form
+msgid "Partner Name"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_partner_assign_form
+msgid "Partner Review"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Partner assigned Analysis"
 msgstr ""
 
 #. module: crm_partner_assign
-#: model:ir.model,name:crm_partner_assign.model_crm_lead_report_assign
-msgid "CRM Lead Report"
-msgstr "CRM pavedienu atskaite"
+#: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_partner_assigned_id
+msgid "Partner this case has been forwarded/assigned to."
+msgstr "Partneris, kuram šī lieta tika nodota/uzticēta."
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,composition_mode:0
-msgid "Composition mode"
+#: model:ir.actions.act_window,name:crm_partner_assign.action_report_crm_partner_assign
+msgid "Partnership Analysis"
 msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,model:0
-msgid "Related Document Model"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_date_partnership
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_date_partnership
+msgid "Partnership Date"
 msgstr ""
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history_mode:0
-msgid "Case Information"
-msgstr "Lietas informācija"
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,author_id:0
-msgid ""
-"Author of the message. If not set, email_from may hold an email address that "
-"did not match any partner."
+#: model:ir.ui.menu,name:crm_partner_assign.menu_report_crm_partner_assign_tree
+msgid "Partnerships"
 msgstr ""
 
 #. module: crm_partner_assign
-#: model:ir.model,name:crm_partner_assign.model_crm_partner_report_assign
-msgid "CRM Partner Report"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_planned_revenue
+msgid "Planned Revenue"
+msgstr "Plānotie ieņēmumi"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_priority
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_form
+msgid "Priority"
+msgstr "Prioritāte"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_probable_revenue
+msgid "Probable Revenue"
+msgstr "Iespējamie ieņēmumi"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_team_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_team_id
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_filter
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_partner_assign_filter
+msgid "Sales Team"
+msgstr "Pārdošanas komanda"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_filter
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_partner_assign_filter
+msgid "Salesperson"
+msgstr "Pārdevējs"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_forward_to_partner_form
+msgid "Send"
+msgstr "Sūtīt"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
+msgid "Send Email"
+msgstr "Nosūtīt e-pastu"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_forward_to_partner_form
+msgid "Send Mail"
 msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation_sequence
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_sequence
+msgid "Sequence"
+msgstr "Sērija"
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:84
+#, python-format
+msgid "Set an email address for the partner %s"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:82
+#, python-format
+msgid "Set an email address for the partner(s): %s"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_stage_id
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_filter
+msgid "Stage"
+msgstr "Stāvoklis"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_tree
+msgid "Subject"
+msgstr "Virsraksts"
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/crm_lead.py:17
+#, python-format
+msgid "The CRM Channel Interested Action is missing"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:69
+#, python-format
+msgid "The Forward Email Template is not in the database"
+msgstr ""
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:73
+#, python-format
+msgid "The Portal group cannot be found"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_channel_interested_contacted
+msgid "The lead has been contacted"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:crm.stage,name:crm_partner_assign.stage_portal_lead_recycle
+msgid "To Recycle"
+msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_turnover
+msgid "Turnover"
+msgstr "Apgrozījums"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_type
+msgid "Type"
+msgstr "Tips"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_report_assign_type
+msgid "Type is used to separate Leads and Opportunities"
+msgstr "Tips tiek lietots, lai atšķirtu potenciālos klientus no potenciālajiem darījumiem"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_user_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_user_id
+msgid "User"
+msgstr "Lietotājs"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
-msgid "High"
-msgstr "Augsta"
+msgid "Very High"
+msgstr "Ļoti augsta"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,partner_ids:0
-msgid "Additional contacts"
+#: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_channel_interested_comment
+msgid "What are the elements that have led to this decision?"
 msgstr ""
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,parent_id:0
-msgid "Initial thread message."
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
+msgid "What is the next action? When? What is the expected revenue?"
 msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.lead.report.assign,create_date:0
-msgid "Create Date"
-msgstr "Izveidošanas datums"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,filter_id:0
-msgid "Filters"
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
+msgid "Why aren't you interested by this lead?"
 msgstr ""
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,partner_assigned_id:0
-#: view:crm.partner.report.assign:0
-#: field:crm.partner.report.assign,partner_id:0
-#: model:ir.model,name:crm_partner_assign.model_res_partner
-msgid "Partner"
-msgstr "Partneris"
+#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:26
+#, python-format
+msgid "You must contact the lead before saying that you are interested"
+msgstr ""
 
-#~ msgid "Send to"
-#~ msgstr "Kam sūtīt"
+#. module: crm_partner_assign
+#: selection:crm.lead.forward.to.partner,forward_type:0
+msgid "a single partner: manual selection of partner"
+msgstr ""
 
-#~ msgid "Reply-to of the Sales team defined on this case"
-#~ msgstr "Atbildēt šai lietai definētai pārdošanas komandai"
+#. module: crm_partner_assign
+#: model:ir.model,name:crm_partner_assign.model_crm_lead_assignation
+msgid "crm.lead.assignation"
+msgstr ""
 
-#~ msgid "HTML formatting?"
-#~ msgstr "HTML formatēšana?"
+#. module: crm_partner_assign
+#: model:ir.model,name:crm_partner_assign.model_crm_lead_channel_interested
+msgid "crm.lead.channel.interested"
+msgstr ""
 
-#~ msgid "State"
-#~ msgstr "Stāvoklis"
+#. module: crm_partner_assign
+#: model:ir.model,name:crm_partner_assign.model_crm_lead_forward_to_partner
+msgid "crm.lead.forward.to.partner"
+msgstr ""
 
-#~ msgid "7 Days"
-#~ msgstr "7 dienas"
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_partner_grade_form
+msgid "e.g. Gold Partner"
+msgstr ""
 
-#~ msgid "Contact"
-#~ msgstr "Kontakts"
+#. module: crm_partner_assign
+#: model:ir.model,name:crm_partner_assign.model_res_partner_activation
+msgid "res.partner.activation"
+msgstr ""
 
-#~ msgid "Category"
-#~ msgstr "Kategorija"
+#. module: crm_partner_assign
+#: model:ir.model,name:crm_partner_assign.model_res_partner_grade
+msgid "res.partner.grade"
+msgstr "res.partner.grade"
 
-#~ msgid "Reply To"
-#~ msgstr "Atbildēt"
-
-#~ msgid "Salesman"
-#~ msgstr "Pārdošanas menedžeris"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Kļūda! Nevar izveidot rekursīvus asociētos dalībniekus."
-
-#~ msgid "unknown"
-#~ msgstr "nezināms"
-
-#~ msgid "CC"
-#~ msgstr "CC"
-
-#~ msgid "Unchanged"
-#~ msgstr "Nemainīts"
-
-#~ msgid "Send new email"
-#~ msgstr "Nosūtīt jaunu e-pastu"
-
-#~ msgid "To"
-#~ msgstr "Kam"
-
-#~ msgid "Address"
-#~ msgstr "Adrese"
-
-#~ msgid "Email Address"
-#~ msgstr "E-pasta adrese"
-
-#~ msgid "crm.lead"
-#~ msgstr "crm.lead"
-
-#~ msgid ""
-#~ "These addresses will receive a copy of this email. To modify the permanent "
-#~ "CC list, edit the global CC field of this case"
-#~ msgstr ""
-#~ "Šīs adreses saņems dotā e-pasta kopijas. Lai izmainītu CC adrešu sarakstu, "
-#~ "labojiet globālo CC lauku šai lietai"
-
-#~ msgid "Select this if you want to send email with HTML formatting."
-#~ msgstr "Izvēlēties šo, ja vēlaties sūtīt e-pastu ar HTML formatējumu."
-
-#~ msgid "Partner Geo-Localisation"
-#~ msgstr "Partnera ģeo-lokalizācija"
-
-#~ msgid "Last 30 Days"
-#~ msgstr "Pēdējas 30 dienas"
-
-#~ msgid "Message Body"
-#~ msgstr "Vēstules teksts"
-
-#~ msgid "Set New State To"
-#~ msgstr "Noteikt jaunu stāvokli"
+#. module: crm_partner_assign
+#: selection:crm.lead.forward.to.partner,forward_type:0
+msgid ""
+"several partners: automatic assignation, using GPS coordinates and partner's"
+" grades"
+msgstr ""

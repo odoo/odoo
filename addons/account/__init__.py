@@ -1,42 +1,39 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import partner
-import account
-import installer
-import project
-import account_invoice
-import account_bank_statement
-import account_bank
-import account_cash_statement
-import account_move_line
-import account_analytic_line
-import account_financial_report
+import models
+
 import wizard
 import report
-import product
-import ir_sequence
-import company
-import res_currency
-import edi
-import res_config
+from openerp import SUPERUSER_ID
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+def _auto_install_l10n(cr, registry):
+    #check the country of the main company (only) and eventually load some module needed in that country
+    country_code = registry['res.users'].browse(cr, SUPERUSER_ID, SUPERUSER_ID, {}).company_id.country_id.code
+    if country_code:
+        #auto install localization module(s) if available
+        module_list = []
+        if country_code in ['BJ', 'BF', 'CM', 'CF', 'KM', 'CG', 'CI', 'GA', 'GN', 'GW', 'GQ', 'ML', 'NE', 'CD', 'SN', 'TD', 'TG']:
+            #countries using OHADA Chart of Accounts
+            module_list.append('l10n_syscohada')
+        elif country_code == 'GB':
+            module_list.append('l10n_uk')
+        else:
+            if registry['ir.module.module'].search(cr, SUPERUSER_ID, [('name', '=', 'l10n_' + country_code.lower())]):
+                module_list.append('l10n_' + country_code.lower())
+            else:
+                module_list.append('l10n_generic_coa')
+        if country_code == 'US':
+            module_list.append('account_plaid')
+            module_list.append('account_check_printing')
+        if country_code in ['US', 'AU', 'NZ', 'CA', 'CO', 'EC', 'ES', 'FR', 'IN', 'MX', 'UK']:
+            module_list.append('account_yodlee')
+
+        #european countries will be using SEPA
+        europe = registry['ir.model.data'].xmlid_to_object(cr, SUPERUSER_ID, 'base.europe', raise_if_not_found=False, context={})
+        if europe:
+            europe_country_codes = [x.code for x in europe.country_ids]
+            if country_code in europe_country_codes:
+                module_list.append('account_sepa')
+        module_ids = registry['ir.module.module'].search(cr, SUPERUSER_ID, [('name', 'in', module_list), ('state', '=', 'uninstalled')])
+        registry['ir.module.module'].button_install(cr, SUPERUSER_ID, module_ids, {})

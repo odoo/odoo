@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="ofx_partner_bank_1" model="res.partner.bank">
+            <field name="acc_number">00987654321</field>
+            <field name="partner_id" ref="base.res_partner_2"></field>
+            <field name="acc_type">bank</field>
+            <field name="bank_id" ref="base.res_bank_1"/>
+        </record>
+
+        <record id="ofx_partner_bank_2" model="res.partner.bank">
+            <field name="acc_number">00987654322</field>
+            <field name="partner_id" ref="base.res_partner_3"></field>
+            <field name="acc_type">bank</field>
+            <field name="bank_id" ref="base.res_bank_1"/>
+        </record>
+
+        <record id="qif_partner_bank_1" model="res.partner.bank">
+            <field name="acc_number">10987654320</field>
+            <field name="partner_id" ref="base.res_partner_4"></field>
+            <field name="acc_type">bank</field>
+            <field name="bank_id" ref="base.res_bank_1"/>
+        </record>
+
+        <record id="qif_partner_bank_2" model="res.partner.bank">
+            <field name="acc_number">10987654322</field>
+            <field name="partner_id" ref="base.res_partner_3"></field>
+            <field name="acc_type">bank</field>
+            <field name="bank_id" ref="base.res_bank_1"/>
+        </record>
+
+    </data>
+</openerp>

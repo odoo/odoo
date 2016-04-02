@@ -1,11 +1,28 @@
+# -*- coding: utf-8 -*-
 
 import werkzeug
 
-from openerp import http, SUPERUSER_ID
+from openerp import http, SUPERUSER_ID, _
 from openerp.http import request
 
 
 class MassMailController(http.Controller):
+
+    @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='public')
+    def mailing(self, mailing_id, email=None, res_id=None, **post):
+        mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
+        if mailing.exists():
+            res_ids = []
+            if mailing.mailing_model == 'mail.mass_mailing.contact':
+                contacts = request.env['mail.mass_mailing.contact'].sudo().search([
+                    ('email', '=', email),
+                    ('list_id', 'in', [mailing_list.id for mailing_list in mailing.contact_list_ids])
+                ])
+                res_ids = contacts.ids
+            else:
+                res_ids = [res_id]
+            mailing.update_opt_out(mailing_id, email, res_ids, True)
+            return _('You have been unsubscribed successfully')
 
     @http.route('/mail/track/<int:mail_id>/blank.gif', type='http', auth='none')
     def track_mail_open(self, mail_id, **post):
@@ -15,60 +32,16 @@ class MassMailController(http.Controller):
         response = werkzeug.wrappers.Response()
         response.mimetype = 'image/gif'
         response.data = 'R0lGODlhAQABAIAAANvf7wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='.decode('base64')
+
         return response
 
-    @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe'], type='http', auth='none')
-    def mailing(self, mailing_id, email=None, res_id=None, **post):
+    @http.route('/r/<string:code>/m/<int:stat_id>', type='http', auth="none")
+    def full_url_redirect(self, code, stat_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        MassMailing = request.registry['mail.mass_mailing']
-        mailing_ids = MassMailing.exists(cr, SUPERUSER_ID, [mailing_id], context=context)
-        if not mailing_ids:
-            return 'KO'
-        mailing = MassMailing.browse(cr, SUPERUSER_ID, mailing_ids[0], context=context)
-        if mailing.mailing_model == 'mail.mass_mailing.contact':
-            list_ids = [l.id for l in mailing.contact_list_ids]
-            record_ids = request.registry[mailing.mailing_model].search(cr, SUPERUSER_ID, [('list_id', 'in', list_ids), ('id', '=', res_id), ('email', 'ilike', email)], context=context)
-            request.registry[mailing.mailing_model].write(cr, SUPERUSER_ID, record_ids, {'opt_out': True}, context=context)
-        else:
-            email_fname = None
-            if 'email_from' in request.registry[mailing.mailing_model]._all_columns:
-                email_fname = 'email_from'
-            elif 'email' in request.registry[mailing.mailing_model]._all_columns:
-                email_fname = 'email'
-            if email_fname:
-                record_ids = request.registry[mailing.mailing_model].search(cr, SUPERUSER_ID, [('id', '=', res_id), (email_fname, 'ilike', email)], context=context)
-            if 'opt_out' in request.registry[mailing.mailing_model]._all_columns:
-                request.registry[mailing.mailing_model].write(cr, SUPERUSER_ID, record_ids, {'opt_out': True}, context=context)
-        return 'OK'
 
-    @http.route(['/website_mass_mailing/is_subscriber'], type='json', auth="public", website=True)
-    def is_subscriber(self, list_id, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        Contacts = request.registry['mail.mass_mailing.contact']
-        Users = request.registry['res.users']
+        # don't assume geoip is set, it is part of the website module
+        # which mass_mailing doesn't depend on
+        country_code = request.session.get('geoip', False) and request.session.geoip.get('country_code', False)
 
-        is_subscriber = False
-        email = None
-        if uid != request.website.user_id.id:
-            email = Users.browse(cr, SUPERUSER_ID, uid, context).email
-        elif request.session.get('mass_mailing_email'):
-            email = request.session['mass_mailing_email']
-
-        if email:
-            contact_ids = Contacts.search(cr, SUPERUSER_ID, [('list_id', '=', int(list_id)), ('email', '=', email)], context=context)
-            is_subscriber = len(contact_ids) > 0
-
-        return {'is_subscriber': is_subscriber, 'email': email}
-
-    @http.route(['/website_mass_mailing/subscribe'], type='json', auth="public", website=True)
-    def subscribe(self, list_id, email, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        Contacts = request.registry['mail.mass_mailing.contact']
-
-        contact_ids = Contacts.search(cr, SUPERUSER_ID, [('list_id', '=', int(list_id)), ('email', '=', email)], context=context)
-        if not contact_ids:
-            contact_ng = Contacts.name_create(cr, SUPERUSER_ID, email, context=context)
-            Contacts.write(cr, SUPERUSER_ID, [contact_ng[0]], {'list_id': int(list_id)}, context=context)
-        # add email to session
-        request.session['mass_mailing_email'] = email
-        return True
+        request.registry['link.tracker.click'].add_click(cr, uid, code, request.httprequest.remote_addr, country_code, stat_id=stat_id, context=context)
+        return werkzeug.utils.redirect(request.registry['link.tracker'].get_url_from_code(cr, uid, code, context=context), 301)

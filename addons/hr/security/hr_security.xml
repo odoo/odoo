@@ -19,6 +19,15 @@
         <field name="implied_ids" eval="[(4, ref('base.group_hr_user'))]"/>
         <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
+    
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4,ref('base.group_hr_manager'))]"/>
+    </record>
+
+    <record id="base.group_hr_attendance" model="res.groups">
+        <field name="name">Attendances</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
 
 </data>
 <data noupdate="1">

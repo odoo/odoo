@@ -1,0 +1,732 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-11-15 12:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/mn/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction_callback_eval
+msgid ""
+"            Will be safe_eval with `self` being the current transaction. i.e.:\n"
+"                self.env['my.model'].payment_validated(self)"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_adyen
+msgid "-It installs the module payment_adyen."
+msgstr "-Энэ нь payment_adyen модулийг суулгадаг."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_authorize
+msgid "-It installs the module payment_authorize."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_buckaroo
+msgid "-It installs the module payment_buckaroo."
+msgstr "-Энэ нь payment_buckaroo модулийг суулгадаг."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_ogone
+msgid "-It installs the module payment_ogone."
+msgstr "-Энэ нь payment_ogone модулийг суулгадаг."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_paypal
+msgid "-It installs the module payment_paypal."
+msgstr "-Энэ нь payment_paypal модулийг суулгадаг."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_transfer
+msgid "-It installs the module payment_transfer."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
+msgid "3D Secure HTML"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
+msgid "Acquirer"
+msgstr "Хүлээн авагч"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method_acquirer_id
+msgid "Acquirer Account"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method_acquirer_ref
+msgid "Acquirer Ref."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_reference
+msgid "Acquirer Reference"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method_active
+msgid "Active"
+msgstr "Идэвхитэй"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_active
+msgid "Add Extra Fees"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_address
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "Address"
+msgstr "Хаяг"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_adyen
+msgid "Adyen"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_amount
+#: model:ir.model.fields,help:payment.field_payment_transaction_amount
+msgid "Amount"
+msgstr "Дүн"
+
+#. module: payment
+#: selection:payment.acquirer,auto_confirm:0
+msgid "At payment no acquirer confirmation needed"
+msgstr ""
+
+#. module: payment
+#: selection:payment.acquirer,auto_confirm:0
+msgid "At payment with acquirer confirmation"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_buckaroo
+msgid "Buckaroo"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_cancel_msg
+msgid "Cancel Message"
+msgstr ""
+
+#. module: payment
+#: selection:payment.transaction,state:0
+msgid "Canceled"
+msgstr "Цуцлагдсан"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_city
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "City"
+msgstr "Сум/Дүүрэг"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid "Configuration"
+msgstr "Тохиргоо"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.payment_acquirer_installation
+msgid "Configure payment acquiring methods"
+msgstr "Төлбөрийг эзэмших аргыг тохируулах"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_partner_payment_method_count
+msgid "Count Payment Method"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_country_id
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "Country"
+msgstr "Улс"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_method_create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_create_uid
+msgid "Created by"
+msgstr "Үүсгэгч"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_create_date
+#: model:ir.model.fields,field_description:payment.field_payment_method_create_date
+msgid "Created on"
+msgstr "Үүсгэсэн"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_create_date
+msgid "Creation Date"
+msgstr "Үүсгэсэн огноо"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid "Credentials"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
+msgid "Credit card(s)"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_currency_id
+msgid "Currency"
+msgstr "Валют"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "Customer Details"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_sequence
+msgid "Determine the display order"
+msgstr "Харуулах эрэмийг тодорхойлно"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_display_name
+#: model:ir.model.fields,field_description:payment.field_payment_method_display_name
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_display_name
+msgid "Display Name"
+msgstr "Дэлгэцийн Нэр"
+
+#. module: payment
+#: selection:payment.transaction,state:0
+msgid "Done"
+msgstr "Дууссан"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_done_msg
+msgid "Done Message"
+msgstr ""
+
+#. module: payment
+#: selection:payment.transaction,state:0
+msgid "Draft"
+msgstr "Ноорог"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "E-mail"
+msgstr "Э-мэйл"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_email
+msgid "Email"
+msgstr "Имэйл"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_environment
+msgid "Environment"
+msgstr "Орчин"
+
+#. module: payment
+#: selection:payment.transaction,state:0
+msgid "Error"
+msgstr "Алдаа"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_error_msg
+msgid "Error Message"
+msgstr "Алдааны мэссэж"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_fees
+msgid "Fees"
+msgstr "Ажлын хөлс"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction_fees
+msgid "Fees amount; set by the system because depends on the acquirer"
+msgstr "Төлбөрийн дүн; хүлээн авагчаас хамаарах тул системээр тохируулагдсан"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction_state_message
+msgid "Field used to store error and/or validation messages for information"
+msgstr "Алдааг хадгалах болон шалгах зурвасыг мэдээллийн зорилгоор хадгалах талбар"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_fixed
+msgid "Fixed domestic fees"
+msgstr "Орон нутагийн тогтмол төлбөр"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_fixed
+msgid "Fixed international fees"
+msgstr "Олон улсын тогтмол шимтгэл"
+
+#. module: payment
+#: selection:payment.transaction,type:0
+msgid "Form"
+msgstr "Форм"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_view_template_id
+msgid "Form Button Template"
+msgstr "Маягтын Даруулын үлгэр"
+
+#. module: payment
+#: selection:payment.transaction,type:0
+msgid "Form with credentials storage"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_search
+msgid "Group By"
+msgstr "Бүлэглэх"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_pre_msg
+msgid "Help Message"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_id
+#: model:ir.model.fields,field_description:payment.field_payment_method_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_image
+msgid "Image"
+msgstr "Зураг"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction_reference
+msgid "Internal reference of the TX"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_lang
+msgid "Language"
+msgstr "Хэл"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer___last_update
+#: model:ir.model.fields,field_description:payment.field_payment_method___last_update
+#: model:ir.model.fields,field_description:payment.field_payment_transaction___last_update
+msgid "Last Modified on"
+msgstr "Сүүлийн засвар хийсэн огноо"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_method_write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_write_uid
+msgid "Last Updated by"
+msgstr "Сүүлийн засвар хийсэн"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_date
+#: model:ir.model.fields,field_description:payment.field_payment_method_write_date
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_write_date
+msgid "Last Updated on"
+msgstr "Сүүлийн засвар хийсэн огноо"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
+msgid "Make this payment acquirer available (Customer invoices, etc.)"
+msgstr "Энэ төлбөр хүлээн авагчийг бэлэн болгох (Захиалагчийн Нэхэмжлэл, гм.)"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_medium
+msgid "Medium-sized image"
+msgstr "Дунд-хэмжээт зураг"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_image_medium
+msgid ""
+"Medium-sized image of this provider. It is automatically resized as a "
+"128x128px image, with aspect ratio preserved. Use this field in form views "
+"or some kanban views."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_state_message
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "Message"
+msgstr "Мессеж"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_post_msg
+msgid "Message displayed after having done the payment process."
+msgstr "Төлбөрийн процесс хийгдэж дууссаны дараа мессеж дэлгцэнд харагдана."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_pre_msg
+msgid "Message displayed to explain and help the payment process."
+msgstr "Төлбөрийн процессыг тайлбарлах зурвасыг харуулдаг бөгөөд тусладаг."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_error_msg
+msgid "Message displayed, if error is occur during the payment process."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_cancel_msg
+msgid "Message displayed, if order is cancel during the payment process."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_done_msg
+msgid ""
+"Message displayed, if order is done successfully after having done the "
+"payment process."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_pending_msg
+msgid ""
+"Message displayed, if order is in pending state after having done the "
+"payment process."
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid "Messages"
+msgstr "Зурвасууд"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_name
+#: model:ir.model.fields,field_description:payment.field_payment_method_name
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "Name"
+msgstr "Нэр"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_method_name
+msgid "Name of the payment method"
+msgstr ""
+
+#. module: payment
+#: selection:payment.acquirer,auto_confirm:0
+msgid "No automatic confirmation"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_ogone
+msgid "Ogone"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_auto_confirm
+msgid "Order Confirmation"
+msgstr ""
+
+#. module: payment
+#: model:ir.model,name:payment.model_res_partner
+#: model:ir.model.fields,field_description:payment.field_payment_method_partner_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_id
+msgid "Partner"
+msgstr "Харилцагч"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_name
+msgid "Partner Name"
+msgstr "Харилцагчийн нэр"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_acquirer
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid "Payment Acquirer"
+msgstr "Худалдан авагчийн төлбөр"
+
+#. module: payment
+#: model:ir.actions.act_window,name:payment.action_payment_acquirer
+#: model:ir.ui.menu,name:payment.payment_acquirer_menu
+#: model:ir.ui.view,arch_db:payment.acquirer_list
+msgid "Payment Acquirers"
+msgstr "Худалдаг авагчийн төлөлт"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_method_id
+msgid "Payment Method"
+msgstr "Төлбөрийн хэлбэр"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_partner_payment_method_ids
+#: model:ir.ui.view,arch_db:payment.payment_method_form_view
+#: model:ir.ui.view,arch_db:payment.payment_method_tree_view
+#: model:ir.ui.view,arch_db:payment.payment_method_view_search
+msgid "Payment Methods"
+msgstr "Төлбөрийн аргууд"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Төлбөрийн гүйлгээ"
+
+#. module: payment
+#: model:ir.actions.act_window,name:payment.action_payment_transaction
+#: model:ir.actions.act_window,name:payment.action_payment_tx_ids
+#: model:ir.actions.act_window,name:payment.payment_transaction_action_child
+#: model:ir.model.fields,field_description:payment.field_payment_method_payment_ids
+#: model:ir.ui.menu,name:payment.finance_pay_tx_menu
+#: model:ir.ui.menu,name:payment.payment_transaction_menu
+#: model:ir.ui.view,arch_db:payment.transaction_form
+#: model:ir.ui.view,arch_db:payment.transaction_list
+msgid "Payment Transactions"
+msgstr "Төлбөрийн гүйлгээнүүд"
+
+#. module: payment
+#: model:ir.ui.menu,name:payment.finance_payment_menu
+#: model:ir.ui.menu,name:payment.root_payment_menu
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+#: model:ir.ui.view,arch_db:payment.payment_method_form_view
+msgid "Payments"
+msgstr "Төлбөрүүд"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_paypal
+msgid "Paypal"
+msgstr ""
+
+#. module: payment
+#: selection:payment.transaction,state:0
+msgid "Pending"
+msgstr "Хүлээгдэж буй"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_pending_msg
+msgid "Pending Message"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_phone
+msgid "Phone"
+msgstr "Утас"
+
+#. module: payment
+#: selection:payment.acquirer,environment:0
+msgid "Production"
+msgstr "Үйлдвэрлэлийн"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_provider
+#: model:ir.ui.view,arch_db:payment.acquirer_search
+msgid "Provider"
+msgstr "Нийлүүлэгч"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_reference
+msgid "Reference"
+msgstr "Дугаар"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction_acquirer_reference
+msgid "Reference of the TX as stored in the acquirer database"
+msgstr ""
+
+#. module: payment
+#: constraint:payment.acquirer:0
+msgid "Required fields not filled"
+msgstr "Шаардагдах талбаруудыг бөглөөгүй байна"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_eval
+msgid "S2S Callback"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_registration_view_template_id
+msgid "S2S Form Template"
+msgstr ""
+
+#. module: payment
+#: model:ir.actions.act_window,name:payment.payment_method_action
+#: model:ir.ui.menu,name:payment.finance_pay_method_menu
+#: model:ir.ui.menu,name:payment.payment_method_menu
+msgid "Saved Payment Data"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_sequence
+msgid "Sequence"
+msgstr "Дараалал"
+
+#. module: payment
+#: selection:payment.transaction,type:0
+msgid "Server To Server"
+msgstr "Серверээс серверт"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
+msgid "Small-sized image"
+msgstr "Жижиг-хэмжээт зураг"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
+msgid ""
+"Small-sized image of this provider. It is automatically resized as a 64x64px"
+" image, with aspect ratio preserved. Use this field anywhere a small image "
+"is required."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_state
+msgid "Status"
+msgstr "Төлөв"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id
+msgid "Template for method registration"
+msgstr ""
+
+#. module: payment
+#: selection:payment.acquirer,environment:0
+msgid "Test"
+msgstr "Тест"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_post_msg
+msgid "Thanks Message"
+msgstr "Талархлын Зурвас"
+
+#. module: payment
+#: constraint:payment.transaction:0
+msgid "The payment transaction reference must be unique!"
+msgstr "Төлбөрийн гүйлгээний лавлахыг заавал бөглөнө!"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_image
+msgid ""
+"This field holds the image used for this provider, limited to 1024x1024px"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid ""
+"This template renders the acquirer button with all necessary values.\n"
+"                                            It is be rendered with qWeb with the following evaluation context:"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_type
+msgid "Type"
+msgstr "Төрөл"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_date_validate
+msgid "Validation Date"
+msgstr "Батламжилсан огноо"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_var
+msgid "Variable domestic fees (in percents)"
+msgstr "Орон нутагийн хувьсах төлбөр (процентоор)"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_var
+msgid "Variable international fees (in percents)"
+msgstr "Олон улсын хувьсах төлбөр (процентоор)"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_website_published
+msgid "Visible in Portal / Website"
+msgstr "Портал / Вебсайтад харагдах"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_transfer
+msgid "Wire Transfer"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "ZIP"
+msgstr "ZIP"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_zip
+msgid "Zip"
+msgstr "Зип код"
+
+#. module: payment
+#: model:ir.model,name:payment.model_account_config_settings
+msgid "account.config.settings"
+msgstr "account.config.settings"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid "acquirer: payment.acquirer browse record"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid "amount: the transaction amount, a float"
+msgstr "дүн: гүйлгээний дүн, float буюу хөвөгч таслалтай бодит тоо"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid "context: the current context dictionary"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid "currency: the transaction currency browse record"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid "partner: the buyer partner browse record, not necessarily set"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid ""
+"partner_values: specific values about the buyer, for example coming from a "
+"shipping form"
+msgstr "partner_values: худалдан авагчийн тухай тусгай утга, тухайлбал хүргэлтийн маягтаас ирнэ"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_method
+msgid "payment.method"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid "reference: the transaction reference number"
+msgstr "код: гүйлгээний кодын дугаар"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid "tx_url: transaction URL to post the form"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid "tx_values: transaction values"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_authorize
+msgid "unknown"
+msgstr "тодорхой бус"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid "user: current user browse record"
+msgstr ""

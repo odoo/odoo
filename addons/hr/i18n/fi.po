@@ -1,75 +1,291 @@
-# Finnish translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr
+# 
+# Translators:
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-05-10 18:05+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
-"Language-Team: Finnish <fi@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-01-15 10:41+0000\n"
+"PO-Revision-Date: 2016-03-24 16:58+0000\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>\n"
+"Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:10+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr
-#: model:process.node,name:hr.process_node_openerpuser0
-msgid "Openerp user"
-msgstr "OpenERP-käyttäjä"
+#: code:addons/hr/hr.py:119
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopio)"
 
 #. module: hr
-#: field:hr.config.settings,module_hr_timesheet_sheet:0
-msgid "Allow timesheets validation by managers"
-msgstr "Salli päälliköille tuntikorttien vahvistaminen"
-
-#. module: hr
-#: field:hr.job,requirements:0
-msgid "Requirements"
-msgstr "Vaatimukset"
-
-#. module: hr
-#: model:process.transition,name:hr.process_transition_contactofemployee0
-msgid "Link the employee to information"
-msgstr "Yhdistä työntekijä informaatioon"
-
-#. module: hr
-#: field:hr.employee,sinid:0
-msgid "SIN No"
-msgstr "Vakuutustunnus"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard
-#: model:ir.ui.menu,name:hr.menu_hr_main
-#: model:ir.ui.menu,name:hr.menu_hr_reporting
-#: model:ir.ui.menu,name:hr.menu_hr_root
-#: model:ir.ui.menu,name:hr.menu_human_resources_configuration
-msgid "Human Resources"
-msgstr "Henkilöstöhallinto"
-
-#. module: hr
-#: help:hr.employee,image_medium:0
-msgid ""
-"Medium-sized photo of the employee. It is automatically resized as a "
-"128x128px image, with aspect ratio preserved. Use this field in form views "
-"or some kanban views."
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "<i>Work in a fun atmosphere</i>"
 msgstr ""
 
 #. module: hr
-#: view:hr.config.settings:0
-msgid "Time Tracking"
-msgstr "Työajanseuranta"
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "<i>You are passionate</i>"
+msgstr ""
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.job:0
-msgid "Group By..."
-msgstr "Ryhmittely..."
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_trainee
+msgid "<i>You autonomously and quickly learn</i>"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid "<i>You easily manage them</i>"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid ""
+"<span class=\"o_unfollow\">Unfollow</span>\n"
+"                                    <span class=\"o_following\">Following</span>"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "<span>Reports</span>"
+msgstr "<span>Raportit</span>"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "<span>To Approve</span>"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "<span>To Do</span>"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid ""
+"A full time job, with an attractive salary package in a small team of smart "
+"people. You will start contract with a full technical and functional "
+"training. If you are passionate, motivate and flexible apply for this job, "
+"you will certainly join the best company ever."
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "A good job in a young and dynamic team"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_message_needaction
+#: model:ir.model.fields,field_description:hr.field_hr_employee_message_needaction
+#: model:ir.model.fields,field_description:hr.field_hr_job_message_needaction
+msgid "Action Needed"
+msgstr "Vaatii toimia"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_active
+msgid "Active"
+msgstr "Aktiivinen"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "Analyse needs, write specification documents and quotation"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Archived"
+msgstr "Arkistoitu"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_bank_account_id
+msgid "Bank Account Number"
+msgstr "Pankkitilin numero"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+msgid ""
+"Because of our constant growth, we're now looking for people to reinforce "
+"our team of enthusiastic chief technical officer. So if working on an open "
+"source project in a friendly and cooperative atmosphere sounds like fun to "
+"you, read on..."
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid ""
+"Because of our constant growth, we're now looking for people to reinforce "
+"our team of enthusiastic developers. So if working on an open source project"
+" in a friendly and cooperative atmosphere sounds like fun to you, read on..."
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_trainee
+msgid ""
+"Because of our constant growth, we're now looking for people to reinforce "
+"our team of enthusiastic trainees. So if working on an open source project "
+"in a friendly and cooperative atmosphere sounds like fun to you, read on..."
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Birth"
+msgstr "Syntymäaika"
+
+#. module: hr
+#: model:hr.job,name:hr.job_ceo
+msgid "Chief Executive Officer"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,name:hr.job_cto
+msgid "Chief Technical Officer"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_child_ids
+msgid "Child Departments"
+msgstr "Alaosastot"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Citizenship & Other Information"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_city
+msgid "City"
+msgstr "Kaupunki"
+
+#. module: hr
+#: model:web.tip,description:hr.hr_tip_2
+msgid "Click here to change the recruitment goal!"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.act_employee_from_department
+#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
+msgid "Click to add a new employee."
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.open_module_tree_department
+msgid "Click to create a department."
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.view_department_form_installer
+msgid "Click to define a new department."
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.action_hr_job
+msgid "Click to define a new job position."
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Close to the perfection ..."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_coach_id
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Coach"
+msgstr "Valmentaja"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_code
+msgid "Code"
+msgstr "Koodi"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_color
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category_color
+#: model:ir.model.fields,field_description:hr.field_hr_employee_color
+msgid "Color Index"
+msgstr "Väri-indeksi"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_department_tree
+msgid "Companies"
+msgstr "Yritykset"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_company_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_company_id
+#: model:ir.model.fields,field_description:hr.field_hr_job_company_id
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Company"
+msgstr "Yritys"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_human_resources_configuration
+msgid "Configuration"
+msgstr "Asetukset"
+
+#. module: hr
+#: model:hr.job,name:hr.job_consultant
+msgid "Consultant"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Contact Information"
+msgstr "Yhteystiedot"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Contributions to open source projects"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.view_department_form_installer
@@ -77,308 +293,83 @@ msgid "Create Your Departments"
 msgstr "Luo osastot"
 
 #. module: hr
-#: help:hr.job,no_of_employee:0
-msgid "Number of employees currently occupying this job position."
-msgstr "Tässä työtehtävässä parhaillaan olevien työntekijöiden lukumäärä."
+#: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_job_create_uid
+msgid "Created by"
+msgstr "Luonut"
 
 #. module: hr
-#: field:hr.config.settings,module_hr_evaluation:0
-msgid "Organize employees periodic evaluation"
-msgstr "Organisoi työntekijöiden säännöllinen arviointi"
+#: model:ir.model.fields,field_description:hr.field_hr_department_create_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_create_date
+#: model:ir.model.fields,field_description:hr.field_hr_job_create_date
+msgid "Created on"
+msgstr "Luotu"
 
 #. module: hr
-#: view:hr.department:0
-#: view:hr.employee:0
-#: field:hr.employee,department_id:0
-#: view:hr.job:0
-#: field:hr.job,department_id:0
-#: model:ir.model,name:hr.model_hr_department
-msgid "Department"
-msgstr "Osasto"
-
-#. module: hr
-#: field:hr.employee,work_email:0
-msgid "Work Email"
-msgstr "Työsähköposti"
-
-#. module: hr
-#: help:hr.employee,image:0
-msgid ""
-"This field holds the image used as photo for the employee, limited to "
-"1024x1024px."
-msgstr ""
-"Tämä kenttä sisältää työntekijöistä valokuvan, koko rajoitettu 1024x1024px."
-
-#. module: hr
-#: help:hr.config.settings,module_hr_holidays:0
-msgid "This installs the module hr_holidays."
-msgstr "Tämä asentaa moduulin hr_holidays."
-
-#. module: hr
-#: view:hr.job:0
-msgid "Jobs"
-msgstr "Työt"
-
-#. module: hr
-#: view:hr.job:0
-msgid "In Recruitment"
-msgstr "Käynnissä"
-
-#. module: hr
-#: field:hr.job,message_unread:0
-msgid "Unread Messages"
-msgstr "Lukemattomia viestejä"
-
-#. module: hr
-#: field:hr.department,company_id:0
-#: view:hr.employee:0
-#: view:hr.job:0
-#: field:hr.job,company_id:0
-msgid "Company"
-msgstr "Yritys"
-
-#. module: hr
-#: field:hr.job,no_of_recruitment:0
-msgid "Expected in Recruitment"
-msgstr "Vapaat työpaikat"
-
-#. module: hr
-#: field:res.users,employee_ids:0
-msgid "Related employees"
-msgstr "Yhdistä työntekijöihin"
-
-#. module: hr
-#: constraint:hr.employee.category:0
-msgid "Error! You cannot create recursive Categories."
-msgstr "Virhe, et voi luoda rekursiivisia ryhmiä."
-
-#. module: hr
-#: help:hr.config.settings,module_hr_recruitment:0
-msgid "This installs the module hr_recruitment."
-msgstr "Tämä asentaa moduulin hr_recruitment."
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Birth"
-msgstr "Syntymäaika"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-msgid "Employee Tags"
-msgstr "Henkilötunnisteet"
-
-#. module: hr
-#: view:hr.job:0
-msgid "Launch Recruitement"
-msgstr "Käynnistä rekrytointi"
-
-#. module: hr
-#: model:process.transition,name:hr.process_transition_employeeuser0
-msgid "Link a user to an employee"
-msgstr "Yhdistä käyttäjä työntekijään"
-
-#. module: hr
-#: field:hr.department,parent_id:0
-msgid "Parent Department"
-msgstr "Ylempi osasto"
-
-#. module: hr
-#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
-msgid "Leaves"
-msgstr "Poissaolot"
-
-#. module: hr
-#: selection:hr.employee,marital:0
-msgid "Married"
-msgstr "Naimisissa"
-
-#. module: hr
-#: field:hr.job,message_ids:0
-msgid "Messages"
-msgstr "Viestit"
-
-#. module: hr
-#: view:hr.config.settings:0
-msgid "Talent Management"
-msgstr "Osaamisenhallinta"
-
-#. module: hr
-#: help:hr.config.settings,module_hr_timesheet_sheet:0
-msgid "This installs the module hr_timesheet_sheet."
-msgstr "Tmä asentaa moduulin hr_timesheet_sheet."
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Mobile:"
-msgstr "Matkapuhelin:"
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Position"
-msgstr "Asema"
-
-#. module: hr
-#: help:hr.job,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#. module: hr
-#: field:hr.employee,color:0
-msgid "Color Index"
-msgstr "Väri-indeksi"
-
-#. module: hr
-#: model:process.transition,note:hr.process_transition_employeeuser0
-msgid ""
-"The Related user field on the Employee form allows to link the OpenERP user "
-"(and her rights) to the employee."
-msgstr ""
-"Työntekijälomakkeella oleva Yhdistä käyttäjään -kenttä sallii OpenERP-"
-"käyttäjän (ja hänen käyttöoikeuksiensa) yhdistämisen mainittuun työntekijään."
-
-#. module: hr
-#: field:hr.employee,image_medium:0
-msgid "Medium-sized photo"
-msgstr "Keskikokoinen kuva"
-
-#. module: hr
-#: field:hr.employee,identification_id:0
-msgid "Identification No"
-msgstr "Henkilötunnus"
-
-#. module: hr
-#: selection:hr.employee,gender:0
-msgid "Female"
-msgstr "Nainen"
-
-#. module: hr
-#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
-msgid "Attendance"
-msgstr "Läsnäolo"
-
-#. module: hr
-#: field:hr.employee,work_phone:0
-msgid "Work Phone"
-msgstr "Työpuhelin"
-
-#. module: hr
-#: field:hr.employee.category,child_ids:0
-msgid "Child Categories"
-msgstr "Aliryhmät"
-
-#. module: hr
-#: field:hr.job,description:0
-#: model:ir.model,name:hr.model_hr_job
-msgid "Job Description"
-msgstr "Työnkuva"
-
-#. module: hr
-#: field:hr.employee,work_location:0
-msgid "Office Location"
-msgstr "Toimiston sijainti"
-
-#. module: hr
-#: field:hr.job,message_follower_ids:0
-msgid "Followers"
-msgstr "Seuraajat"
-
-#. module: hr
-#: view:hr.employee:0
-#: model:ir.model,name:hr.model_hr_employee
-#: model:process.node,name:hr.process_node_employee0
-msgid "Employee"
-msgstr "Työntekijä"
-
-#. module: hr
-#: model:process.node,note:hr.process_node_employeecontact0
-msgid "Other information"
-msgstr "Muut tiedot"
-
-#. module: hr
-#: help:hr.employee,image_small:0
-msgid ""
-"Small-sized photo of the employee. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
-msgstr ""
-"Pienikokoinen kuva työntekijästä. Kuva muutetaan automaattisesti kokoon "
-"64x64px kuvasuhde säilyttäen. Käytä tätä kun tarvitaan pientä kuvaa."
-
-#. module: hr
-#: field:hr.employee,birthday:0
-msgid "Date of Birth"
-msgstr "Syntymäaika"
-
-#. module: hr
-#: help:hr.job,no_of_recruitment:0
-msgid "Number of new employees you expect to recruit."
-msgstr "Työntekijämäärä jonka oletat palkkaavasi."
-
-#. module: hr
-#: model:ir.actions.client,name:hr.action_client_hr_menu
-msgid "Open HR Menu"
-msgstr "Avaa HR Valikko"
-
-#. module: hr
-#: help:hr.job,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Sisältää viestien yhteenvedon (viestien määrän,...). Tämä yhteenveto on "
-"valmiiksi  html-muodossa, jotta se voidaan viedä kanban näkymään."
-
-#. module: hr
-#: help:hr.config.settings,module_account_analytic_analysis:0
-msgid ""
-"This installs the module account_analytic_analysis, which will install sales "
-"management too."
-msgstr ""
-"Tämä asentaa moduulin account_analytic_analysis, joka asentaa myynnin "
-"halllinnan myös."
-
-#. module: hr
-#: view:board.board:0
-msgid "Human Resources Dashboard"
-msgstr "Henkilöstöhallinnon työpöytä"
-
-#. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,job_id:0
-#: view:hr.job:0
-msgid "Job"
-msgstr "Tehtävä"
-
-#. module: hr
-#: field:hr.job,no_of_employee:0
+#: model:ir.model.fields,field_description:hr.field_hr_job_no_of_employee
 msgid "Current Number of Employees"
 msgstr "Työntekijöiden lukumäärä nyt"
 
 #. module: hr
-#: field:hr.department,member_ids:0
-msgid "Members"
-msgstr "Jäsenet"
+#: model:ir.model.fields,field_description:hr.field_hr_employee_birthday
+msgid "Date of Birth"
+msgstr "Syntymäaika"
 
 #. module: hr
-#: model:ir.ui.menu,name:hr.menu_hr_configuration
-msgid "Configuration"
-msgstr "Konfiguraatio"
+#: model:ir.model.fields,help:hr.field_hr_department_message_last_post
+#: model:ir.model.fields,help:hr.field_hr_employee_message_last_post
+#: model:ir.model.fields,help:hr.field_hr_job_message_last_post
+msgid "Date of the last message posted on the record."
+msgstr "Viimeisen viestin päivämäärä"
 
 #. module: hr
-#: model:process.node,note:hr.process_node_employee0
-msgid "Employee form and structure"
-msgstr "Työntekijälomake ja rakenne"
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid "Define a clear communication strategy"
+msgstr ""
 
 #. module: hr
-#: field:hr.config.settings,module_hr_expense:0
-msgid "Manage employees expenses"
-msgstr "Hallitse työntekijöiden kuluja"
+#: model:ir.model.fields,help:hr.field_hr_employee_calendar_id
+msgid "Define the schedule of resource"
+msgstr "Määrittele resurssin aikataulutus"
 
 #. module: hr
-#: view:hr.employee:0
-msgid "Tel:"
-msgstr "Puh.:"
+#: model:hr.job,website_description:hr.job_consultant
+msgid "Deliver generic Odoo functional training sessions"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
+#: model:ir.model.fields,field_description:hr.field_hr_job_department_id
+#: model:ir.ui.view,arch_db:hr.view_department_filter
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Department"
+msgstr "Osasto"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_name
+msgid "Department Name"
+msgstr "Osaston nimi"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_module_tree_department
+#: model:ir.ui.menu,name:hr.menu_hr_department_tree
+#: model:ir.ui.view,arch_db:hr.view_department_filter
+msgid "Departments"
+msgstr "Osastot"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_display_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category_display_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
+#: model:ir.model.fields,field_description:hr.field_hr_job_display_name
+msgid "Display Name"
+msgstr "Näytä nimi"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -386,129 +377,57 @@ msgid "Divorced"
 msgstr "Eronnut"
 
 #. module: hr
-#: field:hr.employee.category,parent_id:0
-msgid "Parent Category"
-msgstr "Ylempi ryhmä"
+#: model:ir.model.fields,field_description:hr.field_hr_employee_time_efficiency
+msgid "Efficiency Factor"
+msgstr "Tehokkuuskerroin"
 
 #. module: hr
-#: view:hr.department:0
-#: model:ir.actions.act_window,name:hr.open_module_tree_department
-#: model:ir.ui.menu,name:hr.menu_hr_department_tree
-msgid "Departments"
-msgstr "Osastot"
+#: model:ir.model,name:hr.model_hr_employee
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Employee"
+msgstr "Työntekijä"
 
 #. module: hr
-#: model:process.node,name:hr.process_node_employeecontact0
-msgid "Employee Contact"
-msgstr "Työntekijän yhteystiedot"
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.action_hr_job
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new job position.\n"
-"              </p><p>\n"
-"                Job Positions are used to define jobs and their "
-"requirements.\n"
-"                You can keep track of the number of employees you have per "
-"job\n"
-"                position and follow the evolution according to what you "
-"planned\n"
-"                for the future.\n"
-"              </p><p>\n"
-"                You can attach a survey to a job position. It will be used "
-"in\n"
-"                the recruitment process to evaluate the applicants for this "
-"job\n"
-"                position.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: hr
-#: selection:hr.employee,gender:0
-msgid "Male"
-msgstr "Mies"
-
-#. module: hr
-#: view:hr.employee:0
-msgid ""
-"$('.oe_employee_picture').load(function() { if($(this).width() > "
-"$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
-msgstr ""
-"$('.oe_employee_picture').load(function() { if($(this).width() > "
-"$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
-
-#. module: hr
-#: help:hr.config.settings,module_hr_evaluation:0
-msgid "This installs the module hr_evaluation."
-msgstr "Tämä asentaa moduulin hr_evaluation."
-
-#. module: hr
-#: constraint:hr.employee:0
-msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr "Virhe! Et voi luoda rekursiivista työntekijähierarkiaa!"
-
-#. module: hr
-#: help:hr.config.settings,module_hr_attendance:0
-msgid "This installs the module hr_attendance."
-msgstr "Tämä asentaa moduulin hr_attendance."
-
-#. module: hr
-#: field:hr.employee,image_small:0
-msgid "Smal-sized photo"
-msgstr "Pienikokoinen kuva"
-
-#. module: hr
-#: view:hr.employee.category:0
 #: model:ir.model,name:hr.model_hr_employee_category
 msgid "Employee Category"
 msgstr "Työntekijäryhmä"
 
 #. module: hr
-#: field:hr.employee,category_ids:0
-msgid "Tags"
-msgstr "Tunnisteet"
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category_name
+msgid "Employee Tag"
+msgstr "Työntekijän tunniste"
 
 #. module: hr
-#: help:hr.config.settings,module_hr_contract:0
-msgid "This installs the module hr_contract."
-msgstr "Tämä asentaa moduulin hr_contract."
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+#: model:ir.ui.view,arch_db:hr.view_employee_category_form
+msgid "Employee Tags"
+msgstr "Henkilötunnisteet"
 
 #. module: hr
-#: view:hr.employee:0
-msgid "Related User"
-msgstr "Yhdistä käyttäjään"
-
-#. module: hr
-#: view:hr.config.settings:0
-msgid "or"
-msgstr "tai"
-
-#. module: hr
-#: field:hr.employee.category,name:0
-msgid "Category"
-msgstr "Ryhmä"
-
-#. module: hr
-#: view:hr.job:0
-msgid "Stop Recruitment"
-msgstr "Pysäytä rekrytointi"
-
-#. module: hr
-#: field:hr.config.settings,module_hr_attendance:0
-msgid "Install attendances feature"
-msgstr "Asenna läsnäolot-ominaisuus"
-
-#. module: hr
-#: help:hr.employee,bank_account_id:0
+#: model:ir.model.fields,help:hr.field_hr_employee_bank_account_id
 msgid "Employee bank salary account"
 msgstr "Työntekijän palkanmaksun pankkitilinumero"
 
 #. module: hr
-#: field:hr.department,note:0
-msgid "Note"
-msgstr "Huomautus"
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Employee's Name"
+msgstr "Työntekijän nimi"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.act_employee_from_department
+#: model:ir.actions.act_window,name:hr.open_view_employee_list
+#: model:ir.actions.act_window,name:hr.open_view_employee_list_my
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category_employee_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job_employee_ids
+#: model:ir.ui.menu,name:hr.menu_hr_root
+#: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
+#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:ir.ui.view,arch_db:hr.view_employee_tree
+#: model:ir.ui.view,arch_db:hr.view_partner_tree2
+msgid "Employees"
+msgstr "Työntekijät"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
@@ -516,363 +435,635 @@ msgid "Employees Structure"
 msgstr "Henkilöstön rakenne"
 
 #. module: hr
-#: view:hr.employee:0
-msgid "Contact Information"
-msgstr "Yhteystiedot"
-
-#. module: hr
-#: field:hr.config.settings,module_hr_holidays:0
-msgid "Manage holidays, leaves and allocation requests"
-msgstr "Hallitse lomat, poissaolot ja varauspyynnöt"
-
-#. module: hr
-#: field:hr.department,child_ids:0
-msgid "Child Departments"
-msgstr "Alaosastot"
-
-#. module: hr
-#: view:hr.employee:0
-#: view:hr.job:0
-#: field:hr.job,state:0
-msgid "Status"
-msgstr "Tila"
-
-#. module: hr
-#: field:hr.employee,otherid:0
-msgid "Other Id"
-msgstr "Muu tunniste"
-
-#. module: hr
-#: model:process.process,name:hr.process_process_employeecontractprocess0
-msgid "Employee Contract"
-msgstr "Työsopimus"
-
-#. module: hr
-#: view:hr.config.settings:0
-msgid "Contracts"
-msgstr "Sopimukset"
-
-#. module: hr
-#: help:hr.job,message_ids:0
-msgid "Messages and communication history"
-msgstr "Viesti- ja kommunikointihistoria"
-
-#. module: hr
-#: field:hr.employee,ssnid:0
-msgid "SSN No"
-msgstr "Henkilötunnus"
-
-#. module: hr
-#: field:hr.job,message_is_follower:0
-msgid "Is a Follower"
-msgstr "on seuraaja"
-
-#. module: hr
-#: field:hr.config.settings,module_hr_recruitment:0
-msgid "Manage the recruitment process"
-msgstr "Hallitse rekrytointiprosessia"
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Active"
-msgstr "Aktiivinen"
-
-#. module: hr
-#: view:hr.config.settings:0
-msgid "Human Resources Management"
-msgstr "Henkilöstöhallinto (HR)"
-
-#. module: hr
-#: view:hr.config.settings:0
-msgid "Install your country's payroll"
-msgstr "Asenna maasi palkanlaskenta"
-
-#. module: hr
-#: field:hr.employee,bank_account_id:0
-msgid "Bank Account Number"
-msgstr "Pankkitilin numero"
-
-#. module: hr
-#: view:hr.department:0
-msgid "Companies"
-msgstr "Yritykset"
-
-#. module: hr
-#: field:hr.job,message_summary:0
-msgid "Summary"
-msgstr "Yhteenveto"
-
-#. module: hr
-#: model:process.transition,note:hr.process_transition_contactofemployee0
-msgid ""
-"In the Employee form, there are different kind of information like Contact "
-"information."
-msgstr ""
-"Työntekijälomakkeelle merkitään erilaista informaatiota, esimerkiksi "
-"yhteystiedot."
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a new employee.\n"
-"              </p><p>\n"
-"                With just a quick glance on the OpenERP employee screen, "
-"you\n"
-"                can easily find all the information you need for each "
-"person;\n"
-"                contact data, job position, availability, etc.\n"
-"              </p>\n"
-"            "
+#: model:ir.ui.view,arch_db:hr.view_employee_category_list
+msgid "Employees Tags"
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:0
-msgid "HR Settings"
-msgstr "HR-asetukset"
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Citizenship & Other Info"
-msgstr "Kansalaisuus ja muuta tietoa"
-
-#. module: hr
-#: constraint:hr.department:0
+#: code:addons/hr/hr.py:299 constraint:hr.department:0
+#, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "Virhe! Et voi luoda rekursiivisia osastoja."
 
 #. module: hr
-#: field:hr.employee,address_id:0
-msgid "Working Address"
-msgstr "Työosoite"
+#: code:addons/hr/hr.py:269 constraint:hr.employee:0
+#, python-format
+msgid "Error! You cannot create recursive hierarchy of Employee(s)."
+msgstr "Virhe! Et voi luoda rekursiivista työntekijähierarkiaa!"
 
 #. module: hr
-#: view:hr.employee:0
-msgid "Public Information"
-msgstr "Julkinen informaatio"
+#: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
+msgid "Expected New Employees"
+msgstr "Oletettu uusien työtekijöiden lukumäärä"
 
 #. module: hr
-#: field:hr.employee,marital:0
-msgid "Marital Status"
-msgstr "Siviilisääty"
-
-#. module: hr
-#: model:ir.model,name:hr.model_ir_actions_act_window
-msgid "ir.actions.act_window"
-msgstr "ir.actions.act_window"
-
-#. module: hr
-#: field:hr.employee,last_login:0
-msgid "Latest Connection"
-msgstr "Viimeisin yhteys"
-
-#. module: hr
-#: field:hr.employee,image:0
-msgid "Photo"
-msgstr "Kuva"
-
-#. module: hr
-#: view:hr.config.settings:0
-msgid "Cancel"
-msgstr "Peruuta"
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.open_module_tree_department
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a department.\n"
-"              </p><p>\n"
-"                OpenERP's department structure is used to manage all "
-"documents\n"
-"                related to employees by departments: expenses, timesheets,\n"
-"                leaves and holidays, recruitments, etc.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klikkaa luodaksesi osaston.\n"
-"              </p><p>\n"
-"                OpenERP:in osastorakennetta käytetään kaikkien "
-"työntekijöihin \n"
-"                yhdistettyjen dokumenttien hallintaan osastoilla: kulut, "
-"tuntilomakkeet, \n"
-"                vapaat ja lomat, rekrytoinnit, jne.\n"
-"              </p>\n"
-"            "
-
-#. module: hr
-#: help:hr.config.settings,module_hr_timesheet:0
-msgid "This installs the module hr_timesheet."
-msgstr "Tämä asentaa moduulin hr_timesheet."
-
-#. module: hr
-#: help:hr.job,expected_employees:0
+#: model:ir.model.fields,help:hr.field_hr_job_expected_employees
 msgid ""
 "Expected number of employees for this job position after new recruitment."
 msgstr "Odotettu työntekijämäärä tähän työtehtävään rekrytoinnin päättyessä."
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new department.\n"
-"              </p><p>\n"
-"                Your departments structure is used to manage all documents\n"
-"                related to employees by departments: expenses and "
-"timesheets,\n"
-"                leaves and holidays, recruitments, etc.\n"
-"              </p>\n"
-"            "
+#: model:hr.job,name:hr.job_developer
+msgid "Experienced Developer"
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klikkaa luodaksesi uuden osaston.\n"
-"              </p><p>\n"
-"                OpenERP:in osastorakennetta käytetään kaikkien "
-"työntekijöihin \n"
-"                yhdistettyjen dokumenttien hallintaan osastoilla: kulut, "
-"tuntilomakkeet, \n"
-"                vapaat ja lomat, rekrytoinnit, jne.\n"
-"              </p>\n"
-"            "
 
 #. module: hr
-#: view:hr.employee:0
-msgid "Personal Information"
-msgstr "Henkilötiedot"
+#: selection:hr.employee,gender:0
+msgid "Female"
+msgstr "Nainen"
 
 #. module: hr
-#: field:hr.employee,city:0
-msgid "City"
-msgstr "Kaupunki"
+#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid "Follow"
+msgstr "Seuraa"
 
 #. module: hr
-#: field:hr.employee,passport_id:0
-msgid "Passport No"
-msgstr "Passin numero"
+#: model:hr.job,website_description:hr.job_consultant
+msgid "Follow and check the development part"
+msgstr ""
 
 #. module: hr
-#: field:hr.employee,mobile_phone:0
-msgid "Work Mobile"
-msgstr "Matkapuhelin (työ)"
+#: model:ir.model.fields,field_description:hr.field_hr_department_message_follower_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee_message_follower_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job_message_follower_ids
+#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid "Followers"
+msgstr "Seuraajat"
 
 #. module: hr
-#: selection:hr.job,state:0
-msgid "Recruitement in Progress"
-msgstr "Rekrytointi käsittelyssä"
+#: model:ir.model.fields,field_description:hr.field_hr_department_message_channel_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee_message_channel_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job_message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Seuraajat (kanavat)"
 
 #. module: hr
-#: field:hr.config.settings,module_account_analytic_analysis:0
-msgid ""
-"Allow invoicing based on timesheets (the sale application will be installed)"
-msgstr "Salli laskutus perustuen tuntikortteihin (myyntisovellus asennetaan)"
+#: model:ir.model.fields,field_description:hr.field_hr_department_message_partner_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee_message_partner_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job_message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seuraajat (kumppanit)"
 
 #. module: hr
-#: view:hr.employee.category:0
-msgid "Employees Categories"
-msgstr "Työntekijäryhmät"
-
-#. module: hr
-#: field:hr.employee,address_home_id:0
-msgid "Home Address"
-msgstr "Kotiosoite"
-
-#. module: hr
-#: field:hr.config.settings,module_hr_timesheet:0
-msgid "Manage timesheets"
-msgstr "Hallitse tuntikortteja"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_payroll_modules
-msgid "Payroll"
-msgstr "Palkkahallinto"
-
-#. module: hr
-#: selection:hr.employee,marital:0
-msgid "Single"
-msgstr "Naimaton"
-
-#. module: hr
-#: field:hr.job,name:0
-msgid "Job Name"
-msgstr "Tehtävänimike"
-
-#. module: hr
-#: view:hr.job:0
-msgid "In Position"
-msgstr "Tehtävässä"
-
-#. module: hr
-#: help:hr.config.settings,module_hr_payroll:0
-msgid "This installs the module hr_payroll."
-msgstr "Tämä asnetaa moduulin hr_payroll."
-
-#. module: hr
-#: field:hr.config.settings,module_hr_contract:0
-msgid "Record contracts per employee"
-msgstr "Tallenna sopimistiedot työntekijälle"
-
-#. module: hr
-#: view:hr.department:0
-msgid "department"
-msgstr "osasto"
-
-#. module: hr
-#: field:hr.employee,country_id:0
-msgid "Nationality"
-msgstr "Kansalaisuus"
-
-#. module: hr
-#: view:hr.config.settings:0
-msgid "Additional Features"
-msgstr "Lisäominaisuudet"
-
-#. module: hr
-#: field:hr.employee,notes:0
-msgid "Notes"
-msgstr "Muistiinpanot"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.action2
-msgid "Subordinate Hierarchy"
-msgstr "Alaishierarkkia"
-
-#. module: hr
-#: field:hr.employee,resource_id:0
-msgid "Resource"
-msgstr "Resurssi"
-
-#. module: hr
-#: field:hr.department,complete_name:0
-#: field:hr.employee,name_related:0
-#: field:hr.employee.category,complete_name:0
-msgid "Name"
-msgstr "Nimi"
-
-#. module: hr
-#: field:hr.employee,gender:0
+#: model:ir.model.fields,field_description:hr.field_hr_employee_gender
 msgid "Gender"
 msgstr "Sukupuoli"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee.category,employee_ids:0
-#: field:hr.job,employee_ids:0
-#: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
-#: model:ir.actions.act_window,name:hr.open_view_employee_list
-#: model:ir.actions.act_window,name:hr.open_view_employee_list_my
-#: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
-msgid "Employees"
-msgstr "Työntekijät"
+#: model:hr.job,website_description:hr.job_developer
+msgid "Good knowledge of HTML and Javascript"
+msgstr ""
 
 #. module: hr
-#: help:hr.employee,sinid:0
-msgid "Social Insurance Number"
-msgstr "Sosiaaliturvatunnus"
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Good knowledge of object oriented programming"
+msgstr ""
 
 #. module: hr
-#: field:hr.department,name:0
-msgid "Department Name"
-msgstr "Osaston nimi"
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Good knowledge of the latest web technologies"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Good knowledge of the programming language"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Good knowledge of web design"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Good language skills in another language"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Group By"
+msgstr "Ryhmittele"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_department
+msgid "HR Department"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "HR Settings"
+msgstr "HR-asetukset"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "Help with the configuration of the software"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_hrm
+msgid "Hire a team of great Human Resources people"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+msgid "Hire a team of great executive people"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_marketing
+msgid "Hire a team of great marketing people"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job_no_of_hired_employee
+msgid "Hired Employees"
+msgstr "Palkatut työntekijät"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
+msgid "Home Address"
+msgstr "Kotiosoite"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_main
+msgid "Human Resources"
+msgstr "Henkilöstön hallinta"
+
+#. module: hr
+#: model:hr.job,name:hr.job_hrm
+msgid "Human Resources Manager"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_id
+#: model:ir.model.fields,field_description:hr.field_hr_job_id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_identification_id
+msgid "Identification No"
+msgstr "Henkilötunnus"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department_message_unread
+#: model:ir.model.fields,help:hr.field_hr_employee_message_unread
+#: model:ir.model.fields,help:hr.field_hr_job_message_unread
+msgid "If checked new messages require your attention."
+msgstr "Jos valittu, uudet viestit vaativat huomiosi."
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department_message_needaction
+#: model:ir.model.fields,help:hr.field_hr_employee_message_needaction
+#: model:ir.model.fields,help:hr.field_hr_job_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Jos valittu, uudet viestit vaativat huomiotasi."
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr "Jos aktiivisen kentän arvo on epätosi (false), voit piilottaa resurssin poistamatta sitä."
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid "Improve our communication to customers"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_job_filter
+msgid "In Position"
+msgstr "Tehtävässä"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_job_filter
+msgid "In Recruitment"
+msgstr "Käynnissä"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid "Increase opportunities"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid "Increase the visibility of the product"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_message_is_follower
+#: model:ir.model.fields,field_description:hr.field_hr_employee_message_is_follower
+#: model:ir.model.fields,field_description:hr.field_hr_job_message_is_follower
+msgid "Is Follower"
+msgstr "on seuraaja"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+#: model:ir.ui.view,arch_db:hr.view_hr_job_tree
+#: model:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Job"
+msgstr "Tehtävä"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job_description
+msgid "Job Description"
+msgstr "Työnkuva"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job_name
+msgid "Job Name"
+msgstr "Tehtävänimike"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_job
+msgid "Job Position"
+msgstr "Tehtävänimike"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Job Position Name"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.action_hr_job
+#: model:ir.ui.menu,name:hr.menu_hr_job_position
+#: model:ir.ui.menu,name:hr.menu_hr_job_position_config
+msgid "Job Positions"
+msgstr "Työtehtävät"
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.action_hr_job
+msgid ""
+"Job Positions are used to define jobs and their requirements.\n"
+"                You can keep track of the number of employees you have per job\n"
+"                position and follow the evolution according to what you planned\n"
+"                for the future."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
+msgid "Job Title"
+msgstr "Tehtävänimike"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_jobs_ids
+#: model:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Jobs"
+msgstr "Työt"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_message_last_post
+#: model:ir.model.fields,field_description:hr.field_hr_employee_message_last_post
+#: model:ir.model.fields,field_description:hr.field_hr_job_message_last_post
+msgid "Last Message Date"
+msgstr "Viimeinen viestipvm"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department___last_update
+#: model:ir.model.fields,field_description:hr.field_hr_employee___last_update
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category___last_update
+#: model:ir.model.fields,field_description:hr.field_hr_job___last_update
+msgid "Last Modified on"
+msgstr "Viimeksi muokattu"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users_last_website_so_id
+msgid "Last Online Sale Order"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_job_write_uid
+msgid "Last Updated by"
+msgstr "Viimeksi päivittänyt"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_write_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_write_date
+msgid "Last Updated on"
+msgstr "Viimeksi päivitetty"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_last_login
+msgid "Latest Connection"
+msgstr "Viimeisin yhteys"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Launch Recruitment"
+msgstr "Käynnistä rekrytointi"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_marketing
+msgid "Launch new marketing campaigns and offers"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_hrm
+msgid "Launch new products, Human Resources campaigns and offers"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+msgid "Launch new products, marketing campaigns and offers"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_login
+msgid "Login"
+msgstr "Kirjautuminen"
+
+#. module: hr
+#: selection:hr.employee,gender:0
+msgid "Male"
+msgstr "Mies"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_manager_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_parent_id
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Manager"
+msgstr "Päällikkö"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_marital
+msgid "Marital Status"
+msgstr "Siviilisääty"
+
+#. module: hr
+#: model:hr.job,name:hr.job_marketing
+msgid "Marketing and Community Manager"
+msgstr ""
+
+#. module: hr
+#: selection:hr.employee,marital:0
+msgid "Married"
+msgstr "Naimisissa"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Master or engineer in computer science"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_image_medium
+msgid "Medium-sized photo"
+msgstr "Keskikokoinen kuva"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_image_medium
+msgid ""
+"Medium-sized photo of the employee. It is automatically resized as a "
+"128x128px image, with aspect ratio preserved. Use this field in form views "
+"or some kanban views."
+msgstr "Keskikokoinen kuva työntekijästä. Kuva skaalataan automaattisesti kokoon 128x128px, kuvasuhde säilyttäen. Käytä tätä kenttää lomake- ja kanban näkymissä."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_member_ids
+msgid "Members"
+msgstr "Jäsenet"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee_message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job_message_ids
+#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid "Messages"
+msgstr "Viestit"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "More <i class=\"fa fa-caret-down\"/>"
+msgstr "Lisää <i class=\"fa fa-caret-down\"/>"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Must have ..."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
+msgid "Name"
+msgstr "Nimi"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_country_id
+msgid "Nationality (Country)"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Nice to have"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_note
+msgid "Note"
+msgstr "Huomautus"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_notes
+msgid "Notes"
+msgstr "Muistiinpanot"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_message_needaction_counter
+#: model:ir.model.fields,field_description:hr.field_hr_employee_message_needaction_counter
+#: model:ir.model.fields,field_description:hr.field_hr_job_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Toimenpiteiden määrä"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_job_no_of_employee
+msgid "Number of employees currently occupying this job position."
+msgstr "Tässä työtehtävässä parhaillaan olevien työntekijöiden lukumäärä."
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_job_no_of_hired_employee
+msgid ""
+"Number of hired employees for this job position during recruitment phase."
+msgstr "Tähän työtehtävään palkattujen työntekijöiden määrä rekrytointivaiheessa."
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department_message_needaction_counter
+#: model:ir.model.fields,help:hr.field_hr_employee_message_needaction_counter
+#: model:ir.model.fields,help:hr.field_hr_job_message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Toimenpiteitä vaativien viestien määrä"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_job_no_of_recruitment
+msgid "Number of new employees you expect to recruit."
+msgstr "Työntekijämäärä jonka oletat palkkaavasi."
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department_message_unread_counter
+#: model:ir.model.fields,help:hr.field_hr_employee_message_unread_counter
+#: model:ir.model.fields,help:hr.field_hr_job_message_unread_counter
+msgid "Number of unread messages"
+msgstr "Lukemattomien viestien määrä"
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.open_module_tree_department
+msgid ""
+"Odoo's department structure is used to manage all documents\n"
+"                related to employees by departments: expenses, timesheets,\n"
+"                leaves and holidays, recruitments, etc."
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.client,name:hr.action_client_hr_menu
+msgid "Open HR Menu"
+msgstr "Avaa HR Valikko"
+
+#. module: hr
+#: selection:hr.employee,gender:0
+msgid "Other"
+msgstr "Muu"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Other Information ..."
+msgstr "Muu informaatio..."
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Our staff at work"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_parent_id
+msgid "Parent Department"
+msgstr "Ylempi osasto"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_developer
+msgid "Passion for the Internet and its culture"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_passport_id
+msgid "Passport No"
+msgstr "Passin numero"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Personal Information"
+msgstr "Henkilötiedot"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_image
+msgid "Photo"
+msgstr "Kuva"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Pictures of smart and enthusiastic people"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Position"
+msgstr "Asema"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Preferably 1 year of experience"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Public Information"
+msgstr "Julkinen informaatio"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "Quantify and negotiate the resources required"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_developer
+msgid "Quick and autonomous learner"
+msgstr ""
+
+#. module: hr
+#: selection:hr.job,state:0
+msgid "Recruitment Closed"
+msgstr "Rekrytointi on päättynyt"
+
+#. module: hr
+#: selection:hr.job,state:0
+msgid "Recruitment in Progress"
+msgstr "Rekrytointiprosessi käynnissä"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Related User"
+msgstr "Yhdistä käyttäjään"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users_employee_ids
+msgid "Related employees"
+msgstr "Yhdistä työntekijöihin"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_user_id
+msgid "Related user name for the resource to manage its access."
+msgstr "Liittyvä käyttäjätunnus resurssille sen oikeuksien määrittämiseksi"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
@@ -880,49 +1071,208 @@ msgid "Reports"
 msgstr "Raportit"
 
 #. module: hr
-#: field:hr.config.settings,module_hr_payroll:0
-msgid "Manage payroll"
-msgstr "Hallitse palkkoja"
+#: model:ir.model.fields,field_description:hr.field_hr_job_requirements
+msgid "Requirements"
+msgstr "vaatimukset"
 
 #. module: hr
-#: view:hr.config.settings:0
-#: model:ir.actions.act_window,name:hr.action_human_resources_configuration
-msgid "Configure Human Resources"
-msgstr "Konfiguroi henkilöstöhallintoa"
+#: model:ir.model.fields,field_description:hr.field_hr_employee_resource_id
+msgid "Resource"
+msgstr "Resurssi"
 
 #. module: hr
-#: selection:hr.job,state:0
-msgid "No Recruitment"
-msgstr "Ei rekrytointeja"
+#: model:ir.model.fields,field_description:hr.field_hr_employee_resource_type
+msgid "Resource Type"
+msgstr "Resurssin tyyppi"
 
 #. module: hr
-#: help:hr.employee,ssnid:0
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Responsibilities"
+msgstr "Vastuut"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_sinid
+msgid "SIN No"
+msgstr "Vakuutustunnus"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_ssnid
+msgid "SSN No"
+msgstr "Henkilötunnus"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid "Scale our events organization all around the world"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_job_state
+msgid ""
+"Set whether the recruitment process is open or closed for this job position."
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "Settings"
+msgstr "Asetukset"
+
+#. module: hr
+#: selection:hr.employee,marital:0
+msgid "Single"
+msgstr "Naimaton"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "Skills"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_image_small
+msgid "Small-sized photo"
+msgstr "Pienikokoinen kuva"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_image_small
+msgid ""
+"Small-sized photo of the employee. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
+msgstr "Pienikokoinen kuva työntekijästä. Kuva muutetaan automaattisesti kokoon 64x64px kuvasuhde säilyttäen. Käytä tätä kun tarvitaan pientä kuvaa."
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_sinid
+msgid "Social Insurance Number"
+msgstr "Sosiaaliturvatunnus"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_ssnid
 msgid "Social Security Number"
 msgstr "Sosiaaliturvatunnus"
 
 #. module: hr
-#: model:process.node,note:hr.process_node_openerpuser0
-msgid "Creation of a OpenERP user"
-msgstr "OpenERP-käyttäjän luonti"
+#: model:ir.model.fields,field_description:hr.field_hr_job_state
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Status"
+msgstr "Tila"
 
 #. module: hr
-#: field:hr.employee,login:0
-msgid "Login"
-msgstr "Kirjautuminen"
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Stop Recruitment"
+msgstr "Pysäytä rekrytointi"
 
 #. module: hr
-#: field:hr.job,expected_employees:0
+#: model:ir.actions.act_window,name:hr.hr_employee_action_subordinate_hierachy
+msgid "Subordinate Hierarchy"
+msgstr "Alaishierarkkia"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_child_ids
+msgid "Subordinates"
+msgstr "Alaiset"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users_subscription_count
+msgid "Subscriptions"
+msgstr ""
+
+#. module: hr
+#: sql_constraint:hr.employee.category:0
+msgid "Tag name already exists !"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category_ids
+msgid "Tags"
+msgstr "Tunnisteet"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "Take part in the consulting services"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_developer
+msgid "Team spirit and good communication"
+msgstr ""
+
+#. module: hr
+#: sql_constraint:hr.job:0
+msgid "The name of the job position must be unique per department in company!"
+msgstr "Tehtävänimikkeen yrityksen osaston sisällä pitää olla yksilöllinen!"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
+msgid ""
+"This field depict the efficiency of the resource to complete tasks. e.g  "
+"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
+"show a load of 100% for this phase by default, but if we put a efficiency of"
+" 200%, then his load will only be 50%."
+msgstr "Tämä kenttä kuvaa resurssin tehokkuutta tehtävien suorittamisessa. Esim. jos resurssi jätetään yksin viideksi päiväksi suorittamaan viittä hänelle määrättyä tehtävää, tämä näyttää 100% kuormitusta. Jos tehokkuus määritetään 200%:ksi, kuormitus on vain 50%."
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_image
+msgid ""
+"This field holds the image used as photo for the employee, limited to "
+"1024x1024px."
+msgstr "Tämä kenttä sisältää työntekijöistä valokuvan, koko rajoitettu 1024x1024px."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job_expected_employees
 msgid "Total Forecasted Employees"
 msgstr "Ennuste yhteensä työntekijöitä"
 
 #. module: hr
-#: help:hr.job,state:0
-msgid ""
-"By default 'In position', set it to 'In Recruitment' if recruitment process "
-"is going on for this job position."
+#: model:hr.job,name:hr.job_trainee
+msgid "Trainee"
 msgstr ""
-"Oletuksena \"Tehtävässä\" asetetaan tilaan \"Käynnissä\", jos "
-"rekrytointiprosessi on käynnissä tähän tehtävään."
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_marketing
+msgid "Transform our product into a suite of well positioned business Apps"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_message_unread
+#: model:ir.model.fields,field_description:hr.field_hr_employee_message_unread
+#: model:ir.model.fields,field_description:hr.field_hr_job_message_unread
+#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+#: model:ir.ui.view,arch_db:hr.view_department_filter
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Unread Messages"
+msgstr "Lukemattomia viestejä"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_message_unread_counter
+#: model:ir.model.fields,field_description:hr.field_hr_employee_message_unread_counter
+#: model:ir.model.fields,field_description:hr.field_hr_job_message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Lukemattomien viestien laskuri"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job_write_date
+msgid "Update Date"
+msgstr "Päivityksen ajankohta"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
+msgid "User"
+msgstr "Käyttäjä"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
@@ -930,57 +1280,62 @@ msgid "Users"
 msgstr "Käyttäjät"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.action_hr_job
-#: model:ir.ui.menu,name:hr.menu_hr_job
-msgid "Job Positions"
-msgstr "Työtehtävät"
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.open_board_hr
+#: model:hr.job,website_description:hr.job_consultant
 msgid ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"                  <p>\n"
-"                    <b>Human Resources dashboard is empty.</b>\n"
-"                  </p><p>\n"
-"                    To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add "
-"to\n"
-"                    Dashboard'</i> in the extended search options.\n"
-"                  </p><p>\n"
-"                    You can filter and group data before inserting into the\n"
-"                    dashboard using the search options.\n"
-"                  </p>\n"
-"              </div>\n"
-"            "
+"We are looking for a motivated and results-driven Functional Consultant! You"
+" will take part in the consulting services we provide to our partners and "
+"customers, on the functional side. Your job start from the quotation to the "
+"customer to the delivery to the customer. You listen the customer and try to"
+" give him the best service. You report to the head of consulting service and"
+" will be coached by a senior consultant."
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,coach_id:0
-msgid "Coach"
-msgstr "Valmentaja"
+#: model:hr.job,website_description:hr.job_hrm
+msgid ""
+"We are looking for a passionated Human Resources Manager to help us make "
+"products people love to use. We need someone who is ambitious, passionated, "
+"and ..... not afraid to start new things, a lot of new things and scale "
+"them."
+msgstr ""
 
 #. module: hr
-#: sql_constraint:hr.job:0
-msgid "The name of the job position must be unique per company!"
-msgstr "Tehtävänimikeen tulee olla ainutkertainen yrityskohtaisesti!"
+#: model:hr.job,website_description:hr.job_ceo
+msgid ""
+"We are looking for a passionated executive manager to help us make products "
+"people love to use. We need someone who is ambitious, passionated, and ....."
+" not afraid to start new things, a lot of new things and scale them."
+msgstr ""
 
 #. module: hr
-#: help:hr.config.settings,module_hr_expense:0
-msgid "This installs the module hr_expense."
-msgstr "Tämä asentaa moduulin hr_expense."
+#: model:hr.job,website_description:hr.job_marketing
+msgid ""
+"We are looking for a passionated marketer manager to help us make products "
+"people love to use. We need someone who is ambitious, passionated, and ....."
+" not afraid to start new things, a lot of new things and scale them."
+msgstr ""
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_config_settings
-msgid "hr.config.settings"
-msgstr "hr.config.settings"
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "What we offer"
+msgstr ""
 
 #. module: hr
-#: field:hr.department,manager_id:0
-#: view:hr.employee:0
-#: field:hr.employee,parent_id:0
-msgid "Manager"
-msgstr "Esimies"
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid "What you will do ..."
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -988,362 +1343,253 @@ msgid "Widower"
 msgstr "Leski"
 
 #. module: hr
-#: field:hr.employee,child_ids:0
-msgid "Subordinates"
-msgstr "Alaiset"
+#: model:hr.job,website_description:hr.job_consultant
+msgid "Will report to the Head of Professional Services"
+msgstr ""
 
 #. module: hr
-#: view:hr.config.settings:0
-msgid "Apply"
-msgstr "Käytä"
-
-#~ msgid "Error! You can not create recursive departments."
-#~ msgstr "Virhe! Et voi luoda itseään toistavia osastoja."
-
-#~ msgid "Sunday"
-#~ msgstr "Sunnuntai"
-
-#~ msgid "Unmaried"
-#~ msgstr "Naimaton"
-
-#~ msgid "Workgroup manager"
-#~ msgstr "Työryhmän johtaja"
-
-#~ msgid "Social IDs"
-#~ msgstr "Henkilötunnukset"
-
-#~ msgid "Fill up contact information"
-#~ msgstr "Täytä yhteystiedot"
-
-#~ msgid "Maried"
-#~ msgstr "Naimisissa"
-
-#~ msgid "Employee's timesheet group"
-#~ msgstr "Työntekijän aikatauluryhmä"
-
-#~ msgid "Create openerp user"
-#~ msgstr "Luo OpenERP käyttäjä"
-
-#~ msgid "Day of week"
-#~ msgstr "Viikonpäivä"
-
-#~ msgid "Create OpenERP User"
-#~ msgstr "Luo OpenERP käyttäjä"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "Virhe! Et voi luoda itseään toistavaa työntekijähierarkiaa."
-
-#~ msgid "Categories of Employee"
-#~ msgstr "Työntekijän kategoriat"
-
-#~ msgid "Starting date"
-#~ msgstr "Aloituspäivämäärä"
-
-#~ msgid "New Employee"
-#~ msgstr "Uusi työntekijä"
-
-#~ msgid "Job Information"
-#~ msgstr "Työnkuvaus"
-
-#~ msgid "All Employees"
-#~ msgstr "Kaikki työntekijät"
-
-#~ msgid "Fill up employee's contact information"
-#~ msgstr "Täytä työntekijän yhteystiedot"
-
-#~ msgid "Timesheet Line"
-#~ msgstr "Tuntilistan rivi"
-
-#~ msgid "Group name"
-#~ msgstr "Ryhmän nimi"
-
-#~ msgid "Friday"
-#~ msgstr "Perjantai"
-
-#~ msgid "Tuesday"
-#~ msgstr "Tiistai"
-
-#~ msgid "Reporting"
-#~ msgstr "Raportointi"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Virheellinen XML näkymä-arkkitehtuurille!"
-
-#~ msgid "Wednesday"
-#~ msgstr "Keskiviikko"
-
-#~ msgid "Birthday"
-#~ msgstr "Syntymäaika"
-
-#~ msgid "Monday"
-#~ msgstr "Maanantai"
-
-#~ msgid "Working Time"
-#~ msgstr "Työaika"
-
-#~ msgid "Thursday"
-#~ msgstr "Torstai"
-
-#~ msgid "Other"
-#~ msgstr "Muu"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "Objektin nimen tulee alkaa x_ ja se ei saa sisältää erikoismerkkejä!"
-
-#~ msgid "Saturday"
-#~ msgstr "Lauantai"
-
-#~ msgid "Parents"
-#~ msgstr "Vanhemmat"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Virheellinen mallin nimi toiminnon määrittelyssä."
-
-#~ msgid "Working Time Categories"
-#~ msgstr "Työaika kategoriat"
-
-#~ msgid "Contact  of employee"
-#~ msgstr "Työntekijän yhteys"
-
-#~ msgid "Work from"
-#~ msgstr "Työaika alkaen"
-
-#~ msgid "Employee Hierarchy"
-#~ msgstr "Työntekijöiden hierarkia"
-
-#~ msgid "Working Time Category"
-#~ msgstr "Työaika kategoria"
-
-#~ msgid "hr.department"
-#~ msgstr "hr.department"
-
-#~ msgid "Employee Complete Form"
-#~ msgstr "Työntekijän täysi lomake"
-
-#~ msgid "Employee Contract Process"
-#~ msgstr "Työntekijän sopimusprosessi"
-
-#~ msgid "Categories structure"
-#~ msgstr "Kategorioiden rakenne"
-
-#~ msgid "Parent Users"
-#~ msgstr "Ylemmät käyttäjät"
-
-#~ msgid "Work to"
-#~ msgstr "Työaika päättyy"
-
-#~ msgid "Other ID"
-#~ msgstr "Muu tunnus"
-
-#~ msgid "Holidays"
-#~ msgstr "Lomat"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr "Virhe! Osastoa, jossa työntekijä on esimiehenä, ei voi valita."
-
-#~ msgid "Employee Marital Status"
-#~ msgstr "Työntekijän siviilisääty"
-
-#~ msgid "Employee Passport Information"
-#~ msgstr "Työntekijän passin tiedot"
-
-#~ msgid "Timesheets"
-#~ msgstr "Tuntilistat"
-
-#~ msgid "No of Employee"
-#~ msgstr "Työntekijänumero"
-
-#~ msgid "Work E-mail"
-#~ msgstr "Työpaikan sähköposti"
-
-#~ msgid "Image"
-#~ msgstr "Kuva"
-
-#~ msgid "The chosen company is not in the allowed companies for this user"
-#~ msgstr "Valittu yritys ei ole sallittu tälle käyttäjälle"
-
-#~ msgid "unknown"
-#~ msgstr "tuntematon"
-
-#~ msgid "Old"
-#~ msgstr "Vanha"
-
-#~ msgid "Helps you manage and streamline your recruitment process."
-#~ msgstr "Auttaa hallitsemaan ja virtaviivaistamaan työhönottoprosessia."
-
-#~ msgid "Attendances"
-#~ msgstr "Läsnäolot"
-
-#~ msgid "Current"
-#~ msgstr "Nykyinen"
-
-#~ msgid ""
-#~ "Tracks and manages employee expenses, and can automatically re-invoice "
-#~ "clients if the expenses are project-related."
-#~ msgstr ""
-#~ "Seuraa ja hallitsee työntekijäkuluja ja voi automaattisesti laskuttaa "
-#~ "asiakasta, jos kulut liittyvät projektiin."
-
-#~ msgid "Mobile"
-#~ msgstr "Matkapuhelin"
-
-#~ msgid "Simplifies the management of employee's attendances."
-#~ msgstr "Yksinkertaistaa työntekijän läsnäolon hallintaa"
-
-#~ msgid "title"
-#~ msgstr "titteli"
-
-#~ msgid "Mark as Old"
-#~ msgstr "Merkitse vanhentuneeksi"
-
-#~ msgid "Employee's Contracts"
-#~ msgstr "Työntekijän sopimukset"
-
-#~ msgid "My Departments Employee"
-#~ msgstr "Oman osaston työntekijä"
-
-#~ msgid "Generic Payroll system."
-#~ msgstr "Yleinen palkkahallintojärjestelmä"
-
-#~ msgid ""
-#~ "Tracks and helps employees encode and validate timesheets and attendances."
-#~ msgstr ""
-#~ "Seuraa ja auttaa työntekijöitä syöttämään ja tarkistamaan tuntilistoja ja "
-#~ "läsnäoloja."
-
-#~ msgid "Number of employee with that job."
-#~ msgstr "Samaa työtä tekevien henkilöiden määrä."
-
-#~ msgid "My Board"
-#~ msgstr "Oma työpöytä"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Konfiguraation eteneminen"
-
-#~ msgid "Categories"
-#~ msgstr "Kategoriat"
-
-#~ msgid "State"
-#~ msgstr "Tila"
-
-#~ msgid "HR Manager Dashboard"
-#~ msgstr "Henkilöstöpäällikön Työpöytä"
-
-#~ msgid "You can not have two users with the same login !"
-#~ msgstr "Kahdella eri käyttäjällä ei voi olla samaa käyttäjätunnusta!"
-
-#~ msgid "Status Description"
-#~ msgstr "Statuksen kuvaus"
-
-#~ msgid "Holidays / Leaves Management"
-#~ msgstr "Lomien / vapaiden hallinta"
-
-#~ msgid "Configure"
-#~ msgstr "Konfiguroi"
-
-#~ msgid "Description"
-#~ msgstr "Kuvaus"
-
-#~ msgid "Expenses"
-#~ msgstr "Kustannukset"
-
-#~ msgid "Configure Your Human Resources Application"
-#~ msgstr "konfiguroi HR ohjelmistosi"
-
-#~ msgid ""
-#~ "Your Company's Department Structure is used to manage all documents related "
-#~ "to employees by departments: expenses and timesheet validation, leaves "
-#~ "management, recruitments, etc."
-#~ msgstr ""
-#~ "Yrityksen osatorakennetta käytetään hallitsemaan dokumenttejä jotka "
-#~ "liittyvät osastom työntekijöihin, kuluihin, tuntilistojen tarkastamiseen, "
-#~ "lomien hallintaan, palkkaamiseen jne."
-
-#~ msgid "Tracks employee leaves, allocation requests and planning."
-#~ msgstr "Seuraa työntekijöiden lomia, pyyntöjä ja suunnitelmia."
-
-#~ msgid "Periodic Evaluations"
-#~ msgstr "Määräaikaiset arvioinnit"
-
-#~ msgid "In Recruitement"
-#~ msgstr "Palkattavana"
-
-#~ msgid "It is linked with manager of Department"
-#~ msgstr "On linkitetty osaston johtajaan."
-
-#~ msgid ""
-#~ "Lets you create and manage the periodic evaluation and performance review of "
-#~ "employees."
-#~ msgstr ""
-#~ "Mahdollistaan määräaikaisarviointien ja suorituskykyanalyysien tekemisen "
-#~ "työntekijöille."
-
-#~ msgid "Expected Employees"
-#~ msgstr "Odotetut työntekijät"
-
-#~ msgid "Error ! You cannot create recursive Categories."
-#~ msgstr "Virhe! Et voi luoda rekursiivisia kategorioita."
-
-#~ msgid "Required number of Employees in total for that job."
-#~ msgstr "Tarvittava kokonaishenkilömäärä työtä varten."
-
-#~ msgid ""
-#~ "You can enhance the base HR Application by installing few HR-related "
-#~ "functionalities."
-#~ msgstr ""
-#~ "Voit laajentaa perus HR ohjelmaa asentamalla muutamia HR:ään littyviä "
-#~ "toimintoja."
-
-#~ msgid "Human Resources Application Configuration"
-#~ msgstr "HR ohjelmiston konfiguraation"
-
-#~ msgid "HR Manager Board"
-#~ msgstr "HR johtajan työpöytä"
-
-#~ msgid "Generic Payroll system Integrated with Accountings."
-#~ msgstr "Yleinen palkkasovellus ingegroituna kirjanpitoon."
-
-#~ msgid "Extends employee profiles to help manage their contracts."
-#~ msgstr "Laajentaa työntekijäprofiileja mahdolistaen sopimustenhallinnan"
-
-#~ msgid "Current Activity"
-#~ msgstr "Nykyinen aktiviteetti"
-
-#~ msgid "Payroll Accounting"
-#~ msgstr "Palkkakirjanpito"
-
-#~ msgid "Recruitment Process"
-#~ msgstr "Rekrytointiprosessi"
-
-#~ msgid "Create your Employees"
-#~ msgstr "Luo työntekijät"
-
-#~ msgid "Required number of employees in total for that job."
-#~ msgstr "Tehtävään vaadittava kokonaishenkilömäärä"
-
-#~ msgid "HR Management"
-#~ msgstr "Henkilöstönhallinta"
-
-#~ msgid ""
-#~ "Partner that is related to the current employee. Accounting transaction will "
-#~ "be written on this partner belongs to employee."
-#~ msgstr ""
-#~ "Kumppani joka liittyy nykyiseen työntekijään. Henkilöön liittyvät "
-#~ "kirjanpitotapahtumat kirjataan tälle kumppanille."
-
-#~ msgid "Dashboard"
-#~ msgstr "Työtila"
-
-#~ msgid "Number of employees with that job."
-#~ msgstr "Tätä tehtävää tekevien henkilöiden määrä"
-
-#~ msgid "Subordonate Hierarchy"
-#~ msgstr "Alaishierarkia"
-
-#~ msgid "Number of Employees"
-#~ msgstr "Henkilöstön määrä"
-
-#~ msgid "My Departments Jobs"
-#~ msgstr "Oman osaston työtehtävät"
+#: model:ir.actions.act_window,help:hr.act_employee_from_department
+#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
+msgid ""
+"With just a quick glance on the Odoo employee screen, you\n"
+"                can easily find all the information you need for each person;\n"
+"                contact data, job position, availability, etc."
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+#: model:hr.job,website_description:hr.job_trainee
+msgid ""
+"With our product, which is a suite of 3000 business apps. It is fully open "
+"source, full featured and it’s online offer is 3 times cheaper than "
+"traditional competitors. We have 2.000.000 users, and we're growing fast."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_work_email
+msgid "Work Email"
+msgstr "Työsähköposti"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_work_location
+msgid "Work Location"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_mobile_phone
+msgid "Work Mobile"
+msgstr "Matkapuhelin (työ)"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_work_phone
+msgid "Work Phone"
+msgstr "Työpuhelin"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_address_id
+msgid "Working Address"
+msgstr "Työosoite"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_calendar_id
+msgid "Working Time"
+msgstr "Työaika"
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_marketing
+msgid "Write attractive content"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_hrm
+msgid "Write attractive content and build up Human Resources materials"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+msgid "Write attractive content and build up executive materials"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "You are a quick and autonomous learner"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "You are an excellent communicator and negotiator"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid "You are approachable, honest and fun team player"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "You are available immediately"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid "You are creative"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "You are ready to travel in US"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid "You are ready to work in a dynamic company"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.action_hr_job
+msgid ""
+"You can attach a survey to a job position. It will be used in\n"
+"                the recruitment process to evaluate the applicants for this job\n"
+"                position."
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "You have 2 or 3 years of experience"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "You have a Master degree in Business Management"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+#: model:hr.job,website_description:hr.job_marketing
+msgid "You have an affinity with the IT world"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid "You have an affinity with the product"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "You have good knowledge in accounting"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "You speak a third language"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_consultant
+msgid "You speak fluently French and English"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_trainee
+msgid ""
+"You will be responsible for developing and improving applications, such as "
+"the You will work autonomously as well as                     coordinate and"
+" supervise small distributed development teams for specific projects. You "
+"will become a technical                 expert of the product."
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_developer
+msgid ""
+"You will be responsible for developing and improving applications, such as "
+"the You will work autonomously as well as coordinate and supervise small "
+"distributed development teams for specific projects. You will become a "
+"technical expert of the product."
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_ceo
+#: model:hr.job,website_description:hr.job_hrm
+#: model:hr.job,website_description:hr.job_marketing
+msgid ""
+"You will be responsible for developing and improving product communication. "
+"You will work autonomously as well as coordinate and supervise small "
+"distributed development teams for specific projects. You will become a "
+"techinical expert of the product."
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_trainee
+msgid "You will become a technical expert of the product."
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_developer
+msgid "You will initially be coached by senior developers"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+msgid "You will initially be coached by senior technical officer"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_trainee
+msgid "You will initially be coached by senior trainees"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+#: model:hr.job,website_description:hr.job_developer
+#: model:hr.job,website_description:hr.job_trainee
+msgid "You will report to the head of R&amp;D"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_developer
+msgid "You will work closely with all developers"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_cto
+msgid "You will work closely with all technical officer"
+msgstr ""
+
+#. module: hr
+#: model:hr.job,website_description:hr.job_trainee
+msgid "You will work closely with all trainees"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.view_department_form_installer
+msgid ""
+"Your departments structure is used to manage all documents\n"
+"                related to employees by departments: expenses and timesheets,\n"
+"                leaves and holidays, recruitments, etc."
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_department_form
+msgid "department"
+msgstr "osasto"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "e.g. Part Time"
+msgstr "esim. Osa-aikainen"

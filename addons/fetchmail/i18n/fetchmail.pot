@@ -1,13 +1,13 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
 #	* fetchmail
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.0alpha\n"
+"Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 17:05+0000\n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-09-07 14:40+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,53 +16,125 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_tree
+msgid "# of emails"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Actions to Perform on Incoming Mails"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_active
+msgid "Active"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Advanced"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Advanced Options"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_configuration
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Configuration"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.inherit_view_general_configuration
+msgid "Configure the incoming email gateway"
+msgstr ""
+
+#. module: fetchmail
 #: selection:fetchmail.server,state:0
 msgid "Confirmed"
 msgstr ""
 
 #. module: fetchmail
-#: field:fetchmail.server,server:0
-msgid "Server Name"
+#: code:addons/fetchmail/fetchmail.py:150
+#, python-format
+msgid "Connection test failed: %s"
 msgstr ""
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "POP"
-msgstr ""
-
-#. module: fetchmail
-#: help:fetchmail.server,priority:0
-msgid "Defines the order of processing, lower values mean higher priority"
-msgstr ""
-
-#. module: fetchmail
-#: help:fetchmail.server,is_ssl:0
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_is_ssl
 msgid "Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP3S=995)"
 msgstr ""
 
 #. module: fetchmail
-#: field:fetchmail.server,attach:0
-msgid "Keep Attachments"
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_object_id
+msgid "Create a New Record"
 msgstr ""
 
 #. module: fetchmail
-#: field:fetchmail.server,is_ssl:0
-msgid "SSL/TLS"
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_uid
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
+msgid "Created by"
 msgstr ""
 
 #. module: fetchmail
-#: help:fetchmail.server,original:0
-msgid "Whether a full original copy of each email should be kept for referenceand attached to each processed message. This will usually double the size of your message database."
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_date
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
+msgid "Created on"
 msgstr ""
 
 #. module: fetchmail
-#: view:base.config.settings:0
-msgid "Configure the incoming email gateway"
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_priority
+msgid "Defines the order of processing, lower values mean higher priority"
 msgstr ""
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_display_name
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Fetch Now"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_server
+msgid "Hostname or IP of the mail server"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_id
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
+msgid "ID"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "IMAP"
+msgstr ""
+
+#. module: fetchmail
+#: selection:fetchmail.server,type:0
+msgid "IMAP Server"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "If SSL required."
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_mail_mail_fetchmail_server_id
+msgid "Inbound Mail Server"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Incoming Mail Server"
 msgstr ""
 
 #. module: fetchmail
@@ -72,13 +144,36 @@ msgid "Incoming Mail Servers"
 msgstr ""
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server type IMAP."
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_attach
+msgid "Keep Attachments"
 msgstr ""
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "POP/IMAP Servers"
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_original
+msgid "Keep Original"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_date
+msgid "Last Fetch Date"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings___last_update
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_uid
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_date
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
+msgid "Last Updated on"
 msgstr ""
 
 #. module: fetchmail
@@ -87,208 +182,19 @@ msgid "Local Server"
 msgstr ""
 
 #. module: fetchmail
-#: field:fetchmail.server,state:0
-msgid "Status"
-msgstr ""
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_server
-msgid "POP/IMAP Server"
-msgstr ""
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Reset Confirmation"
-msgstr ""
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "SSL"
-msgstr ""
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
-msgid "fetchmail.config.settings"
-msgstr ""
-
-#. module: fetchmail
-#: field:fetchmail.server,date:0
-msgid "Last Fetch Date"
-msgstr ""
-
-#. module: fetchmail
-#: help:fetchmail.server,action_id:0
-msgid "Optional custom server action to trigger for each incoming mail, on the record that was created or updated by this mail"
-msgstr ""
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "# of emails"
-msgstr ""
-
-#. module: fetchmail
-#: field:fetchmail.server,original:0
-msgid "Keep Original"
-msgstr ""
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Advanced Options"
-msgstr ""
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-#: field:fetchmail.server,configuration:0
-msgid "Configuration"
-msgstr ""
-
-#. module: fetchmail
-#: field:fetchmail.server,script:0
-msgid "Script"
-msgstr ""
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Incoming Mail Server"
-msgstr ""
-
-#. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:155
-#, python-format
-msgid "Connection test failed!"
-msgstr ""
-
-#. module: fetchmail
-#: field:fetchmail.server,user:0
-msgid "Username"
-msgstr ""
-
-#. module: fetchmail
-#: help:fetchmail.server,server:0
-msgid "Hostname or IP of the mail server"
-msgstr ""
-
-#. module: fetchmail
-#: field:fetchmail.server,name:0
-msgid "Name"
-msgstr ""
-
-#. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:155
-#, python-format
-msgid "Here is what we got instead:\n"
-" %s."
-msgstr ""
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Test & Confirm"
-msgstr ""
-
-#. module: fetchmail
-#: field:fetchmail.server,action_id:0
-msgid "Server Action"
-msgstr ""
-
-#. module: fetchmail
-#: field:mail.mail,fetchmail_server_id:0
-msgid "Inbound Mail Server"
-msgstr ""
-
-#. module: fetchmail
-#: field:fetchmail.server,message_ids:0
-#: model:ir.actions.act_window,name:fetchmail.act_server_history
-msgid "Messages"
-msgstr ""
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Search Incoming Mail Servers"
-msgstr ""
-
-#. module: fetchmail
-#: field:fetchmail.server,active:0
-msgid "Active"
-msgstr ""
-
-#. module: fetchmail
-#: help:fetchmail.server,attach:0
-msgid "Whether attachments should be downloaded. If not enabled, incoming emails will be stripped of any attachments before being processed"
-msgstr ""
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_mail_mail
-msgid "Outgoing Mails"
-msgstr ""
-
-#. module: fetchmail
-#: field:fetchmail.server,priority:0
-msgid "Server Priority"
-msgstr ""
-
-#. module: fetchmail
-#: selection:fetchmail.server,type:0
-msgid "IMAP Server"
-msgstr ""
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "IMAP"
-msgstr ""
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server type POP."
-msgstr ""
-
-#. module: fetchmail
-#: field:fetchmail.server,password:0
-msgid "Password"
-msgstr ""
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Actions to Perform on Incoming Mails"
-msgstr ""
-
-#. module: fetchmail
-#: field:fetchmail.server,type:0
-msgid "Server Type"
-msgstr ""
-
-#. module: fetchmail
-#: view:fetchmail.server:0
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Login Information"
 msgstr ""
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server Information"
+#: model:ir.actions.act_window,name:fetchmail.act_server_history
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_message_ids
+msgid "Messages"
 msgstr ""
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "If SSL required."
-msgstr ""
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Advanced"
-msgstr ""
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server & Login"
-msgstr ""
-
-#. module: fetchmail
-#: help:fetchmail.server,object_id:0
-msgid "Process each incoming mail as part of a conversation corresponding to this document type. This will create new documents for new conversations, or attach follow-up emails to the existing conversations (documents)."
-msgstr ""
-
-#. module: fetchmail
-#: field:fetchmail.server,object_id:0
-msgid "Create a New Record"
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_name
+msgid "Name"
 msgstr ""
 
 #. module: fetchmail
@@ -297,12 +203,142 @@ msgid "Not Confirmed"
 msgstr ""
 
 #. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_action_id
+msgid "Optional custom server action to trigger for each incoming mail, on the record that was created or updated by this mail"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model,name:fetchmail.model_mail_mail
+msgid "Outgoing Mails"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "POP"
+msgstr ""
+
+#. module: fetchmail
 #: selection:fetchmail.server,type:0
 msgid "POP Server"
 msgstr ""
 
 #. module: fetchmail
-#: field:fetchmail.server,port:0
+#: model:ir.model,name:fetchmail.model_fetchmail_server
+msgid "POP/IMAP Server"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_tree
+msgid "POP/IMAP Servers"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_password
+msgid "Password"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_port
 msgid "Port"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_object_id
+msgid "Process each incoming mail as part of a conversation corresponding to this document type. This will create new documents for new conversations, or attach follow-up emails to the existing conversations (documents)."
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Reset Confirmation"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "SSL"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_is_ssl
+msgid "SSL/TLS"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_script
+msgid "Script"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Search Incoming Mail Servers"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Server & Login"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_action_id
+msgid "Server Action"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Server Information"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_server
+msgid "Server Name"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_priority
+msgid "Server Priority"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_type
+msgid "Server Type"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Server type IMAP."
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Server type POP."
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_state
+msgid "Status"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Test & Confirm"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_user
+msgid "Username"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_original
+msgid "Whether a full original copy of each email should be kept for referenceand attached to each processed message. This will usually double the size of your message database."
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_attach
+msgid "Whether attachments should be downloaded. If not enabled, incoming emails will be stripped of any attachments before being processed"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
+msgid "fetchmail.config.settings"
 msgstr ""
 

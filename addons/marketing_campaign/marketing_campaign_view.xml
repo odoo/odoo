@@ -1,19 +1,5 @@
 <?xml version="1.0"?>
 <openerp>
-    <data noupdate="1">
-
-        <record id="action_client_marketing_menu" model="ir.actions.client">
-            <field name="name">Open Marketing Menu</field>
-            <field name="tag">reload</field>
-            <field name="params" eval="{'menu_id': ref('base.marketing_menu')}"/>
-        </record>
-
-        <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_client_marketing_menu"/>
-            <field name="state">open</field>
-        </record>
-
-    </data>
     <data>
 
     <!-- Marketing Campaign -->
@@ -52,7 +38,7 @@
         <field name="name">marketing.campaign.form</field>
         <field name="model">marketing.campaign</field>
         <field name="arch" type="xml">
-            <form string="Marketing Campaign" version="7.0">
+            <form string="Marketing Campaign">
             <header>
                 <button name="state_running_set" string="Run" states="draft" class="oe_highlight"/>
                 <button name="state_done_set" string="Done" states="running" class="oe_highlight"/>
@@ -61,13 +47,16 @@
                 <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,running,done"/>
             </header>
             <sheet string="Campaign">
-                <div class="oe_right oe_button_box" name="button_box">
+                <div class="oe_button_box" name="button_box">
                     <button type="action"
                         name="%(act_marketing_campaing_stat)d"
                         class="oe_stat_button"
                         icon="fa-keyboard-o"
                         help="Marketing Campaign Statistics">
-                        <div>Campaign<br/>Statistics</div>
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_text">Campaign</span>
+                            <span class="o_stat_text">Statistics</span>
+                        </div>
                     </button>
                     <button type="action"
                         name="%(act_marketing_campaing_segment_opened)d"
@@ -83,7 +72,7 @@
                 </div>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
-                    <h1><field name="name" class="oe_inline"/></h1>
+                    <h1><field name="name" placeholder="Marketing Campaign"/></h1>
                 </div>
                 <group>
                     <group>
@@ -107,7 +96,7 @@
         <field name="name">marketing.campaign.tree</field>
         <field name="model">marketing.campaign</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state == 'draft';black:state == 'running';gray:state in ('done','cancelled')" string="Campaigns">
+            <tree decoration-info="state == 'draft'" decoration-muted="state in ('done','cancelled')" string="Campaigns">
                 <field name="name"/>
                 <field name="object_id"/>
                 <field name="mode"/>
@@ -144,16 +133,16 @@
         <field name="arch" type="xml">
             <search string="Campaigns">
                 <field name="name" string="Campaign"/>
-                <filter icon="terp-document-new" string="Draft" name="draft" domain="[('state','=','draft')]"/>
-                <filter icon="terp-check" string="Running" domain="[('state','=','running')]"/>
+                <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                <filter string="Running" domain="[('state','=','running')]"/>
                 <separator/>
-                <filter icon="terp-gtk-jump-to-rtl" string="Test Mode" name="test" domain="[('mode','=','test')]"/>
-                <filter icon="terp-gtk-jump-to-rtl" string="Manual Mode" domain="[('mode','=','manual')]"/>
+                <filter string="Test Mode" name="test" domain="[('mode','=','test')]"/>
+                <filter string="Manual Mode" domain="[('mode','=','manual')]"/>
                 <field name="object_id" string="Resource"/>
-                <group expand="0" string="Group By...">
-                    <filter string="Resource" name="Object" icon="terp-accessories-archiver" context="{'group_by':'object_id'}"/>
-                    <filter string="Mode" name="Mode" icon="terp-gtk-jump-to-rtl" context="{'group_by':'mode'}"/>
-                    <filter string="Status" name="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                <group expand="0" string="Group By">
+                    <filter string="Resource" name="Object" context="{'group_by':'object_id'}"/>
+                    <filter string="Mode" name="Mode" context="{'group_by':'mode'}"/>
+                    <filter string="Status" name="Status" context="{'group_by':'state'}"/>
                 </group>
             </search>
         </field>
@@ -172,9 +161,9 @@
           <p class="oe_view_nocontent_create">
             Click to create a marketing campaign.
           </p><p>
-            OpenERP's marketing campaign allows you to automate communication
+            Odoo's marketing campaign allows you to automate communication
             to your prospects. You can define a segment (set of conditions) on
-            your leads and partners to fullfil the campaign.
+            your leads and partners to fulfill the campaign.
           </p><p>
             A campaign can have many activities like sending an email, printing
             a letter, assigning to a team, etc. These activities are triggered
@@ -184,15 +173,19 @@
         </field>
     </record>
 
-    <menuitem name="Campaigns" id="menu_marketing_campaign" parent="base.marketing_menu" groups="marketing.group_marketing_user,marketing.group_marketing_manager"/>
-    <menuitem id="menu_marketing_campaign_form" parent="menu_marketing_campaign" action="action_marketing_campaign_form" sequence="30"/>
+    <menuitem name="Lead Automation" id="menu_marketing_campaign_root" groups="marketing_campaign.group_lead_automation_user,marketing_campaign.group_lead_automation_manager" web_icon="marketing_campaign,static/description/icon.png"
+    sequence="10"/>
+    <menuitem id="menu_marketing_campaign_campaigns" sequence="1" name="Campaigns" parent="menu_marketing_campaign_root" web_icon="marketing_campaign,static/description/icon.png"/>
+    <menuitem id="menu_marketing_campaign_form" parent="menu_marketing_campaign_campaigns" action="action_marketing_campaign_form" sequence="1"/>
+    <menuitem name="Reports" id="report_marketing_campaign" parent="menu_marketing_campaign_root" 
+        sequence="99"/>
 
     <!-- Marketing Segments -->
     <record model="ir.ui.view" id="view_marketing_campaign_segment_form">
         <field name="name">marketing.campaign.segment.form</field>
         <field name="model">marketing.campaign.segment</field>
         <field name="arch" type="xml">
-            <form string="Marketing Campaign Segment" version="7.0">
+            <form string="Marketing Campaign Segment">
             <header>
                 <button name="state_running_set" string="Run" states="draft" class="oe_highlight"/>
                 <button name="state_done_set" string="Close" states="running" class="oe_highlight"/>
@@ -229,7 +222,7 @@
         <field name="name">marketing.campaign.segment.tree</field>
         <field name="model">marketing.campaign.segment</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state == 'draft';black:state == 'running';gray:state in ('done','cancelled')" string="Segments">
+            <tree decoration-info="state == 'draft'" decoration-muted="state in ('done','cancelled')" string="Segments">
                 <field name="name"/>
                 <field name="campaign_id"/>
                 <field name="date_run"/>
@@ -246,18 +239,18 @@
             <search string="Segments">
                 <field name="name" string="Segment"/>
                 <field name="date_run"/>
-                <filter icon="terp-check" string="Running" name="running" domain="[('state','=','running')]"/>
-                <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]"/>
+                <filter string="Running" name="running" domain="[('state','=','running')]"/>
+                <filter string="Draft" domain="[('state','=','draft')]"/>
                 <separator/>
-                <filter icon="terp-gtk-jump-to-ltr" string="Newly Created" help="Sync mode: only records created after last sync" domain="[('sync_mode','=','create_date')]"/>
-                <filter icon="terp-stock_effects-object-colorize" string="Newly Modified" help="Sync mode: only records updated after last sync" domain="[('sync_mode','=','write_date')]"/>
-                <filter icon="terp-emblem-documents" string="All" help="Sync mode: all records" domain="[('sync_mode','=','all')]"/>
+                <filter string="Newly Created" help="Sync mode: only records created after last sync" domain="[('sync_mode','=','create_date')]"/>
+                <filter string="Newly Modified" help="Sync mode: only records updated after last sync" domain="[('sync_mode','=','write_date')]"/>
+                <filter string="All" help="Sync mode: all records" domain="[('sync_mode','=','all')]"/>
                 <field name="campaign_id"/>
                 <field name="object_id"/>
-                <group expand="0" string="Group By...">
-                    <filter string="Campaign" name="Campaign" icon="terp-gtk-jump-to-rtl" context="{'group_by':'campaign_id'}"/>
-                    <filter string="Status" name="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
-                    <filter string="Launch Month" name="Launch Date" icon="terp-go-month" context="{'group_by':'date_run'}"/>
+                <group expand="0" string="Group By">
+                    <filter string="Campaign" name="Campaign" context="{'group_by':'campaign_id'}"/>
+                    <filter string="Status" name="Status" context="{'group_by':'state'}"/>
+                    <filter string="Launch Month" name="Launch Date" context="{'group_by':'date_run'}"/>
                 </group>
             </search>
         </field>
@@ -274,7 +267,7 @@
         <field name="context">{'group_by': []}</field>
     </record>
 
-    <menuitem id="menu_marketing_campaign_segment_form" parent="menu_marketing_campaign" action="action_marketing_campaign_segment_form" sequence="20"/>
+    <menuitem id="menu_marketing_campaign_segment_form" parent="menu_marketing_campaign_campaigns" action="action_marketing_campaign_segment_form" sequence="2"/>
 
     <!--
         Marketing Activities
@@ -284,7 +277,7 @@
         <field name="name">marketing.campaign.activity.form</field>
         <field name="model">marketing.campaign.activity</field>
         <field name="arch" type="xml">
-            <form string="Activities" version="7.0">
+            <form string="Activities">
                 <group>
                     <group>
                         <field name="name"/>
@@ -295,7 +288,7 @@
                     </group>
                     <group>
                         <field name="variable_cost"/>
-                        <field name="revenue"/>
+                        <field name="revenue" widget="monetary"/>
                     </group>
                 </group>
                 <group >
@@ -309,20 +302,19 @@
                            context="{'default_model_id':object_id}"/>
                         <field name="server_action_id" attrs="{'required':[('type','=','action')],'invisible':[('type','!=','action')]}" domain="[('model_id','=',object_id)]"/>
                         <field name="report_id" attrs="{'required':[('type','=','report')],'invisible':[('type','!=','report')]}" context="{'object_id':object_id}"/>
-                        <field name="report_directory_id" attrs="{'required':[('type','=','report')],'invisible':[('type','!=','report')]}"/>
                     </group>
                 </group>
                 <separator string="Previous Activities"/>
                 <field name="from_ids" mode="tree" context="{'default_activity_to_id': active_id}">
                     <tree string="Incoming Transitions" editable="bottom">
-                        <field name="activity_from_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
+                        <field name="activity_from_id" domain="[('campaign_id', '=', parent.campaign_id)]" options="{'no_create': True}" />
                         <field name='trigger'/>
                         <field name="interval_nbr"/>
                         <field name="interval_type"/>
                     </tree>
-                    <form string="Incoming Transitions" version="7.0">
+                    <form string="Incoming Transitions">
                         <group col="4">
-                            <field name="activity_from_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
+                            <field name="activity_from_id" domain="[('campaign_id', '=', parent.campaign_id)]" options="{'no_create': True}" />
                             <field name='trigger'/>
                             <field name="interval_nbr"/>
                             <field name="interval_type"/>
@@ -332,14 +324,14 @@
                 <separator string="Next Activities"/>
                 <field name="to_ids" mode="tree" context="{'default_activity_from_id': active_id}">
                     <tree string="Outgoing Transitions" editable="bottom">
-                        <field name="activity_to_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
+                        <field name="activity_to_id" domain="[('campaign_id', '=', parent.campaign_id)]" options="{'no_create': True}" />
                         <field name='trigger'/>
                         <field name="interval_nbr"/>
                         <field name="interval_type"/>
                     </tree>
-                    <form string="Outgoing Transitions" version="7.0">
+                    <form string="Outgoing Transitions">
                         <group col="4">
-                            <field name="activity_to_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
+                            <field name="activity_to_id" domain="[('campaign_id', '=', parent.campaign_id)]" options="{'no_create': True}" />
                             <field name='trigger'/>
                             <field name="interval_nbr"/>
                             <field name="interval_type"/>
@@ -369,7 +361,7 @@
         <field name="name">marketing.campaign.workitem.tree</field>
         <field name="model">marketing.campaign.workitem</field>
         <field name="arch" type="xml">
-            <tree colors="red:state == 'exception';black:state == 'todo';gray:state == 'cancelled'" string="Marketing Campaign Activities">
+            <tree decoration-danger="state == 'exception'" decoration-muted="state == 'cancelled'" string="Marketing Campaign Activities">
                 <field name="campaign_id"/>
                 <field name="segment_id"/>
                 <field name="activity_id"/>
@@ -390,7 +382,7 @@
         <field name="name">marketing.campaign.workitem.form</field>
         <field name="model">marketing.campaign.workitem</field>
         <field name="arch" type="xml">
-            <form string="Marketing Campaign Activities" version="7.0">
+            <form string="Marketing Campaign Activities">
             <header>
                 <button string="Process" states="todo" name="process" type="object"/>
                 <button string="Reset" states="exception,cancelled" name="button_draft" type="object"/>
@@ -428,28 +420,28 @@
             <search string="Marketing Campaign Activities">
                 <field name="res_name" string="Marketing Campaign Activity"/>
                 <field name="date"/>
-                <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','todo')]"/>
-                <filter icon="terp-emblem-important" string="Exception" domain="[('state','=','exception')]"/>
+                <filter string="To Do" name="todo" domain="[('state','=','todo')]"/>
+                <filter string="Exception" domain="[('state','=','exception')]"/>
                 <field name="campaign_id"/>
                 <field name="segment_id"/>
                 <field name="object_id"/>
                 <field name="partner_id"/>
                 <field name="res_id"/>
-                <group expand="0" string="Group By...">
-                    <filter string="Campaign" name="campaign" icon="terp-gtk-jump-to-rtl" context="{'group_by':'campaign_id'}"/>
-                    <filter string="Segment" name="segment" icon="terp-stock_symbol-selection" context="{'group_by':'segment_id'}"/>
-                    <filter string="Activity" name="activity" icon="terp-stock_align_left_24" context="{'group_by':'activity_id'}"/>
-                    <filter string="Resource" name="resource" icon="terp-accessories-archiver" context="{'group_by':'object_id'}"/>
-                    <filter string="Resource ID" name="res_id" icon="terp-accessories-archiver" context="{'group_by':'res_id'}"/>
-                    <filter string="Status" name="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
-                    <filter string="Execution Month" name="Date" icon="terp-go-month" context="{'group_by':'date'}"/>
+                <group expand="0" string="Group By">
+                    <filter string="Campaign" name="campaign" context="{'group_by':'campaign_id'}"/>
+                    <filter string="Segment" name="segment" context="{'group_by':'segment_id'}"/>
+                    <filter string="Activity" name="activity" context="{'group_by':'activity_id'}"/>
+                    <filter string="Resource" name="resource" context="{'group_by':'object_id'}"/>
+                    <filter string="Resource ID" name="res_id" context="{'group_by':'res_id'}"/>
+                    <filter string="Status" name="Status" context="{'group_by':'state'}"/>
+                    <filter string="Execution Month" name="Date" context="{'group_by':'date'}"/>
                 </group>
             </search>
         </field>
     </record>
 
     <record model="ir.actions.act_window" id="action_marketing_campaign_workitem">
-        <field name="name">Campaign Follow-up</field>
+        <field name="name">Follow-up</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">marketing.campaign.workitem</field>
         <field name="view_type">form</field>
@@ -459,7 +451,7 @@
         <field name="context">{'group_by': []}</field>
     </record>
 
-    <menuitem id="menu_action_marketing_campaign_workitem" parent="menu_marketing_campaign" action="action_marketing_campaign_workitem" sequence="10"/>
+    <menuitem id="menu_action_marketing_campaign_workitem" parent="report_marketing_campaign" action="action_marketing_campaign_workitem" sequence="3"/>
 
     </data>
 </openerp>

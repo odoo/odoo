@@ -15,7 +15,7 @@
                     <filter string="Partially completed" domain="[('state', '=', 'skip')]"/>
                     <filter string="New" domain="[('state', '=', 'new')]"/>
                     <filter string="Test" domain="[('state','=', 'test')]"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter name="group_by_survey" string="Survey" domain="[]" context="{'group_by': 'survey_id'}"/>
                         <filter string="Email" domain="[]" context="{'group_by': 'email'}"/>
                         <filter string="Partner" domain="[]" context="{'group_by': ['partner_id']}"/>
@@ -27,7 +27,7 @@
             <field name="name">survey_user_input_form</field>
             <field name="model">survey.user_input</field>
             <field name="arch" type="xml">
-                <form string="Survey User inputs" version="7.0" create="false">
+                <form string="Survey User inputs" create="false">
                     <header>
                         <button name="action_survey_resent" string="Sent Invitation Again" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('type','=','manually'), ('state', '=', 'done')]}"/>
                         <button name="action_view_answers" states="done" string="Print These Answers" type="object"  class="oe_highlight" />
@@ -35,8 +35,7 @@
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
-                        <div class="oe_right oe_button_box" name="button_box">
-                        </div>
+                        <div class="oe_button_box" name="button_box"/>
                         <group col="2">
                             <group>
                                 <field name="survey_id"/>
@@ -70,7 +69,7 @@
             <field name="name">survey_user_input_tree</field>
             <field name="model">survey.user_input</field>
             <field name="arch" type="xml">
-                <tree string="Survey User inputs" version="7.0" colors="lightgrey:test_entry == True" create="false">
+                <tree string="Survey User inputs" decoration-muted="test_entry == True" create="false">
                     <field name="survey_id"/>
                     <field name="date_create"/>
                     <field name="deadline"/>
@@ -112,18 +111,28 @@
             <field name="name">Form view for survey</field>
             <field name="model">survey.survey</field>
             <field name="arch" type="xml">
-                <form string="Survey" version="7.0">
+                <form string="Survey">
+                    <field name="id" invisible="1"/>
+                    <field name="tot_start_survey" invisible="1"/>
+                    <field name="is_closed" invisible="1"/>
                     <header groups="base.group_survey_manager">
-                        <button name="action_test_survey" string="Test Survey" type="object"/>
-                        <button name="action_print_survey" string="Print Survey" type="object"/>
-                        <button name="action_send_survey" string="Share and invite by email" type="object" class="oe_highlight" />
-                        <button name="action_result_survey" string="View results" type="object" class="oe_highlight" />
+                        <button name="action_test_survey" string="Design Survey" type="object" class="oe_highlight"/>
+                        <button name="action_test_survey" string="Test Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
+                        <button name="action_print_survey" string="Print Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
+                        <button name="action_send_survey" string="Share and invite by email" type="object" class="oe_highlight"  attrs="{'invisible': [('id', '=', False)]}"/>
+                        <button name="action_result_survey" string="View results" type="object" attrs="{'invisible': ['|',('id', '=', False), ('tot_start_survey', '!=', 0)]}"/>
+                        <button name="action_result_survey" string="View results" type="object" class="oe_highlight" attrs="{'invisible': [('tot_start_survey', '=', 0)]}"/>
                         <field name="stage_id" widget="statusbar" clickable="True" />
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box" attrs="{'invisible': [('is_closed', '=', False)]}">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
                         <div class="oe_title" style="width: 100%;">
                             <label for="title" class="oe_edit_only"/>
-                            <h1><field name="title" /></h1>
+                            <h1><field name="title" placeholder="Survey Title"/></h1>
                         </div>
                         <notebook>
                             <page string="Edit Pages and Questions">
@@ -135,11 +144,10 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Select Options">
-                                <group colspan="4">
-                                    <field name="users_can_go_back" string="User can come back in the previous page" />
-                                    <field name="auth_required" />
-                                    <field name="res_model" groups="base.group_no_one"/>
+                            <page string="Options">
+                                <group class="o_label_nowrap">
+                                    <field name="users_can_go_back" string="User can come back in the previous page"/>
+                                    <field name="auth_required"/>
                                     <field name="quizz_mode" groups="base.group_no_one"/>
                                 </group>
                             </page>
@@ -157,6 +165,7 @@
             <field name="model">survey.survey</field>
             <field name="arch" type="xml">
                 <tree string="Survey">
+                    <field name="active" invisible="1"/>
                     <field name="title" />
                     <field name="stage_id" />
                     <field name="tot_sent_survey" string="Invitations sent" />
@@ -180,12 +189,15 @@
                     <field name="auth_required" />
                     <field name="public_url" />
                     <templates>
-                        <div t-name="kanban-box" t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card">
-                            <div class="oe_dropdown_toggle oe_dropdown_kanban" t-if="widget.view.is_action_enabled('edit')">
-                                <span class="oe_e">í</span> <!-- icon for dropdown menu -->
-                                <ul class="oe_dropdown_menu">
-                                    <li><a type="edit">Survey Options</a></li>
-                                    <li t-if="widget.view.is_action_enabled('delete')"><a type="delete">Delete!</a></li>
+                        <div t-name="kanban-box" t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                            <div class="o_dropdown_kanban dropdown" t-if="widget.editable">
+
+                                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <span class="fa fa-bars fa-lg"/>
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <li><a type="edit">Edit Survey</a></li>
+                                    <li t-if="widget.deletable"><a type="delete">Delete</a></li>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
                             </div>
@@ -204,14 +216,23 @@
                                         <t t-if="! record.designed.raw_value"><a style="color: #aaaaaa;">Share &amp;amp; Invite</a></t>
                                     </li>
                                     <li>
-                                        <t t-if="record.tot_start_survey.raw_value &gt; 0"><a name="action_result_survey" type="object">Analyse Answers</a> <span t-if="record.tot_start_survey.raw_value &gt; 0">(<field name="tot_start_survey" />)</span></t>
-                                        <t t-if="record.tot_start_survey.raw_value &lt;= 0"><a style="color: #aaaaaa;">Analyse Answers</a></t>
+                                        <t t-if="record.tot_start_survey.raw_value &gt; 0"><a name="action_result_survey" type="object">Analyze Answers</a> <span t-if="record.tot_start_survey.raw_value &gt; 0">(<field name="tot_start_survey" />)</span></t>
+                                        <t t-if="record.tot_start_survey.raw_value &lt;= 0"><a style="color: #aaaaaa;">Analyze Answers</a></t>
                                     </li>
                                 </ul></div>
                             </div>
                         </div>
                     </templates>
                 </kanban>
+            </field>
+        </record>
+        <record id="survey_survey_view_search" model="ir.ui.view">
+            <field name="name">survey.survey.search</field>
+            <field name="model">survey.survey</field>
+            <field name="arch" type="xml">
+                <search string="Survey">
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
             </field>
         </record>
 
@@ -234,11 +255,11 @@
             <field name="name">Form view for survey page</field>
             <field name="model">survey.page</field>
             <field name="arch" type="xml">
-                <form string="Survey Page" version="7.0" create="false">
+                <form string="Survey Page" create="false">
                     <sheet>
                         <div class="oe_title" style="width: 100%;">
                             <label for="title" class="oe_edit_only"/>
-                            <h1><field name="title"/></h1>
+                            <h1><field name="title" placeholder="Page Title"/></h1>
                         </div>
                         <field name="question_ids" nolabel="1" mode="tree" context="{'default_page_id': active_id}">
                             <tree>
@@ -271,7 +292,7 @@
                 <search string="Search Page">
                     <field name="title" string="Page"/>
                     <field name="survey_id" string="Survey"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter name="group_by_survey" string="Survey" domain="[]"  context="{'group_by':'survey_id'}"/>
                     </group>
                 </search>
@@ -288,31 +309,99 @@
         </record>
         <act_window context="{'search_default_page_id': active_id, 'default_page_id': active_id}" id="act_survey_page_question" name="Questions" res_model="survey.question" src_model="survey.page"/>
 
+        <template id="assets_backend" name="survey assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/survey/static/src/css/survey_result.css"/>
+            </xpath>
+        </template>
+
         <!-- QUESTIONS -->
         <record model="ir.ui.view" id="survey_question_form">
             <field name="name">Form view for survey question</field>
             <field name="model">survey.question</field>
             <field name="arch" type="xml">
-                <form string="Survey Question" version="7.0" create="false">
+                <form string="Survey Question" create="false">
                     <sheet>
                         <div class="oe_title" style="width: 100%;">
                             <label for="question" string="Question name" class="oe_edit_only"/>
-                            <h1><field name="question" colspan="4"/></h1>
+                            <h1><field name="question" colspan="4" placeholder="Question Name"/></h1>
                             <separator />
                         </div>
                         <group>
-                            <field name="type" widget="radio" />
+                            <group>
+                                <field name="type" widget="radio" />
+                            </group>
+                            <group>
+                                <div class="col-md-6 col-md-offset-3 o_preview_questions">
+                                    <!-- Multiple Lines Text Zone -->
+                                    <div attrs="{'invisible': [('type', '!=', 'free_text')]}">
+                                            <i class="fa fa-align-justify fa-4x"/>
+                                    </div>
+                                    <!-- Single Line Text Zone -->
+                                    <div attrs="{'invisible': [('type', '!=', 'textbox')]}">
+                                        <i class="fa fa-minus fa-4x"/>
+                                    </div>
+                                    <!-- Numerical Value -->
+                                    <div attrs="{'invisible': [('type', '!=', 'numerical_box')]}">
+                                        <i class="fa fa-2x">123..</i>
+                                    </div>
+                                    <!-- Date and Time -->
+                                    <div attrs="{'invisible': [('type', '!=', 'datetime')]}">
+                                        <p class="o_datetime">YYYY-MM-DD hh:mm:ss
+                                            <i class="fa fa-calendar fa-2x"/>
+                                        </p>
+                                    </div>
+                                    <!-- Multiple choice: only one answer -->
+                                    <div attrs="{'invisible': [('type', '!=', 'simple_choice')]}">
+                                        <div class="row"><i class="fa fa-circle-o  fa-lg"/> answer</div>
+                                        <div class="row"><i class="fa fa-dot-circle-o fa-lg"/> answer</div>
+                                        <div class="row"><i class="fa fa-circle-o  fa-lg"/> answer</div>
+                                    </div>
+                                    <!-- Multiple choice: multiple answers allowed -->
+                                    <div attrs="{'invisible': [('type', '!=', 'multiple_choice')]}">
+                                        <div class="row"><i class="fa fa-square-o fa-lg"/> answer</div>
+                                        <div class="row"><i class="fa fa-check-square-o fa-lg"/> answer</div>
+                                        <div class="row"><i class="fa fa-square-o fa-lg"/> answer</div>
+                                    </div>
+                                    <!-- Matrix -->
+                                    <div attrs="{'invisible': [('type', '!=', 'matrix')]}">
+                                        <div class="row o_matrix_head">
+                                            <div class="col-md-3"></div>
+                                            <div class="col-md-3">ans</div>
+                                            <div class="col-md-3">ans</div>
+                                            <div class="col-md-3">ans</div>
+                                        </div>
+                                        <div class="row o_matrix_row">
+                                            <div class="col-md-3">Row1</div>
+                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
+                                            <div class="col-md-3"><i class="fa fa-dot-circle-o fa-lg"/></div>
+                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
+                                        </div>
+                                        <div class="row o_matrix_row">
+                                            <div class="col-md-3">Row2</div>
+                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
+                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
+                                            <div class="col-md-3"><i class="fa fa-dot-circle-o fa-lg"/></div>
+                                        </div>
+                                        <div class="row o_matrix_row">
+                                            <div class="col-md-3">Row3</div>
+                                            <div class="col-md-3"><i class="fa fa-dot-circle-o fa-lg"/></div>
+                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
+                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </group>
                         </group>
                         <notebook>
                             <page string="Answers">
-                                <field name="validation_email" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
+                                <field name="validation_email" attrs="{'invisible': [('type', '!=', 'textbox')]}" on_change="onchange_validation_email(validation_email)"/>
                                 <label for="validation_email" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
                                 <separator />
-                                <label for="labels_ids" attrs="{'invisible': [('type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}" />
                                 <field name="labels_ids" string="Type of answers" context="{'default_question_id': active_id}" attrs="{'invisible': [('type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}">
                                     <tree editable="bottom">
                                         <field name="sequence" widget="handle"/>
-                                        <field name="value" string="Answers"/>
+                                        <field name="value" string="Choices"/>
                                         <field name="quizz_mark" groups="base.group_no_one"/>
                                     </tree>
                                 </field>
@@ -321,30 +410,36 @@
                                 <field name="labels_ids_2" context="{'default_question_id_2': active_id}" attrs="{'invisible': [('type', '!=', 'matrix')]}">
                                     <tree editable="bottom">
                                         <field name="sequence" widget="handle"/>
-                                        <field name="value" string="Answers"/>
+                                        <field name="value" string="Rows"/>
                                     </tree>
                                 </field>
                             </page>
                             <page string="Options">
-                                <group string="Constraints" >
-                                    <field name="constr_mandatory" string="Mandatory Answer"/>
-                                    <field name="constr_error_msg" attrs="{'invisible': [('constr_mandatory', '=', False)]}"/>
-                                    <group colspan="2" nolabel="1" attrs="{'invisible': [('type', 'not in', ['textbox', 'numerical_box', 'datetime'])]}">
-                                        <field name="validation_required"/>
-                                        <group colspan="2" nolabel="1" attrs="{'invisible': [('validation_required', '=', False)]}">
-                                        <field name="validation_length_min" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
-                                        <field name="validation_length_max" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
-                                        <field name="validation_min_float_value" attrs="{'invisible': [('type', '!=', 'numerical_box')]}"/>
-                                        <field name="validation_max_float_value" attrs="{'invisible': [('type', '!=', 'numerical_box')]}"/>
-                                        <field name="validation_min_date" attrs="{'invisible': [('type', '!=', 'datetime')]}"/>
-                                        <field name="validation_max_date" attrs="{'invisible': [('type', '!=', 'datetime')]}"/>
-                                        <field name="validation_error_msg" />
-                                        </group>
+                                <group string="Constraints">
+                                    <group colspan="2" col="4">
+                                        <field name="constr_mandatory" string="Mandatory Answer"/>
+                                        <field name="constr_error_msg" attrs="{'invisible': [('constr_mandatory', '=', False)]}"/>
                                     </group>
-                                    <field name="matrix_subtype" attrs="{'invisible':[('type','not in',['matrix'])]}"/>
+                                    <div colspan="2" attrs="{'invisible': [('type', 'not in', ['textbox', 'numerical_box', 'datetime'])]}">
+                                        <group>
+                                            <field name="validation_required" attrs="{'invisible': [('validation_email', '=', True), ('type', '=', 'textbox')]}"/>
+                                        </group>
+                                        <group col="4" attrs="{'invisible': [('validation_required', '=', False)]}">
+                                            <field name="validation_length_min" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
+                                            <field name="validation_length_max" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
+                                            <field name="validation_min_float_value" attrs="{'invisible': [('type', '!=', 'numerical_box')]}"/>
+                                            <field name="validation_max_float_value" attrs="{'invisible': [('type', '!=', 'numerical_box')]}"/>
+                                            <field name="validation_min_date" attrs="{'invisible': [('type', '!=', 'datetime')]}"/>
+                                            <field name="validation_max_date" attrs="{'invisible': [('type', '!=', 'datetime')]}"/>
+                                            <field name="validation_error_msg" colspan="4"/>
+                                        </group>
+                                    </div>
+                                    <group>
+                                        <field name="matrix_subtype" attrs="{'invisible':[('type','not in',['matrix'])]}"/>
+                                    </group>
                                 </group>
                                 <group string="Display mode" attrs="{'invisible':[('type','not in',['simple_choice', 'multiple_choice'])]}">
-                                    <field name="display_mode" string="Format" attrs="{'invisible':[('type','not in',['simple_choice'])]}"/>
+                                    <field name="display_mode" string="Format" attrs="{'invisible':[('type','not in',['simple_choice'])],'required':[('type','=','simple_choice')]}"/>
                                     <field name="column_nb" string="Number of columns" attrs="{'invisible':[('display_mode','=','dropdown'), ('type','=','simple_choice')]}"/>
                                 </group>
                                 <group string="Allow Comments" attrs="{'invisible':[('type','not in',['simple_choice','multiple_choice', 'matrix'])]}">
@@ -380,7 +475,7 @@
                     <field name="survey_id" string="Survey"/>
                     <field name="page_id" string="Page"/>
                     <field name="type" string="Type"/>
-                    <group expand="1" string="Group By...">
+                    <group expand="1" string="Group By">
                         <filter name="group_by_page" string="Page" domain="[]"  context="{'group_by':'page_id'}"/>
                         <filter name="group_by_type" string="Type" domain="[]"  context="{'group_by':'type'}"/>
                     </group>
@@ -437,7 +532,7 @@
             <field name="name">survey_user_input_line_form</field>
             <field name="model">survey.user_input_line</field>
             <field name="arch" type="xml">
-                <form string="User input line details" version="7.0" create="false">
+                <form string="User input line details" create="false">
                     <sheet>
                         <group col="4">
                             <field name="question_id"/>
@@ -481,7 +576,7 @@
                 <search string="Search User input lines">
                     <field name="user_input_id"/>
                     <field name="survey_id"/>
-                    <group expand="1" string="Group By...">
+                    <group expand="1" string="Group By">
                         <filter name="group_by_survey" string="Survey" domain="[]"  context="{'group_by':'survey_id'}"/>
                         <filter name="group_by_user_input" string="User Input" domain="[]"  context="{'group_by':'user_input_id'}"/>
                     </group>
@@ -516,15 +611,15 @@
         <!-- MENU ELEMENTS -->
 
         <!-- Left menu categories-->
-        <menuitem name="Surveys" id="menu_surveys" parent="base.marketing_menu" sequence="25" groups="base.group_survey_user"/>
-        <menuitem name="Configuration" id="base.menu_marketing_config_root" parent="base.marketing_menu" sequence="30" />
+        <menuitem name="Surveys" id="menu_surveys" sequence="70" groups="base.group_survey_user"  web_icon="survey,static/description/icon.png"/>
 
         <!-- Left menu elements: Survey -->
         <menuitem name="Surveys" id="menu_survey_form" action="action_survey_form" parent="menu_surveys" sequence="1"/>
         <menuitem name="Answers" id="menu_survey_type_form1" action="action_survey_user_input" parent="menu_surveys" sequence="1"/>
 
+
         <!-- Left menu elements: Technical Configuration -->
-        <menuitem name="Surveys" id="menu_surveys_configuration" parent="base.menu_marketing_config_root" groups="base.group_no_one" sequence="25" />
+        <menuitem name="Configuration" id="menu_surveys_configuration" parent="menu_surveys" groups="base.group_no_one" sequence="100" />
         <menuitem name="Pages" id="menu_survey_page_form1" action="action_survey_page_form" parent="menu_surveys_configuration" sequence="1"/>
         <menuitem name="Questions" id="menu_survey_question_form1" action="action_survey_question_form" parent="menu_surveys_configuration" sequence="2"/>
         <menuitem name="Labels" id="menu_survey_label_form1" action="action_survey_label_form" parent="menu_surveys_configuration" sequence="3"/>

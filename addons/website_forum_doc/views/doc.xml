@@ -3,7 +3,6 @@
     <data>
 
         <!-- DOCUMENTATION TOC VIEWS -->
-
         <record id="view_documentation_toc_list" model="ir.ui.view">
             <field name="name">forum.documentation.toc.list</field>
             <field name="model">forum.documentation.toc</field>
@@ -12,28 +11,6 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="forum_id"/>
-                    <field name="parent_id"/>
-                </tree>
-            </field>
-        </record>
-        <record id="action_documentation_toc" model="ir.actions.act_window">
-            <field name="name">Documentation</field>
-            <field name="res_model">forum.documentation.toc</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-        </record>
-        <menuitem id="menu_documentation"
-            parent="website_forum.menu_website_forum" groups="base.group_user"
-            name="Documentation ToC" action="action_documentation_toc" sequence="20"/>
-
-
-        <record id="view_documentation_toc_list" model="ir.ui.view">
-            <field name="name">forum.documentation.toc.list</field>
-            <field name="model">forum.documentation.toc</field>
-            <field name="arch" type="xml">
-                <tree string="Documentation TOC" editable="bottom">
-                    <field name="sequence" widget="handle"/>
-                    <field name="name"/>
                     <field name="parent_id"/>
                 </tree>
             </field>
@@ -61,11 +38,14 @@
                     <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
-                            <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
-                                <span class="oe_e">í</span>
-                                <ul class="oe_dropdown_menu">
-                                    <li t-if="widget.view.is_action_enabled('edit')"><a type="edit">Edit...</a></li>
-                                    <li t-if="widget.view.is_action_enabled('delete')"><a type="delete">Delete</a></li>
+                            <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+
+                                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <span class="fa fa-bars fa-lg"/>
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <li t-if="widget.editable"><a type="edit">Edit Post</a></li>
+                                    <li t-if="widget.deletable"><a type="delete">Delete</a></li>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
                             </div>
@@ -110,7 +90,16 @@
             </field>
         </record>
 
-
+        <record id="view_forum_post_doc_list" model="ir.ui.view">
+            <field name="name">forum.post.list.doc</field>
+            <field name="model">forum.post</field>
+            <field name="inherit_id" ref="website_forum.view_forum_post_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='forum_id']" position="after">
+                    <field name="documentation_toc_id"/>
+                </xpath>
+            </field>
+        </record>
 
     </data>
 </openerp>

@@ -1,565 +1,580 @@
-# Greek translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * crm_partner_assign
+# 
+# Translators:
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-01-12 16:53+0000\n"
-"Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
-"Language-Team: Greek <el@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-14 10:27+0000\n"
+"PO-Revision-Date: 2016-01-02 20:46+0000\n"
+"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
+"Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:41+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: el\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: crm_partner_assign
-#: field:crm.lead.report.assign,delay_close:0
-msgid "Delay to Close"
-msgstr "Καθυστέρηση για Κλείσιμο"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,author_id:0
-msgid "Author"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,planned_revenue:0
-msgid "Planned Revenue"
-msgstr "Προγραμματισμένα Έσοδα"
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,type:0
+#: model:mail.template,body_html:crm_partner_assign.email_template_lead_forward_mail
 msgid ""
-"Message type: email for email message, notification for system message, "
-"comment for other messages such as user replies"
+"\n"
+"            \n"
+"<p>Hello,</p>\n"
+"\n"
+"\n"
+"<p>We have been contacted by those prospects that are in your region. Thus, the following leads have been assigned to ${ctx['partner_id'].name}:</p>\n"
+"\n"
+"<ol>\n"
+"% for lead in ctx['partner_leads']:\n"
+"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n"
+"% endfor\n"
+"</ol>\n"
+"\n"
+"% if ctx.get('partner_in_portal'):\n"
+"<p>Please connect to your <a href=\"${object.get_portal_url()}\">Partner Portal</a> to get details. On each lead are two buttons on the top left corner that you should press after having contacted the lead: \"I'm interested\" & \"I'm not interested\".</p>\n"
+"% else:\n"
+"<p>\n"
+"    You do not have yet a portal access to our database. Please contact \n"
+"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.\n"
+"</p>\n"
+"% endif\n"
+"<p>The lead will be sent to another partner if you do not contact the lead before 20 days.</p>\n"
+"\n"
+"<p>Thanks,</p>\n"
+"\n"
+"<pre>\n"
+"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n"
+"</pre>\n"
+"% if not ctx['partner_id'].user_id:\n"
+"PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
+"% endif\n"
+"            "
 msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.lead.report.assign,nbr:0
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_nbr
 msgid "# of Cases"
 msgstr "# από Υποθέσεις"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: view:crm.partner.report.assign:0
-msgid "Group By..."
-msgstr "Ομαδοποίηση ανά..."
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_opp
+msgid "# of Opportunity"
+msgstr "# της Ευκαιρίας"
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,body:0
-msgid "Automatically sanitized HTML contents"
+#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:30
+#, python-format
+msgid "<p>I am interested by this lead.</p>"
+msgstr "<p>Ενδιαφέρομαι για αυτήν την Σύσταση.</p>"
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:35
+#, python-format
+msgid "<p>I am not interested by this lead. I contacted the lead.</p>"
 msgstr ""
 
 #. module: crm_partner_assign
-#: view:crm.lead:0
-msgid "Forward"
-msgstr "Προώθηση"
-
-#. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Geo Localize"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,starred:0
-msgid "Starred"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-msgid "Body"
-msgstr ""
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,email_from:0
+#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:37
+#, python-format
 msgid ""
-"Email address of the sender. This field is set when no matching partner is "
-"found for incoming emails."
+"<p>I am not interested by this lead. I have not contacted the lead.</p>"
+msgstr "<p>Δεν ενδιαφέρομαι για αυτήν την Σύσταση. Δεν έχω επικοινωνήσει με την Σύσταση.</p>"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
+msgid ""
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">N </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
 msgstr ""
 
 #. module: crm_partner_assign
-#: view:crm.partner.report.assign:0
-msgid "Date Partnership"
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
+msgid ""
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;=',0)]}\">E </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">W </span>\n"
+"                                <span class=\"oe_grey\">) </span>"
 msgstr ""
 
 #. module: crm_partner_assign
-#: selection:crm.lead.report.assign,type:0
-msgid "Lead"
-msgstr "Υποψήφιος Πελάτης"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_activation
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation
+#: model:ir.ui.view,arch_db:crm_partner_assign.res_partner_activation_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.res_partner_activation_tree
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_res_partner_filter_assign
+msgid "Activation"
+msgstr "Ενεργοποίηση"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Delay to close"
-msgstr "Καθηστέρηση για κλείσιμο"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_active
+msgid "Active"
+msgstr "Ενεργό"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history_mode:0
-msgid "Whole Story"
-msgstr ""
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_date_assign
+msgid "Assign Date"
+msgstr "Ημερομηνία Ανάθεσης"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,company_id:0
-msgid "Company"
-msgstr "Εταιρία"
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_filter
+msgid "Assign Month"
+msgstr "Ανάθεση Μήνα"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,notification_ids:0
-msgid "Notifications"
-msgstr ""
+#: model:ir.actions.server,name:crm_partner_assign.action_assign_salesman_according_assigned_partner
+msgid "Assign salesman of assigned partner"
+msgstr "Ανάθεση πωλητή από ανατεθειμένο συνεργάτη."
 
 #. module: crm_partner_assign
-#: field:crm.lead.report.assign,date_assign:0
-msgid "Partner Date"
-msgstr "Ημερομηνία Συνεργάτη"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_date_assign
+msgid "Assignation Date"
+msgstr "Ημερομηνία Ανάθεσης"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: view:crm.partner.report.assign:0
-#: view:res.partner:0
-msgid "Salesperson"
-msgstr ""
+#: model:crm.stage,name:crm_partner_assign.stage_portal_lead_assigned
+msgid "Assigned"
+msgstr "Ανατεθειμένη"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.report.assign,priority:0
-msgid "Highest"
-msgstr "Υψηλότερο"
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_partner_assign_form
+msgid "Assigned Opportunities"
+msgstr "Ανατεθειμένες Ευκαιρίες"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,day:0
-msgid "Day"
-msgstr "Ημέρα"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_partner_assigned_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_partner_assigned_id
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_partner_filter
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_partner_filter
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
+msgid "Assigned Partner"
+msgstr "Ανατεθειμένος Συνεργάτης"
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,message_id:0
-msgid "Message unique identifier"
-msgstr ""
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
+msgid "Automatic Assignation"
+msgstr "Αυτόματη Ανάθεση"
 
 #. module: crm_partner_assign
-#: field:res.partner,date_review_next:0
-msgid "Next Partner Review"
-msgstr ""
+#: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_forward_to_partner_body
+msgid "Automatically sanitized HTML contents"
+msgstr "Αυτόματα απολυμαίνει HTML περιεχόμενα"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history_mode:0
-msgid "Latest email"
-msgstr ""
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_probability
+msgid "Avg Probability"
+msgstr "Μέση Πιθανότητα"
 
 #. module: crm_partner_assign
-#: field:crm.lead,partner_latitude:0
-#: field:res.partner,partner_latitude:0
-msgid "Geo Latitude"
-msgstr ""
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_tree
+msgid "Avg. of Probability"
+msgstr "Μέση τιμή των Πιθανοτήτων"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.report.assign,state:0
-msgid "Cancelled"
-msgstr "Ακυρώθηκε"
+#: model:ir.model,name:crm_partner_assign.model_crm_lead_report_assign
+msgid "CRM Lead Report"
+msgstr "Αναφορά Συστάσεων CRM"
 
 #. module: crm_partner_assign
-#: view:crm.lead:0
-msgid "Geo Assignation"
-msgstr ""
+#: model:ir.model,name:crm_partner_assign.model_crm_partner_report_assign
+msgid "CRM Partner Report"
+msgstr "Έκθεση Συνεργατών CRM"
 
 #. module: crm_partner_assign
-#: model:ir.model,name:crm_partner_assign.model_crm_lead_forward_to_partner
-msgid "Email composition wizard"
-msgstr ""
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_forward_to_partner_form
+msgid "Cancel"
+msgstr "Ακύρωση"
 
 #. module: crm_partner_assign
-#: field:crm.partner.report.assign,turnover:0
-msgid "Turnover"
-msgstr ""
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_form
+msgid "Categorization"
+msgstr "Κατηγοριοποίηση"
 
 #. module: crm_partner_assign
-#: field:crm.lead.report.assign,date_closed:0
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_date_closed
 msgid "Close Date"
 msgstr "Ημερομηνία Ολοκλήρωσης"
 
 #. module: crm_partner_assign
-#: help:res.partner,partner_weight:0
-msgid ""
-"Gives the probability to assign a lead to this partner. (0 means no "
-"assignation.)"
-msgstr ""
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_comment
+msgid "Comment"
+msgstr "Σχόλιο"
 
 #. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Partner Activation"
-msgstr ""
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_form
+msgid "Communication"
+msgstr "Επικοινωνία"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,type:0
-msgid "System notification"
-msgstr ""
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_company_id
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_filter
+msgid "Company"
+msgstr "Εταιρεία"
 
 #. module: crm_partner_assign
-#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:74
-#, python-format
-msgid "Lead forward"
-msgstr ""
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
+msgid "Confirm"
+msgstr "Επιβεβαίωση"
 
 #. module: crm_partner_assign
-#: field:crm.lead.report.assign,probability:0
-msgid "Avg Probability"
-msgstr ""
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_form
+msgid "Contact"
+msgstr "Επαφή"
 
 #. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Previous"
-msgstr "Προηγούμενο"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_body
+msgid "Contents"
+msgstr "Περιεχόμενα"
 
 #. module: crm_partner_assign
-#: code:addons/crm_partner_assign/partner_geo_assign.py:36
-#, python-format
-msgid "Network error"
-msgstr "Σφάλμα δικτύου"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_country_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_country_id
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_filter
+msgid "Country"
+msgstr "Χώρα"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,email_from:0
-msgid "From"
-msgstr "Από"
-
-#. module: crm_partner_assign
-#: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
-#: model:ir.ui.menu,name:crm_partner_assign.menu_res_partner_grade_action
-#: view:res.partner.grade:0
-msgid "Partner Grade"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: view:crm.partner.report.assign:0
-msgid "Section"
-msgstr "Τομέας"
-
-#. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-msgid "Send"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Next"
-msgstr "Επόμενο"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,priority:0
-msgid "Priority"
-msgstr "Προτεραιότητα"
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,delay_expected:0
-msgid "Overpassed Deadline"
-msgstr "Περασμένη Προθεσμία"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,type:0
-#: field:crm.lead.report.assign,type:0
-msgid "Type"
-msgstr "Τύπος"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,type:0
-msgid "Email"
-msgstr ""
-
-#. module: crm_partner_assign
-#: help:crm.lead,partner_assigned_id:0
-msgid "Partner this case has been forwarded/assigned to."
-msgstr ""
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,priority:0
-msgid "Lowest"
-msgstr "Χαμηλότερο"
-
-#. module: crm_partner_assign
-#: view:crm.partner.report.assign:0
-msgid "Date Invoice"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,template_id:0
-msgid "Template"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Assign Date"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Leads Analysis"
-msgstr "Ανάλυση Ευκαιριών"
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,creation_date:0
-msgid "Creation Date"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_create_date
+msgid "Create Date"
 msgstr "Ημερομηνία Δημιουργίας"
 
 #. module: crm_partner_assign
-#: model:ir.model,name:crm_partner_assign.model_res_partner_activation
-msgid "res.partner.activation"
-msgstr ""
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_create_uid
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_create_uid
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_create_uid
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation_create_uid
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_create_uid
+msgid "Created by"
+msgstr "Δημιουργήθηκε από"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,parent_id:0
-msgid "Parent Message"
-msgstr ""
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_create_date
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_create_date
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_create_date
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation_create_date
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_create_date
+msgid "Created on"
+msgstr "Δημιουργήθηκε στις"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,res_id:0
-msgid "Related Document ID"
-msgstr ""
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_partner_id
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_tree
+msgid "Customer"
+msgstr "Πελάτης"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.report.assign,state:0
-msgid "Pending"
-msgstr "Εκκρεμεί"
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_form
+msgid "Customer Name"
+msgstr "Όνομα Πελάτη"
 
 #. module: crm_partner_assign
-#: view:crm.lead:0
-msgid "Partner Assignation"
-msgstr ""
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_partner_assign_filter
+msgid "Date Partnership"
+msgstr "Ημερομηνία Συνεργασίας"
 
 #. module: crm_partner_assign
-#: help:crm.lead.report.assign,type:0
-msgid "Type is used to separate Leads and Opportunities"
-msgstr ""
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "July"
-msgstr "Ιούλιος"
-
-#. module: crm_partner_assign
-#: view:crm.partner.report.assign:0
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Date Review"
-msgstr ""
+msgstr "Ημερομηνία Αναθεώρησης"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,stage_id:0
-msgid "Stage"
-msgstr "Στάδιο"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_delay_open
+msgid "Delay to Assign"
+msgstr "Καθυστέρηση εκχώρησης"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,state:0
-msgid "Status"
-msgstr ""
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_delay_close
+msgid "Delay to Close"
+msgstr "Καθυστέρηση για Κλείσιμο"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,to_read:0
-msgid "To read"
-msgstr ""
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_form
+msgid "Details"
+msgstr "Λεπτομέρειες"
 
 #. module: crm_partner_assign
-#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:74
-#, python-format
-msgid "Fwd"
-msgstr "Προοθ."
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_contacted
+msgid "Did you contact the lead?"
+msgstr "Έχετε επικοινωνήσει με την Σύσταση;"
 
 #. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Geo Localization"
-msgstr ""
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_display_name
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_display_name
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_display_name
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_display_name
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_display_name
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation_display_name
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_display_name
+msgid "Display Name"
+msgstr "Εμφάνιση Ονόματος"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: view:crm.partner.report.assign:0
-msgid "Opportunities Assignment Analysis"
-msgstr ""
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
+msgid "Do you have contacted the customer?"
+msgstr "Έχετε έρθει σε επαφή με τον πελάτη;"
 
 #. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-#: view:res.partner:0
-msgid "Cancel"
-msgstr "Ακύρωση"
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_forward_to_partner_form
+msgid "Email Template"
+msgstr "Πρότυπο email"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,history_mode:0
-msgid "Send history"
-msgstr "Αποστολή Ιστορικού"
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_tree
+msgid "Expected Revenues"
+msgstr "Προσδοκόμενα Έσοδα"
 
 #. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Close"
-msgstr "Κλείσιμο"
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_filter
+msgid "Extended Filters..."
+msgstr "Εκτεταμένα Φίλτρα..."
 
 #. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "March"
-msgstr "Μάρτιος"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_partner_id
+msgid "Forward Leads To"
+msgstr "Προώθηση Συστάσεων σε"
 
 #. module: crm_partner_assign
-#: model:ir.actions.act_window,name:crm_partner_assign.action_report_crm_opportunity_assign
-#: model:ir.ui.menu,name:crm_partner_assign.menu_report_crm_opportunities_assign_tree
-msgid "Opp. Assignment Analysis"
-msgstr ""
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_forward_type
+msgid "Forward selected leads to"
+msgstr "Προώθηση επιλεγμένων Συστάσεων σε"
 
 #. module: crm_partner_assign
-#: help:crm.lead.report.assign,delay_close:0
-msgid "Number of Days to close the case"
-msgstr "Αριθμός Ημερών για κλείσιμο της υπόθεσης"
+#: model:ir.actions.act_window,name:crm_partner_assign.action_crm_send_mass_forward
+#: model:ir.actions.act_window,name:crm_partner_assign.crm_lead_forward_to_partner_act
+msgid "Forward to Partner"
+msgstr "Πρώθησε σε Συνεργάτη"
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,notified_partner_ids:0
+#: model:mail.template,subject:crm_partner_assign.email_template_lead_forward_mail
+msgid "Fwd: Lead: ${ctx['partner_id'].name}"
+msgstr "Fwd: Σύσταση: ${ctx['partner_id'].name}"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_partner_latitude
+msgid "Geo Latitude"
+msgstr "Γεωγραφικό Πλάτος"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_partner_longitude
+msgid "Geo Longitude"
+msgstr "Γεωγραφικό μήκος"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
+msgid "Geolocation"
+msgstr "Γεωγραφική τοποθεσία"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,help:crm_partner_assign.field_res_partner_grade_partner_weight
+#: model:ir.model.fields,help:crm_partner_assign.field_res_partner_partner_weight
 msgid ""
-"Partners that have a notification pushing this message in their mailboxes"
-msgstr ""
+"Gives the probability to assign a lead to this partner. (0 means no "
+"assignation.)"
+msgstr "Δίνει την πιθανότητα φια να αναθέσει μία σύσταση σε αυτόν των συνεργάτη. (0 σημαίνει όχι ανάθεση.)"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,type:0
-msgid "Comment"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:res.partner,partner_weight:0
-msgid "Weight"
-msgstr "Βάρος"
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "April"
-msgstr "Απρίλιος"
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,grade_id:0
-#: view:crm.partner.report.assign:0
-#: field:crm.partner.report.assign,grade_id:0
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_grade_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_grade_id
 msgid "Grade"
 msgstr "Βαθμίδα"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "December"
-msgstr "Δεκέμβριος"
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_filter
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_partner_assign_filter
+msgid "Group By"
+msgstr "Ομαδοποίηση Ανά"
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,vote_user_ids:0
-msgid "Users that voted for this message"
-msgstr ""
+#: selection:crm.lead.report.assign,priority:0
+msgid "High"
+msgstr "Υψηλή"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,month:0
-msgid "Month"
-msgstr "Μήνας"
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_tree
+msgid "I'm interested"
+msgstr "Ενδιαφέρομαι"
 
 #. module: crm_partner_assign
-#: field:crm.lead.report.assign,opening_date:0
-msgid "Opening Date"
-msgstr "Μέρα Έναρξης"
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_tree
+msgid "I'm not interested"
+msgstr "Δεν Ενδιαφέρομαι"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,child_ids:0
-msgid "Child Messages"
-msgstr ""
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_id
+msgid "ID"
+msgstr "ID"
 
 #. module: crm_partner_assign
-#: field:crm.partner.report.assign,date_review:0
-#: field:res.partner,date_review:0
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_implemented_partner_ids
+msgid "Implementation References"
+msgstr "Αναφορές Υλοποίησης"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_assigned_partner_id
+msgid "Implemented by"
+msgstr "Υλοποιήθηκε από"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_interested
+msgid "Interested by this lead"
+msgstr "Οι ενδιαφερόμενοι από την Σύσταση"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_date
+msgid "Invoice Account Date"
+msgstr "Ημερομηνία Λογαριασμού Τιμολογίου"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation___last_update
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested___last_update
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner___last_update
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign___last_update
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign___last_update
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation___last_update
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade___last_update
+msgid "Last Modified on"
+msgstr "Τελευταία αλλαγή στις"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_write_uid
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_write_uid
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_write_uid
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation_write_uid
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_write_uid
+msgid "Last Updated by"
+msgstr "Τελευταία Ενημέρωση από"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_write_date
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_write_date
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_write_date
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation_write_date
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_write_date
+msgid "Last Updated on"
+msgstr "Τελευταία Ενημέρωση στις"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_date_assign
+msgid "Last date this case was forwarded/assigned to a partner"
+msgstr "Τελευταία ημερομηνία αυτή η υπόθεση είχε προωθηθεί/ανατεθεί σε ένα συνεργάτη"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_date_review
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_date_review
 msgid "Latest Partner Review"
+msgstr "Τελευταία Αναθεώρηση Συνεργάτη"
+
+#. module: crm_partner_assign
+#: selection:crm.lead.report.assign,type:0
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_lead_id
+msgid "Lead"
+msgstr "Σύσταση"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_lead_link
+msgid "Lead  Single Links"
+msgstr "Σύνδεσμοι ενιαίας Σύστασης"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_graph
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_pivot
+msgid "Lead Assign"
+msgstr "Ανάθεση Σύστασης"
+
+#. module: crm_partner_assign
+#: model:ir.actions.act_window,name:crm_partner_assign.crm_lead_channel_interested_act
+msgid "Lead Feedback"
+msgstr "Ανατροφοδότηση Σύστασης"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_lead_location
+msgid "Lead Location"
+msgstr "Τοποθεσία Σύστασης"
+
+#. module: crm_partner_assign
+#: model:ir.model,name:crm_partner_assign.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Σύσταση/Ευκαιρία"
+
+#. module: crm_partner_assign
+#: model:ir.actions.act_window,name:crm_partner_assign.action_portal_leads
+#: model:ir.ui.menu,name:crm_partner_assign.openerp_portal_menu_sales_leads_current
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_tree
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_tree
+msgid "Leads"
+msgstr "Συστάσεις"
+
+#. module: crm_partner_assign
+#: model:ir.ui.menu,name:crm_partner_assign.portal_leads
+msgid "Leads & Opportunities"
+msgstr "Συστάσεις & Ευκαιρίες"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_filter
+msgid "Leads Analysis"
+msgstr "Ανάλυση Ευκαιριών"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_id_9621
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_partner_grade_form
+msgid "Level"
+msgstr "Επίπεδο"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_name
+msgid "Level Name"
 msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,subject:0
-msgid "Subject"
-msgstr "Θέμα"
-
-#. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-msgid "or"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_partner_weight
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_partner_weight
+msgid "Level Weight"
 msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,body:0
-msgid "Contents"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,vote_user_ids:0
-msgid "Votes"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "#Opportunities"
-msgstr "# Ευκαιρίες"
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,starred:0
-msgid "Current user has a starred notification linked to this message"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.partner.report.assign,date_partnership:0
-#: field:res.partner,date_partnership:0
-msgid "Partnership Date"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:crm.lead:0
-msgid "Team"
-msgstr ""
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,state:0
-msgid "Draft"
-msgstr "Πρόχειρο"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
 msgid "Low"
-msgstr "Χαμηλό"
+msgstr "Χαμηλή"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: selection:crm.lead.report.assign,state:0
-msgid "Closed"
-msgstr "Έκλεισε"
-
-#. module: crm_partner_assign
-#: model:ir.actions.act_window,name:crm_partner_assign.action_crm_send_mass_forward
-msgid "Mass forward to partner"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:res.partner:0
-#: field:res.partner,opportunity_assigned_ids:0
-msgid "Assigned Opportunities"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead,date_assign:0
-msgid "Assignation Date"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,probability_max:0
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_probability_max
 msgid "Max Probability"
-msgstr ""
+msgstr "Μέγιστη Πιθανότητα"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "August"
-msgstr "Αύγουστος"
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_partner_filter
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_partner_filter
+msgid "My Assigned Partners"
+msgstr "Οι ανατεθειμένοι μου Συνεργάτες"
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,record_name:0
-msgid "Name get of the related document."
-msgstr ""
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation_name
+msgid "Name"
+msgstr "Όνομα"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_date_review_next
+msgid "Next Partner Review"
+msgstr "Επόμενη Αναθεώρηση του Συνεργάτη"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
@@ -567,425 +582,317 @@ msgid "Normal"
 msgstr "Κανονικό"
 
 #. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Escalate"
-msgstr "Διαβάθμιση"
+#: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_report_assign_delay_close
+msgid "Number of Days to close the case"
+msgstr "Αριθμός Ημερών για κλείσιμο της υπόθεσης"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "June"
-msgstr "Ιούνιος"
-
-#. module: crm_partner_assign
-#: help:crm.lead.report.assign,delay_open:0
+#: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_report_assign_delay_open
 msgid "Number of Days to open the case"
 msgstr "Αριθμός Ημερών για άνοιγμα υπόθεσης"
 
 #. module: crm_partner_assign
-#: field:crm.lead.report.assign,delay_open:0
-msgid "Delay to Open"
-msgstr ""
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
+msgid "Once the lead is processed, it will be in your \"Opportunities\" menu."
+msgstr "Μόλις ολοκληρωθεί η επεξεργασία της Σύστασης, θα είναι στο μενού \"Ευκαιρίες\"."
 
 #. module: crm_partner_assign
-#: field:crm.lead.report.assign,user_id:0
-#: field:crm.partner.report.assign,user_id:0
-msgid "User"
-msgstr "Χρήστης"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_opening_date
+msgid "Opening Date"
+msgstr "Μέρα Έναρξης"
 
 #. module: crm_partner_assign
-#: field:res.partner.grade,active:0
-msgid "Active"
-msgstr "Ενεργό"
+#: model:ir.actions.act_window,name:crm_partner_assign.action_report_crm_opportunity_assign
+#: model:ir.ui.menu,name:crm_partner_assign.menu_report_crm_opportunities_assign_tree
+msgid "Opp. Assignment Analysis"
+msgstr "Ανάλυση Ανάθεσης Ευκαιριών"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "November"
-msgstr "Νοέμβριος"
+#: model:ir.actions.act_window,name:crm_partner_assign.action_portal_opportunities
+#: model:ir.ui.menu,name:crm_partner_assign.openerp_portal_menu_sales_leads_current1
+msgid "Opportunities"
+msgstr "Ευκαιρίες"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Extended Filters..."
-msgstr "Εκτεταμένα Φίλτρα..."
-
-#. module: crm_partner_assign
-#: field:crm.lead,partner_longitude:0
-#: field:res.partner,partner_longitude:0
-msgid "Geo Longitude"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.partner.report.assign,opp:0
-msgid "# of Opportunity"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Lead Assign"
-msgstr ""
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "October"
-msgstr "Οκτώβριος"
-
-#. module: crm_partner_assign
-#: view:crm.lead:0
-msgid "Assignation"
-msgstr ""
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "January"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-msgid "Send Mail"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,date:0
-msgid "Date"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Planned Revenues"
-msgstr "Προβλεπόμενα Έσοδα"
-
-#. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Partner Review"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.partner.report.assign,period_id:0
-msgid "Invoice Period"
-msgstr ""
-
-#. module: crm_partner_assign
-#: model:ir.model,name:crm_partner_assign.model_res_partner_grade
-msgid "res.partner.grade"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,message_id:0
-msgid "Message-Id"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-#: field:crm.lead.forward.to.partner,attachment_ids:0
-msgid "Attachments"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,record_name:0
-msgid "Message Record Name"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:res.partner.activation,sequence:0
-#: field:res.partner.grade,sequence:0
-msgid "Sequence"
-msgstr ""
-
-#. module: crm_partner_assign
-#: code:addons/crm_partner_assign/partner_geo_assign.py:37
-#, python-format
-msgid ""
-"Cannot contact geolocation servers. Please make sure that your internet "
-"connection is up and running (%s)."
-msgstr ""
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "September"
-msgstr "Σεπτέμβριος"
-
-#. module: crm_partner_assign
-#: field:res.partner.grade,name:0
-msgid "Grade Name"
-msgstr ""
-
-#. module: crm_partner_assign
-#: help:crm.lead,date_assign:0
-msgid "Last date this case was forwarded/assigned to a partner"
-msgstr ""
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,state:0
-#: view:res.partner:0
-msgid "Open"
-msgstr "Ανοιχτό"
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,subtype_id:0
-msgid "Subtype"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:res.partner,date_localization:0
-msgid "Geo Localization Date"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Current"
-msgstr "Τρέχων"
-
-#. module: crm_partner_assign
-#: model:ir.model,name:crm_partner_assign.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,notified_partner_ids:0
-msgid "Notified partners"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
-#: model:ir.actions.act_window,name:crm_partner_assign.crm_lead_forward_to_partner_act
-msgid "Forward to Partner"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,section_id:0
-#: field:crm.partner.report.assign,section_id:0
-msgid "Sales Team"
-msgstr ""
-
-#. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "May"
-msgstr "Μάιος"
-
-#. module: crm_partner_assign
-#: field:crm.lead.report.assign,probable_revenue:0
-msgid "Probable Revenue"
-msgstr "Εκτιμώμενα Έσοδα"
-
-#. module: crm_partner_assign
-#: view:crm.partner.report.assign:0
-#: field:crm.partner.report.assign,activation:0
-#: view:res.partner:0
-#: field:res.partner,activation:0
-#: view:res.partner.activation:0
-msgid "Activation"
-msgstr ""
-
-#. module: crm_partner_assign
-#: view:crm.lead:0
-#: field:crm.lead,partner_assigned_id:0
-msgid "Assigned Partner"
-msgstr ""
-
-#. module: crm_partner_assign
-#: field:res.partner,grade_id:0
-msgid "Partner Level"
-msgstr ""
-
-#. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,to_read:0
-msgid "Current user has an unread notification linked to this message"
-msgstr ""
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_partner_assign_graph
+msgid "Opportunities Assignment Analysis"
+msgstr "Ανάλυση Ανάθεσης Ευκαιριών"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,type:0
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_tree
 msgid "Opportunity"
 msgstr "Ευκαιρία"
 
 #. module: crm_partner_assign
-#: field:crm.lead.report.assign,partner_id:0
-msgid "Customer"
-msgstr "Πελάτης"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_delay_expected
+msgid "Overpassed Deadline"
+msgstr "Περασμένη Προθεσμία"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.report.assign,month:0
-msgid "February"
-msgstr "Φεβρουάριος"
+#: model:ir.model,name:crm_partner_assign.model_res_partner
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_partner_assigned_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_partner_id
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_partner_assign_filter
+msgid "Partner"
+msgstr "Συνεργάτης"
 
 #. module: crm_partner_assign
-#: field:res.partner.activation,name:0
-msgid "Name"
-msgstr ""
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_partner_assign_form
+msgid "Partner Activation"
+msgstr "Ενεργοποίηση Συνεργάτη"
 
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.res_partner_activation_act
 #: model:ir.ui.menu,name:crm_partner_assign.res_partner_activation_config_mi
 msgid "Partner Activations"
-msgstr ""
+msgstr "Ενεργοποιήσεις Συνεργάτη"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,country_id:0
-#: view:crm.partner.report.assign:0
-#: field:crm.partner.report.assign,country_id:0
-msgid "Country"
-msgstr "Χώρα"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_forward_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner_assignation_lines
+msgid "Partner Assignation"
+msgstr "Ανάθεση Συνεργάτη"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,year:0
-msgid "Year"
-msgstr ""
+#: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
+#: model:ir.ui.menu,name:crm_partner_assign.menu_res_partner_grade_action
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_partner_grade_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_partner_grade_tree
+msgid "Partner Level"
+msgstr "Επίπεδο Συνεργάτη"
 
 #. module: crm_partner_assign
-#: view:res.partner:0
-msgid "Convert to Opportunity"
-msgstr "Μετατροπή σε Ευκαιρία"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_partner_location
+msgid "Partner Location"
+msgstr "Τοποθεσία Συνεργάτη"
 
 #. module: crm_partner_assign
-#: view:crm.lead:0
-msgid "Geo Assign"
-msgstr ""
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_form
+msgid "Partner Name"
+msgstr "Όνομα Συνεργάτη"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-msgid "Delay to open"
-msgstr "Καθηστέρηση για άνοιγμα"
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_partner_assign_form
+msgid "Partner Review"
+msgstr "Αναθεώρηση Συνεργάτη"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_partner_assign_filter
+msgid "Partner assigned Analysis"
+msgstr "Ανάλυση Ανάθεσης Συνεργατών"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_partner_assigned_id
+msgid "Partner this case has been forwarded/assigned to."
+msgstr "Συνεργάτης αυτής της υπόθεσης που έχει προωθηθεί/ανατεθεί."
 
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.action_report_crm_partner_assign
-#: model:ir.ui.menu,name:crm_partner_assign.menu_report_crm_partner_assign_tree
 msgid "Partnership Analysis"
+msgstr "Αναλυση Συνεργασιών"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_date_partnership
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_date_partnership
+msgid "Partnership Date"
+msgstr "Ημερομηνία Συνεργασίας"
+
+#. module: crm_partner_assign
+#: model:ir.ui.menu,name:crm_partner_assign.menu_report_crm_partner_assign_tree
+msgid "Partnerships"
 msgstr ""
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,notification_ids:0
-msgid ""
-"Technical field holding the message notifications. Use notified_partner_ids "
-"to access notified partners."
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_planned_revenue
+msgid "Planned Revenue"
+msgstr "Προγραμματισμένα Έσοδα"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_priority
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_form
+msgid "Priority"
+msgstr "Προτεραιότητα"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_probable_revenue
+msgid "Probable Revenue"
+msgstr "Εκτιμώμενα Έσοδα"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_team_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_team_id
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_filter
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_partner_assign_filter
+msgid "Sales Team"
+msgstr "Ομάδα Πώλησης"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_filter
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_partner_assign_filter
+msgid "Salesperson"
+msgstr "Πωλητής"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_forward_to_partner_form
+msgid "Send"
+msgstr "Αποστολή"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
+msgid "Send Email"
+msgstr "Αποστολή email"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_forward_to_partner_form
+msgid "Send Mail"
+msgstr "Αποστολή Mail"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation_sequence
+#: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_sequence
+msgid "Sequence"
+msgstr "Ιεράρχηση"
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:84
+#, python-format
+msgid "Set an email address for the partner %s"
 msgstr ""
 
 #. module: crm_partner_assign
-#: view:crm.partner.report.assign:0
-msgid "Partner assigned Analysis"
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:82
+#, python-format
+msgid "Set an email address for the partner(s): %s"
 msgstr ""
 
 #. module: crm_partner_assign
-#: model:ir.model,name:crm_partner_assign.model_crm_lead_report_assign
-msgid "CRM Lead Report"
-msgstr "Αναφορά Υποψηφίων πελατών CRM"
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_stage_id
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_filter
+msgid "Stage"
+msgstr "Στάδιο"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,composition_mode:0
-msgid "Composition mode"
-msgstr ""
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_tree
+msgid "Subject"
+msgstr "Θέμα"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,model:0
-msgid "Related Document Model"
-msgstr ""
+#: code:addons/crm_partner_assign/crm_lead.py:17
+#, python-format
+msgid "The CRM Channel Interested Action is missing"
+msgstr "Λείπει το CRM κανάλι 'Ενδιαφερόμενοι για Ενέργεια'"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history_mode:0
-msgid "Case Information"
-msgstr ""
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:69
+#, python-format
+msgid "The Forward Email Template is not in the database"
+msgstr "Το πρότυπο προώθησης email δεν είναι στην βάση δεδομένων"
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,author_id:0
-msgid ""
-"Author of the message. If not set, email_from may hold an email address that "
-"did not match any partner."
-msgstr ""
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:73
+#, python-format
+msgid "The Portal group cannot be found"
+msgstr "Η Ομάδα Πύλη δεμ μπορεί να βρεθεί"
 
 #. module: crm_partner_assign
-#: model:ir.model,name:crm_partner_assign.model_crm_partner_report_assign
-msgid "CRM Partner Report"
-msgstr ""
+#: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_channel_interested_contacted
+msgid "The lead has been contacted"
+msgstr "Έχει γίνει επαφή σε την Σύσταση"
+
+#. module: crm_partner_assign
+#: model:crm.stage,name:crm_partner_assign.stage_portal_lead_recycle
+msgid "To Recycle"
+msgstr "Για ανακύκλωση"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_turnover
+msgid "Turnover"
+msgstr "Τζίρος"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_type
+msgid "Type"
+msgstr "Τύπος"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_report_assign_type
+msgid "Type is used to separate Leads and Opportunities"
+msgstr "Ο Τύπος χρησιμοποιήτε για να ξεχωρίσει τους Πιθανούς Πελάτες από τις Ευκαιρίες"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_user_id
+#: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_user_id
+msgid "User"
+msgstr "Χρήστης"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
-msgid "High"
+msgid "Very High"
+msgstr "Πολύ υψηλή"
+
+#. module: crm_partner_assign
+#: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_channel_interested_comment
+msgid "What are the elements that have led to this decision?"
+msgstr "Ποια είναι τα στοιχεία που οδήγησαν σε αυτή την απόφαση;"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
+msgid "What is the next action? When? What is the expected revenue?"
+msgstr "Ποια είναι η επόμενη ενέργεια; Πότε; Ποια είναι τα αναμενόμενα έσοδα;"
+
+#. module: crm_partner_assign
+#: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
+msgid "Why aren't you interested by this lead?"
+msgstr "Γιατί δεν ενδιαφέρεστε για αυτήν την σύσταση;"
+
+#. module: crm_partner_assign
+#: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:26
+#, python-format
+msgid "You must contact the lead before saying that you are interested"
+msgstr "Πρέπει να επικοινωνήσετε με την Σύσταση πριν πείτε ότι δεν σας ενδιαφέρει."
+
+#. module: crm_partner_assign
+#: selection:crm.lead.forward.to.partner,forward_type:0
+msgid "a single partner: manual selection of partner"
+msgstr "ένας ενιαίος συνεργάτης: χειροκίνητη επιλογή του συνεργάτη"
+
+#. module: crm_partner_assign
+#: model:ir.model,name:crm_partner_assign.model_crm_lead_assignation
+msgid "crm.lead.assignation"
 msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,partner_ids:0
-msgid "Additional contacts"
+#: model:ir.model,name:crm_partner_assign.model_crm_lead_channel_interested
+msgid "crm.lead.channel.interested"
 msgstr ""
 
 #. module: crm_partner_assign
-#: help:crm.lead.forward.to.partner,parent_id:0
-msgid "Initial thread message."
+#: model:ir.model,name:crm_partner_assign.model_crm_lead_forward_to_partner
+msgid "crm.lead.forward.to.partner"
 msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.lead.report.assign,create_date:0
-msgid "Create Date"
+#: model:ir.ui.view,arch_db:crm_partner_assign.view_partner_grade_form
+msgid "e.g. Gold Partner"
 msgstr ""
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,filter_id:0
-msgid "Filters"
-msgstr ""
+#: model:ir.model,name:crm_partner_assign.model_res_partner_activation
+msgid "res.partner.activation"
+msgstr "res.partner.activation"
 
 #. module: crm_partner_assign
-#: view:crm.lead.report.assign:0
-#: field:crm.lead.report.assign,partner_assigned_id:0
-#: view:crm.partner.report.assign:0
-#: field:crm.partner.report.assign,partner_id:0
-#: model:ir.model,name:crm_partner_assign.model_res_partner
-msgid "Partner"
-msgstr "Συνεργάτης"
+#: model:ir.model,name:crm_partner_assign.model_res_partner_grade
+msgid "res.partner.grade"
+msgstr "res.partner.grade"
 
-#~ msgid "Send to"
-#~ msgstr "Αποστολή σε"
-
-#~ msgid "Reply-to of the Sales team defined on this case"
-#~ msgstr "Απάντηση-στην ομάδα Πωλήσεων που ορίστικε σε αυτήν την υπόθεση"
-
-#~ msgid "HTML formatting?"
-#~ msgstr "διαμόρφωση HTML;"
-
-#~ msgid "State"
-#~ msgstr "Κατάσταση"
-
-#~ msgid "7 Days"
-#~ msgstr "7 Ημέρες"
-
-#~ msgid "Select this if you want to send email with HTML formatting."
-#~ msgstr "Επιλέξτε αυτό εάν θέλετε να στείλετε το email με μορφή HTML."
-
-#~ msgid "Contact"
-#~ msgstr "Επαφή"
-
-#~ msgid "Category"
-#~ msgstr "Κατηγορία"
-
-#~ msgid "Reply To"
-#~ msgstr "Απάντηση Σε"
-
-#~ msgid "Salesman"
-#~ msgstr "Πωλητής"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Σφάλμα! Δεν επιτρέπεται η δημιουργία μελών σε κυκλικό συσχετισμό"
-
-#~ msgid "unknown"
-#~ msgstr "άγνωστο"
-
-#~ msgid "CC"
-#~ msgstr "CC"
-
-#~ msgid "Unchanged"
-#~ msgstr "Αμετάβλητο"
-
-#~ msgid "Last 30 Days"
-#~ msgstr "Τελευταίες 30 Ημέρες"
-
-#~ msgid "To"
-#~ msgstr "Πρός"
-
-#~ msgid "Address"
-#~ msgstr "Διεύθυνση"
-
-#~ msgid "Send new email"
-#~ msgstr "Αποστολή νέου email"
-
-#~ msgid "Email Address"
-#~ msgstr "Διεύθυνση Email"
-
-#~ msgid "crm.lead"
-#~ msgstr "crm.lead"
+#. module: crm_partner_assign
+#: selection:crm.lead.forward.to.partner,forward_type:0
+msgid ""
+"several partners: automatic assignation, using GPS coordinates and partner's"
+" grades"
+msgstr "αρκετοί συσνεργάτες: αυτόματη ανάθεση κάνοντας χρήση το στίγμα GPS και τους βαθμούς του κάθε Συνεργάτη"

@@ -30,6 +30,21 @@ class test_model(orm.Model):
         'text': fields.text(),
     }
 
+    # `base` module does not contains any model that implement the `_group_by_full` functionality
+    # test this feature here...
+
+    def _gbf_m2o(self, cr, uid, ids, domain, read_group_order, access_rights_uid, context):
+        Sub = self.pool['test_converter.test_model.sub']
+        all_ids = Sub._search(cr, uid, [], access_rights_uid=access_rights_uid, context=context)
+        result = Sub.name_get(cr, access_rights_uid or uid, all_ids, context=context)
+        folds = {i: i not in ids for i, _ in result}
+        return result, folds
+
+    _group_by_full = {
+        'many2one': _gbf_m2o,
+    }
+
+
 class test_model_sub(orm.Model):
     _name = 'test_converter.test_model.sub'
 

@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2014 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import workitem
 from openerp.workflow.helpers import Session
 from openerp.workflow.helpers import Record
@@ -70,7 +52,12 @@ class WorkflowInstance(object):
         cr = self.session.cr
         cr.execute("select * from wkf_workitem where inst_id=%s", (self.instance['id'],))
         stack = []
-        for work_item_values in cr.dictfetchall():
+        for i, work_item_values in enumerate(cr.dictfetchall()):
+            if i > 0:
+                # test if previous workitem has already processed this one
+                cr.execute("select id from wkf_workitem where id=%s", (work_item_values['id'],))
+                if not cr.fetchone():
+                    continue
             wi = WorkflowItem(self.session, self.record, work_item_values)
             wi.process(signal=signal, force_running=force_running, stack=stack)
             # An action is returned
@@ -128,7 +115,3 @@ def update(session, record, instance_id):
 
 def _update_end(session, record, instance_id):
     return WorkflowInstance(session, record)._update_end(instance_id)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

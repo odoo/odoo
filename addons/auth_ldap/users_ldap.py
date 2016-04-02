@@ -1,22 +1,4 @@
-##############################################################################
-#    
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ldap
 import logging
@@ -96,7 +78,11 @@ class CompanyLDAP(osv.osv):
             return False
 
         entry = False
-        filter = filter_format(conf['ldap_filter'], (login,))
+        try:
+            filter = filter_format(conf['ldap_filter'], (login,))
+        except TypeError:
+            _logger.warning('Could not format LDAP filter. Your filter should contain one \'%s\'.')
+            return False
         try:
             results = self.query(conf, filter)
 
@@ -105,7 +91,7 @@ class CompanyLDAP(osv.osv):
             if results and len(results) == 1:
                 dn = results[0][0]
                 conn = self.connect(conf)
-                conn.simple_bind_s(dn, password)
+                conn.simple_bind_s(dn, password.encode('utf-8'))
                 conn.unbind()
                 entry = results[0]
         except ldap.INVALID_CREDENTIALS:
@@ -140,8 +126,9 @@ class CompanyLDAP(osv.osv):
         results = []
         try:
             conn = self.connect(conf)
-            conn.simple_bind_s(conf['ldap_binddn'] or '',
-                               conf['ldap_password'] or '')
+            ldap_password = conf['ldap_password'] or ''
+            ldap_binddn = conf['ldap_binddn'] or ''
+            conn.simple_bind_s(ldap_binddn.encode('utf-8'), ldap_password.encode('utf-8'))
             results = conn.search_st(conf['ldap_base'], ldap.SCOPE_SUBTREE,
                                      filter, retrieve_attributes, timeout=60)
             conn.unbind()
@@ -183,14 +170,14 @@ class CompanyLDAP(osv.osv):
         """
         
         user_id = False
-        login = tools.ustr(login.lower())
+        login = tools.ustr(login.lower().strip())
         cr.execute("SELECT id, active FROM res_users WHERE lower(login)=%s", (login,))
         res = cr.fetchone()
         if res:
             if res[1]:
                 user_id = res[0]
         elif conf['create_user']:
-            _logger.debug("Creating new OpenERP user \"%s\" from LDAP" % login)
+            _logger.debug("Creating new Odoo user \"%s\" from LDAP" % login)
             user_obj = self.pool['res.users']
             values = self.map_ldap_attributes(cr, uid, conf, login, ldap_entry)
             if conf['user']:
@@ -205,16 +192,16 @@ class CompanyLDAP(osv.osv):
         'sequence': fields.integer('Sequence'),
         'company': fields.many2one('res.company', 'Company', required=True,
             ondelete='cascade'),
-        'ldap_server': fields.char('LDAP Server address', size=64, required=True),
+        'ldap_server': fields.char('LDAP Server address', required=True),
         'ldap_server_port': fields.integer('LDAP Server port', required=True),
-        'ldap_binddn': fields.char('LDAP binddn', size=64,
+        'ldap_binddn': fields.char('LDAP binddn', 
             help=("The user account on the LDAP server that is used to query "
                   "the directory. Leave empty to connect anonymously.")),
-        'ldap_password': fields.char('LDAP password', size=64,
+        'ldap_password': fields.char('LDAP password',
             help=("The password of the user account on the LDAP server that is "
                   "used to query the directory.")),
-        'ldap_filter': fields.char('LDAP filter', size=256, required=True),
-        'ldap_base': fields.char('LDAP base', size=64, required=True),
+        'ldap_filter': fields.char('LDAP filter', required=True),
+        'ldap_base': fields.char('LDAP base', required=True),
         'user': fields.many2one('res.users', 'Template User',
             help="User to copy when creating new users"),
         'create_user': fields.boolean('Create user',
@@ -237,18 +224,22 @@ class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
         'ldaps': fields.one2many(
-            'res.company.ldap', 'company', 'LDAP Parameters'),
+            'res.company.ldap', 'company', 'LDAP Parameters', copy=True, groups="base.group_system"),
     }
 
 
 class users(osv.osv):
     _inherit = "res.users"
-    def login(self, db, login, password):
-        user_id = super(users, self).login(db, login, password)
+    def _login(self, db, login, password):
+        user_id = super(users, self)._login(db, login, password)
         if user_id:
             return user_id
         registry = RegistryManager.get(db)
         with registry.cursor() as cr:
+            cr.execute("SELECT id FROM res_users WHERE lower(login)=%s", (login,))
+            res = cr.fetchone()
+            if res:
+                return False
             ldap_obj = registry.get('res.company.ldap')
             for conf in ldap_obj.get_ldap_dicts(cr):
                 entry = ldap_obj.authenticate(conf, login, password)
@@ -274,4 +265,3 @@ class users(osv.osv):
                         return
             raise
         
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

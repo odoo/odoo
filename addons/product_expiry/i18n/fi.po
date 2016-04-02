@@ -1,202 +1,159 @@
-# Finnish translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * product_expiry
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2011-06-27 06:27+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Finnish <fi@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-09-08 07:20+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:26+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_from_product_template
-msgid "Ham"
-msgstr "Kinkku"
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_alert_date
+msgid "Alert Date"
+msgstr "Hälytyspäivä"
 
 #. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_lait_product_template
-msgid "Cow milk"
-msgstr "Maito"
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_use_date
+msgid "Best before Date"
+msgstr "Parasta ennen päiväys"
 
 #. module: product_expiry
-#: field:product.product,life_time:0
-msgid "Product Life Time"
-msgstr "Tuotteen elinikä"
-
-#. module: product_expiry
-#: help:stock.production.lot,removal_date:0
-msgid ""
-"This is the date on which the goods with this Serial Number should be "
-"removed from the stock."
-msgstr ""
-"Tämä on päivä, jolloin tämän sarjanumeron tuotteet pitäisi poistaa "
-"varastosta."
-
-#. module: product_expiry
-#: help:product.product,removal_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr ""
-"Kun uusi sarjanumero myönnetään käyttöön, niin tuotteet pitää poistaa näin "
-"monta päivää ennen varastosta."
-
-#. module: product_expiry
-#: field:product.product,use_time:0
-msgid "Product Use Time"
-msgstr "Tuotteen käyttöaika"
-
-#. module: product_expiry
-#: model:ir.model,name:product_expiry.model_product_product
-msgid "Product"
-msgstr "Tuote"
-
-#. module: product_expiry
-#: help:product.product,use_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr ""
-"Kun uusi sarjanumero muönnetään, niin näin monta päivää ennen tuotteet "
-"alkavat huonontua, olemtta kuitenkaan vielä vaarallisia."
-
-#. module: product_expiry
-#: field:product.product,removal_time:0
-msgid "Product Removal Time"
-msgstr "Tuotteen poistopäivä"
-
-#. module: product_expiry
-#: help:stock.production.lot,alert_date:0
-msgid ""
-"This is the date on which an alert should be notified about the goods with "
-"this Serial Number."
-msgstr ""
-"Päivä jolloin ilmoitetaan tämän sarjanumeron tuotteiden osalta hälytys."
-
-#. module: product_expiry
-#: model:ir.model,name:product_expiry.model_stock_production_lot
-msgid "Serial Number"
-msgstr "Sarjanumero"
-
-#. module: product_expiry
-#: help:product.product,alert_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr ""
-
-#. module: product_expiry
-#: field:stock.production.lot,removal_date:0
-msgid "Removal Date"
-msgstr "Poistopäivä"
-
-#. module: product_expiry
+#: model:product.product,name:product_expiry.product_product_pain
 #: model:product.template,name:product_expiry.product_product_pain_product_template
 msgid "Bread"
 msgstr "Leipä"
 
 #. module: product_expiry
-#: view:product.product:0
+#: model:product.product,name:product_expiry.product_product_lait
+#: model:product.template,name:product_expiry.product_product_lait_product_template
+msgid "Cow milk"
+msgstr "Maito"
+
+#. module: product_expiry
+#: model:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
 msgid "Dates"
 msgstr "Päivämäärät"
 
 #. module: product_expiry
-#: field:stock.production.lot,life_date:0
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_life_date
 msgid "End of Life Date"
 msgstr "Elinkaaren loppupäivä"
 
 #. module: product_expiry
-#: field:stock.production.lot,use_date:0
-msgid "Best before Date"
-msgstr "Parasta ennen päiväys"
-
-#. module: product_expiry
+#: model:product.product,name:product_expiry.product_product_jambon
 #: model:product.template,name:product_expiry.product_product_jambon_product_template
-msgid "French cheese Camenbert"
-msgstr "Ranskalaista Camenbert juustoa"
-
-#. module: product_expiry
-#: help:product.product,life_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
+msgid "French cheese Camembert"
 msgstr ""
 
 #. module: product_expiry
-#: field:stock.production.lot,alert_date:0
-msgid "Alert Date"
-msgstr "Hälytyspäivä"
+#: model:product.product,name:product_expiry.product_product_from
+#: model:product.template,name:product_expiry.product_product_from_product_template
+msgid "Ham"
+msgstr "Kinkku"
 
 #. module: product_expiry
-#: help:stock.production.lot,use_date:0
-msgid ""
-"This is the date on which the goods with this Serial Number start "
-"deteriorating, without being dangerous yet."
+#: model:ir.model,name:product_expiry.model_stock_production_lot
+msgid "Lot/Serial"
 msgstr ""
 
 #. module: product_expiry
-#: help:stock.production.lot,life_date:0
+#: model:ir.model.fields,field_description:product_expiry.field_product_template_alert_time
+msgid "Product Alert Time"
+msgstr "Tuotten hälytysaika"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_template_life_time
+msgid "Product Life Time"
+msgstr "Tuotteen elinikä"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_template_removal_time
+msgid "Product Removal Time"
+msgstr "Tuotteen poistopäivä"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_template
+msgid "Product Template"
+msgstr "Tuotemalli"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_template_use_time
+msgid "Product Use Time"
+msgstr "Tuotteen käyttöaika"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_quant
+msgid "Quants"
+msgstr "Määrät"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_removal_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant_removal_date
+msgid "Removal Date"
+msgstr "Poistopäivä"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_alert_date
+msgid ""
+"This is the date on which an alert should be notified about the goods with "
+"this Serial Number."
+msgstr "Päivä jolloin ilmoitetaan tämän sarjanumeron tuotteiden osalta hälytys."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_life_date
 msgid ""
 "This is the date on which the goods with this Serial Number may become "
 "dangerous and must not be consumed."
 msgstr ""
 
 #. module: product_expiry
-#: field:product.product,alert_time:0
-msgid "Product Alert Time"
-msgstr "Tuotten hälytysaika"
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_removal_date
+msgid ""
+"This is the date on which the goods with this Serial Number should be "
+"removed from the stock."
+msgstr "Tämä on päivä, jolloin tämän sarjanumeron tuotteet pitäisi poistaa varastosta."
 
-#~ msgid "Production lot"
-#~ msgstr "Tuotantoerä"
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_use_date
+msgid ""
+"This is the date on which the goods with this Serial Number start "
+"deteriorating, without being dangerous yet."
+msgstr ""
 
-#~ msgid ""
-#~ "The date on which the lot starts deteriorating without becoming dangerous."
-#~ msgstr ""
-#~ "Päivä jolloin erän laatu alkaa heikkenemään ennenkun se tulee vaaralliseksi."
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_alert_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before an "
+"alert should be notified."
+msgstr ""
 
-#~ msgid "Products date of expiry"
-#~ msgstr "Tuotteet viimeisen käyttöpäivän mukaan"
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_life_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods may become dangerous and must not be consumed."
+msgstr ""
 
-#~ msgid ""
-#~ "The combination of serial number and internal reference must be unique !"
-#~ msgstr ""
-#~ "Sarjanumeron ja sisäisen viitenumeron yhdistelmän on oltava uniikki !"
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_removal_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods should be removed from the stock."
+msgstr "Kun uusi sarjanumero myönnetään käyttöön, niin tuotteet pitää poistaa näin monta päivää ennen varastosta."
 
-#~ msgid "The date on which the lot should be removed."
-#~ msgstr "Päivä jolloin erä tulisi poistaa."
-
-#~ msgid ""
-#~ "The number of days after which an alert should be notified about the "
-#~ "production lot."
-#~ msgstr "Päivien määrä jonka jälkeen tuote-erästä tulee hälytys."
-
-#~ msgid ""
-#~ "The date on which the lot may become dangerous and should not be consumed."
-#~ msgstr ""
-#~ "Päivä jolloin erä muuttuu vaaralliseksi, eikä sitä tule enään käyttää."
-
-#~ msgid ""
-#~ "The number of days before a production lot may become dangerous and should "
-#~ "not be consumed."
-#~ msgstr ""
-#~ "Päivien määrä ennenkuin tuotantoerä voi tulla vaaralliseksi eikä sitä enään "
-#~ "tulisi käyttää."
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Virhe: Väärä EAN-koodi"
-
-#~ msgid "The number of days before a production lot should be removed."
-#~ msgstr "Päivien määrä ennenkuin tuotantoerä tulisi poistaa."
-
-#~ msgid ""
-#~ "The date on which an alert should be notified about the production lot."
-#~ msgstr "Päivä jolloin tästä tuotantoerästä tulisi tehdä hälytys."
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_use_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods starts deteriorating, without being dangerous yet."
+msgstr "Kun uusi sarjanumero muönnetään, niin näin monta päivää ennen tuotteet alkavat huonontua, olemtta kuitenkaan vielä vaarallisia."

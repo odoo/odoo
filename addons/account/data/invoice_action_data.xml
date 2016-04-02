@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+<openerp>
+
+    <!-- Mail template are declared in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="1">
+        <!--Email template -->
+        <record id="email_template_edi_invoice" model="mail.template">
+            <field name="name">Invoice - Send by Email</field>
+            <field name="email_from">${(object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '')|safe}</field>
+            <field name="subject">${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="model_id" ref="account.model_account_invoice"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="report_template" ref="account_invoices"/>
+            <field name="report_name">Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+% set access_action = object.get_access_action()
+% set access_name = 'View invoice' if access_action and access_action['type'] == 'ir.actions.act_url' else 'See invoice'
+% set access_url = access_action['type'] == 'ir.actions.act_url' and access_action['url'] or '/report/pdf/account.report_invoice/' + str(object.id)
+
+<p>Dear
+% if object.partner_id.is_company and object.child_ids:
+    ${object.partner_id.child_ids[0].name}
+% else :
+    ${object.partner_id.name}
+% endif
+,</p>
+<p>Thank you for your inquiry. Here is your invoice <strong>${object.name}</strong>
+% if object.origin:
+(with reference: ${object.origin} )
+% endif
+amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>
+from ${object.company_id.name}.
+</p>
+
+<p style="margin-left: 30px;">
+    <a href="${access_url}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px" class="o_default_snippet_text">${access_name}</a>
+</p>
+<p>If you have any question, do not hesitate to contact us.</p>
+<p>Best regards,</p>
+]]></field>
+        </record>
+    </data>
+</openerp>

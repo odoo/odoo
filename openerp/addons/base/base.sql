@@ -19,6 +19,7 @@ CREATE TABLE ir_model (
   name varchar,
   state varchar,
   info text,
+  transient boolean,
   primary key(id)
 );
 
@@ -27,14 +28,24 @@ CREATE TABLE ir_model_fields (
   model varchar NOT NULL,
   model_id integer references ir_model on delete cascade,
   name varchar NOT NULL,
-  relation varchar,
-  select_level varchar,
-  field_description varchar,
-  ttype varchar,
   state varchar default 'base',
+  field_description varchar,
+  help varchar,
+  ttype varchar,
+  relation varchar,
   relation_field varchar,
+  index boolean,
+  copy boolean,
+  related varchar,
+  readonly boolean default False,
+  required boolean default False,
+  selectable boolean default False,
   translate boolean default False,
-  serialization_field_id integer references ir_model_fields on delete cascade, 
+  serialization_field_id integer references ir_model_fields on delete cascade,
+  relation_table varchar,
+  column1 varchar,
+  column2 varchar,
+  store boolean,
   primary key(id)
 );
 
@@ -86,7 +97,7 @@ CREATE TABLE ir_module_module (
     summary character varying(256),
     name character varying(128) NOT NULL,
     author character varying(128),
-    icon character varying(64),
+    icon varchar,
     state character varying(16),
     latest_version character varying(64),
     shortdesc character varying(256),
@@ -140,6 +151,7 @@ CREATE TABLE ir_model_constraint (
     module integer NOT NULL references ir_module_module on delete restrict,
     model integer NOT NULL references ir_model on delete restrict,
     type character varying(1) NOT NULL,
+    definition varchar,
     name varchar NOT NULL,
     primary key(id)
 );
@@ -185,11 +197,11 @@ insert into res_currency (id, name) VALUES (1, 'EUR');
 insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('EUR', 'base', 'res.currency', true, 1);
 select setval('res_currency_id_seq', 2);
 
-insert into res_company (id, name, partner_id, currency_id) VALUES (1, 'Your Company', 1, 1);
+insert into res_company (id, name, partner_id, currency_id) VALUES (1, 'My Company', 1, 1);
 insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('main_company', 'base', 'res.company', true, 1);
 select setval('res_company_id_seq', 2);
 
-insert into res_partner (id, name, company_id) VALUES (1, 'Your Company', 1);
+insert into res_partner (id, name, company_id) VALUES (1, 'My Company', 1);
 insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('main_partner', 'base', 'res.partner', true, 1);
 select setval('res_partner_id_seq', 2);
 

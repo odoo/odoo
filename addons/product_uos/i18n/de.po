@@ -1,0 +1,66 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * product_uos
+# 
+# Translators:
+# Renko Spiekermann <renkosp@gmail.com>, 2016
+# Wolfgang Taferner, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2016-01-15 03:28+0000\n"
+"Last-Translator: Wolfgang Taferner\n"
+"Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: product_uos
+#: model:ir.model.fields,help:product_uos.field_product_template_uos_coeff
+msgid ""
+"Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * "
+"coeff"
+msgstr "Faktor zur Berechnung Standard UoM -> UoS (uos = uom * coeff)"
+
+#. module: product_uos
+#: model:ir.model,name:product_uos.model_product_template
+msgid "Product Template"
+msgstr "Produktvorlage"
+
+#. module: product_uos
+#: model:ir.model.fields,field_description:product_uos.field_sale_order_line_product_uos_qty
+msgid "Quantity"
+msgstr "Anzahl"
+
+#. module: product_uos
+#: model:ir.model,name:product_uos.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Auftragsposition"
+
+#. module: product_uos
+#: model:ir.model.fields,help:product_uos.field_product_template_uos_id
+#: model:ir.model.fields,help:product_uos.field_sale_order_line_product_uos
+msgid ""
+"Specify a unit of measure here if invoicing is made in another unit of "
+"measure than inventory. Keep empty to use the default unit of measure."
+msgstr "Definieren Sie hier eine Mengeneinheit, wenn sich diese bei Abrechnung und Bestandsführung unterscheidet. Wenn Sie keinen Eintrag vornehmen, wird die Standard Mengeneinheit verwendet."
+
+#. module: product_uos
+#: model:ir.model.fields,field_description:product_uos.field_sale_order_line_product_uos
+#: model:ir.ui.view,arch_db:product_uos.product_template_form_view_inherit_product_uos
+msgid "Unit of Measure"
+msgstr "ME"
+
+#. module: product_uos
+#: model:ir.model.fields,field_description:product_uos.field_product_template_uos_coeff
+msgid "Unit of Measure -> UOS Coeff"
+msgstr "ME -> VE Umrechnung"
+
+#. module: product_uos
+#: model:ir.model.fields,field_description:product_uos.field_product_template_uos_id
+msgid "Unit of Sale"
+msgstr "Verkaufseinheit"

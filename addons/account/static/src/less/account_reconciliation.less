@@ -1,0 +1,644 @@
+@actionColWidth: 15px;
+@mainTableBordersPadding: 3px;
+@lightBorder: 1px solid #bbb;
+@accountingBorder: 1px solid #000;
+@initialLineBackground: #f0f0f0;
+@infoColor: #44c;
+// Warning, this value is also specified in the abstractReconciliation widget
+@aestetic_animation_speed: 300ms;
+
+.o_reconciliation {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    cursor: default;
+    font-size: 12px;
+
+    // Why on earth does bootstrap set font-size to 14px in popovers ?
+    .popover {
+        font-size: 12px;
+    }
+
+    .oe_form_sheetbg {
+        padding-top: 0;
+
+        .oe_form_sheet {
+            position: relative;
+            padding: 20px 15px 20px 15px;
+            border-top: 0;
+            height: 100%;
+        }
+    }
+
+    .clearer {
+        clear: both;
+    }
+
+    .oe_view_nocontent {
+        max-width: none;
+
+        > p {
+            padding: 0 10%;
+        }
+    }
+
+    h1 input, h2 input {
+       height: auto !important;
+    }
+
+    h1 {
+        width: 48%;
+        padding: 0 0 0 @actionColWidth;
+        margin: 0 0 25px 0;
+        float: left;
+        font-size: 2em;
+        height: 1.5em;
+    }
+
+    .statement_name span {
+        line-height: 1.5em;
+        cursor: pointer;
+    }
+
+    .change_statement_name_container {
+        display: none;
+        width: 95%;
+
+        td:first-child, td:first-child > input {
+            width: 99%;
+        }
+        td:last-child {
+            width: 1%;
+            padding-left: 3px;
+
+            button {
+                height: 100%;
+                box-sizing: content-box;
+            }
+        }
+    }
+
+    h2 {
+        font-size: 1.8em;
+    }
+
+    .progress {
+        width: 49%;
+        margin: 10px @actionColWidth 0 0;
+        float: right;
+        position: relative;
+        display: inline-block;
+
+        .progress-text {
+            text-align: center;
+            position: absolute;
+            width: 100%;
+            left: 0;
+            top: 1px;
+            z-index: 10;
+            text-shadow:
+               -1px -1px 0 #f5f5f5,
+                1px -1px 0 #f5f5f5,
+                -1px 1px 0 #f5f5f5,
+                 1px 1px 0 #f5f5f5;
+        }
+        .progress-bar {
+            background-color: @odoo-brand-optional;
+        }
+    }
+
+    .show_more_container {
+        text-align: center;
+        margin-bottom: 15px;
+
+        .show_more {
+            display: none;
+            margin: auto;
+        }
+    }
+    .notification_area {
+        margin: 0 @actionColWidth;
+        .fa {
+            font-size: 20px;
+            margin-left: 7px;
+            line-height: 14px;
+            position: relative;
+            top: 3px;
+        }
+    }
+
+    .interface_options {
+        margin-bottom: 25px;
+        padding-left: @actionColWidth;
+
+        .oe_radio_input, .o_radio_input {
+            border: none;
+            display: inline;
+        }
+    }
+
+    .done_message {
+        width: 100%;
+        padding: 0 20%;
+        margin-top: 50px;
+        margin-bottom: 50px;
+
+        h2 {
+            margin-bottom: 30px;
+
+            .congrats_icon {
+                float: right;
+                font-size: 2em;
+                position: relative;
+                top: -0.25em;
+            }
+        }
+
+        .achievements {
+            margin-top: 30px;
+            text-align: center;
+            position: relative;
+
+            .achievement {
+                font-size: 4em;
+                margin: 0 0.3em;
+                position: relative;
+                vertical-align: middle;
+                text-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+
+                i {
+                    font-size: 0.5em;
+                    color: white;
+                    position: absolute;
+                    top: 50%;
+                    margin-top: -0.55em;
+                    left: 0;
+                    width: 100%;
+                    text-align: center;
+                    //text-shadow: 1px 1px 0 black;
+                }
+            }
+        }
+
+        .action_buttons {
+            text-align: center;
+        }
+    }
+
+    /* icons */
+    .fa {
+        &.line_info_button {
+            color: #ccc !important;
+        }
+    }
+    .accounting_view .fa-add-remove:before {
+        content: "\f068";
+    }
+    .match .fa-add-remove:before {
+        content: "\f067";
+    }
+
+    // reconciliationLine widget
+    .o_reconciliation_line {
+        margin-bottom: 30px;
+
+        table {
+            width: 100%;
+        }
+
+        // modes : default
+        .toggle_match, .toggle_create {
+            -webkit-transition-property: -webkit-transform;
+            -moz-transition-property: -moz-transform;
+            -ms-transition-property: -ms-transform;
+            -o-transition-property: -o-transform;
+            transition-property: transform;
+            -webkit-transform: rotate(0deg);
+            -moz-transform: rotate(0deg);
+            -ms-transform: rotate(0deg);
+            -o-transform: rotate(0deg);
+            transform: rotate(0deg);
+            -webkit-transition-duration: @aestetic_animation_speed;
+            -moz-transition-duration: @aestetic_animation_speed;
+            -ms-transition-duration: @aestetic_animation_speed;
+            -o-transition-duration: @aestetic_animation_speed;
+            transition-duration: @aestetic_animation_speed;
+        }
+
+        .visible_toggle {
+            visibility: visible !important;
+            -webkit-transform: rotate(90deg);
+            -moz-transform: rotate(90deg);
+            -ms-transform: rotate(90deg);
+            -o-transform: rotate(90deg);
+            transform: rotate(90deg);
+        }
+
+        .partner_name {
+            color: #444;
+
+            .change_partner {
+                color: @odoo-brand-optional;
+                display: none;
+                cursor: pointer;
+                margin: 0 10px 0 5px;
+            }
+            &:hover .change_partner {
+                display: inline;
+            }
+        }
+
+        .change_partner_container {
+            width: 200px;
+            display: none;
+            position: relative !important;
+        }
+
+        // modes : specific
+        &[data-mode="match"] {
+            .toggle_match {
+                .visible_toggle;
+            }
+        }
+
+        &[data-mode="create"] {
+            .toggle_create {
+                .visible_toggle;
+            }
+
+            &.no_partner {
+                .toggle_match {
+                    .visible_toggle;
+                }
+            }
+        }
+
+        &[data-mode="inactive"] {
+            .initial_line > td {
+                background-color: (@initialLineBackground + #080808) !important;
+            }
+        }
+
+        &.no_match:not(.no_partner) {
+            .initial_line {
+                cursor: default !important;
+
+                .line_info_button {
+                    cursor: pointer;
+                }
+            }
+            .toggle_match {
+                visibility: hidden !important;
+            }
+        }
+
+        /* gap between accounting_view and action view */
+        > table > tbody > tr:nth-child(1) > td table {
+            margin-bottom: 10px;
+        }
+
+        /* popover */
+        table.details {
+            td:first-child {
+                padding-right: 10px;
+                font-weight: bold;
+            }
+
+            tr.one_line_info {
+                td {
+                    padding-top: 10px;
+                    text-align: center;
+                    color: @infoColor;
+                }
+            }
+        }
+
+        /* arrays of move lines */
+        .accounting_view, .match table {
+            width: 100%;
+
+            tbody tr {
+                cursor: pointer;
+            }
+
+            tr.already_reconciled {
+                color: @infoColor;
+            }
+
+            td {
+                padding: 1px 8px;
+                vertical-align: middle;
+            }
+
+            td.cell_action, td.cell_info_popover {
+                width: @actionColWidth;
+                padding: 0;
+            }
+
+            td.cell_action {
+                text-align: left;
+            }
+
+            td.cell_account_code {
+                width: 80px;
+                padding-left: @mainTableBordersPadding;
+            }
+
+            td.cell_due_date {
+                width: 100px;
+            }
+
+            td.cell_label {
+
+            }
+
+            td.cell_debit {
+                text-align: right;
+                width: 15%;
+            }
+
+            td.cell_credit {
+                width: 15%;
+                text-align: right;
+                padding-right: @mainTableBordersPadding;
+            }
+
+            td.cell_info_popover {
+                text-align: right;
+            }
+
+            tr.line_open_balance {
+                color: #bbb;
+            }
+
+            tr {
+                .toggle_create, .toggle_match, .fa-add-remove {
+                    visibility: hidden;
+                    color: #555;
+                }
+
+                &:hover, &:active, &:focus {
+                    .toggle_create, .toggle_match, .fa-add-remove {
+                        visibility: visible;
+                    }
+                }
+            }
+
+            tr .do_partial_reconcile_button {
+                color: @odoo-brand-optional;
+                padding-right: 5px;
+            }
+
+            tr .undo_partial_reconcile_button {
+                color: @odoo-brand-secondary;
+                padding-right: 5px;
+            }
+        }
+
+        /* Partie infos */
+        .accounting_view {
+            border-collapse: separate;
+
+            .initial_line > td {
+                border-top: @lightBorder;
+                padding-top: 4px;
+                padding-bottom: 5px;
+                background-color: @initialLineBackground;
+                -webkit-transition-property: background-color;
+                -moz-transition-property: background-color;
+                -ms-transition-property: background-color;
+                transition-property: background-color;
+                -webkit-transition-duration: @aestetic_animation_speed;
+                -moz-transition-duration: @aestetic_animation_speed;
+                -ms-transition-duration: @aestetic_animation_speed;
+                -o-transition-duration: @aestetic_animation_speed;
+                transition-duration: @aestetic_animation_speed;
+
+                &.cell_action, &.cell_info_popover {
+                    border-top: none;
+                    background: white !important;
+                    // Hack pour l'alignement au px près
+                    padding-top: 6px;
+                    padding-bottom: 3px;
+                }
+            }
+
+            caption {
+                text-align: left;
+                height: 26px;
+                margin: 0 @actionColWidth 4px @actionColWidth;
+                padding: 0; 
+
+                .partner_name {
+                    font-size: 1.1em;
+                    font-weight: bold;
+                }
+
+                .tip_reconciliation_not_balanced {
+                    color: red;
+                    float: right;
+                    padding-right: 7px;
+                }
+
+                button {
+                    float: right;
+                    position: relative;
+                    top: -4px;
+
+                    &:disabled {
+                        opacity: 0.5;
+                    }
+                }
+
+                > span, > input {
+                    position: relative; top: 7px; /* meh */
+                }
+            }
+
+            // accounting "T"
+            td.cell_credit { border-left: @accountingBorder; }
+        }
+
+
+        /* Match view */
+        .match {
+            display: none;
+            padding: 1px;
+            .match_controls {
+                padding: 0 0 5px (@actionColWidth+@mainTableBordersPadding);
+
+                .filter {
+                    width: 240px;
+                    display: inline-block;
+                }
+
+                .pager_control_left, .pager_control_right {
+                    display: inline-block;
+                    cursor: pointer;
+                }
+
+                .pager_control_left {
+                    margin-right: 10px;
+                }
+
+                .pager_control_left.disabled, .pager_control_right.disabled {
+                    color: #ddd;
+                    cursor: default;
+                }
+            }
+
+            .show_more {
+                display: inline-block;
+                margin-left: (@actionColWidth+@mainTableBordersPadding);
+                margin-top: 5px;
+            }
+        }
+
+
+        /* Action create */
+        .create {
+            display: none;
+            margin: 0 @actionColWidth;
+            border: 1px solid #d5d5d5;
+            border-radius: 5px;
+            padding: 10px;
+            overflow: auto;
+
+            .quick_add {
+                position: relative;
+                margin-bottom: 10px;
+                clear: both;
+
+                &:empty {
+                    display: none;
+                }
+
+                .presets_config {
+                    display: none;
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    z-index: 100;
+
+                    .dropdown-menu {
+                        font-size: 1em; // Since there's no dropdown-menu-sm class in bootstrap
+                    }
+                }
+
+                &:hover .presets_config, .presets_config.open {
+                    display: inline;
+                }
+            }
+
+            .o_form > table {
+                width: 49%;
+                margin: 0;
+                vertical-align: top;
+
+                &.create_group_left { float: left; }
+                &.create_group_right { float: right; }
+
+                td {
+                    width: 99%;
+                    padding-left: 8px;
+
+                    .oe_m2o_cm_button {
+                        line-height: 22px;
+                    }
+                }
+
+                td.o_td_label {
+                    line-height: 26px;
+                    font-weight: bold;
+                    padding-right: 8px;
+                    min-width: 100px;
+                    border-right: 1px solid #ddd;
+                    white-space: nowrap;
+                    width: 1%;
+                }
+
+                input, select {
+                    width: 100%;
+                }
+
+            }
+
+            .add_line_container {
+                clear: both;
+                line-height: 26px;
+                text-align: center;
+                margin: 0;
+                padding-top: 7px;
+            }
+        }
+    }
+}
+
+.o_manual_reconciliation {
+    .o_manual_reconciliation_line {
+        .button_reconcile {
+            float: right;
+            position: relative;
+            top: 1.1em;
+        }
+
+        .accounting_view {
+            thead {
+                background: none;
+
+                td {
+                    vertical-align: bottom !important;
+                }
+
+                td:nth-child(2) {
+                    padding-left: 0;
+                }
+
+                .cell_item_name {
+                    display: inline-block;
+                    min-width: 135px;
+                }
+
+                .cell_last_time_entries_checked {
+                    font-weight: normal;
+                    display: inline-block;
+                }
+                .cell_item_name + .cell_last_time_entries_checked {
+                    padding-left: 20px;
+                }
+
+                .cell_title_account_code {
+                    text-align: center;
+                }
+
+                tr:first-child td {
+                    border-bottom: @lightBorder;
+
+                    &.cell_action, &.cell_info_popover {
+                        border-bottom: none;
+                    }
+
+                    &.cell_title_account_code {
+                        border-bottom: 1px solid #000 !important;
+                    }
+                }
+
+            }
+
+            .filler_line td {
+                height: 22px;
+                cursor: default !important;
+            }
+
+            tbody.tbody_matched_lines tr:first-child td {
+                padding-top: 4px;
+            }
+        }
+
+        td.cell_due_date {
+            padding-left: @mainTableBordersPadding !important;
+        }
+    }
+}

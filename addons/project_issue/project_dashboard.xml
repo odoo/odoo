@@ -1,0 +1,30 @@
+<odoo>
+    <record id="view_project_kanban_inherited" model="ir.ui.view">
+        <field name="name">project.project.kanban.inherited</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="arch" type="xml">
+            <field name="use_tasks" position="after">
+                <field name="use_issues"/>
+                <field name="issue_ids" invisible="1"/>
+                <field name="issue_needaction_count" invisible="1"/>
+            </field>
+            <xpath expr="//div/a[contains(@class, 'o_project_kanban_box')]" position="after">
+                <a t-if="record.use_issues.raw_value" class="o_project_kanban_box" name="%(act_project_project_2_project_issue_all)d" type="action">
+                    <span class="o_value"><t t-raw="record.issue_ids.raw_value.length"/></span>
+                    <span class="o_label"><field name="label_issues"/></span>
+                    <a t-if="record.issue_needaction_count.raw_value" class="o_needaction" name="%(act_project_project_2_project_issue_all)d" type="action" context="{'search_default_message_needaction': 1}">
+                        <t t-esc="record.issue_needaction_count.raw_value"/>
+                    </a>
+                </a>
+            </xpath>
+
+            <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]" position="inside">
+                <div>
+                    <a name="%(action_project_issue_report_filtered)d" type="action">Issues</a>
+                </div>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

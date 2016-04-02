@@ -1,20 +1,117 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* board
-#
+# * board
+# 
+# Translators:
+# fausthuang, 2015
+# fausthuang, 2015
+# Martin Trigaux, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-11-30 17:42+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@intoerp.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2016-03-12 01:56+0000\n"
+"Last-Translator: Joroy <13637815@qq.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:09+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:24
+#, python-format
+msgid "&nbsp;"
+msgstr "&nbsp;"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:406
+#, python-format
+msgid "'%s' added to dashboard"
+msgstr "'%s' 添加到仪表板"
+
+#. module: board
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid "<b>Your personal dashboard is empty.</b>"
+msgstr "<b>您的个人仪表板是空的.</b>"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:70
+#, python-format
+msgid "Add"
+msgstr "添加"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:64
+#, python-format
+msgid "Add to my Dashboard"
+msgstr "添加到我的仪表板"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:139
+#, python-format
+msgid "Are you sure you want to remove this item ?"
+msgstr "您确定要移除此分录吗？"
+
+#. module: board
+#: model:ir.model,name:board.model_board_board
+msgid "Board"
+msgstr "仪表板"
+
+#. module: board
+#: model:ir.model,name:board.model_board_create
+msgid "Board Creation"
+msgstr "仪表板创建"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_name
+msgid "Board Name"
+msgstr "仪表板名称"
+
+#. module: board
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Cancel"
+msgstr "取消"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:6
+#, python-format
+msgid "Change Layout"
+msgstr "更改布局"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:4
+#, python-format
+msgid "Change Layout.."
+msgstr "更改布局..."
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:36
+#, python-format
+msgid "Choose dashboard layout"
+msgstr "选择仪表板布局"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:408
+#, python-format
+msgid "Could not add filter to dashboard"
+msgstr "无法增加过滤器到仪表板"
+
+#. module: board
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Create"
+msgstr "创建"
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_board_create
@@ -23,405 +120,78 @@ msgid "Create Board"
 msgstr "创建仪表板"
 
 #. module: board
-#: view:board.create:0
-msgid "Create"
-msgstr "创建"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:4
-#, python-format
-msgid "Reset Layout.."
-msgstr "重置布局..."
-
-#. module: board
-#: view:board.create:0
+#: model:ir.ui.view,arch_db:board.view_board_create
 msgid "Create New Dashboard"
-msgstr "创建新的控制面板"
+msgstr "创建新的仪表板"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_create_uid
+msgid "Created by"
+msgstr "创建者"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_create_date
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_board_display_name
+#: model:ir.model.fields,field_description:board.field_board_create_display_name
+msgid "Display Name"
+msgstr "显示名称"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:40
-#, python-format
-msgid "Choose dashboard layout"
-msgstr "选择控制面板布局"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:70
-#, python-format
-msgid "Add"
-msgstr "新增"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:139
-#, python-format
-msgid "Are you sure you want to remove this item ?"
-msgstr "您确定要移除此条目吗？"
-
-#. module: board
-#: model:ir.model,name:board.model_board_board
-msgid "Board"
-msgstr "仪表板"
-
-#. module: board
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board.open_board_my_dash_action
-#: model:ir.ui.menu,name:board.menu_board_my_dash
-msgid "My Dashboard"
-msgstr "我的控制面板"
-
-#. module: board
-#: field:board.create,name:0
-msgid "Board Name"
-msgstr "仪表板名称"
-
-#. module: board
-#: model:ir.model,name:board.model_board_create
-msgid "Board Creation"
-msgstr "仪表板创建"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:67
-#, python-format
-msgid "Add to Dashboard"
-msgstr "添加到控制面板"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:28
-#, python-format
-msgid "&nbsp;"
-msgstr "不能有空格"
-
-#. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
-msgid ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"                  <p>\n"
-"                    <b>Your personal dashboard is empty.</b>\n"
-"                  </p><p>\n"
-"                    To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add "
-"to\n"
-"                    Dashboard'</i> in the extended search options.\n"
-"                  </p><p>\n"
-"                    You can filter and group data before inserting into the\n"
-"                    dashboard using the search options.\n"
-"                  </p>\n"
-"              </div>\n"
-"            "
-msgstr ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"                  <p>\n"
-"                    "
-"<b>控制面板是展示企业度量信息和关键业务指标（KPI）现状的数据虚拟化工具。目前您还没有添加报表到您的个人控制面板（personal "
-"dashboard）。</b>\n"
-"                  </p><p>\n"
-"                   要添加一个报表到控制面板，请进入任意菜单，切换到列表视图或图表视图，在搜索栏下拉菜单中点击<i> "
-"“添加到控制面板”</i>。\n"
-"                  </p><p>\n"
-"                   添加之前，你需要根据自己的要求，使用过滤器来充分过滤数据。\n"
-"                  </p>\n"
-"              </div>\n"
-"            "
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:6
-#, python-format
-msgid "Reset"
-msgstr "清空"
-
-#. module: board
-#: field:board.create,menu_parent_id:0
-msgid "Parent Menu"
-msgstr "上级菜单"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:8
-#, python-format
-msgid "Change Layout.."
-msgstr "更改布局..."
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:93
+#: code:addons/board/static/src/js/dashboard.js:94
 #, python-format
 msgid "Edit Layout"
 msgstr "编辑布局"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:10
-#, python-format
-msgid "Change Layout"
-msgstr "更改布局"
+#: model:ir.model.fields,field_description:board.field_board_board_id
+#: model:ir.model.fields,field_description:board.field_board_create_id
+msgid "ID"
+msgstr "ID"
 
 #. module: board
-#: view:board.create:0
-msgid "Cancel"
-msgstr "取消"
+#: model:ir.model.fields,field_description:board.field_board_board___last_update
+#: model:ir.model.fields,field_description:board.field_board_create___last_update
+msgid "Last Modified on"
+msgstr "最后修改日"
 
 #. module: board
-#: view:board.create:0
-msgid "or"
-msgstr "or"
+#: model:ir.model.fields,field_description:board.field_board_create_write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:69
-#, python-format
-msgid "Title of new dashboard item"
-msgstr "控制面板部件标题"
-
-#~ msgid "Author"
-#~ msgstr "作者"
-
-#~ msgid "Note"
-#~ msgstr "备注"
-
-#~ msgid "Publish a note"
-#~ msgstr "发布备注"
-
-#~ msgid "Date"
-#~ msgstr "日期"
-
-#~ msgid "Configuration"
-#~ msgstr "设置"
-
-#~ msgid "Note Type"
-#~ msgstr "备注类型"
-
-#~ msgid "Note type"
-#~ msgstr "备注类型"
-
-#~ msgid "Subject"
-#~ msgstr "主题"
-
-#, python-format
-#~ msgid "User Error!"
-#~ msgstr "用户错误！"
-
-#~ msgid "Width"
-#~ msgstr "宽度"
-
-#~ msgid "Menu Information"
-#~ msgstr "菜单信息"
-
-#~ msgid "Title"
-#~ msgstr "标题"
-
-#~ msgid "Action Views"
-#~ msgstr "动作视图"
-
-#~ msgid "Menu Name"
-#~ msgstr "菜单名称"
-
-#~ msgid "Position"
-#~ msgstr "位置"
-
-#~ msgid "Height"
-#~ msgstr "高度"
-
-#~ msgid "Create Menu"
-#~ msgstr "创建菜单"
-
-#~ msgid "board.board"
-#~ msgstr "控制台"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "在这动作定义中有无效的模块名"
-
-#~ msgid "Dashboard Definition"
-#~ msgstr "控制台定义"
-
-#~ msgid "board.note"
-#~ msgstr "备注"
-
-#~ msgid "Notes"
-#~ msgstr "备注"
-
-#~ msgid "board.note.type"
-#~ msgstr "备注类型"
-
-#~ msgid "Dashboard"
-#~ msgstr "控制台"
-
-#~ msgid "Base module for all dashboards."
-#~ msgstr "所有控制台的基础模块"
-
-#~ msgid "Action"
-#~ msgstr "动作"
-
-#~ msgid "Open Dashboard"
-#~ msgstr "打开控制台"
-
-#~ msgid "Left"
-#~ msgstr "左对齐"
-
-#~ msgid "Board View"
-#~ msgstr "控制台视图"
-
-#~ msgid "Right"
-#~ msgstr "右对齐"
-
-#~ msgid "Sequence"
-#~ msgstr "序列"
-
-#~ msgid "Create Board Menu"
-#~ msgstr "创建控制台菜单"
-
-#~ msgid "Dashboard View"
-#~ msgstr "控制台视图"
-
-#~ msgid "board.board.line"
-#~ msgstr "控制台明细"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "无效的视图结构xml文件!"
-
-#~ msgid "Dashboards"
-#~ msgstr "控制面板"
-
-#~ msgid "Latest Connections"
-#~ msgstr "最后一次连接"
-
-#~ msgid "Month"
-#~ msgstr "月"
-
-#~ msgid "Creation Date"
-#~ msgstr "创建日期"
-
-#~ msgid "Weekly Global Activity"
-#~ msgstr "每周全局活动"
-
-#~ msgid "# of Entries"
-#~ msgstr "# 条"
-
-#~ msgid "Log Analysis"
-#~ msgstr "日志分析"
-
-#~ msgid "User Connections"
-#~ msgstr "用户连接列表"
-
-#~ msgid "Menu Create"
-#~ msgstr "菜单创建"
-
-#~ msgid "Log Report"
-#~ msgstr "日志报表"
-
-#~ msgid "  Year  "
-#~ msgstr "  年  "
-
-#~ msgid "Latest Activities"
-#~ msgstr "最近活动"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    上月    "
-
-#~ msgid "Monthly Activity per Document"
-#~ msgstr "每种单据的月活动次数"
-
-#~ msgid "Model"
-#~ msgstr "模型"
-
-#~ msgid "Object"
-#~ msgstr "对象"
-
-#~ msgid "Year"
-#~ msgstr "年"
-
-#~ msgid "Group By..."
-#~ msgstr "分组..."
-
-#~ msgid "Dashboard main module"
-#~ msgstr "控制台主模块"
-
-#~ msgid "Administration Dashboard"
-#~ msgstr "管理员控制台"
-
-#~ msgid "March"
-#~ msgstr "3月"
-
-#~ msgid "June"
-#~ msgstr "6月"
-
-#~ msgid "August"
-#~ msgstr "8月"
-
-#~ msgid "January"
-#~ msgstr "1月"
-
-#~ msgid "October"
-#~ msgstr "10月"
-
-#~ msgid "February"
-#~ msgstr "2月"
-
-#~ msgid "Day"
-#~ msgstr "天"
-
-#~ msgid "Extended Filters..."
-#~ msgstr "增加筛选条件"
-
-#~ msgid "July"
-#~ msgstr "7月"
-
-#~ msgid "Board Line"
-#~ msgstr "控制台明细"
-
-#~ msgid "Create Menu For Dashboard"
-#~ msgstr "为控制台创建菜单"
-
-#~ msgid "November"
-#~ msgstr "11月"
-
-#~ msgid "April"
-#~ msgstr "4月"
-
-#~ msgid ""
-#~ "Gives the sequence order                         when displaying a list of "
-#~ "board lines."
-#~ msgstr "指定显示控制台明细的序列"
-
-#~ msgid "   Month   "
-#~ msgstr "   月份   "
-
-#~ msgid "December"
-#~ msgstr "12月"
-
-#~ msgid "September"
-#~ msgstr "9月"
-
-#, python-format
-#~ msgid "Please Insert Dashboard View(s) !"
-#~ msgstr "请安装控制台视图！"
-
-#~ msgid "May"
-#~ msgstr "5月"
-
-#~ msgid "Log created in current month"
-#~ msgstr "本月创建的日志"
-
-#~ msgid "Configuration Overview"
-#~ msgstr "配置总揽"
-
-#~ msgid "Log created in last month"
-#~ msgstr "上月创建的日志"
-
-#~ msgid "Log created in current year"
-#~ msgstr "本年创建的日志"
-
-#~ msgid "Home Page"
-#~ msgstr "首页"
-
-#~ msgid "Users"
-#~ msgstr "用户"
+#: model:ir.model.fields,field_description:board.field_board_create_write_date
+msgid "Last Updated on"
+msgstr "最后更新时间"
+
+#. module: board
+#: model:ir.actions.act_window,name:board.open_board_my_dash_action
+#: model:ir.ui.menu,name:board.menu_board_my_dash
+#: model:ir.ui.view,arch_db:board.board_my_dash_view
+msgid "My Dashboard"
+msgstr "我的仪表板"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_menu_parent_id
+msgid "Parent Menu"
+msgstr "上级菜单"
+
+#. module: board
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"To add your first report into this dashboard, go to any\n"
+"                    menu, switch to list or graph view, and click <i>'Add to\n"
+"                    Dashboard'</i> in the extended search options."
+msgstr "要添加第一个报表到这个仪表板，去任意\n菜单，切换到列表或图表视图，然后单击<I>“添加到\n仪表板“</I>在扩展的搜索选项。"
+
+#. module: board
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"You can filter and group data before inserting into the\n"
+"                    dashboard using the search options."
+msgstr "您可以使用搜索选项过滤或分组数据在添加到\n仪表板之前。"

@@ -1,26 +1,40 @@
-# Macedonian translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_margin
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-03-01 14:29+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Macedonian <mk@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-09-08 08:02+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:28+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: sale_margin
-#: field:sale.order.line,purchase_price:0
-msgid "Cost Price"
-msgstr "Цена на чинење"
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line_purchase_price
+msgid "Cost"
+msgstr "Трошок"
+
+#. module: sale_margin
+#: model:ir.model.fields,help:sale_margin.field_sale_order_margin
+msgid ""
+"It gives profitability by calculating the difference between the Unit Price "
+"and the cost."
+msgstr ""
+
+#. module: sale_margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line_margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_report_margin
+msgid "Margin"
+msgstr "Маржа"
 
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_order
@@ -28,21 +42,11 @@ msgid "Sales Order"
 msgstr "Налог за продажба"
 
 #. module: sale_margin
-#: field:sale.order,margin:0
-#: field:sale.order.line,margin:0
-msgid "Margin"
-msgstr "Маржа"
-
-#. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Ставка од налог за продажба"
 
 #. module: sale_margin
-#: help:sale.order,margin:0
-msgid ""
-"It gives profitability by calculating the difference between the Unit Price "
-"and the cost price."
-msgstr ""
-"Ја дава профитабилноста преку пресметување на разликата помеѓу Единечната "
-"цена и цената на чинење."
+#: model:ir.model,name:sale_margin.model_sale_report
+msgid "Sales Orders Statistics"
+msgstr "Статистики на налози за продажба"

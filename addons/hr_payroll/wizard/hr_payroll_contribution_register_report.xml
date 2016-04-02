@@ -6,16 +6,15 @@
             <field name="name">payslip.lines.contribution.register</field>
             <field name="model">payslip.lines.contribution.register</field>
             <field name="arch" type="xml">
-            <form string="Contribution Register's Payslip Lines" version="7.0">
+            <form string="Contribution Register's Payslip Lines">
                 <group col="4" colspan="6">
                     <field name="date_from"/>
                     <newline/>
                     <field name="date_to"/>
                 </group>
                 <footer>
-                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
-                    or
-                    <button string="Cancel" class="oe_link" special="cancel"/>
+                    <button name="print_report" string="Print" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
                 </footer>
             </form>
             </field>

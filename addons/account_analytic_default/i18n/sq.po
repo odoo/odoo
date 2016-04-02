@@ -1,128 +1,46 @@
-# Albanian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_analytic_default
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2010-08-02 14:42+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Albanian <sq@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2016-01-31 16:40+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Albanian (http://www.transifex.com/odoo/odoo-9/language/sq/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:05+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: sq\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_analytic_default
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_product
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
-msgid "Analytic Rules"
+#: model:ir.model.fields,field_description:account_analytic_default.field_product_product_rules_count
+#: model:ir.model.fields,field_description:account_analytic_default.field_product_template_rules_count
+msgid "# Analytic Rules"
 msgstr ""
 
 #. module: account_analytic_default
-#: view:account.analytic.default:0
-msgid "Group By..."
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+msgid "Accounts"
 msgstr ""
 
 #. module: account_analytic_default
-#: help:account.analytic.default,date_stop:0
-msgid "Default end date for this Analytic Account."
-msgstr ""
-
-#. module: account_analytic_default
-#: help:account.analytic.default,product_id:0
-msgid ""
-"Select a product which will use analytic account specified in analytic "
-"default (e.g. create new customer invoice or Sales order if we select this "
-"product, it will automatically take this as an analytic account)"
-msgstr ""
-
-#. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_stock_picking
-msgid "Picking List"
-msgstr ""
-
-#. module: account_analytic_default
-#: view:account.analytic.default:0
-msgid "Conditions"
-msgstr ""
-
-#. module: account_analytic_default
-#: view:account.analytic.default:0
-#: field:account.analytic.default,product_id:0
-msgid "Product"
-msgstr ""
-
-#. module: account_analytic_default
-#: help:account.analytic.default,partner_id:0
-msgid ""
-"Select a partner which will use analytic account specified in analytic "
-"default (e.g. create new customer invoice or Sales order if we select this "
-"partner, it will automatically take this as an analytic account)"
-msgstr ""
-
-#. module: account_analytic_default
-#: view:account.analytic.default:0
-#: field:account.analytic.default,company_id:0
-msgid "Company"
-msgstr ""
-
-#. module: account_analytic_default
-#: view:account.analytic.default:0
-#: field:account.analytic.default,user_id:0
-msgid "User"
-msgstr ""
-
-#. module: account_analytic_default
-#: model:ir.actions.act_window,name:account_analytic_default.act_account_acount_move_line_open
-msgid "Entries"
-msgstr ""
-
-#. module: account_analytic_default
-#: field:account.analytic.default,date_stop:0
-msgid "End Date"
-msgstr ""
-
-#. module: account_analytic_default
-#: view:account.analytic.default:0
-#: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
-#: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
-msgid "Analytic Defaults"
-msgstr ""
-
-#. module: account_analytic_default
-#: field:account.analytic.default,sequence:0
-msgid "Sequence"
-msgstr ""
-
-#. module: account_analytic_default
-#: help:account.analytic.default,user_id:0
-msgid ""
-"Select a user which will use analytic account specified in analytic default."
-msgstr ""
-
-#. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_account_invoice_line
-msgid "Invoice Line"
-msgstr ""
-
-#. module: account_analytic_default
-#: help:account.analytic.default,company_id:0
-msgid ""
-"Select a company which will use analytic account specified in analytic "
-"default (e.g. create new customer invoice or Sales order if we select this "
-"company, it will automatically take this as an analytic account)"
-msgstr ""
-
-#. module: account_analytic_default
-#: view:account.analytic.default:0
-#: field:account.analytic.default,analytic_id:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_analytic_id
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Analytic Account"
+msgstr "Llogaria Analitike"
+
+#. module: account_analytic_default
+#: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
+#: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
+#: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
+msgid "Analytic Defaults"
 msgstr ""
 
 #. module: account_analytic_default
@@ -131,33 +49,178 @@ msgid "Analytic Distribution"
 msgstr ""
 
 #. module: account_analytic_default
-#: help:account.analytic.default,date_start:0
+#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
+#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
+#: model:ir.ui.view,arch_db:account_analytic_default.product_form_view_default_analytic_button
+#: model:ir.ui.view,arch_db:account_analytic_default.product_template_view_default_analytic_button
+msgid "Analytic Rules"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_company_id
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+msgid "Company"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+msgid "Conditions"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_uid
+msgid "Created by"
+msgstr "Krijuar nga"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_date
+msgid "Created on"
+msgstr "Krijuar me"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_stop
+msgid "Default end date for this Analytic Account."
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_start
 msgid "Default start date for this Analytic Account."
 msgstr ""
 
 #. module: account_analytic_default
-#: view:account.analytic.default:0
-msgid "Accounts"
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_display_name
+msgid "Display Name"
+msgstr "Emri i paraqitur"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_date_stop
+msgid "End Date"
 msgstr ""
 
 #. module: account_analytic_default
-#: view:account.analytic.default:0
-#: field:account.analytic.default,partner_id:0
-msgid "Partner"
+#: model:ir.actions.act_window,name:account_analytic_default.act_account_acount_move_line_open
+msgid "Entries"
+msgstr "Hyrjet"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_product_product_expense_policy
+msgid "Expense Invoice Policy"
 msgstr ""
 
 #. module: account_analytic_default
-#: field:account.analytic.default,date_start:0
-msgid "Start Date"
-msgstr ""
-
-#. module: account_analytic_default
-#: help:account.analytic.default,sequence:0
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_sequence
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
 msgstr ""
 
 #. module: account_analytic_default
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+msgid "Group By"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,help:account_analytic_default.field_product_product_expense_policy
+msgid ""
+"If you invoice at cost, the expense will be invoiced on the sale order at "
+"the cost of the analytic line;if you invoice at sales price, the price of "
+"the product will be used instead."
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model,name:account_analytic_default.model_account_invoice_line
+msgid "Invoice Line"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default___last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_write_uid
+msgid "Last Updated by"
+msgstr "Modifikuar per here te fundit nga"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_write_date
+msgid "Last Updated on"
+msgstr "Modifikuar per here te fundit me"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_partner_id
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+msgid "Partner"
+msgstr "Partner"
+
+#. module: account_analytic_default
+#: model:ir.model,name:account_analytic_default.model_product_product
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_product_id
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+msgid "Product"
+msgstr "Produkti"
+
+#. module: account_analytic_default
+#: model:ir.model,name:account_analytic_default.model_product_template
+msgid "Product Template"
+msgstr ""
+
+#. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
 msgid "Sales Order Line"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_company_id
+msgid ""
+"Select a company which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sales order if we select this "
+"company, it will automatically take this as an analytic account)"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_partner_id
+msgid ""
+"Select a partner which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sales order if we select this "
+"partner, it will automatically take this as an analytic account)"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_product_id
+msgid ""
+"Select a product which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sales order if we select this "
+"product, it will automatically take this as an analytic account)"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_user_id
+msgid ""
+"Select a user which will use analytic account specified in analytic default."
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_date_start
+msgid "Start Date"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model,name:account_analytic_default.model_stock_picking
+msgid "Transfer"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_user_id
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+msgid "User"
 msgstr ""

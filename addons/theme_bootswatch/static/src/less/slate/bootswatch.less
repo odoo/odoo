@@ -1,0 +1,375 @@
+// Slate 3.2.0
+// Bootswatch
+// -----------------------------------------------------
+
+.btn-shadow(@color) {
+  #gradient > .vertical-three-colors(lighten(@color, 6%), @color, 60%, darken(@color, 4%));
+  filter: none;
+}
+
+.btn-shadow-inverse(@color) {
+  #gradient > .vertical-three-colors(darken(@color, 24%), darken(@color, 18%), 40%, darken(@color, 14%));
+  filter: none;
+}
+
+// Navbar =====================================================================
+
+.navbar {
+
+  .btn-shadow(@navbar-default-bg);
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+
+  &-inverse {
+    .btn-shadow(@navbar-inverse-bg);
+
+    .badge {
+      background-color: @navbar-inverse-link-active-bg;
+    }
+  }
+
+  &-nav > li > a {
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+
+    &:hover {
+      .btn-shadow-inverse(@navbar-default-bg);
+      border-left-color: transparent;
+    }
+  }
+
+  .nav .open > a {
+    border-color: transparent;
+  }
+
+  &-nav > li.active > a {
+    border-left-color: transparent;
+  }
+
+  &-form {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+}
+
+// Buttons ====================================================================
+
+.btn,
+.btn:hover {
+  border-color: rgba(0, 0, 0, 0.6);
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+.btn-default {
+  .btn-shadow(@btn-default-bg);
+
+  &:hover {
+    .btn-shadow-inverse(@btn-default-bg);
+  }
+}
+
+.btn-primary {
+  .btn-shadow(@btn-primary-bg);
+
+  &:hover {
+    .btn-shadow-inverse(@btn-primary-bg);
+  }
+}
+
+.btn-success {
+  .btn-shadow(@btn-success-bg);
+
+  &:hover {
+    .btn-shadow-inverse(@btn-success-bg);
+  }
+}
+
+.btn-info {
+  .btn-shadow(@btn-info-bg);
+
+  &:hover {
+    .btn-shadow-inverse(@btn-info-bg);
+  }
+}
+
+.btn-warning {
+  .btn-shadow(@btn-warning-bg);
+
+  &:hover {
+    .btn-shadow-inverse(@btn-warning-bg);
+  }
+}
+
+.btn-danger {
+  .btn-shadow(@btn-danger-bg);
+
+  &:hover {
+    .btn-shadow-inverse(@btn-danger-bg);
+  }
+}
+
+.btn-link,
+.btn-link:hover {
+  border-color: transparent;
+}
+
+// Typography =================================================================
+
+h1, h2, h3, h4, h5, h6 {
+  text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.text-primary,
+.text-primary:hover {
+  color: @brand-primary;
+}
+
+.text-success,
+.text-success:hover {
+  color: @brand-success;
+}
+
+.text-danger,
+.text-danger:hover {
+  color: @brand-danger;
+}
+
+.text-warning,
+.text-warning:hover {
+  color: @brand-warning;
+}
+
+.text-info,
+.text-info:hover {
+  color: @brand-info;
+}
+
+// Tables =====================================================================
+
+.table {
+
+  .success,
+  .warning,
+  .danger,
+  .info {
+    color: #fff;
+  }
+
+  &-bordered tbody {
+
+    tr.success,
+    tr.warning,
+    tr.danger {
+
+      td,
+      &:hover td {
+        border-color: @table-border-color;
+      }
+    }
+  }
+}
+
+.table-responsive > .table {
+  background-color: @table-bg;
+}
+
+// Forms ======================================================================
+
+input,
+textarea {
+  color: @input-color;
+}
+
+.has-warning {
+  .help-block,
+  .control-label,
+  .form-control-feedback {
+    color: @brand-warning;
+  }
+
+  .form-control,
+  .form-control:focus {
+    border-color: @brand-warning;
+  }
+
+  .input-group-addon {
+    background-color: @body-bg;
+    border: none;
+  }
+}
+
+.has-error {
+  .help-block,
+  .control-label,
+  .form-control-feedback {
+    color: @brand-danger;
+  }
+
+  .form-control,
+  .form-control:focus {
+    border-color: @brand-danger;
+  }
+
+  .input-group-addon {
+    background-color: @body-bg;
+    border: none;
+  }
+}
+
+.has-success {
+  .help-block,
+  .control-label,
+  .form-control-feedback {
+    color: @brand-success;
+  }
+
+  .form-control,
+  .form-control:focus {
+    border-color: @brand-success;
+  }
+
+  .input-group-addon {
+    background-color: @body-bg;
+    border: none;
+  }
+}
+
+legend {
+  color: #fff;
+}
+
+.input-group-addon {
+  border-color: rgba(0, 0, 0, 0.6);
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+  .btn-shadow(@btn-default-bg);
+  color: @btn-default-color;
+}
+
+// Navs =======================================================================
+
+.nav {
+
+  .open > a,
+  .open > a:hover,
+  .open > a:focus {
+    border-color: rgba(0, 0, 0, 0.6);
+  }
+
+}
+
+.nav-pills {
+
+  & > li > a {
+    .btn-shadow(@btn-default-bg);
+    border: 1px solid rgba(0, 0, 0, 0.6);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+
+    &:hover {
+      .btn-shadow-inverse(@btn-default-bg);
+      border: 1px solid rgba(0, 0, 0, 0.6);
+    }
+  }
+
+  & > li.active > a,
+  & > li.active > a:hover {
+    background-color: none;
+    .btn-shadow-inverse(@btn-default-bg);
+    border: 1px solid rgba(0, 0, 0, 0.6);
+  }
+
+  & > li.disabled > a,
+  & > li.disabled > a:hover {
+    .btn-shadow(@btn-default-bg);
+  }
+}
+
+.pagination {
+
+  & > li > a,
+  & > li > span {
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+    .btn-shadow(@btn-default-bg);
+
+    &:hover {
+      .btn-shadow-inverse(@btn-default-bg);
+    }
+  }
+
+  & > li.active > a,
+  & > li.active > span {
+    .btn-shadow-inverse(@btn-default-bg);
+  }
+
+  & > li.disabled > a,
+  & > li.disabled > a:hover,
+  & > li.disabled > span,
+  & > li.disabled > span:hover {
+    background-color: transparent;
+    .btn-shadow(@btn-default-bg);
+  }
+}
+
+.pager {
+
+  & > li > a {
+    .btn-shadow(@btn-default-bg);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+
+    &:hover {
+      .btn-shadow-inverse(@btn-default-bg);
+    }
+  }
+
+  & > li.disabled > a,
+  & > li.disabled > a:hover {
+    background-color: transparent;
+    .btn-shadow(@btn-default-bg);
+  }
+}
+
+.breadcrumb {
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+  .btn-shadow(@btn-default-bg);
+}
+
+// Indicators =================================================================
+
+.alert {
+
+  .alert-link,
+  a {
+    color: #fff;
+    text-decoration: underline;
+  }
+
+  .close {
+    color: @close-color;
+    text-decoration: none;
+  }
+}
+
+// Progress bars ==============================================================
+
+// Containers =================================================================
+
+a.thumbnail:hover,
+a.thumbnail:focus,
+a.thumbnail.active {
+  border-color: @thumbnail-border;
+}
+
+.jumbotron {
+  border: 1px solid rgba(0, 0, 0, 0.6);
+}
+
+.panel-primary,
+.panel-success,
+.panel-danger,
+.panel-warning,
+.panel-info {
+
+  .panel-heading {
+    border-color: #000;
+  }
+}

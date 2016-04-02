@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_account_journal_form_inherited" model="ir.ui.view">
+            <field name="name">account.journal.form.inherited</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='advanced_settings']/group" position="inside">
+                    <group string="Check Printing" attrs="{'invisible': [('check_printing_payment_method_selected', '=', False)]}">
+                        <field name="check_printing_payment_method_selected" invisible="1"/>
+                        <field name="check_sequence_id" invisible="1"/>
+                        <field name="check_manual_sequencing"/>
+                        <field name="check_next_number" attrs="{'invisible': [('check_manual_sequencing', '=', False)]}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

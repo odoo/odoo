@@ -17,11 +17,11 @@ class ImportModule(Controller):
     def check_user(self, uid=None):
         if uid is None:
             uid = request.uid
-        is_admin = request.registry['res.users'].has_group(request.cr, uid, 'base.group_erp_manager')
+        is_admin = request.registry['res.users']._is_admin(request.cr, uid, [uid])
         if not is_admin:
             raise openerp.exceptions.AccessError("Only administrators can upload a module")
 
-    @route('/base_import_module/login', type='http', auth='none', methods=['POST'])
+    @route('/base_import_module/login', type='http', auth='none', methods=['POST'], csrf=False)
     @webservice
     def login(self, login, password, db=None):
         if db and db != request.db:
@@ -30,10 +30,13 @@ class ImportModule(Controller):
         if not uid:
             return Response(response="Wrong login/password", status=401)
         self.check_user(uid)
-        return "ok"
+        return Response(headers={
+            'X-CSRF-TOKEN': request.csrf_token(),
+        })
 
     @route('/base_import_module/upload', type='http', auth='user', methods=['POST'])
     @webservice
-    def upload(self, mod_file=None, **kw):
+    def upload(self, mod_file=None, force='', **kw):
         self.check_user()
-        return request.registry['ir.module.module'].import_zipfile(request.cr, request.uid, mod_file, context=request.context)[0]
+        force = True if force == '1' else False
+        return request.registry['ir.module.module'].import_zipfile(request.cr, request.uid, mod_file, force=force, context=request.context)[0]

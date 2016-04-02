@@ -14,8 +14,8 @@
         <record id="provider_facebook" model="auth.oauth.provider">
             <field name="name">Facebook Graph</field>
             <field name="auth_endpoint">https://www.facebook.com/dialog/oauth</field>
-            <field name="scope"></field>
-            <field name="validation_endpoint">https://graph.facebook.com/me/permissions</field>
+            <field name="scope">public_profile,email</field>
+            <field name="validation_endpoint">https://graph.facebook.com/me</field>
             <field name="data_endpoint"></field>
             <field name="css_class">fa fa-facebook-square</field>
             <field name="body">Log in with facebook</field>
@@ -27,18 +27,7 @@
             <field name="validation_endpoint">https://www.googleapis.com/oauth2/v1/tokeninfo</field>
             <field name="data_endpoint">https://www.googleapis.com/oauth2/v1/userinfo</field>
             <field name="css_class">fa fa-google-plus-square</field>
-            <field name="body">Log in with google</field>
+            <field name="body">Log in with Google</field>
         </record>
-        <!--
-        <record id="provider_twitter" model="auth.oauth.provider">
-            <field name="name">Twitter OAuth</field>
-            <field name="auth_endpoint">https://api.twitter.com/oauth/request_token</field>
-            <field name="scope"></field>
-            <field name="validation_endpoint">https://api.twitter.com/oauth/authorize</field>
-            <field name="data_endpoint"></field>
-            <field name="css_class">fa-twitter</field>
-            <field name="body">Sign in with twitter</field>
-        </record>
-        -->
     </data>
 </openerp>

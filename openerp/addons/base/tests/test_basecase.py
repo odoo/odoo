@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import unittest2
+import unittest
 
 from openerp.tests import common
 
@@ -83,6 +83,4 @@ class test_transaction_case(common.TransactionCase):
         self.assertEqual(partner, p_browse_ref, "browse_ref() should resolve xid to browse records")
 
 if __name__ == '__main__':
-    unittest2.main()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    unittest.main()

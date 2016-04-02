@@ -1,0 +1,145 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_paypal
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2015-11-21 06:47+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_paypal
+#: model:payment.acquirer,cancel_msg:payment_paypal.payment_acquirer_paypal
+msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
+msgstr "<span><i>取消,</i> 你的付款已被取消.</span>"
+
+#. module: payment_paypal
+#: model:payment.acquirer,done_msg:payment_paypal.payment_acquirer_paypal
+msgid ""
+"<span><i>Done,</i> Your online payment has been successfully processed. "
+"Thank you for your order.</span>"
+msgstr "<span><i>完成,</i> 你的在线支付已成功完成. 感谢你的订单.</span>"
+
+#. module: payment_paypal
+#: model:payment.acquirer,error_msg:payment_paypal.payment_acquirer_paypal
+msgid ""
+"<span><i>Error,</i> Please be aware that an error occurred during the "
+"transaction. The order has been confirmed but won't be paid. Don't hesitate "
+"to contact us if you have any questions on the status of your order.</span>"
+msgstr "<span><i>错误,</i> 请注意交易中会发生的错误. 订单已确认但未支付. 如你有任何关于订单状态的问题, 请及时联系我们.</span>"
+
+#. module: payment_paypal
+#: model:payment.acquirer,pending_msg:payment_paypal.payment_acquirer_paypal
+msgid ""
+"<span><i>Pending,</i> Your online payment has been successfully processed. "
+"But your order is not validated yet.</span>"
+msgstr "<span><i>待定,</i> 你的在线支付已完成. 但是你的订单还未确认.</span>"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token
+msgid "Access Token"
+msgstr "存取令牌"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token_validity
+msgid "Access Token Validity"
+msgstr "Access Token 的有效性"
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: payment_paypal
+#: model:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
+msgid "How to configure your paypal account?"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "付款 托收方"
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "支付交易"
+
+#. module: payment_paypal
+#: model:payment.acquirer,name:payment_paypal.payment_acquirer_paypal
+msgid "Paypal"
+msgstr "贝宝"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_email_account
+msgid "Paypal Email ID"
+msgstr "邮箱地址支付ID"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_use_ipn
+msgid "Paypal Instant Payment Notification"
+msgstr "Paypal 即时支付提醒"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_seller_account
+msgid "Paypal Merchant ID"
+msgstr "Paypal 销售商 ID"
+
+#. module: payment_paypal
+#: model:ir.ui.view,arch_db:payment_paypal.transaction_form_paypal
+msgid "Paypal TX Details"
+msgstr "Paypal TX 详情"
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/models/paypal.py:186
+#, python-format
+msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_password
+msgid "Rest API Password"
+msgstr "Rest API 密码"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_username
+msgid "Rest API Username"
+msgstr "重置 API 用户名"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_seller_account
+msgid ""
+"The Merchant ID is used to ensure communications coming from Paypal are "
+"valid and secured."
+msgstr "销售商 ID 被用于确认来自Paypal的信息是有效的和安全的。 "
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction_paypal_txn_type
+msgid "Transaction type"
+msgstr "交易类型"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_use_ipn
+msgid "Use IPN"
+msgstr "使用 IPN"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_enabled
+msgid "Use Rest API"
+msgstr "使用 Rest API"
+
+#. module: payment_paypal
+#: model:payment.acquirer,pre_msg:payment_paypal.payment_acquirer_paypal
+msgid ""
+"You will be redirected to the Paypal website after clicking on the payment "
+"button."
+msgstr ""

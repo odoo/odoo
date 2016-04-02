@@ -1,0 +1,77 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_order_dates
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-09-08 08:04+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_order_dates
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_commitment_date
+msgid "Commitment Date"
+msgstr "Ngày cam kết"
+
+#. module: sale_order_dates
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order_requested_date
+msgid ""
+"Date by which the customer has requested the items to be delivered.\n"
+"When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
+"Leave this field empty if you want the Delivery Order to be processed as soon as possible. In that case the expected date will be computed using the default method: based on the Product Lead Times and the Company's Security Delay."
+msgstr "Ngày mà khách hàng đã yêu cầu giao hàng.\nKhi đơn hàng này được xác nhận. Ngày dự kiến trên Phiếu xuất kho sẽ được tính toán dựa trên ngày này và chính sách Delay của công ty.\nĐể trống nếu bạn muốn Phiếu xuất kho được xử lý sớm hơn. Trong trường hợp đó, ngày dự kiến sẽ được tính theo phương pháp mặc định: dựa trên Product Lead Times và chính sách Delay của công ty."
+
+#. module: sale_order_dates
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
+msgid ""
+"Date by which the products are sure to be delivered. This is a date that you"
+" can promise to the customer, based on the Product Lead Times."
+msgstr "Ngày mà sản phẩm chắc chắn được giao. Đây là một ngày mà bạn có thể hứa với khách hàng, dựa trên Product Lead Times."
+
+#. module: sale_order_dates
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order_effective_date
+msgid "Date on which the first Delivery Order was created."
+msgstr "Ngày trên Phiếu xuất kho đầu tiên được tạo."
+
+#. module: sale_order_dates
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_effective_date
+msgid "Effective Date"
+msgstr "Ngày hiệu lực"
+
+#. module: sale_order_dates
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_requested_date
+msgid "Requested Date"
+msgstr "Ngày yêu cầu"
+
+#. module: sale_order_dates
+#: code:addons/sale_order_dates/sale_order_dates.py:51
+#, python-format
+msgid "Requested date is too soon!"
+msgstr "Ngày yêu cầu quá sớm!"
+
+#. module: sale_order_dates
+#: model:ir.model,name:sale_order_dates.model_sale_order
+msgid "Sales Order"
+msgstr "Đơn hàng"
+
+#. module: sale_order_dates
+#: model:ir.model,name:sale_order_dates.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Chi tiết Đơn hàng Bán"
+
+#. module: sale_order_dates
+#: code:addons/sale_order_dates/sale_order_dates.py:52
+#, python-format
+msgid ""
+"The date requested by the customer is sooner than the commitment date. You "
+"may be unable to honor the customer's request."
+msgstr "Ngày được yêu cầu bởi khách hàng sớm hơn ngày cam kết. Bạn có thể không chấp nhận yêu cầu của khách hàng."

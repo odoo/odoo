@@ -4,10 +4,10 @@
     'version': '1.0',
     'description':
         """
-OpenERP Web core module.
+Odoo Web core module.
 ========================
 
-This module provides the core of the OpenERP Web Client.
+This module provides the core of the Odoo Web Client.
         """,
     'depends': ['base'],
     'auto_install': True,
@@ -17,4 +17,5 @@ This module provides the core of the OpenERP Web Client.
     'qweb' : [
         "static/src/xml/*.xml",
     ],
+    'bootstrap': True, # load translations for login screen
 }

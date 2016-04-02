@@ -1,43 +1,18 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv, fields
+from odoo import api, fields, models
 
-def referencable_models(self, cr, uid, context=None):
-    obj = self.pool.get('res.request.link')
-    ids = obj.search(cr, uid, [], context=context)
-    res = obj.read(cr, uid, ids, ['object', 'name'], context)
-    return [(r['object'], r['name']) for r in res]
 
-class res_request_link(osv.osv):
+@api.model
+def referenceable_models(self):
+    return [(link.object, link.name) for link in self.env['res.request.link'].search([])]
+
+
+class ResRequestLink(models.Model):
     _name = 'res.request.link'
-    _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
-        'object': fields.char('Object', size=64, required=True),
-        'priority': fields.integer('Priority'),
-    }
-    _defaults = {
-        'priority': 5,
-    }
     _order = 'priority'
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+    name = fields.Char(required=True, translate=True)
+    object = fields.Char(required=True)
+    priority = fields.Integer(default=5)

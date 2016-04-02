@@ -1,39 +1,21 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv,fields
+from openerp import fields, models
 
-class company(osv.osv):
+class company(models.Model):
     _inherit = 'res.company'
-    _columns = {
-        'po_lead': fields.float(
-            'Purchase Lead Time', required=True,
-            help="Margin of error for supplier lead times. When the system"\
-                 "generates Purchase Orders for procuring products,"\
-                 "they will be scheduled that many days earlier "\
-                 "to cope with unexpected supplier delays."),
-    }
-    _defaults = {
-        'po_lead': lambda *a: 1.0,
-    }
 
+    po_lead = fields.Float(string='Purchase Lead Time', required=True,\
+        help="Margin of error for vendor lead times. When the system "
+             "generates Purchase Orders for procuring products, "
+             "they will be scheduled that many days earlier "
+             "to cope with unexpected vendor delays.", default=0.0)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    po_double_validation = fields.Selection([
+        ('one_step', 'Confirm purchase orders in one step'),
+        ('two_step', 'Get 2 levels of approvals to confirm a purchase order')
+        ], string="Levels of Approvals", default='one_step',\
+        help="Provide a double validation mechanism for purchases")
+    po_double_validation_amount = fields.Monetary(string='Double validation amount', default=5000,\
+        help="Minimum amount for which a double validation is required")

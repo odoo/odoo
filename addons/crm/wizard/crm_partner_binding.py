@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -54,11 +36,9 @@ class crm_partner_binding(osv.osv_memory):
         partner_id = False
         partner_obj = self.pool.get('res.partner')
 
-        # The active model has to be a lead or a phonecall
+        # The active model has to be a lead
         if (context.get('active_model') == 'crm.lead') and context.get('active_id'):
             active_model = self.pool.get('crm.lead').browse(cr, uid, context.get('active_id'), context=context)
-        elif (context.get('active_model') == 'crm.phonecall') and context.get('active_id'):
-            active_model = self.pool.get('crm.phonecall').browse(cr, uid, context.get('active_id'), context=context)
 
         # Find the best matching partner for the active model
         if (active_model):
@@ -89,11 +69,9 @@ class crm_partner_binding(osv.osv_memory):
         res = super(crm_partner_binding, self).default_get(cr, uid, fields, context=context)
         partner_id = self._find_matching_partner(cr, uid, context=context)
 
-        if 'action' in fields:
+        if 'action' in fields and not res.get('action'):
             res['action'] = partner_id and 'exist' or 'create'
         if 'partner_id' in fields:
             res['partner_id'] = partner_id
 
         return res
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

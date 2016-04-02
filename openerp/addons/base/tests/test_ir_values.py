@@ -1,4 +1,4 @@
-import unittest2
+import unittest
 
 import openerp.tests.common as common
 
@@ -53,7 +53,6 @@ class test_ir_values(common.TransactionCase):
         act_id_1 = self.ref('base.act_values_form_action')
         act_id_2 = self.ref('base.act_values_form_defaults')
         act_id_3 = self.ref('base.action_res_company_form')
-        act_id_4 = self.ref('base.action_res_company_tree')
 
         ir_values = self.registry('ir.values')
         ir_values.set(self.cr, self.uid, 'action', 'tree_but_open', 'OnDblClick Action', ['unexisting_model'], 'ir.actions.act_window,%d' % act_id_1, isobject=True)
@@ -63,7 +62,6 @@ class test_ir_values(common.TransactionCase):
         reports = self.registry('ir.actions.report.xml').browse(self.cr, self.uid, report_ids, {})
         report_id = [report.id for report in reports if not report.groups_id][0]  # assume at least one
         ir_values.set(self.cr, self.uid, 'action', 'client_print_multi', 'Nice Report', ['unexisting_model'], 'ir.actions.report.xml,%d' % report_id, isobject=True)
-        ir_values.set(self.cr, self.uid, 'action', 'client_action_relate', 'Related Stuff', ['unexisting_model'], 'ir.actions.act_window,%d' % act_id_4, isobject=True)
 
         # Replace one action binding to set a new name.
 
@@ -96,12 +94,5 @@ class test_ir_values(common.TransactionCase):
         assert actions[0][1] == 'Nice Report', 'Bound action does not match definition'
         assert isinstance(actions[0][2], dict) and actions[0][2]['id'] == report_id, 'Bound action does not match definition'
 
-        actions = ir_values.get(self.cr, self.uid, 'action', 'client_action_relate', ['unexisting_model'])
-        assert len(actions) == 1, "Mismatching number of bound actions"
-        assert len(actions[0]) == 3, "Malformed action definition"
-        assert actions[0][1] == 'Related Stuff', 'Bound action does not match definition'
-        assert isinstance(actions[0][2], dict) and actions[0][2]['id'] == act_id_4, 'Bound action does not match definition'
-
-
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()

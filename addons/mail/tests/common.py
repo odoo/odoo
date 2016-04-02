@@ -1,134 +1,126 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Business Applications
-#    Copyright (c) 2012-TODAY OpenERP S.A. <http://openerp.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 from openerp.tests import common
 
 
-class TestMail(common.TransactionCase):
+class TestMail(common.SavepointCase):
 
-    def _mock_smtp_gateway(self, *args, **kwargs):
-        return args[2]['Message-Id']
+    @classmethod
+    def _init_mock_build_email(cls):
+        cls._mails_args = []
+        cls._mails = []
 
-    def _init_mock_build_email(self):
-        self._build_email_args_list = []
-        self._build_email_kwargs_list = []
-
-    def _mock_build_email(self, *args, **kwargs):
-        """ Mock build_email to be able to test its values. Store them into
-            some internal variable for latter processing. """
-        self._build_email_args_list.append(args)
-        self._build_email_kwargs_list.append(kwargs)
-        return self._build_email(*args, **kwargs)
+    def format_and_process(self, template, to='groups@example.com, other@gmail.com', subject='Frogs',
+                           extra='', email_from='Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>',
+                           cc='', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>',
+                           model=None, target_model='mail.channel', target_field='name'):
+        self.assertFalse(self.env[target_model].search([(target_field, '=', subject)]))
+        mail = template.format(to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id)
+        self.env['mail.thread'].with_context(mail_channel_noautofollow=True).message_process(model, mail)
+        return self.env[target_model].search([(target_field, '=', subject)])
 
     def setUp(self):
         super(TestMail, self).setUp()
-        cr, uid = self.cr, self.uid
+        self._mails_args[:] = []
+        self._mails[:] = []
 
-        # Install mock SMTP gateway
-        self._init_mock_build_email()
-        self._build_email = self.registry('ir.mail_server').build_email
-        self.registry('ir.mail_server').build_email = self._mock_build_email
-        self._send_email = self.registry('ir.mail_server').send_email
-        self.registry('ir.mail_server').send_email = self._mock_smtp_gateway
+    @classmethod
+    def setUpClass(cls):
+        super(TestMail, cls).setUpClass()
 
-        # Usefull models
-        self.ir_model = self.registry('ir.model')
-        self.ir_model_data = self.registry('ir.model.data')
-        self.ir_attachment = self.registry('ir.attachment')
-        self.mail_alias = self.registry('mail.alias')
-        self.mail_thread = self.registry('mail.thread')
-        self.mail_group = self.registry('mail.group')
-        self.mail_mail = self.registry('mail.mail')
-        self.mail_message = self.registry('mail.message')
-        self.mail_notification = self.registry('mail.notification')
-        self.mail_followers = self.registry('mail.followers')
-        self.mail_message_subtype = self.registry('mail.message.subtype')
-        self.res_users = self.registry('res.users')
-        self.res_partner = self.registry('res.partner')
+        def build_email(self, *args, **kwargs):
+            cls._mails_args.append(args)
+            cls._mails.append(kwargs)
+            return build_email.origin(self, *args, **kwargs)
 
-        # Find Employee group
-        group_employee_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
-        self.group_employee_id = group_employee_ref and group_employee_ref[1] or False
+        def send_email(self, cr, uid, message, *args, **kwargs):
+            return message['Message-Id']
 
-        # Partner Data
+        def mail_group_message_get_recipient_values(self, cr, uid, ids, notif_message=None, recipient_ids=None, context=None):
+            return self.pool['mail.thread'].message_get_recipient_values(cr, uid, ids, notif_message=notif_message, recipient_ids=recipient_ids, context=context)
+
+        cls.env['ir.mail_server']._patch_method('build_email', build_email)
+        cls.env['ir.mail_server']._patch_method('send_email', send_email)
+        cls.env['mail.channel']._patch_method('message_get_recipient_values', mail_group_message_get_recipient_values)
+
+        # User groups
+        user_group_employee = cls.env.ref('base.group_user')
+        user_group_portal = cls.env.ref('base.group_portal')
+        user_group_public = cls.env.ref('base.group_public')
 
         # User Data: employee, noone
-        self.user_employee_id = self.res_users.create(cr, uid, {
+        Users = cls.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True})
+        cls.user_employee = Users.create({
             'name': 'Ernest Employee',
             'login': 'ernest',
             'alias_name': 'ernest',
             'email': 'e.e@example.com',
             'signature': '--\nErnest',
             'notify_email': 'always',
-            'groups_id': [(6, 0, [self.group_employee_id])]
-        }, {'no_reset_password': True})
-        self.user_noone_id = self.res_users.create(cr, uid, {
-            'name': 'Noemie NoOne',
-            'login': 'noemie',
-            'alias_name': 'noemie',
-            'email': 'n.n@example.com',
-            'signature': '--\nNoemie',
-            'notify_email': 'always',
-            'groups_id': [(6, 0, [])]
-        }, {'no_reset_password': True})
-
-        # Test users to use through the various tests
-        self.res_users.write(cr, uid, uid, {'name': 'Administrator'})
-        self.user_raoul_id = self.res_users.create(cr, uid, {
-            'name': 'Raoul Grosbedon',
-            'signature': 'SignRaoul',
-            'email': 'raoul@raoul.fr',
-            'login': 'raoul',
-            'alias_name': 'raoul',
-            'groups_id': [(6, 0, [self.group_employee_id])]
-        })
-        self.user_bert_id = self.res_users.create(cr, uid, {
+            'groups_id': [(6, 0, [user_group_employee.id])]})
+        cls.user_public = Users.create({
             'name': 'Bert Tartignole',
-            'signature': 'SignBert',
-            'email': 'bert@bert.fr',
             'login': 'bert',
             'alias_name': 'bert',
-            'groups_id': [(6, 0, [])]
+            'email': 'b.t@example.com',
+            'signature': 'SignBert',
+            'notify_email': 'always',
+            'groups_id': [(6, 0, [user_group_public.id])]})
+        cls.user_portal = Users.create({
+            'name': 'Chell Gladys',
+            'login': 'chell',
+            'alias_name': 'chell',
+            'email': 'chell@gladys.portal',
+            'signature': 'SignChell',
+            'notify_email': 'always',
+            'groups_id': [(6, 0, [user_group_portal.id])]})
+        cls.user_admin = cls.env.user
+
+        # Test Data for Partners
+        cls.partner_1 = cls.env['res.partner'].create({
+            'name': 'Valid Lelitre',
+            'email': 'valid.lelitre@agrolait.com',
+            'notify_email': 'always'})
+        cls.partner_2 = cls.env['res.partner'].create({
+            'name': 'Valid Poilvache',
+            'email': 'valid.other@gmail.com',
+            'notify_email': 'always'})
+
+        # Create test groups without followers and messages by default
+        TestMailGroup = cls.env['mail.channel'].with_context({
+            'mail_create_nolog': True,
+            'mail_create_nosubscribe': True,
+            'mail_channel_noautofollow': True,
         })
-        self.user_raoul = self.res_users.browse(cr, uid, self.user_raoul_id)
-        self.user_bert = self.res_users.browse(cr, uid, self.user_bert_id)
-        self.user_admin = self.res_users.browse(cr, uid, uid)
-        self.partner_admin_id = self.user_admin.partner_id.id
-        self.partner_raoul_id = self.user_raoul.partner_id.id
-        self.partner_bert_id = self.user_bert.partner_id.id
+        # Pigs: base group for tests
+        cls.group_pigs = TestMailGroup.create({
+            'name': 'Pigs',
+            'description': 'Fans of Pigs, unite !',
+            'public': 'groups',
+            'group_public_id': user_group_employee.id,
+            'alias_name': 'pigs',
+            'alias_contact': 'followers'}
+        ).with_context({'mail_create_nosubscribe': False})
+        # Jobs: public group
+        cls.group_public = TestMailGroup.create({
+            'name': 'Jobs',
+            'description': 'NotFalse',
+            'public': 'public',
+            'alias_name': 'public',
+            'alias_contact': 'everyone'}
+        ).with_context({'mail_create_nosubscribe': False})
 
-        # Test 'pigs' group to use through the various tests
-        self.group_pigs_id = self.mail_group.create(
-            cr, uid,
-            {'name': 'Pigs', 'description': 'Fans of Pigs, unite !', 'alias_name': 'group+pigs'},
-            {'mail_create_nolog': True}
-        )
-        self.group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
-        # Test mail.group: public to provide access to everyone
-        self.group_jobs_id = self.mail_group.create(cr, uid, {'name': 'Jobs', 'public': 'public'})
-        # Test mail.group: private to restrict access
-        self.group_priv_id = self.mail_group.create(cr, uid, {'name': 'Private', 'public': 'private'})
+        # remove default followers
+        cls.env['mail.followers'].search([
+            ('res_model', '=', 'mail.channel'),
+            ('res_id', 'in', (cls.group_pigs | cls.group_public).ids)]).unlink()
 
-    def tearDown(self):
+        cls._init_mock_build_email()
+
+    @classmethod
+    def tearDownClass(cls):
         # Remove mocks
-        self.registry('ir.mail_server').build_email = self._build_email
-        self.registry('ir.mail_server').send_email = self._send_email
-        super(TestMail, self).tearDown()
+        cls.env['ir.mail_server']._revert_method('build_email')
+        cls.env['ir.mail_server']._revert_method('send_email')
+        cls.env['mail.channel']._revert_method('message_get_recipient_values')
+        super(TestMail, cls).tearDownClass()

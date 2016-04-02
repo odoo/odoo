@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Used in other modules for the tests, NOT in this one -->
+
+        <record forcecreate="True" id="property_stock_valuation_account_id" model="ir.property">
+            <field name="name">property_stock_valuation_account_id</field>
+            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_stock_valuation_account_id')]"/>
+            <field eval="'account.account,'+str(ref('stk'))" model="account.account" name="value"/>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record forcecreate="True" id="property_stock_valuation_journal_id" model="ir.property">
+            <field name="name">property_stock_valuation_journal</field>
+            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_stock_journal')]"/>
+            <field eval="'account.journal,'+str(ref('miscellaneous_journal'))" model="account.journal" name="value"/>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+
+    </data>
+</openerp>

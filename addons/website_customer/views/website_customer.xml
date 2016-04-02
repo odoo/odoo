@@ -13,7 +13,7 @@
     <t t-call="website.layout">
         <div id="wrap">
             <div class="oe_structure">
-                <section data-snippet-id="title">
+                <section>
                     <h1 class="text-center">
                         Our References
                     </h1><h2 class="text-center text-muted">
@@ -66,7 +66,7 @@
 </template>
 
 <!-- Option: left column: World Map -->
-<template id="opt_country" inherit_id="website_customer.index" optional="enabled" name="Show Map">
+<template id="opt_country" inherit_id="website_customer.index" customize_show="True" name="Show Map">
     <xpath expr="//div[@id='ref_left_column']" position="inside">
         <!-- modal for large map -->
         <div class="modal fade customer_map_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -84,20 +84,21 @@
         <!-- modal end -->
         <h3>World Map<button class="btn btn-link" data-toggle="modal" data-target=".customer_map_modal"><span class="fa fa-external-link" /></button></h3>
         <ul class="nav">
-            <iframe t-attf-src="/google_map/?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/customers/"
-                style="width:260px; height:240px; border:0; padding:0; margin:0;"></iframe>
+            <iframe t-attf-src="/google_map?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/customers/"
+                style="width:260px; height:240px; border:0; padding:0; margin:0;" scrolling="no"></iframe>
         </ul>
     </xpath>
 </template>
 
-<template id="opt_country_list" inherit_id="website_customer.index" optional="enabled" name="Filter on Countries">
+
+<template id="opt_country_list" inherit_id="website_customer.index" customize_show="True" name="Filter on Countries">
     <xpath expr="//div[@id='ref_left_column']" position="inside">
         <h3>References by Country</h3>
         <ul class="nav nav-pills nav-stacked mt16 mb32">
             <t t-foreach="countries" t-as="country_dict">
                 <t t-if="country_dict['country_id']">
                     <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or ''">
-                        <a t-attf-href="/customers/#{ country_dict['country_id'][0] and 'country/%s' % slug(country_dict['country_id']) or '' }#{ search_path }">
+                        <a t-attf-href="/customers/#{ tag and 'tag/%s/' % slug(tag) or '' }#{ country_dict['country_id'][0] and 'country/%s' % slug(country_dict['country_id']) or '' }#{ search_path }">
                             <span class="badge pull-right" t-esc="country_dict['country_id_count'] or '0'"/>
                             <t t-esc="country_dict['country_id'][1]"/>
                         </a>
@@ -109,6 +110,21 @@
     </xpath>
 </template>
 
+<template id="opt_tag_list" inherit_id="website_customer.index" customize_show="True" name="Filter on Tags" priority="5">
+    <xpath expr="//div[@id='ref_left_column']" position="inside">
+
+        <h3 t-if="len(tags)">References by Tag</h3>
+        <ul class="nav nav-pills nav-stacked mt16 mb32" t-if="len(tags)">
+            <a class="mr8" t-attf-href="/customers/#{ current_country and 'country/%s' % slug(current_country) or '' }#{ search_path }">
+                <span class="fa fa-1x fa-tags"/> All </a>
+            <t t-foreach="tags" t-as="o_tag">
+                <a t-attf-class="label label-#{o_tag.classname}" t-esc="o_tag.name" t-att-style="tag and tag.id==o_tag.id and 'text-decoration: underline'"
+                    t-attf-href="/customers/#{ 'tag/%s/' % slug(o_tag) }#{ current_country and 'country/%s' % slug(current_country)  or '' }#{ search_path }"/>
+            </t>
+        </ul>
+    </xpath>
+</template>
+
 <template id="details" name="Customer Detail">
   <t t-call="website.layout">
     <div id="wrap">
@@ -116,7 +132,7 @@
         <div class="container mt16">
             <div class="row">
                 <div class="col-md-5">
-                    <ol class="breadcrumb">
+                    <ol t-if="not edit_page" class="breadcrumb">
                         <li><a href="/customers">Our References</a></li>
                         <li class="active"><span t-field="partner.display_name"/></li>
                     </ol>

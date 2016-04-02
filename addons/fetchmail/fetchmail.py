@@ -1,25 +1,8 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import poplib
 import time
 from imaplib import IMAP4
 from imaplib import IMAP4_SSL
@@ -30,15 +13,17 @@ try:
 except ImportError:
     import StringIO
 
-import zipfile
-import base64
-from openerp import addons
-
 from openerp.osv import fields, osv
-from openerp import tools
+from openerp import tools, api, SUPERUSER_ID
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
+MAX_POP_MESSAGES = 50
+MAIL_TIMEOUT = 60
+
+# Workaround for Python 2.7.8 bug https://bugs.python.org/issue23906
+poplib._MAXLINE = 65536
 
 class fetchmail_server(osv.osv):
     """Incoming POP/IMAP mail server account"""
@@ -47,13 +32,13 @@ class fetchmail_server(osv.osv):
     _order = 'priority'
 
     _columns = {
-        'name':fields.char('Name', size=256, required=True, readonly=False),
+        'name':fields.char('Name', required=True, readonly=False),
         'active':fields.boolean('Active', required=False),
         'state':fields.selection([
             ('draft', 'Not Confirmed'),
             ('done', 'Confirmed'),
-        ], 'Status', select=True, readonly=True),
-        'server' : fields.char('Server Name', size=256, readonly=True, help="Hostname or IP of the mail server", states={'draft':[('readonly', False)]}),
+        ], 'Status', select=True, readonly=True, copy=False),
+        'server' : fields.char('Server Name', readonly=True, help="Hostname or IP of the mail server", states={'draft':[('readonly', False)]}),
         'port' : fields.integer('Port', readonly=True, states={'draft':[('readonly', False)]}),
         'type':fields.selection([
             ('pop', 'POP Server'),
@@ -63,11 +48,11 @@ class fetchmail_server(osv.osv):
         'is_ssl':fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP3S=995)"),
         'attach':fields.boolean('Keep Attachments', help="Whether attachments should be downloaded. "
                                                          "If not enabled, incoming emails will be stripped of any attachments before being processed"),
-        'original':fields.boolean('Keep Original', help="Whether a full original copy of each email should be kept for reference"
+        'original':fields.boolean('Keep Original', help="Whether a full original copy of each email should be kept for reference "
                                                         "and attached to each processed message. This will usually double the size of your message database."),
         'date': fields.datetime('Last Fetch Date', readonly=True),
-        'user' : fields.char('Username', size=256, readonly=True, states={'draft':[('readonly', False)]}),
-        'password' : fields.char('Password', size=1024, readonly=True, states={'draft':[('readonly', False)]}),
+        'user' : fields.char('Username', readonly=True, states={'draft':[('readonly', False)]}),
+        'password' : fields.char('Password', readonly=True, states={'draft':[('readonly', False)]}),
         'action_id':fields.many2one('ir.actions.server', 'Server Action', help="Optional custom server action to trigger for each incoming mail, "
                                                                                "on the record that was created or updated by this mail"),
         'object_id': fields.many2one('ir.model', "Create a New Record", help="Process each incoming mail as part of a conversation "
@@ -78,7 +63,7 @@ class fetchmail_server(osv.osv):
                                                                                                                   "lower values mean higher priority"),
         'message_ids': fields.one2many('mail.mail', 'fetchmail_server_id', 'Messages', readonly=True),
         'configuration' : fields.text('Configuration', readonly=True),
-        'script' : fields.char('Script', readonly=True, size=64),
+        'script' : fields.char('Script', readonly=True),
     }
     _defaults = {
         'state': "draft",
@@ -129,6 +114,7 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
         self.write(cr, uid, ids , {'state':'draft'})
         return True
 
+    @api.cr_uid_ids_context
     def connect(self, cr, uid, server_id, context=None):
         if isinstance(server_id, (list,tuple)):
             server_id = server_id[0]
@@ -148,6 +134,8 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
             #connection.user("recent:"+server.user)
             connection.user(server.user)
             connection.pass_(server.password)
+        # Add timeout on socket
+        connection.sock.settimeout(MAIL_TIMEOUT)
         return connection
 
     def button_confirm_login(self, cr, uid, ids, context=None):
@@ -158,8 +146,8 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
                 connection = server.connect()
                 server.write({'state':'done'})
             except Exception, e:
-                _logger.exception("Failed to connect to %s server %s.", server.type, server.name)
-                raise osv.except_osv(_("Connection test failed!"), _("Here is what we got instead:\n %s.") % tools.ustr(e))
+                _logger.info("Failed to connect to %s server %s.", server.type, server.name, exc_info=True)
+                raise UserError(_("Connection test failed: %s") % tools.ustr(e))
             finally:
                 try:
                     if connection:
@@ -179,8 +167,7 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
 
     def fetch_mail(self, cr, uid, ids, context=None):
         """WARNING: meant for cron usage only - will commit() after each email!"""
-        if context is None:
-            context = {}
+        context = dict(context or {})
         context['fetchmail_cron_running'] = True
         mail_thread = self.pool.get('mail.thread')
         action_pool = self.pool.get('ir.actions.server')
@@ -206,7 +193,7 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
                                                                  strip_attachments=(not server.attach),
                                                                  context=context)
                         except Exception:
-                            _logger.exception('Failed to process mail from %s server %s.', server.type, server.name)
+                            _logger.info('Failed to process mail from %s server %s.', server.type, server.name, exc_info=True)
                             failed += 1
                         if res_id and server.action_id:
                             action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids': [res_id], 'active_model': context.get("thread_model", server.object_id.model)})
@@ -215,63 +202,73 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
                         count += 1
                     _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", count, server.type, server.name, (count - failed), failed)
                 except Exception:
-                    _logger.exception("General failure when trying to fetch mail from %s server %s.", server.type, server.name)
+                    _logger.info("General failure when trying to fetch mail from %s server %s.", server.type, server.name, exc_info=True)
                 finally:
                     if imap_server:
                         imap_server.close()
                         imap_server.logout()
             elif server.type == 'pop':
                 try:
-                    pop_server = server.connect()
-                    (numMsgs, totalSize) = pop_server.stat()
-                    pop_server.list()
-                    for num in range(1, numMsgs + 1):
-                        (header, msges, octets) = pop_server.retr(num)
-                        msg = '\n'.join(msges)
-                        res_id = None
-                        try:
-                            res_id = mail_thread.message_process(cr, uid, server.object_id.model,
-                                                                 msg,
-                                                                 save_original=server.original,
-                                                                 strip_attachments=(not server.attach),
-                                                                 context=context)
-                        except Exception:
-                            _logger.exception('Failed to process mail from %s server %s.', server.type, server.name)
-                            failed += 1
-                        if res_id and server.action_id:
-                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids': [res_id], 'active_model': context.get("thread_model", server.object_id.model)})
-                        pop_server.dele(num)
-                        cr.commit()
-                    _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", numMsgs, server.type, server.name, (numMsgs - failed), failed)
+                    while True:
+                        pop_server = server.connect()
+                        (numMsgs, totalSize) = pop_server.stat()
+                        pop_server.list()
+                        for num in range(1, min(MAX_POP_MESSAGES, numMsgs) + 1):
+                            (header, msges, octets) = pop_server.retr(num)
+                            msg = '\n'.join(msges)
+                            res_id = None
+                            try:
+                                res_id = mail_thread.message_process(cr, uid, server.object_id.model,
+                                                                     msg,
+                                                                     save_original=server.original,
+                                                                     strip_attachments=(not server.attach),
+                                                                     context=context)
+                                pop_server.dele(num)
+                            except Exception:
+                                _logger.info('Failed to process mail from %s server %s.', server.type, server.name, exc_info=True)
+                                failed += 1
+                            if res_id and server.action_id:
+                                action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids': [res_id], 'active_model': context.get("thread_model", server.object_id.model)})
+                            cr.commit()
+                        if numMsgs < MAX_POP_MESSAGES:
+                            break
+                        pop_server.quit()
+                        _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", numMsgs, server.type, server.name, (numMsgs - failed), failed)
                 except Exception:
-                    _logger.exception("General failure when trying to fetch mail from %s server %s.", server.type, server.name)
+                    _logger.info("General failure when trying to fetch mail from %s server %s.", server.type, server.name, exc_info=True)
                 finally:
                     if pop_server:
                         pop_server.quit()
             server.write({'date': time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)})
         return True
 
-    def cron_update(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        if not context.get('fetchmail_cron_running'):
-            # Enabled/Disable cron based on the number of 'done' server of type pop or imap
-            ids = self.search(cr, uid, [('state','=','done'),('type','in',['pop','imap'])])
-            try:
-                cron_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'fetchmail', 'ir_cron_mail_gateway_action')[1]
-                self.pool.get('ir.cron').write(cr, 1, [cron_id], {'active': bool(ids)})
-            except ValueError:
-                # Nevermind if default cron cannot be found
-                pass
+    def _update_cron(self, cr, uid, context=None):
+        if context and context.get('fetchmail_cron_running'):
+            return
+
+        try:
+            cron = self.pool['ir.model.data'].get_object(
+                cr, SUPERUSER_ID, 'fetchmail', 'ir_cron_mail_gateway_action', context=context)
+        except ValueError:
+            # Nevermind if default cron cannot be found
+            return
+
+        # Enabled/Disable cron based on the number of 'done' server of type pop or imap
+        cron.toggle(model=self._name, domain=[('state','=','done'), ('type','in',['pop','imap'])])
 
     def create(self, cr, uid, values, context=None):
         res = super(fetchmail_server, self).create(cr, uid, values, context=context)
-        self.cron_update(cr, uid, context=context)
+        self._update_cron(cr, uid, context=context)
         return res
 
     def write(self, cr, uid, ids, values, context=None):
         res = super(fetchmail_server, self).write(cr, uid, ids, values, context=context)
-        self.cron_update(cr, uid, context=context)
+        self._update_cron(cr, uid, context=context)
+        return res
+
+    def unlink(self, cr, uid, ids, context=None):
+        res = super(fetchmail_server, self).unlink(cr, uid, ids, context=context)
+        self._update_cron(cr, uid, context=context)
         return res
 
 class mail_mail(osv.osv):
@@ -300,6 +297,3 @@ class mail_mail(osv.osv):
             values['fetchmail_server_id'] = fetchmail_server_id
         res = super(mail_mail, self).write(cr, uid, ids, values, context=context)
         return res
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

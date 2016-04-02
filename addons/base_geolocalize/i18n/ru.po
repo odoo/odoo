@@ -1,0 +1,77 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_geolocalize
+# 
+# Translators:
+# Вадим Кунгурцев <kvadim@aport.ru>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-12-29 08:24+0000\n"
+"Last-Translator: Вадим Кунгурцев <kvadim@aport.ru>\n"
+"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: base_geolocalize
+#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "<span class=\"oe_inline\"> ( On  </span>"
+msgstr "<span class=\"oe_inline\"> (Нахождение: </span>"
+
+#. module: base_geolocalize
+#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "<span> : Lat : </span>"
+msgstr "<span> : Широта : </span>"
+
+#. module: base_geolocalize
+#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "<span> ;  Long:  </span>"
+msgstr "<span> ; Долгота: </span>"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py:23
+#, python-format
+msgid ""
+"Cannot contact geolocation servers. Please make sure that your internet "
+"connection is up and running (%s)."
+msgstr "Не удается связаться с сервером геолокации. Пожалуйста, убедитесь, что ваше подключение к интернету работает (%s)."
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_partner_latitude
+msgid "Geo Latitude"
+msgstr "Географическая широта"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_date_localization
+msgid "Geo Localization Date"
+msgstr "Дата геолокации"
+
+#. module: base_geolocalize
+#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Geo Localize"
+msgstr "Геолоцировать"
+
+#. module: base_geolocalize
+#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Geo Location"
+msgstr "Геопозиция"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_partner_longitude
+msgid "Geo Longitude"
+msgstr "Географическая долгота"
+
+#. module: base_geolocalize
+#: model:ir.model,name:base_geolocalize.model_res_partner
+msgid "Partner"
+msgstr "Контрагент"
+
+#. module: base_geolocalize
+#: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Partner Assignation"
+msgstr "Назначение партнера"

@@ -1,0 +1,793 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * purchase_requisition
+# 
+# Translators:
+# Bogdan, 2015-2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"PO-Revision-Date: 2016-02-15 19:48+0000\n"
+"Last-Translator: Bogdan\n"
+"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Call for Tender Reference:</strong><br/>"
+msgstr "<strong>Посилання тендера:</strong><br/>"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Date</strong>"
+msgstr "<strong>Дата</strong>"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Description</strong>"
+msgstr "<strong>Опис</strong>"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Product UoM</strong>"
+msgstr "<strong>Од. виміру товару</strong>"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Qty</strong>"
+msgstr "<strong>К-сть</strong>"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Reference </strong>"
+msgstr "<strong>Посилання </strong>"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Scheduled Date</strong>"
+msgstr "<strong>Запланована дата</strong>"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Scheduled Ordering Date:</strong><br/>"
+msgstr "<strong>Запланована дата замовлення:</strong><br/>"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Selection Type:</strong><br/>"
+msgstr "<strong>Тип вибору:</strong><br/>"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Source:</strong><br/>"
+msgstr "<strong>Джерело:</strong><br/>"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "<strong>Vendor </strong>"
+msgstr "<strong>Постачальник </strong>"
+
+#. module: purchase_requisition
+#: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
+msgid ""
+"A Call for Tenders is a procedure for generating competing offers from\n"
+"            different bidders. In the call for tenders, you can record the\n"
+"            products you need to buy and generate the creation of RfQs to\n"
+"            vendors. Once the tenders have been registered, you can review and\n"
+"            compare them and you can validate some and cancel others."
+msgstr "Тендер - це процедура вибору постачальника з декількох конкурентних пропозицій.\nВ тендерних закупівлях ви можете додавати товари, які необхідно купити та згенерувати запити комерційної пропозиції декільком постачальникам.\nКоли пропозиції будуть отримані, ви можете переглянути їх  і порівняти. Також можете прийняти одні та скасувати інші пропозиції."
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction
+msgid "Action Needed"
+msgstr "Необхідна дія"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_account_analytic_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_account_analytic_id
+msgid "Analytic Account"
+msgstr "Аналітичний рахунок"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Approved by Vendor"
+msgstr "Затверджено постачальником."
+
+#. module: purchase_requisition
+#: model:ir.actions.act_window,name:purchase_requisition.action_bid_line_qty
+msgid "Bid Line Qty"
+msgstr "К-сть у рядку пропозиції"
+
+#. module: purchase_requisition
+#: selection:purchase.requisition,state:0
+msgid "Bid Selection"
+msgstr "Вибір пропозиції"
+
+#. module: purchase_requisition
+#: model:ir.actions.report.xml,name:purchase_requisition.action_report_purchase_requisitions
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_requisition_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_requisition_id
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_tree
+msgid "Call for Tenders"
+msgstr "Тендери"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_name
+msgid "Call for Tenders Reference"
+msgstr "Посилання тендера"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Call for Tenders in negotiation"
+msgstr "Тендери на узгодженні"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Call for Tenders where tenders are closed"
+msgstr "Закриті тендери"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_bid_line_qty
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_partner
+msgid "Cancel"
+msgstr "Скасувати"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Cancel Call"
+msgstr "Скасувати тендер"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_tree_tender
+msgid "Cancel Choice"
+msgstr "Скасувати вибір"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Cancel Purchase Order"
+msgstr "Скасувати замовлення на купівлю"
+
+#. module: purchase_requisition
+#: selection:purchase.requisition,state:0
+msgid "Cancelled"
+msgstr "Скасовано"
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:302
+#, python-format
+msgid ""
+"Cancelled by the call for tenders associated to this request for quotation."
+msgstr "Скасовано у тендері пов’язаному з цим запитом комерційної пропозиції."
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:67
+#, python-format
+msgid "Cancelled by the tender associated to this quotation."
+msgstr "Скасовано у тендері пов’язаному з цією пропозицією."
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_bid_line_qty
+msgid "Change Bid line quantity"
+msgstr "Змінити кількість у пропозиції"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_tree_tender
+#: model:ir.ui.view,arch_db:purchase_requisition.view_bid_line_qty
+msgid "Change Quantity"
+msgstr "Змінити кількість"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_product_template_purchase_requisition
+msgid ""
+"Check this box to generate Call for Tenders instead of generating requests "
+"for quotation from procurement."
+msgstr "Поставте галочку, щоб створювати тендери замість звичайних запитів комерційної пропозиції під час забезпечення."
+
+#. module: purchase_requisition
+#: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_partner
+msgid "Choose Vendor"
+msgstr "Оберіть постачальника"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Choose product lines"
+msgstr "Оберіть рядки товару"
+
+#. module: purchase_requisition
+#: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
+msgid "Click to start a new Call for Tenders process."
+msgstr "Натисніть, щоб розпочати новий процес тендерних закупівель."
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Close Call for Tenders"
+msgstr "Закрити тендер."
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Closed Tenders"
+msgstr "Закриті тендери."
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_company_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_company_id
+msgid "Company"
+msgstr "Компанія"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Confirm Call"
+msgstr "Підтвердити тендер"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_tree_tender
+msgid "Confirm Order"
+msgstr "Підтвердити замовлення"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Confirm Purchase Order"
+msgstr "Підтвердити замовлення на купівлю"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+#: selection:purchase.requisition,state:0
+msgid "Confirmed"
+msgstr "Confirmed"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_partner
+msgid "Create Request for Quotation"
+msgstr "Створити запит комерційної пропозиції"
+
+#. module: purchase_requisition
+#: selection:product.template,purchase_requisition:0
+msgid "Create a draft purchase order"
+msgstr "Створити чернетку замовлення на купівлю"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_bid_line_qty_create_uid
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_uid
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_create_uid
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner_create_uid
+msgid "Created by"
+msgstr "Створив"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_bid_line_qty_create_date
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_date
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_create_date
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner_create_date
+msgid "Created on"
+msgstr "Дата створення"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_last_post
+msgid "Date of the last message posted on the record."
+msgstr "Дата останнього повідомлення по запису."
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:22
+#, python-format
+msgid "Define product(s) you want to include in the call for tenders."
+msgstr "Вкажіть товар(и), які ви хочете включити в тендер."
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_description
+msgid "Description"
+msgstr "Опис"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_bid_line_qty_display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner_display_name
+msgid "Display Name"
+msgstr "Показати ім'я"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Done"
+msgstr "Done"
+
+#. module: purchase_requisition
+#: selection:purchase.requisition,state:0
+msgid "Draft"
+msgstr "Чорновий"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "End Month"
+msgstr "Кінець місяця"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_follower_ids
+msgid "Followers"
+msgstr "Підписники"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Підписники (Канали)"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Підписники (Партнери)"
+
+#. module: purchase_requisition
+#. openerp-web
+#: code:addons/purchase_requisition/static/src/xml/purchase_requisition.xml:5
+#, python-format
+msgid "Generate PO"
+msgstr "Згенерувати ЗНК"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Group By"
+msgstr "Групувати за"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_bid_line_qty_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner_id
+msgid "ID"
+msgstr "ID"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_unread
+msgid "If checked new messages require your attention."
+msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_is_follower
+msgid "Is Follower"
+msgstr "Стежить"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_last_post
+msgid "Last Message Date"
+msgstr "Дата останнього повідомлення"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_bid_line_qty___last_update
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition___last_update
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line___last_update
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner___last_update
+msgid "Last Modified on"
+msgstr "Остання модифікація"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_bid_line_qty_write_uid
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_write_uid
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner_write_uid
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_write_uid
+msgid "Last Updated by"
+msgstr "Востаннє оновив"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_bid_line_qty_write_date
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_write_date
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner_write_date
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_write_date
+msgid "Last Updated on"
+msgstr "Останнє оновлення"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_procurement_order_requisition_id
+msgid "Latest Requisition"
+msgstr "Остання заявка"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_ids
+msgid "Messages"
+msgstr "Повідомлення"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_ids
+msgid "Messages and communication history"
+msgstr "Повідомлення та історія бесіди"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_multiple_rfq_per_supplier
+msgid "Multiple RFQ per vendor"
+msgstr "Декілька ЗКП на постачальника"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "Multiple Requisitions"
+msgstr "Декілька заявок"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "New"
+msgstr "Новий"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "New Call for Tenders"
+msgstr "Новий тендер"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Кількість дій"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Кількість повідомлень, які потебують дії"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_message_unread_counter
+msgid "Number of unread messages"
+msgstr "Кількість непрочитаних повідомлень"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Order Date"
+msgstr "Дата замовлення"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Ordering Date"
+msgstr "Дата замовлення"
+
+#. module: purchase_requisition
+#: selection:purchase.requisition,state:0
+msgid "PO Created"
+msgstr "ЗНК створено"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_picking_type_id
+msgid "Picking Type"
+msgstr "Тип відбору"
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_procurement_order
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_template_purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_procurement_id
+msgid "Procurement"
+msgstr "Забезпечення"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_product_id
+msgid "Product"
+msgstr "Товар"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Product Lines"
+msgstr "Рядки товару"
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_product_template
+msgid "Product Template"
+msgstr "Шаблон товару"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_product_uom_id
+msgid "Product Unit of Measure"
+msgstr "Одиниця виміру товару"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Products"
+msgstr "Товари"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_po_line_ids
+msgid "Products by vendor"
+msgstr "Товари по постачальникам"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_ids
+msgid "Products to Purchase"
+msgstr "Товари які необхідно купити"
+
+#. module: purchase_requisition
+#: selection:product.template,purchase_requisition:0
+msgid "Propose a call for tenders"
+msgstr "Створити тендер"
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_order
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Purchase Order"
+msgstr "Purchase Order"
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Рядок замовлення на купівлю"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_tree_tender
+msgid "Purchase Order Lines"
+msgstr "Рядки замовлення на купівлю"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_purchase_ids
+msgid "Purchase Orders"
+msgstr "Замовлення на купівлю"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
+msgid "Purchase Orders with requisition"
+msgstr "Замовлення по тендеру"
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_requisition
+msgid "Purchase Requisition"
+msgstr "Пошук пропозицій"
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
+msgid "Purchase Requisition Line"
+msgstr "Рядок пошуку пропозицій"
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_requisition_partner
+msgid "Purchase Requisition Partner"
+msgstr "Партнет у тендері"
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:431
+#, python-format
+msgid "Purchase Requisition created"
+msgstr "Тендер створено"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "Purchase Requisitions (exclusive)"
+msgstr "Тендери (виключно)"
+
+#. module: purchase_requisition
+#: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
+#: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
+msgid "Purchase Tenders"
+msgstr "Тендери"
+
+#. module: purchase_requisition
+#: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
+msgid "Purchase orders"
+msgstr "Замовлення на купівлю"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_bid_line_qty_qty
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_product_qty
+#: model:ir.ui.view,arch_db:purchase_requisition.view_bid_line_qty
+msgid "Quantity"
+msgstr "Кількість"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_line_quantity_tendered
+msgid "Quantity Tendered"
+msgstr "Кількість по тендеру"
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:201
+#, python-format
+msgid "RFQ created"
+msgstr "ЗКП створено"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "RFQs/Bids"
+msgstr "ЗКП/Пропозиції"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Reference"
+msgstr "Посилання"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Request a Quotation"
+msgstr "Зробити запит пропозиції"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Requests for Quotation"
+msgstr "Запити комерційної пропозиції"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+msgid "Requests for Quotation Details"
+msgstr "Деталі запиту комерційної пропозиції"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
+msgid "Requisition"
+msgstr "Тендер"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Reset to Draft"
+msgstr "Зробити чернеткою"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_user_id
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Responsible"
+msgstr "Відповідальний"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_schedule_date
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_schedule_date
+msgid "Scheduled Date"
+msgstr "Запланована дата"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_ordering_date
+msgid "Scheduled Ordering Date"
+msgstr "Запланована дата замовлення"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Search Call for Tenders"
+msgstr "Пошук тендерів"
+
+#. module: purchase_requisition
+#: selection:purchase.requisition,exclusive:0
+msgid "Select multiple RFQ"
+msgstr "Вибрати декілька ЗКП"
+
+#. module: purchase_requisition
+#: selection:purchase.requisition,exclusive:0
+msgid "Select only one RFQ (exclusive)"
+msgstr "Вибрати тільки один ЗКП (виключно)"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_exclusive
+msgid ""
+"Select only one RFQ (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\n"
+"Select multiple RFQ:  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"
+msgstr "Вибрати тільки один ЗКП (виключно): При підтвердженні замовлення на купівлю інші замовлення скасовуються.\nВибрати декілька ЗКП: Дозволяє мати декілька замовлень на придбання. При підтвердженні замовлення інші не скасовуються."
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Send RFQ by Email"
+msgstr "Відправити ЗКП по пошті"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Source"
+msgstr "Звідки"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_origin
+msgid "Source Document"
+msgstr "Початковий документ"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_state
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Status"
+msgstr "Статус"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_order_line_quantity_tendered
+msgid ""
+"Technical field for not loosing the initial information about the quantity "
+"proposed in the tender"
+msgstr "Технічне поле для зберігання початкової кількості запропонованої у пропозиції по тендеру."
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_date_end
+msgid "Tender Closing Deadline"
+msgstr "Кінцевий термін дії тендеру"
+
+#. module: purchase_requisition
+#: model:ir.actions.act_window,name:purchase_requisition.purchase_line_tree
+msgid "Tender Lines"
+msgstr "Рядки тендера"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_exclusive
+msgid "Tender Selection Type"
+msgstr "Тип вибору переможця"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "Terms and Conditions"
+msgstr "Терміни та умови"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_schedule_date
+msgid ""
+"The expected and scheduled delivery date where all the products are received"
+msgstr "Очікувана та запланована дата доставки всіх товарів."
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Unassigned"
+msgstr "Непризначено"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "Unassigned  Requisition"
+msgstr "Непризначений тендер"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_unread
+msgid "Unread Messages"
+msgstr "Непрочитані повідомлення"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Кількість непрочитаних повідомлень"
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_tree_tender
+msgid "Vendor"
+msgstr "Постачальник"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_partner_partner_ids
+msgid "Vendors"
+msgstr "Постачальники"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_warehouse_id
+msgid "Warehouse"
+msgstr "Warehouse"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_website_message_ids
+msgid "Website Messages"
+msgstr "Повідомлення з веб-сайту"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_website_message_ids
+msgid "Website communication history"
+msgstr "Історія бесіди на веб-сайті"
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:72
+#, python-format
+msgid "You can not confirm call because there is no product line."
+msgstr "Ви не можете підтвердити тендер оскільки від не містить жодного товару."
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:249
+#, python-format
+msgid "You have already generate the purchase order(s)."
+msgstr "Ви вже згенерували замовлення на придбання."
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:198
+#, python-format
+msgid ""
+"You have already one %s purchase order for this partner, you must cancel "
+"this purchase order to create a new quotation."
+msgstr "Уже існує одне замовлення на купівлю %s для цього партнера, ви повинні скасувати це замовлення, щоб створити нове."
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:258
+#, python-format
+msgid "You have no line selected for buying."
+msgstr "Не обрано жодного рядка для купівлі."
+
+#. module: purchase_requisition
+#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+msgid "e.g. PO0025"
+msgstr "напр. ЗНК0025"

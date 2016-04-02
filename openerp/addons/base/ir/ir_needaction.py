@@ -1,28 +1,10 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2009-Today OpenERP SA (<http://www.openerp.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv
+from odoo import api, models
 
 
-class ir_needaction_mixin(osv.AbstractModel):
+class IrNeedactionMixin(models.AbstractModel):
     """Mixin class for objects using the need action feature.
 
     Need action feature can be used by models that have to be able to
@@ -38,7 +20,6 @@ class ir_needaction_mixin(osv.AbstractModel):
     This class also offers several global services:
     - ``_needaction_count``: returns the number of actions uid has to perform
     """
-
     _name = 'ir.needaction_mixin'
     _needaction = True
 
@@ -46,7 +27,8 @@ class ir_needaction_mixin(osv.AbstractModel):
     # Addons API
     #------------------------------------------------------
 
-    def _needaction_domain_get(self, cr, uid, context=None):
+    @api.model
+    def _needaction_domain_get(self):
         """ Returns the domain to filter records that require an action
             :return: domain or False is no action
         """
@@ -56,10 +38,11 @@ class ir_needaction_mixin(osv.AbstractModel):
     # "Need action" API
     #------------------------------------------------------
 
-    def _needaction_count(self, cr, uid, domain=None, context=None):
+    @api.model
+    def _needaction_count(self, domain=None):
         """ Get the number of actions uid has to perform. """
-        dom = self._needaction_domain_get(cr, uid, context=context)
+        dom = self._needaction_domain_get()
         if not dom:
             return 0
-        res = self.search(cr, uid, (domain or []) + dom, limit=100, order='id DESC', context=context)
+        res = self.search((domain or []) + dom, limit=100, order='id DESC')
         return len(res)

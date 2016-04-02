@@ -1,43 +1,58 @@
-# Thai translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_mrp
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-12-12 11:19+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Thai <th@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2016-03-10 04:43+0000\n"
+"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
+"Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:28+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_mrp
+#: model:ir.model.fields,help:sale_mrp.field_mrp_production_sale_ref
+msgid "Indicate the Customer Reference from sales order."
+msgstr "แสดงลูกค้าโดยอ้างจากใบขาย"
+
+#. module: sale_mrp
+#: model:ir.model.fields,help:sale_mrp.field_mrp_production_sale_name
+msgid "Indicate the name of sales order."
+msgstr "แสดงชื่อจากใบขาย"
 
 #. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_mrp_production
 msgid "Manufacturing Order"
-msgstr ""
+msgstr "คำสั่งผลิต"
 
 #. module: sale_mrp
-#: help:mrp.production,sale_name:0
-msgid "Indicate the name of sales order."
-msgstr ""
+#: model:ir.model.fields,field_description:sale_mrp.field_sale_order_line_property_ids
+msgid "Properties"
+msgstr "คุณสมบัติ"
 
 #. module: sale_mrp
-#: help:mrp.production,sale_ref:0
-msgid "Indicate the Customer Reference from sales order."
-msgstr ""
-
-#. module: sale_mrp
-#: field:mrp.production,sale_ref:0
-msgid "Sale Reference"
-msgstr ""
-
-#. module: sale_mrp
-#: field:mrp.production,sale_name:0
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_production_sale_name
 msgid "Sale Name"
-msgstr ""
+msgstr "ชื่อเซลส์"
+
+#. module: sale_mrp
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_production_sale_ref
+msgid "Sale Reference"
+msgstr "อ้างถึงเซลส์"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "รายการคำสั่งขาย"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_stock_move
+msgid "Stock Move"
+msgstr "ย้ายสต็อก"

@@ -1,57 +1,22 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#    * base_iban
-#
+# * base_iban
+# 
+# Translators:
+# Kris Krnacs, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-03-16 00:07+0000\n"
-"Last-Translator: krnkris <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-10-21 09:52+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:00+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: base_iban
-#: constraint:res.partner.bank:0
-msgid ""
-"\n"
-"Please define BIC/Swift code on bank for bank type IBAN Account to make "
-"valid payments"
-msgstr ""
-"\n"
-"Kérem határozza meg a BIC/Swift códot az IBAN bankszámla típushoz az "
-"érvényes fizetésekhez"
-
-#. module: base_iban
-#: code:addons/base_iban/base_iban.py:141
-#, python-format
-msgid "This IBAN does not pass the validation check, please verify it"
-msgstr "Ez az IBAN nem ment át az ellenőrzése, kérjem ellenőrizni"
-
-#. module: base_iban
-#: model:res.partner.bank.type,format_layout:base_iban.bank_iban
-msgid "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
-msgstr "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
-
-#. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
-msgid "bank_bic"
-msgstr "bank_bic"
-
-#. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
-msgid "zip"
-msgstr "Irányítószám"
-
-#. module: base_iban
-#: help:res.partner.bank,iban:0
-msgid "International Bank Account Number"
-msgstr "Nemzetközi bankszámlaszám"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
@@ -59,66 +24,33 @@ msgid "Bank Accounts"
 msgstr "Bankszámlák"
 
 #. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_country_field
-msgid "country_id"
-msgstr "country_id"
+#: code:addons/base_iban/base_iban.py:57
+#, python-format
+msgid "Cannot compute the BBAN because the account number is not an IBAN."
+msgstr "BBAN kiszámíthatatlan, mert  a számlaszám nem IBAN."
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:138
+#: code:addons/base_iban/base_iban.py:26
+#, python-format
+msgid "No IBAN !"
+msgstr "Nem IBAN !"
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:34
 #, python-format
 msgid ""
-"The IBAN does not seem to be correct. You should have entered something like "
-"this %s"
-msgstr "Az IBAN nem tűnik megfelelőnek. Valami ilyennek kellene lennie %s"
+"The IBAN does not seem to be correct. You should have entered something like this %s\n"
+"Where B = National bank code, S = Branch code, C = Account No, k = Check digit"
+msgstr "Az IBAN nem tűnik megfelelőnek. Valami ilyennek kellene lennie %s\nAhol B = Nemzetköz bank kód, S = Fiók kód, C = Számla sz., k = Ellenőrző számjegy"
 
 #. module: base_iban
-#: field:res.partner.bank,iban:0
-msgid "IBAN"
-msgstr "IBAN"
-
-#. module: base_iban
-#: code:addons/base_iban/base_iban.py:142
+#: code:addons/base_iban/base_iban.py:30
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
 msgstr "Az IBAN érvényes, az ország kóddal kell kezdődnie"
 
 #. module: base_iban
-#: model:res.partner.bank.type,name:base_iban.bank_iban
-msgid "IBAN Account"
-msgstr "IBAN szám"
-
-#~ msgid "Create IBAN bank accounts"
-#~ msgstr "IBAN bankszámlák létrehozása"
-
-#~ msgid "acc_number"
-#~ msgstr "acc_number"
-
-#~ msgid ""
-#~ "\n"
-#~ "This module installs the base for IBAN (International Bank Account Number) "
-#~ "bank accounts and checks for its validity.\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Ez a modul lehetővé teszi a nemzetközi bankszámlaszám (IBAN) kezelését és "
-#~ "ellenőrzi annak érvényességét.\n"
-#~ "\n"
-#~ "    "
-
+#: code:addons/base_iban/base_iban.py:40
 #, python-format
-#~ msgid "The IBAN is invalid, It should begin with the country code"
-#~ msgstr "Az IBAN érvénytelen, az országkóddal kell kezdődnie."
-
-#, python-format
-#~ msgid ""
-#~ "The IBAN does not seems to be correct. You should have entered something "
-#~ "like this %s"
-#~ msgstr ""
-#~ "Az IBAN nem tűnik helyesnek. Valami ehhez hasonlót kellett volna megadnia: %s"
-
-#~ msgid "bic"
-#~ msgstr "BIC (SWIFT) kód"
-
-#~ msgid "iban"
-#~ msgstr "IBAN"
+msgid "This IBAN does not pass the validation check, please verify it."
+msgstr "Ez az IBAN nem ment át az ellenőrzésen, kérjem ellenőrizni."

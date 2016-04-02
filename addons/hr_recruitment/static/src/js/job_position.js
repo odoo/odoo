@@ -1,14 +1,16 @@
-openerp.hr_recruitment = function (openerp) {
-  "use strict";
+odoo.define('hr_recruitment.hr_recruitment', function(require) {
+"use strict";
 
-  openerp.web_kanban.KanbanRecord.include({
-      on_card_clicked: function() {
-          if (this.view.dataset.model === 'hr.job') {
-              this.$('.oe_applications a').first().click();
-          } else {
-              this._super.apply(this, arguments);
-          }
-      },
-  });
+var KanbanRecord = require('web_kanban.Record');
 
-};
+KanbanRecord.include({
+    on_card_clicked: function() {
+        if (this.model === 'hr.job') {
+            this.$('.oe_applications a').first().click();
+        } else {
+            this._super.apply(this, arguments);
+        }
+    },
+});
+
+});

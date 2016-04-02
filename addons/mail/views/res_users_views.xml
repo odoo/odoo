@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Update Preferences form !-->
+        <record id="view_users_form_simple_modif_mail" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.mail</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+            <field name="arch" type="xml">
+            <data>
+                <field name="email" position="before">
+                    <field name="notify_email" widget="radio" readonly="0"/>
+                </field>
+            </data>
+            </field>
+        </record>
+
+        <!-- Update user form !-->
+        <record id="view_users_form_mail" model="ir.ui.view">
+            <field name="name">res.users.form.mail</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="signature" position="before">
+                        <field name="notify_email" widget="radio"/>
+                    </field>
+                    <field name="signature" position="before">
+                        <label for="alias_id" string="Messaging Alias" class="oe_read_only"
+                                attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                        <field name="alias_id" class="oe_read_only" required="0" nolabel="1"
+                                attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                        <label for="alias_name" string="Messaging Alias" class="oe_edit_only"
+                                attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                        <div class="oe_edit_only" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                            <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                        </div>
+                        <field name="alias_contact" string="Alias Accepts Emails From"
+                                attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                    </field>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</openerp>

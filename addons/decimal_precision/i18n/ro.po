@@ -1,26 +1,33 @@
-# Romanian translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * decimal_precision
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-01-18 17:27+0000\n"
-"Last-Translator: Mihai Satmarean <Unknown>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-09-07 18:04+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:29+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: decimal_precision
-#: field:decimal.precision,digits:0
-msgid "Digits"
-msgstr "Cifre"
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_create_uid
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_create_uid
+msgid "Created by"
+msgstr "Creat de"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_create_date
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_create_date
+msgid "Created on"
+msgstr "Creat în"
 
 #. module: decimal_precision
 #: model:ir.actions.act_window,name:decimal_precision.action_decimal_precision_form
@@ -29,39 +36,74 @@ msgid "Decimal Accuracy"
 msgstr "Exactitate Zecimala"
 
 #. module: decimal_precision
-#: field:decimal.precision,name:0
-msgid "Usage"
-msgstr "Utilizare"
+#: model:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_form
+#: model:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_tree
+msgid "Decimal Precision"
+msgstr "Precizie Zecimala"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_digits
+msgid "Digits"
+msgstr "Cifre"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_display_name
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_id
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_id
+msgid "ID"
+msgstr "ID"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision___last_update
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test___last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_write_uid
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_write_uid
+msgid "Last Updated by"
+msgstr "Ultima actualizare făcută de"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_write_date
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_write_date
+msgid "Last Updated on"
+msgstr "Ultima actualizare în"
 
 #. module: decimal_precision
 #: sql_constraint:decimal.precision:0
 msgid "Only one value can be defined for each given usage!"
-msgstr ""
-"Doar o singura valoare poate fi definita pentru fiecare utilizare data!"
+msgstr "Doar o singura valoare poate fi definita pentru fiecare utilizare data!"
 
 #. module: decimal_precision
-#: view:decimal.precision:0
-msgid "Decimal Precision"
-msgstr "Precizie Zecimala"
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_name
+msgid "Usage"
+msgstr "Utilizare"
 
 #. module: decimal_precision
 #: model:ir.model,name:decimal_precision.model_decimal_precision
 msgid "decimal.precision"
 msgstr "precizie.zecimala"
 
-#~ msgid "Decimal Precision Configuration"
-#~ msgstr "Configurarea Preciziei Zecimale"
+#. module: decimal_precision
+#: model:ir.model,name:decimal_precision.model_decimal_precision_test
+msgid "decimal.precision.test"
+msgstr ""
 
-#~ msgid ""
-#~ "\n"
-#~ "This module allows to configure the price accuracy you need for different "
-#~ "kind\n"
-#~ "of usage: accounting, sales, purchases, ...\n"
-#~ "\n"
-#~ "The decimal precision is configured per company.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Acest modul permite configurarea exactitatii preţului de care aveţi nevoie "
-#~ "pentru diferite tipuri\n"
-#~ "de utilizare: contabilitate, vânzări, achiziţii, ...\n"
-#~ "Precizia zecimală este configurată pentru fiecare companie.\n"
+#. module: decimal_precision
+#: model:ir.model,name:decimal_precision.model_ir_qweb_field_float
+msgid "ir.qweb.field.float"
+msgstr ""
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float_2
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float_4
+msgid "unknown"
+msgstr "necunoscut(a)"

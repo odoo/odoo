@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[(4,ref('base.group_sale_salesman'))]"/>
+        </record>
+
+        <record id="team_sales_department" model="crm.team">
+            <field name="member_ids" eval="[(4, ref('base.user_demo'))]"/>
+        </record>
+        <record model="crm.team" id="crm_team_1">
+            <field name="name">Indirect Sales</field>
+        </record>
+    </data>
+</odoo>

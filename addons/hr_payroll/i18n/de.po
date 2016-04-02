@@ -1,1278 +1,152 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* hr_payroll
-#
+# * hr_payroll
+# 
+# Translators:
+# Ralf Hilgenstock <rh@dialoge.info>, 2015-2016
+# Wolfgang Taferner, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-10 17:42+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
-"Language-Team: German <de@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-01 06:26+0000\n"
+"PO-Revision-Date: 2016-03-13 11:16+0000\n"
+"Last-Translator: Wolfgang Taferner\n"
+"Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:26+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_payroll
-#: field:hr.payslip.line,condition_select:0
-#: field:hr.salary.rule,condition_select:0
-msgid "Condition Based on"
-msgstr "Bedingung basiert auf"
-
-#. module: hr_payroll
-#: selection:hr.contract,schedule_pay:0
-msgid "Monthly"
-msgstr "Monatlich"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,rate:0
-msgid "Rate (%)"
-msgstr "Anteil (%)"
-
-#. module: hr_payroll
-#: view:hr.payslip.line:0
-#: model:ir.model,name:hr_payroll.model_hr_salary_rule_category
-#: report:paylip.details:0
-msgid "Salary Rule Category"
-msgstr "Lohn Regel Kategorie"
-
-#. module: hr_payroll
-#: field:hr.payslip.worked_days,number_of_days:0
-msgid "Number of Days"
-msgstr "Anzahl Tage"
-
-#. module: hr_payroll
-#: help:hr.salary.rule.category,parent_id:0
-msgid ""
-"Linking a salary category to its parent is used only for the reporting "
-"purpose."
-msgstr ""
-"Das Verlinken einer Lohnkategorie mit ihrer übergeordneten Kategorie wird "
-"nur im Berichtswesen verwendet."
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-#: view:hr.payslip.line:0
-#: view:hr.salary.rule:0
-msgid "Group By..."
-msgstr "Gruppierung..."
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "States"
-msgstr "Status Abrechnung"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,input_ids:0
-#: view:hr.salary.rule:0
-#: field:hr.salary.rule,input_ids:0
-msgid "Inputs"
-msgstr "Eingaben"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,parent_rule_id:0
-#: field:hr.salary.rule,parent_rule_id:0
-msgid "Parent Salary Rule"
-msgstr "Übergeordnete Lohn Rechenregel"
-
-#. module: hr_payroll
-#: view:hr.employee:0
-#: field:hr.employee,slip_ids:0
-#: view:hr.payslip:0
-#: view:hr.payslip.run:0
-#: field:hr.payslip.run,slip_ids:0
-#: model:ir.actions.act_window,name:hr_payroll.act_hr_employee_payslip_list
-msgid "Payslips"
-msgstr "Abrechnungen Mitarbeitervergütung"
-
-#. module: hr_payroll
-#: field:hr.payroll.structure,parent_id:0
-#: field:hr.salary.rule.category,parent_id:0
-msgid "Parent"
-msgstr "Übergeordnet"
-
-#. module: hr_payroll
-#: field:hr.contribution.register,company_id:0
-#: field:hr.payroll.structure,company_id:0
-#: field:hr.payslip,company_id:0
-#: field:hr.payslip.line,company_id:0
-#: field:hr.salary.rule,company_id:0
-#: field:hr.salary.rule.category,company_id:0
-msgid "Company"
-msgstr "Unternehmen"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Done Slip"
-msgstr "Erledigtes Lohnkonto"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-#: view:hr.payslip.run:0
-msgid "Set to Draft"
-msgstr "Zurücksetzen"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_salary_rule
-msgid "hr.salary.rule"
-msgstr "hr.salary.rule"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-#: view:hr.payslip.run:0
-msgid "to"
-msgstr "an"
-
-#. module: hr_payroll
-#: field:hr.payslip,payslip_run_id:0
-#: view:hr.payslip.run:0
-#: model:ir.model,name:hr_payroll.model_hr_payslip_run
-msgid "Payslip Batches"
-msgstr "Lohnzettel Stapel"
-
-#. module: hr_payroll
-#: view:hr.payslip.employees:0
-msgid ""
-"This wizard will generate payslips for all selected employee(s) based on the "
-"dates and credit note specified on Payslips Run."
-msgstr ""
-"Dieser Assistent erzeugt das Lohnkonto für alle für diesen Lauf ausgewählten "
-"Mitarbeiter aufgrund von Datum und Gutschrift"
-
-#. module: hr_payroll
-#: report:contribution.register.lines:0
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Quantity/Rate"
-msgstr "Menge/Satz"
-
-#. module: hr_payroll
-#: view:hr.salary.rule:0
-msgid "Children Definition"
-msgstr ""
-
-#. module: hr_payroll
-#: field:hr.payslip.input,payslip_id:0
-#: field:hr.payslip.line,slip_id:0
-#: field:hr.payslip.worked_days,payslip_id:0
-#: model:ir.model,name:hr_payroll.model_hr_payslip
-#: report:payslip:0
-msgid "Pay Slip"
-msgstr "Vergütungsabrechnung"
-
-#. module: hr_payroll
-#: view:hr.payslip.employees:0
-msgid "Generate"
-msgstr "Erzeugen"
-
-#. module: hr_payroll
-#: help:hr.payslip.line,amount_percentage_base:0
-#: help:hr.salary.rule,amount_percentage_base:0
-msgid "result will be affected to a variable"
-msgstr "Das Ergebnis wird einer Variablen zugewiesen"
-
-#. module: hr_payroll
-#: report:contribution.register.lines:0
-msgid "Total:"
-msgstr "Summe:"
-
-#. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
-msgid "All Children Rules"
-msgstr "Füge abhängige Rechenregeln hinzu"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-#: view:hr.salary.rule:0
-msgid "Input Data"
-msgstr "Eingabedaten"
-
-#. module: hr_payroll
-#: constraint:hr.payslip:0
-msgid "Payslip 'Date From' must be before 'Date To'."
-msgstr "Lohnzettel Datum von muss vor Datum bis liegen."
-
-#. module: hr_payroll
-#: view:hr.salary.rule.category:0
-msgid "Notes"
-msgstr "Bemerkungen"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:871
-#: code:addons/hr_payroll/hr_payroll.py:876
-#: code:addons/hr_payroll/hr_payroll.py:882
-#: code:addons/hr_payroll/hr_payroll.py:899
-#: code:addons/hr_payroll/hr_payroll.py:905
+#: code:addons/hr_payroll/hr_payroll.py:59
 #, python-format
-msgid "Error!"
-msgstr "Fehler !"
+msgid "%s (copy)"
+msgstr "%s (copy)"
 
 #. module: hr_payroll
-#: report:contribution.register.lines:0
-#: field:hr.payslip.input,amount:0
-#: field:hr.payslip.line,amount:0
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Amount"
-msgstr "Betrag"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-#: view:hr.payslip.line:0
-#: model:ir.model,name:hr_payroll.model_hr_payslip_line
-msgid "Payslip Line"
-msgstr "Vergütungsposition"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Other Information"
-msgstr "Weitere Informationen"
-
-#. module: hr_payroll
-#: field:hr.config.settings,module_hr_payroll_account:0
-msgid "Link your payroll to accounting system"
-msgstr "Verbinden Sie Ihre Personalabrechnung mit der Fibu"
-
-#. module: hr_payroll
-#: help:hr.payslip.line,amount_select:0
-#: help:hr.salary.rule,amount_select:0
-msgid "The computation method for the rule amount."
-msgstr "Die Berechnungsmethode den Betrag dieser Rechenregel"
-
-#. module: hr_payroll
-#: view:payslip.lines.contribution.register:0
-msgid "Contribution Register's Payslip Lines"
-msgstr "Beitragskonto Lohnkonto Zeilen"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:52
-#, python-format
-msgid "Warning !"
-msgstr "Warnung !"
-
-#. module: hr_payroll
-#: report:paylip.details:0
-msgid "Details by Salary Rule Category:"
-msgstr "Details je Rechenregel Kategorie"
-
-#. module: hr_payroll
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Note"
-msgstr "Notiz"
-
-#. module: hr_payroll
-#: field:hr.payroll.structure,code:0
-#: field:hr.payslip,number:0
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Reference"
-msgstr "Referenz"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Draft Slip"
-msgstr "Lohnkont Entwurf"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:432
-#, python-format
-msgid "Normal Working Days paid at 100%"
-msgstr "Normale Arbeitstage zu 100% bezahlt"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,condition_range_max:0
-#: field:hr.salary.rule,condition_range_max:0
-msgid "Maximum Range"
-msgstr "Maximaler Bereich"
-
-#. module: hr_payroll
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Identification No"
-msgstr "Identifikationsnummer"
-
-#. module: hr_payroll
-#: field:hr.payslip,struct_id:0
-msgid "Structure"
-msgstr "Struktur"
-
-#. module: hr_payroll
-#: field:hr.contribution.register,partner_id:0
-msgid "Partner"
-msgstr "Partner"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Total Working Days"
-msgstr "Gesamt Arbeitstage"
-
-#. module: hr_payroll
-#: help:hr.payslip.line,code:0
-#: help:hr.salary.rule,code:0
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_state
 msgid ""
-"The code of salary rules can be used as reference in computation of other "
-"rules. In that case, it is case sensitive."
-msgstr ""
-"Auf die Lohnberechnungsformel kann von anderen Formeln Bezug genommen "
-"werden. In diesem Fall wird Groß- / Kleinschreibung unterschieden."
+"* When the payslip is created the status is 'Draft'.            \n"
+"* If the payslip is under verification, the status is 'Waiting'.             \n"
+"* If the payslip is confirmed then status is set to 'Done'.            \n"
+"* When user cancel payslip the status is 'Rejected'."
+msgstr "* Durch Erstellung einer Lohnabrechnung ist der Status zunächst 'Entwurf'.\n* Während der Prüfung, ist der Status zwischenzeitlich 'Wiedervorlage'.\n* Wenn die Lohnabrechnung genehmigt wurde, ist der Status 'Erledigt'.\n* Wenn die Lohnabrechnung abgebrochen wird ist der Status 'Verworfen'."
 
 #. module: hr_payroll
-#: selection:hr.contract,schedule_pay:0
-msgid "Weekly"
-msgstr "Wöchentlich"
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Address</strong>"
+msgstr "<strong>Adresse</strong>"
 
 #. module: hr_payroll
-#: view:hr.payslip:0
-msgid "From"
-msgstr "Von"
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Authorized signature</strong>"
+msgstr "<strong>Bestätigte Unterschrift</strong>"
 
 #. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Confirm"
-msgstr "Bestätigen"
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Bank Account</strong>"
+msgstr "<strong>Bankverbindung</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "<strong>Date From:</strong>"
+msgstr "<strong>Ab Datum:</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Date From</strong>"
+msgstr "<strong>Ab Datum</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "<strong>Date To:</strong>"
+msgstr "<strong>Bis Datum:</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Date To</strong>"
+msgstr "<strong>Bis Datum:</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Designation</strong>"
+msgstr "<strong>Bezeichnung</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Email</strong>"
+msgstr "<strong>E-Mail</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Identification No</strong>"
+msgstr "<strong>Identifikationsnummer</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Name</strong>"
+msgstr "<strong>Name</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Reference</strong>"
+msgstr "<strong>Referenz</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "<strong>Register Name:</strong>"
+msgstr "<strong>Abrechnungsstelle:</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "<strong>Total</strong>"
+msgstr "<strong>Total</strong>"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a new contribution register.\n"
-"              </p><p>\n"
-"                A contribution register is a third party involved in the "
-"salary\n"
-"                payment of the employees. It can be the social security, "
-"the\n"
-"                estate or anyone that collect or inject money on payslips.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klicken Sie zur Hinterlegung einer neuen Sozialabgabe.\n"
-"              </p><p>\n"
-"                Durch Sozialabgaben sind Dritte mit in die Abrechnung von "
-"Gehalt und sonstigen Bezügen\n"
-"                einzubeziehen. Es kann sich um eine Rentenversicherung, "
-"Krankenversicherung, öffentliche Einrichtung\n"
-"                oder Kirche sein, die entsprechende finanzielle Abgaben in "
-"die Gehaltsabrechnungen mit einbeziehen \n"
-"                möchte. \n"
-"              </p>\n"
-"            "
+"A contribution register is a third party involved in the salary\n"
+"                payment of the employees. It can be the social security, the\n"
+"                estate or anyone that collect or inject money on payslips."
+msgstr "Eine Abrechnungsstelle ist eine andere Institution, die in die\nLohnabwicklung einbezogen ist. Das sind Sozialversicherungsträger,\nFinanzämter und weitere, an die Zahlungen erfolgen oder von\ndenen Zahlungen empfangen werden. "
 
 #. module: hr_payroll
-#: help:hr.payslip.line,condition_range_max:0
-#: help:hr.salary.rule,condition_range_max:0
-msgid "The maximum amount, applied for this rule."
-msgstr "Der maximale Betrag für diese Rechenregel"
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Accounting"
+msgstr "Finanzen"
 
 #. module: hr_payroll
-#: help:hr.payslip.line,condition_python:0
-#: help:hr.salary.rule,condition_python:0
-msgid ""
-"Applied this rule for calculation if condition is true. You can specify "
-"condition like basic > 1000."
-msgstr ""
-"Diese Rechenregel wird angewandt, wenn der die Bedingung erfüllt ist. zB "
-"basic > 1000"
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Accounting Information"
+msgstr "Finanzbuchhaltung Info"
 
 #. module: hr_payroll
-#: report:contribution.register.lines:0
-#: report:paylip.details:0
-msgid "Register Name"
-msgstr "Beitragskonto"
-
-#. module: hr_payroll
-#: view:hr.payslip.employees:0
-msgid "Payslips by Employees"
-msgstr "Lohnkonten je Mitarbeiter"
-
-#. module: hr_payroll
-#: selection:hr.contract,schedule_pay:0
-msgid "Quarterly"
-msgstr "Vierteljährlich"
-
-#. module: hr_payroll
-#: selection:hr.payslip,state:0
-msgid "Waiting"
-msgstr "Wartend"
-
-#. module: hr_payroll
-#: help:hr.salary.rule,quantity:0
-msgid ""
-"It is used in computation for percentage and fixed amount.For e.g. A rule "
-"for Meal Voucher having fixed amount of 1€ per worked day can have its "
-"quantity defined in expression like worked_days.WORK100.number_of_days."
-msgstr ""
-"Wird für Prozent und Absolutwert verwendet. zB. Eine Regel für Essensbons "
-"mit einem fixen Betrag von 1€ je Arbeitstag kann definiert werden als: "
-"worked_days.WORK100.number_of_days."
-
-#. module: hr_payroll
-#: view:hr.salary.rule:0
-msgid "Search Salary Rule"
-msgstr "Suche Lohn Rechenregel"
-
-#. module: hr_payroll
-#: field:hr.payslip,employee_id:0
-#: field:hr.payslip.line,employee_id:0
-#: model:ir.model,name:hr_payroll.model_hr_employee
-msgid "Employee"
-msgstr "Mitarbeiter"
-
-#. module: hr_payroll
-#: selection:hr.contract,schedule_pay:0
-msgid "Semi-annually"
-msgstr "Halbjährlich"
-
-#. module: hr_payroll
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Email"
-msgstr "EMail"
-
-#. module: hr_payroll
-#: view:hr.payslip.run:0
-msgid "Search Payslip Batches"
-msgstr "Suche Lohnkonten Stapel"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,amount_percentage_base:0
-#: field:hr.salary.rule,amount_percentage_base:0
-msgid "Percentage based on"
-msgstr "Prozent basierend auf"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:90
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (Kopie)"
-
-#. module: hr_payroll
-#: help:hr.config.settings,module_hr_payroll_account:0
-msgid "Create journal entries from payslips"
-msgstr "Erstelle Buchungen durch Gehaltsabrechnung"
-
-#. module: hr_payroll
-#: field:hr.payslip,paid:0
-msgid "Made Payment Order ? "
-msgstr "Zahlungsauftrag erstellt? "
-
-#. module: hr_payroll
-#: report:contribution.register.lines:0
-msgid "PaySlip Lines by Contribution Register"
-msgstr "Lohnkontozeilen je BeitragskontoLoh"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-#: field:hr.payslip,line_ids:0
-#: view:hr.payslip.line:0
-#: model:ir.actions.act_window,name:hr_payroll.act_contribution_reg_payslip_lines
-msgid "Payslip Lines"
-msgstr "Lohnkonto Zeilen"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Miscellaneous"
-msgstr "Verschiedenes"
-
-#. module: hr_payroll
-#: selection:hr.payslip,state:0
-msgid "Rejected"
-msgstr "Abgelehnt"
-
-#. module: hr_payroll
-#: view:hr.payroll.structure:0
-#: field:hr.payroll.structure,rule_ids:0
-#: view:hr.salary.rule:0
-#: model:ir.actions.act_window,name:hr_payroll.action_salary_rule_form
-#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_salary_rule_form
-msgid "Salary Rules"
-msgstr "Lohnkonto Rechenregeln"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:341
-#, python-format
-msgid "Refund: "
-msgstr "Vergütung "
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
-msgid "PaySlip Lines by Contribution Registers"
-msgstr "Lohnkonto Zeilen je Beitragskonten"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-#: selection:hr.payslip,state:0
-#: view:hr.payslip.run:0
-msgid "Done"
-msgstr "Erledigt"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,appears_on_payslip:0
-#: field:hr.salary.rule,appears_on_payslip:0
-msgid "Appears on Payslip"
-msgstr "Scheint am Lohnkonto auf"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,amount_fix:0
-#: selection:hr.payslip.line,amount_select:0
-#: field:hr.salary.rule,amount_fix:0
-#: selection:hr.salary.rule,amount_select:0
-msgid "Fixed Amount"
-msgstr "Fester Betrag"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:370
-#, python-format
-msgid "Warning!"
-msgstr "Warnung !"
-
-#. module: hr_payroll
-#: help:hr.payslip.line,active:0
-#: help:hr.salary.rule,active:0
-msgid ""
-"If the active field is set to false, it will allow you to hide the salary "
-"rule without removing it."
-msgstr ""
-"Wenn das Aktiv-Feld deaktiviert wird, wird die Rechenregel verborgen ohne "
-"diese zu löschen"
-
-#. module: hr_payroll
-#: field:hr.payslip,state:0
-#: field:hr.payslip.run,state:0
-msgid "Status"
-msgstr "Status"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Worked Days & Inputs"
-msgstr "Gearbeitete Tage & Eingaben"
-
-#. module: hr_payroll
-#: field:hr.payslip,details_by_salary_rule_category:0
-msgid "Details by Salary Rule Category"
-msgstr "Details je Rechenregel Kategorie"
-
-#. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_payslip_lines_contribution_register
-msgid "PaySlip Lines"
-msgstr "Lohnkontenzeilen"
-
-#. module: hr_payroll
-#: help:hr.payslip.line,register_id:0
-#: help:hr.salary.rule,register_id:0
-msgid "Eventual third party involved in the salary payment of the employees."
-msgstr "Allfällige Fremde im Zusammenhang mit Lohnzahlungen an Mitarbeiter"
-
-#. module: hr_payroll
-#: field:hr.payslip.worked_days,number_of_hours:0
-msgid "Number of Hours"
-msgstr "Gesamtstunden"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "PaySlip Batch"
-msgstr "Lohnkonto Stapel"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,condition_range_min:0
-#: field:hr.salary.rule,condition_range_min:0
-msgid "Minimum Range"
-msgstr "Minimaler Bereich"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,child_ids:0
-#: field:hr.salary.rule,child_ids:0
-msgid "Child Salary Rule"
-msgstr "abhängige Rechenregel"
-
-#. module: hr_payroll
-#: report:contribution.register.lines:0
-#: field:hr.payslip,date_to:0
-#: field:hr.payslip.run,date_end:0
-#: report:paylip.details:0
-#: report:payslip:0
-#: field:payslip.lines.contribution.register,date_to:0
-msgid "Date To"
-msgstr "Datum bis"
-
-#. module: hr_payroll
-#: selection:hr.payslip.line,condition_select:0
-#: selection:hr.salary.rule,condition_select:0
-msgid "Range"
-msgstr "Bereich"
-
-#. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_tree
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_tree
-msgid "Salary Structures Hierarchy"
-msgstr "Lohn Struktur Hierarchie"
-
-#. module: hr_payroll
-#: help:hr.employee,total_wage:0
-msgid "Sum of all current contract's wage of employee."
-msgstr "Summe aller Vertragslöhne des Mitarbeiters"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Payslip"
-msgstr "Mitarbeiterabrechnung"
-
-#. module: hr_payroll
-#: field:hr.payslip,credit_note:0
-#: field:hr.payslip.run,credit_note:0
-msgid "Credit Note"
-msgstr "Gutschrift"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-#: model:ir.actions.act_window,name:hr_payroll.act_payslip_lines
-msgid "Payslip Computation Details"
-msgstr "Lohnkonto Berechnung Details"
-
-#. module: hr_payroll
-#: help:hr.payslip.line,appears_on_payslip:0
-#: help:hr.salary.rule,appears_on_payslip:0
-msgid "Used to display the salary rule on payslip."
-msgstr "Abrechnungsregel soll bei Gehaltsabrechnung mit angezeigt werden."
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_payslip_input
-msgid "Payslip Input"
-msgstr "Lohnkonto Eingaben"
-
-#. module: hr_payroll
-#: view:hr.salary.rule.category:0
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
-msgid "Salary Rule Categories"
-msgstr "Lohnkonto Rechenregeln"
-
-#. module: hr_payroll
-#: help:hr.payslip.input,contract_id:0
-#: help:hr.payslip.worked_days,contract_id:0
-msgid "The contract for which applied this input"
-msgstr "Der Arbeitsvertrag für den die Eingaben gelten"
-
-#. module: hr_payroll
-#: view:hr.salary.rule:0
-msgid "Computation"
-msgstr "Berechnung"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:899
-#, python-format
-msgid "Wrong range condition defined for salary rule %s (%s)."
-msgstr "Falsche Bedingungen für die Bandbreiten der Abrechnungsregel %s (%s)"
-
-#. module: hr_payroll
-#: help:hr.payslip.input,amount:0
-msgid ""
-"It is used in computation. For e.g. A rule for sales having 1% commission of "
-"basic salary for per product can defined in expression like result = "
-"inputs.SALEURO.amount * contract.wage*0.01."
-msgstr ""
-"Dieses Feld wird für Berechnungen verwendet.\r\n"
-"Eine Regel für 1% Verkaufskommision auf den Grundgehalt lautet zB: result = "
-"inputs.SALEURO.amount * contract.wage*0.01"
-
-#. module: hr_payroll
-#: view:hr.payslip.line:0
-#: field:hr.payslip.line,amount_select:0
-#: field:hr.salary.rule,amount_select:0
-msgid "Amount Type"
-msgstr "Berechnungsart"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,category_id:0
-#: view:hr.salary.rule:0
-#: field:hr.salary.rule,category_id:0
-msgid "Category"
-msgstr "Kategorie"
-
-#. module: hr_payroll
-#: view:hr.salary.rule:0
-msgid "Company Contribution"
-msgstr "Arbeitgeberanteile"
-
-#. module: hr_payroll
-#: help:hr.payslip.run,credit_note:0
-msgid ""
-"If its checked, indicates that all payslips generated from here are refund "
-"payslips."
-msgstr "Wenn markiert, dann sind alle hier erzeugten Lohnkonten Vergütungen."
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:876
-#, python-format
-msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
-msgstr ""
-"Falsche prozentuale Kalkulationsgrundlage oder Menge die für "
-"Gehaltsabrechnungsregel %s (%s) angewendet wird."
-
-#. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_list_form
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_view
-msgid "Salary Structures"
-msgstr "Lohnkonto Strukturen"
-
-#. module: hr_payroll
-#: view:hr.payslip.run:0
-msgid "Draft Payslip Batches"
-msgstr "Entwurf Lohnkonten Stapel"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-#: selection:hr.payslip,state:0
-#: view:hr.payslip.run:0
-#: selection:hr.payslip.run,state:0
-msgid "Draft"
-msgstr "Entwurf"
-
-#. module: hr_payroll
-#: report:contribution.register.lines:0
-#: field:hr.payslip,date_from:0
-#: field:hr.payslip.run,date_start:0
-#: report:paylip.details:0
-#: report:payslip:0
-#: field:payslip.lines.contribution.register,date_from:0
-msgid "Date From"
-msgstr "Datum von"
-
-#. module: hr_payroll
-#: view:hr.payslip.run:0
-msgid "Done Payslip Batches"
-msgstr "Erledigte Lohnkonten Stapel"
-
-#. module: hr_payroll
-#: report:paylip.details:0
-msgid "Payslip Lines by Contribution Register:"
-msgstr "Lohnkonto Zeilen je Beitragskonto"
-
-#. module: hr_payroll
-#: view:hr.salary.rule:0
-msgid "Conditions"
-msgstr "Bedingungen"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,amount_percentage:0
-#: selection:hr.payslip.line,amount_select:0
-#: field:hr.salary.rule,amount_percentage:0
-#: selection:hr.salary.rule,amount_select:0
-msgid "Percentage (%)"
-msgstr "Prozent (%)"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:871
-#, python-format
-msgid "Wrong quantity defined for salary rule %s (%s)."
-msgstr "Falsche Menge wurde definiert für diese Abrechnungsregel %s (%s)."
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Worked Day"
-msgstr "Arbeitstage"
-
-#. module: hr_payroll
-#: view:hr.payroll.structure:0
-msgid "Employee Function"
-msgstr "Mitarbeiter Funktion"
-
-#. module: hr_payroll
-#: model:ir.actions.report.xml,name:hr_payroll.payslip_report
-msgid "Employee PaySlip"
-msgstr "Mitarbeiterabrechnung"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,salary_rule_id:0
-msgid "Rule"
-msgstr "Regel"
-
-#. module: hr_payroll
-#: model:ir.actions.report.xml,name:hr_payroll.payslip_details_report
-msgid "PaySlip Details"
-msgstr "Lohnkonto Details"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Compute Sheet"
-msgstr "Berechnen"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,active:0
-#: field:hr.salary.rule,active:0
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_active
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_active
 msgid "Active"
 msgstr "Aktiv"
 
 #. module: hr_payroll
-#: view:hr.salary.rule:0
-msgid "Child Rules"
-msgstr "Abhängige Rechenregeln"
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Add an internal note..."
+msgstr "Interne Anmerkung hinzufügen ..."
 
 #. module: hr_payroll
-#: help:hr.payslip.line,condition_range_min:0
-#: help:hr.salary.rule,condition_range_min:0
-msgid "The minimum amount, applied for this rule."
-msgstr "Der Minimum Betrag für diese Rechenregel."
-
-#. module: hr_payroll
-#: selection:hr.payslip.line,condition_select:0
-#: selection:hr.salary.rule,condition_select:0
-msgid "Python Expression"
-msgstr "Python Ausdruck"
-
-#. module: hr_payroll
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Designation"
-msgstr "Abmelden"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Companies"
-msgstr "Unternehmen"
-
-#. module: hr_payroll
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Authorized Signature"
-msgstr "Auth. Unterschrift"
-
-#. module: hr_payroll
-#: field:hr.payslip,contract_id:0
-#: field:hr.payslip.input,contract_id:0
-#: field:hr.payslip.line,contract_id:0
-#: field:hr.payslip.worked_days,contract_id:0
-#: model:ir.model,name:hr_payroll.model_hr_contract
-msgid "Contract"
-msgstr "Arbeitsvertrag"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:52
-#, python-format
-msgid "You must select employee(s) to generate payslip(s)."
-msgstr ""
-"Sie müssen Mitarbeiter für die zu erstellende Gehaltsabrechnung wählen"
-
-#. module: hr_payroll
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Credit"
-msgstr "Haben"
-
-#. module: hr_payroll
-#: field:hr.contract,schedule_pay:0
-msgid "Scheduled Pay"
-msgstr "geplante Zahlung"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,condition_python:0
-#: field:hr.salary.rule,condition_python:0
-msgid "Python Condition"
-msgstr "Python Bedingung"
-
-#. module: hr_payroll
-#: view:hr.contribution.register:0
-msgid "Contribution"
-msgstr "Arbeitnehmer / Arbeitgeber Anteile"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:351
-#, python-format
-msgid "Refund Payslip"
-msgstr "Guthaben Lohnkonto"
-
-#. module: hr_payroll
-#: field:hr.rule.input,input_id:0
-#: model:ir.model,name:hr_payroll.model_hr_rule_input
-msgid "Salary Rule Input"
-msgstr "Lohn Rechenregel Eingabe"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,quantity:0
-#: field:hr.salary.rule,quantity:0
-msgid "Quantity"
-msgstr "Menge"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Refund"
-msgstr "Gutschrift"
-
-#. module: hr_payroll
-#: report:contribution.register.lines:0
-#: field:hr.payslip.input,code:0
-#: field:hr.payslip.line,code:0
-#: field:hr.payslip.worked_days,code:0
-#: field:hr.rule.input,code:0
-#: field:hr.salary.rule,code:0
-#: field:hr.salary.rule.category,code:0
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Code"
-msgstr "Kurzbez."
-
-#. module: hr_payroll
-#: field:hr.payslip.line,amount_python_compute:0
-#: selection:hr.payslip.line,amount_select:0
-#: field:hr.salary.rule,amount_python_compute:0
-#: selection:hr.salary.rule,amount_select:0
-msgid "Python Code"
-msgstr "Python Code"
-
-#. module: hr_payroll
-#: field:hr.payslip.input,sequence:0
-#: field:hr.payslip.line,sequence:0
-#: field:hr.payslip.worked_days,sequence:0
-#: field:hr.salary.rule,sequence:0
-msgid "Sequence"
-msgstr "Reihenfolge"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Period"
-msgstr "Periode"
-
-#. module: hr_payroll
-#: view:hr.payslip.run:0
-msgid "Period from"
-msgstr "Abrechnungsperiode"
-
-#. module: hr_payroll
-#: view:hr.salary.rule:0
-msgid "General"
-msgstr "Allgemein"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:674
-#, python-format
-msgid "Salary Slip of %s for %s"
-msgstr "Lohnkonto von %s für %s"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_payslip_employees
-msgid "Generate payslips for all selected employees"
-msgstr "Erzeuge Lohnkonten für alle ausgewählten Mitarbeiter"
-
-#. module: hr_payroll
-#: field:hr.contract,struct_id:0
-#: view:hr.payroll.structure:0
-#: view:hr.payslip:0
-#: view:hr.payslip.line:0
-#: model:ir.model,name:hr_payroll.model_hr_payroll_structure
-msgid "Salary Structure"
-msgstr "Vergütungsstruktur"
-
-#. module: hr_payroll
-#: field:hr.contribution.register,register_line_ids:0
-msgid "Register Line"
-msgstr "Abrechnungspositionen"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#. module: hr_payroll
-#: view:hr.payslip.run:0
-#: selection:hr.payslip.run,state:0
-msgid "Close"
-msgstr "Beenden"
-
-#. module: hr_payroll
-#: help:hr.payslip,struct_id:0
-msgid ""
-"Defines the rules that have to be applied to this payslip, accordingly to "
-"the contract chosen. If you let empty the field contract, this field isn't "
-"mandatory anymore and thus the rules applied will be all the rules set on "
-"the structure of all contracts of the employee valid for the chosen period"
-msgstr ""
-"Definiere Rechenregeln die entsprechend dem Vertrag für dieses Lohnkonto "
-"anzuwenden sind.\r\n"
-"Wenn  das Feld leer ist werden alle für diese Periode gültigen Rechenregeln "
-"für alle Verträge der Mitarbeiter angewendet."
-
-#. module: hr_payroll
-#: field:hr.payroll.structure,children_ids:0
-#: field:hr.salary.rule.category,children_ids:0
-msgid "Children"
-msgstr "abhängige Elemente"
-
-#. module: hr_payroll
-#: help:hr.payslip,credit_note:0
-msgid "Indicates this payslip has a refund of another"
-msgstr ""
-"Zeigt an dass dieses Lohnkonto eine Gutschrift eines anderen beinhaltet"
-
-#. module: hr_payroll
-#: selection:hr.contract,schedule_pay:0
-msgid "Bi-monthly"
-msgstr "Zweimonatlich"
-
-#. module: hr_payroll
-#: report:paylip.details:0
-msgid "Pay Slip Details"
-msgstr "Lohnkonto Details"
-
-#. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
-#: model:ir.ui.menu,name:hr_payroll.menu_department_tree
-msgid "Employee Payslips"
-msgstr "Mitarbeiter Lohnkonten"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_config_settings
-msgid "hr.config.settings"
-msgstr ""
-
-#. module: hr_payroll
-#: view:hr.payslip.line:0
-#: field:hr.payslip.line,register_id:0
-#: field:hr.salary.rule,register_id:0
-#: model:ir.model,name:hr_payroll.model_hr_contribution_register
-msgid "Contribution Register"
-msgstr "Anteile  Arbeitnehmer / Arbeitgeber"
-
-#. module: hr_payroll
-#: view:payslip.lines.contribution.register:0
-msgid "Print"
-msgstr "Druck"
-
-#. module: hr_payroll
-#: view:hr.payslip.line:0
-msgid "Calculations"
-msgstr "Kalkulation"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Worked Days"
-msgstr "Gearbeitete Tage"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Search Payslips"
-msgstr "Auszahlung Vergütungen"
-
-#. module: hr_payroll
-#: view:hr.payslip.run:0
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_run_tree
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_payslip_run
-msgid "Payslips Batches"
-msgstr "Lohnkonten Stapel"
-
-#. module: hr_payroll
-#: view:hr.contribution.register:0
-#: field:hr.contribution.register,note:0
-#: field:hr.payroll.structure,note:0
-#: field:hr.payslip,name:0
-#: field:hr.payslip,note:0
-#: field:hr.payslip.input,name:0
-#: field:hr.payslip.line,note:0
-#: field:hr.payslip.worked_days,name:0
-#: field:hr.rule.input,name:0
-#: view:hr.salary.rule:0
-#: field:hr.salary.rule,note:0
-#: field:hr.salary.rule.category,note:0
-msgid "Description"
-msgstr "Beschreibung"
-
-#. module: hr_payroll
-#: field:hr.employee,total_wage:0
-msgid "Total Basic Salary"
-msgstr "Gesamt Basis Entgelt"
-
-#. module: hr_payroll
-#: view:hr.contribution.register:0
-#: model:ir.actions.act_window,name:hr_payroll.action_contribution_register_form
-#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_contribution_register_form
-msgid "Contribution Registers"
-msgstr "Anteile Arbeitgeber / Arbeitnehmer"
-
-#. module: hr_payroll
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_reporting
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_root_payroll
-#: model:ir.ui.menu,name:hr_payroll.payroll_configure
-msgid "Payroll"
-msgstr "Personalabrechnung"
-
-#. module: hr_payroll
-#: model:ir.actions.report.xml,name:hr_payroll.contribution_register
-msgid "PaySlip Lines By Conribution Register"
-msgstr "Lohnkontozeilen je Beitragskonto"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:370
-#, python-format
-msgid "You cannot delete a payslip which is not draft or cancelled!"
-msgstr ""
-"Sie können keine Personalabrechnung stornieren, die nicht mehr im Entwurf "
-"ist oder bereits abgebrochen wurde."
-
-#. module: hr_payroll
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Address"
-msgstr "Anschrift"
-
-#. module: hr_payroll
-#: field:hr.payslip,worked_days_line_ids:0
-#: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
-msgid "Payslip Worked Days"
-msgstr "Lohnkonto gearbeitete Tage"
-
-#. module: hr_payroll
-#: view:hr.salary.rule.category:0
-msgid "Salary Categories"
-msgstr "Lohn Kategorien"
-
-#. module: hr_payroll
-#: report:contribution.register.lines:0
-#: field:hr.contribution.register,name:0
-#: field:hr.payroll.structure,name:0
-#: field:hr.payslip.line,name:0
-#: field:hr.payslip.run,name:0
-#: field:hr.salary.rule,name:0
-#: field:hr.salary.rule.category,name:0
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Name"
-msgstr "Bezeichnung"
-
-#. module: hr_payroll
-#: help:hr.payslip.line,amount_percentage:0
-#: help:hr.salary.rule,amount_percentage:0
-msgid "For example, enter 50.0 to apply a percentage of 50%"
-msgstr "zB 50.0 für 50%"
-
-#. module: hr_payroll
-#: view:hr.payroll.structure:0
-msgid "Payroll Structures"
-msgstr "Lohnkonto Strukturen"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-#: view:hr.payslip.employees:0
-#: field:hr.payslip.employees,employee_ids:0
-#: view:hr.payslip.line:0
-msgid "Employees"
-msgstr "Mitarbeiter"
-
-#. module: hr_payroll
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Bank Account"
-msgstr "Bank Konto"
-
-#. module: hr_payroll
-#: help:hr.payslip.line,sequence:0
-#: help:hr.salary.rule,sequence:0
-msgid "Use to arrange calculation sequence"
-msgstr ""
-"Wird genutzt zur Bestimmung der Reihenfolge bei der Vergütungsberechnung, "
-"z.B. Berechnung von Zulagen und Abzügen."
-
-#. module: hr_payroll
-#: help:hr.payslip,state:0
-msgid ""
-"* When the payslip is created the status is 'Draft'.            \n"
-"* If the payslip is under verification, the status is 'Waiting'.             "
-"\n"
-"* If the payslip is confirmed then status is set to 'Done'.            \n"
-"* When user cancel payslip the status is 'Rejected'."
-msgstr ""
-"* Durch Erstellung einer Lohnabrechnung ist der Status zunächst 'Entwurf'.\n"
-"* Während der Prüfung, ist der Status zwischenzeitlich 'Wiedervorlage'.\n"
-"* Wenn die Lohnabrechnung genehmigt wurde, ist der Status 'Erledigt'.\n"
-"* Wenn die Lohnabrechnung abgebrochen wird ist der Status 'Verworfen'."
-
-#. module: hr_payroll
-#: help:hr.payslip.line,condition_range:0
-#: help:hr.salary.rule,condition_range:0
-msgid ""
-"This will be used to compute the % fields values; in general it is on basic, "
-"but you can also use categories code fields in lowercase as a variable names "
-"(hra, ma, lta, etc.) and the variable basic."
-msgstr ""
-"Dies wird für die Berechnung von % verwendet, generell auf basic bezogen "
-"aber auch andere Felder wie (hra, ma, lta, etc.) sind möglich."
-
-#. module: hr_payroll
-#: selection:hr.contract,schedule_pay:0
-msgid "Annually"
-msgstr "Jährlich"
-
-#. module: hr_payroll
-#: field:hr.payslip,input_line_ids:0
-msgid "Payslip Inputs"
-msgstr "Lohnkonto Eingaben"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Other Inputs"
-msgstr "Andere Eingaben"
-
-#. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
-msgid "Salary Rule Categories Hierarchy"
-msgstr "Lohnkonto Rechenregel Kategorien Hierarchie"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:882
-#, python-format
-msgid "Wrong python code defined for salary rule %s (%s)."
-msgstr "Falscher Python Code für die Berechnungsformel %s (%s)."
-
-#. module: hr_payroll
-#: report:contribution.register.lines:0
-#: field:hr.payslip.line,total:0
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Total"
-msgstr "Gesamt"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Salary Computation"
-msgstr "Vergütungsberechnung"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Details By Salary Rule Category"
-msgstr "Details je Rechenregel Kategorie"
-
-#. module: hr_payroll
-#: help:hr.payslip.input,code:0
-#: help:hr.payslip.worked_days,code:0
-#: help:hr.rule.input,code:0
-msgid "The code that can be used in the salary rules"
-msgstr "Der Code der in der Rechenregeln verwendet werden kann"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:905
-#, python-format
-msgid "Wrong python condition defined for salary rule %s (%s)."
-msgstr "Falsche Python Bedingung für die Abrechnungsregel %s (%s)."
-
-#. module: hr_payroll
-#: view:hr.payslip.run:0
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_by_employees
-msgid "Generate Payslips"
-msgstr "Erzeuge Lohnkonten"
-
-#. module: hr_payroll
-#: view:hr.payslip.line:0
-msgid "Search Payslip Lines"
-msgstr "Suche Lohnkonto Zeilen"
-
-#. module: hr_payroll
-#: selection:hr.contract,schedule_pay:0
-msgid "Bi-weekly"
-msgstr "Zweiwöchentlich"
+#: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
+msgid "All Children Rules"
+msgstr "Abhängige Regeln hinzufügen"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,condition_select:0
@@ -1281,1033 +155,1259 @@ msgid "Always True"
 msgstr "Immer Wahr"
 
 #. module: hr_payroll
-#: report:contribution.register.lines:0
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_amount
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Amount"
+msgstr "Betrag"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_select
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_select
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Amount Type"
+msgstr "Berechnungsart"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Annually"
+msgstr "Jährlich"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_appears_on_payslip
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_appears_on_payslip
+msgid "Appears on Payslip"
+msgstr "Erscheint im Lohnkonto"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_python
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_python
+msgid ""
+"Applied this rule for calculation if condition is true. You can specify "
+"condition like basic > 1000."
+msgstr "Diese Regel wird angewandt, wenn die Bedingung erfüllt ist. Z.B. basic > 1000"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+msgid "Apply"
+msgstr "Anwenden"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Bi-monthly"
+msgstr "Zweimonatlich"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Bi-weekly"
+msgstr "Zweiwöchentlich"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_form
+msgid "Calculations"
+msgstr "Kalkulation"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+#: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Cancel Payslip"
+msgstr "Lohnberechnung abbrechen"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_9081
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
+msgid "Category"
+msgstr "Kategorie"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Child Rules"
+msgstr "Abhängige Regeln"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_child_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_child_ids
+msgid "Child Salary Rule"
+msgstr "Abhängige Regel für Lohnkonto"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_children_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_children_ids
+msgid "Children"
+msgstr "Abhängige Elemente"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Children Definition"
+msgstr "Definition von Abhängigkeiten"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
+msgid "Click to add a new contribution register."
+msgstr "Klicken Sie, um eine weitere Abrechnungsstelle anzulegen"
+
+#. module: hr_payroll
+#: selection:hr.payslip.run,state:0
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+msgid "Close"
+msgstr "Schließen"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_code
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Code"
+msgstr "Code"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Companies"
+msgstr "Unternehmen"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_company_id
+msgid "Company"
+msgstr "Unternehmen"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Company Contribution"
+msgstr "Arbeitgeberanteile"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Computation"
+msgstr "Berechnung"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Compute Sheet"
+msgstr "Berechnen"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_select
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_select
+msgid "Condition Based on"
+msgstr "Bedingung basiert auf"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Conditions"
+msgstr "Bedingungen"
+
+#. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_configuration
+msgid "Configuration"
+msgstr "Konfiguration"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_configuration
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+msgid "Configure Payroll"
+msgstr "Lohnabrechnung konfigurieren"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Confirm"
+msgstr "Bestätigen"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_contract
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_contract_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_contract_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_contract_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_contract_id
+msgid "Contract"
+msgstr "Arbeitsvertrag"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
+msgid "Contribution"
+msgstr "Arbeitnehmer / Arbeitgeberanteile"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_contribution_register
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_register_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_register_id
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Contribution Register"
+msgstr "Anteile  Arbeitnehmer / Arbeitgeber"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
+msgid "Contribution Register's Payslip Lines"
+msgstr "Beitragskonto Lohnkonto Zeilen"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_contribution_register_form
+#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_contribution_register_form
+#: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_filter
+#: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_tree
+msgid "Contribution Registers"
+msgstr "Anteile Arbeitgeber / Arbeitnehmer"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payroll_config_settings_module_hr_payroll_account
+msgid "Create journal entries from payslips"
+msgstr "Erstelle Buchungen durch Gehaltsabrechnung"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_create_uid
+msgid "Created by"
+msgstr "Angelegt von"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_create_date
+msgid "Created on"
+msgstr "Angelegt am"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_credit_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_credit_note
+msgid "Credit Note"
+msgstr "Gutschrift"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_date_from
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_date_start
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_date_from
+msgid "Date From"
+msgstr "Datum von"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_date_to
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_date_end
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_date_to
+msgid "Date To"
+msgstr "Datum bis"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_struct_id
+msgid ""
+"Defines the rules that have to be applied to this payslip, accordingly to "
+"the contract chosen. If you let empty the field contract, this field isn't "
+"mandatory anymore and thus the rules applied will be all the rules set on "
+"the structure of all contracts of the employee valid for the chosen period"
+msgstr "Definiere Rechenregeln, die entsprechend dem Vertrag für dieses Lohnkonto anzuwenden sind. Wenn das Feld leer ist werden alle für diese Periode gültigen Rechenregeln für alle Verträge der Mitarbeiter angewendet."
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_note
+#: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Description"
+msgstr "Beschreibung"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Details By Salary Rule Category"
+msgstr "Details je Rechenregel Kategorie"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_details_by_salary_rule_category
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Details by Salary Rule Category"
+msgstr "Details je Rechenregel Kategorie"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslip_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails_display_name
+msgid "Display Name"
+msgstr "Angezeigter Name"
+
+#. module: hr_payroll
+#: selection:hr.payslip,state:0
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Done"
+msgstr "Erledigt"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+msgid "Done Payslip Batches"
+msgstr "Erledigte Lohnkonten Stapel"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Done Slip"
+msgstr "Erledigtes Lohnkonto"
+
+#. module: hr_payroll
+#: selection:hr.payslip,state:0 selection:hr.payslip.run,state:0
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Draft"
+msgstr "Entwurf"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+msgid "Draft Payslip Batches"
+msgstr "Entwurf Lohnkonten Stapel"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Draft Slip"
+msgstr "Lohnkont Entwurf"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_employee
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employee_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_employee_id
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Employee"
+msgstr "Mitarbeiter"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_list_view
+msgid "Employee Function"
+msgstr "Mitarbeiter Funktion"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
+#: model:ir.ui.menu,name:hr_payroll.menu_department_tree
+msgid "Employee Payslips"
+msgstr "Mitarbeiter Lohnkonten"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_employee_ids
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Employees"
+msgstr "Mitarbeiter"
+
+#. module: hr_payroll
+#: constraint:hr.payroll.structure:0
+msgid "Error ! You cannot create a recursive Salary Structure."
+msgstr "Fehler! Sie dürfen keine Rekursion in der Lohnstruktur erzeugen."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_register_id
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_register_id
+msgid "Eventual third party involved in the salary payment of the employees."
+msgstr "Allfällige Fremde im Zusammenhang mit Lohnzahlungen an Mitarbeiter"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,amount_select:0
+#: selection:hr.salary.rule,amount_select:0
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_fix
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_fix
+msgid "Fixed Amount"
+msgstr "Fester Betrag"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_percentage
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_amount_percentage
+msgid "For example, enter 50.0 to apply a percentage of 50%"
+msgstr "zB 50.0 für 50%"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "General"
+msgstr "Allgemein"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
+msgid "Generate"
+msgstr "Erzeugen"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_by_employees
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+msgid "Generate Payslips"
+msgstr "Erzeuge Lohnkonten"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_employees
+msgid "Generate payslips for all selected employees"
+msgstr "Erzeuge Lohnkonten für alle ausgewählten Mitarbeiter"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
+msgid "Group By"
+msgstr "Gruppiere nach"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_id
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_id
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister_id
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslip_id
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails_id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_run_credit_note
+msgid ""
+"If its checked, indicates that all payslips generated from here are refund "
+"payslips."
+msgstr "Wenn markiert, dann sind alle hier erzeugten Lohnkonten Vergütungen."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_active
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_active
+msgid ""
+"If the active field is set to false, it will allow you to hide the salary "
+"rule without removing it."
+msgstr "Wenn das Aktiv-Feld deaktiviert wird, wird die Rechenregel verborgen ohne diese zu löschen"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_credit_note
+msgid "Indicates this payslip has a refund of another"
+msgstr "Zeigt an, dass dieses Lohnkonto eine Gutschrift eines anderen beinhaltet"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Input Data"
+msgstr "Eingabedaten"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_input_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_input_ids
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Inputs"
+msgstr "Eingaben"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+msgid "Install your country's payroll"
+msgstr "Installieren Sie die Personalabrechnung für Ihr Land"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_note
+msgid "Internal Note"
+msgstr "Interne Mitteilung"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_quantity
+msgid ""
+"It is used in computation for percentage and fixed amount.For e.g. A rule "
+"for Meal Voucher having fixed amount of 1€ per worked day can have its "
+"quantity defined in expression like worked_days.WORK100.number_of_days."
+msgstr "Wird für Prozent und Absolutwert verwendet. zB. Eine Regel für Essensbons mit einem fixen Betrag von 1€ je Arbeitstag kann definiert werden als: worked_days.WORK100.number_of_days."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
+msgid ""
+"It is used in computation. For e.g. A rule for sales having 1% commission of"
+" basic salary for per product can defined in expression like result = "
+"inputs.SALEURO.amount * contract.wage*0.01."
+msgstr "Dieses Feld wird für Berechnungen verwendet.\r\nEine Regel für 1% Verkaufskommision auf den Grundgehalt lautet zB: result = inputs.SALEURO.amount * contract.wage*0.01"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslip___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails___last_update
+msgid "Last Modified on"
+msgstr "Zuletzt geändert am"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_write_uid
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert durch"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_write_date
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_module_hr_payroll_account
+msgid "Link your payroll to accounting system"
+msgstr "Verbinden Sie Ihre Personalabrechnung mit der Fibu"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_category_parent_id
+msgid ""
+"Linking a salary category to its parent is used only for the reporting "
+"purpose."
+msgstr "Das Verlinken einer Lohnkategorie mit ihrer übergeordneten Kategorie wird nur im Berichtswesen verwendet."
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_paid
+msgid "Made Payment Order ? "
+msgstr "Zahlungsauftrag erstellt? "
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_max
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range_max
+msgid "Maximum Range"
+msgstr "Maximaler Bereich"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_min
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range_min
+msgid "Minimum Range"
+msgstr "Minimaler Bereich"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Miscellaneous"
+msgstr "Verschiedenes"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Monthly"
+msgstr "Monatlich"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_name
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Name"
+msgstr "Bezeichnung"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:395
+#, python-format
+msgid "Normal Working Days paid at 100%"
+msgstr "Normale Arbeitstage zu 100% bezahlt"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
+msgid "Notes"
+msgstr "Notizen"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_number_of_days
+msgid "Number of Days"
+msgstr "Anzahl der Tage"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_number_of_hours
+msgid "Number of Hours"
+msgstr "Gesamte Stunden"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Other Inputs"
+msgstr "Andere Eingaben"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_parent_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_parent_id
+msgid "Parent"
+msgstr "Vorgänger"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_parent_rule_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_parent_rule_id
+msgid "Parent Salary Rule"
+msgstr "Übergeordnete Lohn Rechenregel"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_partner_id
+msgid "Partner"
+msgstr "Partner"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_payslip_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_slip_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_payslip_id
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Pay Slip"
+msgstr "Vergütungsabrechnung"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "PaySlip Batch"
+msgstr "Lohnkonto Stapel"
+
+#. module: hr_payroll
+#: model:ir.actions.report.xml,name:hr_payroll.payslip_details_report
+msgid "PaySlip Details"
+msgstr "Lohnkonto Details"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_payslip_lines_contribution_register
+msgid "PaySlip Lines"
+msgstr "Lohnkontenzeilen"
+
+#. module: hr_payroll
+#: model:ir.actions.report.xml,name:hr_payroll.action_contribution_register
+msgid "PaySlip Lines By Conribution Register"
+msgstr "Lohnkontozeilen je Beitragskonto"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "PaySlip Lines by Contribution Register"
+msgstr "Lohnkontozeilen je BeitragskontoLoh"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
+msgid "PaySlip Lines by Contribution Registers"
+msgstr "Lohnkonto Zeilen je Beitragskonten"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "PaySlip Name"
 msgstr "Lohnkonto Bezeichnung"
 
 #. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Accounting"
-msgstr "Finanzbuchhaltung"
+#: model:ir.actions.act_window,name:hr_payroll.open_payroll_modules
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_root
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+msgid "Payroll"
+msgstr "Personalabrechnung"
 
 #. module: hr_payroll
-#: field:hr.payslip.line,condition_range:0
-#: field:hr.salary.rule,condition_range:0
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_filter
+msgid "Payroll Structures"
+msgstr "Lohnkonto Strukturen"
+
+#. module: hr_payroll
+#: model:ir.actions.report.xml,name:hr_payroll.action_report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Payslip"
+msgstr "Mitarbeiterabrechnung"
+
+#. module: hr_payroll
+#: constraint:hr.payslip:0
+msgid "Payslip 'Date From' must be before 'Date To'."
+msgstr "Lohnzettel Datum von muss vor Datum bis liegen."
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_run
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_payslip_run_id
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+msgid "Payslip Batches"
+msgstr "Lohnzettel Stapel"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.act_payslip_lines
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_payslip_count
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Payslip Computation Details"
+msgstr "Lohnkonto Berechnung Details"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_input
+msgid "Payslip Input"
+msgstr "Lohnkonto Eingaben"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_line_ids
+msgid "Payslip Inputs"
+msgstr "Lohnkonto Eingaben"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_line
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_form
+msgid "Payslip Line"
+msgstr "Vergütungsposition"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.act_contribution_reg_payslip_lines
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_ids
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Payslip Lines"
+msgstr "Lohnkonto Zeilen"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Payslip Lines by Contribution Register"
+msgstr "Gehaltsabrechnungszeilen nach Sozialabgaben"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_name
+msgid "Payslip Name"
+msgstr "Bezeichnung Gehaltsabrechnung"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_line_ids
+msgid "Payslip Worked Days"
+msgstr "Lohnkonto gearbeitete Tage"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.act_hr_employee_payslip_list
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_employee_payslip_count
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_employee_slip_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_slip_ids
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model:ir.ui.view,arch_db:hr_payroll.payroll_hr_employee_view_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_tree
+msgid "Payslips"
+msgstr "Abrechnungen Mitarbeitervergütung"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_run_tree
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payslip_run
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_tree
+msgid "Payslips Batches"
+msgstr "Lohnkonten Stapel"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
+msgid "Payslips by Employees"
+msgstr "Lohnkonten je Mitarbeiter"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,amount_select:0
+#: selection:hr.salary.rule,amount_select:0
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_percentage
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_percentage
+msgid "Percentage (%)"
+msgstr "Prozent (%)"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_percentage_base
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_percentage_base
+msgid "Percentage based on"
+msgstr "Prozent basierend auf"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Period"
+msgstr "Periode"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
+msgid "Print"
+msgstr "Drucken"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,amount_select:0
+#: selection:hr.salary.rule,amount_select:0
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_python_compute
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_python_compute
+msgid "Python Code"
+msgstr "Python Code"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_python
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_python
+msgid "Python Condition"
+msgstr "Python Bedingung"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,condition_select:0
+#: selection:hr.salary.rule,condition_select:0
+msgid "Python Expression"
+msgstr "Python Ausdruck"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_quantity
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_quantity
+msgid "Quantity"
+msgstr "Anzahl"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "Quantity/Rate"
+msgstr "Menge/Satz"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Quantity/rate"
+msgstr "Menge/Satz"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Quarterly"
+msgstr "Vierteljährlich"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,condition_select:0
+#: selection:hr.salary.rule,condition_select:0
+msgid "Range"
+msgstr "Bereich"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range
 msgid "Range Based on"
 msgstr "Bereich basierend auf"
 
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_rate
+msgid "Rate (%)"
+msgstr "Anteil (%)"
 
-#~ msgid "Analytic Account for Salary Analysis"
-#~ msgstr "Analytishes Konto für Personalkosten Analyse"
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_number
+msgid "Reference"
+msgstr "Referenz"
 
-#~ msgid "New Slip"
-#~ msgstr "Neue Abrechnung"
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Refund"
+msgstr "Gutschrift"
 
-#~ msgid "Axis Bank"
-#~ msgstr "Axis Bank"
-
-#~ msgid "Working Days"
-#~ msgstr "Arbeitstage"
-
-#~ msgid "(Based on type Payroll will calculate basic salary)"
-#~ msgstr "(anhängig vom Typ wird der Grundgehalt berechnet)"
-
-#~ msgid "Department"
-#~ msgstr "Abteilung"
-
-#~ msgid "Deductions:"
-#~ msgstr "Abzüge:"
-
-#~ msgid "Employee No"
-#~ msgstr "Mitarbetier Nr."
-
-#~ msgid "Calculations Rules"
-#~ msgstr "Rechenregeln"
-
-#~ msgid ","
-#~ msgstr ","
-
-#~ msgid "Year Salary Report"
-#~ msgstr "Jährliches Lohnkonto"
-
-#~ msgid "The Manager"
-#~ msgstr "Der Vorgesetzte"
-
-#~ msgid "Allowances with Basic:"
-#~ msgstr "Zulagen basieren auf:"
-
-#~ msgid "Use for Gratuity ?"
-#~ msgstr "Anspruch auf Abfindung?"
-
-#~ msgid "Paid ? "
-#~ msgstr "Bezahlt? "
-
-#~ msgid "Employee Payable Account"
-#~ msgstr "Kreditoren Konto Mitarb."
-
-#~ msgid "Half-Pay Holiday"
-#~ msgstr "Teilvergüt. (50%) Abwesenh."
-
-#~ msgid ""
-#~ "\n"
-#~ "    The Payroll system - India, Manages and depends on,\n"
-#~ "    * HR Details\n"
-#~ "    * HR Contracts\n"
-#~ "    * HR Payslip\n"
-#~ "    * HR Paysheet\n"
-#~ "    * HR Attendance\n"
-#~ "    * HR Holidays\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Das Modul Lohn- und Gehaltsabrechnung steuert\n"
-#~ "    * HR Details\n"
-#~ "    * HR Contracts\n"
-#~ "    * HR Payslip\n"
-#~ "    * HR Paysheet\n"
-#~ "    * HR Attendance\n"
-#~ "    * HR Holidays\n"
-#~ "    "
-
-#~ msgid "Account"
-#~ msgstr "Konto"
-
-#~ msgid "Payment From"
-#~ msgstr "Bezahlung ab"
-
-#~ msgid "Miscelleanous / Statutory"
-#~ msgstr "Diverse / Gesetzliche"
-
-#~ msgid "Leaves"
-#~ msgstr "Abwesenheit"
-
-#~ msgid "Register"
-#~ msgstr "Meldung"
-
-#~ msgid "Next Month Date"
-#~ msgstr "Nächster Monat"
-
-#~ msgid "Keep empty to use the period of the validation(Payslip) date."
-#~ msgstr "Kein Eintrag um für aktuellen Periode Löhne abzurechnen."
-
-#~ msgid "Value"
-#~ msgstr "Betrag"
-
-#~ msgid "Name of the Employee"
-#~ msgstr "Name Mitarbeiter"
-
-#~ msgid "Country of Issue"
-#~ msgstr "Land"
-
+#. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:315
 #, python-format
-#~ msgid "Please Confirm all Expanse Invoice appear for Reimbursement"
-#~ msgstr "Bestätigen Sie alle Spesenrechnungen zwecks Erstattung"
+msgid "Refund Payslip"
+msgstr "Guthaben Lohnkonto"
 
-#~ msgid "Other Deduction"
-#~ msgstr "Andere Abzüge"
-
-#~ msgid "Paid Holiday"
-#~ msgstr "Bezahlter Urlaub"
-
-#~ msgid "Passport Expire Date"
-#~ msgstr "Ausweis Gültig Bis"
-
-#~ msgid "Special Allowance and Deductions for Employee"
-#~ msgstr "Besondere Zulagen und Abzüge"
-
-#~ msgid "Un-Paid Holiday"
-#~ msgstr "Unbezahlter Urlaub"
-
-#~ msgid "Force Period"
-#~ msgstr "Erzwinge Periode"
-
-#~ msgid "Amount (in words) :"
-#~ msgstr "Betrag (ausgeschrieben)"
-
-#~ msgid "Payment"
-#~ msgstr "Auszahlung"
-
-#~ msgid "Analytic Account"
-#~ msgstr "Analytisches Konto"
-
-#~ msgid "Expanse To"
-#~ msgstr "Zahlung an"
-
-#~ msgid "Based on"
-#~ msgstr "Basiert auf"
-
-#~ msgid "Bank"
-#~ msgstr "Bank"
-
-#~ msgid "Expanse Entries"
-#~ msgstr "Buchungen Aufwand"
-
-#~ msgid "Error! You can not create recursive analytic accounts."
-#~ msgstr "Fehler ! Sie können keine rekursiven Anal. Konten definieren."
-
+#. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:306
 #, python-format
-#~ msgid "Please defined the Employee Home Address Along with Partners !!"
-#~ msgstr "Bitte definieren Sie die Anschrift des Mitarbeiters beim Partner"
+msgid "Refund: "
+msgstr "Vergütung "
 
-#~ msgid "Sub Total"
-#~ msgstr "Zwischensumme"
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_register_line_ids
+msgid "Register Line"
+msgstr "Abrechnungspositionen"
 
-#~ msgid "Visa No"
-#~ msgstr "Visa Nr."
+#. module: hr_payroll
+#: selection:hr.payslip,state:0
+msgid "Rejected"
+msgstr "Abgelehnt"
 
-#~ msgid "Employee Year Salary"
-#~ msgstr "Jahreseinkommen Mitarbeiter"
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_salary_rule_id
+msgid "Rule"
+msgstr "Regel"
 
-#~ msgid "Authorised Signature"
-#~ msgstr "Authorisierte Unterschrift"
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
+msgid "Salary Categories"
+msgstr "Lohn Kategorien"
 
-#~ msgid "Unite"
-#~ msgstr "Zusammen"
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Salary Computation"
+msgstr "Vergütungsberechnung"
 
-#~ msgid "Salary Detail"
-#~ msgstr "Lohn und Gehalt Details"
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree_view
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_salary_rule_category_filter
+msgid "Salary Rule Categories"
+msgstr "Lohnkonto Rechenregeln"
 
-#~ msgid "Notes:"
-#~ msgstr "Bemerkungen:"
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
+msgid "Salary Rule Categories Hierarchy"
+msgstr "Lohnkonto Rechenregel Kategorien Hierarchie"
 
-#~ msgid "End Date"
-#~ msgstr "Ende am"
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_salary_rule_category
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Salary Rule Category"
+msgstr "Lohn Regel Kategorie"
 
-#~ msgid "Accounting Information"
-#~ msgstr "Finanzbuchhaltung Info"
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_rule_input
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_input_id
+msgid "Salary Rule Input"
+msgstr "Lohn Rechenregel Eingabe"
 
-#~ msgid "Amount Information"
-#~ msgstr "Betrag Info"
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_salary_rule_form
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_rule_ids
+#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_salary_rule_form
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_list
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_tree
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
+msgid "Salary Rules"
+msgstr "Lohnkonto Rechenregeln"
 
-#~ msgid "Passport"
-#~ msgstr "Ausweis"
-
-#~ msgid "Start Date"
-#~ msgstr "Beginn am"
-
-#~ msgid "Type"
-#~ msgstr "Typ"
-
-#~ msgid "Miscelleanous"
-#~ msgstr "Diverse"
-
+#. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:638
 #, python-format
-#~ msgid "Integrity Error !"
-#~ msgstr "Integritätsfehler !"
+msgid "Salary Slip of %s for %s"
+msgstr "Lohnkonto von %s für %s"
 
-#~ msgid "Verify Sheet"
-#~ msgstr "Genehmige Abrechnung"
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payroll_structure
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_struct_id
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_tree
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_tree
+msgid "Salary Structure"
+msgstr "Vergütungsstruktur"
 
-#~ msgid "Accounting Informations"
-#~ msgstr "Finanzen Informationen"
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_list_form
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_view
+msgid "Salary Structures"
+msgstr "Lohnkonto Strukturen"
 
-#~ msgid "Contributions Configuration"
-#~ msgstr "Konfiguration Arbeitsleistung"
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_tree
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_tree
+msgid "Salary Structures Hierarchy"
+msgstr "Lohn Struktur Hierarchie"
 
-#~ msgid "Basic Salary - Leaves"
-#~ msgstr "Grundlohn - Abwesenheit"
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_schedule_pay
+msgid "Scheduled Pay"
+msgstr "geplante Zahlung"
 
-#~ msgid "By Employee Function"
-#~ msgstr "Nach Funktionen"
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+msgid "Search Payslip Batches"
+msgstr "Suche Lohnkonten Stapel"
 
-#~ msgid "Chaque Nos"
-#~ msgstr "Scheck Nr."
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Search Payslip Lines"
+msgstr "Suche Lohnkonto Zeilen"
 
-#~ msgid "Year Salary Detail"
-#~ msgstr "Jahreslohn Details"
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Search Payslips"
+msgstr "Auszahlung Vergütungen"
 
-#~ msgid "Wating for Verification"
-#~ msgstr "Warte auf Genehmigung"
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
+msgid "Search Salary Rule"
+msgstr "Suche Lohn Rechenregel"
 
-#~ msgid "Account Lines"
-#~ msgstr "Buchungspositionen"
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Semi-annually"
+msgstr "Halbjährlich"
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Fehlerhafter XML Quellcode für diese Ansicht"
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_sequence
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_sequence
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_sequence
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_sequence
+msgid "Sequence"
+msgstr "Reihenfolge"
 
-#~ msgid "Gross SAL"
-#~ msgstr "Brutto L+G"
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Set to Draft"
+msgstr "Auf 'Entwurf' setzen"
 
+#. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_global_settings
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+msgid "Settings"
+msgstr "Einstellungen"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "States"
+msgstr "Status Abrechnung"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_state
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_state
+msgid "Status"
+msgstr "Status"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_struct_id
+msgid "Structure"
+msgstr "Struktur"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_code
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_code
+msgid ""
+"The code of salary rules can be used as reference in computation of other "
+"rules. In that case, it is case sensitive."
+msgstr "Auf die Lohnberechnungsformel kann von anderen Formeln Bezug genommen werden. In diesem Fall wird Groß- / Kleinschreibung unterschieden."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_code
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_worked_days_code
+#: model:ir.model.fields,help:hr_payroll.field_hr_rule_input_code
+msgid "The code that can be used in the salary rules"
+msgstr "Der Code der in der Rechenregeln verwendet werden kann"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_select
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_amount_select
+msgid "The computation method for the rule amount."
+msgstr "Die Berechnungsmethode den Betrag dieser Rechenregel"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_contract_id
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_worked_days_contract_id
+msgid "The contract for which applied this input"
+msgstr "Der Arbeitsvertrag für den die Eingaben gelten"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range_max
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range_max
+msgid "The maximum amount, applied for this rule."
+msgstr "Der maximale Betrag für diese Rechenregel"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range_min
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range_min
+msgid "The minimum amount, applied for this rule."
+msgstr "Der Minimum Betrag für diese Rechenregel."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range
+msgid ""
+"This will be used to compute the % fields values; in general it is on basic,"
+" but you can also use categories code fields in lowercase as a variable "
+"names (hra, ma, lta, etc.) and the variable basic."
+msgstr "Dies wird für die Berechnung von % verwendet, generell auf basic bezogen aber auch andere Felder wie (hra, ma, lta, etc.) sind möglich."
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
+msgid ""
+"This wizard will generate payslips for all selected employee(s) based on the"
+" dates and credit note specified on Payslips Run."
+msgstr "Dieser Assistent erzeugt das Lohnkonto für alle für diesen Lauf ausgewählten Mitarbeiter aufgrund von Datum und Gutschrift"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_total
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Total"
+msgstr "Gesamtbetrag"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Total Working Days"
+msgstr "Gesamt Arbeitstage"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_sequence
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_sequence
+msgid "Use to arrange calculation sequence"
+msgstr "Wird genutzt zur Bestimmung der Reihenfolge bei der Vergütungsberechnung, z.B. Berechnung von Zulagen und Abzügen."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_appears_on_payslip
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_appears_on_payslip
+msgid "Used to display the salary rule on payslip."
+msgstr "Abrechnungsregel soll bei Gehaltsabrechnung mit angezeigt werden."
+
+#. module: hr_payroll
+#: selection:hr.payslip,state:0
+msgid "Waiting"
+msgstr "Warteliste"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Weekly"
+msgstr "Wöchentlich"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Worked Day"
+msgstr "Arbeitstage"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Worked Days"
+msgstr "Gearbeitete Tage"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Worked Days & Inputs"
+msgstr "Gearbeitete Tage & Eingaben"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:838
 #, python-format
-#~ msgid "Please defined the Partner in Home Address !!"
-#~ msgstr "Bitte definiere Partner für Mitarbeiter Anschrift!!"
-
-#~ msgid "For the month of"
-#~ msgstr "Für Monat"
-
-#~ msgid "Deduction"
-#~ msgstr "Abzug"
-
-#~ msgid "Passport List"
-#~ msgstr "Ausweis Liste"
-
-#~ msgid "Payment Entries"
-#~ msgstr "Zahlung Einzelpost."
-
-#~ msgid "YTD"
-#~ msgstr "YTEUR"
-
-#~ msgid "Expense"
-#~ msgstr "Aufwand"
-
-#~ msgid "Fided Value"
-#~ msgstr "Fester Betrag"
-
-#~ msgid "Yours Sincerely"
-#~ msgstr "Freundliche Grüsse"
-
-#~ msgid "Allowances"
-#~ msgstr "Zulagen"
-
-#~ msgid "SI. No."
-#~ msgstr "SV Nr."
-
-#~ msgid "Net Amount"
-#~ msgstr "Netto Betrag"
-
-#~ msgid "State"
-#~ msgstr "Status"
-
-#~ msgid "Function of the Employee"
-#~ msgstr "Funktion des Mitarbeiters"
-
-#~ msgid "Confirm Sheet"
-#~ msgstr "Bestätigte Abrechnung"
-
-#~ msgid "Wating for Account Verification"
-#~ msgstr "Warte auf Freigabe"
-
-#~ msgid "Others:"
-#~ msgstr "Weitere:"
-
-#~ msgid "Contracts"
-#~ msgstr "Verträge"
-
-#~ msgid "Passport and Visa"
-#~ msgstr "Ausweis und Visa"
-
-#~ msgid "Employee Code"
-#~ msgstr "Mitarbeiter Nr."
-
-#~ msgid "Accounting Lines"
-#~ msgstr "Abrechnung"
-
-#~ msgid "Bank Journal"
-#~ msgstr "Bank Journal"
-
-#~ msgid "Total SAL"
-#~ msgstr "Gesamt L+G"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Die Objektbezeichnung muss mit x_ beginnen und darf keine Sonderzeichen "
-#~ "haben !"
-
-#~ msgid "Earnings"
-#~ msgstr "Einkünfte"
-
-#~ msgid "Reject"
-#~ msgstr "Verwerfen"
-
-#~ msgid "All Passports"
-#~ msgstr "Alle Ausweise"
-
-#~ msgid "Employee Name"
-#~ msgstr "Mitarbeiter Name"
-
-#~ msgid "Salary Account"
-#~ msgstr "Finanzkonto L+G"
-
-#~ msgid "For"
-#~ msgstr "An"
-
-#~ msgid "Expanse Journal"
-#~ msgstr "Journal L+G"
-
-#~ msgid "Employee Contract"
-#~ msgstr "Arbeitsvertrag"
-
-#~ msgid "Contribe by Company ?"
-#~ msgstr "Mitarbeit n. Untern."
-
-#~ msgid "Working Days / Week"
-#~ msgstr "Arbeitstage / Woche"
-
-#~ msgid "Complete Accountant Checking"
-#~ msgstr "Freigabe erteilen"
-
-#~ msgid "Title"
-#~ msgstr "Bezeichnung"
-
-#~ msgid "On Attendance"
-#~ msgstr "Anwesenheit"
-
-#~ msgid "Allowance/Deduction Heads"
-#~ msgstr "Zulagen und Abzüge"
-
-#~ msgid "Employee Account"
-#~ msgstr "Mitarbeiter Konto"
-
-#~ msgid "Condition"
-#~ msgstr "Bedingungen"
-
-#~ msgid "Compute"
-#~ msgstr "Berechne"
-
-#~ msgid "Payment Lines"
-#~ msgstr "Zahlungspositionen"
-
-#~ msgid "HR Manager"
-#~ msgstr "Personalleiter"
-
-#~ msgid "Categoty Code"
-#~ msgstr "Kategorie"
-
-#~ msgid "Allowance Deduction Categoty"
-#~ msgstr "Kategorien Zulagen u. Abzüge"
-
-#~ msgid "Allowance / Deduction Category"
-#~ msgstr "Kategorie Zulagen u. Abzüge"
-
-#~ msgid "Draft Sheet"
-#~ msgstr "Entwurf Abrechnung"
-
-#~ msgid "Date"
-#~ msgstr "Datum"
-
-#~ msgid "Basic SAL"
-#~ msgstr "Grundlohn"
-
-#~ msgid "Visa Expire Date"
-#~ msgstr "Visa Gültig Bis"
-
-#~ msgid "Phone No."
-#~ msgstr "Telefon"
-
-#~ msgid "Included in Salary ?"
-#~ msgstr "In Abrechnung berücksichtigt?"
-
-#~ msgid "General Account"
-#~ msgstr "Sachkonto"
-
-#~ msgid "Payment Advice"
-#~ msgstr "Zahlungsanweisung"
-
-#~ msgid "To"
-#~ msgstr "An"
-
-#~ msgid "Process"
-#~ msgstr "Prozess"
-
-#~ msgid "Loan"
-#~ msgstr "Anzahlung"
-
-#~ msgid "Number"
-#~ msgstr "Nummer"
-
-#~ msgid "Contract Detail:"
-#~ msgstr "Vertragsinfo:"
-
-#~ msgid "General Information"
-#~ msgstr "Allgemeine Information"
-
-#~ msgid "Paymeny Lines"
-#~ msgstr "Zahlungspositionen"
-
-#~ msgid "Amount / Percentage"
-#~ msgstr "Betrag / Prozent"
-
-#~ msgid "Accounting Details"
-#~ msgstr "Finanzen Details"
-
-#~ msgid "Current Month Date"
-#~ msgstr "Aktueller Monat"
-
-#~ msgid "Contract Duration"
-#~ msgstr "Dauer Vertrag"
-
-#~ msgid "Process Form"
-#~ msgstr "Prozess Ansicht"
-
-#~ msgid "Passport No"
-#~ msgstr "Ausweis Nr."
-
-#~ msgid "Account Information"
-#~ msgstr "Konto Information"
-
-#~ msgid "Generalities"
-#~ msgstr "Grundregeln"
-
-#~ msgid "for period"
-#~ msgstr "für Periode"
-
-#~ msgid "Allowance / Deduction"
-#~ msgstr "Zulagen / Abzüge"
-
-#~ msgid "E-mail"
-#~ msgstr "EMail"
-
-#~ msgid "Salary Deposit Date Option?"
-#~ msgstr "Auszahlungsdatum?"
-
-#~ msgid "Other Informations"
-#~ msgstr "Weitere Information"
-
-#~ msgid "Dynamic Computation"
-#~ msgstr "Dyn. Berechnung"
-
-#~ msgid "Function"
-#~ msgstr "Funktion"
-
-#~ msgid "Dear Sir/Madam,"
-#~ msgstr "Sehr geehrte/r Frau/Herr,"
-
-#~ msgid "Categoty Name"
-#~ msgstr "Kategorie Bez."
-
-#~ msgid "Create Analytic Structure"
-#~ msgstr "Erzeuge Analyse Struktur"
-
-#~ msgid "Select Bank Account from where Salary Expanse will be Paid"
-#~ msgstr "Wähle Bankkonto für Zahlung v. Lohn und Gehalt"
-
-#~ msgid "Expanse account when Salary Expanse will be recorded"
-#~ msgstr "Aufwandskonto für Lohn und Gehalt"
-
-#~ msgid "Configure Payroll"
-#~ msgstr "Konfiguriere Lohn und Gehalt"
-
-#~ msgid "Special Allowances and Deductions For Employee:"
-#~ msgstr "Besondere Zulagen und Abzüge für Mitarbeiter:"
-
-#~ msgid "Statutory Information"
-#~ msgstr "Gesetzliche Auskunft"
-
-#~ msgid "Employee Functions"
-#~ msgstr "Mitarbeiter Funktionen"
-
-#~ msgid "Fiscal Year"
-#~ msgstr "Geschäftsjahr"
-
-#~ msgid "By Allownce / Deduction"
-#~ msgstr "Durch Zulage / Abzug"
-
-#~ msgid "Passport Issue Date"
-#~ msgstr "Ausweis Gültigkeit"
-
-#~ msgid "Allowance"
-#~ msgstr "Zulagen"
-
-#~ msgid "Bank Details"
-#~ msgstr "Bank Details"
-
-#~ msgid "Deductions"
-#~ msgstr "Abzüge"
-
-#~ msgid "Employee Payslip"
-#~ msgstr "Mitarbeiter Abrechnung"
-
-#~ msgid "By Sal"
-#~ msgstr "Nach L+G"
-
-#~ msgid "Net SAL"
-#~ msgstr "Netto Lohn"
-
-#~ msgid "Print Salary Structure"
-#~ msgstr "Druck L+G Übersicht"
-
-#~ msgid "Total Deductions"
-#~ msgstr "Gesamte Abzüge"
-
-#~ msgid "Based"
-#~ msgstr "Basiert auf"
-
-#~ msgid "Recompute Sheet"
-#~ msgstr "Neuberechnen"
-
-#~ msgid "Employees Salary Details"
-#~ msgstr "Details Mitarbeitervergütung"
-
-#~ msgid "Salary Payment Register"
-#~ msgstr "Monatsabrechnung Mitarbeitervergütung"
-
-#~ msgid "Paid Salary"
-#~ msgstr "Vergütung Bezahlt"
-
-#~ msgid "("
-#~ msgstr "("
-
-#~ msgid "Letter Details"
-#~ msgstr "Anschreiben Auszahlung"
-
-#~ msgid "Expire"
-#~ msgstr "Gültig bis"
-
-#~ msgid "Others"
-#~ msgstr "Sonstige Abzüge"
-
-#~ msgid "Calculaton Field"
-#~ msgstr "Berechnungsfeld"
-
-#~ msgid "Select the Bank Address from whcih the salary is going to be paid"
-#~ msgstr ""
-#~ "Wähle das Bankkonto, von dem die Vergütung an den Mitarbeiter gezahlt werden "
-#~ "soll"
-
-#~ msgid "Bank Advice"
-#~ msgstr "Anweisung Auszahlung"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr ""
-#~ "Fehler ! Sie können keine Abteilung auswählen, für die dieser Mitarbeiter "
-#~ "die Leitung ausübt."
-
-#~ msgid "Register Lines"
-#~ msgstr "Arbeitgeberanteile"
-
-#~ msgid "Percentage"
-#~ msgstr "Prozent"
-
-#~ msgid "Employee Deduction"
-#~ msgstr "Arbeitnehmeranteil"
-
-#~ msgid "Valid From"
-#~ msgstr "Gültig ab"
-
-#~ msgid ""
-#~ "Calculation field used for internal calculation, do not place this on form"
-#~ msgstr ""
-#~ "Berechnungsfeld wird für die interne Kalkulation benötigt. Nehmen Sie an "
-#~ "dieser Stelle keinen Eintrag vor."
-
-#~ msgid "Human Resource Payroll"
-#~ msgstr "Personalabrechnung"
-
-#~ msgid "Posted"
-#~ msgstr "Gebucht"
-
-#~ msgid ""
-#~ "Generic Payroll system\n"
-#~ "    * Employee Details\n"
-#~ "    * Employee Contracts\n"
-#~ "    * Passport based Contract\n"
-#~ "    * Allowances / Deductions\n"
-#~ "    * Allow to configure Basic / Grows / Net Salary\n"
-#~ "    * Employee Payslip\n"
-#~ "    * Monthly Payroll Register\n"
-#~ "    * Integrated with Holiday Management\n"
-#~ "    "
-#~ msgstr ""
-#~ "Basismodul für Abrechnung von Mitarbeitervergütungen\n"
-#~ "  * Mitarbeiter Stammdaten  * Arbeitsverträge  * Sozialversicherungsausweis\n"
-#~ "  * Zulagen und Abzüge\n"
-#~ "  * Konfiguration der Grundvergütung, Brutto und Netto Vergütung\n"
-#~ "  * Vergütungsabrechnung für Mitarbeiter\n"
-#~ "    * Monatliche Meldung der Vergütungsabrechnung\n"
-#~ "  * Auszahlung der Mitarbeitervergütung\n"
-#~ "    * Integration mit Urlaubsmanagement\n"
-#~ "    "
-
-#~ msgid "Leave Type"
-#~ msgstr "Abwesenheitstyp"
-
-#~ msgid "Date :"
-#~ msgstr "Datum:"
-
-#~ msgid "Payments -"
-#~ msgstr "Zahlungen -"
-
-#~ msgid "By Salary"
-#~ msgstr "Nachzahlung"
-
-#~ msgid "Leave Deductions"
-#~ msgstr "Abzüge für Abwesenheit"
-
-#~ msgid "Function Value"
-#~ msgstr "Berechnungsfunktion"
-
-#~ msgid "Contribution Register Line"
-#~ msgstr "Arbeitgeberanteile"
-
-#~ msgid "Other Lines"
-#~ msgstr "Weitere Abrechnungspositionen"
-
-#~ msgid "Function Arguments"
-#~ msgstr "Berechnungsfunktionen"
-
-#~ msgid "Company Contributions"
-#~ msgstr "Arbeitgeberanteile"
-
-#~ msgid "Formula"
-#~ msgstr "Berechnungsformel"
-
-#~ msgid "Bank Advice Lines"
-#~ msgstr "Abrechnungen für Banküberweisung"
-
+msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
+msgstr "Falsche prozentuale Kalkulationsgrundlage oder Menge die für Gehaltsabrechnungsregel %s (%s) angewendet wird."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:844
 #, python-format
-#~ msgid "Error !"
-#~ msgstr "Fehler !"
+msgid "Wrong python code defined for salary rule %s (%s)."
+msgstr "Falscher Python Code für die Berechnungsformel %s (%s)."
 
-#~ msgid "No of Working days / week for an employee"
-#~ msgstr "Arbeitstage/Woche"
-
-#~ msgid "Net Basic"
-#~ msgstr "Netto Vergütung"
-
-#~ msgid "Gross Salary"
-#~ msgstr "Brutto Vergütung"
-
-#~ msgid "Total Earnings"
-#~ msgstr "Gesamtvergütung"
-
-#~ msgid "Employee Salary Statement"
-#~ msgstr "Abrechnung nach Mitarbeitern"
-
-#~ msgid "Other Payment"
-#~ msgstr "Weitere Auszahlung"
-
-#~ msgid "Work Permit No"
-#~ msgstr "Arbeitserlaubnis Nummer"
-
-#~ msgid "Employee Salary"
-#~ msgstr "Mitarbeitervergütung"
-
-#~ msgid "Total By Employee"
-#~ msgstr "Arbeitnehmeranteil"
-
+#. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:867
 #, python-format
-#~ msgid "Variable Error !"
-#~ msgstr "Fehler bei Variable !"
-
-#~ msgid "Pay Salary"
-#~ msgstr "Auszahlung"
-
-#~ msgid "Bank Account A/C"
-#~ msgstr "Bank Konto A/C"
-
-#~ msgid "Contribution Lines"
-#~ msgstr "Positionen Arbeitgeberanteile"
-
-#~ msgid "Bank Advice Note"
-#~ msgstr "Vergütungsauszahlung Hinweis"
-
-#~ msgid "Loan Installment"
-#~ msgstr "Rate Mitarbeiterdarlehen"
-
-#~ msgid "Complete HR Checking"
-#~ msgstr "Abschluss der Prüfung"
-
-#~ msgid "Salary Structure:"
-#~ msgstr "Vergütungsstruktur:"
-
-#~ msgid "Employees Salary Detail"
-#~ msgstr "Mitarbeitervergütung Details"
-
-#~ msgid "Function Line"
-#~ msgstr "Auflistung der Berechnungsfunktionen"
-
-#~ msgid "Function Calculation"
-#~ msgstr "Funktionsberechnung"
-
-#~ msgid "Total By Company"
-#~ msgstr "Arbeitgeberanteil"
-
-#~ msgid "Country & Address"
-#~ msgstr "Land & Anschrift"
-
-#~ msgid "Basic Salary – Leaves"
-#~ msgstr "Grundvergütung - Abzug für Abwesenheit"
-
-#~ msgid "Heads"
-#~ msgstr "Zulagen und Abzüge"
-
-#~ msgid "Print Statement"
-#~ msgstr "Vergütungsabrechnung drucken"
-
-#~ msgid "Salary Register"
-#~ msgstr "Vergütungsabrechnung"
-
-#~ msgid "Passport Detail"
-#~ msgstr "Details zum  Ausweis"
-
-#~ msgid "Payroll Register"
-#~ msgstr "Personalabrechnung"
-
-#~ msgid "Paid"
-#~ msgstr "Bezahlt"
-
-#~ msgid "Approve Sheet"
-#~ msgstr "Freigabe Abrechnung"
-
-#~ msgid "Validation"
-#~ msgstr "Genehmigung"
-
-#~ msgid "Search Company Contribution"
-#~ msgstr "Suche Arbeitgeberanteile"
-
-#~ msgid "User"
-#~ msgstr "Benutzer"
-
-#~ msgid "Applied this head for calculation if condition is true"
-#~ msgstr "Kalkuliere diese Zulagen und Abzügen, wenn die Bedingungen zutreffen"
-
-#~ msgid "Yearly Salary Details"
-#~ msgstr "Auswertung Personalabrechnung"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr ""
-#~ "Fehler ! Sie können keine rekursive Hierachie bei Mitarbeitern definieren."
-
-#~ msgid "Wating for HR Verification"
-#~ msgstr "Freigabe wird erwartet"
-
-#~ msgid "Payment Advice:"
-#~ msgstr "Zahlungsanweisung:"
-
-#~ msgid "Basic Salary"
-#~ msgstr "Basisvergütung"
-
-#~ msgid "Salary Information"
-#~ msgstr "Vergütungsinformation"
-
-#~ msgid "Search Passport"
-#~ msgstr "Suche Sozialversicherungsausweis"
-
-#~ msgid "Label"
-#~ msgstr "Buchungstext"
-
-#~ msgid "Company contribution"
-#~ msgstr "Arbeitgeberanteile"
-
-#~ msgid "Other No."
-#~ msgstr "Andere Nr."
-
-#~ msgid "Number :"
-#~ msgstr "Nummer:"
-
-#~ msgid ""
-#~ "This will use to computer the % fields values, in general its on basic, but "
-#~ "You can use all heads code field in small letter as a variable name i.e. "
-#~ "hra, ma, lta, etc...., also you can use, static varible basic"
-#~ msgstr ""
-#~ "Hierdurch erfolgt die % Berechnung, i.d.R. ist die Grundeinstellung für die "
-#~ "Berechnung 'basic'. Sie können aber auch auf alle anderen Variablen der "
-#~ "Zulagen und Abzüge für Ihre Berechnungspositionen referenzieren. Sie geben "
-#~ "hierzu in kleinen Buchstaben die entsprechenden Variablen ein,  z.B. anstatt "
-#~ "basic: hra,ma, lta,etc.... Sie können natürlich auch die statische Variable "
-#~ "'basic' belassen."
-
-#~ msgid "Computation Overview"
-#~ msgstr "Berechnungsübersicht"
-
-#~ msgid "Salary On"
-#~ msgstr "Vergütung für"
-
-#~ msgid "Salary"
-#~ msgstr "Vergütung"
-
-#~ msgid "Total Salary"
-#~ msgstr "Gesamtvergütung"
-
-#~ msgid "Payroll Head"
-#~ msgstr "Zulagen und Abzüge"
-
-#~ msgid "Salary Heads"
-#~ msgstr "Zulagen und Abzüge"
-
-#~ msgid "Print Report"
-#~ msgstr "Drucke Report"
-
-#~ msgid "Month"
-#~ msgstr "Monat"
-
-#~ msgid "Issue"
-#~ msgstr "Problem"
-
-#~ msgid "Basic Salary without Leave:"
-#~ msgstr "Grundlohn ohne Urlaub / Abwesenheit"
-
-#~ msgid "Allowance Deduction Heads"
-#~ msgstr "Zulagen und Abzüge"
-
-#~ msgid "Gross Sal."
-#~ msgstr "Brutto Vergütung"
-
-#~ msgid "Deduction -"
-#~ msgstr "Abzug -"
-
-#~ msgid ")"
-#~ msgstr ")"
-
-#~ msgid "Wage Type"
-#~ msgstr "Lohnart"
-
-#~ msgid "Net Sal."
-#~ msgstr "Netto Lohn"
-
-#~ msgid "Year Salary"
-#~ msgstr "Jahresvergütung"
-
-#~ msgid "Slip Line"
-#~ msgstr "Vergütungsposition"
-
-#~ msgid "Number of Leaves"
-#~ msgstr "Urlaubstage"
-
-#~ msgid "Cancel Sheet"
-#~ msgstr "Abbrechen Auszahlung"
-
-#~ msgid "Advance"
-#~ msgstr "Vorschuss"
-
-#~ msgid "Leaved Deduction"
-#~ msgstr "Abzug Urlaub / Abwesenheit"
-
-#~ msgid "Country"
-#~ msgstr "Land"
-
-#~ msgid "Contribution register based on company"
-#~ msgstr "Arbeitgeberanteil"
-
-#~ msgid "Total Payment"
-#~ msgstr "Auszahlungsbetrag"
-
-#~ msgid "Leave Deductions Line:"
-#~ msgstr "Abzüge für Abwesenheit"
-
-#~ msgid "Company Deduction"
-#~ msgstr "Arbeitgeberanteil"
-
-#~ msgid "Payroll Configurtion"
-#~ msgstr "Konfiguration Personalabrechnung"
-
-#~ msgid "No of Leaves"
-#~ msgstr "Urlaubstage"
-
-#~ msgid "Other Id"
-#~ msgstr "Andere ID"
-
-#~ msgid "Slip ID"
-#~ msgstr "Abrechnung ID"
-
-#~ msgid "Letter Content"
-#~ msgstr "Auszahlung Text"
-
-#~ msgid "Bank Payment Advice"
-#~ msgstr "Vergütungsauszahlung"
-
-#~ msgid "Contributions"
-#~ msgstr "Anteile Arbeitgeber / Arbeitnehmer"
-
+msgid "Wrong python condition defined for salary rule %s (%s)."
+msgstr "Falsche Python Bedingung für die Abrechnungsregel %s (%s)."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:831
 #, python-format
-#~ msgid "Variable Error: %s "
-#~ msgstr "Fehler in Variable:%s "
+msgid "Wrong quantity defined for salary rule %s (%s)."
+msgstr "Falsche Menge wurde definiert für diese Abrechnungsregel %s (%s)."
 
+#. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:861
 #, python-format
-#~ msgid "Please check configuration of %s, payroll head is missing"
-#~ msgstr "Bitte prüfen Sie die Konfiguration von %s, der Abrechnungskopf fehlt"
+msgid "Wrong range condition defined for salary rule %s (%s)."
+msgstr "Falsche Bedingungen für die Bandbreiten der Abrechnungsregel %s (%s)"
 
-#~ msgid "Basic"
-#~ msgstr "Basis"
-
+#. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:333
 #, python-format
-#~ msgid "Please define bank account for the %s employee"
-#~ msgstr "Bitte definieren Sie die Bankverbindung für den Mitarbeiter %s"
+msgid "You cannot delete a payslip which is not draft or cancelled!"
+msgstr "Sie können keine Personalabrechnung stornieren, die nicht mehr im Entwurf ist oder bereits abgebrochen wurde."
 
-#~ msgid "The Passport No must be unique !"
-#~ msgstr "Die Nummer des Ausweis sollte eindeutig sein !"
-
-#~ msgid "hr.payroll.year.salary"
-#~ msgstr "hr.payroll.year.salary"
-
-#~ msgid "#"
-#~ msgstr "#"
-
-#~ msgid "hr.payroll.employees.detail"
-#~ msgstr "hr.payroll.employees.detail"
-
-#~ msgid "Error! contract start-date must be lower then contract end-date."
-#~ msgstr ""
-#~ "Fehler! Datum des Vertragsbeginns muss zeitlich vor dem  Datum des "
-#~ "Vertragsendes sein."
-
-#~ msgid "Net Salary"
-#~ msgstr "Nettolohn"
-
-#~ msgid "E-mail Address"
-#~ msgstr "E-Mail-Adresse"
-
-#~ msgid "Category Code"
-#~ msgstr "Kategorie Kürzel"
-
-#~ msgid "Category Name"
-#~ msgstr "Kategorie Bezeichnung"
-
-#~ msgid "D/C"
-#~ msgstr "S/H"
-
-#~ msgid "C/D"
-#~ msgstr "S/H"
-
-#~ msgid "Children definition"
-#~ msgstr "Definition abhängiger Daten"
-
-#~ msgid ""
-#~ "* When the payslip is created the state is 'Draft'.            \n"
-#~ "* If the payslip is under verification, the state is 'Waiting'.             "
-#~ "\n"
-#~ "* If the payslip is confirmed then state is set to 'Done'.            \n"
-#~ "* When user cancel payslip the state is 'Rejected'."
-#~ msgstr ""
-#~ "Der Status des Lohnkontos ist:\n"
-#~ "* \"Entwurf\" nach Erstellung\n"
-#~ "* \"Wartend\" wenn das Lohnkonto überprüft wird.\n"
-#~ "* \"Erledigt\" wenn das Lohnkonto bestätigt ist.\n"
-#~ "* \"Abgelehnt\" wenn das Lohnkonto vom Benutzer storniert ist"
-
+#. module: hr_payroll
+#: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:35
 #, python-format
-#~ msgid "Wrong python code defined for salary rule %s (%s) "
-#~ msgstr "Falscher python code Für Rechenregel %s (%s) "
+msgid "You must select employee(s) to generate payslip(s)."
+msgstr "Sie müssen Mitarbeiter für die zu erstellende Gehaltsabrechnung wählen"
 
-#~ msgid "Payslip Info"
-#~ msgstr "Lohnkonto Information"
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payroll_config_settings
+msgid "hr.payroll.config.settings"
+msgstr "hr.payroll.config.settings"
 
-#, python-format
-#~ msgid "You must select employee(s) to generate payslip(s)"
-#~ msgstr "Sie müssen Mitarbeiter auswählen um Lohnkonten erzeugen zu können."
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_salary_rule
+msgid "hr.salary.rule"
+msgstr "hr.salary.rule"
 
-#, python-format
-#~ msgid "Wrong quantity defined for salary rule %s (%s)"
-#~ msgstr "Falsche Menge für Rechenregel %s (%s) definiert"
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
+msgid "report.hr_payroll.report_contributionregister"
+msgstr "report.hr_payroll.report_contributionregister"
 
-#, python-format
-#~ msgid "Wrong python condition defined for salary rule %s (%s)"
-#~ msgstr "Falsche Python Bedingung für Rechenregel %s (%s)"
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslip
+msgid "report.hr_payroll.report_payslip"
+msgstr "report.hr_payroll.report_payslip"
 
-#, python-format
-#~ msgid "Error"
-#~ msgstr "Fehler"
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
+msgid "report.hr_payroll.report_payslipdetails"
+msgstr "report.hr_payroll.report_payslipdetails"
 
-#~ msgid ""
-#~ "A contribution register is a third party involved in the salary payment of "
-#~ "the employees. It can be the social security, the estate or anyone that "
-#~ "collect or inject money on payslips."
-#~ msgstr ""
-#~ "Ein Beitragskonto ist eine Fremder der in die Lohnzahlung involviert ist. zB "
-#~ "Sozialversicherung, der Staat, oder jeder der Geld im Rahmen des Lohnkontos "
-#~ "einzahlt oder erhält."
-
-#, python-format
-#~ msgid "Wrong range condition defined for salary rule %s (%s)"
-#~ msgstr "Falsche Bereichsbedingung für Lohnregel %s (%s)"
-
-#, python-format
-#~ msgid "Wrong percentage base or quantity defined for salary rule %s (%s)"
-#~ msgstr "Falscher Prozentsatz oder Menge für diese Rechenregel %s (%s)"
-
-#~ msgid "Used for the display of rule on payslip"
-#~ msgstr "Verwendet um die Rechenregel am Konto darzustellen"
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_percentage_base
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_amount_percentage_base
+msgid "result will be affected to a variable"
+msgstr "Das Ergebnis wird einer Variablen zugewiesen"

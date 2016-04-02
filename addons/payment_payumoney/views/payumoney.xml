@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="payumoney_acquirer_button">
+        <form t-if="acquirer.payumoney_merchant_key" t-att-action="tx_url" method="post" target="_self">
+            <input type="hidden" name="key" t-att-value='key' />
+            <input type="hidden" name="txnid" t-att-value='txnid' />
+            <input type="hidden" name="amount" t-att-value='amount' />
+            <input type="hidden" name="productinfo" t-att-value='productinfo' />
+            <input type="hidden" name="firstname" t-att-value='firstname' />
+            <input type="hidden" name="email" t-att-value='email' />
+            <input type="hidden" name="phone" t-att-value='phone'/>
+            <input type="hidden" name="service_provider" t-att-value='service_provider' />
+            <input type="hidden" name="hash" t-att-value='hash' />
+            <input type="hidden" name="surl" t-att-value='surl' />
+            <input type="hidden" name="furl" t-att-value='furl' />
+            <input type="hidden" name="curl" t-att-value='curl' />
+            <input type="hidden" name="udf1" t-att-value='udf1'/>
+            <!-- submit -->
+            <button type="submit" width="100px" t-att-class="submit_class">
+                <img t-if="not submit_txt" src="/payment_payumoney/static/src/img/payumoney_icon.png"/>
+                <span t-if="submit_txt"><t t-esc="submit_txt"/> <span class="fa fa-long-arrow-right"/></span>
+            </button>
+        </form>
+    </template>
+</odoo>

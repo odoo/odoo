@@ -1,111 +1,88 @@
-# Romanian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * google_account
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-05-13 12:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-01-13 13:41+0000\n"
+"PO-Revision-Date: 2016-01-14 10:12+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:48+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
-#. module: google_base_account
-#: field:res.users,gmail_user:0
-msgid "Username"
-msgstr "Nume de utilizator"
+#. module: google_account
+#: model:ir.model.fields,field_description:google_account.field_google_service_create_uid
+msgid "Created by"
+msgstr "Creat de"
 
-#. module: google_base_account
-#: model:ir.actions.act_window,name:google_base_account.act_google_login_form
-msgid "Google Login"
-msgstr "Autentificare Google"
+#. module: google_account
+#: model:ir.model.fields,field_description:google_account.field_google_service_create_date
+msgid "Created on"
+msgstr "Creat în"
 
-#. module: google_base_account
-#: code:addons/google_base_account/wizard/google_login.py:29
-#, python-format
-msgid "Google Contacts Import Error!"
-msgstr "Eroare Import Contacte Google!"
+#. module: google_account
+#: model:ir.model.fields,field_description:google_account.field_google_service_display_name
+msgid "Display Name"
+msgstr "Afiseaza nume"
 
-#. module: google_base_account
-#: model:ir.model,name:google_base_account.model_res_users
-msgid "Users"
-msgstr "Utilizatori"
+#. module: google_account
+#: model:ir.model.fields,field_description:google_account.field_google_service_id
+msgid "ID"
+msgstr "ID"
 
-#. module: google_base_account
-#: view:google.login:0
-msgid "or"
-msgstr "sau"
+#. module: google_account
+#: model:ir.model.fields,field_description:google_account.field_google_service___last_update
+msgid "Last Modified on"
+msgstr "Ultima modificare la"
 
-#. module: google_base_account
-#: view:google.login:0
-msgid "Google login"
-msgstr "autentificare Google"
+#. module: google_account
+#: model:ir.model.fields,field_description:google_account.field_google_service_write_uid
+msgid "Last Updated by"
+msgstr "Ultima actualizare făcută de"
 
-#. module: google_base_account
-#: field:google.login,password:0
-msgid "Google Password"
-msgstr "Parola Google"
+#. module: google_account
+#: model:ir.model.fields,field_description:google_account.field_google_service_write_date
+msgid "Last Updated on"
+msgstr "Ultima actualizare în"
 
-#. module: google_base_account
-#: code:addons/google_base_account/wizard/google_login.py:77
-#, python-format
-msgid "Error!"
-msgstr "Eroare!"
-
-#. module: google_base_account
-#: view:res.users:0
-msgid "Google Account"
-msgstr "Cont Google"
-
-#. module: google_base_account
-#: view:res.users:0
-msgid "Synchronization"
-msgstr "Sincronizare"
-
-#. module: google_base_account
-#: code:addons/google_base_account/wizard/google_login.py:77
-#, python-format
-msgid "Authentication failed. Check the user and password."
-msgstr "Autentificarea a esuat. Verificati utilizatorul si parola."
-
-#. module: google_base_account
-#: code:addons/google_base_account/wizard/google_login.py:29
+#. module: google_account
+#: code:addons/google_account/google_account.py:98
 #, python-format
 msgid ""
-"Please install gdata-python-client from http://code.google.com/p/gdata-"
-"python-client/downloads/list"
+"Something went wrong during your token generation. Maybe your Authorization "
+"Code is invalid"
 msgstr ""
-"Va rugam sa instalati gdata-python-client de la adresa "
-"http://code.google.com/p/gdata-python-client/downloads/list"
 
-#. module: google_base_account
-#: model:ir.model,name:google_base_account.model_google_login
-msgid "Google Contact"
-msgstr "Contact Google"
+#. module: google_account
+#: code:addons/google_account/google_account.py:37
+#, python-format
+msgid ""
+"Something went wrong during your token generation. Maybe your Authorization "
+"Code is invalid or already expired"
+msgstr ""
 
-#. module: google_base_account
-#: view:google.login:0
-msgid "Cancel"
-msgstr "Anuleaza"
+#. module: google_account
+#: code:addons/google_account/google_account.py:128
+#, python-format
+msgid ""
+"Something went wrong during your token generation. Maybe your Authorization "
+"Code is invalid or already expired [%s]"
+msgstr ""
 
-#. module: google_base_account
-#: field:google.login,user:0
-msgid "Google Username"
-msgstr "Nume de utilizator Google"
+#. module: google_account
+#: code:addons/google_account/google_account.py:173
+#, python-format
+msgid "Something went wrong with your request to google"
+msgstr ""
 
-#. module: google_base_account
-#: field:res.users,gmail_password:0
-msgid "Password"
-msgstr "Parola"
-
-#. module: google_base_account
-#: view:google.login:0
-msgid "_Login"
-msgstr "_Autentificare"
+#. module: google_account
+#: model:ir.model,name:google_account.model_google_service
+msgid "google.service"
+msgstr ""

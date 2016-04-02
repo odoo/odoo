@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2014-Today OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import osv
 
@@ -29,8 +11,7 @@ class AbstractReport(osv.AbstractModel):
     _wrapped_report_class = None
 
     def render_html(self, cr, uid, ids, data=None, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
 
         # If the key 'landscape' is present in data['form'], passing it into the context
         if data and data.get('form', {}).get('landscape'):
@@ -55,7 +36,9 @@ class AbstractReport(osv.AbstractModel):
 
         # Rendering self._template with the wrapped report instance localcontext as
         # rendering environment
-        docargs = wrapped_report.localcontext
+        docargs = dict(wrapped_report.localcontext)
+        if not docargs.get('lang'):
+            docargs.pop('lang', False)
         docargs['docs'] = docargs.get('objects')
 
         # Used in template translation (see translate_doc method from report model)

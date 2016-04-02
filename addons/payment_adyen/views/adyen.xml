@@ -4,21 +4,21 @@
 
         <template id="adyen_acquirer_button">
             <form t-if="acquirer.adyen_merchant_account" t-att-action="tx_url" method="post" target="_self">
-                <input type="hidden" name="merchantReference" t-att-value="tx_values['merchantReference']"/>
-                <input type="hidden" name="paymentAmount" t-att-value="tx_values['paymentAmount'] or '0.0'"/>
-                <input type="hidden" name="currencyCode" t-att-value="tx_values['currencyCode']"/>
-                <input type="hidden" name="shipBeforeDate" t-att-value="tx_values['shipBeforeDate']"/>
-                <input type="hidden" name="skinCode" t-att-value="tx_values['skinCode']"/>
-                <input type="hidden" name="merchantAccount" t-att-value="tx_values['merchantAccount']"/>
-                <input type="hidden" name="shopperLocale" t-att-value="tx_values['shopperLocale']"/>
-                <input type="hidden" name="sessionValidity" t-att-value="tx_values['sessionValidity']"/>
-                <input type="hidden" name="merchantSig" t-att-value="tx_values['merchantSig']"/>
+                <input type="hidden" name="merchantReference" t-att-value="merchantReference"/>
+                <input type="hidden" name="paymentAmount" t-att-value="paymentAmount"/>
+                <input type="hidden" name="currencyCode" t-att-value="currencyCode"/>
+                <input type="hidden" name="shipBeforeDate" t-att-value="shipBeforeDate"/>
+                <input type="hidden" name="skinCode" t-att-value="skinCode"/>
+                <input type="hidden" name="merchantAccount" t-att-value="merchantAccount"/>
+                <input type="hidden" name="shopperLocale" t-att-value="shopperLocale"/>
+                <input type="hidden" name="sessionValidity" t-att-value="sessionValidity"/>
+                <input type="hidden" name="merchantSig" t-att-value="merchantSig"/>
                 <!-- URLs -->
-                <input t-if="tx_values.get('resURL')" type='hidden' name='resURL'
-                    t-att-value="tx_values.get('resURL')"/>
+                <input type='hidden' name='resURL'
+                    t-att-value="resURL"/>
                 <!-- custom -->
-                <input t-if="tx_values.get('merchantReturnData')" type='hidden' name='merchantReturnData'
-                    t-att-value="tx_values.get('merchantReturnData')"/>
+                <input t-if="merchantReturnData" type='hidden' name='merchantReturnData'
+                    t-att-value="merchantReturnData"/>
                 <!-- submit -->
                 <button type="submit" width="100px"
                     t-att-class="submit_class">

@@ -1,26 +1,9 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import osv,fields
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class repair_cancel(osv.osv_memory):
     _name = 'mrp.repair.cancel'
@@ -46,7 +29,7 @@ class repair_cancel(osv.osv_memory):
         if repair_order.invoiced or repair_order.invoice_method == 'none':
             repair_order_obj.action_cancel(cr, uid, [record_id], context=context)
         else:
-            raise osv.except_osv(_('Warning!'),_('Repair order is not invoiced.'))
+            raise UserError(_('Repair order is not invoiced.'))
 
         return {'type': 'ir.actions.act_window_close'}
 
@@ -72,15 +55,10 @@ class repair_cancel(osv.osv_memory):
             res['arch'] = """
                 <form string="Cancel Repair" version="7.0">
                     <header>
-                        <button name="cancel_repair" string="_Yes" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        <button name="cancel_repair" string="_Yes" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
                     </header>
                     <label string="Do you want to continue?"/>
                 </form>
             """
         return res
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="payment_transaction_user_rule" model="ir.rule">
+            <field name="name">Access own payment transaction only</field>
+            <field name="model_id" ref="payment.model_payment_transaction"/>
+            <field name="domain_force">[
+                '|',
+                    ('partner_id','=',False),
+                    ('partner_id','=',user.partner_id.id)
+                ]</field>
+            <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal')), (4, ref('base.group_public'))]"/>
+        </record>
+
+        <record id="payment_transaction_salesman_rule" model="ir.rule">
+            <field name="name">Access every payment transaction</field>
+            <field name="model_id" ref="payment.model_payment_transaction"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_sale_salesman'))]"/>
+        </record>
+
+        <record id="payment_method_user_rule" model="ir.rule">
+            <field name="name">Access own payment methods only</field>
+            <field name="model_id" ref="payment.model_payment_method"/>
+            <field name="domain_force">[('partner_id','=',user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal')), (4, ref('base.group_public'))]"/>
+        </record>
+
+        <record id="payment_method_salesman_rule" model="ir.rule">
+            <field name="name">Access every payment method</field>
+            <field name="model_id" ref="payment.model_payment_method"/>
+            <field name="groups" eval="[(4, ref('base.group_sale_salesman'))]"/>
+        </record>
+
+    </data>
+</openerp>

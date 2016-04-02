@@ -6,6 +6,7 @@ import time
 import openerp
 import openerp.addons.hw_proxy.controllers.main as hw_proxy
 import threading
+import subprocess
 from openerp import http
 from openerp.http import request
 from openerp.tools.translate import _
@@ -16,7 +17,7 @@ upgrade_template = """
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>OpenERP's PosBox - Software Upgrade</title>
+        <title>Odoo's PosBox - Software Upgrade</title>
         <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
         <script>
         $(function(){
@@ -29,17 +30,8 @@ upgrade_template = """
                     $.ajax({
                         url:'/hw_proxy/perform_upgrade/'
                     }).then(function(status){
-                        $('#upgrade').html('Upgrade Successful<br \\>Click to Restart the PosBox');
+                        $('#upgrade').html('Upgrade successful, restarting the posbox...');
                         $('#upgrade').off('click');
-                        $('#upgrade').click(function(){
-                            $.ajax({ url:'/hw_proxy/perform_restart' })
-                            $('#upgrade').text('Restarting');
-                            $('#upgrade').off('click');
-                            setTimeout(function(){
-                                window.location = '/'
-                            },30*1000);
-                        });
-
                     },function(){
                         $('#upgrade').text('Upgrade Failed');
                     });
@@ -73,14 +65,25 @@ upgrade_template = """
     <body>
         <h1>PosBox Software Upgrade</h1>
         <p>
-        This tool will help you perform an upgrade of the PosBox's software.
+        This tool will help you perform an upgrade of the PosBox's software over the
+	internet. 
+	<p></p>
         However the preferred method to upgrade the posbox is to flash the sd-card with
-        the <a href='http://nightly.openerp.com/trunk/posbox/'>latest image</a>. The upgrade
-        procedure is explained into to the <a href='/hw_proxy/static/doc/manual.pdf'>PosBox manual</a>
+        the <a href='http://nightly.odoo.com/trunk/posbox/'>latest image</a>. The upgrade
+        procedure is explained into to the
+        <a href='https://www.odoo.com/documentation/user/point_of_sale/posbox/index.html'>PosBox manual</a>
         </p>
         <p>
         To upgrade the posbox, click on the upgrade button. The upgrade will take a few minutes. <b>Do not reboot</b> the PosBox during the upgrade.
         </p>
+        <p>
+        Latest patch:
+        </p>
+        <pre>
+"""
+upgrade_template += subprocess.check_output("git --work-tree=/home/pi/odoo/ --git-dir=/home/pi/odoo/.git log -1", shell=True).replace("\n", "<br/>")
+upgrade_template += """
+        </pre>
         <div class='centering'>
             <a href='#' id='upgrade'>Upgrade</a>
         </div>
@@ -93,7 +96,6 @@ class PosboxUpgrader(hw_proxy.Proxy):
     def __init__(self):
         super(PosboxUpgrader,self).__init__()
         self.upgrading = threading.Lock()
-        self.last_upgrade = 0
 
     @http.route('/hw_proxy/upgrade', type='http', auth='none', )
     def upgrade(self):
@@ -102,25 +104,8 @@ class PosboxUpgrader(hw_proxy.Proxy):
     @http.route('/hw_proxy/perform_upgrade', type='http', auth='none')
     def perform_upgrade(self):
         self.upgrading.acquire()
-        if time.time() - self.last_upgrade < 30:
-            self.upgrading.release()
-            return 'UPTODATE'
-        else:
-            os.system('/bin/bash /home/pi/openerp/update.sh')
-            self.last_upgrade = time.time()
-            self.upgrading.release()
-            return 'SUCCESS'
 
-    @http.route('/hw_proxy/perform_restart', type='http', auth='none')
-    def perform_restart(self):
-        self.upgrading.acquire()
-        if time.time() - self.last_upgrade < 30:
-            self.upgrading.release()
-            return 'RESTARTED'
-        else:
-            os.system('/bin/bash /home/pi/openerp/restart.sh')
-            self.last_upgrade = time.time()
-            self.upgrading.release()
-            return 'SUCCESS'
-
+        os.system('/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh')
         
+        self.upgrading.release()
+        return 'SUCCESS'

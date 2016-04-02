@@ -1,0 +1,275 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * auth_signup
+# 
+# Translators:
+# David Hernandez <davidhernandez.ctam@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-01-06 07:13+0000\n"
+"PO-Revision-Date: 2016-01-27 18:18+0000\n"
+"Last-Translator: David Hernandez <davidhernandez.ctam@gmail.com>\n"
+"Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-9/language/es_MX/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es_MX\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: auth_signup
+#: model:mail.template,body_html:auth_signup.set_password_email
+msgid ""
+"\n"
+"                \n"
+"                    <p>\n"
+"                        ${object.name},\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        You have been invited to connect to \"${object.company_id.name}\" in order to get access to your documents in Odoo.\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        To accept the invitation, click on the following link:\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li><a href=\"${object.signup_url}\">Accept invitation to \"${object.company_id.name}\"</a></li>\n"
+"                    </ul>\n"
+"                    <p>\n"
+"                        Thanks,\n"
+"                    </p>\n"
+"                    <pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"                    </pre>\n"
+"                \n"
+"            "
+msgstr "\n\n\n<p>\n${object.name},\n</p>\n<p>\nUsted ha sido invitado para conectarse a \"${object.company_id.name}\" con el fin de tener acceso a sus documentos en Odoo\n</p>\n<p>\nPara aceptar la invitación, haga clic en el siguiente enlace:\n</p>\n<ul>\n<li><a href=\"${object.signup_url}\">Aceptar invitación a \"${object.company_id.name}\"</a></li>\n</ul>\n<p>\nGracias,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
+
+#. module: auth_signup
+#: model:mail.template,body_html:auth_signup.reset_password_email
+msgid ""
+"\n"
+"<p>A password reset was requested for the Odoo account linked to this email.</p>\n"
+"\n"
+"<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>, which will remain valid during 24 hours.</p>\n"
+"\n"
+"<p>Note: If you do not expect this, you can safely ignore this email.</p>"
+msgstr ""
+
+#. module: auth_signup
+#: model:mail.template,subject:auth_signup.set_password_email
+msgid "${object.company_id.name} invitation to connect on Odoo"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
+msgid ""
+"<strong>A password reset has been requested for this user. An email "
+"containing the following link has been sent:</strong>"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
+msgid ""
+"<strong>An invitation email containing the following subscription link has "
+"been sent:</strong>"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
+msgid "Allow external users to sign up"
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:64
+#, python-format
+msgid "An email has been sent with credentials to reset your password"
+msgstr "Un email ha sido enviado con credencial de reiniciar su contraseña"
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:40
+#, python-format
+msgid "Another user is already registered using this email address."
+msgstr "Otro usuario está listo para registrar usando este dirección de correo electrónico."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:115
+#, python-format
+msgid "Authentication Failed."
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.reset_password
+#: model:ir.ui.view,arch_db:auth_signup.signup
+msgid "Back to Login"
+msgstr "Volver al Inicio de sesión"
+
+#. module: auth_signup
+#: code:addons/auth_signup/res_users.py:277
+#, python-format
+msgid "Cannot send email: user %s has no email address."
+msgstr "No se puede enviar por correo electrónico: el %s usuarios no tiene dirección de correo electrónico."
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.reset_password
+msgid "Confirm"
+msgstr "Confirmar"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.fields
+msgid "Confirm Password"
+msgstr ""
+
+#. module: auth_signup
+#: selection:res.users,state:0
+msgid "Connected"
+msgstr "Conectado"
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:43
+#, python-format
+msgid "Could not create a new account."
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:66
+#, python-format
+msgid "Could not reset your password"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_reset_password
+msgid "Enable password reset from Login page"
+msgstr "Habilitar restablecimiento de contraseña de la página Inicio de sesión"
+
+#. module: auth_signup
+#: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_uninvited
+msgid "If unchecked, only invited users may sign up."
+msgstr "Si no se controla, solamente los usuarios invitados pueden inscribirse."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:91
+#, python-format
+msgid "Invalid signup token"
+msgstr ""
+
+#. module: auth_signup
+#: selection:res.users,state:0
+msgid "Never Connected"
+msgstr "Nunca Conectado"
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.fields
+msgid "Password"
+msgstr "Contraseña"
+
+#. module: auth_signup
+#: model:mail.template,subject:auth_signup.reset_password_email
+msgid "Password reset"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.login
+msgid "Reset Password"
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/res_users.py:253
+#, python-format
+msgid "Reset password: invalid username or email"
+msgstr "Perdí mi clave: nombre de usuario o email no es válida"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
+msgid "Send Reset Password Instructions"
+msgstr "Enviar Instrucciones de restablecimiento de contraseña"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
+msgid "Send an Invitation Email"
+msgstr "Enviar un invitación por email"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.login
+#: model:ir.ui.view,arch_db:auth_signup.signup
+msgid "Sign up"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
+msgid "Signup Expiration"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
+msgid "Signup Token"
+msgstr "Registra Token"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_type
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_type
+msgid "Signup Token Type"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_valid
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_valid
+msgid "Signup Token is Valid"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_url
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_url
+msgid "Signup URL"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_state
+msgid "Status"
+msgstr "Status"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_template_user_id
+msgid "Template user for new users created through signup"
+msgstr "Plantilla usuario para nuevos usuarios creados mediante registro"
+
+#. module: auth_signup
+#: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_reset_password
+msgid "This allows users to trigger a password reset from the Login page."
+msgstr "Esto permite a los usuarios desencadenar un restablecimiento de contraseña desde la página de inicio de sesión."
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_res_users
+msgid "Users"
+msgstr "Usuarios"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.fields
+#: model:ir.ui.view,arch_db:auth_signup.reset_password
+msgid "Your Email"
+msgstr "Tu Email"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.fields
+msgid "Your Name"
+msgstr "Su nombre"
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_base_config_settings
+msgid "base.config.settings"
+msgstr "base.config.settings"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.fields
+msgid "e.g. John Doe"
+msgstr ""

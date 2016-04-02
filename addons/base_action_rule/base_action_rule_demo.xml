@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="test_filter_draft" model="ir.filters">
+            <field name="name">Test lead in state 'draft'</field>
+            <field name="model_id">base.action.rule.lead.test</field>
+            <field name="domain">[('state', '=', 'draft')]</field>
+        </record>
+
+        <record id="test_filter_open" model="ir.filters">
+            <field name="name">Test lead in state 'open'</field>
+            <field name="model_id">base.action.rule.lead.test</field>
+            <field name="domain">[('state', '=', 'open')]</field>
+        </record>
+
+        <record id="test_filter_done" model="ir.filters">
+            <field name="name">Test lead in state 'done'</field>
+            <field name="model_id">base.action.rule.lead.test</field>
+            <field name="domain">[('state', '=', 'done')]</field>
+        </record>
+
+        <record id="test_rule_on_create" model="base.action.rule">
+            <field name="name">Test rule on create</field>
+            <field name="kind">on_create</field>
+            <field name="model_id" ref="base_action_rule.model_base_action_rule_lead_test"/>
+            <field name="act_user_id" ref="base.user_demo"/>
+            <field name="filter_id" ref="test_filter_draft"/>
+        </record>
+
+        <record id="test_rule_on_write" model="base.action.rule">
+            <field name="name">Test rule on write</field>
+            <field name="kind">on_write</field>
+            <field name="model_id" ref="base_action_rule.model_base_action_rule_lead_test"/>
+            <field name="act_user_id" ref="base.user_demo"/>
+            <field name="filter_pre_id" ref="test_filter_open"/>
+            <field name="filter_id" ref="test_filter_done"/>
+        </record>
+
+        <record id="test_rule_on_recompute" model="base.action.rule">
+            <field name="name">Test rule on recompute</field>
+            <field name="kind">on_write</field>
+            <field name="model_id" ref="base_action_rule.model_base_action_rule_lead_test"/>
+            <field name="act_user_id" ref="base.user_demo"/>
+            <field name="filter_domain">[('customer', '=', True)]</field>
+        </record>
+
+        <record id="test_rule_on_line" model="base.action.rule">
+            <field name="name">Test rule on secondary record</field>
+            <field name="kind">on_create</field>
+            <field name="model_id" ref="base_action_rule.model_base_action_rule_line_test"/>
+            <field name="act_user_id" ref="base.user_demo"/>
+        </record>
+    </data>
+</openerp>

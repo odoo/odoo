@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
 
@@ -32,8 +14,8 @@ class res_partner_grade(osv.osv):
     _columns = {
         'sequence': fields.integer('Sequence'),
         'active': fields.boolean('Active'),
-        'name': fields.char('Grade Name', size=32),
-        'partner_weight': fields.integer('Grade Weight',
+        'name': fields.char('Level Name'),
+        'partner_weight': fields.integer('Level Weight',
             help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
     }
     _defaults = {
@@ -47,18 +29,16 @@ class res_partner_activation(osv.osv):
 
     _columns = {
         'sequence' : fields.integer('Sequence'),
-        'name' : fields.char('Name', size=32, required=True),
+        'name' : fields.char('Name', required=True),
     }
 
 
 class res_partner(osv.osv):
     _inherit = "res.partner"
     _columns = {
-        'partner_weight': fields.integer('Grade Weight',
+        'partner_weight': fields.integer('Level Weight',
             help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
-        'opportunity_assigned_ids': fields.one2many('crm.lead', 'partner_assigned_id',\
-            'Assigned Opportunities'),
-        'grade_id': fields.many2one('res.partner.grade', 'Grade'),
+        'grade_id': fields.many2one('res.partner.grade', 'Level'),
         'activation' : fields.many2one('res.partner.activation', 'Activation', select=1),
         'date_partnership' : fields.date('Partnership Date'),
         'date_review' : fields.date('Latest Partner Review'),
@@ -87,8 +67,8 @@ class res_partner(osv.osv):
 class crm_lead(osv.osv):
     _inherit = "crm.lead"
     _columns = {
-        'partner_latitude': fields.float('Geo Latitude'),
-        'partner_longitude': fields.float('Geo Longitude'),
+        'partner_latitude': fields.float('Geo Latitude', digits=(16, 5)),
+        'partner_longitude': fields.float('Geo Longitude', digits=(16, 5)),
         'partner_assigned_id': fields.many2one('res.partner', 'Assigned Partner',track_visibility='onchange' , help="Partner this case has been forwarded/assigned to.", select=True),
         'date_assign': fields.date('Assignation Date', help="Last date this case was forwarded/assigned to a partner"),
     }
@@ -127,7 +107,7 @@ class crm_lead(osv.osv):
             self.assign_geo_localize(cr, uid, [lead.id], lead.partner_latitude, lead.partner_longitude, context=context)
             partner = res_partner.browse(cr, uid, partner_id, context=context)
             if partner.user_id:
-                salesteam_id = partner.section_id and partner.section_id.id or False
+                salesteam_id = partner.team_id and partner.team_id.id or False
                 for lead_id in ids:
                     self.allocate_salesman(cr, uid, [lead_id], [partner.user_id.id], team_id=salesteam_id, context=context)
             self.write(cr, uid, [lead.id], {'date_assign': fields.date.context_today(self,cr,uid,context=context), 'partner_assigned_id': partner_id}, context=context)
@@ -191,7 +171,7 @@ class crm_lead(osv.osv):
                         ('partner_weight','>', 0),
                         ('partner_latitude','>', latitude - 8), ('partner_latitude','<', latitude + 8),
                         ('partner_longitude','>', longitude - 8), ('partner_longitude','<', longitude + 8),
-                        ('country', '=', lead.country_id.id),
+                        ('country_id', '=', lead.country_id.id),
                     ], context=context)
 
                 # 5. fifth way: anywhere in same country
@@ -207,7 +187,8 @@ class crm_lead(osv.osv):
                     # warning: point() type takes (longitude, latitude) as parameters in this order!
                     cr.execute("""SELECT id, distance
                                   FROM  (select id, (point(partner_longitude, partner_latitude) <-> point(%s,%s)) AS distance FROM res_partner
-                                  WHERE partner_longitude is not null
+                                  WHERE active
+                                        AND partner_longitude is not null
                                         AND partner_latitude is not null
                                         AND partner_weight > 0) AS d
                                   ORDER BY distance LIMIT 1""", (longitude, latitude))
@@ -228,6 +209,3 @@ class crm_lead(osv.osv):
                         res_partner_ids[lead.id] = partner_id
                         break
         return res_partner_ids
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

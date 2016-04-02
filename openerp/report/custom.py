@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#    
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import os
 import time
@@ -29,14 +11,13 @@ import print_xml
 import render
 from interface import report_int
 import common
-from openerp.osv.osv import except_osv
-from openerp.osv.orm import browse_null
-from openerp.osv.orm import browse_record_list
+from openerp.osv.orm import BaseModel
 from pychart import *
 import misc
 import cStringIO
 from lxml import etree
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class external_pdf(render.render):
     def __init__(self, pdf):
@@ -84,7 +65,7 @@ class report_custom(report_int):
                     if row_canvas[i]:
                         row_canvas[i]=False
                 elif len(fields[i])==1:
-                    if not isinstance(obj, browse_null):
+                    if obj:
                         row.append(str(eval('obj.'+fields[i][0],{'obj': obj})))
                     else:
                         row.append(None)
@@ -106,7 +87,7 @@ class report_custom(report_int):
                     key = levels.keys()
                 for l in key:
                     objs = eval('obj.'+l,{'obj': obj})
-                    if not isinstance(objs, (browse_record_list, list)):
+                    if not isinstance(objs, (BaseModel, list)):
                         objs = [objs]
                     field_new = []
                     cond_new = []
@@ -191,8 +172,8 @@ class report_custom(report_int):
                 new_obj = eval('obj.'+report['field_parent'][1],{'obj': obj})
                 if not isinstance(new_obj, list) :
                     new_obj = [new_obj]
-                for o in  new_obj:
-                    if not isinstance(o, browse_null):
+                for o in new_obj:
+                    if o:
                         res += build_tree(o, level, depth+1)
                 return res
 
@@ -552,7 +533,7 @@ class report_custom(report_int):
         colors = map(lambda x:fill_style.Plain(bgcolor=x), misc.choice_colors(len(results)))
 
         if reduce(lambda x,y : x+y, map(lambda x : x[1],results)) == 0.0:
-            raise except_osv(_('Error'), _("The sum of the data (2nd field) is null.\nWe can't draw a pie chart !"))
+            raise UserError(_("The sum of the data (2nd field) is null.\nWe can't draw a pie chart !"))
 
         plot = pie_plot.T(data=results, arc_offsets=[0,10,0,10],
                           shadow = (2, -2, fill_style.gray50),
@@ -621,7 +602,3 @@ class report_custom(report_int):
         self.obj.render()
         return True
 report_custom('report.custom')
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

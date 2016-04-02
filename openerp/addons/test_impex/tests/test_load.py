@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import pkgutil
-import unittest2
+import unittest
 
 import openerp.modules.registry
 import openerp
@@ -56,7 +56,7 @@ class ImporterCase(common.TransactionCase):
 
         ids = ModelData.search(
             self.cr, openerp.SUPERUSER_ID,
-            [('model', '=', record._table_name), ('res_id', '=', record.id)])
+            [('model', '=', record._name), ('res_id', '=', record.id)])
         if ids:
             d = ModelData.read(
                 self.cr, openerp.SUPERUSER_ID, ids, ['name', 'module'])[0]
@@ -64,27 +64,19 @@ class ImporterCase(common.TransactionCase):
                 return '%s.%s' % (d['module'], d['name'])
             return d['name']
 
-        name = dict(record.name_get())[record.id]
+        name = record.name_get()[0][1]
         # fix dotted name_get results, otherwise xid lookups blow up
         name = name.replace('.', '-')
         ModelData.create(self.cr, openerp.SUPERUSER_ID, {
             'name': name,
-            'model': record._table_name,
+            'model': record._name,
             'res_id': record.id,
             'module': '__test__'
         })
         return '__test__.' + name
 
     def add_translations(self, name, type, code, *tnx):
-        Lang = self.registry('res.lang')
-        if not Lang.search(self.cr, openerp.SUPERUSER_ID, [('code', '=', code)]):
-            Lang.create(self.cr, openerp.SUPERUSER_ID, {
-                'name': code,
-                'code': code,
-                'translatable': True,
-                'date_format': '%d.%m.%Y',
-                'decimal_point': ',',
-            })
+        self.registry('res.lang').load_lang(self.cr, openerp.SUPERUSER_ID, code)
         Translations = self.registry('ir.translation')
         for source, value in tnx:
             Translations.create(self.cr, openerp.SUPERUSER_ID, {
@@ -247,7 +239,7 @@ class test_integer_field(ImporterCase):
             -1, -42, -(2**31 - 1), -(2**31), -12345678
         ], values(self.read()))
 
-    @mute_logger('openerp.sql_db', 'openerp.osv.orm')
+    @mute_logger('openerp.sql_db', 'openerp.models')
     def test_out_of_range(self):
         result = self.import_(['value'], [[str(2**31)]])
         self.assertIs(result['ids'], False)
@@ -389,14 +381,14 @@ class test_unbound_string_field(ImporterCase):
 class test_required_string_field(ImporterCase):
     model_name = 'export.string.required'
 
-    @mute_logger('openerp.sql_db', 'openerp.osv.orm')
+    @mute_logger('openerp.sql_db', 'openerp.models')
     def test_empty(self):
         result = self.import_(['value'], [[]])
         self.assertEqual(result['messages'], [message(
             u"Missing required value for the field 'unknown' (value)")])
         self.assertIs(result['ids'], False)
 
-    @mute_logger('openerp.sql_db', 'openerp.osv.orm')
+    @mute_logger('openerp.sql_db', 'openerp.models')
     def test_not_provided(self):
         result = self.import_(['const'], [['12']])
         self.assertEqual(result['messages'], [message(
@@ -521,7 +513,7 @@ class test_selection_function(ImporterCase):
         self.assertEqual(len(result['ids']), 2)
         self.assertFalse(result['messages'])
         self.assertEqual(
-            ['3', '1'],
+            [3, 1],
             values(self.read()))
 
     def test_translated(self):
@@ -536,7 +528,7 @@ class test_selection_function(ImporterCase):
         ], context={'lang': 'fr_FR'})
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), 2)
-        self.assertEqual(values(self.read()), ['1', '2'])
+        self.assertEqual(values(self.read()), [1, 2])
 
         result = self.import_(['value'], [['Wheee']], context={'lang': 'fr_FR'})
         self.assertFalse(result['messages'])
@@ -770,7 +762,7 @@ class test_m2m(ImporterCase):
         id4 = M2O_o.create(self.cr, openerp.SUPERUSER_ID, {'value': 9, 'str': 'record3'})
         records = M2O_o.browse(self.cr, openerp.SUPERUSER_ID, [id1, id2, id3, id4])
 
-        name = lambda record: dict(record.name_get())[record.id]
+        name = lambda record: record.name_get()[0][1]
 
         result = self.import_(['value'], [
             ['%s,%s' % (name(records[1]), name(records[2]))],

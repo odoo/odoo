@@ -6,17 +6,14 @@
             id="report_wc_barcode"
             string="Work Centers Barcode"
             model="mrp.workcenter"
-            name="mrp.wc.barcode"
-            rml="mrp_operations/report/mrp_wc_barcode.rml"
+            report_type="qweb-pdf"
+            file="mrp_operations.report_wcbarcode"
+            name="mrp_operations.report_wcbarcode"
             header="False" />
 
-        <report
-            id="report_code_barcode"
-            string="Start/Stop Barcode"
-            model="mrp_operations.operation.code"
-            name="mrp.code.barcode"
-            rml="mrp_operations/report/mrp_code_barcode.rml"
-            header="False"/>
+        <record id="report_wc_barcode" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="mrp_operations.paperformat_wcbarcode"/>
+        </record>
 
     </data>
 </openerp>

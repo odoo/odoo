@@ -1,37 +1,17 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'WMS Landed Costs',
     'version': '1.1',
-    'author': 'OpenERP SA',
     'summary': 'Landed Costs',
     'description': """
 Landed Costs Management
 =======================
 This module allows you to easily add extra costs on pickings and decide the split of these costs among their stock moves in order to take them into account in your stock valuation.
     """,
-    'website': 'http://www.openerp.com',
-    'images': [],
-    'depends': ['stock_account'],
+    'website': 'https://www.odoo.com/page/warehouse',
+    'depends': ['stock_account', 'purchase'],
     'category': 'Warehouse Management',
     'sequence': 16,
     'demo': [
@@ -44,10 +24,10 @@ This module allows you to easily add extra costs on pickings and decide the spli
         'stock_landed_costs_data.xml',
     ],
     'test': [
+        '../account/test/account_minimal_test.xml',
+        '../stock_account/test/stock_valuation_account.xml',
+        'test/stock_landed_costs.yml',
     ],
     'installable': True,
-    'application': True,
     'auto_install': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

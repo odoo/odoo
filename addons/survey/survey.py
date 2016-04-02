@@ -1,31 +1,16 @@
 # -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-TODAY OpenERP S.A. <http://www.openerp.com>
-#
-#    This program is free software: you can redistribute it and / or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp import SUPERUSER_ID
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DF
 from openerp.addons.website.models.website import slug
 from urlparse import urljoin
 from itertools import product
 from collections import Counter
+from collections import OrderedDict
+from openerp.exceptions import UserError
 
 import datetime
 import logging
@@ -39,7 +24,7 @@ class survey_stage(osv.Model):
 
     _name = 'survey.stage'
     _description = 'Survey Stage'
-    _order = 'sequence asc'
+    _order = 'sequence,id'
 
     _columns = {
         'name': fields.char(string="Name", required=True, translate=True),
@@ -124,8 +109,10 @@ class survey_survey(osv.Model):
 
     def _get_public_url(self, cr, uid, ids, name, arg, context=None):
         """ Computes a public URL for the survey """
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
-            'web.base.url')
+        if context and context.get('relative_url'):
+            base_url = '/'
+        else:
+            base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
         res = {}
         for survey in self.browse(cr, uid, ids, context=context):
             res[survey.id] = urljoin(base_url, "survey/start/%s" % slug(survey))
@@ -140,8 +127,10 @@ class survey_survey(osv.Model):
 
     def _get_print_url(self, cr, uid, ids, name, arg, context=None):
         """ Computes a printing URL for the survey """
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
-            'web.base.url')
+        if context and context.get('relative_url'):
+            base_url = '/'
+        else:
+            base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
         res = {}
         for survey in self.browse(cr, uid, ids, context=context):
             res[survey.id] = urljoin(base_url, "survey/print/%s" % slug(survey))
@@ -149,8 +138,10 @@ class survey_survey(osv.Model):
 
     def _get_result_url(self, cr, uid, ids, name, arg, context=None):
         """ Computes an URL for the survey results """
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
-            'web.base.url')
+        if context and context.get('relative_url'):
+            base_url = '/'
+        else:
+            base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
         res = {}
         for survey in self.browse(cr, uid, ids, context=context):
             res[survey.id] = urljoin(base_url, "survey/results/%s" % slug(survey))
@@ -160,9 +151,8 @@ class survey_survey(osv.Model):
 
     _columns = {
         'title': fields.char('Title', required=1, translate=True),
-        'res_model': fields.char('Category'),
-        'page_ids': fields.one2many('survey.page', 'survey_id', 'Pages'),
-        'stage_id': fields.many2one('survey.stage', string="Stage", ondelete="set null"),
+        'page_ids': fields.one2many('survey.page', 'survey_id', 'Pages', copy=True),
+        'stage_id': fields.many2one('survey.stage', string="Stage", ondelete="set null", copy=False),
         'auth_required': fields.boolean('Login required',
             help="Users with a public link will be requested to login before taking part to the survey",
             oldname="authenticate"),
@@ -189,11 +179,13 @@ class survey_survey(osv.Model):
             string="Print link", type="char"),
         'result_url': fields.function(_get_result_url,
             string="Results link", type="char"),
-        'email_template_id': fields.many2one('email.template',
+        'email_template_id': fields.many2one('mail.template',
             'Email Template', ondelete='set null'),
         'thank_you_message': fields.html('Thank you message', translate=True,
             help="This message will be displayed when survey is completed"),
-        'quizz_mode': fields.boolean(string='Quizz mode')
+        'quizz_mode': fields.boolean(string='Quiz mode'),
+        'active': fields.boolean(string="Active"),
+        'is_closed': fields.related('stage_id', 'closed', type='boolean'),
     }
 
     def _default_stage(self, cr, uid, context=None):
@@ -204,7 +196,8 @@ class survey_survey(osv.Model):
 
     _defaults = {
         'color': 0,
-        'stage_id': lambda self, *a, **kw: self._default_stage(*a, **kw)
+        'stage_id': lambda self, *a, **kw: self._default_stage(*a, **kw),
+        'active': True,
     }
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
@@ -235,12 +228,10 @@ class survey_survey(osv.Model):
     # Public methods #
 
     def copy_data(self, cr, uid, id, default=None, context=None):
-        vals = dict()
         current_rec = self.read(cr, uid, id, fields=['title'], context=context)
         title = _("%s (copy)") % (current_rec.get('title'))
-        vals['title'] = title
-        vals['user_input_ids'] = []
-        return super(survey_survey, self).copy_data(cr, uid, id, default=vals,
+        default = dict(default or {}, title=title)
+        return super(survey_survey, self).copy_data(cr, uid, id, default,
             context=context)
 
     def next_page(self, cr, uid, user_input, page_id, go_back=False, context=None):
@@ -282,15 +273,14 @@ class survey_survey(osv.Model):
             else:
                 return (pages[current_page_index + 1][1], current_page_index + 1, False)
 
-    def filter_input_ids(self, cr, uid, filters, finished=False, context=None):
+    def filter_input_ids(self, cr, uid, survey, filters, finished=False, context=None):
         '''If user applies any filters, then this function returns list of
            filtered user_input_id and label's strings for display data in web.
            :param filters: list of dictionary (having: row_id, ansewr_id)
            :param finished: True for completely filled survey,Falser otherwise.
            :returns list of filtered user_input_ids.
         '''
-        if context is None:
-            context = {}
+        context = context if context else {}
         if filters:
             input_line_obj = self.pool.get('survey.user_input_line')
             domain_filter, choice, filter_display_data = [], [], []
@@ -311,7 +301,7 @@ class survey_survey(osv.Model):
         if finished:
             user_input = self.pool.get('survey.user_input')
             if not filtered_input_ids:
-                current_filters = user_input.search(cr, uid, [], context=context)
+                current_filters = user_input.search(cr, uid, [('survey_id', '=', survey.id)], context=context)
                 user_input_objs = user_input.browse(cr, uid, current_filters, context=context)
             else:
                 user_input_objs = user_input.browse(cr, uid, filtered_input_ids, context=context)
@@ -339,30 +329,40 @@ class survey_survey(osv.Model):
                 filter_display_data.append({'question_text': question.question, 'labels': [label.value for label in labels]})
         return filter_display_data
 
-    def prepare_result(self, cr, uid, question, current_filters=[], context=None):
+    def prepare_result(self, cr, uid, question, current_filters=None, context=None):
         ''' Compute statistical data for questions by counting number of vote per choice on basis of filter '''
-        if context is None:
-            context = {}
+        current_filters = current_filters if current_filters else []
+        context = context if context else {}
+        result_summary = {}
+
         #Calculate and return statistics for choice
         if question.type in ['simple_choice', 'multiple_choice']:
-            result_summary = {}
-            [result_summary.update({label.id: {'text': label.value, 'count': 0, 'answer_id': label.id}}) for label in question.labels_ids]
+            answers = {}
+            comments = []
+            [answers.update({label.id: {'text': label.value, 'count': 0, 'answer_id': label.id}}) for label in question.labels_ids]
             for input_line in question.user_input_line_ids:
-                if input_line.answer_type == 'suggestion' and result_summary.get(input_line.value_suggested.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
-                    result_summary[input_line.value_suggested.id]['count'] += 1
-            result_summary = result_summary.values()
+                if input_line.answer_type == 'suggestion' and answers.get(input_line.value_suggested.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
+                    answers[input_line.value_suggested.id]['count'] += 1
+                if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
+                    comments.append(input_line)
+            result_summary = {'answers': answers.values(), 'comments': comments}
 
         #Calculate and return statistics for matrix
         if question.type == 'matrix':
-            rows, answers, res = {}, {}, {}
+            rows = OrderedDict()
+            answers = OrderedDict()
+            res = dict()
+            comments = []
             [rows.update({label.id: label.value}) for label in question.labels_ids_2]
             [answers.update({label.id: label.value}) for label in question.labels_ids]
             for cell in product(rows.keys(), answers.keys()):
                 res[cell] = 0
             for input_line in question.user_input_line_ids:
-                if input_line.answer_type == 'suggestion' and not(current_filters) or input_line.user_input_id.id in current_filters:
+                if input_line.answer_type == 'suggestion' and (not(current_filters) or input_line.user_input_id.id in current_filters) and input_line.value_suggested_row:
                     res[(input_line.value_suggested_row.id, input_line.value_suggested.id)] += 1
-            result_summary = {'answers': answers, 'rows': rows, 'result': res}
+                if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
+                    comments.append(input_line)
+            result_summary = {'answers': answers, 'rows': rows, 'result': res, 'comments': comments}
 
         #Calculate and return statistics for free_text, textbox, datetime
         if question.type in ['free_text', 'textbox', 'datetime']:
@@ -383,13 +383,14 @@ class survey_survey(osv.Model):
                 result_summary.update({'average': round(sum(all_inputs) / len(all_inputs), 2),
                                        'max': round(max(all_inputs), 2),
                                        'min': round(min(all_inputs), 2),
-                                       'most_comman': Counter(all_inputs).most_common(5)})
+                                       'sum': sum(all_inputs),
+                                       'most_common': Counter(all_inputs).most_common(5)})
         return result_summary
 
-    def get_input_summary(self, cr, uid, question, current_filters=[], context=None):
+    def get_input_summary(self, cr, uid, question, current_filters=None, context=None):
         ''' Returns overall summary of question e.g. answered, skipped, total_inputs on basis of filter '''
-        if context is None:
-            context = {}
+        current_filters = current_filters if current_filters else []
+        context = context if context else {}
         result = {}
         if question.survey_id.user_input_ids:
             total_input_ids = current_filters or [input_id.id for input_id in question.survey_id.user_input_ids if input_id.state != 'new']
@@ -407,7 +408,8 @@ class survey_survey(osv.Model):
     def action_start_survey(self, cr, uid, ids, context=None):
         ''' Open the website page with the survey form '''
         trail = ""
-        if context and 'survey_token' in context:
+        context = dict(context or {}, relative_url=True)
+        if 'survey_token' in context:
             trail = "/" + context['survey_token']
         return {
             'type': 'ir.actions.act_url',
@@ -420,13 +422,12 @@ class survey_survey(osv.Model):
         ''' Open a window to compose an email, pre-filled with the survey
         message '''
         if not self._has_questions(cr, uid, ids, context=None):
-            raise osv.except_osv(_('Error!'), _('You cannot send an invitation for a survey that has no questions.'))
+            raise UserError(_('You cannot send an invitation for a survey that has no questions.'))
 
         survey_browse = self.pool.get('survey.survey').browse(cr, uid, ids,
             context=context)[0]
         if survey_browse.stage_id.closed:
-            raise osv.except_osv(_('Warning!'),
-                _("You cannot send invitations for closed surveys."))
+            raise UserError(_("You cannot send invitations for closed surveys."))
 
         assert len(ids) == 1, 'This option should only be used for a single \
                                 survey at a time.'
@@ -455,7 +456,8 @@ class survey_survey(osv.Model):
     def action_print_survey(self, cr, uid, ids, context=None):
         ''' Open the website page with the survey printable view '''
         trail = ""
-        if context and 'survey_token' in context:
+        context = dict(context or {}, relative_url=True)
+        if 'survey_token' in context:
             trail = "/" + context['survey_token']
         return {
             'type': 'ir.actions.act_url',
@@ -466,6 +468,7 @@ class survey_survey(osv.Model):
 
     def action_result_survey(self, cr, uid, ids, context=None):
         ''' Open the website page with the survey results view '''
+        context = dict(context or {}, relative_url=True)
         return {
             'type': 'ir.actions.act_url',
             'name': "Results of the Survey",
@@ -475,6 +478,7 @@ class survey_survey(osv.Model):
 
     def action_test_survey(self, cr, uid, ids, context=None):
         ''' Open the website page with the survey form into test mode'''
+        context = dict(context or {}, relative_url=True)
         return {
             'type': 'ir.actions.act_url',
             'name': "Results of the Survey",
@@ -497,7 +501,7 @@ class survey_page(osv.Model):
     _name = 'survey.page'
     _description = 'Survey Page'
     _rec_name = 'title'
-    _order = 'sequence'
+    _order = 'sequence,id'
 
     # Model Fields #
 
@@ -507,7 +511,7 @@ class survey_page(osv.Model):
         'survey_id': fields.many2one('survey.survey', 'Survey',
             ondelete='cascade', required=True),
         'question_ids': fields.one2many('survey.question', 'page_id',
-            'Questions'),
+            'Questions', copy=True),
         'sequence': fields.integer('Page number'),
         'description': fields.html('Description',
             help="An introductory text to your page", translate=True,
@@ -516,16 +520,6 @@ class survey_page(osv.Model):
     _defaults = {
         'sequence': 10
     }
-
-    # Public methods #
-
-    def copy_data(self, cr, uid, ids, default=None, context=None):
-        vals = {}
-        current_rec = self.read(cr, uid, ids, fields=['title'], context=context)
-        title = _("%s (copy)") % (current_rec.get('title'))
-        vals.update({'title': title})
-        return super(survey_page, self).copy_data(cr, uid, ids, default=vals,
-            context=context)
 
 
 class survey_question(osv.Model):
@@ -536,7 +530,7 @@ class survey_question(osv.Model):
     _name = 'survey.question'
     _description = 'Survey Question'
     _rec_name = 'question'
-    _order = 'sequence'
+    _order = 'sequence,id'
 
     # Model fields #
 
@@ -555,19 +549,19 @@ class survey_question(osv.Model):
             oldname='descriptive_text'),
 
         # Answer
-        'type': fields.selection([('free_text', 'Long Text Zone'),
-                ('textbox', 'Text Input'),
+        'type': fields.selection([('free_text', 'Multiple Lines Text Box'),
+                ('textbox', 'Single Line Text Box'),
                 ('numerical_box', 'Numerical Value'),
                 ('datetime', 'Date and Time'),
                 ('simple_choice', 'Multiple choice: only one answer'),
                 ('multiple_choice', 'Multiple choice: multiple answers allowed'),
-                ('matrix', 'Matrix')], 'Type of Question', required=1),
+                ('matrix', 'Matrix')], 'Type of Question', size=15, required=1),
         'matrix_subtype': fields.selection([('simple', 'One choice per row'),
             ('multiple', 'Multiple choices per row')], 'Matrix Type'),
         'labels_ids': fields.one2many('survey.label',
-            'question_id', 'Types of answers', oldname='answer_choice_ids'),
+            'question_id', 'Types of answers', oldname='answer_choice_ids', copy=True),
         'labels_ids_2': fields.one2many('survey.label',
-            'question_id_2', 'Rows of the Matrix'),
+            'question_id_2', 'Rows of the Matrix', copy=True),
         # labels are used for proposed choices
         # if question.type == simple choice | multiple choice
         #                    -> only labels_ids is used
@@ -583,7 +577,7 @@ class survey_question(osv.Model):
                                        ('2', '6')],
             'Number of columns'),
             # These options refer to col-xx-[12|6|4|3|2] classes in Bootstrap
-        'display_mode': fields.selection([('columns', 'Radio Buttons/Checkboxes'),
+        'display_mode': fields.selection([('columns', 'Radio Buttons'),
                                           ('dropdown', 'Selection Box')],
                                          'Display mode'),
 
@@ -628,7 +622,7 @@ class survey_question(osv.Model):
         'constr_error_msg': lambda s, cr, uid, c: _('This question requires an answer.'),
         'validation_error_msg': lambda s, cr, uid, c: _('The answer you entered has an invalid format.'),
         'validation_required': False,
-        'comments_message': lambda s, cr, uid, c: _('If other, precise:'),
+        'comments_message': lambda s, cr, uid, c: _('If other, please specify:'),
     }
 
     _sql_constraints = [
@@ -639,19 +633,8 @@ class survey_question(osv.Model):
         ('validation_date', 'CHECK (validation_min_date <= validation_max_date)', 'Max date cannot be smaller than min date!')
     ]
 
-    def copy_data(self, cr, uid, ids, default=None, context=None):
-        # This will prevent duplication of user input lines in case of question duplication
-        # (in cascade, this will also allow to duplicate surveys without duplicating bad user input
-        # lines)
-        vals = {'user_input_line_ids': []}
-
-        # Updating question title
-        current_rec = self.read(cr, uid, ids, context=context)
-        question = _("%s (copy)") % (current_rec.get('question'))
-        vals['question'] = question
-
-        return super(survey_question, self).copy_data(cr, uid, ids, default=vals,
-            context=context)
+    def onchange_validation_email(self, cr, uid, ids, validation_email, context=None):
+        return {'value': {'validation_required': False}} if validation_email else {}
 
     # Validation methods
 
@@ -735,7 +718,17 @@ class survey_question(osv.Model):
             # Answer is not in the right range
             try:
                 dateanswer = datetime.datetime.strptime(answer, DF)
-                if not (datetime.datetime.strptime(question.validation_min_date, DF) <= dateanswer <= datetime.datetime.strptime(question.validation_max_date, DF)):
+                min_date = question.validation_min_date and datetime.datetime.strptime(question.validation_min_date, DF) or False
+                max_date = question.validation_max_date and datetime.datetime.strptime(question.validation_max_date, DF) or False
+
+                if (min_date and max_date and not(min_date <= dateanswer <= max_date)):
+                    # If Minimum and Maximum Date are entered
+                    errors.update({answer_tag: question.validation_error_msg})
+                elif (min_date and not(min_date <= dateanswer)):
+                    # If only Minimum Date is entered and not Define Maximum Date
+                    errors.update({answer_tag: question.validation_error_msg})
+                elif (max_date and not(dateanswer <= max_date)):
+                    # If only Maximum Date is entered and not Define Minimum Date
                     errors.update({answer_tag: question.validation_error_msg})
             except ValueError:  # check that it is a datetime has been done hereunder
                 pass
@@ -746,7 +739,7 @@ class survey_question(osv.Model):
         if question.comments_allowed:
             comment_tag = "%s_%s" % (answer_tag, 'comment')
         # Empty answer to mandatory question
-        if question.constr_mandatory and not answer_tag in post:
+        if question.constr_mandatory and answer_tag not in post:
             errors.update({answer_tag: question.constr_error_msg})
         if question.constr_mandatory and answer_tag in post and post[answer_tag].strip() == '':
             errors.update({answer_tag: question.constr_error_msg})
@@ -762,6 +755,9 @@ class survey_question(osv.Model):
             comment_flag = answer_candidates.pop(("%s_%s" % (answer_tag, -1)), None)
             if question.comments_allowed:
                 comment_answer = answer_candidates.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
+            # Preventing answers with blank value
+            if all([True if answer.strip() == '' else False for answer in answer_candidates.values()]):
+                errors.update({answer_tag: question.constr_error_msg})
             # There is no answer neither comments (if comments count as answer)
             if not answer_candidates and question.comment_count_as_answer and (not comment_flag or not comment_answer):
                 errors.update({answer_tag: question.constr_error_msg})
@@ -793,7 +789,7 @@ class survey_label(osv.Model):
     ''' A suggested answer for a question '''
     _name = 'survey.label'
     _rec_name = 'value'
-    _order = 'sequence'
+    _order = 'sequence,id'
     _description = 'Survey Label'
 
     def _check_question_not_empty(self, cr, uid, ids, context=None):
@@ -810,10 +806,10 @@ class survey_label(osv.Model):
         'sequence': fields.integer('Label Sequence order'),
         'value': fields.char("Suggested value", translate=True,
             required=True),
-        'quizz_mark': fields.float('Score for this answer', help="A positive score indicates a correct answer; a negative or null score indicates a wrong answer"),
+        'quizz_mark': fields.float('Score for this choice', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer"),
     }
-    defaults = {
-        'sequence': 100,
+    _defaults = {
+        'sequence': 10,
     }
     _constraints = [
         (_check_question_not_empty, "A label must be attached to one and only one question", ['question_id', 'question_id_2'])
@@ -836,7 +832,7 @@ class survey_user_input(osv.Model):
         'survey_id': fields.many2one('survey.survey', 'Survey', required=True,
                                      readonly=1, ondelete='restrict'),
         'date_create': fields.datetime('Creation Date', required=True,
-                                       readonly=1),
+                                       readonly=1, copy=False),
         'deadline': fields.datetime("Deadline",
                                 help="Date by which the person can open the survey and submit answers",
                                 oldname="date_deadline"),
@@ -849,7 +845,7 @@ class survey_user_input(osv.Model):
                                   'Status',
                                   readonly=True),
         'test_entry': fields.boolean('Test entry', readonly=1),
-        'token': fields.char("Identification token", readonly=1, required=1),
+        'token': fields.char("Identification token", readonly=1, required=1, copy=False),
 
         # Optional Identification data
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=1),
@@ -860,11 +856,13 @@ class survey_user_input(osv.Model):
                                               'Last displayed page'),
         # The answers !
         'user_input_line_ids': fields.one2many('survey.user_input_line',
-                                               'user_input_id', 'Answers'),
+                                               'user_input_id', 'Answers', copy=True),
 
         # URLs used to display the answers
-        'result_url': fields.related('survey_id', 'result_url', string="Public link to the survey results"),
-        'print_url': fields.related('survey_id', 'print_url', string="Public link to the empty survey"),
+        'result_url': fields.related('survey_id', 'result_url', type='char',
+                                     string="Public link to the survey results"),
+        'print_url': fields.related('survey_id', 'print_url', type='char',
+                                    string="Public link to the empty survey"),
 
         'quizz_score': fields.function(_quizz_get_score, type="float", string="Score for the quiz")
     }
@@ -881,10 +879,6 @@ class survey_user_input(osv.Model):
         ('deadline_in_the_past', 'CHECK (deadline >= date_create)', 'The deadline cannot be in the past')
     ]
 
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_('Warning!'), _('You cannot duplicate this \
-            element!'))
-
     def do_clean_emptys(self, cr, uid, automatic=False, context=None):
         ''' Remove empty user inputs that have been created manually
             (used as a cronjob declared in data/survey_cron.xml) '''
@@ -898,7 +892,7 @@ class survey_user_input(osv.Model):
     def action_survey_resent(self, cr, uid, ids, context=None):
         ''' Sent again the invitation '''
         record = self.browse(cr, uid, ids[0], context=context)
-        context = context or {}
+        context = dict(context or {})
         context.update({
             'survey_resent_token': True,
             'default_partner_ids': record.partner_id and [record.partner_id.id] or [],
@@ -978,7 +972,7 @@ class survey_user_input_line(osv.Model):
         'value_free_text': fields.text("Free Text answer"),
         'value_suggested': fields.many2one('survey.label', "Suggested answer"),
         'value_suggested_row': fields.many2one('survey.label', "Row answer"),
-        'quizz_mark': fields.float("Score given for this answer")
+        'quizz_mark': fields.float("Score given for this choice")
     }
 
     _defaults = {
@@ -993,6 +987,8 @@ class survey_user_input_line(osv.Model):
     def __get_mark(self, cr, uid, value_suggested, context=None):
         try:
             mark = self.pool.get('survey.label').browse(cr, uid, int(value_suggested), context=context).quizz_mark
+        except AttributeError:
+            mark = 0.0
         except KeyError:
             mark = 0.0
         except ValueError:
@@ -1010,10 +1006,6 @@ class survey_user_input_line(osv.Model):
         if value_suggested:
             vals.update({'quizz_mark': self.__get_mark(cr, uid, value_suggested)})
         return super(survey_user_input_line, self).write(cr, uid, ids, vals, context=context)
-
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_('Warning!'), _('You cannot duplicate this \
-            element!'))
 
     def save_lines(self, cr, uid, user_input_id, question, post, answer_tag,
                    context=None):
@@ -1130,17 +1122,20 @@ class survey_user_input_line(osv.Model):
                                         ('question_id', '=', question.id)],
                               context=context)
         if old_uil:
-            self.unlink(cr, uid, old_uil, context=context)
+            self.unlink(cr, SUPERUSER_ID, old_uil, context=context)
 
         if answer_tag in post and post[answer_tag].strip() != '':
             vals.update({'answer_type': 'suggestion', 'value_suggested': post[answer_tag]})
         else:
             vals.update({'answer_type': None, 'skipped': True})
-        self.create(cr, uid, vals, context=context)
+
+        # '-1' indicates 'comment count as an answer' so do not need to record it
+        if post.get(answer_tag) and post.get(answer_tag) != '-1':
+            self.create(cr, uid, vals, context=context)
 
         comment_answer = post.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
         if comment_answer:
-            vals.update({'answer_type': 'text', 'value_text': comment_answer})
+            vals.update({'answer_type': 'text', 'value_text': comment_answer, 'skipped': False, 'value_suggested': False})
             self.create(cr, uid, vals, context=context)
 
         return True
@@ -1158,16 +1153,18 @@ class survey_user_input_line(osv.Model):
                                         ('question_id', '=', question.id)],
                               context=context)
         if old_uil:
-            self.unlink(cr, uid, old_uil, context=context)
+            self.unlink(cr, SUPERUSER_ID, old_uil, context=context)
 
         ca = dict_keys_startswith(post, answer_tag)
         comment_answer = ca.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
         if len(ca) > 0:
             for a in ca:
-                vals.update({'answer_type': 'suggestion', 'value_suggested': ca[a]})
-                self.create(cr, uid, vals, context=context)
+                # '-1' indicates 'comment count as an answer' so do not need to record it
+                if a != ('%s_%s' % (answer_tag, '-1')):
+                    vals.update({'answer_type': 'suggestion', 'value_suggested': ca[a]})
+                    self.create(cr, uid, vals, context=context)
         if comment_answer:
-            vals.update({'answer_type': 'text', 'value_text': comment_answer})
+            vals.update({'answer_type': 'text', 'value_text': comment_answer, 'value_suggested': False})
             self.create(cr, uid, vals, context=context)
         if not ca and not comment_answer:
             vals.update({'answer_type': None, 'skipped': True})
@@ -1187,7 +1184,7 @@ class survey_user_input_line(osv.Model):
                                         ('question_id', '=', question.id)],
                               context=context)
         if old_uil:
-            self.unlink(cr, uid, old_uil, context=context)
+            self.unlink(cr, SUPERUSER_ID, old_uil, context=context)
 
         no_answers = True
         ca = dict_keys_startswith(post, answer_tag)

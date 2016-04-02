@@ -1,4 +1,4 @@
-# -*- coding: utf-'8' "-*-"
+# -*- coding: utf-8 -*-
 
 from openerp.addons.payment.models.payment_acquirer import ValidationError
 from openerp.osv import osv
@@ -16,17 +16,17 @@ class TransferPaymentAcquirer(osv.Model):
 
     def _get_providers(self, cr, uid, context=None):
         providers = super(TransferPaymentAcquirer, self)._get_providers(cr, uid, context=context)
-        providers.append(['transfer', 'Wire Transfer'])
+        providers.append(['transfer', _('Wire Transfer')])
         return providers
 
     def transfer_get_form_action_url(self, cr, uid, id, context=None):
         return '/payment/transfer/feedback'
 
     def _format_transfer_data(self, cr, uid, context=None):
-        bank_ids = [bank.id for bank in self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.bank_ids]
+        company_id = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.id
         # filter only bank accounts marked as visible
-        bank_ids = self.pool['res.partner.bank'].search(cr, uid, [('id', 'in', bank_ids), ('footer', '=', True)], context=context)
-        accounts = self.pool['res.partner.bank'].name_get(cr, uid, bank_ids, context=context)
+        journal_ids = self.pool['account.journal'].search(cr, uid, [('type', '=', 'bank'), ('display_on_footer', '=', True), ('company_id', '=', company_id)], context=context)
+        accounts = self.pool['account.journal'].browse(cr, uid, journal_ids, context=context).mapped('bank_account_id').name_get()
         bank_title = _('Bank Accounts') if len(accounts) > 1 else _('Bank Account')
         bank_accounts = ''.join(['<ul>'] + ['<li>%s</li>' % name for id, name in accounts] + ['</ul>'])
         post_msg = '''<div>
@@ -45,7 +45,7 @@ class TransferPaymentAcquirer(osv.Model):
         """ Hook in create to create a default post_msg. This is done in create
         to have access to the name and other creation values. If no post_msg
         or a void post_msg is given at creation, generate a default one. """
-        if values.get('name') == 'transfer' and not values.get('post_msg'):
+        if values.get('provider') == 'transfer' and not values.get('post_msg'):
             values['post_msg'] = self._format_transfer_data(cr, uid, context=context)
         return super(TransferPaymentAcquirer, self).create(cr, uid, values, context=context)
 
@@ -61,12 +61,12 @@ class TransferPaymentTransaction(osv.Model):
             ], context=context)
 
         if not tx_ids or len(tx_ids) > 1:
-            error_msg = 'received data for reference %s' % (pprint.pformat(reference))
+            error_msg = _('received data for reference %s') % (pprint.pformat(reference))
             if not tx_ids:
-                error_msg += '; no order found'
+                error_msg += _('; no order found')
             else:
-                error_msg += '; multiple order found'
-            _logger.error(error_msg)
+                error_msg += _('; multiple order found')
+            _logger.info(error_msg)
             raise ValidationError(error_msg)
 
         return self.browse(cr, uid, tx_ids[0], context=context)

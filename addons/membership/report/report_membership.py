@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields, osv
 from openerp import tools
@@ -39,28 +21,22 @@ class report_membership(osv.osv):
     _name = 'report.membership'
     _description = __doc__
     _auto = False
-    _rec_name = 'year'
+    _rec_name = 'start_date'
     _columns = {
-        'year': fields.char('Year', size=4, readonly=True, select=1),
-        'month': fields.selection([('01', 'January'), ('02', 'February'), \
-                                  ('03', 'March'), ('04', 'April'),\
-                                  ('05', 'May'), ('06', 'June'), \
-                                  ('07', 'July'), ('08', 'August'),\
-                                  ('09', 'September'), ('10', 'October'),\
-                                  ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
-        'date_from': fields.datetime('Start Date', readonly=True, help="Start membership date"),
-        'date_to': fields.datetime('End Date', readonly=True, help="End membership date"),
+        'start_date': fields.date('Start Date', readonly=True),
+        'date_to': fields.date('End Date', readonly=True, help="End membership date"),
         'num_waiting': fields.integer('# Waiting', readonly=True),
         'num_invoiced': fields.integer('# Invoiced', readonly=True),
         'num_paid': fields.integer('# Paid', readonly=True),
-        'tot_pending': fields.float('Pending Amount', digits_compute= dp.get_precision('Account'), readonly=True),
-        'tot_earned': fields.float('Earned Amount', digits_compute= dp.get_precision('Account'), readonly=True),
+        'tot_pending': fields.float('Pending Amount', digits=0, readonly=True),
+        'tot_earned': fields.float('Earned Amount', digits=0, readonly=True),
         'partner_id': fields.many2one('res.partner', 'Member', readonly=True),
         'associate_member_id': fields.many2one('res.partner', 'Associate Member', readonly=True),
         'membership_id': fields.many2one('product.product', 'Membership Product', readonly=True),
         'membership_state': fields.selection(STATE, 'Current Membership State', readonly=True),
         'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
-        'company_id': fields.many2one('res.company', 'Company', readonly=True)
+        'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'quantity': fields.integer("Quantity", readonly=True),
         }
 
     def init(self, cr):
@@ -71,14 +47,13 @@ class report_membership(osv.osv):
         SELECT
         MIN(id) AS id,
         partner_id,
+        count(membership_id) as quantity,
         user_id,
         membership_state,
         associate_member_id,
         membership_amount,
-        date_from,
         date_to,
-        year,
-        month,
+        start_date,
         COUNT(num_waiting) AS num_waiting,
         COUNT(num_invoiced) AS num_invoiced,
         COUNT(num_paid) AS num_paid,
@@ -94,10 +69,8 @@ class report_membership(osv.osv):
             p.membership_state AS membership_state,
             p.associate_member AS associate_member_id,
             p.membership_amount AS membership_amount,
-            TO_CHAR(p.membership_start, 'YYYY-MM-DD') AS date_from,
-            TO_CHAR(p.membership_stop, 'YYYY-MM-DD') AS date_to,
-            TO_CHAR(p.membership_start, 'YYYY') AS year,
-            TO_CHAR(p.membership_start,'MM') AS month,
+            p.membership_stop AS date_to,
+            p.membership_start AS start_date,
             CASE WHEN ml.state = 'waiting'  THEN ml.id END AS num_waiting,
             CASE WHEN ml.state = 'invoiced' THEN ml.id END AS num_invoiced,
             CASE WHEN ml.state = 'paid'     THEN ml.id END AS num_paid,
@@ -116,19 +89,14 @@ class report_membership(osv.osv):
               p.membership_state,
               p.associate_member,
               p.membership_amount,
-              TO_CHAR(p.membership_start, 'YYYY-MM-DD'),
-              TO_CHAR(p.membership_stop, 'YYYY-MM-DD'),
-              TO_CHAR(p.membership_start, 'YYYY'),
-              TO_CHAR(p.membership_start,'MM'),
+              p.membership_start,
               ml.membership_id,
               p.company_id,
               ml.state,
               ml.id
         ) AS foo
         GROUP BY
-            year,
-            month,
-            date_from,
+            start_date,
             date_to,
             partner_id,
             user_id,
@@ -138,6 +106,3 @@ class report_membership(osv.osv):
             associate_member_id,
             membership_amount
         )""")
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

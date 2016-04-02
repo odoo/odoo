@@ -1,52 +1,97 @@
-# Danish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * subscription
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-01-27 06:45+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Danish <da@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-10-14 20:47+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Danish (http://www.transifex.com/odoo/odoo-9/language/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:00+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: da\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: subscription
-#: field:subscription.subscription,doc_source:0
-#: field:subscription.subscription.history,document_id:0
-msgid "Source Document"
-msgstr "Kilde dokument"
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_active
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_active
+msgid "Active"
+msgstr "Aktiv"
 
 #. module: subscription
-#: field:subscription.document,model:0
-msgid "Object"
-msgstr "Objekt"
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_create_uid
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_create_uid
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_create_uid
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_create_uid
+msgid "Created by"
+msgstr "Oprettet af"
 
 #. module: subscription
-#: view:subscription.subscription:0
-msgid "Search Subscription"
-msgstr "Søg abonnement"
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_create_date
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_create_date
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_create_date
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_create_date
+msgid "Created on"
+msgstr "Oprettet den"
 
 #. module: subscription
-#: field:subscription.subscription,date_init:0
-msgid "First Date"
-msgstr "Første dato"
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_cron_id
+msgid "Cron Job"
+msgstr ""
 
 #. module: subscription
-#: field:subscription.document.fields,field:0
-msgid "Field"
-msgstr "Felt"
+#: selection:subscription.document.fields,value:0
+msgid "Current Date"
+msgstr "Aktuel dato"
 
 #. module: subscription
-#: model:ir.model,name:subscription.model_subscription_subscription_history
-msgid "Subscription history"
-msgstr "Abonnements historik"
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_date
+msgid "Date"
+msgstr "Dato"
+
+#. module: subscription
+#: selection:subscription.subscription,interval_type:0
+msgid "Days"
+msgstr "Dage"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_value
+msgid "Default Value"
+msgstr "Standardværdi"
+
+#. module: subscription
+#: model:ir.model.fields,help:subscription.field_subscription_document_fields_value
+msgid "Default value is considered for field when new document is generated."
+msgstr ""
+
+#. module: subscription
+#: model:ir.model.fields,help:subscription.field_subscription_subscription_note
+msgid "Description or Summary of Subscription"
+msgstr "Beskrivelse eller resumé over abonnement"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_display_name
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_display_name
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_display_name
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_display_name
+msgid "Display Name"
+msgstr "Vist navn"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_doc_lines
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+msgid "Documents created"
+msgstr "Dokumenter oprettet"
+
+#. module: subscription
+#: selection:subscription.subscription,state:0
+msgid "Done"
+msgstr "Udført"
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
@@ -55,112 +100,90 @@ msgstr "Kladde"
 
 #. module: subscription
 #: selection:subscription.document.fields,value:0
-msgid "Current Date"
-msgstr "Aktuel dato"
+msgid "False"
+msgstr "Forkert"
 
 #. module: subscription
-#: selection:subscription.subscription,interval_type:0
-msgid "Weeks"
-msgstr "Uger"
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_field
+msgid "Field"
+msgstr "Felt"
 
 #. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,state:0
-msgid "Status"
-msgstr "Status"
-
-#. module: subscription
-#: model:ir.ui.menu,name:subscription.config_recuuring_event
-#: model:ir.ui.menu,name:subscription.next_id_45
-msgid "Recurring Events"
-msgstr "Gentagne sager"
-
-#. module: subscription
-#: model:ir.actions.act_window,name:subscription.action_subscription_form
-#: model:ir.ui.menu,name:subscription.menu_action_subscription_form
-#: view:subscription.subscription:0
-msgid "Subscriptions"
-msgstr "Abonnementer"
-
-#. module: subscription
-#: field:subscription.subscription,interval_number:0
-msgid "Interval Qty"
-msgstr "Interval antal"
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "Stop"
-msgstr "Stop"
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "Set to Draft"
-msgstr "Sæt til udkast"
-
-#. module: subscription
-#: view:subscription.subscription:0
-#: selection:subscription.subscription,state:0
-msgid "Running"
-msgstr "Kørende"
-
-#. module: subscription
-#: view:subscription.subscription.history:0
-msgid "Subscription History"
-msgstr "Abonnements historik"
-
-#. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,user_id:0
-msgid "User"
-msgstr "Bruger"
-
-#. module: subscription
-#: field:subscription.subscription,interval_type:0
-msgid "Interval Unit"
-msgstr "Interval enhed"
-
-#. module: subscription
-#: field:subscription.subscription.history,date:0
-msgid "Date"
-msgstr "Dato"
-
-#. module: subscription
-#: field:subscription.subscription,exec_init:0
-msgid "Number of documents"
-msgstr "Antal dokumenter"
-
-#. module: subscription
-#: help:subscription.document,active:0
-msgid ""
-"If the active field is set to False, it will allow you to hide the "
-"subscription document without removing it."
-msgstr ""
-"Hvis det aktive felt er sat til falsk, kan du skjule abonnementsdokumentet "
-"uden at slette det."
-
-#. module: subscription
-#: field:subscription.document,name:0
-#: field:subscription.subscription,name:0
-msgid "Name"
-msgstr "Navn"
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:147
-#, python-format
-msgid "You cannot delete an active subscription !"
-msgstr "Du kan ikke slette et aktivt abonnement !"
-
-#. module: subscription
-#: field:subscription.document,field_ids:0
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_field_ids
 msgid "Fields"
 msgstr "Felter"
 
 #. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,note:0
-#: field:subscription.subscription,notes:0
-msgid "Notes"
-msgstr "Noter"
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_date_init
+msgid "First Date"
+msgstr "Første dato"
+
+#. module: subscription
+#: model:ir.ui.view,arch_db:subscription.view_subscription_filter
+msgid "Group By"
+msgstr "Gruppér efter"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_id
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_id
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_id
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_id
+msgid "ID"
+msgstr "Id"
+
+#. module: subscription
+#: model:ir.model.fields,help:subscription.field_subscription_document_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the "
+"subscription document without removing it."
+msgstr "Hvis det aktive felt er sat til falsk, kan du skjule abonnementsdokumentet uden at slette det."
+
+#. module: subscription
+#: model:ir.model.fields,help:subscription.field_subscription_subscription_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the "
+"subscription without removing it."
+msgstr ""
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_notes
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+msgid "Internal Notes"
+msgstr "Interne noter"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_number
+msgid "Interval Qty"
+msgstr "Interval antal"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_type
+msgid "Interval Unit"
+msgstr "Interval enhed"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_document___last_update
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_fields___last_update
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription___last_update
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history___last_update
+msgid "Last Modified on"
+msgstr "Sidst ændret den"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_write_uid
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_write_uid
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_write_uid
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_write_uid
+msgid "Last Updated by"
+msgstr "Sidst opdateret af"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_write_date
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_write_date
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_write_date
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_write_date
+msgid "Last Updated on"
+msgstr "Sidst opdateret den"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -168,134 +191,160 @@ msgid "Months"
 msgstr "Måneder"
 
 #. module: subscription
-#: selection:subscription.subscription,interval_type:0
-msgid "Days"
-msgstr "Dage"
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_name
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_name
+msgid "Name"
+msgstr "Navn"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:147
-#, python-format
-msgid "Error!"
-msgstr "Fejl!"
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_note
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+msgid "Notes"
+msgstr "Noter"
 
 #. module: subscription
-#: field:subscription.subscription,cron_id:0
-msgid "Cron Job"
-msgstr ""
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_exec_init
+msgid "Number of documents"
+msgstr "Antal dokumenter"
 
 #. module: subscription
-#: model:ir.model,name:subscription.model_subscription_subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription.history,subscription_id:0
-msgid "Subscription"
-msgstr "Abonnement"
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_model
+msgid "Object"
+msgstr "Objekt"
 
 #. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,partner_id:0
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_partner_id
+#: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "Partner"
-msgstr "Partner"
+msgstr "Kontakt"
 
 #. module: subscription
-#: help:subscription.subscription,cron_id:0
-msgid "Scheduler which runs on subscription"
-msgstr "Planlægningsfunktion på abonnement"
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "Subsription Data"
-msgstr "Abonnements data"
-
-#. module: subscription
-#: help:subscription.subscription,note:0
-msgid "Description or Summary of Subscription"
-msgstr "Beskrivelse eller resumé over abonnement"
-
-#. module: subscription
-#: model:ir.model,name:subscription.model_subscription_document
-#: view:subscription.document:0
-#: field:subscription.document.fields,document_id:0
-msgid "Subscription Document"
-msgstr "Abonnements dokument"
-
-#. module: subscription
-#: help:subscription.subscription,active:0
+#: code:addons/subscription/subscription.py:101
+#, python-format
 msgid ""
-"If the active field is set to False, it will allow you to hide the "
-"subscription without removing it."
+"Please provide another source document.\n"
+"This one does not exist!"
 msgstr ""
 
 #. module: subscription
-#: help:subscription.document.fields,value:0
-msgid "Default value is considered for field when new document is generated."
-msgstr ""
-
-#. module: subscription
-#: selection:subscription.document.fields,value:0
-msgid "False"
-msgstr "Forkert"
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "Group By..."
-msgstr "Gruppér efter..."
-
-#. module: subscription
-#: view:subscription.subscription:0
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
 msgid "Process"
 msgstr "Behandl"
 
 #. module: subscription
-#: help:subscription.subscription,doc_source:0
-msgid ""
-"User can choose the source document on which he wants to create documents"
+#: model:ir.actions.act_window,name:subscription.action_subscription_form
+#: model:ir.ui.menu,name:subscription.menu_action_subscription_form
+msgid "Recurring Documents"
 msgstr ""
-"Bruger kan vælge kilde dokument, ud fra hvilket han vil oprette dokumenter"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_document_form
 #: model:ir.ui.menu,name:subscription.menu_action_document_form
-msgid "Document Types"
-msgstr "Dokument typer"
+msgid "Recurring Types"
+msgstr ""
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:120
-#, python-format
-msgid "Wrong Source Document !"
-msgstr "Forkert kildedokument !"
+#: model:ir.ui.view,arch_db:subscription.view_subscription_filter
+#: selection:subscription.subscription,state:0
+msgid "Running"
+msgstr "Kører"
+
+#. module: subscription
+#: model:ir.model.fields,help:subscription.field_subscription_subscription_cron_id
+msgid "Scheduler which runs on subscription"
+msgstr "Planlægningsfunktion på abonnement"
+
+#. module: subscription
+#: model:ir.ui.view,arch_db:subscription.view_subscription_filter
+msgid "Search Subscription"
+msgstr "Søg abonnement"
+
+#. module: subscription
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+msgid "Set to Draft"
+msgstr "Sæt til udkast"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_doc_source
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_document_id
+msgid "Source Document"
+msgstr "Kilde dokument"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_state
+#: model:ir.ui.view,arch_db:subscription.view_subscription_filter
+msgid "Status"
+msgstr "Status"
+
+#. module: subscription
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+msgid "Stop"
+msgstr "Stop"
+
+#. module: subscription
+#: model:ir.model,name:subscription.model_subscription_subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_subscription_id
+#: model:ir.ui.view,arch_db:subscription.view_subscription_filter
+msgid "Subscription"
+msgstr "Abonnement"
+
+#. module: subscription
+#: model:ir.model,name:subscription.model_subscription_document
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_document_id
+#: model:ir.ui.view,arch_db:subscription.document_form
+#: model:ir.ui.view,arch_db:subscription.document_tree
+#: model:ir.ui.view,arch_db:subscription.view_subscription_document_filter
+msgid "Subscription Document"
+msgstr "Abonnements dokument"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document_fields
-#: view:subscription.document.fields:0
+#: model:ir.ui.view,arch_db:subscription.document_fields_form
+#: model:ir.ui.view,arch_db:subscription.document_fields_tree
 msgid "Subscription Document Fields"
 msgstr "Dokumentfelter på abonnement"
 
 #. module: subscription
-#: selection:subscription.subscription,state:0
-msgid "Done"
-msgstr "Udført"
+#: model:ir.ui.view,arch_db:subscription.subscription_subscription_history_form
+#: model:ir.ui.view,arch_db:subscription.subscription_subscription_history_tree
+msgid "Subscription History"
+msgstr "Abonnements historik"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:120
-#, python-format
+#: model:ir.model,name:subscription.model_subscription_subscription_history
+msgid "Subscription history"
+msgstr "Abonnements historik"
+
+#. module: subscription
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+#: model:ir.ui.view,arch_db:subscription.view_subscription_tree
+msgid "Subscriptions"
+msgstr "Abonnementer"
+
+#. module: subscription
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+msgid "Subsription Data"
+msgstr "Abonnements data"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_user_id
+#: model:ir.ui.view,arch_db:subscription.view_subscription_filter
+msgid "User"
+msgstr "Bruger"
+
+#. module: subscription
+#: model:ir.model.fields,help:subscription.field_subscription_subscription_doc_source
 msgid ""
-"Please provide another source document.\n"
-"This one does not exist !"
+"User can choose the source document on which he wants to create documents"
+msgstr "Bruger kan vælge kilde dokument, ud fra hvilket han vil oprette dokumenter"
+
+#. module: subscription
+#: selection:subscription.subscription,interval_type:0
+msgid "Weeks"
+msgstr "Uger"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:128
+#, python-format
+msgid "You cannot delete an active subscription!"
 msgstr ""
-
-#. module: subscription
-#: field:subscription.document.fields,value:0
-msgid "Default Value"
-msgstr "Standardværdi"
-
-#. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,doc_lines:0
-msgid "Documents created"
-msgstr "Dokumenter oprettet"
-
-#. module: subscription
-#: field:subscription.document,active:0
-#: field:subscription.subscription,active:0
-msgid "Active"
-msgstr "Aktiv"

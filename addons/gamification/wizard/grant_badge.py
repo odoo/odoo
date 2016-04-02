@@ -1,26 +1,9 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013 OpenERP SA (<http://www.openerp.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 
 class grant_badge_wizard(osv.TransientModel):
@@ -36,12 +19,11 @@ class grant_badge_wizard(osv.TransientModel):
     def action_grant_badge(self, cr, uid, ids, context=None):
         """Wizard action for sending a badge to a chosen user"""
 
-        badge_obj = self.pool.get('gamification.badge')
         badge_user_obj = self.pool.get('gamification.badge.user')
 
         for wiz in self.browse(cr, uid, ids, context=context):
             if uid == wiz.user_id.id:
-                raise osv.except_osv(_('Warning!'), _('You can not grant a badge to yourself'))
+                raise UserError(_('You can not grant a badge to yourself'))
 
             #create the badge
             values = {
@@ -51,6 +33,6 @@ class grant_badge_wizard(osv.TransientModel):
                 'comment': wiz.comment,
             }
             badge_user = badge_user_obj.create(cr, uid, values, context=context)
-            result = badge_obj._send_badge(cr, uid, badge_user, context=context)
+            result = badge_user_obj._send_badge(cr, uid, badge_user, context=context)
 
         return result

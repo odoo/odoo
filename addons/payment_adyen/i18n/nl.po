@@ -1,0 +1,127 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_adyen
+# 
+# Translators:
+# Eric Geens <ericgeens@yahoo.com>, 2015
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2015-09-19 08:26+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
+"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/adyen.py:123
+#, python-format
+msgid "; multiple order found"
+msgstr "; meerdere orders gevonden"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/adyen.py:121
+#, python-format
+msgid "; no order found"
+msgstr "; geen order gevonden"
+
+#. module: payment_adyen
+#: model:payment.acquirer,cancel_msg:payment_adyen.payment_acquirer_adyen
+msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
+msgstr "<span><i>Annuleer,</i> Uw betaling is geannuleerd.</span>"
+
+#. module: payment_adyen
+#: model:payment.acquirer,done_msg:payment_adyen.payment_acquirer_adyen
+msgid ""
+"<span><i>Done,</i> Your online payment has been successfully processed. "
+"Thank you for your order.</span>"
+msgstr "<span><i>Klaar,</i> Uw online betaling is succesvol verwerkt. Bedankt voor uw order.</span>"
+
+#. module: payment_adyen
+#: model:payment.acquirer,error_msg:payment_adyen.payment_acquirer_adyen
+msgid ""
+"<span><i>Error,</i> Please be aware that an error occurred during the "
+"transaction. The order has been confirmed but won't be paid. Don't hesitate "
+"to contact us if you have any questions on the status of your order.</span>"
+msgstr "<span><i>Fout,</i> er is een fout gebeurd tijdens de transactie. De order is bevestigd maar niet betaald. Aarzel niet om ons te contacteren indien u vragen heeft over de status van uw order.</span>"
+
+#. module: payment_adyen
+#: model:payment.acquirer,pending_msg:payment_adyen.payment_acquirer_adyen
+msgid ""
+"<span><i>Pending,</i> Your online payment has been successfully processed. "
+"But your order is not validated yet.</span>"
+msgstr "<span><i>Wachtende,</i> Uw online betaling is succesvol verwerkt. Uw order is nog niet gevalideerd.</span>"
+
+#. module: payment_adyen
+#: model:payment.acquirer,name:payment_adyen.payment_acquirer_adyen
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/adyen.py:169
+#, python-format
+msgid "Adyen: feedback error"
+msgstr "Adyen: feedback fout"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/adyen.py:131
+#, python-format
+msgid "Adyen: invalid merchantSig, received %s, computed %s"
+msgstr "Adyen: ongeldige merchantSig, %s ontvangen, %s berekend"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/adyen.py:119
+#, python-format
+msgid "Adyen: received data for reference %s"
+msgstr "Adyen: data ontvangen voor referentie %s"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/adyen.py:112
+#, python-format
+msgid ""
+"Adyen: received data with missing reference (%s) or missing pspReference "
+"(%s)"
+msgstr "Adyen: data ontvangen zonder referentie (%s) of zonder pspReference (%s)"
+
+#. module: payment_adyen
+#: model:ir.ui.view,arch_db:payment_adyen.acquirer_form_adyen
+msgid "How to configure your Adyen account?"
+msgstr "Hoe uw Adyen account te configureren?"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_merchant_account
+msgid "Merchant Account"
+msgstr "Handelaarsaccount"
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Betaling verwerver"
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Betalingstransactie"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_skin_code
+msgid "Skin Code"
+msgstr "Skin Code"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_skin_hmac_key
+msgid "Skin HMAC Key"
+msgstr "Skin HMAC sleutel"
+
+#. module: payment_adyen
+#: model:payment.acquirer,pre_msg:payment_adyen.payment_acquirer_adyen
+msgid ""
+"You will be redirected to the Adyen website after clicking on the payment "
+"button."
+msgstr "U wordt doorgestuurd naar de Adyen website na het klikken op de betaal knop."

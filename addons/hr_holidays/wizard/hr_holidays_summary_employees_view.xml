@@ -6,7 +6,7 @@
             <field name="name">hr.holidays.summary.employee.form</field>
             <field name="model">hr.holidays.summary.employee</field>
             <field name="arch" type="xml">
-                <form string="Leaves Summary" version="7.0">
+                <form string="Leaves Summary">
                     <group col="4" colspan="6">
                         <field name="date_from"/>
                         <newline/>
@@ -15,9 +15,8 @@
                         <field name="emp" invisible="True"/>
                     </group>
                     <footer>
-                        <button name="print_report" string="Print" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
+                        <button name="print_report" string="Print" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
                     </footer>
                 </form>
             </field>

@@ -1,5 +1,1 @@
-from . import test_uom
-
-fast_suite = [
-	test_uom,
-]
+from . import test_uom, test_pricelist

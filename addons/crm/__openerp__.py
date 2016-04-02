@@ -1,44 +1,26 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 {
     'name': 'CRM',
     'version': '1.0',
     'category': 'Customer Relationship Management',
-    'sequence': 2,
-    'summary': 'Leads, Opportunities, Phone Calls',
+    'sequence': 5,
+    'summary': 'Leads, Opportunities, Activities',
     'description': """
-The generic OpenERP Customer Relationship Management
+The generic Odoo Customer Relationship Management
 ====================================================
 
-This application enables a group of people to intelligently and efficiently manage leads, opportunities, meetings and phone calls.
+This application enables a group of people to intelligently and efficiently manage leads, opportunities, meetings and activities.
 
 It manages key tasks such as communication, identification, prioritization, assignment, resolution and notification.
 
-OpenERP ensures that all cases are successfully tracked by users, customers and suppliers. It can automatically send reminders, escalate the request, trigger specific methods and many other actions based on your own enterprise rules.
+Odoo ensures that all cases are successfully tracked by users, customers and vendors. It can automatically send reminders, trigger specific methods and many other actions based on your own enterprise rules.
 
-The greatest thing about this system is that users don't need to do anything special. The CRM module has an email gateway for the synchronization interface between mails and OpenERP. That way, users can just send emails to the request tracker.
+The greatest thing about this system is that users don't need to do anything special. The CRM module has an email gateway for the synchronization interface between mails and Odoo. That way, users can just send emails to the request tracker.
 
-OpenERP will take care of thanking them for their message, automatically routing it to the appropriate staff and make sure all future correspondence gets to the right place.
+Odoo will take care of thanking them for their message, automatically routing it to the appropriate staff and make sure all future correspondence gets to the right place.
 
 
 Dashboard for CRM will include:
@@ -46,45 +28,45 @@ Dashboard for CRM will include:
 * Planned Revenue by Stage and User (graph)
 * Opportunities by Stage (graph)
 """,
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/crm',
     'depends': [
         'base_action_rule',
         'base_setup',
         'sales_team',
         'mail',
-        'email_template',
         'calendar',
         'resource',
-        'board',
         'fetchmail',
+        'utm',
+        'web_tip',
+        'web_planner',
     ],
     'data': [
+        'data/crm_action_data.xml',
         'crm_data.xml',
+        'data/crm_stage_data.xml',
+        'data/sales_config_settings_data.xml',
         'crm_lead_data.xml',
-        'crm_phonecall_data.xml',
+        'crm_tip_data.xml',
 
         'security/crm_security.xml',
         'security/ir.model.access.csv',
 
+        'wizard/crm_activity_log_views.xml',
+        'wizard/crm_lead_lost_view.xml',
         'wizard/crm_lead_to_opportunity_view.xml',
-
-        'wizard/crm_phonecall_to_phonecall_view.xml',
-
         'wizard/crm_merge_opportunities_view.xml',
 
         'crm_view.xml',
-        
-        'crm_phonecall_view.xml',
-        'crm_phonecall_menu.xml',
-
+        'crm_stage_views.xml',
         'crm_lead_view.xml',
         'crm_lead_menu.xml',
+        'views/crm_action_views.xml',
 
         'calendar_event_menu.xml',
 
-        'report/crm_lead_report_view.xml',
-        'report/crm_phonecall_report_view.xml',
+        'report/crm_activity_report_view.xml',
+        'report/crm_opportunity_report_view.xml',
 
         'res_partner_view.xml',
 
@@ -92,11 +74,15 @@ Dashboard for CRM will include:
         'base_partner_merge_view.xml',
 
         'sales_team_view.xml',
+        'views/crm.xml',
+        'web_planner_data.xml',
+        'sales_team_dashboard.xml',
+        'crm_mail_template_data.xml'
     ],
     'demo': [
         'crm_demo.xml',
         'crm_lead_demo.xml',
-        'crm_phonecall_demo.xml',
+        'data/crm_action_demo.xml',
         'crm_action_rule_demo.xml',
     ],
     'test': [
@@ -106,26 +92,13 @@ Dashboard for CRM will include:
         'test/lead2opportunity_assign_salesmen.yml',
         'test/crm_lead_merge.yml',
         'test/crm_lead_cancel.yml',
-        'test/segmentation.yml',
-        'test/phonecalls.yml',
         'test/crm_lead_onchange.yml',
         'test/crm_lead_copy.yml',
         'test/crm_lead_unlink.yml',
         'test/crm_lead_find_stage.yml',
     ],
+    'css': ['static/src/css/crm.css'],
     'installable': True,
     'application': True,
     'auto_install': False,
-    'images': [
-        'images/customers.png',
-        'images/leads.png',
-        'images/opportunities_kanban.png',
-        'images/opportunities_form.png',
-        'images/opportunities_calendar.png',
-        'images/opportunities_graph.png',
-        'images/logged_calls.png',
-        'images/scheduled_calls.png',
-        'images/stages.png',
-    ],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

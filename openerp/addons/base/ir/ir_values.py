@@ -1,27 +1,9 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
-import pickle
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv, fields
-from openerp.osv.orm import except_orm
+from odoo import api, fields, models, tools, _
+from odoo.exceptions import AccessError, MissingError
+from odoo.tools import pickle
 
 EXCLUDED_FIELDS = set((
     'report_sxw_content', 'report_rml_content', 'report_sxw', 'report_rml',
@@ -29,15 +11,15 @@ EXCLUDED_FIELDS = set((
 
 #: Possible slots to bind an action to with :meth:`~.set_action`
 ACTION_SLOTS = [
-                "client_action_multi",  # sidebar wizard action
-                "client_print_multi",   # sidebar report printing button
-                "client_action_relate", # sidebar related link
-                "tree_but_open",        # double-click on item in tree view
-                "tree_but_action",      # deprecated: same as tree_but_open
-               ]
+    "client_action_multi",      # sidebar wizard action
+    "client_print_multi",       # sidebar report printing button
+    "client_action_relate",     # sidebar related link
+    "tree_but_open",            # double-click on item in tree view
+    "tree_but_action",          # deprecated: same as tree_but_open
+]
 
 
-class ir_values(osv.osv):
+class IrValues(models.Model):
     """Holds internal model-specific action bindings and user-defined default
        field values. definitions. This is a legacy internal model, mixing
        two different concepts, and will likely be updated or replaced in a
@@ -86,109 +68,109 @@ class ir_values(osv.osv):
        users, and set by their UI clients calling :meth:`~.set_default`.
        These default values are then automatically used by the
        ORM every time a new record is about to be created, i.e. when
-       :meth:`~openerp.osv.osv.osv.default_get`
-       or :meth:`~openerp.osv.osv.osv.create` are called.
+       :meth:`~odoo.models.Model.default_get`
+       or :meth:`~odoo.models.Model.create` are called.
 
        .. rubric:: Usage: action bindings
 
        Business applications will usually bind their actions during
-       installation, and OpenERP UI clients will apply them as defined,
+       installation, and Odoo UI clients will apply them as defined,
        based on the list of actions included in the result of
-       :meth:`~openerp.osv.osv.osv.fields_view_get`,
+       :meth:`~odoo.models.Model.fields_view_get`,
        or directly returned by explicit calls to :meth:`~.get_actions`.
     """
     _name = 'ir.values'
 
-    def _value_unpickle(self, cursor, user, ids, name, arg, context=None):
-        res = {}
-        for record in self.browse(cursor, user, ids, context=context):
-            value = record[name[:-9]]
+    name = fields.Char(required=True)
+    model = fields.Char(string='Model Name', index=True, required=True,
+                        help="Model to which this entry applies")
+
+    # TODO: model_id and action_id should be read-write function fields
+    model_id = fields.Many2one('ir.model', string='Model (change only)',
+                               help="Model to which this entry applies - "
+                                    "helper field for setting a model, will "
+                                    "automatically set the correct model name")
+    action_id = fields.Many2one('ir.actions.actions', string='Action (change only)',
+                                help="Action bound to this entry - "
+                                     "helper field for binding an action, will "
+                                     "automatically set the correct reference")
+
+    value = fields.Text(help="Default value (pickled) or reference to an action")
+    value_unpickle = fields.Text(string='Default value or action reference',
+                                 compute='_value_unpickle', inverse='_value_pickle')
+    key = fields.Selection([('action', 'Action'), ('default', 'Default')],
+                           string='Type', index=True, required=True, default='action',
+                           help="- Action: an action attached to one slot of the given model\n"
+                                "- Default: a default value for a model field")
+    key2 = fields.Char(string='Qualifier', index=True, default='tree_but_open',
+                       help="For actions, one of the possible action slots: \n"
+                            "  - client_action_multi\n"
+                            "  - client_print_multi\n"
+                            "  - client_action_relate\n"
+                            "  - tree_but_open\n"
+                            "For defaults, an optional condition")
+    res_id = fields.Integer(string='Record ID', index=True,
+                            help="Database identifier of the record to which this applies. "
+                                 "0 = for all records")
+    user_id = fields.Many2one('res.users', string='User', ondelete='cascade', index=True,
+                              help="If set, action binding only applies for this user.")
+    company_id = fields.Many2one('res.company', string='Company', ondelete='cascade', index=True,
+                                 help="If set, action binding only applies for this company")
+
+    @api.depends('key', 'value')
+    def _value_unpickle(self):
+        for record in self:
+            value = record.value
             if record.key == 'default' and value:
                 # default values are pickled on the fly
-                try:
+                with tools.ignore(Exception):
                     value = str(pickle.loads(value))
-                except Exception:
-                    pass
-            res[record.id] = value
-        return res
+            record.value_unpickle = value
 
-    def _value_pickle(self, cursor, user, id, name, value, arg, context=None):
-        if context is None:
-            context = {}
-        ctx = context.copy()
-        if self.CONCURRENCY_CHECK_FIELD in ctx:
-            del ctx[self.CONCURRENCY_CHECK_FIELD]
-        record = self.browse(cursor, user, id, context=context)
-        if record.key == 'default':
-            # default values are pickled on the fly
-            value = pickle.dumps(value)
-        self.write(cursor, user, id, {name[:-9]: value}, context=ctx)
+    def _value_pickle(self):
+        context = dict(self._context)
+        context.pop(self.CONCURRENCY_CHECK_FIELD, None)
+        for record in self.with_context(context):
+            value = record.value_unpickle
+            if record.key == 'default':
+                value = pickle.dumps(value)
+            record.value = value
 
-    def onchange_object_id(self, cr, uid, ids, object_id, context=None):
-        if not object_id: return {}
-        act = self.pool.get('ir.model').browse(cr, uid, object_id, context=context)
-        return {
-                'value': {'model': act.model}
-        }
+    @api.onchange('model_id')
+    def onchange_object_id(self):
+        if self.model_id:
+            self.model = self.model_id.model
 
-    def onchange_action_id(self, cr, uid, ids, action_id, context=None):
-        if not action_id: return {}
-        act = self.pool.get('ir.actions.actions').browse(cr, uid, action_id, context=context)
-        return {
-                'value': {'value_unpickle': act.type+','+str(act.id)}
-        }
+    @api.onchange('action_id')
+    def onchange_action_id(self):
+        if self.action_id:
+            self.value_unpickle = self.action_id
 
-    _columns = {
-        'name': fields.char('Name', size=128, required=True),
-        'model': fields.char('Model Name', size=128, select=True, required=True,
-                             help="Model to which this entry applies"),
+    @api.model_cr_context
+    def _auto_init(self):
+        super(IrValues, self)._auto_init()
+        self._cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = 'ir_values_key_model_key2_res_id_user_id_idx'")
+        if not self._cr.fetchone():
+            self._cr.execute("CREATE INDEX ir_values_key_model_key2_res_id_user_id_idx ON ir_values (key, model, key2, res_id, user_id)")
 
-        # TODO: model_id and action_id should be read-write function fields
-        'model_id': fields.many2one('ir.model', 'Model (change only)', size=128,
-                                    help="Model to which this entry applies - "
-                                         "helper field for setting a model, will "
-                                         "automatically set the correct model name"),
-        'action_id': fields.many2one('ir.actions.actions', 'Action (change only)',
-                                     help="Action bound to this entry - "
-                                         "helper field for binding an action, will "
-                                         "automatically set the correct reference"),
+    @api.model
+    def create(self, vals):
+        self.clear_caches()
+        return super(IrValues, self).create(vals)
 
-        'value': fields.text('Value', help="Default value (pickled) or reference to an action"),
-        'value_unpickle': fields.function(_value_unpickle, fnct_inv=_value_pickle,
-                                          type='text',
-                                          string='Default value or action reference'),
-        'key': fields.selection([('action','Action'),('default','Default')],
-                                'Type', size=128, select=True, required=True,
-                                help="- Action: an action attached to one slot of the given model\n"
-                                     "- Default: a default value for a model field"),
-        'key2' : fields.char('Qualifier', size=128, select=True,
-                             help="For actions, one of the possible action slots: \n"
-                                  "  - client_action_multi\n"
-                                  "  - client_print_multi\n"
-                                  "  - client_action_relate\n"
-                                  "  - tree_but_open\n"
-                                  "For defaults, an optional condition"
-                             ,),
-        'res_id': fields.integer('Record ID', select=True,
-                                 help="Database identifier of the record to which this applies. "
-                                      "0 = for all records"),
-        'user_id': fields.many2one('res.users', 'User', ondelete='cascade', select=True,
-                                   help="If set, action binding only applies for this user."),
-        'company_id': fields.many2one('res.company', 'Company', ondelete='cascade', select=True,
-                                      help="If set, action binding only applies for this company")
-    }
-    _defaults = {
-        'key': 'action',
-        'key2': 'tree_but_open',
-    }
+    @api.multi
+    def write(self, vals):
+        self.clear_caches()
+        return super(IrValues, self).write(vals)
 
-    def _auto_init(self, cr, context=None):
-        super(ir_values, self)._auto_init(cr, context)
-        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_values_key_model_key2_res_id_user_id_idx\'')
-        if not cr.fetchone():
-            cr.execute('CREATE INDEX ir_values_key_model_key2_res_id_user_id_idx ON ir_values (key, model, key2, res_id, user_id)')
+    @api.multi
+    def unlink(self):
+        self.clear_caches()
+        return super(IrValues, self).unlink()
 
-    def set_default(self, cr, uid, model, field_name, value, for_all_users=True, company_id=False, condition=False):
+    @api.model
+    @api.returns('self', lambda value: value.id)
+    def set_default(self, model, field_name, value, for_all_users=True, company_id=False, condition=False):
         """Defines a default value for the given model and field_name. Any previous
            default for the same scope (model, field_name, value, for_all_users, company_id, condition)
            will be replaced and lost in the process.
@@ -220,14 +202,13 @@ class ir_values(osv.osv):
                                     (Currently, the condition is trimmed to 200 characters,
                                     so values that share the same first 200 characters always
                                     match)
-           :return: id of the newly created ir.values entry
+           :return: the newly created ir.values entry
         """
         if isinstance(value, unicode):
             value = value.encode('utf8')
         if company_id is True:
             # should be company-specific, need to get company id
-            user = self.pool.get('res.users').browse(cr, uid, uid)
-            company_id = user.company_id.id
+            company_id = self.env.user.company_id.id
 
         # remove existing defaults for the same scope
         search_criteria = [
@@ -235,22 +216,23 @@ class ir_values(osv.osv):
             ('key2', '=', condition and condition[:200]),
             ('model', '=', model),
             ('name', '=', field_name),
-            ('user_id', '=', False if for_all_users else uid),
-            ('company_id','=', company_id)
-            ]
-        self.unlink(cr, uid, self.search(cr, uid, search_criteria))
+            ('user_id', '=', False if for_all_users else self._uid),
+            ('company_id', '=', company_id)
+        ]
+        self.search(search_criteria).unlink()
 
-        return self.create(cr, uid, {
+        return self.create({
             'name': field_name,
             'value': pickle.dumps(value),
             'model': model,
             'key': 'default',
             'key2': condition and condition[:200],
-            'user_id': False if for_all_users else uid,
+            'user_id': False if for_all_users else self._uid,
             'company_id': company_id,
         })
 
-    def get_default(self, cr, uid, model, field_name, for_all_users=True, company_id=False, condition=False):
+    @api.model
+    def get_default(self, model, field_name, for_all_users=True, company_id=False, condition=False):
         """ Return the default value defined for model, field_name, users, company and condition.
             Return ``None`` if no such default exists.
         """
@@ -259,13 +241,14 @@ class ir_values(osv.osv):
             ('key2', '=', condition and condition[:200]),
             ('model', '=', model),
             ('name', '=', field_name),
-            ('user_id', '=', False if for_all_users else uid),
-            ('company_id','=', company_id)
-            ]
-        defaults = self.browse(cr, uid, self.search(cr, uid, search_criteria))
-        return pickle.loads(defaults[0].value.encode('utf-8')) if defaults else None
+            ('user_id', '=', False if for_all_users else self._uid),
+            ('company_id', '=', company_id)
+        ]
+        defaults = self.search(search_criteria)
+        return pickle.loads(defaults.value.encode('utf-8')) if defaults else None
 
-    def get_defaults(self, cr, uid, model, condition=False):
+    @api.model
+    def get_defaults(self, model, condition=False):
         """Returns any default values that are defined for the current model and user,
            (and match ``condition``, if specified), previously registered via
            :meth:`~.set_default`.
@@ -294,32 +277,43 @@ class ir_values(osv.osv):
         """
         # use a direct SQL query for performance reasons,
         # this is called very often
-        query = """SELECT v.id, v.name, v.value FROM ir_values v
-                      LEFT JOIN res_users u ON (v.user_id = u.id)
-                   WHERE v.key = %%s AND v.model = %%s
-                      AND (v.user_id = %%s OR v.user_id IS NULL)
-                      AND (v.company_id IS NULL OR
-                           v.company_id =
-                             (SELECT company_id from res_users where id = %%s)
-                          )
-                      %s
-                   ORDER BY v.user_id, u.company_id"""
-        params = ('default', model, uid, uid)
+        query = """ SELECT v.id, v.name, v.value FROM ir_values v
+                    LEFT JOIN res_users u ON (v.user_id = u.id)
+                    WHERE v.key = %%s AND v.model = %%s
+                        AND (v.user_id = %%s OR v.user_id IS NULL)
+                        AND (v.company_id IS NULL OR
+                             v.company_id = (SELECT company_id FROM res_users WHERE id = %%s)
+                            )
+                    %s
+                    ORDER BY v.user_id, u.company_id"""
+        params = ('default', model, self._uid, self._uid)
         if condition:
-            query %= 'AND v.key2 = %s'
+            query = query % 'AND v.key2 = %s'
             params += (condition[:200],)
         else:
-            query %= 'AND v.key2 is NULL'
-        cr.execute(query, params)
+            query = query % 'AND v.key2 IS NULL'
+        self._cr.execute(query, params)
 
         # keep only the highest priority default for each field
         defaults = {}
-        for row in cr.dictfetchall():
-            defaults.setdefault(row['name'],
-                (row['id'], row['name'], pickle.loads(row['value'].encode('utf-8'))))
+        for row in self._cr.dictfetchall():
+            value = pickle.loads(row['value'].encode('utf-8'))
+            defaults.setdefault(row['name'], (row['id'], row['name'], value))
         return defaults.values()
 
-    def set_action(self, cr, uid, name, action_slot, model, action, res_id=False):
+    # use ormcache: this is called a lot by BaseModel.default_get()!
+    @api.model
+    @tools.ormcache('self._uid', 'model', 'condition')
+    def get_defaults_dict(self, model, condition=False):
+        """ Returns a dictionary mapping field names with their corresponding
+            default value. This method simply improves the returned value of
+            :meth:`~.get_defaults`.
+        """
+        return dict((f, v) for i, f, v in self.get_defaults(model, condition))
+
+    @api.model
+    @api.returns('self', lambda value: value.id)
+    def set_action(self, name, action_slot, model, action, res_id=False):
         """Binds an the given action to the given model's action slot - for later
            retrieval via :meth:`~.get_actions`. Any existing binding of the same action
            to the same slot is first removed, allowing an update of the action's name.
@@ -335,7 +329,7 @@ class ir_values(osv.osv):
            :param string action: action reference, in the form ``'model,id'``
            :param int res_id: optional record id - will bind the action only to a
                               specific record of the model, not all records.
-           :return: id of the newly created ir.values entry
+           :return: the newly created ir.values entry
         """
         assert isinstance(action, basestring) and ',' in action, \
                'Action definition must be an action reference, e.g. "ir.actions.act_window,42"'
@@ -347,12 +341,12 @@ class ir_values(osv.osv):
             ('key', '=', 'action'),
             ('key2', '=', action_slot),
             ('model', '=', model),
-            ('res_id', '=', res_id or 0), # int field -> NULL == 0
+            ('res_id', '=', res_id or 0),  # int field -> NULL == 0
             ('value', '=', action),
-            ]
-        self.unlink(cr, uid, self.search(cr, uid, search_criteria))
+        ]
+        self.search(search_criteria).unlink()
 
-        return self.create(cr, uid, {
+        return self.create({
             'key': 'action',
             'key2': action_slot,
             'model': model,
@@ -361,7 +355,9 @@ class ir_values(osv.osv):
             'value': action,
         })
 
-    def get_actions(self, cr, uid, action_slot, model, res_id=False, context=None):
+    @api.model
+    @tools.ormcache_context('self._uid', 'action_slot', 'model', 'res_id', keys=('lang',))
+    def get_actions(self, action_slot, model, res_id=False):
         """Retrieves the list of actions bound to the given model's action slot.
            See the class description for more details about the various action
            slots: :class:`~.ir_values`.
@@ -377,45 +373,46 @@ class ir_values(osv.osv):
                     where ``id`` is the ID of the default entry, ``name`` is the
                     action label, and ``action_def`` is a dict containing the
                     action definition as obtained by calling
-                    :meth:`~openerp.osv.osv.osv.read` on the action record.
+                    :meth:`~odoo.models.Model.read` on the action record.
         """
         assert action_slot in ACTION_SLOTS, 'Illegal action slot value: %s' % action_slot
         # use a direct SQL query for performance reasons,
         # this is called very often
-        query = """SELECT v.id, v.name, v.value FROM ir_values v
-                   WHERE v.key = %s AND v.key2 = %s
-                        AND v.model = %s
-                        AND (v.res_id = %s
-                             OR v.res_id IS NULL
-                             OR v.res_id = 0)
-                   ORDER BY v.id"""
-        cr.execute(query, ('action', action_slot, model, res_id or None))
+        query = """ SELECT v.id, v.name, v.value FROM ir_values v
+                    WHERE v.key = %s AND v.key2 = %s AND v.model = %s
+                        AND (v.res_id = %s OR v.res_id IS NULL OR v.res_id = 0)
+                    ORDER BY v.id """
+        self._cr.execute(query, ('action', action_slot, model, res_id or None))
+
+        # map values to their corresponding action record
+        actions = []
+        for id, name, value in self._cr.fetchall():
+            if not value:
+                continue                # skip if undefined
+            action_model, action_id = value.split(',')
+            if action_model not in self.pool:
+                continue                # unknown model? skip it!
+            action = self.env[action_model].browse(int(action_id))
+            actions.append((id, name, action))
+
+        # process values and their action
         results = {}
-        for action in cr.dictfetchall():
-            if not action['value']:
-                continue    # skip if undefined
-            action_model_name, action_id = action['value'].split(',')
-            action_model = self.pool.get(action_model_name)
-            if not action_model:
-                continue    # unknow model? skip it
-            fields = [field for field in action_model._all_columns if field not in EXCLUDED_FIELDS]
+        for id, name, action in actions:
+            fields = [field for field in action._fields if field not in EXCLUDED_FIELDS]
             # FIXME: needs cleanup
             try:
-                action_def = action_model.read(cr, uid, int(action_id), fields, context)
-                if action_def:
-                    if action_model_name in ('ir.actions.report.xml', 'ir.actions.act_window'):
-                        groups = action_def.get('groups_id')
-                        if groups:
-                            cr.execute('SELECT 1 FROM res_groups_users_rel WHERE gid IN %s AND uid=%s',
-                                       (tuple(groups), uid))
-                            if not cr.fetchone():
-                                if action['name'] == 'Menuitem':
-                                    raise osv.except_osv('Error!',
-                                                         'You do not have the permission to perform this operation!!!')
-                                continue
-                # keep only the first action registered for each action name
-                results[action['name']] = (action['id'], action['name'], action_def)
-            except except_orm:
+                action_def = {
+                    field: action._fields[field].convert_to_read(action[field])
+                    for field in fields
+                }
+                if action._name in ('ir.actions.report.xml', 'ir.actions.act_window'):
+                    if action.groups_id and not action.groups_id & self.env.user.groups_id:
+                        if name == 'Menuitem':
+                            raise AccessError(_('You do not have the permission to perform this operation!!!'))
+                        continue
+                # keep only the last action registered for each action name
+                results[name] = (id, name, action_def)
+            except (AccessError, MissingError):
                 continue
         return sorted(results.values())
 
@@ -440,7 +437,8 @@ class ir_values(osv.osv):
         return results
 
     # Backards-compatibility adapter layer to retrofit into split API
-    def set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=False, preserve_user=False, company=False):
+    @api.model
+    def set(self, key, key2, name, models, value, replace=True, isobject=False, meta=False, preserve_user=False, company=False):
         """Deprecated legacy method to set default values and bind actions to models' action slots.
            Now dispatches to the newer API methods according to the value of ``key``: :meth:`~.set_default`
            (``key=='default'``) or :meth:`~.set_action` (``key == 'action'``).
@@ -449,16 +447,17 @@ class ir_values(osv.osv):
         """
         assert key in ['default', 'action'], "ir.values entry keys must be in ['default','action']"
         if key == 'default':
-            def do_set(model,res_id):
-                return self.set_default(cr, uid, model, field_name=name, value=value,
+            def do_set(model, res_id):
+                return self.set_default(model, field_name=name, value=value,
                                         for_all_users=(not preserve_user), company_id=company,
                                         condition=key2)
         elif key == 'action':
-            def do_set(model,res_id):
-                return self.set_action(cr, uid, name, action_slot=key2, model=model, action=value, res_id=res_id)
+            def do_set(model, res_id):
+                return self.set_action(name, action_slot=key2, model=model, action=value, res_id=res_id)
         return self._map_legacy_model_list(models, do_set)
 
-    def get(self, cr, uid, key, key2, models, meta=False, context=None, res_id_req=False, without_user=True, key2_req=True):
+    @api.model
+    def get(self, key, key2, models, meta=False, res_id_req=False, without_user=True, key2_req=True):
         """Deprecated legacy method to get the list of default values or actions bound to models' action slots.
            Now dispatches to the newer API methods according to the value of ``key``: :meth:`~.get_defaults`
            (``key=='default'``) or :meth:`~.get_actions` (``key == 'action'``)
@@ -468,11 +467,9 @@ class ir_values(osv.osv):
         """
         assert key in ['default', 'action'], "ir.values entry keys must be in ['default','action']"
         if key == 'default':
-            def do_get(model,res_id):
-                return self.get_defaults(cr, uid, model, condition=key2)
+            def do_get(model, res_id):
+                return self.get_defaults(model, condition=key2)
         elif key == 'action':
-            def do_get(model,res_id):
-                return self.get_actions(cr, uid, action_slot=key2, model=model, res_id=res_id, context=context)
+            def do_get(model, res_id):
+                return self.get_actions(action_slot=key2, model=model, res_id=res_id)
         return self._map_legacy_model_list(models, do_get, merge_results=True)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Business Applications
-#    Copyright (c) 2013 OpenERP S.A. <http://openerp.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.tests import common
 
@@ -77,8 +59,8 @@ class test_challenge(common.TransactionCase):
         # demo user will set a timezone
         self.user_obj.write(cr, uid, self.demo_user_id, {'tz': "Europe/Brussels"}, context=context)
         goal_ids = self.goal_obj.search(cr, uid, [('user_id', '=', self.demo_user_id), ('definition_id', '=', self.definition_timezone_id)], context=context)
-        
-        self.goal_obj.update(cr, uid, goal_ids, context=context)
+
+        self.goal_obj.update_goal(cr, uid, goal_ids, context=context)
         reached_goal_ids = self.goal_obj.search(cr, uid, [('id', 'in', goal_ids), ('state', '=', 'reached')], context=context)
         self.assertEqual(set(goal_ids), set(reached_goal_ids), "Not every goal was reached after changing timezone")
 

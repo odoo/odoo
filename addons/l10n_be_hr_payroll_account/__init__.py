@@ -1,22 +1,14 @@
 # -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011 OpenERP SA (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+from openerp import SUPERUSER_ID
+
+def _set_accounts(cr, registry):
+    #write the default debit account on salary rule having xml_id like 'l10n_be_hr_payroll.1' up to 'l10n_be_hr_payroll.1409'
+    model_obj = registry['ir.model.data']
+    names = [str(x) for x in range(1,1410)]
+    rec_ids = model_obj.search(cr, SUPERUSER_ID, [('model', '=', 'hr.salary.rule'), ('module', '=', 'l10n_be_hr_payroll'), ('name', 'in', names)], {})
+    account_ids = registry['account.account'].search(cr, SUPERUSER_ID, [('code', 'like', '4530%')], {})
+    if account_ids and rec_ids:
+        rule_ids = [x['res_id'] for x in model_obj.read(cr, SUPERUSER_ID, rec_ids, ['res_id'])]
+        registry['hr.salary.rule'].write(cr, SUPERUSER_ID, rule_ids, {'account_debit': account_ids[0]})

@@ -7,6 +7,7 @@ class website_config_settings(osv.osv_memory):
 
     _columns = {
         'website_id': fields.many2one('website', string="website", required=True),
+        'website_name': fields.related('website_id', 'name', type="char", string="Website Name"),
 
         'language_ids': fields.related('website_id', 'language_ids', type='many2many', relation='res.lang', string='Languages'),
         'default_lang_id': fields.related('website_id', 'default_lang_id', type='many2one', relation='res.lang', string='Default language'),
@@ -19,11 +20,20 @@ class website_config_settings(osv.osv_memory):
         'social_linkedin': fields.related('website_id', 'social_linkedin', type="char", string='LinkedIn Account'),
         'social_youtube': fields.related('website_id', 'social_youtube', type="char", string='Youtube Account'),
         'social_googleplus': fields.related('website_id', 'social_googleplus', type="char", string='Google+ Account'),
+        'compress_html': fields.related('website_id', 'compress_html', type="boolean", string='Compress rendered HTML for a better Google PageSpeed result'),
+        'cdn_activated': fields.related('website_id', 'cdn_activated', type="boolean", string='Use a Content Delivery Network (CDN)'),
+        'cdn_url': fields.related('website_id', 'cdn_url', type="char", string='CDN Base URL'),
+        'cdn_filters': fields.related('website_id', 'cdn_filters', type="text", string='CDN Filters'),
+        'module_website_form_editor': fields.boolean("Form builder: create and customize forms"),
+        'module_website_version': fields.boolean("A/B testing and versioning"),
+        'favicon': fields.related('website_id', 'favicon', type="binary", string="Favicon", help="This field holds the image used to display a favicon on the website."),
     }
 
     def on_change_website_id(self, cr, uid, ids, website_id, context=None):
+        if not website_id:
+            return {'value': {}}
         website_data = self.pool.get('website').read(cr, uid, [website_id], [], context=context)[0]
-        values = {}
+        values = {'website_name': website_data['name']}
         for fname, v in website_data.items():
             if fname in self._columns:
                 values[fname] = v[0] if v and self._columns[fname]._type == 'many2one' else v

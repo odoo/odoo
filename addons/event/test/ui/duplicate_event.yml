@@ -1,16 +1,10 @@
 -
   Copy of event.
 -
-  !python {model: event.event}: |
-    try:
-      self.copy(cr, uid, ref("event_2"))
-    except:
-      pass
+  !python {model: event.event, id: event_2}: |
+    self.copy()
 -
-  Copy of event registarion.
+  Copy of event registration.
 -
-  !python {model: event.registration}: |
-    try:
-      self.copy(cr, uid, ref("reg_1_1"))
-    except:
-      pass
+  !python {model: event.registration, id: reg_1_1}: |
+    self.copy()

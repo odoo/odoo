@@ -1,58 +1,63 @@
-# Croatian translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_order_dates
+# 
+# Translators:
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-19 19:34+0000\n"
-"Last-Translator: Bruno Bardić <bruno.bardic@procudo.hr>\n"
-"Language-Team: Croatian <hr@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-10-19 13:59+0000\n"
+"Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
+"Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:40+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: sale_order_dates
-#: view:sale.order:0
-msgid "Dates"
-msgstr "Datumi"
-
-#. module: sale_order_dates
-#: field:sale.order,commitment_date:0
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_commitment_date
 msgid "Commitment Date"
 msgstr "Obećani datum"
 
 #. module: sale_order_dates
-#: field:sale.order,effective_date:0
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order_requested_date
+msgid ""
+"Date by which the customer has requested the items to be delivered.\n"
+"When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
+"Leave this field empty if you want the Delivery Order to be processed as soon as possible. In that case the expected date will be computed using the default method: based on the Product Lead Times and the Company's Security Delay."
+msgstr "Datum na koji kupac traži isporuku stavaka.\nKada se narudžba potvrdi, datum očekivane isporuke će se izračunati na temelju tog datuma i sigurnosne odgode društva.\nOstavite ovo polje prazno ako želite obradu po ovoj narudžbi što je prije moguće. U tom će slučaju očekivani datum biti izračunat pomoću druge metode: na temelju puta proizvoda i sigurnosne odgode."
+
+#. module: sale_order_dates
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
+msgid ""
+"Date by which the products are sure to be delivered. This is a date that you"
+" can promise to the customer, based on the Product Lead Times."
+msgstr "Datum na koji su proizvodi sigurni za isporuku. To je datum koji možete obećati kupcu, temeljeno na vremenu puštanja proizvoda."
+
+#. module: sale_order_dates
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order_effective_date
+msgid "Date on which the first Delivery Order was created."
+msgstr "Datum kreiranja prvog nabavnog naloga."
+
+#. module: sale_order_dates
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_effective_date
 msgid "Effective Date"
 msgstr "Efektivni datum"
 
 #. module: sale_order_dates
-#: help:sale.order,effective_date:0
-msgid "Date on which the first Delivery Order was created."
-msgstr ""
-
-#. module: sale_order_dates
-#: help:sale.order,requested_date:0
-msgid ""
-"Date by which the customer has requested the items to be delivered.\n"
-"When this Order gets confirmed, the Delivery Order's expected date will be "
-"computed based on this date and the Company's Security Delay.\n"
-"Leave this field empty if you want the Delivery Order to be processed as "
-"soon as possible. In that case the expected date will be computed using the "
-"default method: based on the Product Lead Times and the Company's Security "
-"Delay."
-msgstr ""
-
-#. module: sale_order_dates
-#: field:sale.order,requested_date:0
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_requested_date
 msgid "Requested Date"
 msgstr "Traženi datum"
+
+#. module: sale_order_dates
+#: code:addons/sale_order_dates/sale_order_dates.py:51
+#, python-format
+msgid "Requested date is too soon!"
+msgstr "Traženi datum je prerano!"
 
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order
@@ -60,49 +65,14 @@ msgid "Sales Order"
 msgstr "Prodajni nalog"
 
 #. module: sale_order_dates
-#: help:sale.order,commitment_date:0
-msgid ""
-"Date by which the products are sure to be delivered. This is a date that you "
-"can promise to the customer, based on the Product Lead Times."
-msgstr ""
+#: model:ir.model,name:sale_order_dates.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Stavka prodajnog naloga"
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:90
-#, python-format
-msgid "Requested date is too soon!"
-msgstr ""
-
-#. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:91
+#: code:addons/sale_order_dates/sale_order_dates.py:52
 #, python-format
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
 "may be unable to honor the customer's request."
-msgstr ""
-
-#~ msgid "Sales Order Dates"
-#~ msgstr "Datumi naloga u prodaji"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Referenca naloga mora biti jedinstvena"
-
-#~ msgid "Date on which delivery of products is to be made."
-#~ msgstr "Datum kada bi trebalo dostaviti artikl."
-
-#~ msgid ""
-#~ "\n"
-#~ "Add commitment, requested and effective dates on the sales order.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Add commitment, requested and effective dates on the sales order.\n"
-#~ "Dodaj datum prihvaćanja obveze, traženi i efektivni datum na prodajnom "
-#~ "nalogu.\n"
-
-#~ msgid "Date on which customer has requested for sales."
-#~ msgstr "Datum kada je kupac tražio prodaju"
-
-#~ msgid "Date on which picking is created."
-#~ msgstr "Datum isporuke"
-
-#~ msgid "Date requested by the customer for the sale."
-#~ msgstr "Datum zatražen od kupca za prodaju"
+msgstr "Datum zahtjevan od kupca je prije datuma obveze. Možda nećete biti u mogućnosti udovoljiti zahtjevu kupca."

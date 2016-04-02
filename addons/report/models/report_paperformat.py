@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2014-Today OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from functools import partial
 
@@ -68,10 +50,10 @@ class report_paperformat(osv.Model):
                                             ('custom', 'Custom')],
                                            'Paper size',
                                            help="Select Proper Paper size"),
-                'margin_top': fields.integer('Top Margin (mm)'),
-                'margin_bottom': fields.integer('Bottom Margin (mm)'),
-                'margin_left': fields.integer('Left Margin (mm)'),
-                'margin_right': fields.integer('Right Margin (mm)'),
+                'margin_top': fields.float('Top Margin (mm)'),
+                'margin_bottom': fields.float('Bottom Margin (mm)'),
+                'margin_left': fields.float('Left Margin (mm)'),
+                'margin_right': fields.float('Right Margin (mm)'),
                 'page_height': fields.integer('Page height (mm)'),
                 'page_width': fields.integer('Page width (mm)'),
                 'orientation': fields.selection([('Landscape', 'Landscape'),
@@ -93,7 +75,7 @@ class report_paperformat(osv.Model):
         return True
 
     _constraints = [
-        (_check_format_or_page, 'Error ! You cannot select a format AND speficic '
+        (_check_format_or_page, 'Error ! You cannot select a format AND specific '
                                 'page width/height.', ['format']),
     ]
 
@@ -143,13 +125,10 @@ class ir_actions_report(osv.Model):
         """Used in the ir.actions.report.xml form view in order to search naively after the view(s)
         used in the rendering.
         """
-        if context is None:
-            context = {}
         try:
             report_name = self.browse(cr, uid, ids[0], context).report_name
             act_window_obj = self.pool.get('ir.actions.act_window')
             view_action = act_window_obj.for_xml_id(cr, uid, 'base', 'action_ui_view', context=context)
-            view_action['context'] = context
             view_action['domain'] = [('name', 'ilike', report_name.split('.')[1]), ('type', '=', 'qweb')]
             return view_action
         except:

@@ -1,21 +1,57 @@
-# Norwegian Bokmal translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * fetchmail
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-09-08 18:59+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Norwegian Bokmal <nb@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2016-01-15 07:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-9/language/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:30+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: nb\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_tree
+msgid "# of emails"
+msgstr "# Av e-post."
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Actions to Perform on Incoming Mails"
+msgstr "Tiltak for å utføre på innkommende post."
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_active
+msgid "Active"
+msgstr "Aktiv"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Advanced"
+msgstr "Avansert"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Advanced Options"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_configuration
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Configuration"
+msgstr "Konfigurasjon"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.inherit_view_general_configuration
+msgid "Configure the incoming email gateway"
+msgstr ""
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
@@ -23,60 +59,87 @@ msgid "Confirmed"
 msgstr "Bekreftet"
 
 #. module: fetchmail
-#: field:fetchmail.server,server:0
-msgid "Server Name"
-msgstr "Tjener navn"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "POP"
-msgstr "POP"
-
-#. module: fetchmail
-#: help:fetchmail.server,priority:0
-msgid "Defines the order of processing, lower values mean higher priority"
+#: code:addons/fetchmail/fetchmail.py:150
+#, python-format
+msgid "Connection test failed: %s"
 msgstr ""
-"Definerer rekkefølgen av behandlingen, lavere verdier betyr høyere prioritet."
 
 #. module: fetchmail
-#: help:fetchmail.server,is_ssl:0
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_is_ssl
 msgid ""
 "Connections are encrypted with SSL/TLS through a dedicated port (default: "
 "IMAPS=993, POP3S=995)"
+msgstr "Tilkoblinger er kryptert med SSL / TLS gjennom en egen port (standard: IMAPS = 993, POP3S = 995)"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_object_id
+msgid "Create a New Record"
+msgstr "Oppretter en ny oppføring."
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_uid
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
+msgid "Created by"
+msgstr "Opprettet av"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_date
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
+msgid "Created on"
+msgstr "Opprettet den"
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_priority
+msgid "Defines the order of processing, lower values mean higher priority"
+msgstr "Definerer rekkefølgen av behandlingen, lavere verdier betyr høyere prioritet."
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_display_name
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
+msgid "Display Name"
 msgstr ""
-"Tilkoblinger er kryptert med SSL / TLS gjennom en egen port (standard: IMAPS "
-"= 993, POP3S = 995)"
 
 #. module: fetchmail
-#: field:fetchmail.server,attach:0
-msgid "Keep Attachments"
-msgstr "Hold Vedlegg"
-
-#. module: fetchmail
-#: field:fetchmail.server,is_ssl:0
-msgid "SSL/TLS"
-msgstr "SSL/TLS"
-
-#. module: fetchmail
-#: help:fetchmail.server,original:0
-msgid ""
-"Whether a full original copy of each email should be kept for referenceand "
-"attached to each processed message. This will usually double the size of "
-"your message database."
-msgstr ""
-"Om en full original kopi av hver e-post bør holdes for referenceand festet "
-"til hver bearbeidet melding. Dette vil vanligvis doble størrelsen på "
-"meldingen database."
-
-#. module: fetchmail
-#: view:base.config.settings:0
-msgid "Configure the incoming email gateway"
-msgstr ""
-
-#. module: fetchmail
-#: view:fetchmail.server:0
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Fetch Now"
 msgstr "Hente nå."
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_server
+msgid "Hostname or IP of the mail server"
+msgstr "Vertsnavn eller IP for e-postserveren."
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_id
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
+msgid "ID"
+msgstr "ID"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "IMAP"
+msgstr "IMAP"
+
+#. module: fetchmail
+#: selection:fetchmail.server,type:0
+msgid "IMAP Server"
+msgstr "IMAP-tjener"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "If SSL required."
+msgstr "Hvis SSL nødvendig."
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_mail_mail_fetchmail_server_id
+msgid "Inbound Mail Server"
+msgstr "Inngående E-post tjener."
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Incoming Mail Server"
+msgstr "Innkommende E-post tjener."
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
@@ -85,14 +148,37 @@ msgid "Incoming Mail Servers"
 msgstr "Innkommende Mail Tjenere."
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server type IMAP."
-msgstr "Tjener type IMAP."
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_attach
+msgid "Keep Attachments"
+msgstr "Hold Vedlegg"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "POP/IMAP Servers"
-msgstr "POP/IMAP tjenere."
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_original
+msgid "Keep Original"
+msgstr "Hold Original"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_date
+msgid "Last Fetch Date"
+msgstr "Siste Hente Dato."
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings___last_update
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
+msgid "Last Modified on"
+msgstr "Sist oppdatert "
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_uid
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
+msgid "Last Updated by"
+msgstr "Sist oppdatert av"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_date
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
+msgid "Last Updated on"
+msgstr "Sist oppdatert"
 
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
@@ -100,224 +186,20 @@ msgid "Local Server"
 msgstr "Lokal tjener."
 
 #. module: fetchmail
-#: field:fetchmail.server,state:0
-msgid "Status"
-msgstr ""
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_server
-msgid "POP/IMAP Server"
-msgstr "POP/IMAP Tjener."
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Reset Confirmation"
-msgstr "Tilbakestille Bekreftelse."
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "SSL"
-msgstr "SSL"
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
-msgid "fetchmail.config.settings"
-msgstr ""
-
-#. module: fetchmail
-#: field:fetchmail.server,date:0
-msgid "Last Fetch Date"
-msgstr "Siste Hente Dato."
-
-#. module: fetchmail
-#: help:fetchmail.server,action_id:0
-msgid ""
-"Optional custom server action to trigger for each incoming mail, on the "
-"record that was created or updated by this mail"
-msgstr ""
-"Ekstra tilpasset server tiltak for å utløse for hver innkommende e-post, på "
-"plata som ble opprettet eller oppdatert i denne posten."
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "# of emails"
-msgstr "# Av e-post."
-
-#. module: fetchmail
-#: field:fetchmail.server,original:0
-msgid "Keep Original"
-msgstr "Hold Original"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Advanced Options"
-msgstr ""
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-#: field:fetchmail.server,configuration:0
-msgid "Configuration"
-msgstr "Konfigurasjon"
-
-#. module: fetchmail
-#: field:fetchmail.server,script:0
-msgid "Script"
-msgstr "Manus"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Incoming Mail Server"
-msgstr "Innkommende E-post tjener."
-
-#. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:163
-#, python-format
-msgid "Connection test failed!"
-msgstr "Tilkoblingen var mislykket!"
-
-#. module: fetchmail
-#: field:fetchmail.server,user:0
-msgid "Username"
-msgstr "Brukernavn:"
-
-#. module: fetchmail
-#: help:fetchmail.server,server:0
-msgid "Hostname or IP of the mail server"
-msgstr "Vertsnavn eller IP for e-postserveren."
-
-#. module: fetchmail
-#: field:fetchmail.server,name:0
-msgid "Name"
-msgstr "Navn"
-
-#. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:163
-#, python-format
-msgid ""
-"Here is what we got instead:\n"
-" %s."
-msgstr ""
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Test & Confirm"
-msgstr "Test & Bekreft"
-
-#. module: fetchmail
-#: field:fetchmail.server,action_id:0
-msgid "Server Action"
-msgstr "Tjenerhandling"
-
-#. module: fetchmail
-#: field:mail.mail,fetchmail_server_id:0
-msgid "Inbound Mail Server"
-msgstr "Inngående E-post tjener."
-
-#. module: fetchmail
-#: field:fetchmail.server,message_ids:0
-#: model:ir.actions.act_window,name:fetchmail.act_server_history
-msgid "Messages"
-msgstr "Meldinger"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Search Incoming Mail Servers"
-msgstr "Søk innkommende post tjenere."
-
-#. module: fetchmail
-#: field:fetchmail.server,active:0
-msgid "Active"
-msgstr "Aktiv"
-
-#. module: fetchmail
-#: help:fetchmail.server,attach:0
-msgid ""
-"Whether attachments should be downloaded. If not enabled, incoming emails "
-"will be stripped of any attachments before being processed"
-msgstr ""
-"Om vedlegg skal lastes ned. Hvis ikke er aktivert, vil innkommende e-post "
-"blir fratatt eventuelle vedlegg før de behandles."
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_mail_mail
-msgid "Outgoing Mails"
-msgstr ""
-
-#. module: fetchmail
-#: field:fetchmail.server,priority:0
-msgid "Server Priority"
-msgstr "Tjener prioritet."
-
-#. module: fetchmail
-#: selection:fetchmail.server,type:0
-msgid "IMAP Server"
-msgstr "IMAP-tjener"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "IMAP"
-msgstr "IMAP"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server type POP."
-msgstr "Tjener type POP."
-
-#. module: fetchmail
-#: field:fetchmail.server,password:0
-msgid "Password"
-msgstr "Passord:"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Actions to Perform on Incoming Mails"
-msgstr "Tiltak for å utføre på innkommende post."
-
-#. module: fetchmail
-#: field:fetchmail.server,type:0
-msgid "Server Type"
-msgstr "Tjener Type."
-
-#. module: fetchmail
-#: view:fetchmail.server:0
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Login Information"
 msgstr "Inn loggings informasjon."
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server Information"
-msgstr "Tjenerinformasjon"
+#: model:ir.actions.act_window,name:fetchmail.act_server_history
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_message_ids
+msgid "Messages"
+msgstr "Meldinger."
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "If SSL required."
-msgstr "Hvis SSL nødvendig."
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Advanced"
-msgstr "Avansert"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server & Login"
-msgstr "Tjener og Logg inn."
-
-#. module: fetchmail
-#: help:fetchmail.server,object_id:0
-msgid ""
-"Process each incoming mail as part of a conversation corresponding to this "
-"document type. This will create new documents for new conversations, or "
-"attach follow-up emails to the existing conversations (documents)."
-msgstr ""
-"Behandle hver innkommende post som del av en samtale tilsvarende denne "
-"dokumenttypen. Dette vil skape nye dokumenter for nye samtaler, eller legge "
-"oppfølging e-post til de eksisterende samtaler (dokumenter)."
-
-#. module: fetchmail
-#: field:fetchmail.server,object_id:0
-msgid "Create a New Record"
-msgstr "Oppretter en ny oppføring."
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_name
+msgid "Name"
+msgstr "Navn"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
@@ -325,31 +207,151 @@ msgid "Not Confirmed"
 msgstr "Ikke bekreftet."
 
 #. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_action_id
+msgid ""
+"Optional custom server action to trigger for each incoming mail, on the "
+"record that was created or updated by this mail"
+msgstr "Ekstra tilpasset server tiltak for å utløse for hver innkommende e-post, på plata som ble opprettet eller oppdatert i denne posten."
+
+#. module: fetchmail
+#: model:ir.model,name:fetchmail.model_mail_mail
+msgid "Outgoing Mails"
+msgstr "Utgående e-poster"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "POP"
+msgstr "POP"
+
+#. module: fetchmail
 #: selection:fetchmail.server,type:0
 msgid "POP Server"
 msgstr "POP tjener."
 
 #. module: fetchmail
-#: field:fetchmail.server,port:0
+#: model:ir.model,name:fetchmail.model_fetchmail_server
+msgid "POP/IMAP Server"
+msgstr "POP/IMAP Tjener."
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_tree
+msgid "POP/IMAP Servers"
+msgstr "POP/IMAP tjenere."
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_password
+msgid "Password"
+msgstr "Passord"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_port
 msgid "Port"
 msgstr "Port"
 
-#~ msgid "State"
-#~ msgstr "Stat"
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_object_id
+msgid ""
+"Process each incoming mail as part of a conversation corresponding to this "
+"document type. This will create new documents for new conversations, or "
+"attach follow-up emails to the existing conversations (documents)."
+msgstr "Behandle hver innkommende post som del av en samtale tilsvarende denne dokumenttypen. Dette vil skape nye dokumenter for nye samtaler, eller legge oppfølging e-post til de eksisterende samtaler (dokumenter)."
 
-#~ msgid "Email Message"
-#~ msgstr "E-post Melding."
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Reset Confirmation"
+msgstr "Tilbakestille Bekreftelse."
 
-#, python-format
-#~ msgid ""
-#~ "Here is what we got instead:\n"
-#~ " %s"
-#~ msgstr ""
-#~ "Her er hva vi fikk i stedet:\n"
-#~ "  % s"
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "SSL"
+msgstr "SSL"
 
-#~ msgid "Advanced options"
-#~ msgstr "Avanserte alternativer"
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_is_ssl
+msgid "SSL/TLS"
+msgstr "SSL/TLS"
 
-#~ msgid "Mail Server"
-#~ msgstr "E-posttjener"
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_script
+msgid "Script"
+msgstr "Manus"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Search Incoming Mail Servers"
+msgstr "Søk innkommende post tjenere."
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Server & Login"
+msgstr "Tjener og Logg inn."
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_action_id
+msgid "Server Action"
+msgstr "Tjenerhandling"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Server Information"
+msgstr "Tjenerinformasjon"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_server
+msgid "Server Name"
+msgstr "Tjener navn"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_priority
+msgid "Server Priority"
+msgstr "Tjener prioritet."
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_type
+msgid "Server Type"
+msgstr "Tjener Type."
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Server type IMAP."
+msgstr "Tjener type IMAP."
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Server type POP."
+msgstr "Tjener type POP."
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_state
+msgid "Status"
+msgstr "Status"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Test & Confirm"
+msgstr "Test & Bekreft"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_user
+msgid "Username"
+msgstr "Brukernavn"
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_original
+msgid ""
+"Whether a full original copy of each email should be kept for referenceand "
+"attached to each processed message. This will usually double the size of "
+"your message database."
+msgstr "Om en full original kopi av hver e-post bør holdes for referenceand festet til hver bearbeidet melding. Dette vil vanligvis doble størrelsen på meldingen database."
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_attach
+msgid ""
+"Whether attachments should be downloaded. If not enabled, incoming emails "
+"will be stripped of any attachments before being processed"
+msgstr "Om vedlegg skal lastes ned. Hvis ikke er aktivert, vil innkommende e-post blir fratatt eventuelle vedlegg før de behandles."
+
+#. module: fetchmail
+#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
+msgid "fetchmail.config.settings"
+msgstr ""

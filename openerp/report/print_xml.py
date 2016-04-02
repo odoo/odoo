@@ -1,30 +1,12 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#    
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from lxml import etree
 import openerp
 import openerp.tools as tools
 from openerp.tools.safe_eval import safe_eval
 import print_fnc
-from openerp.osv.orm import browse_null, browse_record
+from openerp.osv.orm import BaseModel
 
 class InheritDict(dict):
     # Might be usefull when we're doing name lookup for call or eval.
@@ -74,26 +56,18 @@ class document(object):
         value = browser
 
         for f in fields:
-            if isinstance(value, list):
-                if len(value)==0:
+            if isinstance(value, (BaseModel, list)):
+                if not value:
                     return ''
                 value = value[0]
-            if isinstance(value, browse_null):
-                return ''
-            else:
-                value = value[f]
+            value = value[f]
 
-        if isinstance(value, browse_null) or (type(value)==bool and not value):
-            return ''
-        else:
-            return value
+        return value or ''
 
     def get_value2(self, browser, field_path):
         value = self.get_value(browser, field_path)
-        if isinstance(value, browse_record):
+        if isinstance(value, BaseModel):
             return value.id
-        elif isinstance(value, browse_null):
-            return False
         else:
             return value
 
@@ -104,7 +78,7 @@ class document(object):
 # dictionary passed to eval
 
 #FIXME: it wont work if the data hasn't been fetched yet... this could
-# happen if the eval node is the first one using this browse_record
+# happen if the eval node is the first one using this Record
 # the next line is a workaround for the problem: it causes the resource to be loaded
 #Pinky: Why not this ? eval(expr, browser) ?
 #       name = browser.name
@@ -127,11 +101,7 @@ class document(object):
                             el.set(key, value)
 
                 elif attrs['type']=='attachment':
-                    if isinstance(browser, list):
-                        model = browser[0]._table_name
-                    else:
-                        model = browser._table_name
-
+                    model = browser._name
                     value = self.get_value(browser, attrs['name'])
 
                     ids = self.pool['ir.attachment'].search(self.cr, self.uid, [('res_model','=',model),('res_id','=',int(value))])
@@ -203,19 +173,13 @@ class document(object):
                     if 'model' in attrs:
                         obj = self.pool[attrs['model']]
                     else:
-                        if isinstance(browser, list):
-                            obj = browser[0]._table
-                        else:
-                            obj = browser._table
+                        obj = browser       # the record(set) is an instance of the model
 
                     # get the ids
                     if 'ids' in attrs:
                         ids = self.eval(browser, attrs['ids'])
                     else:
-                        if isinstance(browser, list):
-                            ids = [b.id for b in browser]
-                        else:
-                            ids = [browser.id]
+                        ids = browse.ids
 
                     # call the method itself
                     newdatas = getattr(obj, attrs['name'])(self.cr, self.uid, ids, *args)
@@ -233,7 +197,7 @@ class document(object):
                             else:
                                 for el_cld in node:
                                     parse_result_tree(el_cld, el, datas)
-                    if not isinstance(newdatas, list):
+                    if not isinstance(newdatas, (BaseModel, list)):
                         newdatas = [newdatas]
                     for newdata in newdatas:
                         parse_result_tree(node, parent, newdata)
@@ -241,7 +205,7 @@ class document(object):
                 elif attrs['type']=='zoom':
                     value = self.get_value(browser, attrs['name'])
                     if value:
-                        if not isinstance(value, list):
+                        if not isinstance(value, (BaseModel, list)):
                             v_list = [value]
                         else:
                             v_list = value
@@ -290,7 +254,3 @@ class document(object):
     def close(self):
         self.doc = None
         self.dom = None
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

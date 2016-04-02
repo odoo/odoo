@@ -6,7 +6,6 @@
     'summary': 'Payment Acquirer: Ogone Implementation',
     'version': '1.0',
     'description': """Ogone Payment Acquirer""",
-    'author': 'OpenERP SA',
     'depends': ['payment'],
     'data': [
         'views/ogone.xml',

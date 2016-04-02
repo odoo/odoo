@@ -1,23 +1,5 @@
 
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2014 OpenERP S.A. (<http://openerp.com).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 #
 # TODO:
@@ -51,12 +33,11 @@ class Environment(dict):
         self.id = record.id
         self.ids = [record.id]
         self.obj = openerp.registry(self.cr.dbname)[self.model]
-        self.columns = self.obj._columns.keys() + self.obj._inherit_fields.keys()
 
     def __getitem__(self, key):
-        if (key in self.columns) or (key in dir(self.obj)):
-            res = self.obj.browse(self.cr, self.uid, self.id)
-            return res[key]
+        records = self.obj.browse(self.cr, self.uid, self.ids)
+        if hasattr(records, key):
+            return getattr(records, key)
         else:
             return super(Environment, self).__getitem__(key)
 
@@ -122,7 +103,7 @@ class WorkflowItem(object):
             triggers = triggers and not ok
 
         if triggers:
-            cr.execute('select * from wkf_transition where act_from=%s', (self.workitem['act_id'],))
+            cr.execute('select * from wkf_transition where act_from=%s ORDER BY sequence,id', (self.workitem['act_id'],))
             for trans in cr.dictfetchall():
                 if trans['trigger_model']:
                     ids = self.wkf_expr_eval_expr(trans['trigger_expr_id'])
@@ -220,7 +201,7 @@ class WorkflowItem(object):
 
     def _split_test(self, split_mode, signal, stack):
         cr = self.session.cr
-        cr.execute('select * from wkf_transition where act_from=%s', (self.workitem['act_id'],))
+        cr.execute('select * from wkf_transition where act_from=%s ORDER BY sequence,id', (self.workitem['act_id'],))
         test = False
         transitions = []
         alltrans = cr.dictfetchall()
@@ -258,7 +239,7 @@ class WorkflowItem(object):
             WorkflowItem.create(self.session, self.record, activity, inst_id, stack=stack)
             cr.execute('delete from wkf_witm_trans where inst_id=%s and trans_id=%s', (inst_id,trans_id))
         else:
-            cr.execute('select id from wkf_transition where act_to=%s', (activity['id'],))
+            cr.execute('select id from wkf_transition where act_to=%s ORDER BY sequence,id', (activity['id'],))
             trans_ids = cr.fetchall()
             ok = True
             for (id,) in trans_ids:
@@ -332,6 +313,3 @@ class WorkflowItem(object):
                 return False
 
         return self.wkf_expr_eval_expr(transition['condition'])
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

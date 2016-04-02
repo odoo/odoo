@@ -5,23 +5,26 @@
     <data noupdate="1">
         <!--Email template -->
         
-        <record id="email_template_goal_reminder" model="email.template">
+        <record id="email_template_goal_reminder" model="mail.template">
             <field name="name">Reminder for Goal Update</field>
+            <field name="model_id" ref="gamification.model_gamification_goal"/>
+            <field name="lang">${object.user_id.lang}</field>
             <field name="body_html"><![CDATA[
-    <header>
+    <p>
         <strong>Reminder ${object.name}</strong>
-    </header>
+    </p>
     
     <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>
             ]]></field>
         </record>
         
-        <record id="simple_report_template" model="email.template">
+        <record id="simple_report_template" model="mail.template">
             <field name="name">Simple Challenge Report Progress</field>
+            <field name="model_id" ref="gamification.model_gamification_challenge"/>
             <field name="body_html"><![CDATA[
-<header>
+<p>
     <strong>${object.name}</strong>
-</header>
+</p>
 <p class="oe_grey">The following message contains the current progress for the challenge ${object.name}</p>
 
 % if object.visibility_mode == 'personal':
@@ -131,7 +134,7 @@
             <field name="view_type">form</field>
             <field name="target">current</field>
             <field name="view_id" ref="base.view_users_simple_form"/>
-            <field name="context">{'default_groups_ref': ['base.group_user']}</field>
+            <field name="context">{}</field>
             <field name="help">Create and manage users that will connect to the system. Users can be deactivated should there be a period of time during which they will/should not connect to the system. You can assign them groups in order to give them specific access to the applications they need to use in the system.</field>
         </record>
 
@@ -147,10 +150,10 @@
 
         <record model="gamification.goal.definition" id="definition_nbr_following">
             <field name="name">Mail Group Following</field>
-            <field name="description">Follow mail groups to receive news</field>
+            <field name="description">Follow mail.channels to receive news</field>
             <field name="computation_mode">python</field>
-            <field name="compute_code">result = pool.get('mail.followers').search(cr, uid, [('res_model', '=', 'mail.group'), ('partner_id', '=', object.user_id.partner_id.id)], count=True, context=context)</field>
-            <field name="action_id" eval="ref('mail.action_view_groups')" />
+            <field name="compute_code">result = pool.get('mail.followers').search(cr, uid, [('res_model', '=', 'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)], count=True, context=context)</field>
+            <field name="action_id" eval="ref('mail.mail_channel_action_view')" />
         </record>
 
 

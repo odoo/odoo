@@ -1,16 +1,13 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
 
-        <report id="report_ir_model_overview"
-                string="Model Overview"
-                model="ir.model"
-                name="ir.model.overview"
-                report_type="sxw"
-                file="base/ir/ir_model_report.sxw"
-                header="False"
-                />
+        <report
+            id="report_ir_model_overview"
+            string="Model Overview"
+            model="ir.model"
+            report_type="qweb-pdf"
+            name="base.report_irmodeloverview"
+            file="base.report_irmodeloverview"/>
 
-    </data>
-</openerp>
+</odoo>
 

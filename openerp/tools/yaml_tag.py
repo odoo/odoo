@@ -115,6 +115,7 @@ def record_constructor(loader, node):
 
 def python_constructor(loader, node):
     kwargs = loader.construct_mapping(node)
+    kwargs['first_line'] = node.start_mark.line + 1
     return Python(**kwargs)
 
 def menuitem_constructor(loader, node):
@@ -183,6 +184,3 @@ def add_constructors():
     yaml.add_multi_constructor(u"!ref", ref_constructor)
     yaml.add_constructor(u"!ir_set", ir_set_constructor)
 add_constructors()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

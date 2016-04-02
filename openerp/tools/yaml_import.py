@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-import threading
-import types
-import time # used to eval time.strftime expressions
+from collections import OrderedDict
 from datetime import datetime, timedelta
 import logging
+import time # used to eval time.strftime expressions
+import types
 
 import openerp
 import openerp.sql_db as sql_db
@@ -24,6 +24,9 @@ from safe_eval import safe_eval as eval
 import assertion_report
 
 _logger = logging.getLogger(__name__)
+
+def encode(s):
+    return s.encode('utf8') if isinstance(s, unicode) else s
 
 class YamlImportException(Exception):
     pass
@@ -121,6 +124,7 @@ class YamlInterpreter(object):
                              'time': time,
                              'datetime': datetime,
                              'timedelta': timedelta}
+        self.env = openerp.api.Environment(self.cr, self.uid, self.context)
 
     def _log(self, *args, **kwargs):
         _logger.log(self.loglevel, *args, **kwargs)
@@ -135,7 +139,7 @@ class YamlInterpreter(object):
         id = xml_id
         if '.' in xml_id:
             module, id = xml_id.split('.', 1)
-            assert '.' not in id, "The ID reference '%s' must contains maximum one dot.\n" \
+            assert '.' not in id, "The ID reference '%s' must contain at most one dot.\n" \
                                   "It is used to refer to other modules ID, in the form: module.record_id" \
                                   % (xml_id,)
             if module != self.module:
@@ -164,11 +168,16 @@ class YamlInterpreter(object):
                 _, id = self.pool['ir.model.data'].get_object_reference(self.cr, self.uid, module, checked_xml_id)
                 self.id_map[xml_id] = id
             except ValueError:
-                raise ValueError("""%s not found when processing %s.
+                raise ValueError("""%r not found when processing %s.
     This Yaml file appears to depend on missing data. This often happens for
-    tests that belong to a module's test suite and depend on each other.""" % (checked_xml_id, self.filename))
+    tests that belong to a module's test suite and depend on each other.""" % (xml_id, self.filename))
 
         return id
+
+    def get_record(self, xml_id):
+        if '.' not in xml_id:
+            xml_id = "%s.%s" % (self.module, xml_id)
+        return self.env.ref(xml_id)
 
     def get_context(self, node, eval_dict):
         context = self.context.copy()
@@ -274,7 +283,7 @@ class YamlInterpreter(object):
     def create_osv_memory_record(self, record, fields):
         model = self.get_model(record.model)
         context = self.get_context(record, self.eval_context)
-        record_dict = self._create_record(model, fields)
+        record_dict = self._create_record(model, fields, context=context)
         id_new = model.create(self.cr, self.uid, record_dict, context=context)
         self.id_map[record.id] = int(id_new)
         return record_dict
@@ -282,7 +291,6 @@ class YamlInterpreter(object):
     def process_record(self, node):
         record, fields = node.items()[0]
         model = self.get_model(record.model)
-
         view_id = record.view
         if view_id and (view_id is not True) and isinstance(view_id, basestring):
             module = self.module
@@ -294,14 +302,18 @@ class YamlInterpreter(object):
             record_dict=self.create_osv_memory_record(record, fields)
         else:
             self.validate_xml_id(record.id)
+            module = self.module
+            record_id = record.id
+            if '.' in record_id:
+                module, record_id = record_id.split('.',1)
             try:
-                self.pool['ir.model.data']._get_id(self.cr, SUPERUSER_ID, self.module, record.id)
+                self.pool['ir.model.data']._get_id(self.cr, SUPERUSER_ID, module, record_id)
                 default = False
             except ValueError:
                 default = True
 
             if self.isnoupdate(record) and self.mode != 'init':
-                id = self.pool['ir.model.data']._update_dummy(self.cr, SUPERUSER_ID, record.model, self.module, record.id)
+                id = self.pool['ir.model.data']._update_dummy(self.cr, SUPERUSER_ID, record.model, module, record_id)
                 # check if the resource already existed at the last update
                 if id:
                     self.id_map[record] = int(id)
@@ -310,25 +322,25 @@ class YamlInterpreter(object):
                     if not self._coerce_bool(record.forcecreate):
                         return None
 
-
             #context = self.get_context(record, self.eval_context)
-            #TOFIX: record.context like {'withoutemployee':True} should pass from self.eval_context. example: test_project.yml in project module
-            context = record.context
+            # FIXME: record.context like {'withoutemployee':True} should pass from self.eval_context. example: test_project.yml in project module
+            # TODO: cleaner way to avoid resetting password in auth_signup (makes user creation costly)
+            context = dict(record.context or {}, no_reset_password=True)
             view_info = False
             if view_id:
                 varg = view_id
                 if view_id is True: varg = False
                 view_info = model.fields_view_get(self.cr, SUPERUSER_ID, varg, 'form', context)
 
-            record_dict = self._create_record(model, fields, view_info, default=default)
+            record_dict = self._create_record(model, fields, view_info, default=default, context=context)
             id = self.pool['ir.model.data']._update(self.cr, SUPERUSER_ID, record.model, \
-                    self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
+                    module, record_dict, record_id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
             self.id_map[record.id] = int(id)
             if config.get('import_partial'):
                 self.cr.commit()
 
-    def _create_record(self, model, fields, view_info=None, parent={}, default=True):
-        """This function processes the !record tag in yalm files. It simulates the record creation through an xml
+    def _create_record(self, model, fields, view_info=None, parent={}, default=True, context=None):
+        """This function processes the !record tag in yaml files. It simulates the record creation through an xml
             view (either specified on the !record tag or the default one for this object), including the calls to
             on_change() functions, and sending only values for fields that aren't set as readonly.
             :param model: model instance
@@ -339,144 +351,175 @@ class YamlInterpreter(object):
             :return: dictionary mapping the field names and their values, ready to use when calling the create() function
             :rtype: dict
         """
-        def _get_right_one2many_view(fg, field_name, view_type):
-            one2many_view = fg[field_name]['views'].get(view_type)
-            # if the view is not defined inline, we call fields_view_get()
-            if not one2many_view:
-                one2many_view = self.pool[fg[field_name]['relation']].fields_view_get(self.cr, SUPERUSER_ID, False, view_type, self.context)
-            return one2many_view
+        readonly_re = re.compile(r"""("readonly"|'readonly'): *true""")
 
-        def process_val(key, val):
-            if fg[key]['type'] == 'many2one':
-                if type(val) in (tuple,list):
-                    val = val[0]
-            elif fg[key]['type'] == 'one2many':
-                if val and isinstance(val, (list,tuple)) and isinstance(val[0], dict):
-                    # we want to return only the fields that aren't readonly
-                    # For that, we need to first get the right tree view to consider for the field `key´
-                    one2many_tree_view = _get_right_one2many_view(fg, key, 'tree')
-                    arch = etree.fromstring(one2many_tree_view['arch'].encode('utf-8'))
-                    for rec in val:
-                        # make a copy for the iteration, as we will alter `rec´
-                        rec_copy = rec.copy()
-                        for field_key in rec_copy:
-                            # if field is missing in view or has a readonly modifier, drop it
-                            field_elem = arch.xpath("//field[@name='%s']" % field_key)
-                            if field_elem and (field_elem[0].get('modifiers', '{}').find('"readonly": true') >= 0):
-                                # TODO: currently we only support if readonly is True in the modifiers. Some improvement may be done in 
-                                # order to support also modifiers that look like {"readonly": [["state", "not in", ["draft", "confirm"]]]}
-                                del rec[field_key]
-                    # now that unwanted values have been removed from val, we can encapsulate it in a tuple as returned value
-                    val = map(lambda x: (0,0,x), val)
-            elif fg[key]['type'] == 'many2many':
-                if val and isinstance(val,(list,tuple)) and isinstance(val[0], (int,long)):
-                    val = [(6,0,val)]
+        class dotdict(object):
+            """ Dictionary class that allow to access a dictionary value by using '.'.
+                This is needed to eval correctly statements like 'parent.fieldname' in context.
+            """
+            def __init__(self, d):
+                self._dict = d
+            def __getattr__(self, attr):
+                return self._dict.get(attr, False)
 
-            # we want to return only the fields that aren't readonly
-            if el.get('modifiers', '{}').find('"readonly": true') >= 0:
-                # TODO: currently we only support if readonly is True in the modifiers. Some improvement may be done in 
-                # order to support also modifiers that look like {"readonly": [["state", "not in", ["draft", "confirm"]]]}
-                return False
+        def get_field_elems(view):
+            """ return the field elements from a view as an OrderedDict """
+            def traverse(node, elems):
+                if node.tag == 'field':
+                    elems[node.get('name')] = node
+                else:
+                    for child in node:
+                        traverse(child, elems)
 
-            return val
+            elems = OrderedDict()
+            traverse(etree.fromstring(encode(view['arch'])), elems)
+            return elems
+
+        def is_readonly(field_elem):
+            """ return whether a given field is readonly """
+            # TODO: currently we only support if readonly is True in modifiers.
+            # Some improvement may be done in order to support modifiers like
+            # {"readonly": [["state", "not in", ["draft", "confirm"]]]}
+            return readonly_re.search(field_elem.get('modifiers', '{}'))
+
+        def get_2many_view(fg, field_name, view_type):
+            """ return a view of the given type for the given field's comodel """
+            return fg[field_name]['views'].get(view_type) or \
+                   self.pool[fg[field_name]['relation']].fields_view_get(self.cr, SUPERUSER_ID, False, view_type, self.context)
+
+        def process_vals(fg, vals):
+            """ sanitize the given field values """
+            result = {}
+            for field_name, field_value in vals.iteritems():
+                if field_name not in fg:
+                    continue
+                if fg[field_name]['type'] == 'many2one' and isinstance(field_value, (tuple, list)):
+                    field_value = field_value[0]
+                elif fg[field_name]['type'] in ('one2many', 'many2many'):
+                    # 2many fields: sanitize field values of sub-records
+                    sub_fg = get_2many_view(fg, field_name, 'form')['fields']
+                    def process(command):
+                        if isinstance(command, (tuple, list)) and command[0] in (0, 1):
+                            return (command[0], command[1], process_vals(sub_fg, command[2]))
+                        elif isinstance(command, dict):
+                            return process_vals(sub_fg, command)
+                        return command
+                    field_value = map(process, field_value or [])
+                result[field_name] = field_value
+            return result
+
+        def post_process(fg, elems, vals):
+            """ filter out readonly fields from vals """
+            result = {}
+            for field_name, field_value in vals.iteritems():
+                if is_readonly(elems[field_name]):
+                    continue
+                if fg[field_name]['type'] in ('one2many', 'many2many'):
+                    # 2many fields: filter field values of sub-records
+                    sub_view = get_2many_view(fg, field_name, 'form')
+                    sub_fg = sub_view['fields']
+                    sub_elems = get_field_elems(sub_view)
+                    def process(command):
+                        if isinstance(command, (tuple, list)) and command[0] in (0, 1):
+                            return (command[0], command[1], post_process(sub_fg, sub_elems, command[2]))
+                        elif isinstance(command, dict):
+                            return (0, 0, post_process(sub_fg, sub_elems, command))
+                        return command
+                    field_value = map(process, field_value or [])
+                result[field_name] = field_value
+            return result
+
+        context = context or {}
+        fields = fields or {}
+        parent_values = {context['field_parent']: parent} if context.get('field_parent') else {}
 
         if view_info:
-            arch = etree.fromstring(view_info['arch'].decode('utf-8'))
-            view = arch if len(arch) else False
-        else:
-            view = False
-        fields = fields or {}
-        if view is not False:
             fg = view_info['fields']
-            # gather the default values on the object. (Can't use `fields´ as parameter instead of {} because we may
-            # have references like `base.main_company´ in the yaml file and it's not compatible with the function)
-            defaults = default and model._add_missing_default_values(self.cr, SUPERUSER_ID, {}, context=self.context) or {}
+            elems = get_field_elems(view_info)
+            recs = model.browse(self.cr, SUPERUSER_ID, [], dict(self.context, **context))
+            onchange_spec = recs._onchange_spec(view_info)
+            record_dict = {}
 
-            # copy the default values in record_dict, only if they are in the view (because that's what the client does)
-            # the other default values will be added later on by the create().
-            record_dict = dict([(key, val) for key, val in defaults.items() if key in fg])
+            if default:
+                # gather the default values on the object. (Can't use `fields´ as parameter instead of {} because we may
+                # have references like `base.main_company´ in the yaml file and it's not compatible with the function)
+                defaults = recs.sudo(self.uid)._add_missing_default_values({})
 
-            # Process all on_change calls
-            nodes = [view]
-            while nodes:
-                el = nodes.pop(0)
-                if el.tag=='field':
-                    field_name = el.attrib['name']
-                    assert field_name in fg, "The field '%s' is defined in the form view but not on the object '%s'!" % (field_name, model._name)
-                    if field_name in fields:
-                        one2many_form_view = None
-                        if (view is not False) and (fg[field_name]['type']=='one2many'):
-                            # for one2many fields, we want to eval them using the inline form view defined on the parent
-                            one2many_form_view = _get_right_one2many_view(fg, field_name, 'form')
+                # copy the default values in record_dict, only if they are in the view (because that's what the client does)
+                # the other default values will be added later on by the create(). The other fields in the view that haven't any
+                # default value are set to False because we may have references to them in other field's context
+                record_dict = dict.fromkeys(fg, False)
+                record_dict.update(process_vals(fg, defaults))
 
-                        field_value = self._eval_field(model, field_name, fields[field_name], one2many_form_view or view_info, parent=record_dict, default=default)
+                # execute onchange on default values first
+                default_names = [name for name in elems if name in record_dict]
+                result = recs.onchange(dict(record_dict, **parent_values), default_names, onchange_spec)
+                record_dict.update(process_vals(fg, result.get('value', {})))
 
-                        #call process_val to not update record_dict if values were given for readonly fields
-                        val = process_val(field_name, field_value)
-                        if val:
-                            record_dict[field_name] = val
-                        #if (field_name in defaults) and defaults[field_name] == field_value:
-                        #    print '*** You can remove these lines:', field_name, field_value
+            # fill in fields, and execute onchange where necessary
+            for field_name, field_elem in elems.iteritems():
+                assert field_name in fg, "The field '%s' is defined in the form view but not on the object '%s'!" % (field_name, model._name)
+                if is_readonly(field_elem):
+                    # skip readonly fields
+                    continue
 
-                    #if field_name has a default value or a value is given in the yaml file, we must call its on_change()
-                    elif field_name not in defaults:
-                        continue
+                if field_name not in fields:
+                    continue
 
-                    if not el.attrib.get('on_change', False):
-                        continue
-                    match = re.match("([a-z_1-9A-Z]+)\((.*)\)", el.attrib['on_change'])
-                    assert match, "Unable to parse the on_change '%s'!" % (el.attrib['on_change'], )
+                ctx = dict(context)
+                form_view = view_info
+                if fg[field_name]['type'] == 'one2many':
+                    # evaluate one2many fields using the inline form view defined in the parent
+                    form_view = get_2many_view(fg, field_name, 'form')
+                    ctx['field_parent'] = fg[field_name]['relation_field']
+                if default and field_elem.get('context'):
+                    ctx.update(eval(field_elem.get('context'),
+                                    globals_dict={'parent': dotdict(parent)},
+                                    locals_dict=record_dict))
 
-                    # creating the context
-                    class parent2(object):
-                        def __init__(self, d):
-                            self.d = d
-                        def __getattr__(self, name):
-                            return self.d.get(name, False)
+                field_value = self._eval_field(model, field_name, fields[field_name], form_view, parent=record_dict, default=default, context=ctx)
+                record_dict.update(process_vals(fg, {field_name: field_value}))
 
-                    ctx = record_dict.copy()
-                    ctx['context'] = self.context
-                    ctx['uid'] = SUPERUSER_ID
-                    ctx['parent'] = parent2(parent)
-                    for a in fg:
-                        if a not in ctx:
-                            ctx[a] = process_val(a, defaults.get(a, False))
+                # if field_name is given or has a default value, we evaluate its onchanges
+                if not field_elem.attrib.get('on_change', False):
+                    continue
 
-                    # Evaluation args
-                    args = map(lambda x: eval(x, ctx), match.group(2).split(','))
-                    result = getattr(model, match.group(1))(self.cr, SUPERUSER_ID, [], *args)
-                    for key, val in (result or {}).get('value', {}).items():
-                        assert key in fg, (
-                            "The field %r returned from the onchange call %r "
-                            "does not exist in the source view %r (of object "
-                            "%r). This field will be ignored (and thus not "
-                            "populated) when clients saves the new record" % (
-                                key, match.group(1), view_info.get('name', '?'), model._name
-                            ))
-                        if key not in fields:
-                            # do not shadow values explicitly set in yaml.
-                            record_dict[key] = process_val(key, val)
-                else:
-                    nodes = list(el) + nodes
+                result = recs.onchange(dict(record_dict, **parent_values), field_name, onchange_spec)
+                record_dict.update(process_vals(fg, {
+                    key: val
+                    for key, val in result.get('value', {}).iteritems()
+                    if key not in fields        # do not shadow values explicitly set in yaml
+                }))
+
+            record_dict = post_process(fg, elems, record_dict)
+
         else:
             record_dict = {}
 
-        for field_name, expression in fields.items():
-            if field_name in record_dict:
+        for field_name, expression in fields.iteritems():
+            if record_dict.get(field_name):
                 continue
-            field_value = self._eval_field(model, field_name, expression, default=False)
+            field_value = self._eval_field(model, field_name, expression, parent=record_dict, default=False, context=context)
             record_dict[field_name] = field_value
-        return record_dict
 
-    def process_ref(self, node, column=None):
+        # filter returned values; indeed the last modification in the import process have added a default
+        # value for all fields in the view; however some fields present in the view are not stored and
+        # should not be sent to create. This bug appears with not stored function fields in the new API.
+        return {
+            key: val
+            for key, val in record_dict.iteritems()
+            if (key in model._columns or key in model._inherit_fields)
+        }
+
+    def process_ref(self, node, field=None):
         assert node.search or node.id, '!ref node should have a `search` attribute or `id` attribute'
         if node.search:
             if node.model:
                 model_name = node.model
-            elif column:
-                model_name = column._obj
+            elif field:
+                model_name = field.comodel_name
             else:
-                raise YamlImportException('You need to give a model for the search, or a column to infer it.')
+                raise YamlImportException('You need to give a model for the search, or a field to infer it.')
             model = self.get_model(model_name)
             q = eval(node.search, self.eval_context)
             ids = model.search(self.cr, self.uid, q)
@@ -486,7 +529,11 @@ class YamlInterpreter(object):
             else:
                 value = ids
         elif node.id:
-            value = self.get_id(node.id)
+            if field and field.type == 'reference':
+                record = self.get_record(node.id)
+                value = "%s,%s" % (record._name, record.id)
+            else:
+                value = self.get_id(node.id)
         else:
             value = None
         return value
@@ -494,45 +541,46 @@ class YamlInterpreter(object):
     def process_eval(self, node):
         return eval(node.expression, self.eval_context)
 
-    def _eval_field(self, model, field_name, expression, view_info=False, parent={}, default=True):
+    def _eval_field(self, model, field_name, expression, view_info=False, parent={}, default=True, context=None):
         # TODO this should be refactored as something like model.get_field() in bin/osv
-        if field_name in model._columns:
-            column = model._columns[field_name]
-        elif field_name in model._inherit_fields:
-            column = model._inherit_fields[field_name][2]
-        else:
+        if field_name not in model._fields:
             raise KeyError("Object '%s' does not contain field '%s'" % (model, field_name))
+        field = model._fields[field_name]
+
         if is_ref(expression):
-            elements = self.process_ref(expression, column)
-            if column._type in ("many2many", "one2many"):
+            elements = self.process_ref(expression, field)
+            if field.type in ("many2many", "one2many"):
                 value = [(6, 0, elements)]
-            else: # many2one
+            else: # many2one or reference
                 if isinstance(elements, (list,tuple)):
                     value = self._get_first_result(elements)
                 else:
                     value = elements
-        elif column._type == "many2one":
+        elif field.type == "many2one":
             value = self.get_id(expression)
-        elif column._type == "one2many":
-            other_model = self.get_model(column._obj)
-            value = [(0, 0, self._create_record(other_model, fields, view_info, parent, default=default)) for fields in expression]
-        elif column._type == "many2many":
+        elif field.type == "one2many":
+            other_model = self.get_model(field.comodel_name)
+            value = [(0, 0, self._create_record(other_model, fields, view_info, parent=parent, default=default, context=context)) for fields in expression]
+        elif field.type == "many2many":
             ids = [self.get_id(xml_id) for xml_id in expression]
             value = [(6, 0, ids)]
-        elif column._type == "date" and is_string(expression):
+        elif field.type == "date" and is_string(expression):
             # enforce ISO format for string date values, to be locale-agnostic during tests
             time.strptime(expression, misc.DEFAULT_SERVER_DATE_FORMAT)
             value = expression
-        elif column._type == "datetime" and is_string(expression):
+        elif field.type == "datetime" and is_string(expression):
             # enforce ISO format for string datetime values, to be locale-agnostic during tests
             time.strptime(expression, misc.DEFAULT_SERVER_DATETIME_FORMAT)
             value = expression
+        elif field.type == "reference":
+            record = self.get_record(expression)
+            value = "%s,%s" % (record._name, record.id)
         else: # scalar field
             if is_eval(expression):
                 value = self.process_eval(expression)
             else:
                 value = expression
-            # raise YamlImportException('Unsupported column "%s" or value %s:%s' % (field_name, type(expression), expression))
+            # raise YamlImportException('Unsupported field "%s" or value %s:%s' % (field_name, type(expression), expression))
         return value
 
     def process_context(self, node):
@@ -541,25 +589,35 @@ class YamlInterpreter(object):
             self.uid = self.get_id(node.uid)
         if node.noupdate:
             self.noupdate = node.noupdate
+        self.env = openerp.api.Environment(self.cr, self.uid, self.context)
 
     def process_python(self, node):
         python, statements = node.items()[0]
-        model = self.get_model(python.model)
-        statements = statements.replace("\r\n", "\n")
+        assert python.model or python.id, "!python node must have attribute `model` or `id`"
+        if python.id is None:
+            record = self.pool[python.model]
+        elif isinstance(python.id, basestring):
+            record = self.get_record(python.id)
+        else:
+            record = self.env[python.model].browse(python.id)
+        if python.model:
+            assert record._name == python.model, "`id` is not consistent with `model`"
+        statements = "\n" * python.first_line + statements.replace("\r\n", "\n")
         code_context = {
-            'model': model,
+            'self': record,
+            'model': record._model,
             'cr': self.cr,
             'uid': self.uid,
             'log': self._log,
             'context': self.context,
             'openerp': openerp,
         }
-        code_context.update({'self': model}) # remove me when no !python block test uses 'self' anymore
         try:
             code_obj = compile(statements, self.filename, 'exec')
             unsafe_eval(code_obj, {'ref': self.get_id}, code_context)
         except AssertionError, e:
-            self._log_assert_failure('AssertionError in Python code %s: %s', python.name, e)
+            self._log_assert_failure('AssertionError in Python code %s (line %d): %s',
+                python.name, python.first_line, e)
             return
         except Exception, e:
             _logger.debug('Exception during evaluation of !python block in yaml_file %s.', self.filename, exc_info=True)
@@ -590,7 +648,7 @@ class YamlInterpreter(object):
             uid = workflow.uid
         else:
             uid = self.uid
-        self.cr.execute('select distinct signal from wkf_transition')
+        self.cr.execute('select distinct signal, sequence, id from wkf_transition ORDER BY sequence,id')
         signals=[x['signal'] for x in self.cr.dictfetchall()]
         if workflow.action not in signals:
             raise YamlImportException('Incorrect action %s. No such action defined' % workflow.action)
@@ -666,52 +724,13 @@ class YamlInterpreter(object):
                 res = None
 
         if node.action:
-            action_type = node.type or 'act_window'
-            icons = {
-                "act_window": 'STOCK_NEW',
-                "report.xml": 'STOCK_PASTE',
-                "wizard": 'STOCK_EXECUTE',
-                "url": 'STOCK_JUMP_TO',
-            }
-            values['icon'] = icons.get(action_type, 'STOCK_NEW')
-            if action_type == 'act_window':
-                action_id = self.get_id(node.action)
-                self.cr.execute('select view_type,view_mode,name,view_id,target from ir_act_window where id=%s', (action_id,))
-                ir_act_window_result = self.cr.fetchone()
-                assert ir_act_window_result, "No window action defined for this id %s !\n" \
-                        "Verify that this is a window action or add a type argument." % (node.action,)
-                action_type, action_mode, action_name, view_id, target = ir_act_window_result
-                if view_id:
-                    self.cr.execute('SELECT type FROM ir_ui_view WHERE id=%s', (view_id,))
-                    # TODO guess why action_mode is ir_act_window.view_mode above and ir_ui_view.type here
-                    action_mode = self.cr.fetchone()
-                self.cr.execute('SELECT view_mode FROM ir_act_window_view WHERE act_window_id=%s ORDER BY sequence LIMIT 1', (action_id,))
-                if self.cr.rowcount:
-                    action_mode = self.cr.fetchone()
-                if action_type == 'tree':
-                    values['icon'] = 'STOCK_INDENT'
-                elif action_mode and action_mode.startswith('tree'):
-                    values['icon'] = 'STOCK_JUSTIFY_FILL'
-                elif action_mode and action_mode.startswith('graph'):
-                    values['icon'] = 'terp-graph'
-                elif action_mode and action_mode.startswith('calendar'):
-                    values['icon'] = 'terp-calendar'
-                if target == 'new':
-                    values['icon'] = 'STOCK_EXECUTE'
-                if not values.get('name', False):
-                    values['name'] = action_name
-            elif action_type == 'wizard':
-                action_id = self.get_id(node.action)
-                self.cr.execute('select name from ir_act_wizard where id=%s', (action_id,))
-                ir_act_wizard_result = self.cr.fetchone()
-                if (not values.get('name', False)) and ir_act_wizard_result:
-                    values['name'] = ir_act_wizard_result[0]
-            else:
-                raise YamlImportException("Unsupported type '%s' in menuitem tag." % action_type)
+            action = self.get_record(node.action)
+            values['action'] = '%s,%s' % (action._name, action.id)
+            if not values.get('name'):
+                values['name'] = action.name
+
         if node.sequence:
             values['sequence'] = node.sequence
-        if node.icon:
-            values['icon'] = node.icon
 
         self._set_group_values(node, values)
 
@@ -719,15 +738,8 @@ class YamlInterpreter(object):
                 'ir.ui.menu', self.module, values, node.id, mode=self.mode, \
                 noupdate=self.isnoupdate(node), res_id=res and res[0] or False)
 
-        if node.id and parent_id:
-            self.id_map[node.id] = int(parent_id)
-
-        if node.action and pid:
-            action_type = node.type or 'act_window'
-            action_id = self.get_id(node.action)
-            action = "ir.actions.%s,%d" % (action_type, action_id)
-            self.pool['ir.model.data'].ir_set(self.cr, SUPERUSER_ID, 'action', \
-                    'tree_but_open', 'Menuitem', [('ir.ui.menu', int(parent_id))], action, True, True, xml_id=node.id)
+        if node.id and pid:
+            self.id_map[node.id] = int(pid)
 
     def process_act_window(self, node):
         assert getattr(node, 'id'), "Attribute %s of act_window is empty !" % ('id',)
@@ -937,20 +949,3 @@ def yaml_import(cr, module, yamlfile, kind, idref=None, mode='init', noupdate=Fa
 
 # keeps convention of convert.py
 convert_yaml_import = yaml_import
-
-def threaded_yaml_import(db_name, module_name, file_name, delay=0):
-    def f():
-        time.sleep(delay)
-        cr = None
-        fp = None
-        try:
-            cr = sql_db.db_connect(db_name).cursor()
-            fp = misc.file_open(file_name)
-            convert_yaml_import(cr, module_name, fp, {}, 'update', True)
-        finally:
-            if cr: cr.close()
-            if fp: fp.close()
-    threading.Thread(target=f).start()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#    
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields,osv
 
@@ -28,7 +10,7 @@ class report_workcenter_load(osv.osv):
     _auto = False
     _log_access = False
     _columns = {
-        'name': fields.char('Week', size=64, required=True),
+        'name': fields.char('Week', required=True),
         'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
         'cycle': fields.float('Number of Cycles'),
         'hour': fields.float('Number of Hours'),
@@ -61,7 +43,7 @@ class report_mrp_inout(osv.osv):
     _log_access = False
     _rec_name = 'date'
     _columns = {
-        'date': fields.char('Week', size=64, required=True),
+        'date': fields.char('Week', required=True),
         'value': fields.float('Stock value', required=True, digits=(16,2)),
         'company_id': fields.many2one('res.company', 'Company', required=True),
     }
@@ -97,8 +79,3 @@ class report_mrp_inout(osv.osv):
                 group by
                     to_char(sm.date,'YYYY:IW'), sm.company_id
             )""")
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

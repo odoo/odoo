@@ -8,14 +8,13 @@
             <field name="name">Make Invoice</field>
             <field name="model">mrp.repair.make_invoice</field>
             <field name="arch" type="xml">
-            <form string="Create invoices" version="7.0">
+            <form string="Create invoices">
                 <group string="Do you really want to create the invoice(s)?">
                     <field name="group"/>
                 </group>
                 <footer>
-                    <button name="make_invoices" string="Create Invoice" type="object"  class="oe_highlight"  />
-                    or
-                    <button string="Cancel" class="oe_link" special="cancel" />
+                    <button name="make_invoices" string="Create Invoice" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel" />
                 </footer>
             </form>
             </field>

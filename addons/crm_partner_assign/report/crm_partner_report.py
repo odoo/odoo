@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 from openerp.osv import fields,osv
 from openerp import tools
 
@@ -35,10 +17,10 @@ class crm_partner_report_assign(osv.osv):
         'date_review' : fields.date('Latest Partner Review'),
         'date_partnership' : fields.date('Partnership Date'),
         'country_id':fields.many2one('res.country', 'Country', readonly=True),
-        'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
-        'opp': fields.integer('# of Opportunity', readonly=True),
+        'team_id':fields.many2one('crm.team', 'Sales Team', oldname='section_id', readonly=True),
+        'opp': fields.integer('# of Opportunity', readonly=True),  # TDE FIXME master: rename into nbr_opportunities
         'turnover': fields.float('Turnover', readonly=True),
-        'period_id': fields.many2one('account.period', 'Invoice Period', readonly=True),
+        'date': fields.date('Invoice Account Date', readonly=True),
     }
     def init(self, cr):
         """
@@ -57,15 +39,12 @@ class crm_partner_report_assign(osv.osv):
                     p.date_review,
                     p.date_partnership,
                     p.user_id,
-                    p.section_id,
+                    p.team_id,
                     (SELECT count(id) FROM crm_lead WHERE partner_assigned_id=p.id) AS opp,
                     i.price_total as turnover,
-                    i.period_id
+                    i.date
                 FROM
                     res_partner p
                     left join account_invoice_report i
                         on (i.partner_id=p.id and i.type in ('out_invoice','out_refund') and i.state in ('open','paid'))
             )""")
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

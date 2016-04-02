@@ -1,32 +1,18 @@
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2012 OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
 from openerp import SUPERUSER_ID
+from openerp.addons.google_account import TIMEOUT
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp.exceptions import UserError
 
 import werkzeug.urls
 import urllib2
 import json
 import re
+import openerp
 
 _logger = logging.getLogger(__name__)
 
@@ -39,13 +25,13 @@ class config(osv.Model):
         config = self.browse(cr, SUPERUSER_ID, config_id, context=context)
         model = config.model_id
         filter_name = config.filter_id and config.filter_id.name or False
-        record = self.pool.get(model.model).read(cr, uid, res_id, [], context=context)
+        record = self.pool.get(model.model).read(cr, uid, [res_id], context=context)[0]
         record.update({'model': model.name, 'filter': filter_name})
         name_gdocs = config.name_template
         try:
             name_gdocs = name_gdocs % record
         except:
-            raise osv.except_osv(_('Key Error!'), _("At least one key cannot be found in your Google Drive name pattern"))
+            raise UserError(_("At least one key cannot be found in your Google Drive name pattern"))
 
         attach_pool = self.pool.get("ir.attachment")
         attach_ids = attach_pool.search(cr, uid, [('res_model', '=', model.model), ('name', '=', name_gdocs), ('res_id', '=', res_id)])
@@ -60,12 +46,13 @@ class config(osv.Model):
     def get_access_token(self, cr, uid, scope=None, context=None):
         ir_config = self.pool['ir.config_parameter']
         google_drive_refresh_token = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_refresh_token')
-        user_is_admin = self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager')
         if not google_drive_refresh_token:
-            if user_is_admin:
-                raise self.pool.get('res.config.settings').get_config_warning(cr, _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it in %(menu:base_setup.menu_general_configuration)s."), context=context)
+            if self.pool['res.users']._is_admin(cr, uid, [uid]):
+                model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base_setup', 'action_general_configuration')
+                msg = _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it .")
+                raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
             else:
-                raise osv.except_osv(_('Error!'), _("Google Drive is not yet configured. Please contact your administrator."))
+                raise UserError(_("Google Drive is not yet configured. Please contact your administrator."))
         google_drive_client_id = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_client_id')
         google_drive_client_secret = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_client_secret')
         #For Getting New Access Token With help of old Refresh Token
@@ -75,15 +62,17 @@ class config(osv.Model):
                                      client_secret=google_drive_client_secret,
                                      grant_type="refresh_token",
                                      scope=scope or 'https://www.googleapis.com/auth/drive'))
-        headers = {"Content-type": "application/x-www-form-urlencoded", "Accept-Encoding": "gzip, deflate"}
+        headers = {"Content-type": "application/x-www-form-urlencoded"}
         try:
             req = urllib2.Request('https://accounts.google.com/o/oauth2/token', data, headers)
-            content = urllib2.urlopen(req).read()
+            content = urllib2.urlopen(req, timeout=TIMEOUT).read()
         except urllib2.HTTPError:
             if user_is_admin:
-                raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong during the token generation. Please request again an authorization code in %(menu:base_setup.menu_general_configuration)s."), context=context)
+                model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base_setup', 'action_general_configuration')
+                msg = _("Something went wrong during the token generation. Please request again an authorization code .")
+                raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
             else:
-                raise osv.except_osv(_('Error!'), _("Google Drive is not yet configured. Please contact your administrator."))
+                raise UserError(_("Google Drive is not yet configured. Please contact your administrator."))
         content = json.loads(content)
         return content.get('access_token')
 
@@ -93,22 +82,22 @@ class config(osv.Model):
         access_token = self.get_access_token(cr, uid, context=context)
         # Copy template in to drive with help of new access token
         request_url = "https://www.googleapis.com/drive/v2/files/%s?fields=parents/id&access_token=%s" % (template_id, access_token)
-        headers = {"Content-type": "application/x-www-form-urlencoded", "Accept-Encoding": "gzip, deflate"}
+        headers = {"Content-type": "application/x-www-form-urlencoded"}
         try:
             req = urllib2.Request(request_url, None, headers)
-            parents = urllib2.urlopen(req).read()
+            parents = urllib2.urlopen(req, timeout=TIMEOUT).read()
         except urllib2.HTTPError:
-            raise self.pool.get('res.config.settings').get_config_warning(cr, _("The Google Template cannot be found. Maybe it has been deleted."), context=context)
+            raise UserError(_("The Google Template cannot be found. Maybe it has been deleted."))
         parents_dict = json.loads(parents)
 
-        record_url = "Click on link to open Record in OpenERP\n %s/?db=%s#id=%s&model=%s" % (google_web_base_url, cr.dbname, res_id, res_model)
+        record_url = "Click on link to open Record in Odoo\n %s/?db=%s#id=%s&model=%s" % (google_web_base_url, cr.dbname, res_id, res_model)
         data = {"title": name_gdocs, "description": record_url, "parents": parents_dict['parents']}
         request_url = "https://www.googleapis.com/drive/v2/files/%s/copy?access_token=%s" % (template_id, access_token)
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         data_json = json.dumps(data)
         # resp, content = Http().request(request_url, "POST", data_json, headers)
         req = urllib2.Request(request_url, data_json, headers)
-        content = urllib2.urlopen(req).read()
+        content = urllib2.urlopen(req, timeout=TIMEOUT).read()
         content = json.loads(content)
         res = {}
         if content.get('alternateLink'):
@@ -119,11 +108,11 @@ class config(osv.Model):
             cr.commit()
             res['url'] = content['alternateLink']
             key = self._get_key_from_url(res['url'])
-            request_url = "https://www.googleapis.com/drive/v2/files/%s/permissions?emailMessage=This+is+a+drive+file+created+by+OpenERP&sendNotificationEmails=false&access_token=%s" % (key, access_token)
+            request_url = "https://www.googleapis.com/drive/v2/files/%s/permissions?emailMessage=This+is+a+drive+file+created+by+Odoo&sendNotificationEmails=false&access_token=%s" % (key, access_token)
             data = {'role': 'writer', 'type': 'anyone', 'value': '', 'withLink': True}
             try:
                 req = urllib2.Request(request_url, json.dumps(data), headers)
-                urllib2.urlopen(req)
+                urllib2.urlopen(req, timeout=TIMEOUT)
             except urllib2.HTTPError:
                 raise self.pool.get('res.config.settings').get_config_warning(cr, _("The permission 'reader' for 'anyone with the link' has not been written on the document"), context=context)
             user = self.pool['res.users'].browse(cr, uid, uid, context=context)
@@ -131,10 +120,10 @@ class config(osv.Model):
                 data = {'role': 'writer', 'type': 'user', 'value': user.email}
                 try:
                     req = urllib2.Request(request_url, json.dumps(data), headers)
-                    urllib2.urlopen(req)
+                    urllib2.urlopen(req, timeout=TIMEOUT)
                 except urllib2.HTTPError:
                     pass
-        return res 
+        return res
 
     def get_google_drive_config(self, cr, uid, res_model, res_id, context=None):
         '''
@@ -149,7 +138,7 @@ class config(osv.Model):
           :return: the config id and config name
         '''
         if not res_id:
-            raise osv.except_osv(_('Google Drive Error!'), _("Creating google drive may only be done by one at a time."))
+            raise UserError(_("Creating google drive may only be done by one at a time."))
         # check if a model is configured with a template
         config_ids = self.search(cr, uid, [('model_id', '=', res_model)], context=context)
         configs = []
@@ -181,7 +170,7 @@ class config(osv.Model):
             if mo:
                 result[data.id] = mo
             else:
-                raise osv.except_osv(_('Incorrect URL!'), _("Please enter a valid Google Document URL."))
+                raise UserError(_("Please enter a valid Google Document URL."))
         return result
 
     def _client_id_get(self, cr, uid, ids, name, arg, context=None):
@@ -192,14 +181,14 @@ class config(osv.Model):
         return result
 
     _columns = {
-        'name': fields.char('Template Name', required=True, size=1024),
+        'name': fields.char('Template Name', required=True),
         'model_id': fields.many2one('ir.model', 'Model', ondelete='set null', required=True),
         'model': fields.related('model_id', 'model', type='char', string='Model', readonly=True),
         'filter_id': fields.many2one('ir.filters', 'Filter', domain="[('model_id', '=', model)]"),
         'google_drive_template_url': fields.char('Template URL', required=True, size=1024),
         'google_drive_resource_id': fields.function(_resource_get, type="char", string='Resource Id'),
         'google_drive_client_id': fields.function(_client_id_get, type="char", string='Google Client '),
-        'name_template': fields.char('Google Drive Name Pattern', size=64, help='Choose how the new google drive will be named, on google side. Eg. gdoc_%(field_name)s', required=True),
+        'name_template': fields.char('Google Drive Name Pattern', help='Choose how the new google drive will be named, on google side. Eg. gdoc_%(field_name)s', required=True),
         'active': fields.boolean('Active'),
     }
 
@@ -234,13 +223,29 @@ class config(osv.Model):
 class base_config_settings(osv.TransientModel):
     _inherit = "base.config.settings"
 
+    def _get_drive_uri(self, cr, uid, ids, field_name, arg, context=None):
+        return {
+            wizard_id: self.default_get(cr, uid, ['google_drive_uri']).get('google_drive_uri')
+            for wizard_id in ids
+        }
+
+    def _get_wizard_ids(self, cr, uid, ids, context=None):
+        result = []
+        if any(rec.key in ['google_drive_client_id', 'google_redirect_uri'] for rec in self.browse(cr, uid, ids, context=context)):
+            result.extend(self.pool['base.config.settings'].search(cr, uid, [], context=context))
+        return result
+
     _columns = {
-        'google_drive_authorization_code': fields.char('Authorization Code', size=124),
-        'google_drive_uri': fields.char('URI', readonly=True, help="The URL to generate the authorization code from Google"),
+        'google_drive_authorization_code': fields.char('Authorization Code'),
+        'google_drive_uri': fields.function(_get_drive_uri, string='URI', help="The URL to generate the authorization code from Google", type="char", store={
+            'ir.config_parameter': (_get_wizard_ids, None, 20),
+        }),  # TODO: 1. in master, remove the store, there is no reason for this field to be stored. It's just a dynamic link.
+             # TODO: 2. when converted to the new API, the code to get the default value can be moved to the compute method directly, and the default value can be removed
+             #          the only reason the default value is defined is because function fields are not computed in draft mode in the old API.
     }
     _defaults = {
         'google_drive_uri': lambda s, cr, uid, c: s.pool['google.service']._get_google_token_uri(cr, uid, 'drive', scope=s.pool['google.drive.config'].get_google_scope(), context=c),
-        'google_drive_authorization_code': lambda s, cr, uid, c: s.pool['ir.config_parameter'].get_param(cr, uid, 'google_drive_authorization_code', context=c),
+        'google_drive_authorization_code': lambda s, cr, uid, c: s.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'google_drive_authorization_code', context=c),
     }
 
     def set_google_authorization_code(self, cr, uid, ids, context=None):
@@ -249,5 +254,5 @@ class base_config_settings(osv.TransientModel):
         auth_code = config.google_drive_authorization_code
         if auth_code and auth_code != ir_config_param.get_param(cr, uid, 'google_drive_authorization_code', context=context):
             refresh_token = self.pool['google.service'].generate_refresh_token(cr, uid, 'drive', config.google_drive_authorization_code, context=context)
-            ir_config_param.set_param(cr, uid, 'google_drive_authorization_code', auth_code)
-            ir_config_param.set_param(cr, uid, 'google_drive_refresh_token', refresh_token)
+            ir_config_param.set_param(cr, uid, 'google_drive_authorization_code', auth_code, groups=['base.group_system'])
+            ir_config_param.set_param(cr, uid, 'google_drive_refresh_token', refresh_token, groups=['base.group_system'])

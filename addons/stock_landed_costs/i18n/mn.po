@@ -1,0 +1,512 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_landed_costs
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:10+0000\n"
+"PO-Revision-Date: 2015-11-21 09:40+0000\n"
+"Last-Translator: Otgonbayar Agvaan <gobi.mn@gmail.com>\n"
+"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/mn/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/stock_landed_costs.py:126
+#: code:addons/stock_landed_costs/stock_landed_costs.py:130
+#, python-format
+msgid " already out"
+msgstr " хэдийнээ дууссан"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_account_id
+msgid "Account"
+msgstr "Бүртгэл"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_account_journal_id
+msgid "Account Journal"
+msgstr "Санхүүгийн журнал"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_needaction
+msgid "Action Needed"
+msgstr "Үйлдэл Шаардлагатай"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_additional_landed_cost
+msgid "Additional Landed Cost"
+msgstr "Нэмэлт газардсан өртөг"
+
+#. module: stock_landed_costs
+#: selection:product.template,split_method:0
+#: selection:stock.landed.cost.lines,split_method:0
+msgid "By Current Cost"
+msgstr ""
+
+#. module: stock_landed_costs
+#: selection:product.template,split_method:0
+#: selection:stock.landed.cost.lines,split_method:0
+msgid "By Quantity"
+msgstr "Тоо хэмжээгээр"
+
+#. module: stock_landed_costs
+#: selection:product.template,split_method:0
+#: selection:stock.landed.cost.lines,split_method:0
+msgid "By Volume"
+msgstr "Эзлэхүүнээр"
+
+#. module: stock_landed_costs
+#: selection:product.template,split_method:0
+#: selection:stock.landed.cost.lines,split_method:0
+msgid "By Weight"
+msgstr "Жингээр"
+
+#. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: stock_landed_costs
+#: selection:stock.landed.cost,state:0
+msgid "Cancelled"
+msgstr "Цуцлагдсан"
+
+#. module: stock_landed_costs
+#: model:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
+msgid "Click to create a new landed cost."
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
+msgid "Click to define a new kind of landed cost."
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Compute"
+msgstr "Тооцоолох"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_price_unit
+msgid "Cost"
+msgstr "Өртөг"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_cost_line_id
+msgid "Cost Line"
+msgstr "Өртөгийн мөр"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_cost_lines
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Cost Lines"
+msgstr "Өртөгийн мөрүүд"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_create_uid
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_create_uid
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_create_uid
+msgid "Created by"
+msgstr "Үүсгэгч"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_create_date
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_create_date
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_create_date
+msgid "Created on"
+msgstr "Үүсгэсэн"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_date
+msgid "Date"
+msgstr "Огноо"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_last_post
+msgid "Date of the last message posted on the record."
+msgstr "Бичлэгт хамгийн сүүлд илгээгдсэн зурвасын огноо."
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_name
+msgid "Description"
+msgstr "Тодорхойлолт"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/purchase_config_settings.py:18
+#, python-format
+msgid ""
+"Disabling the costing methods will prevent you to use the landed costs "
+"feature."
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_display_name
+msgid "Display Name"
+msgstr "Дэлгэцийн Нэр"
+
+#. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+#: model:mail.message.subtype,name:stock_landed_costs.mt_stock_landed_cost_open
+msgid "Done"
+msgstr "Дууссан"
+
+#. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+#: selection:stock.landed.cost,state:0
+msgid "Draft"
+msgstr "Ноорог"
+
+#. module: stock_landed_costs
+#: selection:product.template,split_method:0
+#: selection:stock.landed.cost.lines,split_method:0
+msgid "Equal"
+msgstr "Тэнцүү"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_final_cost
+msgid "Final Cost"
+msgstr "Эцсийн Өртөг"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_follower_ids
+msgid "Followers"
+msgstr "Дагагчид"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Дагагчид (Сувагууд)"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Дагагчид (Харилцагчид)"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_former_cost
+msgid "Former Cost"
+msgstr "Анхны Өртөг"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_former_cost_per_unit
+msgid "Former Cost(Per Unit)"
+msgstr "Анхны Өртөг(Нэгжид)"
+
+#. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Group By"
+msgstr "Бүлэглэх"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_id
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_unread
+msgid "If checked new messages require your attention."
+msgstr "Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг шаардана."
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад анхаарал хандуулахыг шаардана."
+
+#. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
+msgid "Information"
+msgstr "Мэдээлэл"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_is_follower
+msgid "Is Follower"
+msgstr "Дагагч эсэх"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_description
+msgid "Item Description"
+msgstr "Зүйлийн Тайлбар"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_account_move_id
+msgid "Journal Entry"
+msgstr "Журналын бичилтүүд"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_cost_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_cost_id
+msgid "Landed Cost"
+msgstr "Газардсан өртөг"
+
+#. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Landed Cost Name"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost_type
+msgid "Landed Cost Type"
+msgstr "Газардсан өртөг төрөлөөр"
+
+#. module: stock_landed_costs
+#: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_template_landed_cost_ok
+#: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
+msgid "Landed Costs"
+msgstr "Газардсан Өртөгүүд"
+
+#. module: stock_landed_costs
+#: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
+msgid "Landed cost validated"
+msgstr "Газардсан өртөг батлагдсан"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_last_post
+msgid "Last Message Date"
+msgstr "Сүүлийн зурвасын огноо"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost___last_update
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines___last_update
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines___last_update
+msgid "Last Modified on"
+msgstr "Сүүлийн засвар хийсэн огноо"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_write_uid
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_write_uid
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_write_uid
+msgid "Last Updated by"
+msgstr "Сүүлийн засвар хийсэн"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_write_date
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_write_date
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_write_date
+msgid "Last Updated on"
+msgstr "Сүүлийн засвар хийсэн огноо"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_ids
+msgid "Messages"
+msgstr "Зурвасууд"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_ids
+msgid "Messages and communication history"
+msgstr "Зурвас болон харилцсан түүх"
+
+#. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Month"
+msgstr "Сар"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_name
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Name"
+msgstr "Нэр"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Үйлдлийн тоо"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Үйлдэл шаардлагатай зурвасын тоо"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_message_unread_counter
+msgid "Number of unread messages"
+msgstr "Уншаагүй зурвасын тоо"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/stock_landed_costs.py:181
+#, python-format
+msgid "Only draft landed costs can be validated"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_picking_ids
+msgid "Pickings"
+msgstr "Бэлтгэх баримтууд"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/stock_landed_costs.py:90
+#, python-format
+msgid "Please configure Stock Expense Account for product: %s."
+msgstr "Дараах бараанд Барааны Зардлын Дансыг тохируулна уу: %s."
+
+#. module: stock_landed_costs
+#: selection:stock.landed.cost,state:0
+msgid "Posted"
+msgstr "Илгээгдсэн"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_product_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_product_id
+msgid "Product"
+msgstr "Бараа"
+
+#. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
+msgid "Product Name"
+msgstr "Барааны нэр"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_product_template
+msgid "Product Template"
+msgstr "Барааны үлгэр"
+
+#. module: stock_landed_costs
+#: model:ir.actions.act_window,name:stock_landed_costs.stock_landed_cost_type_action
+#: model:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_tree_view
+msgid "Products"
+msgstr "Бараанууд"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_quantity
+msgid "Quantity"
+msgstr "Тоо хэмжээ"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_template_split_method
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_split_method
+msgid "Split Method"
+msgstr "Хуваах Арга"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_state
+msgid "State"
+msgstr "Төлөв"
+
+#. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Status"
+msgstr "Төлөв"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_landed_cost
+msgid "Stock Landed Cost"
+msgstr "Барааны Газардсан Өртөг"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
+msgid "Stock Landed Cost Lines"
+msgstr "Барааны Газардсан Өртөгийн Мөрүүд"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_move_id
+msgid "Stock Move"
+msgstr "Нөөцийн хөдөлгөөн"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
+msgid "Stock Valuation Adjustment Lines"
+msgstr "Барааны Үнэлгээний Тохируулгын Мөрүүд"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/stock_landed_costs.py:52
+#, python-format
+msgid ""
+"The selected picking does not contain any move that would be impacted by "
+"landed costs. Landed costs are only possible for products configured in real"
+" time valuation with real price costing method. Please make sure it is the "
+"case, or you selected the correct picking"
+msgstr "Сонгосон бэлтгэх баримт нь газардсан өртөгөөс нөлөөлөх хөдөлгөөн агуулаагүй байна. Газардсан өртөг нь зөвхөн бодит өртөг тооцоолох аргатай бодит үнэлгээтэй бараанд хэрэглэх боломжтой. Энэ тохиолдлыг нягтална уу. Эсвэл зөв бэлтгэх баримт сонгосон эсэхээ шалгана уу."
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_amount_total
+msgid "Total"
+msgstr "Дүн"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_unread
+msgid "Unread Messages"
+msgstr "Уншаагүй Зурвасууд"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Уншаагүй зурвасын тоолуур"
+
+#. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Validate"
+msgstr "Батлах"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/stock_landed_costs.py:212
+#, python-format
+msgid ""
+"Validated landed costs cannot be cancelled, but you could create negative "
+"landed costs to reverse them"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_valuation_adjustment_lines
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Valuation Adjustments"
+msgstr "Үнэлгээний Тохируулгууд"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_volume
+msgid "Volume"
+msgstr "Эзлэхүүн"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/purchase_config_settings.py:17
+#, python-format
+msgid "Warning!"
+msgstr "Анхааруулга!"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_website_message_ids
+msgid "Website Messages"
+msgstr "Вебсайтын зурвасууд"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_website_message_ids
+msgid "Website communication history"
+msgstr "Вебсайтын харилцааны түүх"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_weight
+msgid "Weight"
+msgstr "Жин"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/stock_landed_costs.py:183
+#, python-format
+msgid ""
+"You cannot validate a landed cost which has no valid valuation adjustments "
+"lines. Did you click on Compute?"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
+msgid "describe the product characteristics..."
+msgstr "барааны шинжүүдийг тайлбарлах..."
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_purchase_config_settings
+msgid "purchase.config.settings"
+msgstr "purchase.config.settings"

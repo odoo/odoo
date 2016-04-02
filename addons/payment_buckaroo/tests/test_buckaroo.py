@@ -20,7 +20,7 @@ class BuckarooCommon(PaymentAcquirerCommon):
         self.base_url = self.registry('ir.config_parameter').get_param(cr, uid, 'web.base.url')
 
         # get the buckaroo account
-        model, self.buckaroo_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment_buckaroo', 'payment_acquirer_buckaroo')
+        model, self.buckaroo_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment', 'payment_acquirer_buckaroo')
 
 
 @openerp.tests.common.at_install(False)
@@ -122,7 +122,7 @@ class BuckarooForm(BuckarooCommon):
             'BRQ_CURRENCY': u'EUR',
             'BRQ_CUSTOMER_NAME': u'Jan de Tester',
             'BRQ_INVOICENUMBER': u'SO004',
-            'BRQ_PAYMENT': u'573311D081B04069BD6336001611DBD4',
+            'brq_payment': u'573311D081B04069BD6336001611DBD4',
             'BRQ_PAYMENT_METHOD': u'paypal',
             'BRQ_SERVICE_PAYPAL_PAYERCOUNTRY': u'NL',
             'BRQ_SERVICE_PAYPAL_PAYEREMAIL': u'fhe@openerp.com',
@@ -130,7 +130,7 @@ class BuckarooForm(BuckarooCommon):
             'BRQ_SERVICE_PAYPAL_PAYERLASTNAME': u'Tester',
             'BRQ_SERVICE_PAYPAL_PAYERMIDDLENAME': u'de',
             'BRQ_SERVICE_PAYPAL_PAYERSTATUS': u'verified',
-            'BRQ_SIGNATURE': u'175d82dd53a02bad393fee32cb1eafa3b6fbbd91',
+            'Brq_signature': u'175d82dd53a02bad393fee32cb1eafa3b6fbbd91',
             'BRQ_STATUSCODE': u'190',
             'BRQ_STATUSCODE_DETAIL': u'S001',
             'BRQ_STATUSMESSAGE': u'Transaction successfully processed',
@@ -159,10 +159,10 @@ class BuckarooForm(BuckarooCommon):
         # check state
         tx = self.payment_transaction.browse(cr, uid, tx_id, context=context)
         self.assertEqual(tx.state, 'done', 'Buckaroo: validation did not put tx into done state')
-        self.assertEqual(tx.buckaroo_txnid, buckaroo_post_data.get('BRQ_TRANSACTIONS'), 'Buckaroo: validation did not update tx payid')
+        self.assertEqual(tx.acquirer_reference, buckaroo_post_data.get('BRQ_TRANSACTIONS'), 'Buckaroo: validation did not update tx payid')
 
         # reset tx
-        tx.write({'state': 'draft', 'date_validate': False, 'buckaroo_txnid': False})
+        tx.write({'state': 'draft', 'date_validate': False, 'acquirer_reference': False})
 
         # now buckaroo post is ok: try to modify the SHASIGN
         buckaroo_post_data['BRQ_SIGNATURE'] = '54d928810e343acf5fb0c3ee75fd747ff159ef7a'

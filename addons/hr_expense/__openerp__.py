@@ -1,30 +1,12 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 {
-    'name': 'Expense Management',
-    'version': '1.0',
+    'name': 'Expense Tracker',
+    'version': '2.0',
     'category': 'Human Resources',
-    'sequence': 29,
+    'sequence': 95,
     'summary': 'Expenses Validation, Invoicing',
     'description': """
 Manage expenses by Employees
@@ -37,36 +19,26 @@ Employee can encode their own expenses and the validation flow puts it automatic
 The whole flow is implemented as:
 ---------------------------------
 * Draft expense
-* Confirmation of the sheet by the employee
-* Validation by his manager
+* Submitted by the employee to his manager
+* Approved by his manager
 * Validation by the accountant and accounting entries creation
 
 This module also uses analytic accounting and is compatible with the invoice on timesheet module so that you are able to automatically re-invoice your customers' expenses if your work by project.
     """,
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'images': ['images/hr_expenses_analysis.jpeg', 'images/hr_expenses.jpeg'],
-    'depends': ['hr', 'account_accountant', 'report'],
+    'website': 'https://www.odoo.com/page/expenses',
+    'depends': ['hr_contract', 'account_accountant', 'report'],
     'data': [
         'security/ir.model.access.csv',
-        'hr_expense_data.xml',
-        'hr_expense_sequence.xml',
-        'hr_expense_workflow.xml',
-        'hr_expense_view.xml',
-        'hr_expense_report.xml',
+        'data/hr_expense_data.xml',
+        'data/hr_expense_sequence.xml',
+        'wizard/hr_expense_refuse_reason.xml',
+        'views/hr_expense_views.xml',
         'security/ir_rule.xml',
-        'report/hr_expense_report_view.xml',
-        'hr_expense_installer_view.xml',
         'views/report_expense.xml',
+        'data/web_tip_data.xml',
+        'views/hr_dashboard.xml',
     ],
-    'demo': ['hr_expense_demo.xml'],
-    'test': [
-        'test/expense_demo.yml',
-        'test/expense_process.yml',
-    ],
+    'demo': ['data/hr_expense_demo.xml'],
     'installable': True,
-    'auto_install': False,
     'application': True,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

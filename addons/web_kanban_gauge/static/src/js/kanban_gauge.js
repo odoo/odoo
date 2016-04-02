@@ -1,4 +1,13 @@
-openerp.web_kanban_gauge = function (instance) {
+odoo.define('web_kanban_gauge.widget', function (require) {
+"use strict";
+
+var core = require('web.core');
+var kanban_widgets = require('web_kanban.widgets');
+var utils = require('web.utils');
+
+var AbstractField = kanban_widgets.AbstractField;
+var fields_registry = kanban_widgets.registry;
+var _t = core._t;
 
 /**
  * Kanban widgets: GaugeWidget
@@ -17,10 +26,8 @@ openerp.web_kanban_gauge = function (instance) {
  * - on_click_label: optional label of the input displayed when clicking
  *
  */
-var _t = instance.web._t,
-   _lt = instance.web._lt;
 
-instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
+var GaugeWidget = AbstractField.extend({
     className: "oe_gauge",
 
     start: function() {
@@ -37,36 +44,91 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
         }
         var title = this.$node.html() || this.field.string;
         // current gauge value
-        var val = this.field.value;
+        var val = this.field.raw_value;
+        if (_.isArray(JSON.parse(val))) {
+            val = JSON.parse(val);
+        }
         var value = _.isArray(val) && val.length ? val[val.length-1]['value'] : val;
         // displayed value under gauge
         var gauge_value = value;
         if (this.options.gauge_value_field) {
             gauge_value = this.getParent().record[this.options.gauge_value_field].raw_value;
         }
-        // var unique_id = _.uniqueId("JustGage");
+
+        var degree = Math.PI/180,
+            width = 200,
+            height = 150,
+            outerRadius = Math.min(width, height)*0.5,
+            innerRadius = outerRadius*0.7,
+            fontSize = height/7;
 
         this.$el.empty().attr('style', this.$node.attr('style') + ';position:relative; display:inline-block;');
-        this.gage = new JustGage({
-            parentNode: this.$el[0],
-            // id: unique_id,
-            value: value,
-            title: title,
-            min: 0,
-            max: max_value,
-            relativeGaugeSize: true,
-            humanFriendly: true,
-            titleFontColor: '#333333',
-            valueFontColor: '#333333',
-            labelFontColor: '#000',
-            label: label,
-            levelColors: self.options.levelcolors || [
-                "#ff0000",
-                "#f9c802",
-                "#a9d70b"
-            ],
-        });
-        this.gage.refresh(value, max_value);
+
+        var arc = d3.svg.arc()
+                .innerRadius(innerRadius)
+                .outerRadius(outerRadius)
+                .startAngle(-90*degree);
+
+        var svg = d3.select(this.$el[0])
+            .append("svg")
+            .attr("width", '100%')
+            .attr("height", '100%')
+            .attr('viewBox','0 0 '+width +' '+height )
+            .attr('preserveAspectRatio','xMinYMin')
+            .append("g")
+            .attr("transform", "translate(" + (width/2) + "," + (height-(width-height)/2-12) + ")");
+
+        function addText(text, fontSize, dx, dy) {
+            return svg.append("text")
+                .attr("text-anchor", "middle")
+                .style("font-size", fontSize+'px')
+                .attr("dy", dy)
+                .attr("dx", dx)
+                .text(text);
+        }
+        // top title
+
+        addText(title, 16, 0, -outerRadius-16).style("font-weight",'bold');
+
+        // center value
+
+        var text = addText(utils.human_number(value, 1), fontSize, 0, -2).style("font-weight",'bold');
+
+        // bottom label
+
+        addText(0, 8, -(outerRadius+innerRadius)/2, 12);
+        addText(label, 8, 0, 12);
+        addText(utils.human_number(max_value, 1), 8, (outerRadius+innerRadius)/2, 12);
+
+        // chart
+
+        svg.append("path")
+            .datum({endAngle: Math.PI/2})
+            .style("fill", "#ddd")
+            .attr("d", arc);
+
+        var foreground = svg.append("path")
+            .datum({endAngle: 0})
+            .style("fill", "hsl(0,80%,50%)")
+            .attr("d", arc);
+
+        var ratio = max_value ? value/max_value : 0;
+        var hue = Math.round(ratio*120);
+
+        foreground.transition()
+            .style("fill", "hsl(" + hue + ",80%,50%)")
+            .duration(1500)
+            .call(arcTween, (ratio-0.5)*Math.PI);
+
+        function arcTween (transition, newAngle) {
+            transition.attrTween("d", function(d) {
+                var interpolate = d3.interpolate(d.endAngle, newAngle);
+                return function (t) {
+                    d.endAngle = interpolate(t);
+                    return arc(d);
+                };
+            });
+        }
 
         var flag_open = false;
         if (this.options.on_change) {
@@ -82,15 +144,15 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
                 $svg.fadeTo(0, 0.2);
 
                 // add input
-                if (!self.$el.find(".oe_justgage_edit").size()) {
-                    $div = $('<div class="oe_justgage_edit" style="z-index:1"/>');
+                if (!self.$el.find(".o_gauge_edit").size()) {
+                    var $div = $('<div class="o_gauge_edit" style="z-index:1"/>');
                     $div.css({
                         'text-align': 'center',
                         'position': 'absolute',
                         'width': self.$el.outerWidth() + 'px',
                         'top': (self.$el.outerHeight()/2-5) + 'px'
                     });
-                    $input = $('<input/>').val(gauge_value);
+                    var $input = $('<input/>').val(gauge_value);
                     $input.css({
                         'text-align': 'center',
                         'margin': 'auto',
@@ -98,10 +160,10 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
                     });
                     $div.append($input);
                     if (self.options.on_click_label) {
-                        $post_input = $('<span style="color: #000000;">' + self.options.on_click_label + '</span>');
+                        var $post_input = $('<span style="color: #000000;">' + self.options.on_click_label + '</span>');
                         $div.append($post_input);
                     }
-                    self.$el.prepend($div)
+                    self.$el.prepend($div);
 
                     $input.focus()
                         .keydown(function (event) {
@@ -128,9 +190,9 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
                             event.stopPropagation();
                             flag_open = false;
                         })
-                        .blur(function (event) {
+                        .blur(function () {
                             if(!flag_open) {
-                                self.$el.find(".oe_justgage_edit").remove();
+                                self.$el.find(".o_gauge_edit").remove();
                                 $svg.fadeTo(0, 1);
                             } else {
                                 $svg.fadeTo(0, 1);
@@ -145,7 +207,7 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
 
             if (this.options.force_set && !+input_value) {
                 $svg.fadeTo(0, 0.3);
-                $div = $('<div/>').text(_t("Click to change value"));
+                var $div = $('<div/>').text(_t("Click to change value"));
                 $div.css(css);
                 this.$el.append($div);
             }
@@ -153,6 +215,6 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
     },
 });
 
-instance.web_kanban.fields_registry.add("gauge", "instance.web_kanban.GaugeWidget");
+fields_registry.add("gauge", GaugeWidget);
 
-}
+});

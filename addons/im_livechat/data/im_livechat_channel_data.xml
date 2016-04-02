@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Remove automatically the empty anonoymous sessions -->
+        <record id="ir_cron_remove_empty_session" model="ir.cron">
+            <field name="name">[im_livechat] Remove empty anonymous sessions</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model">mail.channel</field>
+            <field name="function">cron_remove_empty_session</field>
+            <field name="active" eval="True"/>
+        </record>
+
+    </data>
+
+    <data>
+        <!-- Smiley for rating to be displayed in the conversation -->
+        <record id="mail_shortcode_rating_0" model="mail.shortcode">
+            <field name="source">:rating_0</field>
+            <field name="substitution">&lt;img src='/rating/static/src/img/rating_0.png'/&gt;</field>
+            <field name="description">Rating Smiley Bad</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_shortcode_rating_5" model="mail.shortcode">
+            <field name="source">:rating_5</field>
+            <field name="substitution">&lt;img src='/rating/static/src/img/rating_5.png'/&gt;</field>
+            <field name="description">Rating Smiley Okay</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_shorcode_rating_10" model="mail.shortcode">
+            <field name="source">:rating_10</field>
+            <field name="substitution">&lt;img src='/rating/static/src/img/rating_10.png'/&gt;</field>
+            <field name="description">Rating Smiley Good</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+
+    </data>
+</odoo>

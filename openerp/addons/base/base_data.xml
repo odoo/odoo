@@ -12,18 +12,12 @@
             <field name="field_parent">child_id</field>
         </record>
 
-        <record id="lang_en" model="res.lang">
-            <field name="code">en_US</field>
-            <field name="name">English</field>
-            <field name="translatable">True</field>
-        </record>
-
         <function name="install_lang" model="res.lang"/>
 
         <record id="main_partner" model="res.partner" context="{'default_is_company': True}">
-            <field name="name">Your Company</field>
+            <field name="name">My Company</field>
             <field name="company_id" eval="None"/>
-            <field name="image" eval="False"/>
+            <field name="image" type="base64" file="base/static/img/main_partner-image.png"/>
             <field name="customer" eval="False"/>
             <field name="is_company" eval="True"/>
             <field name="street"></field>
@@ -34,24 +28,11 @@
             <field name="website">www.yourcompany.com</field>
         </record>
 
-        <!-- Currencies -->
-        <record id="EUR" model="res.currency">
-            <field name="name">EUR</field>
-            <field name="symbol">€</field>
-            <field name="rounding">0.01</field>
-            <field name="accuracy">4</field>
-        </record>
-        <record id="rateEUR" model="res.currency.rate">
-            <field name="rate">1.0</field>
-            <field name="currency_id" ref="EUR"/>
-            <field eval="time.strftime('%Y-01-01')" name="name"/>
-        </record>
-
         <!-- Basic Company  -->
         <record id="main_company" model="res.company">
-            <field name="name">Your Company</field>
+            <field name="name">My Company</field>
             <field name="partner_id" ref="main_partner"/>
-            <field name="rml_header1">Your Company Tagline</field>
+            <field name="rml_header1">My Company Tagline</field>
             <field name="currency_id" ref="base.EUR"/>
         </record>
 
@@ -66,8 +47,15 @@
             <field name="partner_id" ref="base.partner_root"/>
             <field name="company_id" ref="main_company"/>
             <field name="company_ids" eval="[(4, ref('main_company'))]"/>
-            <field name="signature">--
-Administrator</field>
+            <field name="signature"><![CDATA[<span>-- <br/>
+Administrator</span>]]></field>
+        </record>
+
+        <!-- Default user with full access rights for newly created users -->
+        <record id="default_user" model="res.users">
+            <field name="name">default user</field>
+            <field name="login">default</field>
+            <field name="active" eval="False"/>
         </record>
 
         <record id="main_partner" model="res.partner">
@@ -79,25 +67,6 @@ Administrator</field>
             <field name="smtp_host">localhost</field>
             <field eval="25" name="smtp_port"/>
             <field eval="10" name="sequence"/>
-        </record>
-
-        <!--
-            A group dedicated to the portal users, making groups
-            restrictions more convenient.
-        -->
-        <record id="group_portal" model="res.groups">
-            <field name="name">Portal</field>
-            <field name="comment">Portal members have specific access rights (such as record rules and restricted menus).
-                They usually do not belong to the usual OpenERP groups.</field>
-        </record>
-        <!--
-            A group dedicated to the public user only, making groups
-            restrictions more convenient.
-        -->
-        <record id="group_public" model="res.groups">
-            <field name="name">Public</field>
-            <field name="comment">Public users have specific access rights (such as record rules and restricted menus).
-                They usually do not belong to the usual OpenERP groups.</field>
         </record>
 
         <!-- Basic fonts family included in PDF standart, will always be in the font list -->
@@ -130,7 +99,7 @@ Administrator</field>
             <field name="login">public</field>
             <field name="password"></field>
             <!-- Avoid auto-including this demo user in any default group -->
-            <field name="groups_id" eval="[(6,0,[ref('base.group_public')])]"/>
+            <field name="groups_id" eval="[(6,0,[])]"/>
             <field name="image" type="base64" file="base/static/img/public_user-image.png"/>
             <field name="partner_id" ref="public_partner"/>
             <field name="active" eval="False"/>

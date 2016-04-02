@@ -7,11 +7,16 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
-    <record id="group_purchase_pricelist" model="res.groups">
-        <field name="name">Purchase Pricelists</field>
+    <record id="group_pricelist_item" model="res.groups">
+        <field name="name">Manage Pricelist Items</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
-	
+
+    <record id="group_product_pricelist" model="res.groups">
+        <field name="name">Pricelists On Product</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
     <record id="group_uom" model="res.groups">
         <field name="name">Manage Multiple Units of Measure</field>
         <field name="category_id" ref="base.module_category_hidden"/>
@@ -32,6 +37,11 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
+    <record id="group_product_variant" model="res.groups">
+        <field name="name">Manage Product Variants</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
 </data>
 <data noupdate="1">
 
@@ -40,6 +50,7 @@
         <field name="model_id" ref="model_product_template"/>
         <field name="global" eval="True"/>
         <field name="domain_force"> ['|',('company_id','=',user.company_id.id),('company_id','=',False)]</field>
+        <field name="active" eval="False"/>
     </record>
 
     <record model="ir.rule" id="product_pricelist_comp_rule">
@@ -52,13 +63,6 @@
     <record model="ir.rule" id="product_pricelist_item_comp_rule">
         <field name="name">product pricelist item company rule</field>
         <field name="model_id" ref="model_product_pricelist_item"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force"> ['|',('company_id','=',user.company_id.id),('company_id','=',False)]</field>
-    </record>
-
-    <record model="ir.rule" id="product_pricelist_version_comp_rule">
-        <field name="name">product pricelist version company rule</field>
-        <field name="model_id" ref="model_product_pricelist_version"/>
         <field name="global" eval="True"/>
         <field name="domain_force"> ['|',('company_id','=',user.company_id.id),('company_id','=',False)]</field>
     </record>

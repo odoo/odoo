@@ -1,108 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
-        <!-- After installation of the module, open the related menu -->
-        <record id="action_client_warehouse_menu" model="ir.actions.client">
-            <field name="name">Open Warehouse Menu</field>
-            <field name="tag">reload</field>
-            <field name="params" eval="{'menu_id': ref('menu_stock_root')}"/>
-        </record>
-        <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_client_warehouse_menu"/>
-            <field name="state">open</field>
-        </record>
         <record id="view_stock_config_settings" model="ir.ui.view">
             <field name="name">stock settings</field>
             <field name="model">stock.config.settings</field>
             <field name="arch" type="xml">
-                <form string="Configure Warehouse" version="7.0" class="oe_form_configuration">
+                <form string="Configure Warehouse" class="oe_form_configuration">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
-                        or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <separator string="Traceability"/>
-                    <group name="traceability">
-                        <label for="id" string="Traceability"/>
+                    <group string="Traceability" name="traceability">
+                        <field name="group_stock_production_lot" widget="radio"/>
+                        <field name="module_product_expiry" widget="radio" attrs="{'invisible': [('group_stock_production_lot', '=', False)]}"/>
+                        <field name="group_stock_tracking_lot" widget="radio"/>
+                        <field name="group_stock_tracking_owner" widget="radio"/>
+                        <label for="id" string="Barcode Interface"/>
                         <div>
                             <div>
-                                <field name="group_stock_production_lot" class="oe_inline"/>
-                                <label for="group_stock_production_lot"/>
+                                <field name="module_stock_barcode" widget="upgrade_boolean"/>
+                                <label for="module_stock_barcode"/>
+                                <a href="https://www.odoo.com/page/warehouse-features" target="_blank"> More Info</a>
                             </div>
-                            <div attrs="{'invisible': [('group_stock_production_lot','=',False)]}">
-                                <field name="module_product_expiry" class="oe_inline"/>
-                                <label for="module_product_expiry"/>
-                            </div>
-                            <div>
-                                <field name="group_stock_tracking_lot" class="oe_inline"/>
-                                <label for="group_stock_tracking_lot"/>
-                            </div>
-                            <div>
-                                <field name="group_stock_tracking_owner" class="oe_inline"/>
-                                <label for="group_stock_tracking_owner"/>
-                             </div>
-                        </div>    
+                        </div>
                     </group>
-                    <separator string="Location &amp; Warehouse"/>
-                    <group>
-                        <label for="id" string="Logistic"/>
+                    <group string="Shipping Connectors" name="shipping">
+                        <label for="id" string="Carriers"/>
                         <div>
                             <div>
-                                <field name="module_procurement_jit" class="oe_inline"/>
-                                <label for="module_procurement_jit"/>
+                                <field name="module_delivery_dhl" widget="upgrade_boolean"/>
+                                <label for="module_delivery_dhl"/>
                             </div>
                             <div>
-                                <field name="group_stock_multiple_locations" class="oe_inline"/>
-                                <label for="group_stock_multiple_locations"/>  
+                                <field name="module_delivery_fedex" widget="upgrade_boolean"/>
+                                <label for="module_delivery_fedex"/>
                             </div>
                             <div>
-                                <field name="group_stock_adv_location" class="oe_inline" on_change="onchange_adv_location(group_stock_adv_location)"/>
-                                <label for="group_stock_adv_location"/>
+                                <field name="module_delivery_temando"  widget="upgrade_boolean"/>
+                                <label for="module_delivery_temando"/>
                             </div>
-                            <div attrs="{'invisible': [('group_stock_adv_location', '=', False)]}">
+                            <div>
+                                <field name="module_delivery_ups"  widget="upgrade_boolean"/>
+                                <label for="module_delivery_ups"/>
+                            </div>
+                            <div>
+                                <field name="module_delivery_usps" widget="upgrade_boolean"/>
+                                <label for="module_delivery_usps"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group string="Location &amp; Warehouse">
+                        <field name="module_procurement_jit" widget="radio"/>
+                        <field name="warehouse_and_location_usage_level" widget="radio" on_change="onchange_warehouse_and_location_usage_level(warehouse_and_location_usage_level)"/>
+                        <field name="group_stock_multi_locations" invisible="1"/>
+                        <field name="group_stock_multi_warehouses" invisible="1"/>
+                        
+                        <label for="group_stock_adv_location"/>
+                        <div>
+                            <field name="group_stock_adv_location" widget="radio" on_change="onchange_adv_location(group_stock_adv_location)"/>
+                            <div attrs="{'invisible': [('group_stock_adv_location', '=', 0)]}">
                                 <label for="propagation_minimum_delta"/>
                                 <field name="propagation_minimum_delta" class="oe_inline"/>
                             </div>
                         </div>
-                    </group>
-                    <group>
-                        <label for="id" string="Products"/>
-                        <div>
-                            <div>
-                                <field name="group_stock_packaging" class="oe_inline"/>
-                                <label for="group_stock_packaging"/>
-                            </div>
-                             <div>
-                                <label for="decimal_precision"/>
-                                <field name="decimal_precision" class="oe_inline"/>
-                            </div>
-                            <div>
-                                <field name="group_uom" class="oe_inline"/>
-                                <label for="group_uom"/>
-                            </div>
-                            <div>
-                                <field name="group_uos" class="oe_inline"/>
-                                <label for="group_uos" />
-                            </div>
+
+                        <label for="id" string="Products" groups="base.group_no_one"/>
+                        <div name="config_products" groups="base.group_no_one">
+                            <label for="decimal_precision"/>
+                            <field name="decimal_precision" class="oe_inline"/>
                         </div>
+
+                        <field name="module_claim_from_delivery" widget="radio"/>
+                        <field name="module_stock_dropshipping" widget="radio"/>
+                        <field name="module_stock_picking_wave" widget="radio"/>
+                        <field name="module_stock_calendar" widget="radio"/>
                     </group>
-                    <group>
-                        <label for="id" string="Additional Features"/>
-                            <div>
-                                <div>
-                                    <field name="module_claim_from_delivery" class="oe_inline"/>
-                                    <label for="module_claim_from_delivery"/>
-                                </div>
-                                <div>
-                                    <field name="module_stock_dropshipping" class="oe_inline"/>
-                                    <label for="module_stock_dropshipping"/>
-                                </div>
-                                <div>
-                                    <field name="module_stock_picking_wave" class="oe_inline"/>
-                                    <label for="module_stock_picking_wave"/>
-                                </div>
-                            </div>
+                    <group string="Products">
+                        <field name="group_uom" widget="radio"/>
+                        <field name="group_product_variant" widget="radio"/>
+                        <field name="group_stock_packaging" widget="radio"/>
                     </group>
                 </form>
             </field>
@@ -116,8 +92,9 @@
             <field name="target">inline</field>
         </record>
 
-        <menuitem id="menu_stock_config_settings" name="Warehouse" parent="base.menu_config"
-            sequence="5" action="action_stock_config_settings"/>
-
+        <menuitem id="menu_stock_config_settings" name="Configuration" parent="menu_stock_root"
+            sequence="100" groups="group_stock_manager"/>
+        <menuitem id="menu_stock_general_settings" name="Settings" parent="menu_stock_config_settings"
+            sequence="0" action="action_stock_config_settings" groups="base.group_system"/>
     </data>
 </openerp>

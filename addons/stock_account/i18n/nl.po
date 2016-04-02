@@ -1,0 +1,681 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_account
+# 
+# Translators:
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-01 06:26+0000\n"
+"PO-Revision-Date: 2016-01-12 22:42+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
+"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
+msgid "# of Products"
+msgstr "# producten"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_category_property_form
+msgid "Account Stock Properties"
+msgstr "Voorraad rekeningen"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+msgid "Accounting"
+msgstr "Boekhouding"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_location_form_inherit
+msgid "Accounting Information"
+msgstr "Boekhoudinformatie"
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/stock_change_standard_price.py:58
+#, python-format
+msgid "Active ID is not set in Context."
+msgstr "Active ID is niet ingesteld in Context."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_config_settings_group_stock_inventory_valuation
+msgid ""
+"Allows to configure inventory valuations on products and product categories."
+msgstr "Geeft u de mogelijkheid om uw voorraad te waarderen op producten en productcategorieën."
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_asset_category_id
+msgid "Asset Type"
+msgstr "Soort activa"
+
+#. module: stock_account
+#: selection:product.category,property_cost_method:0
+#: selection:product.template,property_cost_method:0
+msgid "Average Price"
+msgstr "Gemiddelde prijs"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_can_be_expensed
+msgid "Can be expensed"
+msgstr "Kan gedeclareerd worden"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
+msgid "Cancel"
+msgstr "Annuleren"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+msgid "Change Price"
+msgstr "Verander prijs"
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_view_change_standard_price
+#: model:ir.model,name:stock_account.model_stock_change_standard_price
+#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+msgid "Change Standard Price"
+msgstr "Wijzig kostprijs"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
+msgid "Choose a date in the past to get the inventory at that date."
+msgstr "Kies een datum die in het verleden ligt om de voorraad van die datum op te halen."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_inventory_accounting_date
+msgid ""
+"Choose the accounting date at which you want to value the stock moves "
+"created by the inventory instead of the default one (the inventory end date)"
+msgstr "Kies de boekhouddatum op welke u de voorraadwaarde mutaties wilt waarderen die gemaakt zijn door de voorraad in plaats van de standaard (de voorraad einddatum)"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
+msgid "Choose your date"
+msgstr "KIes uw datum"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_uos_coeff
+msgid ""
+"Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * "
+"coeff"
+msgstr "Factor bij de conversie van standaard maateenheid naar verkoopeenheid.\n Verkoopeenheid = standaard maateenheid * factor"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Company"
+msgstr "Bedrijf"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
+msgid "Compute from average price"
+msgstr "bereken van gemiddelde prijs"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+msgid "Cost"
+msgstr "Kosten"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category_property_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_product_property_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_template_property_cost_method
+msgid "Costing Method"
+msgstr "Kostprijsbepaling"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_create_uid
+msgid "Created by"
+msgstr "Aangemaakt door"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_date
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_create_date
+msgid "Created on"
+msgstr "Aangemaakt op"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_date
+msgid "Date"
+msgstr "Datum"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
+msgstr "Soort uitgestelde inkomsten"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_display_name
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_display_name
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_display_name
+msgid "Display Name"
+msgstr "Schermnaam"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_inventory_accounting_date
+msgid "Force Accounting Date"
+msgstr "Forceer factuurdatum"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Group By"
+msgstr "Groeperen op"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_id
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_id
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_change_standard_price_new_price
+msgid ""
+"If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
+"If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
+msgstr "Indien de kostprijs wordt verhoogd, zal de voorraadverschillen rekening worden gedebiteerd en voorraadafname wordt gecrediteerd met de waarde = (verschilbedrag * hoeveelheid die beschikbaar is).\nIndien de kostprijs wordt verlaagd, zal voorraadverschillen rekening worden gecrediteerd en voorraadtoename rekening zal worden gedebiteerd."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category_property_valuation
+msgid ""
+"If perpetual valuation is enabled for a product, the system will "
+"automatically create journal entries corresponding to stock moves, with "
+"product price as specified by the 'Costing Method'. The inventory variation "
+"account set on the product category will represent the current inventory "
+"value, and the stock input and stock output account will hold the "
+"counterpart moves for incoming and outgoing products."
+msgstr "Als permanente voorraadwaarde niet is ingeschakeld voor een product zal het systeem automatisch boekingen aanmaken voor de corresponderende voorraadmutaties, met de productprijs gespecificeerd als de 'Kostmethode'. De voorraad variatie rekening ingesteld op de productcategorie stelt de huidige voorraadwaarde voor. De voorraadtoename en voorraadafname rekening bevat de tegen boekingen voor inkomende en uitgaande producten."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_property_valuation
+#: model:ir.model.fields,help:stock_account.field_product_template_property_valuation
+msgid ""
+"If perpetual valuation is enabled for a product, the system will "
+"automatically create journal entries corresponding to stock moves, with "
+"product price as specified by the 'Costing Method'The inventory variation "
+"account set on the product category will represent the current inventory "
+"value, and the stock input and stock output account will hold the "
+"counterpart moves for incoming and outgoing products."
+msgstr "Als voorraadwaarde ingeschakeld is voor een product zal het systeem automatisch boekingen aanmaken voor de bijhorende voorraadverplaatsing met een productprijs zoals gespecificeerd bij de 'Kostmethode'. De voorraad variatie rekening die is ingesteld op de productcategorie zal de huidige voorraadwaarde voorstellen en de voorraadtoename en vooraadafname rekening houdt de tegenboeking verplaatsingen voor inkomende en uitgaande producten."
+
+#. module: stock_account
+#: selection:stock.config.settings,module_stock_landed_costs:0
+msgid "Include landed costs in product costing computation"
+msgstr "Inclusief extra kosten uit product kost berekening"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_config_settings_module_stock_landed_costs
+msgid ""
+"Install the module that allows to affect landed costs on pickings, and split"
+" them onto the different products."
+msgstr "Installeer de module welke het mogelijk maakt om de totale kosten te boeken op inkomende leveringen en deze te verdelen over de verschillende producten"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_inventory
+msgid "Inventory"
+msgstr "Voorraadtelling"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_location
+msgid "Inventory Locations"
+msgstr "Voorraad locaties"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category_property_valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_product_property_valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_template_property_valuation
+#: model:ir.model.fields,field_description:stock_account.field_stock_config_settings_group_stock_inventory_valuation
+#: model:ir.ui.view,arch_db:stock_account.view_category_property_form
+msgid "Inventory Valuation"
+msgstr "Voorraadwaardering"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_inventory_value
+msgid "Inventory Value"
+msgstr "Voorraadwaarde"
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_wizard_stock_valuation_history
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_choose_date
+#: model:ir.ui.menu,name:stock_account.menu_action_wizard_valuation_history
+msgid "Inventory at Date"
+msgstr "Voorraad op datum"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_account_invoice
+msgid "Invoice"
+msgstr "Factuuradres"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Factuurregel"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_config_settings_module_stock_landed_costs
+msgid "Landed Costs"
+msgstr "Extra kosten"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price___last_update
+#: model:ir.model.fields,field_description:stock_account.field_stock_history___last_update
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history___last_update
+msgid "Last Modified on"
+msgstr "Laatst gewijzigd op"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_write_uid
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_write_uid
+msgid "Last Updated by"
+msgstr "Laatst bijgewerkt door"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_write_date
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_write_date
+msgid "Last Updated on"
+msgstr "Laatst bijgewerkt op"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_location_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Location"
+msgstr "Locatie"
+
+#. module: stock_account
+#: model:res.groups,name:stock_account.group_inventory_valuation
+msgid "Manage Inventory Valuation and Costing Methods"
+msgstr "Beheer de voorraadwaarde en kostprijs methodes"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Move"
+msgstr "Mutatie"
+
+#. module: stock_account
+#: code:addons/stock_account/product.py:124
+#, python-format
+msgid "No difference between standard price and new price!"
+msgstr "Geen verschil tussen kostprijs en de nieuwe prijs."
+
+#. module: stock_account
+#: selection:stock.config.settings,module_stock_landed_costs:0
+msgid "No landed costs"
+msgstr "Geen extra kosten"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_date
+msgid "Operation Date"
+msgstr "Verwerking datum"
+
+#. module: stock_account
+#: selection:product.category,property_valuation:0
+#: selection:product.template,property_valuation:0
+msgid "Periodic (manual)"
+msgstr "Periodiek (handmatig)"
+
+#. module: stock_account
+#: selection:stock.config.settings,group_stock_inventory_valuation:0
+msgid "Periodic inventory valuation (recommended)"
+msgstr "Periodieke voorraadwaardering (aanbevolen)"
+
+#. module: stock_account
+#: selection:product.category,property_valuation:0
+#: selection:product.template,property_valuation:0
+msgid "Perpetual (automated)"
+msgstr "Permanent (geautomatiseerd)"
+
+#. module: stock_account
+#: selection:stock.config.settings,group_stock_inventory_valuation:0
+msgid ""
+"Perpetual inventory valuation (stock move generates accounting entries)"
+msgstr "Permanente voorraadwaardering (voorraadverplaatsing genereert financiële boekingen)"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_new_price
+msgid "Price"
+msgstr "Bedrag"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_product_product
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_product_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Product"
+msgstr "Product"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_alert_time
+msgid "Product Alert Time"
+msgstr "Product signalering tijd"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_product_category
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_product_categ_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Product Category"
+msgstr "Productcategorie"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_life_time
+msgid "Product Life Time"
+msgstr "Product levensduur"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_quantity
+msgid "Product Quantity"
+msgstr "Hoeveelheid product"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_removal_time
+msgid "Product Removal Time"
+msgstr "Product verwijdertijd"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_product_template
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_product_template_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Product Template"
+msgstr "Productsjabloon"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_use_time
+msgid "Product Use Time"
+msgstr "Product gebruiksduur"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_quant
+msgid "Quants"
+msgstr "Aantallen"
+
+#. module: stock_account
+#: selection:product.category,property_cost_method:0
+#: selection:product.template,property_cost_method:0
+msgid "Real Price"
+msgstr "Werkelijke prijs"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
+msgid "Retrieve the Inventory Value"
+msgstr "Voorraadwaarde ophalen"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
+msgid "Retrieve the curent stock valuation."
+msgstr "Haal huidige voorraadwaarde op."
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Serial Number"
+msgstr "Partijnummer"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_source
+msgid "Source"
+msgstr "Bron"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_uos_id
+msgid ""
+"Specify a unit of measure here if invoicing is made in another unit of "
+"measure than inventory. Keep empty to use the default unit of measure."
+msgstr "Specificeer hier de maateenheid indien de facturatie geschied in een andere maateenheid dan de voorraadboekingen. Laat leeg om de standaard maateenheid te gebruiken."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_can_be_expensed
+msgid "Specify whether the product can be selected in an HR expense."
+msgstr "Specificeer of het product kan worden gebruikt als declaratie."
+
+#. module: stock_account
+#: selection:product.category,property_cost_method:0
+#: selection:product.template,property_cost_method:0
+msgid "Standard Price"
+msgstr "Kostprijs"
+
+#. module: stock_account
+#: code:addons/stock_account/product.py:145
+#: code:addons/stock_account/product.py:152
+#, python-format
+msgid "Standard Price changed"
+msgstr "Kostprijs veranderd"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_property_cost_method
+#: model:ir.model.fields,help:stock_account.field_product_template_property_cost_method
+msgid ""
+"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
+"                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
+msgstr "Kostprijs: De kostprijs wordt handmatig bijgewerkt (meestal aan het eind van het jaar). \nGemiddelde prijs: De kostprijs wordt bij elke binnenkomst van producten opnieuw berekend en gebruikt voor de voorraadwaarde.\nWerkelijke prijs: De kostprijs is de prijs van het laatste verkochte product (wordt bijvoorbeeld gebruikt in het geval van een voorraadverschil)."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
+msgid ""
+"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
+"Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"Real Price: The cost price displayed is the price of the last outgoing product (will be used in case of inventory loss for example)."
+msgstr "Standaard prijs: De kostprijs wordt handmatig gewijzigd aan het einde van een specifieke periode (meestal één keer per jaar).\nGemiddelde prijs: De kostprijs wordt herberekend bij elke inkomende levering en wordt gebruikt voor de product voorraadwaarde.\nWerkelijke prijs: De kostprijs die getoond wordt is de prijs van het laatste uitgaande product (wordt bijvoorbeeld gebruikt bij voorraadverschillen)."
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
+#: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_input
+#: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_input
+msgid "Stock Input Account"
+msgstr "Voorraadtoename rekening"
+
+#. module: stock_account
+#: code:addons/stock_account/stock_account.py:418
+#: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
+#, python-format
+msgid "Stock Journal"
+msgstr "Voorraadboek"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_move
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_move_id
+msgid "Stock Move"
+msgstr "Voorraadmutatie"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_output_categ_id
+#: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_output
+#: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_output
+msgid "Stock Output Account"
+msgstr "Voorraadafname rekening"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_valuation_account_id
+msgid "Stock Valuation Account"
+msgstr "Voorraadwaarde rekening"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_location_valuation_in_account_id
+msgid "Stock Valuation Account (Incoming)"
+msgstr "Voorraadwaarde rekening (inkomend)"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_location_valuation_out_account_id
+msgid "Stock Valuation Account (Outgoing)"
+msgstr "Voorraadwaarde rekening (uitgaand)"
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/stock_valuation_history.py:31
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_graph
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_pivot
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
+#, python-format
+msgid "Stock Value At Date"
+msgstr "Voorraadwaarde op datum"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_account_chart_template
+msgid "Templates for Account Chart"
+msgstr "Sjabloon voor grootboekschema"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
+msgid "Total Value"
+msgstr "Totaal Waarde"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_coeff
+msgid "Unit of Measure -> UOS Coeff"
+msgstr "Maateenheid -> Verkoopeenheid Coeff."
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_id
+msgid "Unit of Sale"
+msgstr "Verkoopeenheid (VE)"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_location_valuation_in_account_id
+msgid ""
+"Used for real-time inventory valuation. When set on a virtual location (non "
+"internal type), this account will be used to hold the value of products "
+"being moved from an internal location into this location, instead of the "
+"generic Stock Output Account set on the product. This has no effect for "
+"internal locations."
+msgstr "Gebruik real-time voorraadwaardering. Wanneer dit is ingesteld op een virtuele locatie (niet een interne locatie), dan zal deze rekening de inkoopwaarde bevatten van de producten welke worden verplaatst uit een interne locatie naar deze locatie, in plaats van de standaard voorraadafname rekening, zoals ingesteld bij het product. Dit heeft geen effect voor interne locaties."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_location_valuation_out_account_id
+msgid ""
+"Used for real-time inventory valuation. When set on a virtual location (non "
+"internal type), this account will be used to hold the value of products "
+"being moved out of this location and into an internal location, instead of "
+"the generic Stock Output Account set on the product. This has no effect for "
+"internal locations."
+msgstr "Gebruik real-time voorraadwaardering. Wanneer dit is ingesteld op een virtuele locatie (niet een interne locatie), dan zal deze rekening de inkoopwaarde bevatten van de producten welke worden verplaatst uit deze locatie naar een interne locatie, in plaats van de standaard voorraadafname  rekening, zoals ingesteld bij het product. Dit heeft geen effect voor interne locaties."
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
+msgid "Value"
+msgstr "Waarde"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_alert_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before an "
+"alert should be notified."
+msgstr "Wanneer een nieuw partijnummer wordt aangemaakt, is dit het het aantal dagen voordat een waarschuwing wordt gegeven."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_life_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods may become dangerous and must not be consumed."
+msgstr "Wanneer een nieuw partijnummer wordt aangemaakt, is dit het aantal dagen voordat de producten gevaarlijk zijn en niet meer mogen worden geconsumeerd."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_removal_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods should be removed from the stock."
+msgstr "Wanneer een nieuw partijnummer wordt aangemaakt, is dit het aantal dagen waarop de producten met dit partijnummer moeten worden verwijderd van de voorraad."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_use_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods starts deteriorating, without being dangerous yet."
+msgstr "Wanneer een nieuw partijnummer wordt aangemaakt, is dit het aantal dagen waarop de producten verminderen in kwaliteit, maar nog niet gevaarlijk zijn voor de volksgezondheid."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_input_categ_id
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"incoming stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the source location. This is the default "
+"value for all products in this category. It can also directly be set on each"
+" product"
+msgstr "Bij het uitvoeren van real-time voorraadwaardering, zal de tegenpost voor alle inkomende voorraadmutaties worden geboekt op deze rekening, tenzij er een specifieke waarderingsrekening is ingesteld op de bronlocatie. Dit is de standaardwaarde voor alle producten in deze categorie. Het kan ook direct worden ingesteld bij een product"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_input
+#: model:ir.model.fields,help:stock_account.field_product_template_property_stock_account_input
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"incoming stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the source location. When not set on the "
+"product, the one from the product category is used."
+msgstr "Bij het uitvoeren van real-time voorraadwaardering, zullen tegenboekingen voor alle inkomende voorraad bewegingen worden geboekt op deze rekening, tenzij er een specifieke waardering rekening is ingesteld op de bronlocatie. Dit is de standaardwaarde voor alle producten in deze categorie. Het kan ook direct worden ingesteld bij elk product"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_output_categ_id
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"outgoing stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the destination location. This is the "
+"default value for all products in this category. It can also directly be set"
+" on each product"
+msgstr "Bij het uitvoeren van real-time voorraadwaardering, zullen tegenboekingen voor alle uitgaande voorraad bewegingen worden geboekt op deze rekening, tenzij er een specifieke waardering rekening is ingesteld op de bestemmingslocatie. Dit is de standaardwaarde voor alle producten in deze categorie. Het kan ook direct worden ingesteld bij elk product"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_output
+#: model:ir.model.fields,help:stock_account.field_product_template_property_stock_account_output
+msgid ""
+"When doing real-time inventory valuation, counterpart journal items for all "
+"outgoing stock moves will be posted in this account, unless there is a "
+"specific valuation account set on the destination location. When not set on "
+"the product, the one from the product category is used."
+msgstr "Bij het uitvoeren van real-time voorraadwaardering, zal de tegenpost voor alle uitgaande voorraadmutaties worden geboekt op deze rekening, tenzij er een specifieke waarderingsrekening is ingesteld op de bestemmingslocatie. Dit is de standaardwaarde voor alle producten in deze categorie. Het kan ook direct worden ingesteld bij een product"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category_property_stock_journal
+msgid ""
+"When doing real-time inventory valuation, this is the Accounting Journal in "
+"which entries will be automatically posted when stock moves are processed."
+msgstr "Wanneer u real-time voorraadwaardering doet, dan is dit het dagboek waarin automatisch de boekingen worden gemaakt, wanneer de voorraadmutaties worden verwerkt."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category_property_stock_valuation_account_id
+msgid ""
+"When real-time inventory valuation is enabled on a product, this account "
+"will hold the current value of the products."
+msgstr "Wanneer real-time voorraadwaardering is geactiveerd bij een product, dan zal deze rekening de huidige waarde van de producten bevatten."
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_wizard_valuation_history
+msgid "Wizard that opens the stock valuation history table"
+msgstr "Wizard welke de voorraadwaarde historie tabel opent"
+
+#. module: stock_account
+#: code:addons/stock_account/stock_account.py:275
+#, python-format
+msgid ""
+"You don't have any stock journal defined on your product category, check if "
+"you have installed a chart of accounts"
+msgstr "U heeft geen voorraadboek gedefinieerd op uw productcategorie, controleer of u een rekeningschema heeft geïnstalleerd."
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+msgid "_Apply"
+msgstr "Toep_assen"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_config_settings
+msgid "stock.config.settings"
+msgstr "stock.config.settings"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_history
+msgid "stock.history"
+msgstr "stock.history"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
+msgid "unknown"
+msgstr "onbekend"

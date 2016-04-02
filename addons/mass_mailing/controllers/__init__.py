@@ -1,3 +1,4 @@
-import main
+# -*- coding: utf-8 -*-
 
-# vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
+import main
+import web_editor

@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
-from openerp import SUPERUSER_ID
-from openerp.addons.web import http
-from openerp.addons.web.http import request
+
+from odoo.addons.web import http
+from odoo.addons.web.http import request
+from odoo.tools import html_escape as escape
 
 
-class google_map(http.Controller):
+class GoogleMap(http.Controller):
     '''
     This class generates on-the-fly partner maps that can be reused in every
     website page. To do so, just use an ``<iframe ...>`` whose ``src``
@@ -25,38 +26,27 @@ class google_map(http.Controller):
 
     @http.route(['/google_map'], type='http', auth="public", website=True)
     def google_map(self, *arg, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        partner_obj = request.registry['res.partner']
-
-        # filter real ints from query parameters and build a domain
         clean_ids = []
-        for s in post.get('partner_ids', "").split(","):
+        for partner_id in post.get('partner_ids', "").split(","):
             try:
-                i = int(s)
-                clean_ids.append(i)
+                clean_ids.append(int(partner_id))
             except ValueError:
                 pass
-
-        # search for partners that can be displayed on a map
-        domain = [("id", "in", clean_ids), ('website_published', '=', True), ('is_company', '=', True)]
-        partners_ids = partner_obj.search(cr, SUPERUSER_ID, domain, context=context)
-
-        # browse and format data
+        partners = request.env['res.partner'].sudo().search([("id", "in", clean_ids),
+                                                             ('website_published', '=', True), ('is_company', '=', True)])
         partner_data = {
-        "counter": len(partners_ids),
-        "partners": []
+            "counter": len(partners),
+            "partners": []
         }
-        request.context.update({'show_address': True})
-        for partner in partner_obj.browse(cr, SUPERUSER_ID, partners_ids, context=context):
+        for partner in partners.with_context({'show_address': True}):
+            # TODO in master, do not use `escape` but `t-esc` in the qweb template.
             partner_data["partners"].append({
                 'id': partner.id,
-                'name': partner.name,
-                'address': '\n'.join(partner.name_get()[0][1].split('\n')[1:]),
-                'latitude': partner.partner_latitude,
-                'longitude': partner.partner_longitude,
-                })
-
-        # generate the map
+                'name': escape(partner.name),
+                'address': escape('\n'.join(partner.name_get()[0][1].split('\n')[1:])),
+                'latitude': escape(str(partner.partner_latitude)),
+                'longitude': escape(str(partner.partner_longitude)),
+            })
         values = {
             'partner_url': post.get('partner_url'),
             'partner_data': json.dumps(partner_data)

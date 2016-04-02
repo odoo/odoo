@@ -1,29 +1,10 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2013 OpenERP s.a. (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from operator import itemgetter
 from textwrap import dedent
 
-from openerp import tools
+from openerp import tools, SUPERUSER_ID
 from openerp.osv import fields, osv
 
 class board_board(osv.osv):
@@ -49,7 +30,6 @@ class board_board(osv.osv):
             ('value', 'in', refs),
         ], context=context)
         menu_ids = map(itemgetter('res_id'), IrValues.read(cr, uid, irv_ids, ['res_id'], context=context))
-        menu_ids = Menus._filter_visible_menus(cr, uid, menu_ids, context=context)
         menu_names = Menus.name_get(cr, uid, menu_ids, context=context)
         return [dict(id=m[0], name=m[1]) for m in menu_names]
 
@@ -66,8 +46,8 @@ class board_board(osv.osv):
         """
 
         res = {}
-        res = super(board_board, self).fields_view_get(cr, user, view_id, view_type,
-                                                       context, toolbar=toolbar, submenu=submenu)
+        res = super(board_board, self).fields_view_get(cr, user, view_id=view_id, view_type=view_type,
+                                                       context=context, toolbar=toolbar, submenu=submenu)
 
         CustView = self.pool.get('ir.ui.view.custom')
         vids = CustView.search(cr, user, [('user_id', '=', user), ('ref_id', '=', view_id)], context=context)
@@ -97,83 +77,3 @@ class board_board(osv.osv):
 
         archnode = etree.fromstring(encode(arch))
         return etree.tostring(remove_unauthorized_children(archnode), pretty_print=True)
-
-
-class board_create(osv.osv_memory):
-
-    def board_create(self, cr, uid, ids, context=None):
-        assert len(ids) == 1
-        this = self.browse(cr, uid, ids[0], context=context)
-
-        view_arch = dedent("""<?xml version="1.0"?>
-            <form string="%s" version="7.0">
-            <board style="2-1">
-                <column/>
-                <column/>
-            </board>
-            </form>
-        """.strip() % (this.name,))
-
-        view_id = self.pool.get('ir.ui.view').create(cr, uid, {
-            'name': this.name,
-            'model': 'board.board',
-            'priority': 16,
-            'type': 'form',
-            'arch': view_arch,
-        }, context=context)
-
-        action_id = self.pool.get('ir.actions.act_window').create(cr, uid, {
-            'name': this.name,
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'board.board',
-            'usage': 'menu',
-            'view_id': view_id,
-            'help': dedent('''<div class="oe_empty_custom_dashboard">
-              <p>
-                <b>This dashboard is empty.</b>
-              </p><p>
-                To add the first report into this dashboard, go to any
-                menu, switch to list or graph view, and click <i>'Add to
-                Dashboard'</i> in the extended search options.
-              </p><p>
-                You can filter and group data before inserting into the
-                dashboard using the search options.
-              </p>
-          </div>
-            ''')
-        }, context=context)
-
-        menu_id = self.pool.get('ir.ui.menu').create(cr, uid, {
-            'name': this.name,
-            'parent_id': this.menu_parent_id.id,
-            'action': 'ir.actions.act_window,%s' % (action_id,)
-        }, context=context)
-
-        self.pool.get('board.board')._clear_list_cache()
-
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'reload',
-            'params': {
-                'menu_id': menu_id
-            },
-        }
-
-    def _default_menu_parent_id(self, cr, uid, context=None):
-        _, menu_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'menu_reporting_dashboard')
-        return menu_id
-
-    _name = "board.create"
-    _description = "Board Creation"
-
-    _columns = {
-        'name': fields.char('Board Name', size=64, required=True),
-        'menu_parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', required=True),
-    }
-
-    _defaults = {
-        'menu_parent_id': _default_menu_parent_id,
-    }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

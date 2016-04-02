@@ -7,9 +7,11 @@
             <field name="model">gamification.badge</field>
             <field name="inherit_id" ref="gamification.badge_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@class='oe_right oe_button_box']" position="inside">
-                    <button string="Granted Employees" type="object" name="get_granted_employees" attrs="{'invisible': [('stat_count','=',0)]}" />
-                </xpath>
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" type="object" name="get_granted_employees" attrs="{'invisible': [('stat_count','=',0)]}" icon="fa-user">
+                        <field name="granted_employees_count" string="Granted" widget="statinfo"/>
+                    </button>
+                </div>
             </field>
         </record>
 
@@ -21,7 +23,7 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
 
-                <xpath expr="//page[@string='Public Information']" position="before">
+                <xpath expr="//page[@name='public']" position="after">
                     <page string="Received Badges" attrs="{'invisible': [('user_id', '=', False)]}">
                         <field name="has_badges" invisible="1"/>
                         <button string="Grant a Badge" type="action" name="%(action_reward_wizard)d"/> to reward this employee for a good action
@@ -33,11 +35,6 @@
                             </p>
                         </div>
                         <field name="badge_ids" widget="many2many_kanban" />
-                    </page>
-                </xpath>
-                <xpath expr="//page[@string='Public Information']" position="after">
-                    <page string="Goals">
-                        <field name="goal_ids" widget="many2many_kanban" />
                     </page>
                 </xpath>
 
@@ -94,7 +91,7 @@
             <field name="view_id" ref="gamification.challenge_form_view"/>
         </record>
 
-        <menuitem id="menu_hr_gamification" parent="hr.menu_hr_root" name="Engagement" sequence="40"/>
+        <menuitem id="menu_hr_gamification" parent="hr.menu_hr_root" name="Challenges" sequence="40"/>
 
         <menuitem id="gamification_badge_menu_hr" parent="menu_hr_gamification" action="gamification.badge_list_action" />
         <menuitem id="gamification_challenge_menu_hr" parent="menu_hr_gamification" action="challenge_list_action2" groups="base.group_hr_user"/>

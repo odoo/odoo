@@ -4,6 +4,7 @@
     'name': 'Advanced Events',
     'category': 'Website',
     'summary': 'Sponsors, Tracks, Agenda, Event News',
+    'website': 'https://www.odoo.com/page/events',
     'version': '1.0',
     'description': """
 Online Advanced Events
@@ -17,12 +18,12 @@ Adds support for:
 - agenda
 - call for proposals
         """,
-    'author': 'OpenERP SA',
-    'depends': ['website_event', 'website_blog'],
+    'depends': ['website_event'],
     'data': [
         'data/event_data.xml',
         'views/website_event.xml',
         'views/event_backend.xml',
+        'data/event_track_tip_data.xml',
         'security/ir.model.access.csv',
         'security/event.xml',
     ],

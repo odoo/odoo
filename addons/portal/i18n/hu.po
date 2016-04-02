@@ -1,291 +1,61 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * portal
+# 
+# Translators:
+# Kris Krnacs, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-02-09 14:01+0000\n"
-"Last-Translator: krnkris <Unknown>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-09-19 16:42+0000\n"
+"Last-Translator: Kris Krnacs\n"
+"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:45+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid "Mako"
-msgstr "Mako"
-
-#. module: portal
-#: code:addons/portal/wizard/share_wizard.py:50
-#, python-format
-msgid "Please select at least one user to share with"
-msgstr "Kérem válasszon legalább egy felhasználót akivel megosztja"
-
-#. module: portal
-#: view:portal.wizard:0
+#: model:mail.template,body_html:portal.mail_template_data_portal_welcome
 msgid ""
-"Select which contacts should belong to the portal in the list below.\n"
-"                        The email address of each selected contact must be "
-"valid and unique.\n"
-"                        If necessary, you can fix any contact's email "
-"address directly in the list."
-msgstr ""
-"Válassza ki, hogy melyik felhasználónak kell hozzátartoznia az alábbi listán "
-"felsorolt portálhoz.\n"
-"                        Minden kiválasztott kapcsolathoz tartozó e-mailnek "
-"érvényesnek és egyedinek kell lennie.\n"
-"                        Ha szükséges, kijavíthatja a kapcsolatok e-mail "
-"címeit a listában."
-
-#. module: portal
-#: model:mail.group,name:portal.company_jobs
-msgid "Company Jobs"
-msgstr "Vállalati feladatok"
-
-#. module: portal
-#: view:portal.payment.acquirer:0
-msgid "amount: the total amount to pay, as a float"
-msgstr "összeg: a teljes fizetendő mennyiség, mind összegezve"
-
-#. module: portal
-#: view:portal.wizard.user:0
-msgid "Contacts"
-msgstr "Kapcsolatok"
-
-#. module: portal
-#: view:share.wizard:0
-#: field:share.wizard,group_ids:0
-msgid "Existing groups"
-msgstr "Már létező csoportok"
-
-#. module: portal
-#: view:res.groups:0
-msgid "Portal Groups"
-msgstr "Portál csoportok"
-
-#. module: portal
-#: field:portal.wizard,welcome_message:0
-msgid "Invitation Message"
-msgstr "Meghívó szövege"
-
-#. module: portal
-#: view:res.groups:0
-msgid "Non-Portal Groups"
-msgstr "Nem portál csoportok"
-
-#. module: portal
-#: code:addons/portal/wizard/share_wizard.py:54
-#, python-format
-msgid "Please select at least one group to share with"
-msgstr "Kérem legalább egy csoport kiválasztását akivel megosztja"
-
-#. module: portal
-#: view:share.wizard:0
-msgid "Details"
-msgstr "Részletek"
-
-#. module: portal
-#: model:ir.ui.menu,name:portal.portal_orders
-msgid "Quotations and Sales Orders"
-msgstr "Árajánlatok és vevői megrendelések"
-
-#. module: portal
-#: view:portal.payment.acquirer:0
-msgid "reference: the reference number of the document to pay"
-msgstr "referencia: a fizetni kívánt dokumentum referencia száma"
-
-#. module: portal
-#: help:portal.payment.acquirer,visible:0
-msgid ""
-"Make this payment acquirer available in portal forms (Customer invoices, "
-"etc.)"
-msgstr ""
-"Ez a fizetési igénylő legyen elérhető a portál űrlapokon (Vevők számlái, "
-"stb.)"
-
-#. module: portal
-#: model:ir.model,name:portal.model_share_wizard
-msgid "Share Wizard"
-msgstr "Megosztás varázsló"
-
-#. module: portal
-#: field:portal.wizard.user,email:0
-msgid "Email"
-msgstr "E-mail"
-
-#. module: portal
-#: model:ir.actions.client,help:portal.action_news
-msgid ""
-"<p>\n"
-"                    Youd don't have unread company's news.\n"
+"\n"
+"            \t<p>\n"
+"                    Dear ${object.user_id.name or ''},\n"
 "                </p>\n"
-"            "
-msgstr ""
-"<p>\n"
-"                    Önnek nincsenek olvasatlan hírei a vállalattól.\n"
+"                <p>\n"
+"                    You have been given access to ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n"
 "                </p>\n"
-"            "
-
-#. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:194
-#, python-format
-msgid ""
-"You must have an email address in your User Preferences to send emails."
-msgstr ""
-"Kell lennie egy e-mail címének a felhasználói űrlapján az e-mail küldéséhez."
-
-#. module: portal
-#: model:ir.actions.client,name:portal.action_jobs
-#: model:ir.ui.menu,name:portal.portal_jobs
-msgid "Jobs"
-msgstr "Feladatok"
-
-#. module: portal
-#: field:portal.wizard,user_ids:0
-msgid "Users"
-msgstr "Felhasználók"
-
-#. module: portal
-#: code:addons/portal/acquirer.py:82
-#, python-format
-msgid "Pay safely online"
-msgstr "Fizzesen biztonságosan online"
-
-#. module: portal
-#: code:addons/portal/acquirer.py:77
-#, python-format
-msgid "No online payment acquirers configured"
-msgstr "Nincs online fizetési igénylő beállítva"
-
-#. module: portal
-#: view:portal.payment.acquirer:0
-msgid ""
-"kind: the kind of document on which the payment form is rendered (translated "
-"to user language, e.g. \"Invoice\")"
-msgstr ""
-"fajta: a dokumentum fajtája amelyen a fizetés űrlap elő lesz terjesztve "
-"(lefordítva a felhasználó nyelvére, stb. \"Számla\")"
-
-#. module: portal
-#: help:portal.wizard,portal_id:0
-msgid "The portal that users can be added in or removed from."
-msgstr ""
-"A portál amihez a felhasználók hozzáadhatók vagy onnan eltávolíthatók"
-
-#. module: portal
-#: code:addons/portal/wizard/share_wizard.py:38
-#, python-format
-msgid "Users you already shared with"
-msgstr "Felhasználók akikkel már megosztott"
-
-#. module: portal
-#: model:ir.actions.client,help:portal.action_jobs
-msgid ""
-"<p>\n"
-"                    Youd don't have unread job offers.\n"
+"                <p>\n"
+"                    Your login account data is:\n"
 "                </p>\n"
-"            "
-msgstr ""
-"<p>\n"
-"                    Nincsenek olvasatlan feladat ajánlatai.\n"
+"                <ul>\n"
+"                    <li>Username: ${object.user_id.login or ''}</li>\n"
+"                </ul>\n"
+"                <ul>\n"
+"                    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"                </ul>\n"
+"                <ul>\n"
+"                \t<li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"                </ul>\n"
+"                <p>\n"
+"                \tYou can set or change your password via the following url:\n"
 "                </p>\n"
+"                <ul>\n"
+"                    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"                </ul>\n"
+"                <p>\n"
+"                \t${object.wizard_id.welcome_message or ''}\n"
+"                </p>\n"
+"                <p>---<br />\n"
+"                    Odoo - Open Source Business Applications<br />\n"
+"                    http://www.odoo.com<br />\n"
+"                </p>\n"
+"            \n"
 "            "
-
-#. module: portal
-#: view:portal.payment.acquirer:0
-msgid ""
-", so it may use Mako expressions.\n"
-"                                The Mako evaluation context provides:"
-msgstr ""
-", így talán Mako kifejezéseket használ.\n"
-"                                A Mako adja az összefüggés értékelést:"
-
-#. module: portal
-#: model:ir.ui.menu,name:portal.portal_menu
-#: field:portal.wizard,portal_id:0
-#: field:res.groups,is_portal:0
-#: model:res.groups,name:portal.group_portal
-msgid "Portal"
-msgstr "Portál"
-
-#. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:34
-#, python-format
-msgid "Your OpenERP account at %(company)s"
-msgstr "Az Ön OpenERP számlája a %(company)s vállalthoz"
-
-#. module: portal
-#: model:res.groups,name:portal.group_anonymous
-msgid "Anonymous"
-msgstr "Névtelenül"
-
-#. module: portal
-#: field:portal.wizard.user,in_portal:0
-msgid "In Portal"
-msgstr "Portálon"
-
-#. module: portal
-#: model:ir.actions.client,name:portal.action_news
-#: model:ir.ui.menu,name:portal.portal_company_news
-msgid "News"
-msgstr "Hírek"
-
-#. module: portal
-#: model:ir.ui.menu,name:portal.portal_after_sales
-msgid "After Sale Services"
-msgstr "Értékesítés utáni szolgáltatások"
-
-#. module: portal
-#: model:res.groups,comment:portal.group_portal
-msgid ""
-"Portal members have specific access rights (such as record rules and "
-"restricted menus).\n"
-"                They usually do not belong to the usual OpenERP groups."
-msgstr ""
-"Portál tagoknak különböző hozzáférési joguk van (mint szabályok beiktatása "
-"és menük korlátozása).\n"
-"                Általában nem függnek, tartoznak az alap OpenERP "
-"csoportoktól."
-
-#. module: portal
-#: model:ir.actions.act_window,name:portal.action_acquirer_list
-#: view:portal.payment.acquirer:0
-msgid "Payment Acquirers"
-msgstr "Fizetés kézhezvevői"
-
-#. module: portal
-#: model:ir.ui.menu,name:portal.portal_projects
-msgid "Projects"
-msgstr "Projektek"
-
-#. module: portal
-#: model:ir.actions.client,name:portal.action_mail_inbox_feeds_portal
-#: model:ir.ui.menu,name:portal.portal_inbox
-msgid "Inbox"
-msgstr "Beérkezett üzenetek"
-
-#. module: portal
-#: view:share.wizard:0
-#: field:share.wizard,user_ids:0
-msgid "Existing users"
-msgstr "Meglévő felhasználók"
-
-#. module: portal
-#: field:portal.wizard.user,wizard_id:0
-msgid "Wizard"
-msgstr "Varázsló"
-
-#. module: portal
-#: field:portal.payment.acquirer,name:0
-msgid "Name"
-msgstr "Név"
+msgstr "\n            \t<p>\n                    Tisztelt ${object.user_id.name or ''},\n                </p>\n                <p>\n                    Hozzáférést kapott ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n                </p>\n                <p>\n                    Belépési fiók adatai:\n                </p>\n                <ul>\n                    <li>Felhasználó név: ${object.user_id.login or ''}</li>\n                </ul>\n                <ul>\n                    <li>Portál: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n                </ul>\n                <ul>\n                \t<li>Adatbázis: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n                </ul>\n                <p>\n                \tBeállíthatja vagy megváltoztathatja a jelszavát a következő url elérési úton:\n                </p>\n                <ul>\n                    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n                </ul>\n                <p>\n                \t${object.wizard_id.welcome_message or ''}\n                </p>\n                <p>---<br />\n                    Odoo - Open Source Business Applications - Nyílt forráskódú üzleti alkalmazás<br />\n                    http://www.odoo.com<br />\n                </p>\n            \n            "
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_groups
@@ -293,208 +63,125 @@ msgid "Access Groups"
 msgstr "Csoportok hozzáférése"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid "uid: the current user id"
-msgstr "uid: the current user id"
+#: model:ir.ui.menu,name:portal.portal_after_sales
+msgid "After Sale Services"
+msgstr "Értékesítés utáni szolgáltatások"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid ""
-"quote(): a method to quote special string character to make them suitable "
-"for inclusion in a URL"
-msgstr ""
-"idézet(): egy mód, mellyel egy speciális karakter láncot be lehet írni egy "
-"URL névbe"
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "Apply"
+msgstr "Alkalmaz"
 
 #. module: portal
-#: help:res.groups,is_portal:0
+#: model:ir.ui.menu,name:portal.portal_orders
+msgid "Billing"
+msgstr "Számlázás"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "Cancel"
+msgstr "Megszakítás"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_partner_id
+msgid "Contact"
+msgstr "Kapcsolattartó"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_user_tree_view
+msgid "Contacts"
+msgstr "Kapcsolattartók"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_create_uid
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_create_uid
+msgid "Created by"
+msgstr "Készítette"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_create_date
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_create_date
+msgid "Created on"
+msgstr "Létrehozás dátuma"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_display_name
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_display_name
+msgid "Display Name"
+msgstr "Név megjelenítése"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
+msgid "Email"
+msgstr "Email"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_id
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_id
+msgid "ID"
+msgstr "ID"
+
+#. module: portal
+#: model:ir.model.fields,help:portal.field_res_groups_is_portal
 msgid "If checked, this group is usable as a portal."
 msgstr "Ha bejelölt, akkor a csoport portálként is használható."
 
 #. module: portal
-#: field:portal.payment.acquirer,form_template:0
-msgid "Payment form template (HTML)"
-msgstr "Fizetés sablonból (HTML)"
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_in_portal
+msgid "In Portal"
+msgstr "Portálon"
 
 #. module: portal
-#: field:portal.wizard.user,partner_id:0
-msgid "Contact"
-msgstr "Kapcsolat"
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_welcome_message
+msgid "Invitation Message"
+msgstr "Meghívó szövege"
 
 #. module: portal
-#: model:ir.model,name:portal.model_mail_mail
-msgid "Outgoing Mails"
-msgstr "Kimenő levelek"
+#: model:ir.model.fields,field_description:portal.field_portal_wizard___last_update
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user___last_update
+msgid "Last Modified on"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:193
-#, python-format
-msgid "Email required"
-msgstr "E-mail szükséges"
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_write_uid
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_write_uid
+msgid "Last Updated by"
+msgstr "Utoljára frissítve, által"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_messages
-msgid "Messaging"
-msgstr "Üzenetküldés"
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_write_date
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_write_date
+msgid "Last Updated on"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: portal
-#: model:res.groups,comment:portal.group_anonymous
-msgid ""
-"Anonymous users have specific access rights (such as record rules and "
-"restricted menus).\n"
-"                They usually do not belong to the usual OpenERP groups."
-msgstr ""
-"Névtelen felhasználóknak különleges hozzáférési joguk van (mint jogosultság "
-"rögzítése és korlátozott menük).\n"
-"                Általában nem függnek az alap OpenERP csoportoktól."
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_user_id
+msgid "Login User"
+msgstr "Bejelentkező felhasználó"
 
 #. module: portal
-#: model:ir.model,name:portal.model_portal_payment_acquirer
-msgid "Online Payment Acquirer"
-msgstr "Online fizetési igénylő"
+#: model:ir.ui.view,arch_db:portal.group_search_view
+msgid "Non-Portal Groups"
+msgstr "Nem portál csoportok"
 
 #. module: portal
-#: model:mail.group,name:portal.company_news_feed
-msgid "Company News"
-msgstr "Vállalati hírek"
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
+#: model:ir.model.fields,field_description:portal.field_res_groups_is_portal
+#: model:ir.ui.menu,name:portal.portal_menu
+msgid "Portal"
+msgstr "Portál"
 
 #. module: portal
-#: code:addons/portal/acquirer.py:76
-#, python-format
-msgid ""
-"You can finish the configuration in the <a href=\"%s\">Bank&Cash settings</a>"
-msgstr ""
-"Befejezheti a beállításokat ebben <a href=\"%s\">Bank&Készpénz "
-"beállítások</a>"
+#: model:ir.actions.act_window,name:portal.partner_wizard_action
+#: model:ir.model,name:portal.model_portal_wizard
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "Portal Access Management"
+msgstr "Portál hozzáférés kezelése"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid "cr: the current database cursor"
-msgstr "cr: a jelenlegi adatbázis kurzor"
-
-#. module: portal
-#: model:ir.actions.client,help:portal.action_mail_inbox_feeds_portal
-msgid ""
-"<p>\n"
-"                    <b>Good Job!</b> Your inbox is empty.\n"
-"                </p><p>\n"
-"                    Your inbox contains private messages or emails sent to "
-"you\n"
-"                    as well as information related to documents or people "
-"you\n"
-"                    follow.\n"
-"                </p>\n"
-"            "
-msgstr ""
-"<p>\n"
-"                    <b>Szép munka!</b> Az ön postafiókja üres.\n"
-"                </p><p>\n"
-"                    A \"Beérkezett üzenetei\" tartalmazzák a privát "
-"üzeneteit vagy e-mailjeit\n"
-"                    továbbá az Ön által nyomon követett dokumentumokhoz vagy "
-"emberekhez\n"
-"                    kapcsolódó információkat.\n"
-"                </p>\n"
-"            "
-
-#. module: portal
-#: view:portal.payment.acquirer:0
-msgid ""
-"object: the document on which the payment form is rendered (usually an "
-"invoice or sales order record)"
-msgstr ""
-"tárgy: a dokumentum melyen a fizetési dokumentum létrehozott (rendszerint "
-"egy számla vagy megrendelés rekord)"
-
-#. module: portal
-#: help:portal.wizard,welcome_message:0
-msgid "This text is included in the email sent to new users of the portal."
-msgstr "Ez a szöveg belekerül a portál új felhasználójához küldött e-mailre."
-
-#. module: portal
-#: model:ir.ui.menu,name:portal.portal_company
-msgid "About Us"
-msgstr "Rólunk"
-
-#. module: portal
-#: view:portal.payment.acquirer:0
-msgid ""
-"currency: the currency record in which the document is issued (e.g. "
-"currency.name could be EUR)"
-msgstr ""
-"Pénznem: a pénznem rekord ami a dokumentumon  használva lett (pl. ezt a "
-"devizát használták EUR)"
-
-#. module: portal
-#: view:portal.payment.acquirer:0
-msgid "Payment Acquirer"
-msgstr "Fizetést kézhezvevő"
-
-#. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:35
-#, python-format
-msgid ""
-"Dear %(name)s,\n"
-"\n"
-"You have been given access to %(portal)s.\n"
-"\n"
-"Your login account data is:\n"
-"Database: %(db)s\n"
-"Username: %(login)s\n"
-"\n"
-"In order to complete the signin process, click on the following url:\n"
-"%(url)s\n"
-"\n"
-"%(welcome_message)s\n"
-"\n"
-"--\n"
-"OpenERP - Open Source Business Applications\n"
-"http://www.openerp.com\n"
-msgstr ""
-"Tisztelt %(name)s,\n"
-"\n"
-"Hozzáférést kapott a %(portal)s.\n"
-"\n"
-"Bejelentkezési adatai a következők:\n"
-"Adatbázis: %(db)s\n"
-"Felhasználó: %(login)s\n"
-"\n"
-"A belépési folyamat teljesítéséhez, a következő elérési útvonalra "
-"kattintson:\n"
-"%(url)s\n"
-"\n"
-"%(welcome_message)s\n"
-"\n"
-"--\n"
-"OpenERP - Open Source Business Applications\n"
-"http://www.openerp.com\n"
-
-#. module: portal
-#: view:portal.wizard:0
-msgid "or"
-msgstr "vagy"
-
-#. module: portal
-#: model:portal.payment.acquirer,form_template:portal.paypal_acquirer
-msgid ""
-"\n"
-"% if object.company_id.paypal_account:\n"
-"<form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\" "
-"target=\"_blank\">\n"
-"  <input type=\"hidden\" name=\"cmd\" value=\"_xclick\"/>\n"
-"  <input type=\"hidden\" name=\"business\" "
-"value=\"${object.company_id.paypal_account}\"/>\n"
-"  <input type=\"hidden\" name=\"item_name\" "
-"value=\"${object.company_id.name} ${kind.title()} ${reference}\"/>\n"
-"  <input type=\"hidden\" name=\"amount\" value=\"${amount}\"/>\n"
-"  <input type=\"hidden\" name=\"currency_code\" "
-"value=\"${currency.name}\"/>\n"
-"  <input type=\"image\" name=\"submit\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
-"</form>\n"
-"% endif\n"
-"            "
-msgstr ""
+#: model:ir.ui.view,arch_db:portal.group_search_view
+msgid "Portal Groups"
+msgstr "Portál csoportok"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
@@ -502,67 +189,78 @@ msgid "Portal User Config"
 msgstr "Portál felhasználó beállítás"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
+#: model:ir.ui.menu,name:portal.portal_projects
+msgid "Projects"
+msgstr "Projektek"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
-"If the template renders to an empty result in a certain context it will be "
-"ignored, as if it was inactive."
-msgstr ""
-"Ha a sablon ürest hoz létre bizonyos összefüggések esetén, akkor el lesz "
-"vetve, mint inaktív."
+"Select which contacts should belong to the portal in the list below.\n"
+"                        The email address of each selected contact must be valid and unique.\n"
+"                        If necessary, you can fix any contact's email address directly in the list."
+msgstr "Válassza ki, hogy melyik felhasználónak kell hozzátartoznia az alábbi listán felsorolt portálhoz.\n                        Minden kiválasztott kapcsolathoz tartozó e-mailnek érvényesnek és egyedinek kell lennie.\n                        Ha szükséges, kijavíthatja a kapcsolatok e-mail címeit a listában."
 
 #. module: portal
-#: field:portal.payment.acquirer,visible:0
-msgid "Visible"
-msgstr "Látható"
-
-#. module: portal
-#: code:addons/portal/wizard/share_wizard.py:39
+#: code:addons/portal/wizard/portal_wizard.py:114
 #, python-format
-msgid "Existing Groups (e.g Portal Groups)"
-msgstr "Létező csoport (pl. Portál csoport)"
+msgid "Several contacts have the same email: "
+msgstr "Egyes ügyfelek ugyanazzal az email-el rendelkeznek: "
 
 #. module: portal
-#: view:portal.wizard:0
-msgid "Cancel"
-msgstr "Mégsem"
+#: code:addons/portal/wizard/portal_wizard.py:111
+#, python-format
+msgid "Some contacts don't have a valid email: "
+msgstr "Egyes ügyfeleknek nincs érvényes email címe: "
 
 #. module: portal
-#: view:portal.wizard:0
-msgid "Apply"
-msgstr "Alkalmaz"
+#: code:addons/portal/wizard/portal_wizard.py:117
+#, python-format
+msgid "Some contacts have the same email as an existing portal user:"
+msgstr "Egyes ügyfelek már létező portál felhasználók email címét tartalmazzák:"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid "ctx: the current context dictionary"
-msgstr "ctx: a jelenlegi összefüggés szótár"
+#: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
+msgid "The portal that users can be added in or removed from."
+msgstr "A portál amihez a felhasználók hozzáadhatók vagy onnan eltávolíthatók"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid ""
-"This is an HTML form template to submit a payment through this acquirer.\n"
-"                                The template will be rendered with"
-msgstr ""
-"Ez egy HTML formátumú sablon az ezen igénylőn keresztül kiadandó "
-"fizetéshez.\n"
-"                                A sablon ezzel lesz elkészítve"
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "This text is included in the email sent to new portal users."
+msgstr "Ez a szöveg hozzá lesz adva az összes új portál felhasználónak elküldött leveléhez."
 
 #. module: portal
-#: code:addons/portal/mail_mail.py:42
+#: model:ir.model.fields,help:portal.field_portal_wizard_welcome_message
+msgid "This text is included in the email sent to new users of the portal."
+msgstr "Ez a szöveg belekerül a portál új felhasználójához küldött e-mailre."
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:120
 #, python-format
 msgid ""
-"Access your personal documents through <a href=\"%s\">our Customer Portal</a>"
-msgstr ""
-"A személyes dokumentum elérése ezen keresztül <a href=\"%s\">a mi Vevő "
-"Portálunk</a>"
+"To resolve this error, you can: \n"
+"- Correct the emails of the relevant contacts\n"
+"- Grant access only to contacts with unique emails"
+msgstr "Ennek a hibának az elhárításához, ezt teheti: \n- Javítsa ki az aktuális ügyfelek email címeit\n- Csak az egyéni email címekkel rendelkező ügyfeleknek engedélyezze a hozzáférést"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid "Form Template"
-msgstr "Sablon űrlap"
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_ids
+msgid "Users"
+msgstr "Felhasználók"
 
 #. module: portal
-#: model:ir.actions.act_window,name:portal.partner_wizard_action
-#: model:ir.model,name:portal.model_portal_wizard
-#: view:portal.wizard:0
-msgid "Portal Access Management"
-msgstr "Portál hozzáférés kezelése"
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_wizard_id
+msgid "Wizard"
+msgstr "Varázsló"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:179
+#, python-format
+msgid ""
+"You must have an email address in your User Preferences to send emails."
+msgstr "Kell lennie egy e-mail címének a felhasználói űrlapján az e-mail küldéséhez."
+
+#. module: portal
+#: model:mail.template,subject:portal.mail_template_data_portal_welcome
+msgid "Your Odoo account at ${user.company_id.name|safe}"
+msgstr "Odoo fiókja itt ${user.company_id.name|safe}"

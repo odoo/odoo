@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010 OpenERP S.A. http://www.openerp.com
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 
@@ -39,7 +21,7 @@ class Query(object):
       - etc.
     """
 
-    def __init__(self, tables=None, where_clause=None, where_clause_params=None, joins=None):
+    def __init__(self, tables=None, where_clause=None, where_clause_params=None, joins=None, extras=None):
 
         # holds the list of tables joined using default JOIN.
         # the table names are stored double-quoted (backwards compatibility)
@@ -67,6 +49,21 @@ class Query(object):
         #                                 LEFT JOIN "table_c" ON ("table_a"."table_a_col2" = "table_c"."table_c_col")
         self.joins = joins or {}
 
+        # holds extra conditions for table joins that should not be in the where
+        # clause but in the join condition itself. The dict is used as follows:
+        #
+        #   self.extras = {
+        #       ('table_a', ('table_b', 'table_a_col1', 'table_b_col', 'LEFT JOIN')):
+        #           ('"table_b"."table_b_col3" = %s', [42])
+        #   }
+        #
+        # which should lead to the following SQL:
+        #
+        #   SELECT ... FROM "table_a"
+        #   LEFT JOIN "table_b" ON ("table_a"."table_a_col1" = "table_b"."table_b_col" AND "table_b"."table_b_col3" = 42)
+        #   ...
+        self.extras = extras or {}
+
     def _get_table_aliases(self):
         from openerp.osv.expression import get_alias_from_query
         return [get_alias_from_query(from_statement)[1] for from_statement in self.tables]
@@ -79,7 +76,7 @@ class Query(object):
             mapping[statement] = table
         return mapping
 
-    def add_join(self, connection, implicit=True, outer=False):
+    def add_join(self, connection, implicit=True, outer=False, extra=None, extra_params=[]):
         """ Join a destination table to the current table.
 
             :param implicit: False if the join is an explicit join. This allows
@@ -87,7 +84,7 @@ class Query(object):
                 OpenERP 7.0. It therefore adds the JOIN specified in ``connection``
                 If True, the join is done implicitely, by adding the table alias
                 in the from clause and the join condition in the where clause
-                of the query. Implicit joins do not handle outer parameter.
+                of the query. Implicit joins do not handle outer, extra, extra_params parameters.
             :param connection: a tuple ``(lhs, table, lhs_col, col, link)``.
                 The join corresponds to the SQL equivalent of::
 
@@ -102,6 +99,14 @@ class Query(object):
                       columns so it would not be correct (e.g. for
                       ``_inherits`` or when a domain criterion explicitly
                       adds filtering)
+
+            :param extra: A string with the extra join condition (SQL), or None.
+                This is used to provide an additional condition to the join
+                clause that cannot be added in the where clause (e.g., for LEFT
+                JOIN concerns). The condition string should refer to the table
+                aliases as "{lhs}" and "{rhs}".
+
+            :param extra_params: a list of parameters for the `extra` condition.
         """
         from openerp.osv.expression import generate_table_alias
         (lhs, table, lhs_col, col, link) = connection
@@ -125,34 +130,45 @@ class Query(object):
             else:
                 # add JOIN
                 self.tables.append(alias_statement)
-                self.joins.setdefault(lhs, []).append((alias, lhs_col, col, outer and 'LEFT JOIN' or 'JOIN'))
+                join_tuple = (alias, lhs_col, col, outer and 'LEFT JOIN' or 'JOIN')
+                self.joins.setdefault(lhs, []).append(join_tuple)
+                if extra or extra_params:
+                    extra = (extra or '').format(lhs=lhs, rhs=alias)
+                    self.extras[(lhs, join_tuple)] = (extra, extra_params)
             return alias, alias_statement
 
     def get_sql(self):
         """ Returns (query_from, query_where, query_params). """
         from openerp.osv.expression import get_alias_from_query
-        query_from = ''
         tables_to_process = list(self.tables)
         alias_mapping = self._get_alias_mapping()
+        from_clause = []
+        from_params = []
 
-        def add_joins_for_table(table, query_from):
-            for (dest_table, lhs_col, col, join) in self.joins.get(table, []):
-                tables_to_process.remove(alias_mapping[dest_table])
-                query_from += ' %s %s ON ("%s"."%s" = "%s"."%s")' % \
-                    (join, alias_mapping[dest_table], table, lhs_col, dest_table, col)
-                query_from = add_joins_for_table(dest_table, query_from)
-            return query_from
+        def add_joins_for_table(lhs):
+            for (rhs, lhs_col, rhs_col, join) in self.joins.get(lhs, []):
+                tables_to_process.remove(alias_mapping[rhs])
+                from_clause.append(' %s %s ON ("%s"."%s" = "%s"."%s"' % \
+                    (join, alias_mapping[rhs], lhs, lhs_col, rhs, rhs_col))
+                extra = self.extras.get((lhs, (rhs, lhs_col, rhs_col, join)))
+                if extra:
+                    if extra[0]:
+                        from_clause.append(' AND ')
+                        from_clause.append(extra[0])
+                    if extra[1]:
+                        from_params.extend(extra[1])
+                from_clause.append(')')
+                add_joins_for_table(rhs)
 
-        for table in tables_to_process:
-            query_from += table
+        for pos, table in enumerate(tables_to_process):
+            if pos > 0:
+                from_clause.append(',')
+            from_clause.append(table)
             table_alias = get_alias_from_query(table)[1]
             if table_alias in self.joins:
-                query_from = add_joins_for_table(table_alias, query_from)
-            query_from += ','
-        query_from = query_from[:-1]  # drop last comma
-        return query_from, " AND ".join(self.where_clause), self.where_clause_params
+                add_joins_for_table(table_alias)
+
+        return "".join(from_clause), " AND ".join(self.where_clause), from_params + self.where_clause_params
 
     def __str__(self):
         return '<osv.Query: "SELECT ... FROM %s WHERE %s" with params: %r>' % self.get_sql()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

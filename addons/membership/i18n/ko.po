@@ -1,132 +1,489 @@
-# Korean translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * membership
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2009-09-08 12:57+0000\n"
-"Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
-"Language-Team: Korean <ko@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-08-25 10:19+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:13+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: membership
-#: model:process.transition,name:membership.process_transition_invoicetoassociate0
-msgid "invoice to associate"
-msgstr "연관지을 인보이스"
+#: model:ir.model.fields,field_description:membership.field_report_membership_num_invoiced
+msgid "# Invoiced"
+msgstr "# 송장 발행"
 
 #. module: membership
-#: model:process.process,name:membership.process_process_membershipprocess0
-msgid "Membership Process"
-msgstr "멤버십 프로세스"
+#: model:ir.model.fields,field_description:membership.field_report_membership_num_paid
+msgid "# Paid"
+msgstr "# 지불"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership_num_waiting
+msgid "# Waiting"
+msgstr "# 대기"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_res_partner_associate_member
+msgid ""
+"A member with whom you want to associate your membership.It will consider "
+"the membership state of the associated member."
+msgstr "귀하의 멤버십에 연결하고자 하는 회원. 관련된 회원의 멤버십 상태를 고려해야 합니다."
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_line
+msgid "Account Invoice line"
+msgstr "계정 송장 명세"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.membership_products_form
+msgid "Add a description..."
+msgstr "설명 추가..."
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "All Members"
+msgstr "모든 회원"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "All non Members"
+msgstr "모든 비 회원"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_membership_membership_line_member_price
+msgid "Amount for the membership"
+msgstr "회원가"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership_associate_member_id
+#: model:ir.model.fields,field_description:membership.field_res_partner_associate_member
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Associate Member"
+msgstr "준회원"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Associated Partner"
+msgstr "관련 파트너"
+
+#. module: membership
+#: model:product.product,name:membership.membership_2
+#: model:product.template,name:membership.membership_2_product_template
+msgid "Basic Membership"
+msgstr "기본 회원권"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.view_partner_form
+msgid "Buy Membership"
+msgstr "회원권 구매"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.view_membership_invoice_view
+msgid "Cancel"
+msgstr "취소"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_res_partner_membership_cancel
+msgid "Cancel Membership Date"
+msgstr "멤버십 취소 날짜"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_cancel
+msgid "Cancel date"
+msgstr "취소 날짜"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
-msgid "Paid Member"
-msgstr "결제한 멤버"
+msgid "Cancelled Member"
+msgstr "취소 회원"
 
 #. module: membership
-#: view:report.membership:0
-msgid "This will display waiting, invoiced and total pending columns"
+#: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
+msgid "Category"
+msgstr "분류"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_product_template_membership
+msgid "Check if the product is eligible for membership."
+msgstr "멤버십에 적격한 제품인지 아닌지 확인하십시오."
+
+#. module: membership
+#: model:ir.actions.act_window,help:membership.action_membership_members
+msgid "Click to add a new Member"
 msgstr ""
 
 #. module: membership
-#: view:report.membership:0
-#: view:res.partner:0
-msgid "Group By..."
-msgstr ""
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line_company_id
+#: model:ir.model.fields,field_description:membership.field_report_membership_company_id
+#: model:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Company"
+msgstr "회사"
 
 #. module: membership
-#: field:report.membership,num_paid:0
-msgid "# Paid"
-msgstr ""
+#: model:ir.ui.view,arch_db:membership.view_partner_tree
+msgid "Contacts"
+msgstr "연락처"
 
 #. module: membership
-#: field:report.membership,tot_earned:0
+#: model:ir.model.fields,field_description:membership.field_membership_invoice_create_uid
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line_create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice_create_date
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line_create_date
+msgid "Created on"
+msgstr "작성일"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership_membership_state
+#: model:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Current Membership State"
+msgstr "현재 멤버십 상태"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_res_partner_membership_state
+msgid "Current Membership Status"
+msgstr "현재 멤버십 상태"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Customers"
+msgstr "고객"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_product_template_membership_date_from
+#: model:ir.model.fields,help:membership.field_res_partner_membership_start
+msgid "Date from which membership becomes active."
+msgstr "멤버십이 활성화 되는 날짜"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_membership_membership_line_date
+msgid "Date on which member has joined the membership"
+msgstr "회원이 멤버십에 가입한 날짜"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_res_partner_membership_cancel
+msgid "Date on which membership has been cancelled"
+msgstr "멤버십을 취소한 날짜"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_product_template_membership_date_to
+#: model:ir.model.fields,help:membership.field_res_partner_membership_stop
+msgid "Date until which membership remains active."
+msgstr "멤버십 만기까지의 날짜"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice_display_name
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line_display_name
+#: model:ir.model.fields,field_description:membership.field_report_membership_display_name
+msgid "Display Name"
+msgstr "표시 이름"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership_tot_earned
 msgid "Earned Amount"
-msgstr ""
+msgstr "적립 금액"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership_date_to
+msgid "End Date"
+msgstr "마감일"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "End Membership Date"
+msgstr "멤버십 종료일"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "End Month"
+msgstr "종료달"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_report_membership_date_to
+msgid "End membership date"
+msgstr "멤버십 종료일"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Ending Month Of Membership"
+msgstr "멤버십 종료달"
+
+#. module: membership
+#: sql_constraint:product.template:0
+msgid "Error ! Ending Date cannot be set before Beginning Date."
+msgstr "오류! 시작일 전에 마감일을 설정할 수 없습니다."
+
+#. module: membership
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr "오류! 재귀 연결된 회원을 생성할 수 없습니다."
+
+#. module: membership
+#: constraint:membership.membership_line:0
+msgid "Error, this membership product is out of date"
+msgstr "오류! 이 멤버십 상품은 날짜가 지났습니다."
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Forecast"
+msgstr "예상"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_res_partner_free_member
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Free Member"
+msgstr "무료 회원"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_from
+msgid "From"
+msgstr "시작일"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
+msgid "From Month"
+msgstr "월"
+
+#. module: membership
+#: model:product.product,name:membership.membership_0
+#: model:product.template,name:membership.membership_0_product_template
+msgid "Gold Membership"
+msgstr "골드 멤버십"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.view_report_membership_search
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Group By"
+msgstr "그룹화"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
+msgid "Group by..."
+msgstr "그룹화..."
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice_id
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line_id
+#: model:ir.model.fields,field_description:membership.field_report_membership_id
+msgid "ID"
+msgstr "ID"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
+msgid "Inactive"
+msgstr "비활성"
+
+#. module: membership
+#: model:ir.model,name:membership.model_account_invoice
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_id
+msgid "Invoice"
+msgstr "송장"
+
+#. module: membership
+#: model:ir.model,name:membership.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "송장 명세"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_invoice_view
+#: model:ir.ui.view,arch_db:membership.view_membership_invoice_view
+msgid "Invoice Membership"
+msgstr "송장 멤버십"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Invoiced Member"
+msgstr "송장 회원"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Invoiced/Paid/Free"
+msgstr "송장발행/유료/무료"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_res_partner_membership_state
+msgid ""
+"It indicates the membership state.\n"
+"-Non Member: A partner who has not applied for any membership.\n"
+"-Cancelled Member: A member who has cancelled his membership.\n"
+"-Old Member: A member whose membership date has expired.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Invoiced Member: A member whose invoice has been created.\n"
+"-Paying member: A member who has paid the membership fee."
+msgstr "멤버십 상태를 나타냅니다.\n-비 회원 : 어떤 멤버십에도 해당되지 않는 파트너\n-취소 회원 : 멤버십을 취소한 회원\n-이전 회원 : 멤버십 날짜가 만기된 회원\n-대기 회원 : 송장을 작성하거나 멤버십이 적용된 회원\n-송장 회원 : 송장을 작성한 멤버\n-지불 회원 : 회비를 지불한 회원"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_membership_membership_line_state
+msgid ""
+"It indicates the membership status.\n"
+"                        -Non Member: A member who has not applied for any membership.\n"
+"                        -Cancelled Member: A member who has cancelled his membership.\n"
+"                        -Old Member: A member whose membership date has expired.\n"
+"                        -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"                        -Invoiced Member: A member whose invoice has been created.\n"
+"                        -Paid Member: A member who has paid the membership amount."
+msgstr "멤버십 상태를 나타냅니다.\n                        -비 회원 : 어떤 멤버십에도 해당되지 않는 파트너\n                        -취소 회원 : 멤버십을 취소한 회원\n                        -이전 회원 : 멤버십 날짜가 만기된 회원\n                        -대기 회원 : 송장을 작성헸거나 멤버십이 적용된 회원\n                        -송장 회원 : 송장을 작성한 회원\n                        -지불 회원 : 회비를 지불한 회원"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line_date
+msgid "Join Date"
+msgstr "가입 날짜"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice___last_update
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line___last_update
+#: model:ir.model.fields,field_description:membership.field_report_membership___last_update
+msgid "Last Modified on"
+msgstr "최근 수정"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice_write_uid
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line_write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice_write_date
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line_write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 날짜"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership_partner_id
+msgid "Member"
+msgstr "구성원"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice_member_price
+msgid "Member Price"
+msgstr "회원 가격"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_members
+#: model:ir.ui.menu,name:membership.menu_membership
+#: model:ir.ui.view,arch_db:membership.membership_members_tree
+msgid "Members"
+msgstr "구성원"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_report_membership_tree
+msgid "Members Analysis"
+msgstr "회원 분석"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_invoice_product_id
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line_membership_id
+#: model:ir.model.fields,field_description:membership.field_product_template_membership
+#: model:ir.model.fields,field_description:membership.field_res_partner_member_lines
+#: model:ir.ui.view,arch_db:membership.view_partner_form
+#: model:ir.ui.view,arch_db:membership.view_report_membership_graph1
+#: model:ir.ui.view,arch_db:membership.view_report_membership_pivot
+#: model:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Membership"
+msgstr "멤버십"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_res_partner_membership_amount
+msgid "Membership Amount"
+msgstr "멤버십 금액"
 
 #. module: membership
 #: model:ir.model,name:membership.model_report_membership
 msgid "Membership Analysis"
-msgstr ""
+msgstr "멤버십 분석"
 
 #. module: membership
-#: selection:report.membership,month:0
-msgid "March"
-msgstr ""
+#: model:ir.ui.view,arch_db:membership.membership_products_form
+msgid "Membership Duration"
+msgstr "멤버십 기간"
 
 #. module: membership
-#: model:process.node,note:membership.process_node_setassociation0
-msgid "Set an associate member of partner."
-msgstr "파트너의 연관 멤버로 설정"
-
-#. module: membership
-#: model:process.transition,note:membership.process_transition_invoicetopaid0
-msgid "Invoice is be paid."
-msgstr "인보이스가 결제됨"
-
-#. module: membership
-#: field:membership.membership_line,company_id:0
-#: view:report.membership:0
-#: field:report.membership,company_id:0
-msgid "Company"
-msgstr ""
-
-#. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: field:res.partner,free_member:0
-#: selection:res.partner,membership_state:0
-msgid "Free Member"
-msgstr "자유 멤버"
-
-#. module: membership
-#: view:res.partner:0
-msgid "Ending Date Of Membership"
-msgstr ""
-
-#. module: membership
-#: help:report.membership,date_to:0
-msgid "End membership date"
-msgstr ""
-
-#. module: membership
-#: field:product.product,membership_date_to:0
-#: field:res.partner,membership_stop:0
+#: model:ir.model.fields,field_description:membership.field_product_template_membership_date_to
+#: model:ir.model.fields,field_description:membership.field_res_partner_membership_stop
 msgid "Membership End Date"
-msgstr ""
+msgstr "멤버십 마감일"
 
 #. module: membership
-#: view:report.membership:0
-#: field:report.membership,user_id:0
-#: view:res.partner:0
-msgid "Salesperson"
-msgstr ""
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line_member_price
+#: model:ir.ui.view,arch_db:membership.membership_products_form
+#: model:ir.ui.view,arch_db:membership.membership_products_tree
+msgid "Membership Fee"
+msgstr "멤버십 회비"
 
 #. module: membership
-#: model:process.transition,name:membership.process_transition_waitingtoinvoice0
-msgid "Waiting to invoice"
-msgstr "인보이스 대기"
+#: model:ir.model,name:membership.model_membership_invoice
+#: model:ir.ui.view,arch_db:membership.view_membership_invoice_view
+msgid "Membership Invoice"
+msgstr "멤버십 송장"
 
 #. module: membership
-#: view:report.membership:0
-msgid "This will display paid, old and total earned columns"
-msgstr ""
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Membership Partners"
+msgstr "멤버십 파트너"
 
 #. module: membership
-#: view:res.partner:0
-msgid "Suppliers"
-msgstr ""
+#: model:ir.model.fields,field_description:membership.field_report_membership_membership_id
+#: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
+#: model:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Membership Product"
+msgstr "멤버십 상품"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_products
+#: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
+msgid "Membership Products"
+msgstr "멤버십 상품"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_product_template_membership_date_from
+#: model:ir.model.fields,field_description:membership.field_res_partner_membership_start
+msgid "Membership Start Date"
+msgstr "멤버십 시작일"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Membership State"
+msgstr "멤버십 상태"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line_state
+msgid "Membership Status"
+msgstr "멤버십 상태"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.membership_products_form
+#: model:ir.ui.view,arch_db:membership.membership_products_tree
+msgid "Membership products"
+msgstr "멤버십 상품"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.view_partner_form
+msgid "Memberships"
+msgstr "멤버십"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "Month"
+msgstr "월"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -136,458 +493,15 @@ msgid "Non Member"
 msgstr "비 멤버"
 
 #. module: membership
-#: view:product.product:0
-msgid "Taxes"
-msgstr ""
-
-#. module: membership
-#: view:res.partner:0
-msgid "All Members"
-msgstr ""
-
-#. module: membership
-#: code:addons/membership/membership.py:410
-#: code:addons/membership/membership.py:413
-#, python-format
-msgid "Error!"
-msgstr ""
-
-#. module: membership
-#: model:process.transition,name:membership.process_transition_producttomember0
-msgid "Product to member"
-msgstr "멤버에 대한 상품"
-
-#. module: membership
-#: model:product.template,name:membership.membership_1_product_template
-msgid "Silver Membership"
-msgstr ""
-
-#. module: membership
-#: model:process.node,note:membership.process_node_associatedmember0
-msgid "Member is associated."
-msgstr "멤버가 연관되었습니다."
-
-#. module: membership
-#: field:report.membership,tot_pending:0
-msgid "Pending Amount"
-msgstr ""
-
-#. module: membership
-#: model:process.transition,note:membership.process_transition_associationpartner0
-msgid "Associated partner."
-msgstr "연관 파트너."
-
-#. module: membership
-#: view:res.partner:0
-msgid "Supplier Partners"
-msgstr ""
-
-#. module: membership
-#: field:report.membership,num_invoiced:0
-msgid "# Invoiced"
-msgstr ""
-
-#. module: membership
-#: model:ir.actions.act_window,name:membership.action_report_membership_tree
-#: model:ir.ui.menu,name:membership.menu_report_membership
-msgid "Members Analysis"
-msgstr ""
-
-#. module: membership
-#: view:res.partner:0
-msgid "End Membership Date"
-msgstr ""
-
-#. module: membership
-#: code:addons/membership/membership.py:414
-#, python-format
-msgid "Partner doesn't have an address to make the invoice."
-msgstr ""
-
-#. module: membership
-#: model:ir.model,name:membership.model_res_partner
-#: field:membership.membership_line,partner:0
-msgid "Partner"
-msgstr "파트너"
-
-#. module: membership
-#: model:process.transition,name:membership.process_transition_invoicetopaid0
-msgid "Invoice to paid"
-msgstr "결제할 인보이스"
-
-#. module: membership
-#: view:res.partner:0
-msgid "Customer Partners"
-msgstr ""
-
-#. module: membership
-#: field:membership.membership_line,date_from:0
-msgid "From"
-msgstr ""
-
-#. module: membership
-#: constraint:membership.membership_line:0
-msgid "Error, this membership product is out of date"
-msgstr "에러, 이 멤버십 상품은 날짜가 지났습니다."
-
-#. module: membership
-#: model:process.transition.action,name:membership.process_transition_action_create0
-msgid "Create"
-msgstr "생성"
-
-#. module: membership
-#: model:ir.model,name:membership.model_membership_membership_line
-msgid "Member line"
-msgstr "멤버 라인"
-
-#. module: membership
-#: help:report.membership,date_from:0
-msgid "Start membership date"
-msgstr "멤버십 시작 날짜"
-
-#. module: membership
-#: field:res.partner,membership_cancel:0
-msgid "Cancel Membership Date"
-msgstr ""
-
-#. module: membership
-#: model:process.node,name:membership.process_node_paidmember0
-msgid "Paid member"
-msgstr "결제된 멤버"
-
-#. module: membership
-#: field:report.membership,num_waiting:0
-msgid "# Waiting"
-msgstr ""
-
-#. module: membership
-#: model:ir.actions.act_window,name:membership.action_membership_members
-#: model:ir.ui.menu,name:membership.menu_members
-#: model:ir.ui.menu,name:membership.menu_membership
-#: view:res.partner:0
-msgid "Members"
-msgstr "멤버"
-
-#. module: membership
-#: view:res.partner:0
-msgid "Invoiced/Paid/Free"
-msgstr ""
-
-#. module: membership
-#: model:process.node,note:membership.process_node_invoicedmember0
-msgid "Open invoice."
-msgstr "인보이스 열기"
-
-#. module: membership
-#: selection:report.membership,month:0
-msgid "July"
-msgstr ""
-
-#. module: membership
-#: model:product.template,name:membership.membership_0_product_template
-msgid "Golden Membership"
-msgstr ""
-
-#. module: membership
-#: help:res.partner,associate_member:0
-msgid ""
-"A member with whom you want to associate your membership.It will consider "
-"the membership state of the associated member."
-msgstr ""
-
-#. module: membership
-#: view:product.product:0
-#: view:report.membership:0
-#: field:report.membership,membership_id:0
-msgid "Membership Product"
-msgstr ""
-
-#. module: membership
-#: model:process.transition,note:membership.process_transition_producttomember0
-msgid "Define product for membership."
-msgstr "멤버십을 위한 상품 정의"
-
-#. module: membership
-#: model:process.transition,note:membership.process_transition_invoicetoassociate0
-msgid "Invoiced member may be Associated member."
-msgstr "인보이스된 멤버가 연관 멤버일 수 있습니다."
-
-#. module: membership
-#: help:product.product,membership_date_to:0
-#: help:res.partner,membership_stop:0
-msgid "Date until which membership remains active."
-msgstr ""
-
-#. module: membership
-#: view:product.product:0
-msgid "Membership products"
-msgstr "멤버십 상품"
-
-#. module: membership
-#: field:res.partner,membership_state:0
-msgid "Current Membership Status"
-msgstr ""
-
-#. module: membership
-#: field:membership.membership_line,date:0
-msgid "Join Date"
-msgstr ""
-
-#. module: membership
-#: model:process.node,name:membership.process_node_setassociation0
-msgid "Set association"
-msgstr "연관 설정"
-
-#. module: membership
-#: view:res.partner:0
-msgid " Membership State"
-msgstr ""
-
-#. module: membership
-#: view:res.partner:0
-msgid "Memberships"
-msgstr ""
-
-#. module: membership
-#: model:process.node,note:membership.process_node_paidmember0
-msgid "Membership invoice paid."
-msgstr "결제된 멤버십 인보이스"
-
-#. module: membership
-#: selection:report.membership,month:0
-msgid "September"
-msgstr ""
-
-#. module: membership
-#: selection:report.membership,month:0
-msgid "December"
-msgstr ""
-
-#. module: membership
-#: model:ir.model,name:membership.model_account_invoice_line
-msgid "Invoice Line"
-msgstr ""
-
-#. module: membership
-#: view:report.membership:0
-#: field:report.membership,month:0
-msgid "Month"
-msgstr ""
-
-#. module: membership
-#: view:product.product:0
-msgid "Group by..."
-msgstr ""
-
-#. module: membership
-#: code:addons/membership/membership.py:411
-#, python-format
-msgid "Partner is a free Member."
-msgstr ""
-
-#. module: membership
-#: view:res.partner:0
-msgid "Buy Membership"
-msgstr ""
-
-#. module: membership
-#: field:report.membership,associate_member_id:0
-#: view:res.partner:0
-#: field:res.partner,associate_member:0
-msgid "Associate Member"
-msgstr ""
-
-#. module: membership
-#: help:product.product,membership_date_from:0
-#: help:res.partner,membership_start:0
-msgid "Date from which membership becomes active."
-msgstr ""
-
-#. module: membership
-#: view:report.membership:0
-msgid "Associated Partner"
-msgstr ""
-
-#. module: membership
-#: model:ir.model,name:membership.model_membership_invoice
-#: view:membership.invoice:0
-msgid "Membership Invoice"
-msgstr ""
-
-#. module: membership
-#: model:process.node,note:membership.process_node_membershipproduct0
-msgid "Define membership product."
-msgstr "멤버십 상품 정의"
-
-#. module: membership
-#: view:product.product:0
-msgid "Category"
-msgstr ""
-
-#. module: membership
-#: view:res.partner:0
-msgid "Contacts"
-msgstr ""
-
-#. module: membership
-#: view:report.membership:0
-msgid "Forecast"
-msgstr ""
-
-#. module: membership
-#: field:report.membership,partner_id:0
-msgid "Member"
-msgstr ""
-
-#. module: membership
-#: view:product.product:0
-msgid "Date From"
-msgstr ""
-
-#. module: membership
-#: model:process.node,name:membership.process_node_associatedmember0
-msgid "Associated member"
-msgstr "연관 멤버"
-
-#. module: membership
-#: help:membership.membership_line,date:0
-msgid "Date on which member has joined the membership"
-msgstr ""
-
-#. module: membership
-#: field:membership.membership_line,state:0
-msgid "Membership Status"
-msgstr ""
-
-#. module: membership
-#: view:res.partner:0
-msgid "Customers"
-msgstr ""
-
-#. module: membership
-#: view:membership.invoice:0
-msgid "or"
-msgstr ""
-
-#. module: membership
-#: selection:report.membership,month:0
-msgid "August"
-msgstr ""
-
-#. module: membership
-#: model:ir.actions.act_window,name:membership.action_membership_products
-#: model:ir.ui.menu,name:membership.menu_membership_products
-#: view:product.product:0
-msgid "Membership Products"
-msgstr "멤버십 상품"
-
-#. module: membership
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
-
-#. module: membership
-#: selection:report.membership,month:0
-msgid "June"
-msgstr ""
-
-#. module: membership
-#: help:product.product,membership:0
-msgid "Check if the product is eligible for membership."
-msgstr ""
-
-#. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
-msgid "Invoiced Member"
-msgstr "인보이스된 멤버"
-
-#. module: membership
-#: field:membership.invoice,product_id:0
-#: field:membership.membership_line,membership_id:0
-#: view:product.product:0
-#: field:product.product,membership:0
-#: view:report.membership:0
-#: view:res.partner:0
-#: field:res.partner,member_lines:0
-msgid "Membership"
-msgstr "멤버십"
-
-#. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
-msgid "Waiting Member"
-msgstr "대기 멤버"
-
-#. module: membership
-#: model:process.transition,name:membership.process_transition_associationpartner0
-msgid "Association Partner"
-msgstr "연관 파트너"
-
-#. module: membership
-#: field:report.membership,date_from:0
-#: view:res.partner:0
-msgid "Start Date"
-msgstr ""
-
-#. module: membership
-#: selection:report.membership,month:0
-msgid "November"
-msgstr ""
-
-#. module: membership
-#: selection:report.membership,month:0
-msgid "October"
-msgstr ""
-
-#. module: membership
-#: help:res.partner,membership_state:0
-msgid ""
-"It indicates the membership state.\n"
-"                    -Non Member: A partner who has not applied for any "
-"membership.\n"
-"                    -Cancelled Member: A member who has cancelled his "
-"membership.\n"
-"                    -Old Member: A member whose membership date has "
-"expired.\n"
-"                    -Waiting Member: A member who has applied for the "
-"membership and whose invoice is going to be created.\n"
-"                    -Invoiced Member: A member whose invoice has been "
-"created.\n"
-"                    -Paying member: A member who has paid the membership fee."
-msgstr ""
-
-#. module: membership
-#: selection:report.membership,month:0
-msgid "January"
-msgstr ""
-
-#. module: membership
-#: view:res.partner:0
-msgid "Membership Partners"
-msgstr ""
-
-#. module: membership
-#: field:membership.membership_line,member_price:0
-#: view:product.product:0
-msgid "Membership Fee"
-msgstr ""
-
-#. module: membership
-#: help:res.partner,membership_amount:0
-msgid "The price negotiated by the partner"
-msgstr ""
-
-#. module: membership
-#: model:product.template,name:membership.membership_2_product_template
-msgid "Basic Membership"
-msgstr ""
-
-#. module: membership
-#: view:res.partner:0
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "None/Canceled/Old/Waiting"
+msgstr "없음/취소/이전/대기"
+
+#. module: membership
+#: model:ir.actions.act_window,help:membership.action_membership_members
+msgid ""
+"Odoo helps you easily track all activities related to a member: \n"
+"                 Current Membership Status, Discussions and History of Membership, etc."
 msgstr ""
 
 #. module: membership
@@ -595,321 +509,134 @@ msgstr ""
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Old Member"
-msgstr "옛 멤버"
-
-#. module: membership
-#: field:membership.membership_line,date_to:0
-msgid "To"
-msgstr ""
-
-#. module: membership
-#: view:report.membership:0
-#: field:report.membership,membership_state:0
-msgid "Current Membership State"
-msgstr ""
-
-#. module: membership
-#: help:membership.membership_line,state:0
-msgid ""
-"It indicates the membership status.\n"
-"                        -Non Member: A member who has not applied for any "
-"membership.\n"
-"                        -Cancelled Member: A member who has cancelled his "
-"membership.\n"
-"                        -Old Member: A member whose membership date has "
-"expired.\n"
-"                        -Waiting Member: A member who has applied for the "
-"membership and whose invoice is going to be created.\n"
-"                        -Invoiced Member: A member whose invoice has been "
-"created.\n"
-"                        -Paid Member: A member who has paid the membership "
-"amount."
-msgstr ""
-
-#. module: membership
-#: model:process.transition,note:membership.process_transition_waitingtoinvoice0
-msgid "Draft invoice is now open."
-msgstr "초안 인보이스가 오픈되었습니다."
-
-#. module: membership
-#: view:product.product:0
-msgid "Inactive"
-msgstr ""
-
-#. module: membership
-#: model:ir.model,name:membership.model_account_invoice
-#: field:membership.membership_line,account_invoice_id:0
-msgid "Invoice"
-msgstr ""
-
-#. module: membership
-#: view:membership.invoice:0
-msgid "Cancel"
-msgstr "취소"
-
-#. module: membership
-#: view:res.partner:0
-msgid "All non Members"
-msgstr ""
-
-#. module: membership
-#: field:membership.membership_line,account_invoice_line:0
-msgid "Account Invoice line"
-msgstr "계정 인보이스 라이"
-
-#. module: membership
-#: model:process.node,note:membership.process_node_waitingmember0
-msgid "Draft invoice for membership."
-msgstr "멤버십을 위한 초안 인보이스"
-
-#. module: membership
-#: field:membership.invoice,member_price:0
-msgid "Member Price"
-msgstr "멤버 가격"
-
-#. module: membership
-#: view:product.product:0
-msgid "Membership Duration"
-msgstr ""
-
-#. module: membership
-#: model:ir.model,name:membership.model_product_product
-msgid "Product"
-msgstr ""
-
-#. module: membership
-#: selection:report.membership,month:0
-msgid "May"
-msgstr ""
-
-#. module: membership
-#: field:product.product,membership_date_from:0
-#: field:res.partner,membership_start:0
-msgid "Membership Start Date"
-msgstr ""
-
-#. module: membership
-#: help:res.partner,free_member:0
-msgid "Select if you want to give free membership."
-msgstr ""
-
-#. module: membership
-#: field:res.partner,membership_amount:0
-msgid "Membership Amount"
-msgstr ""
-
-#. module: membership
-#: field:report.membership,date_to:0
-#: view:res.partner:0
-msgid "End Date"
-msgstr ""
-
-#. module: membership
-#: selection:report.membership,month:0
-msgid "February"
-msgstr ""
-
-#. module: membership
-#: model:process.node,name:membership.process_node_invoicedmember0
-msgid "Invoiced member"
-msgstr "인보이스된 멤버"
-
-#. module: membership
-#: selection:report.membership,month:0
-msgid "April"
-msgstr ""
-
-#. module: membership
-#: view:res.partner:0
-msgid "Starting Date Of Membership"
-msgstr ""
-
-#. module: membership
-#: help:res.partner,membership_cancel:0
-msgid "Date on which membership has been cancelled"
-msgstr ""
-
-#. module: membership
-#: field:membership.membership_line,date_cancel:0
-msgid "Cancel date"
-msgstr "취소 날짜"
-
-#. module: membership
-#: model:process.node,name:membership.process_node_waitingmember0
-msgid "Waiting member"
-msgstr "대기 멤버"
-
-#. module: membership
-#: model:ir.actions.act_window,name:membership.action_membership_invoice_view
-#: view:membership.invoice:0
-msgid "Invoice Membership"
-msgstr "인보이스 멤버십"
-
-#. module: membership
-#: model:process.node,name:membership.process_node_membershipproduct0
-msgid "Membership product"
-msgstr "멤버십 상품"
-
-#. module: membership
-#: help:membership.membership_line,member_price:0
-msgid "Amount for the membership"
-msgstr ""
-
-#. module: membership
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "이전 회원"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
-msgid "Cancelled Member"
-msgstr ""
+msgid "Paid Member"
+msgstr "유료 회원"
 
 #. module: membership
-#: view:report.membership:0
-#: field:report.membership,year:0
-msgid "Year"
-msgstr "년도"
+#: model:ir.model,name:membership.model_res_partner
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line_partner
+msgid "Partner"
+msgstr "파트너"
 
 #. module: membership
-#: view:product.product:0
-msgid "Accounting"
-msgstr ""
+#: code:addons/membership/membership.py:351
+#, python-format
+msgid "Partner doesn't have an address to make the invoice."
+msgstr "파트너가 송장을 만들기 위한 주소를 가지고 있지 않습니다."
 
 #. module: membership
-#: view:report.membership:0
+#: code:addons/membership/membership.py:349
+#, python-format
+msgid "Partner is a free Member."
+msgstr "파트너는 무료 회원입니다."
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership_tot_pending
+msgid "Pending Amount"
+msgstr "보류 금액"
+
+#. module: membership
+#: model:ir.model,name:membership.model_product_template
+msgid "Product Template"
+msgstr "제품 양식"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership_quantity
+msgid "Quantity"
+msgstr "수량"
+
+#. module: membership
+#: model:ir.ui.menu,name:membership.menu_report_membership
+msgid "Reports"
+msgstr "보고서"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Revenue Done"
+msgstr "완료 수익"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership_user_id
+#: model:ir.ui.view,arch_db:membership.view_report_membership_search
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Salesperson"
+msgstr "영업사원"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_res_partner_free_member
+msgid "Select if you want to give free membership."
+msgstr "무료 멤버십을 얻고 싶은 경우 선택하십시오."
+
+#. module: membership
+#: model:product.product,name:membership.membership_1
+#: model:product.template,name:membership.membership_1_product_template
+msgid "Silver Membership"
+msgstr "실버 멤버십"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_report_membership_start_date
+msgid "Start Date"
+msgstr "시작일"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Start Month"
+msgstr "시작 월"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Starting Month Of Membership"
+msgstr "멤버십 개시월"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.membership_products_form
+msgid "Taxes"
+msgstr "세금"
+
+#. module: membership
+#: model:ir.model.fields,help:membership.field_res_partner_membership_amount
+msgid "The price negotiated by the partner"
+msgstr "파트너 협상 가격"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.membership_products_form
+msgid "This note will be displayed on quotations..."
+msgstr "이 노트는 견적에 표시됩니다 ..."
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "This will display paid, old and total earned columns"
+msgstr "지불, 이전 그리고 총 적립 열 표시"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.view_report_membership_search
+msgid "This will display waiting, invoiced and total pending columns"
+msgstr "대기, 송장 발행, 그리고 총 보류 열을 표시"
+
+#. module: membership
+#: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_to
+msgid "To"
+msgstr "받는 사람"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
+msgid "Vendors"
+msgstr "공급업체"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Waiting Member"
+msgstr "대기 회원"
+
+#. module: membership
+#: model:ir.model,name:membership.model_membership_membership_line
+msgid "membership.membership_line"
 msgstr ""
-
-#~ msgid "Currency"
-#~ msgstr "통화"
-
-#~ msgid "Partners"
-#~ msgstr "파트너"
-
-#~ msgid "Free members"
-#~ msgstr "자유 멤버"
-
-#~ msgid "Date from"
-#~ msgstr "시작 날짜"
-
-#~ msgid "Associate member"
-#~ msgstr "연관 멤버"
-
-#~ msgid "Error ! You can not create recursive accounts."
-#~ msgstr "에러! 재귀적 계정을 생성할 수는 없습니다."
-
-#~ msgid "Error: BVR reference is required."
-#~ msgstr "에러: BVR 참조가 필요합니다."
-
-#~ msgid "Date to"
-#~ msgstr "종료 날짜"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "에러!"
-
-#~ msgid "State"
-#~ msgstr "상태"
-
-#~ msgid "Confirm"
-#~ msgstr "확정"
-
-#~ msgid "Configuration"
-#~ msgstr "구성"
-
-#~ msgid "Membership by Years"
-#~ msgstr "년도별 멤버십"
-
-#~ msgid "Reporting"
-#~ msgstr "리포팅"
-
-#~ msgid "Membership Product - 1"
-#~ msgstr "멤버십 상품 - 1"
-
-#~ msgid "Member Sale Pricelist"
-#~ msgstr "멤버 판매 가격리스트"
-
-#~ msgid "Canceled"
-#~ msgstr "취소됨"
-
-#~ msgid "Member Sale Pricelist Version"
-#~ msgstr "멤버 판매 가격리스트 버전"
-
-#~ msgid "Invoiced"
-#~ msgstr "인보이스됨"
-
-#~ msgid "Future members (invoice not confirmed)"
-#~ msgstr "향후 멤버 (확정되지 않은 인보이스)"
-
-#~ msgid "Membership Product - 2"
-#~ msgstr "멤버십 상품 - 2"
-
-#~ msgid "Cancel membership date"
-#~ msgstr "멤버십 날짜 취소"
-
-#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
-#~ msgstr "에러: 유효하지 않은 BVR 숫자 (잘못된 checksum)"
-
-#~ msgid "Paid"
-#~ msgstr "결제됨"
-
-#~ msgid "Specify if this product is a membership product"
-#~ msgstr "이 상품이 멤버십 상품인지 여부를 지정"
-
-#~ msgid "The price negociated by the partner"
-#~ msgstr "파트너 협상 가격"
-
-#~ msgid "Waiting"
-#~ msgstr "대기"
-
-#~ msgid "Invoiced members"
-#~ msgstr "인보이스된 멤버"
-
-#~ msgid "Choose invoice details"
-#~ msgstr "인보이스 상세 선택"
-
-#~ msgid "Old members"
-#~ msgstr "옛 멤버들"
-
-#~ msgid "Membership amount"
-#~ msgstr "멤버십 금액"
-
-#~ msgid "Paid members"
-#~ msgstr "결제된 멤버"
-
-#~ msgid "Future members"
-#~ msgstr "향후 멤버"
-
-#~ msgid "Associated members"
-#~ msgstr "연관된 멤버"
-
-#~ msgid "Canceled Member"
-#~ msgstr "취쇤 멤버"
-
-#~ msgid "Information"
-#~ msgstr "정보"
-
-#~ msgid "Current members"
-#~ msgstr "현재 멤버들"
-
-#, python-format
-#~ msgid "No Address defined for this partner"
-#~ msgstr "이 파트너의 주소가 없습니다."
-
-#~ msgid "New Membership by Years"
-#~ msgstr "연도별 새로운 멤버십"
-
-#~ msgid "Free member"
-#~ msgstr "자유 멤버"
-
-#~ msgid "Stop membership date"
-#~ msgstr "멤버십 날짜를 중단"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "에러: 유효하하지 않은 EAN 코드"
-
-#~ msgid "Current membership state"
-#~ msgstr "현재 멤버십 날짜"

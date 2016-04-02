@@ -1,13 +1,13 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
 #	* project_issue_sheet
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.0alpha\n"
+"Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 17:06+0000\n"
+"POT-Creation-Date: 2015-09-21 09:19+0000\n"
+"PO-Revision-Date: 2015-09-21 09:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,9 +16,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: project_issue_sheet
-#: code:addons/project_issue_sheet/project_issue_sheet.py:57
-#, python-format
-msgid "The Analytic Account is pending !"
+#: model:ir.model.fields,field_description:project_issue_sheet.field_project_issue_analytic_account_id
+msgid "Analytic Account"
 msgstr ""
 
 #. module: project_issue_sheet
@@ -27,45 +26,38 @@ msgid "Analytic Line"
 msgstr ""
 
 #. module: project_issue_sheet
+#: model:ir.model.fields,help:project_issue_sheet.field_project_issue_progress
+msgid "Computed as: Time Spent / Total Time."
+msgstr ""
+
+#. module: project_issue_sheet
+#: model:ir.ui.view,arch_db:project_issue_sheet.project_issue_form_view
+msgid "Duration"
+msgstr ""
+
+#. module: project_issue_sheet
+#: model:ir.model.fields,field_description:project_issue_sheet.field_account_analytic_line_issue_id
+msgid "Issue"
+msgstr ""
+
+#. module: project_issue_sheet
+#: model:ir.model.fields,field_description:project_issue_sheet.field_project_issue_progress
+msgid "Progress (%)"
+msgstr ""
+
+#. module: project_issue_sheet
 #: model:ir.model,name:project_issue_sheet.model_project_issue
 msgid "Project Issue"
 msgstr ""
 
 #. module: project_issue_sheet
-#: model:ir.model,name:project_issue_sheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
+#: model:ir.ui.view,arch_db:project_issue_sheet.project_issue_form_view
+msgid "Timesheet Activities"
 msgstr ""
 
 #. module: project_issue_sheet
-#: view:project.issue:0
-msgid "on_change_project(project_id)"
-msgstr ""
-
-#. module: project_issue_sheet
-#: code:addons/project_issue_sheet/project_issue_sheet.py:57
-#: field:project.issue,analytic_account_id:0
-#, python-format
-msgid "Analytic Account"
-msgstr ""
-
-#. module: project_issue_sheet
-#: view:project.issue:0
-msgid "Worklogs"
-msgstr ""
-
-#. module: project_issue_sheet
-#: field:account.analytic.line,create_date:0
-msgid "Create Date"
-msgstr ""
-
-#. module: project_issue_sheet
-#: view:project.issue:0
-#: field:project.issue,timesheet_ids:0
+#: model:ir.model.fields,field_description:project_issue_sheet.field_project_issue_timesheet_ids
+#: model:ir.ui.view,arch_db:project_issue_sheet.project_issue_form_view
 msgid "Timesheets"
-msgstr ""
-
-#. module: project_issue_sheet
-#: field:hr.analytic.timesheet,issue_id:0
-msgid "Issue"
 msgstr ""
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import itertools
 
-import unittest2
+import unittest
 from lxml import etree as ET, html
 from lxml.html import builder as h
 
@@ -61,7 +61,7 @@ class TestViewSaving(common.TransactionCase):
         company = self.registry('res.company').browse(self.cr, self.uid, 1)
         self.assertEqual(company.phone, "+00 00 000 00 0 000")
 
-    @unittest2.skip("save conflict for embedded (saved by third party or previous version in page) not implemented")
+    @unittest.skip("save conflict for embedded (saved by third party or previous version in page) not implemented")
     def test_embedded_conflict(self):
         e1 = h.SPAN("My Company", attrs(model='res.company', id=1, field='name'))
         e2 = h.SPAN("Leeroy Jenkins", attrs(model='res.company', id=1, field='name'))
@@ -172,6 +172,36 @@ class TestViewSaving(common.TransactionCase):
                         h.LI(h.SPAN({'t-field': "edmund"}))
                     ))
             )
+        )
+
+    def test_save_escaped_text(self):
+        """ Test saving html special chars in text nodes """
+        view_id = self.registry('ir.ui.view').create(self.cr, self.uid, {
+            'arch':'<t><p><h1>hello world</h1></p></t>',
+            'type':'qweb'
+        })
+        view = self.registry('ir.ui.view').browse(self.cr, self.uid, view_id)
+        # script and style text nodes should not escaped client side
+        replacement = '<script>1 && "hello & world"</script>'
+        view.save(replacement, xpath='/t/p/h1')
+        self.assertIn(
+                replacement.replace('&', '&amp;'),
+                view.arch,
+                'inline script should be escaped server side'
+        )
+        self.assertIn(
+                replacement,
+                view.render(),
+                'inline script should not be escaped when rendering'
+        )
+        # common text nodes should be be escaped client side
+        replacement = 'world &amp;amp; &amp;lt;b&amp;gt;cie'
+        view.save(replacement, xpath='/t/p')
+        self.assertIn(replacement, view.arch, 'common text node should not be escaped server side')
+        self.assertIn(
+                replacement,
+                view.render().replace('&', '&amp;'),
+                'text node characters wrongly unescaped when rendering'
         )
 
     def test_save_only_embedded(self):

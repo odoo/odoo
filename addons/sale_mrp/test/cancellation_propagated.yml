@@ -20,14 +20,13 @@
 -
   !record {model: mrp.bom, id: mrp_bom_test1}:
     company_id: base.main_company
-    name: My BOM
     product_tmpl_id: product_manu_product_template
     product_id: product_manu
     product_uom: product.product_uom_unit
     product_qty: 1.0
     type: normal
     bom_line_ids:
-      - product_id: product.product_product_44
+      - product_id: product.consu_delivery_01
         product_uom: product.product_uom_unit
         product_qty: 1.0
 -
@@ -44,14 +43,18 @@
     partner_id: base.res_partner_3
     note: Create Sales order
     warehouse_id: wh_pps
+    pricelist_id: product.list0
     order_line:
       - product_id: product_manu
+        name: "product_manu"
         product_uom_qty: 5.00
+        product_uom: product.product_uom_unit
 
 - 
   Confirm sales order
 - 
-  !workflow {model: sale.order, action: order_confirm, ref: sale_order_product_manu}
+  !python {model: sale.order}: |
+    self.action_confirm(cr, uid, [ref("sale_order_product_manu")], context=context)
 -
   I run scheduler.
 -

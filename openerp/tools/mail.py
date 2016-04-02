@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Business Applications
-#    Copyright (C) 2012-TODAY OpenERP S.A. (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from lxml import etree
 import cgi
@@ -29,10 +11,11 @@ import re
 import socket
 import threading
 import time
-from email.utils import getaddresses
+from email.utils import getaddresses, formataddr
 
 import openerp
 from openerp.loglevels import ustr
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -42,36 +25,151 @@ _logger = logging.getLogger(__name__)
 #----------------------------------------------------------
 
 tags_to_kill = ["script", "head", "meta", "title", "link", "style", "frame", "iframe", "base", "object", "embed"]
-tags_to_remove = ['html', 'body', 'font']
+tags_to_remove = ['html', 'body']
 
 # allow new semantic HTML5 tags
 allowed_tags = clean.defs.tags | frozenset('article section header footer hgroup nav aside figure main'.split() + [etree.Comment])
 safe_attrs = clean.defs.safe_attrs | frozenset(
     ['style',
-     'data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-type', 'data-oe-expression', 'data-oe-translate', 'data-oe-nodeid',
-     'data-snippet-id', 'data-publish', 'data-id', 'data-res_id', 'data-member_id', 'data-view-id'
+     'data-o-mail-quote',  # quote detection
+     'data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-type', 'data-oe-expression', 'data-oe-translation-id', 'data-oe-nodeid',
+     'data-publish', 'data-id', 'data-res_id', 'data-member_id', 'data-view-id'
      ])
 
 
-def html_sanitize(src, silent=True, strict=False):
+class _Cleaner(clean.Cleaner):
+
+    _style_re = re.compile('''([\w-]+)\s*:\s*((?:[^;"']|"[^"]*"|'[^']*')+)''')
+
+    _style_whitelist = [
+        'font-size', 'font-family', 'background-color', 'color', 'text-align',
+        'padding', 'padding-top', 'padding-left', 'padding-bottom', 'padding-right',
+        'margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right'
+        # box model
+        'border', 'border-color', 'border-radius', 'height', 'margin', 'padding', 'width', 'max-width', 'min-width',
+        # tables
+        'border-collapse', 'border-spacing', 'caption-side', 'empty-cells', 'table-layout']
+
+    def __call__(self, doc):
+        # perform quote detection before cleaning and class removal
+        for el in doc.iter():
+            self.tag_quote(el)
+
+        super(_Cleaner, self).__call__(doc)
+
+        # if we keep style attribute, sanitize them
+        if not self.style:
+            for el in doc.iter():
+                self.parse_style(el)
+
+    def tag_quote(self, el):
+        def _create_new_node(tag, text, tail=None, attrs=None):
+            new_node = etree.Element(tag)
+            new_node.text = text
+            new_node.tail = tail
+            if attrs:
+                for key, val in attrs.iteritems():
+                    new_node.set(key, val)
+            return new_node
+
+        def _tag_matching_regex_in_text(regex, node, tag='span', attrs=None):
+            text = node.text or ''
+            if not re.search(regex, text):
+                return
+
+            child_node = None
+            idx, node_idx = 0, 0
+            for item in re.finditer(regex, text):
+                new_node = _create_new_node(tag, text[item.start():item.end()], None, attrs)
+                if child_node is None:
+                    node.text = text[idx:item.start()]
+                    new_node.tail = text[item.end():]
+                    node.insert(node_idx, new_node)
+                else:
+                    child_node.tail = text[idx:item.start()]
+                    new_node.tail = text[item.end():]
+                    node.insert(node_idx, new_node)
+                child_node = new_node
+                idx = item.end()
+                node_idx = node_idx + 1
+
+        el_class = el.get('class', '') or ''
+        el_id = el.get('id', '') or ''
+
+        # gmail or yahoo // # outlook, html // # msoffice
+        if ('gmail_extra' in el_class or 'yahoo_quoted' in el_class) or \
+                (el.tag == 'hr' and ('stopSpelling' in el_class or 'stopSpelling' in el_id)) or \
+                ('SkyDrivePlaceholder' in el_class or 'SkyDrivePlaceholder' in el_class):
+            el.set('data-o-mail-quote', '1')
+            if el.getparent() is not None:
+                el.getparent().set('data-o-mail-quote-container', '1')
+
+        # html signature (-- <br />blah)
+        signature_begin = re.compile(r"((?:(?:^|\n)[-]{2}[\s]?$))")
+        if el.text and el.find('br') is not None and re.search(signature_begin, el.text):
+            el.set('data-o-mail-quote', '1')
+            if el.getparent() is not None:
+                el.getparent().set('data-o-mail-quote-container', '1')
+
+        # text-based quotes (>, >>) and signatures (-- Signature)
+        text_complete_regex = re.compile(r"((?:\n[>]+[^\n\r]*)+|(?:(?:^|\n)[-]{2}[\s]?[\r\n]{1,2}[\s\S]+))")
+        if not el.get('data-o-mail-quote'):
+            _tag_matching_regex_in_text(text_complete_regex, el, 'span', {'data-o-mail-quote': '1'})
+
+        if el.tag == 'blockquote':
+            # remove single node
+            el.set('data-o-mail-quote-node', '1')
+            el.set('data-o-mail-quote', '1')
+        if el.getparent() is not None and (el.getparent().get('data-o-mail-quote') or el.getparent().get('data-o-mail-quote-container')) and not el.getparent().get('data-o-mail-quote-node'):
+            el.set('data-o-mail-quote', '1')
+
+    def parse_style(self, el):
+        attributes = el.attrib
+        styling = attributes.get('style')
+        if styling:
+            valid_styles = {}
+            styles = self._style_re.findall(styling)
+            for style in styles:
+                if style[0].lower() in self._style_whitelist:
+                    valid_styles[style[0].lower()] = style[1]
+            if valid_styles:
+                el.attrib['style'] = '; '.join('%s: %s' % (key, val) for (key, val) in valid_styles.iteritems())
+            else:
+                del el.attrib['style']
+
+    def allow_element(self, el):
+        if el.tag == 'object' and el.get('type') == "image/svg+xml":
+            return True
+        return super(_Cleaner, self).allow_element(el)
+
+
+def html_sanitize(src, silent=True, strict=False, strip_style=False, strip_classes=False):
     if not src:
         return src
     src = ustr(src, errors='replace')
+    # html: remove encoding attribute inside tags
+    doctype = re.compile(r'(<[^>]*\s)(encoding=(["\'][^"\']*?["\']|[^\s\n\r>]+)(\s[^>]*|/)?>)', re.IGNORECASE | re.DOTALL)
+    src = doctype.sub(r"", src)
 
     logger = logging.getLogger(__name__ + '.html_sanitize')
 
     # html encode email tags
     part = re.compile(r"(<(([^a<>]|a[^<>\s])[^<>]*)@[^<>]+>)", re.IGNORECASE | re.DOTALL)
-    src = part.sub(lambda m: cgi.escape(m.group(1)), src)
+    # remove results containing cite="mid:email_like@address" (ex: blockquote cite)
+    # cite_except = re.compile(r"^((?!cite[\s]*=['\"]).)*$", re.IGNORECASE)
+    src = part.sub(lambda m: 'cite=' not in m.group(1) and cgi.escape(m.group(1)) or m.group(1), src)
+    # html encode mako tags <% ... %> to decode them later and keep them alive, otherwise they are stripped by the cleaner
+    src = src.replace('<%', cgi.escape('<%'))
+    src = src.replace('%>', cgi.escape('%>'))
 
     kwargs = {
         'page_structure': True,
-        'style': False,             # do not remove style attributes
+        'style': strip_style,       # True = remove style tags/attrs
         'forms': True,              # remove form tags
         'remove_unknown_tags': False,
         'allow_tags': allowed_tags,
         'comments': False,
-        'processing_instructions' : False
+        'processing_instructions': False
     }
     if etree.LXML_VERSION >= (2, 3, 1):
         # kill_tags attribute has been added in version 2.3.1
@@ -85,17 +183,20 @@ def html_sanitize(src, silent=True, strict=False):
     if strict:
         if etree.LXML_VERSION >= (3, 1, 0):
             # lxml < 3.1.0 does not allow to specify safe_attrs. We keep all attributes in order to keep "style"
+            if strip_classes:
+                current_safe_attrs = safe_attrs - frozenset(['class'])
+            else:
+                current_safe_attrs = safe_attrs
             kwargs.update({
                 'safe_attrs_only': True,
-                'safe_attrs': safe_attrs,
+                'safe_attrs': current_safe_attrs,
             })
     else:
         kwargs['safe_attrs_only'] = False    # keep oe-data attributes + style
-        kwargs['frames'] = False,            # do not remove frames (embbed video in CMS blogs)
 
     try:
         # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
-        cleaner = clean.Cleaner(**kwargs)
+        cleaner = _Cleaner(**kwargs)
         cleaned = cleaner.clean_html(src)
         # MAKO compatibility: $, { and } inside quotes are escaped, preventing correct mako execution
         cleaned = cleaned.replace('%24', '$')
@@ -104,6 +205,8 @@ def html_sanitize(src, silent=True, strict=False):
         cleaned = cleaned.replace('%20', ' ')
         cleaned = cleaned.replace('%5B', '[')
         cleaned = cleaned.replace('%5D', ']')
+        cleaned = cleaned.replace('&lt;%', '<%')
+        cleaned = cleaned.replace('%&gt;', '%>')
     except etree.ParserError, e:
         if 'empty' in str(e):
             return ""
@@ -123,336 +226,21 @@ def html_sanitize(src, silent=True, strict=False):
 
     return cleaned
 
-
-#----------------------------------------------------------
-# HTML Cleaner
-#----------------------------------------------------------
-
-def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_options=None,
-                     protect_sections=False):
-    """ html_email_clean: clean the html by doing the following steps:
-
-     - try to strip email quotes, by removing blockquotes or having some client-
-       specific heuristics
-     - try to strip signatures
-     - shorten the html to a maximum number of characters if requested
-
-    Some specific use case:
-
-     - MsOffice: ``div.style = border-top:solid;`` delimitates the beginning of
-       a quote; detecting by finding WordSection1 of MsoNormal
-     - Hotmail: ``hr.stopSpelling`` delimitates the beginning of a quote; detect
-       Hotmail by funding ``SkyDrivePlaceholder``
-
-    :param string html: sanitized html; tags like html or head should not
-                        be present in the html string. This method therefore
-                        takes as input html code coming from a sanitized source,
-                        like fields.html.
-    :param boolean remove: remove the html code that is unwanted; otherwise it
-                           is only flagged and tagged
-    :param boolean shorten: shorten the html; every excessing content will
-                            be flagged as to remove
-    :param int max_length: if shortening, maximum number of characters before
-                           shortening
-    :param dict expand_options: options for the read more link when shortening
-                                the content.The used keys are the following:
-
-                                 - oe_expand_container_tag: class applied to the
-                                   container of the whole read more link
-                                 - oe_expand_container_class: class applied to the
-                                   link container (default: oe_mail_expand)
-                                 - oe_expand_container_content: content of the
-                                   container (default: ...)
-                                 - oe_expand_separator_node: optional separator, like
-                                   adding ... <br /><br /> <a ...>read more</a> (default: void)
-                                 - oe_expand_a_href: href of the read more link itself
-                                   (default: #)
-                                 - oe_expand_a_class: class applied to the <a> containing
-                                   the link itself (default: oe_mail_expand)
-                                 - oe_expand_a_content: content of the <a> (default: read more)
-
-                                The formatted read more link is the following:
-                                <cont_tag class="oe_expand_container_class">
-                                    oe_expand_container_content
-                                    if expand_options.get('oe_expand_separator_node'):
-                                        <oe_expand_separator_node/>
-                                    <a href="oe_expand_a_href" class="oe_expand_a_class">
-                                        oe_expand_a_content
-                                    </a>
-                                </span>
-    """
-    def _replace_matching_regex(regex, source, replace=''):
-        """ Replace all matching expressions in source by replace """
-        if not source:
-            return source
-        dest = ''
-        idx = 0
-        for item in re.finditer(regex, source):
-            dest += source[idx:item.start()] + replace
-            idx = item.end()
-        dest += source[idx:]
-        return dest
-
-    def _create_node(tag, text, tail=None, attrs={}):
-        new_node = etree.Element(tag)
-        new_node.text = text
-        new_node.tail = tail
-        for key, val in attrs.iteritems():
-            new_node.set(key, val)
-        return new_node
-
-    def _insert_new_node(node, index, new_node_tag, new_node_text, new_node_tail=None, new_node_attrs={}):
-        new_node = _create_node(new_node_tag, new_node_text, new_node_tail, new_node_attrs)
-        node.insert(index, new_node)
-        return new_node
-
-    def _tag_matching_regex_in_text(regex, node, new_node_tag='span', new_node_attrs={}):
-        text = node.text or ''
-        if not re.search(regex, text):
-            return
-
-        cur_node = node
-        node.text = ''
-        idx, iteration = 0, 0
-        for item in re.finditer(regex, text):
-            if iteration == 0:
-                cur_node.text = text[idx:item.start()]
-            else:
-                _insert_new_node(node, (iteration - 1) * 2 + 1, new_node_tag, text[idx:item.start()])
-            new_node = _insert_new_node(node, iteration * 2, new_node_tag, text[item.start():item.end()], None, new_node_attrs)
-
-            cur_node = new_node
-            idx = item.end()
-            iteration += 1
-        new_node = _insert_new_node(node, -1, new_node_tag, text[idx:] + (cur_node.tail or ''), None, {})
-
-    def _truncate_node(node, position, simplify_whitespaces=True):
-        """ Truncate a node text at a given position. This algorithm will shorten
-        at the end of the word whose ending character exceeds position.
-
-            :param bool simplify_whitespaces: whether to try to count all successive
-                                              whitespaces as one character. This
-                                              option should not be True when trying
-                                              to keep 'pre' consistency.
-        """
-        if node.text is None:
-            node.text = ''
-
-        truncate_idx = -1
-        if simplify_whitespaces:
-            cur_char_nbr = 0
-            word = None
-            node_words = node.text.strip(' \t\r\n').split()
-            for word in node_words:
-                cur_char_nbr += len(word)
-                if cur_char_nbr >= position:
-                    break
-            if word:
-                truncate_idx = node.text.find(word) + len(word)
-        else:
-            truncate_idx = position
-        if truncate_idx == -1 or truncate_idx > len(node.text):
-            truncate_idx = len(node.text)
-
-        # compose new text bits
-        innertext = node.text[0:truncate_idx]
-        outertext = node.text[truncate_idx:]
-        node.text = innertext
-
-        # create <span> ... <a href="#">read more</a></span> node
-        read_more_node = _create_node(
-            expand_options.get('oe_expand_container_tag', 'span'),
-            expand_options.get('oe_expand_container_content', ' ... '),
-            None,
-            {'class': expand_options.get('oe_expand_container_class', 'oe_mail_expand')}
-        )
-        if expand_options.get('oe_expand_separator_node'):
-            read_more_separator_node = _create_node(
-                expand_options.get('oe_expand_separator_node'),
-                '',
-                None,
-                {}
-            )
-            read_more_node.append(read_more_separator_node)
-        read_more_link_node = _create_node(
-            'a',
-            expand_options.get('oe_expand_a_content', 'read more'),
-            None,
-            {
-                'href': expand_options.get('oe_expand_a_href', '#'),
-                'class': expand_options.get('oe_expand_a_class', 'oe_mail_expand'),
-            }
-        )
-        read_more_node.append(read_more_link_node)
-        # create outertext node
-        overtext_node = _create_node('span', outertext)
-        # tag node
-        overtext_node.set('in_overlength', '1')
-        # add newly created nodes in dom
-        node.append(read_more_node)
-        node.append(overtext_node)
-
-    if expand_options is None:
-        expand_options = {}
-
-    if not html or not isinstance(html, basestring):
-        return html
-    html = ustr(html)
-
-    # Pre processing
-    # ------------------------------------------------------------
-    # TDE TODO: --- MAIL ORIGINAL ---: '[\-]{4,}([^\-]*)[\-]{4,}'
-
-    # html: remove encoding attribute inside tags
-    doctype = re.compile(r'(<[^>]*\s)(encoding=(["\'][^"\']*?["\']|[^\s\n\r>]+)(\s[^>]*|/)?>)', re.IGNORECASE | re.DOTALL)
-    html = doctype.sub(r"", html)
-
-    # html: ClEditor seems to love using <div><br /><div> -> replace with <br />
-    br_div_tags = re.compile(r'(<div>\s*<br\s*\/>\s*<\/div>)', re.IGNORECASE)
-    html = _replace_matching_regex(br_div_tags, html, '<br />')
-
-    # form a tree
-    root = lxml.html.fromstring(html)
-    if not len(root) and root.text is None and root.tail is None:
-        html = '<div>%s</div>' % html
-        root = lxml.html.fromstring(html)
-
-    quote_tags = re.compile(r'(\n(>)+[^\n\r]*)')
-    signature = re.compile(r'([-]{2,}[\s]?[\r\n]{1,2}[\s\S]+)')
-    for node in root.iter():
-        # remove all tails and replace them by a span element, because managing text and tails can be a pain in the ass
-        if node.tail:
-            tail_node = _create_node('span', node.tail)
-            node.tail = None
-            node.addnext(tail_node)
-
-        # form node and tag text-based quotes and signature
-        _tag_matching_regex_in_text(quote_tags, node, 'span', {'text_quote': '1'})
-        _tag_matching_regex_in_text(signature, node, 'span', {'text_signature': '1'})
-
-    # Processing
-    # ------------------------------------------------------------
-
-    # tree: tag nodes
-    # signature_begin = False  # try dynamic signature recognition
-    quote_begin = False
-    overlength = False
-    overlength_section_id = None
-    overlength_section_count = 0
-    cur_char_nbr = 0
-    for node in root.iter():
-        # comments do not need processing
-        # note: bug in node.get(value, default) for HtmlComments, default never returned
-        if node.tag == etree.Comment:
-            continue
-        # do not take into account multiple spaces that are displayed as max 1 space in html
-        node_text = ' '.join((node.text and node.text.strip(' \t\r\n') or '').split())
-
-        # root: try to tag the client used to write the html
-        if 'WordSection1' in node.get('class', '') or 'MsoNormal' in node.get('class', ''):
-            root.set('msoffice', '1')
-        if 'SkyDrivePlaceholder' in node.get('class', '') or 'SkyDrivePlaceholder' in node.get('id', ''):
-            root.set('hotmail', '1')
-
-        # protect sections by tagging section limits and blocks contained inside sections, using an increasing id to re-find them later
-        if node.tag == 'section':
-            overlength_section_count += 1
-            node.set('section_closure', str(overlength_section_count))
-        if node.getparent() is not None and (node.getparent().get('section_closure') or node.getparent().get('section_inner')):
-            node.set('section_inner', str(overlength_section_count))
-
-        # state of the parsing: flag quotes and tails to remove
-        if quote_begin:
-            node.set('in_quote', '1')
-            node.set('tail_remove', '1')
-        # state of the parsing: flag when being in over-length content, depending on section content if defined (only when having protect_sections)
-        if overlength:
-            if not overlength_section_id or int(node.get('section_inner', overlength_section_count + 1)) > overlength_section_count:
-                node.set('in_overlength', '1')
-                node.set('tail_remove', '1')
-
-        # find quote in msoffice / hotmail / blockquote / text quote and signatures
-        if root.get('msoffice') and node.tag == 'div' and 'border-top:solid' in node.get('style', ''):
-            quote_begin = True
-            node.set('in_quote', '1')
-            node.set('tail_remove', '1')
-        if root.get('hotmail') and node.tag == 'hr' and ('stopSpelling' in node.get('class', '') or 'stopSpelling' in node.get('id', '')):
-            quote_begin = True
-            node.set('in_quote', '1')
-            node.set('tail_remove', '1')
-        if node.tag == 'blockquote' or node.get('text_quote') or node.get('text_signature'):
-            node.set('in_quote', '1')
-
-        # shorten:
-        # if protect section:
-        #   1/ find the first parent not being inside a section
-        #   2/ add the read more link
-        # else:
-        #   1/ truncate the text at the next available space
-        #   2/ create a 'read more' node, next to current node
-        #   3/ add the truncated text in a new node, next to 'read more' node
-        node_text = (node.text or '').strip().strip('\n').strip()
-        if shorten and not overlength and cur_char_nbr + len(node_text) > max_length:
-            node_to_truncate = node
-            while node_to_truncate.getparent() is not None:
-                if node_to_truncate.get('in_quote'):
-                    node_to_truncate = node_to_truncate.getparent()
-                elif protect_sections and (node_to_truncate.getparent().get('section_inner') or node_to_truncate.getparent().get('section_closure')):
-                    node_to_truncate = node_to_truncate.getparent()
-                    overlength_section_id = node_to_truncate.get('section_closure')
-                else:
-                    break
-
-            overlength = True
-            node_to_truncate.set('truncate', '1')
-            if node_to_truncate == node:
-                node_to_truncate.set('truncate_position', str(max_length - cur_char_nbr))
-            else:
-                node_to_truncate.set('truncate_position', str(len(node.text or '')))
-        cur_char_nbr += len(node_text)
-
-    # Tree modification
-    # ------------------------------------------------------------
-
-    for node in root.iter():
-        if node.get('truncate'):
-            _truncate_node(node, int(node.get('truncate_position', '0')), node.tag != 'pre')
-
-    # Post processing
-    # ------------------------------------------------------------
-
-    to_remove = []
-    for node in root.iter():
-        if node.get('in_quote') or node.get('in_overlength'):
-            # copy the node tail into parent text
-            if node.tail and not node.get('tail_remove'):
-                parent = node.getparent()
-                parent.tail = node.tail + (parent.tail or '')
-            to_remove.append(node)
-        if node.get('tail_remove'):
-            node.tail = ''
-        # clean node
-        for attribute_name in ['in_quote', 'tail_remove', 'in_overlength', 'msoffice', 'hotmail', 'truncate', 'truncate_position']:
-            node.attrib.pop(attribute_name, None)
-    for node in to_remove:
-        if remove:
-            node.getparent().remove(node)
-        else:
-            if not expand_options.get('oe_expand_a_class', 'oe_mail_expand') in node.get('class', ''):  # trick: read more link should be displayed even if it's in overlength
-                node_class = node.get('class', '') + ' oe_mail_cleaned'
-                node.set('class', node_class)
-
-    # html: \n that were tail of elements have been encapsulated into <span> -> back to \n
-    html = etree.tostring(root, pretty_print=False)
-    linebreaks = re.compile(r'<span[^>]*>([\s]*[\r\n]+[\s]*)<\/span>', re.IGNORECASE | re.DOTALL)
-    html = _replace_matching_regex(linebreaks, html, '\n')
-
-    return html
-
-
 #----------------------------------------------------------
 # HTML/Text management
 #----------------------------------------------------------
+
+def html_keep_url(text):
+    """ Transform the url into clickable link with <a/> tag """
+    idx = 0
+    final = ''
+    link_tags = re.compile(r"""(?<!["'])((ftp|http|https):\/\/(\w+:{0,1}\w*@)?([^\s<"']+)(:[0-9]+)?(\/|\/([^\s<"']))?)(?![^\s<"']*["']|[^\s<"']*</a>)""")
+    for item in re.finditer(link_tags, text):
+        final += text[idx:item.start()]
+        final += '<a href="%s" target="_blank">%s</a>' % (item.group(0), item.group(0))
+        idx = item.end()
+    final += text[idx:]
+    return final
 
 def html2plaintext(html, body_id=None, encoding='utf-8'):
     """ From an HTML text, convert the HTML to plain text.
@@ -464,6 +252,10 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     ## download here: http://www.peterbe.com/plog/html2plaintext
 
     html = ustr(html)
+
+    if not html:
+        return ''
+
     tree = etree.fromstring(html, parser=etree.HTMLParser())
 
     if body_id is not None:
@@ -498,6 +290,9 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     html = re.sub('<br\s*/?>', '\n', html)
     html = re.sub('<.*?>', ' ', html)
     html = html.replace(' ' * 2, ' ')
+    html = html.replace('&gt;', '>')
+    html = html.replace('&lt;', '<')
+    html = html.replace('&amp;', '&')
 
     # strip all lines
     html = '\n'.join([x.strip() for x in html.splitlines()])
@@ -515,6 +310,7 @@ def plaintext2html(text, container_tag=False):
         html entities, using cgi.escape().
         - all \n,\r are replaced by <br />
         - enclose content into <p>
+        - convert url into clickable link
         - 2 or more consecutive <br /> are considered as paragraph breaks
 
         :param string container_tag: container of the html; by default the
@@ -526,7 +322,10 @@ def plaintext2html(text, container_tag=False):
     text = text.replace('\n', '<br/>')
     text = text.replace('\r', '<br/>')
 
-    # 2-3: form paragraphs
+    # 2. clickable links
+    text = html_keep_url(text)
+
+    # 3-4: form paragraphs
     idx = 0
     final = '<p>'
     br_tags = re.compile(r'(([<]\s*[bB][rR]\s*\/?[>]\s*){2,})')
@@ -535,7 +334,7 @@ def plaintext2html(text, container_tag=False):
         idx = item.end()
     final += text[idx:] + '</p>'
 
-    # 4. container
+    # 5. container
     if container_tag:
         final = '<%s>%s</%s>' % (container_tag, final, container_tag)
     return ustr(final)
@@ -566,7 +365,7 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
     elif plaintext:
         content = '\n%s\n' % plaintext2html(content, container_tag)
     else:
-        content = re.sub(r'(?i)(</?html.*>|</?body.*>|<!\W*DOCTYPE.*>)', '', content)
+        content = re.sub(r'(?i)(</?(?:html|body|head|!\s*DOCTYPE)[^>]*>)', '', content)
         content = u'\n%s\n' % ustr(content)
     # Force all tags to lowercase
     html = re.sub(r'(</?)\W*(\w+)([ >])',
@@ -583,10 +382,10 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
 #----------------------------------------------------------
 
 # matches any email in a body of text
-email_re = re.compile(r"""([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})""", re.VERBOSE) 
+email_re = re.compile(r"""([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63})""", re.VERBOSE)
 
 # matches a string containing only one email
-single_email_re = re.compile(r"""^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$""", re.VERBOSE)
+single_email_re = re.compile(r"""^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}$""", re.VERBOSE)
 
 res_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
 command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
@@ -594,12 +393,8 @@ command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
 # Updated in 7.0 to match the model name as well
 # Typical form of references is <timestamp-openerp-record_id-model_name@domain>
 # group(1) = the record ID ; group(2) = the model (if any) ; group(3) = the domain
-reference_re = re.compile("<.*-open(?:object|erp)-(\\d+)(?:-([\w.]+))?.*@(.*)>", re.UNICODE)
+reference_re = re.compile("<.*-open(?:object|erp)-(\\d+)(?:-([\w.]+))?[^>]*@([^>]*)>", re.UNICODE)
 
-# Bounce regex
-# Typical form of bounce is bounce-128-crm.lead-34@domain
-# group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID
-bounce_re = re.compile("[\w]+-(\d+)-?([\w.]+)?-?(\d+)?", re.UNICODE)
 
 def generate_tracking_message_id(res_id):
     """Returns a string that can be used in the Message-ID RFC822 header field
@@ -659,6 +454,18 @@ def email_split(text):
     if not text:
         return []
     return [addr[1] for addr in getaddresses([text])
+                # getaddresses() returns '' when email parsing fails, and
+                # sometimes returns emails without at least '@'. The '@'
+                # is strictly required in RFC2822's `addr-spec`.
+                if addr[1]
+                if '@' in addr[1]]
+
+def email_split_and_format(text):
+    """ Return a list of email addresses found in ``text``, formatted using
+    formataddr. """
+    if not text:
+        return []
+    return [formataddr((addr[0], addr[1])) for addr in getaddresses([text])
                 # getaddresses() returns '' when email parsing fails, and
                 # sometimes returns emails without at least '@'. The '@'
                 # is strictly required in RFC2822's `addr-spec`.

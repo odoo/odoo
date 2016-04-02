@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="web.tip" id="purchase_tip_1">
+            <field name="description">Click to mark products as received.</field>
+            <field name="model">stock.move</field>
+            <field name="mode">list</field>
+            <field name="action_id" ref="stock.action_receipt_picking_move"/>
+            <field name="trigger_selector">.o_list_view:visible</field>
+            <field name="highlight_selector">.o_list_view:visible td > button</field>
+            <field name="placement">left</field>
+        </record>
+
+        <record model="web.tip" id="purchase_tip_2">
+            <field name="description">If a product has been broken or damaged during the transport, you can scrap it with this button.</field>
+            <field name="model">stock.move</field>
+            <field name="mode">list</field>
+            <field name="action_id" ref="stock.action_receipt_picking_move"/>
+            <field name="trigger_selector">.o_list_view:visible</field>
+            <field name="highlight_selector">.o_list_view:visible td:last-of-type > button</field>
+            <field name="placement">left</field>
+        </record>
+
+        <record model="web.tip" id="purchase_tip_3">
+            <field name="description">Get all the shipments related to this order.</field>
+            <field name="model">purchase.order</field>
+            <field name="mode">form</field>
+            <field name="action_id" ref="purchase.purchase_form_action"/>
+            <field name="trigger_selector">.o_form_buttons_view:visible,div.oe_button_box > button:nth-child(1):visible</field>
+            <field name="highlight_selector">div.oe_button_box:visible > button:nth-child(1)</field>
+            <field name="placement">bottom</field>
+        </record>
+    </data>
+</openerp>

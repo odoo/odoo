@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.addons.web import http
-from openerp.addons.web.http import request
+from odoo import http
+from odoo.http import request
 
-class website_hr(http.Controller):
+class WebsiteHr(http.Controller):
 
     @http.route(['/page/website.aboutus', '/page/aboutus'], type='http', auth="public", website=True)
     def blog(self, **post):
-        hr_obj = request.registry['hr.employee']
-        employee_ids = hr_obj.search(request.cr, request.uid, [('website_published', '=', True)],
-                                     context=request.context)
-        values = {
-            'employee_ids': hr_obj.browse(request.cr, request.uid, employee_ids,
-                                          request.context)
-        }
-        return request.website.render("website.aboutus", values)
+        employees_domain = []
+        if not request.env['res.users'].has_group('base.group_website_publisher'):
+            employees_domain += [('website_published', '=', True)]
+        employees = request.env['hr.employee'].search(employees_domain)
+        return request.website.render("website.aboutus", {'employees': employees})

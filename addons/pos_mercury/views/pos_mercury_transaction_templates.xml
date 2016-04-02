@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='utf-8'?>
+<openerp>
+  <data>
+    <template id='mercury_common'>
+      <MerchantID><t t-esc='merchant_id'/></MerchantID>
+      <TranType><t t-esc='transaction_type'/></TranType>
+      <TranCode><t t-esc='transaction_code'/></TranCode>
+      <InvoiceNo><t t-esc='invoice_no'/></InvoiceNo>
+      <Frequency>OneTime</Frequency>
+    </template>
+
+    <template id='mercury_transaction'>
+      <TStream>
+        <Transaction>
+          <t t-call='pos_mercury.mercury_common'/>
+          <OperatorID><t t-esc='operator_id'/></OperatorID>
+          <RecordNo>RecordNumberRequested</RecordNo>
+          <PartialAuth>Allow</PartialAuth>
+          <Memo><t t-esc='memo'/></Memo>
+          <Account>
+            <AccountSource>Swiped</AccountSource>
+            <EncryptedBlock><t t-esc='encrypted_block'/></EncryptedBlock>
+            <EncryptedKey><t t-esc='encrypted_key'/></EncryptedKey>
+            <EncryptedFormat>MagneSafe</EncryptedFormat>
+          </Account>
+          <Amount>
+            <Purchase><t t-esc='"%.2f" % purchase'/></Purchase> <!-- format required by Mercury -->
+          </Amount>
+        </Transaction>
+      </TStream>
+    </template>
+
+    <template id='mercury_voidsale'>
+      <TStream>
+        <Transaction>
+          <t t-call='pos_mercury.mercury_common'/>
+          <RefNo><t t-esc='ref_no'/></RefNo>
+          <RecordNo><t t-esc='record_no'/></RecordNo>
+          <Memo><t t-esc='memo'/></Memo>
+          <Amount>
+            <Purchase><t t-esc='"%.2f" % authorize'/></Purchase> <!-- format required by Mercury -->
+          </Amount>
+          <TranInfo>
+            <AuthCode><t t-esc='auth_code'/></AuthCode>
+            <t t-if='not is_voidsale'>
+              <AcqRefData><t t-esc='acq_ref_data'/></AcqRefData>
+              <ProcessData><t t-esc='process_data'/></ProcessData>
+            </t>
+          </TranInfo>
+        </Transaction>
+      </TStream>
+    </template>
+
+    <template id='mercury_return'>
+      <TStream>
+        <Transaction>
+          <t t-call='pos_mercury.mercury_common'/>
+          <OperatorID><t t-esc='operator_id'/></OperatorID>
+          <PartialAuth>Allow</PartialAuth>
+          <RefNo><t t-esc='ref_no'/></RefNo>
+          <RecordNo><t t-esc='record_no'/></RecordNo>
+          <Amount>
+            <Purchase><t t-esc='"%.2f" % purchase'/></Purchase>
+          </Amount>
+        </Transaction>
+      </TStream>
+    </template>
+  </data>
+</openerp>

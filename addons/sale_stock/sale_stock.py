@@ -1,456 +1,384 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 from datetime import datetime, timedelta
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
-from openerp.osv import fields, osv
-from openerp.tools.safe_eval import safe_eval as eval
-from openerp.tools.translate import _
-import pytz
-from openerp import SUPERUSER_ID
+from openerp import api, fields, models, _
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare
+from openerp.exceptions import UserError
 
-class sale_order(osv.osv):
+
+class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default.update({
-            'shipped': False,
-            'picking_ids': []
-        })
-        return super(sale_order, self).copy(cr, uid, id, default, context=context)
+    @api.model
+    def _default_warehouse_id(self):
+        company = self.env.user.company_id.id
+        warehouse_ids = self.env['stock.warehouse'].search([('company_id', '=', company)], limit=1)
+        return warehouse_ids
 
-    def _get_default_warehouse(self, cr, uid, context=None):
-        company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
-        warehouse_ids = self.pool.get('stock.warehouse').search(cr, uid, [('company_id', '=', company_id)], context=context)
-        if not warehouse_ids:
-            return False
-        return warehouse_ids[0]
+    incoterm = fields.Many2one('stock.incoterms', 'Incoterms', help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
+    picking_policy = fields.Selection([
+        ('direct', 'Deliver each product when available'),
+        ('one', 'Deliver all products at once')],
+        string='Shipping Policy', required=True, readonly=True, default='direct',
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
+    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse',
+        required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        default=_default_warehouse_id)
+    picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this sale')
+    delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
 
-    def _get_shipped(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        for sale in self.browse(cr, uid, ids, context=context):
-            group = sale.procurement_group_id
-            if group:
-                res[sale.id] = all([proc.state in ['cancel', 'done'] for proc in group.procurement_ids])
-            else:
-                res[sale.id] = False
-        return res
+    @api.multi
+    @api.depends('procurement_group_id')
+    def _compute_picking_ids(self):
+        for order in self:
+            order.picking_ids = self.env['stock.picking'].search([('group_id', '=', order.procurement_group_id.id)]) if order.procurement_group_id else []
+            order.delivery_count = len(order.picking_ids)
 
-    def _get_orders(self, cr, uid, ids, context=None):
-        res = set()
-        for move in self.browse(cr, uid, ids, context=context):
-            if move.procurement_id and move.procurement_id.sale_line_id:
-                res.add(move.procurement_id.sale_line_id.order_id.id)
-        return list(res)
+    @api.onchange('warehouse_id')
+    def _onchange_warehouse_id(self):
+        if self.warehouse_id.company_id:
+            self.company_id = self.warehouse_id.company_id.id
 
-    def _get_orders_procurements(self, cr, uid, ids, context=None):
-        res = set()
-        for proc in self.pool.get('procurement.order').browse(cr, uid, ids, context=context):
-            if proc.state =='done' and proc.sale_line_id:
-                res.add(proc.sale_line_id.order_id.id)
-        return list(res)
-
-    def _get_picking_ids(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        for sale in self.browse(cr, uid, ids, context=context):
-            if not sale.procurement_group_id:
-                res[sale.id] = []
-                continue
-            res[sale.id] = self.pool.get('stock.picking').search(cr, uid, [('group_id', '=', sale.procurement_group_id.id)], context=context)
-        return res
-
-    def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
-        vals = super(sale_order, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
-        location_id = order.partner_shipping_id.property_stock_customer.id
-        vals['location_id'] = location_id
-        routes = line.route_id and [(4, line.route_id.id)] or []
-        vals['route_ids'] = routes
-        vals['warehouse_id'] = order.warehouse_id and order.warehouse_id.id or False
-        vals['partner_dest_id'] = order.partner_shipping_id.id
-        return vals
-
-    _columns = {
-        'incoterm': fields.many2one('stock.incoterms', 'Incoterm', help="International Commercial Terms are a series of predefined commercial terms used in international transactions."),
-        'picking_policy': fields.selection([('direct', 'Deliver each product when available'), ('one', 'Deliver all products at once')],
-            'Shipping Policy', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-            help="""Pick 'Deliver each product when available' if you allow partial delivery."""),
-        'order_policy': fields.selection([
-                ('manual', 'On Demand'),
-                ('picking', 'On Delivery Order'),
-                ('prepaid', 'Before Delivery'),
-            ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-            help="""On demand: A draft invoice can be created from the sales order when needed. \nOn delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \nBefore delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."""),
-        'shipped': fields.function(_get_shipped, string='Delivered', type='boolean', store={
-                'procurement.order': (_get_orders_procurements, ['state'], 10)
-            }),
-        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
-        'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking associated to this sale'),
-    }
-    _defaults = {
-        'warehouse_id': _get_default_warehouse,
-        'picking_policy': 'direct',
-        'order_policy': 'manual',
-    }
-    def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context=None):
-        val = {}
-        if warehouse_id:
-            warehouse = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context=context)
-            if warehouse.company_id:
-                val['company_id'] = warehouse.company_id.id
-        return {'value': val}
-
-    def action_view_delivery(self, cr, uid, ids, context=None):
+    @api.multi
+    def action_view_delivery(self):
         '''
         This function returns an action that display existing delivery orders
         of given sales order ids. It can either be a in a list or in a form
         view, if there is only one delivery order to show.
         '''
-        
-        mod_obj = self.pool.get('ir.model.data')
-        act_obj = self.pool.get('ir.actions.act_window')
+        action = self.env.ref('stock.action_picking_tree_all')
 
-        result = mod_obj.get_object_reference(cr, uid, 'stock', 'action_picking_tree_all')
-        id = result and result[1] or False
-        result = act_obj.read(cr, uid, [id], context=context)[0]
-
-        #compute the number of delivery orders to display
-        pick_ids = []
-        for so in self.browse(cr, uid, ids, context=context):
-            pick_ids += [picking.id for picking in so.picking_ids]
-            
-        #choose the view_mode accordingly
-        if len(pick_ids) > 1:
-            result['domain'] = "[('id','in',[" + ','.join(map(str, pick_ids)) + "])]"
-        else:
-            res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_form')
-            result['views'] = [(res and res[1] or False, 'form')]
-            result['res_id'] = pick_ids and pick_ids[0] or False
-        return result
-
-    def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_invoice = False, context=None):
-        move_obj = self.pool.get("stock.move")
-        res = super(sale_order,self).action_invoice_create(cr, uid, ids, grouped=grouped, states=states, date_invoice = date_invoice, context=context)
-        for order in self.browse(cr, uid, ids, context=context):
-            if order.order_policy == 'picking':
-                for picking in order.picking_ids:
-                    move_obj.write(cr, uid, [x.id for x in picking.move_lines], {'invoice_state': 'invoiced'}, context=context)
-        return res
-
-    def action_cancel(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        sale_order_line_obj = self.pool.get('sale.order.line')
-        proc_obj = self.pool.get('procurement.order')
-        stock_obj = self.pool.get('stock.picking')
-        for sale in self.browse(cr, uid, ids, context=context):
-            for pick in sale.picking_ids:
-                if pick.state not in ('draft', 'cancel'):
-                    raise osv.except_osv(
-                        _('Cannot cancel sales order!'),
-                        _('You must first cancel all delivery order(s) attached to this sales order.'))
-            stock_obj.signal_button_cancel(cr, uid, [p.id for p in sale.picking_ids])
-        return super(sale_order, self).action_cancel(cr, uid, ids, context=context)
-
-    def action_wait(self, cr, uid, ids, context=None):
-        res = super(sale_order, self).action_wait(cr, uid, ids, context=context)
-        for o in self.browse(cr, uid, ids):
-            noprod = self.test_no_product(cr, uid, o, context)
-            if noprod and o.order_policy=='picking':
-                self.write(cr, uid, [o.id], {'order_policy': 'manual'}, context=context)
-        return res
-
-    def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
-        date_planned = super(sale_order, self)._get_date_planned(cr, uid, order, line, start_date, context=context)
-        date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        return date_planned
-
-    def _prepare_procurement_group(self, cr, uid, order, context=None):
-        res = super(sale_order, self)._prepare_procurement_group(cr, uid, order, context=None)
-        res.update({'move_type': order.picking_policy})
-        return res
-
-    def action_ship_end(self, cr, uid, ids, context=None):
-        super(sale_order, self).action_ship_end(cr, uid, ids, context=context)
-        for order in self.browse(cr, uid, ids, context=context):
-            val = {'shipped': True}
-            if order.state == 'shipping_except':
-                val['state'] = 'progress'
-                if (order.order_policy == 'manual'):
-                    for line in order.order_line:
-                        if (not line.invoiced) and (line.state not in ('cancel', 'draft')):
-                            val['state'] = 'manual'
-                            break
-            res = self.write(cr, uid, [order.id], val)
-        return True
-
-
-
-
-    def has_stockable_products(self, cr, uid, ids, *args):
-        for order in self.browse(cr, uid, ids):
-            for order_line in order.order_line:
-                if order_line.product_id and order_line.product_id.type in ('product', 'consu'):
-                    return True
-        return False
-
-
-class sale_order_line(osv.osv):
-    _inherit = 'sale.order.line'
-
-    def need_procurement(self, cr, uid, ids, context=None):
-        #when sale is installed alone, there is no need to create procurements, but with sale_stock
-        #we must create a procurement for each product that is not a service.
-        for line in self.browse(cr, uid, ids, context=context):
-            if line.product_id and line.product_id.type != 'service':
-                return True
-        return super(sale_order_line, self).need_procurement(cr, uid, ids, context=context)
-
-    def _number_packages(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            try:
-                res[line.id] = int((line.product_uom_qty+line.product_packaging.qty-0.0001) / line.product_packaging.qty)
-            except:
-                res[line.id] = 1
-        return res
-
-    _columns = {
-        'product_packaging': fields.many2one('product.packaging', 'Packaging'),
-        'number_packages': fields.function(_number_packages, type='integer', string='Number Packages'),
-        'route_id': fields.many2one('stock.location.route', 'Route', domain=[('sale_selectable', '=', True)]),
-    }
-
-    _defaults = {
-        'product_packaging': False,
-    }
-
-    def button_cancel(self, cr, uid, ids, context=None):
-        res = super(sale_order_line, self).button_cancel(cr, uid, ids, context=context)
-        for line in self.browse(cr, uid, ids, context=context):
-            for move_line in line.move_ids:
-                if move_line.state != 'cancel':
-                    raise osv.except_osv(
-                            _('Cannot cancel sales order line!'),
-                            _('You must first cancel stock moves attached to this sales order line.'))
-        return res
-
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default.update({'move_ids': []})
-        return super(sale_order_line, self).copy_data(cr, uid, id, default, context=context)
-
-    def product_packaging_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False,
-                                   partner_id=False, packaging=False, flag=False, context=None):
-        if not product:
-            return {'value': {'product_packaging': False}}
-        product_obj = self.pool.get('product.product')
-        product_uom_obj = self.pool.get('product.uom')
-        pack_obj = self.pool.get('product.packaging')
-        warning = {}
-        result = {}
-        warning_msgs = ''
-        if flag:
-            res = self.product_id_change(cr, uid, ids, pricelist=pricelist,
-                    product=product, qty=qty, uom=uom, partner_id=partner_id,
-                    packaging=packaging, flag=False, context=context)
-            warning_msgs = res.get('warning') and res['warning'].get('message', '') or ''
-
-        products = product_obj.browse(cr, uid, product, context=context)
-        if not products.packaging_ids:
-            packaging = result['product_packaging'] = False
-
-        if packaging:
-            default_uom = products.uom_id and products.uom_id.id
-            pack = pack_obj.browse(cr, uid, packaging, context=context)
-            q = product_uom_obj._compute_qty(cr, uid, uom, pack.qty, default_uom)
-#            qty = qty - qty % q + q
-            if qty and (q and not (qty % q) == 0):
-                ean = pack.ean or _('(n/a)')
-                qty_pack = pack.qty
-                type_ul = pack.ul
-                if not warning_msgs:
-                    warn_msg = _("You selected a quantity of %d Units.\n"
-                                "But it's not compatible with the selected packaging.\n"
-                                "Here is a proposition of quantities according to the packaging:\n"
-                                "EAN: %s Quantity: %s Type of ul: %s") % \
-                                    (qty, ean, qty_pack, type_ul.name)
-                    warning_msgs += _("Picking Information ! : ") + warn_msg + "\n\n"
-                warning = {
-                       'title': _('Configuration Error!'),
-                       'message': warning_msgs
-                }
-            result['product_uom_qty'] = qty
-
-        return {'value': result, 'warning': warning}
-
-
-    def product_id_change_with_wh(self, cr, uid, ids, pricelist, product, qty=0,
-            uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, warehouse_id=False, context=None):
-        context = context or {}
-        product_uom_obj = self.pool.get('product.uom')
-        product_obj = self.pool.get('product.product')
-        warning = {}
-        res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
-            uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
-            lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
-
-        if not product:
-            res['value'].update({'product_packaging': False})
-            return res
-
-        #update of result obtained in super function
-        product_obj = product_obj.browse(cr, uid, product, context=context)
-        res['value']['delay'] = (product_obj.sale_delay or 0.0)
-
-        # Calling product_packaging_change function after updating UoM
-        res_packing = self.product_packaging_change(cr, uid, ids, pricelist, product, qty, uom, partner_id, packaging, context=context)
-        res['value'].update(res_packing.get('value', {}))
-        warning_msgs = res_packing.get('warning') and res_packing['warning']['message'] or ''
-
-        #determine if the product is MTO or not (for a further check)
-        isMto = False
-        if warehouse_id:
-            warehouse = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context=context)
-            for product_route in product_obj.route_ids:
-                if warehouse.mto_pull_id and warehouse.mto_pull_id.route_id and warehouse.mto_pull_id.route_id.id == product_route.id:
-                    isMto = True
-                    break
-        else:
-            try:
-                mto_route_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'route_warehouse0_mto').id
-            except:
-                # if route MTO not found in ir_model_data, we treat the product as in MTS
-                mto_route_id = False
-            if mto_route_id:
-                for product_route in product_obj.route_ids:
-                    if product_route.id == mto_route_id:
-                        isMto = True
-                        break
-
-        #check if product is available, and if not: raise a warning, but do this only for products that aren't processed in MTO
-        if not isMto:
-            uom2 = False
-            if uom:
-                uom2 = product_uom_obj.browse(cr, uid, uom, context=context)
-                if product_obj.uom_id.category_id.id != uom2.category_id.id:
-                    uom = False
-            if not uom2:
-                uom2 = product_obj.uom_id
-            compare_qty = float_compare(product_obj.virtual_available, qty, precision_rounding=uom2.rounding)
-            if (product_obj.type=='product') and int(compare_qty) == -1:
-                warn_msg = _('You plan to sell %.2f %s but you only have %.2f %s available !\nThe real stock is %.2f %s. (without reservations)') % \
-                    (qty, uom2.name,
-                     max(0,product_obj.virtual_available), uom2.name,
-                     max(0,product_obj.qty_available), uom2.name)
-                warning_msgs += _("Not enough stock ! : ") + warn_msg + "\n\n"
-
-        #update of warning messages
-        if warning_msgs:
-            warning = {
-                       'title': _('Configuration Error!'),
-                       'message' : warning_msgs
-                    }
-        res.update({'warning': warning})
-        return res
-
-class stock_move(osv.osv):
-    _inherit = 'stock.move'
-
-    def action_cancel(self, cr, uid, ids, context=None):
-        sale_ids = []
-        for move in self.browse(cr, uid, ids, context=context):
-            if move.procurement_id and move.procurement_id.sale_line_id:
-                sale_ids.append(move.procurement_id.sale_line_id.order_id.id)
-        if sale_ids:
-            self.pool.get('sale.order').signal_ship_except(cr, uid, sale_ids)
-        return super(stock_move, self).action_cancel(cr, uid, ids, context=context)
-
-    def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
-        invoice_line_id = self.pool.get('account.invoice.line').create(cr, uid, invoice_line_vals, context=context)
-        if move.procurement_id and move.procurement_id.sale_line_id:
-            sale_line = move.procurement_id.sale_line_id
-            self.pool.get('sale.order.line').write(cr, uid, [sale_line.id], {
-                'invoice_lines': [(4, invoice_line_id)]
-            }, context=context)
-            self.pool.get('sale.order').write(cr, uid, [sale_line.order_id.id], {
-                'invoice_ids': [(4, invoice_line_vals['invoice_id'])],
-            })
-        return invoice_line_id
-
-    def _get_master_data(self, cr, uid, move, company, context=None):
-        if move.procurement_id and move.procurement_id.sale_line_id:
-            sale_order = move.procurement_id.sale_line_id.order_id
-            return sale_order.partner_invoice_id, sale_order.user_id.id, sale_order.pricelist_id.currency_id.id
-        return super(stock_move, self)._get_master_data(cr, uid, move, company, context=context)
-
-    def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
-        res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
-        if move.procurement_id and move.procurement_id.sale_line_id:
-            sale_line = move.procurement_id.sale_line_id
-            res['invoice_line_tax_id'] = [(6, 0, [x.id for x in sale_line.tax_id])]
-            res['account_analytic_id'] = sale_line.order_id.project_id and sale_line.order_id.project_id.id or False
-            res['price_unit'] = sale_line.price_unit
-            res['discount'] = sale_line.discount
-        return res
-
-
-class stock_location_route(osv.osv):
-    _inherit = "stock.location.route"
-    _columns = {
-        'sale_selectable': fields.boolean("Selectable on Sales Order Line")
+        result = {
+            'name': action.name,
+            'help': action.help,
+            'type': action.type,
+            'view_type': action.view_type,
+            'view_mode': action.view_mode,
+            'target': action.target,
+            'context': action.context,
+            'res_model': action.res_model,
         }
 
+        pick_ids = sum([order.picking_ids.ids for order in self], [])
 
-class stock_picking(osv.osv):
-    _inherit = "stock.picking"
+        if len(pick_ids) > 1:
+            result['domain'] = "[('id','in',["+','.join(map(str, pick_ids))+"])]"
+        elif len(pick_ids) == 1:
+            form = self.env.ref('stock.view_picking_form', False)
+            form_id = form.id if form else False
+            result['views'] = [(form_id, 'form')]
+            result['res_id'] = pick_ids[0]
+        return result
 
-    def _get_sale_id(self, cr, uid, ids, name, args, context=None):
-        sale_obj = self.pool.get("sale.order")
-        res = {}
-        for picking in self.browse(cr, uid, ids, context=context):
-            res[picking.id] = False
-            if picking.group_id:
-                sale_ids = sale_obj.search(cr, uid, [('procurement_group_id', '=', picking.group_id.id)], context=context)
-                if sale_ids:
-                    res[picking.id] = sale_ids[0]
+    @api.multi
+    def action_cancel(self):
+        self.order_line.mapped('procurement_ids').cancel()
+        super(SaleOrder, self).action_cancel()
+
+    @api.multi
+    def _prepare_invoice(self):
+        invoice_vals = super(SaleOrder, self)._prepare_invoice()
+        invoice_vals['incoterms_id'] = self.incoterm.id or False
+        return invoice_vals
+
+    @api.model
+    def _prepare_procurement_group(self):
+        res = super(SaleOrder, self)._prepare_procurement_group()
+        res.update({'move_type': self.picking_policy, 'partner_id': self.partner_shipping_id.id})
         return res
-    
-    _columns = {
-        'sale_id': fields.function(_get_sale_id, type="many2one", relation="sale.order", string="Sale Order"),
-    }
 
-    def _create_invoice_from_picking(self, cr, uid, picking, vals, context=None):
-        sale_obj = self.pool.get('sale.order')
-        sale_line_obj = self.pool.get('sale.order.line')
-        invoice_line_obj = self.pool.get('account.invoice.line')
-        invoice_id = super(stock_picking, self)._create_invoice_from_picking(cr, uid, picking, vals, context=context)
-        if picking.group_id:
-            sale_ids = sale_obj.search(cr, uid, [('procurement_group_id', '=', picking.group_id.id)], context=context)
-            if sale_ids:
-                sale_line_ids = sale_line_obj.search(cr, uid, [('order_id', 'in', sale_ids), ('product_id.type', '=', 'service'), ('invoiced', '=', False)], context=context)
-                if sale_line_ids:
-                    created_lines = sale_line_obj.invoice_line_create(cr, uid, sale_line_ids, context=context)
-                    invoice_line_obj.write(cr, uid, created_lines, {'invoice_id': invoice_id}, context=context)
-        return invoice_id
+    @api.model
+    def _get_customer_lead(self, product_tmpl_id):
+        super(SaleOrder, self)._get_customer_lead(product_tmpl_id)
+        return product_tmpl_id.sale_delay
+
+class SaleOrderLine(models.Model):
+    _inherit = 'sale.order.line'
+
+    product_packaging = fields.Many2one('product.packaging', string='Packaging', default=False)
+    route_id = fields.Many2one('stock.location.route', string='Route', domain=[('sale_selectable', '=', True)])
+    product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id', string='Product Template', readonly=True)
+
+    @api.depends('order_id.state')
+    def _compute_invoice_status(self):
+        super(SaleOrderLine, self)._compute_invoice_status()
+        for line in self:
+            # We handle the following specific situation: a physical product is partially delivered,
+            # but we would like to set its invoice status to 'Fully Invoiced'. The use case is for
+            # products sold by weight, where the delivered quantity rarely matches exactly the
+            # quantity ordered.
+            if line.order_id.state == 'done'\
+                    and line.invoice_status == 'no'\
+                    and line.product_id.type in ['consu', 'product']\
+                    and line.product_id.invoice_policy == 'delivery'\
+                    and line.procurement_ids.mapped('move_ids')\
+                    and all(move.state in ['done', 'cancel'] for move in line.procurement_ids.mapped('move_ids')):
+                line.invoice_status = 'invoiced'
+
+    @api.multi
+    @api.depends('product_id')
+    def _compute_qty_delivered_updateable(self):
+        for line in self:
+            if line.product_id.type not in ('consu', 'product'):
+                return super(SaleOrderLine, self)._compute_qty_delivered_updateable()
+            line.qty_delivered_updateable = False
+
+    @api.onchange('product_id')
+    def _onchange_product_id_set_customer_lead(self):
+        self.customer_lead = self.product_id.sale_delay
+        return {}
+
+    @api.onchange('product_packaging')
+    def _onchange_product_packaging(self):
+        if self.product_packaging:
+            return self._check_package()
+        return {}
+
+    @api.onchange('product_id')
+    def _onchange_product_id_uom_check_availability(self):
+        if not self.product_uom or (self.product_id.uom_id.category_id.id != self.product_uom.category_id.id):
+            self.product_uom = self.product_id.uom_id
+        self._onchange_product_id_check_availability()
+
+    @api.onchange('product_uom_qty', 'product_uom', 'route_id')
+    def _onchange_product_id_check_availability(self):
+        if not self.product_id or not self.product_uom_qty or not self.product_uom:
+            self.product_packaging = False
+            return {}
+        if self.product_id.type == 'product':
+            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            product_qty = self.env['product.uom']._compute_qty_obj(self.product_uom, self.product_uom_qty, self.product_id.uom_id)
+            if float_compare(self.product_id.virtual_available, product_qty, precision_digits=precision) == -1:
+                is_available = self._check_routing()
+                if not is_available:
+                    warning_mess = {
+                        'title': _('Not enough inventory!'),
+                        'message' : _('You plan to sell %.2f %s but you only have %.2f %s available!\nThe stock on hand is %.2f %s.') % \
+                            (self.product_uom_qty, self.product_uom.name, self.product_id.virtual_available, self.product_id.uom_id.name, self.product_id.qty_available, self.product_id.uom_id.name)
+                    }
+                    return {'warning': warning_mess}
+        return {}
+
+    @api.onchange('product_uom_qty')
+    def _onchange_product_uom_qty(self):
+        if self.state == 'sale' and self.product_id.type in ['product', 'consu'] and self.product_uom_qty < self._origin.product_uom_qty:
+            warning_mess = {
+                'title': _('Ordered quantity decreased!'),
+                'message' : _('You are decreasing the ordered quantity! Do not forget to manually update the delivery order if needed.'),
+            }
+            return {'warning': warning_mess}
+        return {}
+
+    @api.multi
+    def _prepare_order_line_procurement(self, group_id=False):
+        vals = super(SaleOrderLine, self)._prepare_order_line_procurement(group_id=group_id)
+        date_planned = datetime.strptime(self.order_id.date_order, DEFAULT_SERVER_DATETIME_FORMAT)\
+            + timedelta(days=self.customer_lead or 0.0) - timedelta(days=self.order_id.company_id.security_lead)
+        vals.update({
+            'date_planned': date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            'location_id': self.order_id.partner_shipping_id.property_stock_customer.id,
+            'route_ids': self.route_id and [(4, self.route_id.id)] or [],
+            'warehouse_id': self.order_id.warehouse_id and self.order_id.warehouse_id.id or False,
+            'partner_dest_id': self.order_id.partner_shipping_id.id,
+            'sale_line_id': self.id,
+        })
+        return vals
+
+    @api.multi
+    def _get_delivered_qty(self):
+        """Computes the delivered quantity on sale order lines, based on done stock moves related to its procurements
+        """
+        self.ensure_one()
+        super(SaleOrderLine, self)._get_delivered_qty()
+        qty = 0.0
+        for move in self.procurement_ids.mapped('move_ids').filtered(lambda r: r.state == 'done' and not r.scrapped):
+            if move.location_dest_id.usage == "customer":
+                qty += self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
+            elif move.location_dest_id.usage == "internal" and move.to_refund_so:
+                qty -= self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
+        return qty
+
+    @api.multi
+    def _check_package(self):
+        default_uom = self.product_id.uom_id
+        pack = self.product_packaging
+        qty = self.product_uom_qty
+        q = self.env['product.uom']._compute_qty_obj(default_uom, pack.qty, self.product_uom)
+        if qty and q and (qty % q):
+            newqty = qty - (qty % q) + q
+            return {
+                'warning': {
+                    'title': _('Warning'),
+                    'message': _("This product is packaged by %d . You should sell %d .") % (pack.qty, newqty),
+                },
+            }
+        return {}
+
+    def _check_routing(self):
+        """ Verify the route of the product based on the warehouse
+            return True if the product availibility in stock does not need to be verified,
+            which is the case in MTO, Cross-Dock or Drop-Shipping
+        """
+        is_available = False
+        product_routes = self.route_id or (self.product_id.route_ids + self.product_id.categ_id.total_route_ids)
+
+        # Check MTO
+        wh_mto_route = self.order_id.warehouse_id.mto_pull_id.route_id
+        if wh_mto_route and wh_mto_route <= product_routes:
+            is_available = True
+        else:
+            mto_route_id = False
+            try:
+                mto_route_id = self.env['stock.warehouse']._get_mto_route()
+            except UserError:
+                # if route MTO not found in ir_model_data, we treat the product as in MTS
+                pass
+            if mto_route_id and mto_route_id in product_routes.ids:
+                is_available = True
+
+        # Check Drop-Shipping
+        if not is_available:
+            for pull_rule in product_routes.mapped('pull_ids'):
+                if pull_rule.picking_type_id.sudo().default_location_src_id.usage == 'supplier' and\
+                        pull_rule.picking_type_id.sudo().default_location_dest_id.usage == 'customer':
+                    is_available = True
+                    break
+
+        return is_available
+
+
+class StockLocationRoute(models.Model):
+    _inherit = "stock.location.route"
+
+    sale_selectable = fields.Boolean(string="Selectable on Sales Order Line")
+
+
+class AccountInvoice(models.Model):
+    _inherit = 'account.invoice'
+
+    incoterms_id = fields.Many2one('stock.incoterms', string="Incoterms",
+        help="Incoterms are series of sales terms. They are used to divide transaction costs and responsibilities between buyer and seller and reflect state-of-the-art transportation practices.",
+        readonly=True, states={'draft': [('readonly', False)]})
+
+
+class ProcurementOrder(models.Model):
+    _inherit = "procurement.order"
+
+    @api.model
+    def _run_move_create(self, procurement):
+        vals = super(ProcurementOrder, self)._run_move_create(procurement)
+        if self.sale_line_id:
+            vals.update({'sequence': self.sale_line_id.sequence})
+        return vals
+
+
+class StockMove(models.Model):
+    _inherit = "stock.move"
+
+    to_refund_so = fields.Boolean(string="To Refund in SO", default=False,
+        help='Trigger a decrease of the delivered quantity in the associated Sale Order')
+
+    @api.multi
+    def action_done(self):
+        result = super(StockMove, self).action_done()
+
+        # Update delivered quantities on sale order lines
+        todo = self.env['sale.order.line']
+        for move in self:
+            if (move.procurement_id.sale_line_id) and (move.product_id.invoice_policy in ('order', 'delivery')):
+                todo |= move.procurement_id.sale_line_id
+        for line in todo:
+            line.qty_delivered = line._get_delivered_qty()
+        return result
+
+
+class StockPicking(models.Model):
+    _inherit = 'stock.picking'
+
+    @api.depends('move_lines')
+    def _compute_sale_id(self):
+        for picking in self:
+            sale_order = False
+            for move in picking.move_lines:
+                if move.procurement_id.sale_line_id:
+                    sale_order = move.procurement_id.sale_line_id.order_id
+                    break
+            picking.sale_id = sale_order.id if sale_order else False
+
+    sale_id = fields.Many2one(comodel_name='sale.order', string="Sale Order", compute='_compute_sale_id')
+
+
+class StockReturnPicking(models.TransientModel):
+    _inherit = "stock.return.picking"
+
+    @api.multi
+    def _create_returns(self):
+        new_picking_id, pick_type_id = super(StockReturnPicking, self)._create_returns()
+        new_picking = self.env['stock.picking'].browse([new_picking_id])
+        for move in new_picking.move_lines:
+            return_picking_line = self.product_return_moves.filtered(lambda r: r.move_id == move.origin_returned_move_id)
+            if return_picking_line and return_picking_line.to_refund_so:
+                move.to_refund_so = True
+
+        return new_picking_id, pick_type_id
+
+
+class StockReturnPickingLine(models.TransientModel):
+    _inherit = "stock.return.picking.line"
+
+    to_refund_so = fields.Boolean(string="To Refund in SO", help='Trigger a decrease of the delivered quantity in the associated Sale Order')
+
+
+class AccountInvoiceLine(models.Model):
+    _inherit = "account.invoice.line"
+
+    def _get_anglo_saxon_price_unit(self):
+        price_unit = super(AccountInvoiceLine,self)._get_anglo_saxon_price_unit()
+        # in case of anglo saxon with a product configured as invoiced based on delivery, with perpetual
+        # valuation and real price costing method, we must find the real price for the cost of good sold
+        uom_obj = self.env['product.uom']
+        if self.product_id.invoice_policy == "delivery":
+            for s_line in self.sale_line_ids:
+                # qtys already invoiced
+                qty_done = sum([uom_obj._compute_qty_obj(x.uom_id, x.quantity, x.product_id.uom_id) for x in s_line.invoice_lines if x.invoice_id.state in ('open', 'paid')])
+                quantity = uom_obj._compute_qty_obj(self.uom_id, self.quantity, self.product_id.uom_id)
+                # Put moves in fixed order by date executed
+                moves = self.env['stock.move']
+                for procurement in s_line.procurement_ids:
+                    moves |= procurement.move_ids
+                moves.sorted(lambda x: x.date)
+                # Go through all the moves and do nothing until you get to qty_done
+                # Beyond qty_done we need to calculate the average of the price_unit
+                # on the moves we encounter.
+                average_price_unit = 0
+                qty_delivered = 0
+                invoiced_qty = 0
+                for move in moves:
+                    if move.state != 'done':
+                        continue
+                    invoiced_qty += move.product_qty
+                    if invoiced_qty <= qty_done:
+                        continue
+                    qty_to_consider = move.product_qty
+                    if invoiced_qty - move.product_qty < qty_done:
+                        qty_to_consider = invoiced_qty - qty_done
+                    qty_to_consider = min(qty_to_consider, quantity - qty_delivered)
+                    qty_delivered += qty_to_consider
+                    average_price_unit = (average_price_unit * (qty_delivered - qty_to_consider) + move.price_unit * qty_to_consider) / qty_delivered
+                    if qty_delivered == quantity:
+                        break
+                price_unit = average_price_unit or price_unit
+                price_unit = uom_obj._compute_qty_obj(self.uom_id, price_unit, self.product_id.uom_id)
+        return price_unit
+
+
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    @api.multi
+    def _need_procurement(self):
+        for product in self:
+            if product.type not in ['service', 'digital']:
+                return True
+        return super(ProductProduct, self)._need_procurement()

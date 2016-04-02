@@ -1,172 +1,23 @@
-# Arabic translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_multilang
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 01:06+0000\n"
-"PO-Revision-Date: 2012-11-16 19:54+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Arabic <ar@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-14 10:36+0000\n"
+"PO-Revision-Date: 2015-09-10 15:16+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:47+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template
-msgid "Template for Fiscal Position"
-msgstr "قوالب للمركز المالي"
-
-#. module: l10n_multilang
-#: sql_constraint:account.account:0
-msgid "The code of the account must be unique per company !"
-msgstr "يجب ان يكون كود الحساب فريداً لكل شركة !"
-
-#. module: l10n_multilang
-#: constraint:account.account.template:0
-msgid ""
-"Configuration Error!\n"
-"You can not define children to an account with internal type different of "
-"\"View\"! "
-msgstr ""
-"خطأ في الإعدادات!\n"
-" لاتستطيع تعريف أطفال لحساب من نوع داخلي مختلف ل\"العرض\"! "
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_analytic_journal
-msgid "Analytic Journal"
-msgstr "يومية تحليلية"
-
-#. module: l10n_multilang
-#: constraint:account.account.template:0
-msgid "Error ! You can not create recursive account templates."
-msgstr "خطأ ! لا يمكنك انشاء قوالب الحاسب العودية."
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_journal
-msgid "Journal"
-msgstr "يومية"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_chart_template
-msgid "Templates for Account Chart"
-msgstr "القوالب لجدول الحساب"
-
-#. module: l10n_multilang
-#: sql_constraint:account.tax:0
-msgid "The description must be unique per company!"
-msgstr "وصف لكل شركة يجب ان تكون فريد!"
-
-#. module: l10n_multilang
-#: constraint:account.tax.code.template:0
-msgid "Error ! You can not create recursive Tax Codes."
-msgstr "خطأ ! لايمكنك إنشاء اكواد ضريبية متداخلة."
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_tax_template
-msgid "account.tax.template"
-msgstr "account.tax.template"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_tax
-msgid "account.tax"
-msgstr "account.tax"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_account
-msgid "Account"
-msgstr "حساب"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_wizard_multi_charts_accounts
 msgid "wizard.multi.charts.accounts"
 msgstr "wizard.multi.charts.accounts"
-
-#. module: l10n_multilang
-#: constraint:account.journal:0
-msgid ""
-"Configuration error! The currency chosen should be shared by the default "
-"accounts too."
-msgstr ""
-"خطأ في الإعدادات! يجب أن تكون العملة المختارة مشتركة للحسابات الإفتراضية "
-"أيضأً."
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_account_template
-msgid "Templates for Accounts"
-msgstr "قوالب للحسابات"
-
-#. module: l10n_multilang
-#: help:account.chart.template,spoken_languages:0
-msgid ""
-"State here the languages for which the translations of templates could be "
-"loaded at the time of installation of this localization module and copied in "
-"the final object when generating them from templates. You must provide the "
-"language codes separated by ';'"
-msgstr "ضع هنا اللغات حيث ترجمات القوالب، و ليكون كود اللغة مفصول بـ \";\""
-
-#. module: l10n_multilang
-#: constraint:account.account:0
-msgid "Error ! You can not create recursive accounts."
-msgstr "خطأ ! لا يمكن إنشاء حسابات تكرارية."
-
-#. module: l10n_multilang
-#: constraint:account.account:0
-msgid ""
-"Configuration Error! \n"
-"You can not select an account type with a deferral method different of "
-"\"Unreconciled\" for accounts with internal type \"Payable/Receivable\"! "
-msgstr ""
-"التكوين الخطأ!\n"
-"لا يمكنك اختيار  نوع الحساب باستخدام  طريقة التأجيل المختلفه \"عدم "
-"المساواه\" للحسابات من النوع الداخلي \"الدفع / القبض\" "
-
-#. module: l10n_multilang
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr "يجب ان يكون الاسم لليومية فريد لكل شركة!"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "حسابات تحليلية"
-
-#. module: l10n_multilang
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr "يجب ان يكون الكود لليومية فريد لكل شركة !"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_fiscal_position
-msgid "Fiscal Position"
-msgstr "الوضع المالي"
-
-#. module: l10n_multilang
-#: constraint:account.account:0
-msgid ""
-"Configuration Error! \n"
-"You can not define children to an account with internal type different of "
-"\"View\"! "
-msgstr ""
-"خطأ في الإعدادات!\n"
-"لا يمكنك تحديد فرع لحساب مع نوع داخلي مختلف من \"عرض\"! "
-
-#. module: l10n_multilang
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr "خطأ! لا يمكنك إنشاء حسابات تحليلية متكررة."
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_tax_code_template
-msgid "Tax Code Template"
-msgstr "قالب رمز الضريبة"
-
-#. module: l10n_multilang
-#: field:account.chart.template,spoken_languages:0
-msgid "Spoken Languages"
-msgstr "اللغات المنطوقة"

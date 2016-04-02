@@ -1,31 +1,15 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
 import time
 import datetime
-from openerp import tools
-from openerp.osv.orm import except_orm
-from openerp.tools.translate import _
 from dateutil.relativedelta import relativedelta
+
+import openerp
+from openerp import tools
+from openerp.exceptions import UserError
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 def str_to_datetime(strdate):
     return datetime.datetime.strptime(strdate, tools.DEFAULT_SERVER_DATE_FORMAT)
@@ -44,7 +28,7 @@ class fleet_vehicle_cost(osv.Model):
 
     def _set_odometer(self, cr, uid, id, name, value, args=None, context=None):
         if not value:
-            raise except_orm(_('Operation not allowed!'), _('Emptying the odometer value of a vehicle is not allowed.'))
+            raise UserError(_('Emptying the odometer value of a vehicle is not allowed.'))
         date = self.browse(cr, uid, id, context=context).date
         if not(date):
             date = fields.date.context_today(self, cr, uid, context=context)
@@ -52,15 +36,6 @@ class fleet_vehicle_cost(osv.Model):
         data = {'value': value, 'date': date, 'vehicle_id': vehicle_id.id}
         odometer_id = self.pool.get('fleet.vehicle.odometer').create(cr, uid, data, context=context)
         return self.write(cr, uid, id, {'odometer_id': odometer_id}, context=context)
-
-    def _year_get_fnc(self, cr, uid, ids, name, unknow_none, context=None):
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):
-            if (record.date):
-                res[record.id] = str(time.strptime(record.date, tools.DEFAULT_SERVER_DATE_FORMAT).tm_year)
-            else:
-                res[record.id] = _('Unknown')
-        return res
 
     _columns = {
         'name': fields.related('vehicle_id', 'name', type="char", string='Name', store=True),
@@ -75,8 +50,7 @@ class fleet_vehicle_cost(osv.Model):
         'odometer_unit': fields.related('vehicle_id', 'odometer_unit', type="char", string="Unit", readonly=True),
         'date' :fields.date('Date',help='Date when the cost has been executed'),
         'contract_id': fields.many2one('fleet.vehicle.log.contract', 'Contract', help='Contract attached to this cost'),
-        'auto_generated': fields.boolean('Automatically Generated', readonly=True, required=True),
-        'year': fields.function(_year_get_fnc, type="char", string='Year', store=True),
+        'auto_generated': fields.boolean('Automatically Generated', readonly=True),
     }
 
     _defaults ={
@@ -105,8 +79,13 @@ class fleet_vehicle_cost(osv.Model):
 class fleet_vehicle_tag(osv.Model):
     _name = 'fleet.vehicle.tag'
     _columns = {
-        'name': fields.char('Name', required=True, translate=True),
+        'name': fields.char('Name', required=True),
+        'color': fields.integer('Color Index'),
     }
+    _sql_constraints = [
+            ('name_uniq', 'unique (name)', "Tag name already exists !"),
+    ]
+
 
 class fleet_vehicle_state(osv.Model):
     _name = 'fleet.vehicle.state'
@@ -118,15 +97,16 @@ class fleet_vehicle_state(osv.Model):
     _sql_constraints = [('fleet_state_name_unique','unique(name)', 'State name already exists')]
 
 
+
 class fleet_vehicle_model(osv.Model):
 
-    def _model_name_get_fnc(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
+    def name_get(self, cr, uid, ids, context=None):
+        res = []
         for record in self.browse(cr, uid, ids, context=context):
-            name = record.modelname
+            name = record.name
             if record.brand_id.name:
-                name = record.brand_id.name + ' / ' + name
-            res[record.id] = name
+                name = record.brand_id.name + '/' + name
+            res.append((record.id, name))
         return res
 
     def on_change_brand(self, cr, uid, ids, model_id, context=None):
@@ -144,9 +124,8 @@ class fleet_vehicle_model(osv.Model):
     _order = 'name asc'
 
     _columns = {
-        'name': fields.function(_model_name_get_fnc, type="char", string='Name', store=True),
-        'modelname': fields.char('Model name', size=32, required=True), 
-        'brand_id': fields.many2one('fleet.vehicle.model.brand', 'Model Brand', required=True, help='Brand of the vehicle'),
+        'name': fields.char('Model name', required=True),
+        'brand_id': fields.many2one('fleet.vehicle.model.brand', 'Make', required=True, help='Make of the vehicle'),
         'vendors': fields.many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors'),
         'image': fields.related('brand_id', 'image', type="binary", string="Logo"),
         'image_medium': fields.related('brand_id', 'image_medium', type="binary", string="Logo (medium)"),
@@ -157,39 +136,36 @@ class fleet_vehicle_model(osv.Model):
 class fleet_vehicle_model_brand(osv.Model):
     _name = 'fleet.vehicle.model.brand'
     _description = 'Brand model of the vehicle'
-
     _order = 'name asc'
 
-    def _get_image(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = tools.image_get_resized_images(obj.image)
-        return result
+    name = openerp.fields.Char('Make', required=True)
 
-    def _set_image(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
+    image = openerp.fields.Binary("Logo", attachment=True,
+        help="This field holds the image used as logo for the brand, limited to 1024x1024px.")
+    image_medium = openerp.fields.Binary("Medium-sized image",
+        compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
+        help="Medium-sized logo of the brand. It is automatically "\
+             "resized as a 128x128px image, with aspect ratio preserved. "\
+             "Use this field in form views or some kanban views.")
+    image_small = openerp.fields.Binary("Small-sized image",
+        compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
+        help="Small-sized logo of the brand. It is automatically "\
+             "resized as a 64x64px image, with aspect ratio preserved. "\
+             "Use this field anywhere a small image is required.")
 
-    _columns = {
-        'name': fields.char('Brand Name', size=64, required=True),
-        'image': fields.binary("Logo",
-            help="This field holds the image used as logo for the brand, limited to 1024x1024px."),
-        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
-            string="Medium-sized photo", type="binary", multi="_get_image",
-            store = {
-                'fleet.vehicle.model.brand': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Medium-sized logo of the brand. It is automatically "\
-                 "resized as a 128x128px image, with aspect ratio preserved. "\
-                 "Use this field in form views or some kanban views."),
-        'image_small': fields.function(_get_image, fnct_inv=_set_image,
-            string="Smal-sized photo", type="binary", multi="_get_image",
-            store = {
-                'fleet.vehicle.model.brand': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Small-sized photo of the brand. It is automatically "\
-                 "resized as a 64x64px image, with aspect ratio preserved. "\
-                 "Use this field anywhere a small image is required."),
-    }
+    @openerp.api.depends('image')
+    def _compute_images(self):
+        for rec in self:
+            rec.image_medium = tools.image_resize_image_medium(rec.image)
+            rec.image_small = tools.image_resize_image_small(rec.image)
+
+    def _inverse_image_medium(self):
+        for rec in self:
+            rec.image = tools.image_resize_image_big(rec.image_medium)
+
+    def _inverse_image_small(self):
+        for rec in self:
+            rec.image = tools.image_resize_image_big(rec.image_small)
 
 
 class fleet_vehicle(osv.Model):
@@ -199,7 +175,7 @@ class fleet_vehicle(osv.Model):
     def _vehicle_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
-            res[record.id] = record.model_id.brand_id.name + '/' + record.model_id.modelname + ' / ' + record.license_plate
+            res[record.id] = record.model_id.brand_id.name + '/' + record.model_id.name + '/' + record.license_plate
         return res
 
     def return_action_to_open(self, cr, uid, ids, context=None):
@@ -336,9 +312,10 @@ class fleet_vehicle(osv.Model):
     _order= 'license_plate asc'
     _columns = {
         'name': fields.function(_vehicle_name_get_fnc, type="char", string='Name', store=True),
+        'active': fields.boolean('Active'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'license_plate': fields.char('License Plate', size=32, required=True, help='License plate number of the vehicle (ie: plate number for a car)'),
-        'vin_sn': fields.char('Chassis Number', size=32, help='Unique number written on the vehicle motor (VIN/SN number)'),
+        'license_plate': fields.char('License Plate', required=True, help='License plate number of the vehicle (ie: plate number for a car)'),
+        'vin_sn': fields.char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', copy=False),
         'driver_id': fields.many2one('res.partner', 'Driver', help='Driver of the vehicle'),
         'model_id': fields.many2one('fleet.vehicle.model', 'Model', required=True, help='Model of the vehicle'),
         'log_fuel': fields.one2many('fleet.vehicle.log.fuel', 'vehicle_id', 'Fuel Logs'),
@@ -350,12 +327,12 @@ class fleet_vehicle(osv.Model):
         'fuel_logs_count': fields.function(_count_all, type='integer', string='Fuel Logs', multi=True),
         'odometer_count': fields.function(_count_all, type='integer', string='Odometer', multi=True),
         'acquisition_date': fields.date('Acquisition Date', required=False, help='Date when the vehicle has been bought'),
-        'color': fields.char('Color', size=32, help='Color of the vehicle'),
+        'color': fields.char('Color', help='Color of the vehicle'),
         'state_id': fields.many2one('fleet.vehicle.state', 'State', help='Current state of the vehicle', ondelete="set null"),
-        'location': fields.char('Location', size=128, help='Location of the vehicle (garage, ...)'),
+        'location': fields.char('Location', help='Location of the vehicle (garage, ...)'),
         'seats': fields.integer('Seats Number', help='Number of seats of the vehicle'),
         'doors': fields.integer('Doors Number', help='Number of doors of the vehicle'),
-        'tag_ids' :fields.many2many('fleet.vehicle.tag', 'fleet_vehicle_vehicle_tag_rel', 'vehicle_tag_id','tag_id', 'Tags'),
+        'tag_ids' :fields.many2many('fleet.vehicle.tag', 'fleet_vehicle_vehicle_tag_rel', 'vehicle_tag_id','tag_id', 'Tags', copy=False),
         'odometer': fields.function(_get_odometer, fnct_inv=_set_odometer, type='float', string='Last Odometer', help='Odometer measure of the vehicle at the moment of this log'),
         'odometer_unit': fields.selection([('kilometers', 'Kilometers'),('miles','Miles')], 'Odometer Unit', help='Unit of the odometer ',required=True),
         'transmission': fields.selection([('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission', help='Transmission Used by the vehicle'),
@@ -368,29 +345,18 @@ class fleet_vehicle(osv.Model):
         'image_medium': fields.related('model_id', 'image_medium', type="binary", string="Logo (medium)"),
         'image_small': fields.related('model_id', 'image_small', type="binary", string="Logo (small)"),
         'contract_renewal_due_soon': fields.function(_get_contract_reminder_fnc, fnct_search=_search_contract_renewal_due_soon, type="boolean", string='Has Contracts to renew', multi='contract_info'),
-        'contract_renewal_overdue': fields.function(_get_contract_reminder_fnc, fnct_search=_search_get_overdue_contract_reminder, type="boolean", string='Has Contracts Overdued', multi='contract_info'),
+        'contract_renewal_overdue': fields.function(_get_contract_reminder_fnc, fnct_search=_search_get_overdue_contract_reminder, type="boolean", string='Has Contracts Overdue', multi='contract_info'),
         'contract_renewal_name': fields.function(_get_contract_reminder_fnc, type="text", string='Name of contract to renew soon', multi='contract_info'),
         'contract_renewal_total': fields.function(_get_contract_reminder_fnc, type="integer", string='Total of contracts due or overdue minus one', multi='contract_info'),
         'car_value': fields.float('Car Value', help='Value of the bought vehicle'),
         }
 
     _defaults = {
+        'active': True,
         'doors': 5,
         'odometer_unit': 'kilometers',
         'state_id': _get_default_state,
     }
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default.update({
-            'log_fuel':[],
-            'log_contracts':[],
-            'log_services':[],
-            'tag_ids':[],
-            'vin_sn':'',
-        })
-        return super(fleet_vehicle, self).copy(cr, uid, id, default, context=context)
 
     def on_change_model(self, cr, uid, ids, model_id, context=None):
         if not model_id:
@@ -403,9 +369,7 @@ class fleet_vehicle(osv.Model):
         }
 
     def create(self, cr, uid, data, context=None):
-        if not context:
-            context = {}
-        context.update({'mail_create_nolog': True})
+        context = dict(context or {}, mail_create_nolog=True)
         vehicle_id = super(fleet_vehicle, self).create(cr, uid, data, context=context)
         vehicle = self.browse(cr, uid, vehicle_id, context=context)
         self.message_post(cr, uid, [vehicle_id], body=_('%s %s has been added to the fleet!') % (vehicle.model_id.name,vehicle.license_plate), context=context)
@@ -450,8 +414,10 @@ class fleet_vehicle_odometer(osv.Model):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
             name = record.vehicle_id.name
-            if record.date:
-                name = name+ ' / '+ str(record.date)
+            if not name:
+                name = record.date
+            elif record.date:
+                name += ' / '+ record.date
             res[record.id] = name
         return res
 
@@ -568,7 +534,7 @@ class fleet_vehicle_log_fuel(osv.Model):
         'price_per_liter': fields.float('Price Per Liter'),
         'purchaser_id': fields.many2one('res.partner', 'Purchaser', domain="['|',('customer','=',True),('employee','=',True)]"),
         'inv_ref': fields.char('Invoice Reference', size=64),
-        'vendor_id': fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
+        'vendor_id': fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
         'notes': fields.text('Notes'),
         'cost_id': fields.many2one('fleet.vehicle.cost', 'Cost', required=True, ondelete='cascade'),
         'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
@@ -607,8 +573,8 @@ class fleet_vehicle_log_services(osv.Model):
     _description = 'Services for vehicles'
     _columns = {
         'purchaser_id': fields.many2one('res.partner', 'Purchaser', domain="['|',('customer','=',True),('employee','=',True)]"),
-        'inv_ref': fields.char('Invoice Reference', size=64),
-        'vendor_id': fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
+        'inv_ref': fields.char('Invoice Reference'),
+        'vendor_id': fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
         'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
         'notes': fields.text('Notes'),
         'cost_id': fields.many2one('fleet.vehicle.cost', 'Cost', required=True, ondelete='cascade'),
@@ -759,7 +725,6 @@ class fleet_vehicle_log_contract(osv.Model):
             'view_type': 'tree,form',
             'res_model': 'fleet.vehicle.log.contract',
             'type': 'ir.actions.act_window',
-            'nodestroy': True,
             'domain': '[]',
             'res_id': newid,
             'context': {'active_id':newid}, 
@@ -775,7 +740,7 @@ class fleet_vehicle_log_contract(osv.Model):
     def on_change_indic_cost(self, cr, uid, ids, cost_ids, context=None):
         totalsum = 0.0
         for element in cost_ids:
-            if element and len(element) == 3 and element[2] is not False:
+            if element and len(element) == 3 and isinstance(element[2], dict):
                 totalsum += element[2].get('amount', 0.0)
         return {
             'value': {
@@ -798,22 +763,26 @@ class fleet_vehicle_log_contract(osv.Model):
     _order='state desc,expiration_date'
     _columns = {
         'name': fields.function(_vehicle_contract_name_get_fnc, type="text", string='Name', store=True),
+        'active': fields.boolean('Active'),
         'start_date': fields.date('Contract Start Date', help='Date when the coverage of the contract begins'),
         'expiration_date': fields.date('Contract Expiration Date', help='Date when the coverage of the contract expirates (by default, one year after begin date)'),
         'days_left': fields.function(get_days_left, type='integer', string='Warning Date'),
-        'insurer_id' :fields.many2one('res.partner', 'Supplier'),
+        'insurer_id' :fields.many2one('res.partner', 'Vendor'),
         'purchaser_id': fields.many2one('res.partner', 'Contractor', help='Person to which the contract is signed for'),
-        'ins_ref': fields.char('Contract Reference', size=64),
-        'state': fields.selection([('open', 'In Progress'), ('toclose','To Close'), ('closed', 'Terminated')], 'Status', readonly=True, help='Choose wheter the contract is still valid or not'),
-        'notes': fields.text('Terms and Conditions', help='Write here all supplementary informations relative to this contract'),
+        'ins_ref': fields.char('Contract Reference', size=64, copy=False),
+        'state': fields.selection([('open', 'In Progress'), ('toclose','To Close'), ('closed', 'Terminated')],
+                                  'Status', readonly=True, help='Choose wheter the contract is still valid or not',
+                                  copy=False),
+        'notes': fields.text('Terms and Conditions', help='Write here all supplementary information relative to this contract', copy=False),
         'cost_generated': fields.float('Recurring Cost Amount', help="Costs paid at regular intervals, depending on the cost frequency. If the cost frequency is set to unique, the cost will be logged at the start date"),
         'cost_frequency': fields.selection([('no','No'), ('daily', 'Daily'), ('weekly','Weekly'), ('monthly','Monthly'), ('yearly','Yearly')], 'Recurring Cost Frequency', help='Frequency of the recuring cost', required=True),
-        'generated_cost_ids': fields.one2many('fleet.vehicle.cost', 'contract_id', 'Generated Costs', ondelete='cascade'),
+        'generated_cost_ids': fields.one2many('fleet.vehicle.cost', 'contract_id', 'Generated Costs'),
         'sum_cost': fields.function(_get_sum_cost, type='float', string='Indicative Costs Total'),
         'cost_id': fields.many2one('fleet.vehicle.cost', 'Cost', required=True, ondelete='cascade'),
         'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
     }
     _defaults = {
+        'active': True,
         'purchaser_id': lambda self, cr, uid, ctx: self.pool.get('res.users').browse(cr, uid, uid, context=ctx).partner_id.id or False,
         'date': fields.date.context_today,
         'start_date': fields.date.context_today,
@@ -823,18 +792,6 @@ class fleet_vehicle_log_contract(osv.Model):
         'cost_subtype_id': _get_default_contract_type,
         'cost_type': 'contract',
     }
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        today = fields.date.context_today(self, cr, uid, context=context)
-        default['date'] = today
-        default['start_date'] = today
-        default['expiration_date'] = self.compute_next_year_date(today)
-        default['ins_ref'] = ''
-        default['state'] = 'open'
-        default['notes'] = ''
-        return super(fleet_vehicle_log_contract, self).copy(cr, uid, id, default, context=context)
 
     def contract_close(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'closed'}, context=context)
@@ -847,5 +804,5 @@ class fleet_contract_state(osv.Model):
     _description = 'Contains the different possible status of a leasing contract'
 
     _columns = {
-        'name':fields.char('Contract Status', size=64, required=True),
+        'name':fields.char('Contract Status', required=True),
     }

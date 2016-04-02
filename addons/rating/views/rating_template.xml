@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <!-- Bundle for Rating Widget (in assets common to be used in website modules) -->
+        <template id="assets_common" inherit_id="web.assets_common" name="Rating common assets">
+            <xpath expr='.' position="inside">
+                <script src="/rating/static/src/js/rating_common.js"></script>
+                <link href="/rating/static/src/css/rating_common.css" rel="stylesheet"/>
+            </xpath>
+        </template>
+
+        <!-- backend assets -->
+        <template id="assets_backend" name="rating assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/rating/static/src/js/rating.js"></script>
+            </xpath>
+        </template>
+
+        <!-- Rating Star Widget (Generic widget)
+            :param String rating_input_name : the name of the input field to send the rating
+            :param Float rating_default_value : the rate to initialize the widget with
+            :param Boolean rating_disabled : is the widget disabled (False), or it is just used to display information (True). Default value is False
+        -->
+        <template id="rating_star_card" name="Rating Star Widget">
+            <div class="o_rating_star_card">
+                <div t-attf-class="stars #{rating_disabled and 'disabled' or 'enabled'}">
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                </div>
+                <div t-if="not rating_disabled" class="rate_text">
+                    <span class="label label-info"></span>
+                </div>
+            <input type="hidden" readonly="readonly"
+                t-att-name="rating_input_name or 'rating'"
+                t-att-data-default="rating_default_value or 0.0"
+                t-att-data-is_disabled="rating_disabled and 1 or 0"/>
+            </div>
+        </template>
+
+        <!-- Rating card : display the result (avg, total, ...) for rating
+            :param dict rating_stat : a dictionnary with
+                    'avg' : containing the rating note average
+                    'total' : the number of rating for the object
+                    'percent' : a dict where the key is each possible rate, and the value is
+                                the percent of rating having this rate.
+            :param float max_rate : the upper bound of the rate to display (in the popover)
+            :param float min_rate : the lower bound of the rate to display (in the popover)
+        -->
+        <template id="rating_card" name="Rating Card">
+            <div class="o_rating_card">
+                <div class="text-center well well-sm">
+                    <!-- popover 'button' -->
+                    <div class="rating"
+                        data-placement="top"
+                        data-toggle="rating-popover">
+                        <t t-call="rating.rating_star_card">
+                            <t t-set="rating_default_value" t-value="'%.2f' % (rating_stat.get('avg', 0.0),)"/>
+                            <t t-set="rating_disabled" t-value="True"/>
+                        </t>
+                        <i class="fa fa-user"> <t t-esc="rating_stat.get('total', 0)"/></i>
+                    </div>
+                    <!-- popover core -->
+                    <div class="popover rating_popover" role="tooltip">
+                        <div class="arrow"></div>
+                        <div class="popover-content">
+                            <t t-foreach="rating_stat.get('percent')" t-as="percent">
+                                <t t-if="min_rate &lt;= percent and percent &lt;= max_rate">
+                                    <div class="progress" style="width:200px;">
+                                        <div class="progress-bar" role="progressbar"
+                                            aria-valuemin="0"
+                                            aria-valuemax="100"
+                                            t-att-aria-valuenow="rating_stat['percent'][percent]"
+                                            t-attf-style="width: #{rating_stat['percent'][percent]}%">
+                                            <span class="sr-only">
+                                                <t t-esc="rating_stat['percent'][percent]"/>%
+                                            </span>
+                                        </div>
+                                        <span class="progress_type">
+                                            <t t-esc="percent"/> <i class="fa fa-star"/>
+                                        </span>
+                                        <span class="progress_completed">
+                                            <t t-esc="rating_stat['percent'][percent]"/>%
+                                        </span>
+                                    </div>
+                                </t>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- External page : thanks message -->
+        <template id="rating_external_page_view">
+            <head>
+                <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+            </head>
+            <div class='well' t-if="not is_rated">
+                <h1>Thanks for voting !</h1>
+                <div class="oe_right">
+                    <p>Your vote has been taken into account.</p>
+                    <p>It was <img t-attf-src='../../../rating/static/src/img/rating_#{rating}.png'/></p>
+                </div>
+            </div>
+            <div class='well' t-if="is_rated">
+                <h1>Sorry you have already voted !</h1>
+            </div>
+        </template>
+
+    </data>
+</openerp>

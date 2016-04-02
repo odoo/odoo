@@ -1,7 +1,12 @@
 import csv
+import datetime
+import io
 import itertools
 import logging
 import operator
+import os
+
+from openerp.tools.mimetypes import guess_mimetype
 
 try:
     from cStringIO import StringIO
@@ -12,21 +17,49 @@ import psycopg2
 
 from openerp.osv import orm, fields
 from openerp.tools.translate import _
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, \
+    DEFAULT_SERVER_DATETIME_FORMAT
 
 FIELDS_RECURSION_LIMIT = 2
 ERROR_PREVIEW_BYTES = 200
 _logger = logging.getLogger(__name__)
+
+try:
+    import xlrd
+    try:
+        from xlrd import xlsx
+    except ImportError:
+        xlsx = None
+except ImportError:
+    xlrd = xlsx = None
+
+try:
+    import odf_ods_reader
+except ImportError:
+    odf_ods_reader = None
+
+FILE_TYPE_DICT = {
+    'text/csv': ('csv', True, None),
+    'application/vnd.ms-excel': ('xls', xlrd, 'xlrd'),
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ('xlsx', xlsx, 'xlrd >= 0.8'),
+    'application/vnd.oasis.opendocument.spreadsheet': ('ods', odf_ods_reader, 'odfpy')
+}
+EXTENSIONS = {
+    '.' + ext: handler
+    for mime, (ext, handler, req) in FILE_TYPE_DICT.iteritems()
+}
+
 class ir_import(orm.TransientModel):
     _name = 'base_import.import'
     # allow imports to survive for 12h in case user is slow
     _transient_max_hours = 12.0
 
     _columns = {
-        'res_model': fields.char('Model', size=64),
+        'res_model': fields.char('Model'),
         'file': fields.binary(
             'File', help="File to check and/or import, raw binary (not base64)"),
-        'file_name': fields.char('File Name', size=None),
-        'file_type': fields.char('File Type', size=None),
+        'file_name': fields.char('File Name'),
+        'file_type': fields.char(string='File Type'),
     }
 
     def get_fields(self, cr, uid, model, context=None,
@@ -48,7 +81,7 @@ class ir_import(orm.TransientModel):
 
             .. attribute:: name (str)
 
-                The field's logical (OpenERP) name within the scope of
+                The field's logical (Odoo) name within the scope of
                 its parent.
 
             .. attribute:: string (str)
@@ -74,6 +107,7 @@ class ir_import(orm.TransientModel):
         :param str model: name of the model to get fields form
         :param int landing: depth of recursion into o2m fields
         """
+        model_obj = self.pool[model]
         fields = [{
             'id': 'id',
             'name': 'id',
@@ -81,8 +115,11 @@ class ir_import(orm.TransientModel):
             'required': False,
             'fields': [],
         }]
-        fields_got = self.pool[model].fields_get(cr, uid, context=context)
+        fields_got = model_obj.fields_get(cr, uid, context=context)
+        blacklist = orm.MAGIC_COLUMNS + [model_obj.CONCURRENCY_CHECK_FIELD]
         for name, field in fields_got.iteritems():
+            if name in blacklist:
+                continue
             # an empty string means the field is deprecated, @deprecated must
             # be absent or False to mean not-deprecated
             if field.get('deprecated', False) is not False:
@@ -114,13 +151,98 @@ class ir_import(orm.TransientModel):
             elif field['type'] == 'one2many' and depth:
                 f['fields'] = self.get_fields(
                     cr, uid, field['relation'], context=context, depth=depth-1)
-                if self.pool['res.users'].has_group(cr, uid, 'base.group_no_one'):
+                if self.user_has_groups(cr, uid, 'base.group_no_one'):
                     f['fields'].append({'id' : '.id', 'name': '.id', 'string': _("Database ID"), 'required': False, 'fields': []})
 
             fields.append(f)
 
         # TODO: cache on model?
         return fields
+
+    def _read_file(self, file_type, record, options):
+        # guess mimetype from file content
+        mimetype = guess_mimetype(record.file)
+        (file_extension, handler, req) = FILE_TYPE_DICT.get(mimetype, (None, None, None))
+        if handler:
+            try:
+                return getattr(self, '_read_' + file_extension)(record, options)
+            except Exception:
+                _logger.warn("Failed to read file '%s' (transient id %d) using guessed mimetype %s",
+                             record.file_name or '<unknown>', record.id, mimetype)
+
+        # try reading with user-provided mimetype
+        (file_extension, handler, req) = FILE_TYPE_DICT.get(file_type, (None, None, None))
+        if handler:
+            try:
+                return getattr(self, '_read_' + file_extension)(record, options)
+            except Exception:
+                _logger.warn("Failed to read file '%s' (transient id %d) using user-provided mimetype %s",
+                             record.file_name or '<unknown>', record.id, file_type)
+
+        # fallback on file extensions as mime types can be unreliable (e.g.
+        # software setting incorrect mime types, or non-installed software
+        # leading to browser not sending mime types)
+        if record.file_name:
+            p, ext = os.path.splitext(record.file_name)
+            if ext in EXTENSIONS:
+                try:
+                    return getattr(self, '_read_' + ext[1:])(record, options)
+                except Exception:
+                    _logger.warn("Failed to read file '%s' (transient id %s) using file extension",
+                                 record.file_name, record.id)
+
+        if req:
+            raise ImportError(_("Unable to load \"{extension}\" file: requires Python module \"{modname}\"").format(extension=file_extension, modname=req))
+        raise ValueError(_("Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX").format(file_type))
+
+    def _read_xls(self, record, options):
+        book = xlrd.open_workbook(file_contents=record.file)
+        return self._read_xls_book(book)
+    def _read_xls_book(self, book):
+        sheet = book.sheet_by_index(0)
+        # emulate Sheet.get_rows for pre-0.9.4
+        for row in itertools.imap(sheet.row, range(sheet.nrows)):
+            values = []
+            for cell in row:
+                if cell.ctype is xlrd.XL_CELL_NUMBER:
+                    is_float = cell.value % 1 != 0.0
+                    values.append(
+                        unicode(cell.value)
+                        if is_float
+                        else unicode(int(cell.value))
+                    )
+                elif cell.ctype is xlrd.XL_CELL_DATE:
+                    is_datetime = cell.value % 1 != 0.0
+                    # emulate xldate_as_datetime for pre-0.9.3
+                    dt = datetime.datetime(*xlrd.xldate.xldate_as_tuple(
+                        cell.value, book.datemode))
+                    values.append(
+                        dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+                        if is_datetime
+                        else dt.strftime(DEFAULT_SERVER_DATE_FORMAT)
+                    )
+                elif cell.ctype is xlrd.XL_CELL_BOOLEAN:
+                    values.append(u'True' if cell.value else u'False')
+                elif cell.ctype is xlrd.XL_CELL_ERROR:
+                    raise ValueError(
+                        _("Error cell found while reading XLS/XLSX file: %s") %
+                        xlrd.error_text_from_code.get(
+                            cell.value, "unknown error code %s" % cell.value)
+                    )
+                else:
+                    values.append(cell.value)
+            if any(x for x in values if x.strip()):
+                yield values
+    _read_xlsx = _read_xls
+
+    def _read_ods(self, record, options):
+        doc = odf_ods_reader.ODSReader(file=io.BytesIO(record.file))
+
+        return (
+            row
+            for row in doc.getFirstSheet()
+            if any(x for x in row if x.strip())
+        )
 
     def _read_csv(self, record, options):
         """ Returns a CSV-parsed iterator of all empty lines in the file
@@ -132,12 +254,14 @@ class ir_import(orm.TransientModel):
             StringIO(record.file),
             quotechar=str(options['quoting']),
             delimiter=str(options['separator']))
-        csv_nonempty = itertools.ifilter(None, csv_iterator)
+
         # TODO: guess encoding with chardet? Or https://github.com/aadsm/jschardet
         encoding = options.get('encoding', 'utf-8')
-        return itertools.imap(
-            lambda row: [item.decode(encoding) for item in row],
-            csv_nonempty)
+        return (
+            [item.decode(encoding) for item in row]
+            for row in csv_iterator
+            if any(x for x in row if x.strip())
+        )
 
     def _match_header(self, header, fields, options):
         """ Attempts to match a given header to a field of the
@@ -150,12 +274,19 @@ class ir_import(orm.TransientModel):
                   all the fields to traverse
         :rtype: list(Field)
         """
+        string_match = None
         for field in fields:
             # FIXME: should match all translations & original
             # TODO: use string distance (levenshtein? hamming?)
-            if header == field['name'] \
-              or header.lower() == field['string'].lower():
+            if header.lower() == field['name'].lower():
                 return [field]
+            if header.lower() == field['string'].lower():
+                # matching string are not reliable way because
+                # strings have no unique constraint
+                string_match = field
+        if string_match:
+            # this behavior is only applied if there is no matching field['name']
+            return [string_match]
 
         if '/' not in header:
             return []
@@ -196,10 +327,10 @@ class ir_import(orm.TransientModel):
             return None, None
 
         headers = next(rows)
-        return headers, dict(
-            (index, [field['name'] for field in self._match_header(header, fields, options)] or None)
+        return headers, {
+            index: [field['name'] for field in self._match_header(header, fields, options)] or None
             for index, header in enumerate(headers)
-        )
+        }
 
     def parse_preview(self, cr, uid, id, options, count=10, context=None):
         """ Generates a preview of the uploaded files, and performs
@@ -221,7 +352,7 @@ class ir_import(orm.TransientModel):
         fields = self.get_fields(cr, uid, record.res_model, context=context)
 
         try:
-            rows = self._read_csv(record, options)
+            rows = self._read_file(record.file_type, record, options)
 
             headers, matches = self._match_headers(rows, fields, options)
             # Match should have consumed the first row (iif headers), get
@@ -238,15 +369,17 @@ class ir_import(orm.TransientModel):
             # Due to lazy generators, UnicodeDecodeError (for
             # instance) may only be raised when serializing the
             # preview to a list in the return.
-            _logger.debug("Error during CSV parsing preview", exc_info=True)
+            _logger.debug("Error during parsing preview", exc_info=True)
+            preview = None
+            if record.file_type == 'text/csv':
+                preview = record.file[:ERROR_PREVIEW_BYTES].decode('iso-8859-1')
             return {
                 'error': str(e),
                 # iso-8859-1 ensures decoding will always succeed,
                 # even if it yields non-printable characters. This is
                 # in case of UnicodeDecodeError (or csv.Error
                 # compounded with UnicodeDecodeError)
-                'preview': record.file[:ERROR_PREVIEW_BYTES]
-                                .decode( 'iso-8859-1'),
+                'preview': preview,
             }
 
     def _convert_import_data(self, record, fields, options, context=None):
@@ -272,7 +405,7 @@ class ir_import(orm.TransientModel):
         # Get only list of actually imported fields
         import_fields = filter(None, fields)
 
-        rows_to_import = self._read_csv(record, options)
+        rows_to_import = self._read_file(record.file_type, record, options)
         if options.get('headers'):
             rows_to_import = itertools.islice(
                 rows_to_import, 1, None)

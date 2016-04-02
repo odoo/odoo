@@ -1,25 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- vim:fdl=1:
--->
 <templates id="template" xml:space="preserve">
+    <div t-name="WidgetWebsiteButton" class="o_stat_info published">
+        <span class="o_stat_text o_value"/>
+        <span class="o_stat_text">On Website</span>
+    </div>
 
-    <t t-name="WidgetWebsiteButton">
-
-        <div class="btn-group oe_WidgetWebsiteButton">
-            <button class="btn btn-sm btn-success">
-                <span class="oe_unpublish">Not Published</span>
-                <span class="oe_publish">Published</span>
-            </button>
-            <button id="dopprod-0" data-toggle="dropdown" type="button" class="btn btn-sm btn-default dropdown-toggle">
-                <span class="caret"></span>
-            </button>
-            <ul role="menu" class="dropdown-menu" aria-labelledby="dopprod-0">
-                <li>
-                    <a href="#" title="View in frontend">Website</a>
-                </li>
-            </ul>
+    <t t-name="website.WebsiteDashboardMain">
+        <div class="container o_website_dashboard">
         </div>
-
     </t>
 
+    <t t-name="website.dashboard_visits">
+        <div class="row o_dashboard_visits">
+            <div class="col-xs-12 o_box">
+                <h2>Visits</h2>
+
+                <div t-if="widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id" class="row js_analytics_components">
+                </div>
+
+                <div t-if="!(widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id)">
+                    <div class="o_demo_background">
+                        <div class="o_layer">
+                        </div>
+                        <button class="btn btn-sm btn-primary js_link_analytics_settings">Link my Analytics Account</button>
+                    </div>
+                </div>
+
+                <a href="#" class="js_link_analytics_settings">Edit my Analytics Client ID</a>
+
+            </div>
+        </div>
+    </t>
+
+    <div t-name="website.unauthorized_analytics" class="col-xs-12 js_unauthorized_message">
+        <span t-if="reason === 'not_connected'">You need to log in to your Google Account before: </span>
+        <span t-if="reason === 'no_right'">You do not seem to have access to this Analytics Account.</span>
+    </div>
+
+    <div t-name="website.ga_dialog_content">
+        Your Google Analytic Client ID: <input type="text" name="ga_client_id" t-att-value="ga_key" style="width: 100%"></input>
+        <br/>Go to our <a href="https://www.odoo.com/documentation/user/9.0/website/google_analytics.html" target="_blank">User Documentation</a> to get more information.
+    </div>
+
+    <t t-name="website.DateRangeButtons">
+        <div class="btn-group btn-group-sm o_date_range_buttons">
+            <button class="btn btn-sm btn-default js_date_range active" data-date="week">Week</button>
+            <button class="btn btn-sm btn-default js_date_range" data-date="month">Month</button>
+            <button class="btn btn-sm btn-default js_date_range" data-date="year">Year</button>
+        </div>
+    </t>
 </templates>

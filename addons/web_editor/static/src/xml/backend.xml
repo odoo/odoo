@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="web_editor.FieldTextHtmlSimple">
+        <div class="oe_form_field oe_form_field_html_text" t-att-style="widget.node.attrs.style">
+            <textarea readonly="readonly"/>
+        </div>
+    </t>
+
+    <t t-name="web_editor.FieldTextHtml">
+        <div class="oe_form_field oe_form_field_html oe_form_embedded_html" t-att-style="widget.node.attrs.style">
+            <iframe/>
+        </div>
+    </t>
+
+    <t t-name="web_editor.FieldTextHtml.button.reset">
+        <div class="btn-group pull-right">
+            <button class="o_reset_translation btn btn-default btn-sm btn-small" title="Reset from source"><span class="fa fa-upload"></span></button>
+        </div>
+    </t>
+
+    <t t-name="web_editor.FieldTextHtml.button.translate">
+        <div class="btn-group pull-right">
+            <button t-if="widget.field.translate" class="oe_field_translate btn btn-default btn-sm btn-small" style="height: 24px; padding: 1px 3px 0px 5px">
+                <img border="0" class="oe_input_icon" height="16" width="16" src="/web/static/src/img/icons/terp-translate.png" style="margin: 2px 0px -2px 0px;"/>
+            </button>
+        </div>
+    </t>
+
+    <t t-name="web_editor.FieldTextHtml.translate">
+        <div t-if="widget.view.datarecord.id &amp;&amp; widget.languages.length" style="margin: 5px; position: fixed; top: 0; left: 0; z-index: 2000;">
+            <select style="
+                    width: 148px;
+                    height: 22px;
+                    padding: 2px 4px;
+                    border: 1px solid #ccc;
+                    -moz-border-radius: 3px;
+                    -webkit-border-radius: 3px;
+                    border-radius: 3px;
+                    background: white;">
+                <t t-foreach="widget.languages" t-as="lang">
+                    <option value="en_US" t-att-selected="'en_US' == widget.lang ? 'selected' : null">
+                        <t t-if="!widget.get('effective_readonly')">English (edit mode)</t>
+                        <t t-if="widget.get('effective_readonly')">English</t>
+                    </option>
+                    <option t-att-value="lang.code" t-att-selected="lang.code == widget.lang ? 'selected' : null"><t t-esc="lang.name"/></option>
+                </t>
+            </select>
+        </div>
+    </t>
+    <t t-name="web_editor.FieldTextHtml.fullscreen">
+        <span style="margin: 5px; position: fixed; top: 0; right: 0; z-index: 2000;">
+            <button class="o_fullscreen btn btn-primary" style="height: 24px; padding: 1px 2px 1px 3px;">
+                <img border="0" class="oe_input_icon" height="16" width="16" src="/web/static/src/img/icons/STOCK_FULLSCREEN.png" style="margin: 2px 0px -2px 0px;"/>
+            </button>
+        </span>
+    </t>
+
+</templates>

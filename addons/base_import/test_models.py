@@ -6,42 +6,42 @@ class char(orm.Model):
     _name = name('char')
 
     _columns = {
-        'value': fields.char('unknown', size=None)
+        'value': fields.char('unknown')
     }
 
 class char_required(orm.Model):
     _name = name('char.required')
 
     _columns = {
-        'value': fields.char('unknown', size=None, required=True)
+        'value': fields.char('unknown', required=True)
     }
 
 class char_readonly(orm.Model):
     _name = name('char.readonly')
 
     _columns = {
-        'value': fields.char('unknown', size=None, readonly=True)
+        'value': fields.char('unknown', readonly=True)
     }
 
 class char_states(orm.Model):
     _name = name('char.states')
 
     _columns = {
-        'value': fields.char('unknown', size=None, readonly=True, states={'draft': [('readonly', False)]})
+        'value': fields.char('unknown', readonly=True, states={'draft': [('readonly', False)]})
     }
 
 class char_noreadonly(orm.Model):
     _name = name('char.noreadonly')
 
     _columns = {
-        'value': fields.char('unknown', size=None, readonly=True, states={'draft': [('invisible', True)]})
+        'value': fields.char('unknown', readonly=True, states={'draft': [('invisible', True)]})
     }
 
 class char_stillreadonly(orm.Model):
     _name = name('char.stillreadonly')
 
     _columns = {
-        'value': fields.char('unknown', size=None, readonly=True, states={'draft': [('readonly', True)]})
+        'value': fields.char('unknown', readonly=True, states={'draft': [('readonly', True)]})
     }
 
 # TODO: complex field (m2m, o2m, m2o)
@@ -95,7 +95,7 @@ class preview_model(orm.Model):
     _name = name('preview')
 
     _columns = {
-        'name': fields.char('Name', size=None),
+        'name': fields.char('Name'),
         'somevalue': fields.integer('Some Value', required=True),
         'othervalue': fields.integer('Other Variable'),
     }

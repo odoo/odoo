@@ -1,0 +1,22 @@
+Index: addons/openacademy/models.py
+===================================================================
+--- addons.orig/openacademy/models.py	2014-08-27 10:34:08.531934946 +0200
++++ addons/openacademy/models.py	2014-08-27 10:34:08.527934946 +0200
+@@ -25,3 +25,4 @@
+     instructor_id = fields.Many2one('res.partner', string="Instructor")
+     course_id = fields.Many2one('openacademy.course',
+         ondelete='cascade', string="Course", required=True)
++    attendee_ids = fields.Many2many('res.partner', string="Attendees")
+Index: addons/openacademy/views/openacademy.xml
+===================================================================
+--- addons.orig/openacademy/views/openacademy.xml	2014-08-27 10:34:08.531934946 +0200
++++ addons/openacademy/views/openacademy.xml	2014-08-27 10:34:08.527934946 +0200
+@@ -102,6 +102,8 @@
+                                 <field name="seats"/>
+                             </group>
+                         </group>
++                        <label for="attendee_ids"/>
++                        <field name="attendee_ids"/>
+                     </sheet>
+                 </form>
+             </field>

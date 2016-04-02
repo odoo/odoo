@@ -1,20 +1,22 @@
-.oe_module_vignette {
-    padding: 4px;
-}
-.oe_module_icon, .oe_module_desc {
-    display: inline-block;
-    vertical-align: top;
-}
+
 .oe_module_icon {
     width: 80px;
     height: 80px;
-    padding: 0 4px;
+    float: left;
 }
 
 .oe_module_desc {
-    width: 210px;
     font-size: 13px;
-    padding: 0px 5px;
+}
+
+.oe_module_icon + .oe_module_desc {
+    padding-left: 85px;
+}
+
+.oe_module_desc > button {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
 }
 
 .oe_module_desc h4 {
@@ -33,8 +35,3 @@
 .oe_module_desc p {
     margin: 3px 0 5px;
 }
-
-.oe_module_desc .oe_button {
-    min-width: 70px;
-}
-

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="bank_iban_asustek" model="res.partner.bank">
+            <field name="acc_type">iban</field>
+            <field name="acc_number">BE39103123456719</field>
+            <field name="bank_id" ref="base.bank_crelan" />
+            <field name="partner_id" ref="base.res_partner_1"/>
+        </record>
+
+        <record id="bank_iban_china_export" model="res.partner.bank">
+            <field name="acc_type">iban</field>
+            <field name="acc_number">SI56191000000123438</field>
+            <field name="bank_id" ref="base.bank_cbc" />
+            <field name="partner_id" ref="base.res_partner_3"/>
+        </record>
+
+        <record id="bank_iban_main_partner" model="res.partner.bank">
+            <field name="acc_type">iban</field>
+            <field name="acc_number">BE61310126985517</field>
+            <field name="bank_id" ref="base.bank_ing" />
+            <field name="partner_id" ref="base.res_partner_4"/>
+        </record>
+
+    </data>
+</openerp>

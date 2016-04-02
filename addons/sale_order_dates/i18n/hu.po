@@ -1,57 +1,62 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#    * sale_order_dates
-#
+# * sale_order_dates
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2011-01-26 13:07+0000\n"
-"Last-Translator: Krisztian Eyssen <krisz@eyssen.hu>\n"
-"Language-Team: \n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-09-08 08:03+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:40+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_order_dates
-#: view:sale.order:0
-msgid "Dates"
-msgstr "Dátumok"
-
-#. module: sale_order_dates
-#: field:sale.order,commitment_date:0
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_commitment_date
 msgid "Commitment Date"
 msgstr "Kötelezettség dátuma"
 
 #. module: sale_order_dates
-#: field:sale.order,effective_date:0
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order_requested_date
+msgid ""
+"Date by which the customer has requested the items to be delivered.\n"
+"When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
+"Leave this field empty if you want the Delivery Order to be processed as soon as possible. In that case the expected date will be computed using the default method: based on the Product Lead Times and the Company's Security Delay."
+msgstr "A vásárló által igényelt kiszállítási idő dátuma.\nHa ez a megrendelés jóváhagyásra kerül, a kiszállítás elvárt ideje kiszámításra kerül ennek a dátumnak és a Vállalat Biztonsági késedelmi idejéből.\nHagyja üresen, ha ezt a kézbesítési bizonylatot/szállítólevelet el akarja végezni amilyen gyorsan csak lehetséges. Ebben az esetben az elvárt idő az alapértelmezett módszerrel kerül kiszámításra: a termék szállítási idejét és a Vállalat Biztonsági késedelmi idejét alapul véve."
+
+#. module: sale_order_dates
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
+msgid ""
+"Date by which the products are sure to be delivered. This is a date that you"
+" can promise to the customer, based on the Product Lead Times."
+msgstr "Dátum mire az áru biztosan le lesz szállítva. Ez az a dátum amit biztonsággal megígérhet a vásárlónak, a termék szállítási időket figyelembe véve."
+
+#. module: sale_order_dates
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order_effective_date
+msgid "Date on which the first Delivery Order was created."
+msgstr "Dátum amikor az első vásárlói megrendelést létrehozta."
+
+#. module: sale_order_dates
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_effective_date
 msgid "Effective Date"
 msgstr "Teljesítés kelte"
 
 #. module: sale_order_dates
-#: help:sale.order,effective_date:0
-msgid "Date on which the first Delivery Order was created."
-msgstr ""
-
-#. module: sale_order_dates
-#: help:sale.order,requested_date:0
-msgid ""
-"Date by which the customer has requested the items to be delivered.\n"
-"When this Order gets confirmed, the Delivery Order's expected date will be "
-"computed based on this date and the Company's Security Delay.\n"
-"Leave this field empty if you want the Delivery Order to be processed as "
-"soon as possible. In that case the expected date will be computed using the "
-"default method: based on the Product Lead Times and the Company's Security "
-"Delay."
-msgstr ""
-
-#. module: sale_order_dates
-#: field:sale.order,requested_date:0
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_requested_date
 msgid "Requested Date"
 msgstr "Kért dátum"
+
+#. module: sale_order_dates
+#: code:addons/sale_order_dates/sale_order_dates.py:51
+#, python-format
+msgid "Requested date is too soon!"
+msgstr "Az igényelt dátum túl közeli!"
 
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order
@@ -59,37 +64,14 @@ msgid "Sales Order"
 msgstr "Vevői megrendelés"
 
 #. module: sale_order_dates
-#: help:sale.order,commitment_date:0
-msgid ""
-"Date by which the products are sure to be delivered. This is a date that you "
-"can promise to the customer, based on the Product Lead Times."
-msgstr ""
+#: model:ir.model,name:sale_order_dates.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Vásárlói megrendelés sor"
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:90
-#, python-format
-msgid "Requested date is too soon!"
-msgstr ""
-
-#. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:91
+#: code:addons/sale_order_dates/sale_order_dates.py:52
 #, python-format
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
 "may be unable to honor the customer's request."
-msgstr ""
-
-#~ msgid "Sales Order Dates"
-#~ msgstr "Vevői megrendelések dátumai"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "A megrendelés hivatkozásnak egyedinek kell lennie!"
-
-#~ msgid "Date on which picking is created."
-#~ msgstr "Időpont, amikor a kiszedés létrejött."
-
-#~ msgid "Date requested by the customer for the sale."
-#~ msgstr "A megrendelő által kért eladási dámum."
-
-#~ msgid "Committed date for delivery."
-#~ msgstr "Kötelezett dátum a szállításra"
+msgstr "A vásárló által kitűzött dátum közelebb van mint a kötelezettség dátuma. Lehet, hogy nem tudja teljesíteni a vásárló igényét."

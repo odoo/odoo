@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <template id="report_delivery_document">
+        <t t-call="report.html_container">
+            <t t-call="report.external_layout">
+                <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
+                <div class="page">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div>
+                                <span><strong>Customer Address:</strong></span>
+                            </div>
+                            <div t-if="o.partner_id" name="partner_header">
+                                <div t-field="o.partner_id"
+                                   t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
+                            </div>
+                        </div>    
+                    </div>
+                    <h2>
+                        <span t-field="o.name"/>
+                    </h2>
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th><strong>Order (Origin)</strong></th>
+                                <th name="td_sched_date_h"><strong>Scheduled Date</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <span t-field="o.picking_type_id"/>
+                                </td>
+                                <td name="td_sched_date">
+                                   <span t-field="o.min_date"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-condensed mt48" t-if="not o.pack_operation_ids">
+                        <thead>
+                            <tr>
+                                <th><strong>Product</strong></th>
+                                <th><strong>Status</strong></th>
+                                <th><strong>Location</strong></th>
+                                <th class="text-right"><strong>Quantity</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.move_lines" t-as="move">
+                                <td><span t-field="move.product_id"/></td>
+                                <td><span t-field="move.state"/></td>
+                                <td><span t-field="move.location_id"/></td>
+                                <td class="text-right">
+                                    <span t-field="move.product_uom_qty"/>
+                                    <span t-field="move.product_uom"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-condensed mt48" t-if="o.pack_operation_ids">
+                        <t t-set="has_serial_number" t-value="o.pack_operation_ids.filtered('pack_lot_ids')" groups="stock.group_production_lot"/>
+                        <thead>
+                            <tr>
+                                <th><strong>Product</strong></th>
+                                <th t-if="has_serial_number"><strong>Serial Number</strong></th>
+                                <th><strong>Status</strong></th>
+                                <th><strong>Location</strong></th>
+                                <th class="text-right"><strong>Quantity</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.pack_operation_ids" t-as="pack_operation">
+                                <td>
+                                    <span t-field="pack_operation.product_id"/>
+                                    <t t-if="not pack_operation.product_id and pack_operation.package_id">
+                                        <span  t-field="pack_operation.package_id"/>
+                                    </t>
+                                </td>
+                                <t t-if="has_serial_number">
+                                    <td t-if="pack_operation.pack_lot_ids">
+                                        <table class="table table-condensed" t-if="pack_operation.pack_lot_ids">
+                                            <thead>
+                                                <tr><th>Lot</th><th>Qty</th></tr>
+                                            </thead>
+                                            <tr t-foreach="pack_operation.pack_lot_ids" t-as="packlot">
+                                                <td>
+                                                    <span t-field="packlot.lot_id"/>
+                                                    <t t-if="not packlot.lot_id">
+                                                        <span t-field="packlot.lot_name"/>
+                                                    </t>
+                                                </td>
+                                                <td>
+                                                    <span t-field="packlot.qty"/> <t t-if="o.picking_type_id.use_existing_lots and o.state!='done'"> / <span t-field="packlot.qty_todo"/></t>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td t-if="not pack_operation.pack_lot_ids"/>
+                                </t>
+                                <td>
+                                    <t t-set="mls" t-value="pack_operation.picking_id.move_lines"/>
+                                    <t t-set="check" t-value="True"/>
+                                    <t t-foreach="mls" t-as="ml">
+                                        <t t-if="ml.product_id.id == pack_operation.product_id.id and check">
+                                            <t t-set="check" t-value="False"/>
+                                            <span t-field="ml.state"/>
+                                        </t>
+                                    </t>
+                                </td>
+                                <td>
+                                    <span t-field="pack_operation.location_id"/>
+                                    <span t-if="pack_operation.package_id">:</span>
+                                    <span t-field="pack_operation.package_id"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="pack_operation.product_qty"/>
+                                    <span t-field="pack_operation.product_uom_id"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+         </t>
+    </template>
+
+    <template id="report_deliveryslip">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="stock.report_delivery_document" t-lang="o.partner_id.lang"/>
+        </t>
+    </template>
+
+</odoo>

@@ -1,26 +1,34 @@
-# Russian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * decimal_precision
+# 
+# Translators:
+# Max Belyanin <maxbelyanin@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-03-14 18:48+0000\n"
-"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-10-09 08:49+0000\n"
+"Last-Translator: Max Belyanin <maxbelyanin@gmail.com>\n"
+"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:29+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: decimal_precision
-#: field:decimal.precision,digits:0
-msgid "Digits"
-msgstr "Знаков"
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_create_uid
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_create_uid
+msgid "Created by"
+msgstr "Создано"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_create_date
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_create_date
+msgid "Created on"
+msgstr "Создан"
 
 #. module: decimal_precision
 #: model:ir.actions.act_window,name:decimal_precision.action_decimal_precision_form
@@ -29,39 +37,74 @@ msgid "Decimal Accuracy"
 msgstr "Десятичная точность"
 
 #. module: decimal_precision
-#: field:decimal.precision,name:0
-msgid "Usage"
-msgstr "Использование"
+#: model:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_form
+#: model:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_tree
+msgid "Decimal Precision"
+msgstr "Точность"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_digits
+msgid "Digits"
+msgstr "Знаков"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_display_name
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_display_name
+msgid "Display Name"
+msgstr "Отображаемое Имя"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_id
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_id
+msgid "ID"
+msgstr "ID"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision___last_update
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test___last_update
+msgid "Last Modified on"
+msgstr "Последний раз изменено"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_write_uid
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_write_uid
+msgid "Last Updated by"
+msgstr "Последний раз обновлено"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_write_date
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_write_date
+msgid "Last Updated on"
+msgstr "Последний раз обновлено"
 
 #. module: decimal_precision
 #: sql_constraint:decimal.precision:0
 msgid "Only one value can be defined for each given usage!"
-msgstr ""
-"Только одно значение может быть определено для каждого использования!"
+msgstr "Только одно значение может быть определено для каждого использования!"
 
 #. module: decimal_precision
-#: view:decimal.precision:0
-msgid "Decimal Precision"
-msgstr "Точность"
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_name
+msgid "Usage"
+msgstr "Использование"
 
 #. module: decimal_precision
 #: model:ir.model,name:decimal_precision.model_decimal_precision
 msgid "decimal.precision"
 msgstr "decimal.precision"
 
-#~ msgid ""
-#~ "\n"
-#~ "This module allows to configure the price accuracy you need for different "
-#~ "kind\n"
-#~ "of usage: accounting, sales, purchases, ...\n"
-#~ "\n"
-#~ "The decimal precision is configured per company.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Этот модуль позволяет настроить точность цен для разных случаев: бух. учет, "
-#~ "продажи, закупки и т.д.\n"
-#~ "\n"
-#~ "Точность чисел настраивается для каждой компании.\n"
+#. module: decimal_precision
+#: model:ir.model,name:decimal_precision.model_decimal_precision_test
+msgid "decimal.precision.test"
+msgstr "decimal.precision.test"
 
-#~ msgid "Decimal Precision Configuration"
-#~ msgstr "Настройка точности"
+#. module: decimal_precision
+#: model:ir.model,name:decimal_precision.model_ir_qweb_field_float
+msgid "ir.qweb.field.float"
+msgstr "ir.qweb.field.float"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float_2
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float_4
+msgid "unknown"
+msgstr "неизвестен"

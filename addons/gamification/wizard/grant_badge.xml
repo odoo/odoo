@@ -6,16 +6,16 @@
             <field name="name">Grant Badge User Form</field>
             <field name="model">gamification.badge.user.wizard</field>
             <field name="arch" type="xml">
-                <form string="Grant Badge To" version="7.0">
+                <form string="Grant Badge To">
                     Who would you like to reward?
+                    <field name="badge_id" invisible="1"/>
                     <group>
-                        <field name="user_id" nolabel="1" />
-                        <field name="badge_id" invisible="1"/>
-                        <field name="comment" nolabel="1" placeholder="Describe what they did and why it matters (will be public)" class="oe_no_padding" />
+                        <field name="user_id" nolabel="1" colspan="4"/>
+                        <field name="comment" nolabel="1" placeholder="Describe what they did and why it matters (will be public)" colspan="4"/>
                     </group>
                     <footer>
-                        <button string="Grant Badge" type="object" name="action_grant_badge" class="oe_highlight" /> or
-                        <button string="Cancel" special="cancel" class="oe_link"/>
+                        <button string="Grant Badge" type="object" name="action_grant_badge" class="btn-primary" />
+                        <button string="Cancel" special="cancel" class="btn-default"/>
                     </footer>
                 </form>
             </field>

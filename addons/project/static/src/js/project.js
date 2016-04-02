@@ -1,45 +1,67 @@
-openerp.project = function(openerp) {
-    openerp.web_kanban.KanbanView.include({
-        project_display_members_names: function() {
-            /*
-             * Set avatar title for members.
-             * In kanban views, many2many fields only return a list of ids.
-             * We can implement return value of m2m fields like [(1,"Adminstration"),...].
-             */
-            var self = this;
-            var members_ids = [];
+odoo.define('project.update_kanban', function (require) {
+'use strict';
 
-            // Collect members ids
-            self.$el.find('img[data-member_id]').each(function() {
-                members_ids.push($(this).data('member_id'));
-            });
+var core = require('web.core');
+var data = require('web.data');
+var Dialog = require('web.Dialog');
+var Model = require('web.Model');
+var session = require('web.session');
 
-            // Find their matching names
-            var dataset = new openerp.web.DataSetSearch(self, 'res.users', self.session.context, [['id', 'in', _.uniq(members_ids)]]);
-            dataset.read_slice(['id', 'name']).done(function(result) {
-                _.each(result, function(v, k) {
-                    // Set the proper value in the DOM
-                    self.$el.find('img[data-member_id=' + v.id + ']').attr('title', v.name).tooltip();
-                });
-            });
-        },
-        on_groups_started: function() {
-            var self = this;
-            self._super.apply(self, arguments);
+var KanbanView = require('web_kanban.KanbanView');
+var KanbanRecord = require('web_kanban.Record');
 
-            if (self.dataset.model === 'project.project') {
-                self.project_display_members_names();
-            }
+var QWeb = core.qweb;
+var _t = core._t;
+
+KanbanRecord.include({
+    on_card_clicked: function () {
+        if (this.model === 'project.project') {
+            this.$('.o_project_kanban_boxes a').first().click();
+        } else {
+            this._super.apply(this, arguments);
         }
-    });
+    },
+    on_kanban_action_clicked: function (ev) {
+        var self = this;
+        if (this.model === 'project.task' && $(ev.currentTarget).data('type') === 'set_cover') {
+            ev.preventDefault();
 
-    openerp.web_kanban.KanbanRecord.include({
-        on_card_clicked: function() {
-            if (this.view.dataset.model === 'project.project') {
-                this.$('.oe_kanban_project_list a').first().click();
-            } else {
-                this._super.apply(this, arguments);
-            }
-        },
-    });
-};
+            new Model('ir.attachment').query(['id', 'name'])
+               .filter([['res_model', '=', 'project.task'], ['res_id', '=', this.id], ['mimetype', 'ilike', 'image']])
+               .all().then(open_cover_images_dialog);
+        } else {
+            this._super.apply(this, arguments, ev);
+        }
+
+        function open_cover_images_dialog(attachment_ids) {
+            var cover_id = self.record.displayed_image_id.raw_value[0];
+            var $content = $(QWeb.render("project.SetCoverModal", {
+                cover_id: cover_id,
+                attachment_ids: attachment_ids,
+            }));
+            var $imgs = $content.find('img');
+
+            var dialog = new Dialog(self, {
+                title: _t("Set a Cover Image"),
+                buttons: [{text: _t("Select"), classes: 'btn-primary', close: true, disabled: !cover_id, click: function () {
+                    self.update_record({data: {displayed_image_id: $imgs.filter('.o_selected').data('id')}});
+                }}, {text: _t("Remove Cover Image"), close: true, click: function () {
+                    self.update_record({data: {displayed_image_id: 0}});
+                }}, {text: _t("Discard"), close: true}],
+                $content: $content,
+            }).open();
+
+            var $selectBtn = dialog.$footer.find('.btn-primary');
+            $content.on('click', 'img', function (ev) {
+                $imgs.not(ev.currentTarget).removeClass('o_selected');
+                $selectBtn.prop('disabled', !$(ev.currentTarget).toggleClass('o_selected').hasClass('o_selected'));
+            });
+
+            $content.on('dblclick', 'img', function (ev) {
+                self.update_record({data: {displayed_image_id: $(ev.currentTarget).data('id')}});
+                dialog.close();
+            });
+        }
+    },
+});
+});

@@ -5,7 +5,7 @@
             <field name="model">res.company</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//page[@string='Report Configuration']/group[@string='Configuration']" position="after">
+                <xpath expr="//page[@name='report']/group[1]" position="after">
                     <group string="Configuration (Webkit)" col="2">
                         <field name="header_image"/>
                         <field name="header_webkit"/>

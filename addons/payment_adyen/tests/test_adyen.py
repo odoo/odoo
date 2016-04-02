@@ -6,7 +6,6 @@ import urlparse
 from openerp.addons.payment.models.payment_acquirer import ValidationError
 from openerp.addons.payment.tests.common import PaymentAcquirerCommon
 from openerp.addons.payment_adyen.controllers.main import AdyenController
-from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
 
 
@@ -18,7 +17,7 @@ class AdyenCommon(PaymentAcquirerCommon):
         self.base_url = self.registry('ir.config_parameter').get_param(cr, uid, 'web.base.url')
 
         # get the adyen account
-        model, self.adyen_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment_adyen', 'payment_acquirer_adyen')
+        model, self.adyen_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment', 'payment_acquirer_adyen')
 
         # some CC (always use expiration date 06 / 2016, cvc 737, cid 7373 (amex))
         self.amex = (('370000000000002', '7373'))

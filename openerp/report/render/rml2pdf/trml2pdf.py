@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 import sys
@@ -30,8 +12,10 @@ import utils
 import color
 import os
 import logging
+import traceback
 from lxml import etree
 import base64
+from distutils.version import LooseVersion
 from reportlab.platypus.doctemplate import ActionFlowable
 from openerp.tools.safe_eval import safe_eval as eval
 from reportlab.lib.units import inch,cm,mm
@@ -44,6 +28,11 @@ try:
     _hush_pyflakes = [ StringIO ]
 except ImportError:
     from StringIO import StringIO
+
+try:
+    from customfonts import SetCustomFonts
+except ImportError:
+    SetCustomFonts=lambda x:None
 
 _logger = logging.getLogger(__name__)
 
@@ -91,7 +80,6 @@ class NumberedCanvas(canvas.Canvas):
         self._saved_page_states = []
 
     def showPage(self):
-        self._saved_page_states.append(dict(self.__dict__))
         self._startPage()
 
     def save(self):
@@ -126,6 +114,8 @@ class PageCount(platypus.Flowable):
 
 class PageReset(platypus.Flowable):
     def draw(self):
+        """Flag to close current story page numbering and prepare for the next
+        should be executed after the rendering of the full story"""
         self.canv._doPageReset = True
 
 class _rml_styles(object,):
@@ -177,6 +167,7 @@ class _rml_styles(object,):
                 'justify':reportlab.lib.enums.TA_JUSTIFY
             }
             data['alignment'] = align.get(node.get('alignment').lower(), reportlab.lib.enums.TA_LEFT)
+        data['splitLongWords'] = 0
         return data
 
     def _table_style_get(self, style_node):
@@ -379,7 +370,11 @@ class _rml_canvas(object):
         v = utils.attr_get(node, ['x','y'])
         text=self._textual(node, **v)
         text = utils.xml2str(text)
-        self.canvas.drawString(text=text, **v)
+        try:
+            self.canvas.drawString(text=text, **v)
+        except TypeError:
+            _logger.info("Bad RML: <drawString> tag requires attributes 'x' and 'y'!")
+            raise
 
     def _drawCenteredString(self, node):
         v = utils.attr_get(node, ['x','y'])
@@ -767,9 +762,11 @@ class _rml_flowable(object):
             style = self.styles.para_style_get(node)
             if extra_style:
                 style.__dict__.update(extra_style)
-            result = []
-            for i in self._textual(node).split('\n'):
-                result.append(platypus.Paragraph(i, style, **(utils.attr_get(node, [], {'bulletText':'str'}))))
+            text_node = self._textual(node).strip().replace('\n\n', '\n').replace('\n', '<br/>')
+            instance = platypus.Paragraph(text_node, style, **(utils.attr_get(node, [], {'bulletText':'str'})))
+            result = [instance]
+            if LooseVersion(reportlab.Version) > LooseVersion('3.0') and not instance.getPlainText().strip() and instance.text.strip():
+                result.append(platypus.Paragraph('&nbsp;<br/>', style, **(utils.attr_get(node, [], {'bulletText': 'str'}))))
             return result
         elif node.tag=='barCode':
             try:
@@ -932,6 +929,9 @@ class TinyDocTemplate(platypus.BaseDocTemplate):
         self.handle_frameBegin()
 
     def afterPage(self):
+        if isinstance(self.canv, NumberedCanvas):
+            # save current page states before eventual reset
+            self.canv._saved_page_states.append(dict(self.canv.__dict__))
         if self.canv._doPageReset:
             # Following a <pageReset/> tag:
             # - we reset page number to 0
@@ -1007,7 +1007,7 @@ class _rml_template(object):
             if story_cnt > 0:
                 fis.append(platypus.PageBreak())
             fis += r.render(node_story)
-            # Reset Page Number with new story tag
+            # end of story numbering computation
             fis.append(PageReset())
             story_cnt += 1
         try:
@@ -1026,14 +1026,9 @@ def parseNode(rml, localcontext=None, fout=None, images=None, path='.', title=No
     r = _rml_doc(node, localcontext, images, path, title=title)
     #try to override some font mappings
     try:
-        from customfonts import SetCustomFonts
         SetCustomFonts(r)
-    except ImportError:
-        # means there is no custom fonts mapping in this system.
-        pass
-    except Exception:
-        _logger.warning('Cannot set font mapping', exc_info=True)
-        pass
+    except Exception, exc:
+        _logger.info('Cannot set font mapping: %s', "".join(traceback.format_exception_only(type(exc),exc)))
     fp = StringIO()
     r.render(fp)
     return fp.getvalue()
@@ -1044,7 +1039,6 @@ def parseString(rml, localcontext=None, fout=None, images=None, path='.', title=
 
     #try to override some font mappings
     try:
-        from customfonts import SetCustomFonts
         SetCustomFonts(r)
     except Exception:
         pass
@@ -1072,6 +1066,3 @@ if __name__=="__main__":
     else:
         print 'Usage: trml2pdf input.rml >output.pdf'
         print 'Try \'trml2pdf --help\' for more information.'
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

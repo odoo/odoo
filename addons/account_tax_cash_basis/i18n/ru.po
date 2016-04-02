@@ -1,0 +1,93 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_tax_cash_basis
+# 
+# Translators:
+# SV <svilij@yahoo.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:39+0000\n"
+"PO-Revision-Date: 2016-01-13 19:34+0000\n"
+"Last-Translator: SV <svilij@yahoo.com>\n"
+"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_account_move
+msgid "Account Entry"
+msgstr "Проводка по счету"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,help:account_tax_cash_basis.field_account_tax_cash_basis_account
+msgid "Account use when         creating entry for tax cash basis"
+msgstr "Счет используется при создании записи для налога на наличной основе"
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_res_company
+msgid "Companies"
+msgstr "Компании"
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_account_partial_reconcile
+msgid "Partial Reconcile"
+msgstr "Частичная сверка"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,help:account_tax_cash_basis.field_account_tax_use_cash_basis
+msgid ""
+"Select this if the tax should use cash basis, which will         create an "
+"entry for this tax on a given account during reconciliation"
+msgstr "Выберите этот параметр, если налог должен использовать наличную основу, которая будет создавать запись для этого налога на данном счете во время согласования"
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_account_tax
+msgid "Tax"
+msgstr "Налог"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_move_tax_cash_basis_rec_id
+msgid "Tax Cash Basis Entry of"
+msgstr "Запись Налога на Наличной Основе относительно"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_config_settings_tax_cash_basis_journal_id
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_res_company_tax_cash_basis_journal_id
+msgid "Tax Cash Basis Journal"
+msgstr "Журнал Налога на Наличной Основе "
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_tax_cash_basis_account
+msgid "Tax Received Account"
+msgstr "Счет Налога Полученного"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,help:account_tax_cash_basis.field_account_move_tax_cash_basis_rec_id
+msgid ""
+"Technical field used to keep track of the tax cash basis reconciliation. "
+"This is needed when cancelling the source: it will post the inverse journal "
+"entry to cancel that part too."
+msgstr "Технические поле используется для отслеживания согласования налога на наличной основе. Это необходимо при отмене источника: он будет размещать обратную запись в журнале, чтобы отменить эту часть тоже."
+
+#. module: account_tax_cash_basis
+#: code:addons/account_tax_cash_basis/tax_cash_basis.py:82
+#, python-format
+msgid ""
+"There is no tax cash basis journal defined for this company: \"%s\" \n"
+"Configure it in Accounting/Configuration/Settings"
+msgstr "Здесь нет журнала налога на наличной основе, определенного для этой компании: \"%s\"\nНастройте его в Бухгалтерский учет/Конфигурация/Настройки"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_tax_use_cash_basis
+msgid "Use Cash Basis"
+msgstr "Использовать Наличную Основу"
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_account_config_settings
+msgid "account.config.settings"
+msgstr "account.config.settings"

@@ -1,52 +1,281 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#    * sale_crm
-#
+# * sale_crm
+# 
+# Translators:
+# Kisrobert <kisrobi@gmail.com>, 2015
+# Kris Krnacs, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-12-09 15:59+0000\n"
-"Last-Translator: krnkris <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2015-10-15 21:11+0000\n"
+"Last-Translator: Kris Krnacs\n"
+"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:25+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:92
-#, python-format
-msgid "Insufficient Data!"
-msgstr "Nincs elegendő adat!"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_claim_count
+msgid "# Claims"
+msgstr "# Reklamációk száma"
 
 #. module: sale_crm
-#: view:crm.lead:0
-#: view:crm.make.sale:0
-msgid "Convert to Quotation"
-msgstr "Átalakítás árajánlattá"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
+msgid "# Issues"
+msgstr "# Bejelentések"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice_report
-msgid "Invoices Statistics"
-msgstr "Számla statisztikák"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_count
+msgid "# Tasks"
+msgstr "# Feladatok"
 
 #. module: sale_crm
-#: field:crm.make.sale,close:0
-msgid "Mark Won"
-msgstr "Megnyertnek jelölve"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_count
+msgid "# of Sales Order"
+msgstr "# megrendelésszámból"
 
 #. module: sale_crm
-#: field:res.users,default_section_id:0
-msgid "Default Sales Team"
-msgstr "Alapértelmezett értékesítő csapat"
+#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+msgid "<span class=\"o_stat_text\"> Orders</span>"
+msgstr "<span class=\"o_stat_text\"> Vásárlói megrendelések</span>"
 
 #. module: sale_crm
-#: view:sale.order:0
-msgid "My Sales Team(s)"
-msgstr "Az én értékesítő csapata(ai)om"
+#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+msgid "<span class=\"o_stat_text\"> Quote(s) </span>"
+msgstr "<span class=\"o_stat_text\"> Árajánlat(ok) </span>"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_associate_member
+msgid ""
+"A member with whom you want to associate your membership.It will consider "
+"the membership state of the associated member."
+msgstr "Egy tag akihez a tagságát szeretné társítani.Fontolóra veszi a társított tag tagságának állapotát."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
+msgid "Associate Member"
+msgstr "Hozzárendelt tag"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order_campaign_id
+msgid "Campaign"
+msgstr "Kampány"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_cancel
+msgid "Cancel Membership Date"
+msgstr "Tagsági tátum visszavonása"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_count
+msgid "Count Payment Method"
+msgstr "Számolt fizetési mód"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_state
+msgid "Current Membership Status"
+msgstr "Jelenlegi tagsági állapot"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_customer
+msgid "Customer Location"
+msgstr "Ügyfél helye"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_start
+msgid "Date from which membership becomes active."
+msgstr "Dátum amitől a tagság aktiválódik."
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_cancel
+msgid "Date on which membership has been cancelled"
+msgstr "Dátum melyen a tagság vissza lett vonva"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_stop
+msgid "Date until which membership remains active."
+msgstr "Dátum ameddig a tagság aktív maradhat."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_free_member
+msgid "Free Member"
+msgstr "Ingyenes tag"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_latitude
+msgid "Geo Latitude"
+msgstr "Földrajzi szélesség"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_localization
+msgid "Geo Localization Date"
+msgstr "Földrajzi helymeghatározás dátuma"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_longitude
+msgid "Geo Longitude"
+msgstr "Földrajzi hosszúság"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
+msgid "Invoiced in Sale Orders Target"
+msgstr "Vásárlói megrendelés követésen számlázva"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_state
+msgid ""
+"It indicates the membership state.\n"
+"-Non Member: A partner who has not applied for any membership.\n"
+"-Cancelled Member: A member who has cancelled his membership.\n"
+"-Old Member: A member whose membership date has expired.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Invoiced Member: A member whose invoice has been created.\n"
+"-Paying member: A member who has paid the membership fee."
+msgstr "Ez mutatja meg a tagság szintjét.\n-nem tag: Az ügyfél még nem nyújtott be kérvényt egyik tagságra sem.\n-Törölt tag: Olyan tag, aki a törlését kérte.\n-Régi tag: Egy olyan tag, akinek a tagsága lejárt.\n-Várakozó tag: Egy olyan tag, aki tagságot igényelt és készül a számlája.\n-Kiszámlázott tag: Tag, akinek a számlája elkészült.\n-Fizető tag: Tag, aki kifizette a tagsági díját."
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Érdeklődő/Lehetőség"
+
+#. module: sale_crm
+#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
+msgid "Log in the chatter from which opportunity the order originates"
+msgstr "Csevegésben naplózva, mely lehetőségből a vásárlói megrendelés ered."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order_medium_id
+msgid "Medium"
+msgstr "Közepes"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_member_lines
+msgid "Membership"
+msgstr "Tagság"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_amount
+msgid "Membership Amount"
+msgstr "Tagság összege"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_stop
+msgid "Membership End Date"
+msgstr "Tagság befejezés dátuma"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_start
+msgid "Membership Start Date"
+msgstr "Tagság kezdő dátum"
+
+#. module: sale_crm
+#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+msgid "New Quotation"
+msgstr "Új árajánlat"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
+msgid "Number of Quotations"
+msgstr "Árajánlatok száma"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order_opportunity_id
+msgid "Opportunity"
+msgstr "Lehetőség"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_order_ids
+msgid "Orders"
+msgstr "Megrendelések"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
+msgid "Payment Methods"
+msgstr "Elérhető fizetési módok"
+
+#. module: sale_crm
+#: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
+msgid "Quotation"
+msgstr "Árajánlat"
+
+#. module: sale_crm
+#: model:ir.actions.act_window,name:sale_crm.sale_action_quotations
+msgid "Quotations"
+msgstr "Árajánlatok"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_sale_order
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_ids
+msgid "Sales Order"
+msgstr "Vevői megrendelés"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_free_member
+msgid "Select if you want to give free membership."
+msgstr "Válassza ki, ha ingyenes tagságot szeretne adni."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order_source_id
+msgid "Source"
+msgstr "Forrás"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
+msgid "Sum of Orders"
+msgstr "Értékesítések összege"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids
+msgid "Tags"
+msgstr "Címkék"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_ids
+msgid "Tasks"
+msgstr "Feladatok"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_amount
+msgid "The price negotiated by the partner"
+msgstr "Az ár a partnerrel megbeszélt"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_sale_order_campaign_id
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts "
+"Ex: Fall_Drive, Christmas_Special"
+msgstr "Ez a név ami segít követni a különböző kampány törekvéseit. Pl: Őszi_árhullás, Karácsonyi_speciál"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_sale_order_medium_id
+msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+msgstr "Ez a kivitelezés módja. Ex: Posta, Email, vagy Transzparens hirdetés"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_sale_order_source_id
+msgid ""
+"This is the source of the link Ex: Search Engine, another domain, or name of"
+" email list"
+msgstr "Ez az elérési út forrása. Pl: Kereső motor, másik domain, vagy email lista neve"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_customer
+msgid ""
+"This stock location will be used, instead of the default one, as the "
+"destination location for goods you send to this partner"
+msgstr "Ez a termékhely lesz használva, az alapértelmezett helyett, mint a célállomás az ennek a partnernek küldött termékhez"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_supplier
+msgid ""
+"This stock location will be used, instead of the default one, as the source "
+"location for goods you receive from the current partner"
+msgstr "Ez a raktár termékhely lesz használva, az alapértelmezett helyett, ami a forrás helye lesz a jelenlegi partnertől érkezett termékekre"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_res_users
@@ -54,157 +283,6 @@ msgid "Users"
 msgstr "Felhasználók"
 
 #. module: sale_crm
-#: help:crm.make.sale,close:0
-msgid ""
-"Check this to close the opportunity after having created the sales order."
-msgstr ""
-"Válassza ezt a lehetőség bezárásához miután a vevői megrendelést "
-"elkészítette."
-
-#. module: sale_crm
-#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_sent
-msgid "Quotation Send"
-msgstr "Árajánlat elküldve"
-
-#. module: sale_crm
-#: field:sale.order,categ_ids:0
-msgid "Categories"
-msgstr "Kategóriák"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:127
-#: code:addons/sale_crm/wizard/crm_make_sale.py:138
-#, python-format
-msgid "Quotation"
-msgstr "Árajánlat"
-
-#. module: sale_crm
-#: field:crm.make.sale,partner_id:0
-msgid "Customer"
-msgstr "Vásárló"
-
-#. module: sale_crm
-#: view:crm.make.sale:0
-msgid "_Create"
-msgstr "_Létrehoz"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_make_sale
-msgid "Make sales"
-msgstr "Vevői értékesítés létrehozás"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice
-msgid "Invoice"
-msgstr "Számla"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:95
-#, python-format
-msgid "Opportunity: %s"
-msgstr "Lehetőség: %s"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:113
-#, python-format
-msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
-msgstr "A lehetőség át lett <b>konvertálva</b> árajánlattá <em>%s</em>."
-
-#. module: sale_crm
-#: field:crm.make.sale,shop_id:0
-msgid "Shop"
-msgstr "Üzlet"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:92
-#, python-format
-msgid "No addresse(s) defined for this customer."
-msgstr "Ehhez a vevőhöz nem lett  meghatározva cím."
-
-#. module: sale_crm
-#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_confirmed
-msgid "Sales Order Confirmed"
-msgstr "Vásárlói megrendelés visszaigazolva"
-
-#. module: sale_crm
-#: view:account.invoice:0
-#: field:account.invoice,section_id:0
-#: field:account.invoice.report,section_id:0
-#: view:sale.order:0
-#: field:sale.order,section_id:0
-msgid "Sales Team"
-msgstr "Értékesítési csapat"
-
-#. module: sale_crm
-#: view:crm.lead:0
-msgid "Create Quotation"
-msgstr "Árajánlat létrehozása"
-
-#. module: sale_crm
-#: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
-msgid "Make Quotation"
-msgstr "Árajánlat készítése"
-
-#. module: sale_crm
-#: view:crm.make.sale:0
-msgid "Cancel"
-msgstr "Mégsem"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_sale_order
-msgid "Sales Order"
-msgstr "Vevői megrendelés"
-
-#. module: sale_crm
-#: view:crm.make.sale:0
-msgid "or"
-msgstr "vagy"
-
-#~ msgid "Monthly Turnover"
-#~ msgstr "Havi forgalom"
-
-#~ msgid "Quotations"
-#~ msgstr "Árajánlatok"
-
-#, python-format
-#~ msgid "Data Insufficient!"
-#~ msgstr "Elégtelen adatok!"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "A megrendelés hivatkozásnak egyedinek kell lennie!"
-
-#~ msgid "Convert to Quote"
-#~ msgstr "Átalakítás árajánlattá"
-
-#, python-format
-#~ msgid "Customer has no addresses defined!"
-#~ msgstr "A vevő nem rendelkezik címekkel!"
-
-#, python-format
-#~ msgid "Opportunity "
-#~ msgstr "Lehetőség "
-
-#~ msgid "My Quotations"
-#~ msgstr "Árajánlataim"
-
-#~ msgid "Opportunities by Stage"
-#~ msgstr "Lehetőségek szakaszok szerint"
-
-#, python-format
-#~ msgid "Converted to Sales Quotation(id: %s)."
-#~ msgstr "Átalakítva árajánlattá (kód: %s)."
-
-#~ msgid "Creates Sales order from Opportunity"
-#~ msgstr "Lehetőségből vevői megrendelés készítése"
-
-#~ msgid "Close Opportunity"
-#~ msgstr "Lehetőség lezárása"
-
-#, python-format
-#~ msgid "is converted to Quotation."
-#~ msgstr "átalakítva árajánlattá."
-
-#~ msgid ""
-#~ "Check this to close the opportunity after having created the sale order."
-#~ msgstr ""
-#~ "Jelölje be, hogy lezárja a lehetőséget, miután a vevői megrendelés elkészült."
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
+msgid "Vendor Location"
+msgstr "Beszállító helye"

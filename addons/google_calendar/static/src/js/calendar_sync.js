@@ -1,75 +1,100 @@
-openerp.google_calendar = function(instance) {
-    var _t = instance.web._t,
-       _lt = instance.web._lt;
-    var QWeb = instance.web.qweb;
+odoo.define('google_calendar.google_calendar', function (require) {
+"use strict";
 
-    instance.web_calendar.CalendarView.include({
-        view_loading: function(r) {
-            var self = this;
-            this.$el.on('click', 'div.oe_cal_sync_button', function() {
-                self.sync_calendar(r);
-            });
-            return this._super(r);
-        },
-        sync_calendar: function(res, button) {
-            var self = this;
-            var context = instance.web.pyeval.eval('context');
-            //$('div.oe_cal_sync_button').hide();
-            $('div.oe_cal_sync_button').prop('disabled', true);
+var core = require('web.core');
+var Dialog = require('web.Dialog');
+var framework = require('web.framework');
+var pyeval = require('web.pyeval');
+var CalendarView = require('web_calendar.CalendarView');
 
-            self.rpc('/google_calendar/sync_data', {
-                arch: res.arch,
-                fields: res.fields,
-                model: res.model,
-                fromurl: window.location.href,
-                local_context: context
-            }).done(function(o) {
-                if (o.status === "need_auth") {
-                    alert(_t("You will be redirected on gmail to authorize your OpenErp to access your calendar !"));
-                    instance.web.redirect(o.url);
-                }
-                else if (o.status === "need_config_from_admin"){
-                    if (!_.isUndefined(o.action) && parseInt(o.action)){
-                        if (confirm(_t("An admin need to configure Google Synchronization before to use it, do you want to configure it now ? !"))){
+var _t = core._t;
+var QWeb = core.qweb;
+
+CalendarView.include({
+    view_loading: function(r) {
+        var self = this;
+        this.$el.on('click', '.o_google_sync_button', function() {
+            self.sync_calendar(r);
+        });
+        return this._super(r);
+    },
+    sync_calendar: function(res, button) {
+        var self = this;
+        var context = pyeval.eval('context');
+        this.$google_button.prop('disabled', true);
+
+        this.rpc('/google_calendar/sync_data', {
+            arch: res.arch,
+            fields: res.fields,
+            model: res.model,
+            fromurl: window.location.href,
+            local_context: context,
+        }).done(function(o) {
+            if (o.status === "need_auth") {
+                Dialog.alert(self, _t("You will be redirected to Google to authorize access to your calendar!"), {
+                    confirm_callback: function() {
+                        framework.redirect(o.url);
+                    },
+                    title: _t('Redirection'),
+                });
+            } else if (o.status === "need_config_from_admin") {
+                if (!_.isUndefined(o.action) && parseInt(o.action)) {
+                    Dialog.confirm(self, _t("The Google Synchronization needs to be configured before you can use it, do you want to do it now?"), {
+                        confirm_callback: function() {
                             self.do_action(o.action);
-                        }
-                    }
-                    else{
-                        alert(_t("An admin need to configure Google Synchronization before to use it !"));
-                    }
+                        },
+                        title: _t('Configuration'),
+                    });
+                } else {
+                    Dialog.alert(self, _t("An administrator needs to configure Google Synchronization before you can use it!"), {
+                        title: _t('Configuration'),
+                    });
                 }
-                else if (o.status === "need_refresh"){
-                    self.$calendar.fullCalendar('refetchEvents');
-                }
-                else if (o.status === "need_reset"){
-                    if (confirm(_t("The account that you are trying to synchronize (" + o.info.new_name + "), is not the same that the last one used \
-(" + o.info.old_name + "! )" + "\r\n\r\nDo you want remove all references from the old account ?"))){
-
+            } else if (o.status === "need_refresh") {
+                self.$calendar.fullCalendar('refetchEvents');
+            } else if (o.status === "need_reset") {
+                var confirm_text1 = _t("The account you are trying to synchronize (%s) is not the same as the last one used (%s)!");
+                var confirm_text2 = _t("In order to do this, you first need to disconnect all existing events from the old account.");
+                var confirm_text3 = _t("Do you want to do this now?");
+                var text = _.str.sprintf(confirm_text1 + "\n" + confirm_text2 + "\n\n" + confirm_text3, o.info.new_name, o.info.old_name);
+                Dialog.confirm(self, text, {
+                    confirm_callback: function() {
                         self.rpc('/google_calendar/remove_references', {
-                            model:res.model,
-                            local_context:context
+                            model: res.model,
+                            local_context: context,
                         }).done(function(o) {
                             if (o.status === "OK") {
-                                alert(_t("All old references have been deleted. You can now restart the synchronization"));
-                            }
-                            else if (o.status === "KO") {
-                                alert(_t("An error has occured when we was removing all old references. Please retry or contact your administrator."));
-                            }
-                            //else NOP
+                                Dialog.alert(self, _t("All events have been disconnected from your previous account. You can now restart the synchronization"), {
+                                    title: _t('Event disconnection success'),
+                                });
+                            } else if (o.status === "KO") {
+                                Dialog.alert(self, _t("An error occured while disconnecting events from your previous account. Please retry or contact your administrator."), {
+                                    title: _t('Event disconnection error'),
+                                });
+                            } // else NOP
                         });
-                    }
-                }
-            }).always(function(o) { $('div.oe_cal_sync_button').prop('disabled',false); });
-        }
-    });
-    
-    instance.web_calendar.CalendarView.include({
-        extraSideBar: function() {
-            this._super();
-            if (this.dataset.model == "calendar.event") {
-                this.$el.find('.oe_calendar_filter').prepend(QWeb.render('GoogleCalendar.buttonSynchro'));
+                    },
+                    title: _t('Accounts'),
+                });
             }
+        }).always(function(o) { self.$google_button.prop('disabled', false); });
+    },
+    extraSideBar: function() {
+        var self = this;
+        var result = this._super();
+        this.$google_button = $();
+        if (this.dataset.model === "calendar.event") {
+            return result.then(function() {
+                this.$google_button = $('<button/>', {type: 'button', html: _t("Sync with <b>Google</b>")})
+                                    .addClass('o_google_sync_button oe_button btn btn-sm btn-default')
+                                    .prepend($('<img/>', {
+                                        src: "/google_calendar/static/src/img/calendar_32.png",
+                                    }))
+                                    .prependTo(self.$('.o_calendar_filter'));
+            });
         }
-    });
+        return result;
+    },
+});
 
-};
+});

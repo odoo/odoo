@@ -1,84 +1,84 @@
 """ View validation code (using assertions, not the RNG schema). """
 
+import collections
 import logging
 
 _logger = logging.getLogger(__name__)
 
 
+_validators = collections.defaultdict(list)
+def valid_view(arch):
+    for pred in _validators[arch.tag]:
+        if not pred(arch):
+            _logger.error("Invalid XML: %s", pred.__doc__)
+            return False
+    return True
+
+
+def validate(*view_types):
+    """ Registers a view-validation function for the specific view types
+    """
+    def decorator(fn):
+        for arch in view_types:
+            _validators[arch].append(fn)
+        return fn
+    return decorator
+
+
+@validate('form')
 def valid_page_in_book(arch):
     """A `page` node must be below a `book` node."""
     return not arch.xpath('//page[not(ancestor::notebook)]')
 
 
+@validate('graph')
 def valid_field_in_graph(arch):
-    """A `graph` must have `string` attribute and an immediate node of `graph` view must be `field`."""
-    if arch.xpath('//graph[not (@string)]'):
-        return False
-    for child in arch.xpath('/graph/child::*'):
-        if child.tag != 'field':
-            return False
-    return True
+    """ Children of ``graph`` can only be ``field`` """
+    return all(
+        child.tag == 'field'
+        for child in arch.xpath('/graph/*')
+    )
 
 
+@validate('tree')
 def valid_field_in_tree(arch):
-    """A `tree` must have `string` attribute and an immediate node of `tree` view must be `field` or `button`."""
-    if arch.xpath('//tree[not (@string)]'):
-        return False
-    for child in arch.xpath('/tree/child::*'):
-        if child.tag not in ('field', 'button'):
-            return False
-    return True
+    """ Children of ``tree`` view must be ``field`` or ``button``."""
+    return all(
+        child.tag in ('field', 'button')
+        for child in arch.xpath('/tree/*')
+    )
 
 
+@validate('form', 'graph', 'tree')
 def valid_att_in_field(arch):
-    """A `name` attribute must be in a `field` node."""
-    return not arch.xpath('//field[not (@name)]')
+    """ ``field`` nodes must all have a ``@name`` """
+    return not arch.xpath('//field[not(@name)]')
 
 
+@validate('form')
 def valid_att_in_label(arch):
-    """A `for` and `string` attribute must be on a `label` node."""
-    return not arch.xpath('//label[not ((@for) or (@string))]')
+    """ ``label`` nodes must have a ``@for`` or a ``@string`` """
+    return not arch.xpath('//label[not(@for or @string)]')
 
 
+@validate('form')
 def valid_att_in_form(arch):
     return True
 
 
+@validate('form')
 def valid_type_in_colspan(arch):
     """A `colspan` attribute must be an `integer` type."""
-    for attrib in arch.xpath('//*/@colspan'):
-        try:
-            int(attrib)
-        except:
-            return False
-    return True
+    return all(
+        attrib.isdigit()
+        for attrib in arch.xpath('//@colspan')
+    )
 
 
+@validate('form')
 def valid_type_in_col(arch):
     """A `col` attribute must be an `integer` type."""
-    for attrib in arch.xpath('//*/@col'):
-        try:
-            int(attrib)
-        except:
-            return False
-    return True
-
-
-def valid_view(arch):
-    if arch.tag == 'form':
-        for pred in [valid_page_in_book, valid_att_in_form, valid_type_in_colspan,
-                     valid_type_in_col, valid_att_in_field, valid_att_in_label]:
-            if not pred(arch):
-                _logger.error('Invalid XML: %s', pred.__doc__)
-                return False
-    elif arch.tag == 'graph':
-        for pred in [valid_field_in_graph, valid_att_in_field]:
-            if not pred(arch):
-                _logger.error('Invalid XML: %s', pred.__doc__)
-                return False
-    elif arch.tag == 'tree':
-        for pred in [valid_field_in_tree, valid_att_in_field]:
-            if not pred(arch):
-                _logger.error('Invalid XML: %s', pred.__doc__)
-                return False
-    return True
+    return all(
+        attrib.isdigit()
+        for attrib in arch.xpath('//@col')
+    )

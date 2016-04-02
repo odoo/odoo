@@ -1,0 +1,892 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    <!-- Account Tags -->
+    <record id="st_tag_in_01" model="account.account.tag">
+        <field name="name">Tax to Pay</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_02" model="account.account.tag">
+        <field name="name">C Forms</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_03" model="account.account.tag">
+        <field name="name">C Forms Tax Collected on Sale</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_04" model="account.account.tag">
+        <field name="name">C Forms Tax Paid on Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_05" model="account.account.tag">
+        <field name="name">Excise Duty</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_06" model="account.account.tag">
+        <field name="name">Excise Duty 12.36%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_07" model="account.account.tag">
+        <field name="name">Excise Duty Collected on Sales</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_08" model="account.account.tag">
+        <field name="name">Education Cess 2% Excise Duty Collected on Sales</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_09" model="account.account.tag">
+        <field name="name">Higher Education Cess 1% Excise Duty Collected on Sales</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_10" model="account.account.tag">
+        <field name="name">Excise Duty Paid on Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_11" model="account.account.tag">
+        <field name="name">Education Cess 2% Excise Duty Paid on Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_12" model="account.account.tag">
+        <field name="name">Higher Education Cess 1% Excise Duty Paid on Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_13" model="account.account.tag">
+        <field name="name">Sales Tax</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_14" model="account.account.tag">
+        <field name="name">Sales Tax 4%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_15" model="account.account.tag">
+        <field name="name">Sales Tax 4% Collected on Sale</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_16" model="account.account.tag">
+        <field name="name">Sales Tax 4% Paid on Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_17" model="account.account.tag">
+        <field name="name">Sales Tax 12%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_18" model="account.account.tag">
+        <field name="name">Sales Tax 12% Collected on Sale</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_19" model="account.account.tag">
+        <field name="name">Sales Tax 12% Paid on Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_20" model="account.account.tag">
+        <field name="name">Sales Tax 15%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_21" model="account.account.tag">
+        <field name="name">Sales Tax 15% Collected on Sale</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_22" model="account.account.tag">
+        <field name="name">Sales Tax 15% Paid on Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_23" model="account.account.tag">
+        <field name="name">Service Tax</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_24" model="account.account.tag">
+        <field name="name">Service Tax 12.36%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_25" model="account.account.tag">
+        <field name="name">Service Tax Collected on Sales of Services</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_26" model="account.account.tag">
+        <field name="name">Education Cess 2% Service Tax Collected on Sales of Services</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_27" model="account.account.tag">
+        <field name="name">Higher Education Cess 1% Service Tax Collected on Sales of Services</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_28" model="account.account.tag">
+        <field name="name">Service Tax Paid on Purchase of Services</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_29" model="account.account.tag">
+        <field name="name">Education Cess 2% Service Tax Paid on Purchase of Services</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_30" model="account.account.tag">
+        <field name="name">Higher Education Cess 1% Service Tax Paid on Purchase of Services</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_31" model="account.account.tag">
+        <field name="name">VAT</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_32" model="account.account.tag">
+        <field name="name">VAT 4%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_33" model="account.account.tag">
+        <field name="name">VAT 4% Collected on Sale</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_34" model="account.account.tag">
+        <field name="name">VAT 4% Paid on Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_35" model="account.account.tag">
+        <field name="name">VAT 8%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_36" model="account.account.tag">
+        <field name="name">VAT 8% Collected on Sale</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_37" model="account.account.tag">
+        <field name="name">VAT 8% Paid on Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_38" model="account.account.tag">
+        <field name="name">VAT 10%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_39" model="account.account.tag">
+        <field name="name">VAT 10% Collected on Sale</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_40" model="account.account.tag">
+        <field name="name">VAT 10% Paid on Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_41" model="account.account.tag">
+        <field name="name">VAT 12.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_42" model="account.account.tag">
+        <field name="name">VAT 12.5% Collected on Sale</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_43" model="account.account.tag">
+        <field name="name">VAT 12.5% Paid on Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_44" model="account.account.tag">
+        <field name="name">Additional VAT 1%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_45" model="account.account.tag">
+        <field name="name">Additional VAT 1% Collected on Sale</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_46" model="account.account.tag">
+        <field name="name">Additional VAT 1% Paid on Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_47" model="account.account.tag">
+        <field name="name">Additional VAT 2.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_48" model="account.account.tag">
+        <field name="name">Additional VAT 2.5% Collected on Sale</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_49" model="account.account.tag">
+        <field name="name">Additional VAT 2.5% Paid on Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_50" model="account.account.tag">
+        <field name="name">Tax Bases</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_51" model="account.account.tag">
+        <field name="name">Base C Forms</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_52" model="account.account.tag">
+        <field name="name">Base of Sale</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_53" model="account.account.tag">
+        <field name="name">Base of  Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_54" model="account.account.tag">
+        <field name="name">Base Excise Duty</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_55" model="account.account.tag">
+        <field name="name">Base Excise Duty 12.36%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_56" model="account.account.tag">
+        <field name="name">Base of  Sale</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_57" model="account.account.tag">
+        <field name="name">Base of  Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_58" model="account.account.tag">
+        <field name="name">Base Sales Tax</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_59" model="account.account.tag">
+        <field name="name">Base Sales Tax 4%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_60" model="account.account.tag">
+        <field name="name">Base of  Sale</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_61" model="account.account.tag">
+        <field name="name">Base of  Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_62" model="account.account.tag">
+        <field name="name">Base Sales Tax 12%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_63" model="account.account.tag">
+        <field name="name">Base of  Sale</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_64" model="account.account.tag">
+        <field name="name">Base of  Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_65" model="account.account.tag">
+        <field name="name">Base Sales Tax 15%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_66" model="account.account.tag">
+        <field name="name">Base of  Sale</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_67" model="account.account.tag">
+        <field name="name">Base of  Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_68" model="account.account.tag">
+        <field name="name">Base Service Tax</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_69" model="account.account.tag">
+        <field name="name">Base Service Tax 12.36%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_70" model="account.account.tag">
+        <field name="name">Base of  Sale</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_71" model="account.account.tag">
+        <field name="name">Base of  Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_72" model="account.account.tag">
+        <field name="name">Base VAT</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_73" model="account.account.tag">
+        <field name="name">Base VAT 4%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_74" model="account.account.tag">
+        <field name="name">Base of Sale</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_75" model="account.account.tag">
+        <field name="name">Base of Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_76" model="account.account.tag">
+        <field name="name">Base VAT 8%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_77" model="account.account.tag">
+        <field name="name">Base of Sale</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_78" model="account.account.tag">
+        <field name="name">Base of Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_79" model="account.account.tag">
+        <field name="name">Base VAT 10%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_80" model="account.account.tag">
+        <field name="name">Base of Sale</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_81" model="account.account.tag">
+        <field name="name">Base of Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_82" model="account.account.tag">
+        <field name="name">Base VAT 12.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_83" model="account.account.tag">
+        <field name="name">Base of Sale</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_84" model="account.account.tag">
+        <field name="name">Base of Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_85" model="account.account.tag">
+        <field name="name">Base Additional VAT 1%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_86" model="account.account.tag">
+        <field name="name">Base of Sale</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_87" model="account.account.tag">
+        <field name="name">Base of Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_88" model="account.account.tag">
+        <field name="name">Base Additional VAT 2.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_89" model="account.account.tag">
+        <field name="name">Base of Sale</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="st_tag_in_90" model="account.account.tag">
+        <field name="name">Base of Purchase</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <!-- Account Tax Templates -->
+
+    <record id="input_tax_15" model="account.tax.template">
+        <field name="name">(standard)Input Sales Tax @ 15%</field>
+        <field name="description">(standard)Input Sales Tax @ 15%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">15</field>
+        <field name="sequence">10</field>
+        <field name="account_id" ref="p11235"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_70'), ref('st_tag_in_21')])]"/>
+    </record>
+    <record id="input_tax_12" model="account.tax.template">
+        <field name="name">(standard)Input Sales Tax @ 12%</field>
+        <field name="description">(standard)Input Sales Tax @ 12%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">12</field>
+        <field name="sequence">10</field>
+        <field name="account_id" ref="p11235"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_56')])]"/>
+    </record>
+    <record id="input_tax_4" model="account.tax.template">
+        <field name="name">(standard)Input Sales Tax @ 4%</field>
+        <field name="description">(standard)Input Sales Tax @ 4%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">4</field>
+        <field name="sequence">10</field>
+        <field name="account_id" ref="p11235"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_15'), ref('st_tag_in_70')])]"/>
+    </record>
+    <record id="add_input_vat_1" model="account.tax.template">
+        <field name="name">(standard)Additional Input VAT @ 1%</field>
+        <field name="description">(standard)Additional Input VAT @ 1%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">1</field>
+        <field name="sequence">15</field>
+        <field name="account_id" ref="p11232"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_86'), ref('st_tag_in_45')])]"/>
+    </record>
+    <record id="input_vat_12" model="account.tax.template">
+        <field name="name">(standard)Input VAT @ 12.5%</field>
+        <field name="description">(standard)Input VAT @ 12.5%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">12.5</field>
+        <field name="sequence">10</field>
+        <field name="account_id" ref="p11232"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_83'), ref('st_tag_in_42')])]"/>
+    </record>
+    <record id="add_input_vat_2" model="account.tax.template">
+        <field name="name">(standard)Additional Input VAT @ 2.5%</field>
+        <field name="description">(standard)Additional Input VAT @ 2.5%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">2.5</field>
+        <field name="sequence">15</field>
+        <field name="account_id" ref="p11232"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_89'), ref('st_tag_in_48')])]"/>
+    </record>
+    <record id="sale_vat_8" model="account.tax.template">
+        <field name="name">(standard)Input VAT @ 8%</field>
+        <field name="description">(standard)Input VAT @ 8%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">8</field>
+        <field name="sequence">10</field>
+        <field name="account_id" ref="p11232"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_77'), ref('st_tag_in_36')])]"/>
+    </record>
+    <record id="sale_vat_10" model="account.tax.template">
+        <field name="name">(standard)Input VAT @ 10%</field>
+        <field name="description">(standard)Input VAT @ 10%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">10</field>
+        <field name="sequence">10</field>
+        <field name="account_id" ref="p11232"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_39'), ref('st_tag_in_80')])]"/>
+    </record>
+    <record id="sale_tax_12" model="account.tax.template">
+        <field name="name">(standard)Input Tax 12%</field>
+        <field name="description">(standard)Input Tax 12%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">12</field>
+        <field name="sequence">1</field>
+        <field name="account_id" ref="p112331"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_07')])]"/>
+    </record>
+    <record id="sale_edu_cess_Excise_Duty_2" model="account.tax.template">
+        <field name="name">(standard)Input Education Cess @ 2% On Excise Duty</field>
+        <field name="description">(standard)Input Education Cess @ 2% On Excise Duty</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0.24</field>
+        <field name="sequence">2</field>
+        <field name="account_id" ref="p112332"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_08')])]"/>
+    </record>
+    <record id="sale_hedu_cess_Excise_Duty_1" model="account.tax.template">
+        <field name="name">(standard)Input Higher Education Cess @ 1% On Excise Duty</field>
+        <field name="description">(standard)Input Higher Education Cess @ 1% On Excise Duty</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0.1224</field>
+        <field name="sequence">3</field>
+        <field name="account_id" ref="p112333"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_09')])]"/>
+    </record>
+    <record id="sale_Excise_Duty_12" model="account.tax.template">
+        <field name="name">(standard)Input Excise Duty @ 12.36%</field>
+        <field name="description">(standard)Input Excise Duty @ 12.36%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">group</field>
+        <field name="amount">0</field>
+        <field name="sequence">1</field>
+        <field name="account_id" ref="p112331"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('sale_tax_12'),ref('sale_edu_cess_Excise_Duty_2'),ref('sale_hedu_cess_Excise_Duty_1')])]"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_56')])]"/>
+    </record>
+    <record id="sale_service_tax12" model="account.tax.template">
+        <field name="name">(standard)Input Service Tax 12%</field>
+        <field name="description">(standard)Input Service Tax 12%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">12</field>
+        <field name="sequence">13</field>
+        <field name="account_id" ref="p112341"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_25')])]"/>
+    </record>
+    <record id="sale_edu_cess_service_tax_2" model="account.tax.template">
+        <field name="name">(standard)Input Education Cess @ 2% On Service Tax</field>
+        <field name="description">(standard)Input Education Cess @ 2% On Service Tax</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0.24</field>
+        <field name="sequence">14</field>
+        <field name="account_id" ref="p112342"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_26')])]"/>
+    </record>
+    <record id="sale_high_edu_service_tax_1" model="account.tax.template">
+        <field name="name">(standard)Input Higher Education Cess @ 1% On Service Tax</field>
+        <field name="description">(standard)Input Higher Education Cess @ 1% On Service Tax</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0.1224</field>
+        <field name="sequence">15</field>
+        <field name="account_id" ref="p112343"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_27')])]"/>
+    </record>
+    <record id="sale_service_tax_12" model="account.tax.template">
+        <field name="name">(standard)Input Service Tax @ 12.36%</field>
+        <field name="description">(standard)Input Service Tax @ 12.36%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">group</field>
+        <field name="amount">12</field>
+        <field name="include_base_amount">True</field>
+        <field name="sequence">8</field>
+        <field name="account_id" ref="p112341"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('sale_service_tax12'),ref('sale_edu_cess_service_tax_2'),ref('sale_high_edu_service_tax_1')])]"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_70')])]"/>
+    </record>
+    <record id="sale_tax_2" model="account.tax.template">
+        <field name="name">(standard)Input Sales Tax @ 2% Against C Form</field>
+        <field name="description">(standard)Input Sales Tax @ 2% Against C Form</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">2</field>
+        <field name="sequence">10</field>
+        <field name="account_id" ref="p11235"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_52'), ref('st_tag_in_03')])]"/>
+    </record>
+    <record id="input_vat_4" model="account.tax.template">
+        <field name="name">(standard)Input VAT @ 4%</field>
+        <field name="description">(standard)Input VAT @ 4%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">4</field>
+        <field name="sequence">10</field>
+        <field name="account_id" ref="p11232"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_33'), ref('st_tag_in_86')])]"/>
+    </record>
+
+    <!--output purchase tax-->
+    <record id="output_tax_15" model="account.tax.template">
+        <field name="name">(standard)Output Purchase Tax @ 15%</field>
+        <field name="description">(standard)Output Purchase Tax @ 15%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">15</field>
+        <field name="sequence">10</field>
+        <field name="account_id" ref="p10050"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_71'), ref('st_tag_in_22')])]"/>
+    </record>
+    <record id="output_tax_12" model="account.tax.template">
+        <field name="name">(standard)Output Purchase Tax @ 12%</field>
+        <field name="description">(standard)Output Purchase Tax @ 12%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">12</field>
+        <field name="sequence">10</field>
+        <field name="account_id" ref="p10050"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_19'), ref('st_tag_in_67')])]"/>
+    </record>
+    <record id="output_tax_4" model="account.tax.template">
+        <field name="name">(standard)Output Purchase Tax @ 4%</field>
+        <field name="description">(standard)Output Purchase Tax @ 4%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">4</field>
+        <field name="sequence">10</field>
+        <field name="account_id" ref="p10050"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_61'), ref('st_tag_in_16')])]"/>
+    </record>
+    <record id="add_output_vat_1" model="account.tax.template">
+        <field name="name">(standard)Additional Output VAT @ 1%</field>
+        <field name="description">(standard)Additional Output VAT @ 1%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">1</field>
+        <field name="sequence">15</field>
+        <field name="account_id" ref="p10051"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_87'), ref('st_tag_in_46')])]"/>
+    </record>
+    <record id="output_vat_12" model="account.tax.template">
+        <field name="name">(standard)Output VAT @ 12.5%</field>
+        <field name="description">(standard)Output VAT @ 12.5%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">12.5</field>
+        <field name="sequence">10</field>
+        <field name="account_id" ref="p10051"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_43'), ref('st_tag_in_84')])]"/>
+    </record>
+    <record id="add_output_vat_2" model="account.tax.template">
+        <field name="name">(standard)Additional Output VAT @ 2.5%</field>
+        <field name="description">(standard)Additional Output VAT @ 2.5%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">2.5</field>
+        <field name="sequence">15</field>
+        <field name="account_id" ref="p10051"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_90'), ref('st_tag_in_49')])]"/>
+    </record>
+    <record id="purchase_vat_8" model="account.tax.template">
+        <field name="name">(standard)Output VAT @ 8%</field>
+        <field name="description">(standard)Output VAT @ 8%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">8</field>
+        <field name="sequence">10</field>
+        <field name="account_id" ref="p10051"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_78'), ref('st_tag_in_37')])]"/>
+    </record>
+    <record id="purchase_vat_10" model="account.tax.template">
+        <field name="name">(standard)Output VAT @ 10%</field>
+        <field name="description">(standard)Output VAT @ 10%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">10</field>
+        <field name="sequence">10</field>
+        <field name="account_id" ref="p10051"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_81'), ref('st_tag_in_40')])]"/>
+    </record>
+    <record id="purchase_edu_cess_12" model="account.tax.template">
+        <field name="name">(standard)Output Tax 12%</field>
+        <field name="description">(standard)Output Tax 12%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">12</field>
+        <field name="sequence">2</field>
+        <field name="account_id" ref="p100521"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_10')])]"/>
+    </record>
+    <record id="purchase_edu_cess_Excise_Duty_2" model="account.tax.template">
+        <field name="name">(standard)Output Education Cess @ 2% Excise Duty</field>
+        <field name="description">(standard)Output Education Cess @ 2% Excise Duty</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0.24</field>
+        <field name="sequence">3</field>
+        <field name="account_id" ref="p100522"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_11')])]"/>
+    </record>
+    <record id="purchase_hedu_cess_Excise_Duty_1" model="account.tax.template">
+        <field name="name">(standard)Output Higher Education Cess @ 1% Excise Duty</field>
+        <field name="description">(standard)Output Higher Education Cess @ 1% Excise Duty</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0.1224</field>
+        <field name="sequence">4</field>
+        <field name="account_id" ref="p100523"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_12')])]"/>
+    </record>
+    <record id="purchase_Excise_Duty_12" model="account.tax.template">
+        <field name="name">(standard)Output Excise Duty @ 12.36%</field>
+        <field name="description">(standard)Output Excise Duty @ 12.36%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">group</field>
+        <field name="amount">12</field>
+        <field name="include_base_amount">True</field>
+        <field name="sequence">1</field>
+        <field name="account_id" ref="p100521"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('purchase_edu_cess_12'),ref('purchase_edu_cess_Excise_Duty_2'),ref('purchase_hedu_cess_Excise_Duty_1')])]"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_57')])]"/>
+    </record>
+    <record id="purchase_edu_service_tax12" model="account.tax.template">
+        <field name="name">(standard)Output Serivce Tax 12%</field>
+        <field name="description">(standard)Output Serivce Tax 12%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">12</field>
+        <field name="sequence">9</field>
+        <field name="account_id" ref="p100531"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_28')])]"/>
+    </record>
+    <record id="purchase_edu_cess_service_tax_2" model="account.tax.template">
+        <field name="name">(standard)Output Education Cess @ 2% On Service Tax</field>
+        <field name="description">(standard)Output Education Cess @ 2% On Service Tax</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0.24</field>
+        <field name="sequence">10</field>
+        <field name="account_id" ref="p100532"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_29')])]"/>
+    </record>
+    <record id="purchase_high_edu_service_tax_1" model="account.tax.template">
+        <field name="name">(standard)Output Higher Education Cess @ 1% On Service Tax</field>
+        <field name="description">(standard)Output Higher Education Cess @ 1% On Service Tax</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0.1224</field>
+        <field name="sequence">11</field>
+        <field name="account_id" ref="p100533"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_30')])]"/>
+    </record>
+    <record id="st_purchase_service_tax_12" model="account.tax.template">
+        <field name="name">(standard)Output Service Tax @ 12.36%</field>
+        <field name="description">(standard)Output Service Tax @ 12.36%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="include_base_amount">True</field>
+        <field name="amount_type">group</field>
+        <field name="amount">12</field>
+        <field name="sequence">8</field>
+        <field name="account_id" ref="p100531"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('purchase_edu_service_tax12'),ref('purchase_edu_cess_service_tax_2'),ref('purchase_high_edu_service_tax_1')])]"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_71')])]"/>
+    </record>
+    <record id="output_vat_4" model="account.tax.template">
+        <field name="name">(standard)Output VAT @ 4%</field>
+        <field name="description">(standard)Output VAT @ 4%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">4</field>
+        <field name="sequence">10</field>
+        <field name="account_id" ref="p10051"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_34'), ref('st_tag_in_75')])]"/>
+    </record>
+    <record id="output_pur_tax_2" model="account.tax.template">
+        <field name="name">(standard)Output Sales Tax @ 2% Against C Form</field>
+        <field name="description">(standard)Output Sales Tax @ 2% Against C Form</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">2</field>
+        <field name="sequence">10</field>
+        <field name="account_id" ref="p10050"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_53'), ref('st_tag_in_04')])]"/>
+    </record>
+
+    </data>
+</openerp>

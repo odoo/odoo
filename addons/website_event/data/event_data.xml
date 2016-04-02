@@ -18,5 +18,18 @@
             <field name="state">open</field>
         </record>
 
+        <record id="mt_event_published" model="mail.message.subtype">
+            <field name="name">Event published</field>
+            <field name="res_model">event.event</field>
+            <field name="default" eval="False"/>
+            <field name="description">Event published</field>
+        </record>
+        <record id="mt_event_unpublished" model="mail.message.subtype">
+            <field name="name">Event unpublished</field>
+            <field name="res_model">event.event</field>
+            <field name="default" eval="False"/>
+            <field name="description">Event unpublished</field>
+        </record>
+
     </data>
 </openerp>

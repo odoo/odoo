@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#    
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """
 Some functions related to the os and os.path module
@@ -73,7 +55,12 @@ def tempdir():
     finally:
         shutil.rmtree(tmpdir)
 
-def zip_dir(path, stream, include_dir=True):      # TODO add ignore list
+def zip_dir(path, stream, include_dir=True, fnct_sort=None):      # TODO add ignore list
+    """
+    : param fnct_sort : Function to be passed to "key" parameter of built-in
+                        python sorted() to provide flexibility of sorting files
+                        inside ZIP archive according to specific requirements.
+    """
     path = os.path.normpath(path)
     len_prefix = len(os.path.dirname(path)) if include_dir else len(path)
     if len_prefix:
@@ -81,6 +68,7 @@ def zip_dir(path, stream, include_dir=True):      # TODO add ignore list
 
     with zipfile.ZipFile(stream, 'w', compression=zipfile.ZIP_DEFLATED, allowZip64=True) as zipf:
         for dirpath, dirnames, filenames in os.walk(path):
+            filenames = sorted(filenames, key=fnct_sort)
             for fname in filenames:
                 bname, ext = os.path.splitext(fname)
                 ext = ext or bname
@@ -139,13 +127,14 @@ else:
             finally:
                 ws.CloseServiceHandle(srv)
 
-        with close_srv(ws.OpenSCManager(None, None, ws.SC_MANAGER_ALL_ACCESS)) as hscm:
-            with close_srv(wsu.SmartOpenService(hscm, nt_service_name, ws.SERVICE_ALL_ACCESS)) as hs:
-                info = ws.QueryServiceStatusEx(hs)
-                return info['ProcessId'] == getppid()
+        try:
+            with close_srv(ws.OpenSCManager(None, None, ws.SC_MANAGER_ALL_ACCESS)) as hscm:
+                with close_srv(wsu.SmartOpenService(hscm, nt_service_name, ws.SERVICE_ALL_ACCESS)) as hs:
+                    info = ws.QueryServiceStatusEx(hs)
+                    return info['ProcessId'] == getppid()
+        except Exception:
+            return False
 
 if __name__ == '__main__':
     from pprint import pprint as pp
     pp(listdir('../report', True))
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

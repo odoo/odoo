@@ -7,7 +7,7 @@
             <field name="priority" eval="50"/>
             <field name="arch" type="xml">
                 <graph string="Product Margins" type="bar">
-                    <field name="name"/>
+                    <field name="product_tmpl_id"/>
                     <field name="turnover" operator="+"/>
                     <field name="total_cost" operator="+"/>
                 </graph>
@@ -19,7 +19,7 @@
             <field name="model">product.product</field>
             <field name="priority">50</field>
             <field name="arch" type="xml">
-                 <form string="Product Margins" version="7.0">
+                 <form string="Product Margins">
                     <group col="4">
                         <field name="name"/>
                         <field name="default_code"/>
@@ -86,8 +86,7 @@
             </field>
         </record>
 
-  <menuitem id="base.next_id_73" name="Purchase" parent="base.menu_reporting" sequence="10"/>
-  <menuitem icon="STOCK_JUSTIFY_FILL" action="product_margin_act_window" id="menu_action_product_margin" name="Product Margins" sequence="5" parent="base.next_id_73"/>
+    <menuitem action="product_margin_act_window" id="menu_action_product_margin" name="Product Margins" sequence="20" parent="account.account_reports_management_menu"/>
 
 </data>
 </openerp>

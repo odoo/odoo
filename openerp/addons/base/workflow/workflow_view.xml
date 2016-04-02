@@ -13,7 +13,7 @@
       <field name="name">workflow.form</field>
       <field name="model">workflow</field>
       <field name="arch" type="xml">
-          <form string="Workflow" version="7.0">
+          <form string="Workflow">
               <group col="4">
                   <field name="name"/>
                   <field name="osv"/>
@@ -52,7 +52,7 @@
             <field name="act_to"/>
             <field name="signal"/>
           </arrow>
-          <label string="When customizing a workflow, be sure you do not modify an existing node or arrow, but rather add new nodes or arrows. If you absolutly need to modify a node or arrow, you can only change fields that are empty or set to the default value. If you don't do that, your customization will be overwrited at the next update or upgrade to a future version of OpenERP."/>
+          <label string="When customizing a workflow, be sure you do not modify an existing node or arrow, but rather add new nodes or arrows. If you absolutly need to modify a node or arrow, you can only change fields that are empty or set to the default value. If you don't do that, your customization will be overwrited at the next update or upgrade to a future version of Odoo."/>
         </diagram>
       </field>
     </record>
@@ -87,7 +87,7 @@
       <field name="name">workflow.activity.form</field>
       <field name="model">workflow.activity</field>
       <field name="arch" type="xml">
-        <form string="Activity" version="7.0">
+        <form string="Activity">
            <sheet>
             <group>
                 <group>
@@ -120,6 +120,7 @@
             <page string="Transitions">
                 <field name="in_transitions">
                   <tree string="Incoming Transitions">
+                    <field name="sequence" widget="handle" />
                     <field name="act_from"/>
                     <field name="signal"/>
                     <field name="condition"/>
@@ -127,6 +128,7 @@
                 </field>
                 <field name="out_transitions">
                   <tree string="Outgoing Transitions">
+                    <field name="sequence" widget="handle" />
                     <field name="act_to"/>
                     <field name="signal"/>
                     <field name="condition"/>
@@ -158,15 +160,13 @@
         <field name="arch" type="xml">
             <search string="Workflow Activity">
                 <field name="name" string="Workflow Activity"/>
-                <filter icon="terp-camera_test" string="Flow Start"
-                domain="[('flow_start', '=',True)]" />
-                <filter icon="terp-gtk-stop" string="Flow Stop"
-                domain="[('flow_stop', '=',True)]" />
+                <filter string="Flow Start" domain="[('flow_start', '=',True)]"/>
+                <filter string="Flow Stop" domain="[('flow_stop', '=',True)]"/>
                 <field name="wkf_id"/>
                 <field name="action_id"/>
                 <field name="kind"/>
-                <group expand="0" string="Group By...">
-                    <filter string="Workflow" icon="terp-stage" domain="[]" context="{'group_by':'wkf_id'}"/>
+                <group expand="0" string="Group By">
+                    <filter string="Workflow" domain="[]" context="{'group_by':'wkf_id'}"/>
                 </group>
             </search>
         </field>
@@ -192,10 +192,11 @@
       <field name="name">workflow.transition.form</field>
       <field name="model">workflow.transition</field>
       <field name="arch" type="xml">
-        <form string="Transition" version="7.0">
+        <form string="Transition">
           <sheet>
             <group>
                 <group>
+                    <field name="sequence" />
                     <field name="act_from"/>
                     <field name="act_to"/>
                     <field name="signal"/>
@@ -216,6 +217,7 @@
       <field name="model">workflow.transition</field>
       <field name="arch" type="xml">
         <tree string="Transition">
+          <field name="sequence" widget="handle" />
           <field name="act_from"/>
           <field name="act_to"/>
           <field name="signal"/>
@@ -255,7 +257,7 @@
       <field name="name">workflow.instance.form</field>
       <field name="model">workflow.instance</field>
       <field name="arch" type="xml">
-        <form string="Workflow Instances" version="7.0">
+        <form string="Workflow Instances">
          <sheet>
           <group col="4">
               <field name="wkf_id"/>
@@ -285,7 +287,7 @@
         <field name="arch" type="xml">
             <search string="Workflow Instances">
                 <field name="res_type" string="Resource Object"/>
-                <filter icon="terp-camera_test" string="Active" domain="[('state','=','active')]" name="active"/>
+                <filter string="Active" domain="[('state','=','active')]" name="active"/>
                 <field name="wkf_id"/>
                 <field name="res_id"/>
                 <field name="state"/>
@@ -313,7 +315,7 @@
       <field name="name">workflow.workitem.form</field>
       <field name="model">workflow.workitem</field>
       <field name="arch" type="xml">
-        <form string="Workflow Workitems" version="7.0">
+        <form string="Workflow Workitems">
          <sheet>
           <group col="4">
               <field name="wkf_id"/>
@@ -345,7 +347,7 @@
         <field name="arch" type="xml">
             <search string="Workflow Workitems">
                 <field name="state" string="Status"/>
-                <filter icon="terp-camera_test" string="Active" name="active" domain="[('state','=','active')]"/>
+                <filter string="Active" name="active" domain="[('state','=','active')]"/>
                 <field name="wkf_id"/>
                 <field name="act_id"/>
                 <field name="subflow_id"/>

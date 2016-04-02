@@ -1,7 +1,7 @@
 -
   In order to test the scheduler to generate RFQ, I create a new product
 -
-  !record {model: product.product, id: scheduler_product}:
+  !record {model: product.product, id: scheduler_product, view: False}:
     name: scheduler prod
     type: product
     seller_ids:
@@ -11,7 +11,7 @@
 -
   Add Buy route
 - 
-  !python {model: product.product, id: scheduler_product}: |
+  !python {model: product.product}: |
     self.write(cr, uid, [ref("scheduler_product")], {"route_ids": [(4, ref("purchase.route_warehouse0_buy"))]})
 -
   I create a procurement order.
@@ -39,4 +39,4 @@
     procurement = self.browse(cr, uid, ref('procurement_order_testcase0'))
     procurement.purchase_line_id.unlink()
     procurement.refresh()
-    assert procurement.state == 'cancel', 'Procurement should be cancelled'
+    assert procurement.state == 'exception', 'Procurement should be in exception'

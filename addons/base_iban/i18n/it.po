@@ -1,57 +1,22 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* base_iban
-#
+# * base_iban
+# 
+# Translators:
+# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-15 21:57+0000\n"
-"Last-Translator: Sergio Corato <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2016-01-04 21:37+0000\n"
+"Last-Translator: Francesco Garganese <francesco.garganese@aeromnia.aero>\n"
+"Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:00+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: base_iban
-#: constraint:res.partner.bank:0
-msgid ""
-"\n"
-"Please define BIC/Swift code on bank for bank type IBAN Account to make "
-"valid payments"
-msgstr ""
-"\n"
-"Definire il codice BIC/Swift sul conto IBAN al fine di emettere pagamenti "
-"validi."
-
-#. module: base_iban
-#: code:addons/base_iban/base_iban.py:141
-#, python-format
-msgid "This IBAN does not pass the validation check, please verify it"
-msgstr "Questo IBAN non ha passato la validazione, si prega di verificare"
-
-#. module: base_iban
-#: model:res.partner.bank.type,format_layout:base_iban.bank_iban
-msgid "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
-msgstr "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
-
-#. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
-msgid "bank_bic"
-msgstr "bank_bic"
-
-#. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
-msgid "zip"
-msgstr "CAP"
-
-#. module: base_iban
-#: help:res.partner.bank,iban:0
-msgid "International Bank Account Number"
-msgstr "IBAN"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
@@ -59,68 +24,33 @@ msgid "Bank Accounts"
 msgstr "Conti Bancari"
 
 #. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_country_field
-msgid "country_id"
-msgstr "country_id"
+#: code:addons/base_iban/base_iban.py:57
+#, python-format
+msgid "Cannot compute the BBAN because the account number is not an IBAN."
+msgstr "Non posso calcolare il BBAN perché il numero di conto non è un IBAN."
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:138
+#: code:addons/base_iban/base_iban.py:26
+#, python-format
+msgid "No IBAN !"
+msgstr "Nessun IBAN !"
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:34
 #, python-format
 msgid ""
-"The IBAN does not seem to be correct. You should have entered something like "
-"this %s"
-msgstr "L'IBAN non sembra essere corretto. Dovrebbe essere simile a %s"
+"The IBAN does not seem to be correct. You should have entered something like this %s\n"
+"Where B = National bank code, S = Branch code, C = Account No, k = Check digit"
+msgstr "L'IBAN sembra non essere corretto. Dovresti aver digitato qualcosa tipo questo %s\nDove B = codice banca Nazionale, S = codice Branca, C = Numero Conto, k = cifra di controllo"
 
 #. module: base_iban
-#: field:res.partner.bank,iban:0
-msgid "IBAN"
-msgstr "IBAN"
-
-#. module: base_iban
-#: code:addons/base_iban/base_iban.py:142
+#: code:addons/base_iban/base_iban.py:30
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
 msgstr "L'IBAN non è valido, dovrebbe includere il codice nazione"
 
 #. module: base_iban
-#: model:res.partner.bank.type,name:base_iban.bank_iban
-msgid "IBAN Account"
-msgstr "Codice di conto IBAN"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML non valido per Visualizzazione Architettura!"
-
-#~ msgid "bic"
-#~ msgstr "bic"
-
-#~ msgid "iban"
-#~ msgstr "IBAN"
-
-#~ msgid "acc_number"
-#~ msgstr "acc_number"
-
+#: code:addons/base_iban/base_iban.py:40
 #, python-format
-#~ msgid "The IBAN is invalid, It should begin with the country code"
-#~ msgstr "L'IBAN non è valido, dovrebbe cominciare con il \"codice nazione\""
-
-#, python-format
-#~ msgid ""
-#~ "The IBAN does not seems to be correct. You should have entered something "
-#~ "like this %s"
-#~ msgstr "L'IBAN non sembra essere corretto. Inserire un valore tipo: %s"
-
-#~ msgid "Create IBAN bank accounts"
-#~ msgstr "Crea account della banca IBAN"
-
-#~ msgid ""
-#~ "\n"
-#~ "This module installs the base for IBAN (International Bank Account Number) "
-#~ "bank accounts and checks for its validity.\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Questo module installa le basi per la gestione ed i controlli della validità "
-#~ "del codice IBAN (International Bank Account Number).\n"
-#~ "\n"
-#~ "    "
+msgid "This IBAN does not pass the validation check, please verify it."
+msgstr "Questo IBAN non passa il controllo di validità, per favore verificalo."

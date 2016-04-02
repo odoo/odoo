@@ -1,29 +1,11 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import re
 
-from openerp import tools
-from openerp.addons.mail.mail_message import decode
-from openerp.addons.mail.mail_thread import decode_header
+from openerp.addons.mail.models.mail_message import decode
+from openerp.addons.mail.models.mail_thread import decode_header
 from openerp.osv import osv
 
 _logger = logging.getLogger(__name__)
@@ -45,8 +27,12 @@ class MailThread(osv.AbstractModel):
         email_to = decode_header(message, 'To')
 
         # 0. Verify whether this is a bounced email (wrong destination,...) -> use it to collect data, such as dead leads
-        if bounce_alias in email_to:
-            bounce_match = tools.bounce_re.search(email_to)
+        if bounce_alias and bounce_alias in email_to:
+            # Bounce regex
+            # Typical form of bounce is bounce_alias-128-crm.lead-34@domain
+            # group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID
+            bounce_re = re.compile("%s-(\d+)-?([\w.]+)?-?(\d+)?" % re.escape(bounce_alias), re.UNICODE)
+            bounce_match = bounce_re.search(email_to)
             if bounce_match:
                 bounced_model, bounced_thread_id = None, False
                 bounced_mail_id = bounce_match.group(1)
@@ -73,7 +59,7 @@ class MailThread(osv.AbstractModel):
         Mail Returned to Sender) is received for an existing thread. The default
         behavior is to check is an integer  ``message_bounce`` column exists.
         If it is the case, its content is incremented. """
-        if self._all_columns.get('message_bounce'):
+        if 'message_bounce' in self._fields:
             for obj in self.browse(cr, uid, ids, context=context):
                 self.write(cr, uid, [obj.id], {'message_bounce': obj.message_bounce + 1}, context=context)
 

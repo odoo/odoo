@@ -1,0 +1,25 @@
+# HG changeset patch
+# Parent c3705f93fcea86a279f2c31204cc0c2914e784d8
+# Parent  8f2d190d879cdf6464bd61f7994b8b582befcafd
+
+diff --git a/academy/models.py b/academy/models.py
+--- a/academy/models.py
++++ b/academy/models.py
+@@ -7,3 +7,9 @@ class Teachers(models.Model):
+ 
+     name = fields.Char()
+     biography = fields.Html()
++
++class Courses(models.Model):
++    _name = 'academy.courses'
++
++    name = fields.Char()
++    teacher_id = fields.Many2one('academy.teachers', string="Teacher")
+diff --git a/academy/security/ir.model.access.csv b/academy/security/ir.model.access.csv
+--- a/academy/security/ir.model.access.csv
++++ b/academy/security/ir.model.access.csv
+@@ -1,2 +1,3 @@
+ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+ access_academy_teachers,access_academy_teachers,model_academy_teachers,,1,0,0,0
++access_academy_courses,access_academy_courses,model_academy_courses,,1,0,0,0
+\ No newline at end of file

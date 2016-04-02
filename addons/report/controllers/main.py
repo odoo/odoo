@@ -1,29 +1,11 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2014-Today OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.addons.web.http import Controller, route, request
-from openerp.addons.web.controllers.main import _serialize_exception
-from openerp.osv import osv
+from openerp.addons.web.controllers.main import _serialize_exception, content_disposition
+from openerp.tools import html_escape
 
-import simplejson
+import json
 from werkzeug import exceptions, url_decode
 from werkzeug.test import Client
 from werkzeug.wrappers import BaseResponse
@@ -46,17 +28,21 @@ class ReportController(Controller):
 
         if docids:
             docids = [int(i) for i in docids.split(',')]
-        options_data = None
         if data.get('options'):
-            options_data = simplejson.loads(data['options'])
+            data.update(json.loads(data.pop('options')))
         if data.get('context'):
-            context.update(simplejson.loads(data['context']))
+            # Ignore 'lang' here, because the context in data is the one from the webclient *but* if
+            # the user explicitely wants to change the lang, this mechanism overwrites it.
+            data['context'] = json.loads(data['context'])
+            if data['context'].get('lang'):
+                del data['context']['lang']
+            context.update(data['context'])
 
         if converter == 'html':
-            html = report_obj.get_html(cr, uid, docids, reportname, data=options_data, context=context)
+            html = report_obj.get_html(cr, uid, docids, reportname, data=data, context=context)
             return request.make_response(html)
         elif converter == 'pdf':
-            pdf = report_obj.get_pdf(cr, uid, docids, reportname, data=options_data, context=context)
+            pdf = report_obj.get_pdf(cr, uid, docids, reportname, data=data, context=context)
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
         else:
@@ -66,7 +52,7 @@ class ReportController(Controller):
     # Misc. route utils
     #------------------------------------------------------
     @route(['/report/barcode', '/report/barcode/<type>/<path:value>'], type='http', auth="user")
-    def report_barcode(self, type, value, width=600, height=100):
+    def report_barcode(self, type, value, width=600, height=100, humanreadable=0):
         """Contoller able to render barcode images thanks to reportlab.
         Samples: 
             <img t-att-src="'/report/barcode/QR/%s' % o.name"/>
@@ -76,19 +62,17 @@ class ReportController(Controller):
         :param type: Accepted types: 'Codabar', 'Code11', 'Code128', 'EAN13', 'EAN8', 'Extended39',
         'Extended93', 'FIM', 'I2of5', 'MSI', 'POSTNET', 'QR', 'Standard39', 'Standard93',
         'UPCA', 'USPS_4State'
+        :param humanreadable: Accepted values: 0 (default) or 1. 1 will insert the readable value
+        at the bottom of the output image
         """
         try:
-            width, height = int(width), int(height)
-            barcode = createBarcodeDrawing(
-                type, value=value, format='png', width=width, height=height
-            )
-            barcode = barcode.asString('png')
+            barcode = request.registry['report'].barcode(type, value, width=width, height=height, humanreadable=humanreadable)
         except (ValueError, AttributeError):
             raise exceptions.HTTPException(description='Cannot convert into barcode.')
 
         return request.make_response(barcode, headers=[('Content-Type', 'image/png')])
 
-    @route(['/report/download'], type='http', auth="user", website=True)
+    @route(['/report/download'], type='http', auth="user")
     def report_download(self, data, token):
         """This function is used by 'qwebactionmanager.js' in order to trigger the download of
         a pdf/controller report.
@@ -97,7 +81,7 @@ class ReportController(Controller):
         type [1]
         :returns: Response with a filetoken cookie and an attachment header
         """
-        requestcontent = simplejson.loads(data)
+        requestcontent = json.loads(data)
         url, type = requestcontent[0], requestcontent[1]
         try:
             if type == 'qweb-pdf':
@@ -115,7 +99,10 @@ class ReportController(Controller):
                     data = url_decode(url.split('?')[1]).items()  # decoding the args represented in JSON
                     response = self.report_routes(reportname, converter='pdf', **dict(data))
 
-                response.headers.add('Content-Disposition', 'attachment; filename=%s.pdf;' % reportname)
+                cr, uid = request.cr, request.uid
+                report = request.registry['report']._get_report_from_name(cr, uid, reportname)
+                filename = "%s.%s" % (report.name, "pdf")
+                response.headers.add('Content-Disposition', content_disposition(filename))
                 response.set_cookie('fileToken', token)
                 return response
             elif type =='controller':
@@ -125,14 +112,14 @@ class ReportController(Controller):
                 return response
             else:
                 return
-        except osv.except_osv, e:
+        except Exception, e:
             se = _serialize_exception(e)
             error = {
                 'code': 200,
-                'message': "OpenERP Server Error",
+                'message': "Odoo Server Error",
                 'data': se
             }
-            return request.make_response(simplejson.dumps(error))
+            return request.make_response(html_escape(json.dumps(error)))
 
     @route(['/report/check_wkhtmltopdf'], type='json', auth="user")
     def check_wkhtmltopdf(self):

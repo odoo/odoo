@@ -1,38 +1,20 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Point of Sale',
     'version': '1.0.1',
     'category': 'Point Of Sale',
-    'sequence': 6,
+    'sequence': 20,
     'summary': 'Touchscreen Interface for Shops',
     'description': """
 Quick and Easy sale process
 ===========================
 
 This module allows you to manage your shop sales very easily with a fully web based touchscreen interface.
-It is compatible with all PC tablets and the iPad, offering multiple payment methods. 
+It is compatible with all PC tablets and the iPad, offering multiple payment methods.
 
-Product selection can be done in several ways: 
+Product selection can be done in several ways:
 
 * Using a barcode reader
 * Browsing through categories of products or via a text search.
@@ -46,54 +28,45 @@ Main Features
 * Allows the user to create an invoice automatically
 * Refund previous sales
     """,
-    'author': 'OpenERP SA',
-    'images': ['images/pos_touch_screen.jpeg', 'images/pos_session.jpeg', 'images/pos_analysis.jpeg','images/sale_order_pos.jpeg','images/product_pos.jpeg'],
-    'depends': ['sale_stock'],
+    'depends': ['sale_stock', 'barcodes'],
     'data': [
-        'data/report_paperformat.xml',
         'security/point_of_sale_security.xml',
         'security/ir.model.access.csv',
+        'data/default_barcode_patterns.xml',
         'wizard/pos_box.xml',
-        'wizard/pos_confirm.xml',
-        'wizard/pos_details.xml',
         'wizard/pos_discount.xml',
         'wizard/pos_open_statement.xml',
         'wizard/pos_payment.xml',
-        'wizard/pos_session_opening.xml',
-        'point_of_sale_report.xml',
-        'point_of_sale_view.xml',
-        'point_of_sale_data.xml',
-        'report/pos_order_report_view.xml',
-        'point_of_sale_sequence.xml',
-        'point_of_sale_workflow.xml',
-        'account_statement_view.xml',
-        'account_statement_report.xml',
-        'res_users_view.xml',
-        'res_partner_view.xml',
+        'views/pos_templates.xml',
+        'views/point_of_sale_template.xml',
+        'views/point_of_sale_report.xml',
+        'views/point_of_sale_view.xml',
+        'views/pos_order_view.xml',
+        'views/product_view.xml',
+        'views/pos_category_view.xml',
+        'views/account_journal_view.xml',
+        'views/pos_config_view.xml',
+        'views/pos_session_view.xml',
+        'views/point_of_sale_sequence.xml',
+        'data/point_of_sale_data.xml',
+        'data/point_of_sale_workflow.xml',
+        'views/pos_order_report_view.xml',
+        'views/account_statement_view.xml',
+        'views/account_statement_report.xml',
+        'views/res_users_view.xml',
+        'views/res_partner_view.xml',
+        'views/res_config_view.xml',
         'views/report_statement.xml',
         'views/report_usersproduct.xml',
-        'views/report_receipt.xml',
-        'views/report_saleslines.xml',
-        'views/report_detailsofsales.xml',
-        'views/report_payment.xml',
-        'views/report_sessionsummary.xml',
+        'views/report_userlabel.xml',
         'views/point_of_sale.xml',
+        'views/point_of_sale_dashboard.xml',
     ],
     'demo': [
-        'point_of_sale_demo.xml',
-        'account_statement_demo.xml',
-    ],
-    'test': [
-        'test/00_register_open.yml',
-        'test/01_order_to_payment.yml',
-        'test/02_order_to_invoice.yml',
-        'test/point_of_sale_report.yml',
-        'test/account_statement_reports.yml',
+        'data/point_of_sale_demo.xml',
     ],
     'installable': True,
     'application': True,
     'qweb': ['static/src/xml/pos.xml'],
-    'auto_install': False,
+    'website': 'https://www.odoo.com/page/point-of-sale',
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

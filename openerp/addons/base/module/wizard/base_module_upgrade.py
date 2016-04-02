@@ -1,27 +1,10 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Business Applications
-#    Copyright (C) 2004-2012 OpenERP SA (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import openerp
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class base_module_upgrade(osv.osv_memory):
     """ Module Upgrade """
@@ -30,7 +13,7 @@ class base_module_upgrade(osv.osv_memory):
     _description = "Module Upgrade"
 
     _columns = {
-        'module_info': fields.text('Modules to Update',readonly=True),
+        'module_info': fields.text('Apps to Update',readonly=True),
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -49,8 +32,8 @@ class base_module_upgrade(osv.osv_memory):
             res['arch'] = '''<form string="Upgrade Completed" version="7.0">
                                 <separator string="Upgrade Completed" colspan="4"/>
                                 <footer>
-                                    <button name="config" string="Start Configuration" type="object" class="oe_highlight"/> or
-                                    <button special="cancel" string="Close" class="oe_link"/>
+                                    <button name="config" string="Start Configuration" type="object" class="btn-primary"/>
+                                    <button special="cancel" string="Close" class="btn-default"/>
                                 </footer>
                              </form>'''
 
@@ -68,6 +51,20 @@ class base_module_upgrade(osv.osv_memory):
         res = mod_obj.read(cr, uid, ids, ['name','state'], context)
         return {'module_info': '\n'.join(map(lambda x: x['name']+' : '+x['state'], res))}
 
+    def upgrade_module_cancel(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.module.module')
+        to_installed_ids = mod_obj.search(cr, uid, [
+            ('state', 'in', ['to upgrade', 'to remove'])])
+        if to_installed_ids:
+            mod_obj.write(cr, uid, to_installed_ids, {'state': 'installed'}, context=context)
+
+        to_uninstalled_ids = mod_obj.search(cr, uid, [
+            ('state', '=', 'to install')])
+        if to_uninstalled_ids:
+            mod_obj.write(cr, uid, to_uninstalled_ids, {'state': 'uninstalled'}, context=context)
+
+        return {'type': 'ir.actions.act_window_close'}
+
     def upgrade_module(self, cr, uid, ids, context=None):
         ir_module = self.pool.get('ir.module.module')
 
@@ -81,28 +78,16 @@ class base_module_upgrade(osv.osv_memory):
                       (tuple(ids), ('uninstalled',)))
             unmet_packages = [x[0] for x in cr.fetchall()]
             if unmet_packages:
-                raise osv.except_osv(_('Unmet Dependency!'),
-                                     _('Following modules are not installed or unknown: %s') % ('\n\n' + '\n'.join(unmet_packages)))
+                raise UserError(_('Following modules are not installed or unknown: %s') % ('\n\n' + '\n'.join(unmet_packages)))
 
             ir_module.download(cr, uid, ids, context=context)
-            cr.commit() # save before re-creating cursor below
 
+        # terminate transaction before re-creating cursor below
+        cr.commit()
+        openerp.api.Environment.reset()
         openerp.modules.registry.RegistryManager.new(cr.dbname, update_module=True)
 
-        ir_model_data = self.pool.get('ir.model.data')
-        __, res_id = ir_model_data.get_object_reference(cr, uid, 'base', 'view_base_module_upgrade_install')
-        return {
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'base.module.upgrade',
-                'views': [(res_id, 'form')],
-                'view_id': False,
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-            }
+        return {'type': 'ir.actions.act_window_close'}
 
     def config(self, cr, uid, ids, context=None):
         return self.pool.get('res.config').next(cr, uid, [], context=context)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

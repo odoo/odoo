@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import tools
 from openerp.osv import fields, osv
@@ -27,7 +9,7 @@ class payslip_report(osv.osv):
     _description = "Payslip Analysis"
     _auto = False
     _columns = {
-        'name':fields.char('Name', size=32, readonly=True),
+        'name':fields.char('Name', readonly=True),
         'date_from': fields.date('Date From', readonly=True,),
         'date_to': fields.date('Date To', readonly=True,),
         'year': fields.char('Year', size=4, readonly=True),
@@ -42,7 +24,7 @@ class payslip_report(osv.osv):
         ], 'Status', readonly=True),
         'employee_id': fields.many2one('hr.employee', 'Employee', readonly=True),
         'nbr': fields.integer('# Payslip lines', readonly=True),
-        'number': fields.char('Number', size=16, readonly=True),
+        'number': fields.char('Number', readonly=True),
         'struct_id': fields.many2one('hr.payroll.structure', 'Structure', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'paid': fields.boolean('Made Payment Order ? ', readonly=True),
@@ -83,5 +65,3 @@ class payslip_report(osv.osv):
                     l.employee_id,p.struct_id,l.category_id
             )
         """)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

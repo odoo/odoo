@@ -16,15 +16,14 @@ class CreatorCase(common.TransactionCase):
     def setUp(self):
         super(CreatorCase, self).setUp()
         self.model = self.registry(self.model_name)
+
     def make(self, value):
         id = self.model.create(self.cr, openerp.SUPERUSER_ID, {'value': value})
         return self.model.browse(self.cr, openerp.SUPERUSER_ID, [id])[0]
+
     def export(self, value, fields=('value',), context=None):
         record = self.make(value)
-        return self.model._BaseModel__export_row(
-            self.cr, openerp.SUPERUSER_ID, record,
-            [f.split('/') for f in fields],
-            context=context)
+        return record._BaseModel__export_rows([f.split('/') for f in fields])
 
 class test_boolean_field(CreatorCase):
     model_name = 'export.boolean'
@@ -50,7 +49,7 @@ class test_integer_field(CreatorCase):
     def test_0(self):
         self.assertEqual(
             self.export(0),
-            [[False]])
+            [[u'0']])
 
     def test_basic_value(self):
         self.assertEqual(
@@ -73,7 +72,7 @@ class test_float_field(CreatorCase):
     def test_0(self):
         self.assertEqual(
             self.export(0.0),
-            [[False]])
+            [[u'0.0']])
 
     def test_epsilon(self):
         self.assertEqual(
@@ -101,14 +100,14 @@ class test_decimal_field(CreatorCase):
     def test_0(self):
         self.assertEqual(
             self.export(0.0),
-            [[False]])
+            [[u'0.0']])
 
     def test_epsilon(self):
         """ epsilon gets sliced to 0 due to precision
         """
         self.assertEqual(
             self.export(0.000000000027),
-            [[False]])
+            [[u'0.0']])
 
     def test_negative(self):
         self.assertEqual(
@@ -130,7 +129,7 @@ class test_string_field(CreatorCase):
     def test_empty(self):
         self.assertEqual(
             self.export(""),
-            [[False]])
+            [['']])
     def test_within_bounds(self):
         self.assertEqual(
             self.export("foobar"),
@@ -149,7 +148,7 @@ class test_unbound_string_field(CreatorCase):
     def test_empty(self):
         self.assertEqual(
             self.export(""),
-            [[False]])
+            [['']])
     def test_small(self):
         self.assertEqual(
             self.export("foobar"),
@@ -171,7 +170,7 @@ class test_text(CreatorCase):
     def test_empty(self):
         self.assertEqual(
             self.export(""),
-            [[False]])
+            [['']])
     def test_small(self):
         self.assertEqual(
             self.export("foobar"),
@@ -191,7 +190,7 @@ class test_date(CreatorCase):
     def test_empty(self):
         self.assertEqual(
             self.export(False),
-            [[False]])
+            [['']])
     def test_basic(self):
         self.assertEqual(
             self.export('2011-11-07'),
@@ -203,7 +202,7 @@ class test_datetime(CreatorCase):
     def test_empty(self):
         self.assertEqual(
             self.export(False),
-            [[False]])
+            [['']])
     def test_basic(self):
         self.assertEqual(
             self.export('2011-11-07 21:05:48'),
@@ -239,14 +238,7 @@ class test_selection(CreatorCase):
             [[u"Bar"]])
 
     def test_localized_export(self):
-        self.registry('res.lang').create(self.cr, openerp.SUPERUSER_ID, {
-            'name': u'Français',
-            'code': 'fr_FR',
-            'translatable': True,
-            'date_format': '%d.%m.%Y',
-            'decimal_point': ',',
-            'thousands_sep': ' ',
-        })
+        self.registry('res.lang').load_lang(self.cr, openerp.SUPERUSER_ID, 'fr_FR')
         Translations = self.registry('ir.translation')
         for source, value in self.translations_fr:
             Translations.create(self.cr, openerp.SUPERUSER_ID, {
@@ -266,20 +258,20 @@ class test_selection_function(CreatorCase):
     def test_empty(self):
         self.assertEqual(
             self.export(False),
-            [[False]])
+            [['']])
 
     def test_value(self):
         # FIXME: selection functions export the *value* itself
         self.assertEqual(
             self.export(1),
-            [[u'1']])
+            [[1]])
         self.assertEqual(
             self.export(3),
-            [[u'3']])
+            [[3]])
         # fucking hell
         self.assertEqual(
             self.export(0),
-            [[False]])
+            [['']])
 
 class test_m2o(CreatorCase):
     model_name = 'export.many2one'
@@ -433,12 +425,10 @@ class test_o2m_multiple(CreatorCase):
         if value is not None: values['value'] = value
         id = self.model.create(self.cr, openerp.SUPERUSER_ID, values)
         return self.model.browse(self.cr, openerp.SUPERUSER_ID, [id])[0]
+
     def export(self, value=None, fields=('child1', 'child2',), context=None, **values):
         record = self.make(value, **values)
-        return self.model._BaseModel__export_row(
-            self.cr, openerp.SUPERUSER_ID, record,
-            [f.split('/') for f in fields],
-            context=context)
+        return record._BaseModel__export_rows([f.split('/') for f in fields])
 
     def test_empty(self):
         self.assertEqual(

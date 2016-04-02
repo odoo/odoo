@@ -1,51 +1,40 @@
-# Korean translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * board
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2009-09-08 13:34+0000\n"
-"Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
-"Language-Team: Korean <ko@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2016-01-25 08:56+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:09+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_create
-#: model:ir.ui.menu,name:board.menu_board_create
-msgid "Create Board"
-msgstr "게시판 생성"
-
-#. module: board
-#: view:board.create:0
-msgid "Create"
-msgstr "생성"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:4
+#: code:addons/board/static/src/xml/board.xml:24
 #, python-format
-msgid "Reset Layout.."
-msgstr "레이아웃 재설정"
-
-#. module: board
-#: view:board.create:0
-msgid "Create New Dashboard"
-msgstr "새로운 대시보드 생성"
+msgid "&nbsp;"
+msgstr "&nbsp;"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:40
+#: code:addons/board/static/src/js/dashboard.js:406
 #, python-format
-msgid "Choose dashboard layout"
-msgstr "대시보드 레이아웃 선택"
+msgid "'%s' added to dashboard"
+msgstr ""
+
+#. module: board
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid "<b>Your personal dashboard is empty.</b>"
+msgstr ""
 
 #. module: board
 #. openerp-web
@@ -56,10 +45,17 @@ msgstr "추가"
 
 #. module: board
 #. openerp-web
+#: code:addons/board/static/src/xml/board.xml:64
+#, python-format
+msgid "Add to my Dashboard"
+msgstr ""
+
+#. module: board
+#. openerp-web
 #: code:addons/board/static/src/js/dashboard.js:139
 #, python-format
 msgid "Are you sure you want to remove this item ?"
-msgstr "정말로 이 아이템을 제거하시겠습니까?"
+msgstr "정말로 이 항목을 제거하시겠습니까?"
 
 #. module: board
 #: model:ir.model,name:board.model_board_board
@@ -67,199 +63,132 @@ msgid "Board"
 msgstr "게시판"
 
 #. module: board
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board.open_board_my_dash_action
-#: model:ir.ui.menu,name:board.menu_board_my_dash
-msgid "My Dashboard"
-msgstr "내 대시보드"
-
-#. module: board
-#: field:board.create,name:0
-msgid "Board Name"
-msgstr "게시판 명칭"
-
-#. module: board
 #: model:ir.model,name:board.model_board_create
 msgid "Board Creation"
 msgstr "게시판 생성"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:67
-#, python-format
-msgid "Add to Dashboard"
-msgstr "대시보드에 추가"
+#: model:ir.model.fields,field_description:board.field_board_create_name
+msgid "Board Name"
+msgstr "게시판 명칭"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:28
-#, python-format
-msgid "&nbsp;"
-msgstr "&nbsp;"
-
-#. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
-msgid ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"                  <p>\n"
-"                    <b>Your personal dashboard is empty.</b>\n"
-"                  </p><p>\n"
-"                    To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add "
-"to\n"
-"                    Dashboard'</i> in the extended search options.\n"
-"                  </p><p>\n"
-"                    You can filter and group data before inserting into the\n"
-"                    dashboard using the search options.\n"
-"                  </p>\n"
-"              </div>\n"
-"            "
-msgstr ""
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Cancel"
+msgstr "취소"
 
 #. module: board
 #. openerp-web
 #: code:addons/board/static/src/xml/board.xml:6
 #, python-format
-msgid "Reset"
-msgstr "초기화"
+msgid "Change Layout"
+msgstr "배치 변경"
 
 #. module: board
-#: field:board.create,menu_parent_id:0
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:4
+#, python-format
+msgid "Change Layout.."
+msgstr "배치 변경.."
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:36
+#, python-format
+msgid "Choose dashboard layout"
+msgstr "대시보드 배치 선택"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:408
+#, python-format
+msgid "Could not add filter to dashboard"
+msgstr "대시보드에 필터를 추가할 수 없습니다."
+
+#. module: board
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Create"
+msgstr "작성"
+
+#. module: board
+#: model:ir.actions.act_window,name:board.action_board_create
+#: model:ir.ui.menu,name:board.menu_board_create
+msgid "Create Board"
+msgstr "게시판 생성"
+
+#. module: board
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Create New Dashboard"
+msgstr "새로운 대시보드 생성"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_create_date
+msgid "Created on"
+msgstr "작성일"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_board_display_name
+#: model:ir.model.fields,field_description:board.field_board_create_display_name
+msgid "Display Name"
+msgstr "표시 이름"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:94
+#, python-format
+msgid "Edit Layout"
+msgstr "배치 편집"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_board_id
+#: model:ir.model.fields,field_description:board.field_board_create_id
+msgid "ID"
+msgstr "ID"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_board___last_update
+#: model:ir.model.fields,field_description:board.field_board_create___last_update
+msgid "Last Modified on"
+msgstr "최근 수정"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 날짜"
+
+#. module: board
+#: model:ir.actions.act_window,name:board.open_board_my_dash_action
+#: model:ir.ui.menu,name:board.menu_board_my_dash
+#: model:ir.ui.view,arch_db:board.board_my_dash_view
+msgid "My Dashboard"
+msgstr "내 대시보드"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_menu_parent_id
 msgid "Parent Menu"
 msgstr "상위 메뉴"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:8
-#, python-format
-msgid "Change Layout.."
-msgstr "레이아웃 변경"
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"To add your first report into this dashboard, go to any\n"
+"                    menu, switch to list or graph view, and click <i>'Add to\n"
+"                    Dashboard'</i> in the extended search options."
+msgstr ""
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:93
-#, python-format
-msgid "Edit Layout"
-msgstr "레이아웃 편집"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:10
-#, python-format
-msgid "Change Layout"
-msgstr "레이아웃 변경"
-
-#. module: board
-#: view:board.create:0
-msgid "Cancel"
-msgstr "취소"
-
-#. module: board
-#: view:board.create:0
-msgid "or"
-msgstr "또는"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:69
-#, python-format
-msgid "Title of new dashboard item"
-msgstr "새로운 대시보드 아이템의 제목"
-
-#~ msgid "Dashboard Definition"
-#~ msgstr "대시보드 정의"
-
-#~ msgid "Publish a note"
-#~ msgstr "노트 출판"
-
-#~ msgid "Author"
-#~ msgstr "작성자"
-
-#~ msgid "Note"
-#~ msgstr "노트"
-
-#~ msgid "Dashboard main module"
-#~ msgstr "대시보드 메인 모듈"
-
-#, python-format
-#~ msgid "User Error!"
-#~ msgstr "사용자 에러!"
-
-#~ msgid "Width"
-#~ msgstr "폭"
-
-#~ msgid "Title"
-#~ msgstr "제목"
-
-#~ msgid "Configuration"
-#~ msgstr "구성"
-
-#~ msgid "Menu Information"
-#~ msgstr "메뉴 정보"
-
-#~ msgid "Notes"
-#~ msgstr "노트"
-
-#~ msgid "Note Type"
-#~ msgstr "노트 타입"
-
-#~ msgid "Create Menu For Dashboard"
-#~ msgstr "대시보드 메뉴 만들기"
-
-#~ msgid "Action Views"
-#~ msgstr "액션 뷰"
-
-#~ msgid "Date"
-#~ msgstr "날짜"
-
-#~ msgid "Menu Name"
-#~ msgstr "메뉴 이름"
-
-#~ msgid "Open Dashboard"
-#~ msgstr "대시보드 열기"
-
-#~ msgid "Position"
-#~ msgstr "포지션"
-
-#~ msgid "Board View"
-#~ msgstr "보드 뷰"
-
-#~ msgid "Left"
-#~ msgstr "왼쪽"
-
-#~ msgid "Note type"
-#~ msgstr "노트 타입"
-
-#, python-format
-#~ msgid "Please Insert Dashboard View(s) !"
-#~ msgstr "대시보드 뷰를 삽입하십시오 !"
-
-#~ msgid "Base module for all dashboards."
-#~ msgstr "모든 대시보드를 위한 베이스 모듈"
-
-#~ msgid "Dashboard"
-#~ msgstr "대시보드"
-
-#~ msgid "Height"
-#~ msgstr "높이"
-
-#~ msgid "Create Board Menu"
-#~ msgstr "보드 메뉴 만들기"
-
-#~ msgid "Dashboards"
-#~ msgstr "대시보드"
-
-#~ msgid "Create Menu"
-#~ msgstr "메뉴 만들기"
-
-#~ msgid "Subject"
-#~ msgstr "주제"
-
-#~ msgid "Dashboard View"
-#~ msgstr "대시보드 뷰"
-
-#~ msgid "Sequence"
-#~ msgstr "시퀀스"
-
-#~ msgid "Right"
-#~ msgstr "오른쪽"
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"You can filter and group data before inserting into the\n"
+"                    dashboard using the search options."
+msgstr ""

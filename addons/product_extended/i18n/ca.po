@@ -1,62 +1,147 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* product_extended
-#
+# * product_extended
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.1\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-07-08 18:00+0000\n"
-"PO-Revision-Date: 2011-02-15 15:23+0000\n"
-"Last-Translator: Benjamí Borràs Delgado <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-10-18 08:00+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-20 05:38+0000\n"
-"X-Generator: Launchpad (build 16567)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ca\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product_extended
-#: model:ir.module.module,shortdesc:product_extended.module_name_translation
-msgid "Product extension to track sales and purchases"
-msgstr "Extensió de producte pel seguiment de compres i vendes"
+#: code:addons/product_extended/wizard/wizard_price.py:24
+#: code:addons/product_extended/wizard/wizard_price.py:40
+#, python-format
+msgid "Active ID is not set in Context."
+msgstr ""
 
 #. module: product_extended
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML invàlid per a la definició de la vista!"
+#: model:ir.model,name:product_extended.model_mrp_bom
+msgid "Bill of Material"
+msgstr "Llista de material"
 
 #. module: product_extended
-#: field:mrp.bom,standard_price:0
+#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
+msgid "Cancel"
+msgstr "Cancel·la"
+
+#. module: product_extended
+#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
+msgid "Change Price"
+msgstr "Canvia preu"
+
+#. module: product_extended
+#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
+msgid "Change Standard Price"
+msgstr "Canvi de preu estàndard"
+
+#. module: product_extended
+#: model:ir.model.fields,field_description:product_extended.field_wizard_price_recursive
+msgid "Change prices of child BoMs too"
+msgstr ""
+
+#. module: product_extended
+#: model:ir.actions.act_window,name:product_extended.action_view_compute_price_wizard
+msgid "Compute Price Wizard"
+msgstr "Assistent Càlcul Preu"
+
+#. module: product_extended
+#: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
+msgid "Compute from BOM"
+msgstr ""
+
+#. module: product_extended
+#: model:ir.model,name:product_extended.model_wizard_price
+msgid "Compute price wizard"
+msgstr ""
+
+#. module: product_extended
+#: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
+msgid ""
+"Compute the price of the product using products and operations of related "
+"bill of materials, for manufactured products only."
+msgstr ""
+
+#. module: product_extended
+#: model:ir.model.fields,field_description:product_extended.field_wizard_price_create_uid
+msgid "Created by"
+msgstr "Creat per"
+
+#. module: product_extended
+#: model:ir.model.fields,field_description:product_extended.field_wizard_price_create_date
+msgid "Created on"
+msgstr "Creat el"
+
+#. module: product_extended
+#: model:ir.model.fields,field_description:product_extended.field_wizard_price_display_name
+msgid "Display Name"
+msgstr "Mostra Nom"
+
+#. module: product_extended
+#: model:ir.model.fields,field_description:product_extended.field_wizard_price_real_time_accounting
+msgid "Generate accounting entries when real-time"
+msgstr ""
+
+#. module: product_extended
+#: model:ir.model.fields,field_description:product_extended.field_wizard_price_id
+msgid "ID"
+msgstr "ID"
+
+#. module: product_extended
+#: model:ir.model.fields,field_description:product_extended.field_wizard_price_info_field
+msgid "Info"
+msgstr "Informació"
+
+#. module: product_extended
+#: model:ir.model.fields,field_description:product_extended.field_wizard_price___last_update
+msgid "Last Modified on"
+msgstr "Darrera modificació feta el"
+
+#. module: product_extended
+#: model:ir.model.fields,field_description:product_extended.field_wizard_price_write_uid
+msgid "Last Updated by"
+msgstr "Actualitzat per última vegada per"
+
+#. module: product_extended
+#: model:ir.model.fields,field_description:product_extended.field_wizard_price_write_date
+msgid "Last Updated on"
+msgstr "Actualitzat per última vegada el dia"
+
+#. module: product_extended
+#: model:ir.model,name:product_extended.model_product_template
+msgid "Product Template"
+msgstr "Plantilla de producte"
+
+#. module: product_extended
+#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
+msgid "Set price on BoM"
+msgstr ""
+
+#. module: product_extended
+#: model:ir.model.fields,field_description:product_extended.field_mrp_bom_standard_price
 msgid "Standard Price"
-msgstr "Preu cost"
+msgstr "Preu estàndard"
 
 #. module: product_extended
-#: field:product.supplierinfo,last_order_date:0
-msgid "Last Order date"
-msgstr "Data de l'última comanda"
+#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
+msgid ""
+"The price is computed from the bill of material lines which are not variant "
+"specific"
+msgstr ""
 
 #. module: product_extended
-#: field:product.product,qty_dispo:0
-msgid "Stock available"
-msgstr "Estoc disponible"
-
-#. module: product_extended
-#: field:product.product,calculate_price:0
-msgid "Compute price"
-msgstr "Calcula preu"
-
-#. module: product_extended
-#: field:product.supplierinfo,last_order:0
-msgid "Last Order"
-msgstr "Última comanda"
-
-#. module: product_extended
-#: view:product.product:0
-msgid "Compute standard price"
-msgstr "Calcular preu cost"
-
-#. module: product_extended
-#: field:product.product,orderpoint_ids:0
-msgid "Orderpoints"
-msgstr "Punts de comandes"
+#: code:addons/product_extended/wizard/wizard_price.py:38
+#, python-format
+msgid ""
+"This wizard is build for product templates, while you are currently running "
+"it from a product variant."
+msgstr "Aquest assistent és per crear plantilles per al producte, mentre tu el tens actualment en execució des d'una variant del producte."

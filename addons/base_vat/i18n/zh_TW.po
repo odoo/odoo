@@ -1,40 +1,21 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* base_vat
-#
+# * base_vat
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-12-27 04:38+0000\n"
-"Last-Translator: Andy Cheng <andy@dobtor.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-09-07 16:40+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:26+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: base_vat
-#: view:res.partner:0
-msgid "Check Validity"
-msgstr "檢查有效性"
-
-#. module: base_vat
-#: code:addons/base_vat/base_vat.py:152
-#, python-format
-msgid ""
-"This VAT number does not seem to be valid.\n"
-"Note: the expected format is %s"
-msgstr ""
-"這個統編似乎是無效的。\n"
-"提醒：格式應為 %s"
-
-#. module: base_vat
-#: field:res.company,vat_check_vies:0
-msgid "VIES VAT Check"
-msgstr "VIES 統編（VAT）檢查"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -42,34 +23,45 @@ msgid "Companies"
 msgstr "公司"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:113
-#, python-format
-msgid "Error!"
-msgstr "錯誤！"
-
-#. module: base_vat
-#: help:res.partner,vat_subjected:0
-msgid ""
-"Check this box if the partner is subjected to the VAT. It will be used for "
-"the VAT legal statement."
-msgstr ""
-"Check this box if the partner is subjected to the VAT. It will be used for "
-"the VAT legal statement.\r\n"
-"如果該業務夥伴需申報（加值型）營業稅，則勾選此框。這會用在營業稅相關的稅務報告。"
-
-#. module: base_vat
-#: model:ir.model,name:base_vat.model_res_partner
-msgid "Partner"
-msgstr "業務夥伴"
-
-#. module: base_vat
-#: help:res.company,vat_check_vies:0
+#: model:ir.model.fields,help:base_vat.field_res_company_vat_check_vies
 msgid ""
 "If checked, Partners VAT numbers will be fully validated against EU's VIES "
 "service rather than via a simple format validation (checksum)."
 msgstr "如果勾選此框，則業務夥伴的統編會以歐盟的 VIES 做完整檢查，否則僅會作基本格式檢查（checksum檢查）。"
 
 #. module: base_vat
-#: field:res.partner,vat_subjected:0
-msgid "VAT Legal Statement"
-msgstr "營業稅報告"
+#: code:addons/base_vat/base_vat.py:111
+#, python-format
+msgid "Importing VAT Number [%s] is not valid !"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Partner"
+msgstr "伙伴"
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:128
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
+"Note: the expected format is %s"
+msgstr ""
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:127
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
+"check or did not respect the expected format %s."
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
+msgid "VIES VAT Check"
+msgstr "VIES 統編（VAT）檢查"
+
+#. module: base_vat
+#: model:ir.ui.view,arch_db:base_vat.view_partner_form
+msgid "e.g. BE0477472701"
+msgstr "例如BE0477472701"

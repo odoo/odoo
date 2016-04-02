@@ -1,0 +1,55 @@
+.modal {
+
+    .modal-content {
+        border-radius: 0;
+
+        .modal-body {
+            &.o_act_window {
+                padding: 0;
+            }
+
+            .o_modal_header {
+                .o-webclient-padding(@top: 10px, @bottom: 10px);
+                .clearfix();
+
+                .o_search_options {
+                    display: inline-block;
+                }
+                .o_pager {
+                    float: right;
+                }
+            }
+
+            .oe-view-manager-content {
+                position: static;  // Reset position for view managers in modals (default value: absolute)
+            }
+        }
+
+        .modal-footer {
+            text-align: left;
+        }
+    }
+    
+
+    @media (min-width: @screen-sm-min) {
+        .modal-dialog {
+            height: 100%;
+            padding: 30px 0;
+            margin: 0 auto;
+
+            .modal-content {
+                max-height: 100%;
+                .o-flex-display();
+                .o-flex-flow(column, nowrap);
+
+                .modal-header, .modal-footer {
+                    .o-flex(0, 0, auto);
+                }
+
+                .modal-body {
+                    overflow: auto;
+                }
+            }
+        }
+    }
+}

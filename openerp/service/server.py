@@ -7,12 +7,7 @@ import logging
 import os
 import os.path
 import platform
-import psutil
 import random
-if os.name == 'posix':
-    import resource
-else:
-    resource = None
 import select
 import signal
 import socket
@@ -20,14 +15,21 @@ import subprocess
 import sys
 import threading
 import time
-import unittest2
+import unittest
 
 import werkzeug.serving
+from werkzeug.debug import DebuggedApplication
 
-try:
+if os.name == 'posix':
+    # Unix only for workers
     import fcntl
-except ImportError:
-    pass
+    import resource
+    import psutil
+else:
+    # Windows shim
+    signal.SIGHUP = -1
+
+# Optional process names for workers
 try:
     from setproctitle import setproctitle
 except ImportError:
@@ -37,17 +39,36 @@ import openerp
 from openerp.modules.registry import RegistryManager
 from openerp.release import nt_service_name
 import openerp.tools.config as config
-from openerp.tools.misc import stripped_sys_argv, dumpstacks
+from openerp.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
 
 _logger = logging.getLogger(__name__)
 
+try:
+    import watchdog
+    from watchdog.observers import Observer
+    from watchdog.events import FileCreatedEvent, FileModifiedEvent, FileMovedEvent
+except ImportError:
+    watchdog = None
+
 SLEEP_INTERVAL = 60     # 1 min
+
+def memory_info(process):
+    """ psutil < 2.0 does not have memory_info, >= 3.0 does not have
+    get_memory_info """
+    return (getattr(process, 'memory_info', None) or process.get_memory_info)()
 
 #----------------------------------------------------------
 # Werkzeug WSGI servers patched
 #----------------------------------------------------------
+class LoggingBaseWSGIServerMixIn(object):
+    def handle_error(self, request, client_address):
+        t, e, _ = sys.exc_info()
+        if t == socket.error and e.errno == errno.EPIPE:
+            # broken pipe, ignore error
+            return
+        _logger.exception('Exception happened during processing of request from %s', client_address)
 
-class BaseWSGIServerNoBind(werkzeug.serving.BaseWSGIServer):
+class BaseWSGIServerNoBind(LoggingBaseWSGIServerMixIn, werkzeug.serving.BaseWSGIServer):
     """ werkzeug Base WSGI Server patched to skip socket binding. PreforkServer
     use this class, sets the socket and calls the process_request() manually
     """
@@ -74,7 +95,7 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
 # should also work with systemd socket activation. This is currently untested
 # and not yet used.
 
-class ThreadedWSGIServerReloadable(werkzeug.serving.ThreadedWSGIServer):
+class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
     """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
     given by the environement, this is used by autoreload to keep the listen
     socket open when a reload happens.
@@ -98,89 +119,36 @@ class ThreadedWSGIServerReloadable(werkzeug.serving.ThreadedWSGIServer):
             super(ThreadedWSGIServerReloadable, self).server_activate()
 
 #----------------------------------------------------------
-# AutoReload watcher
+# FileSystem Watcher for autoreload and cache invalidation
 #----------------------------------------------------------
-
-class AutoReload(object):
-    def __init__(self, server):
-        self.server = server
-        self.files = {}
-        self.modules = {}
-        import pyinotify
-        class EventHandler(pyinotify.ProcessEvent):
-            def __init__(self, autoreload):
-                self.autoreload = autoreload
-
-            def process_IN_CREATE(self, event):
-                _logger.debug('File created: %s', event.pathname)
-                self.autoreload.files[event.pathname] = 1
-
-            def process_IN_MODIFY(self, event):
-                _logger.debug('File modified: %s', event.pathname)
-                self.autoreload.files[event.pathname] = 1
-
-        self.wm = pyinotify.WatchManager()
-        self.handler = EventHandler(self)
-        self.notifier = pyinotify.Notifier(self.wm, self.handler, timeout=0)
-        mask = pyinotify.IN_MODIFY | pyinotify.IN_CREATE  # IN_MOVED_FROM, IN_MOVED_TO ?
-        for path in openerp.modules.modules.ad_paths:
+class FSWatcher(object):
+    def __init__(self):
+        self.observer = Observer()
+        for path in openerp.modules.module.ad_paths:
             _logger.info('Watching addons folder %s', path)
-            self.wm.add_watch(path, mask, rec=True)
+            self.observer.schedule(self, path, recursive=True)
 
-    def process_data(self, files):
-        xml_files = [i for i in files if i.endswith('.xml')]
-        for i in xml_files:
-            for path in openerp.modules.modules.ad_paths:
-                if i.startswith(path):
-                    # find out wich addons path the file belongs to
-                    # and extract it's module name
-                    right = i[len(path) + 1:].split('/')
-                    if len(right) < 2:
-                        continue
-                    module = right[0]
-                    self.modules[module] = 1
-        if self.modules:
-            _logger.info('autoreload: xml change detected, autoreload activated')
-            restart()
+    def dispatch(self, event):
+        if isinstance(event, (FileCreatedEvent, FileModifiedEvent, FileMovedEvent)):
+            if not event.is_directory:
+                path = getattr(event, 'dest_path', event.src_path)
+                if path.endswith('.py'):
+                    try:
+                        source = open(path, 'rb').read() + '\n'
+                        compile(source, path, 'exec')
+                    except SyntaxError:
+                        _logger.error('autoreload: python code change detected, SyntaxError in %s', path)
+                    else:
+                        _logger.info('autoreload: python code updated, autoreload activated')
+                        restart()
 
-    def process_python(self, files):
-        # process python changes
-        py_files = [i for i in files if i.endswith('.py')]
-        py_errors = []
-        # TODO keep python errors until they are ok
-        if py_files:
-            for i in py_files:
-                try:
-                    source = open(i, 'rb').read() + '\n'
-                    compile(source, i, 'exec')
-                except SyntaxError:
-                    py_errors.append(i)
-            if py_errors:
-                _logger.info('autoreload: python code change detected, errors found')
-                for i in py_errors:
-                    _logger.info('autoreload: SyntaxError %s', i)
-            else:
-                _logger.info('autoreload: python code updated, autoreload activated')
-                restart()
-
-    def check_thread(self):
-        # Check if some files have been touched in the addons path.
-        # If true, check if the touched file belongs to an installed module
-        # in any of the database used in the registry manager.
-        while 1:
-            while self.notifier.check_events(1000):
-                self.notifier.read_events()
-                self.notifier.process_events()
-            l = self.files.keys()
-            self.files.clear()
-            self.process_data(l)
-            self.process_python(l)
-
-    def run(self):
-        t = threading.Thread(target=self.check_thread)
-        t.setDaemon(True)
-        t.start()
+    def start(self):
+        self.observer.start()
         _logger.info('AutoReload watcher running')
+
+    def stop(self):
+        self.observer.stop()
+        self.observer.join()
 
 #----------------------------------------------------------
 # Servers: Threaded, Gevented and Prefork
@@ -204,6 +172,10 @@ class CommonServer(object):
         try:
             sock.shutdown(socket.SHUT_RDWR)
         except socket.error, e:
+            if e.errno == errno.EBADF:
+                # Werkzeug > 0.9.6 closes the socket itself (see commit
+                # https://github.com/mitsuhiko/werkzeug/commit/4d8ca089)
+                return
             # On OSX, socket shutdowns both sides if any side closes it
             # causing an error 57 'Socket is not connected' on shutdown
             # of the other side (or something), see
@@ -242,8 +214,8 @@ class ThreadedServer(CommonServer):
             time.sleep(SLEEP_INTERVAL + number)     # Steve Reich timing style
             registries = openerp.modules.registry.RegistryManager.registries
             _logger.debug('cron%d polling for jobs', number)
-            for db_name, registry in registries.items():
-                while True and registry.ready:
+            for db_name, registry in registries.iteritems():
+                while registry.ready:
                     acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
                     if not acquired:
                         break
@@ -288,12 +260,13 @@ class ThreadedServer(CommonServer):
             signal.signal(signal.SIGCHLD, self.signal_handler)
             signal.signal(signal.SIGHUP, self.signal_handler)
             signal.signal(signal.SIGQUIT, dumpstacks)
+            signal.signal(signal.SIGUSR1, log_ormcache_stats)
         elif os.name == 'nt':
             import win32api
             win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
 
         test_mode = config['test_enable'] or config['test_file']
-        if not stop or test_mode:
+        if test_mode or (config['xmlrpc'] and not stop):
             # some tests need the http deamon to be available...
             self.http_spawn()
 
@@ -381,11 +354,16 @@ class GeventServer(CommonServer):
 
         if os.name == 'posix':
             signal.signal(signal.SIGQUIT, dumpstacks)
+            signal.signal(signal.SIGUSR1, log_ormcache_stats)
 
         gevent.spawn(self.watch_parent)
         self.httpd = WSGIServer((self.interface, self.port), self.app)
         _logger.info('Evented Service (longpolling) running on %s:%s', self.interface, self.port)
-        self.httpd.serve_forever()
+        try:
+            self.httpd.serve_forever()
+        except:
+            _logger.exception("Evented Service (longpolling): uncaught error during main loop")
+            raise
 
     def stop(self):
         import gevent
@@ -408,6 +386,9 @@ class PreforkServer(CommonServer):
         self.population = config['workers']
         self.timeout = config['limit_time_real']
         self.limit_request = config['limit_request']
+        self.cron_timeout = config['limit_time_real_cron'] or None
+        if self.cron_timeout == -1:
+            self.cron_timeout = self.timeout
         # working vars
         self.beat = 4
         self.app = app
@@ -463,10 +444,12 @@ class PreforkServer(CommonServer):
         cmd = nargs[0]
         cmd = os.path.join(os.path.dirname(cmd), "openerp-gevent")
         nargs[0] = cmd
-        popen = subprocess.Popen(nargs)
+        popen = subprocess.Popen([sys.executable] + nargs)
         self.long_polling_pid = popen.pid
 
     def worker_pop(self, pid):
+        if pid == self.long_polling_pid:
+            self.long_polling_pid = None
         if pid in self.workers:
             _logger.debug("Worker (%s) unregistered", pid)
             try:
@@ -496,6 +479,9 @@ class PreforkServer(CommonServer):
             elif sig == signal.SIGQUIT:
                 # dump stacks on kill -3
                 self.dumpstacks()
+            elif sig == signal.SIGUSR1:
+                # log ormcache stats on kill -SIGUSR1
+                log_ormcache_stats()
             elif sig == signal.SIGTTIN:
                 # increase number of workers
                 self.population += 1
@@ -525,16 +511,20 @@ class PreforkServer(CommonServer):
         for (pid, worker) in self.workers.items():
             if worker.watchdog_timeout is not None and \
                     (now - worker.watchdog_time) >= worker.watchdog_timeout:
-                _logger.error("Worker (%s) timeout", pid)
+                _logger.error("%s (%s) timeout after %ss",
+                              worker.__class__.__name__,
+                              pid,
+                              worker.watchdog_timeout)
                 self.worker_kill(pid, signal.SIGKILL)
 
     def process_spawn(self):
-        while len(self.workers_http) < self.population:
-            self.worker_spawn(WorkerHTTP, self.workers_http)
+        if config['xmlrpc']:
+            while len(self.workers_http) < self.population:
+                self.worker_spawn(WorkerHTTP, self.workers_http)
+            if not self.long_polling_pid:
+                self.long_polling_spawn()
         while len(self.workers_cron) < config['max_cron_threads']:
             self.worker_spawn(WorkerCron, self.workers_cron)
-        if not self.long_polling_pid:
-            self.long_polling_spawn()
 
     def sleep(self):
         try:
@@ -571,6 +561,7 @@ class PreforkServer(CommonServer):
         signal.signal(signal.SIGTTIN, self.signal_handler)
         signal.signal(signal.SIGTTOU, self.signal_handler)
         signal.signal(signal.SIGQUIT, dumpstacks)
+        signal.signal(signal.SIGUSR1, log_ormcache_stats)
 
         # listen to socket
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -588,8 +579,13 @@ class PreforkServer(CommonServer):
             _logger.info("Stopping gracefully")
             limit = time.time() + self.timeout
             for pid in self.workers.keys():
-                self.worker_kill(pid, signal.SIGTERM)
+                self.worker_kill(pid, signal.SIGINT)
             while self.workers and time.time() < limit:
+                try:
+                    self.process_signals()
+                except KeyboardInterrupt:
+                    _logger.info("Forced shutdown.")
+                    break
                 self.process_zombie()
                 time.sleep(0.1)
         else:
@@ -661,8 +657,6 @@ class Worker(object):
                 raise
 
     def process_limit(self):
-        if resource is None:
-            return
         # If our parent changed sucide
         if self.ppid != os.getppid():
             _logger.info("Worker (%s) Parent changed", self.pid)
@@ -672,7 +666,7 @@ class Worker(object):
             _logger.info("Worker (%d) max request (%s) reached.", self.pid, self.request_count)
             self.alive = False
         # Reset the worker if it consumes too much memory (e.g. caused by a memory leak).
-        rss, vms = psutil.Process(os.getpid()).get_memory_info()
+        rss, vms = memory_info(psutil.Process(os.getpid()))
         if vms > config['limit_memory_soft']:
             _logger.info('Worker (%d) virtual memory limit (%s) reached.', self.pid, vms)
             self.alive = False      # Commit suicide after the request.
@@ -685,7 +679,7 @@ class Worker(object):
         r = resource.getrusage(resource.RUSAGE_SELF)
         cpu_time = r.ru_utime + r.ru_stime
         def time_expired(n, stack):
-            _logger.info('Worker (%d) CPU time limit (%s) reached.', config['limit_time_cpu'])
+            _logger.info('Worker (%d) CPU time limit (%s) reached.', self.pid, config['limit_time_cpu'])
             # We dont suicide in such case
             raise Exception('CPU time limit exceeded.')
         signal.signal(signal.SIGXCPU, time_expired)
@@ -721,7 +715,9 @@ class Worker(object):
                 self.multi.pipe_ping(self.watchdog_pipe)
                 self.sleep()
                 self.process_work()
-            _logger.info("Worker (%s) exiting. request_count: %s.", self.pid, self.request_count)
+            _logger.info("Worker (%s) exiting. request_count: %s, registry count: %s.",
+                         self.pid, self.request_count,
+                         len(openerp.modules.registry.RegistryManager.registries))
             self.stop()
         except Exception:
             _logger.exception("Worker (%s) Exception occured, exiting..." % self.pid)
@@ -768,6 +764,7 @@ class WorkerCron(Worker):
         # The variable db_index is keeping track of the next database to
         # process.
         self.db_index = 0
+        self.watchdog_timeout = multi.cron_timeout  # Use a distinct value for CRON Worker
 
     def sleep(self):
         # Really sleep once all the databases have been processed.
@@ -779,7 +776,7 @@ class WorkerCron(Worker):
         if config['db_name']:
             db_names = config['db_name'].split(',')
         else:
-            db_names = openerp.service.db.exp_list(True)
+            db_names = openerp.service.db.list_dbs(True)
         return db_names
 
     def process_work(self):
@@ -793,7 +790,7 @@ class WorkerCron(Worker):
             self.setproctitle(db_name)
             if rpc_request_flag:
                 start_time = time.time()
-                start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
+                start_rss, start_vms = memory_info(psutil.Process(os.getpid()))
 
             import openerp.addons.base as base
             base.ir.ir_cron.ir_cron._acquire_job(db_name)
@@ -804,7 +801,7 @@ class WorkerCron(Worker):
                 openerp.sql_db.close_db(db_name)
             if rpc_request_flag:
                 run_time = time.time() - start_time
-                end_rss, end_vms = psutil.Process(os.getpid()).get_memory_info()
+                end_rss, end_vms = memory_info(psutil.Process(os.getpid()))
                 vms_diff = (end_vms - start_vms) / 1024
                 logline = '%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % \
                     (db_name, run_time, start_vms / 1024, end_vms / 1024, vms_diff)
@@ -847,7 +844,8 @@ def _reexec(updated_modules=None):
         subprocess.call('net stop {0} && net start {0}'.format(nt_service_name), shell=True)
     exe = os.path.basename(sys.executable)
     args = stripped_sys_argv()
-    args += ["-u", ','.join(updated_modules)]
+    if updated_modules:
+        args += ["-u", ','.join(updated_modules)]
     if not args or args[0] != exe:
         args.insert(0, exe)
     os.execv(sys.executable, args)
@@ -869,12 +867,12 @@ def load_test_file_py(registry, test_file):
         if mod_mod:
             mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
             if test_path == mod_path:
-                suite = unittest2.TestSuite()
-                for t in unittest2.TestLoader().loadTestsFromModule(mod_mod):
+                suite = unittest.TestSuite()
+                for t in unittest.TestLoader().loadTestsFromModule(mod_mod):
                     suite.addTest(t)
                 _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
                 stream = openerp.modules.module.TestStream()
-                result = unittest2.TextTestRunner(verbosity=2, stream=stream).run(suite)
+                result = unittest.TextTestRunner(verbosity=2, stream=stream).run(suite)
                 success = result.wasSuccessful()
                 if hasattr(registry._assertion_report,'report_result'):
                     registry._assertion_report.report_result(success)
@@ -895,10 +893,11 @@ def preload_registries(dbnames):
             # run test_file if provided
             if test_file:
                 _logger.info('loading test file %s', test_file)
-                if test_file.endswith('yml'):
-                    load_test_file_yml(registry, test_file)
-                elif test_file.endswith('py'):
-                    load_test_file_py(registry, test_file)
+                with openerp.api.Environment.manage():
+                    if test_file.endswith('yml'):
+                        load_test_file_yml(registry, test_file)
+                    elif test_file.endswith('py'):
+                        load_test_file_py(registry, test_file)
 
             if registry._assertion_report.failures:
                 rc += 1
@@ -919,18 +918,22 @@ def start(preload=None, stop=False):
     else:
         server = ThreadedServer(openerp.service.wsgi_server.application)
 
-    if config['auto_reload']:
-        autoreload = AutoReload(server)
-        autoreload.run()
+    watcher = None
+    if config['dev_mode']:
+        if watchdog:
+            watcher = FSWatcher()
+            watcher.start()
+        else:
+            _logger.warning("'watchdog' module not installed. Code autoreload feature is disabled")
+        server.app = DebuggedApplication(server.app, evalex=True)
 
     rc = server.run(preload, stop)
 
     # like the legend of the phoenix, all ends with beginnings
     if getattr(openerp, 'phoenix', False):
-        modules = []
-        if config['auto_reload']:
-            modules = autoreload.modules.keys()
-        _reexec(modules)
+        if watcher:
+            watcher.stop()
+        _reexec()
 
     return rc if rc else 0
 
@@ -942,5 +945,3 @@ def restart():
         threading.Thread(target=_reexec).start()
     else:
         os.kill(server.pid, signal.SIGHUP)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

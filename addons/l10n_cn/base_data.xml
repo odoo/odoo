@@ -1,5 +1,14 @@
 <?xml version="1.0"?>
 <openerp>
+
+<!-- 
+    Copyright (C) 2008-2008 维智众源 oldrev@gmail.com  <states data>
+    Copyright (C) 2008-now  开阖软件 jeff@osbzr.com    < PM and LTS >
+
+依据《 中华人民共和国行政区划代码（国家标准  GB/T 2260-2007》 编制
+http://www.cvh.org.cn/cms/sites/default/files/GBT2260-2007.pdf
+-->
+
     <data noupdate="1">
 
         <!-- 添加省份数据 -->
@@ -48,7 +57,7 @@
             <field name="code">鲁</field>
             <field name="country_id" ref="base.cn"/>
         </record>
-        <record id="state_HeN" model="res.country.state">
+        <record id="state_HA" model="res.country.state">
             <field name="name">河南省</field>
             <field name="code">豫</field>
             <field name="country_id" ref="base.cn"/>
@@ -58,7 +67,7 @@
             <field name="code">蒙</field>
             <field name="country_id" ref="base.cn"/>
         </record>
-        <record id="state_HuB" model="res.country.state">
+        <record id="state_HB" model="res.country.state">
             <field name="name">湖北省</field>
             <field name="code">鄂</field>
             <field name="country_id" ref="base.cn"/>
@@ -68,7 +77,7 @@
             <field name="code">新</field>
             <field name="country_id" ref="base.cn"/>
         </record>
-        <record id="state_HuN" model="res.country.state">
+        <record id="state_HN" model="res.country.state">
             <field name="name">湖南省</field>
             <field name="code">湘</field>
             <field name="country_id" ref="base.cn"/>
@@ -88,7 +97,7 @@
             <field name="code">藏</field>
             <field name="country_id" ref="base.cn"/>
         </record>
-        <record id="state_HaN" model="res.country.state">
+        <record id="state_HI" model="res.country.state">
             <field name="name">海南省</field>
             <field name="code">琼</field>
             <field name="country_id" ref="base.cn"/>
@@ -103,7 +112,7 @@
             <field name="code">蜀</field>
             <field name="country_id" ref="base.cn"/>
         </record>
-        <record id="state_HeB" model="res.country.state">
+        <record id="state_HE" model="res.country.state">
             <field name="name">河北省</field>
             <field name="code">冀</field>
             <field name="country_id" ref="base.cn"/>
@@ -128,7 +137,7 @@
             <field name="code">辽</field>
             <field name="country_id" ref="base.cn"/>
         </record>
-        <record id="state_SX" model="res.country.state">
+        <record id="state_SN" model="res.country.state">
             <field name="name">陕西省</field>
             <field name="code">陕</field>
             <field name="country_id" ref="base.cn"/>
@@ -158,5 +167,23 @@
             <field name="code">苏</field>
             <field name="country_id" ref="base.cn"/>
         </record>
+
+        <record id="state_TW" model="res.country.state">
+            <field name="name">台湾省</field>
+            <field name="code">台</field>
+            <field name="country_id" ref="base.cn"/>
+        </record>
+        <record id="state_HK" model="res.country.state">
+            <field name="name">香港特别行政区</field>
+            <field name="code">港</field>
+            <field name="country_id" ref="base.cn"/>
+        </record>
+        <record id="state_MO" model="res.country.state">
+            <field name="name">澳门特别行政区</field>
+            <field name="code">澳</field>
+            <field name="country_id" ref="base.cn"/>
+        </record>
+    
+    
     </data>
 </openerp>

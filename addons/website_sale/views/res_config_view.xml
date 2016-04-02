@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="website_config_settings_view_form" model="ir.ui.view">
+        <field name="name">website.config.settings.form.inherit</field>
+        <field name="model">website.config.settings</field>
+        <field name="inherit_id" ref="website.view_website_config_settings"/>
+        <field name="arch" type="xml">
+            <group name="social" position="before">
+                <group name="delivery" string="eCommerce">
+                    <label string="Manage Deliveries" for="module_website_sale_delivery"/>
+                    <div class="oe_inline">
+                        <field name="module_website_sale_delivery"/>
+                    </div>
+                    <label for="module_delivery_ups" string="Shipping Connectors"/>
+                    <div>
+                        <div>
+                            <field name="module_delivery_ups" widget="upgrade_boolean"/>
+                            <label for="module_delivery_ups"/>
+                        </div><div>
+                            <field name="module_delivery_fedex" widget="upgrade_boolean"/>
+                            <label for="module_delivery_fedex"/>
+                        </div><div>
+                            <field name="module_delivery_temando" widget="upgrade_boolean"/>
+                            <label for="module_delivery_temando"/>
+                        </div><div>
+                            <field name="module_delivery_usps" widget="upgrade_boolean"/>
+                            <label for="module_delivery_usps"/>
+                        </div><div>
+                            <field name="module_delivery_dhl" widget="upgrade_boolean"/>
+                            <label for="module_delivery_dhl"/>
+                        </div>
+                    </div>
+                    <label for="module_sale_ebay" string="Merchant Connectors"/>
+                    <div>
+                        <field name="module_sale_ebay" widget="upgrade_boolean"/>
+                        <label for="module_sale_ebay"/>
+                        <a href="https://www.odoo.com/slides/slide/odoo-integration-with-ebay-216" target="_blank"> More Info</a>
+                    </div>
+                    <label string="Default Sales Team" for="salesteam_id" groups="base.group_no_one"/>
+                    <div groups="base.group_no_one" class="oe_inline">
+                        <field name="salesteam_id"/>
+                    </div>
+                    <label string="Default Salesperson" for="salesperson_id" groups="base.group_no_one"/>
+                    <div groups="base.group_no_one" class="oe_inline">
+                        <field name="salesperson_id"/>
+                    </div>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

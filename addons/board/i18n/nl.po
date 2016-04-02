@@ -1,50 +1,42 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* board
-#
+# * board
+# 
+# Translators:
+# Eric Geens <ericgeens@yahoo.com>, 2015
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-11-24 18:14+0000\n"
-"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-09-10 14:51+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
+"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:09+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_create
-#: model:ir.ui.menu,name:board.menu_board_create
-msgid "Create Board"
-msgstr "Aanmaken dashboard"
-
-#. module: board
-#: view:board.create:0
-msgid "Create"
-msgstr "Aanmaken"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:4
+#: code:addons/board/static/src/xml/board.xml:24
 #, python-format
-msgid "Reset Layout.."
-msgstr "Reset opmaak"
-
-#. module: board
-#: view:board.create:0
-msgid "Create New Dashboard"
-msgstr "Nieuw dashboard aanmaken"
+msgid "&nbsp;"
+msgstr "&nbsp;"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:40
+#: code:addons/board/static/src/js/dashboard.js:406
 #, python-format
-msgid "Choose dashboard layout"
-msgstr "Kies dashboard opmaak"
+msgid "'%s' added to dashboard"
+msgstr "'%s' toegevoegd aan dashboard"
+
+#. module: board
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid "<b>Your personal dashboard is empty.</b>"
+msgstr "<b>Uw persoonlijk dashboard is leeg.</b>"
 
 #. module: board
 #. openerp-web
@@ -52,6 +44,13 @@ msgstr "Kies dashboard opmaak"
 #, python-format
 msgid "Add"
 msgstr "Toevoegen"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:64
+#, python-format
+msgid "Add to my Dashboard"
+msgstr "Aan mijn dashboard toevoegen"
 
 #. module: board
 #. openerp-web
@@ -66,368 +65,132 @@ msgid "Board"
 msgstr "Board"
 
 #. module: board
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board.open_board_my_dash_action
-#: model:ir.ui.menu,name:board.menu_board_my_dash
-msgid "My Dashboard"
-msgstr "Mijn dashboard"
-
-#. module: board
-#: field:board.create,name:0
-msgid "Board Name"
-msgstr "Dashboard naam"
-
-#. module: board
 #: model:ir.model,name:board.model_board_create
 msgid "Board Creation"
 msgstr "Dashboard aanmaken"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:67
-#, python-format
-msgid "Add to Dashboard"
-msgstr "Aan dashboard toevoegen"
+#: model:ir.model.fields,field_description:board.field_board_create_name
+msgid "Board Name"
+msgstr "Dashboard naam"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:28
-#, python-format
-msgid "&nbsp;"
-msgstr "&nbsp;"
-
-#. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
-msgid ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"                  <p>\n"
-"                    <b>Your personal dashboard is empty.</b>\n"
-"                  </p><p>\n"
-"                    To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add "
-"to\n"
-"                    Dashboard'</i> in the extended search options.\n"
-"                  </p><p>\n"
-"                    You can filter and group data before inserting into the\n"
-"                    dashboard using the search options.\n"
-"                  </p>\n"
-"              </div>\n"
-"            "
-msgstr ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"                  <p>\n"
-"                    <b>Uw persoonlijke dashboard is leeg.</b>\n"
-"                  </p><p>\n"
-"                    Om uw eerste rapportage toe te voegen aan dit "
-"dashboard,\n"
-"                    gaat u naar een menu en kies voor de lijst of grafiek "
-"weergave en\n"
-"                    klik op <i>Toevoegen aan dashboard</i> in de uitgebreide "
-"zoek opties.\n"
-"                  </p><p>\n"
-"                    U kunt gegevens eerst filteren en groeperen voordat u "
-"deze\n"
-"                    toevoegt aan het dashboard, door gebruik te maken van\n"
-"                    de zoek opties.\n"
-"                  </p>\n"
-"              </div>\n"
-"            "
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Cancel"
+msgstr "Annuleren"
 
 #. module: board
 #. openerp-web
 #: code:addons/board/static/src/xml/board.xml:6
 #, python-format
-msgid "Reset"
-msgstr "Reset"
-
-#. module: board
-#: field:board.create,menu_parent_id:0
-msgid "Parent Menu"
-msgstr "Hoofdmenu"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:8
-#, python-format
-msgid "Change Layout.."
-msgstr "Verander Opmaak..."
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:93
-#, python-format
-msgid "Edit Layout"
-msgstr "Bewerk Opmaak"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:10
-#, python-format
 msgid "Change Layout"
 msgstr "Opmaak wijzigen"
 
 #. module: board
-#: view:board.create:0
-msgid "Cancel"
-msgstr "Annuleren"
-
-#. module: board
-#: view:board.create:0
-msgid "or"
-msgstr "of"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:4
+#, python-format
+msgid "Change Layout.."
+msgstr "Opmaak wijzigen.."
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:69
+#: code:addons/board/static/src/xml/board.xml:36
 #, python-format
-msgid "Title of new dashboard item"
-msgstr "Titel van nieuwe dashboard"
+msgid "Choose dashboard layout"
+msgstr "Kies dashboard opmaak"
 
-#~ msgid "board.board"
-#~ msgstr "board.board"
-
-#~ msgid "Author"
-#~ msgstr "Auteur"
-
-#~ msgid "Width"
-#~ msgstr "Breedte"
-
-#~ msgid "Title"
-#~ msgstr "Titel"
-
-#~ msgid "board.note"
-#~ msgstr "board.note"
-
-#~ msgid "Date"
-#~ msgstr "Datum"
-
-#~ msgid "Configuration"
-#~ msgstr "Instellingen"
-
-#~ msgid "board.note.type"
-#~ msgstr "board.note.type"
-
-#~ msgid "Dashboard"
-#~ msgstr "Dashboard"
-
-#~ msgid "Position"
-#~ msgstr "Positie"
-
-#~ msgid "Left"
-#~ msgstr "Links"
-
-#~ msgid "Right"
-#~ msgstr "Rechts"
-
-#~ msgid "Sequence"
-#~ msgstr "Volgorde"
-
-#~ msgid "Dashboards"
-#~ msgstr "Dashboards"
-
-#~ msgid "Height"
-#~ msgstr "Hoogte"
-
-#~ msgid "board.board.line"
-#~ msgstr "board.board.line"
-
-#~ msgid "Subject"
-#~ msgstr "Onderwerp"
-
-#~ msgid "Base module for all dashboards."
-#~ msgstr "Basismodule voor alle dashboards"
-
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:408
 #, python-format
-#~ msgid "Please Insert Dashboard View(s) !"
-#~ msgstr "Voeg dashboard weergave(s) toe !"
+msgid "Could not add filter to dashboard"
+msgstr "Kan geen filter aan het dashboard toevoegen"
 
-#~ msgid "Dashboard Definition"
-#~ msgstr "Dashboard definitie"
+#. module: board
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Create"
+msgstr "Aanmaken"
 
-#~ msgid "Publish a note"
-#~ msgstr "Publiceer een notitie"
+#. module: board
+#: model:ir.actions.act_window,name:board.action_board_create
+#: model:ir.ui.menu,name:board.menu_board_create
+msgid "Create Board"
+msgstr "Aanmaken dashboard"
 
-#~ msgid "Note"
-#~ msgstr "Notitie"
+#. module: board
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Create New Dashboard"
+msgstr "Nieuw dashboard aanmaken"
 
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_create_uid
+msgid "Created by"
+msgstr "Aangemaakt door"
 
-#~ msgid "Menu Information"
-#~ msgstr "Menu informatie"
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_create_date
+msgid "Created on"
+msgstr "Aangemaakt op"
 
-#~ msgid "Notes"
-#~ msgstr "Notities"
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_board_display_name
+#: model:ir.model.fields,field_description:board.field_board_create_display_name
+msgid "Display Name"
+msgstr "Naam weergeven"
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Ongeldige XML voor weergave!"
-
-#~ msgid "Menu Name"
-#~ msgstr "Naam menu"
-
-#~ msgid "Open Dashboard"
-#~ msgstr "Open dashboard"
-
-#~ msgid "Board View"
-#~ msgstr "Dashboard-weergave"
-
-#~ msgid "Create Board Menu"
-#~ msgstr "Maak dashboard-menu"
-
-#~ msgid "Dashboard View"
-#~ msgstr "Dashboard-weergave"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Ongeldige modelnaam in de actie-definitie."
-
-#~ msgid "Note Type"
-#~ msgstr "Soort opmerking"
-
-#~ msgid "Create Menu For Dashboard"
-#~ msgstr "Maak menu voor dashboard"
-
-#~ msgid "Note type"
-#~ msgstr "Soort opmerking"
-
-#~ msgid "Create Menu"
-#~ msgstr "Maak menu"
-
-#~ msgid "Administration Dashboard"
-#~ msgstr "Beheer dashboard"
-
-#~ msgid "Menu Create"
-#~ msgstr "Maak menu"
-
-#~ msgid "Group By..."
-#~ msgstr "Groepeer op..."
-
-#~ msgid "Latest Connections"
-#~ msgstr "Laatste verbindingen"
-
-#~ msgid "Action Views"
-#~ msgstr "Actieweergaves"
-
-#~ msgid ""
-#~ "Gives the sequence order                         when displaying a list of "
-#~ "board lines."
-#~ msgstr "Bepaalt de volgorde bij het tonen van de board regel lijst."
-
-#~ msgid "Board Line"
-#~ msgstr "Board regel"
-
-#~ msgid "Latest Activities"
-#~ msgstr "Laatste activiteiten"
-
-#~ msgid "Weekly Global Activity"
-#~ msgstr "Wekelijkse globale activiteit"
-
-#~ msgid "  Year  "
-#~ msgstr "  Jaar  "
-
-#~ msgid "Month"
-#~ msgstr "Maand"
-
-#~ msgid "Monthly Activity per Document"
-#~ msgstr "Maandelijkse activiteit per document"
-
-#~ msgid "Log Analysis"
-#~ msgstr "Log analyse"
-
-#~ msgid "March"
-#~ msgstr "Maart"
-
-#~ msgid "August"
-#~ msgstr "Augustus"
-
-#~ msgid "User Connections"
-#~ msgstr "Verbonden gebruikers"
-
-#~ msgid "November"
-#~ msgstr "November"
-
-#~ msgid "January"
-#~ msgstr "Januari"
-
-#~ msgid "October"
-#~ msgstr "Oktober"
-
-#~ msgid "February"
-#~ msgstr "Februari"
-
-#~ msgid "Day"
-#~ msgstr "Dag"
-
-#~ msgid "Extended Filters..."
-#~ msgstr "Uitgebreide filters..."
-
-#~ msgid "July"
-#~ msgstr "Juli"
-
-#~ msgid "Log Report"
-#~ msgstr "Logboek overzicht"
-
-#~ msgid "Creation Date"
-#~ msgstr "Datum gemaakt"
-
-#~ msgid "June"
-#~ msgstr "Juni"
-
-#~ msgid "April"
-#~ msgstr "April"
-
-#~ msgid "September"
-#~ msgstr "September"
-
-#~ msgid "Year"
-#~ msgstr "Jaar"
-
-#~ msgid "May"
-#~ msgstr "Mei"
-
-#~ msgid "Object"
-#~ msgstr "Object"
-
-#~ msgid "   Month   "
-#~ msgstr "   Maand   "
-
-#~ msgid "December"
-#~ msgstr "December"
-
-#~ msgid "Model"
-#~ msgstr "Model"
-
-#~ msgid "Action"
-#~ msgstr "Actie"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Maand-1    "
-
-#~ msgid "# of Entries"
-#~ msgstr "aantal registraties"
-
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:94
 #, python-format
-#~ msgid "User Error!"
-#~ msgstr "Gebruikersfout!"
+msgid "Edit Layout"
+msgstr "Opmaak bewerken"
 
-#~ msgid "Dashboard main module"
-#~ msgstr "Dashboard hoofdmodule"
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_board_id
+#: model:ir.model.fields,field_description:board.field_board_create_id
+msgid "ID"
+msgstr "ID"
 
-#~ msgid "Log created in current month"
-#~ msgstr "Log aangemaakt in huidige maand"
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_board___last_update
+#: model:ir.model.fields,field_description:board.field_board_create___last_update
+msgid "Last Modified on"
+msgstr "Laatst gewijzigd op"
 
-#~ msgid "Configuration Overview"
-#~ msgstr "Configuratie overzicht"
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_write_uid
+msgid "Last Updated by"
+msgstr "Laatst bijgewerkt door"
 
-#~ msgid "Log created in last month"
-#~ msgstr "Log aangemaakt in laatste maand"
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_write_date
+msgid "Last Updated on"
+msgstr "Laatst bijgewerkt op"
 
-#~ msgid "Log created in current year"
-#~ msgstr "Log aangemaakt in huidige jaar"
+#. module: board
+#: model:ir.actions.act_window,name:board.open_board_my_dash_action
+#: model:ir.ui.menu,name:board.menu_board_my_dash
+#: model:ir.ui.view,arch_db:board.board_my_dash_view
+msgid "My Dashboard"
+msgstr "Mijn dashboard"
 
-#~ msgid "Home Page"
-#~ msgstr "Home Page"
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_menu_parent_id
+msgid "Parent Menu"
+msgstr "Hoofdmenu"
 
-#~ msgid "Users"
-#~ msgstr "Gebruikers"
+#. module: board
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"To add your first report into this dashboard, go to any\n"
+"                    menu, switch to list or graph view, and click <i>'Add to\n"
+"                    Dashboard'</i> in the extended search options."
+msgstr "Om een eerste rapport aan dit dashboard toe te voegen, ga naar een\n                    willekeurig menu, kies lijst- of grafiekweergave, klik op \n                    <i>'Favorieten'</i> in de uitgebreide zoekopties, en selecteer\n                    <i>'Aan mijn dashboard toevoegen'</i> uit het menu."
+
+#. module: board
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"You can filter and group data before inserting into the\n"
+"                    dashboard using the search options."
+msgstr "U kan gegevens filteren en groeperen vooraleer ze aan het\ndashboard toe te voegen met behulp van de zoekopties."

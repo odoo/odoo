@@ -5,7 +5,6 @@
     company_id: base.main_company
     name: MRP User
     login: maou
-    password: maou
     email: mrp_operation_user@yourcompany.com
 -
   I added groups for MRP User.
@@ -58,47 +57,47 @@
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    self.pool.get('mrp.production.workcenter.line').signal_button_start_working(cr, uid, [order.workcenter_lines[0].id])
+    order.workcenter_lines[0].signal_workflow('button_start_working')
 -
   Now I pause first work operation due to technical fault of work center.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    self.pool.get('mrp.production.workcenter.line').signal_button_pause(cr, uid, [order.workcenter_lines[0].id])
+    order.workcenter_lines[0].signal_workflow('button_pause')
 -
   I resume first work operation.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    self.pool.get('mrp.production.workcenter.line').signal_button_resume(cr, uid, [order.workcenter_lines[0].id])
+    order.workcenter_lines[0].signal_workflow('button_resume')
     
 -
   I cancel first work operation.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    self.pool.get('mrp.production.workcenter.line').signal_button_cancel(cr, uid, [order.workcenter_lines[0].id])
+    order.workcenter_lines[0].signal_workflow('button_cancel')
 -
-  I reset first work operation and start after resolving techninal fault of work center.
+  I reset first work operation and start after resolving technical fault of work center.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    self.pool.get('mrp.production.workcenter.line').signal_button_draft(cr, uid, [order.workcenter_lines[0].id])
-    self.pool.get('mrp.production.workcenter.line').signal_button_start_working(cr, uid, [order.workcenter_lines[0].id])
+    order.workcenter_lines[0].signal_workflow('button_draft')
+    order.workcenter_lines[0].signal_workflow('button_start_working')
 -
   I close first work operation as this work center completed its process.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    self.pool.get('mrp.production.workcenter.line').signal_button_done(cr, uid, [order.workcenter_lines[0].id])
+    order.workcenter_lines[0].signal_workflow('button_done')
 -
   Now I close other operations one by one which are in start state.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     for work_line in order.workcenter_lines[1:]:
-        self.pool.get('mrp.production.workcenter.line').signal_button_start_working(cr, uid, [work_line.id])
-        self.pool.get('mrp.production.workcenter.line').signal_button_done(cr, uid, [work_line.id])
+      work_line.signal_workflow('button_start_working')
+      work_line.signal_workflow('button_done')
 
 -
   I check that the production order is now done.
@@ -106,22 +105,6 @@
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     assert order.state == 'done', "Production should be closed after finished all operations."
--
-  I print a Barcode Report of Operation line.
--
-  !python {model: mrp_operations.operation.code}: |
-    from openerp import tools
-    from openerp.report import render_report
-    ids = [
-        ref('mrp_operations.mrp_op_1'),
-        ref('mrp_operations.mrp_op_2'),
-        ref('mrp_operations.mrp_op_3'),
-        ref('mrp_operations.mrp_op_4'),
-        ref('mrp_operations.mrp_op_5')
-    ]
-    data, format = render_report(cr, uid, ids, 'mrp.code.barcode', {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'mrp_operations-barcode_report.'+format), 'wb+').write(data)
 
 -
   I print Workcenter's Barcode Report.
@@ -130,6 +113,8 @@
     from openerp import tools
     from openerp.report import render_report
     ids = [ref('mrp.mrp_workcenter_0'), ref('mrp.mrp_workcenter_1')]
-    data, format = render_report(cr, uid, ids, 'mrp.wc.barcode', {})
+    data, format = render_report(cr, uid, ids, 'mrp_operations.report_wcbarcode', {})
+    assert data
+    assert format
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'mrp_operations-workcenter_barcode_report.'+format), 'wb+').write(data)

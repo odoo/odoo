@@ -1,76 +1,216 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* report_intrastat
-#
+# * report_intrastat
+# 
+# Translators:
+# Ahmet Altınışık <aaltinisik@altinkaya.com.tr>, 2016
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-01-25 17:35+0000\n"
-"Last-Translator: Ahmet Altınışık <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2016-03-01 16:20+0000\n"
+"Last-Translator: Ramiz Deniz Öner <deniz@denizoner.com>\n"
+"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:49+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Comment:</strong>"
+msgstr "<strong>Açıklama:</strong>"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Document:</strong>"
+msgstr "<strong>Belge:</strong>"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Fiscal Position:</strong>"
+msgstr "<strong>Mali Durum:</strong>"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Invoice Date:</strong>"
+msgstr "<strong>Fatura Tarihi:</strong>"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Partner Ref.:</strong>"
+msgstr "<strong>İş Ortağı Referansı:</strong>"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Payment Term:</strong>"
+msgstr "<strong>Ödeme Şekli:</strong>"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Total Without Taxes</strong>"
+msgstr "<strong>Vergisiz Toplam</strong>"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Total</strong>"
+msgstr "<strong>Toplam</strong>"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Amount"
+msgstr "Tutar"
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "April"
+msgstr "Nisan"
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "August"
+msgstr "Ağustos"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Cancelled Invoice"
-msgstr "İptal edilimiş fatura"
+msgstr "İptal edilmiş fatura"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Total (inclu. taxes):"
-msgstr ""
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_company_id
+msgid "Company"
+msgstr "Firma"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Disc. (%)"
-msgstr "İnd. (%)"
+#: model:ir.model,name:report_intrastat.model_res_country
+msgid "Country"
+msgstr "Ülke"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Supplier Invoice"
-msgstr "Tedarikçi Faturası"
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_code
+msgid "Country code"
+msgstr "Ülke kodu"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Unit Price"
-msgstr "Birim Fiyatı"
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_currency_id
+msgid "Currency"
+msgstr "Para Birimi"
 
 #. module: report_intrastat
-#: selection:report.intrastat,type:0
-msgid "Import"
-msgstr "İçe Aktar"
+#: selection:report.intrastat,month:0
+msgid "December"
+msgstr "Aralık"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-#: field:report.intrastat.code,description:0
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Description"
 msgstr "Açıklama"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "VAT :"
-msgstr "KDV :"
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Discount (%)"
+msgstr "İndirim (%)"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Document"
-msgstr "Belge"
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_display_name
+msgid "Display Name"
+msgstr "Adı Göster"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "PRO-FORMA"
-msgstr "PROFORMA"
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Draft Invoice"
+msgstr "Taslak Fatura"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Taxes:"
-msgstr "Vergiler:"
+#: selection:report.intrastat,type:0
+msgid "Export"
+msgstr "Dışa Aktar"
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "February"
+msgstr "Şubat"
+
+#. module: report_intrastat
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_id
+msgid "ID"
+msgstr "ID"
+
+#. module: report_intrastat
+#: selection:report.intrastat,type:0
+msgid "Import"
+msgstr "İçeaktar"
+
+#. module: report_intrastat
+#: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_tree_all
+#: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_all
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Intrastat"
+msgstr "Intrastat"
+
+#. module: report_intrastat
+#: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree
+#: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_code
+#: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_code_form
+msgid "Intrastat Code"
+msgstr "Intrastat Kodu"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_search
+#: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_tree
+msgid "Intrastat Data"
+msgstr "Intrastat Verisi"
+
+#. module: report_intrastat
+#: model:ir.actions.report.xml,name:report_intrastat.account_intrastatinvoices
+msgid "Intrastat Invoices"
+msgstr "Intrastat Faturaları"
+
+#. module: report_intrastat
+#: model:ir.model,name:report_intrastat.model_report_intrastat_code
+#: model:ir.model.fields,field_description:report_intrastat.field_product_template_intrastat_id
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_intrastat_id
+#: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_code_tree
+msgid "Intrastat code"
+msgstr "Intrastat kodu"
+
+#. module: report_intrastat
+#: model:ir.model.fields,field_description:report_intrastat.field_res_country_intrastat
+msgid "Intrastat member"
+msgstr "Intrastat üyesi"
+
+#. module: report_intrastat
+#: model:ir.model,name:report_intrastat.model_report_intrastat
+msgid "Intrastat report"
+msgstr "Intrastat raporu"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Invoice"
+msgstr "Fatura"
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "January"
+msgstr "Ocak"
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "July"
+msgstr "Temmuz"
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "June"
+msgstr "Haziran"
+
+#. module: report_intrastat
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat___last_update
+msgid "Last Modified on"
+msgstr "Son değiştirme tarihi"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -79,253 +219,106 @@ msgstr "Mart"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
-msgid "August"
-msgstr "Ağustos"
-
-#. module: report_intrastat
-#: selection:report.intrastat,month:0
 msgid "May"
 msgstr "Mayıs"
 
 #. module: report_intrastat
-#: field:report.intrastat,type:0
-msgid "Type"
-msgstr "Tür:"
-
-#. module: report_intrastat
-#: model:ir.actions.report.xml,name:report_intrastat.invoice_intrastat_id
-msgid "Invoice Intrastat"
-msgstr ""
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Invoice Date"
-msgstr "Fatura Tarihi"
-
-#. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "June"
-msgstr "Haziran"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Tel. :"
-msgstr "Tel :"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Base"
-msgstr ""
-
-#. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "January"
-msgstr ""
-
-#. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "July"
-msgstr ""
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Quantity"
-msgstr ""
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Partner Ref."
-msgstr ""
-
-#. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "February"
-msgstr ""
-
-#. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "October"
-msgstr ""
-
-#. module: report_intrastat
-#: model:ir.model,name:report_intrastat.model_report_intrastat
-msgid "Intrastat report"
-msgstr ""
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Invoice"
-msgstr ""
-
-#. module: report_intrastat
-#: model:ir.model,name:report_intrastat.model_res_country
-msgid "Country"
-msgstr ""
-
-#. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "September"
-msgstr ""
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Taxes"
-msgstr ""
-
-#. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "April"
-msgstr ""
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Amount"
-msgstr ""
-
-#. module: report_intrastat
-#: view:report.intrastat:0
-msgid "Intrastat Data"
-msgstr ""
-
-#. module: report_intrastat
-#: field:report.intrastat,value:0
-msgid "Value"
-msgstr ""
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-#: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_tree_all
-#: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_all
-msgid "Intrastat"
-msgstr ""
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Draft Invoice"
-msgstr ""
-
-#. module: report_intrastat
-#: field:report.intrastat,supply_units:0
-msgid "Supply Units"
-msgstr ""
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_month
+msgid "Month"
+msgstr "Ay"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "November"
-msgstr ""
+msgstr "Kasım"
 
 #. module: report_intrastat
-#: model:ir.model,name:report_intrastat.model_report_intrastat_code
-#: field:product.template,intrastat_id:0
-#: field:report.intrastat,intrastat_id:0
-#: view:report.intrastat.code:0
-msgid "Intrastat code"
-msgstr ""
+#: selection:report.intrastat,month:0
+msgid "October"
+msgstr "Ekim"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Refund"
-msgstr ""
-
-#. module: report_intrastat
-#: field:report.intrastat,ref:0
-msgid "Source document"
-msgstr ""
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Fiscal Position Remark :"
-msgstr ""
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-#: field:report.intrastat,weight:0
-msgid "Weight"
-msgstr ""
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "PRO-FORMA"
+msgstr "PROFORMA"
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Ürün Şablonu"
 
 #. module: report_intrastat
-#: field:res.country,intrastat:0
-msgid "Intrastat member"
-msgstr ""
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Quantity"
+msgstr "Miktar"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Refund"
+msgstr "İadesi"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
-msgid "December"
-msgstr ""
+msgid "September"
+msgstr "Eylül"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_ref
+msgid "Source document"
+msgstr "Kaynak belge"
+
+#. module: report_intrastat
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_supply_units
+msgid "Supply Units"
+msgstr "Tedarik Birimleri"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Tax"
-msgstr ""
+msgstr "Tax"
 
 #. module: report_intrastat
-#: field:report.intrastat,code:0
-msgid "Country code"
-msgstr ""
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Taxes"
+msgstr "Vergiler"
 
 #. module: report_intrastat
-#: field:report.intrastat,month:0
-msgid "Month"
-msgstr ""
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_type
+msgid "Type"
+msgstr "Tür"
 
 #. module: report_intrastat
-#: field:report.intrastat,currency_id:0
-msgid "Currency"
-msgstr ""
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Unit Price"
+msgstr "Birim Fiyat"
 
 #. module: report_intrastat
-#: selection:report.intrastat,type:0
-msgid "Export"
-msgstr ""
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Unit of measure"
+msgstr "Ölçü birimi"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Fax :"
-msgstr ""
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_value
+msgid "Value"
+msgstr "Değer"
 
 #. module: report_intrastat
-#: field:report.intrastat,name:0
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Vendor Bill"
+msgstr "Tedarikçi Faturası"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Vendor Refund"
+msgstr "Tedarikçi İadesi"
+
+#. module: report_intrastat
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_weight
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Weight"
+msgstr "Ağırlık"
+
+#. module: report_intrastat
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_name
 msgid "Year"
-msgstr ""
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Supplier Refund"
-msgstr ""
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Total (excl. taxes):"
-msgstr ""
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Price"
-msgstr ""
-
-#. module: report_intrastat
-#: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree
-#: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_code
-#: view:report.intrastat.code:0
-#: field:report.intrastat.code,name:0
-msgid "Intrastat Code"
-msgstr ""
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
-
-#~ msgid "The code of the country must be unique !"
-#~ msgstr "Ülke kodu tekil olmak zorunda!"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Hata: Varsayılan ölçü birimi ile satış ölçü birimi aynı kategoride bulunmalı."
-
-#~ msgid "The name of the country must be unique !"
-#~ msgstr "Ülke adı tekil olmalı !"
+msgstr "Yıl"

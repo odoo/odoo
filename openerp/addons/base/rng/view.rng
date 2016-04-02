@@ -178,6 +178,7 @@
             <rng:optional><rng:attribute name="string"/></rng:optional>
             <rng:optional><rng:attribute name="type"/></rng:optional>
             <rng:optional><rng:attribute name="link"/></rng:optional>
+            <rng:optional><rng:attribute name="version"/></rng:optional>
             <rng:ref name="container"/>
         </rng:element>
     </rng:define>
@@ -250,6 +251,19 @@
             <rng:optional><rng:attribute name="string"/></rng:optional>
             <rng:optional><rng:attribute name="colors"/></rng:optional>
             <rng:optional><rng:attribute name="fonts"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-bf"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-it"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-danger"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-info"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-muted"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-primary"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-success"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-warning"/></rng:optional>
+            <rng:optional>
+                <rng:attribute name="limit">
+                    <rng:data type="int"/>
+                </rng:attribute>
+            </rng:optional>
             <rng:optional>
               <rng:attribute name="editable">
                 <rng:choice>
@@ -257,6 +271,7 @@
                   <rng:value>bottom</rng:value>
                 </rng:choice>
               </rng:attribute>
+              <rng:optional><rng:attribute name="on_write"/></rng:optional>
             </rng:optional>
             <rng:optional>
               <rng:attribute name="toolbar">
@@ -266,7 +281,6 @@
                 </rng:choice>
               </rng:attribute>
             </rng:optional>
-            <rng:optional><rng:attribute name="on_write"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="field"/>
@@ -356,52 +370,23 @@
         </rng:element>
     </rng:define>
 
-    <rng:define name="level">
-        <rng:element name="level">
-            <rng:optional><rng:attribute name="object"/></rng:optional>
-            <rng:optional><rng:attribute name="link"/></rng:optional>
-            <rng:optional><rng:attribute name="domain"/></rng:optional>
-            <rng:zeroOrMore>
-                <rng:ref name="field"/>
-            </rng:zeroOrMore>
-            <rng:zeroOrMore>
-                <rng:ref name="html"/>
-            </rng:zeroOrMore>
-        </rng:element>
-    </rng:define>
-
     <rng:define name="gantt">
         <rng:element name="gantt">
-            <rng:optional><rng:attribute name="mode">
-              <rng:choice>
-                 <rng:value>day</rng:value>
-                 <rng:value>3days</rng:value>
-                 <rng:value>week</rng:value>
-                 <rng:value>3weeks</rng:value>
-                 <rng:value>month</rng:value>
-                 <rng:value>3months</rng:value>
-                 <rng:value>year</rng:value>
-                 <rng:value>3years</rng:value>
-                 <rng:value>5years</rng:value>
-              </rng:choice></rng:attribute>
+            <rng:attribute name="date_start"/>
+            <rng:choice>
+                <rng:attribute name="date_stop"/>
+                <rng:attribute name="date_delay"/>
+            </rng:choice>
+            <rng:optional>
+                <rng:attribute name="progress">
+                    <rng:data type="int"/>
+                </rng:attribute>
             </rng:optional>
+            <rng:optional><rng:attribute name="default_group_by"/></rng:optional>
             <rng:optional><rng:attribute name="create"/></rng:optional>
             <rng:optional><rng:attribute name="delete"/></rng:optional>
             <rng:optional><rng:attribute name="edit"/></rng:optional>
-            <rng:optional><rng:attribute name="color"/></rng:optional>
-            <rng:optional><rng:attribute name="date_delay"/></rng:optional>
-            <rng:optional><rng:attribute name="day_length"/></rng:optional>
-            <rng:optional><rng:attribute name="date_start"/></rng:optional>
-            <rng:optional><rng:attribute name="date_stop"/></rng:optional>
-            <rng:optional><rng:attribute name="progress"/></rng:optional>
-            <rng:optional><rng:attribute name="date_string"/></rng:optional>
-            <rng:optional><rng:attribute name="string"/></rng:optional>
-            <rng:optional><rng:attribute name="default_group_by"/></rng:optional>
-            <rng:zeroOrMore>
-                <rng:optional><rng:ref name="level"/></rng:optional>
-                <rng:optional><rng:ref name="field"/></rng:optional>
-                <rng:optional><rng:ref name="html"/></rng:optional>
-            </rng:zeroOrMore>
+            <rng:empty/>
         </rng:element>
     </rng:define>
 
@@ -590,6 +575,8 @@
             <rng:optional><rng:attribute name="filters"/></rng:optional>
             <rng:optional><rng:attribute name="statusbar_visible"/></rng:optional>
             <rng:optional><rng:attribute name="statusbar_colors"/></rng:optional>
+            <rng:optional><rng:attribute name="can_create" /></rng:optional>
+            <rng:optional><rng:attribute name="can_write" /></rng:optional>
             <rng:optional><rng:attribute name="interval" /></rng:optional>
             <!-- Widget *static* options defined as an arbitrary JSON dict, with
                  widget-dependent parameters. To be ignored if widget/client does
@@ -659,7 +646,15 @@
             <rng:optional><rng:attribute name="quick_add" /></rng:optional>
             <rng:optional><rng:attribute name="display" /></rng:optional>            
             <rng:optional><rng:attribute name="type" /></rng:optional>
-            <rng:optional><rng:attribute name="mode" /></rng:optional>
+            <rng:optional>
+                <rng:attribute name="mode">
+                    <rng:choice>
+                        <rng:value>month</rng:value>
+                        <rng:value>week</rng:value>
+                        <rng:value>day</rng:value>
+                    </rng:choice>
+                </rng:attribute>
+            </rng:optional>
             <rng:oneOrMore>
                 <rng:ref name="field"/>
             </rng:oneOrMore>
@@ -672,15 +667,36 @@
     <rng:define name="graph">
         <rng:element name="graph">
             <rng:optional><rng:attribute name="string" /></rng:optional>
-            <rng:optional><rng:attribute name="orientation" /></rng:optional>
-            <rng:optional><rng:attribute name="type" /></rng:optional>
-            <rng:optional><rng:attribute name="stacked" /></rng:optional>
-            <rng:optional><rng:attribute name="color"/></rng:optional>
-            <rng:oneOrMore>
-                <rng:ref name="field"/>
-            </rng:oneOrMore>
+            <rng:optional>
+                <rng:attribute name="type">
+                    <rng:choice>
+                        <rng:value>bar</rng:value>
+                        <rng:value>pie</rng:value>
+                        <rng:value>line</rng:value>
+                        <rng:value>pivot</rng:value>
+                    </rng:choice>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="stacked"><rng:value>True</rng:value></rng:attribute>
+            </rng:optional>
             <rng:zeroOrMore>
-                <rng:ref name="html"/>
+                <rng:ref name="field"/>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="pivot">
+        <rng:element name="pivot">
+            <rng:optional><rng:attribute name="string" /></rng:optional>
+            <rng:optional>
+                <rng:attribute name="display_quantity"><rng:value>False</rng:value></rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="disable_linking"><rng:value>False</rng:value></rng:attribute>
+            </rng:optional>
+            <rng:zeroOrMore>
+                <rng:ref name="field"/>
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>
@@ -740,7 +756,6 @@
             <rng:optional><rng:attribute name="invisible"/></rng:optional>
             <rng:optional><rng:attribute name="name" /></rng:optional>
             <rng:optional><rng:attribute name="separator" /></rng:optional>
-            <rng:optional><rng:attribute name="icon" /></rng:optional>
             <rng:optional><rng:attribute name="string" /></rng:optional>
             <rng:optional><rng:attribute name="type" /></rng:optional>
             <rng:optional><rng:attribute name="align" /></rng:optional>
@@ -756,6 +771,7 @@
                     <rng:ref name="tree" />
                     <rng:ref name="notebook" />
                     <rng:ref name="graph" />
+                    <rng:ref name="pivot" />
                     <rng:ref name="calendar" />
                     <rng:ref name="gantt" />
                     <rng:ref name="xpath" />
@@ -783,6 +799,7 @@
             <rng:ref name="tree" />
             <rng:ref name="notebook" />
             <rng:ref name="graph" />
+            <rng:ref name="pivot" />
             <rng:ref name="calendar" />
             <rng:ref name="data" />
             <rng:ref name="gantt" />

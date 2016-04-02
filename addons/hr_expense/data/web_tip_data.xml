@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="expense_tip_1" model="web.tip">
+        <field name="title"></field>
+        <field name="description">Select the lines you want to submit to be reimbursed.</field>
+        <field name="action_id" ref="hr_expense.expense_all"/>
+        <field name="model">hr.expense</field>
+        <field name="mode">list</field>
+        <field name="trigger_selector">input.oe_list_record_selector:visible</field>
+        <field name="highlight_selector">input.oe_list_record_selector:visible</field>
+        <field name="placement">bottom</field>
+    </record>
+
+    <record id="expense_tip_2" model="web.tip">
+        <field name="title"></field>
+        <field name="description">Click on Action to submit multiple expenses to your manager.</field>
+        <field name="action_id" ref="hr_expense.expense_all"/>
+        <field name="model">hr.expense</field>
+        <field name="mode">list</field>
+        <field name="trigger_selector">div.oe_sidebar.btn-group:visible</field>
+        <field name="highlight_selector">div.oe_sidebar.btn-group:visible</field>
+        <field name="placement">bottom</field>
+    </record>
+
+    <record id="expense_tip_3" model="web.tip">
+        <field name="title"></field>
+        <field name="description">Use the messaging tool to log a note and attach a document to the expense. (e.g. scan of the bill)</field>
+        <field name="action_id" ref="hr_expense.expense_all"/>
+        <field name="model">hr.expense</field>
+        <field name="mode">form</field>
+        <field name="trigger_selector">div.btn-group.btn-group-sm:visible > button</field>
+        <field name="highlight_selector">.o_timeline_compose_post.btn.btn-primary:visible</field>
+        <field name="placement">bottom</field>
+    </record>
+
+</odoo>

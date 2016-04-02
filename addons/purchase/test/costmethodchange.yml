@@ -2,7 +2,7 @@
   Set a product as using average price. 
 -
   !record {model: product.product, id: product_variable_icecream}:
-    default_code: AVG
+    default_code: VARAVG
     name: Variable Ice Cream
     type: product
     categ_id: product.product_category_1
@@ -19,8 +19,6 @@
 - 
   !record {model: purchase.order, id: purchase_order_variable1}:
     partner_id: base.res_partner_3
-    location_id: stock.stock_location_stock
-    pricelist_id: 1
     order_line:
       - product_id: product_variable_icecream
         product_qty: 10.0
@@ -32,8 +30,6 @@
 - 
   !record {model: purchase.order, id: purchase_order_variable2}:
     partner_id: base.res_partner_3
-    location_id: stock.stock_location_stock
-    pricelist_id: 1
     order_line:
       - product_id: product_variable_icecream
         product_qty: 30.0
@@ -43,16 +39,18 @@
 - 
   I confirm the first purchase order
 -
-  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_variable1}
+  !python {model: purchase.order}: |
+    self.button_confirm(cr, uid, [ref("purchase_order_variable1")])
 - 
   I confirm the second purchase order
 - 
-  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_variable2}
+  !python {model: purchase.order}: |
+    self.button_confirm(cr, uid, [ref("purchase_order_variable2")])
 -
   I check the "Approved" status of purchase order 1
 -
   !assert {model: purchase.order, id: purchase_order_variable1}:
-    - state == 'approved'
+    - state == 'purchase'
 - 
   Process the reception of purchase order 1
 -
@@ -115,8 +113,6 @@
 - 
   !record {model: purchase.order, id: purchase_order_variable3}:
     partner_id: base.res_partner_3
-    location_id: stock.stock_location_stock
-    pricelist_id: 1
     order_line:
       - product_id: product_variable_icecream
         product_qty: 20.0
@@ -126,7 +122,8 @@
 - 
   I confirm this third purchase order
 -
-  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_variable3}
+  !python {model: purchase.order}: |
+    self.button_confirm(cr, uid, [ref("purchase_order_variable3")])
 - 
   Process the reception of purchase order 3
 - 

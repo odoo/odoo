@@ -1,24 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """ Modules dependency graph. """
 
@@ -56,7 +37,8 @@ class Graph(dict):
 
     def add_node(self, name, info):
         max_depth, father = 0, None
-        for n in [Node(x, self, None) for x in info['depends']]:
+        for d in info['depends']:
+            n = self.get(d) or Node(d, self, None)  # lazy creation, do not use default value for get()
             if n.depth >= max_depth:
                 father = n
                 max_depth = n.depth
@@ -70,7 +52,7 @@ class Graph(dict):
             return
         # update the graph with values from the database (if exist)
         ## First, we set the default values for each package in graph
-        additional_data = dict.fromkeys(self.keys(), {'id': 0, 'state': 'uninstalled', 'dbdemo': False, 'installed_version': None})
+        additional_data = dict((key, {'id': 0, 'state': 'uninstalled', 'dbdemo': False, 'installed_version': None}) for key in self.keys())
         ## Then we get the values from the database
         cr.execute('SELECT name, id, state, demo AS dbdemo, latest_version AS installed_version'
                    '  FROM ir_module_module'
@@ -78,7 +60,7 @@ class Graph(dict):
                    )
 
         ## and we update the default values with values from the database
-        additional_data.update(dict([(x.pop('name'), x) for x in cr.dictfetchall()]))
+        additional_data.update((x['name'], x) for x in cr.dictfetchall())
 
         for package in self.values():
             for k, v in additional_data[package.name].items():
@@ -117,7 +99,6 @@ class Graph(dict):
                 later.clear()
                 current.remove(package)
                 node = self.add_node(package, info)
-                node.data = info
                 for kind in ('init', 'demo', 'update'):
                     if package in tools.config[kind] or 'all' in tools.config[kind] or kind in force:
                         setattr(node, kind, True)
@@ -148,20 +129,10 @@ class Graph(dict):
                 yield module
             level += 1
 
+    def __str__(self):
+        return '\n'.join(str(n) for n in self if n.depth == 0)
 
-class Singleton(object):
-    def __new__(cls, name, graph, info):
-        if name in graph:
-            inst = graph[name]
-        else:
-            inst = object.__new__(cls)
-            inst.name = name
-            inst.info = info
-            graph[name] = inst
-        return inst
-
-
-class Node(Singleton):
+class Node(object):
     """ One module in the modules dependency graph.
 
     Node acts as a per-module singleton. A node is constructed via
@@ -169,13 +140,26 @@ class Node(Singleton):
     ir_module_module (setted by Graph.update_from_db()).
 
     """
+    def __new__(cls, name, graph, info):
+        if name in graph:
+            inst = graph[name]
+        else:
+            inst = object.__new__(cls)
+            graph[name] = inst
+        return inst
 
     def __init__(self, name, graph, info):
+        self.name = name
         self.graph = graph
+        self.info = info or getattr(self, 'info', {})
         if not hasattr(self, 'children'):
             self.children = []
         if not hasattr(self, 'depth'):
             self.depth = 0
+
+    @property
+    def data(self):
+        return self.info
 
     def add_child(self, name, info):
         node = Node(name, self.graph, info)
@@ -189,7 +173,7 @@ class Node(Singleton):
         return node
 
     def __setattr__(self, name, value):
-        super(Singleton, self).__setattr__(name, value)
+        super(Node, self).__setattr__(name, value)
         if name in ('init', 'update', 'demo'):
             tools.config[name][self.name] = 1
             for child in self.children:
@@ -209,6 +193,3 @@ class Node(Singleton):
         for c in self.children:
             s += '%s`-> %s' % ('   ' * depth, c._pprint(depth+1))
         return s
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

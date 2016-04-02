@@ -1,23 +1,5 @@
 #-*- coding:utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011 OpenERP SA (<http://openerp.com>). All Rights Reserved
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
 from datetime import datetime
@@ -27,6 +9,7 @@ from calendar import isleap
 from openerp.tools.translate import _
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
+from openerp.exceptions import UserError
 
 DATETIME_FORMAT = "%Y-%m-%d"
 
@@ -56,7 +39,7 @@ class payroll_advice(osv.osv):
     _name = 'hr.payroll.advice'
     _description = 'Bank Advice'
     _columns = {
-        'name':fields.char('Name', size=32, readonly=True, required=True, states={'draft': [('readonly', False)]},),
+        'name':fields.char('Name', readonly=True, required=True, states={'draft': [('readonly', False)]},),
         'note': fields.text('Description'),
         'date': fields.date('Date', readonly=True, required=True, states={'draft': [('readonly', False)]}, help="Advice Date is used to search Payslips"),
         'state':fields.selection([
@@ -64,9 +47,9 @@ class payroll_advice(osv.osv):
             ('confirm', 'Confirmed'),
             ('cancel', 'Cancelled'),
         ], 'Status', select=True, readonly=True),
-        'number':fields.char('Reference', size=16, readonly=True),
-        'line_ids':fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary', states={'draft': [('readonly', False)]}, readonly=True),
-        'chaque_nos':fields.char('Cheque Numbers', size=256),
+        'number': fields.char('Reference', readonly=True),
+        'line_ids': fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary', states={'draft': [('readonly', False)]}, readonly=True, copy=True),
+        'chaque_nos': fields.char('Cheque Numbers'),
         'neft': fields.boolean('NEFT Transaction', help="Check this box if your company use online transfer for salary"),
         'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'bank_id':fields.many2one('res.bank', 'Bank', readonly=True, states={'draft': [('readonly', False)]}, help="Select the Bank from which the salary is going to be paid"),
@@ -103,7 +86,7 @@ class payroll_advice(osv.osv):
             slip_ids = payslip_pool.search(cr, uid, [('date_from', '<=', advice.date), ('date_to', '>=', advice.date), ('state', '=', 'done')], context=context)
             for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
                 if not slip.employee_id.bank_account_id and not slip.employee_id.bank_account_id.acc_number:
-                    raise osv.except_osv(_('Error!'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
+                    raise UserError(_('Please define bank account for the %s employee') % (slip.employee_id.name,))
                 line_ids = payslip_line_pool.search(cr, uid, [ ('slip_id', '=', slip.id), ('code', '=', 'NET')], context=context)
                 if line_ids:
                     line = payslip_line_pool.browse(cr, uid, line_ids, context=context)[0]
@@ -129,10 +112,10 @@ class payroll_advice(osv.osv):
         seq_obj = self.pool.get('ir.sequence')
         for advice in self.browse(cr, uid, ids, context=context):
             if not advice.line_ids:
-                raise osv.except_osv(_('Error!'), _('You can not confirm Payment advice without advice lines.'))
+                raise UserError(_('You can not confirm Payment advice without advice lines.'))
             advice_date = datetime.strptime(advice.date, DATETIME_FORMAT)
             advice_year = advice_date.strftime('%m') + '-' + advice_date.strftime('%Y')
-            number = seq_obj.get(cr, uid, 'payment.advice')
+            number = seq_obj.next_by_code(cr, uid, 'payment.advice')
             sequence_num = 'PAY' + '/' + advice_year + '/' + number
             self.write(cr, uid, [advice.id], {'number': sequence_num, 'state': 'confirm'}, context=context)
         return True
@@ -152,7 +135,7 @@ class payroll_advice(osv.osv):
         if company_id:
             company = self.pool.get('res.company').browse(cr, uid, [company_id], context=context)[0]
             if company.partner_id.bank_ids:
-                res.update({'bank_id': company.partner_id.bank_ids[0].bank.id})
+                res.update({'bank_id': company.partner_id.bank_ids[0].bank_id.id})
         return {
             'value':res
         }
@@ -162,13 +145,10 @@ class hr_payslip_run(osv.osv):
     _inherit = 'hr.payslip.run'
     _description = 'Payslip Batches'
     _columns = {
-        'available_advice': fields.boolean('Made Payment Advice?', help="If this box is checked which means that Payment Advice exists for current batch", readonly=False),
+        'available_advice': fields.boolean('Made Payment Advice?',
+                                           help="If this box is checked which means that Payment Advice exists for current batch",
+                                           readonly=False, copy=False),
     }
-    def copy(self, cr, uid, id, default={}, context=None):
-        if not default:
-            default = {}
-        default.update({'available_advice': False})
-        return super(hr_payslip_run, self).copy(cr, uid, id, default, context=context)    
 
     def draft_payslip_run(self, cr, uid, ids, context=None):
         res = super(hr_payslip_run, self).draft_payslip_run(cr, uid, ids, context=context)
@@ -183,25 +163,25 @@ class hr_payslip_run(osv.osv):
         users = self.pool.get('res.users').browse(cr, uid, [uid], context=context)
         for run in self.browse(cr, uid, ids, context=context):
             if run.available_advice:
-                raise osv.except_osv(_('Error!'), _("Payment advice already exists for %s, 'Set to Draft' to create a new advice.") %(run.name))
+                raise UserError(_("Payment advice already exists for %s, 'Set to Draft' to create a new advice.") % (run.name,))
             advice_data = {
                         'batch_id': run.id,
                         'company_id': users[0].company_id.id,
                         'name': run.name,
                         'date': run.date_end,
-                        'bank_id': users[0].company_id.bank_ids and users[0].company_id.bank_ids[0].id or False
+                        'bank_id': users[0].company_id.partner_id.bank_ids and users[0].company_id.partner_id.bank_ids[0].id or False
                     }
             advice_id = advice_pool.create(cr, uid, advice_data, context=context)
             slip_ids = []
             for slip_id in run.slip_ids:
                 # TODO is it necessary to interleave the calls ?
-                payslip_pool.signal_hr_verify_sheet(cr, uid, [slip_id.id])
-                payslip_pool.signal_process_sheet(cr, uid, [slip_id.id])
+                payslip_pool.signal_workflow(cr, uid, [slip_id.id], 'hr_verify_sheet')
+                payslip_pool.signal_workflow(cr, uid, [slip_id.id], 'process_sheet')
                 slip_ids.append(slip_id.id)
 
             for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
                 if not slip.employee_id.bank_account_id or not slip.employee_id.bank_account_id.acc_number:
-                    raise osv.except_osv(_('Error!'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
+                    raise UserError(_('Please define bank account for the %s employee') % (slip.employee_id.name))
                 line_ids = payslip_line_pool.search(cr, uid, [('slip_id', '=', slip.id), ('code', '=', 'NET')], context=context)
                 if line_ids:
                     line = payslip_line_pool.browse(cr, uid, line_ids, context=context)[0]
@@ -252,15 +232,8 @@ class hr_payslip(osv.osv):
     _inherit = 'hr.payslip'
     _description = 'Pay Slips'
     _columns = {
-        'advice_id': fields.many2one('hr.payroll.advice', 'Bank Advice')
+        'advice_id': fields.many2one('hr.payroll.advice', 'Bank Advice', copy=False)
     }
-
-    def copy(self, cr, uid, id, default={}, context=None):
-        if not default:
-            default = {}
-        default.update({'advice_id' : False})
-        return super(hr_payslip, self).copy(cr, uid, id, default, context=context)
-
 
 class res_company(osv.osv):
 
@@ -271,6 +244,3 @@ class res_company(osv.osv):
     _defaults = {
         'dearness_allowance': True,
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

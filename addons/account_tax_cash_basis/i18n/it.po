@@ -1,0 +1,93 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_tax_cash_basis
+# 
+# Translators:
+# Massimo Bianchi <bianchi.massimo@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:39+0000\n"
+"PO-Revision-Date: 2016-02-27 21:03+0000\n"
+"Last-Translator: Massimo Bianchi <bianchi.massimo@gmail.com>\n"
+"Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_account_move
+msgid "Account Entry"
+msgstr "Registrazione Contabile"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,help:account_tax_cash_basis.field_account_tax_cash_basis_account
+msgid "Account use when         creating entry for tax cash basis"
+msgstr "Conto usato quando crei un voce per il principio di cassa."
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_res_company
+msgid "Companies"
+msgstr "Aziende"
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_account_partial_reconcile
+msgid "Partial Reconcile"
+msgstr "Riconciliazione parziale"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,help:account_tax_cash_basis.field_account_tax_use_cash_basis
+msgid ""
+"Select this if the tax should use cash basis, which will         create an "
+"entry for this tax on a given account during reconciliation"
+msgstr "Seleziona questo se l'imposta dovrebbe usare il principio di cassa, che creerà una voce per questa imposta su un conto dato durante la riconciliazione "
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_account_tax
+msgid "Tax"
+msgstr "Imposte"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_move_tax_cash_basis_rec_id
+msgid "Tax Cash Basis Entry of"
+msgstr "Voce per il principio di cassa di"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_config_settings_tax_cash_basis_journal_id
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_res_company_tax_cash_basis_journal_id
+msgid "Tax Cash Basis Journal"
+msgstr "Sezionale per il principio di cassa"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_tax_cash_basis_account
+msgid "Tax Received Account"
+msgstr "Conto di credito per la tassa"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,help:account_tax_cash_basis.field_account_move_tax_cash_basis_rec_id
+msgid ""
+"Technical field used to keep track of the tax cash basis reconciliation. "
+"This is needed when cancelling the source: it will post the inverse journal "
+"entry to cancel that part too."
+msgstr "Campo tecnico usato per tenere traccia del principio di cassa riconciliato. Questo è necessario quando cancelli la sorgente: sarà pubblicata una voce inversa sul sezionale per cancellare anche quella parte."
+
+#. module: account_tax_cash_basis
+#: code:addons/account_tax_cash_basis/tax_cash_basis.py:82
+#, python-format
+msgid ""
+"There is no tax cash basis journal defined for this company: \"%s\" \n"
+"Configure it in Accounting/Configuration/Settings"
+msgstr "Questo non è un sezionale per il principio di cassa definito per l'azienda: \"%s\" \nImpostalo nella sezione Contabilità/Configurazione/Impostazioni"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_tax_use_cash_basis
+msgid "Use Cash Basis"
+msgstr "Usa il principio di cassa"
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_account_config_settings
+msgid "account.config.settings"
+msgstr "account.config.settings"

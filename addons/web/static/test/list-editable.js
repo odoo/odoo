@@ -1,23 +1,14 @@
-openerp.testing.section('editor', {
-    dependencies: ['web.list_editable'],
-    rpc: 'mock',
-    templates: true,
-    setup: function (instance, $s, mock) {
-        mock('test.model:create', function () {
+odoo.define_section('editor', ['web.ListEditor'], function (test, mock) {
+
+    function setup() {
+        mock.add('test.model:create', function () {
             return 42;
         });
+        mock.add('test.model:onchange', function () {
+            return {};
+        });
     }
-}, function (test) {
-    /**
-     *
-     * @param {String} name
-     * @param {Object} [attrs]
-     * @param {String} [attrs.type="char"]
-     * @param {Boolean} [attrs.required]
-     * @param {Boolean} [attrs.invisible]
-     * @param {Boolean} [attrs.readonly]
-     * @return {Object}
-     */
+
     function field(name, attrs) {
         attrs = attrs || {};
         attrs.name = name;
@@ -26,10 +17,6 @@ openerp.testing.section('editor', {
         });
     }
 
-    /**
-     * @param {Array} [fields]
-     * @return {Object}
-     */
     function makeFormView(fields) {
         var fobj = {};
         _(fields).each(function (field) {
@@ -64,36 +51,38 @@ openerp.testing.section('editor', {
         };
     }
 
-    test('base-state', {asserts: 2}, function (instance, $fix) {
-        var e = new instance.web.list.Editor({
+    test('base-state', ['web.FormView'], function (assert, ListEditor, FormView) {
+        var e = new ListEditor({
             dataset: {ids: []},
             edition_view: function () {
                 return makeFormView();
             }
         });
+        var $fix = $( "#qunit-fixture");
         return e.appendTo($fix)
             .done(function () {
                 ok(!e.is_editing(), "should not be editing");
-                ok(e.form instanceof instance.web.FormView,
-                   "should use default form type");
+                ok(e.form instanceof FormView, "should use default form type");
             });
     });
-    test('toggle-edition-save', {
-        asserts: 4,
-        setup: function (instance, $s, mock) {
-            mock('test.model:search_read', function () {
-                return [{id: 42, a: false, b: false, c: false}];
-            });
-        }
-    }, function (instance, $fix) {
-        var e = new instance.web.list.Editor({
-            dataset: new instance.web.DataSetSearch(null, 'test.model'),
+
+    test('toggle-edition-save', ['web.data'], function (assert, ListEditor, data) {
+        setup();
+        assert.expect(4);
+
+        mock.add('test.model:search_read', function () {
+            return [{id: 42, a: false, b: false, c: false}];
+        });
+
+        var e = new ListEditor({
+            dataset: new data.DataSetSearch(null, 'test.model'),
             prepends_on_create: function () { return false; },
             edition_view: function () {
                 return makeFormView([ field('a'), field('b'), field('c') ]);
             }
         });
         var counter = 0;
+        var $fix = $( "#qunit-fixture");
         return e.appendTo($fix)
             .then(function () {
                 return e.edit({}, function () {
@@ -101,24 +90,30 @@ openerp.testing.section('editor', {
                 });
             })
             .then(function (form) {
-                ok(e.is_editing(), "should be editing");
-                equal(counter, 3, "should have configured all fields");
-                return e.save();
+                assert.ok(e.is_editing(), "should be editing");
+                assert.equal(counter, 3, "should have configured all fields");
+                return e.save().then(function() {
+                    return e.cancel();
+                });
             })
             .done(function (record) {
-                ok(!e.is_editing(), "should have stopped editing");
-                equal(record.id, 42, "should have newly created id");
+                assert.ok(!e.is_editing(), "should have stopped editing");
+                assert.equal(record.id, 42, "should have newly created id");
             });
     });
-    test('toggle-edition-cancel', { asserts: 2 }, function (instance, $fix) {
-        var e = new instance.web.list.Editor({
-            dataset: new instance.web.DataSetSearch(null, 'test.model'),
+
+    test('toggle-edition-cancel', ['web.data'], function (assert, ListEditor, data) {
+        assert.expect(2);
+
+        var e = new ListEditor({
+            dataset: new data.DataSetSearch(null, 'test.model'),
             prepends_on_create: function () { return false; },
             edition_view: function () {
                 return makeFormView([ field('a'), field('b'), field('c') ]);
             }
         });
         var counter = 0;
+        var $fix = $( "#qunit-fixture");
         return e.appendTo($fix)
             .then(function () {
                 return e.edit({}, function () {
@@ -133,202 +128,213 @@ openerp.testing.section('editor', {
                 ok(!record.id, "should have no id");
             });
     });
-    test('toggle-save-required', {
-        asserts: 2,
-        fail_on_rejection: false
-    }, function (instance, $fix) {
-        var e = new instance.web.list.Editor({
-            do_warn: function () {
-                warnings++;
-            },
-            dataset: new instance.web.DataSetSearch(null, 'test.model'),
+
+    test('toggle-save-required', ['web.core', 'web.data'], function (assert, ListEditor, core, data) {
+        var done = assert.async();
+        assert.expect(2);
+
+        var warnings = 0;
+
+        var e = new ListEditor({
+            dataset: new data.DataSetSearch(null, 'test.model'),
             prepends_on_create: function () { return false; },
             edition_view: function () {
                 return makeFormView([
                     field('a', {required: true}), field('b'), field('c') ]);
-            }
+            },
+            _trigger_up: function (event) {
+                if (event.name === 'warning') {
+                    warnings++;
+                }
+            },
         });
         var counter = 0;
-        var warnings = 0;
-        return e.appendTo($fix)
+        var $fix = $( "#qunit-fixture");
+
+        e.appendTo($fix)
             .then(function () {
                 return e.edit({}, function () {
                     ++counter;
                 });
             })
             .then(function (form) {
-                return e.save();
+                return e.save().then(function() {
+                    return e.cancel();
+                });
             })
-            .done(function () { ok(false, "cancel should not succeed"); })
+            .done(function () { assert.ok(false, "cancel should not succeed"); })
             .fail(function () {
-                equal(warnings, 1, "should have been warned");
-                ok(e.is_editing(), "should have kept editing");
+                assert.equal(warnings, 1, "should have been warned");
+                assert.ok(e.is_editing(), "should have kept editing");
+                done();
             });
     });
 });
-openerp.testing.section('list.edition', {
-    dependencies: ['web.list_editable'],
-    rpc: 'mock',
-    templates: true,
-    setup: function (instance, $s, mock) {
+
+odoo.define_section('list.edition', ['web.data', 'web.ListView', 'web.data_manager'], function (test, mock) {
+
+    function setup () {
         var records = {};
-        mock('demo:create', function (args) {
+        mock.add('demo:create', function (args) {
             records[42] = _.extend({}, args[0]);
             return 42;
         });
-        mock('demo:read', function (args) {
+        mock.add('demo:read', function (args) {
             var id = args[0][0];
             if (id in records) {
                 return [records[id]];
             }
             return [];
         });
-        mock('demo:search_read', function (args) {
-            // args[0][0] = ["id", "=", 42] 
-            // args[0][0] = 42
+        mock.add('demo:search_read', function (args) {
             var id = args[0][0][2];
             if (id in records) {
                 return [records[id]];
             }
             return [];
         });
-        mock('demo:fields_view_get', function () {
-            return {
-                type: 'tree',
-                fields: {
-                    a: {type: 'char', string: "A"},
-                    b: {type: 'char', string: "B"},
-                    c: {type: 'char', string: "C"}
-                },
-                arch: '<tree><field name="a"/><field name="b"/><field name="c"/></tree>',
-            };
+        mock.add('demo:onchange', function () {
+            return {};
         });
     }
-}, function (test) {
-    test('newrecord', {asserts: 6}, function (instance, $fix, mock) {
+
+    test('newrecord', function (assert, data, ListView, data_manager) {
+        setup();
+        assert.expect(6);
         var got_defaults = false;
-        mock('demo:default_get', function (args) {
+
+        mock.add('demo:default_get', function (args) {
             var fields = args[0];
-            deepEqual(
+            assert.deepEqual(
                 fields, ['a', 'b', 'c'],
                 "should ask defaults for all fields");
             got_defaults = true;
             return { a: "qux", b: "quux" };
         });
 
-        var ds = new instance.web.DataSetStatic(null, 'demo', null, [1]);
-        var l = new instance.web.ListView({}, ds, false, {editable: 'top'});
+        var ds = new data.DataSetStatic(null, 'demo', null, [1]);
+        var fields_view = data_manager._postprocess_fvg({
+            type: 'tree',
+            fields: {
+                a: {type: 'char', string: "A"},
+                b: {type: 'char', string: "B"},
+                c: {type: 'char', string: "C"}
+            },
+            arch: '<tree><field name="a"/><field name="b"/><field name="c"/></tree>',
+        });
+        var l = new ListView({}, ds, fields_view, {editable: 'top'});
 
+        var $fix = $( "#qunit-fixture");
         return l.appendTo($fix)
             .then(l.proxy('reload_content'))
             .then(function () {
                 return l.start_edition();
             })
             .then(function () {
-                ok(got_defaults, "should have fetched default values for form");
+                assert.ok(got_defaults, "should have fetched default values for form");
 
                 return l.save_edition();
             })
             .then(function (result) {
-                ok(result.created, "should yield newly created record");
-                equal(result.record.get('a'), "qux",
+                assert.ok(result.created, "should yield newly created record");
+                assert.equal(result.record.get('a'), "qux",
                       "should have used default values");
-                equal(result.record.get('b'), "quux",
+                assert.equal(result.record.get('b'), "quux",
                       "should have used default values");
-                ok(!result.record.get('c'),
+                assert.ok(!result.record.get('c'),
                     "should have no value if there was no default");
             });
     });
 });
-openerp.testing.section('list.edition.events', {
-    dependencies: ['web.list_editable'],
-    rpc: 'mock',
-    templates: true,
-    setup: function (instance, $s, mock) {
-        mock('demo:read', function () {
+
+odoo.define_section('list.edition.events', ['web.data', 'web.ListView', 'web.data_manager'], function (test, mock) {
+    function fields_view_get () {
+        return {
+            type: 'tree',
+            fields: {
+                a: {type: 'char', string: "A"},
+                b: {type: 'char', string: "B"},
+                c: {type: 'char', string: "C"}
+            },
+            arch: '<tree><field name="a"/><field name="b"/><field name="c"/></tree>',
+        };
+    }
+    function setup () {
+        mock.add('demo:read', function () {
             return [{ id: 1, a: 'foo', b: 'bar', c: 'baz' }];
         });
-        mock('demo:fields_view_get', function () {
-            return {
-                type: 'tree',
-                fields: {
-                    a: {type: 'char', string: "A"},
-                    b: {type: 'char', string: "B"},
-                    c: {type: 'char', string: "C"}
-                },
-                arch: '<tree><field name="a"/><field name="b"/><field name="c"/></tree>',
-            };
-        });
     }
-}, function (test) {
-    test('edition events', {asserts: 4}, function (instance, $fix) {
-        var ds = new instance.web.DataSetStatic(null, 'demo', null, [1]);
+
+    test('edition events',function (assert, data, ListView, data_manager) {
+        setup();
+        assert.expect(4);
+        var ds = new data.DataSetStatic(null, 'demo', null, [1]);
         var o = {
             counter: 0,
             onEvent: function (e) { this.counter++; }
         };
-        var l = new instance.web.ListView({}, ds, false, {editable: 'top'});
+        var fields_view = data_manager._postprocess_fvg(fields_view_get());
+        var l = new ListView({}, ds, fields_view, {editable: 'top'});
         l.on('edit:before edit:after', o, o.onEvent);
+
+        var $fix = $( "#qunit-fixture");
         return l.appendTo($fix)
             .then(l.proxy('reload_content'))
             .then(function () {
-                ok(l.options.editable, "should be editable");
-                equal(o.counter, 0, "should have seen no event yet");
+                assert.ok(l.options.editable, "should be editable");
+                assert.equal(o.counter, 0, "should have seen no event yet");
                 return l.start_edition(l.records.get(1));
             })
             .then(function () {
-                ok(l.editor.is_editing(), "should be editing");
-                equal(o.counter, 2, "should have seen two edition events");
+                assert.ok(l.editor.is_editing(), "should be editing");
+                assert.equal(o.counter, 2, "should have seen two edition events");
             });
     });
 
-    test('edition events: cancelling', {asserts: 3}, function (instance, $fix) {
+    test('edition events: cancelling', function (assert, data, ListView, data_manager) {
+        setup();
         var edit_after = false;
-        var ds = new instance.web.DataSetStatic(null, 'demo', null, [1]);
-        var l = new instance.web.ListView({}, ds, false, {editable: 'top'});
+        var ds = new data.DataSetStatic(null, 'demo', null, [1]);
+        var fields_view = data_manager._postprocess_fvg(fields_view_get());
+        var l = new ListView({}, ds, fields_view, {editable: 'top'});
         l.on('edit:before', {}, function (e) {
             e.cancel = true;
         });
         l.on('edit:after', {}, function () {
             edit_after = true;
         });
+
+        var $fix = $( "#qunit-fixture");
         return l.appendTo($fix)
             .then(l.proxy('reload_content'))
             .then(function () {
-                ok(l.options.editable, "should be editable");
+                assert.ok(l.options.editable, "should be editable");
                 return l.start_edition();
             })
             // cancelling an event rejects the deferred
             .then($.Deferred().reject(), function () {
-                ok(!l.editor.is_editing(), "should not be editing");
-                ok(!edit_after, "should not have fired the edit:after event");
+                assert.ok(!l.editor.is_editing(), "should not be editing");
+                assert.ok(!edit_after, "should not have fired the edit:after event");
                 return $.when();
             });
     });
 });
 
-openerp.testing.section('list.edition.onwrite', {
-    dependencies: ['web.list_editable'],
-    rpc: 'mock',
-    templates: true,
-}, function (test) {
-    test('record-to-read', {asserts: 4}, function (instance, $fix, mock) {
-        mock('demo:fields_view_get', function () {
-            return {
-                type: 'tree',
-                fields: {
-                    a: {type: 'char', string: "A"}
-                },
-                arch: '<tree on_write="on_write" colors="red:a == \'foo\'"><field name="a"/></tree>',
-            };
+odoo.define_section('list.edition.onwrite', ['web.data', 'web.ListView', 'web.data_manager'], function (test, mock) {
+
+    test('record-to-read', function (assert, data, ListView, data_manager) {
+        assert.expect(4);
+
+        mock.add('demo:onchange', function () {
+            return {};
         });
-        mock('demo:read', function (args, kwargs) {
+        mock.add('demo:read', function (args, kwargs) {
             if (_.isEmpty(args[0])) {
                 return [];
             }
             throw new Error(JSON.stringify(_.toArray(arguments)));
         });
-        mock('demo:search_read', function (args, kwargs) {
+        mock.add('demo:search_read', function (args, kwargs) {
             if (_.isEqual(args[0], [['id', 'in', [1]]])) {
                 return [{id: 1, a: 'some value'}];
             } else if (_.isEqual(args[0], [['id', 'in', [42]]])) {
@@ -336,12 +342,21 @@ openerp.testing.section('list.edition.onwrite', {
             }
             throw new Error(JSON.stringify(_.toArray(arguments)));
         });
-        mock('demo:default_get', function () { return {}; });
-        mock('demo:create', function () { return 1; });
-        mock('demo:on_write', function () { return [42]; });
+        mock.add('demo:default_get', function () { return {}; });
+        mock.add('demo:create', function () { return 1; });
+        mock.add('demo:on_write', function () { return [42]; });
 
-        var ds = new instance.web.DataSetStatic(null, 'demo', null, []);
-        var l = new instance.web.ListView({}, ds, false, {editable: 'top'});
+        var ds = new data.DataSetStatic(null, 'demo', null, []);
+        var fields_view = data_manager._postprocess_fvg({
+            type: 'tree',
+            fields: {
+                a: {type: 'char', string: "A"}
+            },
+            arch: '<tree on_write="on_write" colors="red:a == \'foo\'"><field name="a"/></tree>',
+        });
+        var l = new ListView({}, ds, fields_view, {editable: 'top'});
+
+        var $fix = $( "#qunit-fixture");
         return l.appendTo($fix)
         .then(l.proxy('reload_content'))
         .then(function () {
@@ -354,16 +369,17 @@ openerp.testing.section('list.edition.onwrite', {
             return l.save_edition();
         })
         .then(function () {
-            strictEqual(ds.ids.length, 2,
+            assert.strictEqual(ds.ids.length, 2,
                 'should have id of created + on_write');
-            strictEqual(l.records.length, 2,
+            assert.strictEqual(l.records.length, 2,
                 'should have record of created + on_write');
-            strictEqual(
+            assert.strictEqual(
                 $fix.find('tbody tr:eq(1)').css('color'), 'rgb(255, 0, 0)',
                 'shoud have color applied');
-            notStrictEqual(
+            assert.notStrictEqual(
                 $fix.find('tbody tr:eq(2)').css('color'), 'rgb(255, 0, 0)',
                 'should have default color applied');
         });
     });
 });
+

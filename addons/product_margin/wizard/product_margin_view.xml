@@ -5,16 +5,15 @@
             <field name="name">product.margin.form</field>
             <field name="model">product.margin</field>
             <field name="arch" type="xml">
-                <form string="Properties categories" version="7.0">
+                <form string="Properties categories">
                     <group col="4" string="General Information">
                         <field name="from_date" />
                         <field name="to_date" />
                         <field name="invoice_state" />
                     </group>
                     <footer>
-                        <button name="action_open_window" string="Open Margins" type="object"  class="oe_highlight"  />
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
+                        <button name="action_open_window" string="Open Margins" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
                     </footer>
                 </form>
             </field>

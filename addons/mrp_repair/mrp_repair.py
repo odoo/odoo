@@ -1,28 +1,11 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields, osv
 from datetime import datetime
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
+from openerp.exceptions import UserError
 
 class mrp_repair(osv.osv):
     _name = 'mrp.repair'
@@ -68,13 +51,13 @@ class mrp_repair(osv.osv):
             cur = repair.pricelist_id.currency_id
             for line in repair.operations:
                 #manage prices with tax included use compute_all instead of compute
-                if line.to_invoice:
-                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, line.product_id, repair.partner_id)
+                if line.to_invoice and line.tax_id:
+                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id.ids, line.price_unit, cur.id, line.product_uom_qty, line.product_id.id, repair.partner_id.id)
                     for c in tax_calculate['taxes']:
                         val += c['amount']
             for line in repair.fees_lines:
-                if line.to_invoice:
-                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, line.product_id, repair.partner_id)
+                if line.to_invoice and line.tax_id:
+                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id.ids, line.price_unit, cur.id, line.product_uom_qty, line.product_id.id, repair.partner_id.id)
                     for c in tax_calculate['taxes']:
                         val += c['amount']
             res[repair.id] = cur_obj.round(cr, uid, cur, val)
@@ -102,7 +85,7 @@ class mrp_repair(osv.osv):
         for data in self.browse(cr, uid, ids, context=context):
             adr_id = False
             if data.partner_id:
-                adr_id = partner_obj.address_get(cr, uid, [data.partner_id.id], ['default'])['default']
+                adr_id = partner_obj.address_get(cr, uid, [data.partner_id.id], ['contact'])['contact']
             res[data.id] = adr_id
         return res
 
@@ -113,7 +96,7 @@ class mrp_repair(osv.osv):
         return self.pool['mrp.repair'].search(cr, uid, [('fees_lines', 'in', ids)], context=context)
 
     _columns = {
-        'name': fields.char('Repair Reference', size=24, required=True, states={'confirmed': [('readonly', True)]}),
+        'name': fields.char('Repair Reference', required=True, states={'confirmed': [('readonly', True)]}, copy=False),
         'product_id': fields.many2one('product.product', string='Product to Repair', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'product_qty': fields.float('Product Quantity', digits_compute=dp.get_precision('Product Unit of Measure'),
                                     required=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -130,7 +113,7 @@ class mrp_repair(osv.osv):
             ('2binvoiced', 'To be Invoiced'),
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Repaired')
-            ], 'Status', readonly=True, track_visibility='onchange',
+            ], 'Status', readonly=True, track_visibility='onchange', copy=False,
             help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed repair order. \
             \n* The \'Confirmed\' status is used when a user confirms the repair order. \
             \n* The \'Ready to Repair\' status is used to start to repairing, user can start repairing only after repair order is confirmed. \
@@ -139,9 +122,9 @@ class mrp_repair(osv.osv):
             \n* The \'Cancelled\' status is used when user cancel repair order.'),
         'location_id': fields.many2one('stock.location', 'Current Location', select=True, required=True, readonly=True, states={'draft': [('readonly', False)], 'confirmed': [('readonly', True)]}),
         'location_dest_id': fields.many2one('stock.location', 'Delivery Location', readonly=True, required=True, states={'draft': [('readonly', False)], 'confirmed': [('readonly', True)]}),
-        'lot_id': fields.many2one('stock.production.lot', 'Repaired Lot', domain="[('product_id','=', product_id)]", help="Products repaired are all belonging to this lot"),
-        'guarantee_limit': fields.date('Warranty Expiration', help="The warranty expiration limit is computed as: last move date + warranty defined on selected product. If the current date is below the warranty expiration limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards.", states={'confirmed': [('readonly', True)]}),
-        'operations': fields.one2many('mrp.repair.line', 'repair_id', 'Operation Lines', readonly=True, states={'draft': [('readonly', False)]}),
+        'lot_id': fields.many2one('stock.production.lot', 'Repaired Lot', domain="[('product_id','=', product_id)]", help="Products repaired are all belonging to this lot", oldname="prodlot_id"),
+        'guarantee_limit': fields.date('Warranty Expiration', states={'confirmed': [('readonly', True)]}),
+        'operations': fields.one2many('mrp.repair.line', 'repair_id', 'Operation Lines', readonly=True, states={'draft': [('readonly', False)]}, copy=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', help='Pricelist of the selected partner.'),
         'partner_invoice_id': fields.many2one('res.partner', 'Invoicing Address'),
         'invoice_method': fields.selection([
@@ -150,14 +133,14 @@ class mrp_repair(osv.osv):
             ("after_repair", "After Repair")
            ], "Invoice Method",
             select=True, required=True, states={'draft': [('readonly', False)]}, readonly=True, help='Selecting \'Before Repair\' or \'After Repair\' will allow you to generate invoice before or after the repair is done respectively. \'No invoice\' means you don\'t want to generate invoice for this repair order.'),
-        'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True, track_visibility="onchange"),
-        'move_id': fields.many2one('stock.move', 'Move', readonly=True, help="Move created by the repair order", track_visibility="onchange"),
-        'fees_lines': fields.one2many('mrp.repair.fee', 'repair_id', 'Fees', readonly=True, states={'draft': [('readonly', False)]}),
+        'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True, track_visibility="onchange", copy=False),
+        'move_id': fields.many2one('stock.move', 'Move', readonly=True, help="Move created by the repair order", track_visibility="onchange", copy=False),
+        'fees_lines': fields.one2many('mrp.repair.fee', 'repair_id', 'Fees', readonly=True, states={'draft': [('readonly', False)]}, copy=True),
         'internal_notes': fields.text('Internal Notes'),
         'quotation_notes': fields.text('Quotation Notes'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'invoiced': fields.boolean('Invoiced', readonly=True),
-        'repaired': fields.boolean('Repaired', readonly=True),
+        'invoiced': fields.boolean('Invoiced', readonly=True, copy=False),
+        'repaired': fields.boolean('Repaired', readonly=True, copy=False),
         'amount_untaxed': fields.function(_amount_untaxed, string='Untaxed Amount',
             store={
                 'mrp.repair': (lambda self, cr, uid, ids, c={}: ids, ['operations', 'fees_lines'], 10),
@@ -187,10 +170,10 @@ class mrp_repair(osv.osv):
 
     _defaults = {
         'state': lambda *a: 'draft',
-        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'mrp.repair'),
+        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').next_by_code(cr, uid, 'mrp.repair'),
         'invoice_method': lambda *a: 'none',
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.repair', context=context),
-        'pricelist_id': lambda self, cr, uid, context: self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')])[0],
+        'pricelist_id': lambda self, cr, uid, context: self.pool['product.pricelist'].search(cr, uid, [], limit=1)[0],
         'product_qty': 1.0,
         'location_id': _default_stock_location,
     }
@@ -198,19 +181,6 @@ class mrp_repair(osv.osv):
     _sql_constraints = [
         ('name', 'unique (name)', 'The name of the Repair Order must be unique!'),
     ]
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default.update({
-            'state': 'draft',
-            'repaired': False,
-            'invoiced': False,
-            'invoice_id': False,
-            'move_id': False,
-            'name': self.pool.get('ir.sequence').get(cr, uid, 'mrp.repair'),
-        })
-        return super(mrp_repair, self).copy(cr, uid, id, default, context)
 
     def onchange_product_id(self, cr, uid, ids, product_id=None):
         """ On change of product sets some values.
@@ -259,14 +229,14 @@ class mrp_repair(osv.osv):
             return {'value': {
                         'address_id': False,
                         'partner_invoice_id': False,
-                        'pricelist_id': pricelist_obj.search(cr, uid, [('type', '=', 'sale')])[0]
+                        'pricelist_id': pricelist_obj.search(cr, uid, [], limit=1)[0]
                     }
             }
-        addr = part_obj.address_get(cr, uid, [part], ['delivery', 'invoice', 'default'])
+        addr = part_obj.address_get(cr, uid, [part], ['delivery', 'invoice', 'contact'])
         partner = part_obj.browse(cr, uid, part)
         pricelist = partner.property_product_pricelist and partner.property_product_pricelist.id or False
         return {'value': {
-                    'address_id': addr['delivery'] or addr['default'],
+                    'address_id': addr['delivery'] or addr['contact'],
                     'partner_invoice_id': addr['invoice'],
                     'pricelist_id': pricelist
                 }
@@ -298,8 +268,8 @@ class mrp_repair(osv.osv):
             else:
                 self.write(cr, uid, [o.id], {'state': 'confirmed'})
                 for line in o.operations:
-                    if line.product_id.track_production:
-                        raise osv.except_osv(_('Warning!'), _("Serial number is required for operation line with product '%s'") % (line.product_id.name))
+                    if line.product_id.tracking != 'none' and not line.lot_id:
+                        raise UserError(_("Serial number is required for operation line with product '%s'") % (line.product_id.name))
                 mrp_line_obj.write(cr, uid, [l.id for l in o.operations], {'state': 'confirmed'})
         return True
 
@@ -312,7 +282,7 @@ class mrp_repair(osv.osv):
             if not repair.invoiced:
                 mrp_line_obj.write(cr, uid, [l.id for l in repair.operations], {'state': 'cancel'}, context=context)
             else:
-                raise osv.except_osv(_('Warning!'), _('Repair order is already invoiced.'))
+                raise UserError(_('Repair order is already invoiced.'))
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def wkf_invoice_create(self, cr, uid, ids, *args):
@@ -335,7 +305,7 @@ class mrp_repair(osv.osv):
             if repair.state in ('draft', 'cancel') or repair.invoice_id:
                 continue
             if not (repair.partner_id.id and repair.partner_invoice_id.id):
-                raise osv.except_osv(_('No partner!'), _('You have to select a Partner Invoice Address in the repair form!'))
+                raise UserError(_('You have to select a Partner Invoice Address in the repair form!'))
             comment = repair.quotation_notes
             if (repair.invoice_method != 'none'):
                 if group and repair.partner_invoice_id.id in invoices_group:
@@ -348,18 +318,18 @@ class mrp_repair(osv.osv):
                     }
                     inv_obj.write(cr, uid, [inv_id], invoice_vals, context=context)
                 else:
-                    if not repair.partner_id.property_account_receivable:
-                        raise osv.except_osv(_('Error!'), _('No account defined for partner "%s".') % repair.partner_id.name)
-                    account_id = repair.partner_id.property_account_receivable.id
+                    if not repair.partner_id.property_account_receivable_id:
+                        raise UserError(_('No account defined for partner "%s".') % repair.partner_id.name)
+                    account_id = repair.partner_id.property_account_receivable_id.id
                     inv = {
                         'name': repair.name,
                         'origin': repair.name,
                         'type': 'out_invoice',
                         'account_id': account_id,
-                        'partner_id': repair.partner_id.id,
+                        'partner_id': repair.partner_invoice_id.id or repair.partner_id.id,
                         'currency_id': repair.pricelist_id.currency_id.id,
                         'comment': repair.quotation_notes,
-                        'fiscal_position': repair.partner_id.property_account_position.id
+                        'fiscal_position_id': repair.partner_id.property_account_position_id.id
                     }
                     inv_id = inv_obj.create(cr, uid, inv)
                     invoices_group[repair.partner_invoice_id.id] = inv_id
@@ -372,12 +342,12 @@ class mrp_repair(osv.osv):
                         else:
                             name = operation.name
 
-                        if operation.product_id.property_account_income:
-                            account_id = operation.product_id.property_account_income.id
-                        elif operation.product_id.categ_id.property_account_income_categ:
-                            account_id = operation.product_id.categ_id.property_account_income_categ.id
+                        if operation.product_id.property_account_income_id:
+                            account_id = operation.product_id.property_account_income_id.id
+                        elif operation.product_id.categ_id.property_account_income_categ_id:
+                            account_id = operation.product_id.categ_id.property_account_income_categ_id.id
                         else:
-                            raise osv.except_osv(_('Error!'), _('No account defined for product "%s".') % operation.product_id.name)
+                            raise UserError(_('No account defined for product "%s".') % operation.product_id.name)
 
                         invoice_line_id = inv_line_obj.create(cr, uid, {
                             'invoice_id': inv_id,
@@ -385,8 +355,8 @@ class mrp_repair(osv.osv):
                             'origin': repair.name,
                             'account_id': account_id,
                             'quantity': operation.product_uom_qty,
-                            'invoice_line_tax_id': [(6, 0, [x.id for x in operation.tax_id])],
-                            'uos_id': operation.product_uom.id,
+                            'invoice_line_tax_ids': [(6, 0, [x.id for x in operation.tax_id])],
+                            'uom_id': operation.product_uom.id,
                             'price_unit': operation.price_unit,
                             'price_subtotal': operation.product_uom_qty * operation.price_unit,
                             'product_id': operation.product_id and operation.product_id.id or False
@@ -399,14 +369,14 @@ class mrp_repair(osv.osv):
                         else:
                             name = fee.name
                         if not fee.product_id:
-                            raise osv.except_osv(_('Warning!'), _('No product defined on Fees!'))
+                            raise UserError(_('No product defined on Fees!'))
 
-                        if fee.product_id.property_account_income:
-                            account_id = fee.product_id.property_account_income.id
-                        elif fee.product_id.categ_id.property_account_income_categ:
-                            account_id = fee.product_id.categ_id.property_account_income_categ.id
+                        if fee.product_id.property_account_income_id:
+                            account_id = fee.product_id.property_account_income_id.id
+                        elif fee.product_id.categ_id.property_account_income_categ_id:
+                            account_id = fee.product_id.categ_id.property_account_income_categ_id.id
                         else:
-                            raise osv.except_osv(_('Error!'), _('No account defined for product "%s".') % fee.product_id.name)
+                            raise UserError(_('No account defined for product "%s".') % fee.product_id.name)
 
                         invoice_fee_id = inv_line_obj.create(cr, uid, {
                             'invoice_id': inv_id,
@@ -414,13 +384,14 @@ class mrp_repair(osv.osv):
                             'origin': repair.name,
                             'account_id': account_id,
                             'quantity': fee.product_uom_qty,
-                            'invoice_line_tax_id': [(6, 0, [x.id for x in fee.tax_id])],
-                            'uos_id': fee.product_uom.id,
+                            'invoice_line_tax_ids': [(6, 0, [x.id for x in fee.tax_id])],
+                            'uom_id': fee.product_uom.id,
                             'product_id': fee.product_id and fee.product_id.id or False,
                             'price_unit': fee.price_unit,
                             'price_subtotal': fee.product_uom_qty * fee.price_unit
                         })
                         repair_fee_obj.write(cr, uid, [fee.id], {'invoiced': True, 'invoice_line_id': invoice_fee_id})
+                #inv_obj.button_reset_taxes(cr, uid, inv_id, context=context)
                 res[repair.id] = inv_id
         return res
 
@@ -485,7 +456,6 @@ class mrp_repair(osv.osv):
                     'partner_id': repair.address_id and repair.address_id.id or False,
                     'location_id': move.location_id.id,
                     'location_dest_id': move.location_dest_id.id,
-                    'state': 'assigned',
                 })
                 move_ids.append(move_id)
                 repair_line_obj.write(cr, uid, [move.id], {'move_id': move_id, 'state': 'done'}, context=context)
@@ -508,7 +478,7 @@ class mrp_repair(osv.osv):
 
 class ProductChangeMixin(object):
     def product_id_change(self, cr, uid, ids, pricelist, product, uom=False,
-                          product_uom_qty=0, partner_id=False, guarantee_limit=False):
+                          product_uom_qty=0, partner_id=False, guarantee_limit=False, context=None):
         """ On change of product it sets product quantity, tax account, name,
         uom of product, unit price and price subtotal.
         @param pricelist: Pricelist of current record.
@@ -521,18 +491,20 @@ class ProductChangeMixin(object):
         """
         result = {}
         warning = {}
+        ctx = context and context.copy() or {}
+        ctx['uom'] = uom
 
         if not product_uom_qty:
             product_uom_qty = 1
         result['product_uom_qty'] = product_uom_qty
 
         if product:
-            product_obj = self.pool.get('product.product').browse(cr, uid, product)
+            product_obj = self.pool.get('product.product').browse(cr, uid, product, context=ctx)
             if partner_id:
                 partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
-                result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position, product_obj.taxes_id)
+                result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position_id, product_obj.taxes_id, context=ctx)
 
-            result['name'] = product_obj.partner_ref
+            result['name'] = product_obj.display_name
             result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id or False
             if not pricelist:
                 warning = {
@@ -543,7 +515,7 @@ class ProductChangeMixin(object):
                 }
             else:
                 price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
-                            product, product_uom_qty, partner_id, {'uom': uom})[pricelist]
+                            product, product_uom_qty, partner_id, context=ctx)[pricelist]
 
                 if price is False:
                     warning = {
@@ -562,12 +534,6 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
     _name = 'mrp.repair.line'
     _description = 'Repair Line'
 
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default.update({'invoice_line_id': False, 'move_id': False, 'invoiced': False, 'state': 'draft'})
-        return super(mrp_repair_line, self).copy_data(cr, uid, id, default, context)
-
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         """ Calculates amount.
         @param field_name: Name of field.
@@ -575,39 +541,41 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         @return: Dictionary of values.
         """
         res = {}
-        cur_obj = self.pool.get('res.currency')
+        tax_obj = self.pool.get('account.tax')
+        # cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = line.to_invoice and line.price_unit * line.product_uom_qty or 0
-            cur = line.repair_id.pricelist_id.currency_id
-            res[line.id] = cur_obj.round(cr, uid, cur, res[line.id])
+            if line.to_invoice:
+                cur = line.repair_id.pricelist_id.currency_id
+                taxes = tax_obj.compute_all(cr, uid, line.tax_id.ids, line.price_unit, cur.id, line.product_uom_qty, line.product_id.id, line.repair_id.partner_id.id)
+                #res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
+                res[line.id] = taxes['total_included']
+            else:
+                res[line.id] = 0
         return res
 
     _columns = {
-        'name': fields.char('Description', size=64, required=True),
+        'name': fields.char('Description', required=True),
         'repair_id': fields.many2one('mrp.repair', 'Repair Order Reference', ondelete='cascade', select=True),
         'type': fields.selection([('add', 'Add'), ('remove', 'Remove')], 'Type', required=True),
         'to_invoice': fields.boolean('To Invoice'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
-        'invoiced': fields.boolean('Invoiced', readonly=True),
+        'invoiced': fields.boolean('Invoiced', readonly=True, copy=False),
         'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price')),
-        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),
+        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits=0),
         'tax_id': fields.many2many('account.tax', 'repair_operation_line_tax', 'repair_operation_line_id', 'tax_id', 'Taxes'),
         'product_uom_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
-        'invoice_line_id': fields.many2one('account.invoice.line', 'Invoice Line', readonly=True),
+        'invoice_line_id': fields.many2one('account.invoice.line', 'Invoice Line', readonly=True, copy=False),
         'location_id': fields.many2one('stock.location', 'Source Location', required=True, select=True),
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True, select=True),
-        'move_id': fields.many2one('stock.move', 'Inventory Move', readonly=True),
+        'move_id': fields.many2one('stock.move', 'Inventory Move', readonly=True, copy=False),
         'lot_id': fields.many2one('stock.production.lot', 'Lot'),
         'state': fields.selection([
                     ('draft', 'Draft'),
                     ('confirmed', 'Confirmed'),
                     ('done', 'Done'),
-                    ('cancel', 'Cancelled')], 'Status', required=True, readonly=True,
-                    help=' * The \'Draft\' status is set automatically as draft when repair order in draft status. \
-                        \n* The \'Confirmed\' status is set automatically as confirm when repair order in confirm status. \
-                        \n* The \'Done\' status is set automatically when repair order is completed.\
-                        \n* The \'Cancelled\' status is set automatically when user cancel repair order.'),
+                    ('cancel', 'Cancelled')], 'Status', required=True, readonly=True, copy=False,
+                    help='The status of a repair line is set automatically to the one of the linked repair order.'),
     }
     _defaults = {
         'state': lambda *a: 'draft',
@@ -659,12 +627,6 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
     _name = 'mrp.repair.fee'
     _description = 'Repair Fees Line'
 
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default.update({'invoice_line_id': False, 'invoiced': False})
-        return super(mrp_repair_fee, self).copy_data(cr, uid, id, default, context)
-
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         """ Calculates amount.
         @param field_name: Name of field.
@@ -672,29 +634,31 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
         @return: Dictionary of values.
         """
         res = {}
+        tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = line.to_invoice and line.price_unit * line.product_uom_qty or 0
-            cur = line.repair_id.pricelist_id.currency_id
-            res[line.id] = cur_obj.round(cr, uid, cur, res[line.id])
+            if line.to_invoice:
+                cur = line.repair_id.pricelist_id.currency_id
+                taxes = tax_obj.compute_all(cr, uid, line.tax_id.ids, line.price_unit, cur.id, line.product_uom_qty, line.product_id.id, line.repair_id.partner_id.id)
+                res[line.id] = taxes['total_included']
+            else:
+                res[line.id] = 0
         return res
 
     _columns = {
         'repair_id': fields.many2one('mrp.repair', 'Repair Order Reference', required=True, ondelete='cascade', select=True),
-        'name': fields.char('Description', size=64, select=True, required=True),
+        'name': fields.char('Description', select=True, required=True),
         'product_id': fields.many2one('product.product', 'Product'),
         'product_uom_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'price_unit': fields.float('Unit Price', required=True),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
-        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),
+        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits=0),
         'tax_id': fields.many2many('account.tax', 'repair_fee_line_tax', 'repair_fee_line_id', 'tax_id', 'Taxes'),
-        'invoice_line_id': fields.many2one('account.invoice.line', 'Invoice Line', readonly=True),
+        'invoice_line_id': fields.many2one('account.invoice.line', 'Invoice Line', readonly=True, copy=False),
         'to_invoice': fields.boolean('To Invoice'),
-        'invoiced': fields.boolean('Invoiced', readonly=True),
+        'invoiced': fields.boolean('Invoiced', readonly=True, copy=False),
     }
 
     _defaults = {
         'to_invoice': lambda *a: True,
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

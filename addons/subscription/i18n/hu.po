@@ -1,51 +1,98 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#    * subscription
-#
+# * subscription
+# 
+# Translators:
+# Kris Krnacs, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-01-05 17:30+0000\n"
-"Last-Translator: krnkris <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-10-05 21:06+0000\n"
+"Last-Translator: Kris Krnacs\n"
+"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:00+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: subscription
-#: field:subscription.subscription,doc_source:0
-#: field:subscription.subscription.history,document_id:0
-msgid "Source Document"
-msgstr "Forrás dokumentum"
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_active
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_active
+msgid "Active"
+msgstr "Aktív"
 
 #. module: subscription
-#: field:subscription.document,model:0
-msgid "Object"
-msgstr "Tárgy"
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_create_uid
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_create_uid
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_create_uid
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_create_uid
+msgid "Created by"
+msgstr "Készítette"
 
 #. module: subscription
-#: view:subscription.subscription:0
-msgid "Search Subscription"
-msgstr "Feliratkozás keresése"
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_create_date
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_create_date
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_create_date
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_create_date
+msgid "Created on"
+msgstr "Létrehozás dátuma"
 
 #. module: subscription
-#: field:subscription.subscription,date_init:0
-msgid "First Date"
-msgstr "Első dátum"
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_cron_id
+msgid "Cron Job"
+msgstr "Automatikus \"cron\" munka futtatás"
 
 #. module: subscription
-#: field:subscription.document.fields,field:0
-msgid "Field"
-msgstr "Mező"
+#: selection:subscription.document.fields,value:0
+msgid "Current Date"
+msgstr "Aktuális dátum"
 
 #. module: subscription
-#: model:ir.model,name:subscription.model_subscription_subscription_history
-msgid "Subscription history"
-msgstr "Feliratkozás előzmények"
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_date
+msgid "Date"
+msgstr "Dátum"
+
+#. module: subscription
+#: selection:subscription.subscription,interval_type:0
+msgid "Days"
+msgstr "Napok"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_value
+msgid "Default Value"
+msgstr "Alapértelmezett Érték"
+
+#. module: subscription
+#: model:ir.model.fields,help:subscription.field_subscription_document_fields_value
+msgid "Default value is considered for field when new document is generated."
+msgstr "A mező alap értéke ki lesz választva amint egy új dokumentum generálva lesz."
+
+#. module: subscription
+#: model:ir.model.fields,help:subscription.field_subscription_subscription_note
+msgid "Description or Summary of Subscription"
+msgstr "A feliratkozások leírása vagy összegzése"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_display_name
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_display_name
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_display_name
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_display_name
+msgid "Display Name"
+msgstr "Név megjelenítése"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_doc_lines
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+msgid "Documents created"
+msgstr "Létrehozott dokumentumok"
+
+#. module: subscription
+#: selection:subscription.subscription,state:0
+msgid "Done"
+msgstr "Kész"
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
@@ -54,112 +101,90 @@ msgstr "Tervezet"
 
 #. module: subscription
 #: selection:subscription.document.fields,value:0
-msgid "Current Date"
-msgstr "Aktuális dátum"
+msgid "False"
+msgstr "Hamis"
 
 #. module: subscription
-#: selection:subscription.subscription,interval_type:0
-msgid "Weeks"
-msgstr "Hetek"
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_field
+msgid "Field"
+msgstr "Mező"
 
 #. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,state:0
-msgid "Status"
-msgstr "Állapot"
-
-#. module: subscription
-#: model:ir.ui.menu,name:subscription.config_recuuring_event
-#: model:ir.ui.menu,name:subscription.next_id_45
-msgid "Recurring Events"
-msgstr "Ismétlődő események"
-
-#. module: subscription
-#: model:ir.actions.act_window,name:subscription.action_subscription_form
-#: model:ir.ui.menu,name:subscription.menu_action_subscription_form
-#: view:subscription.subscription:0
-msgid "Subscriptions"
-msgstr "Feliratkozások"
-
-#. module: subscription
-#: field:subscription.subscription,interval_number:0
-msgid "Interval Qty"
-msgstr "Intervallum db"
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "Stop"
-msgstr "Leállítás"
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "Set to Draft"
-msgstr "Piszkozat"
-
-#. module: subscription
-#: view:subscription.subscription:0
-#: selection:subscription.subscription,state:0
-msgid "Running"
-msgstr "Futó"
-
-#. module: subscription
-#: view:subscription.subscription.history:0
-msgid "Subscription History"
-msgstr "Feliratkozás Előzmények"
-
-#. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,user_id:0
-msgid "User"
-msgstr "Felhasználó"
-
-#. module: subscription
-#: field:subscription.subscription,interval_type:0
-msgid "Interval Unit"
-msgstr "Intervallum egység"
-
-#. module: subscription
-#: field:subscription.subscription.history,date:0
-msgid "Date"
-msgstr "Dátum"
-
-#. module: subscription
-#: field:subscription.subscription,exec_init:0
-msgid "Number of documents"
-msgstr "Dokumentumok száma"
-
-#. module: subscription
-#: help:subscription.document,active:0
-msgid ""
-"If the active field is set to False, it will allow you to hide the "
-"subscription document without removing it."
-msgstr ""
-"Ha az aktív mező Hamisra állított, akkor lehetősége van a dokumentumot amire "
-"feliratkozott eltüntetni anélkül, hogy törölné azt."
-
-#. module: subscription
-#: field:subscription.document,name:0
-#: field:subscription.subscription,name:0
-msgid "Name"
-msgstr "Név"
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:147
-#, python-format
-msgid "You cannot delete an active subscription !"
-msgstr "Nem törölhet egy aktív feliratkozást!"
-
-#. module: subscription
-#: field:subscription.document,field_ids:0
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_field_ids
 msgid "Fields"
 msgstr "Mezők"
 
 #. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,note:0
-#: field:subscription.subscription,notes:0
-msgid "Notes"
-msgstr "Megjegyzések"
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_date_init
+msgid "First Date"
+msgstr "Első dátum"
+
+#. module: subscription
+#: model:ir.ui.view,arch_db:subscription.view_subscription_filter
+msgid "Group By"
+msgstr "Csoportosítás..."
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_id
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_id
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_id
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_id
+msgid "ID"
+msgstr "ID"
+
+#. module: subscription
+#: model:ir.model.fields,help:subscription.field_subscription_document_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the "
+"subscription document without removing it."
+msgstr "Ha az aktív mező Hamisra állított, akkor lehetősége van a dokumentumot amire feliratkozott eltüntetni anélkül, hogy törölné azt."
+
+#. module: subscription
+#: model:ir.model.fields,help:subscription.field_subscription_subscription_active
+msgid ""
+"If the active field is set to False, it will allow you to hide the "
+"subscription without removing it."
+msgstr "Ha az aktív mező Hamisra állított, akkor lehetősége van a dokumentumot amire feliratkozott eltüntetni anélkül, hogy törölné azt."
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_notes
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+msgid "Internal Notes"
+msgstr "Belső jegyzetek"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_number
+msgid "Interval Qty"
+msgstr "Intervallum db"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_type
+msgid "Interval Unit"
+msgstr "Időköz egysége"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_document___last_update
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_fields___last_update
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription___last_update
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history___last_update
+msgid "Last Modified on"
+msgstr "Utoljára frissítve ekkor"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_write_uid
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_write_uid
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_write_uid
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_write_uid
+msgid "Last Updated by"
+msgstr "Utoljára frissítve, által"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_write_date
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_write_date
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_write_date
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_write_date
+msgid "Last Updated on"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -167,159 +192,160 @@ msgid "Months"
 msgstr "Hónapok"
 
 #. module: subscription
-#: selection:subscription.subscription,interval_type:0
-msgid "Days"
-msgstr "Napok"
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_name
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_name
+msgid "Name"
+msgstr "Név"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:147
-#, python-format
-msgid "Error!"
-msgstr "Hiba!"
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_note
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+msgid "Notes"
+msgstr "Jegyzetek"
 
 #. module: subscription
-#: field:subscription.subscription,cron_id:0
-msgid "Cron Job"
-msgstr "Automatikus \"cron\" munka futtatás"
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_exec_init
+msgid "Number of documents"
+msgstr "Dokumentumok száma"
 
 #. module: subscription
-#: model:ir.model,name:subscription.model_subscription_subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription.history,subscription_id:0
-msgid "Subscription"
-msgstr "Feliratkozás"
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_model
+msgid "Object"
+msgstr "Objektum"
 
 #. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,partner_id:0
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_partner_id
+#: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "Partner"
 msgstr "Partner"
 
 #. module: subscription
-#: help:subscription.subscription,cron_id:0
-msgid "Scheduler which runs on subscription"
-msgstr "A feliratkozásokon futtatható ütemező"
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "Subsription Data"
-msgstr "Feliratkozási adat"
-
-#. module: subscription
-#: help:subscription.subscription,note:0
-msgid "Description or Summary of Subscription"
-msgstr "A feliratkozások leírása vagy összegzése"
-
-#. module: subscription
-#: model:ir.model,name:subscription.model_subscription_document
-#: view:subscription.document:0
-#: field:subscription.document.fields,document_id:0
-msgid "Subscription Document"
-msgstr "Feliratkozási dokumentum"
-
-#. module: subscription
-#: help:subscription.subscription,active:0
+#: code:addons/subscription/subscription.py:101
+#, python-format
 msgid ""
-"If the active field is set to False, it will allow you to hide the "
-"subscription without removing it."
-msgstr ""
-"Ha az aktív mező Hamisra állított, akkor lehetősége van a dokumentumot amire "
-"feliratkozott eltüntetni anélkül, hogy törölné azt."
+"Please provide another source document.\n"
+"This one does not exist!"
+msgstr "Kérem gondoskodjon másik forrás dokumentumról.\nEz nem létezik!"
 
 #. module: subscription
-#: help:subscription.document.fields,value:0
-msgid "Default value is considered for field when new document is generated."
-msgstr ""
-"A mező alap értéke ki lesz választva amint egy új dokumentum generálva lesz."
-
-#. module: subscription
-#: selection:subscription.document.fields,value:0
-msgid "False"
-msgstr "Hamis"
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "Group By..."
-msgstr "Csoportosítás..."
-
-#. module: subscription
-#: view:subscription.subscription:0
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
 msgid "Process"
 msgstr "Folyamat"
 
 #. module: subscription
-#: help:subscription.subscription,doc_source:0
-msgid ""
-"User can choose the source document on which he wants to create documents"
-msgstr ""
-"A felhasználó kiválaszthatja az alap dokumentumot, melyre létrehozza a "
-"sajátjait"
+#: model:ir.actions.act_window,name:subscription.action_subscription_form
+#: model:ir.ui.menu,name:subscription.menu_action_subscription_form
+msgid "Recurring Documents"
+msgstr "Ismétlődő dokumentumok"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_document_form
 #: model:ir.ui.menu,name:subscription.menu_action_document_form
-msgid "Document Types"
-msgstr "Dokumentum típusok"
+msgid "Recurring Types"
+msgstr "Ismétlődő típusok"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:120
-#, python-format
-msgid "Wrong Source Document !"
-msgstr "Hibás forrásdokumentum !"
+#: model:ir.ui.view,arch_db:subscription.view_subscription_filter
+#: selection:subscription.subscription,state:0
+msgid "Running"
+msgstr "Futó"
+
+#. module: subscription
+#: model:ir.model.fields,help:subscription.field_subscription_subscription_cron_id
+msgid "Scheduler which runs on subscription"
+msgstr "A feliratkozásokon futtatható ütemező"
+
+#. module: subscription
+#: model:ir.ui.view,arch_db:subscription.view_subscription_filter
+msgid "Search Subscription"
+msgstr "Feliratkozás keresése"
+
+#. module: subscription
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+msgid "Set to Draft"
+msgstr "Beállítás tervezetnek"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_doc_source
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_document_id
+msgid "Source Document"
+msgstr "Forrás dokumentum"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_state
+#: model:ir.ui.view,arch_db:subscription.view_subscription_filter
+msgid "Status"
+msgstr "Állapot"
+
+#. module: subscription
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+msgid "Stop"
+msgstr "Leállítás"
+
+#. module: subscription
+#: model:ir.model,name:subscription.model_subscription_subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_subscription_id
+#: model:ir.ui.view,arch_db:subscription.view_subscription_filter
+msgid "Subscription"
+msgstr "Feliratkozás"
+
+#. module: subscription
+#: model:ir.model,name:subscription.model_subscription_document
+#: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_document_id
+#: model:ir.ui.view,arch_db:subscription.document_form
+#: model:ir.ui.view,arch_db:subscription.document_tree
+#: model:ir.ui.view,arch_db:subscription.view_subscription_document_filter
+msgid "Subscription Document"
+msgstr "Feliratkozási dokumentum"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document_fields
-#: view:subscription.document.fields:0
+#: model:ir.ui.view,arch_db:subscription.document_fields_form
+#: model:ir.ui.view,arch_db:subscription.document_fields_tree
 msgid "Subscription Document Fields"
 msgstr "Feliratkozási dokumentum mezői"
 
 #. module: subscription
-#: selection:subscription.subscription,state:0
-msgid "Done"
-msgstr "Kész"
+#: model:ir.ui.view,arch_db:subscription.subscription_subscription_history_form
+#: model:ir.ui.view,arch_db:subscription.subscription_subscription_history_tree
+msgid "Subscription History"
+msgstr "Feliratkozás Előzmények"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:120
-#, python-format
+#: model:ir.model,name:subscription.model_subscription_subscription_history
+msgid "Subscription history"
+msgstr "Feliratkozás előzmények"
+
+#. module: subscription
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+#: model:ir.ui.view,arch_db:subscription.view_subscription_tree
+msgid "Subscriptions"
+msgstr "Feliratkozások"
+
+#. module: subscription
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+msgid "Subsription Data"
+msgstr "Feliratkozási adat"
+
+#. module: subscription
+#: model:ir.model.fields,field_description:subscription.field_subscription_subscription_user_id
+#: model:ir.ui.view,arch_db:subscription.view_subscription_filter
+msgid "User"
+msgstr "Felhasználó"
+
+#. module: subscription
+#: model:ir.model.fields,help:subscription.field_subscription_subscription_doc_source
 msgid ""
-"Please provide another source document.\n"
-"This one does not exist !"
-msgstr ""
-"Kérem válasszon másik alap dokumentumot.\n"
-"Ez nem létezik!"
+"User can choose the source document on which he wants to create documents"
+msgstr "A felhasználó kiválaszthatja az alap dokumentumot, melyre létrehozza a sajátjait"
 
 #. module: subscription
-#: field:subscription.document.fields,value:0
-msgid "Default Value"
-msgstr "Alapértelmezett érték"
+#: selection:subscription.subscription,interval_type:0
+msgid "Weeks"
+msgstr "Hetek"
 
 #. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,doc_lines:0
-msgid "Documents created"
-msgstr "Létrehozott dokumentumok"
-
-#. module: subscription
-#: field:subscription.document,active:0
-#: field:subscription.subscription,active:0
-msgid "Active"
-msgstr "Aktív"
-
-#~ msgid "Today"
-#~ msgstr "Ma"
-
+#: code:addons/subscription/subscription.py:128
 #, python-format
-#~ msgid "Error !"
-#~ msgstr "Hiba !"
-
-#~ msgid "Invoice"
-#~ msgstr "Számla"
-
-#~ msgid "This Week"
-#~ msgstr "Ezen a héten"
-
-#~ msgid "State"
-#~ msgstr "Állapot"
-
-#~ msgid "Sale Order"
-#~ msgstr "Vevői megrendelés"
+msgid "You cannot delete an active subscription!"
+msgstr "Nem tud törölni egy aktív feliratkozást!"

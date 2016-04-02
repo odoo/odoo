@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Account Tax Tags -->
+
+        <record id="tag_de_01" model="account.account.tag">
+            <field name="name">Verbleib. Umssatzst.-Vorausz. / Verbl. Übersch. - b. d. Betrag ein Minusz. voranstellen</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_02" model="account.account.tag">
+            <field name="name">Anrechn. (Abzug) d. festg. Sondervorusz. für Dauerfristverl. (nur auszuf. i. d. l. Voranm. d. Best. zeitr., i.d.R. Dezember)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_03" model="account.account.tag">
+            <field name="name">Andere Steuerbeträge</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_04" model="account.account.tag">
+            <field name="name">In Rechn. unr. od. unber. ausg. (§14c) sow. Steuern, n. §4 Nr. 4a S. 1 B. a S. 2, §6a Ab. 4 S. 2, §17 Ab. 1 S. 6 o. §25b Ab. 2 gesch. werden</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_05" model="account.account.tag">
+            <field name="name">Umsatzsteuer</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_06" model="account.account.tag">
+            <field name="name">Lieferungen und sonst. Leistungen (einschl. unentgeltl. Wertabgaben)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_07" model="account.account.tag">
+            <field name="name">Steuerpfl. Umsätze (Lief. u. sonst. Leist. einschl. unentgeltl. Wertabgaben)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_08" model="account.account.tag">
+            <field name="name">zu anderen Steuersätzen</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_09" model="account.account.tag">
+            <field name="name">zum Steuersatz von 19 %</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_10" model="account.account.tag">
+            <field name="name">zum Steuersatz von 7%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_11" model="account.account.tag">
+            <field name="name">Umsätze land- und forstwirtschaftlicher Betrieb nach § 24 UStG</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_12" model="account.account.tag">
+            <field name="name">Umsätze, f. d. e. Steuer n. § 24 UStG zu entrichten ist (Sägewerkserz., Getränke und alkohol. Flüssigk., z.B. Wein)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_13" model="account.account.tag">
+            <field name="name">Innergemeinschaftliche Erwerbe</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_14" model="account.account.tag">
+            <field name="name">Steuerpflichtige innergemeinschaftliche Erwerbe</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_15" model="account.account.tag">
+            <field name="name">zum Steuersatz von 19 %</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_16" model="account.account.tag">
+            <field name="name">zum Steuersatz von 7%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_17" model="account.account.tag">
+            <field name="name">neuer Fahrzeuge von Lieferern ohne USt-IdNr. zum allg. Steuersatz</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_18" model="account.account.tag">
+            <field name="name">zu anderen Steuersätzen</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_19" model="account.account.tag">
+            <field name="name">Ergänzende Angaben zu Umsätzen</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_20" model="account.account.tag">
+            <field name="name">Umsätze, f. d. a. Leistungsempf. d. Steuer n. § 13b Abs. 2 UStG geschuldet wird</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_21" model="account.account.tag">
+            <field name="name">Leistungen eines im Ausland ansässigen Unternehmers (§ 13b Abs. 1 Satz 1 Nr. 1 und 5 UStG)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_22" model="account.account.tag">
+            <field name="name">Steuer inf. Wechsels d. Besteuerungsform sow. Nachsteuer a. verst. Anzahl. u. ä. wg. Steuersatzänderung</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_23" model="account.account.tag">
+            <field name="name">Lief. sicherungsüb. Gegenst. und Umsätze, d. u. d. GrEStG fallen (§ 13b Abs. 1 Satz 1 Nr. 2 und 3 UStG)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_24" model="account.account.tag">
+            <field name="name">Bauleistungen e. i. Inland ans. Unternehmers (§ 13b Abs. 1 Satz 1 Nr. 4 UStG)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_25" model="account.account.tag">
+            <field name="name">Abziehbare Vorsteuerbeträge</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_26" model="account.account.tag">
+            <field name="name">Vst. abz. f. i.g. Lief. neuer Fahrzeuge außerh. e. Unternehmens (§ 2a) sow. v. Kleinunt. i. S. d. § 19 Ab. 1 (§ 15 Abs. 4a)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_27" model="account.account.tag">
+            <field name="name">Vorsteuerbetr. a. d. innergem. von Gegenständen (§ 15 Abs. 1 Satz 1 Nr. 3 UStG)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_28" model="account.account.tag">
+            <field name="name">Entrichtete Einfuhrumsatzsteuer (§ 15 Abs. 1 Satz 1 Nr. 2 UStG)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_29" model="account.account.tag">
+            <field name="name">Vorsteuerbetr., die nach allgemeinen Durchschnittssätzen berechnet sind (§§ 23 und 23a UStG)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_30" model="account.account.tag">
+            <field name="name">Berichtigung des Vorsteuerabzugs (§ 15a UStG)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_31" model="account.account.tag">
+            <field name="name">Vorsteuerb. a. Rechn. v. and. Untern. (§ 15 Abs. 1 S. 1 Nr. 1), a. Leist. i. S. d. § 13a Ab. 1 Nr. 6 (§ 15 Abs. 1 Satz 1 Nr. 5) u. a. i.g.Dreiecksgesch. (§ 25b Abs. 5 UStG)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_32" model="account.account.tag">
+            <field name="name">Bemessungsgrundlage</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_33" model="account.account.tag">
+            <field name="name">Umsatzsteuer</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_34" model="account.account.tag">
+            <field name="name">Lieferungen u. sonst. Leistungen (einschl. unentgeltl. Wertabgaben)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_35" model="account.account.tag">
+            <field name="name">Steuerfreie Umsätze mit Vorsteuerabzug</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_36" model="account.account.tag">
+            <field name="name">Innergemeinsch. Lieferungen (§ 4 Nr. 1 Buchst. b UStG) an Abnehmer mit USt-IdNr</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_37" model="account.account.tag">
+            <field name="name">Weitere steuerf. Umsätze m. Vorsteuerabz. (z.B. Ausfuhrlief., Umsätze nach § 4 Nr. 2 bis 7 UStG)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_38" model="account.account.tag">
+            <field name="name">neuer Fahrzeuge an Abnehmer ohne USt-IdNr</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_39" model="account.account.tag">
+            <field name="name">neuer Fahrzeuge außerhalb eines Unternehmens (§ 2a UStG)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_40" model="account.account.tag">
+            <field name="name">Steuerfreie Umsätze ohne Vorsteuerabzug</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_41" model="account.account.tag">
+            <field name="name">Umsätze nach § 4 Nr. 8 bis 28 UStG</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_42" model="account.account.tag">
+            <field name="name">Steuerpflichtige Umsätze (Lief. u. sonst. Leist. einschl. unentgeltl. Wertabgaben)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_43" model="account.account.tag">
+            <field name="name">zu anderen Steuersätzen</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_44" model="account.account.tag">
+            <field name="name">zum Steuersatz von 19 %</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_45" model="account.account.tag">
+            <field name="name">zum Steuersatz von 7%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_46" model="account.account.tag">
+            <field name="name">Umsätze land- und forstwirtschaftlicher Betrieb nach § 24 UStG</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_47" model="account.account.tag">
+            <field name="name">Umsätze, f. d. e. Steuer n. § 24 UStG zu entrichten ist (Sägewerkserz., Getränke und alkohol. Flüssigk., z.B. Wein)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_48" model="account.account.tag">
+            <field name="name">Lieferungen in das übrige Gemeinschaftsgebiet an Abnehmer mit Ust-IdNr.</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_49" model="account.account.tag">
+            <field name="name">Innergemeinschaftliche Erwerbe</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_50" model="account.account.tag">
+            <field name="name">Steuerfreie innergemeinschaftliche Erwerbe</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_51" model="account.account.tag">
+            <field name="name">Erwerbe nach § 4b UStG</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_52" model="account.account.tag">
+            <field name="name">Steuerpflichtige innergemeinschaftliche Erwerbe</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_53" model="account.account.tag">
+            <field name="name">zum Steuersatz von 19 %</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_54" model="account.account.tag">
+            <field name="name">zum Steuersatz von 7%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_55" model="account.account.tag">
+            <field name="name">neue Fahrzeuge v. Lieferern ohne USt-IdNr. z. allg. Steuersatz</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_56" model="account.account.tag">
+            <field name="name">zu anderen Steuersätzen</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_57" model="account.account.tag">
+            <field name="name">Ergänzende Angaben zu Umsätzen</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_58" model="account.account.tag">
+            <field name="name">Lieferungen d. erst. Abnehmers b. innergemeinsch. Dreiecksgeschäften (§ 25b Abs. 2 UStG)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_59" model="account.account.tag">
+            <field name="name">Nicht steuerbare Umsätze (Leistungsort nicht im Inland)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_60" model="account.account.tag">
+            <field name="name">Steuerpfl. Umsätze i. S. d. § 13b Abs. 1 Satz 1 Nr. 1 bis 5 UStG, für d. der Leistungsempf. d. Steuer schuldet</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_61" model="account.account.tag">
+            <field name="name">Umsätze, f. d. als Leistungsempf. die Steuer n. § 13b Abs. 2 UStG geschuld. wird</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_62" model="account.account.tag">
+            <field name="name">Leistungen e. i. Ausland ansässigen Unternehmers (§ 13b Abs. 1 Satz 1 Nr. 1 und 5 UStG)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_63" model="account.account.tag">
+            <field name="name">Liefer. sicherungsübereig. Gegenst. u. Umsätze, d. u. d. GrEStG fallen (§ 13b Abs. 1 Satz 1 Nr. 2 und 3 UStG)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_64" model="account.account.tag">
+            <field name="name">Bauleistung. e. i. Inland ans. Untern. (§ 13b Abs. 1 Satz 1 Nr. 4 UStG)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_65" model="account.account.tag">
+            <field name="name">Vorsteuer (dient lediglich der Verprobung)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_66" model="account.account.tag">
+            <field name="name">Einfuhren</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_67" model="account.account.tag">
+            <field name="name">zum Steuersatz von 19 %</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_68" model="account.account.tag">
+            <field name="name">zum Steuersatz von 7 %</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_69" model="account.account.tag">
+            <field name="name">Rech. v.a. Unt. (§15 Ab.1 S.1 Nr.1), Leistg. i.S. §13a Ab.1 Nr.6 (§ 15 Ab.1 S.1 Nr.5) und i.g. Dreiecksgeschäfte (§25b Ab. 5)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_70" model="account.account.tag">
+            <field name="name">L+L zum Steuersatz von 19 %</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_de_71" model="account.account.tag">
+            <field name="name">L+L zum Steuersatz von 7 %</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,83 @@
+
+.o_web_client .oe_timesheet_weekly {
+    overflow-x: auto;
+    > table {
+        width: 100%;
+
+        > tbody > tr {
+
+            > th {
+                text-align: center;
+                font-size: 10px;
+                background-color: @odoo-brand-lightsecondary;
+            }
+
+            > td {
+                text-align: right;
+
+                &.oe_timesheet_weekly_account {
+                    white-space: nowrap;
+                    text-align: left;
+                }
+                input.oe_timesheet_weekly_input {
+                    display: inline-block;
+                    width: 40px;
+                    text-align: right;
+                }
+
+                .oe_timesheet_button_add {
+                    margin-left: 8px;
+                }
+                .o_with_button + .oe_timesheet_button_add {
+                    margin-left: 45px;
+                }
+            }
+
+            .oe_timesheet_weekly_today {
+                background-color: lighten(@odoo-brand-primary, 40%);
+            }
+            .oe_timesheet_total {
+                font-weight: bold;
+                background-color: @odoo-brand-lightsecondary;
+            }
+            .o_add_timesheet_line {
+                width: 1%;
+                background-color: @odoo-brand-lightsecondary;
+
+                > div {
+                    .o-flex-display();
+                    .o-align-items(center);
+                    
+                    .o_form_field_many2one {
+                        min-width: 200px;
+                        margin: 0;
+                    }
+                    .o_external_button {
+                        background-color: @odoo-brand-lightsecondary;
+                        padding-top: 0;
+                        padding-bottom: 0;
+                    }
+
+                    .oe_timesheet_button_add {
+                        .o-flex(0, 0, auto);
+                        margin-left: 8px;
+                    }
+                    .o_with_button + .oe_timesheet_button_add {
+                        margin-left: 45px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.openerp .oe_timesheet_weekly {
+    > table > tbody > tr {
+        > th {
+            color: #069;
+        }
+        .o_add_timesheet_line {
+            width: auto;
+        }
+    }
+}

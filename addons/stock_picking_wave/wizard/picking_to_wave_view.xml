@@ -7,13 +7,12 @@
             <field name="name">stock.picking.to.wave.form</field>
             <field name="model">stock.picking.to.wave</field>
             <field name="arch" type="xml">
-                <form string="Add pickings to wave" version="7.0">
+                <form string="Add pickings to wave">
                     <separator string="Select a wave"/>
                     <field name="wave_id" class="oe_inline"/>
                     <footer>
-                        <button name="attach_pickings" type="object" string="Add to wave" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        <button name="attach_pickings" type="object" string="Add to Wave" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
                     </footer>
                 </form>
             </field>

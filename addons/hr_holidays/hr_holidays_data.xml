@@ -1,16 +1,12 @@
 <?xml version="1.0"?>
 <openerp>
     <data noupdate="1">
-        <!-- After installation of the module, open the related menu -->
-        <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="hr.action_client_hr_menu"/>
-            <field name="state">open</field>
-        </record>
+
         <!-- notify all employees of module installation -->
         <record model="mail.message" id="module_install_notification">
-            <field name="model">mail.group</field>
-            <field name="res_id" ref="mail.group_all_employees"/>
-            <field name="type">notification</field>
+            <field name="model">mail.channel</field>
+            <field name="res_id" ref="mail.channel_all_employees"/>
+            <field name="message_type">notification</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="subject">Leave Management application installed!</field>
             <field name="body"><![CDATA[<p>Manage employee leaves from the top menu "Human Resources". Employees can create leave requests that are validated by their manager and/or HR officers.</p>
@@ -21,35 +17,42 @@
         <!-- Casual leave -->
         <record model="hr.holidays.status" id="holiday_status_cl">
             <field name="name" eval="'Legal Leaves '+time.strftime('%Y')"/>
+            <field name="limit" eval="False"/>
             <field name="color_name">black</field>
         </record>
 
         <!-- Sick leave -->
         <record model="hr.holidays.status" id="holiday_status_sl">
             <field name="name">Sick Leaves</field>
-            <field name="limit">True</field>
+            <field name="limit" eval="True"/>
             <field name="color_name">red</field>
         </record>
 
         <!-- Compensatory Days -->
         <record model="hr.holidays.status" id="holiday_status_comp">
             <field name="name">Compensatory Days</field>
-            <field name="limit">True</field>
+            <field name="limit" eval="False"/>
             <field name="color_name">lavender</field>
         </record>
 
         <!--Unpaid Leave -->
         <record model="hr.holidays.status" id="holiday_status_unpaid">
             <field name="name">Unpaid</field>
-            <field name="limit">True</field>
+            <field name="limit" eval="True"/>
             <field name="color_name">brown</field>
         </record>
 
         <!-- Holidays-related subtypes for messaging / Chatter -->
         <record id="mt_holidays_confirmed" model="mail.message.subtype">
-            <field name="name">To Approve</field>
+            <field name="name">Confirmed</field>
             <field name="res_model">hr.holidays</field>
-            <field name="description">Request confirmed and waiting approval</field>
+            <field name="description">Request created and waiting confirmation</field>
+        </record>
+        <record id="mt_holidays_first_validated" model="mail.message.subtype">
+            <field name="name">Waiting Second Validation</field>
+            <field name="res_model">hr.holidays</field>
+            <field name="default" eval="False"/>
+            <field name="description">Request validated, waiting second validation</field>
         </record>
         <record id="mt_holidays_approved" model="mail.message.subtype">
             <field name="name">Approved</field>
@@ -61,6 +64,40 @@
             <field name="res_model">hr.holidays</field>
             <field name="default" eval="False"/>
             <field name="description">Request refused</field>
+        </record>
+
+        <!-- Department related subtypes for messaging / Chatter -->
+        <record id="mt_department_holidays_confirmed" model="mail.message.subtype">
+            <field name="name">Leaves/Allocations Confirmed</field>
+            <field name="res_model">hr.department</field>
+            <field name="default" eval="True"/>
+            <field name="parent_id" eval="ref('mt_holidays_confirmed')"/>
+            <field name="relation_field">department_id</field>
+            <field name="sequence" eval="6"/>
+        </record>
+        <record id="mt_department_holidays_first_validated" model="mail.message.subtype">
+            <field name="name">Leaves/Allocations First Approval</field>
+            <field name="res_model">hr.department</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_holidays_first_validated')"/>
+            <field name="relation_field">department_id</field>
+            <field name="sequence" eval="7"/>
+        </record>
+        <record id="mt_department_holidays_approved" model="mail.message.subtype">
+            <field name="name">Leaves/Allocation Approved</field>
+            <field name="res_model">hr.department</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_holidays_approved')"/>
+            <field name="relation_field">department_id</field>
+            <field name="sequence" eval="8"/>
+        </record>
+        <record id="mt_department_holidays_refused" model="mail.message.subtype">
+            <field name="name">Leaves/Allocation Refused</field>
+            <field name="res_model">hr.department</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_holidays_refused')"/>
+            <field name="relation_field">department_id</field>
+            <field name="sequence" eval="9"/>
         </record>
 
     </data>

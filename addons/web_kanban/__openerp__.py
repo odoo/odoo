@@ -2,7 +2,7 @@
     'name': 'Base Kanban',
     'category': 'Hidden',
     'description': """
-OpenERP Web kanban view.
+Odoo Web kanban view.
 ========================
 
 """,

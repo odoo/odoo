@@ -2,6 +2,13 @@
 <openerp>
     <data>
 
+        <!-- Front-end assets: custom css -->
+        <template id="assets_frontend" inherit_id="website.assets_frontend" name="website_forum_doc assets">
+            <xpath expr="." position="inside">
+                <link rel='stylesheet' href='/website_forum_doc/static/src/css/website_forum_doc.css'/>
+            </xpath>
+        </template>
+
         <!-- Layout add nav and footer -->
         <template id="header_footer_custom" inherit_id="website.footer_default"
             name="Footer Documentation Link">
@@ -47,6 +54,7 @@
 
         <template id="documentation" name="Documentation Index">
             <t t-call="website.layout">
+            <div id="wrap">
                 <section class="container mt16" t-if="toc">
                     <div class="row">
                         <div class="col-sm-8">
@@ -80,6 +88,7 @@
                     <t t-call="website_forum_doc.toc"/>
                 </section>
                 <div class="oe_structure"/>
+            </div>
             </t>
         </template>
 
@@ -114,7 +123,7 @@
                     <div class="row">
                         <div class="col-sm-9">
                             <h1 class="page-header" t-field="post.name"/>
-                            <blockquote t-if="bool(post.content)">
+                            <blockquote class="oe_toc_content" t-if="bool(post.content)">
                                 <t t-raw="post.content"/>
                             </blockquote>
 
@@ -126,7 +135,7 @@
                                 <ul>
                                     <t t-foreach="toc.post_ids" t-as="topic">
                                         <li t-if="post.id != topic.id">
-                                            <a t-attf-href="/forum/how-to/#{slug(toc)}/#{slug(topic)}" t-field="post.name"/>
+                                            <a t-attf-href="/forum/how-to/#{slug(toc)}/#{slug(topic)}" t-field="topic.name"/>
                                         </li>
                                     </t>
                                 </ul>
@@ -142,7 +151,7 @@
                                         from the Q&amp;A section where you can
                                         discuss it and get feedback.
                                     </div>
-                                    &amp;nbsp; <a t-attf-href="/forum/#{slug(forum)}/question/#{slug(post)}" class="fa fa-arrow-right mt16"> Related question</a>
+                                    <a t-attf-href="/forum/#{slug(forum)}/question/#{slug(post)}" class="fa fa-arrow-right mt16 ml8"> Related question</a>
                                 </div>
                             </div>
                         </div>
@@ -191,6 +200,7 @@
                 <div class="container">
                     <div class="well">
                         <form t-attf-action="/forum/#{ slug(forum) }/promote_ok" method="post" role="form" class="form-horizontal">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <input name="post_id" t-att-value="post.id" type="hidden"/>
                             <div class="form-group">
                                 <label class="col-md-3 control-label" for="reason">Question:</label>
@@ -243,14 +253,14 @@
                             <h4>Good answer structure</h4>
                             <ol>
                                 <li>Describe the business solution</li>
-                                <li>Explain how to implement it in OpenERP</li>
+                                <li>Explain how to implement it in Odoo</li>
                                 <li>Benefits of having done this setup</li>
                             </ol>
                         </div>
                         <div class="col-sm-6">
                             <h4>Bad answer structure</h4>
                             <ol>
-                                <li>Explain how to configure in OpenERP</li>
+                                <li>Explain how to configure Odoo</li>
                                 <li>No business benefit</li>
                             </ol>
                         </div>

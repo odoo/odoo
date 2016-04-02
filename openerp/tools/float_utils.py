@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Business Applications
-#    Copyright (c) 2011 OpenERP S.A. <http://openerp.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import math
 
@@ -29,10 +11,11 @@ def _float_check_precision(precision_digits=None, precision_rounding=None):
         return 10 ** -precision_digits
     return precision_rounding
 
-def float_round(value, precision_digits=None, precision_rounding=None):
-    """Return ``value`` rounded to ``precision_digits``
-       decimal digits, minimizing IEEE-754 floating point representation
-       errors, and applying HALF-UP (away from zero) tie-breaking rule.
+def float_round(value, precision_digits=None, precision_rounding=None, rounding_method='HALF-UP'):
+    """Return ``value`` rounded to ``precision_digits`` decimal digits,
+       minimizing IEEE-754 floating point representation errors, and applying
+       the tie-breaking rule selected with ``rounding_method``, by default
+       HALF-UP (away from zero).
        Precision must be given by ``precision_digits`` or ``precision_rounding``,
        not both!
 
@@ -41,6 +24,9 @@ def float_round(value, precision_digits=None, precision_rounding=None):
        :param float precision_rounding: decimal number representing the minimum
            non-zero value at the desired precision (for example, 0.01 for a 
            2-digit precision).
+       :param rounding_method: the rounding method used: 'HALF-UP' or 'UP', the first
+           one rounding up to the closest number with the rule that number>=0.5 is 
+           rounded up to 1, and the latest one always rounding up.
        :return: rounded float
     """
     rounding_factor = _float_check_precision(precision_digits=precision_digits,
@@ -52,7 +38,7 @@ def float_round(value, precision_digits=None, precision_rounding=None):
     # we normalize the value before rounding it as an integer, and de-normalize
     # after rounding: e.g. float_round(1.3, precision_rounding=.5) == 1.5
 
-    # TIE-BREAKING: HALF-UP
+    # TIE-BREAKING: HALF-UP (for normal rounding)
     # We want to apply HALF-UP tie-breaking rules, i.e. 0.5 rounds away from 0.
     # Due to IEE754 float/double representation limits, the approximation of the
     # real value may be slightly below the tie limit, resulting in an error of
@@ -66,8 +52,23 @@ def float_round(value, precision_digits=None, precision_rounding=None):
     normalized_value = value / rounding_factor # normalize
     epsilon_magnitude = math.log(abs(normalized_value), 2)
     epsilon = 2**(epsilon_magnitude-53)
-    normalized_value += cmp(normalized_value,0) * epsilon
-    rounded_value = round(normalized_value) # round to integer
+    if rounding_method == 'HALF-UP':
+        normalized_value += cmp(normalized_value,0) * epsilon
+        rounded_value = round(normalized_value) # round to integer
+
+    # TIE-BREAKING: UP (for ceiling operations)
+    # When rounding the value up, we instead subtract the epsilon value
+    # as the the approximation of the real value may be slightly *above* the
+    # tie limit, this would result in incorrectly rounding up to the next number
+    # The math.ceil operation is applied on the absolute value in order to
+    # round "away from zero" and not "towards infinity", then the sign is
+    # restored.
+
+    elif rounding_method == 'UP':
+        sign = cmp(normalized_value, 0)
+        normalized_value -= sign*epsilon
+        rounded_value = math.ceil(abs(normalized_value))*sign # ceil to integer
+
     result = rounded_value * rounding_factor # de-normalize
     return result
 

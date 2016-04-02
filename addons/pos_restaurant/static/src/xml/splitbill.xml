@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="SplitbillButton">
+        <span class="control-button order-split">
+            <i class="fa fa-files-o"></i>
+            Split
+        </span>
+    </t>
+
+    <t t-name="SplitOrderline">
+
+        <li t-attf-class="orderline #{ selected ? 'selected' : ''} #{ quantity !== line.get_quantity() ? 'partially' : '' }"
+            t-att-data-id="id">
+            <span class="product-name">
+                <t t-esc="line.get_product().display_name"/>
+            </span>
+            <span class="price">
+                <t t-esc="widget.format_currency(line.get_display_price())"/>
+            </span>
+            <ul class="info-list">
+                <t t-if="line.get_quantity_str() !== '1'">
+                    <li class="info">
+                        <t t-if='selected and line.get_unit().groupable'>
+                            <em class='big'>
+                                <t t-esc='quantity' />
+                            </em>
+                            /
+                            <t t-esc="line.get_quantity_str()" />
+                        </t>
+                        <t t-if='!(selected and line.get_unit().groupable)'>
+                            <em>
+                                <t t-esc="line.get_quantity_str()" />
+                            </em>
+                        </t>
+                        <t t-esc="line.get_unit().name" />
+                        at
+                        <t t-esc="widget.format_currency(line.get_unit_price())" />
+                        /
+                        <t t-esc="line.get_unit().name" />
+                    </li>
+                </t>
+                <t t-if="line.get_discount_str() !== '0'">
+                    <li class="info">
+                        With a 
+                        <em>
+                            <t t-esc="line.get_discount_str()" />%
+                        </em>
+                        discount
+                    </li>
+                </t>
+            </ul>
+        </li>
+    </t>
+
+    <t t-name="SplitbillScreenWidget">
+        <div class='splitbill-screen screen'>
+            <div class='screen-content'>
+                <div class='top-content'>
+                    <span class='button back'>
+                        <i class='fa fa-angle-double-left'></i>
+                        Back
+                    </span>
+                    <h1>Bill Splitting</h1>
+                </div>
+                <div class='left-content touch-scrollable scrollable-y'>
+                    <div class='order'>
+                        <ul class='orderlines'>
+                        </ul>
+                    </div>
+                </div>
+                <div class='right-content touch-scrollable scrollable-y'>
+                    <div class='order-info'>
+                        <span class='subtotal'><t t-esc='widget.format_currency(0.0)'/></span>
+                    </div>
+                    <div class='paymentmethods'>
+                        <div class='button payment'>
+                            <i class='fa fa-chevron-right' /> Payment
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

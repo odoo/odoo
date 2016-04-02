@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """ Domain expression processing
 
@@ -131,13 +113,16 @@ Finally, to instruct OpenERP to really use the unaccent function, you have to
 start the server specifying the ``--unaccent`` flag.
 
 """
+import collections
 
 import logging
 import traceback
+from zlib import crc32
 
 import openerp.modules
-from openerp.osv import fields
-from openerp.osv.orm import MAGIC_COLUMNS
+from . import fields
+from .. import SUPERUSER_ID
+from ..models import MAGIC_COLUMNS, BaseModel
 import openerp.tools as tools
 
 
@@ -156,13 +141,33 @@ DOMAIN_OPERATORS = (NOT_OPERATOR, OR_OPERATOR, AND_OPERATOR)
 # operators are also used. In this case its right operand has the form (subselect, params).
 TERM_OPERATORS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike',
                   'like', 'not like', 'ilike', 'not ilike', 'in', 'not in',
-                  'child_of')
+                  'child_of', 'parent_of')
 
 # A subset of the above operators, with a 'negative' semantic. When the
 # expressions 'in NEGATIVE_TERM_OPERATORS' or 'not in NEGATIVE_TERM_OPERATORS' are used in the code
 # below, this doesn't necessarily mean that any of those NEGATIVE_TERM_OPERATORS is
 # legal in the processed term.
 NEGATIVE_TERM_OPERATORS = ('!=', 'not like', 'not ilike', 'not in')
+
+# Negation of domain expressions
+DOMAIN_OPERATORS_NEGATION = {
+    AND_OPERATOR: OR_OPERATOR,
+    OR_OPERATOR: AND_OPERATOR,
+}
+TERM_OPERATORS_NEGATION = {
+    '<': '>=',
+    '>': '<=',
+    '<=': '>',
+    '>=': '<',
+    '=': '!=',
+    '!=': '=',
+    'in': 'not in',
+    'like': 'not like',
+    'ilike': 'not ilike',
+    'not in': 'in',
+    'not like': 'like',
+    'not ilike': 'ilike',
+}
 
 TRUE_LEAF = (1, '=', 1)
 FALSE_LEAF = (0, '=', 1)
@@ -260,51 +265,36 @@ def distribute_not(domain):
          ['|',('user_id','!=',4),('partner_id','not in',[1,2])]
 
     """
-    def negate(leaf):
-        """Negates and returns a single domain leaf term,
-        using the opposite operator if possible"""
-        left, operator, right = leaf
-        mapping = {
-            '<': '>=',
-            '>': '<=',
-            '<=': '>',
-            '>=': '<',
-            '=': '!=',
-            '!=': '=',
-        }
-        if operator in ('in', 'like', 'ilike'):
-            operator = 'not ' + operator
-            return [(left, operator, right)]
-        if operator in ('not in', 'not like', 'not ilike'):
-            operator = operator[4:]
-            return [(left, operator, right)]
-        if operator in mapping:
-            operator = mapping[operator]
-            return [(left, operator, right)]
-        return [NOT_OPERATOR, (left, operator, right)]
 
-    def distribute_negate(domain):
-        """Negate the domain ``subtree`` rooted at domain[0],
-        leaving the rest of the domain intact, and return
-        (negated_subtree, untouched_domain_rest)
-        """
-        if is_leaf(domain[0]):
-            return negate(domain[0]), domain[1:]
-        if domain[0] == AND_OPERATOR:
-            done1, todo1 = distribute_negate(domain[1:])
-            done2, todo2 = distribute_negate(todo1)
-            return [OR_OPERATOR] + done1 + done2, todo2
-        if domain[0] == OR_OPERATOR:
-            done1, todo1 = distribute_negate(domain[1:])
-            done2, todo2 = distribute_negate(todo1)
-            return [AND_OPERATOR] + done1 + done2, todo2
-    if not domain:
-        return []
-    if domain[0] != NOT_OPERATOR:
-        return [domain[0]] + distribute_not(domain[1:])
-    if domain[0] == NOT_OPERATOR:
-        done, todo = distribute_negate(domain[1:])
-        return done + distribute_not(todo)
+    # This is an iterative version of a recursive function that split domain
+    # into subdomains, processes them and combine the results. The "stack" below
+    # represents the recursive calls to be done.
+    result = []
+    stack = [False]
+
+    for token in domain:
+        negate = stack.pop()
+        # negate tells whether the subdomain starting with token must be negated
+        if is_leaf(token):
+            if negate:
+                left, operator, right = token
+                if operator in TERM_OPERATORS_NEGATION:
+                    result.append((left, TERM_OPERATORS_NEGATION[operator], right))
+                else:
+                    result.append(NOT_OPERATOR)
+                    result.append(token)
+            else:
+                result.append(token)
+        elif token == NOT_OPERATOR:
+            stack.append(not negate)
+        elif token in DOMAIN_OPERATORS_NEGATION:
+            result.append(DOMAIN_OPERATORS_NEGATION[token] if negate else token)
+            stack.append(negate)
+            stack.append(negate)
+        else:
+            result.append(token)
+
+    return result
 
 
 # --------------------------------------------------
@@ -341,7 +331,16 @@ def generate_table_alias(src_table_alias, joined_tables=[]):
         return '%s' % alias, '%s' % _quote(alias)
     for link in joined_tables:
         alias += '__' + link[1]
-    assert len(alias) < 64, 'Table alias name %s is longer than the 64 characters size accepted by default in postgresql.' % alias
+    # Use an alternate alias scheme if length exceeds the PostgreSQL limit
+    # of 63 characters.
+    if len(alias) >= 64:
+        # We have to fit a crc32 hash and one underscore
+        # into a 63 character alias. The remaining space we can use to add
+        # a human readable prefix.
+        alias_hash = hex(crc32(alias))[2:]
+        ALIAS_PREFIX_LENGTH = 63 - len(alias_hash) - 1
+        alias = "%s_%s" % (
+            alias[:ALIAS_PREFIX_LENGTH], alias_hash)
     return '%s' % alias, '%s as %s' % (_quote(joined_tables[-1][0]), _quote(alias))
 
 
@@ -400,7 +399,7 @@ def is_leaf(element, internal=False):
         and len(element) == 3 \
         and element[1] in INTERNAL_OPS \
         and ((isinstance(element[0], basestring) and element[0])
-             or element in (TRUE_LEAF, FALSE_LEAF))
+             or tuple(element) in (TRUE_LEAF, FALSE_LEAF))
 
 
 # --------------------------------------------------
@@ -489,7 +488,7 @@ class ExtendedLeaf(object):
     #       i.e.: many2one: 'state_id': current field name
     # --------------------------------------------------
 
-    def __init__(self, leaf, model, join_context=None):
+    def __init__(self, leaf, model, join_context=None, internal=False):
         """ Initialize the ExtendedLeaf
 
             :attr [string, tuple] leaf: operator or tuple-formatted domain
@@ -516,7 +515,7 @@ class ExtendedLeaf(object):
                     in the condition (i.e. in many2one); this link is used to
                     compute aliases
         """
-        assert model, 'Invalid leaf creation without table'
+        assert isinstance(model, BaseModel), 'Invalid leaf creation without table'
         self.join_context = join_context or []
         self.leaf = leaf
         # normalize the leaf's operator
@@ -528,7 +527,7 @@ class ExtendedLeaf(object):
             self._models.append(item[0])
         self._models.append(model)
         # check validity
-        self.check_leaf()
+        self.check_leaf(internal)
 
     def __str__(self):
         return '<osv.ExtendedLeaf: %s on %s (ctx: %s)>' % (str(self.leaf), self.model._table, ','.join(self._get_context_debug()))
@@ -574,7 +573,7 @@ class ExtendedLeaf(object):
     # Leaf manipulation
     # --------------------------------------------------
 
-    def check_leaf(self):
+    def check_leaf(self, internal=False):
         """ Leaf validity rules:
             - a valid leaf is an operator or a leaf
             - a valid leaf has a field objects unless
@@ -583,7 +582,7 @@ class ExtendedLeaf(object):
                 - left is id, operator is 'child_of'
                 - left is in MAGIC_COLUMNS
         """
-        if not is_operator(self.leaf) and not is_leaf(self.leaf, True):
+        if not is_operator(self.leaf) and not is_leaf(self.leaf, internal):
             raise ValueError("Invalid leaf %s" % str(self.leaf))
 
     def is_operator(self):
@@ -602,14 +601,14 @@ class ExtendedLeaf(object):
         self.leaf = normalize_leaf(self.leaf)
         return True
 
-def create_substitution_leaf(leaf, new_elements, new_model=None):
+def create_substitution_leaf(leaf, new_elements, new_model=None, internal=False):
     """ From a leaf, create a new leaf (based on the new_elements tuple
         and new_model), that will have the same join context. Used to
         insert equivalent leafs in the processing stack. """
     if new_model is None:
         new_model = leaf.model
     new_join_context = [tuple(context) for context in leaf.join_context]
-    new_leaf = ExtendedLeaf(new_elements, new_model, join_context=new_join_context)
+    new_leaf = ExtendedLeaf(new_elements, new_model, join_context=new_join_context, internal=internal)
     return new_leaf
 
 class expression(object):
@@ -677,20 +676,23 @@ class expression(object):
             - the leaf is added to the result
 
             Some internal var explanation:
-                :var obj working_model: model object, model containing the field
+                :var list path: left operand seen as a sequence of field names
+                    ("foo.bar" -> ["foo", "bar"])
+                :var obj model: model object, model containing the field
                     (the name provided in the left operand)
-                :var list field_path: left operand seen as a path (foo.bar -> [foo, bar])
-                :var obj relational_model: relational model of a field (field._obj)
-                    ex: res_partner.bank_ids -> res.partner.bank
+                :var obj field: the field corresponding to `path[0]`
+                :var obj column: the column corresponding to `path[0]`
+                :var obj comodel: relational model of field (field.comodel)
+                    (res_partner.bank_ids -> res.partner.bank)
         """
 
-        def to_ids(value, relational_model, context=None, limit=None):
+        def to_ids(value, comodel, context=None, limit=None):
             """ Normalize a single id or name, or a list of those, into a list of ids
                 :param {int,long,basestring,list,tuple} value:
                     if int, long -> return [value]
                     if basestring, convert it into a list of basestrings, then
                     if list of basestring ->
-                        perform a name_search on relational_model for each name
+                        perform a name_search on comodel for each name
                         return the list of related ids
             """
             names = []
@@ -701,7 +703,7 @@ class expression(object):
             elif isinstance(value, (int, long)):
                 return [value]
             if names:
-                name_get_list = [name_get[0] for name in names for name_get in relational_model.name_search(cr, uid, name, [], 'ilike', context=context, limit=limit)]
+                name_get_list = [name_get[0] for name in names for name_get in comodel.name_search(cr, uid, name, [], 'ilike', context=context, limit=limit)]
                 return list(set(name_get_list))
             return list(value)
 
@@ -709,6 +711,8 @@ class expression(object):
             """ Return a domain implementing the child_of operator for [(left,child_of,ids)],
                 either as a range using the parent_left/right tree lookup fields
                 (when available), or as an expanded [(left,in,child_ids)] """
+            if not ids:
+                return FALSE_DOMAIN
             if left_model._parent_store and (not left_model.pool._init):
                 # TODO: Improve where joins are implemented for many with '.', replace by:
                 # doms += ['&',(prefix+'.parent_left','<',o.parent_right),(prefix+'.parent_left','>=',o.parent_left)]
@@ -727,6 +731,34 @@ class expression(object):
                     ids2 = model.search(cr, uid, [(parent_field, 'in', ids)], context=context)
                     return ids + recursive_children(ids2, model, parent_field)
                 return [(left, 'in', recursive_children(ids, left_model, parent or left_model._parent_name))]
+
+        def parent_of_domain(left, ids, left_model, parent=None, prefix='', context=None):
+            """ Return a domain implementing the parent_of operator for [(left,parent_of,ids)],
+                either as a range using the parent_left/right tree lookup fields
+                (when available), or as an expanded [(left,in,parent_ids)] """
+            if left_model._parent_store and (not left_model.pool._init):
+                doms = []
+                for node in left_model.browse(cr, uid, ids, context=context):
+                    if doms:
+                        doms.insert(0, OR_OPERATOR)
+                    doms += [AND_OPERATOR, ('parent_right', '>', node.parent_left), ('parent_left', '<=',  node.parent_left)]
+                if prefix:
+                    return [(left, 'in', left_model.search(cr, uid, doms, context=context))]
+                return doms
+            else:
+                def get_parent_ids(record, parent_field):
+                    ids = set([record.id])
+                    while record[parent_field]:
+                        record = record[parent_field]
+                        ids.add(record.id)
+                    return ids
+                parent_ids = set()
+                for node in left_model.browse(cr, uid, ids, context=context):
+                    parent_ids |= get_parent_ids(node, parent or left_model._parent_name)
+                return [(left, 'in', list(parent_ids))]
+
+        HIERARCHY_FUNCS = {'child_of': child_of_domain,
+                           'parent_of': parent_of_domain}
 
         def pop():
             """ Pop a leaf to process. """
@@ -751,7 +783,6 @@ class expression(object):
             leaf = pop()
 
             # Get working variables
-            working_model = leaf.model
             if leaf.is_operator():
                 left, operator, right = leaf.leaf, None, None
             elif leaf.is_true_leaf() or leaf.is_false_leaf():
@@ -759,12 +790,12 @@ class expression(object):
                 left, operator, right = ('%s' % leaf.leaf[0], leaf.leaf[1], leaf.leaf[2])
             else:
                 left, operator, right = leaf.leaf
-            field_path = left.split('.', 1)
-            field = working_model._columns.get(field_path[0])
-            if field and field._obj:
-                relational_model = working_model.pool[field._obj]
-            else:
-                relational_model = None
+            path = left.split('.', 1)
+
+            model = leaf.model
+            field = model._fields.get(path[0])
+            column = model._columns.get(path[0])
+            comodel = model.pool.get(getattr(field, 'comodel_name', None))
 
             # ----------------------------------------
             # SIMPLE CASE
@@ -787,22 +818,22 @@ class expression(object):
             # -> else: crash
             # ----------------------------------------
 
-            elif not field and field_path[0] in working_model._inherit_fields:
+            elif not column and path[0] in model._inherit_fields:
                 # comments about inherits'd fields
                 #  { 'field_name': ('parent_model', 'm2o_field_to_reach_parent',
                 #                    field_column_obj, origina_parent_model), ... }
-                next_model = working_model.pool[working_model._inherit_fields[field_path[0]][0]]
-                leaf.add_join_context(next_model, working_model._inherits[next_model._name], 'id', working_model._inherits[next_model._name])
+                next_model = model.pool[model._inherit_fields[path[0]][0]]
+                leaf.add_join_context(next_model, model._inherits[next_model._name], 'id', model._inherits[next_model._name])
                 push(leaf)
 
-            elif left == 'id' and operator == 'child_of':
-                ids2 = to_ids(right, working_model, context)
-                dom = child_of_domain(left, ids2, working_model)
+            elif left == 'id' and operator in HIERARCHY_FUNCS:
+                ids2 = to_ids(right, model, context)
+                dom = HIERARCHY_FUNCS[operator](left, ids2, model)
                 for dom_leaf in reversed(dom):
-                    new_leaf = create_substitution_leaf(leaf, dom_leaf, working_model)
+                    new_leaf = create_substitution_leaf(leaf, dom_leaf, model)
                     push(new_leaf)
 
-            elif not field and field_path[0] in MAGIC_COLUMNS:
+            elif not column and path[0] in MAGIC_COLUMNS:
                 push_result(leaf)
 
             elif not field:
@@ -811,46 +842,72 @@ class expression(object):
             # ----------------------------------------
             # PATH SPOTTED
             # -> many2one or one2many with _auto_join:
-            #    - add a join, then jump into linked field: field.remaining on
+            #    - add a join, then jump into linked column: column.remaining on
             #      src_table is replaced by remaining on dst_table, and set for re-evaluation
-            #    - if a domain is defined on the field, add it into evaluation
+            #    - if a domain is defined on the column, add it into evaluation
             #      on the relational table
             # -> many2one, many2many, one2many: replace by an equivalent computed
             #    domain, given by recursively searching on the remaining of the path
-            # -> note: hack about fields.property should not be necessary anymore
-            #    as after transforming the field, it will go through this loop once again
+            # -> note: hack about columns.property should not be necessary anymore
+            #    as after transforming the column, it will go through this loop once again
             # ----------------------------------------
 
-            elif len(field_path) > 1 and field._type == 'many2one' and field._auto_join:
+            elif len(path) > 1 and column and column._type == 'many2one' and column._auto_join:
                 # res_partner.state_id = res_partner__state_id.id
-                leaf.add_join_context(relational_model, field_path[0], 'id', field_path[0])
-                push(create_substitution_leaf(leaf, (field_path[1], operator, right), relational_model))
+                leaf.add_join_context(comodel, path[0], 'id', path[0])
+                push(create_substitution_leaf(leaf, (path[1], operator, right), comodel))
 
-            elif len(field_path) > 1 and field._type == 'one2many' and field._auto_join:
+            elif len(path) > 1 and column and column._type == 'one2many' and column._auto_join:
                 # res_partner.id = res_partner__bank_ids.partner_id
-                leaf.add_join_context(relational_model, 'id', field._fields_id, field_path[0])
-                domain = field._domain(working_model) if callable(field._domain) else field._domain
-                push(create_substitution_leaf(leaf, (field_path[1], operator, right), relational_model))
+                leaf.add_join_context(comodel, 'id', column._fields_id, path[0])
+                domain = column._domain(model) if callable(column._domain) else column._domain
+                push(create_substitution_leaf(leaf, (path[1], operator, right), comodel))
                 if domain:
                     domain = normalize_domain(domain)
                     for elem in reversed(domain):
-                        push(create_substitution_leaf(leaf, elem, relational_model))
-                    push(create_substitution_leaf(leaf, AND_OPERATOR, relational_model))
+                        push(create_substitution_leaf(leaf, elem, comodel))
+                    push(create_substitution_leaf(leaf, AND_OPERATOR, comodel))
 
-            elif len(field_path) > 1 and field._auto_join:
-                raise NotImplementedError('_auto_join attribute not supported on many2many field %s' % left)
+            elif len(path) > 1 and column and column._auto_join:
+                raise NotImplementedError('_auto_join attribute not supported on many2many column %s' % left)
 
-            elif len(field_path) > 1 and field._type == 'many2one':
-                right_ids = relational_model.search(cr, uid, [(field_path[1], operator, right)], context=context)
-                leaf.leaf = (field_path[0], 'in', right_ids)
+            elif len(path) > 1 and column and column._type == 'many2one':
+                right_ids = comodel.search(cr, uid, [(path[1], operator, right)], context=dict(context, active_test=False))
+                leaf.leaf = (path[0], 'in', right_ids)
                 push(leaf)
 
-            # Making search easier when there is a left operand as field.o2m or field.m2m
-            elif len(field_path) > 1 and field._type in ['many2many', 'one2many']:
-                right_ids = relational_model.search(cr, uid, [(field_path[1], operator, right)], context=context)
-                table_ids = working_model.search(cr, uid, [(field_path[0], 'in', right_ids)], context=dict(context, active_test=False))
+            # Making search easier when there is a left operand as column.o2m or column.m2m
+            elif len(path) > 1 and column and column._type in ['many2many', 'one2many']:
+                right_ids = comodel.search(cr, uid, [(path[1], operator, right)], context=context)
+                table_ids = model.search(cr, uid, [(path[0], 'in', right_ids)], context=dict(context, active_test=False))
                 leaf.leaf = ('id', 'in', table_ids)
                 push(leaf)
+
+            elif not column:
+                # Non-stored field should provide an implementation of search.
+                if not field.search:
+                    # field does not support search!
+                    _logger.error("Non-stored field %s cannot be searched.", field)
+                    if _logger.isEnabledFor(logging.DEBUG):
+                        _logger.debug(''.join(traceback.format_stack()))
+                    # Ignore it: generate a dummy leaf.
+                    domain = []
+                else:
+                    # Let the field generate a domain.
+                    if len(path) > 1:
+                        right = comodel.search(
+                            cr, uid, [(path[1], operator, right)],
+                            context=context)
+                        operator = 'in'
+                    recs = model.browse(cr, uid, [], context=context)
+                    domain = field.determine_domain(recs, operator, right)
+
+                if not domain:
+                    leaf.leaf = TRUE_LEAF
+                    push(leaf)
+                else:
+                    for elem in reversed(domain):
+                        push(create_substitution_leaf(leaf, elem, model, internal=True))
 
             # -------------------------------------------------
             # FUNCTION FIELD
@@ -858,23 +915,21 @@ class expression(object):
             # -> stored: management done in the remaining of parsing
             # -------------------------------------------------
 
-            elif isinstance(field, fields.function) and not field.store and not field._fnct_search:
+            elif isinstance(column, fields.function) and not column.store:
                 # this is a function field that is not stored
-                # the function field doesn't provide a search function and doesn't store
-                # values in the database, so we must ignore it : we generate a dummy leaf
-                leaf.leaf = TRUE_LEAF
-                _logger.error(
-                    "The field '%s' (%s) can not be searched: non-stored "
-                    "function field without fnct_search",
-                    field.string, left)
-                # avoid compiling stack trace if not needed
-                if _logger.isEnabledFor(logging.DEBUG):
-                    _logger.debug(''.join(traceback.format_stack()))
-                push(leaf)
+                if not column._fnct_search:
+                    _logger.error(
+                        "Field '%s' (%s) can not be searched: "
+                        "non-stored function field without fnct_search",
+                        column.string, left)
+                    # avoid compiling stack trace if not needed
+                    if _logger.isEnabledFor(logging.DEBUG):
+                        _logger.debug(''.join(traceback.format_stack()))
+                    # ignore it: generate a dummy leaf
+                    fct_domain = []
+                else:
+                    fct_domain = column.search(cr, uid, model, left, [leaf.leaf], context=context)
 
-            elif isinstance(field, fields.function) and not field.store:
-                # this is a function field that is not stored
-                fct_domain = field.search(cr, uid, working_model, left, [leaf.leaf], context=context)
                 if not fct_domain:
                     leaf.leaf = TRUE_LEAF
                     push(leaf)
@@ -882,73 +937,84 @@ class expression(object):
                     # we assume that the expression is valid
                     # we create a dummy leaf for forcing the parsing of the resulting expression
                     for domain_element in reversed(fct_domain):
-                        push(create_substitution_leaf(leaf, domain_element, working_model))
-                    # self.push(create_substitution_leaf(leaf, TRUE_LEAF, working_model))
-                    # self.push(create_substitution_leaf(leaf, AND_OPERATOR, working_model))
+                        push(create_substitution_leaf(leaf, domain_element, model))
+                    # self.push(create_substitution_leaf(leaf, TRUE_LEAF, model))
+                    # self.push(create_substitution_leaf(leaf, AND_OPERATOR, model))
 
             # -------------------------------------------------
             # RELATIONAL FIELDS
             # -------------------------------------------------
 
             # Applying recursivity on field(one2many)
-            elif field._type == 'one2many' and operator == 'child_of':
-                ids2 = to_ids(right, relational_model, context)
-                if field._obj != working_model._name:
-                    dom = child_of_domain(left, ids2, relational_model, prefix=field._obj)
+            elif column._type == 'one2many' and operator in HIERARCHY_FUNCS:
+                ids2 = to_ids(right, comodel, context)
+                if column._obj != model._name:
+                    dom = HIERARCHY_FUNCS[operator](left, ids2, comodel, prefix=column._obj)
                 else:
-                    dom = child_of_domain('id', ids2, working_model, parent=left)
+                    dom = HIERARCHY_FUNCS[operator]('id', ids2, model, parent=left)
                 for dom_leaf in reversed(dom):
-                    push(create_substitution_leaf(leaf, dom_leaf, working_model))
+                    push(create_substitution_leaf(leaf, dom_leaf, model))
 
-            elif field._type == 'one2many':
+            elif column._type == 'one2many':
                 call_null = True
 
                 if right is not False:
                     if isinstance(right, basestring):
-                        ids2 = [x[0] for x in relational_model.name_search(cr, uid, right, [], operator, context=context, limit=None)]
+                        op = {'!=': '=', 'not like': 'like', 'not ilike': 'ilike'}.get(operator, operator)
+                        ids2 = [x[0] for x in comodel.name_search(cr, uid, right, [], op, context=context, limit=None)]
                         if ids2:
-                            operator = 'in'
+                            operator = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
+                    elif isinstance(right, collections.Iterable):
+                        ids2 = right
                     else:
-                        if not isinstance(right, list):
-                            ids2 = [right]
-                        else:
-                            ids2 = right
+                        ids2 = [right]
+
                     if not ids2:
                         if operator in ['like', 'ilike', 'in', '=']:
                             #no result found with given search criteria
                             call_null = False
-                            push(create_substitution_leaf(leaf, FALSE_LEAF, working_model))
+                            push(create_substitution_leaf(leaf, FALSE_LEAF, model))
                     else:
-                        ids2 = select_from_where(cr, field._fields_id, relational_model._table, 'id', ids2, operator)
-                        if ids2:
+                        # determine ids1 <-- column._fields_id --- ids2
+                        if comodel._fields[column._fields_id].store:
+                            ids1 = select_from_where(cr, column._fields_id, comodel._table, 'id', ids2, operator)
+                        else:
+                            recs = comodel.browse(cr, SUPERUSER_ID, ids2, {'prefetch_fields': False})
+                            ids1 = recs.mapped(column._fields_id).ids
+                        if ids1:
                             call_null = False
                             o2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
-                            push(create_substitution_leaf(leaf, ('id', o2m_op, ids2), working_model))
+                            push(create_substitution_leaf(leaf, ('id', o2m_op, ids1), model))
+                        elif operator in ('like', 'ilike', 'in', '='):
+                            # no match found with positive search operator => no result (FALSE_LEAF)
+                            call_null = False
+                            push(create_substitution_leaf(leaf, FALSE_LEAF, model))
 
                 if call_null:
                     o2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
-                    push(create_substitution_leaf(leaf, ('id', o2m_op, select_distinct_from_where_not_null(cr, field._fields_id, relational_model._table)), working_model))
+                    push(create_substitution_leaf(leaf, ('id', o2m_op, select_distinct_from_where_not_null(cr, column._fields_id, comodel._table)), model))
 
-            elif field._type == 'many2many':
-                rel_table, rel_id1, rel_id2 = field._sql_names(working_model)
-                #FIXME
-                if operator == 'child_of':
+            elif column._type == 'many2many':
+                rel_table, rel_id1, rel_id2 = column._sql_names(model)
+
+                if operator in HIERARCHY_FUNCS:
                     def _rec_convert(ids):
-                        if relational_model == working_model:
+                        if comodel == model:
                             return ids
                         return select_from_where(cr, rel_id1, rel_table, rel_id2, ids, operator)
 
-                    ids2 = to_ids(right, relational_model, context)
-                    dom = child_of_domain('id', ids2, relational_model)
-                    ids2 = relational_model.search(cr, uid, dom, context=context)
-                    push(create_substitution_leaf(leaf, ('id', 'in', _rec_convert(ids2)), working_model))
+                    ids2 = to_ids(right, comodel, context)
+                    dom = HIERARCHY_FUNCS[operator]('id', ids2, comodel)
+                    ids2 = comodel.search(cr, uid, dom, context=context)
+                    push(create_substitution_leaf(leaf, ('id', 'in', _rec_convert(ids2)), model))
                 else:
                     call_null_m2m = True
                     if right is not False:
                         if isinstance(right, basestring):
-                            res_ids = [x[0] for x in relational_model.name_search(cr, uid, right, [], operator, context=context)]
+                            op = {'!=': '=', 'not like': 'like', 'not ilike': 'ilike'}.get(operator, operator)
+                            res_ids = [x[0] for x in comodel.name_search(cr, uid, right, [], op, context=context)]
                             if res_ids:
-                                operator = 'in'
+                                operator = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
                         else:
                             if not isinstance(right, list):
                                 res_ids = [right]
@@ -958,29 +1024,29 @@ class expression(object):
                             if operator in ['like', 'ilike', 'in', '=']:
                                 #no result found with given search criteria
                                 call_null_m2m = False
-                                push(create_substitution_leaf(leaf, FALSE_LEAF, working_model))
+                                push(create_substitution_leaf(leaf, FALSE_LEAF, model))
                             else:
                                 operator = 'in'  # operator changed because ids are directly related to main object
                         else:
                             call_null_m2m = False
                             m2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
-                            push(create_substitution_leaf(leaf, ('id', m2m_op, select_from_where(cr, rel_id1, rel_table, rel_id2, res_ids, operator) or [0]), working_model))
+                            push(create_substitution_leaf(leaf, ('id', m2m_op, select_from_where(cr, rel_id1, rel_table, rel_id2, res_ids, operator) or [0]), model))
 
                     if call_null_m2m:
                         m2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
-                        push(create_substitution_leaf(leaf, ('id', m2m_op, select_distinct_from_where_not_null(cr, rel_id1, rel_table)), working_model))
+                        push(create_substitution_leaf(leaf, ('id', m2m_op, select_distinct_from_where_not_null(cr, rel_id1, rel_table)), model))
 
-            elif field._type == 'many2one':
-                if operator == 'child_of':
-                    ids2 = to_ids(right, relational_model, context)
-                    if field._obj != working_model._name:
-                        dom = child_of_domain(left, ids2, relational_model, prefix=field._obj)
+            elif column._type == 'many2one':
+                if operator in HIERARCHY_FUNCS:
+                    ids2 = to_ids(right, comodel, context)
+                    if column._obj != model._name:
+                        dom = HIERARCHY_FUNCS[operator](left, ids2, comodel, prefix=column._obj)
                     else:
-                        dom = child_of_domain('id', ids2, working_model, parent=left)
+                        dom = HIERARCHY_FUNCS[operator]('id', ids2, model, parent=left)
                     for dom_leaf in reversed(dom):
-                        push(create_substitution_leaf(leaf, dom_leaf, working_model))
+                        push(create_substitution_leaf(leaf, dom_leaf, model))
                 else:
-                    def _get_expression(relational_model, cr, uid, left, right, operator, context=None):
+                    def _get_expression(comodel, cr, uid, left, right, operator, context=None):
                         if context is None:
                             context = {}
                         c = context.copy()
@@ -995,34 +1061,51 @@ class expression(object):
                             operator = dict_op[operator]
                         elif isinstance(right, list) and operator in ['!=', '=']:  # for domain (FIELD,'=',['value1','value2'])
                             operator = dict_op[operator]
-                        res_ids = [x[0] for x in relational_model.name_search(cr, uid, right, [], operator, limit=None, context=c)]
+                        res_ids = [x[0] for x in comodel.name_search(cr, uid, right, [], operator, limit=None, context=c)]
                         if operator in NEGATIVE_TERM_OPERATORS:
                             res_ids.append(False)  # TODO this should not be appended if False was in 'right'
                         return left, 'in', res_ids
                     # resolve string-based m2o criterion into IDs
                     if isinstance(right, basestring) or \
                             right and isinstance(right, (tuple, list)) and all(isinstance(item, basestring) for item in right):
-                        push(create_substitution_leaf(leaf, _get_expression(relational_model, cr, uid, left, right, operator, context=context), working_model))
+                        push(create_substitution_leaf(leaf, _get_expression(comodel, cr, uid, left, right, operator, context=context), model))
                     else:
                         # right == [] or right == False and all other cases are handled by __leaf_to_sql()
                         push_result(leaf)
 
             # -------------------------------------------------
+            # BINARY FIELDS STORED IN ATTACHMENT
+            # -> check for null only
+            # -------------------------------------------------
+
+            elif column._type == 'binary' and column.attachment:
+                if operator in ('=', '!=') and not right:
+                    inselect_operator = 'inselect' if operator in NEGATIVE_TERM_OPERATORS else 'not inselect'
+                    subselect = "SELECT res_id FROM ir_attachment WHERE res_model=%s AND res_field=%s"
+                    params = (model._name, left)
+                    push(create_substitution_leaf(leaf, ('id', inselect_operator, (subselect, params)), model, internal=True))
+                else:
+                    _logger.error("Binary field '%s' stored in attachment: ignore %s %s %s",
+                                  column.string, left, operator, right)
+                    leaf.leaf = TRUE_LEAF
+                    push(leaf)
+
+            # -------------------------------------------------
             # OTHER FIELDS
             # -> datetime fields: manage time part of the datetime
-            #    field when it is not there
+            #    column when it is not there
             # -> manage translatable fields
             # -------------------------------------------------
 
             else:
-                if field._type == 'datetime' and right and len(right) == 10:
+                if column._type == 'datetime' and right and len(right) == 10:
                     if operator in ('>', '<='):
                         right += ' 23:59:59'
                     else:
                         right += ' 00:00:00'
-                    push(create_substitution_leaf(leaf, (left, operator, right), working_model))
+                    push(create_substitution_leaf(leaf, (left, operator, right), model))
 
-                elif field.translate and right:
+                elif column.translate and not callable(column.translate) and right:
                     need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
                     sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
                     if need_wildcard:
@@ -1036,36 +1119,32 @@ class expression(object):
 
                     unaccent = self._unaccent if sql_operator.endswith('like') else lambda x: x
 
-                    trans_left = unaccent('value')
-                    quote_left = unaccent(_quote(left))
                     instr = unaccent('%s')
 
                     if sql_operator == 'in':
                         # params will be flatten by to_sql() => expand the placeholders
                         instr = '(%s)' % ', '.join(['%s'] * len(right))
 
-                    subselect = """(SELECT res_id
-                                      FROM ir_translation
-                                     WHERE name = %s
-                                       AND lang = %s
-                                       AND type = %s
-                                       AND {trans_left} {operator} {right}
-                                   ) UNION (
-                                    SELECT id
-                                      FROM "{table}"
-                                     WHERE {left} {operator} {right}
-                                   )
-                                """.format(trans_left=trans_left, operator=sql_operator,
-                                           right=instr, table=working_model._table, left=quote_left)
+                    subselect = """WITH temp_irt_current (id, name) as (
+                            SELECT ct.id, coalesce(it.value,ct.{quote_left})
+                            FROM {current_table} ct
+                            LEFT JOIN ir_translation it ON (it.name = %s and
+                                        it.lang = %s and
+                                        it.type = %s and
+                                        it.res_id = ct.id and
+                                        it.value != '')
+                            )
+                            SELECT id FROM temp_irt_current WHERE {name} {operator} {right} order by name
+                            """.format(current_table=model._table, quote_left=_quote(left), name=unaccent('name'),
+                                       operator=sql_operator, right=instr)
 
                     params = (
-                        working_model._name + ',' + left,
+                        model._name + ',' + left,
                         context.get('lang') or 'en_US',
                         'model',
                         right,
-                        right,
                     )
-                    push(create_substitution_leaf(leaf, ('id', inselect_operator, (subselect, params)), working_model))
+                    push(create_substitution_leaf(leaf, ('id', inselect_operator, (subselect, params)), model, internal=True))
 
                 else:
                     push_result(leaf)
@@ -1088,8 +1167,10 @@ class expression(object):
         # final sanity checks - should never fail
         assert operator in (TERM_OPERATORS + ('inselect', 'not inselect')), \
             "Invalid operator %r in domain term %r" % (operator, leaf)
-        assert leaf in (TRUE_LEAF, FALSE_LEAF) or left in model._all_columns \
+        assert leaf in (TRUE_LEAF, FALSE_LEAF) or left in model._fields \
             or left in MAGIC_COLUMNS, "Invalid field %r in domain term %r" % (left, leaf)
+        assert not isinstance(right, BaseModel), \
+            "Invalid value %r in domain term %r" % (right, leaf)
 
         table_alias = '"%s"' % (eleaf.generate_alias())
 
@@ -1149,7 +1230,7 @@ class expression(object):
             else:  # Must not happen
                 raise ValueError("Invalid domain term %r" % (leaf,))
 
-        elif right == False and (left in model._columns) and model._columns[left]._type == "boolean" and (operator == '='):
+        elif (left in model._columns) and model._columns[left]._type == "boolean" and ((operator == '=' and right is False) or (operator == '!=' and right is True)):
             query = '(%s."%s" IS NULL or %s."%s" = false )' % (table_alias, left, table_alias, left)
             params = []
 
@@ -1157,7 +1238,7 @@ class expression(object):
             query = '%s."%s" IS NULL ' % (table_alias, left)
             params = []
 
-        elif right == False and (left in model._columns) and model._columns[left]._type == "boolean" and (operator == '!='):
+        elif (left in model._columns) and model._columns[left]._type == "boolean" and ((operator == '!=' and right is False) or (operator == '==' and right is True)):
             query = '(%s."%s" IS NOT NULL and %s."%s" != false)' % (table_alias, left, table_alias, left)
             params = []
 
@@ -1188,7 +1269,7 @@ class expression(object):
                 format = need_wildcard and '%s' or model._columns[left]._symbol_set[0]
                 unaccent = self._unaccent if sql_operator.endswith('like') else lambda x: x
                 column = '%s.%s' % (table_alias, _quote(left))
-                query = '(%s%s %s %s)' % (unaccent(column), cast, sql_operator, unaccent(format))
+                query = '(%s %s %s)' % (unaccent(column + cast), sql_operator, unaccent(format))
             elif left in MAGIC_COLUMNS:
                     query = "(%s.\"%s\"%s %s %%s)" % (table_alias, left, cast, sql_operator)
                     params = right
@@ -1240,5 +1321,3 @@ class expression(object):
             query = '(%s) AND %s' % (joins, query)
 
         return query, tools.flatten(params)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

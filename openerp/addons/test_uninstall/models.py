@@ -11,7 +11,7 @@ class test_uninstall_model(Model):
     _name = 'test_uninstall.model'
 
     _columns = {
-        'name': fields.char('Name', size=64),
+        'name': fields.char('Name'),
         'ref': fields.many2one('res.users', string='User'),
         'rel': fields.many2many('res.users', string='Users'),
     }
@@ -19,5 +19,3 @@ class test_uninstall_model(Model):
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'Each name must be unique.')
     ]
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

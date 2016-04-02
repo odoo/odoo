@@ -58,6 +58,10 @@
     !python {model: res.partner.category}: |
         # pretend the pool has finished loading to avoid deferring parent_store computation
         self.pool._init = False
+
+        # Force partner_categ.copy() to copy children
+        self._fields['child_ids'].copy = True
+        self._columns['child_ids'].copy = True
 -
     "1.0 Setup test partner categories: parent root"
 -
@@ -91,6 +95,7 @@
     2. Duplicate the parent category and verify that the children have been duplicated too and are below the new parent
 -
     !python {model: res.partner.category}: |
+        self._columns['child_ids'].copy = True # force copying children for test 
         new_id = self.copy(cr, uid, ref('test_categ_0'))
         new_struct = self.search(cr, uid, [('parent_id', 'child_of', new_id)])
         assert len(new_struct) == 4, "After duplication, the new object must have the childs records"
@@ -141,6 +146,8 @@
 -
     !python {model: res.partner.category}: |
         self.pool._init = True
+        self._fields['child_ids'].copy = False
+        self._columns['child_ids'].copy = False
 
 -
     "Float precision tests: verify that float rounding methods are working correctly via res.currency"
@@ -198,8 +205,8 @@
 -
     !python {model: res.currency}: |
         from openerp.tools import float_compare, float_is_zero, float_round, float_repr
-        def try_round(amount, expected, precision_digits=3, float_round=float_round, float_repr=float_repr):
-            result = float_repr(float_round(amount, precision_digits=precision_digits),
+        def try_round(amount, expected, precision_digits=3, float_round=float_round, float_repr=float_repr, rounding_method='HALF-UP'):
+            result = float_repr(float_round(amount, precision_digits=precision_digits, rounding_method=rounding_method),
                                 precision_digits=precision_digits)
             assert result == expected, 'Rounding error: got %s, expected %s' % (result, expected)
         try_round(2.6745, '2.675')
@@ -212,6 +219,18 @@
         try_round(-357.4555, '-357.456')
         try_round(457.4554, '457.455')
         try_round(-457.4554, '-457.455')
+
+        # Try some rounding value with rounding method UP instead of HALF-UP
+        # We use 8.175 because when normalizing 8.175 with precision_digits=3 it gives
+        # us 8175,0000000001234 as value, and if not handle correctly the rounding UP
+        # value will be incorrect (should be 8,175 and not 8,176)
+        try_round(8.175, '8.175', rounding_method='UP')
+        try_round(8.1751, '8.176', rounding_method='UP')
+        try_round(-8.175, '-8.175', rounding_method='UP')
+        try_round(-8.1751, '-8.176', rounding_method='UP')
+        try_round(-6.000, '-6.000', rounding_method='UP')
+        try_round(1.8, '2', 0, rounding_method='UP')
+        try_round(-1.8, '-2', 0, rounding_method='UP')
 
         # Extended float range test, inspired by Cloves Almeida's test on bug #882036.
         fractions = [.0, .015, .01499, .675, .67499, .4555, .4555, .45555]
@@ -277,7 +296,7 @@
             rate_id = res_currency_rate.create(cr, 1, {'name':'2000-01-01',
                                                        'rate': value,
                                                        'currency_id': currency.id})
-            rate = res_currency_rate.read(cr, 1, rate_id, ['rate'])['rate']
+            rate = res_currency_rate.read(cr, 1, [rate_id], ['rate'])[0]['rate']
             assert rate == expected, 'Roundtrip error: got %s back from db, expected %s' % (rate, expected)
         # res.currency.rate uses 6 digits of precision by default
         try_roundtrip(2.6748955, 2.674896)

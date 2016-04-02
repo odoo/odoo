@@ -1,68 +1,46 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#    * hr_payroll_account
-#
+# * hr_payroll_account
+# 
+# Translators:
+# Kris Krnacs, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-02-03 23:18+0000\n"
-"Last-Translator: Krisztian Eyssen <krisz@eyssen.hu>\n"
-"Language-Team: \n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-10-14 10:15+0000\n"
+"Last-Translator: Kris Krnacs\n"
+"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:33+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_payroll_account
-#: field:hr.salary.rule,account_credit:0
-msgid "Credit Account"
-msgstr "Kedvezményezett folyószámla"
+#: model:ir.ui.view,arch_db:hr_payroll_account.hr_contract_form_inherit
+#: model:ir.ui.view,arch_db:hr_payroll_account.hr_salary_rule_form_inherit
+msgid "Accounting"
+msgstr "Könyvelés"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:104
-#, python-format
-msgid "Payslip of %s"
-msgstr "%s fizetési jegyzék (Payslip)"
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:157
-#, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Credit Account!"
-msgstr ""
-"A \"%s\" költség naplón nem lett helyesen beállítva a kedvezményezett számla!"
-
-#. module: hr_payroll_account
-#: field:hr.payslip,move_id:0
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_move_id
 msgid "Accounting Entry"
 msgstr "Könyvelési bevitel"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:173
+#: code:addons/hr_payroll_account/hr_payroll_account.py:147
+#: code:addons/hr_payroll_account/hr_payroll_account.py:163
 #, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Debit Account!"
-msgstr ""
-"A \"%s\" költség naplón nem lett helyesen beállítva a terhelendő számla!"
+msgid "Adjustment Entry"
+msgstr "Kerekítés bevitel"
 
 #. module: hr_payroll_account
-#: field:hr.salary.rule,account_tax_id:0
-msgid "Tax Code"
-msgstr "Adókód"
-
-#. module: hr_payroll_account
-#: field:hr.payslip,period_id:0
-msgid "Force Period"
-msgstr "Időszak"
-
-#. module: hr_payroll_account
-#: help:hr.payslip,period_id:0
-msgid "Keep empty to use the period of the validation(Payslip) date."
-msgstr ""
-"Hagyja üresen, hogy a (fizetési jegyzék) jóváhagyás időszakát használja."
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract_analytic_account_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_analytic_account_id
+msgid "Analytic Account"
+msgstr "Gyűjtő/elemző könyvelés"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_contract
@@ -70,20 +48,19 @@ msgid "Contract"
 msgstr "Szerződés"
 
 #. module: hr_payroll_account
-#: field:hr.contract,analytic_account_id:0
-#: field:hr.salary.rule,analytic_account_id:0
-msgid "Analytic Account"
-msgstr "Gyűjtőkód"
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_account_credit
+msgid "Credit Account"
+msgstr "Kedvezményezett folyószámla"
 
 #. module: hr_payroll_account
-#: field:hr.salary.rule,account_debit:0
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_date
+msgid "Date Account"
+msgstr "Folyószámla dátum"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_account_debit
 msgid "Debit Account"
 msgstr "Terhelendő számla"
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
-msgid "Payslip Batches"
-msgstr "Fizetési jegyzék kötegek"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
@@ -91,22 +68,9 @@ msgid "Generate payslips for all selected employees"
 msgstr "Fizetési jegyzék létrehozása az összes kijelölt alkalmazottnak"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:157
-#: code:addons/hr_payroll_account/hr_payroll_account.py:173
-#, python-format
-msgid "Configuration Error!"
-msgstr "Beállítási hiba!"
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
-msgid "hr.salary.rule"
-msgstr "hr.salary.rule"
-
-#. module: hr_payroll_account
-#: view:hr.contract:0
-#: view:hr.salary.rule:0
-msgid "Accounting"
-msgstr "Könyvelés"
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip_date
+msgid "Keep empty to use the period of the validation(Payslip) date."
+msgstr "Hagyja üresen, hogy a (fizetési jegyzék) jóváhagyás időszakát használja."
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip
@@ -114,156 +78,46 @@ msgid "Pay Slip"
 msgstr "Fizetési jegyzék"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:159
-#: code:addons/hr_payroll_account/hr_payroll_account.py:175
-#, python-format
-msgid "Adjustment Entry"
-msgstr ""
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "Fizetési jegyzék kötegek"
 
 #. module: hr_payroll_account
-#: field:hr.contract,journal_id:0
-#: field:hr.payslip,journal_id:0
-#: field:hr.payslip.run,journal_id:0
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_line
+msgid "Payslip Line"
+msgstr "Fizetési jegyzék sor"
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:98
+#, python-format
+msgid "Payslip of %s"
+msgstr "%s fizetési jegyzék (Payslip)"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract_journal_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_journal_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_run_journal_id
 msgid "Salary Journal"
 msgstr "Fizetési napló"
 
-#~ msgid "Employee"
-#~ msgstr "Alkalmazott"
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_account_tax_id
+msgid "Tax"
+msgstr "ÁFA"
 
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "Hiba! Nem hozhat létre rekurzív alkalmazotti hierarchiát."
-
-#~ msgid "Leave Type"
-#~ msgstr "Szabadság típusa"
-
-#~ msgid "Analytic Account for Salary Analysis"
-#~ msgstr "Munkabér elemzésére szolgáló gyűjtőkód"
-
-#~ msgid "Period"
-#~ msgstr "Időszak"
-
-#~ msgid "Bank Journal"
-#~ msgstr "Banknapló"
-
-#~ msgid "Salary Account"
-#~ msgstr "Bérköltség főkönyvi számla"
-
-#~ msgid "Accounting Lines"
-#~ msgstr "Könyvelési tételek"
-
-#~ msgid "Accounting Informations"
-#~ msgstr "Könyvelési információk"
-
-#~ msgid "Expense Journal"
-#~ msgstr "Költségnapló"
-
-#~ msgid "Other Informations"
-#~ msgstr "Egyéb információk"
-
-#~ msgid "Expense account when Salary Expense will be recorded"
-#~ msgstr "Főkönyvi számla, ahová a bérköltséget könyvelik"
-
-#~ msgid "Payment Lines"
-#~ msgstr "Kifizetés sorok"
-
-#~ msgid "Account Lines"
-#~ msgstr "Könyvelési tételek"
-
-#~ msgid "Account"
-#~ msgstr "Számla"
-
-#~ msgid "Bank Account"
-#~ msgstr "Bankszámlaszám"
-
-#~ msgid "Accounting Vouchers"
-#~ msgstr "Könyvelési bizonylatok"
-
-#~ msgid "Accounting vouchers"
-#~ msgstr "Könyvelési bizonylatok"
-
-#~ msgid "General Account"
-#~ msgstr "Főkönyvi számla"
-
-#~ msgid "Expense Entries"
-#~ msgstr "Költségtételek"
-
-#~ msgid "Employee Account"
-#~ msgstr "Alkalmazott számlája"
-
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:145
 #, python-format
-#~ msgid "Please Configure Partners Receivable Account!!"
-#~ msgstr "Kérem, állítsa be a partner vevő számláját!"
+msgid "The Expense Journal \"%s\" has not properly configured the Credit Account!"
+msgstr "A \"%s\" költség naplón nem lett helyesen beállítva a kedvezményezett számla!"
 
-#~ msgid "Employee Payable Account"
-#~ msgstr "Alkalmazott szállító számlája"
-
-#~ msgid "Sequence"
-#~ msgstr "Sorszám"
-
-#~ msgid "Year"
-#~ msgstr "Év"
-
-#~ msgid "Accounting Details"
-#~ msgstr "Könyvelési részletek"
-
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:161
 #, python-format
-#~ msgid "Please Configure Partners Payable Account!!"
-#~ msgstr "Kérem, állítsa be a partner szállító számláját!"
+msgid "The Expense Journal \"%s\" has not properly configured the Debit Account!"
+msgstr "A \"%s\" költség naplón nem lett helyesen beállítva a terhelendő számla!"
 
-#~ msgid "Description"
-#~ msgstr "Megjegyzés"
-
-#, python-format
-#~ msgid "Please Confirm all Expense Invoice appear for Reimbursement"
-#~ msgstr ""
-#~ "Kérem, hagyjon jóvá minden költségszámlát, hogy meg lehessen azokat téríteni "
-#~ "az alkalmazottaknak"
-
-#~ msgid "Name"
-#~ msgstr "Név"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Vigyázat!"
-
-#, python-format
-#~ msgid "Please define fiscal year for perticular contract"
-#~ msgstr "Kérem, határozza meg a szerződés üzleti évét!"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr ""
-#~ "Hiba! Nem választhat ki olyan részleget, amelynek az alkalmazott a "
-#~ "menedzsere."
-
-#~ msgid "Total By Company"
-#~ msgstr "Vállalat összesen"
-
-#~ msgid "Total By Employee"
-#~ msgstr "Alkalmazott összesen"
-
-#~ msgid "Bank Advice Note"
-#~ msgstr "Banki értesítő megjegyzés"
-
-#~ msgid "Salary Structure"
-#~ msgstr "Bérszerkezet"
-
-#~ msgid "Payroll Register"
-#~ msgstr "Bérszámfejtési nyilvántartás"
-
-#~ msgid "Human Resource Payroll Accounting"
-#~ msgstr "Bérfeladás könyvelése"
-
-#~ msgid "Payslip Line"
-#~ msgstr "Fizetési jegyzék sor"
-
-#, python-format
-#~ msgid "Fiscal Year is not defined for slip date %s"
-#~ msgstr "Nem határoztak meg üzleti évet a fizetési jegyzék dátumára: %s"
-
-#, python-format
-#~ msgid "Period is not defined for slip date %s"
-#~ msgstr "Nem határoztak meg időszakot a fizetési jegyzék dátumára: %s"
-
-#~ msgid "Account Move Link to Pay Slip"
-#~ msgstr "A fizetési jegyzékhez kapcsolódó könyvelési tétel"
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
+msgid "hr.salary.rule"
+msgstr "hr.salary.rule"

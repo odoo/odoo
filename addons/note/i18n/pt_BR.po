@@ -1,201 +1,169 @@
-# Brazilian Portuguese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * note
+# 
+# Translators:
+# Grazziano Duarte <g.negocios@outlook.com.br>, 2015
+# Mateus Cerqueira Lopes <mateus1@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-20 23:55+0000\n"
-"Last-Translator: Fábio Martinelli - http://zupy.com.br "
-"<webmaster@zupy.com.br>\n"
-"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:10+0000\n"
+"PO-Revision-Date: 2015-12-10 01:10+0000\n"
+"Last-Translator: Grazziano Duarte <g.negocios@outlook.com.br>\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:49+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: note
-#: field:note.note,memo:0
-msgid "Note Content"
-msgstr "Conteúdo da Nota"
+#: model:ir.model.fields,field_description:note.field_note_note_message_needaction
+msgid "Action Needed"
+msgstr "Ação Necessária"
 
 #. module: note
-#: view:note.stage:0
-msgid "Stages of Notes"
-msgstr "Estágio das Notas"
-
-#. module: note
-#: model:note.stage,name:note.demo_note_stage_04
-#: model:note.stage,name:note.note_stage_02
-msgid "This Week"
-msgstr "Esta Semana"
-
-#. module: note
-#: model:ir.model,name:note.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
-
-#. module: note
-#: model:ir.model,name:note.model_note_tag
-msgid "Note Tag"
-msgstr "Marcador da Nota"
-
-#. module: note
-#: model:res.groups,name:note.group_note_fancy
-msgid "Notes / Fancy mode"
-msgstr "Notas / Modo extravagante"
-
-#. module: note
-#: model:ir.model,name:note.model_note_note
-#: view:note.note:0
-msgid "Note"
-msgstr "Nota"
-
-#. module: note
-#: view:note.note:0
-msgid "Group By..."
-msgstr "Agrupar Por..."
-
-#. module: note
-#: field:note.note,message_follower_ids:0
-msgid "Followers"
-msgstr "Seguidores"
-
-#. module: note
-#: model:ir.actions.act_window,help:note.action_note_note
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Click to add a personal note.\n"
-"          </p><p>\n"
-"            Use notes to organize personal tasks or notes. All\n"
-"            notes are private; no one else will be able to see them. "
-"However\n"
-"            you can share some notes with other people by inviting "
-"followers\n"
-"            on the note. (Useful for meeting minutes, especially if\n"
-"            you activate the pad feature for collaborative writings).\n"
-"          </p><p>\n"
-"            You can customize how you process your notes/tasks by adding,\n"
-"            removing or modifying columns.\n"
-"          </p>\n"
-"        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Clique para adicionar nota pessoal.\n"
-"          </p><p>\n"
-"            Use notas para organizar tarefas ou notas pessoais. Todas\n"
-"            notas são privadas; ninguém mais é capaz de vê-las. Contudo\n"
-"            você pode compartilhar algumas notas com outras pessoas "
-"convidando seguidores\n"
-"            na nota. (Útil para atas de reunião, especialmente se\n"
-"            você ativar o recurso \"PAD\" para textos colaborativos).\n"
-"          </p><p>\n"
-"            Você pode customizar a forma como você processa suas "
-"notas/tarefas adicionando,\n"
-"            removendo ou modificando colunas.\n"
-"          </p>\n"
-"        "
-
-#. module: note
-#: model:note.stage,name:note.demo_note_stage_01
-#: model:note.stage,name:note.note_stage_01
-msgid "Today"
-msgstr "Hoje"
-
-#. module: note
-#: model:ir.model,name:note.model_res_users
-msgid "Users"
-msgstr "Usuários"
-
-#. module: note
-#: view:note.note:0
-msgid "í"
-msgstr "í"
-
-#. module: note
-#: view:note.stage:0
-msgid "Stage of Notes"
-msgstr "Estágios das Notas"
-
-#. module: note
-#: field:note.note,message_unread:0
-msgid "Unread Messages"
-msgstr "Mensagens Não Lidas"
-
-#. module: note
-#: field:note.note,current_partner_id:0
-msgid "unknown"
-msgstr "desconhecido"
-
-#. module: note
-#: view:note.note:0
-msgid "By sticky note Category"
-msgstr "Por Categoria de lembrete"
-
-#. module: note
-#: help:note.note,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Se marcado novas mensagens requerem sua atenção"
-
-#. module: note
-#: field:note.stage,name:0
-msgid "Stage Name"
-msgstr "Nome do Estágio"
-
-#. module: note
-#: field:note.note,message_is_follower:0
-msgid "Is a Follower"
-msgstr "É um Seguidor"
-
-#. module: note
-#: model:note.stage,name:note.demo_note_stage_02
-msgid "Tomorrow"
-msgstr "Amanhã"
-
-#. module: note
-#: view:note.note:0
-#: field:note.note,open:0
+#: model:ir.model.fields,field_description:note.field_note_note_open
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Active"
 msgstr "Ativo"
 
 #. module: note
-#: help:note.stage,user_id:0
-msgid "Owner of the note stage."
-msgstr "Proprietário do estágio da nota."
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Archive"
+msgstr "Arquivo"
 
 #. module: note
-#: model:ir.ui.menu,name:note.menu_notes_stage
-msgid "Categories"
-msgstr "Categorias"
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "By sticky note Category"
+msgstr "Por Categoria de lembrete"
 
 #. module: note
-#: view:note.note:0
-#: field:note.note,stage_id:0
-msgid "Stage"
-msgstr "Estágio"
+#: model:ir.actions.act_window,help:note.action_note_note
+msgid "Click to add a personal note."
+msgstr "Clique para adicionar uma nota pessoal."
 
 #. module: note
-#: field:note.tag,name:0
-msgid "Tag Name"
-msgstr "Nome do Marcador"
+#: model:ir.model.fields,field_description:note.field_note_note_color
+#: model:ir.model.fields,field_description:note.field_note_tag_color
+msgid "Color Index"
+msgstr "Índice de Cores"
 
 #. module: note
-#: field:note.note,message_ids:0
-msgid "Messages"
-msgstr "Mensagens"
+#: model:ir.ui.menu,name:note.menu_note_configuration
+msgid "Configuration"
+msgstr "Configuração"
 
 #. module: note
-#: view:base.config.settings:0
-#: model:ir.actions.act_window,name:note.action_note_note
-#: model:ir.ui.menu,name:note.menu_note_notes
-#: view:note.note:0
-#: model:note.stage,name:note.note_stage_04
-msgid "Notes"
-msgstr "Notas"
+#: model:ir.model.fields,field_description:note.field_note_note_create_uid
+#: model:ir.model.fields,field_description:note.field_note_stage_create_uid
+#: model:ir.model.fields,field_description:note.field_note_tag_create_uid
+msgid "Created by"
+msgstr "Criado por"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note_create_date
+#: model:ir.model.fields,field_description:note.field_note_stage_create_date
+#: model:ir.model.fields,field_description:note.field_note_tag_create_date
+msgid "Created on"
+msgstr "Criado em"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note_date_done
+msgid "Date done"
+msgstr "Data de conclusão"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note_message_last_post
+msgid "Date of the last message posted on the record."
+msgstr "Data da ultima mensagem para o registro."
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "Delete"
+msgstr "Excluir"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note_display_name
+#: model:ir.model.fields,field_description:note.field_note_stage_display_name
+#: model:ir.model.fields,field_description:note.field_note_tag_display_name
+msgid "Display Name"
+msgstr "Nome de Exibição"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_stage_fold
+msgid "Folded by Default"
+msgstr "Dobrado por Padrão"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note_message_follower_ids
+msgid "Followers"
+msgstr "Seguidores"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note_message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Seguidores (Canais)"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note_message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seguidores (Parceiros)"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note_id
+#: model:ir.model.fields,field_description:note.field_note_stage_id
+#: model:ir.model.fields,field_description:note.field_note_tag_id
+msgid "ID"
+msgstr "ID"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note_message_unread
+msgid "If checked new messages require your attention."
+msgstr "Se marcado novas mensagens solicitarão sua atenção."
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Se marcado novas mensagens solicitarão sua atenção."
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note_message_is_follower
+msgid "Is Follower"
+msgstr "É um seguidor"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note_message_last_post
+msgid "Last Message Date"
+msgstr "Data da última mensagem"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note___last_update
+#: model:ir.model.fields,field_description:note.field_note_stage___last_update
+#: model:ir.model.fields,field_description:note.field_note_tag___last_update
+msgid "Last Modified on"
+msgstr "Última modificação em"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note_write_uid
+#: model:ir.model.fields,field_description:note.field_note_stage_write_uid
+#: model:ir.model.fields,field_description:note.field_note_tag_write_uid
+msgid "Last Updated by"
+msgstr "Última atualização por"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note_write_date
+#: model:ir.model.fields,field_description:note.field_note_stage_write_date
+#: model:ir.model.fields,field_description:note.field_note_tag_write_date
+msgid "Last Updated on"
+msgstr "Última atualização em"
 
 #. module: note
 #: model:note.stage,name:note.demo_note_stage_03
@@ -204,100 +172,192 @@ msgid "Later"
 msgstr "Mais tarde"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_note_note_message_ids
+msgid "Messages"
+msgstr "Mensagens"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note_message_ids
+msgid "Messages and communication history"
+msgstr "Histórico de mensagens e comunicação"
+
+#. module: note
+#: model:note.stage,name:note.note_stage_00
+msgid "New"
+msgstr "Novo"
+
+#. module: note
+#: code:addons/note/note.py:163
+#, python-format
+msgid "New Note"
+msgstr "Nova Nota"
+
+#. module: note
+#: model:ir.model,name:note.model_note_note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model:ir.ui.view,arch_db:note.view_note_note_form
+msgid "Note"
+msgstr "Observação"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note_memo
+msgid "Note Content"
+msgstr "Conteúdo da Nota"
+
+#. module: note
 #: model:ir.model,name:note.model_note_stage
 msgid "Note Stage"
 msgstr "Estágio da Nota"
 
 #. module: note
-#: field:note.note,message_summary:0
-msgid "Summary"
-msgstr "Resumo"
-
-#. module: note
-#: field:note.note,stage_ids:0
-msgid "Stages of Users"
-msgstr "Estágios de Usuários"
-
-#. module: note
-#: field:note.note,name:0
+#: model:ir.model.fields,field_description:note.field_note_note_name
 msgid "Note Summary"
 msgstr "Resumo da Nota"
 
 #. module: note
-#: model:ir.actions.act_window,name:note.action_note_stage
-#: view:note.note:0
-msgid "Stages"
-msgstr "Estágios"
+#: model:ir.model,name:note.model_note_tag
+msgid "Note Tag"
+msgstr "Marcador da Nota"
 
 #. module: note
-#: help:note.note,message_ids:0
-msgid "Messages and communication history"
-msgstr "Histórico de mensagens e comunicação"
+#: model:ir.actions.act_window,name:note.action_note_note
+#: model:ir.ui.menu,name:note.menu_note_notes
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model:note.stage,name:note.note_stage_04
+msgid "Notes"
+msgstr "Notas"
 
 #. module: note
-#: view:note.note:0
-msgid "Delete"
-msgstr "Excluir"
+#: model:ir.model.fields,field_description:note.field_note_note_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Número de ações"
 
 #. module: note
-#: field:note.note,color:0
-msgid "Color Index"
-msgstr "Índice de Cores"
+#: model:ir.model.fields,help:note.field_note_note_message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Número de mensagens que requer uma ação"
 
 #. module: note
-#: field:note.note,sequence:0
-#: field:note.stage,sequence:0
-msgid "Sequence"
-msgstr "Sequência"
+#: model:ir.model.fields,help:note.field_note_note_message_unread_counter
+msgid "Number of unread messages"
+msgstr "Quantidade de mensagens não lidas."
 
 #. module: note
-#: view:note.note:0
-#: field:note.note,tag_ids:0
-msgid "Tags"
-msgstr "Marcadores"
-
-#. module: note
-#: view:note.note:0
-msgid "Archive"
-msgstr "Arquivo"
-
-#. module: note
-#: field:base.config.settings,module_note_pad:0
-msgid "Use collaborative pads (etherpad)"
-msgstr "Usar pads colaborativos (etherpad)"
-
-#. module: note
-#: help:note.note,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Contém o resumo da conversação (número de mensagens, ...). Este resumo é "
-"gerado diretamente em formato HTML para que possa ser inserido nas visões "
-"kanban."
-
-#. module: note
-#: field:base.config.settings,group_note_fancy:0
-msgid "Use fancy layouts for notes"
-msgstr "Usar layouts extravagantes para notas"
-
-#. module: note
-#: field:note.note,current_partner_id:0
-#: field:note.stage,user_id:0
+#: model:ir.model.fields,field_description:note.field_note_note_user_id
+#: model:ir.model.fields,field_description:note.field_note_stage_user_id
 msgid "Owner"
 msgstr "Proprietário"
 
 #. module: note
-#: help:note.stage,sequence:0
+#: model:ir.model.fields,help:note.field_note_stage_user_id
+msgid "Owner of the note stage."
+msgstr "Proprietário do estágio da nota."
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note_sequence
+#: model:ir.model.fields,field_description:note.field_note_stage_sequence
+msgid "Sequence"
+msgstr "Seqüência"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note_stage_id
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Stage"
+msgstr "Estágio"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_stage_name
+msgid "Stage Name"
+msgstr "Nome do Estágio"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_stage_form
+msgid "Stage of Notes"
+msgstr "Estágios das Notas"
+
+#. module: note
+#: model:ir.actions.act_window,name:note.action_note_stage
+#: model:ir.ui.menu,name:note.menu_notes_stage
+#: model:ir.ui.view,arch_db:note.view_note_note_tree
+msgid "Stages"
+msgstr "Estágios"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_stage_tree
+msgid "Stages of Notes"
+msgstr "Estágio das Notas"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note_stage_ids
+msgid "Stages of Users"
+msgstr "Estágios de Usuários"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_tag_name
+msgid "Tag Name"
+msgstr "Nome do Marcador"
+
+#. module: note
+#: sql_constraint:note.tag:0
+msgid "Tag name already exists !"
+msgstr "Essa tag já existe !"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.ui.view,arch_db:note.view_note_note_form
+msgid "Tags"
+msgstr "Marcadores"
+
+#. module: note
+#: model:note.stage,name:note.demo_note_stage_04
+#: model:note.stage,name:note.note_stage_02
+msgid "This Week"
+msgstr "Esta Semana"
+
+#. module: note
+#: model:note.stage,name:note.demo_note_stage_01
+#: model:note.stage,name:note.note_stage_01
+msgid "Today"
+msgstr "Hoje"
+
+#. module: note
+#: model:note.stage,name:note.demo_note_stage_02
+msgid "Tomorrow"
+msgstr "Amanhã"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note_message_unread
+msgid "Unread Messages"
+msgstr "Mensagens não lidas"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note_message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Contador de Mensagens Não Lidas."
+
+#. module: note
+#: model:ir.actions.act_window,help:note.action_note_note
+msgid ""
+"Use notes to organize personal tasks or notes. All\n"
+"            notes are private; no one else will be able to see them. However\n"
+"            you can share some notes with other people by inviting followers\n"
+"            on the note. (Useful for meeting minutes, especially if\n"
+"            you activate the pad feature for collaborative writings)."
+msgstr "Use notas para organizar tarefas pessoais ou notas. Todas\nas notas são particulares; ninguém será capaz de vê-las. Entretanto\nvocê pode compartilhar algumas notas com outras pessoas, convidando seguidores\nsobre a nota. (Útil para atas de reuniões, especialmente se\nvocê ativar o recurso de bloco para os escritos de colaboração)."
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_stage_sequence
 msgid "Used to order the note stages"
 msgstr "Usado para ordenar os estágios das notas"
 
 #. module: note
-#: field:note.note,date_done:0
-msgid "Date done"
-msgstr "Data de conclusão"
+#: model:ir.model,name:note.model_res_users
+msgid "Users"
+msgstr "Usuários"
 
 #. module: note
-#: field:note.stage,fold:0
-msgid "Folded by Default"
-msgstr "Dobrado por Padrão"
+#: model:ir.actions.act_window,help:note.action_note_note
+msgid ""
+"You can customize how you process your notes/tasks by adding,\n"
+"            removing or modifying columns."
+msgstr "Você pode personalizar a forma como você processa suas notas/tarefas, acrescentando,\nremovendo ou modificando colunas."

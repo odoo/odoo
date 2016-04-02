@@ -1,10 +1,7 @@
 # -*- coding: utf-'8' "-*-"
 
 import base64
-try:
-    import simplejson as json
-except ImportError:
-    import json
+import json
 from hashlib import sha1
 import hmac
 import logging
@@ -14,6 +11,7 @@ from openerp.addons.payment.models.payment_acquirer import ValidationError
 from openerp.addons.payment_adyen.controllers.main import AdyenController
 from openerp.osv import osv, fields
 from openerp.tools import float_round
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -27,7 +25,7 @@ class AcquirerAdyen(osv.Model):
          - yhpp: hosted payment page: pay.shtml for single, select.shtml for multiple
         """
         return {
-            'adyen_form_url': 'https://%s.adyen.com/hpp/pay.shtml' % environment,
+            'adyen_form_url': 'https://%s.adyen.com/hpp/pay.shtml' % ('live' if environment == 'prod' else environment),
         }
 
     def _get_providers(self, cr, uid, context=None):
@@ -59,7 +57,7 @@ class AcquirerAdyen(osv.Model):
         if inout == 'in':
             keys = "paymentAmount currencyCode shipBeforeDate merchantReference skinCode merchantAccount sessionValidity shopperEmail shopperReference recurringContract allowedMethods blockedMethods shopperStatement merchantReturnData billingAddressType deliveryAddressType offset".split()
         else:
-            keys = "authResult pspReference merchantReference skinCode paymentMethod shopperLocale merchantReturnData".split()
+            keys = "authResult pspReference merchantReference skinCode merchantReturnData".split()
 
         def get_value(key):
             if values.get(key):
@@ -70,7 +68,7 @@ class AcquirerAdyen(osv.Model):
         key = acquirer.adyen_skin_hmac_key.encode('ascii')
         return base64.b64encode(hmac.new(key, sign, sha1).digest())
 
-    def adyen_form_generate_values(self, cr, uid, id, partner_values, tx_values, context=None):
+    def adyen_form_generate_values(self, cr, uid, id, values, context=None):
         base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
         acquirer = self.browse(cr, uid, id, context=context)
         # tmp
@@ -78,22 +76,20 @@ class AcquirerAdyen(osv.Model):
         from dateutil import relativedelta
         tmp_date = datetime.date.today() + relativedelta.relativedelta(days=1)
 
-        adyen_tx_values = dict(tx_values)
-        adyen_tx_values.update({
-            'merchantReference': tx_values['reference'],
-            'paymentAmount': '%d' % int(float_round(tx_values['amount'], 2) * 100),
-            'currencyCode': tx_values['currency'] and tx_values['currency'].name or '',
+        values.update({
+            'merchantReference': values['reference'],
+            'paymentAmount': '%d' % int(float_round(values['amount'], 2) * 100),
+            'currencyCode': values['currency'] and values['currency'].name or '',
             'shipBeforeDate': tmp_date,
             'skinCode': acquirer.adyen_skin_code,
             'merchantAccount': acquirer.adyen_merchant_account,
-            'shopperLocale': partner_values['lang'],
+            'shopperLocale': values.get('partner_lang'),
             'sessionValidity': tmp_date,
             'resURL': '%s' % urlparse.urljoin(base_url, AdyenController._return_url),
+            'merchantReturnData': json.dumps({'return_url': '%s' % values.pop('return_url')}) if values.get('return_url') else False,
+            'merchantSig': self._adyen_generate_merchant_sig(acquirer, 'in', values),
         })
-        if adyen_tx_values.get('return_url'):
-            adyen_tx_values['merchantReturnData'] = json.dumps({'return_url': '%s' % adyen_tx_values.pop('return_url')})
-        adyen_tx_values['merchantSig'] = self._adyen_generate_merchant_sig(acquirer, 'in', adyen_tx_values)
-        return partner_values, adyen_tx_values
+        return values
 
     def adyen_get_form_action_url(self, cr, uid, id, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
@@ -103,10 +99,6 @@ class AcquirerAdyen(osv.Model):
 class TxAdyen(osv.Model):
     _inherit = 'payment.transaction'
 
-    _columns = {
-        'adyen_psp_reference': fields.char('Adyen PSP Reference'),
-    }
-
     # --------------------------------------------------
     # FORM RELATED METHODS
     # --------------------------------------------------
@@ -114,28 +106,28 @@ class TxAdyen(osv.Model):
     def _adyen_form_get_tx_from_data(self, cr, uid, data, context=None):
         reference, pspReference = data.get('merchantReference'), data.get('pspReference')
         if not reference or not pspReference:
-            error_msg = 'Adyen: received data with missing reference (%s) or missing pspReference (%s)' % (reference, pspReference)
-            _logger.error(error_msg)
+            error_msg = _('Adyen: received data with missing reference (%s) or missing pspReference (%s)') % (reference, pspReference)
+            _logger.info(error_msg)
             raise ValidationError(error_msg)
 
         # find tx -> @TDENOTE use pspReference ?
         tx_ids = self.pool['payment.transaction'].search(cr, uid, [('reference', '=', reference)], context=context)
         if not tx_ids or len(tx_ids) > 1:
-            error_msg = 'Adyen: received data for reference %s' % (reference)
+            error_msg = _('Adyen: received data for reference %s') % (reference)
             if not tx_ids:
-                error_msg += '; no order found'
+                error_msg += _('; no order found')
             else:
-                error_msg += '; multiple order found'
-            _logger.error(error_msg)
+                error_msg += _('; multiple order found')
+            _logger.info(error_msg)
             raise ValidationError(error_msg)
         tx = self.pool['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
 
         # verify shasign
         shasign_check = self.pool['payment.acquirer']._adyen_generate_merchant_sig(tx.acquirer_id, 'out', data)
         if shasign_check != data.get('merchantSig'):
-            error_msg = 'Adyen: invalid merchantSig, received %s, computed %s' % (data.get('merchantSig'), shasign_check)
+            error_msg = _('Adyen: invalid merchantSig, received %s, computed %s') % (data.get('merchantSig'), shasign_check)
             _logger.warning(error_msg)
-            # raise ValidationError(error_msg)
+            raise ValidationError(error_msg)
 
         return tx
 
@@ -159,7 +151,7 @@ class TxAdyen(osv.Model):
         if status == 'AUTHORISED':
             tx.write({
                 'state': 'done',
-                'adyen_psp_reference': data.get('pspReference'),
+                'acquirer_reference': data.get('pspReference'),
                 # 'date_validate': data.get('payment_date', fields.datetime.now()),
                 # 'paypal_txn_type': data.get('express_checkout')
             })
@@ -167,11 +159,11 @@ class TxAdyen(osv.Model):
         elif status == 'PENDING':
             tx.write({
                 'state': 'pending',
-                'adyen_psp_reference': data.get('pspReference'),
+                'acquirer_reference': data.get('pspReference'),
             })
             return True
         else:
-            error = 'Paypal: feedback error'
+            error = _('Adyen: feedback error')
             _logger.info(error)
             tx.write({
                 'state': 'error',

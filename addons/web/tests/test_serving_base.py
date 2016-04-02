@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 
 import random
-import unittest2
+import unittest
 
-from ..controllers.main import module_topological_sort as sort
+from openerp.tools import topological_sort
 
 def sample(population):
     return random.sample(
         population,
             random.randint(0, min(len(population), 5)))
 
-class TestModulesLoading(unittest2.TestCase):
+class TestModulesLoading(unittest.TestCase):
     def setUp(self):
         self.mods = map(str, range(1000))
     def test_topological_sort(self):
@@ -22,7 +22,7 @@ class TestModulesLoading(unittest2.TestCase):
         ms = dict(modules)
 
         seen = set()
-        sorted_modules = sort(ms)
+        sorted_modules = topological_sort(ms)
         for module in sorted_modules:
             deps = ms[module]
             self.assertGreaterEqual(

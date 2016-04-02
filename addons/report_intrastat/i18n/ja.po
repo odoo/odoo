@@ -1,82 +1,71 @@
-# Japanese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * report_intrastat
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-06-15 23:02+0000\n"
-"Last-Translator: Akira Hiyama <Unknown>\n"
-"Language-Team: Japanese <ja@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"PO-Revision-Date: 2015-10-22 12:05+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:49+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Cancelled Invoice"
-msgstr "キャンセル済請求書"
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Comment:</strong>"
+msgstr ""
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Total (inclu. taxes):"
-msgstr "合計（税込）"
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Document:</strong>"
+msgstr ""
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Disc. (%)"
-msgstr "割引（%）"
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Fiscal Position:</strong>"
+msgstr ""
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Supplier Invoice"
-msgstr "仕入先請求書"
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Invoice Date:</strong>"
+msgstr ""
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Unit Price"
-msgstr "単価"
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Partner Ref.:</strong>"
+msgstr ""
 
 #. module: report_intrastat
-#: selection:report.intrastat,type:0
-msgid "Import"
-msgstr "インポート"
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Payment Term:</strong>"
+msgstr ""
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-#: field:report.intrastat.code,description:0
-msgid "Description"
-msgstr "説明"
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Total Without Taxes</strong>"
+msgstr ""
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "VAT :"
-msgstr "消費税："
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Total</strong>"
+msgstr ""
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Document"
-msgstr "ドキュメント"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "PRO-FORMA"
-msgstr "プロフォーマ"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Taxes:"
-msgstr "税金："
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Amount"
+msgstr "金額"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
-msgid "March"
-msgstr "3月"
+msgid "April"
+msgstr "4月"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -84,39 +73,122 @@ msgid "August"
 msgstr "8月"
 
 #. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Cancelled Invoice"
+msgstr "キャンセル済請求書"
+
+#. module: report_intrastat
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_company_id
+msgid "Company"
+msgstr "会社"
+
+#. module: report_intrastat
+#: model:ir.model,name:report_intrastat.model_res_country
+msgid "Country"
+msgstr "国"
+
+#. module: report_intrastat
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_code
+msgid "Country code"
+msgstr "国コード"
+
+#. module: report_intrastat
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_currency_id
+msgid "Currency"
+msgstr "通貨"
+
+#. module: report_intrastat
 #: selection:report.intrastat,month:0
-msgid "May"
-msgstr "5月"
+msgid "December"
+msgstr "12月"
 
 #. module: report_intrastat
-#: field:report.intrastat,type:0
-msgid "Type"
-msgstr "タイプ"
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Description"
+msgstr "説明"
 
 #. module: report_intrastat
-#: model:ir.actions.report.xml,name:report_intrastat.invoice_intrastat_id
-msgid "Invoice Intrastat"
-msgstr "州内の請求書"
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Discount (%)"
+msgstr "割引（%）"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Invoice Date"
-msgstr "請求日"
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Draft Invoice"
+msgstr "ドラフト請求書"
+
+#. module: report_intrastat
+#: selection:report.intrastat,type:0
+msgid "Export"
+msgstr "エクスポート"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
-msgid "June"
-msgstr "6月"
+msgid "February"
+msgstr "2月"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Tel. :"
-msgstr "TEL："
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_id
+msgid "ID"
+msgstr "ID"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Base"
-msgstr "基本"
+#: selection:report.intrastat,type:0
+msgid "Import"
+msgstr "インポート"
+
+#. module: report_intrastat
+#: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_tree_all
+#: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_all
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Intrastat"
+msgstr "州内"
+
+#. module: report_intrastat
+#: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree
+#: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_code
+#: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_code_form
+msgid "Intrastat Code"
+msgstr "州内コード"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_search
+#: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_tree
+msgid "Intrastat Data"
+msgstr "州内データ"
+
+#. module: report_intrastat
+#: model:ir.actions.report.xml,name:report_intrastat.account_intrastatinvoices
+msgid "Intrastat Invoices"
+msgstr ""
+
+#. module: report_intrastat
+#: model:ir.model,name:report_intrastat.model_report_intrastat_code
+#: model:ir.model.fields,field_description:report_intrastat.field_product_template_intrastat_id
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_intrastat_id
+#: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_code_tree
+msgid "Intrastat code"
+msgstr "州内コード"
+
+#. module: report_intrastat
+#: model:ir.model.fields,field_description:report_intrastat.field_res_country_intrastat
+msgid "Intrastat member"
+msgstr "州内メンバー"
+
+#. module: report_intrastat
+#: model:ir.model,name:report_intrastat.model_report_intrastat
+msgid "Intrastat report"
+msgstr "州内レポート"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Invoice"
+msgstr "請求書"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -129,86 +201,29 @@ msgid "July"
 msgstr "7月"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Quantity"
-msgstr "数量"
+#: selection:report.intrastat,month:0
+msgid "June"
+msgstr "6月"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Partner Ref."
-msgstr "パートナの参照"
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat___last_update
+msgid "Last Modified on"
+msgstr "最終更新日"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
-msgid "February"
-msgstr "2月"
+msgid "March"
+msgstr "3月"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
-msgid "October"
-msgstr "10月"
+msgid "May"
+msgstr "5月"
 
 #. module: report_intrastat
-#: model:ir.model,name:report_intrastat.model_report_intrastat
-msgid "Intrastat report"
-msgstr "州内レポート"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Invoice"
-msgstr "請求書"
-
-#. module: report_intrastat
-#: model:ir.model,name:report_intrastat.model_res_country
-msgid "Country"
-msgstr "国"
-
-#. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "September"
-msgstr "9月"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Taxes"
-msgstr "税金"
-
-#. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "April"
-msgstr "4月"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Amount"
-msgstr "金額"
-
-#. module: report_intrastat
-#: view:report.intrastat:0
-msgid "Intrastat Data"
-msgstr "州内データ"
-
-#. module: report_intrastat
-#: field:report.intrastat,value:0
-msgid "Value"
-msgstr "値"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-#: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_tree_all
-#: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_all
-msgid "Intrastat"
-msgstr "州内"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Draft Invoice"
-msgstr "ドラフト請求書"
-
-#. module: report_intrastat
-#: field:report.intrastat,supply_units:0
-msgid "Supply Units"
-msgstr "供給単位"
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_month
+msgid "Month"
+msgstr "月"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -216,33 +231,14 @@ msgid "November"
 msgstr "11月"
 
 #. module: report_intrastat
-#: model:ir.model,name:report_intrastat.model_report_intrastat_code
-#: field:product.template,intrastat_id:0
-#: field:report.intrastat,intrastat_id:0
-#: view:report.intrastat.code:0
-msgid "Intrastat code"
-msgstr "州内コード"
+#: selection:report.intrastat,month:0
+msgid "October"
+msgstr "10月"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Refund"
-msgstr "返金"
-
-#. module: report_intrastat
-#: field:report.intrastat,ref:0
-msgid "Source document"
-msgstr "元となるドキュメント"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Fiscal Position Remark :"
-msgstr "会計ポジションの注釈："
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-#: field:report.intrastat,weight:0
-msgid "Weight"
-msgstr "重量"
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "PRO-FORMA"
+msgstr "プロフォーマ"
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_product_template
@@ -250,85 +246,77 @@ msgid "Product Template"
 msgstr "製品テンプレート"
 
 #. module: report_intrastat
-#: field:res.country,intrastat:0
-msgid "Intrastat member"
-msgstr "州内メンバー"
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Quantity"
+msgstr "数量"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Refund"
+msgstr "返金"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
-msgid "December"
-msgstr "12月"
+msgid "September"
+msgstr "9月"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_ref
+msgid "Source document"
+msgstr "元となるドキュメント"
+
+#. module: report_intrastat
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_supply_units
+msgid "Supply Units"
+msgstr "供給単位"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Tax"
 msgstr "税金"
 
 #. module: report_intrastat
-#: field:report.intrastat,code:0
-msgid "Country code"
-msgstr "国コード"
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Taxes"
+msgstr "税金"
 
 #. module: report_intrastat
-#: field:report.intrastat,month:0
-msgid "Month"
-msgstr "月"
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_type
+msgid "Type"
+msgstr "タイプ"
 
 #. module: report_intrastat
-#: field:report.intrastat,currency_id:0
-msgid "Currency"
-msgstr "通貨"
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Unit Price"
+msgstr "単価"
 
 #. module: report_intrastat
-#: selection:report.intrastat,type:0
-msgid "Export"
-msgstr "エクスポート"
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Unit of measure"
+msgstr ""
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Fax :"
-msgstr "FAX："
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_value
+msgid "Value"
+msgstr "値"
 
 #. module: report_intrastat
-#: field:report.intrastat,name:0
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Vendor Bill"
+msgstr ""
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Vendor Refund"
+msgstr ""
+
+#. module: report_intrastat
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_weight
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Weight"
+msgstr "重量"
+
+#. module: report_intrastat
+#: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_name
 msgid "Year"
 msgstr "年"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Supplier Refund"
-msgstr "仕入先返金"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Total (excl. taxes):"
-msgstr "合計（税抜）："
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Price"
-msgstr "価格"
-
-#. module: report_intrastat
-#: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree
-#: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_code
-#: view:report.intrastat.code:0
-#: field:report.intrastat.code,name:0
-msgid "Intrastat Code"
-msgstr "州内コード"
-
-#~ msgid "The code of the country must be unique !"
-#~ msgstr "国のコードは固有でなければなりません。"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr "エラー：デフォルトの単位と発注単位は同じ分類でなければいけません。"
-
-#~ msgid "The name of the country must be unique !"
-#~ msgstr "国の名前は固有であるべきです。"
-
-#~ msgid "This Year"
-#~ msgstr "今年"
-
-#~ msgid "This Month"
-#~ msgstr "今月"

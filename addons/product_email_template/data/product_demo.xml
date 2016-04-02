@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-        <record id="product_online_training_email_template" model="email.template">
+<odoo>
+        <record id="product_online_training_email_template" model="mail.template">
             <field name="name">Online Training</field>
             <field name="subject">Online Training</field>
             <field name="model_id" ref="product.model_product_template"/>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[ 
     <div style="height:auto;text-align: center;font-size : 40px;color: #333333;margin-top:30px;font-weight: 300;">
-            Online Training + Certification
+            Online Training
     </div>
      <div style="height:auto;text-left: center;font-size : 16px;color: #646464;margin-top:30px;margin-left:15px;margin-right:5px;">
         These courses feature the same high quality course content found in our traditional classroom trainings, supplemented with
         modular sessions and cloud-based labs. Many of our online learning courses also include dozens of recorded webinars and live
-        sessions by our senior instructors. At the end of the training, you can pass the OpenERP Certification exam in one of the 5000+
-        Pearson VUE test centers worldwide.
+        sessions by our senior instructors.
     </div>
     <div style="height: auto;margin-top:30px;margin-bottom:10px;margin-left:20px;color: #646464;font-size:16px;">
         <strong>Your advantages</strong>
@@ -23,7 +21,6 @@
             <li>New interactive learning experience</li>
             <li>Lower training budget for the same quality courses</li>
             <li>Better comfort to facilitate your learning process</li>
-            <li>OpenERP <a href="https://www.openerp.com/certification">Certification Exam</a> included (Pre-Ordered, available as of November 1st, 2013)</li>
         </ul>
     </div>
     <hr color="DCDCFB"/>
@@ -34,7 +31,7 @@
         <table>
             <tr>
                 <td>
-                    <img src="https://www.openerp.com/saas_master/static/site_new/img/layout/online_training.png"/>
+                    <img src="/product_email_template/static/img/online_training.png"/>
                 </td>
                 <td style="height: auto;margin-top:10px;margin-bottom:10px;font-size:18px;color: #646464;">
                     <strong>There are three components to the training</strong>
@@ -50,8 +47,8 @@
     <div style="height:auto;text-align: left;font-size : 14px;color: #646464;margin-top:10px;margin-left:15px;">
         The 5-day training is modular, which means that you can choose to participate in the full training or to just 1 or 2 modules.
         Nevertheless, <b>the first day of the training is compulsory</b> for everyone. The Monday is compulsory because the
-        introduction of OpenERP is important before going through the other modules.<br/><br/>
-        Each day of the week starts from 9 AM (CEST/PST) to 12 PM (CEST/PST). A Q&A session will be hosted by an OpenERP trainer.
+        introduction of Odoo is important before going through the other modules.<br/><br/>
+        Each day of the week starts from 9 AM (CEST/PST) to 12 PM (CEST/PST). A Q&A session will be hosted by an Odoo trainer.
         Each day, the participants are expected to have done the following <b>BEFORE</b> attending the Q&A session:
         <ul>
             <li>Watch the videos for this day</li>
@@ -63,59 +60,29 @@
         <b>Q&A session is not to cover questions related to a specific implementation project </b>or company-specific business
         workflows. The <b>questions should be about the material covered in the videos </b>and the exercises and should benefit
         the other participants of the training as well.<br/>
-        Each day of the week is dedicated to specific applications in OpenERP as per the following planning:
+        Each day of the week is dedicated to specific applications in Odoo as per the following planning:
         <ul style="color: #6d57e0">
             <li>
-                <strong><a href="https://www.openerp.com/online-training#Monday" style="text-decoration:none;" target=_new>Monday: </a></strong>
-                <a href="https://www.openerp.com/online-training#Monday_1" style="text-decoration:none;" target=_new>Introduction</a>,
-                <a href="https://www.openerp.com/online-training#Monday_2" style="text-decoration:none;" target=_new>CRM</a>,
-                <a href="https://www.openerp.com/online-training#Monday_3" style="text-decoration:none;" target=_new>Sales Management</a>
+                <strong>Monday: </strong>
+                Introduction, CRM, Sales Management
             </li>
             <li>
-                <strong><a href="https://www.openerp.com/online-training#Tuesday" style="text-decoration:none;" target=_new>Tuesday: </a></strong>
-                <a href="https://www.openerp.com/online-training#Tuesday_1" style="text-decoration:none;" target=_new>Access rights</a>,
-                <a href="https://www.openerp.com/online-training#Tuesday_2" style="text-decoration:none;" target=_new>Purchase</a>,
-                <a href="https://www.openerp.com/online-training#Tuesday_2" style="text-decoration:none;" target=_new>Sales &amp; Purchase management</a>,
-                <a href="https://www.openerp.com/online-training#Tuesday_4" style="text-decoration:none;" target=_new>Financial accounting</a>
+                <strong>Tuesday: </strong>
+                Access rights, Purchase, Sales &amp; Purchase management, Financial accounting
             </li>
             <li>
-                <strong><a href="https://www.openerp.com/online-training#Wednesday" style="text-decoration:none;" target=_new>Wednesday: </a></strong>
-                <a href="https://www.openerp.com/online-training#Wednesday_1" style="text-decoration:none;" target=_new>Project management</a>,
-                <a href="https://www.openerp.com/online-training#Wednesday_2" style="text-decoration:none;" target=_new>Human resources</a>,
-                <a href="https://www.openerp.com/online-training#Wednesday_3" style="text-decoration:none;" target=_new>Contract management</a>
+                <strong>Wednesday: </strong>
+                Project management, Human resources, Contract management
             </li>
             <li>
-                <strong><a href="https://www.openerp.com/online-training#Thursday" style="text-decoration:none;" target=_new>Thursday: </a></strong>
-                <a href="https://www.openerp.com/online-training#Thursday_1" style="text-decoration:none;" target=_new>Warehouse management</a>,
-                <a href="https://www.openerp.com/online-training#Thursday_2" style="text-decoration:none;" target=_new>Manufacturing (MRP) &amp; Sales</a>,
-                <a href="https://www.openerp.com/online-training#Thursday_4" style="text-decoration:none;" target=_new>Import/Export</a>
+                <strong>Thursday: </strong>
+                Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export
             </li>
             <li>
-                <strong><a href="https://www.openerp.com/online-training#Friday" style="text-decoration:none;" target=_new>Friday: </a></strong>
-                <a href="https://www.openerp.com/online-training#Friday_1" style="text-decoration:none;" target=_new>Pricelists</a>,
-                <a href="https://www.openerp.com/online-training#Friday_2" style="text-decoration:none;" target=_new>Point of Sale (POS)</a>,
-                <a href="https://www.openerp.com/online-training#Friday_3" style="text-decoration:none;" target=_new>Introduction to report customization</a>
+                <strong>Friday: </strong>
+                Pricelists, Point of Sale (POS), Introduction to report customization
             </li>
         </ul>
-    </div>
-    <div style="text-align: center;margin-top:30px;" >
-        <table cellspacing="5" align="center" cellpadding="5">
-            <tr style="font-size : 20px;color: #333333;margin-top:30px;">
-                <td>English</td></td>
-                <td>English</td></td>
-                <td>Spanish</td>
-            </tr>
-            <tr style="font-size : 10px;color: #646464;">
-                <td>Europe</td>
-                <td>USA & Canada</td>
-                <td>USA & Latin America</td>
-            </tr>
-            <tr style="font-size : 10px;color: #FFFFFF;background-color:#8b5bdd;">
-                <td><a href="http://onlinetrainingencet.eventbrite.com" style="text-decoration:none;color:#FFFFFF;" target=_new>Register</a></td>
-                <td><a href="http://onlinetrainingenpst.eventbrite.com" style="text-decoration:none;color:#FFFFFF;" target=_new>Register</a></td>
-                <td><a href="http://onlinetrainingespst.eventbrite.com" style="text-decoration:none;color:#FFFFFF;" target=_new>Register</a></td>
-            </tr>
-        </table>
     </div>
     <hr color="DCDCFB"/>
     <div style="height:auto;text-align: center;font-size : 40px;color: #333333;margin-top:40px;font-weight: 300;">
@@ -133,8 +100,8 @@
             <tr style="text-align: left;font-size : 16px;color: #646464;">
                 <td style="width:50%;">
                     <ul>
-                        <li>OpenERP’s architecture</li>
-                        <li>How to create an OpenERP Online instance</li>
+                        <li>Odoo’s architecture</li>
+                        <li>How to create an Odoo Online instance</li>
                         <li>List and form views, search and filter features</li>
                         <li>Tooltips and drill-downs</li>
                         <li>Advanced navigation</li>
@@ -143,7 +110,7 @@
                     </ul>
                 </td>
                 <td style="width:50%;">
-                        The introduction exercises have been created to help you discover OpenERP in an easy way. Their main objective is to present the different applications, menus, view types, shortcuts, field types, wizards, actions, etc.  It will help you to discover how to navigate in OpenERP!<br/></br>
+                        The introduction exercises have been created to help you discover Odoo in an easy way. Their main objective is to present the different applications, menus, view types, shortcuts, field types, wizards, actions, etc.  It will help you to discover how to navigate in Odoo!<br/></br>
                         Therefore, the Introduction is compulsory for everyone, even if you need to learn a specific module given on an other date. This obligation has been made to make sure that you are not lost if you arrive in the middle of the training for another module.
                 </td>
             </tr>
@@ -161,7 +128,6 @@
                         <li>Call, Meeting</li>
                         <li>Partners & contacts</li>
                         <li>Automated actions</li>
-                        <li>Import partners and contacts from LinkedIn</li>
                     </ul>
                 </td>
                 <td style="width:50%;">
@@ -213,7 +179,7 @@
                     </ul>
                 </td>
                 <td style="width:50%;">
-                    OpenERP can work with independent applications, so the
+                    Odoo can work with independent applications, so the
                     whole commercial process can be integrated together in
                     order to accomplish complete business flows.
                 </td>
@@ -252,12 +218,12 @@
             <tr style="text-align: left;font-size : 16px;color: #646464;">
                 <td style="width:50%;">
                     <ul>
-                        <li>Suppliers</li>
+                        <li>Vendors</li>
                         <li>Products</li>
                         <li>Request for Quotation</li>
                         <li>Purchase order</li>
                         <li>Invoicing & Invoice control</li>
-                        <li>Incoming order (Complete/partial reception)</li>
+                        <li>Incoming order (Complete/partial receipt)</li>
                         <li>Purchase requisition</li>
                     </ul>
                 </td>
@@ -266,7 +232,7 @@
                         <li>Better negotiate volumes and prices based on historical data</li>
                         <li>Centralize all the data to be able to build reporting and statistics</li>
                         <li>Control the invoicing process</li>
-                        <li>Work with purchase requisitions to ask different suppliers to submit quotations</li>
+                        <li>Work with purchase requisitions to ask different vendors to submit quotations</li>
                     </ul>
                 </td>
             </tr>
@@ -325,8 +291,8 @@
                 <td style="width:50%;">
                     <ul>
                         <li>Projects</li>
-                        <li>Tasks and tasks delegation</li>
-                        <li>Issues and issues escalation</li>
+                        <li>Tasks</li>
+                        <li>Issues</li>
                     </ul>
                 </td>
                 <td style="width:50%;">
@@ -335,7 +301,6 @@
                         <li>Discover the Kanban view to quickly operate some actions and to quickly detect any bottlenecks in your projects flows</li>
                         <li>Discover the Gantt view to see how your project has been planned and adapt it according to new elements or to the people agenda</li>
                         <li>Define project members & delegate tasks</li>
-                        <li>Register issues and escalate them</li>
                         <li>Create automatically timesheet lines in the Human Resources menu from recorded work activities</li>
                         <li>Track and invoice (to customers) the costs associated to a project</li>
                         <li>Manage a support ticket system</li>
@@ -365,7 +330,7 @@
                         <li>Better negotiate volumes and prices based on historical data</li>
                         <li>Centralize all the data to be able to build reporting and statistics</li>
                         <li>Control the invoicing process</li>
-                        <li>Work with purchase requisitions to ask different suppliers to submit quotations</li>
+                        <li>Work with purchase requisitions to ask different vendors to submit quotations</li>
                     </ul>
                     <strong>About Holidays:</strong>
                     <ul>
@@ -422,7 +387,7 @@
                     </ul>
                 </td>
                 <td style="width:50%;">
-                    OpenERP Warehouse Management is at once very simple, flexible and complete. It is based on the concept of double entry that revolutionized accounting: ‘Nothing lost, everything moved’. In OpenERP, we don’t talk about disappearance, consumption or loss of products: instead we speak only of stock moves from one place to another.
+                    Odoo Warehouse Management is at once very simple, flexible and complete. It is based on the concept of double entry that revolutionized accounting: ‘Nothing lost, everything moved’. In Odoo, we don’t talk about disappearance, consumption or loss of products: instead we speak only of stock moves from one place to another.
                 </td>
             </tr>
         </table>
@@ -465,7 +430,7 @@
                     </ul>
                 </td>
                 <td style="width:50%;">
-                    From the sales perspective, you will have a manufacturing order generated based on a request coming from a customer without any manual operation. This integration of those two aplications allows you to perform the following flow in an automated way: Sale order –> Stock level verification –> Production of the missing units –> Reception in stock of the finished goods –> Delivery to the customer.
+                    From the sales perspective, you will have a manufacturing order generated based on a request coming from a customer without any manual operation. This integration of those two aplications allows you to perform the following flow in an automated way: Sale order –> Stock level verification –> Production of the missing units –> Receival in stock of the finished goods –> Delivery to the customer.
                 </td>
             </tr>
         </table>
@@ -484,9 +449,9 @@
                 </td>
                 <td style="width:50%;">
                     <ul>
-                        <li>Transfer data from one system to OpenERP.</li>
+                        <li>Transfer data from one system to Odoo.</li>
                     </ul>
-                    OpenERP offers a simple way to import and export data. OpenERP will guide you for this phase thanks to a FAQ directly integrated into the import screen
+                    Odoo offers a simple way to import and export data. Odoo will guide you for this phase thanks to a FAQ directly integrated into the import screen
                 </td>
             </tr>
         </table>
@@ -513,7 +478,7 @@
                         <li>Keep control on the pricing policy</li>
                         <li>Allow discounts for some periods</li>
                         <li>Ensure your margins even when you define discounts</li>
-                        <li>Allow different pricing by customer and/or supplier</li>
+                        <li>Allow different pricing by customer and/or vendor</li>
                         <li>Update the prices in an easy way</li>
                     </ul>
                 </td>
@@ -540,7 +505,7 @@
                     </ul>
                 </td>
                 <td style="width:50%;">
-                    OpenERP POS is the first POS running in a 100% web based environment, which means any computer with a browser can host the POS. The POS is a two-part system with a front-end (interaction with the client) and a back-end (managers can configure the system, print reports, analyse, ...)<br/><br/>
+                    Odoo POS is the first POS running in a 100% web based environment, which means any computer with a browser can host the POS. The POS is a two-part system with a front-end (interaction with the client) and a back-end (managers can configure the system, print reports, analyse, ...)<br/><br/>
                      <strong>About the front-end:</strong>
                     <ul>
                         <li>Offline mode. Imagine several cases were having an offline mode is of prime interest: Connexion to server shutdown at a big supermarket / Use in environments that requires mobility but without wifi / Use in large environments like restaurants and gardens / Use in low tech environments</li>
@@ -570,7 +535,7 @@
                     </ul>
                 </td>
                 <td style="width:50%;">
-                    This features will help you to fully customize the standard documents made from OpenERP.
+                    This features will help you to fully customize the standard documents made from Odoo.
                 </td>
             </tr>
         </table>
@@ -612,7 +577,7 @@
         <table cellspacing="5">
             <tr>
                 <td>
-                    With the live sessions, we learned a lot more than what was covered in the videos. Definitely a good start for building up a solid base of working knowledge of OpenERP.
+                    With the live sessions, we learned a lot more than what was covered in the videos. Definitely a good start for building up a solid base of working knowledge of Odoo.
                 </td>
                 <td>
                     The trainer did a wonderful job with the training! He was well informed and interactive online and offline. Thank you so much for the experience! 
@@ -620,7 +585,7 @@
             </tr>
             <tr>
                 <td>
-                    It would be very difficult to cover all of the possibilities of OpenERP and I believe the major aspects were covered very well 
+                    It would be very difficult to cover all of the possibilities of Odoo and I believe the major aspects were covered very well 
                 </td>
                 <td>
                     The trainer has a very good knowledge of the subject, he understands the issues of the trainees very fast and provided answers with the right level of illustration.
@@ -635,7 +600,7 @@
 
         <record id="product_online_training" model="product.product">
             <field name="name">Online Training</field>
-            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="categ_id" ref="product.product_category_3"/>
             <field name="standard_price">500</field>
             <field name="list_price">900</field>
             <field name="type">service</field>
@@ -644,5 +609,4 @@
             <field name="email_template_id" ref="product_online_training_email_template"/>
         </record>
 
-    </data>
-</openerp>
+</odoo>

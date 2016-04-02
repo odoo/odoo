@@ -1,168 +1,225 @@
-import lru
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+# decorator makes wrappers that have the same API as their wrapped function;
+# this is important for the openerp.api.guess() that relies on signatures
+from collections import defaultdict
+from decorator import decorator
+from inspect import formatargspec, getargspec
 import logging
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
+
+
+class ormcache_counter(object):
+    """ Statistic counters for cache entries. """
+    __slots__ = ['hit', 'miss', 'err']
+
+    def __init__(self):
+        self.hit = 0
+        self.miss = 0
+        self.err = 0
+
+    @property
+    def ratio(self):
+        return 100.0 * self.hit / (self.hit + self.miss or 1)
+
+# statistic counters dictionary, maps (dbname, modelname, method) to counter
+STAT = defaultdict(ormcache_counter)
+
 
 class ormcache(object):
-    """ LRU cache decorator for orm methods,
+    """ LRU cache decorator for model methods.
+    The parameters are strings that represent expressions referring to the
+    signature of the decorated method, and are used to compute a cache key::
+
+        @ormcache('model_name', 'mode')
+        def _compute_domain(self, cr, uid, model_name, mode="read"):
+            ...
+
+    For the sake of backward compatibility, the decorator supports the named
+    parameter `skiparg`::
+
+        @ormcache(skiparg=3)
+        def _compute_domain(self, cr, uid, model_name, mode="read"):
+            ...
     """
+    def __init__(self, *args, **kwargs):
+        self.args = args
+        self.skiparg = kwargs.get('skiparg')
 
-    def __init__(self, skiparg=2, size=8192, multi=None, timeout=None):
-        self.skiparg = skiparg
-        self.size = size
-        self.method = None
-        self.stat_miss = 0
-        self.stat_hit = 0
-        self.stat_err = 0
-
-    def __call__(self,m):
-        self.method = m
-        def lookup(self2, cr, *args, **argv):
-            r = self.lookup(self2, cr, *args, **argv)
-            return r
+    def __call__(self, method):
+        self.method = method
+        self.determine_key()
+        lookup = decorator(self.lookup, method)
         lookup.clear_cache = self.clear
         return lookup
 
-    def stat(self):
-        return "lookup-stats hit=%s miss=%s err=%s ratio=%.1f" % (self.stat_hit,self.stat_miss,self.stat_err, (100*float(self.stat_hit))/(self.stat_miss+self.stat_hit) )
+    def determine_key(self):
+        """ Determine the function that computes a cache key from arguments. """
+        if self.skiparg is None:
+            # build a string that represents function code and evaluate it
+            args = formatargspec(*getargspec(self.method))[1:-1]
+            if self.args:
+                code = "lambda %s: (%s,)" % (args, ", ".join(self.args))
+            else:
+                code = "lambda %s: ()" % (args,)
+            self.key = eval(code)
+        else:
+            # backward-compatible function that uses self.skiparg
+            self.key = lambda *args, **kwargs: args[self.skiparg:]
 
-    def lru(self, self2):
-        try:
-            ormcache = getattr(self2, '_ormcache')
-        except AttributeError:
-            ormcache = self2._ormcache = {}
-        try:
-            d = ormcache[self.method]
-        except KeyError:
-            d = ormcache[self.method] = lru.LRU(self.size)
-        return d
+    def lru(self, model):
+        counter = STAT[(model.pool.db_name, model._name, self.method)]
+        return model.pool.cache, (model._name, self.method), counter
 
-    def lookup(self, self2, cr, *args, **argv):
-        d = self.lru(self2)
-        key = args[self.skiparg-2:]
+    def lookup(self, method, *args, **kwargs):
+        d, key0, counter = self.lru(args[0])
+        key = key0 + self.key(*args, **kwargs)
         try:
-           r = d[key]
-           self.stat_hit += 1
-           return r
+            r = d[key]
+            counter.hit += 1
+            return r
         except KeyError:
-           self.stat_miss += 1
-           value = d[key] = self.method(self2, cr, *args)
-           return value
+            counter.miss += 1
+            value = d[key] = self.method(*args, **kwargs)
+            return value
         except TypeError:
-           self.stat_err += 1
-           return self.method(self2, cr, *args)
+            counter.err += 1
+            return self.method(*args, **kwargs)
 
-    def clear(self, self2, *args):
-        """ Remove *args entry from the cache or all keys if *args is undefined 
-        """
-        d = self.lru(self2)
-        if args:
-            logger.warn("ormcache.clear arguments are deprecated and ignored "
-                        "(while clearing caches on (%s).%s)",
-                        self2._name, self.method.__name__)
+    def clear(self, model, *args):
+        """ Clear the registry cache """
+        d, key0, _ = self.lru(model)
         d.clear()
-        self2.pool._any_cache_cleared = True
+        model.pool._any_cache_cleared = True
+
 
 class ormcache_context(ormcache):
-    def __init__(self, skiparg=2, size=8192, accepted_keys=()):
-        super(ormcache_context,self).__init__(skiparg,size)
-        self.accepted_keys = accepted_keys
+    """ This LRU cache decorator is a variant of :class:`ormcache`, with an
+    extra parameter ``keys`` that defines a sequence of dictionary keys. Those
+    keys are looked up in the ``context`` parameter and combined to the cache
+    key made by :class:`ormcache`.
+    """
+    def __init__(self, *args, **kwargs):
+        super(ormcache_context, self).__init__(*args, **kwargs)
+        self.keys = kwargs['keys']
 
-    def lookup(self, self2, cr, *args, **argv):
-        d = self.lru(self2)
-
-        context = argv.get('context', {})
-        ckey = filter(lambda x: x[0] in self.accepted_keys, context.items())
-        ckey.sort()
-
-        d = self.lru(self2)
-        key = args[self.skiparg-2:]+tuple(ckey)
-        try:
-           r = d[key]
-           self.stat_hit += 1
-           return r
-        except KeyError:
-           self.stat_miss += 1
-           value = d[key] = self.method(self2, cr, *args, **argv)
-           return value
-        except TypeError:
-           self.stat_err += 1
-           return self.method(self2, cr, *args, **argv)
+    def determine_key(self):
+        """ Determine the function that computes a cache key from arguments. """
+        assert self.skiparg is None, "ormcache_context() no longer supports skiparg"
+        # build a string that represents function code and evaluate it
+        spec = getargspec(self.method)
+        args = formatargspec(*spec)[1:-1]
+        cont_expr = "(context or {})" if 'context' in spec.args else "self._context"
+        keys_expr = "tuple(map(%s.get, %r))" % (cont_expr, self.keys)
+        if self.args:
+            code = "lambda %s: (%s, %s)" % (args, ", ".join(self.args), keys_expr)
+        else:
+            code = "lambda %s: (%s,)" % (args, keys_expr)
+        self.key = eval(code)
 
 
 class ormcache_multi(ormcache):
-    def __init__(self, skiparg=2, size=8192, multi=3):
-        super(ormcache_multi,self).__init__(skiparg,size)
-        self.multi = multi - 2
+    """ This LRU cache decorator is a variant of :class:`ormcache`, with an
+    extra parameter ``multi`` that gives the name of a parameter. Upon call, the
+    corresponding argument is iterated on, and every value leads to a cache
+    entry under its own key.
+    """
+    def __init__(self, *args, **kwargs):
+        super(ormcache_multi, self).__init__(*args, **kwargs)
+        self.multi = kwargs['multi']
 
-    def lookup(self, self2, cr, *args, **argv):
-        d = self.lru(self2)
-        args = list(args)
-        multi = self.multi
-        ids = args[multi]
-        r = {}
-        miss = []
+    def determine_key(self):
+        """ Determine the function that computes a cache key from arguments. """
+        assert self.skiparg is None, "ormcache_multi() no longer supports skiparg"
+        assert isinstance(self.multi, basestring), "ormcache_multi() parameter multi must be an argument name"
 
+        super(ormcache_multi, self).determine_key()
+
+        # key_multi computes the extra element added to the key
+        spec = getargspec(self.method)
+        args = formatargspec(*spec)[1:-1]
+        code_multi = "lambda %s: %s" % (args, self.multi)
+        self.key_multi = eval(code_multi)
+
+        # self.multi_pos is the position of self.multi in args
+        self.multi_pos = spec.args.index(self.multi)
+
+    def lookup(self, method, *args, **kwargs):
+        d, key0, counter = self.lru(args[0])
+        base_key = key0 + self.key(*args, **kwargs)
+        ids = self.key_multi(*args, **kwargs)
+        result = {}
+        missed = []
+
+        # first take what is available in the cache
         for i in ids:
-            args[multi] = i
-            key = tuple(args[self.skiparg-2:])
+            key = base_key + (i,)
             try:
-               r[i] = d[key]
-               self.stat_hit += 1
+                result[i] = d[key]
+                counter.hit += 1
             except Exception:
-               self.stat_miss += 1
-               miss.append(i)
+                counter.miss += 1
+                missed.append(i)
 
-        if miss:
-            args[multi] = miss
-            r.update(self.method(self2, cr, *args))
+        if missed:
+            # call the method for the ids that were not in the cache; note that
+            # thanks to decorator(), the multi argument will be bound and passed
+            # positionally in args.
+            args = list(args)
+            args[self.multi_pos] = missed
+            result.update(method(*args, **kwargs))
 
-        for i in miss:
-            args[multi] = i
-            key = tuple(args[self.skiparg-2:])
-            d[key] = r[i]
+            # store those new results back in the cache
+            for i in missed:
+                key = base_key + (i,)
+                d[key] = result[i]
 
-        return r
+        return result
+
 
 class dummy_cache(object):
-    """ Cache decorator replacement to actually do no caching.
-    """
+    """ Cache decorator replacement to actually do no caching. """
     def __init__(self, *l, **kw):
         pass
+
     def __call__(self, fn):
         fn.clear_cache = self.clear
         return fn
+
     def clear(self, *l, **kw):
         pass
 
-if __name__ == '__main__':
 
-    class A():
-        @ormcache()
-        def m(self,a,b):
-            print  "A::m(", self,a,b
-            return 1
+def log_ormcache_stats(sig=None, frame=None):
+    """ Log statistics of ormcache usage by database, model, and method. """
+    from openerp.modules.registry import RegistryManager
+    import threading
 
-        @ormcache_multi(multi=3)
-        def n(self,cr,uid,ids):
-            print  "m", self,cr,uid,ids
-            return dict([(i,i) for i in ids])
+    me = threading.currentThread()
+    me_dbname = me.dbname
+    entries = defaultdict(int)
+    for dbname, reg in RegistryManager.registries.iteritems():
+        for key in reg.cache.iterkeys():
+            entries[(dbname,) + key[:2]] += 1
+    for key, count in sorted(entries.items()):
+        dbname, model_name, method = key
+        me.dbname = dbname
+        stat = STAT[key]
+        _logger.info("%6d entries, %6d hit, %6d miss, %6d err, %4.1f%% ratio, for %s.%s",
+                     count, stat.hit, stat.miss, stat.err, stat.ratio, model_name, method.__name__)
 
-    a=A()
-    r=a.m(1,2)
-    r=a.m(1,2)
-    r=a.n("cr",1,[1,2,3,4])
-    r=a.n("cr",1,[1,2])
-    print r
-    for i in a._ormcache:
-        print a._ormcache[i].d
-    a.m.clear_cache()
-    a.n.clear_cache(a,1,1)
-    r=a.n("cr",1,[1,2])
-    print r
-    r=a.n("cr",1,[1,2])
+    me.dbname = me_dbname
+
+
+def get_cache_key_counter(bound_method, *args, **kwargs):
+    """ Return the cache, key and stat counter for the given call. """
+    model = bound_method.im_self
+    ormcache = bound_method.clear_cache.im_self
+    cache, key0, counter = ormcache.lru(model)
+    key = key0 + ormcache.key(model, *args, **kwargs)
+    return cache, key, counter
 
 # For backward compatibility
 cache = ormcache
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

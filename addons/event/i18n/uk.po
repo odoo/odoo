@@ -1,473 +1,1367 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* event
-#
+# * event
+# 
+# Translators:
+# Bogdan, 2015-2016
+# ТАрас <tratatuta@i.ua>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2009-11-05 14:54+0000\n"
-"Last-Translator: Eugene Babiy <eugene.babiy@gmail.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-01 06:27+0000\n"
+"PO-Revision-Date: 2016-03-26 21:23+0000\n"
+"Last-Translator: ТАрас <tratatuta@i.ua>\n"
+"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:12+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: event
-#: view:event.event:0
-#: view:report.event.registration:0
-msgid "My Events"
+#: model:ir.model.fields,field_description:event.field_report_event_registration_cancel_state
+msgid " # No of Cancelled Registrations"
+msgstr "# Жодна зі скасованих реєстрацій"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_report_event_registration_confirm_state
+msgid " # No of Confirmed Registrations"
+msgstr "# Жодна з підтверджених реєстрацій"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_report_event_registration_draft_state
+msgid " # No of Draft Registrations"
+msgstr "# Жодна з незавершених реєстрацій"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_kanban
+msgid "(stats)"
 msgstr ""
 
 #. module: event
-#: field:event.registration,nb_register:0
-msgid "Number of Participants"
+#: model:event.event,description:event.event_0
+msgid "3 Intensive Days"
 msgstr ""
 
 #. module: event
-#: field:event.event,register_attended:0
-msgid "# of Participations"
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "5 Intensive Days"
 msgstr ""
 
 #. module: event
-#: field:event.event,main_speaker_id:0
-msgid "Main Speaker"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-#: view:event.registration:0
-#: view:report.event.registration:0
-msgid "Group By..."
-msgstr ""
-
-#. module: event
-#: field:event.event,register_min:0
-msgid "Minimum Registrations"
-msgstr "Мінімум Реєстрацій"
-
-#. module: event
-#: help:event.event,register_min:0
+#: model:event.event,description:event.event_2
 msgid ""
-"You can for each event define a minimum registration level. If you do not "
-"enough registrations you are not able to confirm your event. (put 0 to "
-"ignore this rule )"
+"<em>(Chamber Works reserves the right to cancel, re-name or re-"
+"locate<br/>the event or change the dates on which it is held.)</em>"
 msgstr ""
 
 #. module: event
-#: field:event.registration,date_open:0
-msgid "Registration Date"
+#: model:ir.ui.view,arch_db:event.view_event_kanban
+msgid ""
+"<i class=\"fa fa-clock-o\"/>\n"
+"                                        <b>To</b>"
 msgstr ""
 
 #. module: event
-#: field:event.event,type:0
-msgid "Type of Event"
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid ""
+"<i>You will be able to create dynamic page interacting with the ORM.</i>"
 msgstr ""
 
 #. module: event
-#: model:event.event,name:event.event_0
-msgid "Concert of Bon Jovi"
-msgstr "Концерт Bon Jovi"
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid ""
+"<i>You will be able to develop a full application with backend and user "
+"interface.</i>"
+msgstr ""
 
 #. module: event
-#: view:event.registration:0
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid ""
+"<i>You will be able to develop simple dynamic components in HTML pages.</i>"
+msgstr ""
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.event_event_report_template_badge
+#: model:ir.ui.view,arch_db:event.event_registration_report_template_badge
+msgid "<i>to</i>"
+msgstr " <i>до</i>"
+
+#. module: event
+#: model:mail.template,body_html:event.event_reminder
+msgid ""
+"<p>Hello ${object.name},</p>\n"
+"<p>This is a reminder for ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin_located} to ${object.event_id.date_end_located}.\n"
+"For any further information please contact our event department.</p>\n"
+"<p>Thank you for your participation!</p>\n"
+"<p>Best regards</p>"
+msgstr ""
+
+#. module: event
+#: model:mail.template,body_html:event.event_registration_mail_template_badge
+msgid ""
+"<p>Hello ${object.name},</p>\n"
+"<p>We confirm that your subscription to the event ${object.event_id.name} has been recorded.\n"
+"Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
+"<p>Thank you for your participation!</p>\n"
+"<p>Best regards</p>"
+msgstr ""
+
+#. module: event
+#: model:mail.template,body_html:event.event_subscription
+msgid ""
+"<p>Hello ${object.name},</p>\n"
+"<p>We confirm that your subscription to the event ${object.event_id.name} has been recorded.\n"
+"You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
+"<p>Thank you for your participation!</p>\n"
+"<p>Best regards</p>"
+msgstr ""
+
+#. module: event
+#: model:mail.template,body_html:event.event_thanks
+msgid ""
+"<p>Hello ${object.name},</p>\n"
+"<p>We would like to thank you for your presence at our event ${object.event_id.name}.\n"
+"<br/><br/>\n"
+"    % if object.event_id.organizer_id and object.event_id.organizer_id.is_company:\n"
+"        <strong>The ${object.event_id.organizer_id.name} Team</strong>\n"
+"    % elif object.event_id.organizer_id:\n"
+"        <strong>${object.event_id.organizer_id.name}</strong>\n"
+"    % endif\n"
+"</p>"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "<small>John Doe, CEO</small>"
+msgstr ""
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_form
+msgid ""
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
+"                                                to \n"
+"                                            </span>"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid ""
+"<span style=\"text-align: -webkit-center; \">This course is dedicated to "
+"developers who need to grasp knowledge of the <strong>business applications "
+"development </strong>process. This course is for new developers or for IT "
+"professionals eager to learn more about technical aspects.</span>"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "<strong>Conference on Business Apps</strong>"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid ""
+"<strong>Having attended this course, participants should be able "
+"to:</strong>"
+msgstr "<strong>Відвідавши цей курс, учасники матимуть змогу:</strong>"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_2
+#: model:event.event,description:event.event_3
+msgid "<strong>Objectives:</strong>"
+msgstr "<strong>Мета:</strong>"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "<strong>Our prices include:</strong>"
+msgstr "<strong>В ціну входить:</strong>"
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "<strong>Program:</strong>"
+msgstr "<strong>План:</strong>"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "<strong>Requirements:</strong>"
+msgstr "<strong>Вимоги:</strong>"
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "<strong>Where to find us:</strong>"
+msgstr "<strong>Де нас знайти:</strong>"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_message_needaction
+#: model:ir.model.fields,field_description:event.field_event_registration_message_needaction
+msgid "Action Needed"
+msgstr "Необхідна дія"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_active
+msgid "Active"
+msgstr "Активний"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Advanced JQuery"
+msgstr ""
+
+#. module: event
+#: selection:event.mail,interval_type:0
+msgid "After each subscription"
+msgstr "Після кожної підписки"
+
+#. module: event
+#: selection:event.mail,interval_type:0
+msgid "After the event"
+msgstr "Після події"
+
+#. module: event
+#: selection:event.config.settings,module_event_sale:0
+msgid "All events are free"
+msgstr "Всі події - безкоштовні"
+
+#. module: event
+#: selection:event.config.settings,module_website_event_questions:0
+msgid "Allow adding extra questions on subscriptions"
+msgstr "Дозволити додаткові запитання у підписках"
+
+#. module: event
+#: selection:event.config.settings,module_event_sale:0
+msgid "Allow selling tickets"
+msgstr "Дозволити продаж квитків"
+
+#. module: event
+#: selection:event.config.settings,module_website_event_track:0
+msgid "Allow tracks, agenda and dedicated menus/website per event"
+msgstr "Дозволити відстеження маршрутів, розклад та окремі меню/сайт для події"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_configuration
+msgid "Apply"
+msgstr "Застосувати"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_search
+msgid "Archived"
+msgstr "Заархівовано"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Arrays"
+msgstr "Списки"
+
+#. module: event
 #: selection:event.registration,state:0
+#: model:ir.ui.view,arch_db:event.view_event_registration_form
 #: selection:report.event.registration,registration_state:0
 msgid "Attended"
-msgstr ""
+msgstr "Учасник"
 
 #. module: event
-#: selection:report.event.registration,month:0
-msgid "March"
-msgstr ""
+#: model:ir.model.fields,field_description:event.field_event_registration_date_closed
+msgid "Attended Date"
+msgstr "Дата участі"
 
 #. module: event
-#: view:event.registration:0
-msgid "Send Email"
-msgstr ""
+#: model:ir.ui.view,arch_db:event.view_event_registration_tree
+msgid "Attended the Event"
+msgstr "Учасник заходу"
 
 #. module: event
-#: field:event.event,company_id:0
-#: field:event.registration,company_id:0
-#: view:report.event.registration:0
-#: field:report.event.registration,company_id:0
-msgid "Company"
-msgstr ""
-
-#. module: event
-#: field:event.event,email_confirmation_id:0
-#: field:event.type,default_email_event:0
-msgid "Event Confirmation Email"
-msgstr ""
-
-#. module: event
-#: field:event.type,default_registration_max:0
-msgid "Default Maximum Registration"
-msgstr ""
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Display"
-msgstr ""
-
-#. module: event
-#: field:event.event,register_avail:0
-msgid "Available Registrations"
-msgstr ""
-
-#. module: event
-#: view:event.registration:0
 #: model:ir.model,name:event.model_event_registration
-msgid "Event Registration"
-msgstr "Реєстрація Події"
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_registration_id
+#: model:ir.ui.view,arch_db:event.view_event_registration_form
+msgid "Attendee"
+msgstr "Учасник"
 
 #. module: event
-#: model:ir.module.category,description:event.module_category_event_management
-msgid "Helps you manage your Events."
-msgstr ""
+#: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+msgid "Attendee / Contact"
+msgstr "Учасник / Контакт"
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Day"
-msgstr ""
+#: model:ir.model.fields,field_description:event.field_event_registration_name
+#: model:ir.ui.view,arch_db:event.event_event_report_template_badge
+msgid "Attendee Name"
+msgstr "Ім'я учасника"
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Event on Registration"
-msgstr "Подія по Реєстрації"
-
-#. module: event
-#: view:event.event:0
-msgid "Confirmed events"
-msgstr ""
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Event Beginning Date"
-msgstr ""
-
-#. module: event
-#: model:ir.actions.act_window,name:event.action_report_event_registration
-#: model:ir.model,name:event.model_report_event_registration
-#: model:ir.ui.menu,name:event.menu_report_event_registration
-#: view:report.event.registration:0
-msgid "Events Analysis"
-msgstr ""
-
-#. module: event
-#: help:event.type,default_registration_max:0
-msgid "It will select this default maximum value when you choose this event"
-msgstr ""
-
-#. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,user_id_registration:0
-msgid "Register"
-msgstr ""
-
-#. module: event
-#: field:event.event,message_ids:0
-#: field:event.registration,message_ids:0
-msgid "Messages"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-#: field:event.event,registration_ids:0
-#: model:ir.actions.act_window,name:event.act_event_list_register_event
+#: model:ir.actions.act_window,name:event.act_event_registration_from_event
 #: model:ir.actions.act_window,name:event.action_registration
+#: model:ir.model.fields,field_description:event.field_event_event_registration_ids
 #: model:ir.ui.menu,name:event.menu_action_registration
-#: view:res.partner:0
-msgid "Registrations"
-msgstr "Реєстрації"
+#: model:ir.ui.view,arch_db:event.view_event_form
+msgid "Attendees"
+msgstr "Учасники"
 
 #. module: event
-#: code:addons/event/event.py:89
-#: code:addons/event/event.py:100
-#: code:addons/event/event.py:355
-#, python-format
-msgid "Error!"
-msgstr "Помилка!"
+#: model:ir.model.fields,field_description:event.field_event_config_settings_auto_confirmation
+msgid "Auto Confirmation"
+msgstr "Авто-підтвердження"
 
 #. module: event
-#: view:event.event:0
-msgid "Confirm Event"
-msgstr "Підтвердити Подію"
+#: model:ir.model.fields,field_description:event.field_event_event_badge_back
+msgid "Badge Back"
+msgstr "Тильна сторона"
 
 #. module: event
-#: view:board.board:0
-#: model:ir.actions.act_window,name:event.act_event_view
-msgid "Next Events"
+#: model:ir.model.fields,field_description:event.field_event_event_badge_front
+msgid "Badge Front"
+msgstr "Передня сторона"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_badge_innerright
+msgid "Badge Inner Right"
+msgstr "Всередині зправа"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
+msgid "Badge Innner Left"
+msgstr "Всередині зліва"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Banner Odoo Image"
+msgstr "Зображення банера Odoo"
+
+#. module: event
+#: selection:event.mail,interval_type:0
+msgid "Before the event"
+msgstr "До початку"
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "Best regards,"
+msgstr "З повагою, "
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Bootstrap CSS"
 msgstr ""
 
 #. module: event
-#: selection:event.event,state:0
-#: selection:event.registration,state:0
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Bring your own laptop."
+msgstr "Візьміть з собою ноутбук."
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Building a Full Application"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Calling the ORM"
+msgstr ""
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_configuration
+#: model:ir.ui.view,arch_db:event.view_event_confirm
+msgid "Cancel"
+msgstr "Скасувати"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_form
+msgid "Cancel Event"
+msgstr "Скасувати подію"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_registration_form
+#: model:ir.ui.view,arch_db:event.view_event_registration_tree
+msgid "Cancel Registration"
+msgstr "Скасувати реєстрацію"
+
+#. module: event
+#: selection:event.event,state:0 selection:event.registration,state:0
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Cancelled"
+msgstr "Скасовано"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_event_type_id
+msgid "Category"
+msgstr "Category"
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)"
 msgstr ""
 
 #. module: event
-#: view:event.event:0
-msgid "ticket"
-msgstr ""
+#: model:ir.actions.act_window,help:event.action_event_view
+msgid "Click to add a new event."
+msgstr "Натисніть, щоб додати нову подію."
 
 #. module: event
-#: model:event.event,name:event.event_1
-msgid "Opera of Verdi"
-msgstr "Опера Верді"
-
-#. module: event
-#: help:event.event,message_unread:0
-#: help:event.registration,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr ""
-
-#. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,registration_state:0
-msgid "Registration State"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-msgid "tickets"
-msgstr ""
-
-#. module: event
-#: view:res.partner:0
-msgid "False"
-msgstr ""
-
-#. module: event
-#: field:event.registration,event_end_date:0
-msgid "Event End Date"
-msgstr ""
-
-#. module: event
-#: help:event.event,message_summary:0
-#: help:event.registration,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Registrations in confirmed or done state"
-msgstr ""
-
-#. module: event
-#: code:addons/event/event.py:106
-#: code:addons/event/event.py:108
+#: code:addons/event/models/event.py:204
 #, python-format
-msgid "Warning!"
+msgid "Closing Date cannot be set before Beginning Date."
+msgstr "Дата завершення не може бути призначеною перед Датою початку."
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_company_id
+#: model:ir.model.fields,field_description:event.field_event_registration_company_id
+#: model:ir.model.fields,field_description:event.field_report_event_registration_company_id
+#: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+msgid "Company"
+msgstr "Компанія"
+
+#. module: event
+#: code:addons/event/models/event.py:397
+#, python-format
+msgid "Compose Email"
+msgstr "Створити лист"
+
+#. module: event
+#: model:event.type,name:event.event_type_2
+msgid "Conference"
+msgstr "Конференція"
+
+#. module: event
+#: model:event.event,name:event.event_2
+msgid "Conference on Business Apps"
 msgstr ""
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
-msgid "Registration"
-msgstr "Реєстрація"
+#: model:ir.ui.menu,name:event.menu_event_configuration
+msgid "Configuration"
+msgstr "Налаштування"
 
 #. module: event
-#: view:event.registration:0
-#: field:event.registration,partner_id:0
-#: model:ir.model,name:event.model_res_partner
-msgid "Partner"
-msgstr ""
+#: model:ir.actions.act_window,name:event.action_event_configuration
+msgid "Configure Event"
+msgstr "Налаштувати подію"
 
 #. module: event
-#: help:event.type,default_registration_min:0
-msgid "It will select this default minimum value when you choose this event"
-msgstr ""
-
-#. module: event
-#: model:ir.model,name:event.model_event_type
-msgid " Event Type "
-msgstr ""
-
-#. module: event
-#: view:event.registration:0
-#: field:event.registration,event_id:0
-#: model:ir.model,name:event.model_event_event
-#: view:report.event.registration:0
-#: field:report.event.registration,event_id:0
-#: view:res.partner:0
-msgid "Event"
-msgstr "Подія"
-
-#. module: event
-#: view:event.event:0
-#: selection:event.event,state:0
-#: view:event.registration:0
-#: selection:event.registration,state:0
-#: selection:report.event.registration,event_state:0
-#: selection:report.event.registration,registration_state:0
-msgid "Confirmed"
-msgstr "Підтверджено"
-
-#. module: event
-#: view:event.registration:0
-msgid "Participant"
-msgstr ""
-
-#. module: event
-#: view:event.registration:0
-#: view:report.event.registration:0
+#: model:ir.ui.view,arch_db:event.view_event_registration_form
+#: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Confirm"
-msgstr ""
+msgstr "Підтвердити"
 
 #. module: event
-#: view:event.event:0
-msgid "Organized by"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-msgid "Register with this event"
-msgstr ""
-
-#. module: event
-#: help:event.type,default_email_registration:0
-msgid ""
-"It will select this default confirmation registration mail value when you "
-"choose this event"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-msgid "Only"
-msgstr ""
-
-#. module: event
-#: field:event.event,message_follower_ids:0
-#: field:event.registration,message_follower_ids:0
-msgid "Followers"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-msgid "Location"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-#: field:event.event,message_unread:0
-#: view:event.registration:0
-#: field:event.registration,message_unread:0
-msgid "Unread Messages"
-msgstr ""
-
-#. module: event
-#: view:event.registration:0
-#: view:report.event.registration:0
-msgid "New"
-msgstr ""
-
-#. module: event
-#: field:event.event,register_current:0
-msgid "Confirmed Registrations"
-msgstr "Підтверджені Реєстрації"
-
-#. module: event
-#: field:event.registration,email:0
-msgid "Email"
-msgstr ""
-
-#. module: event
-#: code:addons/event/event.py:329
-#, python-format
-msgid "New registration confirmed: %s."
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-msgid "Upcoming"
-msgstr ""
-
-#. module: event
-#: field:event.registration,create_date:0
-msgid "Creation Date"
-msgstr ""
-
-#. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,user_id:0
-msgid "Event Responsible"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-#: view:event.registration:0
-#: view:res.partner:0
-msgid "Cancel Registration"
-msgstr "Скасувати Реєстрацію"
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "July"
-msgstr ""
-
-#. module: event
-#: field:event.event,reply_to:0
-msgid "Reply-To Email"
-msgstr ""
-
-#. module: event
-#: view:event.registration:0
-msgid "Confirmed registrations"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-msgid "Starting Date"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-msgid "Event Organization"
-msgstr ""
-
-#. module: event
-#: view:event.confirm:0
+#: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Confirm Anyway"
 msgstr "Всеодно Підтвердити"
 
 #. module: event
-#: field:report.event.registration,nbevent:0
-msgid "Number Of Events"
-msgstr "Кількість Подій"
+#: model:ir.ui.view,arch_db:event.view_event_form
+msgid "Confirm Event"
+msgstr "Підтвердити Подію"
 
 #. module: event
-#: help:event.event,main_speaker_id:0
-msgid "Speaker who will be giving speech at the event."
+#: model:ir.ui.view,arch_db:event.view_event_registration_tree
+msgid "Confirm Registration"
+msgstr "Підтвердити Реєстрацію"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_auto_confirm
+msgid "Confirmation not required"
+msgstr "Підтвердження не є обов’язковим"
+
+#. module: event
+#: selection:event.event,state:0 selection:event.registration,state:0
+#: model:ir.ui.view,arch_db:event.view_event_search
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
+msgid "Confirmed"
+msgstr "Confirmed"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_kanban
+msgid "Confirmed attendees"
+msgstr "Затверджені учасники"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_search
+msgid "Confirmed events"
+msgstr "Підтверджені події"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_registration_partner_id
+msgid "Contact"
+msgstr "Контакт"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Controlers and Views"
 msgstr ""
 
 #. module: event
-#: view:event.event:0
-msgid "Cancel Event"
-msgstr "Відмінити Подію"
+#: model:ir.model.fields,field_description:event.field_event_event_country_id
+msgid "Country"
+msgstr "Country"
 
 #. module: event
-#: model:ir.actions.act_window,name:event.act_event_reg
-#: view:report.event.registration:0
-msgid "Events Filling Status"
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Course Summary"
+msgstr "Підсумок курсу"
+
+#. module: event
+#: model:web.tip,description:event.event_tip_1
+msgid ""
+"Create and manage registrations for this event, send emails to attendees and"
+" print identification badges."
 msgstr ""
 
 #. module: event
-#: view:event.event:0
-msgid "Event Category"
+#: model:ir.model.fields,field_description:event.field_event_config_settings_create_uid
+#: model:ir.model.fields,field_description:event.field_event_confirm_create_uid
+#: model:ir.model.fields,field_description:event.field_event_event_create_uid
+#: model:ir.model.fields,field_description:event.field_event_mail_create_uid
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_create_uid
+#: model:ir.model.fields,field_description:event.field_event_registration_create_uid
+#: model:ir.model.fields,field_description:event.field_event_type_create_uid
+msgid "Created by"
+msgstr "Створив"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_config_settings_create_date
+#: model:ir.model.fields,field_description:event.field_event_confirm_create_date
+#: model:ir.model.fields,field_description:event.field_event_event_create_date
+#: model:ir.model.fields,field_description:event.field_event_mail_create_date
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_create_date
+#: model:ir.model.fields,field_description:event.field_event_registration_create_date
+#: model:ir.model.fields,field_description:event.field_event_type_create_date
+msgid "Created on"
+msgstr "Дата створення"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_report_event_registration_create_date
+msgid "Creation Date"
+msgstr "Дата створення"
+
+#. module: event
+#: code:addons/event/models/event.py:378
+#, python-format
+msgid "Customer"
+msgstr "Клієнт"
+
+#. module: event
+#: code:addons/event/models/event.py:376
+#, python-format
+msgid "Customer Email"
 msgstr ""
 
 #. module: event
-#: field:event.event,register_prospect:0
-msgid "Unconfirmed Registrations"
-msgstr "Непідтверджені Реєстрації"
+#: model:ir.model.fields,help:event.field_event_event_message_last_post
+#: model:ir.model.fields,help:event.field_event_registration_message_last_post
+msgid "Date of the last message posted on the record."
+msgstr "Дата останнього повідомлення по запису."
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Day 1"
+msgstr "День 1"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Day 2"
+msgstr "День 2"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Day 3"
+msgstr "День 3"
+
+#. module: event
+#: selection:event.mail,interval_unit:0
+msgid "Day(s)"
+msgstr "День (дні)"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_type_default_registration_max
+msgid "Default Maximum Registration"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_type_default_registration_min
+msgid "Default Minimum Registration"
+msgstr ""
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_kanban
+msgid "Delete"
+msgstr "Вилучити"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_description
+msgid "Description"
+msgstr "Опис"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Develop a new module for a particular application."
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_config_settings_display_name
+#: model:ir.model.fields,field_description:event.field_event_confirm_display_name
+#: model:ir.model.fields,field_description:event.field_event_event_display_name
+#: model:ir.model.fields,field_description:event.field_event_mail_display_name
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_display_name
+#: model:ir.model.fields,field_description:event.field_event_registration_display_name
+#: model:ir.model.fields,field_description:event.field_event_type_display_name
+#: model:ir.model.fields,field_description:event.field_report_event_registration_display_name
+msgid "Display Name"
+msgstr "Показати ім'я"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail_sequence
+msgid "Display order"
+msgstr "Порядок відображення"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Dive into Strings"
+msgstr ""
+
+#. module: event
+#: selection:event.event,state:0
+#: selection:report.event.registration,event_state:0
+msgid "Done"
+msgstr "Done"
+
+#. module: event
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
+msgid "Draft"
+msgstr "Чернетка"
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid ""
+"During this conference, our team will give a detailed overview of our "
+"business applications. You’ll know all the benefits of using it."
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_registration_email
+msgid "Email"
+msgstr "Email"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_form
+msgid "Email Schedule"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_config_settings_group_email_scheduling
+msgid "Email Scheduling"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail_template_id
+msgid "Email to Send"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_date_end
+msgid "End Date"
+msgstr "Кінцева дата"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_date_end_located
+msgid "End Date Located"
+msgstr ""
+
+#. module: event
+#: model:ir.model,name:event.model_event_event
+#: model:ir.model.fields,field_description:event.field_event_mail_event_id
+#: model:ir.model.fields,field_description:event.field_event_registration_event_id
+#: model:ir.model.fields,field_description:event.field_report_event_registration_event_id
+#: model:ir.ui.view,arch_db:event.view_registration_search
+#: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+msgid "Event"
+msgstr "Подія"
+
+#. module: event
+#: model:ir.actions.report.xml,name:event.report_event_event_badge
+msgid "Event Badge"
+msgstr ""
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+msgid "Event Beginning Date"
+msgstr ""
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_confirm
+#: model:ir.ui.view,arch_db:event.view_event_confirm
+msgid "Event Confirmation"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_report_event_registration_event_date
+msgid "Event Date"
+msgstr "Дата проведення"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_registration_event_end_date
+msgid "Event End Date"
+msgstr "Дата завершення"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_registration_form
+msgid "Event Information"
+msgstr "Інформація про подію"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_event_logo
+msgid "Event Logo"
+msgstr "Логотип"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_mail_form
+msgid "Event Mail Scheduler"
+msgstr "Планувальник пошти події"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_mail_tree
+msgid "Event Mail Schedulers"
+msgstr "Планувальники пошти події"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+msgid "Event Month"
+msgstr "Місяць"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_name
+#: model:ir.ui.view,arch_db:event.view_event_form
+msgid "Event Name"
+msgstr "Назва події"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_calendar
+msgid "Event Organization"
+msgstr "Організація подій"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_registration_calendar
+#: model:ir.ui.view,arch_db:event.view_event_registration_form
+#: model:ir.ui.view,arch_db:event.view_registration_search
+msgid "Event Registration"
+msgstr "Реєстрація Події"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_report_event_registration_user_id
+msgid "Event Responsible"
+msgstr "Відповідальна особа"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_registration_event_begin_date
+msgid "Event Start Date"
+msgstr "Дата початку"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_report_event_registration_event_state
+#: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+msgid "Event State"
+msgstr "Статус"
+
+#. module: event
+#: model:ir.model,name:event.model_event_type
+#: model:ir.model.fields,field_description:event.field_event_type_name
+#: model:ir.model.fields,field_description:event.field_report_event_registration_event_type_id
+#: model:ir.ui.view,arch_db:event.view_event_search
+#: model:ir.ui.view,arch_db:event.view_event_type_form
+#: model:ir.ui.view,arch_db:event.view_event_type_tree
+#: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+msgid "Event Type"
+msgstr "Тип Події"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.report_event_registration_graph
+#: model:ir.ui.view,arch_db:event.report_event_registration_pivot
+#: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+msgid "Event on Registration"
+msgstr "Подія по Реєстрації"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_view
+#: model:ir.ui.menu,name:event.event_main_menu
+#: model:ir.ui.menu,name:event.menu_event_event
+#: model:ir.ui.menu,name:event.menu_report_event_registration
+#: model:ir.ui.view,arch_db:event.view_event_configuration
+#: model:ir.ui.view,arch_db:event.view_event_form
+#: model:ir.ui.view,arch_db:event.view_event_search
+#: model:ir.ui.view,arch_db:event.view_event_tree
+msgid "Events"
+msgstr "Події"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_report_event_registration
+msgid "Events Analysis"
+msgstr "Аналіз подій"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_mail
+msgid "Events Mail Schedulers"
+msgstr "Планувальники пошти подій"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_type
+msgid "Events Types"
+msgstr "Типи подій"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_search
+msgid "Events in New state"
+msgstr "Змінили статус"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+msgid "Events which are in New state"
+msgstr "В новому статусі"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+msgid "Events which are in confirm state"
+msgstr "В статусі підтвердження"
+
+#. module: event
+#: model:event.type,name:event.event_type_1
+msgid "Exhibition"
+msgstr "Виставка"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_registration_search
+msgid "Expected"
+msgstr "Очікуються"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_kanban
+msgid "Expected attendees"
+msgstr "Запрошені учасники"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+msgid "Extended Filters..."
+msgstr "Extended Filters..."
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_form
+msgid "Finish Event"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_message_follower_ids
+#: model:ir.model.fields,field_description:event.field_event_registration_message_follower_ids
+msgid "Followers"
+msgstr "Підписники"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_message_channel_ids
+#: model:ir.model.fields,field_description:event.field_event_registration_message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Підписники (Канали)"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_message_partner_ids
+#: model:ir.model.fields,field_description:event.field_event_registration_message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Підписники (Партнери)"
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "For any additional information, please contact us at"
+msgstr "За додатковою інформацією, зв'яжіться з нами"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event_seats_max
+msgid ""
+"For each event you can define a maximum registration of seats(number of "
+"attendees), above this numbers the registrations are not accepted."
+msgstr "На кожну подію, Ви можете визначати максимальну кількість місць для реєстрації (кількість учасників); вище зазначеної кількості заявки не прийматимуться."
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event_seats_min
+msgid ""
+"For each event you can define a minimum reserved seats (number of "
+"attendees), if it does not reach the mentioned registrations the event can "
+"not be confirmed (keep 0 to ignore this rule)"
+msgstr "На кожну подію, Ви можете вказати мінімальну кількість замовлених місць (кількість учасників); якщо зазначена кількість не набереться - подію не буде затверджено (натисніть 0, щоб ігнорувати це правило)"
+
+#. module: event
+#: model:event.event,name:event.event_1
+msgid "Functional Webinar"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "Functional flow of the main applications;"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Functions"
+msgstr "Функції"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_search
+#: model:ir.ui.view,arch_db:event.view_registration_search
+#: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+msgid "Group By"
+msgstr "Групувати за"
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "Having attended this conference, participants should be able to:"
+msgstr "Відвідавши цей курс, учасники матимуть змогу:"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Hello World"
+msgstr "Привіт, світ!"
+
+#. module: event
+#: selection:event.mail,interval_unit:0
+msgid "Hour(s)"
+msgstr "Година (години)"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "How to Debug"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid ""
+"I did not expect such a great learning experience. I feel like I can develop"
+" anything now."
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_config_settings_id
+#: model:ir.model.fields,field_description:event.field_event_confirm_id
+#: model:ir.model.fields,field_description:event.field_event_event_id
+#: model:ir.model.fields,field_description:event.field_event_mail_id
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_id
+#: model:ir.model.fields,field_description:event.field_event_registration_id
+#: model:ir.model.fields,field_description:event.field_event_type_id
+#: model:ir.model.fields,field_description:event.field_report_event_registration_id
+msgid "ID"
+msgstr "ID"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event_message_unread
+#: model:ir.model.fields,help:event.field_event_registration_message_unread
+msgid "If checked new messages require your attention."
+msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event_message_needaction
+#: model:ir.model.fields,help:event.field_event_registration_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event_state
+msgid ""
+"If event is created, the status is 'Draft'. If event is confirmed for the "
+"particular dates the status is set to 'Confirmed'. If the event is over, the"
+" status is set to 'Done'. If event is cancelled the status is set to "
+"'Cancelled'."
+msgstr ""
+
+#. module: event
+#: selection:event.mail,interval_unit:0
+msgid "Immediately"
+msgstr "Безпосередньо"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Install and administer your own server;"
+msgstr "Встановіть та адмініструйте свій власний сервер;"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_config_settings_module_event_sale
+msgid "Install the event_sale module"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_config_settings_module_website_event_track
+msgid "Install the module website_event_track"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_config_settings_module_website_event_questions
+msgid "Install the website_event_questions module"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Integrated Help"
+msgstr "Комплексна допомога"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail_interval_nbr
+msgid "Interval"
+msgstr "Інтервал"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Introduction to JQuery"
+msgstr "Вступ до JQuery"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Introduction to Javascript"
+msgstr "Вступ до Javascript"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Introduction to QWeb"
+msgstr "Вступ до QWeb"
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "Introduction, CRM, Sales Management"
+msgstr "Передмова, CRM, Керування продажами"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_message_is_follower
+#: model:ir.model.fields,field_description:event.field_event_registration_message_is_follower
+msgid "Is Follower"
+msgstr "Стежить"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_type_default_registration_max
+msgid "It will select this default maximum value when you choose this event"
+msgstr "Вибиратиметься це максимальне значення за замовчуванням, при виборі даної події"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_type_default_registration_min
+msgid "It will select this default minimum value when you choose this event"
+msgstr "Вибиратиметься це мінімальне значення за замовчуванням, при виборі даної події"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_color
+msgid "Kanban Color Index"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_message_last_post
+#: model:ir.model.fields,field_description:event.field_event_registration_message_last_post
+msgid "Last Message Date"
+msgstr "Дата останнього повідомлення"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_config_settings___last_update
+#: model:ir.model.fields,field_description:event.field_event_confirm___last_update
+#: model:ir.model.fields,field_description:event.field_event_event___last_update
+#: model:ir.model.fields,field_description:event.field_event_mail___last_update
+#: model:ir.model.fields,field_description:event.field_event_mail_registration___last_update
+#: model:ir.model.fields,field_description:event.field_event_registration___last_update
+#: model:ir.model.fields,field_description:event.field_event_type___last_update
+#: model:ir.model.fields,field_description:event.field_report_event_registration___last_update
+msgid "Last Modified on"
+msgstr "Остання модифікація"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_config_settings_write_uid
+#: model:ir.model.fields,field_description:event.field_event_confirm_write_uid
+#: model:ir.model.fields,field_description:event.field_event_event_write_uid
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_write_uid
+#: model:ir.model.fields,field_description:event.field_event_mail_write_uid
+#: model:ir.model.fields,field_description:event.field_event_registration_write_uid
+#: model:ir.model.fields,field_description:event.field_event_type_write_uid
+msgid "Last Updated by"
+msgstr "Востаннє оновив"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_config_settings_write_date
+#: model:ir.model.fields,field_description:event.field_event_confirm_write_date
+#: model:ir.model.fields,field_description:event.field_event_event_write_date
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_write_date
+#: model:ir.model.fields,field_description:event.field_event_mail_write_date
+#: model:ir.model.fields,field_description:event.field_event_registration_write_date
+#: model:ir.model.fields,field_description:event.field_event_type_write_date
+msgid "Last Updated on"
+msgstr "Останнє оновлення"
+
+#. module: event
+#: selection:event.event,seats_availability:0
+msgid "Limited"
+msgstr "Обмежений"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_address_id
+msgid "Location"
+msgstr "Розташування"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Loops"
+msgstr "Повторення"
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "Luigi Roni, Senior Event Manager"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_event_mail_ids
+msgid "Mail Schedule"
+msgstr "Планування розсилок"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_scheduler_id
+msgid "Mail Scheduler"
+msgstr "Планувальник розсилок"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_event_type
+msgid "Mail Schedulers"
+msgstr "Планувальники розсилок"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_mail_sent
+msgid "Mail Sent"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail_mail_sent
+msgid "Mail Sent on Event"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail_mail_registration_ids
+msgid "Mail registration ids"
+msgstr ""
+
+#. module: event
+#: model:res.groups,name:event.group_event_manager
+msgid "Manager"
+msgstr "Менеджер"
+
+#. module: event
+#: selection:event.config.settings,auto_confirmation:0
+msgid "Manually confirm every subscription"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_report_event_registration_seats_max
+msgid "Max Seats"
+msgstr "Макс. к-ть місць"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_seats_availability
+#: model:ir.model.fields,field_description:event.field_event_event_seats_available
+msgid "Maximum Attendees"
+msgstr "Максимальна к-ть учасників"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_seats_max
+msgid "Maximum Attendees Number"
+msgstr "Максимальна кількість учасників"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_message_ids
+#: model:ir.model.fields,field_description:event.field_event_registration_message_ids
+msgid "Messages"
+msgstr "Повідомлення"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event_message_ids
+#: model:ir.model.fields,help:event.field_event_registration_message_ids
+msgid "Messages and communication history"
+msgstr "Повідомлення та історія бесіди"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_seats_min
+msgid "Minimum Attendees"
+msgstr "Мінімальна к-ть учасників"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Modules"
+msgstr "Модулі"
+
+#. module: event
+#: selection:event.mail,interval_unit:0
+msgid "Month(s)"
+msgstr "Місяць (місяці)"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_search
+msgid "My Events"
+msgstr "Мої події"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+msgid "New"
+msgstr "Новий"
+
+#. module: event
+#: selection:event.config.settings,group_email_scheduling:0
+msgid "No automated emails"
+msgstr ""
+
+#. module: event
+#: selection:event.config.settings,module_website_event_questions:0
+msgid "No extra questions on subscriptions"
+msgstr "Немає додаткових запитань у підписках"
+
+#. module: event
+#: selection:event.config.settings,module_website_event_track:0
+msgid "No mini website per event"
+msgstr "Немає міні-сайтів для події"
+
+#. module: event
+#: code:addons/event/models/event.py:198
+#, python-format
+msgid "No more available seats."
+msgstr "Не залишилося вільних місць."
+
+#. module: event
+#: code:addons/event/models/event.py:298
+#, python-format
+msgid "No more seats available for this event."
+msgstr "Не залишилося вільних місць."
+
+#. module: event
+#: selection:event.config.settings,auto_confirmation:0
+msgid "No validation step on subscription"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_message_needaction_counter
+#: model:ir.model.fields,field_description:event.field_event_registration_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Кількість дій"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_report_event_registration_nbevent
+msgid "Number of Events"
+msgstr "Кількість подій"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_seats_expected
+msgid "Number of Expected Attendees"
+msgstr "Очікувана кількість учасників"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_seats_used
+msgid "Number of Participants"
+msgstr "Кількість учасників"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_report_event_registration_nbregistration
+msgid "Number of Registrations"
+msgstr "Кількість реєстрацій"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event_message_needaction_counter
+#: model:ir.model.fields,help:event.field_event_registration_message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Кількість повідомлень, які потебують дії"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event_message_unread_counter
+#: model:ir.model.fields,help:event.field_event_registration_message_unread_counter
+msgid "Number of unread messages"
+msgstr "Кількість непрочитаних повідомлень"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Odoo Official Website"
+msgstr "Офіційний сайт Odoo "
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Odoo Web Client"
+msgstr ""
+
+#. module: event
+#: model:ir.actions.act_window,help:event.action_event_view
+msgid ""
+"Odoo helps you schedule and efficiently organize your events:\n"
+"    track subscriptions and participations, automate the confirmation emails,\n"
+"    sell tickets, etc."
+msgstr "Odoo допомагає спланувати та ефективно організувати Ваші події:\nвідстежувати підписки та учасників, автоматизувати листи підтвердження,\nпродавати квитки і т.д.."
+
+#. module: event
+#: model:event.event,name:event.event_0
+msgid "Open Days in Los Angeles"
+msgstr "Відкриті дні у Лос-Анджелесі"
 
 #. module: event
 #: model:ir.actions.client,name:event.action_client_event_menu
@@ -475,317 +1369,495 @@ msgid "Open Event Menu"
 msgstr ""
 
 #. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,event_state:0
-msgid "Event State"
-msgstr ""
+#: model:ir.model.fields,field_description:event.field_event_event_organizer_id
+msgid "Organizer"
+msgstr "Організатор"
 
 #. module: event
-#: field:event.registration,log_ids:0
-msgid "Logs"
-msgstr ""
+#: model:ir.ui.view,arch_db:event.view_registration_search
+msgid "Participant"
+msgstr "Учасник"
 
 #. module: event
-#: view:event.event:0
-#: field:event.event,state_id:0
-msgid "State"
-msgstr ""
+#: model:ir.model.fields,field_description:event.field_report_event_registration_name_registration
+msgid "Participant / Contact Name"
+msgstr "Учасник / Ім'я"
 
 #. module: event
-#: selection:report.event.registration,month:0
-msgid "September"
-msgstr ""
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "December"
-msgstr ""
-
-#. module: event
-#: help:event.registration,origin:0
-msgid "Reference of the sales order which created the registration"
-msgstr ""
-
-#. module: event
-#: field:report.event.registration,draft_state:0
-msgid " # No of Draft Registrations"
-msgstr ""
-
-#. module: event
-#: field:event.event,email_registration_id:0
-#: field:event.type,default_email_registration:0
-msgid "Registration Confirmation Email"
-msgstr ""
-
-#. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,month:0
-msgid "Month"
-msgstr ""
-
-#. module: event
-#: field:event.registration,date_closed:0
-msgid "Attended Date"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-msgid "Finish Event"
-msgstr ""
-
-#. module: event
-#: view:event.registration:0
-msgid "Registrations in unconfirmed state"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-msgid "Event Description"
-msgstr ""
-
-#. module: event
-#: field:event.event,date_begin:0
-msgid "Start Date"
-msgstr ""
-
-#. module: event
-#: view:event.confirm:0
-msgid "or"
-msgstr ""
-
-#. module: event
-#: help:res.partner,speaker:0
-msgid "Check this box if this contact is a speaker."
-msgstr ""
-
-#. module: event
-#: code:addons/event/event.py:108
-#, python-format
-msgid "No Tickets Available!"
-msgstr ""
-
-#. module: event
-#: help:event.event,state:0
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
 msgid ""
-"If event is created, the status is 'Draft'.If event is confirmed for the "
-"particular dates the status is set to 'Confirmed'. If the event is over, the "
-"status is set to 'Done'.If event is cancelled the status is set to "
-"'Cancelled'."
-msgstr ""
+"Participants are expected to have some knowledge in programming. A basic "
+"knowledge of the Python programming is recommended."
+msgstr "Розраховано на учасників зі знанням азів програмування. Рекомендовано основи мови програмування Python."
 
 #. module: event
-#: model:ir.actions.act_window,help:event.action_event_view
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"               Click to add a new event.\n"
-"             </p><p>\n"
-"               OpenERP helps you schedule and efficiently organize your "
-"events:\n"
-"               track subscriptions and participations, automate the "
-"confirmation emails,\n"
-"               sell tickets, etc.\n"
-"             </p>\n"
-"           "
-msgstr ""
+"Participants preferably have a functional knowledge of our software (see "
+"Functional Training)."
+msgstr "Учасники повинні мати навички користування нашим програмним забезпеченням (див. Тренінг з користування)"
 
 #. module: event
-#: help:event.event,register_max:0
-msgid ""
-"You can for each event define a maximum registration level. If you have too "
-"much registrations you are not able to confirm your event. (put 0 to ignore "
-"this rule )"
-msgstr ""
+#: model:ir.ui.view,arch_db:event.view_registration_search
+msgid "Partner"
+msgstr "Партнер"
 
 #. module: event
-#: field:event.event,user_id:0
-msgid "Responsible User"
-msgstr ""
-
-#. module: event
-#: code:addons/event/event.py:100
-#, python-format
-msgid ""
-"The total of confirmed registration for the event '%s' does not meet the "
-"expected minimum/maximum. Please reconsider those limits before going "
-"further."
-msgstr ""
-
-#. module: event
-#: help:event.event,email_confirmation_id:0
-msgid ""
-"If you set an email template, each participant will receive this email "
-"announcing the confirmation of the event."
-msgstr ""
-
-#. module: event
-#: view:board.board:0
-msgid "Events Filling By Status"
-msgstr ""
-
-#. module: event
-#: selection:report.event.registration,event_state:0
-#: selection:report.event.registration,registration_state:0
-msgid "Draft"
-msgstr "Чорновик"
-
-#. module: event
-#: view:event.event:0
-msgid "Events in New state"
-msgstr ""
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Events which are in New state"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-#: model:ir.actions.act_window,name:event.action_event_view
-#: model:ir.actions.act_window,name:event.open_board_associations_manager
-#: model:ir.module.category,name:event.module_category_event_management
-#: model:ir.ui.menu,name:event.event_main_menu
-#: model:ir.ui.menu,name:event.menu_board_associations_manager
-#: model:ir.ui.menu,name:event.menu_event_event
-#: model:ir.ui.menu,name:event.menu_reporting_events
-#: view:res.partner:0
-msgid "Events"
-msgstr "Події"
-
-#. module: event
-#: view:event.event:0
-#: field:event.event,state:0
-#: view:event.registration:0
-#: field:event.registration,state:0
-msgid "Status"
-msgstr "Статус"
-
-#. module: event
-#: field:event.event,city:0
-msgid "city"
-msgstr ""
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "August"
-msgstr ""
-
-#. module: event
-#: field:event.event,zip:0
-msgid "zip"
-msgstr ""
-
-#. module: event
-#: field:res.partner,event_ids:0
-#: field:res.partner,event_registration_ids:0
-msgid "unknown"
-msgstr ""
-
-#. module: event
-#: field:event.event,street2:0
-msgid "Street2"
-msgstr ""
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "June"
-msgstr ""
-
-#. module: event
-#: help:event.type,default_reply_to:0
-msgid ""
-"The email address of the organizer which is put in the 'Reply-To' of all "
-"emails sent automatically at event or registrations confirmation. You can "
-"also put your email address of your mail gateway if you use one."
-msgstr ""
-
-#. module: event
-#: help:event.event,message_ids:0
-#: help:event.registration,message_ids:0
-msgid "Messages and communication history"
-msgstr ""
-
-#. module: event
-#: field:event.registration,phone:0
+#: model:ir.model.fields,field_description:event.field_event_registration_phone
 msgid "Phone"
+msgstr "Телефон"
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "Point of Sale (POS), Introduction to report customization."
 msgstr ""
 
 #. module: event
-#: model:email.template,body_html:event.confirmation_event
+#: model:event.event,description:event.event_2
+msgid "Project management, Human resources, Contract management."
+msgstr "Менеджмент проектів, Управління персоналом, Управління контрактами."
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Python Objects"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Read Great Contents"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_registration_origin
 msgid ""
-"\n"
-"        <p>Hello ${object.name},</p>\n"
-"        <p>The event ${object.event_id.name} that you registered for is "
-"confirmed and will be held from ${object.event_id.date_begin} to "
-"${object.event_id.date_end}.\n"
-"        For any further information please contact our event "
-"department.</p>\n"
-"        <p>Thank you for your participation!</p>\n"
-"        <p>Best regards</p>"
+"Reference of the document that created the registration, for example a sale "
+"order"
 msgstr ""
 
 #. module: event
-#: field:event.event,message_is_follower:0
-#: field:event.registration,message_is_follower:0
-msgid "Is a Follower"
+#: model:ir.ui.view,arch_db:event.view_event_form
+msgid "Register with this event"
 msgstr ""
 
 #. module: event
-#: field:event.registration,user_id:0
-#: model:res.groups,name:event.group_event_user
-msgid "User"
+#: model:ir.ui.view,arch_db:event.view_event_registration_form
+#: model:ir.ui.view,arch_db:event.view_event_registration_graph
+#: model:ir.ui.view,arch_db:event.view_event_registration_pivot
+#: model:ir.ui.view,arch_db:event.view_event_registration_tree
+msgid "Registration"
+msgstr "Реєстрація"
+
+#. module: event
+#: model:ir.actions.report.xml,name:event.report_event_registration_badge
+msgid "Registration Badge"
+msgstr "Реєстраційний бейдж"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_registration_date_open
+msgid "Registration Date"
+msgstr "Дата реєстрації"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_registration_search
+msgid "Registration Day"
+msgstr "День реєстрації"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_registration_search
+msgid "Registration ID"
+msgstr "ID реєстрації"
+
+#. module: event
+#: model:ir.model,name:event.model_event_mail_registration
+msgid "Registration Mail Scheduler"
+msgstr "Планувальник реєстраційних листів"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_mail_form
+msgid "Registration Mails"
+msgstr "Реєстраційні листи"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_registration_search
+msgid "Registration Month"
+msgstr "Місяць реєстрації"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_report_event_registration_registration_state
+msgid "Registration State"
+msgstr "Статус реєстрації"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_report_event_registration_search
+msgid "Registration contact"
+msgstr "Контакт"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_mail_form
+msgid "Registration mail"
+msgstr "Реєстраційний лист"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_form
+msgid "Registrations"
+msgstr "Реєстрації"
+
+#. module: event
+#: model:mail.template,subject:event.event_reminder
+msgid "Reminder of event ${object.event_id.name}"
+msgstr "Нагадування про подію ${object.event_id.name}"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_type_default_reply_to
+msgid "Reply To"
+msgstr "Відповісти"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_reply_to
+msgid "Reply-To Email"
+msgstr "Лист-відповідь"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Report Engine"
+msgstr "Генератор звітів"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_reporting_events
+msgid "Reports"
+msgstr "Звіти"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Requirements"
+msgstr "Вимоги"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_seats_reserved
+msgid "Reserved Seats"
+msgstr "Зарезервовано місць"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_user_id
+#: model:ir.ui.view,arch_db:event.view_event_search
+msgid "Responsible"
+msgstr "Відповідальний"
+
+#. module: event
+#: model:res.groups,name:event.group_email_scheduling
+msgid "Schedule Emails on Event Subscription"
+msgstr "Запланувати Email-и для підписки на подію"
+
+#. module: event
+#: selection:event.config.settings,group_email_scheduling:0
+msgid "Schedule emails to attendees and subscribers"
 msgstr ""
 
 #. module: event
-#: view:event.confirm:0
-msgid ""
-"Warning: This Event has not reached its Minimum Registration Limit. Are you "
-"sure you want to confirm it?"
+#: model:ir.model.fields,field_description:event.field_event_mail_scheduled_date
+msgid "Scheduled Sent Mail"
 msgstr ""
 
 #. module: event
-#: view:event.event:0
-msgid "(confirmed:"
-msgstr ""
+#: model:ir.model.fields,field_description:event.field_event_mail_registration_scheduled_date
+msgid "Scheduled Time"
+msgstr "Запланований час"
 
 #. module: event
-#: view:event.registration:0
-msgid "My Registrations"
-msgstr ""
+#: model:event.type,name:event.event_type_0
+msgid "Seminar"
+msgstr "Семінар"
 
 #. module: event
-#: selection:report.event.registration,month:0
-msgid "November"
-msgstr ""
+#: model:ir.ui.view,arch_db:event.view_event_registration_form
+msgid "Send by Email"
+msgstr "Надіслано Email-ом"
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Extended Filters..."
-msgstr ""
+#: model:ir.model.fields,field_description:event.field_event_mail_done
+msgid "Sent"
+msgstr "Надіслано"
 
 #. module: event
-#: selection:report.event.registration,month:0
-msgid "October"
-msgstr ""
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "January"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
+#: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Set To Draft"
 msgstr "Встановити як Чорновик"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
-#: view:res.partner:0
-msgid "Confirm Registration"
-msgstr "Підтвердити Реєстрацію"
+#: model:ir.ui.view,arch_db:event.view_event_registration_form
+msgid "Set To Unconfirmed"
+msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:89
+#: model:ir.ui.menu,name:event.menu_event_global_settings
+msgid "Settings"
+msgstr "Налаштування"
+
+#. module: event
+#: model:event.type,name:event.event_type_3
+msgid "Show"
+msgstr "Показ"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_registration_origin
+msgid "Source Document"
+msgstr "Початковий документ"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_date_begin
+msgid "Start Date"
+msgstr "Початкова дата"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_date_begin_located
+msgid "Start Date Located"
+msgstr "Місце "
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_search
+msgid "Start Month"
+msgstr "Місяць початку"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_state
+#: model:ir.model.fields,field_description:event.field_event_registration_state
+#: model:ir.ui.view,arch_db:event.view_event_search
+#: model:ir.ui.view,arch_db:event.view_registration_search
+msgid "Status"
+msgstr "Статус"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.act_register_event_partner
+msgid "Subscribe"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_config_settings_module_website_event_questions
+msgid "Subscription Survey"
+msgstr "Контроль підписки"
+
+#. module: event
+#: model:event.event,name:event.event_3
+msgid "Technical Training"
+msgstr "Технічна підготовка"
+
+#. module: event
+#: model:mail.template,subject:event.event_thanks
+msgid "Thanks for attending ${object.event_id.name}"
+msgstr "Дякуємо за участь ${object.event_id.name}"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event_reply_to
+msgid ""
+"The email address of the organizer is likely to be put here, with the effect"
+" to be in the 'Reply-To' of the mails sent automatically at event or "
+"registrations confirmation. You can also put the email address of your mail "
+"gateway if you use one."
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid ""
+"This course help me build my first application within a month. Definetly "
+"worth its price."
+msgstr "Цей курс допоміг мені створити свій перший додаток за місяць. Безсумнівно, вартий своїх грошей."
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_mail_template_id
+msgid ""
+"This field contains the template of the mail that will be automatically sent"
+msgstr "Це поле містить шаблон листа, що надсилатиметься автоматично"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_config_settings_module_event_sale
+msgid "Tickets"
+msgstr "Білети"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_date_tz
+msgid "Timezone"
+msgstr "Часовий пояс"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "To get more information, visit the"
+msgstr "Детальніша інформація на"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_config_settings_module_website_event_track
+msgid "Tracks and Agenda"
+msgstr "Маршрути і розклад"
+
+#. module: event
+#: model:event.type,name:event.event_type_4
+msgid "Training"
+msgstr "Тренінг"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Training Center Module"
+msgstr "Модуль центру підготовки"
+
+#. module: event
+#: selection:event.event,state:0 selection:event.registration,state:0
+#: model:ir.ui.view,arch_db:event.view_event_search
+msgid "Unconfirmed"
+msgstr "Непідтверджено"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_seats_unconfirmed
+msgid "Unconfirmed Seat Reservations"
+msgstr "Непідтверджені зарезервовані місця"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Underscore"
+msgstr "Підкресліть"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Understand the development concepts and architecture;"
+msgstr "Розуміти концепти та архітектуру розвитку;"
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "Understand the various modules;"
+msgstr "Розуміти різні модулі;"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail_interval_unit
+msgid "Unit"
+msgstr "Одиниця"
+
+#. module: event
+#: selection:event.event,seats_availability:0
+msgid "Unlimited"
+msgstr "Необмежено"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_message_unread
+#: model:ir.model.fields,field_description:event.field_event_registration_message_unread
+#: model:ir.ui.view,arch_db:event.view_event_search
+#: model:ir.ui.view,arch_db:event.view_registration_search
+msgid "Unread Messages"
+msgstr "Непрочитані повідомлення"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_message_unread_counter
+#: model:ir.model.fields,field_description:event.field_event_registration_message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Кількість непрочитаних повідомлень"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_config_settings_auto_confirmation
+msgid ""
+"Unselect this option to manually manage draft event and draft subscription"
+msgstr "Скасуйте вибір цієї опції, щоб вручну керувати чернетками подій та підписок"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_search
+msgid "Upcoming"
+msgstr "Майбутні"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_search
+msgid "Upcoming events from today"
+msgstr "Найближчі події від сьогодні"
+
+#. module: event
+#: model:res.groups,name:event.group_event_user
+msgid "User"
+msgstr "Користувач"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Variables &amp; Operators"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
+msgstr "Управління складом, Виробництво (MRP-система) &amp; Продаж, Імпорт/Експорт."
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_confirm
+msgid ""
+"Warning: This Event has not reached its Minimum Registration Limit. Are you "
+"sure you want to confirm it?"
+msgstr "Попередження: Дана подія не набрала мінімальної кількості учасників. Ви впевнені, що хочете її підтвердити?"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_website_message_ids
+msgid "Website Messages"
+msgstr "Повідомлення з веб-сайту"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event_website_message_ids
+msgid "Website communication history"
+msgstr "Історія бесіди на сайті"
+
+#. module: event
+#: selection:event.mail,interval_unit:0
+msgid "Week(s)"
+msgstr "Тиждень (тижні)"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "What do people say about this course?"
+msgstr "Що кажуть про цей курс?"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "What you will learn?"
+msgstr "Що ви дізнаєтесь?"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail_interval_type
+msgid "When to Run "
+msgstr "Коли"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Workflows"
+msgstr "Процеси"
+
+#. module: event
+#: code:addons/event/models/event.py:230
 #, python-format
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
@@ -793,550 +1865,83 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: view:res.partner:0
-msgid "Date"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-msgid "Email Configuration"
-msgstr ""
-
-#. module: event
-#: field:event.type,default_registration_min:0
-msgid "Default Minimum Registration"
-msgstr ""
-
-#. module: event
-#: field:event.event,address_id:0
-msgid "Location Address"
-msgstr ""
-
-#. module: event
-#: model:ir.actions.act_window,name:event.action_event_type
-#: model:ir.ui.menu,name:event.menu_event_type
-msgid "Types of Events"
-msgstr "Типи Подій"
-
-#. module: event
-#: help:event.event,email_registration_id:0
-msgid ""
-"This field contains the template of the mail that will be automatically sent "
-"each time a registration for this event is confirmed."
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-#: view:event.registration:0
-msgid "Attended the Event"
-msgstr ""
-
-#. module: event
-#: constraint:event.event:0
-msgid "Error ! Closing Date cannot be set before Beginning Date."
-msgstr ""
-
-#. module: event
-#: code:addons/event/event.py:355
+#: code:addons/event/models/event.py:355
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
-msgstr ""
+msgstr "Для цього потрібно дочекатися дня початку події."
 
 #. module: event
-#: selection:event.event,state:0
-#: selection:report.event.registration,event_state:0
-msgid "Done"
-msgstr "Готово"
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Show Confirmed Registrations"
-msgstr ""
-
-#. module: event
-#: view:event.confirm:0
-msgid "Cancel"
-msgstr "Скасувати"
-
-#. module: event
-#: field:event.registration,reply_to:0
-msgid "Reply-to Email"
-msgstr ""
-
-#. module: event
-#: code:addons/event/event.py:106
-#, python-format
-msgid "Only %d Seats are Available!"
-msgstr ""
-
-#. module: event
-#: model:email.template,subject:event.confirmation_event
-#: model:email.template,subject:event.confirmation_registration
-msgid "Your registration at ${object.event_id.name}"
-msgstr ""
-
-#. module: event
-#: view:event.registration:0
-msgid "Set To Unconfirmed"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-#: field:event.event,is_subscribed:0
-msgid "Subscribed"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-msgid "Unsubscribe"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-#: view:event.registration:0
-msgid "Responsible"
-msgstr ""
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Registration contact"
-msgstr ""
-
-#. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,speaker_id:0
-#: field:res.partner,speaker:0
-msgid "Speaker"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-msgid "Upcoming events from today"
-msgstr ""
-
-#. module: event
-#: model:event.event,name:event.event_2
-msgid "Conference on ERP Business"
-msgstr ""
-
-#. module: event
-#: model:ir.actions.act_window,name:event.act_event_view_registration
-#: model:mail.message.subtype,name:event.mt_event_registration
-msgid "New Registration"
-msgstr ""
-
-#. module: event
-#: field:event.event,note:0
-msgid "Description"
-msgstr ""
-
-#. module: event
-#: field:report.event.registration,confirm_state:0
-msgid " # No of Confirmed Registrations"
-msgstr ""
-
-#. module: event
-#: field:report.event.registration,name_registration:0
-msgid "Participant / Contact Name"
-msgstr ""
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "May"
-msgstr ""
-
-#. module: event
-#: view:res.partner:0
-msgid "Events Registration"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-msgid "No ticket available."
-msgstr ""
-
-#. module: event
-#: field:event.event,register_max:0
-#: field:report.event.registration,register_max:0
-msgid "Maximum Registrations"
-msgstr "Максимум Реєстрацій"
-
-#. module: event
-#: view:event.event:0
-#: selection:event.event,state:0
-#: selection:event.registration,state:0
-msgid "Unconfirmed"
-msgstr ""
-
-#. module: event
-#: field:event.event,date_end:0
-msgid "End Date"
-msgstr ""
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "February"
-msgstr ""
-
-#. module: event
-#: view:board.board:0
-msgid "Association Dashboard"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-#: field:event.event,name:0
-#: field:event.registration,name:0
-msgid "Name"
-msgstr "Назва"
-
-#. module: event
-#: view:event.event:0
-#: field:event.event,country_id:0
-msgid "Country"
-msgstr ""
-
-#. module: event
-#: view:res.partner:0
-msgid "Close Registration"
-msgstr ""
-
-#. module: event
-#: field:event.registration,origin:0
-msgid "Source Document"
-msgstr ""
-
-#. module: event
-#: selection:report.event.registration,month:0
-msgid "April"
-msgstr ""
-
-#. module: event
-#: help:event.type,default_email_event:0
+#: model:ir.model.fields,help:event.field_event_config_settings_group_email_scheduling
 msgid ""
-"It will select this default confirmation event mail value when you choose "
-"this event"
+"You will be able to configure emails, and to schedule them to be "
+"automatically sent to the attendees on subscription and/or attendance"
 msgstr ""
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Events which are in confirm state"
+#: model:mail.template,subject:event.event_registration_mail_template_badge
+msgid "Your badge for ${object.event_id.name}"
+msgstr "Ваш бейдж для ${object.event_id.name}"
+
+#. module: event
+#: model:mail.template,subject:event.event_subscription
+msgid "Your subscription at ${object.event_id.name}"
+msgstr "Ваша підписка на ${object.event_id.name}"
+
+#. module: event
+#: model:mail.template,report_name:event.event_registration_mail_template_badge
+msgid "badge_of_${(object.event_id.name or '').replace('/','_')}"
 msgstr ""
 
 #. module: event
-#: view:event.event:0
-#: view:event.type:0
-#: field:event.type,name:0
-#: view:report.event.registration:0
-#: field:report.event.registration,event_type:0
-msgid "Event Type"
-msgstr "Тип Події"
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "drinks and lunch;"
+msgstr "напої та ланч; "
 
 #. module: event
-#: field:event.event,message_summary:0
-#: field:event.registration,message_summary:0
-msgid "Summary"
+#: model:ir.model,name:event.model_event_config_settings
+msgid "event.config.settings"
 msgstr ""
 
 #. module: event
-#: field:event.registration,id:0
-msgid "ID"
-msgstr ""
-
-#. module: event
-#: field:event.type,default_reply_to:0
-msgid "Default Reply-To"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-msgid "available."
-msgstr ""
-
-#. module: event
-#: field:event.registration,event_begin_date:0
-#: field:report.event.registration,event_date:0
-msgid "Event Start Date"
-msgstr ""
-
-#. module: event
-#: view:report.event.registration:0
-msgid "Participant / Contact"
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-msgid "Current Registrations"
-msgstr ""
-
-#. module: event
-#: model:email.template,body_html:event.confirmation_registration
-msgid ""
-"\n"
-"        <p>Hello ${object.name},</p>\n"
-"        <p>We confirm that your registration to the event "
-"${object.event_id.name} has been recorded.\n"
-"        You will automatically receive an email providing you more practical "
-"information (such as the schedule, the agenda...) as soon as the event is "
-"confirmed.</p>\n"
-"        <p>Thank you for your participation!</p>\n"
-"        <p>Best regards</p>"
-msgstr ""
-
-#. module: event
-#: help:event.event,reply_to:0
-msgid ""
-"The email address of the organizer is likely to be put here, with the effect "
-"to be in the 'Reply-To' of the mails sent automatically at event or "
-"registrations confirmation. You can also put the email address of your mail "
-"gateway if you use one."
-msgstr ""
-
-#. module: event
-#: view:event.event:0
-#: model:ir.actions.act_window,name:event.act_register_event_partner
-msgid "Subscribe"
-msgstr ""
-
-#. module: event
-#: model:res.groups,name:event.group_event_manager
-msgid "Manager"
-msgstr ""
-
-#. module: event
-#: field:event.event,street:0
-msgid "Street"
-msgstr ""
-
-#. module: event
-#: view:event.confirm:0
-#: model:ir.actions.act_window,name:event.action_event_confirm
 #: model:ir.model,name:event.model_event_confirm
-msgid "Event Confirmation"
+msgid "event.confirm"
 msgstr ""
 
 #. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,year:0
-msgid "Year"
+#: model:ir.model,name:event.model_event_mail
+msgid "event.mail"
 msgstr ""
 
 #. module: event
-#: field:event.event,speaker_confirmed:0
-msgid "Speaker Confirmed"
+#: model:event.event,description:event.event_2
+msgid "events@openerp.com"
 msgstr ""
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Неправильний XML для Архітектури Вигляду!"
-
-#~ msgid "Reporting"
-#~ msgstr "Звіти"
-
-#~ msgid "Configuration"
-#~ msgstr "Налаштування"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Назва об'єкту має починатися з x_ і не містити ніяких спеціальних символів!"
-
-#~ msgid "Confirmation Email"
-#~ msgstr "Підтвердження Email"
-
-#~ msgid "Registration Email"
-#~ msgstr "Реєстраційний Email"
-
-#~ msgid "Make Invoice"
-#~ msgstr "Виписати Інвойс"
-
-#~ msgid "Ok"
-#~ msgstr "Гаразд"
-
-#~ msgid "Ending date"
-#~ msgstr "Кінцева Дата"
-
-#~ msgid "Event type"
-#~ msgstr "Тип Події"
-
-#~ msgid "Extra Info"
-#~ msgstr "Додаткова Інформація"
-
-#~ msgid "Create Invoices"
-#~ msgstr "Створити Інвойси"
-
-#~ msgid "All Events"
-#~ msgstr "Усі Події"
-
-#~ msgid "Registration Confirmation"
-#~ msgstr "Підтвердження Реєстрації"
-
-#~ msgid "Dates"
-#~ msgstr "Дати"
-
-#~ msgid "Events by Categories"
-#~ msgstr "Події по Категоріях"
-
-#~ msgid "Confirm Registrations"
-#~ msgstr "Підтвердити Реєстрації"
-
-#~ msgid "Registration By Event Types"
-#~ msgstr "Реєстрації по Типах Подій"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr "Помилка: ОдПрод повинна бути в іншій категорії від ОдВим"
-
-#~ msgid "The event limit is reached. What do you want to do?"
-#~ msgstr "Досягнуто ліміт подій. Що Ви бажаєте зробити?"
-
-#~ msgid "Parent Category"
-#~ msgstr "Батьківська Категорія"
-
-#~ msgid "Canceled"
-#~ msgstr "Скасовано"
-
-#~ msgid "Ticket for Concert"
-#~ msgstr "Квиток на Концерт"
-
-#~ msgid "Mailing"
-#~ msgstr "Листування"
-
-#~ msgid "Error Messages"
-#~ msgstr "Повідомлення про Помилки"
-
-#~ msgid "Communication history"
-#~ msgstr "Історія зв'язку"
-
-#~ msgid "Event Done"
-#~ msgstr "Подію Створено"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Помилка: Типова ОдВим та ОдВим закупівлі повинні бути в одній категорії."
-
-#~ msgid "Invoice Created"
-#~ msgstr "Інвойс Створено"
-
-#~ msgid "Event description"
-#~ msgstr "Опис Події"
-
-#~ msgid "Event type on registration"
-#~ msgstr "Тип події на реєстрації"
-
-#~ msgid "Event Related"
-#~ msgstr "Пов'язана Подія"
-
-#~ msgid "Statistics"
-#~ msgstr "Статистика"
-
-#~ msgid "History"
-#~ msgstr "Історія"
-
-#~ msgid "Number of Registration"
-#~ msgstr "Номер Реєстрації"
-
-#~ msgid "All Registrations"
-#~ msgstr "Всі Реєстрації"
-
-#~ msgid "Events by section"
-#~ msgstr "Події по секції"
-
-#~ msgid "Partner Contact"
-#~ msgstr "Контакт Партнера"
-
-#, python-format
-#~ msgid "Open"
-#~ msgstr "Відкрити"
-
-#~ msgid "Beginning date"
-#~ msgstr "Дата початку"
-
-#~ msgid "General"
-#~ msgstr "Загальне"
-
-#~ msgid "Send Reminder"
-#~ msgstr "Надіслати Нагадування"
-
-#~ msgid "Auto Confirmation Email"
-#~ msgstr "Email Автопідтвердження"
-
-#~ msgid "Events on registrations"
-#~ msgstr "Події по реєстрації"
-
-#~ msgid "Invoice"
-#~ msgstr "Інвойс"
-
-#~ msgid "Case"
-#~ msgstr "Випадок"
-
-#~ msgid "Ticket for Conference"
-#~ msgstr "Квиток на Конференцію"
-
-#~ msgid "Confirmed Events"
-#~ msgstr "Підтверджені Події"
-
-#~ msgid "New event"
-#~ msgstr "Нова Подія"
-
-#~ msgid "Conference on ERP Buisness"
-#~ msgstr "Конференція з ERP Бізнесу"
-
-#~ msgid "This email will be sent when someone subscribes to the event."
-#~ msgstr "Цей лист буде надіслано коли хтось підписується на подію."
-
-#~ msgid "Unit Price"
-#~ msgstr "Ціна за Одиницю"
-
-#~ msgid "Type"
-#~ msgstr "Тип"
-
-#~ msgid "Draft Events"
-#~ msgstr "Чорнові Події"
-
-#~ msgid "Product"
-#~ msgstr "Продукт"
-
-#~ msgid "Payments"
-#~ msgstr "Платежі"
-
-#~ msgid "Invoice Rejected"
-#~ msgstr "Інвойс Відхилено"
-
-#~ msgid "Auto Registration Email"
-#~ msgstr "Email Автореєстрації"
-
-#~ msgid "Events Organisation"
-#~ msgstr "Організація Подій"
-
-#~ msgid "List Register Partners"
-#~ msgstr "Список Реєстрації Партнерів"
-
-#~ msgid "Actions"
-#~ msgstr "Дії"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Помилка: Невірний код EAN"
-
-#~ msgid "Draft Registration"
-#~ msgstr "Чорнова Реєстрація"
-
-#~ msgid "Ticket for Opera"
-#~ msgstr "Квиток на Оперу"
-
-#~ msgid "Draft Registrations"
-#~ msgstr "Чорнові Реєстрації"
-
-#~ msgid "Mail Auto Confirm"
-#~ msgstr "Автопідтвердження по Пошті"
-
-#~ msgid "Mail Auto Register"
-#~ msgstr "Автореєстрація по Пошті"
-
-#~ msgid "Case section"
-#~ msgstr "Секція випадку"
-
-#~ msgid "To be Invoiced"
-#~ msgstr "До Інвойсування"
-
-#~ msgid "Events On Registrations"
-#~ msgstr "Події по Реєстраціях"
+#. module: event
+#: model:ir.model,name:event.model_report_event_registration
+msgid "report.event.registration"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_3
+msgid "to learn <i>business applications development</i>"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_0
+msgid "to learn Odoo Programming"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_1
+msgid "to learn technical aspects"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "training material."
+msgstr ""

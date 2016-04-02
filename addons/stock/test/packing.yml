@@ -1,7 +1,7 @@
 -
   Create a new stockable product 
 - 
-  !record {model: product.product, id: product1}:
+  !record {model: product.product, id: product1, view: False}:
     name: Nice product
     type: product
     categ_id: product.product_category_1
@@ -49,10 +49,10 @@
     #Create package for each line and assign it as result_package_id
     #create pack operation
     stock_pack.write(cr, uid, record.pack_operation_ids[0].id, {'result_package_id': package1, 'product_qty': 120})
-    new_pack1 = stock_pack.create(cr, uid, {'product_id': ref('product1'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick1'), 'lot_id': lot_a, 'result_package_id': package2, 'product_qty': 120, 'location_id': ref('stock_location_suppliers'), 'location_dest_id': ref('stock_location_stock')}, context=context)
+    new_pack1 = stock_pack.create(cr, uid, {'product_id': ref('product1'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick1'), 'pack_lot_ids': [(0, 0, {'lot_id': lot_a, 'qty': 120})], 'result_package_id': package2, 'product_qty': 120, 'location_id': ref('stock_location_suppliers'), 'location_dest_id': ref('stock_location_stock')}, context=context)
     new_pack2 = stock_pack.create(cr, uid, {'product_id': ref('product1'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick1'), 'result_package_id': package3, 'product_qty': 60, 'location_id': ref('stock_location_suppliers'), 'location_dest_id': ref('stock_location_stock')}, context=context)
 - 
-  Transfer the reception
+  Transfer the receipt
 - 
   !python {model: stock.picking}: |
     self.do_transfer(cr, uid, [ref('pick1')], context=context)
@@ -106,7 +106,7 @@
     for rec in delivery_id.pack_operation_ids:
       if rec.package_id.name == 'Pallet 2':
         lot_ids = self.pool.get("stock.production.lot").search(cr, uid, [('product_id', '=', ref('product1')), ('name','=','Lot A')])
-        stock_pack.write(cr, uid, [rec.id], {'product_id': ref('product1'), 'product_qty': 20, 'lot_id': lot_ids[0], 'product_uom_id': ref('product.product_uom_unit')}, context=context)
+        stock_pack.write(cr, uid, [rec.id], {'product_id': ref('product1'), 'product_qty': 20, 'pack_lot_ids': [(0, 0, {'lot_id': lot_ids[0], 'qty': 20})],  'product_uom_id': ref('product.product_uom_unit')}, context=context)
       if rec.package_id.name == 'Pallet 3':
         stock_pack.write(cr, uid, [rec.id], {'product_id': ref('product1'),'product_qty': 10, 'product_uom_id': ref('product.product_uom_unit')}, context=context)
 - 
@@ -121,9 +121,9 @@
     reco_id = self.search(cr ,uid , [('product_id','=',ref('product1'))], context=context)
     for rec in self.browse(cr, uid, reco_id, context=context):
       if rec.package_id.name == 'Pallet 1' and rec.location_id.id == ref('stock_location_customers'):
-        assert rec.qty == 120, "Should have 120 pieces on pallet 1"
+        assert rec.qty == 120, "Should have 120 pieces on pallet 1, got " +  str(rec.qty)
       elif rec.package_id.name == 'Pallet 2' and rec.location_id.id == ref('stock_location_stock'):
-        assert rec.qty == 100, "Should have 100 pieces in stock on pallet 2"
+        assert rec.qty == 100, "Should have 100 pieces in stock on pallet 2, got " +  str(rec.qty)
       elif rec.lot_id.name == 'Lot A' and rec.location_id.id == ref('stock_location_customers'):
         assert (rec.qty == 20 and not rec.package_id), "Should have 20 pieces in customer location from pallet 2"
       elif rec.package_id.name == 'Pallet 3' and rec.location_id.id == ref('stock_location_stock'):
@@ -138,13 +138,13 @@
   !python {model: stock.picking}: |
     backorder_ids = self.search(cr, uid, [('backorder_id', '=', ref('delivery_order1'))], context=context)
     assert backorder_ids, "Backorder should have been created"
+    self.action_assign(cr, uid, backorder_ids, context=context)
     self.do_prepare_partial(cr, uid, backorder_ids, context=context)
     picking = self.browse(cr, uid, backorder_ids[0])
     assert len(picking.pack_operation_ids) == 2, "Wrong number of pack operation"
     for pack_op in picking.pack_operation_ids:
         assert pack_op.product_qty == 1, "Wrong quantity in pack operation (%s found instead of 1)" % (pack_op.product_qty)
         assert pack_op.package_id.name in ('Pallet 2', 'Pallet 3'), "Wrong pallet info in pack operation (%s found)" % (pack_op.package_id.name)
-    self.action_assign(cr, uid, backorder_ids, context=context)
     self.do_transfer(cr, uid, backorder_ids, context=context)
 - 
   Check there are still 0 pieces in stock 
@@ -156,4 +156,4 @@
       total_qty += rec.qty
     product = self.pool.get("product.product").browse(cr, uid, ref('product1'))
     assert total_qty == 0, "Total quantity in stock should be 0 as the backorder took everything out of stock"
-    assert product.qty_available == 0, "Quantity available should be 0 too" 
+    assert product.qty_available == 0, "Quantity available should be 0 too"

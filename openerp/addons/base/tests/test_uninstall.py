@@ -1,27 +1,26 @@
 # -*- coding: utf-8 -*-
 # This assumes an existing but uninitialized database.
-import unittest2
+import unittest
 
 import openerp
 from openerp import SUPERUSER_ID
 import common
 
-DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
 def registry(model):
-    return openerp.modules.registry.RegistryManager.get(DB)[model]
+    return openerp.modules.registry.RegistryManager.get(common.get_db_name())[model]
 
 def cursor():
-    return openerp.modules.registry.RegistryManager.get(DB).cursor()
+    return openerp.modules.registry.RegistryManager.get(common.get_db_name()).cursor()
 
 def get_module(module_name):
-    registry = openerp.modules.registry.RegistryManager.get(DB)
+    registry = openerp.modules.registry.RegistryManager.get(common.get_db_name())
     return registry.get(module_name)
 
 def reload_registry():
     openerp.modules.registry.RegistryManager.new(
-        DB, update_module=True)
+        common.get_db_name(), update_module=True)
 
 def search_registry(model_name, domain):
     cr = cursor()
@@ -52,7 +51,7 @@ def uninstall_module(module_name):
     cr.close()
     reload_registry()
 
-class test_uninstall(unittest2.TestCase):
+class test_uninstall(unittest.TestCase):
     """
     Test the install/uninstall of a test module. The module is available in
     `openerp.tests` which should be present in the addons-path.
@@ -83,7 +82,4 @@ class test_uninstall(unittest2.TestCase):
 
 
 if __name__ == '__main__':
-    unittest2.main()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    unittest.main()

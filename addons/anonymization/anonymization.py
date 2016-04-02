@@ -1,24 +1,5 @@
 # -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from lxml import etree
 import os
@@ -29,11 +10,14 @@ except ImportError:
     import pickle
 import random
 import datetime
+from openerp.release import version_info
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.tools.safe_eval import safe_eval as eval
 
 from itertools import groupby
 from operator import itemgetter
+from openerp.exceptions import UserError
 
 
 FIELD_STATES = [('clear', 'Clear'), ('anonymized', 'Anonymized'), ('not_existing', 'Not Existing'), ('new', 'New')]
@@ -54,9 +38,9 @@ class ir_model_fields_anonymization(osv.osv):
     _rec_name = 'field_id'
 
     _columns = {
-        'model_name': fields.char('Object Name', size=128, required=True),
+        'model_name': fields.char('Object Name', required=True),
         'model_id': fields.many2one('ir.model', 'Object', ondelete='set null'),
-        'field_name': fields.char('Field Name', size=128, required=True),
+        'field_name': fields.char('Field Name', required=True),
         'field_id': fields.many2one('ir.model.fields', 'Field', ondelete='set null'),
         'state': fields.selection(selection=FIELD_STATES, String='Status', required=True, readonly=True),
     }
@@ -86,11 +70,11 @@ class ir_model_fields_anonymization(osv.osv):
         if context.get('manual'):
             global_state = self._get_global_state(cr, uid, context=context)
             if global_state == 'anonymized':
-                raise osv.except_osv('Error!', "The database is currently anonymized, you cannot create, modify or delete fields.")
+                raise UserError(_("The database is currently anonymized, you cannot create, modify or delete fields."))
             elif global_state == 'unstable':
-                msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized," + \
+                msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized,"
                       " while some fields are not anonymized. You should try to solve this problem before trying to create, write or delete fields.")
-                raise osv.except_osv('Error!', msg)
+                raise UserError(msg)
 
         return True
 
@@ -226,9 +210,9 @@ class ir_model_fields_anonymization_history(osv.osv):
         'date': fields.datetime('Date', required=True, readonly=True),
         'field_ids': fields.many2many('ir.model.fields.anonymization', 'anonymized_field_to_history_rel', 'field_id', 'history_id', 'Fields', readonly=True),
         'state': fields.selection(selection=ANONYMIZATION_HISTORY_STATE, string='Status', required=True, readonly=True),
-        'direction': fields.selection(selection=ANONYMIZATION_DIRECTION, string='Direction', required=True, readonly=True),
+        'direction': fields.selection(selection=ANONYMIZATION_DIRECTION, string='Direction', size=20, required=True, readonly=True),
         'msg': fields.text('Message', readonly=True),
-        'filepath': fields.char(string='File path', size=256, readonly=True),
+        'filepath': fields.char(string='File path', readonly=True),
     }
 
 
@@ -253,7 +237,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         return res
 
     _columns = {
-        'name': fields.char(size=64, string='File Name'),
+        'name': fields.char(string='File Name'),
         'summary': fields.function(_get_summary, type='text', string='Summary'),
         'file_export': fields.binary(string='Export'),
         'file_import': fields.binary(string='Import', help="This is the file created by the anonymization process. It should have the '.pickle' extention."),
@@ -301,7 +285,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
         return res
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, *args, **kwargs):
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         state = self.pool.get('ir.model.fields.anonymization')._get_global_state(cr, uid, context=context)
 
         if context is None:
@@ -309,7 +293,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
         step = context.get('step', 'new_window')
 
-        res = super(ir_model_fields_anonymize_wizard, self).fields_view_get(cr, uid, view_id, view_type, context, *args, **kwargs)
+        res = super(ir_model_fields_anonymize_wizard, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
 
         eview = etree.fromstring(res['arch'])
         placeholder = eview.xpath("group[@name='placeholder1']")
@@ -355,9 +339,9 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 # remove the placeholer:
                 eview.remove(placeholder)
             else:
-                msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized," + \
+                msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized,"
                   " while some fields are not anonymized. You should try to solve this problem before trying to do anything else.")
-                raise osv.except_osv('Error!', msg)
+                raise UserError(msg)
 
             res['arch'] = etree.tostring(eview)
 
@@ -368,7 +352,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
             'state': 'in_exception',
             'msg': error_msg,
         })
-        raise osv.except_osv(error_type, error_msg)
+        raise UserError('%s: %s' % (error_type, error_msg))
 
     def anonymize_database(self, cr, uid, ids, context=None):
         """Sets the 'anonymized' state to defined fields"""
@@ -388,7 +372,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         if state == 'anonymized':
             self._raise_after_history_update(cr, uid, history_id, _('Error !'), _("The database is currently anonymized, you cannot anonymize it again."))
         elif state == 'unstable':
-            msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized," + \
+            msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized,"
                   " while some fields are not anonymized. You should try to solve this problem before trying to do anything.")
             self._raise_after_history_update(cr, uid, history_id, 'Error !', msg)
 
@@ -445,7 +429,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                     self._raise_after_history_update(cr, uid, history_id, 'Error !', msg)
 
                 if anonymized_value is None:
-                    self._raise_after_history_update(cr, uid, history_id, _('Error !'), _("Anonymized value is None. This cannot happens."))
+                    self._raise_after_history_update(cr, uid, history_id, _('Error !'), _("Anonymized value can not be empty."))
 
                 sql = "update %(table)s set %(field)s = %%(anonymized_value)s where id = %%(id)s" % {
                     'table': table_name,
@@ -492,7 +476,9 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         })
 
         # handle the view:
-        view_id = self._id_get(cr, uid, 'ir.ui.view', 'view_ir_model_fields_anonymize_wizard_form', 'anonymization')
+        view_id = self.pool['ir.model.data'].xmlid_to_res_id(
+            cr, uid, 'anonymization.view_ir_model_fields_anonymize_wizard_form'
+        )
 
         return {
                 'res_id': ids[0],
@@ -521,11 +507,11 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         # check that all the defined fields are in the 'anonymized' state
         state = ir_model_fields_anonymization_model._get_global_state(cr, uid, context=context)
         if state == 'clear':
-            raise osv.except_osv_('Error!', "The database is not currently anonymized, you cannot reverse the anonymization.")
+            raise UserError(_("The database is not currently anonymized, you cannot reverse the anonymization."))
         elif state == 'unstable':
-            msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized," + \
+            msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized,"
                   " while some fields are not anonymized. You should try to solve this problem before trying to do anything.")
-            raise osv.except_osv('Error!', msg)
+            raise UserError(msg)
 
         wizards = self.browse(cr, uid, ids, context=context)
         for wizard in wizards:
@@ -538,7 +524,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
             data = pickle.loads(base64.decodestring(wizard.file_import))
 
             migration_fix_obj = self.pool.get('ir.model.fields.anonymization.migration.fix')
-            fix_ids = migration_fix_obj.search(cr, uid, [('target_version', '=', '7.0')])
+            fix_ids = migration_fix_obj.search(cr, uid, [('target_version', '=', '.'.join(map(str, version_info[:2])))])
             fixes = migration_fix_obj.read(cr, uid, fix_ids, ['model_name', 'field_name', 'query', 'query_type', 'sequence'])
             fixes = group(fixes, ('model_name', 'field_name'))
 
@@ -596,7 +582,10 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
             })
 
             # handle the view:
-            view_id = self._id_get(cr, uid, 'ir.ui.view', 'view_ir_model_fields_anonymize_wizard_form', 'anonymization')
+            view_id = self.pool['ir.model.data'].xmlid_to_res_id(
+                cr, uid, 'anonymization.view_ir_model_fields_anonymize_wizard_form'
+            )
+
 
             return {
                     'res_id': ids[0],
@@ -632,6 +621,3 @@ class ir_model_fields_anonymization_migration_fix(osv.osv):
         'query_type': fields.selection(string='Query', selection=[('sql', 'sql'), ('python', 'python')]),
         'sequence': fields.integer('Sequence'),
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

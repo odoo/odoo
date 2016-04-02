@@ -23,15 +23,12 @@
             <input name="discussion" t-att-value="identifier" type="hidden"/>
             <input name="blog_post_id" t-att-value="options.post_id" type="hidden"/>
             <div id="inline_comment">
-                <textarea class="mb8 form-control" rows="2" id="inline_comment" placeholder="Write a comment..."/>
+                <textarea rows="2" id="inline_comment" placeholder="Write a comment..." t-attf-class="mb8 form-control #{options.public_user ? 'hidden' : ''}"/>
             </div>
-            <div id="author_name">
-                <input id="author_name" name="user_name" t-attf-class="form-control #{options.public_user ? '' : 'hidden'}" placeholder="Your name..."/>
+            <div t-attf-class="media-body discussion_scroll_post #{options.public_user ? '' : 'hidden'}">
+                Please <strong><a t-attf-href="/web/login/?redirect=#{options.current_url}"> Sign in</a></strong> to comment.
             </div>
-            <div id="author_email">
-                <input id="author_email" name="user_email" t-attf-class="mt8 mb8 form-control #{options.public_user ? '' : 'hidden'}" placeholder="Your Email..."/>
-            </div>
-            <button id='comment_post' class="btn btn-primary btn-xs mb8">Post</button>
+            <button id='comment_post' t-attf-class="btn btn-primary btn-xs mb8 #{options.public_user ? 'hidden' : ''}">Post</button>
             <div class="discussion_history"/>
         </div>
     </t>

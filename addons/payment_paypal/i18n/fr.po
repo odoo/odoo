@@ -1,0 +1,147 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_paypal
+# 
+# Translators:
+# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015-2016
+# Melanie Bernard <mbe@odoo.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2016-01-08 20:19+0000\n"
+"Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
+"Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: payment_paypal
+#: model:payment.acquirer,cancel_msg:payment_paypal.payment_acquirer_paypal
+msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
+msgstr "<span><i>Annulez,</i> Votre paiement a été annulé.</span>"
+
+#. module: payment_paypal
+#: model:payment.acquirer,done_msg:payment_paypal.payment_acquirer_paypal
+msgid ""
+"<span><i>Done,</i> Your online payment has been successfully processed. "
+"Thank you for your order.</span>"
+msgstr "<span><i>Terminé,</i> votre paiement en ligne a été traité avec succès. Merci de votre commande.</span>"
+
+#. module: payment_paypal
+#: model:payment.acquirer,error_msg:payment_paypal.payment_acquirer_paypal
+msgid ""
+"<span><i>Error,</i> Please be aware that an error occurred during the "
+"transaction. The order has been confirmed but won't be paid. Don't hesitate "
+"to contact us if you have any questions on the status of your order.</span>"
+msgstr "<span><i>Erreur,</i> une erreur est survenue pendant la transaction. La commande a été confirmée mais ne sera pas payée. N'hésitez pas à nous contacter si vous avez une question sur le statut de votre commande.</span>"
+
+#. module: payment_paypal
+#: model:payment.acquirer,pending_msg:payment_paypal.payment_acquirer_paypal
+msgid ""
+"<span><i>Pending,</i> Your online payment has been successfully processed. "
+"But your order is not validated yet.</span>"
+msgstr "<span><i>En cours,</i> votre paiement en ligne a été enregistré. Mais votre commande n'est pas encore validée.</span>"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token
+msgid "Access Token"
+msgstr "Jeton d'accès"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token_validity
+msgid "Access Token Validity"
+msgstr "Validité du Jeton d'Accès"
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_res_company
+msgid "Companies"
+msgstr "Sociétés"
+
+#. module: payment_paypal
+#: model:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
+msgid "How to configure your paypal account?"
+msgstr "Comment configurer votre compte Payal?"
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Intermédiaire de paiement"
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transaction"
+
+#. module: payment_paypal
+#: model:payment.acquirer,name:payment_paypal.payment_acquirer_paypal
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_email_account
+msgid "Paypal Email ID"
+msgstr "Identifiant Paypal"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_use_ipn
+msgid "Paypal Instant Payment Notification"
+msgstr "Notification Instantanée de Paiement Paypal"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_seller_account
+msgid "Paypal Merchant ID"
+msgstr "Identifiant Paypal du vendeur"
+
+#. module: payment_paypal
+#: model:ir.ui.view,arch_db:payment_paypal.transaction_form_paypal
+msgid "Paypal TX Details"
+msgstr "Détails de la transaction Paypal"
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/models/paypal.py:186
+#, python-format
+msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
+msgstr "Paypal: données reçues contenant des références manquantes (%s)  ou txn_id (%s)"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_password
+msgid "Rest API Password"
+msgstr "Mot de passe de l'API Rest"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_username
+msgid "Rest API Username"
+msgstr "Utilisateur de l'API Rest"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_seller_account
+msgid ""
+"The Merchant ID is used to ensure communications coming from Paypal are "
+"valid and secured."
+msgstr "L'identifiant du vendeur est utilisé afin de garantir la validité et la sécurité des données provenant de Paypal."
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction_paypal_txn_type
+msgid "Transaction type"
+msgstr "Type de transaction"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_use_ipn
+msgid "Use IPN"
+msgstr "Utiliser la Notification Instantanée de Paiement"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_enabled
+msgid "Use Rest API"
+msgstr "Utiliser l'API Rest"
+
+#. module: payment_paypal
+#: model:payment.acquirer,pre_msg:payment_paypal.payment_acquirer_paypal
+msgid ""
+"You will be redirected to the Paypal website after clicking on the payment "
+"button."
+msgstr "Vous serez redirigé vers le site de Paypal après avoir cliqué sur le bouton de paiement."

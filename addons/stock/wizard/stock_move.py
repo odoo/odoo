@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -86,8 +68,15 @@ class stock_move_scrap(osv.osv_memory):
             move_obj.action_scrap(cr, uid, move_ids,
                              data.product_qty, data.location_id.id, restrict_lot_id=data.restrict_lot_id.id,
                              context=context)
+        if context.get('active_id'):
+            move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
+            if move.picking_id:
+                return {
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'stock.picking',
+                    'type': 'ir.actions.act_window',
+                    'res_id': move.picking_id.id,
+                    'context': context
+                }
         return {'type': 'ir.actions.act_window_close'}
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

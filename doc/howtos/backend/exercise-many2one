@@ -1,0 +1,95 @@
+# HG changeset patch
+# Parent a6e217b1fbbc64111581c269629b1c25c23abb99
+
+Index: addons/openacademy/models.py
+===================================================================
+--- addons.orig/openacademy/models.py	2014-08-27 10:37:10.135932250 +0200
++++ addons/openacademy/models.py	2014-08-27 10:37:10.131932250 +0200
+@@ -8,6 +8,9 @@
+     name = fields.Char(string="Title", required=True)
+     description = fields.Text()
+ 
++    responsible_id = fields.Many2one('res.users',
++        ondelete='set null', string="Responsible", index=True)
++
+ 
+ class Session(models.Model):
+     _name = 'openacademy.session'
+@@ -16,3 +19,7 @@
+     start_date = fields.Date()
+     duration = fields.Float(digits=(6, 2), help="Duration in days")
+     seats = fields.Integer(string="Number of seats")
++
++    instructor_id = fields.Many2one('res.partner', string="Instructor")
++    course_id = fields.Many2one('openacademy.course',
++        ondelete='cascade', string="Course", required=True)
+Index: addons/openacademy/views/openacademy.xml
+===================================================================
+--- addons.orig/openacademy/views/openacademy.xml	2014-08-27 10:37:10.135932250 +0200
++++ addons/openacademy/views/openacademy.xml	2014-08-27 10:37:10.131932250 +0200
+@@ -9,6 +9,7 @@
+                     <sheet>
+                         <group>
+                             <field name="name"/>
++                            <field name="responsible_id"/>
+                         </group>
+                         <notebook>
+                             <page string="Description">
+@@ -34,6 +35,18 @@
+             </field>
+         </record>
+ 
++        <!-- override the automatically generated list view for courses -->
++        <record model="ir.ui.view" id="course_tree_view">
++            <field name="name">course.tree</field>
++            <field name="model">openacademy.course</field>
++            <field name="arch" type="xml">
++                <tree string="Course Tree">
++                    <field name="name"/>
++                    <field name="responsible_id"/>
++                </tree>
++            </field>
++        </record>
++
+         <!-- window action -->
+         <!--
+             The following tag is an action definition for a "window action",
+@@ -73,16 +86,34 @@
+                 <form string="Session Form">
+                     <sheet>
+                         <group>
+-                            <field name="name"/>
+-                            <field name="start_date"/>
+-                            <field name="duration"/>
+-                            <field name="seats"/>
++                            <group string="General">
++                                <field name="course_id"/>
++                                <field name="name"/>
++                                <field name="instructor_id"/>
++                            </group>
++                            <group string="Schedule">
++                                <field name="start_date"/>
++                                <field name="duration"/>
++                                <field name="seats"/>
++                            </group>
+                         </group>
+                     </sheet>
+                 </form>
+             </field>
+         </record>
+ 
++        <!-- session tree/list view -->
++        <record model="ir.ui.view" id="session_tree_view">
++            <field name="name">session.tree</field>
++            <field name="model">openacademy.session</field>
++            <field name="arch" type="xml">
++                <tree string="Session Tree">
++                    <field name="name"/>
++                    <field name="course_id"/>
++                </tree>
++            </field>
++        </record>
++
+         <record model="ir.actions.act_window" id="session_list_action">
+             <field name="name">Sessions</field>
+             <field name="res_model">openacademy.session</field>

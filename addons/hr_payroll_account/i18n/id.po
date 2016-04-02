@@ -1,110 +1,75 @@
-# Indonesian translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_payroll_account
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-02-09 05:18+0000\n"
-"Last-Translator: moelyana <Unknown>\n"
-"Language-Team: Indonesian <id@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-12-02 00:38+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:33+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_payroll_account
-#: field:hr.salary.rule,account_credit:0
-msgid "Credit Account"
-msgstr ""
+#: model:ir.ui.view,arch_db:hr_payroll_account.hr_contract_form_inherit
+#: model:ir.ui.view,arch_db:hr_payroll_account.hr_salary_rule_form_inherit
+msgid "Accounting"
+msgstr "Akuntansi"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:104
-#, python-format
-msgid "Payslip of %s"
-msgstr ""
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:157
-#, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Credit Account!"
-msgstr ""
-
-#. module: hr_payroll_account
-#: field:hr.payslip,move_id:0
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_move_id
 msgid "Accounting Entry"
-msgstr ""
+msgstr "Catatan akuntansi"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:173
+#: code:addons/hr_payroll_account/hr_payroll_account.py:147
+#: code:addons/hr_payroll_account/hr_payroll_account.py:163
 #, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Debit Account!"
-msgstr ""
+msgid "Adjustment Entry"
+msgstr "Penyesuaian entri"
 
 #. module: hr_payroll_account
-#: field:hr.salary.rule,account_tax_id:0
-msgid "Tax Code"
-msgstr ""
-
-#. module: hr_payroll_account
-#: field:hr.payslip,period_id:0
-msgid "Force Period"
-msgstr "Periode Lainnya"
-
-#. module: hr_payroll_account
-#: help:hr.payslip,period_id:0
-msgid "Keep empty to use the period of the validation(Payslip) date."
-msgstr "Biarkan tetap kosong untuk menggunakan periode tanggal  validasi"
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_contract
-msgid "Contract"
-msgstr ""
-
-#. module: hr_payroll_account
-#: field:hr.contract,analytic_account_id:0
-#: field:hr.salary.rule,analytic_account_id:0
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract_analytic_account_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_analytic_account_id
 msgid "Analytic Account"
 msgstr "Akun Analisis"
 
 #. module: hr_payroll_account
-#: field:hr.salary.rule,account_debit:0
-msgid "Debit Account"
+#: model:ir.model,name:hr_payroll_account.model_hr_contract
+msgid "Contract"
+msgstr "Kontrak"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_account_credit
+msgid "Credit Account"
+msgstr "Rekening kredit"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_date
+msgid "Date Account"
 msgstr ""
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
-msgid "Payslip Batches"
-msgstr ""
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_account_debit
+msgid "Debit Account"
+msgstr "Debet rekening"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
 msgid "Generate payslips for all selected employees"
-msgstr ""
+msgstr "Menghasilkan payslips untuk semua karyawan yang dipilih"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:157
-#: code:addons/hr_payroll_account/hr_payroll_account.py:173
-#, python-format
-msgid "Configuration Error!"
-msgstr ""
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
-msgid "hr.salary.rule"
-msgstr ""
-
-#. module: hr_payroll_account
-#: view:hr.contract:0
-#: view:hr.salary.rule:0
-msgid "Accounting"
-msgstr ""
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip_date
+msgid "Keep empty to use the period of the validation(Payslip) date."
+msgstr "Biarkan tetap kosong untuk menggunakan periode tanggal  validasi"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip
@@ -112,157 +77,46 @@ msgid "Pay Slip"
 msgstr "Slip Pembayaran"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:159
-#: code:addons/hr_payroll_account/hr_payroll_account.py:175
-#, python-format
-msgid "Adjustment Entry"
-msgstr ""
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "Batch payslip"
 
 #. module: hr_payroll_account
-#: field:hr.contract,journal_id:0
-#: field:hr.payslip,journal_id:0
-#: field:hr.payslip.run,journal_id:0
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_line
+msgid "Payslip Line"
+msgstr "Jalur payslip"
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:98
+#, python-format
+msgid "Payslip of %s"
+msgstr "Payslip dari %s"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract_journal_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_journal_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_run_journal_id
 msgid "Salary Journal"
+msgstr "Jurnal gaji"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_account_tax_id
+msgid "Tax"
+msgstr "Pajak"
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:145
+#, python-format
+msgid "The Expense Journal \"%s\" has not properly configured the Credit Account!"
+msgstr "Biaya jurnal \"%s\" telah tidak dikonfigurasi dengan benar rekening kredit!"
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:161
+#, python-format
+msgid "The Expense Journal \"%s\" has not properly configured the Debit Account!"
+msgstr "Biaya jurnal \"%s\" telah tidak dikonfigurasi dengan benar Debit rekening!"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
+msgid "hr.salary.rule"
 msgstr ""
-
-#~ msgid "Expense Journal"
-#~ msgstr "Jurnal beban"
-
-#~ msgid "Analytic Account for Salary Analysis"
-#~ msgstr "Analitik Account untuk Analisis Gaji"
-
-#~ msgid "Period"
-#~ msgstr "Periode"
-
-#~ msgid "Employee"
-#~ msgstr "Karyawan"
-
-#~ msgid "Bank Journal"
-#~ msgstr "Jurnal Bank"
-
-#~ msgid "Contribution Register Line"
-#~ msgstr "Kontribusi Register Line"
-
-#~ msgid "Contribution Register"
-#~ msgstr "Kontribusi Registrasi"
-
-#~ msgid "Salary Account"
-#~ msgstr "Akun Gaji"
-
-#~ msgid "Other Informations"
-#~ msgstr "Informasi Lainnya"
-
-#~ msgid "Accounting Lines"
-#~ msgstr "Baris Akunting"
-
-#~ msgid "Expense account when Salary Expense will be recorded"
-#~ msgstr "Beban Gaji Biaya yang bersangkutan pada saat akan dicatat"
-
-#~ msgid "Accounting Informations"
-#~ msgstr "Informasi Akunting"
-
-#~ msgid "Payroll Register"
-#~ msgstr "Registrasi Penggajian Karyawan"
-
-#~ msgid "Description"
-#~ msgstr "Keterangan"
-
-#, python-format
-#~ msgid "Please Confirm all Expense Invoice appear for Reimbursement"
-#~ msgstr "Mohon Konfirmasikan semua Faktur Beban yang muncul untuk Penggantian"
-
-#~ msgid "Bank Account"
-#~ msgstr "Akun Bank"
-
-#~ msgid "Human Resource Payroll Accounting"
-#~ msgstr "Akuntansi Penggajian Karyawan"
-
-#~ msgid "Payment Lines"
-#~ msgstr "Daftar Pembayaran"
-
-#, python-format
-#~ msgid "Please define fiscal year for perticular contract"
-#~ msgstr "Harap tentukan tahun fiskal untuk kontrak perticular"
-
-#~ msgid "Account Lines"
-#~ msgstr "Daftar Akun"
-
-#~ msgid "Name"
-#~ msgstr "Nama"
-
-#~ msgid "Account"
-#~ msgstr "Akun"
-
-#~ msgid "Payslip Line"
-#~ msgstr "Daftar slip pembayaran"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr ""
-#~ "Error! Anda tidak dapat  membuat  Hirarki Karyawan secara rekursif  ."
-
-#~ msgid "Accounting Vouchers"
-#~ msgstr "Akunting Voucher"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Peringatan !"
-
-#~ msgid "Accounting vouchers"
-#~ msgstr "Accounting vouchers"
-
-#~ msgid "General Account"
-#~ msgstr "Akun Umum"
-
-#~ msgid "Expense Entries"
-#~ msgstr "Beban Masukan"
-
-#~ msgid "Employee Account"
-#~ msgstr "Akun Karyawan"
-
-#~ msgid "Total By Employee"
-#~ msgstr "Jumlah Berdasarkan Karyawan"
-
-#~ msgid "Bank Advice Note"
-#~ msgstr "Catatan Saran Bank"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr ""
-#~ "Error! Anda tidak dapat memilih  departemen  yang karyawan adalah manajer."
-
-#~ msgid "Sequence"
-#~ msgstr "Urutan"
-
-#~ msgid "Leave Type"
-#~ msgstr "Jenis Cuti"
-
-#~ msgid "Total By Company"
-#~ msgstr "Jumlah berdasarkan perusahaan"
-
-#~ msgid "Salary Structure"
-#~ msgstr "Struktur Gaji"
-
-#, python-format
-#~ msgid "Please Configure Partners Receivable Account!!"
-#~ msgstr "Harap Konfigurasi Account Piutang Rekanan!"
-
-#~ msgid "Employee Payable Account"
-#~ msgstr "Account Hutang Usaha Karyawan"
-
-#~ msgid "Year"
-#~ msgstr "Tahun"
-
-#, python-format
-#~ msgid "Fiscal Year is not defined for slip date %s"
-#~ msgstr "Setahun fiskal tidak didefinisikan untuk slip Tanggal %s"
-
-#, python-format
-#~ msgid "Period is not defined for slip date %s"
-#~ msgstr "Periode tidak didefinisikan untuk slip Tanggal %s"
-
-#~ msgid "Accounting Details"
-#~ msgstr "Rincian Akunting"
-
-#, python-format
-#~ msgid "Please Configure Partners Payable Account!!"
-#~ msgstr "Harap Konfigurasi Hutang Rekanan!"

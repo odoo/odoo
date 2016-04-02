@@ -3,7 +3,6 @@
 -
   !record {model: mrp.bom, id: mrp_bom_test1}:
     company_id: base.main_company
-    name: PC Assemble SC234
     product_tmpl_id: product.product_product_3_product_template
     product_id: product.product_product_3
     product_uom: product.product_uom_unit
@@ -13,13 +12,14 @@
       - product_id: product.product_product_2
         product_uom: product.product_uom_unit
         product_qty: 1.0
-      - product_id: product.product_product_44
+      - product_id: product.consu_delivery_01
         product_uom: product.product_uom_unit
         product_qty: 1.0
 -
   I make the production order using BoM having one service type product and one consumable product.
 -
   !record {model: mrp.production, id: mrp_production_servicetype_mo1}:
+    name: 'MO-Test'
     product_id: product.product_product_3
     product_qty: 1.0
     bom_id: mrp_bom_test1

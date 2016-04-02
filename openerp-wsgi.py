@@ -51,5 +51,3 @@ pidfile = '.gunicorn.pid'
 workers = 4
 timeout = 240
 max_requests = 2000
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -8,17 +8,14 @@
             <field name="name">Change Product Qty</field>
             <field name="model">change.production.qty</field>
             <field name="arch" type="xml">
-                <form string="Change Product Qty" version="7.0">
+                <form string="Change Product Qty">
                     <group>
-                        <separator string="Change Quantity" colspan="4"/>
-                        <newline/>
                         <field name="product_qty"/>
                     </group>
                     <footer>
                         <button name="change_prod_qty" string="Approve"
-                            colspan="1" type="object" class="oe_highlight"  />
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />    
+                            colspan="1" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
                     </footer>
                 </form>
             </field>

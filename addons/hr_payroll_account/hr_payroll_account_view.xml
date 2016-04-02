@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
             <field name="arch" type="xml">
                 <field name="paid" position="after">
-                    <field name="period_id"/>
+                    <field name="date"/>
                     <field name="journal_id" required="1"/>
                     <field name="move_id" readonly="1"/>
                 </field>
@@ -22,7 +22,7 @@
             <field name="model">hr.salary.rule</field>
             <field name="inherit_id" ref="hr_payroll.hr_salary_rule_form"/>
             <field name="arch" type="xml">
-              <xpath expr="/form/notebook/page[@string='Child Rules']" position="after">
+              <xpath expr="/form/notebook/page[@name='rules']" position="after">
                     <page string="Accounting">
                         <group colspan="4">
                             <field name="account_debit" />

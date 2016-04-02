@@ -1,52 +1,282 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* sale_crm
-#
+# * sale_crm
+# 
+# Translators:
+# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2015
+# Massimo Bianchi <bianchi.massimo@gmail.com>, 2016
+# Simone Bernini <simone@aperturelabs.it>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-18 22:33+0000\n"
-"Last-Translator: Sergio Corato <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2016-03-03 11:30+0000\n"
+"Last-Translator: Simone Bernini <simone@aperturelabs.it>\n"
+"Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:25+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:92
-#, python-format
-msgid "Insufficient Data!"
-msgstr "Dati Insufficienti!"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_claim_count
+msgid "# Claims"
+msgstr "# Reclami"
 
 #. module: sale_crm
-#: view:crm.lead:0
-#: view:crm.make.sale:0
-msgid "Convert to Quotation"
-msgstr "Converti in preventivo"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
+msgid "# Issues"
+msgstr "# Problematiche"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice_report
-msgid "Invoices Statistics"
-msgstr "Statistiche Fatture"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_count
+msgid "# Tasks"
+msgstr "# Attività"
 
 #. module: sale_crm
-#: field:crm.make.sale,close:0
-msgid "Mark Won"
-msgstr "Marca Vinto"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_count
+msgid "# of Sales Order"
+msgstr "# dell'Ordine di Vendita"
 
 #. module: sale_crm
-#: field:res.users,default_section_id:0
-msgid "Default Sales Team"
-msgstr "Team Vendite di Default"
+#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+msgid "<span class=\"o_stat_text\"> Orders</span>"
+msgstr "<span class=\"o_stat_text\"> Ordini</span>"
 
 #. module: sale_crm
-#: view:sale.order:0
-msgid "My Sales Team(s)"
-msgstr "I Miei Team di Vendita"
+#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+msgid "<span class=\"o_stat_text\"> Quote(s) </span>"
+msgstr "<span class=\"o_stat_text\">Preventivo(i)</span>"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_associate_member
+msgid ""
+"A member with whom you want to associate your membership.It will consider "
+"the membership state of the associated member."
+msgstr "Un membro a cui associare la tua iscrizione"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
+msgid "Associate Member"
+msgstr "Membro associato"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order_campaign_id
+msgid "Campaign"
+msgstr "Campagna"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_cancel
+msgid "Cancel Membership Date"
+msgstr "Cancella data associazione"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_count
+msgid "Count Payment Method"
+msgstr "Conta metodo di pagamento"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_state
+msgid "Current Membership Status"
+msgstr "Stato attuale dell'iscrizione"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_customer
+msgid "Customer Location"
+msgstr "Punto di Stoccaggio Cliente"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_start
+msgid "Date from which membership becomes active."
+msgstr "Data da cui l'iscrizione diventa attiva"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_cancel
+msgid "Date on which membership has been cancelled"
+msgstr "Data in cui l'iscrizione è stata annullata"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_stop
+msgid "Date until which membership remains active."
+msgstr "Date fino a cui l'iscrizione rimarrà attiva."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_free_member
+msgid "Free Member"
+msgstr "Membro Gratuito"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_latitude
+msgid "Geo Latitude"
+msgstr "Geo Latitudine"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_localization
+msgid "Geo Localization Date"
+msgstr "Data geo localizzazione"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_longitude
+msgid "Geo Longitude"
+msgstr "Geo Longitudine"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
+msgid "Invoiced in Sale Orders Target"
+msgstr "Fatturato nel target dei preventivi."
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_state
+msgid ""
+"It indicates the membership state.\n"
+"-Non Member: A partner who has not applied for any membership.\n"
+"-Cancelled Member: A member who has cancelled his membership.\n"
+"-Old Member: A member whose membership date has expired.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Invoiced Member: A member whose invoice has been created.\n"
+"-Paying member: A member who has paid the membership fee."
+msgstr "Indica l'appartenenza ad un gruppo.\n-Non Iscritto: Un partner che non appartiene a nessun gruppo.\n-Cancellato: Un membro che ha cancellato l'iscrizione\n-Scaduto: Un membro la cui iscrizione è scaduta\n-In Attesa: Un membro che si è iscritto, ma la cui fattura deve ancora essere creata.\n-Fattura Emessa: Un membro per cui è stata emessa la fattura.\n-Pagato: Un membro che ha pagato la quota di iscrizione."
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Lead/Opportunità"
+
+#. module: sale_crm
+#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
+msgid "Log in the chatter from which opportunity the order originates"
+msgstr "Registra nella chat da quale occasione si è generato l'ordine"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order_medium_id
+msgid "Medium"
+msgstr "Canale"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_member_lines
+msgid "Membership"
+msgstr "Iscrizione"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_amount
+msgid "Membership Amount"
+msgstr "Valore iscrizione"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_stop
+msgid "Membership End Date"
+msgstr "Scadenza associazione membro"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_start
+msgid "Membership Start Date"
+msgstr "Data inizio iscrizione"
+
+#. module: sale_crm
+#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+msgid "New Quotation"
+msgstr "Nuovo preventivo"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
+msgid "Number of Quotations"
+msgstr "Numero di preventivi"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order_opportunity_id
+msgid "Opportunity"
+msgstr "Opportunità"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_order_ids
+msgid "Orders"
+msgstr "Ordini"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
+msgid "Payment Methods"
+msgstr "Metodi di pagamento"
+
+#. module: sale_crm
+#: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
+msgid "Quotation"
+msgstr "Preventivo"
+
+#. module: sale_crm
+#: model:ir.actions.act_window,name:sale_crm.sale_action_quotations
+msgid "Quotations"
+msgstr "Preventivi"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_sale_order
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_ids
+msgid "Sales Order"
+msgstr "Ordine di vendita"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_free_member
+msgid "Select if you want to give free membership."
+msgstr "Selezionare se si desidera un'iscrizione gratuita"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order_source_id
+msgid "Source"
+msgstr "Origine"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
+msgid "Sum of Orders"
+msgstr "Somma degli ordini"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids
+msgid "Tags"
+msgstr "Tag"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_ids
+msgid "Tasks"
+msgstr "Attività"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_membership_amount
+msgid "The price negotiated by the partner"
+msgstr "Prezzo negoziato dal partner"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_sale_order_campaign_id
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts "
+"Ex: Fall_Drive, Christmas_Special"
+msgstr "Questo nome puo' aiutarti a tenere traccia di differenti campagne di vendita. Es. Sconti natalizi, saldi autunnali, ecc.."
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_sale_order_medium_id
+msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+msgstr "Rappresenta il metodo di consegna. Es: email, banner, volantini, ecc.."
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_sale_order_source_id
+msgid ""
+"This is the source of the link Ex: Search Engine, another domain, or name of"
+" email list"
+msgstr "Questa è l'origine del link, es.: Motore di ricerca, altro dominio o nome dell'elenco di email"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_customer
+msgid ""
+"This stock location will be used, instead of the default one, as the "
+"destination location for goods you send to this partner"
+msgstr "Questo Punto di Stoccaggio verrà utilizzato, al posto di quello predefinito, come destinazione per le merci inviate al partner"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_supplier
+msgid ""
+"This stock location will be used, instead of the default one, as the source "
+"location for goods you receive from the current partner"
+msgstr "Questo Punto di Stoccaggio verrà utilizzata (al posto di quello predefinito) come Punto di Stoccaggio di provenienza per beni provenienti dal Partner attuale"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_res_users
@@ -54,296 +284,6 @@ msgid "Users"
 msgstr "Utenti"
 
 #. module: sale_crm
-#: help:crm.make.sale,close:0
-msgid ""
-"Check this to close the opportunity after having created the sales order."
-msgstr ""
-"Selezionare per chiudere l'opportunità dopo aver creato l'ordine di vendita."
-
-#. module: sale_crm
-#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_sent
-msgid "Quotation Send"
-msgstr "Offerte Spedite"
-
-#. module: sale_crm
-#: field:sale.order,categ_ids:0
-msgid "Categories"
-msgstr "Categorie"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:127
-#: code:addons/sale_crm/wizard/crm_make_sale.py:138
-#, python-format
-msgid "Quotation"
-msgstr "Preventivo"
-
-#. module: sale_crm
-#: field:crm.make.sale,partner_id:0
-msgid "Customer"
-msgstr "Cliente"
-
-#. module: sale_crm
-#: view:crm.make.sale:0
-msgid "_Create"
-msgstr "_Crea"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_make_sale
-msgid "Make sales"
-msgstr "Effettua vendite"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice
-msgid "Invoice"
-msgstr "Fattura"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:95
-#, python-format
-msgid "Opportunity: %s"
-msgstr "Opportunità:%s"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:113
-#, python-format
-msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
-msgstr "L'opportunità è stata <b>convertita</b> nell'offerta <em>%s</em>."
-
-#. module: sale_crm
-#: field:crm.make.sale,shop_id:0
-msgid "Shop"
-msgstr "Negozio"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:92
-#, python-format
-msgid "No addresse(s) defined for this customer."
-msgstr "Nessun indirizzo/i definito/i per il cliente."
-
-#. module: sale_crm
-#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_confirmed
-msgid "Sales Order Confirmed"
-msgstr "Ordine di vendita Confermato"
-
-#. module: sale_crm
-#: view:account.invoice:0
-#: field:account.invoice,section_id:0
-#: field:account.invoice.report,section_id:0
-#: view:sale.order:0
-#: field:sale.order,section_id:0
-msgid "Sales Team"
-msgstr "Team vendite"
-
-#. module: sale_crm
-#: view:crm.lead:0
-msgid "Create Quotation"
-msgstr "Crea Preventivo"
-
-#. module: sale_crm
-#: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
-msgid "Make Quotation"
-msgstr "Genera preventivo"
-
-#. module: sale_crm
-#: view:crm.make.sale:0
-msgid "Cancel"
-msgstr "Annulla"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_sale_order
-msgid "Sales Order"
-msgstr "Ordine di vendita"
-
-#. module: sale_crm
-#: view:crm.make.sale:0
-msgid "or"
-msgstr "o"
-
-#~ msgid "All at once"
-#~ msgstr "Tutto in una volta"
-
-#~ msgid "Crm opportunity quotation"
-#~ msgstr "Crm possibilità di preventivo"
-
-#~ msgid "Opportunity Analytic"
-#~ msgstr "Opportunità Analitica"
-
-#~ msgid "Use this partner if there is no partner on the case"
-#~ msgstr "Utilizza questo partner se non c'è alcun partner su questo caso"
-
-#~ msgid "Create"
-#~ msgstr "Crea"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML non valido per Visualizzazione Architettura!"
-
-#~ msgid "Opportunity goes into the quotation"
-#~ msgstr "Da opportunità a preventivo"
-
-#~ msgid "Analytic account"
-#~ msgstr "Contabilità Analitica"
-
-#~ msgid "Convert opportunity to quotation"
-#~ msgstr "Converte opportunità in preventivo"
-
-#~ msgid "Your action"
-#~ msgstr "La Tua Azione"
-
-#~ msgid "Packing Policy"
-#~ msgstr "Politiche Preparazione Merci"
-
-#~ msgid "Create Quote"
-#~ msgstr "Crea preventivo"
-
-#~ msgid "Contract Volume (pricelist)"
-#~ msgstr "Volume di contratto (listino prezzi)"
-
-#~ msgid "CRM Opportunity"
-#~ msgstr "Opportunità CRM"
-
-#~ msgid "Opportunity convert into quotation"
-#~ msgstr "Opportunità convertita in preventivo"
-
-#~ msgid "Direct Delivery"
-#~ msgstr "Consegna Diretta"
-
-#~ msgid "Opportunity Quotation"
-#~ msgstr "Opportunità di preventivo"
-
-#~ msgid "Convert to Quote"
-#~ msgstr "Converti in preventivo"
-
-#~ msgid "Check this to close the case after having created the sale order."
-#~ msgstr ""
-#~ "Selezionare questo per chiudere il caso dopo aver creato l'ordine di vendita"
-
-#~ msgid "Opporunity convert to the Pricelist"
-#~ msgstr "Opportunità trasformata in Listino Prezzi"
-
-#~ msgid "User Responsible"
-#~ msgstr "Utente Responsabile"
-
-#~ msgid "Reflect the contract made with customer"
-#~ msgstr "Rispecchia il contratto stipulato con il client"
-
-#~ msgid "Products"
-#~ msgstr "Prodotti"
-
-#~ msgid "Close Case"
-#~ msgstr "Chiudi il caso"
-
-#~ msgid "Make Case"
-#~ msgstr "Crea Caso"
-
-#~ msgid "The CRM Opportunity can lead to a quotation."
-#~ msgstr "La opportunità CRM può portare a un preventivo"
-
-#~ msgid "Opportunity Pricelist"
-#~ msgstr "Opportunità Listino Prezzi"
-
-#~ msgid "Case Description"
-#~ msgstr "Descrizione Caso"
-
-#~ msgid "Case Section"
-#~ msgstr "Sezione del caso"
-
-#~ msgid "Contract Pricelist"
-#~ msgstr "Listino Contratti"
-
-#~ msgid "Analytic Account"
-#~ msgstr "Conto Analitico"
-
-#~ msgid "Sale CRM Stuff"
-#~ msgstr "Materiale vendita CRM"
-
-#~ msgid "Close Opportunity"
-#~ msgstr "Chiudi Opportunità"
-
-#, python-format
-#~ msgid "Opportunity "
-#~ msgstr "Opportunità "
-
-#, python-format
-#~ msgid "is converted to Quotation."
-#~ msgstr "è convertito in preventivo"
-
-#, python-format
-#~ msgid "Data Insufficient!"
-#~ msgstr "Dati insufficienti"
-
-#, python-format
-#~ msgid "Customer has no addresses defined!"
-#~ msgstr "Il cliente non ha un indirizzo definito"
-
-#~ msgid ""
-#~ "\n"
-#~ "This module adds a shortcut on one or several opportunity cases in the CRM.\n"
-#~ "This shortcut allows you to generate a sales order based on the selected "
-#~ "case.\n"
-#~ "If different cases are open (a list), it generates one sale order by\n"
-#~ "case.\n"
-#~ "The case is then closed and linked to the generated sales order.\n"
-#~ "\n"
-#~ "We suggest you to install this module if you installed both the sale and "
-#~ "the\n"
-#~ "crm modules.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Questo modulo aggiunge una scorciatoia per una o per diverse opportunità di "
-#~ "vendita nel CRM.\n"
-#~ "Questa scorciatoia permette di generare un ordine di vendita basato sul caso "
-#~ "selezionato.\n"
-#~ "Se vengono aperti diversi casi (una lista), viene generato un ordine di "
-#~ "vendita\n"
-#~ "per ogni caso di CRM.\n"
-#~ "Il caso viene quindi chiuso e legato all'ordine di vendita generato.\n"
-#~ "\n"
-#~ "Si consiglia di installare questo modulo qualora siano già installati sia il "
-#~ "modulo vendite\n"
-#~ " che quello del CRM.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "Check this to close the opportunity after having created the sale order."
-#~ msgstr ""
-#~ "Spuntare questa opzione per chiudere l'opportunità dopo la creazione "
-#~ "dell'ordine di vendita."
-
-#~ msgid "Monthly Turnover"
-#~ msgstr "Fatturato mensile"
-
-#, python-format
-#~ msgid "Converted to Sales Quotation(id: %s)."
-#~ msgstr "Convertito in preventivo di vendita(id: %s)."
-
-#~ msgid "Creates Sales order from Opportunity"
-#~ msgstr "Crea ordine di vendita da opportunità"
-
-#~ msgid "Quotations"
-#~ msgstr "Preventivi"
-
-#~ msgid "My Quotations"
-#~ msgstr "I miei preventivi"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Il riferimento ordine deve essere unico!"
-
-#~ msgid "Opportunities by Stage"
-#~ msgstr "Opportunità per stadio"
-
-#, python-format
-#~ msgid "Opportunity  '%s' is converted to Quotation."
-#~ msgstr "L'opportunità '%s' è stata convertita in Quotazione."
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "Il riferimento dell'ordine deve essere unico per ogni azienda!"
-
-#~ msgid "Category"
-#~ msgstr "Categoria"
-
-#~ msgid "My Opportunities"
-#~ msgstr "Le Mie Opportunità"
-
-#~ msgid "My Planned Revenues by Stage"
-#~ msgstr "Le mie entrate previste per stadio"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
+msgid "Vendor Location"
+msgstr "Location del fornitore"

@@ -1,25 +1,7 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import SUPERUSER_ID
+from openerp import _, SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools import html2plaintext
 
@@ -44,8 +26,12 @@ class note_tag(osv.osv):
     _name = "note.tag"
     _description = "Note Tag"
     _columns = {
-        'name' : fields.char('Tag Name', required=True),
+        'name': fields.char('Tag Name', required=True),
+        'color': fields.integer('Color Index'),
     }
+    _sql_constraints = [
+            ('name_uniq', 'unique (name)', "Tag name already exists !"),
+    ]
 
 class note_note(osv.osv):
     """ Note """
@@ -168,17 +154,18 @@ class note_note(osv.osv):
             return result
 
         else:
-            return super(note_note, self).read_group(self, cr, uid, domain, fields, groupby, 
+            return super(note_note, self).read_group(cr, uid, domain, fields, groupby,
                 offset=offset, limit=limit, context=context, orderby=orderby,lazy=lazy)
 
+    def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
+        res = super(note_note, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
+        new_action_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'note.action_note_note')
+        new_action = self._notification_link_helper(cr, uid, ids, 'new', context=context, action_id=new_action_id)
+        res['user'] = {
+            'actions': [{'url': new_action, 'title': _('New Note')}]
+        }
+        return res
 
-#upgrade config setting page to configure pad, fancy and tags mode
-class note_base_config_settings(osv.osv_memory):
-    _inherit = 'base.config.settings'
-    _columns = {
-        'module_note_pad': fields.boolean('Use collaborative pads (etherpad)'),
-        'group_note_fancy': fields.boolean('Use fancy layouts for notes', implied_group='note.group_note_fancy'),
-    }
 
 class res_users(osv.Model):
     _name = 'res.users'

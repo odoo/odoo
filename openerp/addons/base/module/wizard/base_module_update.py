@@ -1,49 +1,23 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
-from openerp.osv import osv, fields
+from openerp import models, fields, api
 
-class base_module_update(osv.osv_memory):
-    """ Update Module """
-
+class base_module_update(models.TransientModel):
     _name = "base.module.update"
     _description = "Update Module"
 
-    _columns = {
-        'update': fields.integer('Number of modules updated', readonly=True),
-        'add': fields.integer('Number of modules added', readonly=True),
-        'state':fields.selection([('init','init'),('done','done')], 'Status', readonly=True),
-    }
+    updated = fields.Integer('Number of modules updated', readonly=True)
+    added = fields.Integer('Number of modules added', readonly=True)
+    state = fields.Selection([('init', 'init'), ('done', 'done')], 'Status', readonly=True, default='init')
 
-    _defaults = {  
-        'state': 'init',
-    }
-
-    def update_module(self, cr, uid, ids, context=None):
-        module_obj = self.pool.get('ir.module.module')
-        update, add = module_obj.update_list(cr, uid,)
-        self.write(cr, uid, ids, {'update': update, 'add': add, 'state': 'done'}, context=context)
+    @api.one
+    def update_module(self):
+        self.updated, self.added = self.env['ir.module.module'].update_list()
+        self.state = 'done'
         return False
 
-    def action_module_open(self, cr, uid, ids, context):
+    @api.multi
+    def action_module_open(self):
         res = {
             'domain': str([]),
             'name': 'Modules',
@@ -54,5 +28,3 @@ class base_module_update(osv.osv_memory):
             'type': 'ir.actions.act_window',
         }
         return res
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

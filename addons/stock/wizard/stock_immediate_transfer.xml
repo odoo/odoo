@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_immediate_transfer" model="ir.ui.view">
+        <field name="name">view_immediate_transfer</field>
+        <field name="model">stock.immediate.transfer</field>
+        <field name="arch" type="xml">
+            <form string="Immediate transfer?">
+                <group>
+                    <p>
+                        You haven't set processed quantities. If you click <i>apply</i>,
+                        Odoo will process all quantities to do.
+                    </p>
+                </group>
+                <footer>
+                    <button name="process" string="_Apply" type="object" class="btn-primary"/>
+                    <button string="_Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

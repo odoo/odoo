@@ -1,31 +1,11 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Employee Directory',
     'version': '1.1',
-    'author': 'OpenERP SA',
     'category': 'Human Resources',
-    'sequence': 21,
-    'website': 'http://www.openerp.com',
+    'sequence': 75,
     'summary': 'Jobs, Departments, Employees Details',
     'description': """
 Human Resources Management
@@ -40,25 +20,29 @@ You can manage:
 * HR Departments
 * HR Jobs
     """,
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/employees',
     'images': [
         'images/hr_department.jpeg',
         'images/hr_employee.jpeg',
         'images/hr_job_position.jpeg',
         'static/src/img/default_image.png',
     ],
-    'depends': ['base_setup','mail', 'resource', 'board'],
+    'depends': [
+        'base_setup',
+        'mail',
+        'resource',
+        'web_kanban',
+        'web_tip',
+    ],
     'data': [
         'security/hr_security.xml',
         'security/ir.model.access.csv',
         'hr_view.xml',
         'hr_installer.xml',
         'hr_data.xml',
-        'res_config_view.xml',
-        'mail_hr_view.xml',
-        'res_users_view.xml',
+        'hr_tip_data.xml',
         'views/hr.xml',
+        'hr_dashboard.xml',
     ],
     'demo': ['hr_demo.xml'],
     'test': [
@@ -69,6 +53,5 @@ You can manage:
     'installable': True,
     'application': True,
     'auto_install': False,
-    'qweb': [ 'static/src/xml/suggestions.xml' ],
+    'qweb': [],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

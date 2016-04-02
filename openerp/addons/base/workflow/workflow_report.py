@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 from operator import itemgetter
 import os
@@ -70,7 +52,7 @@ def graph_get(cr, graph, wkf_ids, nested, workitem, witm_trans, processed_subflo
             actfrom[n['id']] = (n['id'],{})
             actto[n['id']] = (n['id'],{})
             node_ids = tuple(map(itemgetter('id'), nodes))
-    cr.execute('select * from wkf_transition where act_from IN %s', (node_ids,))
+    cr.execute('select * from wkf_transition where act_from IN %s ORDER BY sequence,id', (node_ids,))
     transitions = cr.dictfetchall()
     for t in transitions:
         if not t['act_to'] in activities:
@@ -220,6 +202,3 @@ class report_graph(report.interface.report_int):
         return self.obj.get(), 'pdf'
 
 report_graph('report.workflow.instance.graph', 'ir.workflow')
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

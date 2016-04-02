@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="mail_channel_view_search" model="ir.ui.view">
+            <field name="name">mail.channel.search</field>
+            <field name="model">mail.channel</field>
+            <field name="arch" type="xml">
+                <search string="Search history">
+                    <field name="name"/>
+                    <group expand="0" string="Group By...">
+                        <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'livechat_channel_id'}"/>
+                        <separator orientation="vertical" />
+                        <filter name="group_by_day" string="Creation date (day)" domain="[]" context="{'group_by':'create_date:day'}"/>
+                        <filter name="group_by_week" string="Creation date (week)" domain="[]" context="{'group_by':'create_date:week'}"/>
+                        <filter name="group_by_month" string="Creation date (month)" domain="[]" context="{'group_by':'create_date:month'}" />
+                        <filter name="group_by_year" string="Creation date (year)" domain="[]" context="{'group_by':'create_date:year'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="mail_channel_view_tree" model="ir.ui.view">
+            <field name="name">mail.channel.tree</field>
+            <field name="model">mail.channel</field>
+            <field name="arch" type="xml">
+                <tree string="History" create="false">
+                    <field name="create_date" string="Session Date"/>
+                    <field name="name" string="Attendees"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="mail_channel_view_form" model="ir.ui.view">
+            <field name="name">mail.channel.form</field>
+            <field name="model">mail.channel</field>
+            <field name="arch" type="xml">
+                <form string="Session Form" create="false" edit="false">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" string="Attendees"/>
+                                <field name="create_date" readonly="1" string="Session Date"/>
+                            </group>
+                            <group>
+                                <field name="rating_ids" mode="kanban" nolabel="1">
+                                    <kanban>
+                                        <field name="rating"/>
+                                        <field name="feedback"/>
+                                        <field name="res_name"/>
+                                        <field name="create_date"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div class="oe_group_details" style="min-height: 40px">
+                                                    <img t-attf-src="rating/static/src/img/rating_#{record.rating.raw_value and record.rating.raw_value or 0}.png" class="oe_kanban_image" style="float:left; margin-right: 10px;"/>
+                                                    <span t-if="record.feedback.raw_value">
+                                                        <t t-esc="record.feedback.raw_value"/>
+                                                    </span>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                </field>
+                            </group>
+                        </group>
+                        <field name="message_ids" type="tree">
+                            <tree string="History">
+                                <field name="author_id"/>
+                                <field name="body"/>
+                                <field name="create_date" groups="base.group_no_one"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="mail_channel_action" model="ir.actions.act_window">
+            <field name="name">History</field>
+            <field name="res_model">mail.channel</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="im_livechat.mail_channel_view_search"/>
+            <field name="domain">[('livechat_channel_id', '!=', None)]</field>
+            <field name="context">{}</field>
+        </record>
+        <record id="mail_channel_action_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="im_livechat.mail_channel_view_tree"/>
+            <field name="act_window_id" ref="im_livechat.mail_channel_action"/>
+        </record>
+
+        <record id="mail_channel_action_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="im_livechat.mail_channel_view_form"/>
+            <field name="act_window_id" ref="im_livechat.mail_channel_action"/>
+        </record>
+
+
+        <record id="mail_channel_action_from_livechat_channel" model="ir.actions.act_window">
+            <field name="name">Sessions</field>
+            <field name="res_model">mail.channel</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('livechat_channel_id', 'in', [active_id])]</field>
+            <field name="context">{
+                'search_default_livechat_channel_id': [active_id],
+                'default_livechat_channel_id': active_id,
+            }</field>
+            <field name="search_view_id" ref="mail_channel_view_search"/>
+        </record>
+
+    </data>
+</openerp>

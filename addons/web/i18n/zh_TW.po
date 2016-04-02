@@ -1,2008 +1,2158 @@
-# Chinese (Traditional) translation for openerp-web
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
-# This file is distributed under the same license as the openerp-web package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * web
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: openerp-web\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2011-12-04 16:06+0000\n"
-"Last-Translator: Walter Cheuk <wwycheuk@gmail.com>\n"
-"Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-01-18 04:43+0000\n"
+"PO-Revision-Date: 2016-01-21 10:35+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-05-14 05:54+0000\n"
-"X-Generator: Launchpad (build 17002)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:147
+#: code:addons/web/static/src/js/views/form_common.js:870
 #, python-format
-msgid "Default language:"
-msgstr "預設語言："
+msgid " & Close"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/coresetup.js:592
+#: code:addons/web/static/src/js/views/form_widgets.js:442
 #, python-format
-msgid "%d minutes ago"
-msgstr "%d 分鐘前"
+msgid " selected records"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/coresetup.js:620
+#: code:addons/web/static/src/js/views/search_filters.js:115
+#: code:addons/web/static/src/js/views/search_filters.js:290
 #, python-format
-msgid "Still loading...<br />Please be patient."
-msgstr "載入中... <br />請稍後"
+msgid "%(field)s %(operator)s"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:1999
+#: code:addons/web/static/src/js/views/search_filters.js:116
 #, python-format
 msgid "%(field)s %(operator)s \"%(value)s\""
 msgstr "%(field)s %(operator)s \"%(value)s\""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:2061
-#: code:addons/web/static/src/js/search.js:2097
-#: code:addons/web/static/src/js/search.js:2124
-#, python-format
-msgid "less or equal than"
-msgstr "小於或等於"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:410
-#, python-format
-msgid "Please enter your previous password"
-msgstr "請輸入先前的密碼"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:126
-#: code:addons/web/static/src/xml/base.xml:185
-#: code:addons/web/static/src/xml/base.xml:300
-#, python-format
-msgid "Master password:"
-msgstr "主密碼："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:292
-#, python-format
-msgid "Change Master Password"
-msgstr "變更主要密碼"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:513
-#, python-format
-msgid "Do you really want to delete the database: %s ?"
-msgstr "您確定要刪除資料庫: %s ?"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:1502
-#, python-format
-msgid "Search %(field)s at: %(value)s"
-msgstr "搜尋 %(field)s 在: %(value)s"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:559
-#, python-format
-msgid "Access Denied"
-msgstr "拒絕存取"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:5220
-#, python-format
-msgid "Uploading error"
-msgstr "上傳錯誤"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/coresetup.js:593
-#, python-format
-msgid "about an hour ago"
-msgstr "約一小時前"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/controllers/main.py:811
-#: code:addons/web/static/src/js/chrome.js:536
-#: code:addons/web/static/src/xml/base.xml:234
-#, python-format
-msgid "Backup Database"
-msgstr "備用資料庫"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views.js:518
-#, python-format
-msgid "%(view_type)s view"
-msgstr "%(view_type)s 檢視"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/dates.js:49
-#: code:addons/web/static/src/js/dates.js:53
-#, python-format
-msgid "'%s' is not a valid date"
-msgstr "‘%s’不是有效的日期"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1858
-#, python-format
-msgid "Here is a preview of the file we could not import:"
-msgstr "無法匯入檔案的預覽："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/coresetup.js:591
-#, python-format
-msgid "about a minute ago"
-msgstr "約一分鐘前"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1306
-#, python-format
-msgid "File"
-msgstr "檔案"
-
-#. module: web
-#: code:addons/web/controllers/main.py:869
-#, python-format
-msgid "You cannot leave any password empty."
-msgstr "密碼不能為空白"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:732
-#, python-format
-msgid "Invalid username or password"
-msgstr "無效的帳號或密碼"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:224
-#: code:addons/web/static/src/xml/base.xml:256
-#: code:addons/web/static/src/xml/base.xml:278
-#, python-format
-msgid "Master Password:"
-msgstr "主密碼："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1245
-#: code:addons/web/static/src/xml/base.xml:1402
-#, python-format
-msgid "Select"
-msgstr "選取"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:571
-#, python-format
-msgid "Database restored successfully"
-msgstr "資料庫儲存成功"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:437
-#, python-format
-msgid "Version"
-msgstr "版本"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:592
-#, python-format
-msgid "Latest Modification Date:"
-msgstr "最後修改日期："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:1566
-#, python-format
-msgid "M2O search fields do not currently handle multiple default values"
-msgstr "多對一搜尋欄位目前不能處理多項預設值"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:1241
-#, python-format
-msgid "Widget type '%s' is not implemented"
-msgstr "小工具的型態 '%s' 並未被實作"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1626
-#, python-format
-msgid "Share with all users"
-msgstr "與所有使用者分享"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:77
-#: code:addons/web/static/src/js/view_form.js:320
-#, python-format
-msgid "Form"
-msgstr "表單"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1352
-#, python-format
-msgid "(no string)"
-msgstr "(no string)"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/formats.js:286
-#, python-format
-msgid "'%s' is not a correct time"
-msgstr "'%s' 並非正確的時間"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:1401
-#, python-format
-msgid "not a valid number"
-msgstr "不是有效的數值"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:343
-#, python-format
-msgid "New Password:"
-msgstr "新密碼："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:632
-#, python-format
-msgid "Attachment :"
-msgstr "附件："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1712
-#, python-format
-msgid "Fields to export"
-msgstr "要匯出欄位"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_list.js:1350
-#, python-format
-msgid "Undefined"
-msgstr "未定義"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:5002
-#, python-format
-msgid "File Upload"
-msgstr "上傳檔案"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/coresetup.js:597
-#, python-format
-msgid "about a month ago"
-msgstr "大約一個月前"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1618
-#, python-format
-msgid "Custom Filters"
-msgstr "客製化篩選器"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1364
-#, python-format
-msgid "Button Type:"
-msgstr "按鈕型態"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:441
-#, python-format
-msgid "OpenERP SA Company"
-msgstr "OpenERP SA 公司"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:1663
-#, python-format
-msgid "Custom Filter"
-msgstr "自訂篩選"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:177
-#, python-format
-msgid "Duplicate Database"
-msgstr "複製資料庫"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/controllers/main.py:832
-#: code:addons/web/controllers/main.py:833
-#: code:addons/web/controllers/main.py:869
-#: code:addons/web/controllers/main.py:871
-#: code:addons/web/controllers/main.py:877
-#: code:addons/web/controllers/main.py:878
-#: code:addons/web/static/src/js/chrome.js:823
-#: code:addons/web/static/src/xml/base.xml:294
-#: code:addons/web/static/src/xml/base.xml:354
-#, python-format
-msgid "Change Password"
-msgstr "變更密碼"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:3528
-#, python-format
-msgid "View type '%s' is not supported in One2Many."
-msgstr "檢視型態 '%s' 在一對多中並不支援。"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:5082
-#: code:addons/web/static/src/js/view_list.js:2204
-#, python-format
-msgid "Download"
-msgstr "下載"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/formats.js:270
-#, python-format
-msgid "'%s' is not a correct datetime"
-msgstr "'%s' 並非正確的日期時間"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_list.js:432
-#, python-format
-msgid "Group"
-msgstr "群組"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:949
-#, python-format
-msgid "Unhandled widget"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1004
-#, python-format
-msgid "Selection:"
-msgstr "選擇："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:881
-#, python-format
-msgid "The following fields are invalid:"
-msgstr "下列欄位為無效:"
-
-#. module: web
-#: code:addons/web/controllers/main.py:890
-#, python-format
-msgid "Languages"
-msgstr "語言"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1298
-#, python-format
-msgid "...Upload in progress..."
-msgstr "...資料上傳中..."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1789
-#, python-format
-msgid "Import"
-msgstr "匯入"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:565
-#, python-format
-msgid "Could not restore the database"
-msgstr "資料庫無法回復"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:4982
-#, python-format
-msgid "File upload"
-msgstr "檔案上傳"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:3925
-#, python-format
-msgid "Action Button"
-msgstr "動作按鈕"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:564
-#: code:addons/web/static/src/xml/base.xml:1493
-#, python-format
-msgid "Manage Filters"
-msgstr "管理篩選"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:2042
-#, python-format
-msgid "contains"
-msgstr "包含"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/coresetup.js:623
-#, python-format
-msgid "Take a minute to get a coffee,<br />because it's loading..."
-msgstr "喝杯咖啡休息一下吧,<br />因為還在載入中..."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:435
-#, python-format
-msgid "Activate the developer mode"
-msgstr "啟動開發者模式"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:341
-#, python-format
-msgid "Loading (%d)"
-msgstr "載入(%d)"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:1216
-#, python-format
-msgid "GroupBy"
-msgstr "分組"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_list.js:699
-#, python-format
-msgid "You must select at least one record."
-msgstr "您必須選擇至少一筆紀錄。"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:557
-#, python-format
-msgid "View Log (perm_read)"
-msgstr "檢視日誌 (perm_read)"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:1071
-#, python-format
-msgid "Set Default"
-msgstr "設定為預設值"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1000
-#, python-format
-msgid "Relation:"
-msgstr "關聯"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/coresetup.js:590
-#, python-format
-msgid "less than a minute ago"
-msgstr "不到一分鐘前"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:873
-#, python-format
-msgid "Condition:"
-msgstr "條件："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:1709
-#, python-format
-msgid "Unsupported operator %s in domain %s"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/formats.js:246
-#, python-format
-msgid "'%s' is not a correct float"
-msgstr "'%s' 並非正確的浮點數值"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:571
-#, python-format
-msgid "Restored"
-msgstr "回復"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_list.js:409
-#, python-format
-msgid "%d-%d of %d"
-msgstr "%d 的 %d-%d"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2955
-#, python-format
-msgid "Create and Edit..."
-msgstr "建立及編輯"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/pyeval.js:736
-#, python-format
-msgid "Unknown nonliteral type "
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2359
-#, python-format
-msgid "Resource error"
-msgstr "資源錯誤"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:2144
-#, python-format
-msgid "is not"
-msgstr "不是"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:572
-#, python-format
-msgid "Print Workflow"
-msgstr "列印工作流程"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:413
-#, python-format
-msgid "Please confirm your new password"
-msgstr "請確認新密碼"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1825
-#, python-format
-msgid "UTF-8"
-msgstr "UTF-8"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:443
-#, python-format
-msgid "For more information visit"
-msgstr "更多資訊請至"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1880
-#, python-format
-msgid "Add All Info..."
-msgstr "增加全部資訊..."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1701
-#, python-format
-msgid "Export Formats"
-msgstr "匯出格式"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:996
-#, python-format
-msgid "On change:"
-msgstr "變更："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views.js:939
-#, python-format
-msgid "Model %s fields"
-msgstr "模型 %s 欄位"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_list.js:906
-#, python-format
-msgid "Setting 'id' attribute on existing record %s"
-msgstr "在已存在的紀錄 %s 設定 'id' 屬性"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_list.js:8
-#, python-format
-msgid "List"
-msgstr "列表"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:2058
-#: code:addons/web/static/src/js/search.js:2094
-#: code:addons/web/static/src/js/search.js:2121
-#, python-format
-msgid "greater than"
-msgstr "大於"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_list.js:2258
-#: code:addons/web/static/src/xml/base.xml:568
-#, python-format
-msgid "View"
-msgstr "檢視"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1492
-#, python-format
-msgid "Save Filter"
-msgstr "儲存篩選"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1372
-#, python-format
-msgid "Action ID:"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:479
-#, python-format
-msgid "Your user's preference timezone does not match your browser timezone:"
-msgstr "您的使用者偏好的時區和您的瀏覽器的時區不符："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:1237
-#, python-format
-msgid "Field '%s' specified in view could not be found."
-msgstr "找不到檢視中指定的欄位 '%s'。"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1777
-#, python-format
-msgid "Saved exports:"
-msgstr "已儲存匯出："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:338
-#, python-format
-msgid "Old Password:"
-msgstr "舊密碼："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/formats.js:113
-#, python-format
-msgid "Bytes,Kb,Mb,Gb,Tb,Pb,Eb,Zb,Yb"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:503
-#, python-format
-msgid "The database has been duplicated."
-msgstr "資料庫已被複製。"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1643
-#, python-format
-msgid "Apply"
-msgstr "套用"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1414
-#, python-format
-msgid "Save & New"
-msgstr "儲存並新增"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1251
-#: code:addons/web/static/src/xml/base.xml:1253
-#, python-format
-msgid "Save As"
-msgstr "另存為"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/doc/module/static/src/xml/web_example.xml:3
-#, python-format
-msgid "00:00:00"
-msgstr "00:00:00"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2330
-#, python-format
-msgid "E-mail error"
-msgstr "電子郵件錯誤"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/coresetup.js:595
-#, python-format
-msgid "a day ago"
-msgstr "一天前"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1810
-#, python-format
-msgid "Does your file have titles?"
-msgstr "您的檔案有標題嗎？"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_list.js:327
-#, python-format
-msgid "Unlimited"
-msgstr "無限制"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:788
-#, python-format
-msgid ""
-"Warning, the record has been modified, your changes will be discarded.\n"
-"\n"
-"Are you sure you want to leave this page ?"
-msgstr "警告，記錄已經被修改，您的變更將會被忽略。"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2991
-#, python-format
-msgid "Search: "
-msgstr "搜尋： "
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:566
-#, python-format
-msgid "Technical translation"
-msgstr "技術性翻譯"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1818
-#, python-format
-msgid "Delimiter:"
-msgstr "分隔符號："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:484
-#, python-format
-msgid "Browser's timezone"
-msgstr "瀏覽器的時區"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1623
-#, python-format
-msgid "Filter name"
-msgstr "篩選器名稱"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1490
-#, python-format
-msgid "-- Actions --"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:4262
-#: code:addons/web/static/src/js/view_form.js:4423
-#: code:addons/web/static/src/xml/base.xml:1435
-#: code:addons/web/static/src/xml/base.xml:1726
-#, python-format
-msgid "Add"
-msgstr "添加"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:558
-#, python-format
-msgid "Toggle Form Layout Outline"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:443
-#, python-format
-msgid "OpenERP.com"
-msgstr "OpenERP.com"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2349
-#, python-format
-msgid "Can't send email to invalid e-mail address"
-msgstr "無法傳送電子郵件至無效的電子郵件地址"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:658
-#, python-format
-msgid "Add..."
-msgstr "新增..."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:424
-#, python-format
-msgid "Preferences"
-msgstr "偏好設定"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:435
-#, python-format
-msgid "Wrong on change format: %s"
-msgstr "變更格式: %s 錯誤"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/controllers/main.py:793
-#: code:addons/web/static/src/xml/base.xml:203
-#, python-format
-msgid "Drop Database"
-msgstr "刪除資料庫"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:488
-#, python-format
-msgid "Click here to change your user's timezone."
-msgstr "點擊此處以便變更您的使用者時區"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:988
-#, python-format
-msgid "Modifiers:"
-msgstr "修飾鍵："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:649
-#, python-format
-msgid "Delete this attachment"
-msgstr "刪除附加檔"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:796
-#: code:addons/web/static/src/xml/base.xml:837
-#: code:addons/web/static/src/xml/base.xml:1410
-#: code:addons/web/static/src/xml/base.xml:1630
-#, python-format
-msgid "Save"
-msgstr "儲存"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views.js:1074
-#: code:addons/web/static/src/xml/base.xml:370
-#, python-format
-msgid "More"
-msgstr "更多"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:73
-#, python-format
-msgid "Username"
-msgstr "使用者名稱"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:503
-#, python-format
-msgid "Duplicating database"
-msgstr "複製資料庫"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:585
-#, python-format
-msgid "Password has been changed successfully"
-msgstr "密碼變更成功"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_list_editable.js:793
-#, python-format
-msgid "The form's data can not be discarded"
-msgstr "表格的資料無法忽略"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:555
-#, python-format
-msgid "Debug View#"
-msgstr "除錯檢視#"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:77
-#, python-format
-msgid "Log in"
-msgstr "登入"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:199
-#: code:addons/web/static/src/js/view_list.js:346
-#: code:addons/web/static/src/xml/base.xml:1785
-#, python-format
-msgid "Delete"
-msgstr "刪除"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/pyeval.js:774
-#, python-format
-msgid ""
-"Local evaluation failure\n"
-"%s\n"
-"\n"
-"%s"
-msgstr ""
-"本地評估失敗\n"
-"%s\n"
-"\n"
-"%s"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:367
-#, python-format
-msgid "Invalid database name"
-msgstr "無效的資料庫名稱"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1714
-#, python-format
-msgid "Save fields list"
-msgstr "儲存欄位清單"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/doc/module/static/src/xml/web_example.xml:5
-#, python-format
-msgid "Start"
-msgstr "開始"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views.js:897
-#, python-format
-msgid "View Log (%s)"
-msgstr "檢視日誌(%s)"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:586
-#, python-format
-msgid "Creation Date:"
-msgstr "建立日期："
-
-#. module: web
-#: code:addons/web/controllers/main.py:833
-#: code:addons/web/controllers/main.py:878
-#, python-format
-msgid "Error, password not changed !"
-msgstr "錯誤，密碼並未變更！"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:4981
-#, python-format
-msgid "The selected file exceed the maximum file size of %s."
-msgstr "所選檔案其大小超過最大檔案 %s"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:635
-#, python-format
-msgid "/web/binary/upload_attachment"
-msgstr "/web/binary/upload_attachment"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:585
-#, python-format
-msgid "Changed Password"
-msgstr "已變更密碼"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1457
-#, python-format
-msgid "Search"
-msgstr "搜尋"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:3139
-#: code:addons/web/static/src/js/view_form.js:3785
-#: code:addons/web/static/src/js/view_form.js:3906
-#: code:addons/web/static/src/js/view_form.js:4358
-#: code:addons/web/static/src/js/view_form.js:4482
-#, python-format
-msgid "Open: "
-msgstr "開啟: "
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:236
-#: code:addons/web/static/src/xml/base.xml:327
-#, python-format
-msgid "Backup"
-msgstr "備份"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/dates.js:76
-#: code:addons/web/static/src/js/dates.js:80
-#, python-format
-msgid "'%s' is not a valid time"
-msgstr "‘%s’ 不是有效的時間"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/formats.js:278
-#, python-format
-msgid "'%s' is not a correct date"
-msgstr "‘%s’ 不是正確的日期"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:955
-#, python-format
-msgid "(nolabel)"
-msgstr "(nolabel)"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/coresetup.js:596
-#, python-format
-msgid "%d days ago"
-msgstr "%d 天以前"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1500
-#, python-format
-msgid "(Any existing filter with the same name will be replaced)"
-msgstr "(會取代所有同名篩選)"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:1936
-#: code:addons/web/static/src/xml/base.xml:356
-#: code:addons/web/static/src/xml/base.xml:1405
-#: code:addons/web/static/src/xml/base.xml:1881
-#, python-format
-msgid "Cancel"
-msgstr "取消"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:672
-#: code:addons/web/static/src/js/coresetup.js:618
-#: code:addons/web/static/src/xml/base.xml:9
-#, python-format
-msgid "Loading..."
-msgstr "載入..."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:589
-#, python-format
-msgid "Latest Modification by:"
-msgstr "最後更動資料者："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:492
-#, python-format
-msgid "Timezone mismatch"
-msgstr "時區不匹配"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:1663
-#, python-format
-msgid "Unknown operator %s in domain %s"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:427
-#, python-format
-msgid "%d / %d"
-msgstr "%d / %d"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1803
-#, python-format
-msgid "2. Check your file format"
-msgstr "2. 檢查檔案格式"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1739
-#, python-format
-msgid "Name"
-msgstr "名稱"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1796
-#, python-format
-msgid ""
-"Select a .CSV file to import. If you need a sample of file to import,\n"
-"       you should use the export tool with the \"Import Compatible\" option."
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/coresetup.js:598
-#, python-format
-msgid "%d months ago"
-msgstr "%d 個月以前"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:205
-#: code:addons/web/static/src/xml/base.xml:326
-#, python-format
-msgid "Drop"
-msgstr "捨棄"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1491
-#, python-format
-msgid "Add Advanced Filter"
-msgstr "新增進階篩選器"
-
-#. module: web
-#: code:addons/web/controllers/main.py:871
-#, python-format
-msgid "The new password and its confirmation must be identical."
-msgstr "新密碼與確認密碼必須一致。"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:564
-#: code:addons/web/static/src/xml/base.xml:266
-#, python-format
-msgid "Restore Database"
-msgstr "回復資料庫"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:702
-#, python-format
-msgid "Login"
-msgstr "登入"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:442
-#, python-format
-msgid "Licenced under the terms of"
-msgstr "在條款下授權"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:268
-#: code:addons/web/static/src/xml/base.xml:328
-#, python-format
-msgid "Restore"
-msgstr "還原"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1695
-#, python-format
-msgid "Export Type:"
-msgstr "匯出類型："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:428
-#, python-format
-msgid "Log out"
-msgstr "登出"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:1192
-#, python-format
-msgid "Group by: %s"
-msgstr "群組條件: %s"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:154
-#, python-format
-msgid "No data provided."
-msgstr "沒有提供資料"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_list.js:345
-#: code:addons/web/static/src/xml/base.xml:1683
-#, python-format
-msgid "Export"
-msgstr "匯出"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/data_export.js:31
-#, python-format
-msgid "Export To File"
-msgstr "匯出至檔案"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views.js:1172
-#, python-format
-msgid "You must choose at least one record."
-msgstr "要選擇至少一個紀錄。"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/coresetup.js:621
-#, python-format
-msgid "Don't leave yet,<br />it's still loading..."
-msgstr "別離開, <br />仍在載入中..."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:841
-#, python-format
-msgid "Invalid Search"
-msgstr "無效的搜尋"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_list.js:990
-#, python-format
-msgid "Could not find id in dataset"
-msgstr "資料集中找不到id"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1728
-#, python-format
-msgid "Remove All"
-msgstr "全部移除"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1368
-#, python-format
-msgid "Method:"
-msgstr "方法:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_list.js:1449
+#: code:addons/web/static/src/js/views/list_view.js:1579
 #, python-format
 msgid "%(page)d/%(page_count)d"
 msgstr "%(page)d/%(page_count)d"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome.js:414
+#: code:addons/web/static/src/js/view_manager.js:66
 #, python-format
-msgid "The confirmation does not match the password"
-msgstr "確認動作並不與密碼相符"
+msgid "%(view_type)s view"
+msgstr "%(view_type)s 檢視"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:463
+#: code:addons/web/static/src/js/views/form_view.js:443
 #, python-format
-msgid "Edit Company data"
-msgstr "編輯公司資訊"
+msgid "%d / %d"
+msgstr "%d / %d"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:5017
+#: code:addons/web/static/src/js/framework/core.js:134
 #, python-format
-msgid "Save As..."
-msgstr "另存新檔…"
+msgid "%d days ago"
+msgstr "%d 天以前"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:5138
+#: code:addons/web/static/src/js/framework/core.js:132
 #, python-format
-msgid "Could not display the selected image."
-msgstr "無法顯示所選影像"
+msgid "%d hours ago"
+msgstr "%d 個小時前"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome.js:531
+#: code:addons/web/static/src/js/framework/core.js:130
 #, python-format
-msgid "Database backed up successfully"
-msgstr "資料庫備份成功"
+msgid "%d minutes ago"
+msgstr "%d 分鐘前"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1829
+#: code:addons/web/static/src/js/framework/core.js:136
 #, python-format
-msgid ""
-"For use if CSV files have titles on multiple lines, skips more than a single "
-"line during import"
-msgstr ""
+msgid "%d months ago"
+msgstr "%d 個月以前"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:414
-#, python-format
-msgid "99+"
-msgstr "99+"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1795
-#, python-format
-msgid "1. Import a .CSV file"
-msgstr "1. 匯入 .CSV 檔"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:702
-#, python-format
-msgid "No database selected !"
-msgstr "無選定之資料庫！"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/formats.js:184
-#, python-format
-msgid "(%d records)"
-msgstr "(%d 筆)"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:992
-#, python-format
-msgid "Change default:"
-msgstr "變更預設值"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:189
-#, python-format
-msgid "Original database name:"
-msgstr "原始資料庫名稱:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:2044
-#: code:addons/web/static/src/js/search.js:2056
-#: code:addons/web/static/src/js/search.js:2092
-#: code:addons/web/static/src/js/search.js:2119
-#, python-format
-msgid "is equal to"
-msgstr "等於"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views.js:1581
-#, python-format
-msgid "Could not serialize XML"
-msgstr "無法序列化 XML"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1637
-#, python-format
-msgid "Advanced Search"
-msgstr "進階搜尋"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:308
-#, python-format
-msgid "Confirm new master password:"
-msgstr "確認新主密碼："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/coresetup.js:624
-#, python-format
-msgid "Maybe you should consider reloading the application by pressing F5..."
-msgstr "或許您可以考慮按F5來重新載入應用程式..."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_list.js:17
-#: code:addons/web/static/src/js/view_list.js:2258
-#: code:addons/web/static/src/xml/base.xml:324
-#: code:addons/web/static/src/xml/base.xml:834
-#: code:addons/web/static/src/xml/base.xml:1404
-#, python-format
-msgid "Create"
-msgstr "建立"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:2043
-#, python-format
-msgid "doesn't contain"
-msgstr "不包含"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1806
-#, python-format
-msgid "Import Options"
-msgstr "匯入選項"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:3023
-#, python-format
-msgid "Add %s"
-msgstr "新增 %s"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:145
-#, python-format
-msgid "Admin password:"
-msgstr "管理員密碼："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/data_export.js:30
-#: code:addons/web/static/src/js/view_form.js:1077
-#: code:addons/web/static/src/xml/base.xml:1422
-#, python-format
-msgid "Close"
-msgstr "關閉"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/coresetup.js:622
-#, python-format
-msgid ""
-"You may not believe it,<br />but the application is actually loading..."
-msgstr "您也許不相信, <br />但是程式事實上是在載入中...."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1800
-#, python-format
-msgid "CSV File:"
-msgstr "CSV 檔："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:1879
-#, python-format
-msgid "Advanced"
-msgstr "進階的"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_tree.js:11
-#, python-format
-msgid "Tree"
-msgstr "樹狀列表"
-
-#. module: web
-#: code:addons/web/controllers/main.py:793
-#, python-format
-msgid "Could not drop database !"
-msgstr "無法刪除資料庫！"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/formats.js:231
-#, python-format
-msgid "'%s' is not a correct integer"
-msgstr "'%s' 不是正確的整數"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:899
-#, python-format
-msgid "All users"
-msgstr "所有使用者"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:1671
-#, python-format
-msgid "Unknown field %s in domain %s"
-msgstr "在領域 %s 中的不知名欄位 %s"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views.js:1546
-#, python-format
-msgid "Node [%s] is not a JSONified XML node"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1454
-#, python-format
-msgid "Advanced Search..."
-msgstr "進階搜尋..."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:521
-#, python-format
-msgid "Dropping database"
-msgstr "刪除資料庫"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:82
-#: code:addons/web/static/src/xml/base.xml:467
-#, python-format
-msgid "Powered by"
-msgstr "技術提供"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:1484
-#: code:addons/web/static/src/xml/base.xml:992
-#, python-format
-msgid "Yes"
-msgstr "是"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:5002
-#, python-format
-msgid "There was a problem while uploading your file"
-msgstr "在上傳您的檔案時，發生了問題。"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:580
-#, python-format
-msgid "XML ID:"
-msgstr "XML ID:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:976
-#, python-format
-msgid "Size:"
-msgstr "大小:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1845
-#, python-format
-msgid "--- Don't Import ---"
-msgstr "--- 請勿匯入 ---"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1697
-#, python-format
-msgid "Import-Compatible Export"
-msgstr "具備匯入相容性的匯出"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/coresetup.js:600
+#: code:addons/web/static/src/js/framework/core.js:138
 #, python-format
 msgid "%d years ago"
 msgstr "%d 年以前"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_list.js:1050
+#: code:addons/web/static/src/js/views/list_view.js:441
 #, python-format
-msgid "Unknown m2m command %s"
-msgstr "不知名的 m2m 指令 %s"
+msgid "%d-%d of %d"
+msgstr "%d 的 %d-%d"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:1078
+#: code:addons/web/static/src/js/views/list_view.js:1488
 #, python-format
-msgid "Save default"
-msgstr "儲存預設值"
+msgid "%s (%d)"
+msgstr "%s (%d)"
+
+#. module: web
+#: model:ir.ui.view,arch_db:web.webclient_bootstrap
+msgid "&lt;!--[if lte IE 9]&gt;"
+msgstr ""
+
+#. module: web
+#: model:ir.ui.view,arch_db:web.layout
+#: model:ir.ui.view,arch_db:web.qunit_suite
+msgid "&lt;!DOCTYPE html&gt;"
+msgstr ""
+
+#. module: web
+#: model:ir.ui.view,arch_db:web.webclient_bootstrap
+msgid "&lt;![endif]--&gt;"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:193
-#: code:addons/web/static/src/xml/base.xml:282
+#: code:addons/web/static/src/js/framework/formats.js:171
 #, python-format
-msgid "New database name:"
-msgstr "新資料庫名稱："
+msgid "'%s' is not a correct date"
+msgstr "‘%s’ 不是正確的日期"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome.js:411
+#: code:addons/web/static/src/js/framework/time.js:193
 #, python-format
-msgid "Please enter your new password"
-msgstr "請輸入您的新密碼"
+msgid "'%s' is not a correct date, datetime nor time"
+msgstr "'%s' 不是正確的日期, 日期時間或時間"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:5017
+#: code:addons/web/static/src/js/framework/formats.js:166
 #, python-format
-msgid "The field is empty, there's nothing to save !"
-msgstr "欄位空白，沒有東西可以儲存！"
+msgid "'%s' is not a correct datetime"
+msgstr "'%s' 並非正確的日期時間"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:567
+#: code:addons/web/static/src/js/framework/formats.js:146
 #, python-format
-msgid "Manage Views"
-msgstr "管理檢視"
+msgid "'%s' is not a correct float"
+msgstr "'%s' 並非正確的浮點數值"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1822
+#: code:addons/web/static/src/js/framework/formats.js:134
 #, python-format
-msgid "Encoding:"
-msgstr "編碼："
+msgid "'%s' is not a correct integer"
+msgstr "'%s' 不是正確的整數"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1829
+#: code:addons/web/static/src/js/framework/formats.js:176
 #, python-format
-msgid "Lines to skip"
-msgstr "略過行"
+msgid "'%s' is not a correct time"
+msgstr "'%s' 並非正確的時間"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2945
+#: code:addons/web/static/src/js/framework/time.js:205
 #, python-format
-msgid "Create \"<strong>%s</strong>\""
-msgstr "建立 \"<strong>%s</strong>\""
+msgid "'%s' is not convertible to date, datetime nor time"
+msgstr "'%s' 無法轉換成日期、日期時間或時間"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/data_export.js:362
+#: code:addons/web/static/src/js/framework/formats.js:77
 #, python-format
-msgid "Please select fields to save export list..."
-msgstr "請選擇欄位以儲存匯出表列...."
+msgid "(%d records)"
+msgstr "(%d 筆)"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:440
+#: code:addons/web/static/src/xml/base.xml:106
 #, python-format
-msgid "Copyright © 2004-TODAY OpenERP SA. All Rights Reserved."
-msgstr "Copyright © 2004-TODAY OpenERP SA. 版權所有."
+msgid "(Community Edition)"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2379
+#: code:addons/web/static/src/xml/base_common.xml:100
 #, python-format
-msgid "This resource is empty"
-msgstr "此資源檔為空白"
+msgid "(no string)"
+msgstr "(no string)"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1710
+#: code:addons/web/static/src/xml/base_common.xml:34
+#, python-format
+msgid "(nolabel)"
+msgstr "(nolabel)"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/utils.js:300
+#, python-format
+msgid ",k,M"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1012
+#, python-format
+msgid "...Upload in progress..."
+msgstr "...資料上傳中..."
+
+#. module: web
+#: model:ir.ui.view,arch_db:web.menu_secondary
+msgid "<span class=\"oe_logo_edit\">Edit Company data</span>"
+msgstr ""
+
+#. module: web
+#: model:ir.ui.view,arch_db:web.menu_secondary
+msgid "<span>Odoo</span>"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/user_menu.js:81
+#: code:addons/web/static/src/xml/base.xml:84
+#, python-format
+msgid "About"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/crash_manager.js:25
+#, python-format
+msgid "Access Denied"
+msgstr "拒絕存取"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/crash_manager.js:21
+#, python-format
+msgid "Access Error"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1503
+#, python-format
+msgid "Access to all Enterprise Apps"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/sidebar.js:24
+#, python-format
+msgid "Action"
+msgstr "動作"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1106
+#, python-format
+msgid "Action Button"
+msgstr "動作按鈕"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base_common.xml:120
+#, python-format
+msgid "Action ID:"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:660
+#, python-format
+msgid "Activate"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:96
+#, python-format
+msgid "Activate the developer mode"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:657
+#, python-format
+msgid "Active"
+msgstr "活躍"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1367
+#: code:addons/web/static/src/xml/base.xml:1110
+#: code:addons/web/static/src/xml/base.xml:1343
+#, python-format
+msgid "Add"
+msgstr "新增"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1216
+#, python-format
+msgid "Add Custom Filter"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1217
+#, python-format
+msgid "Add a condition"
+msgstr "新增條件"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1016
+#, python-format
+msgid "Add an item"
+msgstr "新增項目"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1227
+#, python-format
+msgid "Add custom group"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:323
+#, python-format
+msgid "Add..."
+msgstr "新增..."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1308
+#, python-format
+msgid "Add: "
+msgstr "新增: "
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1123
+#, python-format
+msgid "Advanced Search..."
+msgstr "進階搜尋..."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/dialog.js:162
+#, python-format
+msgid "Alert"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:564
+#, python-format
+msgid "All users"
+msgstr "所有使用者"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1508
+#, python-format
+msgid "And more"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1217
+#: code:addons/web/static/src/xml/base.xml:1237
+#, python-format
+msgid "Apply"
+msgstr "套用"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:664
+#: code:addons/web/static/src/js/views/list_view.js:308
+#, python-format
+msgid "Archive"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:671
+#, python-format
+msgid "Archived"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_menus.js:243
+#, python-format
+msgid "Are you sure that you want to remove this filter?"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:295
+#, python-format
+msgid "Attachment :"
+msgstr "附件："
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1327
 #, python-format
 msgid "Available fields"
 msgstr "可提供欄位"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1856
+#: code:addons/web/static/src/xml/base.xml:616
 #, python-format
-msgid "The import failed due to:"
-msgstr "匯入失敗，原因為："
+msgid "Bar Chart"
+msgstr "長條圖"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views.js:886
-#: code:addons/web/static/src/xml/base.xml:561
+#: code:addons/web/static/src/js/views/list_view.js:1955
 #, python-format
-msgid "JS Tests"
-msgstr "JS 測試"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1771
-#, python-format
-msgid "Save as:"
-msgstr "另存為："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:1024
-#, python-format
-msgid "Filter on: %s"
-msgstr "以 %s 進行篩選"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2991
-#: code:addons/web/static/src/js/view_form.js:3878
-#, python-format
-msgid "Create: "
-msgstr "建立： "
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:562
-#, python-format
-msgid "View Fields"
-msgstr "檢視欄位"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:348
-#, python-format
-msgid "Confirm New Password:"
-msgstr "確認新密碼:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_list.js:587
-#, python-format
-msgid "Do you really want to remove these records?"
-msgstr "您真的要刪除這些記錄嗎？"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:980
-#, python-format
-msgid "Context:"
+msgid "Binary file"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:2114
-#: code:addons/web/static/src/js/search.js:2143
+#: code:addons/web/static/src/xml/base.xml:1507
 #, python-format
-msgid "is"
-msgstr "是"
+msgid "Bugfixes guarantee"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/data_export.js:6
+#: code:addons/web/static/src/xml/base_common.xml:97
 #, python-format
-msgid "Export Data"
-msgstr "匯出資料"
+msgid "Button"
+msgstr "按鈕"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:984
+#: code:addons/web/static/src/xml/base_common.xml:112
 #, python-format
-msgid "Domain:"
-msgstr "領域："
+msgid "Button Type:"
+msgstr "按鈕型態"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:856
+#: code:addons/web/static/src/js/framework/utils.js:285
 #, python-format
-msgid "Default:"
-msgstr "預設值："
+msgid "Bytes,Kb,Mb,Gb,Tb,Pb,Eb,Zb,Yb"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:82
-#: code:addons/web/static/src/xml/base.xml:468
+#: code:addons/web/static/src/js/views/list_common.js:134
 #, python-format
-msgid "OpenERP"
-msgstr "OpenERP"
+msgid "Can't convert value %s to context"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/doc/module/static/src/xml/web_example.xml:8
+#: code:addons/web/static/src/js/views/form_widgets.js:352
 #, python-format
-msgid "Stop"
-msgstr "停止"
+msgid "Can't send email to invalid e-mail address"
+msgstr "無法傳送電子郵件至無效的電子郵件地址"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:68
-#: code:addons/web/static/src/xml/base.xml:211
-#: code:addons/web/static/src/xml/base.xml:243
+#: code:addons/web/static/src/js/framework/crash_manager.js:182
+#: code:addons/web/static/src/js/framework/dialog.js:176
+#: code:addons/web/static/src/js/views/form_common.js:1029
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:44
+#: code:addons/web/static/src/js/views/form_widgets.js:1667
+#: code:addons/web/static/src/xml/base.xml:60
 #, python-format
-msgid "Database:"
-msgstr "資料庫："
+msgid "Cancel"
+msgstr "取消"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1211
-#: code:addons/web/static/src/xml/base.xml:1268
+#: code:addons/web/controllers/main.py:829
+#: code:addons/web/controllers/main.py:831
+#: code:addons/web/controllers/main.py:837
+#: code:addons/web/controllers/main.py:838
+#: code:addons/web/static/src/js/widgets/change_password.js:14
+#: code:addons/web/static/src/xml/base.xml:59
 #, python-format
-msgid "Uploading ..."
-msgstr "上載 ..."
+msgid "Change Password"
+msgstr "變更密碼"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1874
+#: code:addons/web/static/src/xml/base_common.xml:71
 #, python-format
-msgid "Name:"
-msgstr "名稱:"
+msgid "Change default:"
+msgstr "變更預設值"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome.js:1165
+#: code:addons/web/static/src/js/views/form_widgets.js:447
 #, python-format
-msgid "About"
-msgstr "關於本軟體"
+msgid "Change selection "
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1457
-#, python-format
-msgid "Search Again"
-msgstr "再次搜尋"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1481
-#, python-format
-msgid "-- Filters --"
-msgstr "-- 篩選 --"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2431
-#: code:addons/web/static/src/xml/base.xml:1258
-#: code:addons/web/static/src/xml/base.xml:1260
+#: code:addons/web/static/src/xml/base.xml:967
+#: code:addons/web/static/src/xml/base.xml:1021
+#: code:addons/web/static/src/xml/base.xml:1023
 #, python-format
 msgid "Clear"
 msgstr "清除"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1698
+#: code:addons/web/static/src/js/framework/crash_manager.js:135
+#: code:addons/web/static/src/js/web_client.js:132
+#, python-format
+msgid "Client Error"
+msgstr "客戶端的錯誤"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_common.js:864
+#: code:addons/web/static/src/js/views/form_view.js:1128
+#: code:addons/web/static/src/js/widgets/data_export.js:40
+#, python-format
+msgid "Close"
+msgstr "關閉"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:487
+#, python-format
+msgid "Condition:"
+msgstr "條件："
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:53
+#, python-format
+msgid "Confirm New Password:"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/dialog.js:187
+#, python-format
+msgid "Confirmation"
+msgstr "確認"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base_common.xml:59
+#, python-format
+msgid "Context:"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:116
+#, python-format
+msgid "Copyright © 2004-2015 Odoo S.A."
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:1347
+#, python-format
+msgid "Could not display the selected image."
+msgstr "無法顯示所選影像"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list_view.js:1110
+#, python-format
+msgid "Could not find id in dataset"
+msgstr "資料集中找不到id"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/utils.js:180
+#, python-format
+msgid "Could not serialize XML"
+msgstr "無法序列化 XML"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_common.js:1032
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:30
+#: code:addons/web/static/src/js/views/list_view.js:48
+#: code:addons/web/static/src/js/views/list_view.js:2024
+#: code:addons/web/static/src/xml/base.xml:451
+#, python-format
+msgid "Create"
+msgstr "建立"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_common.js:223
+#, python-format
+msgid "Create \"<strong>%s</strong>\""
+msgstr "建立 \"<strong>%s</strong>\""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:27
+#, python-format
+msgid "Create a %s"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_common.js:234
+#, python-format
+msgid "Create and Edit..."
+msgstr "建立及編輯"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:40
+#, python-format
+msgid "Create and edit"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_common.js:279
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1064
+#, python-format
+msgid "Create: "
+msgstr "建立： "
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:249
+#, python-format
+msgid "Created by :"
+msgstr "建立者："
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:200
+#, python-format
+msgid "Creation Date:"
+msgstr "建立日期："
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:196
+#, python-format
+msgid "Creation User:"
+msgstr "建立的使用者:"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_common.js:1065
+#: code:addons/web/static/src/js/views/search_menus.js:175
+#, python-format
+msgid "Custom Filter"
+msgstr "自訂篩選"
+
+#. module: web
+#: model:ir.ui.view,arch_db:web.login
+msgid "Database"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:110
+#, python-format
+msgid "Database expiration:"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:675
+#, python-format
+msgid "Day"
+msgstr "日"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:658
+#, python-format
+msgid "Deactivate"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:521
+#, python-format
+msgid "Default:"
+msgstr "預設值："
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_view.js:210
+#: code:addons/web/static/src/js/views/list_view.js:310
+#: code:addons/web/static/src/xml/base.xml:1368
+#, python-format
+msgid "Delete"
+msgstr "刪除"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:260
+#, python-format
+msgid "Delete this attachment"
+msgstr "刪除附加檔"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1019
+#, python-format
+msgid "Delete this file"
+msgstr "刪除此檔案"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_common.js:864
+#: code:addons/web/static/src/xml/base.xml:408
+#: code:addons/web/static/src/xml/base.xml:457
+#, python-format
+msgid "Discard"
+msgstr "捨棄"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/sidebar.js:205
+#, python-format
+msgid "Do you really want to delete this attachment ?"
+msgstr "您確定要刪除這附加檔嗎？"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_view.js:780
+#, python-format
+msgid "Do you really want to delete this record?"
+msgstr "您確定要刪除這項記錄？"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list_view.js:630
+#, python-format
+msgid "Do you really want to remove these records?"
+msgstr "您真的要刪除這些記錄嗎？"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:82
+#, python-format
+msgid "Documentation"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base_common.xml:63
+#, python-format
+msgid "Domain:"
+msgstr "領域："
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/misc.js:17
+#, python-format
+msgid "Don't leave yet,<br />it's still loading..."
+msgstr "別離開, <br />仍在載入中..."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:1278
+#: code:addons/web/static/src/js/views/list_view.js:1946
+#, python-format
+msgid "Download"
+msgstr "下載"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list_view.js:1962
+#, python-format
+msgid "Download \"%s\""
+msgstr "下載 \"%s\""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/pivot_view.js:123
+#, python-format
+msgid "Download xls"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_view.js:211
+#, python-format
+msgid "Duplicate"
+msgstr "製作複本"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:352
+#, python-format
+msgid "E-mail Error"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:171
+#: code:addons/web/static/src/xml/base.xml:446
+#: code:addons/web/static/src/xml/base.xml:915
+#, python-format
+msgid "Edit"
+msgstr "編輯"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:173
+#, python-format
+msgid "Edit Action"
+msgstr "編輯動作"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:172
+#, python-format
+msgid "Edit SearchView"
+msgstr "編輯搜尋檢視"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/debug_manager.js:180
+#: code:addons/web/static/src/xml/base.xml:174
+#, python-format
+msgid "Edit Workflow"
+msgstr "編輯流程"
+
+#. module: web
+#: model:ir.ui.view,arch_db:web.login
+msgid "Email"
+msgstr "電郵"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/website.tour.xml:25
+#, python-format
+msgid "End This Tutorial"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_menus.js:83
+#: code:addons/web/static/src/js/views/search_menus.js:90
+#, python-format
+msgid "Error"
+msgstr "錯誤"
+
+#. module: web
+#: code:addons/web/controllers/main.py:838
+#, python-format
+msgid "Error, password not changed !"
+msgstr "錯誤，密碼並未變更！"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/pyeval.js:981
+#, python-format
+msgid "Evaluation Error"
+msgstr "評估錯誤"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:599
+#, python-format
+msgid "Expand all"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list_view.js:307
+#: code:addons/web/static/src/xml/base.xml:1259
+#, python-format
+msgid "Export"
+msgstr "匯出"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/data_export.js:50
+#, python-format
+msgid "Export Data"
+msgstr "匯出資料"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1277
+#, python-format
+msgid "Export Formats"
+msgstr "匯出格式"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/data_export.js:41
+#, python-format
+msgid "Export To File"
+msgstr "匯出至檔案"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1271
+#, python-format
+msgid "Export Type:"
+msgstr "匯出類型："
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1274
 #, python-format
 msgid "Export all Data"
 msgstr "匯出所有資料"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_list.js:1344
+#: code:addons/web/static/src/js/view_manager.js:370
 #, python-format
-msgid ""
-"Grouping on field '%s' is not possible because that field does not appear in "
-"the list view."
-msgstr "以欄位 '%s' 分組是不可能的，因為該欄位並未在列表式檢視中出現。"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:559
-#, python-format
-msgid "Set Defaults"
-msgstr "設為預設值"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1688
-#, python-format
-msgid ""
-"This wizard will export all data that matches the current search criteria to "
-"a CSV file.\n"
-"            You can export all data or only the fields that can be "
-"reimported after modification."
+msgid "Failed to evaluate search criterions"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:320
+#: code:addons/web/static/src/xml/base.xml:1197
 #, python-format
-msgid "The record could not be found in the database."
-msgstr "資料庫中找不到該筆記錄。"
+msgid "Favorites"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1498
+#: code:addons/web/static/src/js/views/form_view.js:1292
 #, python-format
-msgid "Filter Name:"
-msgstr "篩選名稱："
+msgid "Field '%s' specified in view could not be found."
+msgstr "找不到檢視中指定的欄位 '%s'。"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:968
+#: code:addons/web/static/src/xml/base_common.xml:39
 #, python-format
-msgid "Type:"
-msgstr "類型:"
+msgid "Field:"
+msgstr "欄位："
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome.js:560
+#: code:addons/web/static/src/js/widgets/debug_manager.js:135
+#: code:addons/web/static/src/xml/base.xml:167
 #, python-format
-msgid "Incorrect super-administrator password"
-msgstr "錯誤的超級管理員密碼"
+msgid "Fields View Get"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:964
+#: code:addons/web/static/src/xml/base.xml:1285
 #, python-format
-msgid "Object:"
-msgstr "物件:"
+msgid "Fields to export"
+msgstr "要匯出欄位"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome.js:309
-#: code:addons/web/static/src/js/chrome.js:343
+#: code:addons/web/static/src/js/views/form_widgets.js:1193
+#, python-format
+msgid "File Upload"
+msgstr "上傳檔案"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:1173
+#, python-format
+msgid "File upload"
+msgstr "檔案上傳"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_inputs.js:540
+#, python-format
+msgid "Filter"
+msgstr "過濾器"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_menus.js:83
+#, python-format
+msgid "Filter name is required."
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_inputs.js:484
+#, python-format
+msgid "Filter on: %s"
+msgstr "以 %s 進行篩選"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_menus.js:90
+#, python-format
+msgid "Filter with same name already exists."
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1213
+#, python-format
+msgid "Filters"
+msgstr "過濾器"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:649
+#, python-format
+msgid "Flip axis"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:119
+#, python-format
+msgid "For more information visit"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_view.js:34
+#: code:addons/web/static/src/js/views/form_view.js:357
+#, python-format
+msgid "Form"
+msgstr "表單"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:118
+#, python-format
+msgid "GNU Lesser General Public License"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1500
+#, python-format
+msgid "Get this feature and much more with Odoo Enterprise!"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/crash_manager.js:24
+#, python-format
+msgid "Global Business Error"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/graph_view.js:18
+#, python-format
+msgid "Graph"
+msgstr "圖形"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list_view.js:465
+#, python-format
+msgid "Group"
+msgstr "群組"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_inputs.js:685
+#: code:addons/web/static/src/xml/base.xml:1179
+#, python-format
+msgid "Group By"
+msgstr "分組方式"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_inputs.js:660
+#, python-format
+msgid "Group by: %s"
+msgstr "群組條件: %s"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/priority.js:50
+#, python-format
+msgid "High"
+msgstr "高"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:184
+#, python-format
+msgid "ID:"
+msgstr "編號:"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:1351
+#, python-format
+msgid "Image"
+msgstr "圖片"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1273
+#, python-format
+msgid "Import-Compatible Export"
+msgstr "具備匯入相容性的匯出"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:665
+#, python-format
+msgid "Inactive"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/graph_widget.js:190
+#: code:addons/web/static/src/js/views/graph_widget.js:197
+#, python-format
+msgid "Invalid data"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/debug_manager.js:106
+#: code:addons/web/static/src/xml/base.xml:211
+#, python-format
+msgid "JS Tests"
+msgstr "JS 測試"
+
+#. module: web
+#: code:addons/web/controllers/main.py:769
+#, python-format
+msgid "Languages"
+msgstr "語言"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:254
+#, python-format
+msgid "Latest Modification Date:"
+msgstr "最後修改日期："
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:250
+#, python-format
+msgid "Latest Modification by:"
+msgstr "最後更動資料者："
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:223
+#, python-format
+msgid "Leave Debug Mode"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:118
+#, python-format
+msgid "Licenced under the terms of"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:617
+#, python-format
+msgid "Line Chart"
+msgstr "折線圖"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list_view.js:39
+#, python-format
+msgid "List"
+msgstr "列表"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/loading.js:12
+#: code:addons/web/static/src/js/widgets/loading.js:46
 #, python-format
 msgid "Loading"
 msgstr "正在載入"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/coresetup.js:599
+#: code:addons/web/static/src/js/widgets/loading.js:44
 #, python-format
-msgid "about a year ago"
-msgstr "大約一年前"
+msgid "Loading (%d)"
+msgstr "載入(%d)"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:2045
-#: code:addons/web/static/src/js/search.js:2057
-#: code:addons/web/static/src/js/search.js:2093
-#: code:addons/web/static/src/js/search.js:2120
+#: code:addons/web/static/src/js/framework/misc.js:14
+#: code:addons/web/static/src/xml/base.xml:5
 #, python-format
-msgid "is not equal to"
-msgstr "不等於"
+msgid "Loading..."
+msgstr "載入..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:5167
+#: code:addons/web/static/src/js/framework/pyeval.js:985
+#, python-format
+msgid ""
+"Local evaluation failure\n"
+"%s\n"
+"\n"
+"%s"
+msgstr "本地評估失敗\n%s\n\n%s"
+
+#. module: web
+#: model:ir.ui.view,arch_db:web.login
+msgid "Log in"
+msgstr "登入"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:84
+#, python-format
+msgid "Log out"
+msgstr "登出"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/priority.js:49
+#, python-format
+msgid "Low"
+msgstr "低"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_inputs.js:440
+#, python-format
+msgid "M2O search fields do not currently handle multiple default values"
+msgstr "多對一搜尋欄位目前不能處理多項預設值"
+
+#. module: web
+#: model:ir.ui.view,arch_db:web.login_layout
+msgid "Manage Databases"
+msgstr "管理資料庫"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/debug_manager.js:141
+#: code:addons/web/static/src/xml/base.xml:168
+#, python-format
+msgid "Manage Filters"
+msgstr "管理篩選"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/misc.js:20
+#, python-format
+msgid "Maybe you should consider reloading the application by pressing F5..."
+msgstr "或許您可以考慮按F5來重新載入應用程式..."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:570
+#, python-format
+msgid "Measure"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:602
+#, python-format
+msgid "Measures"
+msgstr "測量"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/debug_manager.js:89
+#, python-format
+msgid "Metadata (%s)"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base_common.xml:116
+#, python-format
+msgid "Method:"
+msgstr "方法:"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/crash_manager.js:22
+#, python-format
+msgid "Missing Record"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1505
+#, python-format
+msgid "Mobile support"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/debug_manager.js:129
+#, python-format
+msgid "Model %s fields"
+msgstr "模型 %s 欄位"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:254
+#, python-format
+msgid "Modified by :"
+msgstr "修改者:"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base_common.xml:67
+#, python-format
+msgid "Modifiers:"
+msgstr "修飾鍵："
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:626
+#, python-format
+msgid "Month"
+msgstr "月"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:900
+#, python-format
+msgid "More"
+msgstr "更多"
+
+#. module: web
+#: model:ir.ui.view,arch_db:web.menu
+msgid "More <b class=\"caret\"/>"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1303
+#, python-format
+msgid "Move Down"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1302
+#, python-format
+msgid "Move Up"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/tour.js:180
+#, python-format
+msgid "Move your mouse"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/tour.js:181
+#, python-format
+msgid "Move your mouse here to open the insert block"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:83
+#, python-format
+msgid "My Odoo.com account"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1322
+#, python-format
+msgid "Name"
+msgstr "名稱"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1381
+#, python-format
+msgid "Name:"
+msgstr "名稱:"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_view.js:362
+#, python-format
+msgid "New"
+msgstr "新增"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:48
+#, python-format
+msgid "New Password:"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1504
+#, python-format
+msgid "New design"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_inputs.js:330
+#, python-format
+msgid "No"
+msgstr "否"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:192
+#, python-format
+msgid "No Update:"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/graph_widget.js:89
+#, python-format
+msgid ""
+"No data available for this chart. Try to add some records, or make sure that"
+" there is no active filter in the search bar."
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:642
+#, python-format
+msgid ""
+"No data available for this pivot table.  Try to add some records, or make sure\n"
+"                that there is at least one measure and no active filter in the search bar."
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_view.js:123
+#, python-format
+msgid "No data provided."
+msgstr "沒有提供資料"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/graph_widget.js:88
+#, python-format
+msgid "No data to display"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:641
+#, python-format
+msgid "No data to display."
+msgstr "沒有資料可以顯示"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_common.js:243
+#, python-format
+msgid "No results to show..."
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:456
+#, python-format
+msgid "No selected record"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:328
+#, python-format
+msgid "No value found for the field  for value "
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/utils.js:144
+#, python-format
+msgid "Node [%s] is not a JSONified XML node"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/priority.js:48
+#, python-format
+msgid "Normal"
+msgstr "正常"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:669
+#, python-format
+msgid "Not Archived"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/graph_widget.js:226
+#, python-format
+msgid "Not enough data points"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:838
+#, python-format
+msgid "Not shown in kanban"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base_common.xml:43
+#, python-format
+msgid "Object:"
+msgstr "物件："
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/dialog.js:36
+#: model:ir.ui.view,arch_db:web.layout
+#, python-format
+msgid "Odoo"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:101
+#, python-format
+msgid "Odoo (Formerly OpenERP)"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/apps.js:189
+#, python-format
+msgid "Odoo Apps will be available soon"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:1675
+#, python-format
+msgid "Odoo Enterprise"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:117
+#, python-format
+msgid "Odoo S.A."
+msgstr ""
+
+#. module: web
+#: model:ir.ui.view,arch_db:web.qunit_suite
+msgid "Odoo Web Tests"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:117
+#, python-format
+msgid "Odoo is a trademark of"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:119
+#, python-format
+msgid "Odoo.com"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:671
+#, python-format
+msgid "Off"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/dialog.js:40
+#: code:addons/web/static/src/js/framework/dialog.js:152
+#: code:addons/web/static/src/js/framework/dialog.js:170
+#: code:addons/web/static/src/xml/base.xml:1356
+#, python-format
+msgid "Ok"
+msgstr "確定"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:43
+#, python-format
+msgid "Old Password:"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:675
+#, python-format
+msgid "On"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base_common.xml:75
+#, python-format
+msgid "On change:"
+msgstr "變更："
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/progress_bar.js:79
+#, python-format
+msgid "Only Integer Value should be valid."
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:557
+#, python-format
+msgid "Only you"
+msgstr "只有您"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:198
+#, python-format
+msgid "Open Debug Menu"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:153
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:928
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1098
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1324
+#, python-format
+msgid "Open: "
+msgstr "開啟: "
+
+#. module: web
+#: model:ir.ui.view,arch_db:web.login
+msgid "Password"
+msgstr "密碼"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:567
+#, python-format
+msgid "Pie Chart"
+msgstr "派餅圖"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/graph_widget.js:198
+#, python-format
+msgid ""
+"Pie chart cannot display all zero numbers.. Try to change your domain to "
+"display positive results"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/graph_widget.js:191
+#, python-format
+msgid ""
+"Pie chart cannot mix positive and negative numbers. Try to change your "
+"domain to only display positive results"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/pivot_view.js:25
+#, python-format
+msgid "Pivot"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/data_export.js:165
+#, python-format
+msgid "Please enter save field list name"
+msgstr "請輸入儲存欄位列表名稱"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1316
+#, python-format
+msgid "Please note that only the selected ids will be exported."
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1313
+#, python-format
+msgid ""
+"Please pay attention that all records matching your search filter will be "
+"exported. Not only the selected ids."
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/data_export.js:414
+#, python-format
+msgid "Please select fields to export..."
+msgstr "請選擇匯出欄位..."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/data_export.js:401
+#, python-format
+msgid "Please select fields to save export list..."
+msgstr "請選擇欄位以儲存匯出表列...."
+
+#. module: web
+#: model:ir.ui.view,arch_db:web.menu_secondary
+msgid "Powered by"
+msgstr ""
+
+#. module: web
+#: model:ir.ui.view,arch_db:web.login_layout
+msgid "Powered by <span>Odoo</span>"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:82
+#, python-format
+msgid "Preferences"
+msgstr "偏好設定"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/sidebar.js:23
+#, python-format
+msgid "Print"
+msgstr "列印"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:175
+#, python-format
+msgid "Print Workflow"
+msgstr "列印工作流程"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/graph_view.js:90
+#: code:addons/web/static/src/js/views/graph_widget.js:16
+#: code:addons/web/static/src/xml/base.xml:578
+#: code:addons/web/static/src/xml/base.xml:610
+#, python-format
+msgid "Quantity"
+msgstr "數量"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:627
+#, python-format
+msgid "Quarter"
+msgstr "刻"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base_common.xml:79
+#, python-format
+msgid "Relation:"
+msgstr "關聯"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1300
+#, python-format
+msgid "Remove"
+msgstr "移除"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1301
+#, python-format
+msgid "Remove All"
+msgstr "全部移除"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:328
+#, python-format
+msgid "Render"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:382
+#, python-format
+msgid "Resource Error"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_common.js:870
+#: code:addons/web/static/src/xml/base.xml:456
+#: code:addons/web/static/src/xml/base.xml:507
+#: code:addons/web/static/src/xml/base.xml:1253
+#, python-format
+msgid "Save"
+msgstr "儲存"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_common.js:885
+#, python-format
+msgid "Save & New"
+msgstr "儲存並新增"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1014
+#: code:addons/web/static/src/xml/base.xml:1016
+#, python-format
+msgid "Save As"
+msgstr "另存為"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:1204
+#, python-format
+msgid "Save As..."
+msgstr "另存新檔…"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1398
+#, python-format
+msgid "Save as:"
+msgstr "另存為："
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1245
+#, python-format
+msgid "Save current search"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_view.js:1134
+#, python-format
+msgid "Save default"
+msgstr "儲存預設值"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1331
+#, python-format
+msgid "Save fields list"
+msgstr "儲存欄位清單"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1404
+#, python-format
+msgid "Saved exports:"
+msgstr "已儲存匯出："
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_inputs.js:349
+#, python-format
+msgid "Search %(field)s at: %(value)s"
+msgstr "搜尋 %(field)s 在: %(value)s"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_inputs.js:191
+#: code:addons/web/static/src/js/views/search_inputs.js:210
+#: code:addons/web/static/src/js/views/search_inputs.js:391
+#, python-format
+msgid "Search %(field)s for: %(value)s"
+msgstr "以: %(value)s 搜尋 %(field)s"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1077
+#, python-format
+msgid "Search Again"
+msgstr "再次搜尋"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_common.js:209
+#, python-format
+msgid "Search More..."
+msgstr "搜尋更多..."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_common.js:279
+#, python-format
+msgid "Search: "
+msgstr "搜尋： "
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:444
+#, python-format
+msgid "See selection "
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_common.js:1043
+#: code:addons/web/static/src/xml/base.xml:1008
+#, python-format
+msgid "Select"
+msgstr "選取"
+
+#. module: web
+#: model:ir.ui.view,arch_db:web.login
+msgid "Select <i class=\"fa fa-database\"/>"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:468
+#, python-format
+msgid "Select records..."
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_common.js:1078
+#, python-format
+msgid "Selected domain"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:468
+#, python-format
+msgid "Selected records"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base_common.xml:83
+#, python-format
+msgid "Selection:"
+msgstr "選擇："
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_view.js:1126
+#, python-format
+msgid "Set Default"
+msgstr "設定為預設值"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:163
+#, python-format
+msgid "Set Defaults"
+msgstr "設為預設值"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list_view.js:1013
+#, python-format
+msgid "Setting 'id' attribute on existing record %s"
+msgstr "在已存在的紀錄 %s 設定 'id' 屬性"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1207
+#, python-format
+msgid "Share with all users"
+msgstr "與所有使用者分享"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/apps.js:189
+#, python-format
+msgid "Showing locally available modules"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base_common.xml:55
+#, python-format
+msgid "Size:"
+msgstr "大小:"
+
+#. module: web
+#: code:addons/web/controllers/main.py:1067
+#, python-format
+msgid "Something horrible happened"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base_common.xml:107
+#, python-format
+msgid "Special:"
+msgstr "特殊的:"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/misc.js:15
+#, python-format
+msgid "Still loading..."
+msgstr "仍在下載中..."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/misc.js:16
+#, python-format
+msgid "Still loading...<br />Please be patient."
+msgstr "載入中... <br />請稍後"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:83
+#, python-format
+msgid "Support"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:670
+#, python-format
+msgid "Switch Off"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:672
+#, python-format
+msgid "Switch On"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/misc.js:19
+#, python-format
+msgid "Take a minute to get a coffee,<br />because it's loading..."
+msgstr "喝杯咖啡休息一下吧,<br />因為還在載入中..."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:216
+#, python-format
+msgid "Technical Translation"
+msgstr "技術性翻譯"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:1208
+#, python-format
+msgid "The field is empty, there's nothing to save !"
+msgstr "欄位空白，沒有東西可以儲存！"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_view.js:939
+#, python-format
+msgid "The following fields are invalid:"
+msgstr "下列欄位為無效:"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list_view_editable.js:121
+#, python-format
+msgid ""
+"The line has been modified, your changes will be discarded. Are you sure you"
+" want to discard the changes ?"
+msgstr ""
+
+#. module: web
+#: code:addons/web/controllers/main.py:831
+#, python-format
+msgid "The new password and its confirmation must be identical."
+msgstr "新密碼與確認密碼必須一致。"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1107
+#, python-format
+msgid "The o2m record must be saved before an action can be used"
+msgstr "在一項行動被使用之前，一對多的紀錄必須被儲存"
+
+#. module: web
+#: code:addons/web/controllers/main.py:837
+#, python-format
+msgid ""
+"The old password you provided is incorrect, your password was not changed."
+msgstr "您提供的舊密碼是錯誤的，您的密碼並未變更。"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_view.js:357
+#, python-format
+msgid "The record could not be found in the database."
+msgstr "資料庫中找不到該筆記錄。"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_view.js:802
+#, python-format
+msgid ""
+"The record has been modified, your changes will be discarded. Are you sure "
+"you want to leave this page ?"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:1172
+#, python-format
+msgid "The selected file exceed the maximum file size of %s."
+msgstr "所選檔案其大小超過最大檔案 %s"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1520
 #, python-format
 msgid ""
 "The type of the field '%s' must be a many2many field with a relation to "
@@ -2011,645 +2161,553 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/coresetup.js:594
+#: code:addons/web/static/src/js/views/form_widgets.js:1193
 #, python-format
-msgid "%d hours ago"
-msgstr "%d 個小時前"
+msgid "There was a problem while uploading your file"
+msgstr "在上傳您的檔案時，發生了問題。"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_form.js:4334
-#: code:addons/web/static/src/js/view_form.js:4464
+#: code:addons/web/static/src/js/views/search_menus.js:242
 #, python-format
-msgid "Add: "
-msgstr "新增: "
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1879
-#, python-format
-msgid "Quick Add"
-msgstr "快速新增"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1826
-#, python-format
-msgid "Latin 1"
+msgid ""
+"This filter is global and will be removed for everybody if you continue."
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/chrome.js:277
-#: code:addons/web/static/src/js/chrome.js:286
-#: code:addons/web/static/src/js/chrome.js:466
-#: code:addons/web/static/src/js/chrome.js:847
-#: code:addons/web/static/src/js/view_form.js:575
-#: code:addons/web/static/src/js/view_form.js:1940
-#: code:addons/web/static/src/xml/base.xml:1773
+#: code:addons/web/static/src/js/views/form_widgets.js:382
 #, python-format
-msgid "Ok"
-msgstr "確定"
+msgid "This resource is empty"
+msgstr "此資源檔為空白"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views.js:1237
+#: code:addons/web/static/src/xml/base.xml:1264
+#, python-format
+msgid ""
+"This wizard will export all data that matches the current search criteria to a CSV file.\n"
+"            You can export all data or only the fields that can be reimported after modification."
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:944
+#, python-format
+msgid ""
+"Timezone Mismatch : The timezone of your browser doesn't match the selected "
+"one. The time in Odoo is displayed according to your field timezone."
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:162
+#, python-format
+msgid "Toggle Form Layout Outline"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/pivot_view.js:20
+#, python-format
+msgid "Total"
+msgstr "總計"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/web_client.js:134
+#, python-format
+msgid "Traceback:"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/tree_view.js:18
+#, python-format
+msgid "Tree"
+msgstr "樹狀列表"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/crash_manager.js:48
+#, python-format
+msgid "Trying to reconnect... "
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base_common.xml:47
+#, python-format
+msgid "Type:"
+msgstr "類型:"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:672
+#: code:addons/web/static/src/js/views/list_view.js:309
+#, python-format
+msgid "Unarchive"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/graph_widget.js:73
+#: code:addons/web/static/src/js/views/list_view.js:1463
+#: code:addons/web/static/src/js/views/list_view.js:1469
+#: code:addons/web/static/src/js/views/list_view.js:1481
+#: code:addons/web/static/src/js/views/pivot_view.js:494
+#, python-format
+msgid "Undefined"
+msgstr "未定義"
+
+#. module: web
+#: code:addons/web/controllers/main.py:958
+#, python-format
+msgid "Underscore prefixed methods cannot be remotely called"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:650
+#, python-format
+msgid "Unhandled widget"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:884
+#, python-format
+msgid "Unknown"
+msgstr "未知"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/data.js:1075
+#, python-format
+msgid "Unknown field %s in domain %s"
+msgstr "在領域 %s 中的不知名欄位 %s"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list_view.js:1163
+#, python-format
+msgid "Unknown m2m command %s"
+msgstr "不知名的 m2m 指令 %s"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/pyeval.js:949
+#, python-format
+msgid "Unknown nonliteral type "
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/data.js:1067
+#, python-format
+msgid "Unknown operator %s in domain %s"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list_view.js:368
+#, python-format
+msgid "Unlimited"
+msgstr "無限制"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/data.js:1120
+#, python-format
+msgid "Unsupported operator %s in domain %s"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:1658
+#, python-format
+msgid "Upgrade now"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1506
+#, python-format
+msgid "Upgrade to future versions"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:970
+#: code:addons/web/static/src/xml/base.xml:1031
+#, python-format
+msgid "Uploading ..."
+msgstr "上載 ..."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1633
+#: code:addons/web/static/src/js/widgets/sidebar.js:168
+#, python-format
+msgid "Uploading Error"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/sidebar.js:196
 #, python-format
 msgid "Uploading..."
 msgstr "正在上傳..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:125
-#, python-format
-msgid "Load Demonstration data:"
-msgstr "載入展示資料："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:637
-#, python-format
-msgid "Created by :"
-msgstr "建立者："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/dates.js:22
-#: code:addons/web/static/src/js/dates.js:26
-#, python-format
-msgid "'%s' is not a valid datetime"
-msgstr "'%s' 不是有效的日期時間"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:274
-#, python-format
-msgid "File:"
-msgstr "檔案："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:2059
-#: code:addons/web/static/src/js/search.js:2095
-#: code:addons/web/static/src/js/search.js:2122
-#, python-format
-msgid "less than"
-msgstr "小於"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_list.js:699
-#: code:addons/web/static/src/js/views.js:1172
-#, python-format
-msgid "Warning"
-msgstr "警告"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:569
-#, python-format
-msgid "Edit SearchView"
-msgstr "編輯搜尋檢視"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:2160
-#, python-format
-msgid "is true"
-msgstr "為真"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:4030
-#, python-format
-msgid "Add an item"
-msgstr "新增項目"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1621
-#, python-format
-msgid "Save current filter"
-msgstr "儲存目前篩選條件"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:1933
-#, python-format
-msgid "Confirm"
-msgstr "確認"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/data_export.js:127
-#, python-format
-msgid "Please enter save field list name"
-msgstr "請輸入儲存欄位列表名稱"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_list.js:2216
-#, python-format
-msgid "Download \"%s\""
-msgstr "下載 \"%s\""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:325
-#, python-format
-msgid "New"
-msgstr "新增"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_list.js:1777
-#, python-format
-msgid "Can't convert value %s to context"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views.js:881
-#: code:addons/web/static/src/xml/base.xml:563
-#, python-format
-msgid "Fields View Get"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:163
-#, python-format
-msgid "Confirm password:"
-msgstr "確認密碼："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:2060
-#: code:addons/web/static/src/js/search.js:2096
-#: code:addons/web/static/src/js/search.js:2123
-#, python-format
-msgid "greater or equal than"
-msgstr "大於或等於"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1349
-#, python-format
-msgid "Button"
-msgstr "按鈕"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:440
-#, python-format
-msgid "OpenERP is a trademark of the"
-msgstr "OpenERP 商標屬於"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/data_export.js:375
-#, python-format
-msgid "Please select fields to export..."
-msgstr "請選擇匯出欄位..."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:304
-#, python-format
-msgid "New master password:"
-msgstr "新主密碼："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:2161
-#, python-format
-msgid "is false"
-msgstr "為否(false)"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:426
-#, python-format
-msgid "About OpenERP"
-msgstr "有關 OpenERP"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/formats.js:301
-#, python-format
-msgid "'%s' is not a correct date, datetime nor time"
-msgstr "'%s' 不是正確的日期, 日期時間或時間"
-
-#. module: web
-#: code:addons/web/controllers/main.py:1307
-#, python-format
-msgid "No content found for field '%s' on '%s:%s'"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:322
-#, python-format
-msgid "Database Management"
-msgstr "資料庫管理"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:5138
-#, python-format
-msgid "Image"
-msgstr "影像"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:81
-#, python-format
-msgid "Manage Databases"
-msgstr "管理資料庫"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/pyeval.js:770
-#, python-format
-msgid "Evaluation Error"
-msgstr "評估錯誤"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:1387
-#, python-format
-msgid "not a valid integer"
-msgstr "並非有效整數"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:355
-#: code:addons/web/static/src/xml/base.xml:798
-#: code:addons/web/static/src/xml/base.xml:838
-#: code:addons/web/static/src/xml/base.xml:1404
-#: code:addons/web/static/src/xml/base.xml:1412
-#: code:addons/web/static/src/xml/base.xml:1648
-#, python-format
-msgid "or"
-msgstr "或"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:1485
-#, python-format
-msgid "No"
-msgstr "否"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/formats.js:313
-#, python-format
-msgid "'%s' is not convertible to date, datetime nor time"
-msgstr "'%s' 無法轉換成日期、日期時間或時間"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:200
-#: code:addons/web/static/src/xml/base.xml:179
-#: code:addons/web/static/src/xml/base.xml:325
-#, python-format
-msgid "Duplicate"
-msgstr "製作複本"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:799
-#: code:addons/web/static/src/xml/base.xml:839
-#: code:addons/web/static/src/xml/base.xml:1419
-#, python-format
-msgid "Discard"
-msgstr "捨棄"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1642
-#, python-format
-msgid "Add a condition"
-msgstr "新增條件"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/coresetup.js:619
-#, python-format
-msgid "Still loading..."
-msgstr "仍在下載中..."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:884
-#, python-format
-msgid "Incorrect value for field %(fieldname)s: [%(value)s] is %(message)s"
-msgstr "欄位 %(fieldname)s 的不正確數值: [%(value)s] 是 %(message)s"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:3926
-#, python-format
-msgid "The o2m record must be saved before an action can be used"
-msgstr "在一項行動被使用之前，一對多的紀錄必須被儲存"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:531
-#, python-format
-msgid "Backed"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1628
+#: code:addons/web/static/src/xml/base.xml:1204
 #, python-format
 msgid "Use by default"
 msgstr "使用預設值"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/view_list.js:1358
+#: code:addons/web/static/src/js/framework/crash_manager.js:23
 #, python-format
-msgid "%s (%d)"
-msgstr "%s (%d)"
+msgid "Validation Error"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:841
+#: code:addons/web/static/src/xml/base.xml:105
 #, python-format
-msgid "triggered from search view"
-msgstr "從搜尋檢視中觸發"
+msgid "Version"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:1079
+#: code:addons/web/static/src/js/widgets/priority.js:51
 #, python-format
-msgid "Filter"
-msgstr "篩選器"
+msgid "Very High"
+msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:972
+#: code:addons/web/static/src/js/views/list_view.js:2024
+#: code:addons/web/static/src/xml/base.xml:171
+#, python-format
+msgid "View"
+msgstr "檢視"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:166
+#, python-format
+msgid "View Fields"
+msgstr "檢視欄位"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:161
+#, python-format
+msgid "View Metadata"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:746
+#, python-format
+msgid "View type '%s' is not supported in X2Many."
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/crash_manager.js:19
+#: code:addons/web/static/src/js/framework/crash_manager.js:20
+#: code:addons/web/static/src/js/framework/crash_manager.js:119
+#: code:addons/web/static/src/js/views/form_view.js:807
+#: code:addons/web/static/src/js/views/list_view.js:756
+#: code:addons/web/static/src/js/widgets/sidebar.js:126
+#, python-format
+msgid "Warning"
+msgstr "警告"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:625
+#, python-format
+msgid "Week"
+msgstr "週"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_view.js:1296
+#, python-format
+msgid "Widget type '%s' is not implemented"
+msgstr "小工具的型態 '%s' 並未被實作"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base_common.xml:51
 #, python-format
 msgid "Widget:"
 msgstr "小工具"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:570
+#: code:addons/web/static/src/js/widgets/progress_bar.js:76
 #, python-format
-msgid "Edit Action"
-msgstr "編輯動作"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:577
-#, python-format
-msgid "ID:"
-msgstr "編號:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:892
-#, python-format
-msgid "Only you"
-msgstr "只有您"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:571
-#, python-format
-msgid "Edit Workflow"
-msgstr "編輯流程"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views.js:1246
-#, python-format
-msgid "Do you really want to delete this attachment ?"
-msgstr "您確定要刪除這附加檔嗎？"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views.js:914
-#, python-format
-msgid "Technical Translation"
-msgstr "技術性翻譯"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:960
-#, python-format
-msgid "Field:"
-msgstr "欄位："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:642
-#, python-format
-msgid "Modified by :"
-msgstr "修改者:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:521
-#, python-format
-msgid "The database %s has been dropped"
-msgstr "資料庫 %s 已被刪除"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:482
-#, python-format
-msgid "User's timezone"
-msgstr "使用者的時區"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/chrome.js:301
-#: code:addons/web/static/src/js/chrome.js:1276
-#, python-format
-msgid "Client Error"
-msgstr "客戶端的錯誤"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views.js:1073
-#, python-format
-msgid "Print"
-msgstr "列印"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1359
-#, python-format
-msgid "Special:"
-msgstr "特殊的:"
-
-#. module: web
-#: code:addons/web/controllers/main.py:877
-#, python-format
-msgid ""
-"The old password you provided is incorrect, your password was not changed."
-msgstr "您提供的舊密碼是錯誤的，您的密碼並未變更。"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:583
-#, python-format
-msgid "Creation User:"
-msgstr "建立的使用者:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:769
-#, python-format
-msgid "Do you really want to delete this record?"
-msgstr "您確定要刪除這項記錄？"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1413
-#, python-format
-msgid "Save & Close"
-msgstr "儲存並關閉"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/view_form.js:2932
-#, python-format
-msgid "Search More..."
-msgstr "搜尋更多..."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:75
-#: code:addons/web/static/src/xml/base.xml:329
-#, python-format
-msgid "Password"
-msgstr "密碼"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:568
-#: code:addons/web/static/src/xml/base.xml:831
-#: code:addons/web/static/src/xml/base.xml:1206
-#, python-format
-msgid "Edit"
-msgstr "編輯"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1727
-#, python-format
-msgid "Remove"
-msgstr "移除"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1090
-#, python-format
-msgid "Select date"
-msgstr "選擇日期"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/search.js:1351
-#: code:addons/web/static/src/js/search.js:1369
-#, python-format
-msgid "Search %(field)s for: %(value)s"
-msgstr "以: %(value)s 搜尋 %(field)s"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1305
-#, python-format
-msgid "Delete this file"
-msgstr "刪除此檔案"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:168
-#, python-format
-msgid "Create Database"
-msgstr "建立資料庫"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:442
-#, python-format
-msgid "GNU Affero General Public License"
+msgid "Wrong value entered!"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1816
+#: code:addons/web/static/src/xml/base.xml:188
 #, python-format
-msgid "Separator:"
-msgstr "分隔符號："
+msgid "XML ID:"
+msgstr "XML ID:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:318
+#: code:addons/web/static/src/xml/base.xml:628
 #, python-format
-msgid "Back to Login"
-msgstr "返回登入畫面"
+msgid "Year"
+msgstr "年份"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/search.js:616
-#: code:addons/web/static/src/xml/base.xml:1480
+#: code:addons/web/static/src/js/views/search_inputs.js:329
+#: code:addons/web/static/src/xml/base_common.xml:71
 #, python-format
-msgid "Filters"
-msgstr "篩選器"
+msgid "Yes"
+msgstr "是"
 
-#~ msgid "Disable all tips"
-#~ msgstr "停用所有提示"
-
-#~ msgid "Hide this tip"
-#~ msgstr "隱藏此提示"
-
-#~ msgid "Field"
-#~ msgstr "欄位"
-
-#~ msgid "Open..."
-#~ msgstr "開啟..."
-
-#~ msgid "Search..."
-#~ msgstr "搜尋..."
-
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/crash_manager.js:53
 #, python-format
-#~ msgid "Confirm Password:"
-#~ msgstr "確認密碼："
+msgid "You are back online"
+msgstr ""
 
-#~ msgid "Add condition"
-#~ msgstr "添加條件"
-
-#~ msgid "<em>   Search More...</em>"
-#~ msgstr "<em>   搜尋更多...</em>"
-
-#~ msgid "Translations"
-#~ msgstr "翻譯"
-
-#~ msgid "<em>   Create and Edit...</em>"
-#~ msgstr "<em>   建立並編輯...</em>"
-
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:49
 #, python-format
-#~ msgid "<em>   Create \"<strong>%s</strong>\"</em>"
-#~ msgstr "<em>   建立「<strong>%s</strong>」</em>"
+msgid "You are creating a new %s, are you sure it does not exist yet?"
+msgstr ""
 
-#~ msgid "Create..."
-#~ msgstr "建立..."
+#. module: web
+#: code:addons/web/controllers/main.py:829
+#, python-format
+msgid "You cannot leave any password empty."
+msgstr "密碼不能為空白"
 
-#~ msgid "and"
-#~ msgstr "和"
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/misc.js:18
+#, python-format
+msgid ""
+"You may not believe it,<br />but the application is actually loading..."
+msgstr "您也許不相信, <br />但是程式事實上是在載入中...."
 
-#~ msgid "Any of the following conditions must match"
-#~ msgstr "以下任何條件都要符合"
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/sidebar.js:126
+#, python-format
+msgid "You must choose at least one record."
+msgstr "要選擇至少一個紀錄。"
 
-#~ msgid "All the following conditions must match"
-#~ msgstr "以下所有條件都要符合"
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list_view.js:756
+#, python-format
+msgid "You must select at least one record."
+msgstr "您必須選擇至少一筆紀錄。"
 
-#~ msgid "None of the following conditions must match"
-#~ msgstr "以下無一條件需要符合"
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/crash_manager.js:69
+#, python-format
+msgid "Your Odoo session expired. Please refresh the current web page."
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/core.js:133
+#, python-format
+msgid "a day ago"
+msgstr "一天前"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/core.js:129
+#, python-format
+msgid "about a minute ago"
+msgstr "約一分鐘前"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/core.js:135
+#, python-format
+msgid "about a month ago"
+msgstr "大約一個月前"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/core.js:137
+#, python-format
+msgid "about a year ago"
+msgstr "大約一年前"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/core.js:131
+#, python-format
+msgid "about an hour ago"
+msgstr "約一小時前"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_filters.js:160
+#, python-format
+msgid "contains"
+msgstr "包含"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_filters.js:161
+#, python-format
+msgid "doesn't contain"
+msgstr "不包含"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_filters.js:177
+#: code:addons/web/static/src/js/views/search_filters.js:211
+#: code:addons/web/static/src/js/views/search_filters.js:240
+#, python-format
+msgid "greater than"
+msgstr "大於"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_filters.js:179
+#: code:addons/web/static/src/js/views/search_filters.js:213
+#: code:addons/web/static/src/js/views/search_filters.js:242
+#, python-format
+msgid "greater than or equal to"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_filters.js:232
+#: code:addons/web/static/src/js/views/search_filters.js:267
+#, python-format
+msgid "is"
+msgstr "是"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_filters.js:162
+#: code:addons/web/static/src/js/views/search_filters.js:175
+#: code:addons/web/static/src/js/views/search_filters.js:209
+#: code:addons/web/static/src/js/views/search_filters.js:238
+#, python-format
+msgid "is equal to"
+msgstr "等於"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_filters.js:286
+#, python-format
+msgid "is false"
+msgstr "為否(false)"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_filters.js:268
+#, python-format
+msgid "is not"
+msgstr "不是"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_filters.js:163
+#: code:addons/web/static/src/js/views/search_filters.js:176
+#: code:addons/web/static/src/js/views/search_filters.js:210
+#: code:addons/web/static/src/js/views/search_filters.js:239
+#, python-format
+msgid "is not equal to"
+msgstr "不等於"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_filters.js:165
+#: code:addons/web/static/src/js/views/search_filters.js:182
+#: code:addons/web/static/src/js/views/search_filters.js:216
+#: code:addons/web/static/src/js/views/search_filters.js:245
+#: code:addons/web/static/src/js/views/search_filters.js:270
+#, python-format
+msgid "is not set"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_filters.js:164
+#: code:addons/web/static/src/js/views/search_filters.js:181
+#: code:addons/web/static/src/js/views/search_filters.js:215
+#: code:addons/web/static/src/js/views/search_filters.js:244
+#: code:addons/web/static/src/js/views/search_filters.js:269
+#, python-format
+msgid "is set"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_filters.js:285
+#, python-format
+msgid "is true"
+msgstr "為真"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_filters.js:178
+#: code:addons/web/static/src/js/views/search_filters.js:212
+#: code:addons/web/static/src/js/views/search_filters.js:241
+#, python-format
+msgid "less than"
+msgstr "小於"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/framework/core.js:128
+#, python-format
+msgid "less than a minute ago"
+msgstr "不到一分鐘前"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_filters.js:180
+#: code:addons/web/static/src/js/views/search_filters.js:214
+#: code:addons/web/static/src/js/views/search_filters.js:243
+#, python-format
+msgid "less than or equal to"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_inputs.js:229
+#, python-format
+msgid "not a valid integer"
+msgstr "並非有效整數"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_inputs.js:244
+#, python-format
+msgid "not a valid number"
+msgstr "不是有效的數值"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1214
+#: code:addons/web/static/src/xml/website.tour.xml:14
+#, python-format
+msgid "or"
+msgstr "或"

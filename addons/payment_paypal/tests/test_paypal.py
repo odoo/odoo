@@ -17,7 +17,7 @@ class PaypalCommon(PaymentAcquirerCommon):
         self.base_url = self.registry('ir.config_parameter').get_param(cr, uid, 'web.base.url')
 
         # get the paypal account
-        model, self.paypal_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment_paypal', 'payment_acquirer_paypal')
+        model, self.paypal_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment', 'payment_acquirer_paypal')
         # tde+seller@openerp.com - tde+buyer@openerp.com - tde+buyer-it@openerp.com
 
         # some CC
@@ -33,45 +33,12 @@ class PaypalCommon(PaymentAcquirerCommon):
         self.switch_polo = (('6331101999990016', '123'))
 
 
-class PaypalServer2Server(PaypalCommon):
-
-    def test_00_tx_management(self):
-        cr, uid, context = self.cr, self.uid, {}
-        # be sure not to do stupid things
-        paypal = self.payment_acquirer.browse(self.cr, self.uid, self.paypal_id, None)
-        self.assertEqual(paypal.environment, 'test', 'test without test environment')
-
-        res = self.payment_acquirer._paypal_s2s_get_access_token(cr, uid, [self.paypal_id], context=context)
-        self.assertTrue(res[self.paypal_id] is not False, 'paypal: did not generate access token')
-
-        tx_id = self.payment_transaction.s2s_create(
-            cr, uid, {
-                'amount': 0.01,
-                'acquirer_id': self.paypal_id,
-                'currency_id': self.currency_euro_id,
-                'reference': 'test_reference',
-                'partner_id': self.buyer_id,
-            }, {
-                'number': self.visa[0][0],
-                'cvc': self.visa[0][1],
-                'brand': 'visa',
-                'expiry_mm': 9,
-                'expiry_yy': 2015,
-            }, context=context
-        )
-
-        tx = self.payment_transaction.browse(cr, uid, tx_id, context=context)
-        self.assertTrue(tx.paypal_txn_id is not False, 'paypal: txn_id should have been set after s2s request')
-
-        self.payment_transaction.write(cr, uid, tx_id, {'paypal_txn_id': False}, context=context)
-
-
 class PaypalForm(PaypalCommon):
 
     def test_10_paypal_form_render(self):
         cr, uid, context = self.cr, self.uid, {}
         # be sure not to do stupid things
-        self.payment_acquirer.write(cr, uid, self.paypal_id, {'fees_active': False}, context)
+        self.payment_acquirer.write(cr, uid, self.paypal_id, {'paypal_email_account': 'tde+paypal-facilitator@openerp.com', 'fees_active': False}, context)
         paypal = self.payment_acquirer.browse(cr, uid, self.paypal_id, context)
         self.assertEqual(paypal.environment, 'test', 'test without test environment')
 
@@ -83,17 +50,16 @@ class PaypalForm(PaypalCommon):
         res = self.payment_acquirer.render(
             cr, uid, self.paypal_id,
             'test_ref0', 0.01, self.currency_euro_id,
-            partner_id=None,
-            partner_values=self.buyer_values,
+            values=self.buyer_values,
             context=context)
 
         form_values = {
             'cmd': '_xclick',
             'business': 'tde+paypal-facilitator@openerp.com',
-            'item_name': 'test_ref0',
+            'item_name': 'YourCompany: test_ref0',
             'item_number': 'test_ref0',
-            'first_name': 'Buyer',
-            'last_name': 'Norbert',
+            'first_name': 'Norbert',
+            'last_name': 'Buyer',
             'amount': '0.01',
             'currency_code': 'EUR',
             'address1': 'Huge Street 2/543',
@@ -136,9 +102,8 @@ class PaypalForm(PaypalCommon):
         # render the button
         res = self.payment_acquirer.render(
             cr, uid, self.paypal_id,
-            'test_ref0', 12.50, self.currency_euro,
-            partner_id=None,
-            partner_values=self.buyer_values,
+            'test_ref0', 12.50, self.currency_euro_id,
+            values=self.buyer_values,
             context=context)
 
         # check form result
@@ -163,7 +128,7 @@ class PaypalForm(PaypalCommon):
             'protection_eligibility': u'Ineligible',
             'last_name': u'Poilu',
             'txn_id': u'08D73520KX778924N',
-            'receiver_email': u'tde+paypal-facilitator@openerp.com',
+            'receiver_email': u'dummy',
             'payment_status': u'Pending',
             'payment_gross': u'',
             'tax': u'0.00',
@@ -183,9 +148,9 @@ class PaypalForm(PaypalCommon):
             'address_name': u'Norbert Poilu',
             'pending_reason': u'multi_currency',
             'item_number': u'test_ref_2',
-            'receiver_id': u'DEG7Z7MYGT6QA',
+            'receiver_id': u'dummy',
             'transaction_subject': u'',
-            'business': u'tde+paypal-facilitator@openerp.com',
+            'business': u'dummy',
             'test_ipn': u'1',
             'payer_id': u'VTDKRZQSAHYPS',
             'verify_sign': u'An5ns1Kso7MWUdW4ErQKJJJ4qi4-AVoiUf-3478q3vrSmqh08IouiYpM',
@@ -223,13 +188,13 @@ class PaypalForm(PaypalCommon):
         tx = self.payment_transaction.browse(cr, uid, tx_id, context=context)
         self.assertEqual(tx.state, 'pending', 'paypal: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.state_message, 'multi_currency', 'paypal: wrong state message after receiving a valid pending notification')
-        self.assertEqual(tx.paypal_txn_id, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
+        self.assertEqual(tx.acquirer_reference, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
         self.assertFalse(tx.date_validate, 'paypal: validation date should not be updated whenr receiving pending notification')
 
         # update tx
         self.payment_transaction.write(cr, uid, [tx_id], {
             'state': 'draft',
-            'paypal_txn_id': False,
+            'acquirer_reference': False,
         }, context=context)
         # update notification from paypal
         paypal_post_data['payment_status'] = 'Completed'
@@ -238,5 +203,5 @@ class PaypalForm(PaypalCommon):
         # check
         tx = self.payment_transaction.browse(cr, uid, tx_id, context=context)
         self.assertEqual(tx.state, 'done', 'paypal: wrong state after receiving a valid pending notification')
-        self.assertEqual(tx.paypal_txn_id, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
+        self.assertEqual(tx.acquirer_reference, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
         self.assertEqual(tx.date_validate, '2013-11-18 03:21:19', 'paypal: wrong validation date')

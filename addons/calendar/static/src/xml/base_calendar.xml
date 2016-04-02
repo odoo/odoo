@@ -1,76 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template>
-    <t t-name="many2manyattendee">
-        <t t-set="i" t-value="0"/>
-            <t t-foreach="elements" t-as="el">
-                <span class="oe_tag no-wrap" t-att-data-index="i">
-                    <a t-attf-class="oe_invitation #{el[2]}"/>
-                    <t t-esc="el[1]"/>
-                </span>
-            <t t-set="i" t-value="i + 1"/>
+    <t t-name="Many2ManyAttendeeTag" t-extend="FieldMany2ManyTag">
+        <t t-jquery="span:first" t-operation="prepend">
+            <span t-attf-class="o_calendar_invitation #{el['status']}"/>
         </t>
     </t>
-    <t t-name='notify_title'>
-        <span  t-attf-class="link2event eid_#{id}">
-            <t t-esc="title"/>
-        </span> 
+
+    <t t-name="CalendarNotification" t-extend="Notification">
+        <t t-jquery=".o_notification_title > t" t-operation="replace">
+            <span  t-attf-class="link2event eid_{{widget.eid}}">
+                <t t-esc="widget.title"/>
+            </span>
+        </t>
+        <t t-jquery=".o_notification_content" t-operation="append">
+            <br/><br/>
+            <button type="button" class="btn btn-sm btn-primary link2showed oe_highlight oe_form oe_button"><span>OK</span></button>
+            <button type="button" class="btn btn-sm btn-link link2event">Details</button>
+            <button type="button" class="btn btn-sm btn-link link2recall">Snooze</button>
+        </t>
     </t>
-    <t t-name='notify_footer'>
-        <br/><br/>
-        <button class='link2showed oe_highlight oe_form oe_button '><span>OK</span></button> 
-        <button class='link2event '>Details</button>
-        <button class='link2recall '>Snooze</button> 
+
+    <t t-extend="CalendarView.sidebar.responsible">
+        <t t-jquery="span[t-attf-class*='color_filter']" t-operation="after">
+            <t t-if="(filters_value.value != -1) &amp;&amp; (filters_value.is_remove != false)">
+                <span class="oe_remove_follower fa fa-times" title="Remove this favorite from the list" t-att-data-id="filters_value.value"/>
+           </t>
+        </t>
     </t>
-    <t t-name='m2mattendee_tag'>
-        <div class="text-tag">
-            <div class="text-button">
-                <a class="oe_invitation custom-edit"/>
-                <span class="text-label"/>
-                <a class="text-remove"/>
-            </div>
-        </div>         
-    </t>
-    
-    <t t-name="invitation_view">
-        <div class='invitation_block well' style='width:50%; margin:auto; margin-top : 30px;'>
-            <div class="oe_right"><b><t t-esc="invitation['current_attendee'].cn"/> (<t t-esc="invitation['current_attendee'].email"/>)</b></div>
-            <div class="oe_left">
-                <img class="cal_inline cal_image" src='/web/binary/company_logo' />
-            </div>
-            <div>               
-                <div class="invitation_block cal_meeting">
-                    <h2 class="cal_inline">Calendar Invitation</h2>                                
-                    <t t-if="invitation['current_attendee'].state != 'needsAction'">
-                        <a t-attf-class="attendee_#{invitation['current_attendee'].state}">
-                            <b t-if="invitation['current_attendee'].state == 'accepted'">Yes I'm going.</b>
-                            <b t-if="invitation['current_attendee'].state == 'declined'">No I'm not going.</b>
-                        </a>                        
-                    </t>
-                    <br/><br/>
-                    <div class="cal_meeting"><t t-esc="invitation['meeting'].event"/></div>
-                    <br/>
-                    <table class="">
-                        <tr>
-                            <td class="cal_lable">When</td>
-                            <td> <t t-esc="invitation['meeting'].when"/></td>
-                        </tr>
-                        <tr>
-                            <td class="cal_lable">Where</td>
-                            <td> <t t-esc="invitation['meeting'].where or '-'"/></td>
-                        </tr>
-                        <tr>
-                            <td class="cal_lable">Who</td>
-                            <td>
-                                <t t-foreach="invitation['attendee']" t-as="att">
-                                    <br/>
-                                    <span class="cal_status"><a t-attf-class="oe_invitation #{att.status}"/><t t-esc="att.name"/></span>
-                                </t>
-                            </td>
-                        </tr>
-                    </table>
-                    <br/>
-                </div>
+
+    <div t-name="CalendarInvitation" class="o_calendar_invitation_page">
+        <div class="pull-right">
+            <t t-esc="attendee_data['current_attendee'].cn"/> (<t t-esc="attendee_data['current_attendee'].email"/>)
+            <div t-if="attendee_data['current_attendee'].state !== 'needsAction'" t-attf-class="o_#{attendee_data['current_attendee'].state}">
+                <t t-if="attendee_data['current_attendee'].state === 'accepted'">Yes I'm going.</t>
+                <t t-if="attendee_data['current_attendee'].state === 'declined'">No I'm not going.</t>
             </div>
         </div>
-     </t>
+        <div class="pull-left o_logo">
+            <img class="img img-responsive" src='/web/binary/company_logo'/>
+        </div>
+        <div class="o_event_title">
+            <h2>Calendar Invitation</h2>
+            <h3><t t-esc="attendee_data['meeting'].event"/></h3>
+        </div>
+        <table class="o_event_table table table-striped">
+            <tr>
+                <th>When</th>
+                <td><t t-esc="attendee_data['meeting'].when"/></td>
+            </tr>
+            <tr>
+                <th>Where</th>
+                <td><t t-esc="attendee_data['meeting'].where or '-'"/></td>
+            </tr>
+            <tr>
+                <th>Who</th>
+                <td>
+                    <ul>
+                        <li t-foreach="attendee_data['attendee']" t-as="attendee" t-attf-class="o_#{attendee.status}">
+                            <t t-esc="attendee.name"/>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
 </template>

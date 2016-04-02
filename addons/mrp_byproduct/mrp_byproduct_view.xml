@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
             <field name="arch" type="xml">
              <notebook position="inside">
-                 <page string="Byproducts" position="inside">
+                 <page string="Byproducts">
                      <field name="sub_products">
                          <tree string="Byproducts"  editable="top">
                              <field name="product_id" on_change="onchange_product_id(product_id)"/>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_rating_rating_kanban">
+            <field name="name">rating.rating.kanban</field>
+            <field name="model">rating.rating</field>
+            <field name="arch" type="xml">
+                <kanban create="false" class="oe_background_grey">
+                    <field name="rating"/>
+                    <field name="res_id"/>
+                    <field name="res_model"/>
+                    <field name="res_name"/>
+                    <field name="create_date"/>
+                    <field name="partner_id"/>
+                    <field name="rated_partner_id"/>
+                    <field name="feedback"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <a t-att-href="_.str.sprintf('/web?#id=%s&amp;view_type=form&amp;model=%s', record.res_id.raw_value, record.res_model.raw_value)">
+                                    <img t-attf-src="rating/static/src/img/rating_#{record.rating.raw_value}.png"
+                                        t-attf-title="Name : #{ record.res_name.raw_value } &lt;br&gt;
+                                            #{ record.partner_id.value ? 'Customer : ' + record.partner_id.value + '&lt;br&gt;' : '' }
+                                            #{ record.rated_partner_id.value ? 'Responsible : ' + record.rated_partner_id.value+'&lt;br&gt;' : '' }
+                                            Date : #{ moment(record.create_date.raw_value).format('L') }
+                                            #{ record.feedback.raw_value ? '&lt;br&gt;'+'Reason : ' + record.feedback.raw_value : '' }"
+                                        data-html="true" data-placement="bottom"/>
+                                </a>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_rating_rating_pivot">
+            <field name="name">rating.rating.pivot</field>
+            <field name="model">rating.rating</field>
+            <field name="arch" type="xml">
+                <pivot string="Rating Average" display_quantity="true">
+                    <field name="res_name" type="row"/>
+                    <field name="rating" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_rating_rating_graph">
+           <field name="name">rating.rating.graph</field>
+           <field name="model">rating.rating</field>
+           <field name="arch" type="xml">
+                <graph string="Rating Average" type="bar">
+                    <field name="res_name" type="row"/>
+                    <field name="rating" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_rating_rating_search">
+            <field name="name">rating.rating.search</field>
+            <field name="model">rating.rating</field>
+            <field name="arch" type="xml">
+                <search string="Ratings">
+                    <field name="rated_partner_id"/>
+                    <field name="rating"/>
+                    <field name="partner_id"/>
+                    <field name="res_name"/>
+                    <field name="res_id"/>
+                    <filter string="Happy" domain="[('rating', '&gt;=', 7)]"/>
+                    <filter string="Okay" domain="[('rating', '&gt;', 3), ('rating', '&lt;', 7)]"/>
+                    <filter string="Unhappy" domain="[('rating', '&gt;=', 0), ('rating', '&lt;=',3)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Responsible" name="Responsible" context="{'group_by':'rated_partner_id'}"/>
+                        <filter string="Customer" name="customer" context="{'group_by':'partner_id'}"/>
+                        <filter string="Rating" name="rating" context="{'group_by':'rating'}"/>
+                        <filter string="Resource" name="resource" context="{'group_by':'res_name'}"/>
+                        <filter string="Day" context="{'group_by':'create_date:day'}"/>
+                        <filter string="Month" context="{'group_by':'create_date:month'}"/>
+                        <filter string="Year" context="{'group_by':'create_date:year'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_view_rating" model="ir.actions.act_window">
+            <field name="name">Rating</field>
+            <field name="res_model">rating.rating</field>
+            <field name="view_mode">graph,pivot,kanban</field>
+            <field name="help" type="html">
+                <p>
+                    There is no rating for this object at the moment.
+                </p>
+            </field>
+        </record>
+    </data>
+</openerp>

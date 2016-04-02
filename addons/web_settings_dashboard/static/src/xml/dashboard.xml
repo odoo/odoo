@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="DashboardMain">
+        <div class="container-fluid o_web_settings_dashboard">
+            <div class="row">
+                <div class="o_web_settings_dashboard_enterprise"/>
+                <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col">
+                    <div class="text-center o_web_settings_dashboard_apps"></div>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col"> 
+                    <div class="text-center o_web_settings_dashboard_invitations"></div>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col">
+                    <div class="text-center o_web_settings_dashboard_planner"></div>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col">
+                    <div class="text-center o_web_settings_dashboard_share"></div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="DashboardApps">
+        <div class="text-center o_web_settings_dashboard_apps">
+            <i class="fa fa-cog fa-4x text-muted o_browse_apps" style="cursor: pointer;"></i>
+            <div class="o_web_settings_dashboard_header">
+                <t t-set="installed_apps" t-value="widget.data.installed_apps"/>
+                <t t-if="installed_apps">
+                    <t t-esc="installed_apps"></t>
+                    <t t-if="installed_apps == 1">Installed App</t>
+                    <t t-if="installed_apps > 1">Installed Apps</t>
+                </t>
+                <t t-if="! installed_apps">
+                    No app installed
+                </t>
+            </div>
+            <div>
+                <a class="btn btn-primary btn-block o_browse_apps" role="button"><strong>Browse Apps</strong></a>
+            </div>
+            <div class="o_web_settings_dashboard_pills">
+                <a href="https://www.odoo.com/apps/modules" target="_blank" class="pull-left"><i class="fa fa-rocket fa-2x text-muted"/> App store</a>
+                <a href="https://www.odoo.com/apps/themes" target="_blank" class="pull-right"><i class="fa fa-picture-o fa-2x text-muted"/> Theme store</a>
+            </div>
+            <div class="clearfix"/>
+        </div>
+    </t>
+    <t t-name="DashboardInvitations">
+        <div class="text-center o_web_settings_dashboard_invitations">
+            <i class="fa fa-users fa-4x text-muted o_web_settings_dashboard_access_rights" style="cursor: pointer;"></i>
+            <div class="o_web_settings_dashboard_header">
+                <t t-set="active_users" t-value="widget.data.active_users"></t>
+                <t t-set="pending_users" t-value="widget.data.pending_users"></t>
+                <t t-if="active_users">
+                    <t t-esc="active_users"></t> Active User<t t-if="active_users > 1">s</t>
+                </t>
+            </div>
+            <div class="text-center">
+                <a href="#" class="o_web_settings_dashboard_access_rights"> Manage access rights</a>
+            </div>
+            <hr/>
+            <div class="o_web_settings_dashboard_invitation_form">
+                <strong>Invite new users:</strong>
+                <textarea rows="3" id="user_emails" placeholder="Enter e-mail addresses (one per line)"></textarea>
+                <button class="btn btn-primary btn-block o_web_settings_dashboard_invitations" role="button"> <strong><i class="fa fa-cog fa-spin hidden"/> Invite</strong></button>
+            </div>
+            <div>
+                <small class="o_web_settings_dashboard_pending_users text-muted text-center">
+                    <t t-if="pending_users.length">
+                        <br/>
+                        <strong>Pending invitations:</strong><br/>
+                        <t t-foreach="pending_users" t-as="pending">
+                            <a href="#"><div class="o_web_settings_dashboard_user" t-att-data-user-id="pending[0]"> <t t-esc="pending[1]"/></div></a>
+                        </t>
+                        <t t-if="pending_users.length &lt; widget.data.pending_count">
+                            <br/>
+                            <a href="#"><div class="o_web_settings_dashboard_more"><t t-esc="widget.data.pending_count - pending_users.length"/> more</div></a>
+                        </t>
+                    </t>
+                </small>
+            </div>
+        </div>
+    </t>
+    <t t-name="DashboardPlanner">
+        <div class="text-center o_web_settings_dashboard_planner">
+            <i class="fa fa-info-circle fa-4x text-muted"></i>
+            <div class="o_web_settings_dashboard_header">
+                <span class="o_web_settings_dashboard_planner_overall_progress"><t t-esc="widget.overall_progress"></t></span>%
+                Implementation
+            </div>
+            <div>
+                <small class="text-muted text-center o_web_settings_dashboard_compact_subtitle">
+                    Follow these implementation guides to get the most out of Odoo.
+                </small>
+            </div>
+            <hr/>
+            <t t-set="planners" t-value="widget.planners"/>
+            <t t-call="DashboardPlanner.PlannersList"/>
+            <hr/>
+            Need more help? <a href="https://www.odoo.com/documentation/user">Browse the documentation.</a>
+        </div>
+    </t>
+    
+    <t t-name="DashboardPlanner.PlannersList">
+        <div class="row o_web_settings_dashboard_planners_list">
+            <t t-if="!planners.length">
+                <div>You need to install some apps first.</div>
+            </t>
+            <t t-if="planners.length" t-foreach="planners" t-as="p">
+                <div t-attf-class="col-xs-2 col-md-3 col-lg-2 o_web_settings_dashboard_planner_progress_text o_web_settings_dashboard_progress_#{p.progress}">
+                    <t t-esc="p.progress"/>%
+                </div>
+                <div t-attf-class="col-xs-10 col-md-9 col-lg-10 o_web_settings_dashboard_planner_progress_bar o_web_settings_dashboard_progress_#{p.progress}">
+                    <div class="o_web_settings_dashboard_progress_title text-left" t-att-data-menu-id="p.menu_id[0]">
+                        <t t-esc="p.menu_id[1]"></t> <i class="fa fa-arrow-right pull-right"/>
+                    </div>
+                    <div class="progress" t-att-data-menu-id="p.menu_id[0]">
+                        <div class="progress-bar" role="progressbar" t-attf-style="width:#{p.progress}%">
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="DashboardShare">
+        <div class="text-center o_web_settings_dashboard_share">
+            <i class="fa fa-share-alt fa-4x text-muted"/>
+            <div class="o_web_settings_dashboard_header">Social Share</div>
+            <div>
+                <small class="text-muted text-center o_web_settings_dashboard_compact_subtitle">
+                    Help us spread the word: Share Odoo's awesomeness with your friends!
+                </small>
+            </div>
+            <hr/>
+            <div class="row mt16">
+                <div class="col-xs-4"><a><i class="fa fa-twitter-square fa-4x tw_share"/></a></div>
+                <div class="col-xs-4"><a><i class="fa fa-facebook-square fa-4x fb_share"/></a></div>
+                <div class="col-xs-4"><a><i class="fa fa-linkedin-square fa-4x li_share"/></a></div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="DashboardEnterprise">
+        <hr class="mt16"/>
+        <div class="text-center o_web_settings_dashboard_enterprise">
+            <div class="text-center o_web_settings_dashboard_enterprise">
+                <div class="text-center o_web_settings_dashboard_header">Odoo Enterprise</div>
+                <div class="mb16"><a href="http://www.odoo.com/editions" target="_blank">Get more features with the Enterprise Edition!</a></div>
+                <div><img class="img img-responsive" t-att-src='_s + "/web/static/src/img/enterprise_upgrade.jpg"'/></div>
+                <div>
+                    <a class="btn btn-primary btn-block o_confirm_upgrade" role="button"><strong>Upgrade Now</strong></a>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

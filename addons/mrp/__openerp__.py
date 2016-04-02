@@ -1,37 +1,17 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 {
     'name': 'MRP',
     'version': '1.1',
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/manufacturing',
     'category': 'Manufacturing',
-    'sequence': 18,
-    'summary': 'Manufacturing Orders, Bill of Materials, Routing',
-    'images': ['images/bill_of_materials.jpeg', 'images/manufacturing_order.jpeg', 'images/planning_manufacturing_order.jpeg', 'images/manufacturing_analysis.jpeg', 'images/routings.jpeg','images/work_centers.jpeg'],
+    'sequence': 14,
+    'summary': 'Manufacturing Orders, Bill of Materials, Routings',
     'depends': ['product', 'procurement', 'stock_account', 'resource', 'report'],
     'description': """
-Manage the Manufacturing process in OpenERP
+Manage the Manufacturing process in Odoo
 ===========================================
 
 The manufacturing module allows you to cover planning, ordering, stocks and the manufacturing or assembly of products from raw materials and components. It handles the consumption and production of products according to a bill of materials and the necessary operations on machinery, tools or human resources according to routings.
@@ -43,7 +23,7 @@ Key Features
 * Make to Stock/Make to Order
 * Multi-level bill of materials, no limit
 * Multi-level routing, no limit
-* Routing and work center integrated with analytic accounting
+* Routings and work center integrated with analytic accounting
 * Periodical scheduler computation 
 * Allows to browse bills of materials in a complete structure that includes child and phantom bills of materials
 
@@ -60,8 +40,6 @@ Dashboard / Reports for MRP will include:
         'mrp_data.xml',
         'wizard/mrp_product_produce_view.xml',
         'wizard/change_production_qty_view.xml',
-        'wizard/mrp_price_view.xml',
-        'wizard/mrp_workcenter_load_view.xml',
         'wizard/stock_move_view.xml',
         'mrp_view.xml',
         'mrp_report.xml',
@@ -83,4 +61,3 @@ Dashboard / Reports for MRP will include:
     'application': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

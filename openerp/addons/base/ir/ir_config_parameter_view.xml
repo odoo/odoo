@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <record model="ir.ui.view" id="view_ir_config_search">
             <field name="model">ir.config_parameter</field>
             <field name="arch" type="xml">
@@ -16,17 +15,19 @@
                 <tree string="System Parameters">
                     <field name="key"/>
                     <field name="value"/>
+                    <field name="group_ids"/>
                 </tree>
             </field>
         </record>
         <record model="ir.ui.view" id="view_ir_config_form">
             <field name="model">ir.config_parameter</field>
             <field name="arch" type="xml">
-                <form string="System Parameters" version="7.0">
+                <form string="System Parameters">
                   <sheet>
                     <group>
                         <field name="key"/>
                         <field name="value"/>
+                        <field name="group_ids" widget="many2many_tags"/>
                     </group>
                   </sheet>
                 </form>
@@ -34,5 +35,4 @@
         </record>
         <act_window name="System Parameters" res_model="ir.config_parameter" id="ir_config_list_action"/>
         <menuitem id="ir_config_menu" name="System Parameters" parent="menu_ir_property" action="ir_config_list_action"/>
-    </data>
-</openerp>
+</odoo>

@@ -1,24 +1,5 @@
 #openerp.loggers.handlers. -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2014 OpenERP s.a. (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ConfigParser
 import optparse
@@ -48,23 +29,41 @@ class MyOption (optparse.Option, object):
         self.my_default = attrs.pop('my_default', None)
         super(MyOption, self).__init__(*opts, **attrs)
 
-
-def check_ssl():
-    try:
-        from OpenSSL import SSL
-        import socket
-
-        return hasattr(socket, 'ssl') and hasattr(SSL, "Connection")
-    except:
-        return False
-
-DEFAULT_LOG_HANDLER = [':INFO']
-
+DEFAULT_LOG_HANDLER = ':INFO'
 def _get_default_datadir():
-    return appdirs.user_data_dir(appname='OpenERP', appauthor=release.author)
+    home = os.path.expanduser('~')
+    if os.path.isdir(home):
+        func = appdirs.user_data_dir
+    else:
+        if sys.platform in ['win32', 'darwin']:
+            func = appdirs.site_data_dir
+        else:
+            func = lambda **kwarg: "/var/lib/%s" % kwarg['appname'].lower()
+    # No "version" kwarg as session and filestore paths are shared against series
+    return func(appname=release.product_name, appauthor=release.author)
+
+def _deduplicate_loggers(loggers):
+    """ Avoid saving multiple logging levels for the same loggers to a save
+    file, that just takes space and the list can potentially grow unbounded
+    if for some odd reason people use :option`odoo.py --save`` all the time.
+    """
+    # dict(iterable) -> the last item of iterable for any given key wins,
+    # which is what we want and expect. Output order should not matter as
+    # there are no duplicates within the output sequence
+    return (
+        '{}:{}'.format(logger, level)
+        for logger, level in dict(it.split(':') for it in loggers).iteritems()
+    )
+
 
 class configmanager(object):
     def __init__(self, fname=None):
+        """Constructor.
+
+        :param fname: a shortcut allowing to instantiate :class:`configmanager`
+                      from Python code without resorting to environment
+                      variable
+        """
         # Options not exposed on the command line. Command line options will be added
         # from optparse's parser.
         self.options = {
@@ -86,7 +85,6 @@ class configmanager(object):
 
         self.misc = {}
         self.config_file = fname
-        self.has_ssl = check_ssl()
 
         self._LOGLEVELS = dict([
             (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x)) 
@@ -116,7 +114,7 @@ class configmanager(object):
         group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules default=web")
 
         group.add_option("-D", "--data-dir", dest="data_dir", my_default=_get_default_datadir(),
-                         help="Directory where to store OpenERP data")
+                         help="Directory where to store Odoo data")
         parser.add_option_group(group)
 
         # XML-RPC / HTTP
@@ -131,24 +129,6 @@ class configmanager(object):
                          help="Enable correct behavior when behind a reverse proxy")
         group.add_option("--longpolling-port", dest="longpolling_port", my_default=8072,
                          help="specify the TCP port for longpolling requests", type="int")
-        parser.add_option_group(group)
-
-        # XML-RPC / HTTPS
-        title = "XML-RPC Secure Configuration"
-        if not self.has_ssl:
-            title += " (disabled as ssl is unavailable)"
-
-        group = optparse.OptionGroup(parser, title)
-        group.add_option("--xmlrpcs-interface", dest="xmlrpcs_interface", my_default='',
-                         help="Specify the TCP IP address for the XML-RPC Secure protocol. The empty string binds to all interfaces.")
-        group.add_option("--xmlrpcs-port", dest="xmlrpcs_port", my_default=8071,
-                         help="specify the TCP port for the XML-RPC Secure protocol", type="int")
-        group.add_option("--no-xmlrpcs", dest="xmlrpcs", action="store_false", my_default=True,
-                         help="disable the XML-RPC Secure protocol")
-        group.add_option("--cert-file", dest="secure_cert_file", my_default='server.cert',
-                         help="specify the certificate file for the SSL connection")
-        group.add_option("--pkey-file", dest="secure_pkey_file", my_default='server.pkey',
-                         help="specify the private key file for the SSL connection")
         parser.add_option_group(group)
 
         # WEB
@@ -174,12 +154,13 @@ class configmanager(object):
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
         group.add_option("--logrotate", dest="logrotate", action="store_true", my_default=False, help="enable logfile rotation")
         group.add_option("--syslog", action="store_true", dest="syslog", my_default=False, help="Send the log to the syslog server")
-        group.add_option('--log-handler', action="append", default=DEFAULT_LOG_HANDLER, my_default=DEFAULT_LOG_HANDLER, metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "openerp.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
+        group.add_option('--log-handler', action="append", default=[], my_default=DEFAULT_LOG_HANDLER, metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "openerp.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
         group.add_option('--log-request', action="append_const", dest="log_handler", const="openerp.http.rpc.request:DEBUG", help='shortcut for --log-handler=openerp.http.rpc.request:DEBUG')
         group.add_option('--log-response', action="append_const", dest="log_handler", const="openerp.http.rpc.response:DEBUG", help='shortcut for --log-handler=openerp.http.rpc.response:DEBUG')
         group.add_option('--log-web', action="append_const", dest="log_handler", const="openerp.http:DEBUG", help='shortcut for --log-handler=openerp.http:DEBUG')
         group.add_option('--log-sql', action="append_const", dest="log_handler", const="openerp.sql_db:DEBUG", help='shortcut for --log-handler=openerp.sql_db:DEBUG')
         group.add_option('--log-db', dest='log_db', help="Logging database", my_default=False)
+        group.add_option('--log-db-level', dest='log_db_level', my_default='warning', help="Logging database level")
         # For backward-compatibility, map the old log levels to something
         # quite close.
         levels = [
@@ -188,7 +169,7 @@ class configmanager(object):
         ]
         group.add_option('--log-level', dest='log_level', type='choice',
                          choices=levels, my_default='info',
-                         help='specify the level of the logging. Accepted values: %s (deprecated option).' % (levels,))
+                         help='specify the level of the logging. Accepted values: %s.' % (levels,))
 
         parser.add_option_group(group)
 
@@ -227,7 +208,7 @@ class configmanager(object):
         parser.add_option_group(group)
 
         group = optparse.OptionGroup(parser, "Internationalisation options",
-            "Use these options to translate OpenERP to another language."
+            "Use these options to translate Odoo to another language."
             "See i18n section of the user manual. Option '-d' is mandatory."
             "Option '-l' is mandatory in case of importation"
             )
@@ -252,13 +233,10 @@ class configmanager(object):
 
         # Advanced options
         group = optparse.OptionGroup(parser, "Advanced options")
-        if os.name == 'posix':
-            group.add_option('--auto-reload', dest='auto_reload', action='store_true', my_default=False, help='enable auto reload')
+        group.add_option('--dev', dest='dev_mode', action='store_true', my_default=False, help='enable developper mode')
         group.add_option('--debug', dest='debug_mode', action='store_true', my_default=False, help='enable debug mode')
         group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False,
                           help="stop the server after its initialization")
-        group.add_option("-t", "--timezone", dest="timezone", my_default=False,
-                         help="specify reference timezone for the server (e.g. Europe/Brussels")
         group.add_option("--osv-memory-count-limit", dest="osv_memory_count_limit", my_default=False,
                          help="Force a limit on the maximum number of records kept in the virtual "
                               "osv_memory tables. The default is False, which means no count-based limit.",
@@ -273,6 +251,8 @@ class configmanager(object):
                          type="int")
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
                          help="Use the unaccent function provided by the database when available.")
+        group.add_option("--geoip-db", dest="geoip_database", my_default='/usr/share/GeoIP/GeoLiteCity.dat',
+                         help="Absolute path to the GeoIP database file.")
         parser.add_option_group(group)
 
         if os.name == 'posix':
@@ -292,6 +272,10 @@ class configmanager(object):
                              type="int")
             group.add_option("--limit-time-real", dest="limit_time_real", my_default=120,
                              help="Maximum allowed Real time per request (default 120).",
+                             type="int")
+            group.add_option("--limit-time-real-cron", dest="limit_time_real_cron", my_default=-1,
+                             help="Maximum allowed Real time per cron job. (default: --limit-time-real). "
+                                  "Set to 0 for no limit. ",
                              type="int")
             group.add_option("--limit-request", dest="limit_request", my_default=8192,
                              help="Maximum number of request to be processed per worker (default 8192).",
@@ -352,8 +336,8 @@ class configmanager(object):
             "the i18n-export option cannot be used without the database (-d) option")
 
         # Check if the config file exists (-c used, but not -s)
-        die(not opt.save and opt.config and not os.path.exists(opt.config),
-            "The config file '%s' selected with -c/--config doesn't exist, "\
+        die(not opt.save and opt.config and not os.access(opt.config, os.R_OK),
+            "The config file '%s' selected with -c/--config doesn't exist or is not readable, "\
             "use -s/--save if you want to generate it"% opt.config)
 
         # place/search the config file on Win32 near the server installation
@@ -367,8 +351,7 @@ class configmanager(object):
             rcfilepath = os.path.expanduser('~/.openerp_serverrc')
 
         self.rcfile = os.path.abspath(
-            self.config_file or opt.config \
-                or os.environ.get('OPENERP_SERVER') or rcfilepath)
+            self.config_file or opt.config or os.environ.get('OPENERP_SERVER') or rcfilepath)
         self.load()
 
         # Verify that we want to log or not, if not the output will go to stdout
@@ -384,15 +367,15 @@ class configmanager(object):
                 'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password',
                 'db_maxconn', 'import_partial', 'addons_path',
-                'xmlrpc', 'syslog', 'without_demo', 'timezone',
-                'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
-                'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler', 'log_level', 'log_db'
-                ]
+                'xmlrpc', 'syslog', 'without_demo',
+                'dbfilter', 'log_level', 'log_db',
+                'log_db_level', 'geoip_database',
+        ]
 
         for arg in keys:
             # Copy the command-line argument (except the special case for log_handler, due to
             # action=append requiring a real default, so we cannot use the my_default workaround)
-            if getattr(opt, arg) and getattr(opt, arg) != DEFAULT_LOG_HANDLER:
+            if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
             # ... or keep, but cast, the config file value.
             elif isinstance(self.options[arg], basestring) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
@@ -400,22 +383,23 @@ class configmanager(object):
 
         if isinstance(self.options['log_handler'], basestring):
             self.options['log_handler'] = self.options['log_handler'].split(',')
+        self.options['log_handler'].extend(opt.log_handler)
 
         # if defined but None take the configfile value
         keys = [
             'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
-            'debug_mode', 'smtp_ssl', 'load_language',
+            'debug_mode', 'dev_mode', 'smtp_ssl', 'load_language',
             'stop_after_init', 'logrotate', 'without_demo', 'xmlrpc', 'syslog',
-            'list_db', 'xmlrpcs', 'proxy_mode',
+            'list_db', 'proxy_mode',
             'test_file', 'test_enable', 'test_commit', 'test_report_directory',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
             'data_dir',
         ]
 
         posix_keys = [
-            'auto_reload', 'workers',
+            'workers',
             'limit_memory_hard', 'limit_memory_soft',
-            'limit_time_cpu', 'limit_time_real', 'limit_request',
+            'limit_time_cpu', 'limit_time_real', 'limit_request', 'limit_time_real_cron'
         ]
 
         if os.name == 'posix':
@@ -433,12 +417,17 @@ class configmanager(object):
 
         self.options['root_path'] = os.path.abspath(os.path.expanduser(os.path.expandvars(os.path.dirname(openerp.__file__))))
         if not self.options['addons_path'] or self.options['addons_path']=='None':
+            default_addons = []
             base_addons = os.path.join(self.options['root_path'], 'addons')
+            if os.path.exists(base_addons):
+                default_addons.append(base_addons)
             main_addons = os.path.abspath(os.path.join(self.options['root_path'], '../addons'))
-            self.options['addons_path'] = '%s,%s' % (base_addons, main_addons)
+            if os.path.exists(main_addons):
+                default_addons.append(main_addons)
+            self.options['addons_path'] = ','.join(default_addons)
         else:
             self.options['addons_path'] = ",".join(
-                    os.path.abspath(os.path.expanduser(os.path.expandvars(x)))
+                    os.path.abspath(os.path.expanduser(os.path.expandvars(x.strip())))
                       for x in self.options['addons_path'].split(','))
 
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
@@ -447,49 +436,12 @@ class configmanager(object):
         self.options['translate_modules'] = opt.translate_modules and map(lambda m: m.strip(), opt.translate_modules.split(',')) or ['all']
         self.options['translate_modules'].sort()
 
-        # TODO checking the type of the parameters should be done for every
-        # parameters, not just the timezone.
-        # The call to get_server_timezone() sets the timezone; this should
-        # probably done here.
-        if self.options['timezone']:
-            # Prevent the timezone to be True. (The config file parsing changes
-            # the string 'True' to the boolean value True. It would be probably
-            # be better to remove that conversion.)
-            die(not isinstance(self.options['timezone'], basestring),
-                "Invalid timezone value in configuration or environment: %r.\n"
-                "Please fix this in your configuration." %(self.options['timezone']))
-
-            # If an explicit TZ was provided in the config, make sure it is known
-            try:
-                import pytz
-                pytz.timezone(self.options['timezone'])
-            except pytz.UnknownTimeZoneError:
-                die(True, "The specified timezone (%s) is invalid" % self.options['timezone'])
-            except:
-                # If pytz is missing, don't check the provided TZ, it will be ignored anyway.
-                pass
-
         if opt.pg_path:
             self.options['pg_path'] = opt.pg_path
 
         if self.options.get('language', False):
             if len(self.options['language']) > 5:
                 raise Exception('ERROR: The Lang name must take max 5 chars, Eg: -lfr_BE')
-
-        if not self.options['db_user']:
-            try:
-                import getpass
-                self.options['db_user'] = getpass.getuser()
-            except:
-                self.options['db_user'] = None
-
-        die(not self.options['db_user'], 'ERROR: No user specified for the connection to the database')
-
-        if self.options['db_password']:
-            if sys.platform == 'win32' and not self.options['db_host']:
-                self.options['db_host'] = 'localhost'
-            #if self.options['db_host']:
-            #    self._generate_pgpassfile()
 
         if opt.save:
             self.save()
@@ -499,44 +451,6 @@ class configmanager(object):
             openerp.conf.server_wide_modules = map(lambda m: m.strip(), opt.server_wide_modules.split(','))
         else:
             openerp.conf.server_wide_modules = ['web','web_kanban']
-
-    def _generate_pgpassfile(self):
-        """
-        Generate the pgpass file with the parameters from the command line (db_host, db_user,
-        db_password)
-
-        Used because pg_dump and pg_restore can not accept the password on the command line.
-        """
-        is_win32 = sys.platform == 'win32'
-        if is_win32:
-            filename = os.path.join(os.environ['APPDATA'], 'pgpass.conf')
-        else:
-            filename = os.path.join(os.environ['HOME'], '.pgpass')
-
-        text_to_add = "%(db_host)s:*:*:%(db_user)s:%(db_password)s" % self.options
-
-        if os.path.exists(filename):
-            content = [x.strip() for x in file(filename, 'r').readlines()]
-            if text_to_add in content:
-                return
-
-        fp = file(filename, 'a+')
-        fp.write(text_to_add + "\n")
-        fp.close()
-
-        if is_win32:
-            try:
-                import _winreg
-            except ImportError:
-                _winreg = None
-            x=_winreg.ConnectRegistry(None,_winreg.HKEY_LOCAL_MACHINE)
-            y = _winreg.OpenKey(x, r"SYSTEM\CurrentControlSet\Control\Session Manager\Environment", 0,_winreg.KEY_ALL_ACCESS)
-            _winreg.SetValueEx(y,"PGPASSFILE", 0, _winreg.REG_EXPAND_SZ, filename )
-            _winreg.CloseKey(y)
-            _winreg.CloseKey(x)
-        else:
-            import stat
-            os.chmod(filename, stat.S_IRUSR + stat.S_IWUSR)
 
     def _is_addons_path(self, path):
         for f in os.listdir(path):
@@ -599,6 +513,8 @@ class configmanager(object):
                 continue
             if opt in ('log_level',):
                 p.set('options', opt, loglevelnames.get(self.options[opt], self.options[opt]))
+            elif opt == 'log_handler':
+                p.set('options', opt, ','.join(_deduplicate_loggers(self.options[opt])))
             else:
                 p.set('options', opt, self.options[opt])
 
@@ -626,6 +542,9 @@ class configmanager(object):
     def get(self, key, default=None):
         return self.options.get(key, default)
 
+    def pop(self, key, default=None):
+        return self.options.pop(key, default)
+
     def get_misc(self, sect, key, default=None):
         return self.misc.get(sect,{}).get(key, default)
 
@@ -644,22 +563,21 @@ class configmanager(object):
         if not os.path.exists(d):
             os.makedirs(d, 0700)
         else:
-            os.chmod(d, 0700)
+            assert os.access(d, os.W_OK), \
+                "%s: directory is not writable" % d
         return d
 
     @property
     def session_dir(self):
-        d = os.path.join(self['data_dir'], 'sessions', release.series)
+        d = os.path.join(self['data_dir'], 'sessions')
         if not os.path.exists(d):
             os.makedirs(d, 0700)
         else:
-            os.chmod(d, 0700)
+            assert os.access(d, os.W_OK), \
+                "%s: directory is not writable" % d
         return d
 
     def filestore(self, dbname):
         return os.path.join(self['data_dir'], 'filestore', dbname)
 
 config = configmanager()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

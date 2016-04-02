@@ -1,30 +1,12 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Belgium - Accounting',
-    'version': '1.1',
+    'version': '2.0',
     'category': 'Localization/Account Charts',
     'description': """
-This is the base module to manage the accounting chart for Belgium in OpenERP.
+This is the base module to manage the accounting chart for Belgium in Odoo.
 ==============================================================================
 
 After installing this module, the Configuration wizard for accounting is launched.
@@ -52,37 +34,32 @@ Wizards provided by this module:
         **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Annual Listing Of VAT-Subjected Customers
 
     """,
-    'author': 'Noviat & OpenERP SA',
+    'author': 'Noviat & Odoo SA',
     'depends': [
         'account',
         'base_vat',
         'base_iban',
-        'account_chart',
-        'l10n_be_coda',
         'l10n_multilang',
     ],
     'data': [
-        'account_financial_report.xml',
-        'account_pcmn_belgium.xml',
-        'account_tax_code_template.xml',
         'account_chart_template.xml',
-        'account_chart_template.yml',
+        'account_pcmn_belgium.xml',
         'account_tax_template.xml',
-        'wizard/l10n_be_account_vat_declaration_view.xml',
-        'wizard/l10n_be_vat_intra_view.xml',
-        'wizard/l10n_be_partner_vat_listing.xml',
-        'wizard/account_wizard.xml',
         'l10n_be_sequence.xml',
-        'l10n_be_reports.xml',
         'fiscal_templates.xml',
         'account_fiscal_position_tax_template.xml',
+        'account_chart_template.yml',
         'security/ir.model.access.csv',
-        'views/report_vatintraprint.xml',
-        'views/report_vatpartnerlisting.xml',
+        'menuitem.xml'
     ],
-    'demo': [],
+    'demo': [
+        'demo/l10n_be_demo.yml',
+        '../account/demo/account_bank_statement.yml',
+        '../account/demo/account_invoice_demo.yml',
+    ],
+    'test': [
+    ],
     'installable': True,
-    'images': ['images/1_config_chart_l10n_be.jpeg','images/2_l10n_be_chart.jpeg'],
+    'website': 'https://www.odoo.com/page/accounting',
+    'post_init_hook': 'load_translations',
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

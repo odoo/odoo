@@ -5,7 +5,6 @@
     company_id: base.main_company
     name: HR Officer
     login: ao
-    password: ao
 -
   I added groups for HR Attendance Officer.
 -
@@ -46,8 +45,8 @@
     import time
     try:
       self.create(cr, uid, {'employee_id': ref('hr.employee_niv'), 'name': time.strftime('%Y-%m-%d 09:59:25'), 'action': 'sign_out'}, None)
-    except Exception, e:
-      assert e[0]=='ValidateError', e
+    except openerp.exceptions.ValidationError:
+      pass
 -
   First of all, Employee Sign's In.
 -
@@ -62,8 +61,8 @@
      import time
      try:
        self.create(cr, uid, {'employee_id': ref('hr.employee_niv'), 'name': time.strftime('%Y-%m-%d 08:59:25'), 'action': 'sign_in'}, None)
-     except Exception, e:
-       assert e[0]=='ValidateError', e
+     except openerp.exceptions.ValidationError:
+       pass
 -
   After that Employee is going to Sign In after First Sign In.
 -
@@ -71,8 +70,8 @@
      import time
      try:
        self.create(cr, uid, {'employee_id': ref('hr.employee_niv'), 'name': time.strftime('%Y-%m-%d 10:59:25'), 'action': 'sign_in'}, None)
-     except Exception, e:
-       assert e[0]=='ValidateError', e
+     except openerp.exceptions.ValidationError:
+       pass
 -
   After two hours, Employee Sign's Out.
 -
@@ -87,8 +86,8 @@
      import time
      try:
        self.create(cr, uid, {'employee_id': ref('hr.employee_niv'), 'name': time.strftime('%Y-%m-%d 10:59:25'), 'action': 'sign_out'}, None)
-     except Exception, e:
-       assert e[0]=='ValidateError', e
+     except openerp.exceptions.ValidationError:
+       pass
 -
   After that Employee is going to Sign Out After First Sign Out.
 -
@@ -96,5 +95,5 @@
      import time
      try:
        self.create(cr, uid, {'employee_id': ref('hr.employee_niv'), 'name': time.strftime('%Y-%m-%d 12:59:25'), 'action': 'sign_out'}, None)
-     except Exception, e:
-       assert e[0]=='ValidateError', e
+     except openerp.exceptions.ValidationError:
+       pass

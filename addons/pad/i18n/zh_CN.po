@@ -1,42 +1,23 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pad
+# 
+# Translators:
+# Gary Wei <Gary.wei@elico-corp.com>, 2015
+# Joroy <13637815@qq.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-23 01:32+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@intoerp.com>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2016-03-12 01:56+0000\n"
+"Last-Translator: Joroy <13637815@qq.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:44+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: pad
-#. openerp-web
-#: code:addons/pad/static/src/xml/pad.xml:18
-#, python-format
-msgid "&Ntilde;"
-msgstr "&Ntilde;"
-
-#. module: pad
-#. openerp-web
-#: code:addons/pad/static/src/xml/pad.xml:9
-#, python-format
-msgid ""
-"You must configure the etherpad through the menu Settings > Companies > "
-"Companies, in the configuration tab of your company."
-msgstr "必须通过菜单“设置-公司-公司”，在公司的配置标签中设置 etherpad"
-
-#. module: pad
-#: help:res.company,pad_key:0
-msgid "Etherpad lite api key."
-msgstr "Etherpad lite api key."
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pad
 #: model:ir.model,name:pad.model_res_company
@@ -44,80 +25,102 @@ msgid "Companies"
 msgstr "公司"
 
 #. module: pad
-#: model:ir.model,name:pad.model_pad_common
-msgid "pad.common"
-msgstr "pad.common"
+#: model:ir.model.fields,field_description:pad.field_pad_common_create_uid
+msgid "Created by"
+msgstr "创建者"
 
 #. module: pad
-#: view:res.company:0
-msgid "Pads"
-msgstr "Pads"
+#: model:ir.model.fields,field_description:pad.field_pad_common_create_date
+msgid "Created on"
+msgstr "创建于"
 
 #. module: pad
-#: field:res.company,pad_server:0
-msgid "Pad Server"
-msgstr "Pad 服务器"
+#: model:ir.model.fields,field_description:pad.field_pad_common_display_name
+msgid "Display Name"
+msgstr "显示名称"
 
 #. module: pad
-#: field:res.company,pad_key:0
+#: model:ir.model.fields,help:pad.field_res_company_pad_key
+msgid "Etherpad lite api key."
+msgstr "Etherpad lite api key."
+
+#. module: pad
+#: model:ir.model.fields,help:pad.field_res_company_pad_server
+msgid "Etherpad lite server. Example: beta.primarypad.com"
+msgstr "Etherpad lite服务器，例如 beta.primarypad.com"
+
+#. module: pad
+#: model:ir.model.fields,field_description:pad.field_pad_common_id
+msgid "ID"
+msgstr "ID"
+
+#. module: pad
+#: model:ir.model.fields,field_description:pad.field_pad_common___last_update
+msgid "Last Modified on"
+msgstr "最后修改日"
+
+#. module: pad
+#: model:ir.model.fields,field_description:pad.field_pad_common_write_uid
+msgid "Last Updated by"
+msgstr "最后更新"
+
+#. module: pad
+#: model:ir.model.fields,field_description:pad.field_pad_common_write_date
+msgid "Last Updated on"
+msgstr "最后更新"
+
+#. module: pad
+#: model:ir.model.fields,field_description:pad.field_res_company_pad_key
 msgid "Pad Api Key"
 msgstr "Pad Api Key"
 
 #. module: pad
-#: help:res.company,pad_server:0
-msgid "Etherpad lite server. Example: beta.primarypad.com"
-msgstr "Etherpad lite服务器，例如 beta.primarypad.com"
+#: model:ir.model.fields,field_description:pad.field_res_company_pad_server
+msgid "Pad Server"
+msgstr "Pad 服务器"
 
+#. module: pad
+#: code:addons/pad/pad.py:53
 #, python-format
-#~ msgid "Ok"
-#~ msgstr "确定"
+msgid ""
+"Pad creation failed, either there is a problem with your pad server URL or "
+"with your connection."
+msgstr "Pad的创建失败了，估你的Pad URL有问题或者你的连接有问题"
 
-#~ msgid "Enhanced support for (Ether)Pad attachments"
-#~ msgstr "增强支持PAD附件"
+#. module: pad
+#: model:ir.ui.view,arch_db:pad.view_company_form_with_pad
+msgid "Pads"
+msgstr "Pads"
 
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "错误！您不能创建递归公司."
-
+#. module: pad
+#. openerp-web
+#: code:addons/pad/static/src/js/pad.js:53
 #, python-format
-#~ msgid "Write"
-#~ msgstr "写"
+msgid "This pad will be initialized on first edit"
+msgstr "Pad讲在第一个编辑时初始化"
 
-#~ msgid "The root URL of the company's pad instance"
-#~ msgstr "公司PAD实例的根网址"
-
-#~ msgid ""
-#~ "\n"
-#~ "Adds enhanced support for (Ether)Pad attachments in the web client, lets "
-#~ "the\n"
-#~ "company customize which Pad installation should be used to link to new pads\n"
-#~ "(by default, pad.openerp.com)\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "在Web客户端加入增强的PAD附件支持，让公司自定义PAD的安装可以链接到新的PAD\n"
-#~ "    "
-
+#. module: pad
+#. openerp-web
+#: code:addons/pad/static/src/js/pad.js:50
 #, python-format
-#~ msgid "Name"
-#~ msgstr "名称"
+msgid "Unable to load pad"
+msgstr "不能装入Pad"
 
-#~ msgid "Pad root URL"
-#~ msgstr "PAD根网址"
+#. module: pad
+#. openerp-web
+#: code:addons/pad/static/src/xml/pad.xml:7
+#, python-format
+msgid ""
+"You must configure the etherpad through the menu Settings > Companies > "
+"Companies, in the configuration tab of your company."
+msgstr "必须通过菜单“设置-公司-公司”，在公司的配置标签中设置 etherpad"
 
-#~ msgid "Pad"
-#~ msgstr "Pad"
+#. module: pad
+#: model:ir.ui.view,arch_db:pad.view_company_form_with_pad
+msgid "e.g. beta.primarypad.com"
+msgstr "例如： beta.primarypad.com"
 
-#~ msgid "Template used to generate pad URL."
-#~ msgstr "用于生成pad URL的模版"
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "公司名称必须唯一！"
-
-#~ msgid "ir.attachment"
-#~ msgstr "ir.attachment"
-
-#~ msgid "Pad URL Template"
-#~ msgstr "Pad URL 模版"
-
-#~ msgid "Add Pad"
-#~ msgstr "添加 Pad"
+#. module: pad
+#: model:ir.model,name:pad.model_pad_common
+msgid "pad.common"
+msgstr "pad.common"

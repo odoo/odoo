@@ -1,42 +1,22 @@
-# Russian translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pad
+# 
+# Translators:
+# Max Belyanin <maxbelyanin@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-28 13:00+0000\n"
-"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
-"Language-Team: Russian <ru@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-10-08 15:39+0000\n"
+"Last-Translator: Max Belyanin <maxbelyanin@gmail.com>\n"
+"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:44+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: pad
-#. openerp-web
-#: code:addons/pad/static/src/xml/pad.xml:18
-#, python-format
-msgid "&Ntilde;"
-msgstr "&Ntilde;"
-
-#. module: pad
-#. openerp-web
-#: code:addons/pad/static/src/xml/pad.xml:9
-#, python-format
-msgid ""
-"You must configure the etherpad through the menu Settings > Companies > "
-"Companies, in the configuration tab of your company."
-msgstr ""
-
-#. module: pad
-#: help:res.company,pad_key:0
-msgid "Etherpad lite api key."
-msgstr ""
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: pad
 #: model:ir.model,name:pad.model_res_company
@@ -44,82 +24,102 @@ msgid "Companies"
 msgstr "Компании"
 
 #. module: pad
-#: model:ir.model,name:pad.model_pad_common
-msgid "pad.common"
-msgstr "pad.common"
+#: model:ir.model.fields,field_description:pad.field_pad_common_create_uid
+msgid "Created by"
+msgstr "Создано"
 
 #. module: pad
-#: view:res.company:0
-msgid "Pads"
-msgstr "Планшеты"
+#: model:ir.model.fields,field_description:pad.field_pad_common_create_date
+msgid "Created on"
+msgstr "Создан"
 
 #. module: pad
-#: field:res.company,pad_server:0
+#: model:ir.model.fields,field_description:pad.field_pad_common_display_name
+msgid "Display Name"
+msgstr "Отображаемое Имя"
+
+#. module: pad
+#: model:ir.model.fields,help:pad.field_res_company_pad_key
+msgid "Etherpad lite api key."
+msgstr "Etherpad lite api ключ."
+
+#. module: pad
+#: model:ir.model.fields,help:pad.field_res_company_pad_server
+msgid "Etherpad lite server. Example: beta.primarypad.com"
+msgstr "Etherpad lite сервер. Например: beta.primarypad.com"
+
+#. module: pad
+#: model:ir.model.fields,field_description:pad.field_pad_common_id
+msgid "ID"
+msgstr "ID"
+
+#. module: pad
+#: model:ir.model.fields,field_description:pad.field_pad_common___last_update
+msgid "Last Modified on"
+msgstr "Последний раз изменено"
+
+#. module: pad
+#: model:ir.model.fields,field_description:pad.field_pad_common_write_uid
+msgid "Last Updated by"
+msgstr "Последний раз обновлено"
+
+#. module: pad
+#: model:ir.model.fields,field_description:pad.field_pad_common_write_date
+msgid "Last Updated on"
+msgstr "Последний раз обновлено"
+
+#. module: pad
+#: model:ir.model.fields,field_description:pad.field_res_company_pad_key
+msgid "Pad Api Key"
+msgstr "Планшет Api ключ"
+
+#. module: pad
+#: model:ir.model.fields,field_description:pad.field_res_company_pad_server
 msgid "Pad Server"
 msgstr "Сервер планшета"
 
 #. module: pad
-#: field:res.company,pad_key:0
-msgid "Pad Api Key"
-msgstr ""
+#: code:addons/pad/pad.py:53
+#, python-format
+msgid ""
+"Pad creation failed, either there is a problem with your pad server URL or "
+"with your connection."
+msgstr "Создание планшета не удалась, либо есть проблема с вашим сервером планшета URL или с подключением."
 
 #. module: pad
-#: help:res.company,pad_server:0
-msgid "Etherpad lite server. Example: beta.primarypad.com"
-msgstr ""
+#: model:ir.ui.view,arch_db:pad.view_company_form_with_pad
+msgid "Pads"
+msgstr "Планшеты"
 
+#. module: pad
+#. openerp-web
+#: code:addons/pad/static/src/js/pad.js:53
 #, python-format
-#~ msgid "Ok"
-#~ msgstr "Ok"
+msgid "This pad will be initialized on first edit"
+msgstr "Этот планшет должен быть иницилизирован при первом редактировании"
 
-#~ msgid "Enhanced support for (Ether)Pad attachments"
-#~ msgstr "Расширенная поддержка для вложений (Ether)Pad"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Ошибка ! Нельзя создать рекурсивные компании."
-
+#. module: pad
+#. openerp-web
+#: code:addons/pad/static/src/js/pad.js:50
 #, python-format
-#~ msgid "Write"
-#~ msgstr "Записать"
+msgid "Unable to load pad"
+msgstr "Невозможно загрузить планшет"
 
+#. module: pad
+#. openerp-web
+#: code:addons/pad/static/src/xml/pad.xml:7
 #, python-format
-#~ msgid "Name"
-#~ msgstr "Название"
+msgid ""
+"You must configure the etherpad through the menu Settings > Companies > "
+"Companies, in the configuration tab of your company."
+msgstr "Вы должны настроить etherpad через меню Настройки > Компании > Компании во вкладке конфигурации вашей компании."
 
-#~ msgid "Pad"
-#~ msgstr "Планшет"
+#. module: pad
+#: model:ir.ui.view,arch_db:pad.view_company_form_with_pad
+msgid "e.g. beta.primarypad.com"
+msgstr "т.е. beta.primarypad.com"
 
-#~ msgid ""
-#~ "\n"
-#~ "Adds enhanced support for (Ether)Pad attachments in the web client, lets "
-#~ "the\n"
-#~ "company customize which Pad installation should be used to link to new pads\n"
-#~ "(by default, pad.openerp.com)\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Добавляет расширенную поддержку (Ether)Pad вложений в веб-клиенте, позволяет "
-#~ "компании настроить какая инсталляция (Ether)Pad будет использоваться для "
-#~ "связи с новыми планшетами (по умолчанию, pad.openerp.com).\n"
-#~ "    "
-
-#~ msgid "Pad root URL"
-#~ msgstr "Ссылка на планшет"
-
-#~ msgid "The root URL of the company's pad instance"
-#~ msgstr "Основная ссылка на корпоративный планшет"
-
-#~ msgid "Template used to generate pad URL."
-#~ msgstr "Шаблон используемый для создания адреса планшета."
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "Название компании должно быть уникальным!"
-
-#~ msgid "Pad URL Template"
-#~ msgstr "Шаблон адреса планшета"
-
-#~ msgid "ir.attachment"
-#~ msgstr "ir.attachment"
-
-#~ msgid "Add Pad"
-#~ msgstr "Добавить планшет"
+#. module: pad
+#: model:ir.model,name:pad.model_pad_common
+msgid "pad.common"
+msgstr "pad.common"

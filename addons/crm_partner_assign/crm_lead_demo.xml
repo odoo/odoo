@@ -12,11 +12,9 @@
                   <field name="function">Reseller</field>
                   <field name="country_id" ref="base.uk"/>
                   <field name="city">Edinburgh</field>
-                  <field name="type_id" ref="crm.type_lead8"/>
-                  <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor1')])]"/>
-                  <field name="channel_id" ref="crm.crm_case_channel_email"/>
+                  <field name="tag_ids" eval="[(6, 0, [ref('crm.categ_oppor1')])]"/>
                   <field name="priority">2</field>
-                  <field name="section_id" ref="sales_team.crm_case_section_2"/>
+                  <field name="team_id" ref="sales_team.crm_team_1"/>
                   <field name="user_id" ref=""/>
                   <field name="stage_id" ref="crm.stage_lead1"/>
                   <field name="description">Hi,
@@ -27,6 +25,9 @@
             Steve</field>
                   <field eval="1" name="active"/>
                   <field name="partner_assigned_id" ref="portal.partner_demo_portal"/>
+                  <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+                  <field name="medium_id" ref="utm.utm_medium_email"/>
+                  <field name="source_id" ref="utm.utm_source_newsletter"/>
             </record>
       </data>
 </openerp>

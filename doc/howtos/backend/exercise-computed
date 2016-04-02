@@ -1,0 +1,40 @@
+# HG changeset patch
+# Parent a358be0a577b0569831958a8ec1302825c645dee
+# Parent  59107edbe5f81bab5e7db172bf2bffa504ce399a
+
+diff --git a/openacademy/models.py b/openacademy/models.py
+--- a/openacademy/models.py
++++ b/openacademy/models.py
+@@ -28,3 +28,13 @@ class Session(models.Model):
+     course_id = fields.Many2one('openacademy.course',
+         ondelete='cascade', string="Course", required=True)
+     attendee_ids = fields.Many2many('res.partner', string="Attendees")
++
++    taken_seats = fields.Float(string="Taken seats", compute='_taken_seats')
++
++    @api.depends('seats', 'attendee_ids')
++    def _taken_seats(self):
++        for r in self:
++            if not r.seats:
++                r.taken_seats = 0.0
++            else:
++                r.taken_seats = 100.0 * len(r.attendee_ids) / r.seats
+diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml
++++ b/openacademy/views/openacademy.xml
+@@ -100,6 +100,7 @@
+                                 <field name="start_date"/>
+                                 <field name="duration"/>
+                                 <field name="seats"/>
++                                <field name="taken_seats" widget="progressbar"/>
+                             </group>
+                         </group>
+                         <label for="attendee_ids"/>
+@@ -117,6 +118,7 @@
+                 <tree string="Session Tree">
+                     <field name="name"/>
+                     <field name="course_id"/>
++                    <field name="taken_seats" widget="progressbar"/>
+                 </tree>
+             </field>
+         </record>

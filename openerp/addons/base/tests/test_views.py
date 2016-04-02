@@ -2,7 +2,7 @@
 from functools import partial
 import itertools
 
-import unittest2
+import unittest
 
 from lxml import etree as ET
 from lxml.builder import E
@@ -357,16 +357,18 @@ class TestApplyInheritanceSpecs(ViewCase):
                     name="target"),
                 string="Title"))
 
+    @openerp.tools.mute_logger('openerp.addons.base.ir.ir_ui_view')
     def test_invalid_position(self):
         spec = Field(
                 Field(name="whoops"),
                 name="target", position="serious_series")
 
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(ValueError):
             self.View.apply_inheritance_specs(self.cr, self.uid,
                                               self.base_arch,
                                               spec, None)
 
+    @openerp.tools.mute_logger('openerp.addons.base.ir.ir_ui_view')
     def test_incorrect_version(self):
         # Version ignored on //field elements, so use something else
         arch = E.form(E.element(foo="42"))
@@ -374,15 +376,16 @@ class TestApplyInheritanceSpecs(ViewCase):
             Field(name="placeholder"),
             foo="42", version="7.0")
 
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(ValueError):
             self.View.apply_inheritance_specs(self.cr, self.uid,
                                               arch,
                                               spec, None)
 
+    @openerp.tools.mute_logger('openerp.addons.base.ir.ir_ui_view')
     def test_target_not_found(self):
         spec = Field(name="targut")
 
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(ValueError):
             self.View.apply_inheritance_specs(self.cr, self.uid,
                                               self.base_arch,
                                               spec, None)
@@ -428,28 +431,32 @@ class TestNoModel(ViewCase):
         """
         Test if translations work correctly without a model
         """
-        View = self.registry('ir.ui.view')
-        self.registry('res.lang').load_lang(self.cr, self.uid, 'fr_FR')
-        orig_text = "Copyright copyrighter"
-        translated_text = u"Copyrighter, tous droits réservés"
-        self.text_para.text = orig_text 
-        self.registry('ir.translation').create(self.cr, self.uid, {
-            'name': 'website',
-            'type': 'view',
-            'lang': 'fr_FR',
-            'src': orig_text,
-            'value': translated_text,
+        self.env['res.lang'].load_lang('fr_FR')
+        ARCH = '<template name="foo">%s</template>'
+        TEXT_EN = "Copyright copyrighter"
+        TEXT_FR = u"Copyrighter, tous droits réservés"
+        view = self.env['ir.ui.view'].create({
+            'name': 'dummy',
+            'arch': ARCH % TEXT_EN,
+            'inherit_id': False,
+            'type': 'qweb',
         })
-        sarch = View.translate_qweb(self.cr, self.uid, None, self.arch, 'fr_FR')
-
-        self.text_para.text = translated_text
-        self.assertEqual(sarch, self.arch)
+        self.env['ir.translation'].create({
+            'type': 'model',
+            'name': 'ir.ui.view,arch_db',
+            'res_id': view.id,
+            'lang': 'fr_FR',
+            'src': TEXT_EN,
+            'value': TEXT_FR,
+        })
+        view = view.with_context(lang='fr_FR')
+        self.assertEqual(view.arch, ARCH % TEXT_FR)
 
 class TestTemplating(ViewCase):
     def setUp(self):
         import openerp.modules
         super(TestTemplating, self).setUp()
-        self._pool = openerp.modules.registry.RegistryManager.get(common.DB)
+        self._pool = openerp.modules.registry.RegistryManager.get(common.get_db_name())
         self._init = self._pool._init
         # fuck off
         self._pool._init = False
@@ -543,14 +550,13 @@ class TestTemplating(ViewCase):
                         'data-oe-xpath': '/xpath/item/content[1]',
                     }), {
                         'order': '2',
-                        'data-oe-source-id': str(id)
                     }),
                 E.item({
                     'order': '1',
                     'data-oe-model': 'ir.ui.view',
                     'data-oe-id': str(id),
                     'data-oe-field': 'arch',
-                    'data-oe-xpath': '/root[1]/item[1]'
+                    'data-oe-xpath': '/root[1]/item[1]',
                 })
             )
         )
@@ -609,7 +615,7 @@ class TestTemplating(ViewCase):
                     {'t-ignore': 'true', 'order': '1'},
                     E.t({'t-esc': 'foo'}),
                     E.item(
-                        {'order': '2', 'data-oe-source-id': str(id)},
+                        {'order': '2'},
                         E.content(
                             {'t-att-href': 'foo'},
                             "bar")
@@ -639,7 +645,7 @@ class test_views(ViewCase):
         """Insert view into database via a query to passtrough validation"""
         kw.pop('id', None)
         kw.setdefault('mode', 'extension' if kw.get('inherit_id') else 'primary')
-        kw.setdefault('application', 'always')
+        kw.setdefault('active', True)
 
         keys = sorted(kw.keys())
         fields = ','.join('"%s"' % (k.replace('"', r'\"'),) for k in keys)
@@ -660,7 +666,7 @@ class test_views(ViewCase):
             name='base view',
             model=model,
             priority=1,
-            arch="""<?xml version="1.0"?>
+            arch_db="""<?xml version="1.0"?>
                         <tree string="view">
                           <field name="url"/>
                         </tree>
@@ -674,9 +680,23 @@ class test_views(ViewCase):
             model=model,
             priority=1,
             inherit_id=vid,
-            arch="""<?xml version="1.0"?>
+            arch_db="""<?xml version="1.0"?>
                         <xpath expr="//field[@name='url']" position="before">
                           <field name="name"/>
+                        </xpath>
+                    """,
+        )
+        self.assertTrue(validate())     # inherited view
+
+        # validation of a second inherited view (depending on 1st)
+        self._insert_view(
+            name='inherited view 2',
+            model=model,
+            priority=5,
+            inherit_id=vid,
+            arch_db="""<?xml version="1.0"?>
+                        <xpath expr="//field[@name='name']" position="after">
+                          <field name="target"/>
                         </xpath>
                     """,
         )
@@ -690,11 +710,10 @@ class test_views(ViewCase):
             'model': 'ir.ui.view',
             'arch': """
                 <form string="Base title" version="7.0">
-                    <separator string="separator" colspan="4"/>
+                    <separator name="separator" string="Separator" colspan="4"/>
                     <footer>
-                        <button name="action_next" type="object" string="Next button"/>
-                        or
-                        <button string="Skip" special="cancel" />
+                        <button name="action_next" type="object" string="Next button" class="btn-primary"/>
+                        <button string="Skip" special="cancel" class="btn-default"/>
                     </footer>
                 </form>
             """
@@ -713,7 +732,7 @@ class test_views(ViewCase):
                             <button name="action_next" type="object" string="New button"/>
                         </footer>
                     </footer>
-                    <separator string="separator" position="replace">
+                    <separator name="separator" position="replace">
                         <p>Replacement data</p>
                     </separator>
                 </data>
@@ -726,7 +745,10 @@ class test_views(ViewCase):
             'priority': 17,
             'arch': """
                 <footer position="attributes">
-                    <attribute name="thing">bob</attribute>
+                    <attribute name="thing">bob tata lolo</attribute>
+                    <attribute name="thing" add="bibi and co" remove="tata" separator=" " />
+                    <attribute name="otherthing">bob, tata,lolo</attribute>
+                    <attribute name="otherthing" remove="tata, bob"/>
                 </footer>
             """
         })
@@ -746,7 +768,7 @@ class test_views(ViewCase):
                 E.p("Replacement data"),
                 E.footer(
                     E.button(name="action_next", type="object", string="New button"),
-                    thing="bob"
+                    thing="bob lolo bibi and co", otherthing="lolo"
                 ),
                 string="Replacement title", version="7.0"))
 
@@ -758,11 +780,10 @@ class test_views(ViewCase):
             'model': 'ir.ui.view.custom',
             'arch': """
                 <form string="Base title" version="7.0">
-                    <separator string="separator" colspan="4"/>
+                    <separator name="separator" string="Separator" colspan="4"/>
                     <footer>
-                        <button name="action_next" type="object" string="Next button"/>
-                        or
-                        <button string="Skip" special="cancel" />
+                        <button name="action_next" type="object" string="Next button" class="btn-primary"/>
+                        <button string="Skip" special="cancel" class="btn-default"/>
                     </footer>
                 </form>
             """
@@ -781,7 +802,7 @@ class test_views(ViewCase):
                             <button name="action_next" type="object" string="New button"/>
                         </footer>
                     </footer>
-                    <separator string="separator" position="replace">
+                    <separator name="separator" position="replace">
                         <p>Replacement data</p>
                     </separator>
                 </data>
@@ -1092,21 +1113,21 @@ class TestOptionalViews(ViewCase):
         self.v1 = self.create({
             'model': 'a',
             'inherit_id': self.v0,
-            'application': 'always',
+            'active': True,
             'priority': 10,
             'arch': '<xpath expr="//base" position="after"><v1/></xpath>',
         })
         self.v2 = self.create({
             'model': 'a',
             'inherit_id': self.v0,
-            'application': 'enabled',
+            'active': True,
             'priority': 9,
             'arch': '<xpath expr="//base" position="after"><v2/></xpath>',
         })
         self.v3 = self.create({
             'model': 'a',
             'inherit_id': self.v0,
-            'application': 'disabled',
+            'active': False,
             'priority': 8,
             'arch': '<xpath expr="//base" position="after"><v3/></xpath>'
         })
@@ -1125,10 +1146,10 @@ class TestOptionalViews(ViewCase):
         )
 
     def test_applied_state_toggle(self):
-        """ Change application states of v2 and v3, check that the results
+        """ Change active states of v2 and v3, check that the results
         are as expected
         """
-        self.browse(self.v2).write({'application': 'disabled'})
+        self.browse(self.v2).toggle()
         arch = self.read_combined(self.v0)['arch']
         self.assertEqual(
             ET.fromstring(arch),
@@ -1138,7 +1159,7 @@ class TestOptionalViews(ViewCase):
             )
         )
 
-        self.browse(self.v3).write({'application': 'enabled'})
+        self.browse(self.v3).toggle()
         arch = self.read_combined(self.v0)['arch']
         self.assertEqual(
             ET.fromstring(arch),
@@ -1149,7 +1170,7 @@ class TestOptionalViews(ViewCase):
             )
         )
 
-        self.browse(self.v2).write({'application': 'enabled'})
+        self.browse(self.v2).toggle()
         arch = self.read_combined(self.v0)['arch']
         self.assertEqual(
             ET.fromstring(arch),
@@ -1160,10 +1181,6 @@ class TestOptionalViews(ViewCase):
                 E.v3(),
             )
         )
-
-    def test_mandatory_no_disabled(self):
-        with self.assertRaises(Exception):
-            self.browse(self.v1).write({'application': 'disabled'})
 
 class TestXPathExtentions(common.BaseCase):
     def test_hasclass(self):

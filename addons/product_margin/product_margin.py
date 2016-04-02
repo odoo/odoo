@@ -1,23 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
 
@@ -26,6 +8,39 @@ from openerp.osv import fields, osv
 
 class product_product(osv.osv):
     _inherit = "product.product"
+
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
+        """
+            Inherit read_group to calculate the sum of the non-stored fields, as it is not automatically done anymore through the XML.
+        """
+        res = super(product_product, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, lazy=lazy)
+        if context is None:
+            context = {}
+        fields_list = ['turnover', 'sale_avg_price', 'sale_purchase_price', 'sale_num_invoiced', 'purchase_num_invoiced',
+                       'sales_gap', 'purchase_gap', 'total_cost', 'sale_expected', 'normal_cost', 'total_margin',
+                       'expected_margin', 'total_margin_rate', 'expected_margin_rate']
+        if any(x in fields for x in fields_list):
+            # Calculate first for every product in which line it needs to be applied
+            re_ind = 0
+            prod_re = {}
+            tot_products = []
+            for re in res:
+                if re.get('__domain'):
+                    products = self.search(cr, uid, re['__domain'], context=context)
+                    tot_products += products
+                    for prod in products:
+                        prod_re[prod] = re_ind
+                re_ind += 1
+
+            res_val = self._product_margin(cr, uid, tot_products, [x for x in fields if fields in fields_list], '', context=context)
+            for key in res_val.keys():
+                for l in res_val[key].keys():
+                    re = res[prod_re[key]]
+                    if re.get(l):
+                        re[l] += res_val[key][l]
+                    else:
+                        re[l] = res_val[key][l]
+        return res
 
     def _product_margin(self, cr, uid, ids, field_names, arg, context=None):
         res = {}
@@ -58,16 +73,14 @@ class product_product(osv.osv):
 
             #Cost price is calculated afterwards as it is a property
             sqlstr="""select
-                    sum(l.price_unit * l.quantity)/sum(nullif(l.quantity * pu.factor / pu2.factor,0)) as avg_unit_price,
-                    sum(l.quantity * pu.factor / pu2.factor) as num_qty,
+                    sum(l.price_unit * l.quantity)/sum(nullif(l.quantity,0)) as avg_unit_price,
+                    sum(l.quantity) as num_qty,
                     sum(l.quantity * (l.price_subtotal/(nullif(l.quantity,0)))) as total,
-                    sum(l.quantity * pu.factor * pt.list_price / pu2.factor) as sale_expected
+                    sum(l.quantity * pt.list_price) as sale_expected
                 from account_invoice_line l
                 left join account_invoice i on (l.invoice_id = i.id)
                 left join product_product product on (product.id=l.product_id)
-                left join product_template pt on (pt.id = l.product_id)
-                    left join product_uom pu on (pt.uom_id = pu.id)
-                    left join product_uom pu2 on (l.uos_id = pu2.id)
+                left join product_template pt on (pt.id = product.product_tmpl_id)
                 where l.product_id = %s and i.state in %s and i.type IN %s and (i.date_invoice IS NULL or (i.date_invoice>=%s and i.date_invoice<=%s and i.company_id=%s))
                 """
             invoice_types = ('out_invoice', 'in_refund')
@@ -110,11 +123,11 @@ class product_product(osv.osv):
         'sale_avg_price' : fields.function(_product_margin, type='float', string='Avg. Unit Price', multi='product_margin',
             help="Avg. Price in Customer Invoices."),
         'purchase_avg_price' : fields.function(_product_margin, type='float', string='Avg. Unit Price', multi='product_margin',
-            help="Avg. Price in Supplier Invoices "),
+            help="Avg. Price in Vendor Bills "),
         'sale_num_invoiced' : fields.function(_product_margin, type='float', string='# Invoiced in Sale', multi='product_margin',
             help="Sum of Quantity in Customer Invoices"),
         'purchase_num_invoiced' : fields.function(_product_margin, type='float', string='# Invoiced in Purchase', multi='product_margin',
-            help="Sum of Quantity in Supplier Invoices"),
+            help="Sum of Quantity in Vendor Bills"),
         'sales_gap' : fields.function(_product_margin, type='float', string='Sales Gap', multi='product_margin',
             help="Expected Sale - Turn Over"),
         'purchase_gap' : fields.function(_product_margin, type='float', string='Purchase Gap', multi='product_margin',
@@ -122,11 +135,11 @@ class product_product(osv.osv):
         'turnover' : fields.function(_product_margin, type='float', string='Turnover' ,multi='product_margin',
             help="Sum of Multiplication of Invoice price and quantity of Customer Invoices"),
         'total_cost'  : fields.function(_product_margin, type='float', string='Total Cost', multi='product_margin',
-            help="Sum of Multiplication of Invoice price and quantity of Supplier Invoices "),
+            help="Sum of Multiplication of Invoice price and quantity of Vendor Bills "),
         'sale_expected' :  fields.function(_product_margin, type='float', string='Expected Sale', multi='product_margin',
             help="Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"),
         'normal_cost'  : fields.function(_product_margin, type='float', string='Normal Cost', multi='product_margin',
-            help="Sum of Multiplication of Cost price and quantity of Supplier Invoices"),
+            help="Sum of Multiplication of Cost price and quantity of Vendor Bills"),
         'total_margin' : fields.function(_product_margin, type='float', string='Total Margin', multi='product_margin',
             help="Turnover - Standard price"),
         'expected_margin' : fields.function(_product_margin, type='float', string='Expected Margin', multi='product_margin',
@@ -136,6 +149,3 @@ class product_product(osv.osv):
         'expected_margin_rate' : fields.function(_product_margin, type='float', string='Expected Margin (%)', multi='product_margin',
             help="Expected margin * 100 / Expected Sale"),
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,50 +1,40 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* board
-#
+# * board
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2010-10-30 11:59+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2015-11-19 10:08+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:09+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_create
-#: model:ir.ui.menu,name:board.menu_board_create
-msgid "Create Board"
-msgstr "Ustvarite nadzorno ploščo"
-
-#. module: board
-#: view:board.create:0
-msgid "Create"
-msgstr "Ustvari"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:4
+#: code:addons/board/static/src/xml/board.xml:24
 #, python-format
-msgid "Reset Layout.."
-msgstr "Povrni postavitev"
-
-#. module: board
-#: view:board.create:0
-msgid "Create New Dashboard"
-msgstr "Ustvarite novo nadzorno ploščo"
+msgid "&nbsp;"
+msgstr "&nbsp;"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:40
+#: code:addons/board/static/src/js/dashboard.js:406
 #, python-format
-msgid "Choose dashboard layout"
-msgstr "Izberite postavitev nadzorne plošče"
+msgid "'%s' added to dashboard"
+msgstr ""
+
+#. module: board
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid "<b>Your personal dashboard is empty.</b>"
+msgstr ""
 
 #. module: board
 #. openerp-web
@@ -52,6 +42,13 @@ msgstr "Izberite postavitev nadzorne plošče"
 #, python-format
 msgid "Add"
 msgstr "Dodaj"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:64
+#, python-format
+msgid "Add to my Dashboard"
+msgstr ""
 
 #. module: board
 #. openerp-web
@@ -66,332 +63,132 @@ msgid "Board"
 msgstr "Plošča"
 
 #. module: board
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board.open_board_my_dash_action
-#: model:ir.ui.menu,name:board.menu_board_my_dash
-msgid "My Dashboard"
-msgstr "Moja nadzorna plošča"
-
-#. module: board
-#: field:board.create,name:0
-msgid "Board Name"
-msgstr "Ime nadzorne plošče"
-
-#. module: board
 #: model:ir.model,name:board.model_board_create
 msgid "Board Creation"
 msgstr "Kreiranje nadzorne plošče"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:67
-#, python-format
-msgid "Add to Dashboard"
-msgstr "Dodaj v Nadzorno Ploščo"
+#: model:ir.model.fields,field_description:board.field_board_create_name
+msgid "Board Name"
+msgstr "Ime nadzorne plošče"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:28
-#, python-format
-msgid "&nbsp;"
-msgstr "&nbsp;"
-
-#. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
-msgid ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"                  <p>\n"
-"                    <b>Your personal dashboard is empty.</b>\n"
-"                  </p><p>\n"
-"                    To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add "
-"to\n"
-"                    Dashboard'</i> in the extended search options.\n"
-"                  </p><p>\n"
-"                    You can filter and group data before inserting into the\n"
-"                    dashboard using the search options.\n"
-"                  </p>\n"
-"              </div>\n"
-"            "
-msgstr ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"                  <p>\n"
-"                    <b>Vaša nadzorna plošča je prazna.</b>\n"
-"                  </p><p>\n"
-"                    Elemente na nadzorno ploščo lahko dodajate\n"
-"                    iz vsakega iskanja.\n"
-"                  </p>\n"
-"              </div>\n"
-"            "
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Cancel"
+msgstr "Preklic"
 
 #. module: board
 #. openerp-web
 #: code:addons/board/static/src/xml/board.xml:6
 #, python-format
-msgid "Reset"
-msgstr "Obnovi"
-
-#. module: board
-#: field:board.create,menu_parent_id:0
-msgid "Parent Menu"
-msgstr "Nadmenu"
+msgid "Change Layout"
+msgstr "Spremeni postavitev"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:8
+#: code:addons/board/static/src/xml/board.xml:4
 #, python-format
 msgid "Change Layout.."
 msgstr "Spremeni postavitev"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:93
+#: code:addons/board/static/src/xml/board.xml:36
+#, python-format
+msgid "Choose dashboard layout"
+msgstr "Izberite postavitev nadzorne plošče"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:408
+#, python-format
+msgid "Could not add filter to dashboard"
+msgstr "Filtra ni bilo mogoče dodati nadzorni plošči"
+
+#. module: board
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Create"
+msgstr "Ustvari"
+
+#. module: board
+#: model:ir.actions.act_window,name:board.action_board_create
+#: model:ir.ui.menu,name:board.menu_board_create
+msgid "Create Board"
+msgstr "Ustvarite nadzorno ploščo"
+
+#. module: board
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Create New Dashboard"
+msgstr "Ustvarite novo nadzorno ploščo"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_create_uid
+msgid "Created by"
+msgstr "Ustvaril"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_create_date
+msgid "Created on"
+msgstr "Ustvarjeno"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_board_display_name
+#: model:ir.model.fields,field_description:board.field_board_create_display_name
+msgid "Display Name"
+msgstr "Prikaz naziva"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:94
 #, python-format
 msgid "Edit Layout"
 msgstr "Uredi izgled"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:10
-#, python-format
-msgid "Change Layout"
-msgstr "Spremeni postavitev"
+#: model:ir.model.fields,field_description:board.field_board_board_id
+#: model:ir.model.fields,field_description:board.field_board_create_id
+msgid "ID"
+msgstr "ID"
 
 #. module: board
-#: view:board.create:0
-msgid "Cancel"
-msgstr "Prekliči"
+#: model:ir.model.fields,field_description:board.field_board_board___last_update
+#: model:ir.model.fields,field_description:board.field_board_create___last_update
+msgid "Last Modified on"
+msgstr "Zadnjič spremenjeno"
 
 #. module: board
-#: view:board.create:0
-msgid "or"
-msgstr "ali"
+#: model:ir.model.fields,field_description:board.field_board_create_write_uid
+msgid "Last Updated by"
+msgstr "Zadnjič posodobil"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:69
-#, python-format
-msgid "Title of new dashboard item"
-msgstr "Naziv novega elementa nadzorne plošče"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Naziv objekta se mora začeti z 'x_' in ne sme vsebovati posebnih znakov."
-
-#~ msgid "Configuration"
-#~ msgstr "Konfiguracija"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Neveljaven XML za arhitekturo pogleda."
-
-#~ msgid "Author"
-#~ msgstr "Avtor"
-
-#~ msgid "Note"
-#~ msgstr "Opomba"
-
-#, python-format
-#~ msgid "User Error!"
-#~ msgstr "Napaka uporabnika!"
-
-#~ msgid "Width"
-#~ msgstr "Širina"
-
-#~ msgid "Title"
-#~ msgstr "Naslov"
-
-#~ msgid "Notes"
-#~ msgstr "Opombe"
-
-#~ msgid "Date"
-#~ msgstr "Datum"
-
-#~ msgid "Sequence"
-#~ msgstr "Zaporedje"
-
-#~ msgid "Position"
-#~ msgstr "Položaj"
-
-#~ msgid "Right"
-#~ msgstr "Desno"
-
-#~ msgid "Left"
-#~ msgstr "Levo"
-
-#~ msgid "Height"
-#~ msgstr "Višina"
-
-#~ msgid "Subject"
-#~ msgstr "Zadeva"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Napačno ime modela v definiciji dejanja."
-
-#~ msgid "Menu Information"
-#~ msgstr "Informacije o meniju"
-
-#~ msgid "board.board"
-#~ msgstr "board.board"
-
-#~ msgid "board.note.type"
-#~ msgstr "board.note.type"
-
-#~ msgid "  Year  "
-#~ msgstr "  Leto  "
-
-#~ msgid "Menu Create"
-#~ msgstr "Ustvari meni"
-
-#~ msgid "Group By..."
-#~ msgstr "Združi po ..."
-
-#~ msgid "Latest Connections"
-#~ msgstr "Zadnje povezave"
-
-#~ msgid "Month"
-#~ msgstr "Mesec"
-
-#~ msgid "Log Analysis"
-#~ msgstr "Analiza dnevnika"
-
-#~ msgid "March"
-#~ msgstr "marec"
-
-#~ msgid "Log Report"
-#~ msgstr "Poročilo dnevnika"
-
-#~ msgid "June"
-#~ msgstr "junij"
-
-#~ msgid "Creation Date"
-#~ msgstr "Ustvarjeno dne"
-
-#~ msgid "August"
-#~ msgstr "avgust"
-
-#~ msgid "User Connections"
-#~ msgstr "Povezave uporabnika"
-
-#~ msgid "October"
-#~ msgstr "oktober"
-
-#~ msgid "February"
-#~ msgstr "februar"
-
-#~ msgid "Day"
-#~ msgstr "Dan"
-
-#~ msgid "July"
-#~ msgstr "julij"
-
-#~ msgid "January"
-#~ msgstr "januar"
-
-#~ msgid "November"
-#~ msgstr "november"
-
-#~ msgid "April"
-#~ msgstr "april"
-
-#~ msgid "Menu Name"
-#~ msgstr "Ime Menija"
-
-#~ msgid "Action"
-#~ msgstr "Dejanje"
-
-#~ msgid "Create Menu"
-#~ msgstr "Ustvari Meni"
-
-#~ msgid "September"
-#~ msgstr "september"
-
-#~ msgid "   Month   "
-#~ msgstr "   Mesec   "
-
-#~ msgid "December"
-#~ msgstr "december"
-
-#~ msgid "Dashboard View"
-#~ msgstr "Pogled nadzorne plošče"
-
-#~ msgid "Year"
-#~ msgstr "Leto"
-
-#~ msgid "May"
-#~ msgstr "maj"
-
-#~ msgid "Object"
-#~ msgstr "Predmet"
-
-#~ msgid "Note Type"
-#~ msgstr "Tip opombe"
-
-#~ msgid "Dashboard main module"
-#~ msgstr "Osnovni modul nadzorne plošče"
-
-#~ msgid "Administration Dashboard"
-#~ msgstr "Nadzorna plošča administracije"
-
-#~ msgid "Weekly Global Activity"
-#~ msgstr "Tedenske globalne aktivnosti"
-
-#~ msgid "Open Dashboard"
-#~ msgstr "Odpri nadzorno ploščo"
-
-#~ msgid "# of Entries"
-#~ msgstr "# vnosov"
-
-#~ msgid "Monthly Activity per Document"
-#~ msgstr "Mesečne aktivnosti na dokument"
-
-#~ msgid "Dashboard Definition"
-#~ msgstr "Opredelitev nadzorne plošče"
-
-#~ msgid "Note type"
-#~ msgstr "Tip opombe"
-
-#~ msgid "Publish a note"
-#~ msgstr "Objavi opombo"
-
-#~ msgid "Action Views"
-#~ msgstr "Pregled dejanj"
-
-#~ msgid "Extended Filters..."
-#~ msgstr "Razširjeni filtri..."
-
-#~ msgid "Board Line"
-#~ msgstr "Vrstica plošče"
-
-#~ msgid "Create Menu For Dashboard"
-#~ msgstr "Ustvari meni za nadzorno ploščo"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Mesec-1    "
-
-#~ msgid ""
-#~ "Gives the sequence order                         when displaying a list of "
-#~ "board lines."
-#~ msgstr "Daje zaporedje ob prikazovanju seznama vrstic plošče."
-
-#~ msgid "Base module for all dashboards."
-#~ msgstr "Osnovni modul za vse nadzorne plošče"
-
-#~ msgid "Model"
-#~ msgstr "Model"
-
-#~ msgid "Dashboard"
-#~ msgstr "Nadzorna plošča"
-
-#~ msgid "Latest Activities"
-#~ msgstr "Zadnje aktivnosti"
-
-#~ msgid "Board View"
-#~ msgstr "Pogled plošče"
-
-#~ msgid "Create Board Menu"
-#~ msgstr "Ustvari meni plošče"
-
-#, python-format
-#~ msgid "Please Insert Dashboard View(s) !"
-#~ msgstr "Prosim vnesite poglede nadzorne plošče!"
+#: model:ir.model.fields,field_description:board.field_board_create_write_date
+msgid "Last Updated on"
+msgstr "Zadnjič posodobljeno"
+
+#. module: board
+#: model:ir.actions.act_window,name:board.open_board_my_dash_action
+#: model:ir.ui.menu,name:board.menu_board_my_dash
+#: model:ir.ui.view,arch_db:board.board_my_dash_view
+msgid "My Dashboard"
+msgstr "Moja nadzorna plošča"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_menu_parent_id
+msgid "Parent Menu"
+msgstr "Nadrejeni meni"
+
+#. module: board
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"To add your first report into this dashboard, go to any\n"
+"                    menu, switch to list or graph view, and click <i>'Add to\n"
+"                    Dashboard'</i> in the extended search options."
+msgstr ""
+
+#. module: board
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"You can filter and group data before inserting into the\n"
+"                    dashboard using the search options."
+msgstr ""

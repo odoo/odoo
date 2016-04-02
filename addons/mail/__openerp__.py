@@ -1,29 +1,10 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010-Today OpenERP S.A. (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 {
-    'name': 'Social Network',
+    'name': 'Discuss',
     'version': '1.0',
-    'category': 'Social Network',
-    'sequence': 2,
+    'category': 'Discuss',
+    'sequence': 25,
     'summary': 'Discussions, Mailing Lists, News',
     'description': """
 Business oriented Social Networking
@@ -35,7 +16,7 @@ It enables the users to read and send messages as well as emails. It also provid
 
 Main Features
 -------------
-* Clean and renewed communication history for any OpenERP document that can act as a discussion topic
+* Clean and renewed communication history for any Odoo document that can act as a discussion topic
 * Subscription mechanism to be updated about new messages on interesting documents
 * Unified feeds page to see recent messages and activity on followed documents
 * User communication through the feeds page
@@ -43,47 +24,48 @@ Main Features
 * Relies on the global outgoing mail server - an integrated email management system - allowing to send emails with a configurable scheduler-based processing engine
 * Includes an extensible generic email composition assistant, that can turn into a mass-mailing assistant and is capable of interpreting simple *placeholder expressions* that will be replaced with dynamic data when each email is actually sent.
     """,
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'depends': ['base', 'base_setup'],
+    'website': 'https://www.odoo.com/page/enterprise-social-network',
+    'depends': ['base', 'base_setup', 'bus'],
     'data': [
         'wizard/invite_view.xml',
         'wizard/mail_compose_message_view.xml',
-        'mail_message_subtype.xml',
-        'res_config_view.xml',
-        'mail_message_view.xml',
-        'mail_mail_view.xml',
-        'mail_followers_view.xml',
-        'mail_thread_view.xml',
-        'mail_group_view.xml',
-        'res_partner_view.xml',
+        'views/mail_message_subtype_views.xml',
+        'views/mail_tracking_views.xml',
+        'views/mail_message_views.xml',
+        'views/mail_mail_views.xml',
+        'views/mail_followers_views.xml',
+        'views/mail_channel_views.xml',
+        'views/mail_shortcode_views.xml',
+        'views/res_config_views.xml',
         'data/mail_data.xml',
-        'data/mail_group_data.xml',
+        'data/mail_channel_data.xml',
+        'data/mail_shortcode_data.xml',
         'security/mail_security.xml',
         'security/ir.model.access.csv',
-        'mail_alias_view.xml',
-        'res_users_view.xml',
-        'views/mail.xml',
+        'views/mail_alias_views.xml',
+        'views/res_users_views.xml',
+        'views/mail_templates.xml',
+        'wizard/email_template_preview_view.xml',
+        'views/mail_template_views.xml',
+        'views/ir_actions_views.xml',
+        'views/res_partner_views.xml',
+        'views/contact_views.xml',
     ],
     'demo': [
         'data/mail_demo.xml',
-        'data/mail_group_demo_data.xml',
+        'data/mail_channel_demo.xml',
     ],
     'installable': True,
     'application': True,
-    'images': [
-        'images/inbox.jpeg',
-        'images/messages_form.jpeg',
-        'images/messages_list.jpeg',
-        'images/email.jpeg',
-        'images/join_a_group.jpeg',
-        'images/share_a_message.jpeg',
-    ],
     'qweb': [
-        'static/src/xml/mail.xml',
-        'static/src/xml/mail_followers.xml',
+        'static/src/xml/client_action.xml',
+        'static/src/xml/composer.xml',
+        'static/src/xml/chatter.xml',
+        'static/src/xml/followers.xml',
+        'static/src/xml/systray.xml',
+        'static/src/xml/thread.xml',
+        'static/src/xml/chat_window.xml',
+        'static/src/xml/extended_chat_window.xml',
         'static/src/xml/announcement.xml',
-        'static/src/xml/suggestions.xml',
     ],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

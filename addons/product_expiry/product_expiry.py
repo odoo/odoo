@@ -1,26 +1,9 @@
-##############################################################################
-#    
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
 
 import openerp
+from openerp import api, models
 from openerp.osv import fields, osv
 
 class stock_production_lot(osv.osv):
@@ -56,17 +39,9 @@ class stock_production_lot(osv.osv):
     }
     # Assign dates according to products data
     def create(self, cr, uid, vals, context=None):
-        newid = super(stock_production_lot, self).create(cr, uid, vals, context=context)
-        obj = self.browse(cr, uid, newid, context=context)
-        towrite = []
-        for f in ('life_date', 'use_date', 'removal_date', 'alert_date'):
-            if not getattr(obj, f):
-                towrite.append(f)
-        if context is None:
-            context = {}
-        context['product_id'] = obj.product_id.id
-        self.write(cr, uid, [obj.id], self.default_get(cr, uid, towrite, context=context))
-        return newid
+        context = dict(context or {})
+        context['product_id'] = vals.get('product_id', context.get('default_product_id'))
+        return super(stock_production_lot, self).create(cr, uid, vals, context=context)
 
     _defaults = {
         'life_date': _get_date('life_time'),
@@ -74,6 +49,19 @@ class stock_production_lot(osv.osv):
         'removal_date': _get_date('removal_time'),
         'alert_date': _get_date('alert_time'),
     }
+
+
+# Onchange added in new api to avoid having to change views
+class StockProductionLot(models.Model):
+    _inherit = 'stock.production.lot'
+
+    @api.onchange('product_id')
+    def _onchange_product(self):
+        defaults = self.with_context(
+            product_id=self.product_id.id).default_get(
+                ['life_date', 'use_date', 'removal_date', 'alert_date'])
+        for field, value in defaults.items():
+            setattr(self, field, value)
 
 
 class stock_quant(osv.osv):
@@ -90,11 +78,12 @@ class stock_quant(osv.osv):
             }),
     }
 
-    def apply_removal_strategy(self, cr, uid, location, product, qty, domain, removal_strategy, context=None):
+    def apply_removal_strategy(self, cr, uid, qty, move, ops=False, domain=None, removal_strategy='fifo', context=None):
         if removal_strategy == 'fefo':
-            order = 'removal_date, id'
-            return self._quants_get_order(cr, uid, location, product, qty, domain, order, context=context)
-        return super(stock_quant, self).apply_removal_strategy(cr, uid, location, product, qty, domain, removal_strategy, context=context)
+            order = 'removal_date, in_date, id'
+            return self._quants_get_order(cr, uid, qty, move, ops=ops, domain=domain, orderby=order, context=context)
+        return super(stock_quant, self).apply_removal_strategy(cr, uid, qty, move, ops=ops, domain=domain,
+                                                               removal_strategy=removal_strategy, context=context)
 
 
 class product_product(osv.osv):
@@ -109,4 +98,3 @@ class product_product(osv.osv):
         'alert_time': fields.integer('Product Alert Time',
             help='When a new a Serial Number is issued, this is the number of days before an alert should be notified.'),
     }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

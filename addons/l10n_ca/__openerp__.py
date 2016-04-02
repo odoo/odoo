@@ -1,31 +1,14 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'Canada - Accounting',
-    'version': '1.2',
+    'version': '1.0',
     'author': 'Savoir-faire Linux',
-    'website': 'http://www.savoirfairelinux.com',
+    'website': 'https://www.savoirfairelinux.com',
     'category': 'Localization/Account Charts',
     'description': """
-This is the module to manage the English and French - Canadian accounting chart in OpenERP.
+This is the module to manage the Canadian accounting chart in Odoo.
 ===========================================================================================
 
 Canadian accounting charts and localizations.
@@ -33,9 +16,9 @@ Canadian accounting charts and localizations.
 Fiscal positions
 ----------------
 
-When considering taxes to be applied, it is the province where the delivery occurs that matters. 
-Therefore we decided to implement the most common case in the fiscal positions: delivery is the 
-responsibility of the supplier and done at the customer location.
+When considering taxes to be applied, it is the province where the delivery occurs that matters.
+Therefore we decided to implement the most common case in the fiscal positions: delivery is the
+responsibility of the vendor and done at the customer location.
 
 Some examples:
 
@@ -45,37 +28,28 @@ On the customer, set the fiscal position to his province.
 2) You have a customer from another province. However this customer comes to your location
 with their truck to pick up products. On the customer, do not set any fiscal position.
 
-3) An international supplier doesn't charge you any tax. Taxes are charged at customs 
-by the customs broker. On the supplier, set the fiscal position to International.
+3) An international vendor doesn't charge you any tax. Taxes are charged at customs
+by the customs broker. On the vendor, set the fiscal position to International.
 
-4) An international supplier charge you your provincial tax. They are registered with your
-provincial government and remit taxes themselves. On the supplier, do not set any fiscal 
+4) An international vendor charge you your provincial tax. They are registered with your
 position.
     """,
     'depends': [
-        'base',
         'account',
         'base_iban',
         'base_vat',
-        'account_chart',
-        'account_anglo_saxon'
+        'l10n_multilang',
+        'report',
     ],
     'data': [
-        'account_chart_en.xml',
-        'account_tax_code_en.xml',
-        'account_chart_template_en.xml',
-        'account_tax_en.xml',
-        'fiscal_templates_en.xml',
-        'account_chart_fr.xml',
-        'account_tax_code_fr.xml',
-        'account_chart_template_fr.xml',
-        'account_tax_fr.xml',
-        'fiscal_templates_fr.xml',
-        'l10n_ca_wizard.xml'
+        'account_chart_template.xml',
+        'account_chart.xml',
+        'account_chart_template_after.xml',
+        'account_tax.xml',
+        'fiscal_templates.xml',
+        'account_chart_template.yml',
+        'data/res_company.xml',
     ],
-    'demo': [],
     'installable': True,
-    'images': ['images/config_chart_l10n_ca.jpeg','images/l10n_ca_chart.jpeg'],
+    'post_init_hook': 'load_translations',
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

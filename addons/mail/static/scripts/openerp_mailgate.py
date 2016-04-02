@@ -1,25 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-TODAY OpenERP S.A. (http://www.openerp.com)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 """
     openerp_mailgate.py
 """
@@ -30,10 +11,10 @@ import optparse
 import sys
 import xmlrpclib
 import smtplib
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEBase import MIMEBase
-from email.MIMEText import MIMEText
-from email.Utils import COMMASPACE, formatdate
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email.mime.text import MIMEText
+from email.utils import COMMASPACE, formatdate
 from email import Encoders
 
 class DefaultConfig(object):
@@ -120,13 +101,13 @@ def configure_parser():
     parser = optparse.OptionParser(usage='usage: %prog [options]', version='%prog v1.1')
     group = optparse.OptionGroup(parser, "Note",
         "This program parse a mail from standard input and communicate "
-        "with the OpenERP server for case management in the CRM module.")
+        "with the Odoo server for case management in the CRM module.")
     parser.add_option_group(group)
     parser.add_option("-u", "--user", dest="userid",
-                      help="OpenERP user id to connect with",
+                      help="Odoo user id to connect with",
                       default=config.OPENERP_DEFAULT_USER_ID, type='int')
     parser.add_option("-p", "--password", dest="password",
-                      help="OpenERP user password",
+                      help="Odoo user password",
                       default=config.OPENERP_DEFAULT_PASSWORD)
     parser.add_option("-o", "--model", dest="model",
                       help="Name or ID of destination model",
@@ -135,13 +116,13 @@ def configure_parser():
                       help="Admin email for error notifications.",
                       default=None)
     parser.add_option("-d", "--dbname", dest="dbname",
-                      help="OpenERP database name (default: %default)",
+                      help="Odoo database name (default: %default)",
                       default=config.OPENERP_DEFAULT_DATABASE)
     parser.add_option("--host", dest="host",
-                      help="OpenERP Server hostname",
+                      help="Odoo Server hostname",
                       default=config.OPENERP_HOSTNAME)
     parser.add_option("--port", dest="port",
-                      help="OpenERP Server XML-RPC port number",
+                      help="Odoo Server XML-RPC port number",
                       default=config.OPENERP_PORT)
     parser.add_option("--custom-values", dest="custom_values",
                       help="Dictionary of extra values to pass when creating records",
@@ -187,15 +168,13 @@ def main():
             '%s' % (cgitb.text(sys.exc_info())),
         ])
 
-        subject = '[OPENERP]:ERROR: Mailgateway - %s' % time.strftime('%Y-%m-%d %H:%M:%S')
+        subject = '[Odoo]:ERROR: Mailgateway - %s' % time.strftime('%Y-%m-%d %H:%M:%S')
         send_mail(
             config.MAIL_ERROR,
             config.MAIL_ADMINS,
             subject, msg, files=[('message.txt', msg_txt)]
         )
-        sys.stderr.write("Failed to deliver email to OpenERP Server, sending error notification to %s\n" % config.MAIL_ADMINS)
+        sys.stderr.write("Failed to deliver email to Odoo Server, sending error notification to %s\n" % config.MAIL_ADMINS)
 
 if __name__ == '__main__':
     main()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

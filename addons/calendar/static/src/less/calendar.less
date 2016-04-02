@@ -1,0 +1,103 @@
+.openerp {
+    .oe_invitation {
+        width : 13px;
+        height : 13px;
+        margin-bottom : -4px;
+        display : inline-block;    
+    }
+    a.oe_invitation {
+       cursor: default!important;
+    }
+    .needsAction {
+        background : url(/web/static/src/img/icons/gtk-normal.png) no-repeat;
+        background-size : 11px 11px;    
+    }
+    .accepted {
+        background : url(/web/static/src/img/icons/gtk-yes.png) no-repeat;
+        background-size : 11px 11px;    
+    }
+    .declined {
+        background : url(/web/static/src/img/icons/gtk-no.png) no-repeat;
+        background-size : 11px 11px;    
+    }
+}
+
+.o_calendar_invitation {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+
+    &.accepted {
+        background-color: @brand-success;
+    }
+
+    &.needsAction {
+        background-color: @odoo-brand-secondary;
+    }
+
+    &.declined {
+        background-color: @brand-danger;
+    }
+}
+
+.o_calendar_all_responsibles {
+    .o_calendar_responsible {
+        margin-top: 10px;
+    }
+
+    .oe_remove_follower {
+        display: none;
+        cursor: pointer;
+    }
+    &:hover .oe_remove_follower {
+        display: inline-block;
+    }
+}
+
+.o_cal_avatar {
+    height: 24px;
+    width: 24px;
+}
+
+.o_add_favorite_calendar {
+    margin-top: 10px;
+    position: relative;
+}
+
+.o_calendar_invitation_page {
+    .o-flex(0, 0, auto);
+    width: 50%;
+    margin: 30px auto 0;
+    .o-webclient-padding(@top: 10px, @bottom: 10px);
+    background-color: @odoo-view-background-color;
+
+    .o_logo {
+        width: 15%;
+    }
+    .o_event_title {
+        margin-left: 20%;
+
+        h2 {
+            margin-top: 0;
+        }
+    }
+    .o_event_table {
+        clear: both;
+        margin: 15px 0 0;
+
+        th {
+            padding-right: 15px;
+        }
+        ul {
+            padding-left: 0;
+        }
+    }
+
+    .o_accepted {
+        color: @brand-success;
+    }
+    .o_declined {
+        color: @brand-danger;
+    }
+}

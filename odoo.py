@@ -4,15 +4,13 @@
 #
 # To install your odoo development environement type:
 #
-# wget -O- https://raw.githubusercontent.com/odoo/odoo/master/odoo.py | python
+# wget -O- https://raw.githubusercontent.com/odoo/odoo/9.0/odoo.py | python
 #
 # The setup_* subcommands used to boostrap odoo are defined here inline and may
 # only depends on the python 2.7 stdlib
 #
 # The rest of subcommands are defined in odoo/cli or in <module>/cli by
 # subclassing the Command object
-#
-# https://raw.githubusercontent.com/odoo-dev/odoo/master-odoo-cmd-fme/odoo.py
 #
 #----------------------------------------------------------
 import os
@@ -47,14 +45,14 @@ def git_locate():
         os.chdir('odoo')
 
     path = os.getcwd()
-    while path != '/':
+    while path != os.path.abspath(os.sep):
         gitconfig_path = os.path.join(path, '.git/config')
         if os.path.isfile(gitconfig_path):
             release_py = os.path.join(path, 'openerp/release.py')
             if os.path.isfile(release_py):
                 break
         path = os.path.dirname(path)
-    if path == '/':
+    if path == os.path.abspath(os.sep):
         path = None
     return path
 
@@ -68,11 +66,10 @@ def cmd_setup_git():
         git_dir = os.getcwd()
     if git_dir:
         # push sane config for git < 2.0, and hooks
-        run('git','config','push.default','simple')
+        #run('git','config','push.default','simple')
         # alias
         run('git','config','alias.st','status')
         # merge bzr style
-        run('git','config','merge.ff','no')
         run('git','config','merge.commit','no')
         # pull let me choose between merge or rebase only works in git > 2.0, use an alias for 1
         run('git','config','pull.ff','only')
@@ -85,15 +82,15 @@ def cmd_setup_git():
         run('git','config','remote.odoo.pushurl','git@github.com:odoo/odoo.git')
         run('git','config','--add','remote.odoo.fetch','dummy')
         run('git','config','--unset-all','remote.odoo.fetch')
-        run('git','config','--add','remote.odoo.fetch','+refs/heads/*:refs/remotes/odoo/heads/*')
+        run('git','config','--add','remote.odoo.fetch','+refs/heads/*:refs/remotes/odoo/*')
         # setup odoo-dev remote
         run('git','config','remote.odoo-dev.url','https://github.com/odoo-dev/odoo.git')
         run('git','config','remote.odoo-dev.pushurl','git@github.com:odoo-dev/odoo.git')
         run('git','remote','update')
-        # setup master branch
-        run('git','config','branch.master.remote','odoo')
-        run('git','config','branch.master.merge','refs/heads/master')
-        run('git','checkout','master')
+        # setup 9.0 branch
+        run('git','config','branch.9.0.remote','odoo')
+        run('git','config','branch.9.0.merge','refs/heads/9.0')
+        run('git','checkout','9.0')
     else:
         printf('no git repo found')
 
@@ -103,7 +100,7 @@ def cmd_setup_git_dev():
         # setup odoo-dev remote
         run('git','config','--add','remote.odoo-dev.fetch','dummy')
         run('git','config','--unset-all','remote.odoo-dev.fetch')
-        run('git','config','--add','remote.odoo-dev.fetch','+refs/heads/*:refs/remotes/odoo-dev/heads/*')
+        run('git','config','--add','remote.odoo-dev.fetch','+refs/heads/*:refs/remotes/odoo-dev/*')
         run('git','config','--add','remote.odoo-dev.fetch','+refs/pull/*:refs/remotes/odoo-dev/pull/*')
         run('git','remote','update')
 
@@ -113,14 +110,15 @@ def cmd_setup_git_review():
         # setup odoo-dev remote
         run('git','config','--add','remote.odoo.fetch','dummy')
         run('git','config','--unset-all','remote.odoo.fetch')
-        run('git','config','--add','remote.odoo.fetch','+refs/heads/*:refs/remotes/odoo/heads/*')
+        run('git','config','--add','remote.odoo.fetch','+refs/heads/*:refs/remotes/odoo/*')
         run('git','config','--add','remote.odoo.fetch','+refs/tags/*:refs/remotes/odoo/tags/*')
         run('git','config','--add','remote.odoo.fetch','+refs/pull/*:refs/remotes/odoo/pull/*')
 
 def setup_deps_debian(git_dir):
-    debian_control_path = os.path.join(git_dir, 'setup/debian/control')
+    debian_control_path = os.path.join(git_dir, 'debian/control')
     debian_control = open(debian_control_path).read()
     debs = re.findall('python-[0-9a-z]+',debian_control)
+    debs += ["postgresql"]
     proc = subprocess.Popen(['sudo','apt-get','install'] + debs, stdin=open('/dev/tty'))
     proc.communicate()
 
@@ -146,7 +144,7 @@ def cmd_setup():
     cmd_setup_pg()
 
 def main():
-    # regsitry of commands
+    # registry of commands
     g = globals()
     cmds = dict([(i[4:],g[i]) for i in g if i.startswith('cmd_')])
     # if curl URL | python2 then use command setup
@@ -160,4 +158,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

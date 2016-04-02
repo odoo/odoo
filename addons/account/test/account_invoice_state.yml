@@ -1,23 +1,15 @@
 -
-  Test with that user which have rights to make Invoicing. 
--
-  !context
-    uid: 'res_users_account_user'
--
   In order to test Confirm Draft Invoice wizard I create an invoice and confirm it with this wizard
 -
   !record {model: account.invoice, id: account_invoice_state}:
-    account_id: account.a_recv
     company_id: base.main_company
     currency_id: base.EUR
-    invoice_line:
-      - account_id: account.a_sale
-        name: '[PCSC234] PC Assemble SC234'
+    invoice_line_ids:
+      - name: 'Computer SC234'
         price_unit: 450.0
         quantity: 1.0
         product_id: product.product_product_3
-        uos_id: product.product_uom_unit
-    journal_id: account.bank_journal
+        uom_id: product.product_uom_unit
     partner_id: base.res_partner_12
     reference_type: none
 -
@@ -43,18 +35,17 @@
   !assert {model: account.invoice, id: account_invoice_state}:
     - state == 'open'
 -
-  I Modified the journal record so it can cancel invoice
+  I check the journal associated and put this journal as not
 -
-  !record {model: account.journal, id: account.bank_journal}:
-    update_posted: 1
-
-
+  !python {model: account.invoice, id: account_invoice_state}: |
+    moves = self.env['account.move.line'].search([('invoice_id', '=', self.id)])
+    assert (len(moves) > 0), 'You should have multiple moves'
+    moves[0].journal_id.write({'update_posted': True})
 -
   In order to check the "Cancel Selected Invoices" wizard in openerp I cancelled this open invoice using this wizard
 -
   !record {model: account.invoice.cancel, id: account_invoice_cancel_0}:
     {}
-
 -
   I clicked on Cancel Invoices Button
 -
@@ -62,10 +53,8 @@
     self.invoice_cancel(cr, uid, [ref("account_invoice_cancel_0")], {"lang": 'en_US',
       "tz": False, "active_model": "account.invoice", "active_ids": [ref("account_invoice_state")],
       "type": "out_invoice", "active_id": ref("account_invoice_state"), })
-
 -
   I check that customer invoice is in the cancel state
 -
   !assert {model: account.invoice, id: account_invoice_state}:
     - state == 'cancel'
-

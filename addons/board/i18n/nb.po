@@ -1,51 +1,42 @@
-# Norwegian Bokmal translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * board
+# 
+# Translators:
+# Mari Løken <mari@tinderbox.no>, 2016
+# Mari Løken <mari@tinderbox.no>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-12 10:28+0000\n"
-"Last-Translator: Kaare Pettersen <Unknown>\n"
-"Language-Team: Norwegian Bokmal <nb@li.org>\n"
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"PO-Revision-Date: 2016-02-01 09:05+0000\n"
+"Last-Translator: Mari Løken <mari@tinderbox.no>\n"
+"Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-9/language/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:09+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_create
-#: model:ir.ui.menu,name:board.menu_board_create
-msgid "Create Board"
-msgstr "Opprett styret."
-
-#. module: board
-#: view:board.create:0
-msgid "Create"
-msgstr "Opprett."
+"Content-Transfer-Encoding: \n"
+"Language: nb\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:4
+#: code:addons/board/static/src/xml/board.xml:24
 #, python-format
-msgid "Reset Layout.."
-msgstr "Tilbakestille Oppsett .."
-
-#. module: board
-#: view:board.create:0
-msgid "Create New Dashboard"
-msgstr "Opprett nytt kontrollpanel."
+msgid "&nbsp;"
+msgstr "&nbsp;"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:40
+#: code:addons/board/static/src/js/dashboard.js:406
 #, python-format
-msgid "Choose dashboard layout"
-msgstr "Velg kontrollpanel oppsett."
+msgid "'%s' added to dashboard"
+msgstr "'%s' legg til i kontrollpanel"
+
+#. module: board
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid "<b>Your personal dashboard is empty.</b>"
+msgstr ""
 
 #. module: board
 #. openerp-web
@@ -53,6 +44,13 @@ msgstr "Velg kontrollpanel oppsett."
 #, python-format
 msgid "Add"
 msgstr "Legg til."
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:64
+#, python-format
+msgid "Add to my Dashboard"
+msgstr "Legg til mitt kontrollpanel"
 
 #. module: board
 #. openerp-web
@@ -67,285 +65,132 @@ msgid "Board"
 msgstr "Brett"
 
 #. module: board
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board.open_board_my_dash_action
-#: model:ir.ui.menu,name:board.menu_board_my_dash
-msgid "My Dashboard"
-msgstr "Mitt dashboard."
-
-#. module: board
-#: field:board.create,name:0
-msgid "Board Name"
-msgstr "Styre navn."
-
-#. module: board
 #: model:ir.model,name:board.model_board_create
 msgid "Board Creation"
 msgstr "Styret opprettelse."
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:67
-#, python-format
-msgid "Add to Dashboard"
-msgstr "Legg til i kontrollpanelet."
+#: model:ir.model.fields,field_description:board.field_board_create_name
+msgid "Board Name"
+msgstr "Styre navn."
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:28
-#, python-format
-msgid "&nbsp;"
-msgstr "&nbsp;"
-
-#. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
-msgid ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"                  <p>\n"
-"                    <b>Your personal dashboard is empty.</b>\n"
-"                  </p><p>\n"
-"                    To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add "
-"to\n"
-"                    Dashboard'</i> in the extended search options.\n"
-"                  </p><p>\n"
-"                    You can filter and group data before inserting into the\n"
-"                    dashboard using the search options.\n"
-"                  </p>\n"
-"              </div>\n"
-"            "
-msgstr ""
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Cancel"
+msgstr "Avbryt"
 
 #. module: board
 #. openerp-web
 #: code:addons/board/static/src/xml/board.xml:6
 #, python-format
-msgid "Reset"
-msgstr "Tilbakestill."
-
-#. module: board
-#: field:board.create,menu_parent_id:0
-msgid "Parent Menu"
-msgstr "Overordnet meny"
+msgid "Change Layout"
+msgstr "Endre oppsett."
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:8
+#: code:addons/board/static/src/xml/board.xml:4
 #, python-format
 msgid "Change Layout.."
 msgstr "Endre oppsett.."
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:93
+#: code:addons/board/static/src/xml/board.xml:36
+#, python-format
+msgid "Choose dashboard layout"
+msgstr "Velg kontrollpanel oppsett."
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:408
+#, python-format
+msgid "Could not add filter to dashboard"
+msgstr "Ikke mulig å legge til filter i kontrollpanel"
+
+#. module: board
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Create"
+msgstr "Opprett."
+
+#. module: board
+#: model:ir.actions.act_window,name:board.action_board_create
+#: model:ir.ui.menu,name:board.menu_board_create
+msgid "Create Board"
+msgstr "Opprett styret."
+
+#. module: board
+#: model:ir.ui.view,arch_db:board.view_board_create
+msgid "Create New Dashboard"
+msgstr "Opprett nytt kontrollpanel."
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_create_uid
+msgid "Created by"
+msgstr "Opprettet av"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_create_date
+msgid "Created on"
+msgstr "Opprettet den"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_board_display_name
+#: model:ir.model.fields,field_description:board.field_board_create_display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:94
 #, python-format
 msgid "Edit Layout"
 msgstr "Rediger oppsett."
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:10
-#, python-format
-msgid "Change Layout"
-msgstr "Endre oppsett."
+#: model:ir.model.fields,field_description:board.field_board_board_id
+#: model:ir.model.fields,field_description:board.field_board_create_id
+msgid "ID"
+msgstr "ID"
 
 #. module: board
-#: view:board.create:0
-msgid "Cancel"
-msgstr "Kanseller"
+#: model:ir.model.fields,field_description:board.field_board_board___last_update
+#: model:ir.model.fields,field_description:board.field_board_create___last_update
+msgid "Last Modified on"
+msgstr "Sist oppdatert "
 
 #. module: board
-#: view:board.create:0
-msgid "or"
-msgstr "Eller."
+#: model:ir.model.fields,field_description:board.field_board_create_write_uid
+msgid "Last Updated by"
+msgstr "Sist oppdatert av"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:69
-#, python-format
-msgid "Title of new dashboard item"
-msgstr "Tittel på nytt kontrollpanel element."
+#: model:ir.model.fields,field_description:board.field_board_create_write_date
+msgid "Last Updated on"
+msgstr "Sist oppdatert"
 
-#~ msgid "  Year  "
-#~ msgstr "  År  "
+#. module: board
+#: model:ir.actions.act_window,name:board.open_board_my_dash_action
+#: model:ir.ui.menu,name:board.menu_board_my_dash
+#: model:ir.ui.view,arch_db:board.board_my_dash_view
+msgid "My Dashboard"
+msgstr "Mitt dashboard."
 
-#~ msgid "Log created in last month"
-#~ msgstr "Logg opprettet i forrige måned"
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_create_menu_parent_id
+msgid "Parent Menu"
+msgstr "Overordnet meny"
 
-#~ msgid "Log created in current year"
-#~ msgstr "Logg opprettet i gjeldende år."
+#. module: board
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"To add your first report into this dashboard, go to any\n"
+"                    menu, switch to list or graph view, and click <i>'Add to\n"
+"                    Dashboard'</i> in the extended search options."
+msgstr ""
 
-#~ msgid "Menu Create"
-#~ msgstr "Meny laget"
-
-#~ msgid "Menu Name"
-#~ msgstr "Menynavn"
-
-#~ msgid "Menu Information"
-#~ msgstr "Meny informasjon"
-
-#~ msgid "Group By..."
-#~ msgstr "Grupper etter ..."
-
-#~ msgid "Latest Connections"
-#~ msgstr "Siste Tilkoblinger"
-
-#~ msgid "Weekly Global Activity"
-#~ msgstr "Ukentlig global aktivitet"
-
-#~ msgid "Log created in current month"
-#~ msgstr "Logg opprettet i gjeldende måned."
-
-#~ msgid "Configuration Overview"
-#~ msgstr "Konfigurasjonsoversikt"
-
-#~ msgid "# of Entries"
-#~ msgstr "# av oppføringer"
-
-#~ msgid "Month"
-#~ msgstr "Måned"
-
-#~ msgid "Monthly Activity per Document"
-#~ msgstr "Månedlig aktivitet per dokument"
-
-#~ msgid "March"
-#~ msgstr "Mars"
-
-#~ msgid "August"
-#~ msgstr "August"
-
-#~ msgid "Title"
-#~ msgstr "Tittel"
-
-#~ msgid "Day"
-#~ msgstr "Dag"
-
-#~ msgid "July"
-#~ msgstr "juli"
-
-#~ msgid "Log Report"
-#~ msgstr "Logg rapport"
-
-#~ msgid "Creation Date"
-#~ msgstr "Opprettelsesdato"
-
-#~ msgid "June"
-#~ msgstr "Juni"
-
-#~ msgid "Log Analysis"
-#~ msgstr "Logg analyse"
-
-#~ msgid "Object"
-#~ msgstr "Objekt"
-
-#~ msgid "User Connections"
-#~ msgstr "Brukertilkoblinger"
-
-#~ msgid "Action Views"
-#~ msgstr "Handling Visninger"
-
-#~ msgid "November"
-#~ msgstr "November"
-
-#~ msgid "January"
-#~ msgstr "Januar"
-
-#~ msgid "October"
-#~ msgstr "Oktober"
-
-#~ msgid "February"
-#~ msgstr "Februar"
-
-#~ msgid ""
-#~ "Gives the sequence order                         when displaying a list of "
-#~ "board lines."
-#~ msgstr "Gir rekkefølgen av når du viser en liste over bord linjer."
-
-#~ msgid "Board Line"
-#~ msgstr "bord Linje"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Måned-1    "
-
-#~ msgid "Users"
-#~ msgstr "Brukere"
-
-#~ msgid "April"
-#~ msgstr "April"
-
-#~ msgid "Latest Activities"
-#~ msgstr "Senest aktiveter"
-
-#~ msgid "Position"
-#~ msgstr "Posisjon"
-
-#~ msgid "Left"
-#~ msgstr "Venstre"
-
-#, python-format
-#~ msgid "User Error!"
-#~ msgstr "Bruker feil!"
-
-#~ msgid "Model"
-#~ msgstr "Modell"
-
-#~ msgid "Action"
-#~ msgstr "Handling"
-
-#~ msgid "Home Page"
-#~ msgstr "Hjemmeside"
-
-#~ msgid "Board View"
-#~ msgstr "Bord visning"
-
-#~ msgid "Dashboard"
-#~ msgstr "Kontrollpanel"
-
-#~ msgid "Height"
-#~ msgstr "Høyde"
-
-#~ msgid "Create Board Menu"
-#~ msgstr "Opprett bord meny"
-
-#~ msgid "December"
-#~ msgstr "Desember"
-
-#~ msgid "Create Menu"
-#~ msgstr "Opprett meny"
-
-#~ msgid "September"
-#~ msgstr "September"
-
-#~ msgid "Sequence"
-#~ msgstr "Sekvens"
-
-#~ msgid "Right"
-#~ msgstr "Høyre"
-
-#~ msgid "May"
-#~ msgstr "Mai"
-
-#~ msgid "Width"
-#~ msgstr "Bredde"
-
-#~ msgid "   Month   "
-#~ msgstr "   Måned   "
-
-#~ msgid "Year"
-#~ msgstr "År"
-
-#~ msgid "Dashboard View"
-#~ msgstr "Kontrollpanel visning"
-
-#~ msgid "Administration Dashboard"
-#~ msgstr "Administrasjon kontrollpanel"
-
-#~ msgid "Dashboard Definition"
-#~ msgstr "Kontrollpanel Definisjon"
-
-#, python-format
-#~ msgid "Please Insert Dashboard View(s) !"
-#~ msgstr "Vennligst Sett Kontrollpanel Vinsning (er)!"
-
-#~ msgid "Create Menu For Dashboard"
-#~ msgstr "Opprett meny for Kontrollpanel."
+#. module: board
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"You can filter and group data before inserting into the\n"
+"                    dashboard using the search options."
+msgstr ""

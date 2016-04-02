@@ -18,7 +18,7 @@
             <field name="inherit_id" ref="base.view_translation_form"/>
             <field name="model">ir.translation</field>
             <field name="arch" type="xml">
-                 <xpath expr="//form[@string='Translations']/sheet" position="inside">
+                 <xpath expr="//form/sheet" position="inside">
                     <group string="Gengo Translation Service" col="4" colspan="4">
                         <field name="gengo_translation" />
                         <label string="Note: If the translation state is 'In Progress', it means that the translation has to be approved to be uploaded in this system. You are supposed to do that directly by using your Gengo Account"/>

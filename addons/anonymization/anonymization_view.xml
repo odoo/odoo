@@ -8,7 +8,7 @@
         <field name="name">ir.model.fields.anonymization.form</field>
         <field name="model">ir.model.fields.anonymization</field>
         <field name="arch" type="xml">
-            <form string="Anonymized Field" version="7.0">
+            <form string="Anonymized Field">
                 <sheet>
                 <group col="4">
                     <field name="model_id" on_change="onchange_model_id(model_id)" />
@@ -53,7 +53,7 @@
         <field name="name">ir.model.fields.anonymize.wizard.form</field>
         <field name="model">ir.model.fields.anonymize.wizard</field>
         <field name="arch" type="xml">
-            <form string="Database Anonymization" version="7.0">
+            <form string="Database Anonymization">
                 <header>
                     <button name="anonymize_database"
                             string="Anonymize Database"
@@ -98,7 +98,7 @@
         <field name="name">ir.model.fields.anonymization.history.form</field>
         <field name="model">ir.model.fields.anonymization.history</field>
         <field name="arch" type="xml">
-            <form string="Anonymization History" version="7.0">
+            <form string="Anonymization History">
                 <sheet>
                 <group col="4">
                     <field name="date"/>
