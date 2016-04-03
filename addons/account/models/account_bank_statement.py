@@ -837,7 +837,6 @@ class AccountBankStatementLine(models.Model):
                 payment_methods = (total>0) and self.journal_id.inbound_payment_method_ids or self.journal_id.outbound_payment_method_ids
                 currency = self.journal_id.currency_id or self.company_id.currency_id
                 payment_id = self.env['account.payment'].create({
-                    'statement_line_id': self.id,
                     'payment_method_id': payment_methods and payment_methods[0].id or False,
                     'payment_type': total >0 and 'inbound' or 'outbound',
                     'partner_id': self.partner_id and self.partner_id.id or False,
