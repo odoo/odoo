@@ -460,12 +460,12 @@
                                     <field name="date_due" groups="base.group_no_one"/>
                                 </group>
                                 <group>
+                                    <field name="fiscal_position_id" options="{'no_create': True}" />
                                     <field domain="[('company_id', '=', company_id),('internal_type','=', 'receivable'), ('deprecated', '=', False)]"
                                 name="account_id" groups="account.group_account_manager"/>
+                                    <field name="move_id" groups="account.group_account_manager" attrs="{'invisible': [('move_id', '=', False)]}"/>
                                     <field name="origin" groups="base.group_user" attrs="{'invisible': [('origin', '=', False)]}"/>
                                     <field name="name"/>
-                                    <field name="move_id" groups="account.group_account_manager" attrs="{'invisible': [('move_id', '=', False)]}"/>
-                                    <field name="fiscal_position_id" options="{'no_create': True}" />
                                 </group>
                             </group>
                             <field name="tax_line_ids">
