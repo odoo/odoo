@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-19 09:27+0000\n"
+"POT-Creation-Date: 2015-10-15 06:40+0000\n"
+"PO-Revision-Date: 2016-03-31 15:47+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Albanian (http://www.transifex.com/odoo/odoo-8/language/sq/)\n"
 "MIME-Version: 1.0\n"
@@ -45,7 +45,7 @@ msgid ""
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "    \n"
@@ -100,10 +100,17 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1468
+#: code:addons/account/account.py:1477
 #, python-format
 msgid " Centralisation"
 msgstr ""
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:521
+#, python-format
+msgid " seconds"
+msgstr "sekonda"
 
 #. module: account
 #: field:analytic.entries.report,nbr:0
@@ -115,7 +122,7 @@ msgstr ""
 #: field:account.config.settings,code_digits:0
 #: field:wizard.multi.charts.accounts,code_digits:0
 msgid "# of Digits"
-msgstr ""
+msgstr "# të Shifrave"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_tree
@@ -125,7 +132,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice.report,nbr:0
 msgid "# of Invoices"
-msgstr ""
+msgstr "# të Invoice-ve"
 
 #. module: account
 #: field:account.entries.report,nbr:0
@@ -140,25 +147,25 @@ msgstr ""
 #. module: account
 #: field:account.move.line.reconcile,trans_nbr:0
 msgid "# of Transaction"
-msgstr ""
+msgstr "# të Transakcionit"
 
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${objekt.kompani_id.emër|sigurt} Invoice (Ref ${objekt.numër ose 'n/a'})"
 
 #. module: account
 #: code:addons/account/account.py:1861
 #, python-format
 msgid "%s (Copy)"
-msgstr ""
+msgstr "%s (Kopje)"
 
 #. module: account
 #: code:addons/account/account.py:635 code:addons/account/account.py:786
 #: code:addons/account/account.py:787
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopje)"
 
 #. module: account
 #: view:website:account.report_partnerbalance
@@ -210,7 +217,7 @@ msgstr ""
 #: model:account.payment.term,name:account.account_payment_term_15days
 #: model:account.payment.term,note:account.account_payment_term_15days
 msgid "15 Days"
-msgstr ""
+msgstr "15 Ditë"
 
 #. module: account
 #: selection:account.config.settings,period:0
@@ -228,7 +235,7 @@ msgstr ""
 #: model:account.payment.term,name:account.account_payment_term_net
 #: model:account.payment.term,note:account.account_payment_term_net
 msgid "30 Net Days"
-msgstr ""
+msgstr "30 Ditë Neto"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
@@ -239,12 +246,12 @@ msgstr ""
 #. module: account
 #: view:website:account.report_generalledger
 msgid ": General ledger"
-msgstr ""
+msgstr ": Libri Kryesor Llogaritar"
 
 #. module: account
 #: view:website:account.report_trialbalance
 msgid ": Trial Balance"
-msgstr ""
+msgstr ": Bilanc për Verifikim"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period
@@ -566,12 +573,12 @@ msgstr ""
 #: code:addons/account/account_bank_statement.py:736
 #, python-format
 msgid "A selected move line was already reconciled."
-msgstr ""
+msgstr "Një linjë lëvizëse e përzgjedhur është tashmë e kordinuar."
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only once time on same taxes."
-msgstr ""
+msgstr "Një pozicion fiskal mund të përcaktohet vetëm një herë për taksat e njëjta."
 
 #. module: account
 #: view:website:account.report_centraljournal
@@ -613,12 +620,12 @@ msgstr ""
 #: view:website:account.report_trialbalance
 #, python-format
 msgid "Account"
-msgstr ""
+msgstr "Llogaria"
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
-msgstr ""
+msgstr "Raporti i balancës së llogarisë ekzistuese testuese"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_balance
@@ -674,7 +681,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
 msgid "Account Common Account Report"
-msgstr ""
+msgstr "Raporti i llogarive të zakonshme"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
@@ -684,29 +691,29 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_common_partner_report
 msgid "Account Common Partner Report"
-msgstr ""
+msgstr "Raporti Partner i llogarive të zakonshme"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
 msgid "Account Common Report"
-msgstr ""
+msgstr "Raporti i llogarive të zakonshme"
 
 #. module: account
 #: field:account.analytic.line,currency_id:0
 msgid "Account Currency"
-msgstr ""
+msgstr "Llogaria e të ardhurave"
 
 #. module: account
 #: field:account.fiscal.position.account,account_dest_id:0
 #: field:account.fiscal.position.account.template,account_dest_id:0
 msgid "Account Destination"
-msgstr ""
+msgstr "Përcaktimi i llogarive"
 
 #. module: account
 #: view:account.move:account.view_move_form
 #: model:ir.model,name:account.model_account_move
 msgid "Account Entry"
-msgstr ""
+msgstr "Hyrja e Llogarisë"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_general_journal
@@ -719,7 +726,7 @@ msgstr ""
 #: view:account.journal:account.view_account_journal_tree
 #: field:res.partner.bank,journal_id:0
 msgid "Account Journal"
-msgstr ""
+msgstr "Llogaria e Ditarit"
 
 #. module: account
 #: model:ir.model,name:account.model_account_journal_select
@@ -729,14 +736,14 @@ msgstr ""
 #. module: account
 #: field:account.invoice.report,account_line_id:0
 msgid "Account Line"
-msgstr ""
+msgstr "Linja e Llogarisë"
 
 #. module: account
 #: view:account.fiscal.position:account.view_account_position_form
 #: field:account.fiscal.position,account_ids:0
 #: field:account.fiscal.position.template,account_ids:0
 msgid "Account Mapping"
-msgstr ""
+msgstr "Planifikimi i Llogarive"
 
 #. module: account
 #: field:account.use.model,model:0
@@ -759,7 +766,7 @@ msgstr ""
 #. module: account
 #: field:account.bank.accounts.wizard,acc_name:0
 msgid "Account Name."
-msgstr ""
+msgstr "Emri i Llogarisë."
 
 #. module: account
 #: model:ir.model,name:account.model_account_partner_ledger
@@ -769,7 +776,7 @@ msgstr ""
 #. module: account
 #: field:res.partner,property_account_payable:0
 msgid "Account Payable"
-msgstr ""
+msgstr "Llogari për tu paguar"
 
 #. module: account
 #: view:account.period:account.view_account_period_form
@@ -785,12 +792,12 @@ msgstr ""
 #. module: account
 #: view:product.category:account.view_category_property_form
 msgid "Account Properties"
-msgstr ""
+msgstr "Karakteristikat e llogarisë"
 
 #. module: account
 #: field:res.partner,property_account_receivable:0
 msgid "Account Receivable"
-msgstr ""
+msgstr "Llogaritë e arkëtueshme"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reconcile
@@ -804,19 +811,19 @@ msgstr ""
 #: field:account.financial.report,children_ids:0
 #: model:ir.model,name:account.model_account_financial_report
 msgid "Account Report"
-msgstr ""
+msgstr "R"
 
 #. module: account
 #: field:accounting.report,account_report_id:0
 #: model:ir.ui.menu,name:account.menu_account_financial_reports_tree
 msgid "Account Reports"
-msgstr ""
+msgstr "Raport llogarie"
 
 #. module: account
 #: view:account.financial.report:account.view_account_report_tree_hierarchy
 #: model:ir.ui.menu,name:account.menu_account_report_tree_hierarchy
 msgid "Account Reports Hierarchy"
-msgstr ""
+msgstr "Hierarkia e raporteve të llogarive"
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -1083,7 +1090,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_action_account_form
 #: model:ir.ui.menu,name:account.menu_analytic
 msgid "Accounts"
-msgstr ""
+msgstr "Llogarite"
 
 #. module: account
 #: view:account.journal:account.view_account_journal_form
@@ -1129,7 +1136,7 @@ msgstr ""
 #: field:account.journal.period,active:0 field:account.payment.term,active:0
 #: field:account.tax,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 #. module: account
 #: view:account.addtmpl.wizard:account.view_account_addtmpl_wizard_form
@@ -1599,17 +1606,7 @@ msgstr ""
 
 #. module: account
 #: help:account.fiscal.position,auto_apply:0
-msgid "Apply automatically this fiscal position."
-msgstr ""
-
-#. module: account
-#: help:account.fiscal.position,country_group_id:0
-msgid "Apply only if delivery or invocing country match the group."
-msgstr ""
-
-#. module: account
-#: help:account.fiscal.position,country_id:0
-msgid "Apply only if delivery or invoicing country match."
+msgid "Apply automatically this fiscal position if the conditions match."
 msgstr ""
 
 #. module: account
@@ -1618,10 +1615,24 @@ msgid "Apply only if partner has a VAT number."
 msgstr ""
 
 #. module: account
+#: help:account.fiscal.position,country_group_id:0
+msgid ""
+"Apply when the shipping or invoicing country is in this country group, and "
+"no position matches the country directly."
+msgstr ""
+
+#. module: account
+#: help:account.fiscal.position,country_id:0
+msgid ""
+"Apply when the shipping or invoicing country matches. Takes precedence over "
+"positions matching on a country group."
+msgstr ""
+
+#. module: account
 #: view:validate.account.move:account.validate_account_move_view
 #: view:validate.account.move.lines:account.validate_account_move_line_view
 msgid "Approve"
-msgstr ""
+msgstr "Aprovo"
 
 #. module: account
 #: selection:report.account.sales,month:0
@@ -1675,7 +1686,7 @@ msgstr ""
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
 msgid "Assets"
-msgstr ""
+msgstr "Asetet"
 
 #. module: account
 #: field:account.config.settings,module_account_asset:0
@@ -1836,7 +1847,7 @@ msgstr ""
 #: code:addons/account/account.py:3071
 #, python-format
 msgid "Bank"
-msgstr ""
+msgstr "Banka"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -1851,7 +1862,7 @@ msgstr ""
 #: field:account.invoice,partner_bank_id:0
 #: field:account.invoice.report,partner_bank_id:0
 msgid "Bank Account"
-msgstr ""
+msgstr "Llogari Bankare"
 
 #. module: account
 #: help:account.invoice,partner_bank_id:0
@@ -1892,7 +1903,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
+msgstr "Linja e Deklaratave Bankare"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
@@ -1993,7 +2004,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_reporting_budgets
 msgid "Budgets"
-msgstr ""
+msgstr "Buxhetet"
 
 #. module: account
 #: field:account.statement.operation.template,name:0
@@ -2076,7 +2087,7 @@ msgstr ""
 #: view:validate.account.move:account.validate_account_move_view
 #: view:validate.account.move.lines:account.validate_account_move_line_view
 msgid "Cancel"
-msgstr ""
+msgstr "Anullo"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -2136,7 +2147,7 @@ msgstr ""
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 #: selection:report.invoice.created,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "E Anulluar"
 
 #. module: account
 #: view:website:account.report_invoice_document
@@ -2279,7 +2290,7 @@ msgstr ""
 #. module: account
 #: view:product.template:account.product_template_search_view
 msgid "Category"
-msgstr ""
+msgstr "Kategori"
 
 #. module: account
 #: view:account.invoice.report:account.view_account_invoice_report_search
@@ -2505,7 +2516,7 @@ msgstr ""
 msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
-msgstr ""
+msgstr "Selektoni këtë kuti nëse deshironi të lejoni anulimin e shënimeve lidhur me këtë ditar apo te faturës lidhur me këtë ditar"
 
 #. module: account
 #: help:account.journal,entry_posted:0
@@ -2569,10 +2580,17 @@ msgid "Choose Fiscal Year"
 msgstr ""
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1297
+#, python-format
+msgid "Choose counterpart"
+msgstr ""
+
+#. module: account
 #: view:account.automatic.reconcile:account.account_automatic_reconcile_view1
 #: view:account.bank.statement:account.view_bank_statement_form
 msgid "Close"
-msgstr ""
+msgstr "Mbyll"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -2622,7 +2640,7 @@ msgstr ""
 #: view:account.fiscalyear:account.view_account_fiscalyear_search
 #: selection:account.fiscalyear,state:0 selection:account.period,state:0
 msgid "Closed"
-msgstr ""
+msgstr "Mbyllur"
 
 #. module: account
 #: field:account.bank.statement,closing_date:0
@@ -2703,7 +2721,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Kompanitë"
 
 #. module: account
 #: field:res.partner,ref_companies:0
@@ -2750,7 +2768,7 @@ msgstr ""
 #: field:analytic.entries.report,company_id:0
 #: field:wizard.multi.charts.accounts,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Kompani"
 
 #. module: account
 #: view:account.entries.report:account.view_company_analysis_tree
@@ -2775,7 +2793,7 @@ msgstr ""
 #. module: account
 #: help:account.journal,company_id:0
 msgid "Company related to this journal"
-msgstr ""
+msgstr "Kompani te lidhura me kete ditar"
 
 #. module: account
 #: view:accounting.report:account.accounting_report_view
@@ -2913,7 +2931,7 @@ msgstr ""
 #: view:account.bank.statement:account.view_account_bank_statement_filter
 #: view:account.bank.statement:account.view_bank_statement_search
 msgid "Confirmed"
-msgstr ""
+msgstr "E Konfirmuar"
 
 #. module: account
 #. openerp-web
@@ -2975,7 +2993,7 @@ msgstr ""
 
 #. module: account
 #: field:account.fiscal.position,country_id:0
-msgid "Countries"
+msgid "Country"
 msgstr ""
 
 #. module: account
@@ -3027,6 +3045,13 @@ msgstr ""
 #. module: account
 #: view:account.invoice.refund:account.view_account_invoice_refund
 msgid "Create Refund"
+msgstr ""
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1294
+#, python-format
+msgid "Create Write-off"
 msgstr ""
 
 #. module: account
@@ -3129,7 +3154,7 @@ msgstr ""
 #: field:validate.account.move.lines,create_uid:0
 #: field:wizard.multi.charts.accounts,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Krijuar nga"
 
 #. module: account
 #: field:account.account,create_date:0
@@ -3218,7 +3243,7 @@ msgstr ""
 #: field:validate.account.move.lines,create_date:0
 #: field:wizard.multi.charts.accounts,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Krijuar me"
 
 #. module: account
 #: help:account.addtmpl.wizard,cparent_id:0
@@ -3304,7 +3329,7 @@ msgstr ""
 #: view:website:account.report_salepurchasejournal
 #: field:wizard.multi.charts.accounts,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
@@ -3447,7 +3472,7 @@ msgstr "Partner"
 #: view:website:account.report_salepurchasejournal
 #, python-format
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form
@@ -3491,7 +3516,7 @@ msgstr ""
 #: help:account.bank.statement,message_last_post:0
 #: help:account.invoice,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Data e mesazhit të fundit të postuar në regjistër"
 
 #. module: account
 #: help:res.partner,last_reconciliation_date:0
@@ -3594,7 +3619,7 @@ msgstr ""
 #. module: account
 #: field:account.journal,default_credit_account_id:0
 msgid "Default Credit Account"
-msgstr ""
+msgstr "Llogari Baze e Kreditit"
 
 #. module: account
 #: field:account.journal,default_debit_account_id:0
@@ -3666,7 +3691,7 @@ msgstr ""
 #: view:website:account.report_overdue_document
 #, python-format
 msgid "Description"
-msgstr ""
+msgstr "Përshkrimi"
 
 #. module: account
 #: view:website:account.report_invoice_document
@@ -3782,7 +3807,7 @@ msgstr ""
 #: selection:account.subscription,state:0
 #: selection:report.invoice.created,state:0
 msgid "Done"
-msgstr ""
+msgstr "E Kryer"
 
 #. module: account
 #: view:account.bank.statement:account.view_account_bank_statement_filter
@@ -3794,7 +3819,7 @@ msgstr ""
 #: selection:account.subscription,state:0
 #: selection:report.invoice.created,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Paraprake"
 
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_journal_entries_validation
@@ -3937,7 +3962,7 @@ msgstr ""
 #: field:account.vat.declaration,date_to:0 field:accounting.report,date_to:0
 #: field:accounting.report,date_to_cmp:0
 msgid "End Date"
-msgstr ""
+msgstr "Data Perfundimtare"
 
 #. module: account
 #: field:account.aged.trial.balance,period_to:0
@@ -3998,7 +4023,7 @@ msgstr "Hyrjet Journal të fundvitit"
 #: field:account.analytic.inverted.balance,date2:0
 #: field:account.analytic.journal.report,date2:0
 msgid "End of period"
-msgstr ""
+msgstr "Fundi i periudhes"
 
 #. module: account
 #: field:account.chart,period_to:0
@@ -4102,7 +4127,7 @@ msgstr ""
 #. module: account
 #: field:account.journal,sequence_id:0
 msgid "Entry Sequence"
-msgstr ""
+msgstr "Rend Hyrje"
 
 #. module: account
 #: view:account.subscription:account.view_subscription_search
@@ -4275,7 +4300,7 @@ msgstr ""
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Filtra të zgjeruar..."
 
 #. module: account
 #. openerp-web
@@ -4560,7 +4585,7 @@ msgstr ""
 #: field:account.bank.statement,message_follower_ids:0
 #: field:account.invoice,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Ndjekesit"
 
 #. module: account
 #: help:account.tax.template,amount:0
@@ -4741,7 +4766,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_subscription_generate
 #: model:ir.ui.menu,name:account.menu_generate_subscription
 msgid "Generate Entries"
-msgstr ""
+msgstr "Krijo Hyrje"
 
 #. module: account
 #: field:account.subscription.generate,date:0
@@ -4858,12 +4883,12 @@ msgstr ""
 #: view:account.treasury.report:account.view_account_treasury_report_search
 #: view:analytic.entries.report:account.view_analytic_entries_report_search
 msgid "Group By"
-msgstr ""
+msgstr "Grupo Nga"
 
 #. module: account
 #: field:account.journal,group_invoice_lines:0
 msgid "Group Invoice Lines"
-msgstr ""
+msgstr "Rradhitje e Faturave te grupuara"
 
 #. module: account
 #: field:account.journal,groups_id:0
@@ -4969,7 +4994,7 @@ msgstr ""
 #: field:validate.account.move,id:0 field:validate.account.move.lines,id:0
 #: field:wizard.multi.charts.accounts,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account
 #: field:account.journal.period,icon:0
@@ -4986,7 +5011,7 @@ msgstr ""
 #: help:account.bank.statement,message_unread:0
 #: help:account.invoice,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Nëqoftëse është e çekuar mesazhet e reja kërkojnë vëmëndjen tuaj."
 
 #. module: account
 #: help:account.journal,allow_date:0
@@ -5057,7 +5082,7 @@ msgstr ""
 msgid ""
 "If this box is checked, the system will try to group the accounting lines "
 "when generating them from invoices."
-msgstr ""
+msgstr "Nëse kjo kuti eshte e zgjedhur, sistemi do të përpiqet të grupoje linjat e kontabilitetit, kur ti gjeneroje ato nga faturat."
 
 #. module: account
 #: help:account.config.settings,module_account_accountant:0
@@ -5227,7 +5252,7 @@ msgstr ""
 #: field:product.category,property_account_income_categ:0
 #: field:product.template,property_account_income:0
 msgid "Income Account"
-msgstr ""
+msgstr "Llogaria e të Ardhurave"
 
 #. module: account
 #: field:account.chart.template,property_account_income:0
@@ -5377,7 +5402,7 @@ msgstr ""
 #: view:website:account.report_invoice_document
 #, python-format
 msgid "Invoice"
-msgstr ""
+msgstr "Invoice"
 
 #. module: account
 #: view:account.change.currency:account.view_account_change_currency
@@ -5401,7 +5426,7 @@ msgstr ""
 #: field:account.invoice.tax,invoice_id:0
 #: model:ir.model,name:account.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Linja Invoice-it"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -5570,12 +5595,12 @@ msgstr ""
 #. module: account
 #: help:account.journal,default_credit_account_id:0
 msgid "It acts as a default account for credit amount"
-msgstr ""
+msgstr "Vepron si një llogari e paracaktuar për shumën e kredisë"
 
 #. module: account
 #: help:account.journal,default_debit_account_id:0
 msgid "It acts as a default account for debit amount"
-msgstr ""
+msgstr "Vepron si një llogari e paracaktuar për shumën e debise"
 
 #. module: account
 #: help:account.partner.ledger,amount_currency:0
@@ -5664,7 +5689,7 @@ msgstr ""
 #: view:website:account.report_journal
 #, python-format
 msgid "Journal"
-msgstr ""
+msgstr "Ditar"
 
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
@@ -5691,7 +5716,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_action_move_journal_line_form
 #: model:ir.ui.menu,name:account.menu_finance_entries
 msgid "Journal Entries"
-msgstr ""
+msgstr "Hyrjet e Ditarit"
 
 #. module: account
 #: view:account.move:account.view_account_move_filter
@@ -5931,9 +5956,16 @@ msgstr "Mbaje zbrazët për të përdorur periudhën e datës së miratimit (të
 
 #. module: account
 #. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1299
+#, python-format
+msgid "Keep open"
+msgstr ""
+
+#. module: account
+#. openerp-web
 #: field:account.statement.operation.template,label:0
-#: code:addons/account/static/src/js/account_widgets.js:75
-#: code:addons/account/static/src/js/account_widgets.js:80
+#: code:addons/account/static/src/js/account_widgets.js:74
+#: code:addons/account/static/src/js/account_widgets.js:79
 #: view:website:account.report_journal
 #: view:website:account.report_salepurchasejournal
 #, python-format
@@ -5954,7 +5986,7 @@ msgstr ""
 #: field:account.bank.statement,message_last_post:0
 #: field:account.invoice,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Data e Mesazhit të Fundit"
 
 #. module: account
 #: field:account.account,write_uid:0
@@ -6041,7 +6073,7 @@ msgstr ""
 #: field:validate.account.move.lines,write_uid:0
 #: field:wizard.multi.charts.accounts,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Modifikuar per here te fundit nga"
 
 #. module: account
 #: field:account.account,write_date:0
@@ -6128,7 +6160,7 @@ msgstr ""
 #: field:validate.account.move.lines,write_date:0
 #: field:wizard.multi.charts.accounts,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Modifikuar per here te fundit me"
 
 #. module: account
 #: field:res.partner,last_reconciliation_date:0
@@ -6205,7 +6237,7 @@ msgstr ""
 #. module: account
 #: field:account.journal,loss_account_id:0
 msgid "Loss Account"
-msgstr ""
+msgstr "Llogari Humbje"
 
 #. module: account
 #: field:account.config.settings,expense_currency_exchange_account_id:0
@@ -6328,13 +6360,13 @@ msgstr ""
 #: field:account.bank.statement,message_ids:0
 #: field:account.invoice,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Mesazhet"
 
 #. module: account
 #: help:account.bank.statement,message_ids:0
 #: help:account.invoice,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Historiku i mesazheve dhe komunikimeve"
 
 #. module: account
 #: view:account.tax:account.view_tax_form
@@ -6385,7 +6417,7 @@ msgstr ""
 #: view:analytic.entries.report:account.view_analytic_entries_report_search
 #: field:report.account.sales,month:0 field:report.account_type.sales,month:0
 msgid "Month"
-msgstr ""
+msgstr "Muaj"
 
 #. module: account
 #: field:report.aged.receivable,name:0
@@ -6471,7 +6503,7 @@ msgstr ""
 #: view:website:account.report_analyticcostledgerquantity
 #: view:website:account.report_financial
 msgid "Name"
-msgstr ""
+msgstr "Emri"
 
 #. module: account
 #: field:account.fiscalyear.close,report_name:0
@@ -6692,7 +6724,7 @@ msgstr ""
 #. module: account
 #: field:account.account.template,note:0
 msgid "Note"
-msgstr ""
+msgstr "Shënim"
 
 #. module: account
 #: view:account.account.template:account.view_account_template_form
@@ -6762,7 +6794,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:21
 #, python-format
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #. module: account
 #: code:addons/account/account.py:3199
@@ -7381,7 +7413,7 @@ msgstr ""
 #: field:validate.account.move,period_ids:0
 #, python-format
 msgid "Period"
-msgstr ""
+msgstr "Periudha"
 
 #. module: account
 #. openerp-web
@@ -7528,7 +7560,7 @@ msgstr ""
 #: view:validate.account.move:account.validate_account_move_view
 #: view:validate.account.move.lines:account.validate_account_move_line_view
 msgid "Post Journal Entries"
-msgstr ""
+msgstr "Posto Hyrjet e Ditarit"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -7537,7 +7569,7 @@ msgstr ""
 #: selection:account.move,state:0
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Posted"
-msgstr ""
+msgstr "E Postuar"
 
 #. module: account
 #: view:account.move:account.view_account_move_filter
@@ -7580,7 +7612,7 @@ msgstr ""
 #: view:account.common.report:account.account_common_report_view
 #: view:account.invoice:account.invoice_form
 msgid "Print"
-msgstr ""
+msgstr "Print"
 
 #. module: account
 #: model:ir.model,name:account.model_account_partner_balance
@@ -7673,7 +7705,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Shëmbull i Produktit"
 
 #. module: account
 #: field:account.entries.report,product_uom_id:0
@@ -7715,7 +7747,7 @@ msgstr ""
 #. module: account
 #: field:account.journal,profit_account_id:0
 msgid "Profit Account"
-msgstr ""
+msgstr "Llogari Fitimi"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report_pl
@@ -7770,7 +7802,7 @@ msgstr ""
 #: view:account.tax.template:account.view_account_tax_template_search
 #: selection:account.tax.template,type_tax_use:0
 msgid "Purchase"
-msgstr ""
+msgstr "Blerje"
 
 #. module: account
 #: code:addons/account/account.py:3187
@@ -7881,7 +7913,7 @@ msgstr ""
 #: field:account.invoice.refund,description:0 field:cash.box.in,name:0
 #: field:cash.box.out,name:0
 msgid "Reason"
-msgstr ""
+msgstr "Arsye"
 
 #. module: account
 #: selection:account.account,type:0 selection:account.account.template,type:0
@@ -8258,7 +8290,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "Reset to Draft"
-msgstr ""
+msgstr "Rivendos në Paraprake"
 
 #. module: account
 #. openerp-web
@@ -8284,7 +8316,7 @@ msgstr ""
 #: view:account.invoice:account.invoice_supplier_form
 #: view:account.invoice:account.invoice_tree
 msgid "Responsible"
-msgstr ""
+msgstr "Përgjegjës"
 
 #. module: account
 #: selection:account.financial.report,sign:0
@@ -8328,10 +8360,16 @@ msgid "Round per line"
 msgstr ""
 
 #. module: account
+#: code:addons/account/account_bank_statement.py:899
+#, python-format
+msgid "Rounding error from currency conversion"
+msgstr ""
+
+#. module: account
 #: view:account.subscription:account.view_subscription_search
 #: selection:account.subscription,state:0
 msgid "Running"
-msgstr ""
+msgstr "Rrjedhshme"
 
 #. module: account
 #: view:account.subscription:account.view_subscription_search
@@ -8402,7 +8440,7 @@ msgstr ""
 #: view:account.analytic.line:account.view_account_analytic_line_filter
 #: view:product.template:account.product_template_form_view
 msgid "Sales"
-msgstr ""
+msgstr "Shitjet"
 
 #. module: account
 #: code:addons/account/account.py:3186
@@ -8691,7 +8729,7 @@ msgstr ""
 #: field:account.tax.code.template,sequence:0
 #: field:account.tax.template,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sekuencë"
 
 #. module: account
 #: field:ir.sequence,fiscal_ids:0
@@ -8771,7 +8809,7 @@ msgstr ""
 #: view:account.invoice:account.invoice_supplier_form
 #: view:account.subscription:account.view_subscription_form
 msgid "Set to Draft"
-msgstr ""
+msgstr "Vendos tek Paraprake"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_tree
@@ -8884,7 +8922,7 @@ msgstr ""
 #: field:account.vat.declaration,date_from:0
 #: field:accounting.report,date_from:0 field:accounting.report,date_from_cmp:0
 msgid "Start Date"
-msgstr ""
+msgstr "Fillo Datën"
 
 #. module: account
 #: view:website:account.report_agedpartnerbalance
@@ -8939,7 +8977,7 @@ msgstr ""
 #: field:account.analytic.inverted.balance,date1:0
 #: field:account.analytic.journal.report,date1:0
 msgid "Start of period"
-msgstr ""
+msgstr "Fillimi i Periudhës"
 
 #. module: account
 #: field:account.chart,period_from:0
@@ -9619,6 +9657,20 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: constraint:account.config.settings:0
+msgid ""
+"The company of the gain exchange rate account must be the same than the "
+"company selected."
+msgstr ""
+
+#. module: account
+#: constraint:account.config.settings:0
+msgid ""
+"The company of the loss exchange rate account must be the same than the "
+"company selected."
+msgstr ""
+
+#. module: account
 #: help:account.tax,type:0
 msgid "The computation method for the tax amount."
 msgstr ""
@@ -9645,6 +9697,11 @@ msgstr ""
 #: help:res.partner,property_account_position:0
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
+msgstr ""
+
+#. module: account
+#: view:account.config.settings:account.view_account_config_settings
+msgid "The fiscal year is created when installing a Chart of Account."
 msgstr ""
 
 #. module: account
@@ -9959,6 +10016,30 @@ msgid "This Year"
 msgstr ""
 
 #. module: account
+#: help:product.template,property_account_expense:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product."
+msgstr ""
+
+#. module: account
+#: help:product.template,property_account_income:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product."
+msgstr ""
+
+#. module: account
+#: help:product.category,property_account_expense_categ:0
+msgid "This account will be used for invoices to value expenses."
+msgstr ""
+
+#. module: account
+#: help:product.category,property_account_income_categ:0
+msgid "This account will be used for invoices to value sales."
+msgstr ""
+
+#. module: account
 #: help:res.partner,property_account_payable:0
 msgid ""
 "This account will be used instead of the default one as the payable account "
@@ -9970,18 +10051,6 @@ msgstr ""
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
-msgstr ""
-
-#. module: account
-#: help:product.category,property_account_expense_categ:0
-#: help:product.template,property_account_expense:0
-msgid "This account will be used to value outgoing stock using cost price."
-msgstr ""
-
-#. module: account
-#: help:product.category,property_account_income_categ:0
-#: help:product.template,property_account_income:0
-msgid "This account will be used to value outgoing stock using sale price."
 msgstr ""
 
 #. module: account
@@ -10069,7 +10138,7 @@ msgstr ""
 msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
-msgstr ""
+msgstr "Fusha permban informacionin e lidhur me numerimin e ditareve hyrese te ketij ditari"
 
 #. module: account
 #: help:account.tax,domain:0 help:account.tax.template,domain:0
@@ -10298,7 +10367,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:36
 #, python-format
-msgid "Tip : Hit ctrl-enter to validate the whole sheet."
+msgid "Tip : Hit ctrl-enter to reconcile all balanced items."
 msgstr ""
 
 #. module: account
@@ -10538,7 +10607,7 @@ msgstr "Saktë"
 #: field:account.journal,type:0 field:account.move.reconcile,type:0
 #: xsl:account.transfer:0 field:report.invoice.created,type:0
 msgid "Type"
-msgstr ""
+msgstr "Tipi"
 
 #. module: account
 #: field:account.journal,type_control_ids:0
@@ -10628,7 +10697,7 @@ msgstr ""
 #: selection:account.move,state:0
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Unposted"
-msgstr ""
+msgstr "E Pa Postuar"
 
 #. module: account
 #: view:account.move:account.view_account_move_filter
@@ -10644,7 +10713,7 @@ msgstr ""
 #: field:account.bank.statement,message_unread:0
 #: field:account.invoice,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Mesazhe të Palexuara"
 
 #. module: account
 #: field:account.account,unrealized_gain_loss:0
@@ -10824,7 +10893,7 @@ msgstr ""
 #. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_validated
 msgid "Validated"
-msgstr ""
+msgstr "Të Vërtetuara"
 
 #. module: account
 #: help:account.account,unrealized_gain_loss:0
@@ -11030,7 +11099,7 @@ msgstr ""
 #: view:report.account_type.sales:account.view_report_account_type_sales_search
 #: field:report.account_type.sales,name:0
 msgid "Year"
-msgstr ""
+msgstr "Viti"
 
 #. module: account
 #: field:account.tax.code,sum:0
@@ -11053,6 +11122,13 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_widgets.js:1050
+#, python-format
+msgid "last"
+msgstr ""
+
+#. module: account
 #: help:account.move.line,blocked:0
 msgid ""
 "You can check this box to mark this journal item as a litigation with the "
@@ -11060,13 +11136,21 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1220
+#: code:addons/account/account_move_line.py:1246
 #, python-format
 msgid "You can not add/modify entries in a closed period %s of journal %s."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1047
+#: code:addons/account/wizard/account_open_closed_fiscalyear.py:42
+#, python-format
+msgid ""
+"You can not cancel closing entries if the 'End of Year Entries Journal' "
+"period is closed."
+msgstr ""
+
+#. module: account
+#: code:addons/account/account.py:1057
 #, python-format
 msgid "You can not re-open a period which belongs to closed fiscal year"
 msgstr ""
@@ -11112,7 +11196,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:2273
+#: code:addons/account/account.py:2293
 #, python-format
 msgid ""
 "You can specify year, month and date in the name of the model using the following labels:\n"
