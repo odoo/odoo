@@ -586,7 +586,6 @@
                                     <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
                                     <field name="attribute_value_ids" widget="many2many_tags" domain="[('product_ids.product_tmpl_id', '=', parent.product_tmpl_id)]" groups="product.group_product_variant"/>
                                     <field name="operation_id" groups="mrp.group_mrp_routings" domain="[('routing_id', '=', parent.routing_id)]"/>
-                                    <field name="procure_method" groups="stock.group_stock_multi_locations"/>
                                 </tree>
                             </field>
                         </page>

@@ -42,12 +42,11 @@ class TestSaleMrpFlow(common.TransactionCase):
                 'uom_po_id': uom_id,
                 'route_ids': route_ids})
 
-        def create_bom_lines(bom_id, product_id, qty, uom_id, procure_method):
+        def create_bom_lines(bom_id, product_id, qty, uom_id, procure_method): #TODO: remove procure_method
             self.MrpBomLine.create({
                 'product_id': product_id,
                 'product_qty': qty,
                 'bom_id': bom_id,
-                'procure_method': procure_method,
                 'product_uom_id': uom_id})
 
         def create_bom(product_tmpl_id, qty, uom_id, bom_type):

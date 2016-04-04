@@ -95,8 +95,8 @@ class MrpBom(models.Model):
                 if method: method(bom_line, qty, kw)
             else:
                 done.append(self.product_tmpl_id.id)
-                # We need to convert to units/UoM of chosen BoM
-                qty2 = self.env['product.uom']._compute_qty(bom_line.product_uom_id.id, quantity / self.product_qty * bom_line.product_qty, bom.product_uom_id.id)
+                # We need to convert to units/UoM of chosen BoM 
+                qty2 = self.env['product.uom']._compute_qty(bom_line.product_uom_id.id, quantity * bom_line.product_qty / self.product_qty, bom.product_uom_id.id)
                 bom.explode(bom_line.product_id, qty2, method=method, method_wo=method_wo, done=done, result=kw)
         return True
 
@@ -171,9 +171,6 @@ class MrpBomLine(models.Model):
     attribute_value_ids = fields.Many2many('product.attribute.value', string='Variants', help="BOM Product Variants needed form apply this line.")
     operation_id = fields.Many2one('mrp.routing.workcenter', string='Consumed in Operation', help="The operation where the components are consumed, or the finished products created.")
     child_line_ids = fields.One2many('mrp.bom.line', compute='_get_child_bom_lines', string='BOM lines of the referred bom')
-
-    procure_method = fields.Selection(selection=[('make_to_stock', 'From Stock'), ('make_to_order', 'Make to Order')], string='Supply Method', required=True, default='make_to_stock',
-        help="""By default, the system will take from the stock in the source location and passively wait for availability. The other possibility allows you to directly create a procurement on the source location (and thus ignore its current stock) to gather products. If we want to chain moves and have this one to wait for the previous, this second option should be chosen.""")
     has_attachments = fields.Boolean(compute="_compute_has_attachments")
 
     _sql_constraints = [
