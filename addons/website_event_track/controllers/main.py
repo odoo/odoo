@@ -4,20 +4,18 @@
 import collections
 import datetime
 import pytz
-import re
 
-import openerp
-from openerp.addons.web import http
-from openerp.addons.web.http import request
-from openerp.tools import html_escape
+from odoo import fields, http
+from odoo.http import request
+from odoo.tools import html_escape as escape, html2plaintext
 
 
-class website_event(http.Controller):
+class WebsiteEventTrackController(http.Controller):
+
     @http.route(['''/event/<model("event.event"):event>/track/<model("event.track", "[('event_id','=',event[0])]"):track>'''], type='http', auth="public", website=True)
     def event_track_view(self, event, track, **post):
-        track_obj = request.registry.get('event.track')
-        track = track_obj.browse(request.cr, openerp.SUPERUSER_ID, track.id, context=request.context)
-        values = { 'track': track, 'event': track.event_id, 'main_object': track }
+        track = track.sudo()
+        values = {'track': track, 'event': track.event_id, 'main_object': track}
         return request.website.render("website_event_track.track_view", values)
 
     def _prepare_calendar(self, event, event_track_ids):
@@ -29,8 +27,8 @@ class website_event(http.Controller):
 
         forcetr = True
         for track in event_track_ids:
-            start_date = (datetime.datetime.strptime(track.date, '%Y-%m-%d %H:%M:%S')).replace(tzinfo=pytz.utc).astimezone(local_tz)
-            end_date = start_date + datetime.timedelta(hours = (track.duration or 0.5))
+            start_date = fields.Datetime.from_string(track.date).replace(tzinfo=pytz.utc).astimezone(local_tz)
+            end_date = start_date + datetime.timedelta(hours=(track.duration or 0.5))
             location = track.location_id or False
             locations.setdefault(location, [])
 
@@ -55,13 +53,12 @@ class website_event(http.Controller):
             'dates': dates
         }
 
-
-    # TODO: not implemented
     @http.route(['''/event/<model("event.event", "[('show_tracks','=',1)]"):event>/agenda'''], type='http', auth="public", website=True)
     def event_agenda(self, event, tag=None, **post):
         days_tracks = collections.defaultdict(lambda: [])
-        for track in sorted(event.track_ids, key=lambda x: (x.date, bool(x.location_id))):
-            if not track.date: continue
+        for track in event.track_ids.sorted(lambda track: (track.date, bool(track.location_id))):
+            if not track.date:
+                continue
             days_tracks[track.date[:10]].append(track)
 
         days = {}
@@ -70,15 +67,10 @@ class website_event(http.Controller):
             days_tracks_count[day] = len(tracks)
             days[day] = self._prepare_calendar(event, tracks)
 
-        cr, uid, context = request.cr, request.uid, request.context
-        track_obj = request.registry['event.track']
-        tracks_ids = track_obj.search(cr, openerp.SUPERUSER_ID, [('event_id', '=', event.id)], context=context)
-        speakers = dict()
-        for t in track_obj.browse(cr, openerp.SUPERUSER_ID, tracks_ids, context=context):
-            acc = ""
-            for speaker in t.speaker_ids:
-                acc = speaker.name + u" – " + acc if acc else speaker.name
-            speakers[t.id] = acc
+        speakers = {}
+        for track in event.sudo().track_ids:
+            speakers_name = u" – ".join(track.speaker_ids.mapped('name'))
+            speakers[track.id] = speakers_name
 
         return request.website.render("website_event_track.agenda", {
             'event': event,
@@ -96,15 +88,9 @@ class website_event(http.Controller):
         searches = {}
         if tag:
             searches.update(tag=tag.id)
-            track_obj = request.registry.get('event.track')
-            track_ids = track_obj.search(request.cr, request.uid,
-                [("id", "in", [track.id for track in event.track_ids]), ("tag_ids", "=", tag.id)], context=request.context)
-            tracks = track_obj.browse(request.cr, request.uid, track_ids, context=request.context)
+            tracks = event.track_ids.filtered(lambda track: tag in track.tag_ids)
         else:
             tracks = event.track_ids
-
-        def html2text(html):
-            return re.sub(r'<[^>]+>', "", html)
 
         values = {
             'event': event,
@@ -112,36 +98,30 @@ class website_event(http.Controller):
             'tracks': tracks,
             'tags': event.tracks_tag_ids,
             'searches': searches,
-            'html2text': html2text
+            'html2plaintext': html2plaintext
         }
         return request.website.render("website_event_track.tracks", values)
 
     @http.route(['''/event/<model("event.event", "[('show_track_proposal','=',1)]"):event>/track_proposal'''], type='http', auth="public", website=True)
     def event_track_proposal(self, event, **post):
-        values = { 'event': event }
-        return request.website.render("website_event_track.event_track_proposal", values)
+        return request.website.render("website_event_track.event_track_proposal", {'event': event})
 
     @http.route(['/event/<model("event.event"):event>/track_proposal/post'], type='http', auth="public", methods=['POST'], website=True)
     def event_track_proposal_post(self, event, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-
         tags = []
         for tag in event.allowed_track_tag_ids:
-            if post.get('tag_'+str(tag.id)):
+            if post.get('tag_' + str(tag.id)):
                 tags.append(tag.id)
 
-        track_obj = request.registry['event.track']
-        track_id = track_obj.create(cr, openerp.SUPERUSER_ID, {
+        track = request.env['event.track'].sudo().create({
             'name': post['track_name'],
             'partner_name': post['partner_name'],
             'partner_email': post['email_from'],
             'partner_phone': post['phone'],
-            'partner_biography': html_escape(post['biography']),
+            'partner_biography': escape(post['biography']),
             'event_id': event.id,
             'tag_ids': [(6, 0, tags)],
             'user_id': False,
-            'description': html_escape(post['description']),
-        }, context=context)
-        track = track_obj.browse(cr, uid, track_id, context=context)
-        values = {'track': track, 'event': event}
-        return request.website.render("website_event_track.event_track_proposal_success", values)
+            'description': escape(post['description'])
+        })
+        return request.website.render("website_event_track.event_track_proposal_success", {'track': track, 'event': event})

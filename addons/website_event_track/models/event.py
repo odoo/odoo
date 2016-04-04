@@ -1,29 +1,31 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import models, fields, api
 from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
 
+class Event(models.Model):
 
-class event_event(models.Model):
     _inherit = "event.event"
 
     @api.multi
     def _count_tracks(self):
-        track_data = self.env['event.track'].read_group([('state', '!=', 'cancel')],
-                                                        ['event_id', 'state'], ['event_id'])
+        track_data = self.env['event.track'].read_group([('state', '!=', 'cancel')], ['event_id', 'state'], ['event_id'])
         result = dict((data['event_id'][0], data['event_id_count']) for data in track_data)
         for event in self:
             event.count_tracks = result.get(event.id, 0)
 
-    @api.one
+    @api.multi
     def _count_sponsor(self):
-        self.count_sponsor = len(self.sponsor_ids)
+        for event in self:
+            event.count_sponsor = len(event.sponsor_ids)
 
-    @api.one
+    @api.multi
     @api.depends('track_ids.tag_ids')
     def _get_tracks_tag_ids(self):
-        self.tracks_tag_ids = self.track_ids.mapped('tag_ids').ids
+        for event in self:
+            event.tracks_tag_ids = event.track_ids.mapped('tag_ids').ids
 
     track_ids = fields.One2many('event.track', 'event_id', 'Tracks')
     sponsor_ids = fields.One2many('event.sponsor', 'event_id', 'Sponsors')
@@ -37,7 +39,7 @@ class event_event(models.Model):
     @api.multi
     def _get_new_menu_pages(self):
         self.ensure_one()
-        result = super(event_event, self)._get_new_menu_pages()
+        result = super(Event, self)._get_new_menu_pages()
         if self.show_tracks:
             result.append((_('Talks'), '/event/%s/track' % slug(self)))
             result.append((_('Agenda'), '/event/%s/agenda' % slug(self)))
@@ -53,4 +55,4 @@ class event_event(models.Model):
                 nbr_menu_items = len(event._get_new_menu_pages())
                 if nbr_menu_items != len(event.menu_id.child_id):
                     event.menu_id.unlink()
-        return super(event_event, self)._set_show_menu()
+        return super(Event, self)._set_show_menu()
