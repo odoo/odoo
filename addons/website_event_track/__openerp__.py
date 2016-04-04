@@ -21,6 +21,7 @@ Adds support for:
     'depends': ['website_event'],
     'data': [
         'data/website_event_track_data.xml',
+        'views/event_views.xml',
         'views/website_event_track_templates.xml',
         'views/website_event_track_views.xml',
         'data/website_event_track_tip_data.xml',
