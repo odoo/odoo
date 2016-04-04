@@ -57,7 +57,7 @@ var AttendanceSlider = Widget.extend({
     check_attendance: function () {
         var self = this;
         self.employee = false;
-        this.$el.hide();
+        this.do_hide();
         var employee = new data.DataSetSearch(self, 'hr.employee', self.session.user_context, [
             ['user_id', '=', self.session.uid]
         ]);
@@ -67,7 +67,7 @@ var AttendanceSlider = Widget.extend({
             if (res[0].attendance_access === false){
                 return;
             }
-            self.$el.show();
+            self.do_show();
             self.employee = res[0];
             self.last_sign = time.str_to_datetime(self.employee.last_sign);
             self.set({"signed_in": self.employee.state !== "absent"});
