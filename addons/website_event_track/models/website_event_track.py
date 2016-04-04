@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, fields, api
-from openerp.tools.translate import _
-from openerp.addons.website.models.website import slug
+from odoo import api, fields, models
+from odoo.tools.translate import _
+from odoo.addons.website.models.website import slug
 
 
-class event_track_tag(models.Model):
+class TrackTag(models.Model):
+
     _name = "event.track.tag"
     _description = 'Track Tag'
     _order = 'name'
@@ -15,18 +17,20 @@ class event_track_tag(models.Model):
     color = fields.Integer(string='Color Index')
 
     _sql_constraints = [
-            ('name_uniq', 'unique (name)', "Tag name already exists !"),
+        ('name_uniq', 'unique (name)', "Tag name already exists !"),
     ]
 
 
-class event_track_location(models.Model):
+class TrackLocation(models.Model):
+
     _name = "event.track.location"
     _description = 'Track Location'
 
     name = fields.Char('Room')
 
 
-class event_track(models.Model):
+class Track(models.Model):
+
     _name = "event.track"
     _description = 'Event Track'
     _order = 'priority, date'
@@ -59,7 +63,7 @@ class event_track(models.Model):
 
     @api.model
     def create(self, vals):
-        res = super(event_track, self).create(vals)
+        res = super(Track, self).create(vals)
         res.message_subscribe(res.speaker_ids.ids)
         res.message_post_with_view(
             'website_event_track.event_track_template_new',
@@ -71,7 +75,7 @@ class event_track(models.Model):
     def write(self, vals):
         if vals.get('state') == 'published':
             vals.update({'website_published': True})
-        res = super(event_track, self).write(vals)
+        res = super(Track, self).write(vals)
         if vals.get('speaker_ids'):
             self.message_subscribe([speaker['id'] for speaker in self.resolve_2many_commands('speaker_ids', vals['speaker_ids'], ['id'])])
         return res
@@ -79,15 +83,15 @@ class event_track(models.Model):
     @api.multi
     @api.depends('name')
     def _website_url(self, field_name, arg):
-        res = super(event_track, self)._website_url(field_name, arg)
+        res = super(Track, self)._website_url(field_name, arg)
         res.update({(track.id, '/event/%s/track/%s' % (slug(track.event_id), slug(track))) for track in self})
         return res
 
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         """ Override read_group to always display all states. """
         if groupby and groupby[0] == "state":
             # Default result structure
-            # states = self._get_state_list(cr, uid, context=context)
             states = [('draft', 'Proposal'), ('confirmed', 'Confirmed'), ('announced', 'Announced'), ('published', 'Published'), ('cancel', 'Cancelled')]
             read_group_all_states = [{
                 '__context': {'group_by': groupby[1:]},
@@ -96,7 +100,7 @@ class event_track(models.Model):
                 'state_count': 0,
             } for state_value, state_name in states]
             # Get standard results
-            read_group_res = super(event_track, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+            read_group_res = super(Track, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby)
             # Update standard results with default results
             result = []
             for state_value, state_name in states:
@@ -109,13 +113,14 @@ class event_track(models.Model):
                 result.append(res[0])
             return result
         else:
-            return super(event_track, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+            return super(Track, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby)
 
-    def open_track_speakers_list(self, cr, uid, track_id, context=None):
-        track_id = self.browse(cr, uid, track_id, context=context)
+    @api.multi
+    def open_track_speakers_list(self):
+        self.ensure_one()
         return {
             'name': _('Speakers'),
-            'domain': [('id', 'in', [partner.id for partner in track_id.speaker_ids])],
+            'domain': [('id', 'in', [partner.id for partner in self.speaker_ids])],
             'view_type': 'form',
             'view_mode': 'kanban,form',
             'res_model': 'res.partner',
@@ -124,7 +129,8 @@ class event_track(models.Model):
         }
 
 
-class event_sponsors_type(models.Model):
+class SponsorType(models.Model):
+
     _name = "event.sponsor.type"
     _order = "sequence"
 
@@ -132,7 +138,8 @@ class event_sponsors_type(models.Model):
     sequence = fields.Integer('Sequence')
 
 
-class event_sponsors(models.Model):
+class Sponsor(models.Model):
+
     _name = "event.sponsor"
     _order = "sequence"
 

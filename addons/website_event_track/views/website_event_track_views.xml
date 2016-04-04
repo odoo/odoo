@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
-    <data>
+<odoo>
 
         <!-- Event Tracks -->
         <record model="ir.ui.view" id="view_event_track_kanban">
@@ -172,11 +171,12 @@
             <field name="res_model">event.track</field>
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
             <field name="help" type="html">
-<p class="oe_view_nocontent_create">
-Click to add a track.
-</p><p>
-    Tracks define the agenda of your event. These can bea talk, a round table, a meeting, etc.
-</p></field>
+                <p class="oe_view_nocontent_create">
+                Click to add a track.
+                </p><p>
+                    Tracks define the agenda of your event. These can bea talk, a round table, a meeting, etc.
+                </p>
+            </field>
         </record>
 
         <record model="ir.actions.act_window" id="action_event_track_from_event">
@@ -186,14 +186,20 @@ Click to add a track.
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
             <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'group_by': 'state'}</field>
             <field name="help" type="html">
-<p class="oe_view_nocontent_create">
-Click to add a track.
-</p><p>
-Tracks define the agenda of your event. These can be a talk, a round table, a meeting, etc.
-</p></field>
+                <p class="oe_view_nocontent_create">
+                Click to add a track.
+                </p><p>
+                Tracks define the agenda of your event. These can be a talk, a round table, a meeting, etc.
+                </p>
+            </field>
         </record>
 
-        <menuitem name="Event Tracks" id="menu_event_track" action="action_event_track" parent="event.event_main_menu" groups="base.group_no_one"/>
+        <menuitem
+            id="menu_event_track"
+            name="Event Tracks"
+            action="action_event_track"
+            parent="event.event_main_menu"
+            groups="base.group_no_one"/>
 
         <!-- EVENTS/CONFIGURATION/EVENT locations -->
         <record model="ir.ui.view" id="view_event_location_form">
@@ -209,6 +215,7 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
                 </form>
             </field>
         </record>
+
         <record model="ir.ui.view" id="view_event_location_tree">
             <field name="name">Event Location</field>
             <field name="model">event.track.location</field>
@@ -218,12 +225,17 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
                 </tree>
             </field>
         </record>
+
         <record model="ir.actions.act_window" id="action_event_track_location">
             <field name="name">Event Locations</field>
             <field name="res_model">event.track.location</field>
         </record>
-        <menuitem name="Locations" id="menu_event_track_location"
-            action="action_event_track_location" parent="event.menu_event_configuration"/>
+
+        <menuitem
+            id="menu_event_track_location"
+            name="Locations"
+            action="action_event_track_location"
+            parent="event.menu_event_configuration"/>
 
         <!-- EVENTS/CONFIGURATION/EVENT Sponsor Types -->
         <record model="ir.ui.view" id="view_event_sponsor_type_form">
@@ -240,6 +252,7 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
                 </form>
             </field>
         </record>
+
         <record model="ir.ui.view" id="view_event_sponsor_type_tree">
             <field name="name">Sponsor Types</field>
             <field name="model">event.sponsor.type</field>
@@ -250,11 +263,15 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
                 </tree>
             </field>
         </record>
+
         <record model="ir.actions.act_window" id="action_event_sponsor_type">
             <field name="name">Sponsor Types</field>
             <field name="res_model">event.sponsor.type</field>
         </record>
-        <menuitem id="menu_event_sponsor_type" action="action_event_sponsor_type"
+
+        <menuitem
+            id="menu_event_sponsor_type"
+            action="action_event_sponsor_type"
             parent="event.menu_event_configuration"/>
 
         <!-- EVENT.SPONSOR VIEWS -->
@@ -302,6 +319,7 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
                 </form>
             </field>
         </record>
+
         <record model="ir.ui.view" id="view_event_track_tag_tree">
             <field name="name">Tracks Tag</field>
             <field name="model">event.track.tag</field>
@@ -311,12 +329,15 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
                 </tree>
             </field>
         </record>
+
         <record model="ir.actions.act_window" id="action_event_track_tag">
             <field name="name">Track Tags</field>
             <field name="res_model">event.track.tag</field>
         </record>
-        <menuitem id="menu_event_track_tag" action="action_event_track_tag"
+
+        <menuitem
+            id="menu_event_track_tag"
+            action="action_event_track_tag"
             parent="event.menu_event_configuration"/>
 
-    </data>
-</openerp>
+</odoo>
