@@ -380,6 +380,156 @@
             <field name="bom_id" ref="mrp_bom_desk"/>
         </record>
 
+        <!-- Manufacturing Order Demo With Lots-->
+
+        <record id="product_product_laptop_charger" model="product.product">
+            <field name="name">Laptop Charger</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="tracking">lot</field>
+            <field name="standard_price">2000.0</field>
+            <field name="list_price">2250.0</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description">19v,5.5 x 2.5 mm Pin Type Adapter (Power Cord Included)</field>
+            <field name="default_code">E-COM13</field>
+        </record>
+
+        <record id="product_product_laptop_keypad" model="product.product">
+            <field name="name">Laptop Keypad</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="tracking">lot</field>
+            <field name="standard_price">800</field>
+            <field name="list_price">850</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description">New Original Laptop Keyboard Part No 9GT99</field>
+            <field name="default_code">E-COM14</field>
+        </record>
+
+        <record id="product.product_product_27" model="product.product">
+            <field name="tracking">lot</field>
+        </record>
+
+        <record id="lot_product_27_0" model="stock.production.lot">
+            <field name="name">0000000000030</field>
+            <field name="product_id" ref="product.product_product_27"/>
+        </record>
+        <record id="lot_product_27_1" model="stock.production.lot">
+            <field name="name">0000000000031</field>
+            <field name="product_id" ref="product.product_product_27"/>
+        </record>
+        <record id="lot_product_laptop_charger" model="stock.production.lot">
+            <field name="name">0000000000032</field>
+            <field name="product_id" ref="product_product_laptop_charger"/>
+        </record>
+        <record id="lot_product_laptop_keypad" model="stock.production.lot">
+            <field name="name">0000000000033</field>
+            <field name="product_id" ref="product_product_laptop_keypad"/>
+        </record>
+
+        <record id="stock_inventory_product_27" model="stock.inventory">
+            <field name="name">Inventory for laptop customized</field>
+            <field name="filter">product</field>
+            <field name="product_id" ref="product.product_product_27"/>
+        </record>
+
+        <record id="stock_inventory_product_27_lot0" model="stock.inventory.line">
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_product_27"/>
+            <field name="product_qty">50</field>
+            <field name="prod_lot_id" ref="lot_product_27_0"/>
+            <field name="location_id" ref="stock.stock_location_14"/>
+        </record>
+
+        <record id="stock_inventory_product_27_lot1" model="stock.inventory.line">
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_product_27"/>
+            <field name="product_qty">40</field>
+            <field name="prod_lot_id" ref="lot_product_27_1"/>
+            <field name="location_id" ref="stock.stock_location_14"/>
+        </record>
+
+        <record id="stock_inventory_product_laptop_charger" model="stock.inventory">
+            <field name="name">Inventory for laptop charger</field>
+            <field name="filter">product</field>
+            <field name="product_id" ref="product_product_laptop_charger"/>
+        </record>
+        <record id="stock_inventory_line_product_laptop_charger" model="stock.inventory.line">
+            <field name="product_id" ref="product_product_laptop_charger"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_product_laptop_charger"/>
+            <field name="product_qty">50</field>
+            <field name="prod_lot_id" ref="lot_product_laptop_charger"/>
+            <field name="location_id" ref="stock.stock_location_14"/>
+        </record>
+        <record id="stock_inventory_product_laptop_keypad" model="stock.inventory">
+            <field name="name">Inventory for laptop keypad</field>
+            <field name="filter">product</field>
+            <field name="product_id" ref="product_product_laptop_keypad"/>
+        </record>
+        <record id="stock_inventory_line_product_laptop_keypad" model="stock.inventory.line">
+            <field name="product_id" ref="product_product_laptop_keypad"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_product_laptop_keypad"/>
+            <field name="product_qty">50</field>
+            <field name="prod_lot_id" ref="lot_product_laptop_keypad"/>
+            <field name="location_id" ref="stock.stock_location_14"/>
+        </record>
+
+        <record id="mrp_bom_laptop_cust" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product.product_product_27_product_template"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">1</field>
+        </record>
+        <record id="mrp_bom_laptop_cust_line_1" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_laptop_charger"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="bom_id" ref="mrp_bom_laptop_cust"/>
+        </record>
+        <record id="mrp_bom_laptop_cust_line_2" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_laptop_keypad"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">2</field>
+            <field name="bom_id" ref="mrp_bom_laptop_cust"/>
+        </record>
+
+        <record id="mrp_bom_laptop_cust_rout" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product.product_product_27_product_template"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">2</field>
+            <field name="routing_id" ref="mrp_routing_1"/>
+        </record>
+        <record id="mrp_bom_laptop_cust_rout_line_1" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_laptop_charger"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="bom_id" ref="mrp_bom_laptop_cust_rout"/>
+        </record>
+        <record id="mrp_bom_laptop_cust_rout_line_2" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_laptop_keypad"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="sequence">2</field>
+            <field name="bom_id" ref="mrp_bom_laptop_cust_rout"/>
+        </record>
+
+        <record id="mrp_production_laptop_cust" model="mrp.production">
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="product_qty">5</field>
+            <field name="location_src_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_stock"/>
+            <field name="bom_id" ref="mrp_bom_laptop_cust"/>
+        </record>
+
         <!-- Run Scheduler -->
         <function model="procurement.order" name="run_scheduler"/>
     </data>

@@ -437,6 +437,9 @@ class MrpProduction(models.Model):
         if action_rec:
             action = action_rec.read([])[0]
             action['domain'] = [('id', 'in', scrap_moves.ids)]
+            action_context = eval(action['context'])
+            action_context['scrap_move'] = True
+            action['context'] = str(action_context)
             return action
 
 
@@ -968,7 +971,7 @@ class InventoryMessage(models.Model):
     picking_type_id = fields.Many2one('stock.picking.type', string="Alert on Operation", required=True)
     code = fields.Selection(related='picking_type_id.code', store=True)
     product_id = fields.Many2one('product.product', string="Product")
-    bom_id = fields.Many2one('mrp.bom', 'Bill of Material')
+    bom_id = fields.Many2one('mrp.bom', 'Bill of Material', domain="[('product_id', '=', product_id)]")
     workcenter_id = fields.Many2one('mrp.workcenter', string='Work Center')
     valid_until = fields.Date(default=_default_valid_until, required=True)
     routing_id = fields.Many2one('mrp.routing', string='Routing')

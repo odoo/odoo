@@ -50,7 +50,7 @@ Dashboard / Reports for MRP will include:
         'report/mrp_report_view.xml',
         'views/ir_attachment_view.xml',
     ],
-    'demo': ['data/mrp_demo.xml'],
+    'demo': ['data/mrp_demo.xml', 'data/mrp_lot_demo.yml'],
     'installable': True,
     'application': True,
     'auto_install': False,

@@ -19,11 +19,16 @@ class StockScrap(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done')], default="draft")
     move_id = fields.Many2one('stock.move', 'Stock Move', readonly=True)
     tracking = fields.Selection(related="product_id.tracking")
+    origin = fields.Char(string='Source Document')
+    date_expected = fields.Datetime(string='Expected Date', default=fields.Datetime.now)
 
     @api.model
     def create(self, vals):
         if vals.get('name', 'New') == 'New':
             vals['name'] = self.env['ir.sequence'].next_by_code('stock.scrap') or 'New'
+        if self.env.context.get('active_model') == 'stock.picking':
+            origin = self.env['stock.picking'].browse(self.env.context.get('active_id')).name
+            vals.update(origin=origin)
         scrap = super(StockScrap, self).create(vals)
         scrap.do_scrap()
         return scrap
@@ -39,8 +44,10 @@ class StockScrap(models.Model):
         StockMove = self.env['stock.move']
         if self.env.context.get('active_model') == 'stock.picking':
             picking_id = self.env.context.get('active_id')
+        picking = self.env['stock.picking'].browse(self.env.context.get('active_id'))
         default_val = {
             'name': self.name,
+            'origin': picking.name,
             'product_id': self.product_id.id,
             'product_uom': self.product_uom_id.id,
             'product_uom_qty': self.scrap_qty,

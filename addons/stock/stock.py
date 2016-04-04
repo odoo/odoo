@@ -875,6 +875,13 @@ class stock_picking(models.Model):
                 res[pick.id] = True
         return res
 
+    def _has_scrap_move(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        StockMove = self.pool['stock.move']
+        for pick in self.browse(cr, uid, ids, context=context):
+            res[pick.id] = any(StockMove.search(cr, uid, [('picking_id', '=', pick.id), ('scrapped', '=', True)], context=context))
+        return res
+
     def _get_quant_reserved_exist(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for pick in self.browse(cr, uid, ids, context=context):
@@ -1022,6 +1029,7 @@ class stock_picking(models.Model):
                   'stock.move': (_get_pickings, ['group_id', 'picking_id'], 10),
               }),
         'launch_pack_operations': fields.boolean("Launch Pack Operations", copy=False),
+        'has_scrap_move': fields.function(_has_scrap_move, type='boolean', string='Has Scrap Move'),
     }
 
     _defaults = {
@@ -1767,6 +1775,9 @@ class stock_picking(models.Model):
         if action_id:
             action = self.pool['ir.actions.act_window'].read(cr, uid, action_id, [], context=context)
             action['domain'] = [('id', 'in', scrap_moves)]
+            action_context = eval(action['context'])
+            action_context['scrap_move'] = True
+            action['context'] = str(action_context)
             return action
 
 

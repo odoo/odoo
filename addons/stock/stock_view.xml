@@ -909,7 +909,8 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" name="button_scrapped_moves" string="Scrapped Moves" type="object" icon="fa-arrows-v"/>
+                        <field name="has_scrap_move" invisible="True"/>
+                        <button class="oe_stat_button" name="button_scrapped_moves" string="Scrapped Moves" type="object" icon="fa-arrows-v" attrs="{'invisible': [('has_scrap_move', '=', False)]}"/>
                     </div>
                     <h1>
                         <field name="name" attrs="{'invisible': [('name','=','/')]}" readonly="1"/>
@@ -1386,7 +1387,7 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done')) and date > current_date" string="Moves" create="0">
-                    <field name="name" invisible="1"/>
+                    <field name="name"/>
                     <field name="picking_id" string="Reference"/>
                     <field name="origin"/>
                     <field name="picking_type_id" invisible="1"/>
@@ -1397,7 +1398,7 @@
                     <field name="location_id" groups="stock.group_stock_multi_locations"/>
                     <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                     <field name="date" groups="base.group_no_one"/>
-                    <field name="date_expected"/>
+                    <field name="date_expected" invisible="context.get('scrap_move')"/>
                     <field name="state"/>
                 </tree>
             </field>
