@@ -15,7 +15,7 @@ var SetBulletStatus = common.AbstractField.extend(common.ReinitializeFieldMixin,
         if (this.get("effective_readonly")) {
             var bullet_class = this.classes[this.get('value')] || 'default';
             if (this.get('value')){
-                title = this.get('value') == 'waiting'? _t('Waiting Raw Materials.') : _t('Ready to produce.'),
+                title = this.get('value') == 'waiting'? _t('Waiting Materials') : _t('Ready to produce'),
                 this.$el.attr({'title': title, 'style': 'display:inline'});
                 this.$el
                     .removeClass('text-success text-danger text-default')

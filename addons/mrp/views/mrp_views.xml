@@ -808,8 +808,6 @@
                     <button name="action_assign" attrs="{'invisible': [('availability', '=', 'assigned')]}" string="Check availability" type="object" class="oe_highlight"/>
                     <button name="button_plan" attrs="{'invisible': ['|', ('state', '!=', 'confirmed'), ('routing_id', '=', False)]}" type="object" string="Create Workorders" class="oe_highlight"/>
                     <button name="%(act_mrp_product_produce)d" attrs="{'invisible': ['|', ('state', 'not in', ('confirmed','progress')), ('routing_id', '!=', False)]}" string="Produce" type="action" class="oe_highlight"/>
-
-                    <button name="%(action_mrp_workorder_production_specific)d" type="action" attrs="{'invisible': ['|', ('nb_orders', '=', 0), ('state', '=', 'done')]}" string="Work Orders" class="oe_highlight"/>
                     <button name="%(act_mrp_product_produce)d" attrs="{'invisible': ['|', '|', ('nb_orders', '=', 0), ('state', '=', 'done'), ('routing_id', '!=', False)]}" string="Produce" type="action"/>
 
                     <button name="post_inventory" string="Post Inventory" type="object" class="oe_highlight" attrs="{'invisible': [('post_visible', '=', False)]}"/>
@@ -819,6 +817,7 @@
                 </header>
                 <sheet>
                     <field name="post_visible" invisible="1"/>
+                    <field name="has_scrap_move" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="%(action_mrp_workorder_production_specific)d" type="action" attrs="{'invisible': [('nb_orders', '=', 0)]}" class="oe_stat_button" icon="fa-play-circle-o">
                             <div class="o_form_field o_stat_info">
@@ -827,7 +826,7 @@
                             </div>
                         </button>
                         <button name="%(action_mrp_production_moves)d" type="action" string="Inventory Moves" class="oe_stat_button" icon="fa-arrows-v" attrs="{'invisible': [('state', 'not in', ('progress', 'done'))]}"/>
-                        <button class="oe_stat_button" name="button_scrapped_moves" string="Scrapped Moves" type="object" icon="fa-arrows-v"/>
+                        <button class="oe_stat_button" name="button_scrapped_moves" string="Scrapped Moves" type="object" icon="fa-arrows-v" attrs="{'invisible': [('has_scrap_move', '=', False)]}"/>
                         <field name="work_order_ids" invisible="1"/>
                     </div>
                     <div class="oe_title">
@@ -1285,7 +1284,6 @@
                 <button name="button_start" type="object" string="Continue Production" class="btn-warning" attrs="{'invisible': ['|', '|', ('blocked', '=', True), ('show_state', '=', True), ('state', 'in', ('done', 'pending', 'ready'))]}"></button>
                 <button name="button_start" type="object" string="Continue Production" attrs="{'invisible': ['|', ('blocked', '=', True), ('state', '!=', 'done')]}"/>
                 <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('confirmed', 'cancel'))]}"/>
-                <field name="availability" nolabel="1" widget="bullet_state" options="{'classes': {'assigned': 'success', 'waiting': 'danger'}}" attrs="{'invisible': [('state', '=', 'done')]}"/>
                 <field name="state" widget="statusbar" statusbar_visible="pending,ready,progress,done"/>
                 <field name="show_state" invisible="1"/>
                 <field name="blocked" invisible="1"/>
@@ -1300,11 +1298,12 @@
                             <field name="qty_produced"/> /
                             <field name="qty"/>
                             <field name="uom" widget="selection"/>
+                            <field name="availability" nolabel="1" widget="bullet_state" options="{'classes': {'assigned': 'success', 'waiting': 'danger'}}" attrs="{'invisible': [('state', '=', 'done')]}"/>
                         </div>
                         <field name="sequence" invisible="1"/>
                         <field name="is_produced" invisible="1"/>
                     </group>
-                    <div class="alert alert-warning alert-dismissible text-center" role="alert" attrs="{'invisible': [('inv_message', '=', False)]}">
+                    <div class="alert alert-danger alert-dismissible text-left" role="alert" attrs="{'invisible': [('inv_message', '=', False)]}">
                         <a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>
                         <field name="inv_message" style="height: 50px;"/>
                     </div>

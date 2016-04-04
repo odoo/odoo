@@ -311,13 +311,6 @@ class StockScrap(models.Model):
 
     production_id = fields.Many2one('mrp.production', 'Manufacturing Order', states={'done': [('readonly', True)]})
 
-    @api.model
-    def create(self, vals):
-        if self.env.context.get('active_model') == 'mrp.production':
-            origin = self.env['mrp.production'].browse(self.env.context.get('active_id')).name
-            vals.update(origin=origin)
-        return super(StockScrap, self).create(vals)
-
     @api.multi
     def do_scrap(self):
         self.ensure_one()
