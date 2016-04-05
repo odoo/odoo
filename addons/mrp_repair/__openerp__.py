@@ -8,11 +8,11 @@
     'sequence': 200,
     'category': 'Manufacturing',
     'summary': 'Repair broken or damaged products',
-    'description': """,
+    'description': """
 The aim is to have a complete module to manage all products repairs.
 ====================================================================
 
-The following topics should be covered by this module:
+The following topics are covered by this module:
 ------------------------------------------------------
     * Add/remove products in the reparation
     * Impact for stocks
