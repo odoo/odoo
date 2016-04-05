@@ -62,7 +62,10 @@ class StockMove(models.Model):
         compute='_qty_done_compute', inverse='_qty_done_set')
     move_lot_ids = fields.One2many('stock.move.lots', 'move_id', domain=[('done_wo', '=', True)], string='Lots')
     bom_line_id = fields.Many2one('mrp.bom.line', string="BoM Line")
+    unit_factor = fields.Float('Unit Factor')
+    bom_sequence = fields.Integer('BoM sequence')
     is_done = fields.Boolean('Done', compute='_compute_is_done', help='Technical Field to order moves', store=True)
+
 
     @api.multi
     @api.depends('state')
@@ -140,6 +143,8 @@ class StockMove(models.Model):
         moves_todo = self.env['stock.move']
         for move in self:
             if move.state in ('done', 'cancel'):
+                continue
+            if move.quantity_done <= 0:
                 continue
             moves_todo |= move
             if move.quantity_done > move.product_uom_qty:
@@ -230,7 +235,7 @@ class StockMove(models.Model):
         if bom_point and bom_point.bom_type == 'phantom':
             processed_ids = self - self
             factor = self.product_uom.sudo()._compute_qty(self.product_uom_qty, bom_point.product_uom_id.id) / bom_point.product_qty
-            bom_point.sudo().explode(self.product_id, factor, self._generate_move_phantom)
+            bom_point.sudo().explode(self.product_id, factor, method=self._generate_move_phantom)
             to_explode_again_ids = self.search([('split_from', '=', self.id)])
             if to_explode_again_ids:
                 for new_move in to_explode_again_ids:

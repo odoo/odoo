@@ -72,7 +72,9 @@ class MrpProductProduce(models.TransientModel):
         moves = self.production_id.move_raw_ids + self.production_id.move_finished_ids
         for move in moves.filtered(lambda x: x.product_id.tracking == 'none' and x.state not in ('done', 'cancel')):
             quantity = self.product_qty
-            if move.bom_line_id:
-                quantity = quantity / move.bom_line_id.bom_id.product_qty * move.bom_line_id.product_qty
-            move.quantity_done_store += quantity
+#             if move.bom_line_id:
+#                 
+#                 quantity = quantity / move.bom_line_id.bom_id.product_qty * move.bom_line_id.product_qty
+            if move.unit_factor:
+                move.quantity_done_store += quantity * move.unit_factor
         return {'type': 'ir.actions.act_window_close'}

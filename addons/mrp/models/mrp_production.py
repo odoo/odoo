@@ -328,17 +328,17 @@ class MrpProduction(models.Model):
         return True
 
     @api.multi
-    def _update_move(self, bom_line, quantity, result=None):
+    def _update_move(self, bom_line, quantity, **kw):
         self.ensure_one()
         move = self.move_raw_ids.filtered(lambda x:x.bom_line_id.id == bom_line.id and x.state not in ('done', 'cancel'))
         if move:
             move.write({'product_uom_qty': quantity})
             return move
         else:
-            self._generate_move(bom_line, quantity)
+            self._generate_move(bom_line, quantity, **kw)
 
     @api.multi
-    def _generate_move(self, bom_line, quantity, result=None):
+    def _generate_move(self, bom_line, quantity, **kw):
         self.ensure_one()
         if bom_line.product_id.type not in ['product', 'consu']:
             return False
@@ -346,6 +346,10 @@ class MrpProduction(models.Model):
             source_location = self.bom_id.routing_id.location_id
         else:
             source_location = self.location_src_id
+        if 'original_quantity' in kw:
+            original_quantity = kw['original_quantity']
+        else:
+            original_quantity = 1.0
         
         data = {
             'name': self.name,
@@ -365,6 +369,7 @@ class MrpProduction(models.Model):
             'warehouse_id': source_location.get_warehouse(),
             'group_id': self.procurement_group_id.id,
             'propagate': self.propagate,
+            'unit_factor': quantity / original_quantity,
         }
         return self.env['stock.move'].create(data)
 
@@ -391,7 +396,7 @@ class MrpProduction(models.Model):
         for production in self:
             production._make_production_produce_line()
             factor = self.env['product.uom']._compute_qty(production.product_uom_id.id, production.product_qty, production.bom_id.product_uom_id.id)
-            production.bom_id.explode(production.product_id, factor, self._generate_move)
+            production.bom_id.explode(production.product_id, factor, method=self._generate_move)
             #Check for all draft moves whether they are mto or not
             self._adjust_procure_method()
             self.move_raw_ids.action_confirm()
@@ -572,11 +577,9 @@ class MrpProductionWorkcenterLine(models.Model):
         # Update quantities done on each raw material line
         raw_moves = self.move_raw_ids.filtered(lambda x: (x.has_tracking == 'none') and (x.state not in ('done', 'cancel')) and x.bom_line_id)
         for move in raw_moves:
-            factor = 1.0
             #if it's a finished product, we use factor 1 as no bom_line
-            if move.bom_line_id:
-                factor = move.bom_line_id.bom_id.product_qty / move.bom_line_id.product_qty
-            move.quantity_done += self.qty_producing / factor
+            if move.unit_factor:
+                move.quantity_done += self.qty_producing * move.unit_factor
 
         # Transfer quantities from temporary to final move lots or make them final
         for move_lot in self.active_move_lot_ids:
@@ -649,8 +652,6 @@ class MrpProductionWorkcenterLine(models.Model):
             if move.product_id.tracking == 'lot':
                 if existing_move_lots:
                     existing_move_lots[0].quantity = qty
-                #else:
-                #    self.active_move_lot_ids += self.env['stock.move.lots'].new({'workorder_id'})
             elif move.product_id.tracking == 'serial':
                 if existing_move_lots:
                     #Create extra pseudo record
@@ -666,6 +667,18 @@ class MrpProductionWorkcenterLine(models.Model):
                                                                                         'workorder_id': self.id,
                                                                                         'done_wo': False})
                             qty_todo -= 1
+                    elif qty < sum_quantities:
+                        qty_todo = sum_quantities - qty
+                        for movelot in existing_move_lots:
+                            if qty_todo <= 0:
+                                break
+                            if (movelot.quantity_done == 0) and (qty_todo - movelot.quantity > 0):
+                                qty_todo -= movelot.quantity
+                                self.active_move_lot_ids -= movelot
+                            else:
+                                movelot.quantity = movelot.quantity - qty_todo
+                                qty_todo = 0
+
 
     def _get_current_state(self):
         for order in self:
@@ -822,7 +835,7 @@ class MrpUnbuild(models.Model):
         for unbuild in self:
             bom = unbuild._get_bom()
             factor = unbuild.product_uom_id._compute_qty(unbuild.product_qty, bom.product_uom_id.id)
-            bom.explode(unbuild.product_id, factor / bom.product_qty, self._generate_move)
+            bom.explode(unbuild.product_id, factor / bom.product_qty, method=self._generate_move)
             unbuild.consume_line_id.action_confirm()
         return True
 
