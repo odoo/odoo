@@ -11,7 +11,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import AccessError
-from odoo.tools import config, human_size, ustr
+from odoo.tools import config, human_size, ustr, html_escape
 from odoo.tools.mimetypes import guess_mimetype
 
 _logger = logging.getLogger(__name__)
@@ -175,14 +175,26 @@ class IrAttachment(models.Model):
             :param values : dict of values to create or write an ir_attachment
             :return mime : string indicating the mimetype, or application/octet-stream by default
         """
-        mimetype = 'application/octet-stream'
-        if values.get('datas_fname'):
+        mimetype = None
+        if values.get('mimetype'):
+            mimetype = values['mimetype']
+        if not mimetype and values.get('datas_fname'):
             mimetype = mimetypes.guess_type(values['datas_fname'])[0]
-        if values.get('url'):
+        if not mimetype and values.get('url'):
             mimetype = mimetypes.guess_type(values['url'])[0]
         if values.get('datas') and (not mimetype or mimetype == 'application/octet-stream'):
             mimetype = guess_mimetype(values['datas'].decode('base64'))
-        return mimetype
+        return mimetype or 'application/octet-stream'
+
+    def _check_contents(self, values):
+        mimetype = values['mimetype'] = self._compute_mimetype(values)
+        needs_escape = 'htm' in mimetype or '/ht' in mimetype # hta, html, xhtml, etc.
+        if needs_escape and not self.env.user._is_admin():
+            if 'datas' in values:
+                values['datas'] = html_escape(values['datas'].decode('base64')).encode('base64')
+            else:
+                values['mimetype'] = 'text/plain'
+        return values
 
     @api.model
     def _index(self, bin_data, datas_fname, file_type):
@@ -345,6 +357,8 @@ class IrAttachment(models.Model):
         # remove computed field depending of datas
         for field in ('file_size', 'checksum'):
             vals.pop(field, False)
+        if 'mimetype' in vals or 'datas' in vals:
+            vals = self._check_contents(vals)
         return super(IrAttachment, self).write(vals)
 
     @api.multi
@@ -372,9 +386,7 @@ class IrAttachment(models.Model):
         # remove computed field depending of datas
         for field in ('file_size', 'checksum'):
             values.pop(field, False)
-        # if mimetype not given, compute it !
-        if 'mimetype' not in values:
-            values['mimetype'] = self._compute_mimetype(values)
+        values = self._check_contents(values)
         self.browse().check('write', values=values)
         return super(IrAttachment, self).create(values)
 

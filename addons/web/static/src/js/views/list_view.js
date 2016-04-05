@@ -1106,7 +1106,7 @@ ListView.List = Class.extend({
                     record.set(column.id, names[0]);
                 });
             }
-        } else if (column.type === 'many2many' || column.type === 'one2many') {
+        } else if (column.type === 'many2many') {
             value = record.get(column.id);
             // non-resolved (string) m2m values are arrays
             if (value instanceof Array && !_.isEmpty(value)

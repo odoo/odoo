@@ -32,30 +32,24 @@ class ProductPublicCategory(models.Model):
     # buttons have consistent styling.
     # In this case, the default image is set by the js code.
     image = fields.Binary(attachment=True, help="This field holds the image used as image for the category, limited to 1024x1024px.")
-    image_medium = fields.Binary(string='Medium-sized image',
-                                 compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
+    image_medium = fields.Binary(string='Medium-sized image', attachment=True,
                                  help="Medium-sized image of the category. It is automatically "
                                  "resized as a 128x128px image, with aspect ratio preserved. "
                                  "Use this field in form views or some kanban views.")
-    image_small = fields.Binary(string='Small-sized image',
-                                compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
+    image_small = fields.Binary(string='Small-sized image', attachment=True,
                                 help="Small-sized image of the category. It is automatically "
                                 "resized as a 64x64px image, with aspect ratio preserved. "
                                 "Use this field anywhere a small image is required.")
 
-    @api.depends('image')
-    def _compute_images(self):
-        for rec in self:
-            rec.image_medium = tools.image_resize_image_medium(rec.image)
-            rec.image_small = tools.image_resize_image_small(rec.image)
+    @api.model
+    def create(self, vals):
+        tools.image_resize_images(vals)
+        return super(product_public_category, self).create(vals)
 
-    def _inverse_image_medium(self):
-        for rec in self:
-            rec.image = tools.image_resize_image_big(rec.image_medium)
-
-    def _inverse_image_small(self):
-        for rec in self:
-            rec.image = tools.image_resize_image_big(rec.image_small)
+    @api.multi
+    def write(self, vals):
+        tools.image_resize_images(vals)
+        return super(product_public_category, self).write(vals)
 
     @api.constrains('parent_id')
     def check_parent_id(self):
