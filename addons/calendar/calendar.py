@@ -1381,6 +1381,30 @@ class calendar_event(osv.Model):
             ('user_id', '=', uid),
         ]
 
+    @api.multi
+    def _get_message_unread(self):
+        id_map = {x: calendar_id2real_id(x) for x in self.ids}
+        real = self.browse(set(id_map.values()))
+        super(calendar_event, real)._get_message_unread()
+        for event in self:
+            if event.id == id_map[event.id]:
+                continue
+            rec = self.browse(id_map[event.id])
+            event.message_unread_counter = rec.message_unread_counter
+            event.message_unread = rec.message_unread
+
+    @api.multi
+    def _get_message_needaction(self):
+        id_map = {x: calendar_id2real_id(x) for x in self.ids}
+        real = self.browse(set(id_map.values()))
+        super(calendar_event, real)._get_message_needaction()
+        for event in self:
+            if event.id == id_map[event.id]:
+                continue
+            rec = self.browse(id_map[event.id])
+            event.message_needaction_counter = rec.message_needaction_counter
+            event.message_needaction = rec.message_needaction
+
     @api.cr_uid_ids_context
     def message_post(self, cr, uid, thread_id, context=None, **kwargs):
         if isinstance(thread_id, basestring):
