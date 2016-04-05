@@ -11,7 +11,7 @@ from odoo.exceptions import ValidationError
 class Company(models.Model):
     _name = "res.company"
     _description = 'Companies'
-    _order = 'name'
+    _order = 'sequence, name'
 
     _header = """
 <header>
@@ -152,6 +152,7 @@ class Company(models.Model):
     vat = fields.Char(related='partner_id.vat', string="Tax ID")
     company_registry = fields.Char()
     rml_paper_format = fields.Selection([('a4', 'A4'), ('us_letter', 'US Letter')], string="Paper Format", required=True, default='a4', oldname='paper_format')
+    sequence = fields.Integer(help='Used to order Companies in the company switcher', default=10)
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')

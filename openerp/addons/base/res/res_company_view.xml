@@ -44,6 +44,7 @@
                                     <field name="company_registry"/>
                                     <field name="currency_id" options="{'no_create': True}" id="company_currency"/>
                                     <field name="parent_id"  groups="base.group_multi_company"/>
+                                    <field name="sequence" invisible="1"/>
                                 </group>
                             </group>
                         </page>
@@ -88,6 +89,7 @@
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Companies">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="partner_id"/>
                 </tree>
