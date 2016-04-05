@@ -30,10 +30,6 @@ If you need to manage your meetings, you should install the CRM module.
         'views/calendar.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
-    'test': [
-        'test/calendar_test.yml',
-        'test/test_calendar_recurrent_event_case2.yml'
-    ],
     'installable': True,
     'application': True,
     'auto_install': False,

@@ -563,7 +563,7 @@ class Field(object):
         # copy attributes from field to self (string, help, etc.)
         for attr, prop in self.related_attrs:
             if not getattr(self, attr):
-                setattr(self, attr, getattr(field, prop))
+                setattr(self, attr, getattr(field, prop, None))
 
         for attr, value in field._attrs.iteritems():
             if attr not in self._attrs:
