@@ -44,12 +44,12 @@ class ProductPublicCategory(models.Model):
     @api.model
     def create(self, vals):
         tools.image_resize_images(vals)
-        return super(product_public_category, self).create(vals)
+        return super(ProductPublicCategory, self).create(vals)
 
     @api.multi
     def write(self, vals):
         tools.image_resize_images(vals)
-        return super(product_public_category, self).write(vals)
+        return super(ProductPublicCategory, self).write(vals)
 
     @api.constrains('parent_id')
     def check_parent_id(self):
