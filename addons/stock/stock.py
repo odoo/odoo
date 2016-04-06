@@ -914,8 +914,35 @@ class stock_picking(models.Model):
                 location_dest_id = picking_type.default_location_dest_id.id
 
             res['value'] = {'location_id': location_id,
-                            'location_dest_id': location_dest_id,}
+                            'location_dest_id': location_dest_id}
+
+        if partner_id:
+            warning = {}
+            title = False
+            message = False
+            partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
+
+            # If partner has no warning, check its company
+            if partner.picking_warn == 'no-message' and partner.parent_id:
+                partner = partner.parent_id
+
+            if partner.picking_warn != 'no-message':
+                # Block if partner only has warning but parent company is blocked
+                if partner.picking_warn != 'block' and partner.parent_id and partner.parent_id.picking_warn == 'block':
+                    partner = partner.parent_id
+                title = _("Warning for %s") % partner.name
+                message = partner.picking_warn_msg
+                warning = {
+                    'title': title,
+                    'message': message
+                }
+                if partner.picking_warn == 'block':
+                    return {'value': {'partner_id': False}, 'warning': warning}
+                return {'warning': warning}
+
         return res
+
+
 
     def _default_location_destination(self):
         # retrieve picking type from context; if none this returns an empty recordset
