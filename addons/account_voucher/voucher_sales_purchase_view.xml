@@ -15,7 +15,7 @@
                     <group expand="0" string="Group By">
                         <filter string="Vendor" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Date" domain="[]" context="{'group_by':'date','visible':True}"/>
+                        <filter string="Bill Date" domain="[]" context="{'group_by':'date','visible':True}"/>
                         <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
@@ -36,7 +36,7 @@
                     <group expand="0" string="Group By">
                         <filter string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Account Date" domain="[]" context="{'group_by':'date','visible':True}"/>
+                        <filter string="Account Date" domain="[]" context="{'group_by':'account_date','visible':True}"/>
                         <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
@@ -102,8 +102,9 @@
                                 <field name="narration" placeholder="Internal Notes" nolabel="1"/>
 			                </group>
                         </page>
-                        <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}" groups="base.group_no_one">
+                        <page string="Journal Items">
                             <group>
+                                <field name="account_date"/>
                                 <field name="move_id" readonly="1"/>
                             </group>
                         </page>
@@ -219,8 +220,9 @@
                                 <field name="narration" placeholder="Internal Notes" nolabel="1"/>
                             </group>
                         </page>
-                        <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}" groups="base.group_no_one">
+                        <page string="Journal Items">
                             <group>
+                                <field name="account_date"/>
                                 <field name="move_id" readonly="1"/>
                             </group>
                         </page>

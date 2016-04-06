@@ -70,8 +70,10 @@ class AccountVoucher(models.Model):
 
     voucher_type = fields.Selection([('sale', 'Sale'), ('purchase', 'Purchase')], string='Type', readonly=True, states={'draft': [('readonly', False)]}, oldname="type")
     name = fields.Char('Payment Reference', readonly=True, states={'draft': [('readonly', False)]}, default='')
-    date = fields.Date(readonly=True, select=True, states={'draft': [('readonly', False)]},
-                           help="Effective date for accounting entries", copy=False, default=fields.Date.context_today)
+    date = fields.Date("Bill Date", readonly=True, select=True, states={'draft': [('readonly', False)]},
+                           copy=False, default=fields.Date.context_today)
+    account_date = fields.Date("Accounting Date", readonly=True, select=True, states={'draft': [('readonly', False)]},
+                               help="Effective date for accounting entries", copy=False, default=fields.Date.context_today)
     journal_id = fields.Many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=_default_journal)
     account_id = fields.Many2one('account.account', 'Account', required=True, readonly=True, states={'draft': [('readonly', False)]}, domain="[('deprecated', '=', False), ('internal_type','=', (pay_now == 'pay_now' and 'liquidity' or voucher_type == 'purchase' and 'payable' or 'receivable'))]")
     line_ids = fields.One2many('account.voucher.line', 'voucher_id', 'Voucher Lines',
@@ -104,6 +106,10 @@ class AccountVoucher(models.Model):
             ('pay_later', 'Pay Later'),
         ], 'Payment', select=True, readonly=True, states={'draft': [('readonly', False)]}, default='pay_later')
     date_due = fields.Date('Due Date', readonly=True, select=True, states={'draft': [('readonly', False)]})
+
+    @api.onchange('date')
+    def onchange_date(self):
+        self.account_date = self.date
 
     @api.onchange('partner_id', 'pay_now')
     def onchange_partner_id(self):
@@ -169,7 +175,7 @@ class AccountVoucher(models.Model):
                 'currency_id': company_currency != current_currency and current_currency or False,
                 'amount_currency': (sign * abs(self.amount)  # amount < 0 for refunds
                     if company_currency != current_currency else 0.0),
-                'date': self.date,
+                'date': self.account_date,
                 'date_maturity': self.date_due
             }
         return move_line
@@ -189,7 +195,7 @@ class AccountVoucher(models.Model):
             'name': name,
             'journal_id': self.journal_id.id,
             'narration': self.narration,
-            'date': self.date,
+            'date': self.account_date,
             'ref': self.reference,
         }
         return move
@@ -241,7 +247,7 @@ class AccountVoucher(models.Model):
                 'quantity': 1,
                 'credit': abs(amount) if self.voucher_type == 'sale' else 0.0,
                 'debit': abs(amount) if self.voucher_type == 'purchase' else 0.0,
-                'date': self.date,
+                'date': self.account_date,
                 'tax_ids': [(4,t.id) for t in line.tax_ids],
                 'amount_currency': line.price_subtotal if current_currency != company_currency else 0.0,
             }
@@ -263,7 +269,7 @@ class AccountVoucher(models.Model):
             # we select the context to use accordingly if it's a multicurrency case or not
             # But for the operations made by _convert_amount, we always need to give the date in the context
             ctx = local_context.copy()
-            ctx['date'] = voucher.date
+            ctx['date'] = voucher.account_date
             ctx['check_move_validity'] = False
             # Create the account move record.
             move = self.env['account.move'].create(voucher.account_move_get())
