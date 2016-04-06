@@ -57,15 +57,16 @@ class website_sale_options(WebsiteSale):
     def modal(self, product_id, **kw):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         pricelist = request.website.get_current_pricelist()
-        if not context.get('pricelist'):
-            context['pricelist'] = int(pricelist)
+        product_context = dict(context)
+        if not product_context.get('pricelist'):
+            product_context['pricelist'] = int(pricelist)
+        # fetch quantity from custom context
+        product_context.update(kw.get('kwargs', {}).get('context', {}))
 
-        website_context = kw.get('kwargs', {}).get('context', {})
-        context = dict(context or {}, **website_context)
         from_currency = pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id
         to_currency = pricelist.currency_id
         compute_currency = lambda price: pool['res.currency']._compute(cr, uid, from_currency, to_currency, price, context=context)
-        product = pool['product.product'].browse(cr, uid, int(product_id), context=context)
+        product = pool['product.product'].browse(cr, uid, int(product_id), context=product_context)
         request.website = request.website.with_context(context)
 
         return request.website._render("website_sale_options.modal", {
