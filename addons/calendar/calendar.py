@@ -884,6 +884,14 @@ class calendar_event(osv.Model):
                 duration = float(diff.days) * 24 + (float(diff.seconds) / 3600)
                 values['duration'] = round(duration, 2)
 
+    def _is_highlighted(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, False)
+        if context.get('active_model') == 'res.partner':
+            for event in self.browse(cr, uid, ids, context=context):
+                if event.partner_ids.filtered(lambda s: s.id == context.get('active_id')):
+                    res[event.id] = True
+        return res
+
     _columns = {
         'id': fields.integer('ID', readonly=True),
         'state': fields.selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', readonly=True, track_visibility='onchange'),
@@ -934,6 +942,7 @@ class calendar_event(osv.Model):
         'attendee_ids': fields.one2many('calendar.attendee', 'event_id', 'Attendees', ondelete='cascade'),
         'partner_ids': fields.many2many('res.partner', 'calendar_event_res_partner_rel', string='Attendees', states={'done': [('readonly', True)]}),
         'alarm_ids': fields.many2many('calendar.alarm', 'calendar_alarm_calendar_event_rel', string='Reminders', ondelete="restrict", copy=False),
+        'is_highlighted': fields.function(_is_highlighted, string='# Meetings Highlight', type='boolean'),
     }
 
     def _get_default_partners(self, cr, uid, ctx=None):
