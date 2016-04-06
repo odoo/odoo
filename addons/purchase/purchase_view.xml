@@ -536,6 +536,13 @@
                 <field name="uom_po_id" position="after">
                     <field name="purchase_method" widget="radio" groups="purchase.group_purchase_manager"/>
                 </field>
+                <group name="description" position="after">
+                    <group string="Warning when Purchasing this Product" colspan="2">
+                        <field name="purchase_line_warn" nolabel="1"/>
+                        <field name="purchase_line_warn_msg" colspan="3" nolabel="1"
+                                attrs="{'required':[('purchase_line_warn','!=','no-message')],'readonly':[('purchase_line_warn','=','no-message')]}"/>
+                    </group>
+                </group>
             </field>
         </record>
 
