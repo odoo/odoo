@@ -9,6 +9,7 @@ from openerp.tools.translate import _
 from openerp.tools.float_utils import float_is_zero, float_compare
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import UserError, AccessError
+from openerp.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 class PurchaseOrder(models.Model):
     _name = "purchase.order"
@@ -207,6 +208,35 @@ class PurchaseOrder(models.Model):
             self.fiscal_position_id = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id)
             self.payment_term_id = self.partner_id.property_supplier_payment_term_id.id
             self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.user.company_id.currency_id.id
+        return {}
+
+    @api.onchange('partner_id')
+    def onchange_partner_id_warning(self):
+        if not self.partner_id:
+            return
+        warning = {}
+        title = False
+        message = False
+
+        partner = self.partner_id
+
+        # If partner has no warning, check its company
+        if partner.purchase_warn == 'no-message' and partner.parent_id:
+            partner = partner.parent_id
+
+        if partner.purchase_warn != 'no-message':
+            # Block if partner only has warning but parent company is blocked
+            if partner.purchase_warn != 'block' and partner.parent_id and partner.parent_id.purchase_warn == 'block':
+                partner = partner.parent_id
+            title = _("Warning for %s") % partner.name
+            message = partner.purchase_warn_msg
+            warning = {
+                'title': title,
+                'message': message
+                }
+            if partner.purchase_warn == 'block':
+                self.update({'partner_id': False})
+            return {'warning': warning}
         return {}
 
     @api.onchange('picking_type_id')
@@ -500,7 +530,6 @@ class PurchaseOrderLine(models.Model):
         return bom_delivered
 
 
-
     name = fields.Text(string='Description', required=True)
     product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True)
     date_planned = fields.Datetime(string='Scheduled Date', required=True, select=True)
@@ -652,6 +681,26 @@ class PurchaseOrderLine(models.Model):
         self._onchange_quantity()
 
         return result
+
+    @api.onchange('product_id')
+    def onchange_product_id_warning(self):
+        if not self.product_id:
+            return
+        warning = {}
+        title = False
+        message = False
+
+        product_info = self.product_id
+
+        if product_info.purchase_line_warn != 'no-message':
+            title = _("Warning for %s") % product_info.name
+            message = product_info.purchase_line_warn_msg
+            warning['title'] = title
+            warning['message'] = message
+            if product_info.purchase_line_warn == 'block':
+                self.product_id = False
+            return {'warning': warning}
+        return {}
 
     @api.onchange('product_qty', 'product_uom')
     def _onchange_quantity(self):
@@ -976,6 +1025,8 @@ class ProductTemplate(models.Model):
         help="On ordered quantities: Invoice this product based on ordered quantities.\n"
         "On received quantities: Invoice this product based on received quantity.", default="receive")
     route_ids = fields.Many2many(default=lambda self: self._get_buy_route())
+    purchase_line_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order Line', help=WARNING_HELP, required=True, default="no-message")
+    purchase_line_warn_msg = fields.Text('Message for Purchase Order Line')
 
 
 class ProductProduct(models.Model):
