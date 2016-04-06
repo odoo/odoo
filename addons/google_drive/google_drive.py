@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
-from openerp import SUPERUSER_ID
+from openerp import api, SUPERUSER_ID
 from openerp.addons.google_account import TIMEOUT
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -76,6 +76,7 @@ class config(osv.Model):
         content = json.loads(content)
         return content.get('access_token')
 
+    @api.cr_uid_context
     def copy_doc(self, cr, uid, res_id, template_id, name_gdocs, res_model, context=None):
         ir_config = self.pool['ir.config_parameter']
         google_web_base_url = ir_config.get_param(cr, SUPERUSER_ID, 'web.base.url')
