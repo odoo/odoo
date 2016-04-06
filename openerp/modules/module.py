@@ -248,7 +248,29 @@ def load_information_from_description_file(module, mod_path=None):
 
             f = tools.file_open(terp_file)
             try:
-                info.update(eval(f.read()))
+                fileContent = f.read()
+                values = eval(fileContent)
+                if ('without_bt_swissdec' in tools.config.options and
+                    tools.config['without_bt_swissdec'] == True and
+                    'depends_without_bt_swissdec' in values):
+
+                    # set the depends
+                    values['depends'] = values.pop('depends_without_bt_swissdec', None)
+
+                    # set the data
+                    values['data'] = values.pop('data', []) + values.pop('data_without_bt_swissdec', [])
+                    values.pop('data_with_bt_swissdec', None) # just to clean the list
+
+                else:
+
+                    # just clean the list
+                    values.pop('depends_without_bt_swissdec', None)
+
+                    # set the data
+                    values['data'] = values.pop('data', []) + values.pop('data_with_bt_swissdec', [])
+                    values.pop('data_without_bt_swissdec', None) # just to clean the list
+
+                info.update(values)
             finally:
                 f.close()
 
