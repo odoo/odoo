@@ -198,6 +198,13 @@ class product_category(osv.osv):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
+    def _compute_product_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        prod_templates = self.pool['product.template'].read_group(cr, uid, [('categ_id', 'in', ids)], ['categ_id'], ['categ_id'], context=context)
+        for prod_template in prod_templates:
+            res[prod_template['categ_id'][0]] = prod_template['categ_id_count']
+        return res
+
     _name = "product.category"
     _description = "Product Category"
     _columns = {
@@ -205,10 +212,10 @@ class product_category(osv.osv):
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('product.category','Parent Category', select=True, ondelete='cascade'),
         'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
-        'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of product categories."),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type', help="A category of the view type is a virtual category that can be used as the parent of another category to create a hierarchical structure."),
         'parent_left': fields.integer('Left Parent', select=1),
         'parent_right': fields.integer('Right Parent', select=1),
+        'product_count': fields.function(_compute_product_count, type="integer", help="The number of products under this category (Does not consider the children categories)"),
     }
 
 
@@ -218,7 +225,7 @@ class product_category(osv.osv):
 
     _parent_name = "parent_id"
     _parent_store = True
-    _parent_order = 'sequence, name'
+    _parent_order = 'name'
     _order = 'parent_left'
 
     _constraints = [
