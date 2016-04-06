@@ -6,7 +6,7 @@
 Odoo Guidelines
 ===============
 
-This page introduce the new Odoo Coding Guidelines. These guidelines aim to improve the quality of the code (better readability of source, ...) and Odoo Apps. Indeed, proper code ought ease maintenance, aid debugging, lower complexity and promote reliability.
+This page introduces the new Odoo Coding Guidelines. Those aim to improve the quality of the code (e.g. better readability of source) and Odoo Apps. Indeed, proper code eases maintenance, aids debugging, lowers complexity and promotes reliability.
 
 These guidelines should be applied to every new module, and new developpment. These guidelines will be applied to old module **only** in case of code refactoring (migration to new API, big refactoring, ...).
 
@@ -15,7 +15,7 @@ Module structure
 
 Directories
 -----------
-A module is organised in some important directories. These directories aim to contain the business core of the module; having a look at them should make understand the purpose of the module.
+A module is organised in important directories. Those contain the business logic; having a look at them should make understand the purpose of the module.
 
 - *data/* : demo and data xml
 - *models/* : models definition
@@ -23,10 +23,9 @@ A module is organised in some important directories. These directories aim to co
 - *views/* : contains the views and templates
 - *static/* : contains the web assets, separated into *css/, js/, img/, lib/, ...*
 
-Other directories compose the module.
+Other optional directories compose the module.
 
-- *data/* : contains the data (in XML form)
-- *wizard/* : regroup the transient models (formerly *osv_memory*) and their views.
+- *wizard/* : regroups the transient models (formerly *osv_memory*) and their views.
 - *report/* : contains the reports (RML report **[deprecated]**, models based on SQL views (for reporting) and other complex reports). Python objects and XML views are included in this directory.
 - *tests/* : contains the Python/YML tests
 
@@ -54,17 +53,17 @@ For instance, *sale* module introduces ``sale_order`` and
 For *data*, split them by purpose : demo or data. The filename will be
 the main_model name, suffixed by *_demo.xml* or *_data.xml*.
 
-For *controllers*, the only file should be named *main.py*. Otherwise, if you need to inherit an existing controller from another module, its name will be *<module_name>.py*. Unlike *models*, each controller should be contained in a separated file.
+For *controllers*, the only file should be named *main.py*. Otherwise, if you need to inherit an existing controller from another module, its name will be *<module_name>.py*. Unlike *models*, each controller class should be contained in a separated file.
 
 For *static files*, since the resources can be used in different contexts (frontend, backend, both), they will be included in only one bundle. So, CSS/Less, JavaScript and XML files should be suffixed with the name of the bundle type. i.e.: *im_chat_common.css*, *im_chat_common.js* for 'assets_common' bundle, and *im_chat_backend.css*, *im_chat_backend.js* for 'assets_backend' bundle.
-For modules having only one file, the convention will be *<module_name>.ext* (i.e.: *project.js*).
-Don't link data (image, libraries) outside Odoo: don't use an
+If the module owns only one file, the convention will be *<module_name>.ext* (i.e.: *project.js*).
+Don't link data (image, libraries) outside Odoo: do not use an
 URL to an image but copy it in our codebase instead.
 
-For *data*, split them by purpose: data or demo. The filename will be
+Regarding *data*, split them by purpose: data or demo. The filename will be
 the *main_model* name, suffixed by *_data.xml* or *_demo.xml*.
 
-For *wizards*, the naming convention is :
+Regarding *wizards*, naming convention is :
 
 - :file:`{<main_transient>}.py`
 - :file:`{<main_transient>}_views.xml`
@@ -172,7 +171,7 @@ To declare a record in XML, the **record** notation (using *<record>*) is recomm
         </field>
     </record>
 
-Some syntax equivalences exists, and can be used:
+Odoo supports custom tags acting as syntax sugar:
 
 - menuitem: use it as a shortcut to declare a ``ir.ui.menu``
 - workflow: the <workflow> tag sends a signal to an existing workflow.
