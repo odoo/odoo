@@ -108,8 +108,7 @@ class crm_lead(osv.osv):
             partner = res_partner.browse(cr, uid, partner_id, context=context)
             if partner.user_id:
                 salesteam_id = partner.team_id and partner.team_id.id or False
-                for lead_id in ids:
-                    self.allocate_salesman(cr, uid, [lead_id], [partner.user_id.id], team_id=salesteam_id, context=context)
+                self.allocate_salesman(cr, uid, [lead.id], [partner.user_id.id], team_id=salesteam_id, context=context)
             self.write(cr, uid, [lead.id], {'date_assign': fields.date.context_today(self,cr,uid,context=context), 'partner_assigned_id': partner_id}, context=context)
         return res
 
