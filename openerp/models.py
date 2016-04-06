@@ -5966,9 +5966,24 @@ class BaseModel(object):
                     if field.type in ('one2many', 'many2many'):
                         if newval != oldval or newval._is_dirty():
                             # put new value in result
-                            result['value'][name] = field.convert_to_write(
+                            new_vals_seq = field.convert_to_write(
                                 newval, record._origin, subfields.get(name),
                             )
+                            if name in result['value']:
+                                # merge new_vals_seq with result['value'][name]
+                                for entry in result['value'][name]:
+                                    for new_entry in new_vals_seq:
+                                        if (
+                                                isinstance(new_entry, tuple) and
+                                                isinstance(entry, tuple) and
+                                                len(new_entry) == 3 and
+                                                len(entry) == 3 and
+                                                (new_entry[0], new_entry[1]) == (entry[0], entry[1]) and
+                                                isinstance(new_entry[2], dict) and
+                                                isinstance(entry[2], dict)):
+                                            entry[2].update(new_entry[2])
+                            else:
+                                result['value'][name] = new_vals_seq
                             todo.append(name)
                         else:
                             # keep result: newval may have been dirty before
