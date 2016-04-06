@@ -451,7 +451,7 @@
                         <page string="Internal Notes">
                             <field name="description"/>
                         </page>
-                        <page name="lead" string="Contact Information">
+                        <page name="lead" string="Contact Details" groups="crm.group_use_lead">
                             <group>
                                 <group>
                                     <field name="partner_name"/>
@@ -475,12 +475,16 @@
                                     <field name="function"/>
                                     <field name="mobile"/>
                                     <field name="fax"/>
-                                    <field name="opt_out"/>
                                 </group>
+                            </group>
+                        </page>
+                        <page name="extra" string="Extra Info">
+                            <group>
                                 <group string="Marketing">
                                     <field name="campaign_id" />
                                     <field name="medium_id" />
                                     <field name="source_id" />
+                                    <field name="opt_out"/>
                                 </group>
                                 <group string="Misc" name="Misc">
                                     <field name="day_open" groups="base.group_no_one"/>

@@ -6,7 +6,7 @@
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="arch" type="xml">
-                <xpath expr="//notebook/page[@name='lead']" position="after">
+                <xpath expr="//notebook/page[@name='extra']" position="after">
                     <page string="Assigned Partner" groups="base.group_sale_salesman">
                         <group col="3">
                             <label for="partner_latitude" string="Geolocation"/>
