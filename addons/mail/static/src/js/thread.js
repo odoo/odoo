@@ -118,7 +118,8 @@ var Thread = Widget.extend({
             var $content = $(this);
             var $read_more = $('<a class="o_mail_read_more" href="#"></a>').text(read_more);
             var is_read_more = true;
-            $read_more.click(function() {
+            $read_more.click(function(e) {
+                e.preventDefault();
                 is_read_more = !is_read_more;
                 $content.toggle(!is_read_more);
                 $read_more.text(is_read_more ? read_more : read_less);
