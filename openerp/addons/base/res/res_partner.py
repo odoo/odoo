@@ -15,6 +15,16 @@ from odoo.modules import get_module_resource
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
 
+# Global variables used for the warning fields declared on the res.partner
+# in the following modules : sale, purchase, account, stock 
+WARNING_MESSAGE = [
+                   ('no-message','No Message'),
+                   ('warning','Warning'),
+                   ('block','Blocking Message')
+                   ]
+WARNING_HELP = _('Selecting the "Warning" option will notify user with the message, Selecting "Blocking Message" will throw an exception with the message and block the flow. The Message has to be written in the next field.')
+
+
 ADDRESS_FORMAT_CLASSES = {
     '%(city)s %(state_code)s\n%(zip)s': 'o_city_state',
     '%(zip)s %(city)s': 'o_zip_city'
@@ -111,7 +121,6 @@ class PartnerTitle(models.Model):
 
     name = fields.Char(string='Title', required=True, translate=True)
     shortcut = fields.Char(string='Abbreviation', translate=True)
-
 
 class Partner(models.Model, FormatAddress):
     _description = 'Partner'
