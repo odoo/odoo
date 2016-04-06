@@ -6,7 +6,7 @@ import time
 from openerp import api, fields, models, _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.exceptions import ValidationError
-
+from openerp.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 class AccountFiscalPosition(models.Model):
     _name = 'account.fiscal.position'
@@ -445,6 +445,8 @@ class ResPartner(models.Model):
     contract_ids = fields.One2many('account.analytic.account', 'partner_id', string='Contracts', readonly=True)
     bank_account_count = fields.Integer(compute='_compute_bank_count', string="Bank")
     trust = fields.Selection([('good', 'Good Debtor'), ('normal', 'Normal Debtor'), ('bad', 'Bad Debtor')], string='Degree of trust you have in this debtor', default='normal', company_dependent=True)
+    invoice_warn = fields.Selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP, required=True, default="no-message")
+    invoice_warn_msg = fields.Text('Message for Invoice')
 
     @api.multi
     def _compute_bank_count(self):

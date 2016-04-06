@@ -464,12 +464,29 @@ class AccountInvoice(models.Model):
                 payment_term_id = p.property_supplier_payment_term_id.id
             fiscal_position = p.property_account_position_id.id
             bank_id = p.bank_ids and p.bank_ids.ids[0] or False
+
+            # If partner has no warning, check its company
+            if p.invoice_warn == 'no-message' and p.parent_id:
+                p = p.parent_id
+            if p.invoice_warn != 'no-message':
+                # Block if partner only has warning but parent company is blocked
+                if p.invoice_warn != 'block' and p.parent_id and p.parent_id.invoice_warn == 'block':
+                    p = p.parent_id
+                warning = {
+                    'title': _("Warning for %s") % p.name,
+                    'message': p.invoice_warn_msg
+                    }
+                if p.invoice_warn == 'block':
+                    self.partner_id = False
+                return {'warning': warning}
+
         self.account_id = account_id
         self.payment_term_id = payment_term_id
         self.fiscal_position_id = fiscal_position
 
         if type in ('in_invoice', 'in_refund'):
             self.partner_bank_id = bank_id
+
 
     @api.onchange('journal_id')
     def _onchange_journal_id(self):
