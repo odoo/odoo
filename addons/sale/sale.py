@@ -8,7 +8,7 @@ from openerp import api, fields, models, _
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import UserError
 from openerp.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT
-
+from openerp.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 class res_company(models.Model):
     _inherit = "res.company"
@@ -212,6 +212,36 @@ class SaleOrder(models.Model):
             values['team_id'] = self.partner_id.team_id.id
         self.update(values)
 
+    @api.onchange('partner_id')
+    def onchange_partner_id_warning(self):
+        if not self.partner_id:
+            return
+        warning = {}
+        title = False
+        message = False
+        partner = self.partner_id
+
+        # If partner has no warning, check its company
+        if partner.sale_warn == 'no-message' and partner.parent_id:
+            partner = partner.parent_id
+
+        if partner.sale_warn != 'no-message':
+            # Block if partner only has warning but parent company is blocked
+            if partner.sale_warn != 'block' and partner.parent_id and partner.parent_id.sale_warn == 'block':
+                partner = partner.parent_id
+            title =  _("Warning for %s") % partner.name
+            message = partner.sale_warn_msg
+            warning = {
+                    'title': title,
+                    'message': message,
+            }
+            if partner.sale_warn == 'block':
+                self.update({'partner_id': False, 'partner_invoice_id': False, 'partner_shipping_id': False, 'pricelist_id': False})
+                return {'warning': warning}
+
+        if warning:
+            return {'warning': warning}
+
     @api.model
     def create(self, vals):
         if vals.get('name', 'New') == 'New':
@@ -226,6 +256,7 @@ class SaleOrder(models.Model):
             vals['pricelist_id'] = vals.setdefault('pricelist_id', partner.property_product_pricelist and partner.property_product_pricelist.id)
         result = super(SaleOrder, self).create(vals)
         return result
+
 
     @api.multi
     def _prepare_invoice(self):
@@ -784,6 +815,18 @@ class SaleOrderLine(models.Model):
         if self.order_id.pricelist_id and self.order_id.partner_id:
             vals['price_unit'] = self.env['account.tax']._fix_tax_included_price(product.price, product.taxes_id, self.tax_id)
         self.update(vals)
+
+        title = False
+        message = False
+        warning = {}
+        if product.sale_line_warn != 'no-message':
+            title = _("Warning for %s") % product.name
+            message = product.sale_line_warn_msg
+            warning['title'] = title
+            warning['message'] = message
+            if product.sale_line_warn == 'block':
+                self.product_id = False
+            return {'warning': warning}
         return {'domain': domain}
 
     @api.onchange('product_uom', 'product_uom_qty')
@@ -913,6 +956,8 @@ class ProductTemplate(models.Model):
              "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
              "Create a task and track hours: Create a task on the sale order validation and track the work hours.",
         default='manual')
+    sale_line_warn = fields.Selection(WARNING_MESSAGE, 'Sales Order Line', help=WARNING_HELP, required=True, default="no-message")
+    sale_line_warn_msg = fields.Text('Message for Sales Order Line')
 
     @api.multi
     @api.depends('product_variant_ids.sales_count')
