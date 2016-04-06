@@ -83,16 +83,18 @@ var Editor = Widget.extend({
         return (this.is_editing() && !this.record.id);
     },
     edit: function (record, configureField) {
+        var self = this;
         // TODO: specify sequence of edit calls
         var loaded;
         if(record) {
             this.form.trigger('load_record', _.extend({}, record));
             loaded = this.form.record_loaded;
         } else {
-            loaded = this.form.load_defaults();
+            loaded = this.form.load_defaults().then(function() {
+                return self.form.record_loaded;
+            });
         }
 
-        var self = this;
         return loaded.then(function () {
             return self.do_show({reload: false});
         }).then(function () {
