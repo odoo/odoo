@@ -146,6 +146,7 @@ class BlogPost(osv.Model):
             'res.users', 'Last Contributor',
             select=True, readonly=True,
         ),
+        'published_date': fields.datetime('Published Date'),
         'author_avatar': fields.related(
             'author_id', 'image_small',
             string="Avatar", type="binary"),
@@ -254,6 +255,8 @@ class BlogPost(osv.Model):
             ids = [ids]
         if 'content' in vals:
             vals['content'] = self._postproces_content(cr, uid, ids[0], vals['content'], context=context)
+        if 'website_published' in vals:
+            vals['published_date'] = fields.datetime.now() if vals['website_published'] else False
         result = super(BlogPost, self).write(cr, uid, ids, vals, context)
         self._check_for_publication(cr, uid, ids, vals, context=context)
         return result
