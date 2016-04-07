@@ -1324,4 +1324,21 @@ class Pickle(object):
 
 pickle = Pickle
 
+class Pickle(object):
+    @classmethod
+    def load(cls, stream):
+        unpickler = cPickle.Unpickler(stream)
+        # pickle builtins: str/unicode, int/long, float, bool, tuple, list, dict, None
+        unpickler.find_global = None
+        return unpickler.load()
+
+    @classmethod
+    def loads(cls, text):
+        return cls.load(StringIO(text))
+
+    dumps = cPickle.dumps
+    dump = cPickle.dump
+
+pickle = Pickle
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
