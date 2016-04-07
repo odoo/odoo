@@ -18,6 +18,7 @@
             <field name="blog_id" ref="blog_blog_1"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
             <field name="website_published" eval="True"/>
+            <field name="published_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="website_meta_keywords">Odoo, email</field>
             <field name="website_meta_description">The Future of Emails</field>
             <field name="cover_properties">{"background-image": "url(/website_blog/static/src/img/library/flower_texture.jpg)", "background-color": "oe_yellow" ,"opacity": "1.0", "resize_class": "cover container cover_narrow"}</field>
@@ -122,6 +123,7 @@
             <field name="subtitle">Building your company's website and selling your products online easy.</field>
             <field name="blog_id" ref="blog_blog_1"/>
             <field name="website_published" eval="True"/>
+            <field name="published_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1'), ref('blog_tag_2')])]"/>
             <field name="cover_properties">{"background-image": "url(/website/static/src/img/library/ship_sea.jpg)", "background-color": "oe_green" ,"opacity": "0.8", "resize_class": "cover cover_full"}</field>
             <field name="content">
