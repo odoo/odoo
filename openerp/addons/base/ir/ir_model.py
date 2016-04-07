@@ -573,7 +573,7 @@ class IrModelConstraint(models.Model):
                 continue
             model = self.env[data.model.model]
             name = tools.ustr(data.name)
-            if not model_obj:
+            if not model:
                 continue
             typ = data.type
 
