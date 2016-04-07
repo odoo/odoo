@@ -91,18 +91,18 @@ def _migrate_full_reconcile(cr, registry):
                 registry['account.full.reconcile'].create(cr, SUPERUSER_ID, {
                     'partial_reconcile_ids': [(6, 0, partial_rec_ids)],
                     }, context={'check_move_validity': False})
-        #copy values on account.move.line: rely on partial reconciliations only, as the reconcile_id column may not be
-        #up-to-date, as unreconciliations/new reconciliations may have been done after migration
-        cr.execute("""
-            WITH tmp_table AS (
-                SELECT debit_move_id AS aml_id, full_reconcile_id
-                FROM account_partial_reconcile rec
-                WHERE rec.full_reconcile_id IS NOT NULL
-                UNION ALL
-                SELECT credit_move_id AS aml_id, full_reconcile_id
-                FROM account_partial_reconcile rec
-                WHERE rec.full_reconcile_id IS NOT NULL)
-            UPDATE account_move_line aml
-            SET full_reconcile_id = tmp.full_reconcile_id FROM tmp_table tmp WHERE aml.id = tmp.aml_id
-            """)
+    #copy values on account.move.line: rely on partial reconciliations only, as the reconcile_id column may not be
+    #up-to-date, as unreconciliations/new reconciliations may have been done after migration
+    cr.execute("""
+        WITH tmp_table AS (
+            SELECT debit_move_id AS aml_id, full_reconcile_id
+            FROM account_partial_reconcile rec
+            WHERE rec.full_reconcile_id IS NOT NULL
+            UNION ALL
+            SELECT credit_move_id AS aml_id, full_reconcile_id
+            FROM account_partial_reconcile rec
+            WHERE rec.full_reconcile_id IS NOT NULL)
+        UPDATE account_move_line aml
+        SET full_reconcile_id = tmp.full_reconcile_id FROM tmp_table tmp WHERE aml.id = tmp.aml_id
+        """)
     return
