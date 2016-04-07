@@ -97,6 +97,11 @@ class stock_config_settings(osv.osv_memory):
             ], "Packages",
             implied_group='stock.group_tracking_lot',
             help="""This allows to manipulate packages.  You can put something in, take something from a package, but also move entire packages and put them even in another package.  """),
+        'group_warning': fields.selection([
+            (0, 'All the partners can be used in pickings'),
+            (1, 'An informative or blocking warning can be set on a partner')
+            ], "Warning", implied_group='stock.group_warning'),
+
         'group_stock_tracking_owner': fields.selection([
             (0, 'All products in your warehouse belong to your company'),
             (1, 'Manage consignee stocks (advanced)')

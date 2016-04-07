@@ -85,6 +85,10 @@ class AccountConfigSettings(models.TransientModel):
     group_analytic_accounting = fields.Boolean(string='Analytic accounting',
         implied_group='analytic.group_analytic_accounting',
         help="Allows you to use the analytic accounting.")
+    group_warning = fields.Selection([
+            (0, 'All the partners can be used in invoices'),
+            (1, 'An informative or blocking warning can be set on a partner')
+            ], "Warning", implied_group='account.group_warning')
     currency_exchange_journal_id = fields.Many2one('account.journal',
         related='company_id.currency_exchange_journal_id',
         string="Rate Difference Journal",)

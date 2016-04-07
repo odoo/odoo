@@ -49,6 +49,10 @@ class sale_configuration(osv.TransientModel):
             (0, 'Do not personalize sale orders and invoice reports'),
             (1, 'Personalize the sale orders and invoice report with categories, subtotals and page-breaks')
             ], "Sale Reports Layout", implied_group='sale.group_sale_layout'),
+        'group_warning': fields.selection([
+            (0, 'All the products and the customers can be used in sale orders'),
+            (1, 'An informative or blocking warning can be set on a product or a customer')
+            ], "Warning", implied_group='sale.group_warning'),
         'module_website_quote': fields.selection([
             (0, 'Print quotes or send by email'),
             (1, 'Send online quotations based on templates (advanced)')
