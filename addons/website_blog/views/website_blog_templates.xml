@@ -148,7 +148,8 @@
                                 "widget": "contact",
                                 "fields": ["name"]
                             }'/>
-                            &#5760; <span t-field="blog_post.create_date" t-field-options='{"format": "MMMM yyyy"}'/>
+                            &#5760; <t t-if="blog_post.published_date"><span t-field="blog_post.published_date" t-field-options='{"format": "MMMM yyyy"}'/></t>
+                            <t t-if="not blog_post.published_date"><span t-field="blog_post.create_date" t-field-options='{"format": "MMMM yyyy"}'/></t>
                             <span t-if="len(blog_post.message_ids) &gt; 0">
                                 &#5760; <t t-esc="len(blog_post.message_ids)"/>
                                 <t t-if="len(blog_post.message_ids) &lt;= 1" >comment</t>
@@ -430,6 +431,28 @@
                 <a t-att-href="website.social_github" t-if="website.social_github"><i class="fa fa-github"/></a>
                 <a t-att-href="'/blog/%s/feed' % (blog.id)"><i class="fa fa-rss-square"/></a>
             </h2>
+        </section>
+    </xpath>
+</template>
+
+<!-- Option:Right Column: status -->
+<template id="opt_blog_rc_status" name="Status" priority="5"
+        inherit_id="website_blog.index_right" active="True" customize_show="True">
+    <xpath expr="//div[@id='main_column']" position="attributes">
+        <attribute name="class">col-sm-8</attribute>
+    </xpath>
+    <xpath expr="//div[@id='blog_right_column']" position="inside">
+        <section class="mt32 mb32" groups="base.group_website_designer">
+        <h4>Status</h4>
+        <ul class="nav nav-pills nav-stacked">
+            <t t-set="state" t-value="state_info['state']"/>
+            <li t-attf-class="#{state == 'published' and 'active' or ''}">
+                <a t-attf-href="#{state == 'published' and blog_url(state='') or blog_url(state='published')}">Published <span class="pull-right badge" t-esc="state_info['published']" /></a>
+            </li>
+            <li t-attf-class="#{state == 'unpublished' and 'active' or ''}">
+                <a t-attf-href="#{state == 'unpublished' and blog_url(state='') or blog_url(state='unpublished')}">Not Published <span class="pull-right badge" t-esc="state_info['unpublished']" /></a>
+            </li>
+        </ul>
         </section>
     </xpath>
 </template>
