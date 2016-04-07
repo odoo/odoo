@@ -689,6 +689,7 @@ class BaseModel(object):
             attrs = {
                 'manual': True,
                 'string': field['field_description'],
+                'help': field['help'],
                 'index': bool(field['index']),
                 'copy': bool(field['copy']),
                 'related': field['related'],

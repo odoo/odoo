@@ -40,7 +40,9 @@ class sale_quote(http.Controller):
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
         user = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, request.uid, context=request.context)
-        tx_id = request.registry['payment.transaction'].search(request.cr, SUPERUSER_ID, [('reference', '=', order.name)], context=request.context)
+        tx_id = request.session.get('quote_%s_transaction_id' % order.id)
+        if not tx_id:
+            tx_id = request.registry['payment.transaction'].search(request.cr, SUPERUSER_ID, [('reference', '=', order.name)], context=request.context)
         tx = request.registry['payment.transaction'].browse(request.cr, SUPERUSER_ID, tx_id, context=request.context) if tx_id else False
         values = {
             'quotation': order,
@@ -65,7 +67,7 @@ class sale_quote(http.Controller):
             for acquirer in values['acquirers']:
                 acquirer.button = payment_obj.render(
                     request.cr, SUPERUSER_ID, acquirer.id,
-                    order.name,
+                    '/',
                     order.amount_total,
                     order.pricelist_id.currency_id.id,
                     values={
@@ -160,6 +162,10 @@ class sale_quote(http.Controller):
     # note dbo: website_sale code
     @http.route(['/quote/<int:order_id>/transaction/<int:acquirer_id>'], type='json', auth="public", website=True)
     def payment_transaction(self, acquirer_id, order_id):
+        return self.payment_transaction_token(acquirer_id, order_id, None)
+
+    @http.route(['/quote/<int:order_id>/transaction/<int:acquirer_id>/<token>'], type='json', auth="public", website=True)
+    def payment_transaction_token(self, acquirer_id, order_id, token):
         """ Json method that creates a payment.transaction, used to create a
         transaction when the user clicks on 'pay now' button. After having
         created the transaction, the event continues and the user is redirected
@@ -169,6 +175,7 @@ class sale_quote(http.Controller):
                                 user is redirected to the checkout page
         """
         cr, uid, context = request.cr, request.uid, request.context
+        payment_obj = request.registry.get('payment.acquirer')
         transaction_obj = request.registry.get('payment.transaction')
         order = request.registry.get('sale.order').browse(cr, SUPERUSER_ID, order_id, context=context)
 
@@ -179,22 +186,25 @@ class sale_quote(http.Controller):
         tx_id = transaction_obj.search(cr, SUPERUSER_ID, [('reference', '=', order.name)], context=context)
         tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
         if tx:
-            if tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
+            if tx.sale_order_id.id != order.id or tx.state in ['error', 'cancel'] or tx.acquirer_id.id != acquirer_id:
+                tx = False
+                tx_id = False
+            elif tx.state == 'draft':
                 tx.write({
-                    'acquirer_id': acquirer_id,
+                    'amount': order.amount_total,
                 })
-            tx_id = tx.id
-        else:
+        if not tx:
             tx_id = transaction_obj.create(cr, SUPERUSER_ID, {
                 'acquirer_id': acquirer_id,
-                'type': 'form',
+                'type': order._get_payment_type(),
                 'amount': order.amount_total,
                 'currency_id': order.pricelist_id.currency_id.id,
                 'partner_id': order.partner_id.id,
-                'reference': order.name,
+                'reference': transaction_obj.get_next_reference(cr, uid, order.name, context=context),
                 'sale_order_id': order.id,
                 'callback_eval': "self.env['sale.order']._confirm_online_quote(self.sale_order_id.id, self)"
             }, context=context)
+            request.session['quote_%s_transaction_id' % order.id] = tx_id
             tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
             # update quotation
             request.registry['sale.order'].write(
@@ -206,5 +216,16 @@ class sale_quote(http.Controller):
         # confirm the quotation
         if tx.acquirer_id.auto_confirm == 'at_pay_now':
             request.registry['sale.order'].action_confirm(cr, SUPERUSER_ID, [order.id], context=dict(request.context, send_email=True))
-
-        return tx_id
+        return payment_obj.render(
+            request.cr, SUPERUSER_ID, tx.acquirer_id.id,
+            tx.reference,
+            order.amount_total,
+            order.pricelist_id.currency_id.id,
+            values={
+                'return_url': '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
+                'type': order._get_payment_type(),
+                'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
+                'partner_id': order.partner_shipping_id.id or order.partner_invoice_id.id,
+                'billing_partner_id': order.partner_invoice_id.id,
+            },
+            context=dict(context, submit_class='btn btn-primary', submit_txt=_('Pay & Confirm')))

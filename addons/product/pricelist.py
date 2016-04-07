@@ -249,7 +249,7 @@ class product_pricelist(osv.osv):
                 break
             # Final price conversion into pricelist currency
             if suitable_rule and suitable_rule.compute_price != 'fixed' and suitable_rule.base != 'pricelist':
-                price = self.pool['res.currency'].compute(cr, uid, product.currency_id.id, pricelist.currency_id.id, price, context=context)
+                price = self.pool['res.currency'].compute(cr, uid, product.currency_id.id, pricelist.currency_id.id, price, round=False, context=context)
 
             results[product.id] = (price, suitable_rule and suitable_rule.id or False)
         return results
@@ -319,7 +319,7 @@ class product_pricelist_item(osv.osv):
         'date_start': fields.date('Start Date', help="Starting date for the pricelist item validation"),
         'date_end': fields.date('End Date', help="Ending valid for the pricelist item validation"),
         'compute_price': fields.selection([('fixed', 'Fix Price'), ('percentage', 'Percentage (discount)'), ('formula', 'Formula')], select=True, default='fixed'),
-        'fixed_price': fields.float('Fixed Price'),
+        'fixed_price': fields.float('Fixed Price', digits_compute=dp.get_precision('Product Price')),
         'percent_price': fields.float('Percentage Price'),
     }
 

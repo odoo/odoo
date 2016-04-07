@@ -506,7 +506,7 @@ class procurement_order(osv.osv):
                             if qty_rounded > 0:
                                 proc_id = procurement_obj.create(cr, uid,
                                                                  self._prepare_orderpoint_procurement(cr, uid, op, qty_rounded, context=context),
-                                                                 context=context)
+                                                                 context=dict(context, procurement_autorun_defer=True))
                                 tot_procs.append(proc_id)
                             if use_new_cursor:
                                 cr.commit()

@@ -1132,6 +1132,7 @@ class pos_order(osv.osv):
             }
             invoice = inv_ref.new(cr, uid, inv)
             invoice._onchange_partner_id()
+            invoice.fiscal_position_id = order.fiscal_position_id
 
             inv = invoice._convert_to_write(invoice._cache)
             if not inv.get('account_id', None):
@@ -1395,6 +1396,7 @@ class pos_order_line(osv.osv):
     def _amount_line_all(self, cr, uid, ids, field_names, arg, context=None):
         res = dict([(i, {}) for i in ids])
         account_tax_obj = self.pool.get('account.tax')
+        cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids, context=context):
             cur = line.order_id.pricelist_id.currency_id
             taxes = [ tax for tax in line.tax_ids if tax.company_id.id == line.order_id.company_id.id ]
@@ -1408,6 +1410,10 @@ class pos_order_line(osv.osv):
                 taxes = account_tax_obj.browse(cr, uid, taxes_ids, context).compute_all(price, cur, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
                 res[line.id]['price_subtotal'] = taxes['total_excluded']
                 res[line.id]['price_subtotal_incl'] = taxes['total_included']
+
+            res[line.id]['price_subtotal'] = cur_obj.round(cr, uid, cur, res[line.id]['price_subtotal'])
+            res[line.id]['price_subtotal_incl'] = cur_obj.round(cr, uid, cur, res[line.id]['price_subtotal_incl'])
+
         return res
 
     def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False, context=None):
@@ -1519,30 +1525,24 @@ class pos_category(osv.osv):
     # In this case, the default image is set by the js code.
     image = openerp.fields.Binary("Image", attachment=True,
         help="This field holds the image used as image for the cateogry, limited to 1024x1024px.")
-    image_medium = openerp.fields.Binary("Medium-sized image",
-        compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
+    image_medium = openerp.fields.Binary("Medium-sized image", attachment=True,
         help="Medium-sized image of the category. It is automatically "\
              "resized as a 128x128px image, with aspect ratio preserved. "\
              "Use this field in form views or some kanban views.")
-    image_small = openerp.fields.Binary("Small-sized image",
-        compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
+    image_small = openerp.fields.Binary("Small-sized image", attachment=True,
         help="Small-sized image of the category. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
 
-    @openerp.api.depends('image')
-    def _compute_images(self):
-        for rec in self:
-            rec.image_medium = tools.image_resize_image_medium(rec.image)
-            rec.image_small = tools.image_resize_image_small(rec.image)
+    @openerp.api.model
+    def create(self, vals):
+        tools.image_resize_images(vals)
+        return super(pos_category, self).create(vals)
 
-    def _inverse_image_medium(self):
-        for rec in self:
-            rec.image = tools.image_resize_image_big(rec.image_medium)
-
-    def _inverse_image_small(self):
-        for rec in self:
-            rec.image = tools.image_resize_image_big(rec.image_small)
+    @openerp.api.multi
+    def write(self, vals):
+        tools.image_resize_images(vals)
+        return super(pos_category, self).write(vals)
 
 class product_template(osv.osv):
     _inherit = 'product.template'

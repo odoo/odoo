@@ -24,6 +24,8 @@ class sale_order(osv.Model):
 
     def action_confirm(self, cr, uid, ids, context=None):
         # fetch the partner's id and subscribe the partner to the sale order
+        if not isinstance(ids, (tuple, list)):
+            ids = [ids]
         assert len(ids) == 1
         document = self.browse(cr, uid, ids[0], context=context)
         partner = document.partner_id
@@ -32,6 +34,8 @@ class sale_order(osv.Model):
         return super(sale_order, self).action_confirm(cr, uid, ids, context=context)
 
     def get_signup_url(self, cr, uid, ids, context=None):
+        if not isinstance(ids, (tuple, list)):
+            ids = [ids]
         assert len(ids) == 1
         document = self.browse(cr, uid, ids[0], context=context)
         contex_signup = dict(context, signup_valid=True)
