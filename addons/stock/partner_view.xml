@@ -27,7 +27,7 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <page name="warnings" position="inside">
-                <group colspan="2" col="2">
+                <group colspan="2" col="2" groups="stock.group_warning">
                     <separator string="Warning on the Picking" colspan="4"/>
                     <field name="picking_warn" nolabel="1" />
                     <field name="picking_warn_msg" colspan="3" nolabel="1" 
