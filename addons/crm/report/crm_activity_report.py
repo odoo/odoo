@@ -27,6 +27,8 @@ class crm_activity_report(models.Model):
         string='Type',
         selection=[('lead', 'Lead'), ('opportunity', 'Opportunity')],
         help="Type is used to separate Leads and Opportunities")
+    active = fields.Boolean('Active', readonly=True)
+    probability = fields.Float('Probability', group_operator='avg', readonly=True)
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'crm_activity_report')
@@ -45,7 +47,9 @@ class crm_activity_report(models.Model):
                     l.company_id,
                     l.stage_id,
                     l.partner_id,
-                    l.type as lead_type
+                    l.type as lead_type,
+                    l.active,
+                    l.probability
                 from
                     "mail_message" m
                 join
