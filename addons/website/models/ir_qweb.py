@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-from openerp.addons.web.http import request
-from openerp.osv import orm
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.http import request
+from odoo import models
 
 
-class QWeb(orm.AbstractModel):
+class QWeb(models.AbstractModel):
     """ QWeb object for rendering stuff in the website context
     """
     _inherit = 'ir.qweb'
@@ -14,9 +15,9 @@ class QWeb(orm.AbstractModel):
     }
 
     CDN_TRIGGERS = {
-        'link':    'href',
-        'script':  'src',
-        'img':     'src',
+        'link': 'href',
+        'script': 'src',
+        'img': 'src',
     }
 
     PRESERVE_WHITESPACE = [
