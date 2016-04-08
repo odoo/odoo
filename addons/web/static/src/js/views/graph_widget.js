@@ -14,6 +14,7 @@ var QWeb = core.qweb;
 var MAX_LEGEND_LENGTH = 25 * (1 + config.device.size_class);
 
 return Widget.extend({
+    className: "o_graph_svg_container",
     init: function (parent, model, options) {
         this._super(parent);
         this.context = options.context;

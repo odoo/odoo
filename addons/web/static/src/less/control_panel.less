@@ -1,0 +1,74 @@
+.o_control_panel {
+    .o-webclient-padding(@top: 10px, @bottom: 10px);
+    background-color: @odoo-control-panel-background-color;
+    border-bottom: 1px solid @odoo-main-color-muted;
+    .breadcrumb {
+        font-size: 18px;
+        margin: 0px;
+        > li > a {
+            color: @odoo-brand-optional;
+            cursor: pointer;
+            &:hover {
+                color: darken(@odoo-brand-optional, 10%);
+                text-decoration: none;
+            }
+        }
+    }
+
+    // Sidebar
+    .o_cp_sidebar {
+        padding-right: 10px;
+
+        .o_hidden_input_file {
+            position: relative;
+            input.o_form_input_file {
+                position: absolute;
+                top: 1px;
+                opacity: 0;
+                width: 100%;
+                height: 26px;
+            }
+            .o_form_binary_form span {
+                padding: 3px 25px;
+                color: @btn-default-color;
+            }
+            .o_form_binary_form:hover {
+                background-color: @table-bg-hover;
+            }
+        }
+        .o_sidebar_delete_attachment {
+            padding: 0px;
+            position: absolute;
+            top: 5px;
+            right: 10px;
+        }
+    }
+
+    // Pager
+    .o_cp_pager {
+        text-align: center;
+        padding-left: 5px;
+        .user-select(none);
+    }
+
+    // View Switcher
+    .o_cp_switch_buttons {
+        padding-left: 5px;
+    }
+}
+
+.o_x2m_control_panel {
+    .o_cp_buttons > div {
+        margin-top: 5px;
+    }
+}
+
+// Pager input (to edit pager values)
+.o_pager_value > input {
+    display: inline-block;
+    width: 60px;
+    text-align: right;
+    &:focus {
+        outline: none;
+    }
+}

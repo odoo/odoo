@@ -116,14 +116,6 @@
     background-size: @size;
 }
 
-// Background gradient
-.o-linear-gradient(@deg: 45deg, @start-color: #555, @end-color: #333) {
-    background-repeat: repeat-x;
-    background-image: -webkit-linear-gradient(@deg, @start-color, @end-color);
-    background-image: -o-linear-gradient(@deg, @start-color, @end-color);
-    background-image: linear-gradient(@deg, @start-color, @end-color);
-}
-
 // ------------------------------------------------------------------
 // Dropdowns
 // ------------------------------------------------------------------
@@ -220,4 +212,41 @@
     overflow: hidden;
     text-overflow: ellipsis;
     vertical-align: top; // To update display context changed by overflow:hidden
+}
+
+// ------------------------------------------------------------------
+// Gradients
+// ------------------------------------------------------------------
+.o-linear-gradient(@deg: 45deg, @start-color: #555, @end-color: #333) {
+    background-repeat: repeat-x;
+    background-image: -webkit-linear-gradient(@deg, @start-color, @end-color);
+    background-image: -o-linear-gradient(@deg, @start-color, @end-color);
+    background-image: linear-gradient(@deg, @start-color, @end-color);
+}
+.o-vertical-gradient(@startColor: #555, @endColor: #333) {
+    background-color: mix(@startColor, @endColor);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(@startColor), to(@endColor));
+    background-image: -webkit-linear-gradient(top, @startColor, @endColor);
+    background-image: -moz-linear-gradient(top, @startColor, @endColor);
+    background-image: -ms-linear-gradient(top, @startColor, @endColor);
+    background-image: -o-linear-gradient(top, @startColor, @endColor);
+    background-image: linear-gradient(to bottom, @startColor, @endColor);
+}
+.o-skew-gradient(@startColor: #555, @endColor: #333) {
+    background-color: @endColor;
+    background: -moz-linear-gradient(135deg, @endColor, @startColor);
+    background: -o-linear-gradient(135deg, @startColor, @endColor);
+    background: -webkit-gradient(linear, left top, right bottom, from(@startColor), to(@endColor));
+    background: -ms-linear-gradient(top, @startColor, @endColor);
+}
+
+// ------------------------------------------------------------------
+// Transform
+// ------------------------------------------------------------------
+.o-transform(@transform) {
+    -webkit-transform: @transform;
+    -moz-transform: @transform;
+    -ms-transform: @transform;
+    -o-transform: @transform;
+    transform: @transform;
 }
