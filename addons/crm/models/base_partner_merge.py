@@ -13,7 +13,7 @@ from openerp.exceptions import ValidationError
 from openerp.tools import mute_logger
 
 # Validation Library https://pypi.python.org/pypi/validate_email/1.1
-from .validate_email import validate_email
+from odoo.addons.crm.models.validate_email import validate_email
 
 import openerp
 from openerp.osv import osv, orm
