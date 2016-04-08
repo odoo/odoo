@@ -52,14 +52,14 @@
                             class="oe_stat_button"
                             attrs="{'invisible':['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}"
                             icon="fa-money"
-                            type="action" context="{'balance': 'start', 'bank_statement_id': cash_register_id}">
+                            type="action" context="{'balance': 'start', 'bank_statement_id': cash_register_id, 'default_pos_id': config_id}">
                             <span class="o_stat_text">Set Opening Balance</span>
                         </button>
                         <button name="%(account.action_view_account_bnk_stmt_cashbox)d"
                             class="oe_stat_button"
                             attrs="{'invisible':['|', '|', ('cash_control', '=', False), ('state', '=', 'opening_control'), ('state', '=', 'closed')]}"
                             icon="fa-money"
-                            type="action" context="{'balance': 'end', 'bank_statement_id': cash_register_id}">
+                            type="action" context="{'balance': 'end', 'bank_statement_id': cash_register_id, 'default_pos_id': config_id}">
                             <span class="o_stat_text">Set Closing Balance</span>
                         </button>
                     </div>

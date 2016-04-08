@@ -44,7 +44,6 @@
                             <field name="iface_print_auto" />
                             <field name="iface_display_categ_images" />
                             <field name="iface_print_skip_screen"  attrs="{'invisible' : [('iface_print_auto', '=', False)]}" />
-                            <field name="cash_control" />
                         </group>
                     </group>
                     <group string="Hardware Proxy / PosBox" >
@@ -53,6 +52,16 @@
                         <field name="iface_scan_via_proxy" string="Barcode Scanner"/>
                         <field name="iface_electronic_scale" />
                         <field name="iface_cashdrawer" />
+                    </group>
+                    <group string="Cash Control">
+                        <field name="cash_control"/>
+                        <field name="default_cashbox_lines_ids" attrs="{'invisible': [('cash_control', '=', False)]}">
+                            <tree string="Cashbox" editable="bottom">
+                                <field name="coin_value"/>
+                                <field name="number"/>
+                                <field name="subtotal"/>
+                            </tree>
+                        </field>
                     </group>
                     <group name="receipt" string="Receipt" >
                         <field name="receipt_header" string="Header" placeholder="A custom receipt header message"/>
