@@ -70,47 +70,47 @@ class PaymentAcquirer(models.Model):
                                                     help="Template for method registration")
     environment = fields.Selection(
         [('test', 'Test'), ('prod', 'Production')],
-        oldname='env', default='test')
+        required=True, default='test', oldname='env')
     website_published = fields.Boolean(
         'Visible in Portal / Website', copy=False,
-        help="Make this payment acquirer available (Customer invoices, etc.)"),
+        help="Make this payment acquirer available (Customer invoices, etc.)")
     auto_confirm = fields.Selection(
         [('none', 'No automatic confirmation'),
          ('at_pay_confirm', 'At payment with acquirer confirmation'),
          ('at_pay_now', 'At payment no acquirer confirmation needed')],
         string='Order Confirmation', default='at_pay_confirm', required=True)
-    pending_msg = fields.Html(string='Pending Message', translate=True,
+    pending_msg = fields.Html('Pending Message', translate=True,
         default="<i>Pending,</i> Your online payment has been successfully processed. But your order is not validated yet.",
         help='Message displayed, if order is in pending state after having done the payment process.')
-    done_msg = fields.Html(string='Done Message', translate=True,
+    done_msg = fields.Html('Done Message', translate=True,
         default="<i>Done,</i> Your online payment has been successfully processed. Thank you for your order.",
         help='Message displayed, if order is done successfully after having done the payment process.')
-    cancel_msg = fields.Html(string='Cancel Message', translate=True,
+    cancel_msg = fields.Html('Cancel Message', translate=True,
         default="<i>Cancel,</i> Your payment has been cancelled.",
         help='Message displayed, if order is cancel during the payment process.')
-    error_msg = fields.Html(string='Error Message', translate=True,
+    error_msg = fields.Html('Error Message', translate=True,
         default="<i>Error,</i> Please be aware that an error occurred during the transaction. The order has been confirmed but won't be paid. Don't hesitate to contact us if you have any questions on the status of your order.",
         help='Message displayed, if error is occur during the payment process.')
     # Fees
-    fees_active = fields.Boolean(string='Add Extra Fees')
-    fees_dom_fixed = fields.Float(string='Fixed Domestic Fees')
-    fees_dom_var = fields.Float(string='Variable Domestic Fees (in percents)')
-    fees_int_fixed = fields.Float(string='Fixed International Fees')
-    fees_int_var = fields.Float(string='Variable International Fees (in percents)')
+    fees_active = fields.Boolean('Add Extra Fees')
+    fees_dom_fixed = fields.Float('Fixed Domestic Fees')
+    fees_dom_var = fields.Float('Variable Domestic Fees (in percents)')
+    fees_int_fixed = fields.Float('Fixed International Fees')
+    fees_int_var = fields.Float('Variable International Fees (in percents)')
     sequence = fields.Integer(help="Determine the display order")
-        'module_id': fields.many2one('ir.module.module', string='Corresponding Module'),
-        'module_state': fields.related('module_id', 'state', type='char', string='Installation State'),
-        'description': fields.html('Description'),
+    module_id = fields.Many2one('ir.module.module', string='Corresponding Module')
+    module_state = fields.Selection('Installation State', related='module_id.state')
+    description = fields.Html('Description')
 
     image = fields.Binary("Image", attachment=True,
         help="This field holds the image used for this provider, limited to 1024x1024px")
     image_medium = fields.Binary("Medium-sized image", attachment=True,
-        help="Medium-sized image of this provider. It is automatically "\
-             "resized as a 128x128px image, with aspect ratio preserved. "\
+        help="Medium-sized image of this provider. It is automatically "
+             "resized as a 128x128px image, with aspect ratio preserved. "
              "Use this field in form views or some kanban views.")
     image_small = fields.Binary("Small-sized image", attachment=True,
-        help="Small-sized image of this provider. It is automatically "\
-             "resized as a 64x64px image, with aspect ratio preserved. "\
+        help="Small-sized image of this provider. It is automatically "
+             "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
 
 
@@ -123,18 +123,18 @@ class PaymentAcquirer(models.Model):
                 raise ValidationError(_('Required fields not filled, ["required for this provider"]'))
         return True
 
-    @api.multi
-    def get_form_action_url(self):
-    @openerp.api.model
+    @api.model
     def create(self, vals):
-        image_resize_images(vals)
+        tools.image_resize_images(vals)
         return super(PaymentAcquirer, self).create(vals)
 
-    @openerp.api.multi
+    @api.multi
     def write(self, vals):
-        image_resize_images(vals)
+        tools.image_resize_images(vals)
         return super(PaymentAcquirer, self).write(vals)
 
+    @api.multi
+    def get_form_action_url(self):
         """ Returns the form action URL, for form-based acquirer implementations. """
         self.ensure_one()
         if hasattr(self, '%s_get_form_action_url' % self.provider):
