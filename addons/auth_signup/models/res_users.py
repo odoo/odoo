@@ -16,7 +16,7 @@ class ResUsers(models.Model):
     _inherit = 'res.users'
 
     state = fields.Selection(compute='_compute_state', string='Status',
-                 selection=[('new', 'Never Connected'), ('active', 'Activated')])
+                 selection=[('new', 'Never Connected'), ('active', 'Confirmed')])
 
     @api.multi
     def _compute_state(self):
