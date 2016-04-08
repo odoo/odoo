@@ -238,18 +238,22 @@ class MrpProduction(models.Model):
         """
         ProcurementOrder = self.env['procurement.order']
         for production in self:
-            if production.move_finished_ids:
-                production.move_finished_ids.action_cancel()
-            procs = ProcurementOrder.search([('move_dest_id', 'in', [record.id for record in production.move_raw_ids])])
-            if procs:
-                procs.cancel()
-            production.move_raw_ids.action_cancel()
-        self.write({'state': 'cancel'})
-        # Put related procurements in exception
-        procs = ProcurementOrder.search([('production_id', 'in', [self.ids])])
-        if procs:
-            procs.message_post(body=_('Manufacturing order cancelled.'))
-            procs.write({'state': 'exception'})
+            if any(workorder.state == 'running' for workorder in production.work_order_ids):
+                raise UserError(_('You can not cancel production order, Workorder still running.'))
+            else:
+                finish_moves = production.move_finished_ids.filtered(lambda x : x.state in ('done', 'cancel'))
+                if finish_moves:
+                    finish_moves.action_cancel()
+                procs = ProcurementOrder.search([('move_dest_id', 'in', [mvoe.id for move in finish_moves])])
+                if procs:
+                    procs.cancel()
+                production.move_raw_ids.filtered(lambda x: x.state in ('done','cancel')).action_cancel()
+                self.write({'state': 'cancel'})
+                # Put relatfinish_to_canceled procurements in exception
+                procs = ProcurementOrder.search([('production_id', 'in', [self.ids])])
+                if procs:
+                    procs.message_post(body=_('Manufacturing order cancelled.'))
+                    procs.write({'state': 'exception'})
         return True
 
     @api.multi

@@ -97,7 +97,7 @@ class StockMove(models.Model):
                     if old_move_lot[key][0].quantity == quantity:
                         continue
                     else:
-                        old_move_lot[key].quantity = quantity
+                        old_move_lot[key][0].quantity = quantity
                 else:
                     vals = {
                         'move_id': move.id,
@@ -154,7 +154,7 @@ class StockMove(models.Model):
                 extra_move.action_confirm()
                 moves_todo |= extra_move
         for move in moves_todo:
-            if move.quantity_done < move.product_qty:
+            if move.quantity_done < move.product_uom_qty:
                 new_move = self.env['stock.move'].split(move, move.product_qty - move.quantity_done)
                 self.browse(new_move).quantity_done = 0.0
             #TODO: code for when quantity > move.product_qty (extra move or change qty?)
