@@ -5,6 +5,27 @@ import uuid
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
+
+class AccountCashboxLine(models.Model):
+    _inherit = 'account.cashbox.line'
+
+    default_pos_id = fields.Many2one('pos.config', string='This cashbox line is used by default when opening or closing a balance for this point of sale')
+
+class AccountBankStmtCashWizard(models.Model):
+    _inherit = 'account.bank.statement.cashbox'
+    
+    @api.model
+    def default_get(self, fields):
+        vals = super(AccountBankStmtCashWizard, self).default_get(fields)
+        config_id = self.env.context.get('default_pos_id')
+        if config_id:
+            lines = self.env['account.cashbox.line'].search([('default_pos_id', '=', config_id)])
+            if self.env.context.get('balance', False) == 'start':
+                vals['cashbox_lines_ids'] = [[0, 0, {'coin_value': line.coin_value, 'number': line.number, 'subtotal': line.subtotal}] for line in lines]
+            else:
+                vals['cashbox_lines_ids'] = [[0, 0, {'coin_value': line.coin_value, 'number': 0, 'subtotal': 0.0}] for line in lines]
+        return vals
+
 class PosConfig(models.Model):
     _name = 'pos.config'
 
@@ -92,6 +113,7 @@ class PosConfig(models.Model):
         help="The product used to encode the customer tip. Leave empty if you do not accept tips.")
     fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions')
     default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position')
+    default_cashbox_lines_ids = fields.One2many('account.cashbox.line', 'default_pos_id', string='Default Balance')
 
     @api.depends('journal_id.currency_id', 'journal_id.company_id.currency_id')
     def _compute_currency(self):
