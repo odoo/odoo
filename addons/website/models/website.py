@@ -293,11 +293,6 @@ class Website(models.Model):
 
         return dep
 
-    # TODO migration: not use anymore, remove it after git history check
-    def page_for_name(self, name, module='website'):
-        # whatever
-        return '%s.%s' % (module, slugify(name, max_length=50))
-
     @api.model
     def page_exists(self, name, module='website'):
         try:
