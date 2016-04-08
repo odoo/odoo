@@ -2172,7 +2172,7 @@ class BaseModel(object):
         # (range, label) by just the formatted label, in-place
         for group in result:
             for df in dt:
-                if df in group:
+                if group.get(df, False) and (len(group[df])>1):
                     group[df] = group[df][1]
         return result
 
