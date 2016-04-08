@@ -73,7 +73,10 @@ class ResPartner(models.Model):
                 continue        # no signup token, no user, thus no signup url!
 
             fragment = dict()
-            if action:
+            base = '/web#'
+            if action == '/mail/view':
+                base = '/mail/view?'
+            elif action:
                 fragment['action'] = action
             if view_type:
                 fragment['view_type'] = view_type
@@ -82,10 +85,10 @@ class ResPartner(models.Model):
             if model:
                 fragment['model'] = model
             if res_id:
-                fragment['id'] = res_id
+                fragment['res_id'] = res_id
 
             if fragment:
-                query['redirect'] = '/web#' + werkzeug.url_encode(fragment)
+                query['redirect'] = base + werkzeug.url_encode(fragment)
 
             res[partner.id] = urljoin(base_url, "/web/%s?%s" % (route, werkzeug.url_encode(query)))
         return res
@@ -148,5 +151,5 @@ class ResPartner(models.Model):
         if partner.user_ids:
             res['login'] = partner.user_ids[0].login
         else:
-            res['email'] = partner.email or ''
+            res['email'] = res['login'] = partner.email or ''
         return res
