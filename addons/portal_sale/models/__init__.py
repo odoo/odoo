@@ -3,3 +3,4 @@
 
 import mail_mail
 import sale_order
+import account_invoice
