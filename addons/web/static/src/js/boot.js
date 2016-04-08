@@ -199,7 +199,6 @@
         process_jobs: function (jobs, services) {
             var job;
             var require;
-            var time;
 
             function process_job (job) {
                 var require = make_require(job);

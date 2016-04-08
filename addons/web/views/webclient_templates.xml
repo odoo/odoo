@@ -17,10 +17,12 @@
         <link rel="stylesheet" type="text/css" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
         <link rel="stylesheet" type="text/css" href="/web/static/src/fonts/lato/stylesheet.css" />
 
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/navbar.less"/>
+
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/mimetypes.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/animation.less"/>
-
-        <link rel="stylesheet" type="text/css" href="/web/static/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"/>
+        
+        <link rel="stylesheet" type="text/less" href="/web/static/lib/bootstrap-datetimepicker/src/less/bootstrap-datetimepicker.less"/>
         <link rel="stylesheet" type="text/css" href="/web/static/lib/select2/select2.css"/>
         <link rel="stylesheet" type="text/css" href="/web/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
 
@@ -66,7 +68,6 @@
         <script type="text/javascript" src="/web/static/src/js/framework/core.js"></script>
         <script type="text/javascript" src="/web/static/src/js/framework/dialog.js"></script>
         <script type="text/javascript" src="/web/static/src/js/tour.js"></script>
-        <script type="text/javascript" src="/web/static/test/menu.js"></script>
         <script type="text/javascript" src="/web/static/test/x2many.js"></script>
 
         <script type="text/javascript" src="/web/static/lib/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
@@ -79,15 +80,38 @@
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/import_bootstrap.less"/>
 
         <link rel="stylesheet" type="text/css" href="/web/static/lib/nvd3/nv.d3.css"/>
-
-        <link rel="stylesheet" type="text/css" href="/web/static/src/css/base.css"/>
-        <link rel="stylesheet" type="text/css" href="/web/static/src/css/data_export.css"/>
         <link rel="stylesheet" type="text/css" href="/base/static/src/css/modules.css"/>
 
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/enterprise_compatibility.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/bootstrap_overridden.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/webclient_extra.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/webclient_layout.less"/>
+
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/webclient.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/fonts.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/datepicker.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/progress_bar.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/dropdown.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/tooltip.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/debug_manager.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/control_panel.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/control_panel_layout.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/views.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/pivot_view.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/graph_view.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/tree_view.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/form_view_layout.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/form_view.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/list_view.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/search_view.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/modal.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/notification.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/data_export.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/switch_company_menu.less"/>
+
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/dropdown_extra.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/views_extra.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/form_view_extra.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/form_view_layout_extra.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/search_view_extra.less"/>
 
         <script type="text/javascript" src="/web/static/lib/jquery.scrollTo/jquery.scrollTo.js"></script>
         <script type="text/javascript" src="/web/static/lib/nvd3/d3.v3.js"></script>
@@ -109,6 +133,7 @@
         <script type="text/javascript" src="/web/static/src/js/action_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/control_panel.js"></script>
         <script type="text/javascript" src="/web/static/src/js/view_manager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/abstract_web_client.js"></script>
         <script type="text/javascript" src="/web/static/src/js/web_client.js"></script>
         <script type="text/javascript" src="/web/static/src/js/framework/data.js"></script>
         <script type="text/javascript" src="/web/static/src/js/compatibility.js"></script>
@@ -117,6 +142,7 @@
         <script type="text/javascript" src="/web/static/src/js/framework/crash_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/framework/data_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/data_manager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/auto_complete.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/change_password.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/debug_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/data_export.js"></script>
@@ -136,6 +162,7 @@
         <script type="text/javascript" src="/web/static/src/js/views/form_view.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/form_common.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/form_widgets.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/form_upgrade_widgets.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/form_relational_widgets.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/list_view_editable.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/pivot_view.js"></script>
@@ -153,8 +180,6 @@
         <t t-call="web.less_helpers"/>
 
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/import_bootstrap.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/navbar.less"/> <!-- Compatibility -->
-        
         <script type="text/javascript" src="/web/static/src/js/framework/session_instance.js"></script>
     </template>
 
@@ -165,7 +190,6 @@
                 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
                 <title>Odoo</title>
                 <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
-                <link rel="stylesheet" href="/web/static/src/css/full.css" />
                 <t t-raw="head or ''"/>
             </head>
             <body t-att-class="body_classname">
@@ -203,7 +227,7 @@
     <template id="web.login" name="Login">
         <t t-call="web.login_layout">
             <form class="oe_login_form" role="form" t-attf-action="/web/login{{ '?debug' if debug else '' }}" method="post" onsubmit="this.action = this.action + location.hash">
-               <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
                 <div class="form-group field-db" t-if="databases and len(databases) &gt; 1">
                     <label for="db" class="control-label">Database</label>
@@ -255,15 +279,15 @@
         <ul class="nav navbar-nav navbar-right oe_systray" style="display: none;"/>
     </template>
     <template id="web.menu_secondary">
-        <a class="oe_logo" t-att-href="'/web/?debug' if debug else '/web'">
+        <a class="o_sub_menu_logo" t-att-href="'/web/?debug' if debug else '/web'">
             <span class="oe_logo_edit">Edit Company data</span>
             <img src='/web/binary/company_logo'/>
         </a>
-        <div class="oe_secondary_menus_container">
+        <div class="o_sub_menu_content">
             <t t-foreach="menu_data['children']" t-as="menu">
                 <div style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu['id']">
                     <t t-foreach="menu['children']" t-as="menu">
-                        <div class="oe_secondary_menu_section">                                
+                        <div class="oe_secondary_menu_section">
                             <t t-if="menu['children']"><t t-esc="menu['name']"/></t>
                             <t t-if="not menu['children']"><t t-call="web.menu_link"/></t>
                         </div>
@@ -272,7 +296,7 @@
                 </div>
             </t>
         </div>
-        <div class="oe_footer">
+        <div class="o_sub_menu_footer">
             Powered by <a href="http://www.odoo.com" target="_blank"><span>Odoo</span></a>
         </div>
     </template>
@@ -295,61 +319,6 @@
                 <t t-esc="menu['name']"/>
             </span>
         </a>
-    </template>
-
-    <template id="web.webclient_bootstrap" name="Webclient Bootstrap">
-        <t t-call="web.layout">
-            <t t-set="head">
-                <t t-call-assets="web.assets_common" t-js="false"/>
-                <t t-call-assets="web.assets_backend" t-js="false"/>
-                <t t-call-assets="web.assets_common" t-css="false"/>
-                <script type="text/javascript">
-                    odoo.define('web.csrf', function (require) {
-                        var token = "<t t-esc="request.csrf_token(None)"/>";
-                        require('web.core').csrf_token = token;
-                        require('qweb').default_dict.csrf_token = token;
-                    });
-                    odoo.db_info = <t t-raw="db_info"/>;
-                </script>
-                <t t-call-assets="web.assets_backend" t-css="false"/>
-
-                <script type="text/javascript">
-                    $(function() {
-                        <t t-if="init">
-                            <t t-raw="init"/>
-                        </t>
-                        <t t-if="not init">
-                            odoo.define('web.web_client', function (require) {
-                                var WebClient = require('web.WebClient');
-                                var web_client = new WebClient();
-                                web_client.setElement($(document.body));
-                                web_client.start();
-                                return web_client;
-                            });
-                        </t>
-                    });
-                </script>
-                &lt;!--[if lte IE 9]&gt; <link rel="stylesheet" href="/web/static/src/css/ie.css"/> &lt;![endif]--&gt;
-            </t>
-
-            <nav id="oe_main_menu_navbar" class="navbar navbar-inverse" role="navigation" groups="base.group_user,base.group_portal">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                </div>
-                <div class="navbar-collapse collapse" id="oe_main_menu_placeholder">
-                    <t t-call="web.menu"/>
-                </div>
-            </nav>
-            <div class="openerp openerp_webclient_container oe_webclient">
-                <div class="oe_leftbar" groups="base.group_user,base.group_portal">
-                    <t t-call="web.menu_secondary"/>
-                </div><div class="oe_application"/>
-            </div>
-        </t>
     </template>
 
     <template id="web.qunit_suite">
@@ -400,6 +369,77 @@
             <body id="oe" class="openerp">
                 <div id="qunit"></div>
                 <div id="qunit-fixture"></div>
+            </body>
+        </html>
+    </template>
+
+    <template id="web.webclient_bootstrap">
+        &lt;!DOCTYPE html&gt;
+        <html>
+            <head>
+                <meta charset="utf-8"/>
+                <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+                <title>Odoo</title>
+
+                <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+
+                <t t-call-assets="web.assets_common" t-js="false"/>
+                <t t-call-assets="web.assets_backend" t-js="false"/>
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <script type="text/javascript">
+                    odoo.define('web.csrf', function (require) {
+                        var token = "<t t-esc="request.csrf_token(None)"/>";
+                        require('web.core').csrf_token = token;
+                        require('qweb').default_dict.csrf_token = token;
+                    });
+                    odoo.db_info = <t t-raw="db_info"/>;
+                </script>
+                <t t-call-assets="web.assets_backend" t-css="false"/>
+
+                <![CDATA[
+                    <!--[if lt IE 10]>
+                        <body class="ie9">
+                    <![endif]-->
+                ]]>
+
+                <script type="text/javascript">
+                    $(function() {
+                        <t t-if="init">
+                            <t t-raw="init"/>
+                        </t>
+                        <t t-if="not init">
+                            odoo.define('web.web_client', function (require) {
+                                var WebClient = require('web.WebClient');
+                                var web_client = new WebClient();
+                                web_client.setElement($(document.body));
+                                web_client.start();
+                                return web_client;
+                            });
+                        </t>
+                    });
+                </script>
+            </head>
+            <body class="o_web_client">
+                <nav id="oe_main_menu_navbar" class="navbar navbar-inverse">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
+                    <div class="navbar-collapse collapse">
+                        <t t-call="web.menu"/>
+                    </div>
+                </nav>
+                <div class="o_main">
+                    <div class="o_sub_menu">
+                        <t t-call="web.menu_secondary"/>
+                    </div>
+                    <div class="o_main_content"/>
+                </div>
             </body>
         </html>
     </template>

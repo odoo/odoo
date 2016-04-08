@@ -427,13 +427,6 @@ def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', un
         xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field,
         download=download, mimetype=mimetype, default_mimetype=default_mimetype, env=env)
 
-def db_info():
-    version_info = openerp.service.common.exp_version()
-    return {
-        'server_version': version_info.get('server_version'),
-        'server_version_info': version_info.get('server_version_info'),
-    }
-
 #----------------------------------------------------------
 # OpenERP Web web Controllers
 #----------------------------------------------------------
@@ -454,7 +447,14 @@ class Home(http.Controller):
 
         request.uid = request.session.uid
         menu_data = request.registry['ir.ui.menu'].load_menus(request.cr, request.uid, request.debug, context=request.context)
-        return request.render('web.webclient_bootstrap', qcontext={'menu_data': menu_data, 'db_info': json.dumps(db_info())})
+
+        version_info = openerp.service.common.exp_version()
+        db_info = {
+            'server_version': version_info.get('server_version'),
+            'server_version_info': version_info.get('server_version_info'),
+        }
+
+        return request.render('web.webclient_bootstrap', qcontext={'menu_data': menu_data, 'db_info': json.dumps(db_info)})
 
     @http.route('/web/dbredirect', type='http', auth="none")
     def web_db_redirect(self, redirect='/', **kw):

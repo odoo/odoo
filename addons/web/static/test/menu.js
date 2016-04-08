@@ -1,3 +1,5 @@
+// This test is deprecated since v9 at least and thus no longer put in the bundles
+
 odoo.define('web.test.menu', function (require) {
 "use strict";
 

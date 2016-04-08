@@ -541,6 +541,7 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
         return {
             category: _t("Filter"),
             icon: this.icon,
+            separator: _t(" or "),
             values: values,
             field: this
         };
@@ -617,6 +618,7 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
         });
     },
     toggle_filter: function (e) {
+        e.preventDefault();
         e.stopPropagation();
         this.toggle(this.filters[Number($(e.target).parent().data('index'))]);
     },
@@ -686,6 +688,7 @@ var GroupbyGroup = FilterGroup.extend({
         return {
             category: _t("Group By"),
             icon: this.icon,
+            separator: " > ",
             values: values,
             field: this.searchview._s_groupby
         };
