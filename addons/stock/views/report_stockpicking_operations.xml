@@ -8,7 +8,7 @@
         </template>
         <template id="external_layout_header_barcode_right" inherit_id="report.external_layout_header" primary="True">
             <xpath expr="//div[@name='company_address']" position="after">
-                <div class="col-xs-4 pull-right mt8" name="right_box">
+                <div class="col-xs-4 pull-right" name="right_box">
                     <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px;"/>
                 </div>
             </xpath>
@@ -86,7 +86,7 @@
                                     <th><strong>Product</strong></th>
                                     <th class="text-right"><strong>Quantity</strong></th>
                                     <t t-if="o.picking_type_id.code != 'incoming'"><th><strong>Source</strong></th></t>
-                                    <th t-if="any([pack_operation.product_id and pack_operation.product_id.barcode or pack_operation.package_id for pack_operation in o.pack_operation_ids])" class="text-center">
+                                    <th t-if="any([pack_operation.product_id and pack_operation.product_id.barcode or pack_operation.package_id for pack_operation in o.pack_operation_ids])">
                                         <strong>Barcode</strong>
                                     </th>
                                     <th t-if="has_serial_number">
