@@ -55,7 +55,7 @@ class account_entries_report(osv.osv):
         'type': fields.selection([
             ('receivable', 'Receivable'),
             ('payable', 'Payable'),
-            ('cash', 'Cash'),
+            ('liquidity', 'Liquidity'),
             ('view', 'View'),
             ('consolidation', 'Consolidation'),
             ('other', 'Regular'),
