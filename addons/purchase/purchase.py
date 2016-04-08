@@ -1071,7 +1071,8 @@ class MailComposeMessage(models.Model):
 
     @api.multi
     def send_mail(self, auto_commit=False):
-        if self._context.get('default_model') == 'purchase.order' and self._context.get('default_res_id'):
+        compose_internal = self.filtered('subtype_id.internal')
+        if self._context.get('default_model') == 'purchase.order' and self._context.get('default_res_id') and not compose_internal:
             order = self.env['purchase.order'].browse([self._context['default_res_id']])
             if order.state == 'draft':
                 order.state = 'sent'
