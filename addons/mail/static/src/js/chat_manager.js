@@ -934,16 +934,28 @@ var chat_manager = {
     },
 
     search_partner: function (search_val, limit) {
-        return PartnerModel.call('im_search', [search_val, limit || 20], {}, {shadow: true}).then(function(result) {
-            var values = [];
-            _.each(result, function(user) {
-                var escaped_name = _.escape(user.name);
-                values.push(_.extend(user, {
-                    'value': escaped_name,
-                    'label': escaped_name,
-                }));
+        var def = $.Deferred();
+        var values = [];
+        // search among prefetched partners
+        var search_regexp = new RegExp(utils.unaccent(search_val), 'i');
+        _.each(mention_partner_suggestions, function (partners) {
+            if (values.length < limit) {
+                values = values.concat(_.filter(partners, function (partner) {
+                    return session.partner_id !== partner.id && search_regexp.test(partner.name);
+                })).splice(0, limit);
+            }
+        });
+        if (!values.length) {
+            // extend the research to all users
+            def = PartnerModel.call('im_search', [search_val, limit || 20], {}, {shadow: true});
+        } else {
+            def = $.when(values);
+        }
+        return def.then(function (values) {
+            var autocomplete_data = _.map(values, function (value) {
+                return { id: value.id, value: value.name, label: value.name };
             });
-            return values;
+            return _.sortBy(autocomplete_data, 'label');
         });
     },
 };

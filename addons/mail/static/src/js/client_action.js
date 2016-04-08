@@ -56,13 +56,12 @@ var PartnerInviteDialog = Dialog.extend({
                 return $('<span>').text(item.text).prepend(status);
             },
             query: function (query) {
-                chat_manager.search_partner(query.term, 20).then(function(result){
-                    var data = [];
-                    _.each(result, function(partner){
-                        partner.text = partner.name;
-                        data.push(partner);
+                chat_manager.search_partner(query.term, 20).then(function (partners) {
+                    query.callback({
+                        results: _.map(partners, function (partner) {
+                            return _.extend(partner, { text: partner.label });
+                        }),
                     });
-                    query.callback({results: data});
                 });
             }
         });
@@ -331,13 +330,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             focus: function(event) {
                 event.preventDefault();
             },
-            html: true,
         });
 
         this.$('.o_mail_add_channel[data-type=dm]').find("input").autocomplete({
             source: function(request, response) {
                 self.last_search_val = _.escape(request.term);
-                chat_manager.search_partner(self.last_search_val).done(response);
+                chat_manager.search_partner(self.last_search_val, 10).done(response);
             },
             select: function(event, ui) {
                 var partner_id = ui.item.id;
@@ -346,7 +344,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             focus: function(event) {
                 event.preventDefault();
             },
-            html: true,
         });
 
         this.$('.o_mail_add_channel[data-type=private]').find("input").on('keyup', this, function (event) {
