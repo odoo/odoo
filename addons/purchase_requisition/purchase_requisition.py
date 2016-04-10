@@ -105,6 +105,9 @@ class purchase_requisition(osv.osv):
     def tender_open(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'open'}, context=context)
 
+    def tender_reset(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
+
     def tender_done(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
