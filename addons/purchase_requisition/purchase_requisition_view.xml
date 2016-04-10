@@ -8,7 +8,7 @@
         <field name="name">purchase.requisition.type.tree</field>
         <field name="model">purchase.requisition.type</field>
         <field name="arch" type="xml">
-            <tree string="Tender Types">
+            <tree string="Purchase Agreement Types">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="exclusive"/>
@@ -19,7 +19,7 @@
         <field name="name">purchase.requisition.type.form</field>
         <field name="model">purchase.requisition.type</field>
         <field name="arch" type="xml">
-            <form string="Tender Types">
+            <form string="Purchase Agreement Types">
             <sheet>
                 <group>
                     <group string="Agreeent Type">
@@ -35,7 +35,7 @@
         </field>
     </record>
     <record id="tender_type_action" model="ir.actions.act_window">
-        <field name="name">Tender Types</field>
+        <field name="name">Purchase Agreement Types</field>
         <field name="res_model">purchase.requisition.type</field>
         <field name="context">{}</field>
         <field name="view_type">form</field>
@@ -94,7 +94,7 @@
         <field name="name">purchase.requisition.form</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
-            <form string="Call for Tenders">
+            <form string="Purchase Agreements">
             <header>
                 <button name="sent_suppliers" states="draft" string="Confirm" class="oe_highlight"/>
                 <button name="%(action_purchase_requisition_to_so)d" type="action"
@@ -178,7 +178,7 @@
         <field name="name">purchase.requisition.tree</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
-            <tree decoration-bf="message_needaction==True" decoration-muted="state == 'cancel'" decoration-danger="date_end and date_end&lt;current_date" string="Call for Tenders">
+            <tree decoration-bf="message_needaction==True" decoration-muted="state == 'cancel'" decoration-danger="date_end and date_end&lt;current_date" string="Purchase Agreements">
                 <field name="message_needaction" invisible="1"/>
                 <field name="name"/>
                 <field name="ordering_date"/>
@@ -195,12 +195,12 @@
             <field name="name">purchase.requisition.list.select</field>
             <field name="model">purchase.requisition</field>
             <field name="arch" type="xml">
-                <search string="Search Call for Tenders">
-                    <field name="name" string="Call for Tenders"/>
+                <search string="Search Purchase Agreements">
+                    <field name="name" string="Purchase Agreements"/>
                     <field name="type_id" />
-                    <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Call for Tenders"/>
-                    <filter string="Confirmed" domain="[('state','=','in_progress')]" help="Call for Tenders in negotiation"/>
-                    <filter string="Closed Tenders" domain="[('state','=','open')]" help="Call for Tenders where tenders are closed"/>
+                    <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Agreements"/>
+                    <filter string="Confirmed" domain="[('state','=','in_progress')]" help="In negotiation"/>
+                    <filter string="Closed Agreements" domain="[('state','=','open')]"/>
                     <separator/>
                     <filter string="Unassigned"  domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
                     <field name="user_id" />
@@ -217,7 +217,7 @@
 
 
     <record model="ir.actions.act_window" id="action_purchase_requisition">
-        <field name="name">Purchase Tenders</field>
+        <field name="name">Purchase Agreements</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">purchase.requisition</field>
         <field name="view_type">form</field>
@@ -226,13 +226,18 @@
         <field name="search_view_id" ref="view_purchase_requisition_filter"/>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
-            Click to start a new Call for Tenders process. 
+            Click to start a new purchase agreement.
           </p><p>
-            A Call for Tenders is a procedure for generating competing offers from
-            different bidders. In the call for tenders, you can record the
-            products you need to buy and generate the creation of RfQs to
-            vendors. Once the tenders have been registered, you can review and
-            compare them and you can validate some and cancel others.
+            Example of purchase agreements include call for tenders and blanket orders.
+          </p><p>
+            In a call for tenders, you can record the products you need to buy
+            and generate the creation of RfQs to vendors. Once the tenders have
+            been registered, you can review and compare them and you can
+            validate some and cancel others.
+          </p></p>
+            For a blanket order, you can record an agreement for a specifc period
+            (e.g. a year) and you order products within this agreement, benefiting
+            from the negociated prices.
           </p>
         </field>
     </record>

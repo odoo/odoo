@@ -10,12 +10,12 @@ from openerp.exceptions import UserError
 
 class purchase_requisition_type(osv.osv):
     _name = "purchase.requisition.type"
-    _description = "Purchase Requisition Type"
+    _description = "Purchase Agreement Type"
     _order = "sequence"
     _columns = {
-        'name': fields.char('Tender Type', required=True, translate=True),
+        'name': fields.char('Agreement Type', required=True, translate=True),
         'sequence': fields.integer('Sequence'),
-        'exclusive': fields.selection([('exclusive', 'Select only one RFQ (exclusive)'), ('multiple', 'Select multiple RFQ')], 'Tender Selection Type', required=True, help="Select only one RFQ (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\nSelect multiple RFQ:  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"""),
+        'exclusive': fields.selection([('exclusive', 'Select only one RFQ (exclusive)'), ('multiple', 'Select multiple RFQ')], 'Agreement Selection Type', required=True, help="Select only one RFQ (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\nSelect multiple RFQ:  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"""),
         'quantity_copy': fields.selection([('copy','Use quantities of agreement'), ('none','Set quantities manually')], 'Quantities', required=True),
         'line_copy': fields.selection([('copy','Use lines of agreement'), ('none', 'Do not create RfQ lines automatically')], 'Lines', required=True)
     }
@@ -45,13 +45,13 @@ class purchase_requisition(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Call for Tenders Reference', required=True, copy=False),
+        'name': fields.char('Agreement Reference', required=True, copy=False),
         'origin': fields.char('Source Document'),
         'order_count': fields.function(_compute_orders_number, 'Number of Orders', type='integer'),
         'vendor_id': fields.many2one('res.partner', string="Vendor"),
-        'type_id': fields.many2one('purchase.requisition.type', string="Tender Type", required=True),
+        'type_id': fields.many2one('purchase.requisition.type', string="Agreement Type", required=True),
         'ordering_date': fields.date('Ordering Date'),
-        'date_end': fields.datetime('Tender Deadline'),
+        'date_end': fields.datetime('Agreement Deadline'),
         'schedule_date': fields.date('Delivery Date', select=True, help="The expected and scheduled delivery date where all the products are received"),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'description': fields.text('Description'),
@@ -93,7 +93,7 @@ class purchase_requisition(osv.osv):
         for tender in self.browse(cr, uid, ids, context=context):
             for purchase_order in tender.purchase_ids:
                 purchase_order_obj.button_cancel(cr, uid, [purchase_order.id], context=context)
-                purchase_order_obj.message_post(cr, uid, [purchase_order.id], body=_('Cancelled by the tender associated to this quotation.'), context=context)
+                purchase_order_obj.message_post(cr, uid, [purchase_order.id], body=_('Cancelled by the agreement associated to this quotation.'), context=context)
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def tender_in_progress(self, cr, uid, ids, context=None):
@@ -109,7 +109,7 @@ class purchase_requisition(osv.osv):
 
     def action_done(self, cr, uid, ids, context=None):
         """
-        Generate all purchase order based on selected lines, should only be called on one tender at a time
+        Generate all purchase order based on selected lines, should only be called on one agreement at a time
         """
         for tender in self.browse(cr, uid, ids, context=context):
             if tender.state == 'done':
@@ -148,7 +148,7 @@ class purchase_requisition_line(osv.osv):
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
         'price': fields.float('Price', digits_compute=dp.get_precision('Product Price')),
         'product_ordered_qty': fields.function(_compute_ordered_qty, string='Ordered Quantities', type='float'),
-        'requisition_id': fields.many2one('purchase.requisition', 'Call for Tenders', ondelete='cascade'),
+        'requisition_id': fields.many2one('purchase.requisition', 'Purchase Agreement', ondelete='cascade'),
         'company_id': fields.related('requisition_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'schedule_date': fields.date('Scheduled Date'),
@@ -177,7 +177,7 @@ class purchase_requisition_line(osv.osv):
 class purchase_order(osv.osv):
     _inherit = "purchase.order"
     _columns = {
-        'requisition_id': fields.many2one('purchase.requisition', 'Purchase Tenders', copy=False),
+        'requisition_id': fields.many2one('purchase.requisition', 'Purchase Agreement', copy=False),
     }
     def onchange_tender_id(self, cr, uid, ids, tender_id, partner_id, context=None):
         po_line_obj = self.pool.get('purchase.order.line')
