@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2016-04-01 08:18+0000\n"
+"PO-Revision-Date: 2016-04-08 05:27+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -436,7 +436,7 @@ msgid ""
 "                one or several tax code.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikkaa luodaksesi uuden verokoodin.\n</p><p>\nRiippuen maasta jossa toimitaan, verokoodi on yleensä tieto, joka täytyy täyttää veroilmoitukseen. Odoo mahdollistaa verorakenteen määrittämisen ja jokaisen veron laskennan laskennan yhdessä tai useammassa verokoodissa.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
@@ -524,7 +524,7 @@ msgid ""
 "            accounts will be created automatically based on these data.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikkaa luodaksesi pankkitilin.\n</p><p>\nMäärittele yrityksesi pankkitilit ja valitse ne, joiden täytyy näkyä raporttien alatunnisteessa.\n</p>\n<p>\nJos käytät Odoon kirjanpitotoimintoa, päiväkirjat ja tilit luodaan automaattisesti tämän tiedon perusteella.\n</p> "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_manual_reconcile
@@ -5634,7 +5634,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:43
 #, python-format
 msgid "It took you"
-msgstr ""
+msgstr "Sinulta kului"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -6807,7 +6807,7 @@ msgstr "OK"
 #: code:addons/account/account.py:3199
 #, python-format
 msgid "OPEJ"
-msgstr ""
+msgstr "OPEJ"
 
 #. module: account
 #: selection:report.account.sales,month:0
@@ -7868,7 +7868,7 @@ msgstr "Ostot"
 #: view:cash.box.in:account.cash_box_in_form
 #: model:ir.actions.act_window,name:account.action_cash_box_in
 msgid "Put Money In"
-msgstr ""
+msgstr "Laita rahaa sisään"
 
 #. module: account
 #: field:account.tax,python_compute:0 selection:account.tax,type:0
@@ -8398,7 +8398,7 @@ msgstr "SAJ"
 #: code:addons/account/account.py:3196
 #, python-format
 msgid "SCNJ"
-msgstr ""
+msgstr "SCNJ"
 
 #. module: account
 #: selection:account.analytic.journal,type:0
@@ -9192,13 +9192,13 @@ msgstr "Toimittajat"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "TIN:"
-msgstr ""
+msgstr "VAT:"
 
 #. module: account
 #: view:cash.box.out:account.cash_box_out_form
 #: model:ir.actions.act_window,name:account.action_cash_box_out
 msgid "Take Money Out"
-msgstr ""
+msgstr "Ota rahaa ulos"
 
 #. module: account
 #. openerp-web
@@ -9395,7 +9395,7 @@ msgstr ""
 #: view:account.tax.code.template:account.view_tax_code_template_search
 #: view:account.tax.template:account.view_account_tax_template_search
 msgid "Tax Template"
-msgstr ""
+msgstr "Verojen mallipohja"
 
 #. module: account
 #: field:account.chart.template,tax_template_ids:0
@@ -9536,7 +9536,7 @@ msgstr "Tilimallit"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr ""
+msgstr "Verojen mallipohjat"
 
 #. module: account
 #: field:account.payment.term,line_ids:0
@@ -9548,7 +9548,7 @@ msgstr "Ehdot"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:43
 #, python-format
 msgid "That's on average"
-msgstr ""
+msgstr "Se on keskimäärin"
 
 #. module: account
 #: help:account.account,type:0
@@ -10874,7 +10874,7 @@ msgstr "Alv-velvollisuus"
 #. module: account
 #: field:account.fiscal.position,vat_required:0
 msgid "VAT required"
-msgstr ""
+msgstr "ALV on vaadittu"
 
 #. module: account
 #: selection:account.entries.report,move_line_state:0
@@ -11003,7 +11003,7 @@ msgstr "Kun uusi tiliote luodaan, sen tila on \"Ehdotus\".\nKun pankista on saat
 #: code:addons/account/static/src/js/account_widgets.js:533
 #, python-format
 msgid "Whew, that was fast !"
-msgstr ""
+msgstr "Huh, se oli nopeaa!"
 
 #. module: account
 #: field:account.central.journal,amount_currency:0
@@ -11133,7 +11133,7 @@ msgstr ""
 #: code:addons/account/static/src/js/account_widgets.js:1050
 #, python-format
 msgid "last"
-msgstr ""
+msgstr "viimeinen"
 
 #. module: account
 #: help:account.move.line,blocked:0
@@ -11392,7 +11392,7 @@ msgstr "Et voi täsmäyttää päiväkirjan vientejä, jos ne on luotu tilikaude
 #: code:addons/account/account_move_line.py:1257
 #, python-format
 msgid "You cannot use an inactive account."
-msgstr ""
+msgstr "Et voi käyttää passiivista tiliä."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1324
@@ -11503,7 +11503,7 @@ msgstr "Määrittele analyttinen päiväkirjatyyppi '%s'!"
 #: code:addons/account/account_invoice.py:1311
 #, python-format
 msgid "You must first select a partner!"
-msgstr ""
+msgstr "Ensin täytyy valita kumppani!"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_reconcile.py:154
@@ -11515,7 +11515,7 @@ msgstr "Valitse täsmäytettävä tili"
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:57
 #, python-format
 msgid "You must set a period length greater than 0."
-msgstr ""
+msgstr "Jakson pituuden on oltava enemmän kuin 0."
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:59
@@ -11569,7 +11569,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:45
 #, python-format
 msgid "You validated"
-msgstr ""
+msgstr "Validoit"
 
 #. module: account
 #: view:account.invoice.refund:account.view_account_invoice_refund
