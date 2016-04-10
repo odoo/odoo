@@ -114,8 +114,14 @@ Running the server
 .. option:: --debug
 
     when an unexpected error is raised (not a warning or an access error),
-    automatically starts :mod:`python:pdb` before logging and returning the
-    error
+    automatically starts the debugger chosen in :option:`--debugger` before
+    logging and returning the error
+
+.. option:: --debugger <package>
+
+    you can set here the name of the debugger package that will be used
+    when :option:`--debug` is set. Example values are: ``pudb``, ``ipdb`` or
+    ``wdb``. Defaults to :mod:`python:pdb`.
 
 .. _reference/cmdline/server/database:
 
