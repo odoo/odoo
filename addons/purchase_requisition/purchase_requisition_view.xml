@@ -55,7 +55,8 @@
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
             <field name="payment_term_id" position="before">
-                <field name="requisition_id" on_change="onchange_tender_id(requisition_id, partner_id)"/>
+                <field name="requisition_id" on_change="onchange_tender_id(requisition_id, partner_id)" 
+                    domain="[('state', 'in', ('in_progress','open')), '|', ('vendor_id','=',False), ('vendor_id','=',partner_id)]"/>
             </field>
             <xpath expr="//field[@name='order_line']/tree" position="inside">
                 <field name="procurement_ids" invisible="1"/>
@@ -268,7 +269,7 @@
         <field name="inherit_id" ref="procurement.procurement_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='origin']" position="after">
-                <field name="requisition_id" domain="[('state', 'in', ('in_progress','open'))]"/>
+                <field name="requisition_id"/>
             </xpath>
         </field>
     </record>
