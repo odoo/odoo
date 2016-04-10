@@ -4,18 +4,20 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# jeffery chen fan <jeffery9@gmail.com>, 2015
-# 珠海-老天 <liangjia@qq.com>, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2015
 # Michael Chong <michaelchong2005@gmail.com>, 2015
 # mrshelly <mrshelly@hotmail.com>, 2015
 # niulinlnc <admin@niulin.net>, 2015
+# liAnGjiA <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-24 20:43+0000\n"
-"Last-Translator: 珠海-老天 <liangjia@qq.com>\n"
+"PO-Revision-Date: 2016-04-04 15:04+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,28 +42,28 @@ msgstr "%s 加入到 %s 网络."
 #: code:addons/mail/static/src/xml/mail.xml:29
 #, python-format
 msgid "&ograve"
-msgstr "&o 严重"
+msgstr "&ograve"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:156
 #, python-format
 msgid "(no email address)"
-msgstr "（没有电子邮件地址）"
+msgstr "（无电子邮件地址）"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:44
 #, python-format
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.<p></div>"
-msgstr "<div><p>你好，</p><p>%s 邀请你关注 %s 文档: %s.<p></div>"
+msgstr "<div><p>你好，</p><p>%s 邀请你关注 %s 单据: %s.<p></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:47
 #, python-format
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
-msgstr "<div><p>你好，</p><p>%s 邀请你关注新文档。</p></div>"
+msgstr "<div><p>你好，</p><p>%s 邀请你关注新单据。</p></div>"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:134
@@ -71,7 +73,7 @@ msgid ""
 "                            Click here to add new %(document)s or send an email to: <a href='mailto:%(email)s'>%(email)s</a>\n"
 "                        </p>\n"
 "                        %(static_help)s"
-msgstr "<p class='oe_view_nocontent_create'>\n点击这里将添加新 %(document)s 或发送邮件至: <a href='mailto:%(email)s'>%(email)s</a>\n</p>\n%(static_help)s            "
+msgstr "<p class='oe_view_nocontent_create'>\n点击这里将添加新 %(document)s 或发送电子邮件至: <a href='mailto:%(email)s'>%(email)s</a>\n</p>\n%(static_help)s            "
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:145
@@ -154,7 +156,7 @@ msgstr "访问被拒绝"
 #. module: mail
 #: model:ir.model,name:mail.model_res_groups
 msgid "Access Groups"
-msgstr "访问用户组"
+msgstr "访问群组"
 
 #. module: mail
 #: help:mail.message.subtype,default:0
@@ -252,7 +254,7 @@ msgstr "别名"
 #. module: mail
 #: selection:res.partner,notify_email:0
 msgid "All Messages"
-msgstr "全部接收"
+msgstr "全部消息"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
@@ -274,7 +276,7 @@ msgstr "与"
 msgid ""
 "Answers do not go in the original document' discussion thread. This has an "
 "impact on the generated message-id."
-msgstr "答案将不包括在原始文档的讨论线程中。这个将对已产生的 message-id发生影响。"
+msgstr "答案将不包括在原始单据的讨论线程中。这个将对已产生的 message-id发生影响。"
 
 #. module: mail
 #. openerp-web
@@ -384,7 +386,7 @@ msgstr "取消"
 #. module: mail
 #: view:mail.mail:mail.view_mail_tree
 msgid "Cancel Email"
-msgstr "取消 Email"
+msgstr "取消电子邮件"
 
 #. module: mail
 #: selection:mail.mail,state:0
@@ -561,7 +563,7 @@ msgstr "你确信要删除这些消息吗？"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
 msgid "Document Followers"
-msgstr "文档关注者"
+msgstr "单据关注者"
 
 #. module: mail
 #. openerp-web
@@ -588,7 +590,7 @@ msgstr "编辑订阅"
 #: selection:mail.compose.message,type:0 view:mail.mail:mail.view_mail_search
 #: selection:mail.message,type:0
 msgid "Email"
-msgstr "Email"
+msgstr "电子邮件"
 
 #. module: mail
 #: view:mail.group:mail.view_group_form
@@ -608,21 +610,21 @@ msgstr "电子邮件搜索"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
 msgid "Email Thread"
-msgstr "邮件链"
+msgstr "邮件线程"
 
 #. module: mail
 #: help:res.users,alias_id:0
 msgid ""
 "Email address internally associated with this user. Incoming emails will "
 "appear in the user's notifications."
-msgstr "关联这个用户的Email 地址，收到的email被显示在用户的通知中。"
+msgstr "关联这个用户的电子邮件地址，收到的电子邮件被显示在用户的通知中。"
 
 #. module: mail
 #: help:mail.compose.message,email_from:0 help:mail.message,email_from:0
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found for incoming emails."
-msgstr "发送者的Email地址。当收取的email没有对应的合作伙伴时，此字段被设置"
+msgstr "发送者的电子邮件地址。当收取的电子邮件没有对应的合作伙伴时，此字段被设置"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
@@ -672,7 +674,7 @@ msgstr "错误，合作伙伴不能遵循相同的对象两次。"
 #. module: mail
 #: selection:mail.alias,alias_contact:0
 msgid "Everyone"
-msgstr "每人"
+msgstr "所有人"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
@@ -690,7 +692,7 @@ msgid ""
 "Field used to link the related model to the subtype model when using "
 "automatic subscription on a related document. The field is used to compute "
 "getattr(related_document.relation_field)."
-msgstr "使用自动注册相关文档时用来关联模型和子模型的域。该域用来计算 getattr(related_document.relation_field)."
+msgstr "使用自动注册相关单据时用来关联模型和子模型的域。该域用来计算 getattr(related_document.relation_field)."
 
 #. module: mail
 #: field:ir.attachment,file_type_icon:0
@@ -732,14 +734,14 @@ msgstr "关注者"
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Followers of the document and"
-msgstr "该文件的关注者和"
+msgstr "该单据的关注者和"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:131
 #, python-format
 msgid "Followers of this document"
-msgstr "该文件的关注者"
+msgstr "该单据的关注者"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -804,7 +806,7 @@ msgstr "有附件"
 #. module: mail
 #: view:mail.mail:mail.view_mail_form field:mail.mail,headers:0
 msgid "Headers"
-msgstr "页眉"
+msgstr "头信息"
 
 #. module: mail
 #: field:mail.message.subtype,hidden:0
@@ -856,7 +858,7 @@ msgstr "如果要求你关注新消息，勾选此项"
 msgid ""
 "If checked, the partners will receive an email warning they have been added "
 "in the document's followers."
-msgstr "如果选中该项，业务伙伴们将收到邮件提醒他们已经被添加为文档的关注者。"
+msgstr "如果选中该项，业务伙伴们将收到邮件提醒他们已经被添加为单据的关注者。"
 
 #. module: mail
 #: help:base.config.settings,alias_domain:0
@@ -887,7 +889,7 @@ msgstr "收件箱"
 #. module: mail
 #: help:mail.compose.message,parent_id:0 help:mail.message,parent_id:0
 msgid "Initial thread message."
-msgstr "初始化线索消息"
+msgstr "初始化线程消息"
 
 #. module: mail
 #: code:addons/mail/mail_message.py:177
@@ -923,7 +925,7 @@ msgstr "是通知"
 #: field:mail.thread,message_is_follower:0
 #: field:res.partner,message_is_follower:0
 msgid "Is a Follower"
-msgstr "是一个关注者"
+msgstr "是关注者"
 
 #. module: mail
 #. openerp-web
@@ -965,19 +967,19 @@ msgstr "最后一次更新"
 #: help:mail.wizard.invite,partner_ids:0
 msgid ""
 "List of partners that will be added as follower of the current document."
-msgstr "列表中的业务伙伴将添加至当前文档的关注者。"
+msgstr "列表中的业务伙伴将添加至当前单据的关注者。"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:57
 #, python-format
 msgid "Log a note for this document. No notification will be sent"
-msgstr "为这个文档注册一个便签。将不发送提醒"
+msgstr "为这个单据记录一个备注。将不发送通知"
 
 #. module: mail
 #: field:mail.compose.message,is_log:0
 msgid "Log an Internal Note"
-msgstr "记录内部日志"
+msgstr "记录内部备注"
 
 #. module: mail
 #. openerp-web
@@ -985,7 +987,7 @@ msgstr "记录内部日志"
 #: code:addons/mail/static/src/xml/mail.xml:57
 #, python-format
 msgid "Log an internal note"
-msgstr "记录内部日志"
+msgstr "记录内部备注"
 
 #. module: mail
 #: code:addons/mail/mail_mail.py:340
@@ -996,12 +998,12 @@ msgstr "邮件投递失败 "
 #. module: mail
 #: field:ir.ui.menu,mail_group_id:0
 msgid "Mail Group"
-msgstr "邮件群组"
+msgstr "邮件组"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.action_mail_redirect
 msgid "Mail Redirection (Document / Inbox)"
-msgstr "邮件重定向(文档/收件箱)"
+msgstr "邮件重定向(单据/收件箱)"
 
 #. module: mail
 #: help:mail.mail,notification:0
@@ -1089,7 +1091,7 @@ msgstr "子类型消息被关注，意味着子类型将被推送进用户的墙
 msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
-msgstr "消息类型：Email 用于 邮件消息， 通知用户系统消息，评论用于其他消息，例如用户回复。"
+msgstr "消息类型：电子邮件用于 邮件消息， 通知用户系统消息，评论用于其他消息，例如用户回复。"
 
 #. module: mail
 #: help:mail.compose.message,message_id:0 help:mail.message,message_id:0
@@ -1165,7 +1167,7 @@ msgstr "移动到收件箱"
 #: code:addons/mail/static/src/xml/mail.xml:130
 #, python-format
 msgid "My Followers"
-msgstr "我的粉丝"
+msgstr "我的关注者"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_group_root
@@ -1180,12 +1182,12 @@ msgstr "名称"
 #. module: mail
 #: help:mail.compose.message,record_name:0 help:mail.message,record_name:0
 msgid "Name get of the related document."
-msgstr "获得相关文档的名称"
+msgstr "获得相关单据的名称"
 
 #. module: mail
 #: selection:res.partner,notify_email:0
 msgid "Never"
-msgstr "不接收"
+msgstr "从不"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:172
@@ -1211,7 +1213,7 @@ msgstr "没有消息"
 #: field:mail.compose.message,no_auto_thread:0
 #: field:mail.message,no_auto_thread:0
 msgid "No threading for answers"
-msgstr "没有响应的线程"
+msgstr "答案没有线程"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
@@ -1232,7 +1234,7 @@ msgstr "通知"
 #: field:mail.compose.message,notified_partner_ids:0
 #: field:mail.message,notified_partner_ids:0
 msgid "Notified partners"
-msgstr "通知合作伙伴"
+msgstr "已通知的合作伙伴"
 
 #. module: mail
 #: field:mail.compose.message,notify:0
@@ -1242,14 +1244,14 @@ msgstr "通知关注者"
 #. module: mail
 #: help:mail.compose.message,notify:0
 msgid "Notify followers of the document (mass post only)"
-msgstr "通知此文档的关注者(只用于批量发送)"
+msgstr "通知此单据的关注者(只用于批量发送)"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/mail_followers.js:207
 #, python-format
 msgid "One follower"
-msgstr "一个关注者"
+msgstr "关注者"
 
 #. module: mail
 #: view:mail.group:mail.view_group_form
@@ -1261,7 +1263,7 @@ msgstr "只有受邀请的关注者可以阅读群内讨论"
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_form
 msgid "Open Document"
-msgstr "打开文档"
+msgstr "打开单据"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_client_messaging_menu
@@ -1271,7 +1273,7 @@ msgstr "打开消息菜单"
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_form
 msgid "Open Parent Document"
-msgstr "打开父级文档"
+msgstr "打开上级单据"
 
 #. module: mail
 #. openerp-web
@@ -1322,7 +1324,7 @@ msgstr "上级"
 #. module: mail
 #: field:mail.compose.message,parent_id:0 field:mail.message,parent_id:0
 msgid "Parent Message"
-msgstr "父消息"
+msgstr "上级消息"
 
 #. module: mail
 #: field:mail.alias,alias_parent_model_id:0
@@ -1387,7 +1389,7 @@ msgstr "请完成上级的信息"
 #: code:addons/mail/static/src/js/many2many_tags_email.js:63
 #, python-format
 msgid "Please complete partner's informations and Email"
-msgstr "请完成合作伙伴信息和Email"
+msgstr "请完成合作伙伴信息和电子邮件"
 
 #. module: mail
 #. openerp-web
@@ -1447,7 +1449,7 @@ msgstr "读取"
 #. module: mail
 #: field:res.partner,notify_email:0
 msgid "Receive Inbox Notifications by Email"
-msgstr "接收内部提示消息"
+msgstr "通过电子邮件接收收件箱通知"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search selection:mail.mail,state:0
@@ -1495,7 +1497,7 @@ msgstr "相关的业务伙伴"
 #. module: mail
 #: field:mail.message.subtype,relation_field:0
 msgid "Relation field"
-msgstr "关联字段"
+msgstr "关系字段"
 
 #. module: mail
 #. openerp-web
@@ -1517,7 +1519,7 @@ msgstr "回复"
 msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
-msgstr "邮件回复地址。设置回复到绕过自动创建线索。"
+msgstr "回复邮件地址。设置回复到【 reply_to】旁路自动线程创建。"
 
 #. module: mail
 #: field:mail.compose.message,reply_to:0 field:mail.message,reply_to:0
@@ -1584,7 +1586,7 @@ msgstr "发送信息"
 #: code:addons/mail/static/src/xml/mail.xml:54
 #, python-format
 msgid "Send a message to all followers of the document"
-msgstr "向此文档的所有关注者发送信息"
+msgstr "向此单据的所有关注者发送信息"
 
 #. module: mail
 #: view:mail.group:mail.view_group_form
@@ -1723,7 +1725,7 @@ msgid ""
 "The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
-msgstr "相应于这个别名对应的模型(Odoo的文件种类)。任何一封不属于对某个已存在的记录的到来邮件，将导致此模块中新记录的创建(例如，一个新的项目任务)。"
+msgstr "相应于这个别名对应的模型(Odoo单据种类)。任何一封不属于对某个已存在的记录的到来邮件，将导致此模块中新记录的创建(例如，一个新的项目任务)。"
 
 #. module: mail
 #: help:mail.alias,alias_name:0
@@ -1819,7 +1821,7 @@ msgstr "To: me"
 #. module: mail
 #: view:mail.group:mail.view_group_form
 msgid "Topics discussed in this group..."
-msgstr "在该群组中的主题讨论 ..."
+msgstr "在该群组中讨论的话题 ..."
 
 #. module: mail
 #: field:mail.compose.message,type:0
@@ -1832,7 +1834,7 @@ msgstr "类型"
 #, python-format
 msgid ""
 "Unable to send email, please configure the sender's email address or alias."
-msgstr "不能发送email，请配置发件人的email地址或者别名。"
+msgstr "不能发送电子邮件，请配置发件人的电子邮件地址或者别名。"
 
 #. module: mail
 #. openerp-web
@@ -1864,7 +1866,7 @@ msgstr "上传错误"
 #. module: mail
 #: field:mail.compose.message,use_active_domain:0
 msgid "Use active domain"
-msgstr "使用活动域"
+msgstr "使用有效域"
 
 #. module: mail
 #: help:mail.message.subtype,sequence:0
@@ -1913,7 +1915,7 @@ msgstr "警告！"
 msgid ""
 "Warning! \n"
 " %s won't be notified of any email or discussion on this document. Do you really want to remove him from the followers ?"
-msgstr "警告！ \n %s 将不被提醒在这个文件上的所有邮件和讨论。你真的要从关注者中把他删除吗？"
+msgstr "警告！ \n %s 将不被提醒在这个单据上的所有邮件和讨论。你真的要从关注者中把他删除吗？"
 
 #. module: mail
 #. openerp-web
@@ -2001,7 +2003,7 @@ msgstr "作者"
 #: code:addons/mail/mail_thread.py:115
 #, python-format
 msgid "document"
-msgstr "文档"
+msgstr "单据"
 
 #. module: mail
 #. openerp-web
@@ -2136,7 +2138,7 @@ msgstr "不喜欢"
 #: code:addons/mail/static/src/xml/mail.xml:286
 #, python-format
 msgid "updated document"
-msgstr "更新的文档"
+msgstr "更新的单据"
 
 #. module: mail
 #. openerp-web
