@@ -57,6 +57,9 @@
             <field name="payment_term_id" position="before">
                 <field name="requisition_id" on_change="onchange_tender_id(requisition_id, partner_id)"/>
             </field>
+            <xpath expr="//field[@name='order_line']/tree" position="inside">
+                <field name="procurement_ids" invisible="1"/>
+            </xpath>
         </field>
     </record>
 

@@ -30,6 +30,7 @@ class purchase_requisition(osv.osv):
     _name = "purchase.requisition"
     _description = "Purchase Requisition"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _order = "id desc"
 
     def _get_po_line(self, cr, uid, ids, field_names, arg=None, context=None):
         result = dict((res_id, []) for res_id in ids)
@@ -213,6 +214,7 @@ class purchase_order(osv.osv):
                 'price_unit': line.price,
                 'taxes': taxes.mapped('id'),
                 'date_planned': tender.schedule_date or datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                'procurement_ids': tender.procurement_id and [(6,0, [tender.procurement_id.id])] or False,
                 'account_analytic_id': line.account_analytic_id and line.account_analytic_id.id or False,
             }))
         value = {
