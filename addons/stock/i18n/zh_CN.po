@@ -4,8 +4,9 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
-# 珠海-老天 <liangjia@qq.com>, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2015
 # 智源软件 <likaiyuan2006@gmail.com>, 2015
 # mrshelly <mrshelly@hotmail.com>, 2015
 # Talway <9010446@qq.com>, 2015
@@ -15,15 +16,15 @@
 # 卓忆科技 <zhanghao@jointd.com>, 2015
 # 卓忆科技 <zhanghao@jointd.com>, 2015
 # 智源软件 <likaiyuan2006@gmail.com>, 2015
-# 珠海-老天 <liangjia@qq.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2015
 # 老肖 <xfx@oscg.com.hk>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-14 12:26+0000\n"
-"PO-Revision-Date: 2016-03-12 06:57+0000\n"
-"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
+"PO-Revision-Date: 2016-04-05 06:57+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3684,7 +3685,7 @@ msgstr "仓库里仍然为这次移动保留的数量"
 #. module: stock
 #: help:stock.move,product_qty:0
 msgid "Quantity in the default UoM of the product"
-msgstr "此产品默认计量单位的数量"
+msgstr "数量，基于产品默认计量单位"
 
 #. module: stock
 #: help:stock.quant,qty:0
@@ -3717,7 +3718,7 @@ msgid ""
 "Quantity of products to consider when talking about the contribution of this"
 " pack operation towards the remaining quantity of the move (and inverse). "
 "Given in the product main uom."
-msgstr "产品数量会考虑此打包作业产生移动(及反向移动)的剩余数量。同时参考产品的默认计量单位。"
+msgstr "在谈到此打包作业对移动(以及反向)剩余数量的贡献时，需要考虑的产品数量。基于产品主记录单位给出。"
 
 #. module: stock
 #: help:stock.move,reserved_availability:0
@@ -3881,7 +3882,7 @@ msgstr "剩余数量"
 msgid ""
 "Remaining Quantity in default UoM according to operations matched with this "
 "move"
-msgstr "默认计量单位的剩余数量是和这次移动作业相匹配的"
+msgstr " 与本移动匹配的作业的剩余数量，基于默认计量单位"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
@@ -3893,7 +3894,7 @@ msgstr "部分分拣后的剩余部分"
 msgid ""
 "Remaining quantity in default UoM according to moves matched with this "
 "operation. "
-msgstr " 默认计量单位的剩余数量是和这次移动作业相匹配的。"
+msgstr " 与本作业匹配的移动的剩余数量，基于默认计量单位"
 
 #. module: stock
 #: view:product.removal:stock.view_removal
@@ -4651,7 +4652,7 @@ msgstr "位置编码必须在公司内唯一！"
 msgid ""
 "The chosen quantity for product %s is not compatible with the UoM rounding. "
 "It will be automatically converted at confirmation"
-msgstr "选择的产品数量%s不兼容四舍五入计量单位。确认后它将会自动转换"
+msgstr "产品%s选择的数量与计量单位的四舍五入不兼容。确认后它将会自动转换"
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
@@ -4752,7 +4753,7 @@ msgstr "库存推式迁移规则"
 msgid ""
 "The requested operation cannot be processed because of a programming error "
 "setting the `product_qty` field instead of the `product_uom_qty`."
-msgstr "请求的作业无法处理，因为一个程序错误设置`product_qty`字段取代了 `product_uom_qty`。"
+msgstr "请求的作业无法处理，因为一个程序错误，设置`product_qty`字段取代了 `product_uom_qty`。"
 
 #. module: stock
 #. openerp-web
@@ -4768,7 +4769,7 @@ msgid ""
 "The roundings of your Unit of Measures %s on the move vs. %s on the product "
 "don't allow to do these operations or you are not transferring the picking "
 "at once. "
-msgstr "在此产品上您的计量单位%s的舍入 在此移动vs. %s 上不允许这些作业，或您没一次完成分拣调拨。"
+msgstr "库存移动的计量单位%s vs.  产品的计量单位 %s 的四舍五入不允许做这些作业，或没有一次性调拨分拣。"
 
 #. module: stock
 #: code:addons/stock/stock.py:3867
@@ -4776,7 +4777,7 @@ msgstr "在此产品上您的计量单位%s的舍入 在此移动vs. %s 上不�
 msgid ""
 "The selected UoM for product %s is not compatible with the UoM set on the product form. \n"
 "Please choose an UoM within the same UoM category."
-msgstr "产品%s 的所选计量单位与这个产品的默认计量单位类别不同。\n 请选择一个同类别的计量单位。"
+msgstr "为产品%s 选择的计量单位与产品表单上设置的计量单位不兼容。\n 请选择一个同类别的计量单位。"
 
 #. module: stock
 #: constraint:stock.inventory:0

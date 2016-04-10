@@ -4,22 +4,23 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012
-# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
-# 珠海-老天 <liangjia@qq.com>, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2015
 # Luyang Xing <leon.luyangxing@gmail.com>, 2015
 # matt.cai <cysnake4713@gmail.com>, 2015
 # mrshelly <mrshelly@hotmail.com>, 2015
 # Xor3 <xor3@outlook.com>, 2015
 # 卓忆科技 <zhanghao@jointd.com>, 2015
-# 珠海-老天 <liangjia@qq.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2015
 # 钟小华 <mackz@sina.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2016-03-19 10:20+0000\n"
-"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
+"PO-Revision-Date: 2016-04-05 07:53+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2203,7 +2204,7 @@ msgstr "不能创建不同公司的分录"
 msgid ""
 "Cannot create the invoice.\n"
 "The related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. In order to avoid rounding issues, the latest line of your payment term must be of type 'balance'."
-msgstr "无法创建发票。\n相关的支付记录可能未确认核实，因为合计的总额大于发票的开票总额。为避免统计错误，请您确认最新的支付记录都在平衡状态。"
+msgstr "无法创建发票。\n相关的付款条款可能没有正确配置，因为计算出的总额大于已开票的发票总额。为避免四舍五入错误，付款条款的最后一行必须是‘余额’类型。"
 
 #. module: account
 #: code:addons/account/account_invoice.py:453
@@ -5077,7 +5078,7 @@ msgstr "如果此字段配置为False，您可以让他隐藏而不删除它。"
 msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "term without removing it."
-msgstr "如果配置为false，该付款方式将会被隐藏。"
+msgstr "如果有效字段设置为false，该付款方式将会被隐藏。"
 
 #. module: account
 #: help:account.tax,active:0
@@ -8372,7 +8373,7 @@ msgstr "每行舍入"
 #: code:addons/account/account_bank_statement.py:899
 #, python-format
 msgid "Rounding error from currency conversion"
-msgstr "货币换算时，圆整出错。"
+msgstr "货币换算时四舍五入出错。"
 
 #. module: account
 #: view:account.subscription:account.view_subscription_search
@@ -9290,7 +9291,7 @@ msgstr "税适用"
 #. module: account
 #: field:res.company,tax_calculation_rounding_method:0
 msgid "Tax Calculation Rounding Method"
-msgstr "税金计算的舍入方法"
+msgstr "税金计算的四舍五入方法"
 
 #. module: account
 #: field:account.tax.code,name:0 field:account.tax.code.template,name:0
@@ -9431,7 +9432,7 @@ msgstr "税基不同！\n单击“计算”更新税基。"
 #. module: account
 #: field:account.config.settings,tax_calculation_rounding_method:0
 msgid "Tax calculation rounding method"
-msgstr "税额的圆整方式"
+msgstr "税金计算的四舍五入方法"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_tax_code_list
