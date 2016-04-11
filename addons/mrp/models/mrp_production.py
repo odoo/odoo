@@ -785,6 +785,7 @@ class MrpProductionWorkcenterLine(models.Model):
 class MrpProductionWorkcenterLineTime(models.Model):
     _name='mrp.production.work.order.time'
     _description = 'Work Order Time'
+    
     workorder_id = fields.Many2one('mrp.production.work.order', 'Work Order')
     date_start = fields.Datetime('Start Date')
     duration = fields.Float('Duration')
