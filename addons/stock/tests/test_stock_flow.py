@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from openerp.addons.stock.tests.common import TestStockCommon
-from openerp.tools import mute_logger, float_round
+from odoo.addons.stock.tests.common import TestStockCommon
+from odoo.tools import mute_logger, float_round
 
 
 class TestStockFlow(TestStockCommon):

@@ -4,7 +4,7 @@
 # Author: Leonardo Pistone
 # Copyright 2015 Camptocamp SA
 
-from openerp.addons.stock.tests.common2 import TestStockCommon
+from odoo.addons.stock.tests.common2 import TestStockCommon
 
 
 class TestVirtualAvailable(TestStockCommon):
