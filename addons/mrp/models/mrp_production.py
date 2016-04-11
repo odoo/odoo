@@ -591,7 +591,6 @@ class MrpProductionWorkcenterLine(models.Model):
         # Update quantities done on each raw material line
         raw_moves = self.move_raw_ids.filtered(lambda x: (x.has_tracking == 'none') and (x.state not in ('done', 'cancel')) and x.bom_line_id)
         for move in raw_moves:
-            #if it's a finished product, we use factor 1 as no bom_line
             if move.unit_factor:
                 move.quantity_done += self.qty_producing * move.unit_factor
 
@@ -604,7 +603,7 @@ class MrpProductionWorkcenterLine(models.Model):
             if not move_lot.lot_id:
                 raise UserError(_('You should provide a lot for a component'))
             #Search other move_lot where it could be added:
-            lots = self.move_lot_ids.filtered(lambda x: (x.lot_id.id == move_lot.id) and (not x.lot_produced_id) and (not self.done_move))
+            lots = self.move_lot_ids.filtered(lambda x: (x.lot_id.id == move_lot.lot_id.id) and (not x.lot_produced_id) and (not x.done_move))
             if lots:
                 lots[0].quantity_done += move_lot.quantity_done
                 lots[0].lot_produced_id = self.final_lot_id.id
