@@ -319,8 +319,9 @@ class AccountChartTemplate(models.Model):
                     'account_id': account_ref.get(value['account_id'], False),
                 })
 
-        # Create Journals
-        self.generate_journals(account_ref, company)
+        # Create Journals - Only done for root chart template
+        if not self.parent_id:
+            self.generate_journals(account_ref, company)
 
         # generate properties function
         self.generate_properties(account_ref, company)
@@ -596,7 +597,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
             if self.chart_template_id.complete_tax_set:
             # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
                 chart_ids = self._get_chart_parent_ids(self.chart_template_id)
-                base_tax_domain = [('chart_template_id', 'in', chart_ids)]
+                base_tax_domain = [('chart_template_id', 'parent_of', chart_ids)]
                 sale_tax_domain = base_tax_domain + [('type_tax_use', '=', 'sale')]
                 purchase_tax_domain = base_tax_domain + [('type_tax_use', '=', 'purchase')]
                 sale_tax = tax_templ_obj.search(sale_tax_domain, order="sequence, id desc", limit=1)
