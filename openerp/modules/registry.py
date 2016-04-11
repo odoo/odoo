@@ -197,7 +197,7 @@ class Registry(Mapping):
             model._setup_base(cr, SUPERUSER_ID, partial)
 
         for model in self.models.itervalues():
-            model._setup_fields(cr, SUPERUSER_ID)
+            model._setup_fields(cr, SUPERUSER_ID, partial)
 
         for model in self.models.itervalues():
             model._setup_complete(cr, SUPERUSER_ID)
