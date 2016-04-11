@@ -565,7 +565,7 @@ class res_partner(osv.Model, format_address):
 
         result = super(res_partner, self).write(vals)
         for partner in self:
-            if any(u.has_group('base.group_user') for u in partner.user_ids):
+            if any(u.has_group('base.group_user') for u in partner.user_ids if u != self.env.user):
                 self.env['res.users'].check_access_rights('write')
             self._fields_sync(partner, vals)
         return result
