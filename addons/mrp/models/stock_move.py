@@ -60,7 +60,7 @@ class StockMove(models.Model):
     quantity_done_store = fields.Float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'))
     quantity_done = fields.Float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'),
         compute='_qty_done_compute', inverse='_qty_done_set')
-    move_lot_ids = fields.One2many('stock.move.lots', 'move_id', domain=[('done_wo', '=', True)], string='Lots')
+    move_lot_ids = fields.One2many('stock.move.lots', 'move_id', string='Lots')
     bom_line_id = fields.Many2one('mrp.bom.line', string="BoM Line")
     unit_factor = fields.Float('Unit Factor')
     bom_sequence = fields.Integer('BoM sequence')
@@ -72,6 +72,17 @@ class StockMove(models.Model):
     def _compute_is_done(self):
         for move in self:
             move.is_done = (move.state in ('done', 'cancel'))
+
+    @api.multi
+    def action_assign(self, no_prepare=False):
+        res = super(StockMove, self).action_assign(no_prepare=no_prepare)
+        self.check_move_lots()
+        return res
+
+    @api.multi
+    def check_move_lots(self):
+        moves_todo = self.filtered(lambda x: x.raw_material_production_id and x.state not in ('done', 'cancel') )
+        return moves_todo.create_lots()
 
 
     @api.multi
@@ -111,7 +122,7 @@ class StockMove(models.Model):
         return True
 
     @api.multi
-    @api.depends('move_lot_ids','move_lot_ids.quantity_done')
+    @api.depends('move_lot_ids','move_lot_ids.quantity_done', 'quantity_done_store')
     def _qty_done_compute(self):
         for move in self:
             if move.has_tracking != 'none':

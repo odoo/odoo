@@ -169,6 +169,7 @@ class MrpProduction(models.Model):
                 'name': operation.name,
                 'production_id': self.id,
                 'workcenter_id': operation.workcenter_id.id,
+                'sequence': operation.sequence,
                 'operation_id': operation.id,
                 'duration': duration,
                 'state': state,
@@ -192,7 +193,6 @@ class MrpProduction(models.Model):
             self.move_finished_ids.filtered(lambda x: x.operation_id.id in tocheck).write({
                 'workorder_id': workorder_id.id
             })
-            
             workorder_id._generate_lot_ids()
             state = 'pending'
         return True
@@ -204,7 +204,6 @@ class MrpProduction(models.Model):
         for order in orders_new:
             quantity = order.product_uom_id._compute_qty(order.product_qty, order.bom_id.product_uom_id.id)
             order.bom_id.explode(order.product_id, quantity, method_wo=order._workorders_create)
-        #Create 
         orders_new.write({'state': 'planned'})
 
     @api.multi
@@ -419,7 +418,6 @@ class MrpProduction(models.Model):
         for production in self:
             move_to_assign = production.move_raw_ids.filtered(lambda x: x.state in ('confirmed', 'waiting', 'assigned'))
             move_to_assign.action_assign()
-            move_to_assign.create_lots()
         return True
 
     @api.multi

@@ -13,7 +13,6 @@ class TestOrderProcess(TestOrderDemo):
 
         def assert_equals(value1, value2, msg, float_compare=float_compare):
             assert float_compare(value1, value2, precision_digits=2) == 0, msg
-        
         #self.assertTrue(len(self.mrp_production_test1.work_order_ids), "Workcenter lines are not generated proper.")
 
 
@@ -35,7 +34,6 @@ class TestOrderProcess(TestOrderDemo):
         date_planned = self.mrp_production_test1.date_planned
         for move_line in self.mrp_production_test1.move_raw_ids:
                 self.assertEqual(move_line.date, date_planned, "Planned date does not correspond in 'To consume line'.")
-
     # I consume raw materials and put one material in scrap location due to waste it.
         scrap_location_ids = self.env['stock.location'].search([('scrap_location', '=', True)])
         scrap_location_id = scrap_location_ids[0]
@@ -81,8 +79,6 @@ class TestOrderProcess(TestOrderDemo):
 
         # The production order is Waiting Goods, will force production which should set consume lines as available
         self.mrp_production_test1.button_plan()
-        
-
         # I check that production order in ready state after forcing production.
 
         #self.assertEqual(self.mrp_production_test1.availability, 'assigned', 'Production order availability should be set as available')
@@ -104,4 +100,3 @@ class TestOrderProcess(TestOrderDemo):
             if not r:
                 return f
             return math.ceil(f / r) * r
-

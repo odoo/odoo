@@ -74,7 +74,7 @@ class MrpProductProduce(models.TransientModel):
             quantity = self.product_qty
             if move.unit_factor:
                 move.quantity_done_store += quantity * move.unit_factor
-            self.check_finished_move_lots()
+        self.check_finished_move_lots()
         return {'type': 'ir.actions.act_window_close'}
 
     @api.multi

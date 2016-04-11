@@ -46,6 +46,11 @@
             <field name="calendar_id" ref="resource.timesheet_group1"/>
         </record>
 
+        <record id="mrp_workcenter_3" model="mrp.workcenter">
+            <field name="name">Cutting</field>
+            <field name="calendar_id" ref="resource.timesheet_group1"/>
+        </record>
+
         <record id="mrp_workcenter_1" model="mrp.workcenter">
             <field name="name">Drill Station 1</field>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
@@ -56,10 +61,7 @@
             <field name="calendar_id" ref="resource.timesheet_group1"/>
         </record>
 
-        <record id="mrp_workcenter_3" model="mrp.workcenter">
-            <field name="name">Cutting</field>
-            <field name="calendar_id" ref="resource.timesheet_group1"/>
-        </record>
+
 
         <!-- Resource: mrp.routing -->
 
@@ -126,7 +128,7 @@
             <field name="routing_id" ref="mrp_routing_3"/>
             <field name="workcenter_id" ref="mrp_workcenter_3"/>
             <field name="time_cycle">120</field>
-            <field name="sequence">5</field>
+            <field name="sequence">10</field>
             <field name="name">Cutting</field>
             <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.jpg"/>
         </record>
@@ -135,7 +137,7 @@
             <field name="routing_id" ref="mrp_routing_3"/>
             <field name="workcenter_id" ref="mrp_workcenter_1"/>
             <field name="time_cycle">120</field>
-            <field name="sequence">5</field>
+            <field name="sequence">15</field>
             <field name="name">Drilling</field>
             <field name="worksheet" type="base64" file="mrp/static/img/drill-worksheet.jpg"/>
         </record>
@@ -144,7 +146,7 @@
             <field name="routing_id" ref="mrp_routing_3"/>
             <field name="workcenter_id" ref="mrp_workcenter_2"/>
             <field name="time_cycle">120</field>
-            <field name="sequence">5</field>
+            <field name="sequence">20</field>
             <field name="name">Assembly</field>
             <field name="worksheet" type="base64" file="mrp/static/img/assebly-worksheet.jpg"/>
         </record>
@@ -275,16 +277,12 @@
             <field name="product_id" ref="product.product_product_3"/>
             <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="product_qty">3</field>
-            <field name="location_src_id" ref="stock.stock_location_stock"/>
-            <field name="location_dest_id" ref="stock.stock_location_output"/>
             <field name="bom_id" ref="mrp_bom_manufacture"/>
         </record>
 
         <record id="mrp_production_2" model="mrp.production">
             <field name="product_id" ref="mrp.product_product_19"/>
             <field name="product_uom_id" ref="product.product_uom_unit"/>
-            <field name="location_src_id" ref="stock.stock_location_stock"/>
-            <field name="location_dest_id" ref="stock.stock_location_output"/>
             <field name="bom_id" ref="mrp.mrp_bom_3"/>
         </record>
 
@@ -375,8 +373,6 @@
             <field name="product_id" ref="product_product_computer_desk"/>
             <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="product_qty">1</field>
-            <field name="location_src_id" ref="stock.stock_location_stock"/>
-            <field name="location_dest_id" ref="stock.stock_location_output"/>
             <field name="bom_id" ref="mrp_bom_desk"/>
         </record>
 
