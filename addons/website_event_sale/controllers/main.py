@@ -23,7 +23,7 @@ from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website_event.controllers.main import website_event
-from openerp.addons.website_sale.controllers.main import get_pricelist
+from openerp.addons.website_sale.controllers.main import get_pricelist, website_sale
 from openerp.tools.translate import _
 
 
@@ -74,4 +74,20 @@ class website_event(website_event):
         return super(website_event, self)._add_event(event_name, context, **kwargs)
 
 
+class website_sale(website_sale):
 
+    @http.route(['/shop/get_unit_price'], type='json', auth="public", methods=['POST'], website=True)
+    def get_unit_price(self, product_ids, add_qty, use_order_pricelist=False, **kw):
+        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+        res_ticket = {}
+        if 'line_id' in kw:
+            line = pool['sale.order.line'].browse(cr, SUPERUSER_ID, kw['line_id'])
+            if line.event_ticket_id:
+                if line.order_id.pricelist_id:
+                    ticket = pool['event.event.ticket'].browse(cr, SUPERUSER_ID, line.event_ticket_id.id, context=dict(context, pricelist=line.order_id.pricelist_id.id))
+                else:
+                    ticket = line.event_ticket_id
+                res_ticket = {ticket.product_id.id: ticket.price_reduce or ticket.price}
+                product_ids.remove(ticket.product_id.id)
+        res_options = super(website_sale, self).get_unit_price(product_ids, add_qty, use_order_pricelist, **kw)
+        return dict(res_ticket.items() + res_options.items())
