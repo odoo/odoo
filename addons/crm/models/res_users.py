@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from openerp.osv import osv, fields
+from odoo import fields, models
 
 
-class res_users(osv.osv):
+class ResUsers(models.Model):
     _inherit = 'res.users'
-    _columns = {
-        'target_sales_won': fields.integer('Won in Opportunities Target'),
-        'target_sales_done': fields.integer('Activities Done Target'),
-    }
+
+    target_sales_won = fields.Integer(string='Won in Opportunities Target')
+    target_sales_done = fields.Integer(string='Activities Done Target')

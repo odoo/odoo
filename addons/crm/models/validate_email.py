@@ -19,7 +19,6 @@
 
 import re
 import smtplib
-import socket
 
 try:
     import DNS

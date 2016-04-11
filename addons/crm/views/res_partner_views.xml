@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
 
         <!-- open meetings related to given partner -->
         <record id="calendar_event_partner" model="ir.actions.act_window">
@@ -103,7 +102,6 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
-                <data>
                     <!-- <field name="user_id" position="after">
                         <field name="team_id" completion="1" invisible="1"/>
                     </field> -->
@@ -127,9 +125,7 @@
                             <field string="Activities" name="activities_count" widget="statinfo"/>
                         </button>
                     </div>
-                </data>
             </field>
         </record>
 
-    </data>
-</openerp>
+</odoo>

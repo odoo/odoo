@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
         <!--
             LEADS/OPPORTUNITIES CATEGORIES
         -->
@@ -86,7 +85,6 @@
                         <group>
                             <!-- Preload all the partner's information -->
                             <field name="partner_id" string="Customer"
-                                on_change="on_change_partner_id(partner_id)"
                                 options='{"create_name_field": "name"}'
                                 context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_fax': fax, 'default_email': email_from, 'default_user_id': user_id, 'default_team_id': team_id}" groups="base.group_no_one"/>
                             <field name="partner_name" string="Company Name"/>
@@ -95,7 +93,7 @@
                                 <field name="street" placeholder="Street..." class="o_address_street"/>
                                 <field name="street2" placeholder="Street 2..." class="o_address_street"/>
                                 <field name="city" placeholder="City" class="o_address_city"/>
-                                <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' on_change="onchange_state(state_id)"/>
+                                <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
                                 <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                 <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                             </div>
@@ -113,7 +111,7 @@
                             <field name="fax"/>
                         </group>
                         <group>
-                            <field name="user_id" on_change="on_change_user(user_id, context)" domain="[('share', '=', False)]"
+                            <field name="user_id"
                                 context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads'], 'team_id': team_id}"/>
                             <field name="team_id" widget="selection" domain="[('use_leads','=',True)]"/>
                             <field name="type" invisible="1"/>
@@ -410,7 +408,6 @@
                         <group>
                             <group>
                                 <field name="partner_id"
-                                    on_change="on_change_partner_id(partner_id)"
                                     string="Customer" domain="[('customer', '=', True)]"
                                     context="{'search_default_customer': 1,
                                         'default_name': partner_name, 'default_street': street, 
@@ -430,8 +427,7 @@
                                     <div class="o_row mr16">
                                         <field name="next_activity_id"
                                                options="{'no_create': True, 'no_open': True}"
-                                               domain="['|',('team_id','=',False),('team_id','=',team_id)]"
-                                               on_change="onchange_next_activity_id(next_activity_id)"/>
+                                               domain="['|',('team_id','=',False),('team_id','=',team_id)]"/>
                                         <span class="oe_form_field"
                                               attrs="{'invisible': ['|', ('next_activity_id', '=', False), ('date_action', '=', False)]}">&#160;on&#160;</span>
                                         <field name="date_action" attrs="{'invisible': [('next_activity_id', '=', False)]}" placeholder="Choose a date..."/>
@@ -445,7 +441,7 @@
                             </group>
 
                             <group>
-                                <field name="user_id" on_change="on_change_user(user_id, context)" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads'], 'team_id': team_id}" domain="[('share', '=', False)]"/>
+                                <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads'], 'team_id': team_id}"/>
                                 <field name="team_id" widget="selection"/>
                             </group>
                             <group>
@@ -469,7 +465,7 @@
                                         <field name="street" placeholder="Street..." class="o_address_street"/>
                                         <field name="street2" placeholder="Street 2..." class="o_address_street"/>
                                         <field name="city" placeholder="City" class="o_address_city"/>
-                                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' on_change="onchange_state(state_id)"/>
+                                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
                                         <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                         <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                     </div>
@@ -789,5 +785,4 @@
         <menuitem id="crm_lead_menu_activities" name="Next Activities" sequence="5"
             parent="base.menu_sales" action="crm_lead_action_activities" />
 
-    </data>
-</openerp>
+</odoo>

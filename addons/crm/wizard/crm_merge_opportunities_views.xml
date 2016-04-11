@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
 
         <!-- Merge Opportunities  -->
         <record model="ir.ui.view" id="merge_opportunity_form">
@@ -9,7 +8,7 @@
             <field name="arch" type="xml">
                 <form string="Merge Leads/Opportunities">
                     <group string="Assign opportunities to">
-                        <field name="user_id" class="oe_inline" on_change="on_change_user(user_id, team_id, context)"/>
+                        <field name="user_id" class="oe_inline"/>
                         <field name="team_id" class="oe_inline"/>
                     </group>
                     <group string="Select Leads/Opportunities">
@@ -53,5 +52,4 @@
             groups="base.group_sale_salesman"
             />
 
-    </data>
-</openerp>
+</odoo>
