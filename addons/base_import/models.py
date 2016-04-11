@@ -323,7 +323,7 @@ class ir_import(orm.TransientModel):
         # Try to see if all values are a date or datetime
         dt = datetime.datetime
         separator = [' ','/','-']
-        date_format = ['%dr%mr%Y', '%mr%dr%Y', '%Yr%mr%d', '%Yr%dr%m']
+        date_format = ['%mr%dr%Y', '%dr%mr%Y', '%Yr%mr%d', '%Yr%dr%m']
         date_patterns = [options['date_format']] if options.get('date_format') else []
         if not date_patterns:
             date_patterns = [pattern.replace('r', sep) for sep in separator for pattern in date_format]
