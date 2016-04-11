@@ -69,7 +69,8 @@ $('.oe_website_sale').each(function () {
         openerp.jsonRpc("/shop/get_unit_price", 'call', {
             'product_ids': product_ids,
             'add_qty': value,
-            'use_order_pricelist': true})
+            'use_order_pricelist': true,
+            'line_id': line_id})
         .then(function (res) {
             //basic case
             $dom.find('span.oe_currency_value').last().text(res[product_id].toFixed(2));
