@@ -536,7 +536,7 @@ class res_partner(osv.osv, format_address):
         result = super(res_partner,self).write(cr, uid, ids, vals, context=context)
         res_users = self.pool['res.users']
         for partner in self.browse(cr, uid, ids, context=context):
-            if any(res_users.has_group(cr, u.id, 'base.group_user') for u in partner.user_ids):
+            if any(res_users.has_group(cr, u.id, 'base.group_user') for u in partner.user_ids if u.id != uid):
                 res_users.check_access_rights(cr, uid, 'write')
             self._fields_sync(cr, uid, partner, vals, context)
         return result
