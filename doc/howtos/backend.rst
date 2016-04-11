@@ -293,7 +293,7 @@ action more easily.
 
 .. exercise:: Define new menu entries
 
-    Define new menu entries to access courses and sessions under the
+    Define new menu entries to access courses under the
     OpenAcademy menu entry. A user should be able to
 
     - display a list of all the courses
