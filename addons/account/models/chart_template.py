@@ -319,8 +319,9 @@ class AccountChartTemplate(models.Model):
                     'account_id': account_ref.get(value['account_id'], False),
                 })
 
-        # Create Journals
-        self.generate_journals(account_ref, company)
+        # Create Journals - Only done for root chart template
+        if not self.parent_id:
+            self.generate_journals(account_ref, company)
 
         # generate properties function
         self.generate_properties(account_ref, company)
