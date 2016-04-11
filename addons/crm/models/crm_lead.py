@@ -526,14 +526,6 @@ class crm_lead(FormatAddress, osv.osv):
                 attachment.write(values)
         return True
 
-    def get_duplicated_leads(self, cr, uid, ids, partner_id, include_lost=False, context=None):
-        """
-        Search for opportunities that have the same partner and that arent done or cancelled
-        """
-        lead = self.browse(cr, uid, ids[0], context=context)
-        email = lead.partner_id and lead.partner_id.email or lead.email_from
-        return self.pool['crm.lead']._get_duplicated_leads_by_emails(cr, uid, partner_id, email, include_lost=include_lost, context=context)
-
     def _get_duplicated_leads_by_emails(self, cr, uid, partner_id, email, include_lost=False, context=None):
         """
         Search for opportunities that have   the same partner and that arent done or cancelled
