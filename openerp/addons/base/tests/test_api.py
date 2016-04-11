@@ -339,7 +339,7 @@ class TestAPI(common.TransactionCase):
         self.assertItemsEqual(partners.ids, country_id_cache)
 
         # partners' countries are ready for prefetching
-        country_ids = set(c.id for c in country_id_cache.itervalues() if c)
+        country_ids = set(cid for cids in country_id_cache.itervalues() for cid in cids)
         self.assertTrue(len(country_ids) > 1)
         self.assertItemsEqual(country_ids, partners._prefetch['res.country'])
 
