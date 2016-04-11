@@ -269,7 +269,7 @@ class NewId(object):
     def __nonzero__(self):
         return False
 
-IdType = (int, long, basestring, NewId)
+IdType = (int, long, str, unicode, NewId)
 
 
 # maximum number of prefetched records
@@ -6422,7 +6422,7 @@ PGERROR_TO_OE = defaultdict(
     '23505': convert_pgerror_23505,
 })
 
-def _normalize_ids(arg, atoms={int, long, str, unicode, NewId}):
+def _normalize_ids(arg, atoms=set(IdType)):
     """ Normalizes the ids argument for ``browse`` (v7 and v8) to a tuple.
 
     Various implementations were tested on the corpus of all browse() calls

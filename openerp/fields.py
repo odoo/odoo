@@ -1571,15 +1571,23 @@ class Reference(Selection):
             "Reference field %s with non-integer size %r" % (self, self.size)
 
     def convert_to_cache(self, value, record, validate=True):
+        # cache format: (res_model, res_id) or False
+        def process(res_model, res_id):
+            record._prefetch[res_model].add(res_id)
+            return (res_model, res_id)
+
         if isinstance(value, BaseModel):
             if not validate or (value._name in self.get_values(record.env) and len(value) <= 1):
-                return value.with_env(record.env).with_prefetch(record._prefetch) or False
+                return process(value._name, value.id) if value else False
         elif isinstance(value, basestring):
             res_model, res_id = value.split(',')
-            return record.env[res_model].browse(int(res_id), record._prefetch)
+            return process(res_model, int(res_id))
         elif not value:
             return False
         raise ValueError("Wrong value for %s: %r" % (self, value))
+
+    def convert_to_record(self, value, record):
+        return value and record.env[value[0]].browse([value[1]], record._prefetch)
 
     def convert_to_read(self, value, record, use_name_get=True):
         return "%s,%s" % (value._name, value.id) if value else False
@@ -1690,21 +1698,25 @@ class Many2one(_Relational):
         records._cache[self] = self.convert_to_cache(value, records, validate=False)
 
     def convert_to_cache(self, value, record, validate=True):
-        if isinstance(value, (NoneType, int, long)):
-            return record.env[self.comodel_name].browse(value, record._prefetch)
-        if isinstance(value, BaseModel):
+        # cache format: tuple(ids)
+        def process(ids):
+            return record._prefetch[self.comodel_name].update(ids) or ids
+
+        if type(value) in IdType:
+            return process((value,))
+        elif isinstance(value, BaseModel):
             if not validate or (value._name == self.comodel_name and len(value) <= 1):
-                return value.with_env(record.env).with_prefetch(record._prefetch)
+                return process(value._ids)
             raise ValueError("Wrong value for %s: %r" % (self, value))
         elif isinstance(value, tuple):
-            return record.env[self.comodel_name].browse(value[0], record._prefetch)
+            return process((value[0],))
         elif isinstance(value, dict):
-            return record.env[self.comodel_name].new(value)
+            return process(record.env[self.comodel_name].new(value)._ids)
         else:
-            return record.env[self.comodel_name]
+            return ()
 
     def convert_to_record(self, value, record):
-        return value.with_prefetch(record._prefetch)
+        return record.env[self.comodel_name]._browse(value, record.env, record._prefetch)
 
     def convert_to_read(self, value, record, use_name_get=True):
         if use_name_get and value:
@@ -1760,9 +1772,13 @@ class _RelationalMulti(_Relational):
             record._cache[self] = value
 
     def convert_to_cache(self, value, record, validate=True):
+        # cache format: tuple(ids)
+        def process(ids):
+            return record._prefetch[self.comodel_name].update(ids) or ids
+
         if isinstance(value, BaseModel):
             if not validate or (value._name == self.comodel_name):
-                return value.with_env(record.env).with_prefetch(record._prefetch)
+                return process(value._ids)
         elif isinstance(value, list):
             # value is a list of record ids or commands
             comodel = record.env[self.comodel_name]
@@ -1791,14 +1807,14 @@ class _RelationalMulti(_Relational):
                     ids.add(comodel.new(command).id)
                 else:
                     ids.add(command)
-            # return result as a recordset
-            return comodel.browse(list(ids), record._prefetch)
+            # return result as a tuple
+            return process(tuple(ids))
         elif not value:
-            return record.env[self.comodel_name]
+            return ()
         raise ValueError("Wrong value for %s: %s" % (self, value))
 
     def convert_to_record(self, value, record):
-        return value.with_prefetch(record._prefetch)
+        return record.env[self.comodel_name]._browse(value, record.env, record._prefetch)
 
     def convert_to_read(self, value, record, use_name_get=True):
         return value.ids
@@ -2030,5 +2046,5 @@ class Id(Field):
 # imported here to avoid dependency cycle issues
 from openerp import SUPERUSER_ID
 from .exceptions import AccessError, MissingError
-from .models import check_pg_name, BaseModel
+from .models import check_pg_name, BaseModel, IdType
 from .osv import fields
