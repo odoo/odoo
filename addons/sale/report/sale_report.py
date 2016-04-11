@@ -11,6 +11,7 @@ class sale_report(osv.osv):
     _rec_name = 'date'
 
     _columns = {
+        'name': fields.char('Order Reference', readonly=True),
         'date': fields.datetime('Date Order', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', readonly=True),
@@ -56,6 +57,7 @@ class sale_report(osv.osv):
                     sum(l.price_total / COALESCE(cr.rate, 1.0)) as price_total,
                     sum(l.price_subtotal / COALESCE(cr.rate, 1.0)) as price_subtotal,
                     count(*) as nbr,
+                    s.name as name,
                     s.date_order as date,
                     s.state as state,
                     s.partner_id as partner_id,
@@ -97,6 +99,7 @@ class sale_report(osv.osv):
                     l.order_id,
                     t.uom_id,
                     t.categ_id,
+                    s.name,
                     s.date_order,
                     s.partner_id,
                     s.user_id,
