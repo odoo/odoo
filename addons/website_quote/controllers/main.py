@@ -20,10 +20,10 @@ class sale_quote(http.Controller):
     def view(self, order_id, pdf=None, token=None, message=False, **post):
         # use SUPERUSER_ID allow to access/view order for public user
         # only if he knows the private token
+        now = time.strftime('%Y-%m-%d')
         if token:
             order = request.env['sale.order'].sudo().search([('id', '=', order_id), ('access_token', '=', token)])
             # Log only once a day
-            now = time.strftime('%Y-%m-%d')
             if order and request.session.get('view_quote', False) != now:
                 request.session['view_quote'] = now
                 body = _('Quotation viewed by customer')
