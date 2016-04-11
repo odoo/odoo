@@ -7,14 +7,15 @@ class TestStockCommon(common.TestProductCommon):
 
     def _create_pack_operation(self, product, product_qty, picking_id, **values):
         PackOperation = self.env['stock.pack.operation'].sudo(self.user_stock_manager)
-        vals = PackOperation.product_id_change(product.id, False, product_qty)['value']
-        vals.update({
+        vals = {
             'picking_id': picking_id.id,
             'product_id': product.id,
             'product_qty': product_qty,
-            'qty_done': product_qty})
+            'qty_done': product_qty}
         vals.update(**values)
-        return PackOperation.create(vals)
+        pack_operation = PackOperation.new(vals)
+        pack_operation.onchange_product_id()
+        return PackOperation.create(pack_operation._convert_to_write(pack_operation._cache))
 
     def _create_picking_in(self, warehouse):
         Picking = self.env['stock.picking']
@@ -29,8 +30,9 @@ class TestStockCommon(common.TestProductCommon):
         # TDE FIXME: user as parameter
         Move = self.env['stock.move'].sudo(self.user_stock_manager)
         # simulate create + onchange
-        move_values = Move.onchange_product_id(product.id, src_location.id, dst_location.id)['value']
-        move_values.update(product_id=product.id)
+        move = Move.new({'product_id': product.id, 'location_id': src_location.id, 'location_dest_id': dst_location.id})
+        move.onchange_product_id()
+        move_values = move._convert_to_write(move._cache)
         move_values.update(**values)
         return Move.create(move_values)
 
