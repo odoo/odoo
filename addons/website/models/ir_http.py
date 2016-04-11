@@ -59,14 +59,14 @@ class ir_http(orm.AbstractModel):
 
     def get_nearest_lang(self, lang):
         # Try to find a similar lang. Eg: fr_BE and fr_FR
-        if lang in request.website.get_languages():
-            return lang
-
-        short = lang.split('_')[0]
+        short = lang.partition('_')[0]
+        short_match = False
         for code, name in request.website.get_languages():
-            if code.startswith(short):
-                return code
-        return False
+            if code == lang:
+                return lang
+            if not short_match and code.startswith(short):
+                short_match = code
+        return short_match
 
     def _geoip_setup_resolver(self):
         if self._geoip_resolver is None:
