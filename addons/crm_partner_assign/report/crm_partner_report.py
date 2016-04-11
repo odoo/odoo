@@ -68,4 +68,11 @@ class crm_partner_report_assign(osv.osv):
             )""")
 
 
+class account_invoice_report(osv.osv):
+    _inherit = 'account.invoice.report'
+
+    def init(self, cr):
+        super(account_invoice_report, self).init(cr)
+        self.pool['crm.partner.report.assign'].init(cr)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
