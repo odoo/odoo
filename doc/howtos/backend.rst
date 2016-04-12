@@ -982,10 +982,6 @@ Tree views
 Tree views can take supplementary attributes to further customize their
 behavior:
 
-``colors``
-    .. deprecated:: 9.0
-        replaced by ``decoration-{$name}``
-
 ``decoration-{$name}``
     allow changing the style of a row's text based on the corresponding
     record's attributes.
