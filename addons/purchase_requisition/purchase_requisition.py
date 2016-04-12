@@ -224,6 +224,7 @@ class purchase_order(osv.osv):
             'partner_id': partner_id or (tender.vendor_id and tender.vendor_id.id) or False,
             'fiscal_position_id': fpos and fpos.id or False,
             'origin': tender.name,
+            'partner_ref': tender.name,   # that way, we can control vendor bill based on agreement reference
             'notes': tender.description,
             'order_line': (tender.type_id.line_copy=='copy') and order_lines or [],
             'date_order': tender.date_end or fields.datetime.now(),
