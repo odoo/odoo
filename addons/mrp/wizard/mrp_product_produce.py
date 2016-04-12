@@ -3,6 +3,7 @@
 
 from openerp import api, fields, models
 import openerp.addons.decimal_precision as dp
+from openerp.exceptions import UserError
 
 class MrpProductProduce(models.TransientModel):
     _name = "mrp.product.produce"
@@ -69,10 +70,16 @@ class MrpProductProduce(models.TransientModel):
     @api.multi
     def do_produce(self):
         # Nothing to do for lots since values are created using default data (stock.move.lots)
-        moves = self.production_id.move_raw_ids + self.production_id.move_finished_ids
+        moves = self.production_id.move_raw_ids
         for move in moves.filtered(lambda x: x.product_id.tracking == 'none' and x.state not in ('done', 'cancel')):
             quantity = self.product_qty
             if move.unit_factor:
+                move.quantity_done_store += quantity * move.unit_factor
+        moves = self.production_id.move_finished_ids.filtered(lambda x: x.product_id.tracking == 'none' and x.state not in ('done', 'cancel'))
+        for move in moves:
+            if move.product_id.id == self.production_id.product_id.id:
+                move.quantity_done_store += self.product_qty
+            elif move.unit_factor:
                 move.quantity_done_store += quantity * move.unit_factor
         self.check_finished_move_lots()
         return {'type': 'ir.actions.act_window_close'}
@@ -82,6 +89,8 @@ class MrpProductProduce(models.TransientModel):
         lots = self.env['stock.move.lots']
         produce_move = self.production_id.move_finished_ids.filtered(lambda x: x.product_id == self.product_id and x.state not in ('done', 'cancel'))
         if produce_move.product_id.tracking != 'none':
+            if not self.lot_id:
+                raise UserError(_('You need to provide a lot for the finished product'))
             existing_move_lot = produce_move.move_lot_ids.filtered(lambda x: x.lot_id == self.lot_id)
             if existing_move_lot:
                 existing_move_lot.quantity += self.product_qty
@@ -99,8 +108,12 @@ class MrpProductProduce(models.TransientModel):
             for move in self.production_id.move_raw_ids:
                 for movelots in move.move_lot_ids.filtered(lambda x: not x.lot_produced_id):
                     if movelots.quantity_done and self.lot_id:
+                        #Possibly the entire move is selected
                         remaining_qty = movelots.quantity - movelots.quantity_done
-                        new_move_lot = movelots.copy()
-                        new_move_lot.write({'quantity':movelots.quantity_done, 'lot_produced_id': self.lot_id.id})
-                        movelots.write({'quantity': remaining_qty, 'quantity_done': 0})
+                        if remaining_qty > 0:
+                            new_move_lot = movelots.copy()
+                            new_move_lot.write({'quantity':movelots.quantity_done, 'lot_produced_id': self.lot_id.id})
+                            movelots.write({'quantity': remaining_qty, 'quantity_done': 0})
+                        else:
+                            movelots.write({'lot_produced_id': self.lot_id.id})
         return True
