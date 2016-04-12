@@ -906,6 +906,8 @@ class crm_lead(format_address, osv.osv):
             vals.update(onchange_stage_values)
         if vals.get('probability') >= 100 or not vals.get('active', True):
             vals['date_closed'] = fields.datetime.now()
+        elif vals.get('probability') < 100:
+            vals['date_closed'] = False
         return super(crm_lead, self).write(cr, uid, ids, vals, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
