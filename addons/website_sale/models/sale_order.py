@@ -195,7 +195,7 @@ class Website(models.Model):
         order_pl = partner.last_website_so_id and partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
         partner_pl = partner.property_product_pricelist
         pricelists = website._get_pl_partner_order(isocountry, show_visible,
-                                                   website.user_id.partner_id.property_product_pricelist.id,
+                                                   website.user_id.sudo().partner_id.property_product_pricelist.id,
                                                    request.session.get('website_sale_current_pl'),
                                                    website.website_pricelist_ids,
                                                    partner_pl=partner_pl and partner_pl.id or None,
