@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:27+0000\n"
-"PO-Revision-Date: 2016-03-26 15:48+0000\n"
+"PO-Revision-Date: 2016-04-04 07:04+0000\n"
 "Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
 msgid "<b>Category:</b>"
-msgstr "<b>หมวดหมู่:</b>"
+msgstr "<b>หมวด:</b>"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_kanban
@@ -56,7 +56,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_needaction
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "ต้องดำเนินการ"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
@@ -112,7 +112,7 @@ msgstr "สินทรัพย์"
 #: model:ir.model,name:hr_equipment.model_hr_equipment_category
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_6493
 msgid "Asset Category"
-msgstr "หมวดหมู่สินทรัพย์"
+msgstr "หมวดสินทรัพย์"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_name
@@ -123,7 +123,7 @@ msgstr "ชื่อสินทรัพย์"
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_tree
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_tree
 msgid "Assign To Employee"
-msgstr ""
+msgstr "มอบหมายให้บุคลากร"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
@@ -139,32 +139,32 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_user_id
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Assigned to"
-msgstr ""
+msgstr "มอบหมายให้"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_department_id
 msgid "Assigned to Department"
-msgstr ""
+msgstr "มอบหมายให้แผนก"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Assigned to Departments"
-msgstr ""
+msgstr "มอบหมายให้แผนก"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_employee_id
 msgid "Assigned to Employee"
-msgstr ""
+msgstr "มอบหมายให้บุคลากร"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Assigned to Employees"
-msgstr ""
+msgstr "มอบหมายให้บุคลากร"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Assigned to Employees and Departments"
-msgstr ""
+msgstr "มอบหมายให้บุคลากรและแผนก"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
@@ -187,14 +187,14 @@ msgstr "ยกเลิก"
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Category"
-msgstr "หมวดหมู่"
+msgstr "หมวด"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_name
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_form
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
 msgid "Category Name"
-msgstr "ชื่อประเภท"
+msgstr "ชื่อหมวด"
 
 #. module: hr_equipment
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action_from_category_form
@@ -247,7 +247,7 @@ msgstr ""
 #. module: hr_equipment
 #: model:ir.ui.menu,name:hr_equipment.menu_equipment_configuration
 msgid "Configuration"
-msgstr "ตั้งค่า"
+msgstr "การตั้งค่า"
 
 #. module: hr_equipment
 #: model:ir.actions.act_window,name:hr_equipment.action_hr_equipment_configuration
@@ -355,7 +355,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_tree
 msgid "Employee"
-msgstr "พนักงาน"
+msgstr "บุคลากร"
 
 #. module: hr_equipment
 #: model:ir.model,name:hr_equipment.model_hr_equipment
@@ -475,14 +475,14 @@ msgstr ""
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_unread
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_unread
 msgid "If checked new messages require your attention."
-msgstr "ถ้าการตรวจสอบข้อความใหม่ให้ระบุความสนใจของคุณ"
+msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_needaction
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_needaction
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
 
 #. module: hr_equipment
 #: selection:hr.equipment.request,kanban_state:0
@@ -493,14 +493,14 @@ msgstr "กำลังดำเนินการ"
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_form
 msgid "Internal Note ......."
-msgstr ""
+msgstr "โน้ตภายใน ......."
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_is_follower
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_is_follower
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "เป็นผู้ติดตาม"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_kanban_state
@@ -663,7 +663,7 @@ msgstr "ปกติ"
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_note
 msgid "Note"
-msgstr "บันทึกย่อ"
+msgstr "โน้ต"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_needaction_counter
@@ -725,7 +725,7 @@ msgstr ""
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_phone
 msgid "Phones"
-msgstr ""
+msgstr "โทรศัพท์"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
@@ -833,7 +833,7 @@ msgstr "ค้นหา"
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_form
 msgid "Sender"
-msgstr ""
+msgstr "ผู้ส่ง"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_stage_sequence
@@ -886,12 +886,12 @@ msgstr "เปลี่ยนสถานะแล้ว"
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_form
 msgid "Subject"
-msgstr "ชื่อเรื่อง"
+msgstr "เรื่อง"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_name
 msgid "Subjects"
-msgstr ""
+msgstr "หัวข้อ"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_user_id
@@ -1033,7 +1033,7 @@ msgstr ""
 #. module: hr_equipment
 #: model:ir.model,name:hr_equipment.model_hr_equipment_config_settings
 msgid "hr.equipment.config.settings"
-msgstr ""
+msgstr "hr.equipment.config.settings"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_tree

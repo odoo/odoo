@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
   <data noupdate="0">
+        <!-- Tax Tags, used in VAT report-->
         <record id="tax_tag_00" model="account.account.tag">
             <field name="name">Belgium VAT Form: grid 0</field>
             <field name="applicability">taxes</field>
@@ -71,6 +72,14 @@
         </record>
         <record id="tax_tag_59" model="account.account.tag">
             <field name="name">Belgium VAT Form: grid 59</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tax_tag_61" model="account.account.tag">
+            <field name="name">Belgium VAT Form: grid 61</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tax_tag_62" model="account.account.tag">
+            <field name="name">Belgium VAT Form: grid 62</field>
             <field name="applicability">taxes</field>
         </record>
         <record id="tax_tag_63" model="account.account.tag">
@@ -260,7 +269,7 @@
             <field name="price_include" eval="0"/>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
-            <field name="type_tax_use">sale</field>
+            <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_46L'), ref('tax_tag_48s46L')])]"/>
         </record>
@@ -271,7 +280,7 @@
             <field name="price_include" eval="0"/>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
-            <field name="type_tax_use">sale</field>
+            <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_46T'), ref('tax_tag_48s46T')])]"/>
         </record>
@@ -1749,6 +1758,28 @@
             <field name="type_tax_use">purchase</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_83'), ref('tax_tag_87'), ref('tax_tag_85')])]"/>
+        </record>
+        <record id="attn_VAT-IN-V61" model="account.tax.template">
+            <field name="sequence">9000</field>
+            <field name="description">VAT-IN-V61</field>
+            <field name="name">Régularisation en faveur de l'état</field>
+            <field name="price_include" eval="0"/>
+            <field name="amount">0.0</field>
+            <field name="amount_type">fixed</field>
+            <field name="type_tax_use">none</field>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_61')])]"/>
+        </record>
+        <record id="attn_VAT-IN-V62" model="account.tax.template">
+            <field name="sequence">9010</field>
+            <field name="description">VAT-IN-V62</field>
+            <field name="name">Régularisation en faveur du déclarant</field>
+            <field name="price_include" eval="0"/>
+            <field name="amount">0.0</field>
+            <field name="amount_type">fixed</field>
+            <field name="type_tax_use">none</field>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_62')])]"/>
         </record>
     </data>
 </openerp>

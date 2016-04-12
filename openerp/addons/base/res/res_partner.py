@@ -481,9 +481,9 @@ class Partner(models.Model, FormatAddress):
 
         result = super(Partner, self).write(vals)
         for partner in self:
-            partner._fields_sync(vals)
-            if any(u.has_group('base.group_user') for u in partner.user_ids):
+            if any(u.has_group('base.group_user') for u in partner.user_ids if u != self.env.user):
                 self.env['res.users'].check_access_rights('write')
+            partner._fields_sync(vals)
         return result
 
     @api.model

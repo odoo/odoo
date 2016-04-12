@@ -30,11 +30,6 @@ class website_hr_recruitment(http.Controller):
         # Browse jobs as superuser, because address is restricted
         jobs = Jobs.sudo().browse(job_ids)
 
-        # Deduce departments and offices of those jobs
-        departments = set(j.department_id for j in jobs if j.department_id)
-        offices = set(j.address_id for j in jobs if j.address_id)
-        countries = set(o.country_id for o in offices if o.country_id)
-
         # Default search by user country
         if not (country or department or office_id or kwargs.get('all_countries')):
             country_code = request.session['geoip'].get('country_code')
@@ -44,13 +39,23 @@ class website_hr_recruitment(http.Controller):
                 if not any(j for j in jobs if j.address_id and j.address_id.country_id == country):
                     country = False
 
-        # Filter the matching one
+        # Filter job / office for country
         if country and not kwargs.get('all_countries'):
-            jobs = (j for j in jobs if j.address_id is None or j.address_id.country_id and j.address_id.country_id.id == country.id)
+            jobs = [j for j in jobs if j.address_id is None or j.address_id.country_id and j.address_id.country_id.id == country.id]
+            offices = set(j.address_id for j in jobs if j.address_id is None or j.address_id.country_id and j.address_id.country_id.id == country.id)
+        else:
+            offices = set(j.address_id for j in jobs if j.address_id)
+
+        # Deduce departments and countries offices of those jobs
+        departments = set(j.department_id for j in jobs if j.department_id)
+        countries = set(o.country_id for o in offices if o.country_id)
+
         if department:
             jobs = (j for j in jobs if j.department_id and j.department_id.id == department.id)
-        if office_id:
+        if office_id and office_id in map(lambda x: x.id, offices):
             jobs = (j for j in jobs if j.address_id and j.address_id.id == office_id)
+        else:
+            office_id = False
 
         # Render page
         return request.website.render("website_hr_recruitment.index", {
