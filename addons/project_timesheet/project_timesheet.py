@@ -68,7 +68,7 @@ class task(osv.osv):
 
     def _get_task(self, cr, uid, id, context=None):
         res = []
-        for line in self.pool.get('account.analytic.line').search_read(cr,uid,[('task_id', '!=', False),('id','in',id)], context=context):
+        for line in self.pool.get('account.analytic.line').search_read(cr,uid,[('task_id', '!=', False),('id','in',id)], ['task_id'], context=context):
             res.append(line['task_id'][0])
         return res
 
