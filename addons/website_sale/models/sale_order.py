@@ -54,8 +54,8 @@ class sale_order(osv.Model):
         context = dict(context or {})
         order = self.pool['sale.order'].browse(cr, SUPERUSER_ID, order_id, context=context)
         product_context = context.copy()
+        product_context.setdefault('lang', order.partner_id.lang)
         product_context.update({
-            'lang': order.partner_id.lang,
             'partner': order.partner_id.id,
             'quantity': qty,
             'date': order.date_order,
