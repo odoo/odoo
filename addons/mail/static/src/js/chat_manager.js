@@ -11,6 +11,7 @@ var time = require('web.time');
 var web_client = require('web.web_client');
 
 var _t = core._t;
+var _lt = core._lt;
 var LIMIT = 100;
 var preview_msg_max_size = 350;  // optimal for native english speakers
 
@@ -300,7 +301,9 @@ function add_channel (data, options) {
     } else {
         channel = chat_manager.make_channel(data, options);
         channels.push(channel);
-        channels = _.sortBy(channels, function (channel) { return channel.name.toLowerCase(); });
+        // In case of a static channel (Inbox, Starred), the name is translated thanks to _lt
+        // (lazy translate). In this case, channel.name is an object, not a string.
+        channels = _.sortBy(channels, function (channel) { return _.isString(channel.name) ? channel.name.toLowerCase() : '' });
         if (!options.silent) {
             chat_manager.bus.trigger("new_channel", channel);
         }
@@ -1029,13 +1032,13 @@ chat_manager.bus.on('client_action_open', null, function (open) {
 function init () {
     add_channel({
         id: "channel_inbox",
-        name: _t("Inbox"),
+        name: _lt("Inbox"),
         type: "static",
     }, { display_needactions: true });
 
     add_channel({
         id: "channel_starred",
-        name: _t("Starred"),
+        name: _lt("Starred"),
         type: "static"
     });
 

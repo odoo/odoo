@@ -34,8 +34,6 @@
                     <separator/>
                     <filter string="Won" name="won"
                             domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.on_change', '=', 1)]"/>
-                    <filter string="Lost" name="lost"
-                            domain="['&amp;', ('probability', '=', 0), ('active', '=', False)]"/>
                     <field name="team_id" context="{'invisible_team': False}"/>
                     <field name="author_id" string="Salesperson"/>
                     <group expand="1" string="Group By">

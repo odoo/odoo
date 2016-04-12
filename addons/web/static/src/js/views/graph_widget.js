@@ -4,6 +4,7 @@ odoo.define('web.GraphWidget', function (require) {
 var config = require('web.config');
 var core = require('web.core');
 var Model = require('web.DataModel');
+var formats = require('web.formats');
 var Widget = require('web.Widget');
 
 var _t = core._t;
@@ -24,6 +25,7 @@ return Widget.extend({
         this.groupbys = options.groupbys || [];
         this.mode = options.mode || "bar";
         this.measure = options.measure || "__count__";
+        this.stacked = options.stacked;
     },
     start: function () {
         return this.load_data().then(this.proxy('display_graph'));
@@ -167,12 +169,12 @@ return Widget.extend({
           showXAxis: true,
           showYAxis: true,
           rightAlignYAxis: false,
-          stacked: true,
+          stacked: this.stacked,
           reduceXTicks: false,
           // rotateLabels: 40,
           showControls: (this.groupbys.length > 1)
         });
-        chart.yAxis.tickFormat(function(d) { return openerp.web.format_value(d, { type : 'float' });});
+        chart.yAxis.tickFormat(function(d) { return formats.format_value(d, { type : 'float' });});
 
         chart(svg);
         this.to_remove = chart.update;
