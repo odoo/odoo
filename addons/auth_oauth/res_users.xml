@@ -7,13 +7,40 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//page[@name='access_rights']" position="after">
-                    <page string="Oauth">
-                        <group>
-                            <field name="oauth_provider_id"/>
-                            <field name="oauth_uid"/>
-                            <field name="oauth_access_token"/>
-                        </group>
+                <xpath expr="//page[@name='api_keys']" position="after">
+                    <page string="OAuth">
+                        <label for="oauth_account_ids"/>
+                        <field name="oauth_account_ids">
+                            <tree string="OAuth Accounts" create="0" editable="bottom">
+                                <field name="oauth_provider_id"/>
+                                <field name="oauth_email"/>
+                                <field name="oauth_uid" groups="base.group_no_one"/>
+                            </tree>
+                            <form>
+                                <group>
+                                    <field name="oauth_provider_id"/>
+                                    <field name="oauth_email"/>
+                                    <field name="oauth_uid" groups="base.group_no_one"/>
+                                </group>
+                            </form>
+                        </field>
+                        <div groups="base.group_no_one">
+                            <label for="oauth_token_ids"/>
+                            <field name="oauth_token_ids">
+                                <tree string="OAuth Access Tokens" create="0" editable="bottom">
+                                    <field name="oauth_provider_id"/>
+                                    <field name="prefix"/>
+                                    <field name="expiry_date"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                        <field name="oauth_provider_id"/>
+                                        <field name="prefix"/>
+                                        <field name="expiry_date"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </div>
                     </page>
                 </xpath>
             </field>

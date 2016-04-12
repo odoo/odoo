@@ -8,22 +8,37 @@ import json
 import openerp
 from openerp.addons.auth_signup.models.res_partner import SignupError
 from openerp.osv import osv, fields
-from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
-class res_users(osv.Model):
-    _inherit = 'res.users'
+
+class auth_oauth_account(osv.Model):
+    _name = 'auth_oauth.account'
 
     _columns = {
-        'oauth_provider_id': fields.many2one('auth.oauth.provider', 'OAuth Provider'),
-        'oauth_uid': fields.char('OAuth User ID', help="Oauth Provider user_id", copy=False),
-        'oauth_access_token': fields.char('OAuth Access Token', readonly=True, copy=False),
+        'user_id': fields.many2one('res.users', 'User', required=True, readonly=True, ondelete='cascade'),
+        'oauth_provider_id': fields.many2one('auth.oauth.provider', 'OAuth Provider', required=True, readonly=True, ondelete='cascade'),
+        'oauth_uid': fields.char('OAuth User ID', help="OAuth Provider user_id", required=True),
+        'oauth_email': fields.char('OAuth Email', help="OAuth Email", readonly=True),
     }
 
     _sql_constraints = [
         ('uniq_users_oauth_provider_oauth_uid', 'unique(oauth_provider_id, oauth_uid)', 'OAuth UID must be unique per provider'),
     ]
+
+
+class res_users_token(osv.Model):
+    _inherit = 'res.users.token'
+
+    _columns = {
+        'oauth_account_id': fields.many2one('auth_oauth.account', 'OAuth Account', readonly=True, ondelete='cascade'),
+        'oauth_provider_id': fields.related('oauth_account_id', 'oauth_provider_id', type='many2one', relation='auth.oauth.provider', string='OAuth Provider', readonly=True),
+    }
+
+    def _get_type_selection(self):
+        selection = super(res_users_token, self)._get_type_selection()
+        selection.append(('oauth', 'OAuth'))
+        return selection
 
     def _auth_oauth_rpc(self, cr, uid, endpoint, access_token, context=None):
         params = werkzeug.url_encode({'access_token': access_token})
@@ -46,6 +61,15 @@ class res_users(osv.Model):
             validation.update(data)
         return validation
 
+
+class res_users(osv.Model):
+    _inherit = 'res.users'
+
+    _columns = {
+        'oauth_account_ids': fields.one2many('auth_oauth.account', 'user_id', 'OAuth Accounts'),
+        'oauth_token_ids': fields.one2many('res.users.token', 'user_id', 'OAuth Access Tokens', domain=[('type', '=', 'oauth')])
+    }
+
     def _generate_signup_values(self, cr, uid, provider, validation, params, context=None):
         oauth_uid = validation['user_id']
         email = validation.get('email', 'provider_%s_user_%s' % (provider, oauth_uid))
@@ -54,9 +78,6 @@ class res_users(osv.Model):
             'name': name,
             'login': email,
             'email': email,
-            'oauth_provider_id': provider,
-            'oauth_uid': oauth_uid,
-            'oauth_access_token': params['access_token'],
             'active': True,
         }
 
@@ -70,15 +91,18 @@ class res_users(osv.Model):
 
             This method can be overridden to add alternative signin methods.
         """
+        user_id = None
+        login = None
+        oauth_account_id = None
         try:
             oauth_uid = validation['user_id']
-            user_ids = self.search(cr, uid, [("oauth_uid", "=", oauth_uid), ('oauth_provider_id', '=', provider)])
-            if not user_ids:
+            oauth_account_ids = self.pool['auth_oauth.account'].search(cr, uid, [("oauth_uid", "=", oauth_uid), ('oauth_provider_id', '=', provider)])
+            if not oauth_account_ids:
                 raise openerp.exceptions.AccessDenied()
-            assert len(user_ids) == 1
-            user = self.browse(cr, uid, user_ids[0], context=context)
-            user.write({'oauth_access_token': params['access_token']})
-            return user.login
+            oauth_account_id = oauth_account_ids[0]
+            user = self.pool['auth_oauth.account'].browse(cr, uid, oauth_account_id, context=context).user_id
+            login = user.login
+            user_id = user.id
         except openerp.exceptions.AccessDenied, access_denied_exception:
             if context and context.get('no_user_creation'):
                 return None
@@ -87,9 +111,23 @@ class res_users(osv.Model):
             values = self._generate_signup_values(cr, uid, provider, validation, params, context=context)
             try:
                 _, login, _ = self.signup(cr, uid, values, token, context=context)
-                return login
+                user_id = self.search(cr, uid, [('login', '=', login)], context=context)[0]
+                oauth_account_id = self.pool['auth_oauth.account'].create(cr, uid, {
+                    'user_id': user_id,
+                    'oauth_uid': validation['user_id'],
+                    'oauth_provider_id': provider,
+                    'oauth_email': validation.get('email'),
+                }, context=context)
             except SignupError:
                 raise access_denied_exception
+        if user_id:
+            self.pool['res.users.token'].create(cr, uid, {
+                'user_id': user_id,
+                'token': params['access_token'],
+                'type': 'oauth',
+                'oauth_account_id': oauth_account_id,
+            })
+        return login
 
     def auth_oauth(self, cr, uid, provider, params, context=None):
         # Advice by Google (to avoid Confused Deputy Problem)
@@ -98,7 +136,7 @@ class res_users(osv.Model):
         # else:
         #   continue with the process
         access_token = params.get('access_token')
-        validation = self._auth_oauth_validate(cr, uid, provider, access_token, context=context)
+        validation = self.pool['res.users.token']._auth_oauth_validate(cr, uid, provider, access_token, context=context)
         # required check
         if not validation.get('user_id'):
             # Workaround: facebook does not send 'user_id' in Open Graph Api
@@ -113,13 +151,3 @@ class res_users(osv.Model):
             raise openerp.exceptions.AccessDenied()
         # return user credentials
         return (cr.dbname, login, access_token)
-
-    def check_credentials(self, cr, uid, password):
-        try:
-            return super(res_users, self).check_credentials(cr, uid, password)
-        except openerp.exceptions.AccessDenied:
-            res = self.search(cr, SUPERUSER_ID, [('id', '=', uid), ('oauth_access_token', '=', password)])
-            if not res:
-                raise
-
-#
