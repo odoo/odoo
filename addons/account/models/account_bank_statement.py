@@ -855,7 +855,7 @@ class AccountBankStatementLine(models.Model):
 
             # Create write-offs
             for aml_dict in new_aml_dicts:
-                aml_obj.with_context(check_move_validity=False).create(aml_dict)
+                aml_obj.with_context(check_move_validity=False).create(aml_dict, apply_taxes=False)
 
             # Create counterpart move lines and reconcile them
             for aml_dict in counterpart_aml_dicts:

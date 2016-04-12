@@ -440,7 +440,7 @@ var ChatterComposer = composer.BasicComposer.extend({
             internal_subtypes: [],
         });
         if (this.options.is_log) {
-            this.options.send_text = _('Log');
+            this.options.send_text = _t('Log');
         }
         this.events = _.extend(this.events, {
             'click .o_composer_button_full_composer': 'on_open_full_composer',
