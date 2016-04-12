@@ -6,15 +6,63 @@
       </xpath>
     </template>
 
-    <template id="account" name="Account" inherit_id="website_portal.account">
-        <xpath expr="//div[contains(@class,'o_my_documents')]" position="inside">
-            <t t-call="website_portal_sale.quotations" />
-            <t t-call="website_portal_sale.sale_orders" />
-            <t t-call="website_portal_sale.invoices" />
+    <template id="portal_my_home_menu_sale" name="Portal layout : sales menu entries" inherit_id="website_portal.portal_layout" priority="25">
+        <xpath expr="//ul[contains(@class,'o_portal_submenu')]" position="inside">
+            <li>
+                <a href="/my/quotes">Quotes</a>
+            </li>
+            <li>
+                <a href="/my/orders">Orders</a>
+            </li>
+            <li>
+                <a href="/my/invoices">Invoices</a>
+            </li>
         </xpath>
     </template>
 
-    <template id="quotations" name="Quotations">
+    <template id="portal_my_home_sale" name="Portal My Home : sales entries" inherit_id="website_portal.portal_my_home" priority="25">
+        <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
+            <h3 class="page-header">
+                <a href="/my/quotes">Your Quotes
+                    <small class="ml8">
+                        <t t-if="quotation_count">
+                            <span class='badge'><t t-esc="quotation_count"/></span>
+                        </t>
+                        <t t-if="not quotation_count">
+                            There are currently no quotes for your account.
+                        </t>
+                    </small>
+                </a>
+            </h3>
+            <h3 class="page-header">
+                <a href="/my/orders">Your Orders
+                    <small class="ml8">
+                        <t t-if="order_count">
+                            <span class='badge'><t t-esc="order_count"/></span>
+                        </t>
+                        <t t-if="not order_count">
+                            There are currently no orders for your account.
+                        </t>
+                    </small>
+                </a>
+            </h3>
+            <h3 class="page-header">
+                <a href="/my/invoices">Your Invoices and Payments
+                    <small class="ml8">
+                        <t t-if="invoice_count">
+                            <span class='badge'><t t-esc="invoice_count"/></span>
+                        </t>
+                        <t t-if="not invoice_count">
+                            There are currently no invoices for your account.
+                        </t>
+                    </small>
+                </a>
+            </h3>
+        </xpath>
+    </template>
+
+    <template id="portal_my_quotations" name="My Quotations">
+      <t t-call="website_portal.portal_layout">
         <h3 class="page-header">Your Quotes</h3>
         <t t-if="not quotations">
             <p>There are currently no quotes for your account.</p>
@@ -30,9 +78,9 @@
                     </tr>
                 </thead>
                 <t t-foreach="quotations" t-as="quotation">
-                    <tr t-att-class="'hidden to_hide' if quotation.state!='sent' and quotation_index &gt; 4 else ''">
+                    <tr>
                         <td>
-                            <a t-att-href="'/my/orders/'+str(quotation.id)"><t t-esc="quotation.name"/></a>
+                            <a t-attf-href="/my/orders/#{quotation.id}?#{keep_query()}"><t t-esc="quotation.name"/></a>
                         </td>
                         <td><span t-field="quotation.validity_date"/></td>
                         <td>
@@ -47,14 +95,16 @@
                         </td>
                     </tr>
                 </t>
-                <tr t-att-class="'hidden' if len(quotations) &lt; 5 else ''">
-                  <td colspan="5"><a href="" class="o_my_show_more btn btn-xs btn-default"><span>Show more</span><span class="hidden">Show less</span></a></td>
-                </tr>
             </table>
+            <div t-if="pager" class="o_portal_pager text-center">
+              <t t-call="website.pager"/>
+            </div>
         </t>
+      </t>
     </template>
 
-    <template id="sale_orders" name="Sales Orders">
+    <template id="portal_my_orders" name="My Sales Orders">
+      <t t-call="website_portal.portal_layout">
         <h3 class="page-header">Your Orders</h3>
         <t t-if="not orders">
             <p>There are currently no orders for your account.</p>
@@ -70,9 +120,9 @@
                   </tr>
                 </thead>
                 <t t-foreach="orders" t-as="order">
-                    <tr t-att-class="'hidden to_hide' if order.state not in ['manual', 'progress'] and order_index &gt; 4 else ''">
+                    <tr>
                         <td>
-                            <a t-att-href="'/my/orders/'+str(order.id)"><t t-esc="order.name"/></a>
+                            <a t-attf-href="/my/orders/{{order.id}}?{{keep_query()}}"><t t-esc="order.name"/></a>
                         </td>
                         <td><span t-field="order.date_order"/></td>
                         <td>
@@ -89,14 +139,16 @@
                         <td><span t-field="order.amount_total" t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/></td>
                     </tr>
                 </t>
-                <tr t-att-class="'hidden' if len(orders) &lt; 5 else ''">
-                  <td colspan="4"><a href="" class="o_my_show_more btn btn-xs btn-default"><span>Show more</span><span class="hidden">Show less</span></a></td>
-                </tr>
             </table>
+            <div t-if="pager" class="o_portal_pager text-center">
+              <t t-call="website.pager"/>
+            </div>
         </t>
+      </t>
     </template>
 
-    <template id="invoices" name="Invoices and Payments">
+    <template id="portal_my_invoices" name="My Invoices and Payments">
+      <t t-call="website_portal.portal_layout">
         <h3 class="page-header">Your Invoices and Payments</h3>
         <t t-if="not invoices">
             <p>There are currently no invoices for your account.</p>
@@ -114,7 +166,7 @@
                   </tr>
                 </thead>
                 <t t-foreach="invoices" t-as="invoice">
-                    <tr t-att-class="'hidden to_hide' if invoice.state!='open' and invoice_index &gt; 4 else ''">
+                    <tr>
                         <td>
                             <a t-att-href="'/report/pdf/account.report_invoice/'+str(invoice.id)"><t t-esc="invoice.number"/></a>
                         </td>
@@ -137,11 +189,12 @@
                         <td><span t-field="invoice.residual" t-field-options='{"widget": "monetary", "display_currency": "invoice.currency_id"}'/></td>
                     </tr>
                 </t>
-                <tr t-att-class="'hidden' if len(invoices) &lt; 5 else ''">
-                  <td colspan="5"><a href="" class="o_my_show_more btn btn-xs btn-default"><span>Show more</span><span class="hidden">Show less</span></a></td>
-                </tr>
             </table>
+            <div t-if="pager" class="o_portal_pager text-center">
+                <t t-call="website.pager"/>
+            </div>
         </t>
+      </t>
     </template>
 
     <template id="orders_followup" name="Sales Order">
@@ -152,7 +205,17 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <ol class="breadcrumb mt8">
-                            <li><a href="/my/home">My Account</a></li>
+                            <li><a href="/my/home"><i class="fa fa-home"/></a></li>
+                            <li>
+                              <a t-attf-href="/my/#{'quotes' if order.state == 'sent' else 'orders'}?{{ keep_query()}}">
+                                <t t-if="order.state == 'sent'">
+                                    My Quotes
+                                </t>
+                                <t t-if="order.state != 'sent'">
+                                    My Orders
+                                </t>
+                              </a>
+                            </li>
                             <li>
                               <t t-if="order.state == 'sent'">
                                   Quotation
@@ -318,7 +381,7 @@
       </t>
     </template>
 
-    <template id="sale_backend_link" inherit_id='website_portal_sale.sale_orders' customize_show="True" name="Link to Sales Backend" active="False">
+    <template id="sale_backend_link" inherit_id='website_portal_sale.portal_my_orders' customize_show="True" name="Link to Sales Backend" active="False">
         <xpath expr="//h3[@class='page-header']" position="inside">
             <a href="/web#action=portal_sale.action_orders_portal" target="_blank" class="btn btn-default btn-xs pull-right"> Access the complete Sale application</a>
         </xpath>

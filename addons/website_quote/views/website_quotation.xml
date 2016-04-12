@@ -162,7 +162,8 @@
               <div t-if="breadcrumb" class="row">
                   <div class="col-sm-4">
                       <ol class="breadcrumb mt8">
-                          <li><a href="/my/home">My Account</a></li>
+                          <li><a href="/my/home"><i class="fa fa-home"/></a></li>
+                          <li><a t-attf-href="/my/quotes?#{keep_query()}">My Quotations</a></li>
                           <li>
                               Quotation <t t-esc="quotation.name"/>
                           </li>
@@ -682,12 +683,12 @@
       </xpath>
   </template>
 
-  <template id="quotations" inherit_id="website_portal_sale.quotations">
+  <template id="quotations" inherit_id="website_portal_sale.portal_my_quotations">
       <xpath expr="//t[@t-foreach='quotations']" position="replace">
           <t t-foreach="quotations" t-as="quotation">
-              <tr t-att-class="'hidden to_hide' if quotation_index &gt; 4 else ''">
+              <tr>
                   <td>
-                      <a t-att-href="'/quote/'+str(quotation.id)"><t t-esc="quotation.name"/></a>
+                      <a t-attf-href="/quote/#{quotation.id}?#{keep_query()}"><t t-esc="quotation.name"/></a>
                   </td>
                   <td><span t-field="quotation.validity_date"/></td>
                       <td>

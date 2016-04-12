@@ -1,7 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="portal_project_issue" name="Portal Project Issues" inherit_id="website_portal.account">
-        <xpath expr="//div[contains(@class,'o_my_documents')]/*[last()]" position="after">
+
+    <template id="portal_my_home_menu_issue" name="Portal layout : issues menu entry" inherit_id="website_portal.portal_layout" priority="30">
+        <xpath expr="//ul[contains(@class,'o_portal_submenu')]" position="inside">
+            <li t-att-class="page_name == 'issue' and 'active' or ''">
+                 <a href="/my/issues">Issues</a>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_issue" name="Portal My Home : issue entries" inherit_id="website_portal.portal_my_home" priority="30">
+        <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
+            <h3 class="page-header">
+                <a href="/my/issues">Your Issues
+                    <small class="ml8">
+                        <t t-if="issue_count">
+                            <span class='badge'><t t-esc="issue_count"/></span>
+                        </t>
+                        <t t-if="not issue_count">
+                            There are currently no issues for your account.
+                        </t>
+                    </small>
+                </a>
+            </h3>
+        </xpath>
+    </template>
+
+    <template id="portal_my_issues" name="My Issues" priority="30">
+        <t t-call="website_portal.portal_layout">
             <h3 class="page-header">Your Issues</h3>
             <t t-if="not issues">
                 <p>There are currently no issues for your account.</p>
@@ -16,20 +42,21 @@
                         </tr>
                     </thead>
                     <t t-foreach="issues" t-as="issue">
-                        <tr t-att-class="'hidden to_hide' if issue_index &gt; 4 else ''">
-                            <td><a t-attf-href="/my/issues/#{issue.id}">Issue <t t-esc="issue.id"/></a></td>
+                        <tr>
+
+                            <td>
+                                <a t-attf-href="/my/issues/#{issue.id}?{{ keep_query() }}">Issue <t t-esc="issue.id"/></a>
+                            </td>
                             <td><span t-field="issue.name"/></td><td/>
                             <td><span t-field="issue.stage_id.name"/></td>
                         </tr>
                     </t>
-                    <tr t-att-class="'hidden' if len(issues) &lt; 6 else ''">
-                        <td colspan="4">
-                            <a href="" class="o_my_show_more btn btn-xs btn-default"><span>Show more</span><span class="hidden">Show less</span></a>
-                        </td>
-                    </tr>
                 </table>
+                <div t-if="pager" class="o_portal_pager text-center">
+                    <t t-call="website.pager"/>
+                </div>
             </t>
-        </xpath>
+        </t>
     </template>
 
     <template id="issues_followup" name="Project Issues">
@@ -40,7 +67,8 @@
                         <div class="row">
                             <div class="col-sm-4">
                                 <ol class="breadcrumb mt8">
-                                    <li><a href="/my/home">My Account</a></li>
+                                    <li><a href="/my/home"><i class="fa fa-home"/></a></li>
+                                    <li><a t-attf-href="/my/issues?#{keep_query()}">My Issues</a></li>
                                     <li>Issue <span t-field="issue.id"/></li>
                                 </ol>
                             </div>
