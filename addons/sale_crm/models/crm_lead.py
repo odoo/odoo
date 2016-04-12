@@ -19,11 +19,12 @@ class CrmLead(models.Model):
         for lead in self:
             total = 0.0
             nbr = 0
+            company_currency = lead.company_currency or self.env.user.company_id.currency_id
             for order in lead.order_ids:
                 if order.state in ('draft', 'sent'):
                     nbr += 1
                 if order.state not in ('draft', 'sent', 'cancel'):
-                    total += order.currency_id.compute(order.amount_untaxed, self.company_currency)
+                    total += order.currency_id.compute(order.amount_untaxed, company_currency)
             lead.sale_amount_total = total
             lead.sale_number = nbr
 

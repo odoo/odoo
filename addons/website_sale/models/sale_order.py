@@ -51,8 +51,8 @@ class SaleOrder(models.Model):
     def _website_product_id_change(self, order_id, product_id, qty=0):
         order = self.sudo().browse(order_id)
         product_context = dict(self.env.context)
+        product_context.setdefault('lang', order.partner_id.lang)
         product_context.update({
-            'lang': order.partner_id.lang,
             'partner': order.partner_id.id,
             'quantity': qty,
             'date': order.date_order,
