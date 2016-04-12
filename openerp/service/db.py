@@ -58,7 +58,7 @@ def _initialize_db(id, db_name, demo, lang, user_password):
             values = {'password': user_password, 'lang': lang}
             registry['res.users'].write(cr, SUPERUSER_ID, [SUPERUSER_ID], values)
 
-            cr.execute('SELECT login, password FROM res_users ORDER BY login')
+            cr.execute('SELECT login FROM res_users ORDER BY login')
             cr.commit()
     except Exception, e:
         _logger.exception('CREATE DATABASE failed:')

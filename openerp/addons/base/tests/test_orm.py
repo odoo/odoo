@@ -242,14 +242,12 @@ class TestInherits(common.TransactionCase):
         foo_id = self.user.create(self.cr, UID, {
             'name': 'Foo',
             'login': 'foo',
-            'password': 'foo',
             'supplier': True,
         })
         foo_before, = self.user.read(self.cr, UID, [foo_id])
         del foo_before['__last_update']
         bar_id = self.user.copy(self.cr, UID, foo_id, {
             'login': 'bar',
-            'password': 'bar',
         })
         foo_after, = self.user.read(self.cr, UID, [foo_id])
         del foo_after['__last_update']
@@ -287,7 +285,6 @@ class TestInherits(common.TransactionCase):
         self.assertNotEqual(foo.id, bar.id)
         self.assertEqual(bar.partner_id.id, par_id)
         self.assertEqual(bar.login, 'bar', "login is given from copy parameters")
-        self.assertFalse(bar.password, "password should not be copied from original record")
         self.assertEqual(bar.name, 'Bar', "name is given from specific partner")
         self.assertEqual(bar.signature, foo.signature, "signature should be copied")
 
