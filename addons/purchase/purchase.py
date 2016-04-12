@@ -88,6 +88,12 @@ class PurchaseOrder(models.Model):
             order.picking_ids = pickings
             order.picking_count = len(pickings)
 
+    @api.depends('picking_ids', 'picking_ids.state')
+    def _compute_is_shipped(self):
+        for order in self:
+            if order.picking_ids and all([x.state == 'done' for x in order.picking_ids]):
+                order.is_shipped = True
+
     READONLY_STATES = {
         'purchase': [('readonly', True)],
         'done': [('readonly', True)],
@@ -113,7 +119,7 @@ class PurchaseOrder(models.Model):
     currency_id = fields.Many2one('res.currency', 'Currency', required=True, states=READONLY_STATES,\
         default=lambda self: self.env.user.company_id.currency_id.id)
     state = fields.Selection([
-        ('draft', 'Draft PO'),
+        ('draft', 'RFQ'),
         ('sent', 'RFQ Sent'),
         ('to approve', 'To Approve'),
         ('purchase', 'Purchase Order'),
@@ -153,6 +159,7 @@ class PurchaseOrder(models.Model):
     default_location_dest_id_usage = fields.Selection(related='picking_type_id.default_location_dest_id.usage', string='Destination Location Type',\
         help="Technical field used to display the Drop Ship Address", readonly=True)
     group_id = fields.Many2one('procurement.group', string="Procurement Group")
+    is_shipped = fields.Boolean(compute="_compute_is_shipped")
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
