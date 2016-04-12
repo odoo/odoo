@@ -1165,11 +1165,12 @@ class Monetary(Field):
             "Field %s with unknown currency_field %r" % (self, self.currency_field)
 
     def convert_to_cache(self, value, record, validate=True):
-        currency = record[self.currency_field]
-        # FIXME @rco-odoo: currency may not be already initialized if it is a
-        # function or related field!
-        if currency:
-            return currency.round(float(value or 0.0))
+        if validate:
+            currency = record[self.currency_field]
+            # FIXME @rco-odoo: currency may not be already initialized if it is
+            # a function or related field!
+            if currency:
+                return currency.round(float(value or 0.0))
         return float(value or 0.0)
 
 
@@ -1572,8 +1573,7 @@ class Reference(Selection):
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, BaseModel):
-            if ((not validate or value._name in self.get_values(record.env))
-                    and len(value) <= 1):
+            if not validate or (value._name in self.get_values(record.env) and len(value) <= 1):
                 return value.with_env(record.env) or False
         elif isinstance(value, basestring):
             res_model, res_id = value.split(',')
@@ -1691,7 +1691,7 @@ class Many2one(_Relational):
         if isinstance(value, (NoneType, int, long)):
             return record.env[self.comodel_name].browse(value)
         if isinstance(value, BaseModel):
-            if value._name == self.comodel_name and len(value) <= 1:
+            if not validate or (value._name == self.comodel_name and len(value) <= 1):
                 return value.with_env(record.env)
             raise ValueError("Wrong value for %s: %r" % (self, value))
         elif isinstance(value, tuple):
@@ -1757,7 +1757,7 @@ class _RelationalMulti(_Relational):
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, BaseModel):
-            if value._name == self.comodel_name:
+            if not validate or (value._name == self.comodel_name):
                 return value.with_env(record.env)
         elif isinstance(value, list):
             # value is a list of record ids or commands
