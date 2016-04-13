@@ -425,9 +425,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         if (hide_index) {
             $(".oe_form_pager_state", this.$pager).html("");
         } else {
-            var list = this.ViewManager.views['list'];
-            var page = list && list.controller.page || 0;
-            var limit = list && list.controller.limit() || 0;
+            var controller = this.ViewManager.views['list'] && this.ViewManager.views['list'].controller;
+            var page = controller && controller.page || 0;
+            var limit = controller && controller.limit() || 0;
             var off = page * limit;
             var total = this.dataset.size();
 
