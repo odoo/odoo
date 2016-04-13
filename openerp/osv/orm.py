@@ -1010,7 +1010,9 @@ class BaseModel(object):
                     raise except_orm('Error',
                         ('Invalid function definition %s in object %s !\nYou must use the definition: store={object:(fnct, fields, priority, time length)}.' % (store_field, self._name)))
                 self.pool._store_function.setdefault(object, [])
-                self.pool._store_function[object].append((self._name, store_field, fnct, tuple(fields2) if fields2 else None, order, length))
+                key = (self._name, store_field, fnct, tuple(fields2) if fields2 else None, order, length)
+                if key not in self.pool._store_function[object]:
+                    self.pool._store_function[object].append(key)
                 self.pool._store_function[object].sort(lambda x, y: cmp(x[4], y[4]))
 
         for (key, _, msg) in self._sql_constraints:
@@ -4329,6 +4331,7 @@ class BaseModel(object):
             key = (function[priority_], function[model_name_])
             for target_id in target_ids:
                 mapping.setdefault(key, {}).setdefault(target_id,set()).add(tuple(function))
+
 
         # Here mapping looks like:
         # { (10, 'model_a') : { target_id1: [ (function_1_tuple, function_2_tuple) ], ... }
