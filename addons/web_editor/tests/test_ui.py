@@ -1,7 +1,8 @@
-import openerp.tests
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.tests import HttpCase
 
-
-class TestUi(openerp.tests.HttpCase):
+class TestUi(HttpCase):
     def test_01_admin_rte(self):
         self.phantom_js("/web", "odoo.__DEBUG__.services['web.Tour'].run('rte', 'test')", "odoo.__DEBUG__.services['web.Tour'].tours.rte", login='admin')
 
