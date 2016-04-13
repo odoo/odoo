@@ -203,11 +203,7 @@ class TxPaypal(osv.Model):
 
     def _paypal_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
         invalid_parameters = []
-        if data.get('notify_version')[0] != '3.4':
-            _logger.warning(
-                'Received a notification from Paypal with version %s instead of 2.6. This could lead to issues when managing it.' %
-                data.get('notify_version')
-            )
+        _logger.info('Received a notification from Paypal with IPN version %s', data.get('notify_version'))
         if data.get('test_ipn'):
             _logger.warning(
                 'Received a notification from Paypal using sandbox'
