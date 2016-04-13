@@ -405,11 +405,12 @@ class AccountJournal(models.Model):
 
             # If no code provided, loop to find next available journal code
             if not vals.get('code'):
+                journal_code_base = (vals['type'] == 'cash' and 'CSH' or 'BNK')
+                journals = self.env['account.journal'].search([('code', 'like', journal_code_base + '%'), ('company_id', '=', company_id)])
                 for num in xrange(1, 100):
                     # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
-                    journal_code = (vals['type'] == 'cash' and 'CSH' or 'BNK') + str(num)
-                    journal = self.env['account.journal'].search([('code', '=', journal_code), ('company_id', '=', company_id)], limit=1)
-                    if not journal:
+                    journal_code = journal_code_base + str(num)
+                    if journal_code not in journals.mapped('code'):
                         vals['code'] = journal_code
                         break
                 else:
