@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from lxml import etree
 
-from openerp import models, api
-from openerp.tools.translate import encode, xml_translate
+from odoo import models, api
+from odoo.tools.translate import encode, xml_translate
 
 def edit_translation_mapping(data):
     data = dict(data, model=data['name'].partition(',')[0])
