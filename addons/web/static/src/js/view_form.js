@@ -425,7 +425,14 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         if (hide_index) {
             $(".oe_form_pager_state", this.$pager).html("");
         } else {
-            $(".oe_form_pager_state", this.$pager).html(_.str.sprintf(_t("%d / %d"), this.dataset.index + 1, this.dataset.ids.length));
+            var list = this.ViewManager.views['list'];
+            var page = list && list.controller.page || 0;
+            var limit = list && list.controller.limit() || 0;
+            var off = page * limit;
+            var total = this.dataset.size();
+
+            $(".oe_form_pager_state", this.$pager).html(_.str.sprintf(_t("%d / %d"),
+            off + this.dataset.index + 1, total));
         }
     },
     parse_on_change: function (on_change, widget) {
