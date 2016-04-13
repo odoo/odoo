@@ -1,19 +1,23 @@
-from openerp.osv import osv
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import api, models
 
 
-class mail_mail(osv.osv):
+class Mail(models.Model):
     _inherit = 'mail.mail'
 
-    def _postprocess_sent_message(self, cr, uid, mail, context=None, mail_sent=True):
-        if mail_sent and mail.model == 'sale.order':
-            so_obj = self.pool.get('sale.order')
-            order = so_obj.browse(cr, uid, mail.res_id, context=context)
-            partner = order.partner_id
-            # Add the customer in the SO as follower
-            if partner not in order.message_partner_ids:
-                so_obj.message_subscribe(cr, uid, [mail.res_id], [partner.id], context=context)
-            # Add all recipients of the email as followers
-            for p in mail.partner_ids:
-                if p not in order.message_partner_ids:
-                    so_obj.message_subscribe(cr, uid, [mail.res_id], [p.id], context=context)
-        return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context, mail_sent=mail_sent)
+    @api.multi
+    def _postprocess_sent_message_v9(self, mail_sent=True):
+        for mail in self:
+            if mail_sent and mail.model == 'sale.order':
+                order = self.env['sale.order'].browse(mail.res_id)
+                partner = order.partner_id
+                # Add the customer in the SO as follower
+                if partner not in order.message_partner_ids:
+                    order.message_subscribe([partner.id])
+                # Add all recipients of the email as followers
+                for partner in mail.partner_ids:
+                    if partner not in order.message_partner_ids:
+                        order.message_subscribe([partner.id])
+        return super(Mail, self)._postprocess_sent_message_v9(mail_sent=mail_sent)

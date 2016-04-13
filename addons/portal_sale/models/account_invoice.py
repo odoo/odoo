@@ -1,34 +1,33 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import SUPERUSER_ID
-from openerp.osv import osv
-from openerp import SUPERUSER_ID
+from odoo import api, models
 
 
-class account_invoice(osv.Model):
+class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    def invoice_validate(self, cr, uid, ids, context=None):
+    @api.multi
+    def invoice_validate(self):
         # fetch the partner's id and subscribe the partner to the invoice
-        for invoice in self.browse(cr, uid, ids, context=context):
-            partner = invoice.partner_id
-            if partner not in invoice.message_partner_ids:
-                self.message_subscribe(cr, uid, [invoice.id], [partner.id], context=context)
-        return super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
+        for invoice in self:
+            if invoice.partner_id not in invoice.message_partner_ids:
+                invoice.message_subscribe([invoice.partner_id.id])
+        return super(AccountInvoice, self).invoice_validate()
 
-    def get_signup_url(self, cr, uid, ids, context=None):
-        assert len(ids) == 1
-        document = self.browse(cr, uid, ids[0], context=context)
-        contex_signup = dict(context, signup_valid=True)
-        return self.pool['res.partner']._get_signup_url_for_action(
-            cr, uid, [document.partner_id.id], action='/mail/view',
-            model=self._name, res_id=document.id, context=contex_signup,
-        )[document.partner_id.id]
+    @api.multi
+    def get_signup_url(self):
+        self.ensure_one()
+        return self.partner_id.with_context(signup_valid=True)._get_signup_url_for_action(
+            action='/mail/view',
+            model=self._name,
+            res_id=self.id)[self.partner_id.id]
 
-    def get_formview_action(self, cr, uid, id, context=None):
-        context = context or {}
-        user = self.pool['res.users'].browse(cr, SUPERUSER_ID, context.get('uid', uid), context=context)
-        if user.share:
-            return self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'portal_sale', 'portal_action_invoices', context=context)
-        return super(account_invoice, self).get_formview_action(cr, uid, id, context=context)
+    @api.multi
+    def get_formview_action(self):
+        # NOTE : if this method is call as sudo, the only to determine if the user is portal is to check the uid from context
+        # This was introduced with https://github.com/odoo/odoo/commit/f5fedbcb18a57ee9aeab952f3ff95f692f7a863c, and should be better fixed.
+        uid = self.env.context.get('uid', self.env.user.id)
+        if self.env['res.users'].sudo().browse(uid).share:
+            return self.env['ir.actions.act_window'].for_xml_id('portal_sale', 'portal_action_invoices')
+        return super(AccountInvoice, self).get_formview_action()
