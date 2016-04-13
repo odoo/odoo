@@ -443,24 +443,35 @@ class Users(models.Model):
     @api.model
     def check_credentials(self, password):
         """ Override this method to plug additional authentication methods"""
-        self.env.cr.execute('SELECT id, hash FROM res_users_token WHERE user_id=%s AND expiry_date IS NULL or expiry_date >= %s', (self.env.uid, fields.Datetime.now()))
-        for token_id, token_hash in self.env.cr.fetchall():
-            token = self.env['res.users.token'].sudo().browse(token_id)
-            match, replacement = token._crypt_context().verify_and_update(password, token_hash)
-            if replacement is not None and not self.env.registry.in_test_mode:
-                try:
-                    token._set_encrypted_token(replacement)
-                except OperationalError:
-                    # It doesn't matter if the replacement token can't be set because of a concurrent update.
-                    # It will be done later.
-                    pass
-                except Exception:
-                    # The inability to set the replacement token should not prevent the user to sign in,
-                    # but should be referenced in the logs as an exception for the administrator to be aware of it.
-                    _logger.exception(_('Error when attempting to set replacement token'))
-                    pass
-            if match and token.validate(password):
-                break
+        resUsersToken = self.env['res.users.token']
+        for token_type, token_label in resUsersToken._get_type_selection():
+            prefix_length = resUsersToken._get_type_prefix_length()[token_type]
+            self.env.cr.execute("""
+                SELECT id, hash
+                FROM res_users_token
+                WHERE
+                    user_id=%s AND
+                    type=%s AND
+                    prefix=%s AND
+                    (expiry_date IS NULL or expiry_date >= %s)
+            """, (self.env.uid, token_type, password[:prefix_length], fields.Datetime.now()))
+            for token_id, token_hash in self.env.cr.fetchall():
+                token = resUsersToken.sudo().browse(token_id)
+                match, replacement = token._crypt_context().verify_and_update(password, token_hash)
+                if replacement is not None and not self.env.registry.in_test_mode:
+                    try:
+                        token._set_encrypted_token(replacement)
+                    except OperationalError:
+                        # It doesn't matter if the replacement token can't be set because of a concurrent update.
+                        # It will be done later.
+                        pass
+                    except Exception:
+                        # The inability to set the replacement token should not prevent the user to sign in,
+                        # but should be referenced in the logs as an exception for the administrator to be aware of it.
+                        _logger.exception(_('Error when attempting to set replacement token'))
+                        pass
+                if match and token.validate(password):
+                    return
         else:
             raise AccessDenied()
 
