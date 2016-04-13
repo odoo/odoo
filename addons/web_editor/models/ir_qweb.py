@@ -179,18 +179,6 @@ class Contact(models.AbstractModel):
             options=options)
         return node and node.__html__()
 
-
-def parse_fuzzy(in_format, value):
-    day_first = in_format.find('%d') < in_format.find('%m')
-
-    if '%y' in in_format:
-        year_first = in_format.find('%y') < in_format.find('%d')
-    else:
-        year_first = in_format.find('%Y') < in_format.find('%d')
-
-    return parser.parse(value, dayfirst=day_first, yearfirst=year_first)
-
-
 class Date(models.AbstractModel):
     _name = 'ir.qweb.field.date'
     _inherit = 'ir.qweb.field.date'
