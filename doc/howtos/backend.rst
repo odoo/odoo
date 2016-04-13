@@ -1467,8 +1467,8 @@ hooks in the ORM, such an action is declared in XML with the tag ``act_window``.
 
     <act_window id="launch_the_wizard"
                 name="Launch the Wizard"
-                src_model="context_model_name"
-                res_model="wizard_model_name"
+                src_model="context.model.name"
+                res_model="wizard.model.name"
                 view_mode="form"
                 target="new"
                 key2="client_action_multi"/>
