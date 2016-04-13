@@ -129,7 +129,7 @@ When declaring a record in XML,
         <field name="arch" type="xml">
             <tree>
                 <field name="my_field_1"/>
-                <field name="my_field_2" string="My Label" widget="statusbar" statusbar_visible="draft,sent,progress,done" statusbar_colors='{"invoice_except":"red","waiting_date":"blue"}' />
+                <field name="my_field_2" string="My Label" widget="statusbar" statusbar_visible="draft,sent,progress,done" />
             </tree>
         </field>
     </record>
