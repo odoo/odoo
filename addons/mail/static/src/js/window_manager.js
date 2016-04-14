@@ -69,7 +69,6 @@ function open_chat (session, options) {
         });
 
         chat_session.window.on("post_message", null, function (message, channel_id) {
-            message.content = _.escape(message.content);
             chat_manager
                 .post_message(message, {channel_id: channel_id})
                 .then(function () {
@@ -117,7 +116,7 @@ function open_chat (session, options) {
                 }, 0); // setTimeout to prevent to execute handler on first scroll_to, which is asynchronous
                 if (options.passively) {
                     // mark first unread messages as seen when focusing the window, then on scroll to bottom as usual
-                    chat_session.window.$('.o_mail_thread, .o_chat_input').one('click', function () {
+                    chat_session.window.$('.o_mail_thread, .o_chat_composer').one('click', function () {
                         chat_manager.mark_channel_as_seen(session);
                     });
                 } else if (!display_state.chat_windows_hidden && !session.is_folded) {

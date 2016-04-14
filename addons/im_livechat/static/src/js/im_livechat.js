@@ -143,7 +143,7 @@ var LivechatButton = Widget.extend({
             self.$el.hide();
         });
         this.chat_window.on("close_chat_session", this, function () {
-            var input_disabled = this.chat_window.$(".o_chat_input input").prop('disabled');
+            var input_disabled = this.chat_window.$(".o_chat_composer input").prop('disabled');
             var ask_fb = !input_disabled && _.find(this.messages, function (msg) {
                 return msg.id !== '_welcome';
             });
@@ -237,7 +237,7 @@ var LivechatButton = Widget.extend({
     },
 
     ask_feedback: function () {
-        this.chat_window.$(".o_chat_input input").prop('disabled', true);
+        this.chat_window.$(".o_chat_composer input").prop('disabled', true);
 
         var feedback = new Feedback(this, this.channel.uuid);
         feedback.replace(this.chat_window.thread.$el);
