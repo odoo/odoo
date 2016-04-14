@@ -79,6 +79,45 @@ Accessing a relational field (:class:`~openerp.fields.Many2one`,
         # 1 database update
         records.write({'a': 1, 'b': 2, 'c': 3})
 
+Record cache and prefetching
+----------------------------
+
+Odoo maintains a cache for the fields of the records, so that not every field
+access issues a database request, which would be terrible for performance. The
+following example queries the database only for the first statement::
+
+    record.name             # first access reads value from database
+    record.name             # second access gets value from cache
+
+To avoid reading one field on one record at a time, Odoo *prefetches* records
+and fields following some heuristics to get good performance. Once a field must
+be read on a given record, the ORM actually reads that field on a larger
+recordset, and stores the returned values in cache for later use. The prefetched
+recordset is usually the recordset from which the record comes by iteration.
+Moreover, all simple stored fields (boolean, integer, float, char, text, date,
+datetime, selection, many2one) are fetched altogether; they correspond to the
+columns of the model's table, and are fetched efficiently in the same query.
+
+Consider the following example, where ``partners`` is a recordset of 1000
+records. Without prefetching, the loop would make 2000 queries to the database.
+With prefetching, only one query is made::
+
+    for partner in partners:
+        print partner.name          # first pass prefetches 'name' and 'lang'
+                                    # (and other fields) on all 'partners'
+        print partner.lang
+
+The prefetching also works on *secondary records*: when relational fields are
+read, their values (which are records) are  subscribed for future prefetching.
+Accessing one of those secondary records prefetches all secondary records from
+the same model. This makes the following example generate only two queries, one
+for partners and one for countries::
+
+    countries = set()
+    for partner in partners:
+        country = partner.country_id        # first pass prefetches all partners
+        countries.add(country.name)         # first pass prefetches all countries
+
 Set operations
 --------------
 
