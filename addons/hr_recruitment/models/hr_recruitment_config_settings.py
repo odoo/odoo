@@ -6,7 +6,7 @@ from openerp import api, fields, models
 
 class RecruitmentSettings(models.TransientModel):
     _name = 'hr.recruitment.config.settings'
-    _inherit = ['res.config.settings', 'fetchmail.config.settings']
+    _inherit = ['res.config.settings']
 
     module_document = fields.Selection(selection=[
             (0, "Do not manage CVs and motivation letter"),
