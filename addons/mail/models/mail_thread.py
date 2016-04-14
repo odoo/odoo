@@ -1674,7 +1674,7 @@ class MailThread(models.AbstractModel):
                     fname = cid_mapping.get(node.get('src').split('cid:')[1], node.get('data-filename', ''))
                     attachment = parameter_attachments.filtered(lambda attachment: attachment.name == fname)
                     if attachment:
-                        node.set('src', '/web/image/%s' % attachment.id)
+                        node.set('src', '/web/image/%s' % attachment.ids[0])
                         postprocessed = True
             if postprocessed:
                 body = lxml.html.tostring(root, pretty_print=False, encoding='UTF-8')
