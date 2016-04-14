@@ -67,7 +67,7 @@
 
                                             <div class="row">
                                                 <div class="col-xs-12">
-                                                    <a t-if="record.state.raw_value == 'recruit'" name="job_open" type="object">Recruitment Done</a>
+                                                    <a t-if="record.state.raw_value == 'recruit'" name="set_open" type="object">Recruitment Done</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -81,7 +81,7 @@
                                 <t t-if="record.state.raw_value == 'open'">
                                     <div class="row">
                                         <div class="col-xs-12 o_kanban_primary_left">
-                                            <button class="btn btn-primary" name="job_recruitment" type="object">Start Recruitment</button>
+                                            <button class="btn btn-primary" name="set_recruit" type="object">Start Recruitment</button>
                                         </div>
                                     </div>
                                 </t>
