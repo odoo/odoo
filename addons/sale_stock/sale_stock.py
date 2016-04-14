@@ -345,7 +345,7 @@ class AccountInvoiceLine(models.Model):
                     if qty_delivered == quantity:
                         break
                 price_unit = average_price_unit or price_unit
-                price_unit = uom_obj._compute_qty_obj(self.uom_id, price_unit, self.product_id.uom_id)
+                price_unit = uom_obj._compute_qty_obj(self.uom_id, price_unit, self.product_id.uom_id, round=False)
         return price_unit
 
 
