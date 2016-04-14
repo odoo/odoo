@@ -186,12 +186,23 @@ class Users(models.Model):
     _description = 'Users'
     _inherits = {'res.partner': 'partner_id'}
     _order = 'name, login'
-    __uid_cache = defaultdict(dict)             # {dbname: {uid: [password, token]}}
 
     # User can write on a few of his own fields (but not his groups for example)
     SELF_WRITEABLE_FIELDS = ['signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz']
     # User can read a few of his own fields
     SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz', 'tz_offset', 'groups_id', 'partner_id', '__last_update', 'action_id']
+
+    def __init__(self, pool, cr):
+        super(Users, self).__init__(pool, cr)
+        try:
+            # hasattr with name mangling
+            pool.__uid_cache
+        except AttributeError:
+            pool.__uid_cache = defaultdict(dict)  # {uid: {password: {}, token: {}}}
+
+    def clear_caches(self):
+        self.pool.__uid_cache = defaultdict(dict)
+        return super(Users, self).clear_caches()
 
     def _default_groups(self):
         default_user = self.env.ref('base.default_user', raise_if_not_found=False)
@@ -528,16 +539,16 @@ class Users(models.Model):
         if not passwd:
             # empty passwords disallowed for obvious security reasons
             raise AccessDenied()
-        if passwd in (self.__uid_cache[db].get(uid) or {}):
-            if self._check_uid_cache_values(passwd, self.__uid_cache[db][uid][passwd]):
+        if passwd in self.pool.__uid_cache[uid]:
+            if self._check_uid_cache_values(passwd, self.pool.__uid_cache[uid][passwd]):
                 return
             else:
-                self.__uid_cache[db][uid].pop(passwd)
+                self.pool.__uid_cache[uid].pop(passwd)
         cr = self.pool.cursor()
         try:
             token = self.check_credentials(cr, uid, passwd)
             cache_values = self._prepare_uid_cache_values(cr, uid, passwd, token)
-            self.__uid_cache[db].setdefault(uid, {}).update({passwd: cache_values})
+            self.pool.__uid_cache[uid].update({passwd: cache_values})
         finally:
             cr.close()
 
@@ -678,21 +689,14 @@ class UsersToken(models.Model):
     @api.multi
     def write(self, values):
         res = super(UsersToken, self).write(values)
-        user_ids = set(token.user_id.id for token in self)
-        if values.get('user_id'):
-            user_ids.add(values['user_id'])
-        db = self._cr.dbname
-        for user_id in user_ids:
-            Users._Users__uid_cache[db].pop(user_id, None)
+        self.env['res.users'].clear_caches()
         return res
 
     @api.multi
     def unlink(self):
-        user_ids = set(token.user_id.id for token in self)
-        db = self._cr.dbname
-        for user_id in user_ids:
-            Users._Users__uid_cache[db].pop(user_id, None)
-        return super(UsersToken, self).unlink()
+        res = super(UsersToken, self).unlink()
+        self.env['res.users'].clear_caches()
+        return res
 
     def _set_encrypted_token(self, encrypted):
         """ Store the provided encrypted password to the database, and clears
