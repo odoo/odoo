@@ -4,7 +4,7 @@ import logging
 import uuid
 
 from collections import defaultdict
-from datetime import timedelta
+from datetime import datetime, timedelta
 from itertools import chain, repeat
 from lxml import etree
 from lxml.builder import E
@@ -471,7 +471,7 @@ class Users(models.Model):
                         _logger.exception(_('Error when attempting to set replacement token'))
                         pass
                 if match and token.validate(password):
-                    return
+                    return token
         else:
             raise AccessDenied()
 
@@ -528,14 +528,31 @@ class Users(models.Model):
         if not passwd:
             # empty passwords disallowed for obvious security reasons
             raise AccessDenied()
-        if passwd in (self.__uid_cache[db].get(uid) or set()):
-            return
+        if passwd in (self.__uid_cache[db].get(uid) or {}):
+            if self._check_uid_cache_values(passwd, self.__uid_cache[db][uid][passwd]):
+                return
+            else:
+                self.__uid_cache[db][uid].pop(passwd)
         cr = self.pool.cursor()
         try:
-            self.check_credentials(cr, uid, passwd)
-            self.__uid_cache[db].setdefault(uid, set()).add(passwd)
+            token = self.check_credentials(cr, uid, passwd)
+            cache_values = self._prepare_uid_cache_values(cr, uid, passwd, token)
+            self.__uid_cache[db].setdefault(uid, {}).update({passwd: cache_values})
         finally:
             cr.close()
+
+    @api.model
+    def _prepare_uid_cache_values(self, passwd, token):
+        return {'expiry_date': token.expiry_date}
+
+    def _check_uid_cache_values(self, passwd, cached_values):
+        expiry_date = cached_values.get('expiry_date') or None
+        if expiry_date:
+            expiry_date = datetime.strptime(expiry_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            now = datetime.strptime(fields.Datetime.now(), tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            if expiry_date < now:
+                return False
+        return True
 
     @api.model
     def change_password(self, old_passwd, new_passwd):
