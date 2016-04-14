@@ -161,6 +161,12 @@ return AbstractWebClient.extend({
                 });
             });
     },
+    toggle_fullscreen: function(fullscreen) {
+        this._super(fullscreen);
+        if (!fullscreen) {
+            this.menu.reflow();
+        }
+    },
 });
 
 });

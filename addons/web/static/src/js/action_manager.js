@@ -320,6 +320,7 @@ var ActionManager = Widget.extend({
             if (options.clear_breadcrumbs) {
                 self.clear_action_stack(old_action_stack);
             }
+            self.toggle_fullscreen();
         }).fail(function () {
             // Destroy failed action and restore internal state
             new_action.destroy();
@@ -416,6 +417,13 @@ var ActionManager = Widget.extend({
             this.inner_action = null;
             this.inner_widget = null;
         }
+        this.toggle_fullscreen();
+    },
+    toggle_fullscreen: function() {
+        var is_fullscreen = _.some(this.action_stack, function(action) {
+            return action.action_descr.target === "fullscreen";
+        });
+        this.trigger_up("toggle_fullscreen", {fullscreen: is_fullscreen});
     },
     do_push_state: function(state) {
         if (!this.webclient || this.dialog) {
