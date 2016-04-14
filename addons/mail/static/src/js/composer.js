@@ -494,7 +494,9 @@ var BasicComposer = Widget.extend({
             case $.ui.keyCode.ENTER:
             case $.ui.keyCode.UP:
             case $.ui.keyCode.DOWN:
-                this.mention_manager.proposition_navigation(event.which);
+                if (this.mention_manager.is_open()) {
+                    this.mention_manager.proposition_navigation(event.which);
+                }
                 break;
             // Otherwise, check if a mention is typed
             default:
