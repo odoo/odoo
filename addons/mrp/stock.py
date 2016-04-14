@@ -227,7 +227,7 @@ class StockMove(osv.osv):
                 production_obj.signal_workflow(cr, uid, [prod_id], 'button_produce')
             if move.production_id.id:
                 self.write(cr, uid, new_moves, {'production_id': move.production_id.id}, context=context)
-            res.append(new_moves)
+            res.extend(new_moves)
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
