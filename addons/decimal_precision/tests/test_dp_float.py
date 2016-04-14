@@ -6,8 +6,6 @@ from openerp.tests.common import TransactionCase
 
 class TestDbFloat(TransactionCase):
     def test_dp_float(self):
-        import pdb
-        pdb.set_trace()
         test_obj = self.env['decimal.precision.test'].create({})
         self.assertEqual(test_obj.float_nonstored_computed_2, .33)
         self.assertEqual(test_obj.float_nonstored_computed_v8, .33)
