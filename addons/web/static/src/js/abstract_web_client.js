@@ -27,6 +27,9 @@ var WebClient = Widget.extend({
         clear_uncommitted_changes: function (e) {
             this.clear_uncommitted_changes().then(e.data.callback);
         },
+        toggle_fullscreen: function (event) {
+            this.toggle_fullscreen(event.data.fullscreen);
+        },
     },
     init: function(parent, client_options) {
         this.client_options = {};
@@ -102,9 +105,6 @@ var WebClient = Widget.extend({
             if (!$(ev.target).is('input[type=file]')) {
                 self.$('.oe_dropdown_menu.oe_opened, .oe_dropdown_toggle.oe_opened').removeClass('oe_opened');
             }
-        });
-        core.bus.on('set_full_screen', this, function (full_screen) {
-            this.set_content_full_screen(full_screen);
         });
         core.bus.on('connection_lost', this, this.on_connection_lost);
         core.bus.on('connection_restored', this, this.on_connection_restored);
@@ -233,10 +233,8 @@ var WebClient = Widget.extend({
     //--------------------------------------------------------------
     // Misc.
     //--------------------------------------------------------------
-    set_content_full_screen: function(fullscreen) {
-        $(document.body).css('overflow-y', fullscreen ? 'hidden' : 'scroll');
-        this.$('.oe_webclient').toggleClass(
-            'oe_content_full_screen', fullscreen);
+    toggle_fullscreen: function(fullscreen) {
+        this.$el.toggleClass('o_fullscreen', fullscreen);
     },
 });
 
