@@ -7,7 +7,7 @@ from openerp.osv import fields, osv
 
 class crm_configuration(osv.TransientModel):
     _name = 'sale.config.settings'
-    _inherit = ['sale.config.settings', 'fetchmail.config.settings']
+    _inherit = ['sale.config.settings']
 
     _columns = {
         'generate_sales_team_alias': fields.boolean(
@@ -18,7 +18,7 @@ class crm_configuration(osv.TransientModel):
         'group_use_lead': fields.selection([
             (0, "Each mail sent to the alias creates a new opportunity"),
             (1, "Use leads if you need a qualification step before creating an opportunity or a customer")
-            ], "Leads", 
+            ], "Leads",
             implied_group='crm.group_use_lead'),
         'module_crm_voip': fields.boolean("VoIP integration",
             help="Integration with Asterisk"),
