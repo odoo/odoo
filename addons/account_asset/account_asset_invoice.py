@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 
 class account_invoice(osv.osv):
@@ -45,6 +46,11 @@ class account_invoice_line(osv.osv):
     def asset_create(self, cr, uid, lines, context=None):
         context = context or {}
         asset_obj = self.pool.get('account.asset.asset')
+        asset_ids = []
+        for line in lines:
+            if line.invoice_id.number:
+                asset_ids += asset_obj.search(cr, SUPERUSER_ID, [('code', '=', line.invoice_id.number)], context=context)
+        self.pool["account.asset.asset"].write(cr, SUPERUSER_ID, asset_ids, {'active': False})
         for line in lines:
             if line.asset_category_id:
                 vals = {
