@@ -54,5 +54,15 @@ This application supports complete integration and production scheduling for sto
             <field name='manufacture_to_resupply' eval='True'/>
         </record>
 
+        <!-- Reasons To Block Workcenter -->
+        <record id="block_reason0" model="mrp.workcenter.block.reason">
+            <field name="name">Missing material</field>
+        </record>
+        <record id="block_reason1" model="mrp.workcenter.block.reason">
+            <field name="name">Equipment Failure</field>
+        </record>
+        <record id="block_reason2" model="mrp.workcenter.block.reason">
+            <field name="name">Other</field>
+        </record>
     </data>
 </odoo>

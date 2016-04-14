@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Workcenter Block Dialog -->
+    <record id="mrp_workcenter_block_wizard_form" model="ir.ui.view">
+        <field name="name">mrp.workcenter.block.wizard.form</field>
+        <field name="model">mrp.workcenter.block.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Block Workcenter">
+                <group>
+                    <group>
+                        <field name="reason_id"/>
+                        <field name="description" placeholder="Add Description..."/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="button_block" string="Block" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="act_mrp_block_workcenter" model="ir.actions.act_window">
+        <field name="name">Block Workcenter</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.workcenter.block.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

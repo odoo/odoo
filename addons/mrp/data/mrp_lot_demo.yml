@@ -1,16 +1,4 @@
 -
-  !python {model: stock.inventory} : |
-    inv_charger = self.browse(cr, uid, ref('stock_inventory_product_laptop_charger'), context=context)
-    inv_keypad = self.browse(cr, uid, ref('stock_inventory_product_laptop_keypad'), context=context)
-    # Start and validate inventory.
-    if inv_charger.state != 'done':
-        inv_charger.prepare_inventory()
-        inv_charger.action_done()
-    if inv_keypad.state != 'done':
-        inv_keypad.prepare_inventory()
-        inv_keypad.action_done()
-
--
   !python {model: mrp.production}: |
     mo = self.browse(cr, uid, ref('mrp_production_laptop_cust'), context=context)
     if mo.state != 'done':

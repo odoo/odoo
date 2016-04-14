@@ -19,7 +19,7 @@ class TestWorkOrderProcess(TestMrpUsers):
         product_table_sheet = self.env.ref('mrp.product_product_computer_desk_head')
         product_table_leg = self.env.ref('mrp.product_product_computer_desk_leg')
         product_bolt = self.env.ref('mrp.product_product_computer_desk_bolt')
-        source_location_id = production_table.product_id.property_stock_production.id
+        source_location_id = self.ref('stock.stock_location_14')
 
         # Set tracking lot on finish and consume product.
         dining_table.trcking = 'lot'
@@ -77,8 +77,9 @@ class TestWorkOrderProcess(TestMrpUsers):
         # Process cutting operation...
         # ---------------------------------------------------------
 
+        finished_lot =self.env['stock.production.lot'].create({'product_id': production_table.product_id.id})
+        workorders[0].write({'final_lot_id': finished_lot.id})
         workorders[0].button_start()
-        workorders[0].final_lot_id = self.env['stock.production.lot'].create({'product_id': production_table.product_id.id})
         workorders[0].active_move_lot_ids[0].write({'lot_id': lot_sheet.id, 'quantity_done': 1})
         self.assertEqual(workorders[0].state, 'progress', "First workorder state should be Inprogress.")
         workorders[0].record_production()
@@ -114,3 +115,28 @@ class TestWorkOrderProcess(TestMrpUsers):
         # -----------------------------------------
 
         self.assertEqual(production_table.state, 'done', "Production order should be in done state.")
+
+        # Test consumed quants and produced quants correct or not
+
+        finish_move = production_table.move_finished_ids.filtered(lambda x : x.product_id.id == dining_table.id)
+        self.assertEqual(len(finish_move.quant_ids), 1, "Wrong quants of produced materials %s"% finish_move.product_id.name)
+        self.assertEqual(len(move_table_bolt.quant_ids), 1, "Wrong quants of consume material %s"% move_table_bolt.product_id.name)
+        self.assertEqual(len(move_leg.quant_ids), 1, "Wrong quants of consume material %s"% move_leg.product_id.name)
+        self.assertEqual(len(move_table_sheet.quant_ids), 1, "Wrong quants of consume material %s"% move_leg.product_id.name)
+
+        # ----------------------------------------
+        # Check consume quants and produce quants.
+        # ----------------------------------------
+
+        finished_quant = finish_move.quant_ids[0]
+        consume_quants = move_table_sheet.quant_ids + move_leg.quant_ids + move_table_bolt.quant_ids
+        for quant in consume_quants:
+            self.assertEqual(len(quant.produced_quant_ids), 1, "Wrong produced quants on consumed quant.")
+            self.assertEqual(quant.produced_quant_ids[0].lot_id.id, finished_lot.id, "Wrong produced quant lot on consumed quant.")
+            self.assertEqual(quant.produced_quant_ids[0].id, finished_quant.id, "Wrong produced quants of consume material.")
+
+        # ------------------------------------------
+        # Check finished quants with consumed quant.
+        # ------------------------------------------
+
+        self.assertEqual(finished_quant.consumed_quant_ids.ids, consume_quants.ids , "Wrong consume quants on produce quants")

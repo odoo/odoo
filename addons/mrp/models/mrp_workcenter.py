@@ -29,7 +29,9 @@ class MrpWorkcenter(models.Model):
     blocked = fields.Boolean('Blocked')
     working_state = fields.Selection([('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'In Progress')], string='Status', default="normal", store=True, 
                                 compute="_compute_working_state", inverse='_set_blocked')
-    blocked_time_ids = fields.Many2one('mrp.workcenter.blocked.time', 'workcenter_id')
+    oee = fields.Float(compute='_compute_oee', help='Overall Equipment Efficiency')
+    blocked_time = fields.Float(compute='_compute_oee', help='Number of blocked hours on the last 30 days')
+    blocked_time_ids = fields.One2many('mrp.workcenter.blocked.time', 'workcenter_id', string='Blocked Times')
 
     @api.one
     def _set_blocked(self):
@@ -37,6 +39,16 @@ class MrpWorkcenter(models.Model):
             self[0].block(False, "")
         elif self.blocked:
             self[0].unblock()
+
+    @api.depends('blocked')
+    def _compute_oee(self):
+        for workcenter in self:
+            workcenter.blocked_time = sum(workcenter.blocked_time_ids.filtered(lambda x: fields.Datetime.from_string(x.date_start).month == fields.datetime.now().month).mapped('duration'))
+            timesheet_hours = 0.0
+            for order in workcenter.order_ids:
+                timesheet_hours += sum(order.time_ids.mapped('duration'))
+            if workcenter.blocked_time > 0:
+                workcenter.oee = workcenter.blocked_time / (workcenter.blocked_time + timesheet_hours)
 
     @api.multi
     @api.depends('order_ids', 'order_ids.state', 'blocked')
@@ -68,11 +80,14 @@ class MrpWorkcenter(models.Model):
     def unblock(self):
         self.ensure_one()
         if self.blocked:
-            time_obj = self.env['mrp.workcenter.blocked.time']
-            times = time_obj.search([('workcenter_id', '=', self.id), ('state', '=', 'running')])
-            if times:
-                times.state='done'
+            times = self.env['mrp.workcenter.blocked.time'].search([('workcenter_id', '=', self.id), ('state', '=', 'running')])
+            times.write({'state': 'done', 'date_end': fields.Datetime.now()})
         self.write({'blocked': False})
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+            'params': {'menu_id': self.env.ref('base.menu_mrp_root').id},
+        }
 
 
     @api.depends('order_ids')
@@ -92,18 +107,26 @@ class MrpWorkcenter(models.Model):
 
 
 class MrpWorkcenterBlockReason(models.Model):
-    _name="mrp.workcenter.block.reason"
+    _name = "mrp.workcenter.block.reason"
     _description = "Workcenter Blocking Reason"
-    
+
     name = fields.Char("Reason")
 
 
 class MrpWorkcenterBlockedTimeLine(models.Model):
-    _name="mrp.workcenter.blocked.time"
-    
+    _name = "mrp.workcenter.blocked.time"
+
+    @api.depends('date_end')
+    def _compute_duration(self):
+        for blocktime in self:
+            if blocktime.date_end:
+                diff = fields.Datetime.from_string(blocktime.date_end) - fields.Datetime.from_string(blocktime.date_start)
+                blocktime.duration = round(diff.total_seconds() / 60.0 / 60.0, 2)
+
     workcenter_id = fields.Many2one('mrp.workcenter', required=True)
     reason_id = fields.Many2one('mrp.workcenter.block.reason')
     description = fields.Text('Description')
     date_start = fields.Datetime('Start Date')
-    duration = fields.Float('Duration')
+    date_end = fields.Datetime('End Date')
+    duration = fields.Float('Duration', compute='_compute_duration')
     state = fields.Selection([('running', 'Running'), ('done', 'Done')], string="Status", default="running")

@@ -102,6 +102,10 @@
                                             <field name="time_stop" widget="float_time" class="oe_inline"/> minutes
                                         </div>
                                     </group>
+                                    <group>
+                                        <field name="blocked_time"/>
+                                        <field name="oee"/>
+                                    </group>
                                 </group>
                                 <separator string="Description"/>
                                 <field name="note" nolabel="1" placeholder="Description of the work center..."/>
@@ -350,7 +354,9 @@
                                                 <t t-set="status" t-value="'Work orders is running'"/>
                                             </t>
                                             <div t-att-title="status">
-                                                <field name="working_state" widget="kanban_state_selection"/>
+                                                <a name="%(act_mrp_block_workcenter)d" type="action" class="oe_kanban_status " attrs="{'invisible': [('working_state','in',('blocked','done'))]}"/>
+                                                <a name="unblock" type="object" class=" oe_kanban_status oe_kanban_status_red" attrs="{'invisible': [('working_state','in',('normal','done'))]}"/>
+                                                <a name="%(act_mrp_block_workcenter)d" type="action" class=" oe_kanban_status oe_kanban_status_green" attrs="{'invisible': [('working_state','in',('normal','blocked'))]}"/>
                                             </div>
                                         </div> 
                                     </div>
@@ -809,8 +815,8 @@
                     <button name="button_plan" attrs="{'invisible': ['|', ('state', '!=', 'confirmed'), ('routing_id', '=', False)]}" type="object" string="Create Workorders" class="oe_highlight"/>
                     <button name="%(act_mrp_product_produce)d" attrs="{'invisible': ['|', ('state', 'not in', ('confirmed','progress')), ('routing_id', '!=', False)]}" string="Produce" type="action" class="oe_highlight"/>
                     <button name="%(act_mrp_product_produce)d" attrs="{'invisible': ['|', '|', ('nb_orders', '=', 0), ('state', '=', 'done'), ('routing_id', '!=', False)]}" string="Produce" type="action"/>
-
                     <button name="post_inventory" string="Post Inventory" type="object" class="oe_highlight" attrs="{'invisible': [('post_visible', '=', False)]}"/>
+                    <button name="action_cancel" type="object" string="Cancel" attrs="{'invisible': [('state', 'in', ('done','cancel'))]}" class="oe_highlight"/>
                     <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('cancel'))]}"/>
                     <span class="label label-danger" attrs="{'invisible': ['|', ('availability', 'in', ('assigned', 'none')), ('state', 'not in', ('confirmed','progress'))]}">Raw materials not available!</span>
                     <field name="state" widget="statusbar" statusbar_visible="confirmed,progress,done" statusbar_colors='{"confirmed":"blue"}'/>
@@ -1278,8 +1284,8 @@
                 <button name="button_start" type="object" string="Start Working" attrs="{'invisible': ['|', ('blocked', '=', True), ('state', '!=', 'pending')]}"/>
                 <button name="button_start" type="object" string="Start Working" attrs="{'invisible': ['|', ('blocked', '=', True), ('state', '!=', 'ready')]}" class="btn-success"/>
                 <button name="record_production" type="object" string="Record Production" class="btn-success" attrs="{'invisible': ['|', ('state', '!=', 'progress'), ('show_state', '=', False)]}"/>
-                <button name="button_pending" type="object" string="Pause" class="btn-warning" attrs="{'invisible': ['|', ('state', 'in', ('done', 'pending', 'ready')), ('show_state', '=', False)]}"><span>(<field name="delay" widget="float_time" class="oe_inline"/>)</span></button>
-                <button name="button_block" type="object" string="Block" class="btn-danger" attrs="{'invisible': ['|', ('state', 'in', ('done', 'pending', 'ready')), ('show_state', '=', False)]}"/>
+                <button name="button_pending" type="object" string="Pause" class="btn-warning" attrs="{'invisible': ['|', ('state', 'in', ('done', 'pending', 'ready')), ('show_state', '=', False)]}"/>
+                <button name="%(act_mrp_block_workcenter)d" type="action" string="Block" class="btn-danger" attrs="{'invisible': ['|', ('state', 'in', ('done', 'pending', 'ready')), ('show_state', '=', False)]}"/>
                 <button name="button_unblock" type="object" string="Unblock" class="btn-danger" attrs="{'invisible': [('blocked', '=', False)]}"/>
                 <button name="button_start" type="object" string="Continue Production" class="btn-warning" attrs="{'invisible': ['|', '|', ('blocked', '=', True), ('show_state', '=', True), ('state', 'in', ('done', 'pending', 'ready'))]}"></button>
                 <button name="button_start" type="object" string="Continue Production" attrs="{'invisible': ['|', ('blocked', '=', True), ('state', '!=', 'done')]}"/>
@@ -1385,6 +1391,7 @@
                             <field name="name"/>
                             <field name="workcenter_id" readonly="1"/>
                             <field name="production_id" readonly="1"/>
+                            <field name="delay" widget="float_time" attrs="{'invisible': [('show_state', '=', True)]}"/>
                         </group>
                     </group>
                 </page>
