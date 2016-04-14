@@ -269,7 +269,7 @@
                                         domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]"
                                         attrs="{'readonly': [('state','=','base')]}"/>
                                     <field name="related"/>
-                                    <field name="depends"/>
+                                    <field name="depends" attrs="{'required': [('compute', '!=', False)] }"/>
                                     <field name="compute"/>
                                 </group>
                                 <h3>How to define a computed field</h3>

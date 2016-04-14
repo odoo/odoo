@@ -92,7 +92,7 @@ class AccountInvoiceRefund(models.TransientModel):
                         tax_lines = inv_obj._refund_cleanup_lines(tax_lines)
                         invoice.update({
                             'type': inv.type,
-                            'date_invoice': date,
+                            'date_invoice': form.date_invoice,
                             'state': 'draft',
                             'number': False,
                             'invoice_line_ids': invoice_lines,

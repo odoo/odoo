@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Andre de Kock <adekock11@gmail.com>, 2015
+# D VA, 2016
 # Jessica Dowd <dowd.jess@gmail.com>, 2015-2016
 # Marli Grove <marligrove@gmail.com>, 2015
 # Somarie <somariedk@gmail.com>, 2015
@@ -12,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-02-27 10:43+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-03-15 10:53+0000\n"
+"Last-Translator: D VA\n"
 "Language-Team: Afrikaans (http://www.transifex.com/odoo/odoo-9/language/af/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,7 +78,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n    <p>Hallo ${object.partner_id.name},</p>\n    <p>Jou nuwe faktuur is nou beskikbaar: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>VERWYSINGS</strong><br />\n       &nbsp;&nbsp;Faktuurnommer: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Totale bedrag: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Datum van faktuur: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Bestellingsverwysing: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;U kontak: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>U kan ook met Paypal betaal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Moenie huiwer om ons te kontak indien u enige navrae het nie.</p>\n    <p>Dankie dat u  ${object.company_id.name or 'ons'} gekies het!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Phone:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_state
@@ -277,7 +278,7 @@ msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <strong>Invoice payment by Check</strong>\n"
 "                                    </span>"
-msgstr "<span class=\"panel-title\">\n<strong>Faktuur betaling deur Tjek</strong>\n</span>"
+msgstr "<span class=\"panel-title\">\n<strong>Faktuur betaling per Tjek</strong>\n</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -285,7 +286,7 @@ msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <strong>Invoice payment by Wire Transfer</strong>\n"
 "                                    </span>"
-msgstr "<span class=\"panel-title\">\n<strong>Faktuur betaling deur Elektroniese Oorbetaling</strong>\n</span>"
+msgstr "<span class=\"panel-title\">\n<strong>Faktuur betaling per Elektroniese Oorbetaling</strong>\n</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -329,7 +330,7 @@ msgstr "<span> Van </span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form
 msgid "<span> To </span>"
-msgstr "<span> Tot </span>"
+msgstr "<span> Na </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
@@ -354,7 +355,7 @@ msgstr "<span>Nuut</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<span>Not due</span>"
-msgstr "<span>Not due</span>"
+msgstr "<span>Nie betaalbaar nie</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -394,14 +395,14 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Assets Management</strong>"
-msgstr "<strong>Bates</strong>"
+msgstr "<strong>Batebestuur</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Automated documents sending:</strong> automatically send your "
 "invoices by email or snail mail."
-msgstr ""
+msgstr "<strong>Automatiese versending van doumente:</strong> Versend u fakture outomaties per epos of slakkepos."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -425,21 +426,21 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Check the Taxes configuration:</strong>"
-msgstr ""
+msgstr "<strong>Gaan die belastingstellings na:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Check unpaid invoices</strong><br/>\n"
 "                                         Run an <i>Aged Receivable report</i> and check which customers still owe you money."
-msgstr ""
+msgstr "<strong>Gaan onbetaalde rekeninge na:</strong><br/>\nSkep 'n <i>ouderdomsanalise verslag</i> om te sien wie van u kliënte u nog geld skuld."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Clean customer invoices:</strong> easy to create, beautiful and full"
 " featured invoices."
-msgstr ""
+msgstr "<strong>Aantreklike fakture:</strong> Pragtige, volledige fakture wat maklik is om te skep."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -449,7 +450,7 @@ msgstr "<strong>Kommentaar:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Contracts &amp; Subscriptions</strong>"
-msgstr ""
+msgstr "<strong>Kontrakte &amp; Aantekenaars</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -461,14 +462,14 @@ msgstr "<strong>Skep 'n kliënt faktuur</strong>"
 msgid ""
 "<strong>Create a Deposit Ticket</strong><br/>\n"
 "                                        This allows you to record the different payments that constitute your bank deposit. (You may need to"
-msgstr ""
+msgstr "<strong>Skep 'n bankdeposito-strokie </strong><br/>\n                                        Dit sal u toelaat om die verskillende betalings waaruit die deposito bestaan, aan te dui. (U mag dalk moet"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Create the bill in Odoo</strong><br/> with a proper due date, and "
 "create the vendor if it doesnt' exist yet."
-msgstr ""
+msgstr "<strong>Skep die rekening in Odoo</strong><br/> met 'n betaaldatum, en skep die verkoper indien die profiel nog nie bestaan nie."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -539,7 +540,7 @@ msgstr "<strong>Joernale:</strong>"
 msgid ""
 "<strong>Mark the bills to pay</strong><br/>\n"
 "                                        Group or filter your bills to see those due in the next week, then open each bill individually, click on <strong>'Pay'</strong> and select the payment method you prefer."
-msgstr ""
+msgstr "<strong>Merk die rekeninge wat betaal moet word</strong><br/>\n                                        Groepeer of filter u rekeninge om te sien watter rekeninge volgende week betaalbaar is en maak elkeen apart oop, kliek op <strong>'Betaal'</strong> en selekteer u betalingswyse."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -551,14 +552,14 @@ msgstr "<strong> Volgende aksie </strong><br/>"
 msgid ""
 "<strong>On-the-fly payment reconciliation:</strong> automatic suggestions of"
 " outstanding payments when creating invoices."
-msgstr ""
+msgstr "<strong>Voorlopige rekonsiliasie van betalings:</strong> uitwysing van onbetaalde rekeninge terwyl u fakture skep."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Or generate payment orders</strong><br/>\n"
 "                                        Create a Payment Order and select the bills you'd like to pay as Entry lines (only the validated bills will appear)."
-msgstr ""
+msgstr "<strong>Of skep betalingsbestellings</strong><br/>\n                                        Skep 'n betalingsbestelling en kies die rekeninge wat u wil betaal as inskrywings (slegs die geldige rekeninge sal verskyn)."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -568,31 +569,31 @@ msgstr "Vennoot se"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<strong>Period Length (days)</strong>"
-msgstr ""
+msgstr "<strong>Periode (dae)</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Print checks</strong><br/>\n"
 "                                        From the Vendor Payments list, select those you want to pay and click on Print Check (you may first need to activate the check feature in the"
-msgstr ""
+msgstr "<strong>Druk Tjeks</strong><br/>\n                                        Selekteer die Verkopers vir wie u wil betaal vanaf die Verkoper Betalingslys en kliek Druk Tjek (u sal dalk eers die tjek opsie moet aktiveer in die"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Purchases</strong>"
-msgstr ""
+msgstr "<strong>Aankope</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Reconcile Bank Statement</strong>"
-msgstr ""
+msgstr "<strong>Rekonsilieer Bankstate</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Reconcile with existing transaction</strong><br/>\n"
 "                                        In this case, Odoo should automatically match the bank statement with the previously recorded check transaction."
-msgstr ""
+msgstr "<strong>Rekonsilieer met bestaande transaksie</strong><br/>\n                                        In hierdie geval behoort Odoo die bankstaat outomaties met die reeds ingeleesde tjek-transaksie te rekonsilieer."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -604,7 +605,7 @@ msgstr "<strong>Rekonsilieer jou Bankstate</strong>"
 msgid ""
 "<strong>Record Bank Statement (or import file)</strong><br/>\n"
 "                                        Depending on the volume of your transactions, you should be recording your bank statement every week to several times a day."
-msgstr ""
+msgstr "<strong>Sleutel die transaksies op u bankstaat in (of voer u bankstaat in) </strong><br/>\n                                        Afhangende van die hoeveelheid transaksies behoort u die bankstaat besonderhede daagliks of 'n paar keer elke dag in te voer. ."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -616,7 +617,7 @@ msgstr ""
 msgid ""
 "<strong>Record a payment by check on the Invoice</strong><br/>\n"
 "                                        Simply click on the 'Pay' button."
-msgstr ""
+msgstr "<strong>Teken 'n tjekbetaling van die faktuur aan</strong><br/>\n                                        Kliek op die 'Betaal' ikoon."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -628,7 +629,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Reference:</strong>"
-msgstr ""
+msgstr "<strong>Verwysing:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2037,7 +2038,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Cancel Invoice"
-msgstr "Kanselleer Kwitansie"
+msgstr "Kanselleer Faktuur"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_cancel_view
@@ -2188,7 +2189,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_cashbox_line
 msgid "CashBox Line"
-msgstr "Casboek lyn"
+msgstr "Kasboek lyn"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_cashbox_lines_ids

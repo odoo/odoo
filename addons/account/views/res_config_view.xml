@@ -56,13 +56,13 @@
                             <div attrs="{'invisible': ['|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',False), ('has_chart_of_accounts','!=',False)]}">
                                 <label for="sale_tax_id"/>
                                 <field name="sale_tax_id"
-                                    domain="[('chart_template_id', '=', chart_template_id),('type_tax_use','in',('sale','all'))]"
+                                    domain="[('chart_template_id', 'parent_of', chart_template_id),('type_tax_use','in',('sale','all'))]"
                                     class="oe_inline"/>
                             </div>
                             <div attrs="{'invisible': ['|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',False), ('has_chart_of_accounts','!=',False)]}">
                                 <label for="purchase_tax_id"/>
                                 <field name="purchase_tax_id"
-                                    domain="[('chart_template_id', '=', chart_template_id),('type_tax_use','in',('purchase', 'all'))]"
+                                    domain="[('chart_template_id', 'parent_of', chart_template_id),('type_tax_use','in',('purchase', 'all'))]"
                                     class="oe_inline"/>
                             </div>
                             <div attrs="{'invisible': ['|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',True), ('has_chart_of_accounts','!=',False)]}">

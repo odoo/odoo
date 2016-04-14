@@ -130,13 +130,16 @@ var KanbanView = View.extend({
         return this.search_orderer
             .add(options.grouped ? this.load_groups(options) : this.load_records())
             .then(function (data) {
+                var new_ids;
                 _.extend(self, options);
                 if (options.grouped) {
-                    var new_ids = _.union.apply(null, _.map(data.groups, function (group) {
+                    new_ids = _.union.apply(null, _.map(data.groups, function (group) {
                         return group.dataset.ids;
                     }));
-                    self.dataset.alter_ids(new_ids);
+                } else {
+                    new_ids = _.pluck(data.records, 'id');
                 }
+                self.dataset.alter_ids(new_ids);
                 self.data = data;
             })
             .then(this.proxy('render'))
@@ -153,20 +156,18 @@ var KanbanView = View.extend({
     },
 
     load_records: function (offset, dataset) {
-        var options = {
-            'limit': this.limit,
-            'offset': offset,
-        };
-        dataset = dataset || this.dataset;
-        return dataset
-            .read_slice(this.fields_keys.concat(['__last_update']), options)
-            .then(function(records) {
-                return {
-                    records: records,
-                    is_empty: !records.length,
-                    grouped: false,
-                };
-            });
+        dataset = dataset || this.dataset;        
+        return dataset._model.query(this.fields_keys.concat(['__last_update']))
+                .limit(this.limit || false)
+                .offset(offset || 0)
+                .all()
+                .then(function (records) {
+                    return {
+                        records: records,
+                        is_empty: !records.length,
+                        grouped: false,
+                    };
+                });
     },
 
     load_groups: function (options) {
@@ -423,8 +424,34 @@ var KanbanView = View.extend({
 
     render_grouped: function (fragment) {
         var self = this;
+
+        // FORWARDPORT UP TO SAAS-10, NOT IN MASTER!
+        // Drag'n'drop activation/deactivation
+        var group_by_field_attrs = this.fields_view.fields[this.group_by_field];
+
+        // Group_by field might not be in the Kanban view, so we need to get it somewhere else...
+        // This somewhere else is on the search view.
+        if (group_by_field_attrs === undefined) {
+            if (this.ViewManager.searchview.groupby_menu && this.ViewManager.searchview.groupby_menu.groupable_fields) {
+                group_by_field_attrs = _.find(this.ViewManager.searchview.groupby_menu.groupable_fields, function(field) {
+                    return field.name === self.group_by_field;
+                })
+            }
+        }
+        // Deactivate the drag'n'drop if:
+        // - field is a date or datetime since we group by month
+        // - field is readonly
+        var draggable = true;
+        if (group_by_field_attrs) {
+            if (group_by_field_attrs.type === "date" || group_by_field_attrs.type === "datetime") {
+                var draggable = false;
+            }
+            else if (group_by_field_attrs.readonly !== undefined) {
+                var draggable = !(group_by_field_attrs.readonly);
+            }
+        }
         var record_options = _.extend(this.record_options, {
-            draggable: true,
+            draggable: draggable,
         });
 
         var column_options = this.get_column_options();

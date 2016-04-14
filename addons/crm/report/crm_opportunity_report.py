@@ -70,7 +70,7 @@ class crm_opportunity_report(osv.Model):
                     c.team_id,
                     (SELECT COUNT(*)
                      FROM mail_message m
-                     WHERE m.model = 'crm.lead' and m.res_id = c.id) as nbr_activity,
+                     WHERE m.model = 'crm.lead' and m.res_id = c.id) as nbr_activities,
                     c.active,
                     c.campaign_id,
                     c.source_id,

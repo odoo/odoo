@@ -3,8 +3,9 @@
 # * account
 # 
 # Translators:
+# Bole <bole@dajmi5.com>, 2016
 # Dalibor Ružić <Dalibor.Ruzic@storm.hr>, 2015
-# Davor Bojkić <bole@dajmi5.com>, 2015
+# Bole <bole@dajmi5.com>, 2015
 # Davor Bojkić <davor.bojkic@storm.hr>, 2015
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2015
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
@@ -17,8 +18,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-02-27 10:43+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-04-08 06:54+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1659,7 +1660,7 @@ msgstr "Dugotrajna imovina"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_asset
 msgid "Assets management"
-msgstr ""
+msgstr "Upravljanje imovinom"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_account_ids
@@ -1744,7 +1745,7 @@ msgstr "Saldo se računa na bazi otvorenog salda i transakcija."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_balance_cash_basis
 msgid "Balance cash basis"
-msgstr ""
+msgstr "Saldo po naplaćenom"
 
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0
@@ -4015,21 +4016,21 @@ msgstr "Započnite"
 msgid ""
 "Get your bank statements from you bank and import them through plaid.com.\n"
 "-that installs the module account_plaid."
-msgstr ""
+msgstr "Dohvatite bankovne izvode i importirajte ih preko plaid.com servisa.\n- ovo instalira modul account_plaid."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_ofx
 msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .OFX format.\n"
 "This installs the module account_bank_statement_import_ofx."
-msgstr ""
+msgstr "Preuzmite bankovne izvatke sa vaše banke i importirajte ih u odoo u .OFX formatu.\n- Ovo instalira modul account_bank_statement_import_ofx"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_qif
 msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .QIF format.\n"
 "This installs the module account_bank_statement_import_qif."
-msgstr ""
+msgstr "Dohvatite vaše bankovne izvatke i importirajte ih u odoo u .QIF formatu.\nOvo instalira modul account_bank_statement_import_qif."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_yodlee
@@ -4273,7 +4274,7 @@ msgstr "Grupiranje istovrsnih redova računa u jednu stavku knjiženja (ako je i
 msgid ""
 "If you check this box, you will be able to register your payment using SEPA.\n"
 "-This installs the module account_sepa."
-msgstr ""
+msgstr "Ukoliko označite ovo polje, možete evidentirati vaša plaćanja korištenjem SEPA.\n- ovo instalira modul account_sepa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_accountant
@@ -5469,12 +5470,12 @@ msgstr "Razne operacije"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:81
 #, python-format
 msgid "Modify presets"
-msgstr ""
+msgstr "Uredi predloške"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create refund, reconcile and create a new draft invoice"
-msgstr ""
+msgstr "Ispravi: kreiraj storno dokument, zatvori ga te kreiraj novi račun u statusu 'Nacrt'"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_invoice_partner_relation
@@ -5516,13 +5517,13 @@ msgstr "Stavka temeljnice"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_move_line_ids
 msgid "Move line ids"
-msgstr ""
+msgstr "ID-ovi stavaka temeljnice"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1026
 #, python-format
 msgid "Move name (id): %s (%s)"
-msgstr ""
+msgstr "Naziv knjiženja (id): %s (%s)"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5572,7 +5573,7 @@ msgstr "Naziv:"
 #: model:ir.actions.act_window,name:account.act_account_tax_net
 #: model:ir.actions.act_window,name:account.act_account_tax_net_posted
 msgid "Net Tax Lines"
-msgstr ""
+msgstr "Neto retci poreza"
 
 #. module: account
 #: selection:account.bank.statement,state:0
@@ -5607,7 +5608,7 @@ msgstr "Novi očekivani datum plaćanja"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:80
 #, python-format
 msgid "New preset"
-msgstr ""
+msgstr "Novi predložak"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8249,14 +8250,14 @@ msgstr ""
 msgid ""
 "This allows to automate letters for unpaid invoices, with multi-level recalls.\n"
 "-This installs the module account_reports_followup."
-msgstr ""
+msgstr "Ovo omogućuje automatizaciju poruka o neplaćenim računima sa višestrukim nivoima ponavljanja.\n- Ovo instalira modul account_reports_followup."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_batch_deposit
 msgid ""
 "This allows you to group received checks before you deposit them to the bank.\n"
 "-This installs the module account_batch_deposit."
-msgstr ""
+msgstr "Ovo vam omogućuje  da grupirate zaprimljene čekove prije nego ih položite u banku.\n- Instalira modul account_batch_deposit."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_complete_tax_set
@@ -8788,7 +8789,7 @@ msgstr "Koristi anglosaksonsko računovodstvo"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_batch_deposit
 msgid "Use batch deposit"
-msgstr ""
+msgstr "Koristi skupni depozit"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9375,7 +9376,7 @@ msgid ""
 "                                credit note directly or keep it draft,\n"
 "                                waiting for the document to be issued by\n"
 "                                your supplier/customer."
-msgstr ""
+msgstr "Moći ćete uređivati i potvrditi ovo\nodobrenje direktno ili ostaviti u nacrtu,\nčekajući dokument koji će biti izdan\nod strane dobavljača/kupca."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
