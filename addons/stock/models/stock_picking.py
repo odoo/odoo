@@ -487,55 +487,13 @@ class Picking(models.Model):
         self.action_assign()
         self.do_prepare_partial()
 
-    @api.model
-    def _get_top_level_packages(self, quants, quant_to_locations):
-        """This method searches for the higher level packages that can be moved as a single operation, given a list of quants
-           to move and their suggested destination, and returns the list of matching packages.
-        """
-        # TDE FIXME: this method uses shitty arguments
-        # TDE CLEAME while loop could be simpliied with pack.parent_id + all_in check
-        # Try to find as much as possible top-level packages that can be moved
-        top_lvl_packages = self.env['stock.quant.package']
-        for pack in set(quant.package_id for quant in quants if quant.package_id):
-            loop = True
-            test_pack = pack
-            good_pack = False
-            pack_destination = False
-            while loop:
-                all_in = True
-                for quant in test_pack.get_content():
-                    # If the quant is not in the quants to compare and not in the common location
-                    if not quant in quants:
-                        all_in = False
-                        break
-                    else:
-                        #if putaway strat apply, the destination location of each quant may be different (and thus the package should not be taken as a single operation)
-                        if not pack_destination:
-                            pack_destination = quant_to_locations[quant]
-                        elif pack_destination != quant_to_locations[quant]:
-                            all_in = False
-                            break
-                if all_in:
-                    good_pack = test_pack
-                    if test_pack.parent_id:
-                        test_pack = test_pack.parent_id
-                    else:
-                        #stop the loop when there's no parent package anymore
-                        loop = False
-                else:
-                    #stop the loop when the package test_pack is not totally reserved for moves of this picking
-                    #(some quants may be reserved for other picking or not reserved at all)
-                    loop = False
-            if good_pack:
-                top_lvl_packages |= good_pack
-        return top_lvl_packages
-
     def _prepare_pack_ops(self, quants, forced_qties):
         """ Prepare pack_operations, returns a list of dict to give at create """
         # TDE CLEANME: oh dear ...
+        valid_quants = quants.filtered(lambda quant: quant.qty > 0)
         _Mapping = namedtuple('Mapping', ('product', 'package', 'owner', 'location', 'location_dst_id'))
 
-        all_products = quants.mapped('product_id') | self.env['product.product'].browse(p.id for p in forced_qties.keys()) | self.move_lines.mapped('product_id')
+        all_products = valid_quants.mapped('product_id') | self.env['product.product'].browse(p.id for p in forced_qties.keys()) | self.move_lines.mapped('product_id')
         computed_putaway_locations = dict(
             (product, self.location_dest_id.get_putaway_strategy(product) or self.location_dest_id.id) for product in all_products)
 
@@ -550,90 +508,64 @@ class Picking(models.Model):
         if len(picking_moves.mapped('location_dest_id')) > 1:
             raise UserError(_('The destination location must be the same for all the moves of the picking.'))
 
-        vals = []
-        qtys_grouped = {}
-        lots_grouped = {}
-        # for each quant of the picking, find the suggested location
-        quants_suggested_locations = {}
-        # product_putaway_strats = {}
-        for quant in quants:
-            if quant.qty <= 0:
-                continue
-            suggested_location_id = computed_putaway_locations[quant.product_id]
-            quants_suggested_locations[quant] = suggested_location_id
-
-        # find the packages we can movei as a whole
-        top_lvl_packages = self._get_top_level_packages(quants_suggested_locations.keys(), quants_suggested_locations)
-        # and then create pack operations for the top-level packages found
+        pack_operation_values = []
+        # find the packages we can move as a whole, create pack operations and mark related quants as done
+        top_lvl_packages = valid_quants._get_top_level_packages(computed_putaway_locations)
         for pack in top_lvl_packages:
             pack_quants = pack.get_content()
-            vals.append({
+            pack_operation_values.append({
                 'picking_id': self.id,
                 'package_id': pack.id,
                 'product_qty': 1.0,
                 'location_id': pack.location_id.id,
-                'location_dest_id': quants_suggested_locations[pack_quants[0]],
+                'location_dest_id': computed_putaway_locations[pack_quants[0].product_id],
                 'owner_id': pack.owner_id.id,
             })
-            # remove the quants inside the package so that they are excluded from the rest of the computation
-            for quant in pack_quants:
-                del quants_suggested_locations[quant]
+            valid_quants -= pack_quants
+
         # Go through all remaining reserved quants and group by product, package, owner, source location and dest location
         # Lots will go into pack operation lot object
-        for quant, dest_location_id in quants_suggested_locations.items():
-            key = _Mapping(quant.product_id, quant.package_id, quant.owner_id, quant.location_id, dest_location_id)
-            if qtys_grouped.get(key):
-                qtys_grouped[key] += quant.qty
-            else:
-                qtys_grouped[key] = quant.qty
+        qtys_grouped = {}
+        lots_grouped = {}
+        for quant in valid_quants:
+            key = _Mapping(quant.product_id, quant.package_id, quant.owner_id, quant.location_id, computed_putaway_locations[quant.product_id])
+            qtys_grouped.setdefault(key, 0.0)
+            qtys_grouped[key] += quant.qty
             if quant.product_id.tracking != 'none' and quant.lot_id:
-                lots_grouped.setdefault(key, {}).setdefault(quant.lot_id.id, 0.0)
+                lots_grouped.setdefault(key, dict()).setdefault(quant.lot_id.id, 0.0)
                 lots_grouped[key][quant.lot_id.id] += quant.qty
-
         # Do the same for the forced quantities (in cases of force_assign or incomming shipment for example)
         for product, qty in forced_qties.items():
-            if qty <= 0:
+            if qty <= 0.0:
                 continue
-            suggested_location_id = computed_putaway_locations[product]
-            key = _Mapping(product, self.env['stock.quant.package'], self.owner_id, self.location_id, suggested_location_id)
-            if qtys_grouped.get(key):
-                qtys_grouped[key] += qty
-            else:
-                qtys_grouped[key] = qty
+            key = _Mapping(product, self.env['stock.quant.package'], self.owner_id, self.location_id, computed_putaway_locations[product])
+            qtys_grouped.setdefault(key, 0.0)
+            qtys_grouped[key] += qty
 
         # Create the necessary operations for the grouped quants and remaining qtys
         Uom = self.env['product.uom']
-        prevals = {}
+        product_id_to_vals = {}  # use it to create operations using the same order as the picking stock moves
         for mapping, qty in qtys_grouped.items():
-            # product = self.env["product.product"].browse(key[0])
             uom = product_to_uom[mapping.product.id]
-            qty_uom = Uom._compute_qty_obj(mapping.product.uom_id, qty, uom)
-            pack_lot_ids = []
-            if lots_grouped.get(mapping):
-                for lot in lots_grouped[mapping].keys():
-                    pack_lot_ids += [(0, 0, {'lot_id': lot, 'qty': 0.0, 'qty_todo': lots_grouped[mapping][lot]})]
             val_dict = {
                 'picking_id': self.id,
-                'product_qty': qty_uom,
+                'product_qty': Uom._compute_qty_obj(mapping.product.uom_id, qty, uom),
                 'product_id': mapping.product.id,
                 'package_id': mapping.package.id,
                 'owner_id': mapping.owner.id,
                 'location_id': mapping.location.id,
                 'location_dest_id': mapping.location_dst_id,
                 'product_uom_id': uom.id,
-                'pack_lot_ids': pack_lot_ids,
+                'pack_lot_ids': [
+                    (0, 0, {'lot_id': lot, 'qty': 0.0, 'qty_todo': lots_grouped[mapping][lot]})
+                    for lot in lots_grouped.get(mapping, {}).keys()],
             }
-            if mapping.product.id in prevals:
-                prevals[mapping.product.id].append(val_dict)
-            else:
-                prevals[mapping.product.id] = [val_dict]
-        # prevals var holds the operations in order to create them in the same order than the picking stock moves if possible
-        processed_products = set()
-        for move in [x for x in self.move_lines if x.state not in ('done', 'cancel')]:
-            if move.product_id.id not in processed_products:
-                vals += prevals.get(move.product_id.id, [])
-                processed_products.add(move.product_id.id)
-        return vals
+            product_id_to_vals.setdefault(mapping.product.id, list()).append(val_dict)
+
+        for move in self.move_lines.filtered(lambda move: move.state not in ('done', 'cancel')):
+            values = product_id_to_vals.pop(move.product_id.id, [])
+            pack_operation_values += values
+        return pack_operation_values
 
     @api.multi
     def do_prepare_partial(self):
