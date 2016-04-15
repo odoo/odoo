@@ -15,6 +15,22 @@ var X2ManyKanbanView = KanbanView.extend({
         });
         this._super($node, options);
     },
+    load_records: function (offset, dataset) {
+        var options = {
+            'limit': this.limit,
+            'offset': offset,
+        };
+        dataset = dataset || this.dataset;
+        return dataset
+            .read_slice(this.fields_keys.concat(['__last_update']), options)
+            .then(function(records) {
+                return {
+                    records: records,
+                    is_empty: !records.length,
+                    grouped: false,
+                };
+            });
+    },    
 });
 
 var One2ManyKanbanView = X2ManyKanbanView.extend({
@@ -86,4 +102,3 @@ core.view_registry.add('one2many_kanban', One2ManyKanbanView);
 core.view_registry.add('many2many_kanban', Many2ManyKanbanView);
 
 });
-

@@ -391,7 +391,7 @@ class mrp_repair(osv.osv):
                             'price_subtotal': fee.product_uom_qty * fee.price_unit
                         })
                         repair_fee_obj.write(cr, uid, [fee.id], {'invoiced': True, 'invoice_line_id': invoice_fee_id})
-                #inv_obj.button_reset_taxes(cr, uid, inv_id, context=context)
+                inv_obj.compute_taxes(cr, uid, [inv_id], context=context)
                 res[repair.id] = inv_id
         return res
 
@@ -525,7 +525,7 @@ class ProductChangeMixin(object):
                             "You have to change either the product, the quantity or the pricelist.")
                      }
                 else:
-                    result.update({'price_unit': price, 'price_subtotal': price * product_uom_qty})
+                    result.update({'price_unit': price, 'price_subtotal': 0.0})
 
         return {'value': result, 'warning': warning}
 
@@ -548,7 +548,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
                 cur = line.repair_id.pricelist_id.currency_id
                 taxes = tax_obj.compute_all(cr, uid, line.tax_id.ids, line.price_unit, cur.id, line.product_uom_qty, line.product_id.id, line.repair_id.partner_id.id)
                 #res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
-                res[line.id] = taxes['total_included']
+                res[line.id] = taxes['total_excluded']
             else:
                 res[line.id] = 0
         return res
@@ -643,7 +643,7 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
             if line.to_invoice:
                 cur = line.repair_id.pricelist_id.currency_id
                 taxes = tax_obj.compute_all(cr, uid, line.tax_id.ids, line.price_unit, cur.id, line.product_uom_qty, line.product_id.id, line.repair_id.partner_id.id)
-                res[line.id] = taxes['total_included']
+                res[line.id] = taxes['total_excluded']
             else:
                 res[line.id] = 0
         return res
