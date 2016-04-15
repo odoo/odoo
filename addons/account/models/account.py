@@ -249,6 +249,8 @@ class AccountJournal(models.Model):
     profit_account_id = fields.Many2one('account.account', string='Profit Account', domain=[('deprecated', '=', False)], help="Used to register a profit when the ending balance of a cash register differs from what the system computes")
     loss_account_id = fields.Many2one('account.account', string='Loss Account', domain=[('deprecated', '=', False)], help="Used to register a loss when the ending balance of a cash register differs from what the system computes")
 
+    belongs_to_company = fields.Boolean('Belong to the user\'s current company', compute="_belong_to_company", search="_search_company_journals",)
+
     # Bank journals fields
     bank_account_id = fields.Many2one('res.partner.bank', string="Bank Account", ondelete='restrict')
     display_on_footer = fields.Boolean("Show in Invoices Footer", help="Display this bank account on the footer of printed documents like invoices and sales orders.")
@@ -458,6 +460,22 @@ class AccountJournal(models.Model):
             name = "%s (%s)" % (journal.name, currency.name)
             res += [(journal.id, name)]
         return res
+
+    @api.multi
+    @api.depends('company_id')
+    def _belong_to_company(self):
+        for journal in self:
+            journal.belong_to_company = (journal.company_id.id == self.env.user.company_id.id)
+
+    @api.multi
+    def _search_company_journals(self, operator, value):
+        if value:
+            recs = self.search([('company_id', operator, self.env.user.company_id.id)])
+        elif operator == '=':
+            recs = self.search([('company_id', '!=', self.env.user.company_id.id)])
+        else:
+            recs = self.search([('company_id', operator, self.env.user.company_id.id)])
+        return [('id', 'in', [x.id for x in recs])]
 
     @api.multi
     @api.depends('inbound_payment_method_ids', 'outbound_payment_method_ids')
