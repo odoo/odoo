@@ -490,6 +490,29 @@ class Quant(models.Model):
     # Misc tools
     # ----------------------------------------------------------------------
 
+    def _get_top_level_packages(self, product_to_location):
+        """ This method searches for as much possible higher level packages that
+        can be moved as a single operation, given a list of quants to move and
+        their suggested destination, and returns the list of matching packages. """
+        top_lvl_packages = self.env['stock.quant.package']
+        for package in self.mapped('package_id'):
+            all_in = True
+            top_package = self.env['stock.quant.package']
+            while package:
+                if any(quant not in self for quant in package.get_content()):
+                    all_in = False
+                if all_in:
+                    destinations = [product_to_location[product] for product in package.get_content().mapped('product_id')]
+                    if len(destinations) > 1:
+                        all_in = False
+                if all_in:
+                    top_package = package
+                    package = package.parent_id
+                else:
+                    package = False
+            top_lvl_packages |= top_package
+        return top_lvl_packages
+
     @api.multi
     def _get_latest_move(self):
         latest_move = self.history_ids[0]
