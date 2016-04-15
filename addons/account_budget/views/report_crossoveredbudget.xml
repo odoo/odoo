@@ -9,10 +9,10 @@
                     <h2>Budget</h2>
 
                     <div class="row mt32">
-                        <div class="col-xs-3">
+                        <div class="col-xs-4">
                             <strong>Analysis from:</strong>
-                            <p><span t-esc="data['form']['date_from']"/> to
-                            <span t-esc="data['form']['date_to']"/></p>
+                            <p><span t-esc="date_from"/> to
+                            <span t-esc="date_to"/></p>
                         </div>
                         <div class="col-xs-3">
                             <strong>Budget:</strong>
@@ -35,7 +35,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="funct[o.id]" t-as="line">
+                            <tr t-foreach="budgets[o.id]['lines']" t-as="line">
                                 <td>
                                     <span style="color: white;" t-esc="'... '*(line['status'] - 1)"/>
                                     <span t-esc="line['name']"/>
@@ -53,21 +53,22 @@
                                     <span t-esc="line['perc']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/> %
                                 </td>
                             </tr>
-                            <tr t-foreach="funct_total[o.id]" t-as="tot">
+                            <tr>
                                 <td>
                                   <strong>Total:</strong>
                                 </td>
+                                <t t-set="budget_total" t-value="budgets[o.id]['budget_total']" />
                                 <td class="text-right">
-                                    <strong t-esc="tot['tot_theo']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                    <strong t-esc="budget_total['theo']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                 </td>
                                 <td class="text-right">
-                                    <strong t-esc="tot['tot_pln']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                    <strong t-esc="budget_total['pln']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                 </td>
                                 <td class="text-right">
-                                    <strong t-esc="tot['tot_prac']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                    <strong t-esc="budget_total['prac']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                 </td>
                                 <td class="text-center">
-                                    <strong t-esc="tot['tot_perc']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/> %
+                                    <strong t-esc="budget_total['perc']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/> %
                                 </td>
                             </tr>
                         </tbody>

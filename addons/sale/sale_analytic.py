@@ -123,3 +123,4 @@ class AccountAnalyticLine(models.Model):
         line.with_context(create=True).write(res)
         line.mapped('so_line').sudo()._compute_analytic()
         return line
+    
