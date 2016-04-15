@@ -24,6 +24,7 @@ from dateutil.relativedelta import relativedelta
 from decimal import Decimal
 import logging
 import pdb
+import psycopg2
 import time
 
 import openerp
@@ -537,6 +538,9 @@ class pos_order(osv.osv):
             wf_service = netsvc.LocalService("workflow")
             try:
                 wf_service.trg_validate(uid, 'pos.order', order_id, 'paid', cr)
+            except psycopg2.OperationalError:
+                # do not hide transactional errors, the order(s) won't be saved!
+                raise
             except Exception:
                 _logger.error('ERROR: Could not fully process the POS Order', exc_info=True)
         return order_ids
