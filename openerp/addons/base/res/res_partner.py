@@ -636,7 +636,7 @@ class Partner(models.Model, FormatAddress):
         emails = tools.email_split(email)
         if emails:
             email = emails[0]
-        partners = self.search([('email', '=ilike', email)])
+        partners = self.search([('email', '=ilike', email)], limit=1)
         return partners.id or self.name_create(email)[0]
 
     def _get_gravatar_image(self, email):
