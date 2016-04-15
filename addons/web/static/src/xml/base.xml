@@ -204,7 +204,9 @@
 </t>
 <t t-name="WebClient.DebugDropdown">
     <t t-if="active_view.type === 'form'">
-        <li class="oe_metadata"><a href="#" data-action="get_metadata">View Metadata</a></li>
+        <t t-if="active_view.controller.get_selected_ids().length == 1">
+            <li class="oe_metadata"><a href="#" data-action="get_metadata">View Metadata</a></li>
+        </t>
         <li class="oe_layout"><a href="#" data-action="toggle_layout_outline">Toggle Form Layout Outline</a></li>
         <li class="oe_defaults"><a href="#" data-action="set_defaults">Set Defaults</a></li>
     </t>
