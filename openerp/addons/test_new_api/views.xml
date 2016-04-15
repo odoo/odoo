@@ -20,6 +20,13 @@
         </record>
         <menuitem id="menu_messages" action="action_messages" parent="menu_sub" sequence="20"/>
 
+        <record id="action_multi" model="ir.actions.act_window">
+            <field name="name">Multi</field>
+            <field name="res_model">test_new_api.multi</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="menu_multi" action="action_multi" parent="menu_sub"/>
+
         <menuitem id="menu_config" name="Configuration" parent="menu_main" sequence="20"/>
 
         <record id="action_categories" model="ir.actions.act_window">
@@ -121,6 +128,40 @@
                             <field name="name"/>
                             <field name="parent"/>
                         </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Multi tree view -->
+        <record id="multi_tree" model="ir.ui.view">
+            <field name="name">multi tree view</field>
+            <field name="model">test_new_api.multi</field>
+            <field name="arch" type="xml">
+                <tree string="Multi">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Multi form view -->
+        <record id="multi_form" model="ir.ui.view">
+            <field name="name">multi form view</field>
+            <field name="model">test_new_api.multi</field>
+            <field name="arch" type="xml">
+                <form string="Multi" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="partner"/>
+                        </group>
+                        <label for="lines"/>
+                        <field name="lines">
+                            <tree string="Lines" editable="1">
+                                <field name="name"/>
+                                <field name="partner"/>
+                            </tree>
+                        </field>
                     </sheet>
                 </form>
             </field>
