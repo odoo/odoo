@@ -20,6 +20,7 @@
 ##############################################################################
 
 import logging
+import psycopg2
 import time
 from datetime import datetime
 
@@ -671,6 +672,9 @@ class pos_order(osv.osv):
 
             try:
                 self.signal_workflow(cr, uid, [order_id], 'paid')
+            except psycopg2.OperationalError:
+                # do not hide transactional errors, the order(s) won't be saved!
+                raise
             except Exception as e:
                 _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
 
