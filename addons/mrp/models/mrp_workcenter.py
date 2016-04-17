@@ -2,17 +2,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import api, fields, models, _
+from dateutil import relativedelta
+import datetime
 
 # ----------------------------------------------------------
 # Work Centers
 # ----------------------------------------------------------
 
-
 class MrpWorkcenter(models.Model):
     _name = 'mrp.workcenter'
     _description = 'Work Center'
     _inherits = {'resource.resource': "resource_id"}
-
 
     note = fields.Text(string='Description', help="Description of the Work Center. ")
     capacity = fields.Float(string='Capacity', default=1.0, help="Number of pieces work center can produce in parallel.")
@@ -26,69 +26,47 @@ class MrpWorkcenter(models.Model):
     color = fields.Integer('Color')
     count_ready_order = fields.Integer(compute='_compute_orders', string="Total Ready Orders")
     count_progress_order = fields.Integer(compute='_compute_orders', string="Total Running Orders")
-    blocked = fields.Boolean('Blocked')
-    working_state = fields.Selection([('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'In Progress')], string='Status', default="normal", store=True, 
-                                compute="_compute_working_state", inverse='_set_blocked')
-    oee = fields.Float(compute='_compute_oee', help='Overall Equipment Efficiency')
-    blocked_time = fields.Float(compute='_compute_oee', help='Number of blocked hours on the last 30 days')
-    blocked_time_ids = fields.One2many('mrp.workcenter.blocked.time', 'workcenter_id', string='Blocked Times')
-
-    @api.one
-    def _set_blocked(self):
-        if self.working_state == 'blocked':
-            self[0].block(False, "")
-        elif self.blocked:
-            self[0].unblock()
-
-    @api.depends('blocked')
-    def _compute_oee(self):
-        for workcenter in self:
-            workcenter.blocked_time = sum(workcenter.blocked_time_ids.filtered(lambda x: fields.Datetime.from_string(x.date_start).month == fields.datetime.now().month).mapped('duration'))
-            timesheet_hours = 0.0
-            for order in workcenter.order_ids:
-                timesheet_hours += sum(order.time_ids.mapped('duration'))
-            if workcenter.blocked_time > 0:
-                workcenter.oee = workcenter.blocked_time / (workcenter.blocked_time + timesheet_hours)
+    working_state = fields.Selection([('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'In Progress')], string='Status', default="normal", compute="_compute_working_state")
+    oee = fields.Float(compute='_compute_oee', help='Overall Equipment Efficiency, based on the last month')
+    blocked_time = fields.Float(compute='_compute_oee', help='Blocked Hours over the last month')
 
     @api.multi
-    @api.depends('order_ids', 'order_ids.state', 'blocked')
+    def _compute_oee(self):
+        prod_obj = self.env['mrp.workcenter.productivity']
+        date = (datetime.datetime.now() - relativedelta.relativedelta(months=1)).strftime('%Y-%m-%d %H:%M:%S')
+        domain = [
+            ('date_start','>=', date), 
+            ('workcenter_id', 'in', self.mapped('id')), 
+            ('date_end','<>',False)
+        ]
+
+        wcs_block = prod_obj.read_group(domain+[('loss_type','<>','productive')], ['duration','workcenter_id'], ['workcenter_id'], lazy=False)
+        wcs_productive = prod_obj.read_group(domain+[('loss_type','=','productive')], ['duration','workcenter_id'], ['workcenter_id'], lazy=False)
+        wcs_block = dict(map(lambda x: (x['workcenter_id'][0], x['duration']), wcs_block))
+        wcs_productive = dict(map(lambda x: (x['workcenter_id'][0], x['duration']), wcs_productive))
+        for workcenter in self:
+            workcenter.blocked_time = wcs_block.get(workcenter.id)
+            if wcs_productive.get(workcenter.id) or wcs_block.get(workcenter.id):
+                workcenter.oee = round(wcs_productive.get(workcenter.id, 0.0) * 100.0 / (wcs_productive.get(workcenter.id, 0.0) + wcs_block.get(workcenter.id)),2)
+            else:
+                workcenter.oee = 0.0
+
+    @api.multi
     def _compute_working_state(self):
         for workcenter in self:
-            if workcenter.blocked:
-                workcenter.working_state = 'blocked'
-                continue
-            if workcenter.count_progress_order:
+            last = self.env['mrp.workcenter.productivity'].search([('workcenter_id','=',workcenter.id)], limit=1)
+            if (not last) or (last[0].date_end):
+                workcenter.working_state = 'normal'
+            elif last[0].loss_type=='productive':
                 workcenter.working_state = 'done'
             else:
-                workcenter.working_state = 'normal'
-
-    @api.multi
-    def block(self, reason, description):
-        self.ensure_one()
-        if not self.blocked:
-            time_obj = self.env['mrp.workcenter.blocked.time']
-            time_obj.create({'workcenter_id': self.id,
-                             'description': description,
-                             'reason_id': reason and reason.id or False,
-                             'date_start': fields.Datetime.now(),
-                             })
-            #Stop all timers
-            self.order_ids.end_all()
-            self.write({'blocked': True})
+                workcenter.working_state = 'blocked'
 
     @api.multi
     def unblock(self):
-        self.ensure_one()
-        if self.blocked:
-            times = self.env['mrp.workcenter.blocked.time'].search([('workcenter_id', '=', self.id), ('state', '=', 'running')])
-            times.write({'state': 'done', 'date_end': fields.Datetime.now()})
-        self.write({'blocked': False})
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'reload',
-            'params': {'menu_id': self.env.ref('base.menu_mrp_root').id},
-        }
-
+        times = self.env['mrp.workcenter.productivity'].search([('workcenter_id', '=', self.id), ('date_end', '=', False), ('loss_type','<>', 'productive')])
+        times.write({'date_end': fields.Datetime.now()})
+        return True
 
     @api.depends('order_ids')
     def _compute_orders(self):
@@ -106,27 +84,44 @@ class MrpWorkcenter(models.Model):
                 raise ValueError(_('The capacity must be strictly positive.'))
 
 
-class MrpWorkcenterBlockReason(models.Model):
-    _name = "mrp.workcenter.block.reason"
-    _description = "Workcenter Blocking Reason"
+class MrpWorkcenterProductivityLoss(models.Model):
+    _name = "mrp.workcenter.productivity.loss"
+    _description = "TPM Big Losses"
 
-    name = fields.Char("Reason")
+    name = fields.Char("Reason", required=True)
+    sequence = fields.Integer("Sequence", default=1)
+    active = fields.Boolean("Active", default=True)
+    loss_type = fields.Selection([
+        ('availability','Availability'),('performance','Performance'),
+        ('quality','Quality'),('productive','Productive')], "Effectiveness Category", required=True, default='availability')
 
 
-class MrpWorkcenterBlockedTimeLine(models.Model):
-    _name = "mrp.workcenter.blocked.time"
+class MrpWorkcenterProductivity(models.Model):
+    _name = "mrp.workcenter.productivity"
+    _description = "Workcenter Productivity Log"
+    _order = "id desc"
 
-    @api.depends('date_end')
+    @api.depends('date_end','date_start')
     def _compute_duration(self):
         for blocktime in self:
-            if blocktime.date_end:
+            if blocktime.date_end and blocktime.date_start:
                 diff = fields.Datetime.from_string(blocktime.date_end) - fields.Datetime.from_string(blocktime.date_start)
                 blocktime.duration = round(diff.total_seconds() / 60.0 / 60.0, 2)
+            else:
+                blocktime.duration = 0.0
 
-    workcenter_id = fields.Many2one('mrp.workcenter', required=True)
-    reason_id = fields.Many2one('mrp.workcenter.block.reason')
+    @api.multi
+    def button_block(self):
+        self.ensure_one()
+        self.workcenter_id.order_ids.end_all()
+        return {'type': 'ir.actions.act_window_close'}
+
+    workcenter_id = fields.Many2one('mrp.workcenter', string="Workcenter", required=True)
+    user_id = fields.Many2one('res.users', string="User", default=lambda self:self.env.uid)
+    loss_id = fields.Many2one('mrp.workcenter.productivity.loss', string="Loss Reason", required=True)
+    loss_type = fields.Selection(string="Effectiveness", related='loss_id.loss_type', store=True)
     description = fields.Text('Description')
-    date_start = fields.Datetime('Start Date')
+    date_start = fields.Datetime('Start Date', default=fields.Datetime.now())
     date_end = fields.Datetime('End Date')
-    duration = fields.Float('Duration', compute='_compute_duration')
-    state = fields.Selection([('running', 'Running'), ('done', 'Done')], string="Status", default="running")
+    duration = fields.Float('Duration', compute='_compute_duration', store=True)
+

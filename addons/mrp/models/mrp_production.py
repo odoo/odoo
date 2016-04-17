@@ -462,10 +462,10 @@ class MrpProductionWorkcenterLine(models.Model):
     _inherit = ['mail.thread']
 
     @api.multi
-    @api.depends('time_ids.state')
+    @api.depends('time_ids.date_end')
     def _compute_delay(self):
         for workorder in self:
-            duration = sum(workorder.time_ids.filtered(lambda x: x.state == 'done').mapped('duration'))
+            duration = sum(workorder.time_ids.mapped('duration'))
             workorder.delay = duration
             workorder.delay_unit = round(duration / max(workorder.qty_produced, 1), 2)
 
@@ -518,7 +518,7 @@ class MrpProductionWorkcenterLine(models.Model):
     qty = fields.Float(related='production_id.product_qty', string='Qty', readonly=True)
     uom = fields.Many2one('product.uom', related='production_id.product_uom_id', string='Unit of Measure')
 
-    time_ids = fields.One2many('mrp.production.work.order.time', 'workorder_id')
+    time_ids = fields.One2many('mrp.workcenter.productivity', 'workorder_id')
     worksheet = fields.Binary('Worksheet', related='operation_id.worksheet', readonly=True)
     show_state = fields.Boolean(compute='_get_current_state')
     inv_message = fields.Html(compute="_get_inventory_message")
@@ -527,7 +527,7 @@ class MrpProductionWorkcenterLine(models.Model):
     next_work_order_id = fields.Many2one('mrp.production.work.order', "Next Work Order")
     tracking = fields.Selection(related='product.tracking', readonly=True)
     is_produced = fields.Boolean(compute='_is_produced')
-    blocked = fields.Boolean(related='workcenter_id.blocked')
+    working_state = fields.Selection(related='workcenter_id.working_state')
 
     @api.multi
     def write(self, values):
@@ -684,24 +684,31 @@ class MrpProductionWorkcenterLine(models.Model):
 
     def _get_current_state(self):
         for order in self:
-            if order.time_ids.filtered(lambda x : x.user_id.id == self.env.user.id and x.state == 'running'):
+            if order.time_ids.filtered(lambda x : (x.user_id.id == self.env.user.id) and (x.date_end is False) and (x.loss_type=='productive')):
                 order.show_state = True
             else:
                 order.show_state = False
 
     @api.multi
     def button_start(self):
-        timeline = self.env['mrp.production.work.order.time']
+        timeline = self.env['mrp.workcenter.productivity']
+        loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type','=','productive'), '|', ('active','=',False),('active','=',True)], limit=1)
+        if not len(loss_id):
+            raise UserError(_("You need to define at least one productivity loss in the category 'Productivity'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
         for workorder in self:
             if workorder.production_id.state != 'progress':
                 workorder.production_id.state = 'progress'
-            timeline.create({'workorder_id': workorder.id,
-                             'state': 'running',
-                             'date_start': datetime.now(),
-                             'user_id': self.env.user.id})
+            timeline.create({
+                'workorder_id': workorder.id,
+                'workcenter_id': workorder.workcenter_id.id,
+                'description': _('Time Tracking: ')+self.env.user.name,
+                'loss_id': loss_id[0].id,
+                'date_start': datetime.now(),
+                'user_id': self.env.user.id
+            })
         self.write({'state': 'progress',
                     'date_start': datetime.now(),
-                    })
+        })
 
     @api.multi
     def button_finish(self):
@@ -712,25 +719,17 @@ class MrpProductionWorkcenterLine(models.Model):
             self.production_id.button_mark_done()
 
     @api.multi
-    def end_previous(self):
-        timeline_obj = self.env['mrp.production.work.order.time']
-        for workorder in self:
-            timeline = timeline_obj.search([('workorder_id', '=', workorder.id), ('state', '=', 'running'), ('user_id', '=', self.env.user.id)], limit=1)
-            timed = datetime.now() - fields.Datetime.from_string(timeline.date_start)
-            duration = timed.total_seconds() / 60.0
-            timeline.write({'state': 'done',
-                            'duration': duration})
+    def end_previous(self, doall=False):
+        timeline_obj = self.env['mrp.workcenter.productivity']
+        domain = [('workorder_id', 'in', self.mapped('id')), ('date_end', '=', False)]
+        if not doall:
+            domain.append(('user_id', '=', self.env.user.id))
+        timeline = timeline_obj.search(domain, limit=doall and None or 1)
+        timeline.write({'date_end': fields.Datetime.now()})
 
     @api.multi
     def end_all(self):
-        timeline_obj = self.env['mrp.production.work.order.time']
-        for workorder in self:
-            timelines = timeline_obj.search([('workorder_id', '=', workorder.id), ('state', '=', 'running')])
-            for timeline in timelines:
-                timed = datetime.now() - fields.Datetime.from_string(timeline.date_start)
-                duration = timed.total_seconds() / 60.0
-                timeline.write({'state': 'done',
-                                'duration': duration})
+        return self.end_previous(doall=True)
 
     @api.multi
     def button_pending(self):
@@ -767,14 +766,8 @@ class MrpProductionWorkcenterLine(models.Model):
 
 
 class MrpProductionWorkcenterLineTime(models.Model):
-    _name='mrp.production.work.order.time'
-    _description = 'Work Order Time'
-    
+    _inherit = ['mrp.workcenter.productivity']
     workorder_id = fields.Many2one('mrp.production.work.order', 'Work Order')
-    date_start = fields.Datetime('Start Date')
-    duration = fields.Float('Duration')
-    user_id = fields.Many2one('res.users', string="User")
-    state = fields.Selection([('running', 'Running'), ('done', 'Done')], string="Status", default="running")
 
 
 class MrpUnbuild(models.Model):

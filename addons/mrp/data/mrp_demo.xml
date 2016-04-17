@@ -532,5 +532,52 @@
 
         <!-- Run Scheduler -->
         <function model="procurement.order" name="run_scheduler"/>
+
+
+        <!-- OEE -->
+
+        <record id="mrp_workcenter_efficiency_0" model="mrp.workcenter.productivity">
+            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="loss_id" ref="block_reason7"/>
+            <field name="date_start" eval="(datetime.now() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_end" eval="(datetime.now() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="mrp_workcenter_efficiency_1" model="mrp.workcenter.productivity">
+            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="loss_id" ref="block_reason0"/>
+            <field name="date_start" eval="(datetime.now() - timedelta(hours=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_end" eval="(datetime.now() - timedelta(hours=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="mrp_workcenter_efficiency_2" model="mrp.workcenter.productivity">
+            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="loss_id" ref="block_reason1"/>
+            <field name="date_start" eval="(datetime.now() - timedelta(days=5, hours=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_end" eval="(datetime.now() - timedelta(days=5, hours=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="mrp_workcenter_efficiency_3" model="mrp.workcenter.productivity">
+            <field name="workcenter_id" ref="mrp_workcenter_1"/>
+            <field name="loss_id" ref="block_reason7"/>
+            <field name="date_start" eval="(datetime.now() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_end" eval="(datetime.now() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="mrp_workcenter_efficiency_4" model="mrp.workcenter.productivity">
+            <field name="workcenter_id" ref="mrp_workcenter_1"/>
+            <field name="loss_id" ref="block_reason0"/>
+            <field name="date_start" eval="(datetime.now() - timedelta(days=5,hours=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_end" eval="(datetime.now() - timedelta(days=5,hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="mrp_workcenter_efficiency_5" model="mrp.workcenter.productivity">
+            <field name="workcenter_id" ref="mrp_workcenter_1"/>
+            <field name="loss_id" ref="block_reason1"/>
+            <field name="date_start" eval="(datetime.now() - timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+
+
     </data>
 </odoo>
