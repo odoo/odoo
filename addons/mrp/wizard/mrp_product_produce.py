@@ -4,6 +4,7 @@
 from openerp import api, fields, models
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import UserError
+from openerp import api, fields, models, _
 
 class MrpProductProduce(models.TransientModel):
     _name = "mrp.product.produce"
