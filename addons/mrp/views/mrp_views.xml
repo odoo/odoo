@@ -1718,7 +1718,7 @@
                 <filter name="quality" string="Quality Losses" domain="[('loss_type','=','quality')]"/>
                 <separator/>
                 <group expand='0' string='Group by...'>
-                    <filter string="Date" name="loss_date" context="{'group_by': 'start_date'}"/>
+                    <filter string="Date" name="loss_date" context="{'group_by': 'date_start'}"/>
                     <filter string="User" name="user" context="{'group_by': 'create_uid'}"/>
                     <filter string='Workcenter' name="workcenter_group" context="{'group_by': 'workcenter_id'}"/>
                     <filter string="Loss Reason" name="loss_group" context="{'group_by': 'loss_id'}"/>
