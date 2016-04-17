@@ -4,7 +4,7 @@ from openerp import api, fields, models, _
 
 
 class MrpProductionWorkcenterLineTime(models.Model):
-    _inherit = 'mrp.production.productivity'
+    _inherit = 'mrp.workcenter.productivity'
 
     used = fields.Boolean('Used')
 
