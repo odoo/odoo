@@ -117,7 +117,7 @@ class stock_history(osv.osv):
         tools.drop_view_if_exists(cr, 'stock_history')
         cr.execute("""
             CREATE OR REPLACE VIEW stock_history AS (
-              SELECT MIN(id) as id,
+              SELECT row_number() over (order by move_id ASC)::int AS id,
                 move_id,
                 location_id,
                 company_id,
@@ -157,7 +157,7 @@ class stock_history(osv.osv):
                   AND (
                     (source_location.company_id is null and dest_location.company_id is not null) or
                     (source_location.company_id is not null and dest_location.company_id is null) or
-                    source_location.company_id != dest_location.company_id or
+                    source_location.company_id = dest_location.company_id or
                     source_location.usage not in ('internal', 'transit'))
                 ) UNION ALL
                 (SELECT
@@ -189,7 +189,7 @@ class stock_history(osv.osv):
                  AND (
                     (dest_location.company_id is null and source_location.company_id is not null) or
                     (dest_location.company_id is not null and source_location.company_id is null) or
-                    dest_location.company_id != source_location.company_id or
+                    dest_location.company_id = source_location.company_id or
                     dest_location.usage not in ('internal', 'transit'))
                 ))
                 AS foo
