@@ -29,6 +29,26 @@ class MrpWorkcenter(models.Model):
     working_state = fields.Selection([('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'In Progress')], string='Status', default="normal", compute="_compute_working_state")
     oee = fields.Float(compute='_compute_oee', help='Overall Equipment Efficiency, based on the last month')
     blocked_time = fields.Float(compute='_compute_oee', help='Blocked Hours over the last month')
+    oee_target = fields.Float(string='OEE Target', help="OEE Target in percentage", default=90)
+    stat_perf = fields.Integer(compute='_compute_perf', help='Performance over the last month: (expected duration - real duration) / expected duration')
+
+    @api.multi
+    def _compute_perf(self):
+        prod_obj = self.env['mrp.production.work.order']
+        date = (datetime.datetime.now() - relativedelta.relativedelta(months=1)).strftime('%Y-%m-%d %H:%M:%S')
+        domain = [
+            ('date_start','>=', date), 
+            ('workcenter_id', 'in', self.mapped('id')), 
+            ('state','=','done')
+        ]
+        wo = prod_obj.read_group(domain, ['duration','workcenter_id','delay'], ['workcenter_id'], lazy=False)
+        duration = dict(map(lambda x: (x['workcenter_id'][0], x['duration']), wo))
+        delay    = dict(map(lambda x: (x['workcenter_id'][0], x['delay']), wo))
+        for workcenter in self:
+            if delay.get(workcenter.id, 0.0):
+                workcenter.stat_perf = 100 * (duration.get(workcenter.id, 0.0)-delay.get(workcenter.id, 0.0)) / delay.get(workcenter.id, 0.0)
+            else:
+                workcenter.stat_perf = 0.0
 
     @api.multi
     def _compute_oee(self):

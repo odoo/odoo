@@ -714,7 +714,7 @@ class MrpProductionWorkcenterLine(models.Model):
     def button_finish(self):
         self.ensure_one()
         self.end_all()
-        self.write({'state': 'done'})
+        self.write({'state': 'done', 'date_finished': fields.Datetime.now()})
         if not self.production_id.work_order_ids.filtered(lambda x: x.state not in ('done','cancel')):
             self.production_id.button_mark_done()
 
