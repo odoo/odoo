@@ -14,8 +14,8 @@ Odoo E-Commerce
     'data': [
         'data/data.xml',
         'data/web_planner_data.xml',
-        'views/backend.xml',
         'views/views.xml',
+        'views/backend.xml',
         'views/templates.xml',
         'views/payment.xml',
         'views/sale_order.xml',
