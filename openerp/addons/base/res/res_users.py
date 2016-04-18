@@ -172,6 +172,7 @@ class ResUsersLog(models.Model):
     _order = 'id desc'
     # Currenly only uses the magical fields: create_uid, create_date,
     # for recording logins. To be extended for other uses (chat presence, etc.)
+    token_id = fields.Many2one('res.users.token', string='Token used', readonly=True, ondelete='set null')
 
 
 class Users(models.Model):
@@ -487,10 +488,10 @@ class Users(models.Model):
             raise AccessDenied()
 
     @api.model
-    def _update_last_login(self):
+    def _update_last_login(self, token_id=None):
         # only create new records to avoid any side-effect on concurrent transactions
         # extra records will be deleted by the periodical garbage collection
-        self.env['res.users.log'].create({}) # populated by defaults
+        self.env['res.users.log'].create({'token_id': token_id})  # `create_uid` populated by defaults
 
     def _login(self, db, login, password):
         if not password:
@@ -501,8 +502,8 @@ class Users(models.Model):
                 res = self.search(cr, SUPERUSER_ID, [('login','=',login)])
                 if res:
                     user_id = res[0]
-                    self.check_credentials(cr, user_id, password)
-                    self._update_last_login(cr, user_id)
+                    token = self.check_credentials(cr, user_id, password)
+                    self._update_last_login(cr, user_id, token_id=token.id)
         except AccessDenied:
             _logger.info("Login failed for db:%s login:%s", db, login)
             user_id = False
