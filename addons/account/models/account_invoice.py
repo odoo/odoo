@@ -495,6 +495,8 @@ class AccountInvoice(models.Model):
         self.write({'state': 'draft', 'date': False})
         self.delete_workflow()
         self.create_workflow()
+        # Delete attachments now since an invoice can also be generated when the invoice is cancelled
+        self.env['ir.attachment'].search([('res_model', '=', self._name), ('res_id', 'in', self.ids)]).unlink()
         return True
 
     @api.multi
