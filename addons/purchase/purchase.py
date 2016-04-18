@@ -653,6 +653,8 @@ class purchase_order(osv.osv):
             return False
         self.write(cr, uid, ids, {'state':'draft','shipped':0})
         self.set_order_line_status(cr, uid, ids, 'draft', context=context)
+        for po in self.browse(cr, uid, ids, context=context):
+            po.invoice_ids.unlink()
         for p_id in ids:
             # Deleting the existing instance of workflow for PO
             self.delete_workflow(cr, uid, [p_id]) # TODO is it necessary to interleave the calls?
@@ -850,7 +852,7 @@ class purchase_order(osv.osv):
         '''PO is done at the delivery side if all the incoming shipments are done'''
         for purchase in self.browse(cr, uid, ids, context=context):
             for picking in purchase.picking_ids:
-                if picking.state != 'done':
+                if (picking.state not in ('cancel',  'done')) or ((picking.state == 'cancel') and picking.backorder_id):
                     return False
         return True
 
@@ -862,7 +864,7 @@ class purchase_order(osv.osv):
         alldoneorcancel = True
         for purchase in self.browse(cr, uid, ids, context=context):
             for picking in purchase.picking_ids:
-                if picking.state == 'cancel':
+                if picking.state == 'cancel' and picking.backorder_id:
                     at_least_one_canceled = True
                 if picking.state not in ['done', 'cancel']:
                     alldoneorcancel = False
