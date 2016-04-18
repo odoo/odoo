@@ -187,11 +187,13 @@ var ChatterComposer = composer.BasicComposer.extend({
                 dialog.on('closed', self, function () {
                     deferred.resolve();
                 });
-                dialog.view_form.on('on_button_cancel', self, function () {
-                    names_to_remove.push(partner_name);
-                    if (partner_id) {
-                        recipient_ids_to_remove.push(partner_id);
-                    }
+                dialog.opened().then(function () {
+                    dialog.view_form.on('on_button_cancel', self, function () {
+                        names_to_remove.push(partner_name);
+                        if (partner_id) {
+                            recipient_ids_to_remove.push(partner_id);
+                        }
+                    });
                 });
             });
             $.when.apply($, emails_deferred).then(function () {
