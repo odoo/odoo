@@ -742,12 +742,10 @@ def trans_generate(lang, modules, cr):
                 _logger.error("name error in %s: %s", xml_name, str(exc))
                 continue
             objmodel = registry.get(obj.model)
-            if (objmodel is None or (
-                        field_name not in objmodel._columns and
-                        field_name not in objmodel._fields)
+            if (objmodel is None or field_name not in objmodel._fields
                     or not objmodel._translate):
                 continue
-            field_def = objmodel._columns.get(field_name, objmodel._fields[field_name])
+            field_def = objmodel._fields[field_name]
 
             name = "%s,%s" % (encode(obj.model), field_name)
             push_translation(module, 'field', name, 0, encode(field_def.string))
