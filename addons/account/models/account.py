@@ -666,7 +666,7 @@ class AccountTax(models.Model):
 
             taxes.append({
                 'id': tax.id,
-                'name': tax.name,
+                'name': tax.with_context(**{'lang': partner.lang} if partner else {}).name,
                 'amount': tax_amount,
                 'sequence': tax.sequence,
                 'account_id': tax.account_id.id,
