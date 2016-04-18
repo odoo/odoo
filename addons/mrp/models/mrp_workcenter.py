@@ -90,7 +90,7 @@ class MrpWorkcenter(models.Model):
             raise UserError(_("It has been unblocked already. "))
         times = self.env['mrp.workcenter.productivity'].search([('workcenter_id', '=', self.id), ('date_end', '=', False)])
         times.write({'date_end': fields.Datetime.now()})
-        return True
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
 
     @api.depends('order_ids')
     def _compute_orders(self):
@@ -138,7 +138,7 @@ class MrpWorkcenterProductivity(models.Model):
     def button_block(self):
         self.ensure_one()
         self.workcenter_id.order_ids.end_all()
-        return {'type': 'ir.actions.act_window_close'}
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
 
     workcenter_id = fields.Many2one('mrp.workcenter', string="Workcenter", required=True)
     user_id = fields.Many2one('res.users', string="User", default=lambda self:self.env.uid)
