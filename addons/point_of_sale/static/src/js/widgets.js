@@ -965,6 +965,13 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         start: function() {
             var self = this;
             return self.pos.ready.done(function() {
+                if ($.browser.chrome) {
+                    var chrome_version = $.browser.version.split('.')[0];
+                    if (parseInt(chrome_version, 10) >= 50) {
+                        openerp.loadCSS('/point_of_sale/static/src/css/chrome50.css');
+                    }
+                }
+
                 // remove default webclient handlers that induce click delay
                 $(document).off();
                 $(window).off();
