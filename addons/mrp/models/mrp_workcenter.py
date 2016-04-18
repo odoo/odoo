@@ -66,7 +66,7 @@ class MrpWorkcenter(models.Model):
         wcs_productive = dict(map(lambda x: (x['workcenter_id'][0], x['duration']), wcs_productive))
         for workcenter in self:
             workcenter.blocked_time = wcs_block.get(workcenter.id)
-            if wcs_productive.get(workcenter.id) or wcs_block.get(workcenter.id):
+            if wcs_productive.get(workcenter.id) and wcs_block.get(workcenter.id):
                 workcenter.oee = round(wcs_productive.get(workcenter.id, 0.0) * 100.0 / (wcs_productive.get(workcenter.id, 0.0) + wcs_block.get(workcenter.id)),2)
             else:
                 workcenter.oee = 0.0

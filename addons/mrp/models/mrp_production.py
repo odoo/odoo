@@ -468,6 +468,10 @@ class MrpProductionWorkcenterLine(models.Model):
             duration = sum(workorder.time_ids.mapped('duration'))
             workorder.delay = duration
             workorder.delay_unit = round(duration / max(workorder.qty_produced, 1), 2)
+            if duration:
+                workorder.delay_percent = 100 * (workorder.duration - duration) / duration
+            else:
+                workorder.delay_percent = 0
 
     @api.depends('production_id', 'workcenter_id', 'production_id.bom_id', 'production_id.picking_type_id')
     def _get_inventory_message(self):
@@ -502,6 +506,7 @@ class MrpProductionWorkcenterLine(models.Model):
     date_finished = fields.Datetime('Effective End Date', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     delay = fields.Float('Real Duration', compute='_compute_delay', readonly=True, store=True, group_operator="avg")
     delay_unit = fields.Float('Duration Per Unit', compute='_compute_delay', readonly=True, store=True, group_operator="avg")
+    delay_percent = fields.Integer('Duration Deviation (%)', compute='_compute_delay', readonly=True, store=True, group_operator="avg")
 
     qty_produced = fields.Float('Quantity', readonly=True, help="The number of products already handled by this work order", default=0.0) #TODO: decimal precision
     operation_id = fields.Many2one('mrp.routing.workcenter', 'Operation') #Should be used differently as BoM can change in the meantime
