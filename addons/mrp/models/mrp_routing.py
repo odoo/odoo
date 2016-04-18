@@ -68,4 +68,8 @@ class MrpRoutingWorkcenter(models.Model):
                 operation.time_cycle = operation.time_cycle_manual
                 continue
             (delay, qty) = totals.get(operation.id, (operation.time_cycle_manual, 1))
-            operation.time_cycle = delay / qty
+            if qty:
+                operation.time_cycle = delay / qty
+            else:
+                operation.time_cycle = operation.time_cycle_manual
+

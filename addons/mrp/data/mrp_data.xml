@@ -70,14 +70,10 @@ This application supports complete integration and production scheduling for sto
             <field name="loss_type">availability</field>
             <field name="sequence">3</field>
         </record>
-        <record id="block_reason3" model="mrp.workcenter.productivity.loss">
-            <field name="name">Idling and Minor Stop</field>
-            <field name="loss_type">performance</field>
-            <field name="sequence">4</field>
-        </record>
         <record id="block_reason4" model="mrp.workcenter.productivity.loss">
             <field name="name">Reduced Speed</field>
             <field name="loss_type">performance</field>
+            <field name="manual" eval="False"/>
             <field name="sequence">5</field>
         </record>
         <record id="block_reason5" model="mrp.workcenter.productivity.loss">
@@ -93,7 +89,7 @@ This application supports complete integration and production scheduling for sto
         <record id="block_reason7" model="mrp.workcenter.productivity.loss">
             <field name="name">Fully Productive Time</field>
             <field name="loss_type">productive</field>
-            <field name="active" eval="False"/>
+            <field name="manual" eval="False"/>
             <field name="sequence">0</field>
         </record>
     </data>

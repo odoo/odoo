@@ -84,7 +84,7 @@ class MrpWorkcenter(models.Model):
 
     @api.multi
     def unblock(self):
-        times = self.env['mrp.workcenter.productivity'].search([('workcenter_id', '=', self.id), ('date_end', '=', False), ('loss_type','<>', 'productive')])
+        times = self.env['mrp.workcenter.productivity'].search([('workcenter_id', '=', self.id), ('date_end', '=', False)])
         times.write({'date_end': fields.Datetime.now()})
         return True
 
@@ -110,7 +110,7 @@ class MrpWorkcenterProductivityLoss(models.Model):
 
     name = fields.Char("Reason", required=True)
     sequence = fields.Integer("Sequence", default=1)
-    active = fields.Boolean("Active", default=True)
+    manual = fields.Boolean("Is a Blocking Reason", default=True)
     loss_type = fields.Selection([
         ('availability','Availability'),('performance','Performance'),
         ('quality','Quality'),('productive','Productive')], "Effectiveness Category", required=True, default='availability')
@@ -126,7 +126,7 @@ class MrpWorkcenterProductivity(models.Model):
         for blocktime in self:
             if blocktime.date_end and blocktime.date_start:
                 diff = fields.Datetime.from_string(blocktime.date_end) - fields.Datetime.from_string(blocktime.date_start)
-                blocktime.duration = round(diff.total_seconds() / 60.0 / 60.0, 2)
+                blocktime.duration = round(diff.total_seconds() / 60.0 , 2)
             else:
                 blocktime.duration = 0.0
 

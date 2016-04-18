@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <form string="Block Workcenter">
                 <group>
-                    <field name="loss_id" class="oe_inline"/>
+                    <field name="loss_id" class="oe_inline" domain="[('manual','=',True)]"/>
                     <field name="description" placeholder="Add a description..."/>
                 </group>
                 <footer>

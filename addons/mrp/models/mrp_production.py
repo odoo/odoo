@@ -466,6 +466,7 @@ class MrpProductionWorkcenterLine(models.Model):
     def _compute_delay(self):
         for workorder in self:
             duration = sum(workorder.time_ids.mapped('duration'))
+            print 'ICI', duration, workorder.time_ids.mapped('duration')
             workorder.delay = duration
             workorder.delay_unit = round(duration / max(workorder.qty_produced, 1), 2)
             if duration:
@@ -504,8 +505,8 @@ class MrpProductionWorkcenterLine(models.Model):
 
     date_start = fields.Datetime('Effective Start Date', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     date_finished = fields.Datetime('Effective End Date', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
-    delay = fields.Float('Real Duration', compute='_compute_delay', readonly=True, store=True, group_operator="avg")
-    delay_unit = fields.Float('Duration Per Unit', compute='_compute_delay', readonly=True, store=True, group_operator="avg")
+    delay = fields.Float('Real Duration', compute='_compute_delay', readonly=True, store=True)
+    delay_unit = fields.Float('Duration Per Unit', compute='_compute_delay', readonly=True, store=True)
     delay_percent = fields.Integer('Duration Deviation (%)', compute='_compute_delay', readonly=True, store=True, group_operator="avg")
 
     qty_produced = fields.Float('Quantity', readonly=True, help="The number of products already handled by this work order", default=0.0) #TODO: decimal precision
@@ -689,7 +690,7 @@ class MrpProductionWorkcenterLine(models.Model):
 
     def _get_current_state(self):
         for order in self:
-            if order.time_ids.filtered(lambda x : (x.user_id.id == self.env.user.id) and (x.date_end is False) and (x.loss_type=='productive')):
+            if order.time_ids.filtered(lambda x : (x.user_id.id == self.env.user.id) and (x.date_end is False) and (x.loss_type in ('productive', 'performance'))):
                 order.show_state = True
             else:
                 order.show_state = False
@@ -697,9 +698,14 @@ class MrpProductionWorkcenterLine(models.Model):
     @api.multi
     def button_start(self):
         timeline = self.env['mrp.workcenter.productivity']
-        loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type','=','productive'), '|', ('active','=',False),('active','=',True)], limit=1)
-        if not len(loss_id):
-            raise UserError(_("You need to define at least one productivity loss in the category 'Productivity'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+        if self.delay < self.duration:
+            loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type','=','productive')], limit=1)
+            if not len(loss_id):
+                raise UserError(_("You need to define at least one productivity loss in the category 'Productivity'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+        else:
+            loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type','=','performance')], limit=1)
+            if not len(loss_id):
+                raise UserError(_("You need to define at least one productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
         for workorder in self:
             if workorder.production_id.state != 'progress':
                 workorder.production_id.state = 'progress'
@@ -725,12 +731,29 @@ class MrpProductionWorkcenterLine(models.Model):
 
     @api.multi
     def end_previous(self, doall=False):
+        print 'End Previous', doall
         timeline_obj = self.env['mrp.workcenter.productivity']
         domain = [('workorder_id', 'in', self.mapped('id')), ('date_end', '=', False)]
         if not doall:
             domain.append(('user_id', '=', self.env.user.id))
-        timeline = timeline_obj.search(domain, limit=doall and None or 1)
-        timeline.write({'date_end': fields.Datetime.now()})
+        for timeline in timeline_obj.search(domain, limit=doall and None or 1):
+            wc = timeline.workorder_id
+            if timeline.loss_type <> 'productive':
+                print 'not productive'
+                timeline.write({'date_end': fields.Datetime.now()})
+            else:
+                maxdate = fields.Datetime.from_string(timeline.date_start) + relativedelta(minutes=wc.duration - wc.delay)
+                enddate = datetime.now()
+                print 'productive start', fields.Datetime.from_string(timeline.date_start), 'max', maxdate, 'real', enddate
+                print 'duration', wc.duration, 'delay', wc.delay
+                if maxdate > enddate:
+                    timeline.write({'date_end': enddate})
+                else:
+                    timeline.write({'date_end': maxdate})
+                    loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type','=','performance')], limit=1)
+                    if not len(loss_id):
+                        raise UserError(_("You need to define at least one unactive productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+                    timeline.copy({'date_start': maxdate, 'date_end': enddate, 'loss_id': loss_id.id})
 
     @api.multi
     def end_all(self):
