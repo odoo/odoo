@@ -44,7 +44,7 @@
                         </div>
                     </div>
 
-                    <div t-if="o.work_order_ids">
+                    <div t-if="o.workorder_ids">
                         <strong>Work Orders</strong>
                         <table class="table table-condensed">
                             <tr>
@@ -53,7 +53,7 @@
                                 <td class="text-center"><strong>WorkCenter</strong></td>
                                 <td class="text-center"><strong>No. Of Minutes</strong></td>
                             </tr>
-                            <tr t-foreach="o.work_order_ids" t-as="line2">
+                            <tr t-foreach="o.workorder_ids" t-as="line2">
                                 <td class="text-center"><span t-field="line2.sequence"/></td>
                                 <td class="text-center"><span t-field="line2.name"/></td>
                                 <td class="text-center"><span t-field="line2.workcenter_id.name"/></td>

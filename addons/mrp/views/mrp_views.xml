@@ -219,7 +219,7 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="workcenter_id"/>
-                    <field name="time_cycle"/>
+                    <field name="time_cycle" widget="float_time"/>
                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -349,7 +349,7 @@
             <field name="name">Manufacturing Orders</field>
             <field name="res_model">mrp.production</field>
             <field name="view_id" ref="mrp_production_tree_view"/>
-            <field name="domain">[('routing_id', '!=', False),('routing_id.work_order_ids.workcenter_id','=', active_id)]</field>
+            <field name="domain">[('routing_id', '!=', False),('routing_id.workorder_ids.workcenter_id','=', active_id)]</field>
         </record>
 
         <record id="production_order_server_action" model="ir.actions.server">
@@ -602,7 +602,7 @@
                         </group>
                         <notebook>
                             <page string="Work Center Operations">
-                                <field name="work_order_ids" string="Operation"/>
+                                <field name="workorder_ids" string="Operation"/>
                             </page>
                             <page string="Notes">
                                 <field name="note"/>
@@ -929,14 +929,14 @@
                 <form string="Manufacturing Orders">
                 <header>
                     <button name="button_mark_done" attrs="{'invisible': [('check_to_done', '=', False)]}" string="Mark as Done" type="object" class="oe_highlight"/>
-
                     <button name="action_assign" attrs="{'invisible': [('availability', '=', 'assigned')]}" string="Check availability" type="object" class="oe_highlight"/>
                     <button name="button_plan" attrs="{'invisible': ['|', ('state', '!=', 'confirmed'), ('routing_id', '=', False)]}" type="object" string="Create Workorders" class="oe_highlight"/>
                     <button name="%(act_mrp_product_produce)d" attrs="{'invisible': ['|', ('state', 'not in', ('confirmed','progress')), ('routing_id', '!=', False)]}" string="Produce" type="action" class="oe_highlight"/>
                     <button name="%(act_mrp_product_produce)d" attrs="{'invisible': ['|', '|', ('nb_orders', '=', 0), ('state', '=', 'done'), ('routing_id', '!=', False)]}" string="Produce" type="action"/>
                     <button name="post_inventory" string="Post Inventory" type="object" class="oe_highlight" attrs="{'invisible': [('post_visible', '=', False)]}"/>
-                    <button name="action_cancel" type="object" string="Cancel" attrs="{'invisible': [('state', 'in', ('done','cancel'))]}" class="oe_highlight"/>
+                    <button name="action_cancel" type="object" string="Cancel" attrs="{'invisible': ['|', ('state', 'in', ('done','cancel')), ('check_to_done', '=', True)]}"/>
                     <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('cancel'))]}"/>
+                    <button name="button_unreserve" type="object" string="Unreserve" attrs="{'invisible': ['|', ('state', 'in', ['done', 'cancel']), ('availability', 'in', ['none', 'waiting'])]}"/>
                     <span class="label label-danger" attrs="{'invisible': ['|', ('availability', 'in', ('assigned', 'none')), ('state', 'not in', ('confirmed','progress'))]}">Raw materials not available!</span>
                     <field name="state" widget="statusbar" statusbar_visible="confirmed,progress,done" statusbar_colors='{"confirmed":"blue"}'/>
                 </header>
@@ -952,7 +952,7 @@
                         </button>
                         <button name="%(action_mrp_production_moves)d" type="action" string="Inventory Moves" class="oe_stat_button" icon="fa-arrows-v" attrs="{'invisible': [('state', 'not in', ('progress', 'done'))]}"/>
                         <button class="oe_stat_button" name="button_scrapped_moves" string="Scrapped Moves" type="object" icon="fa-arrows-v" attrs="{'invisible': [('has_scrap_move', '=', False)]}"/>
-                        <field name="work_order_ids" invisible="1"/>
+                        <field name="workorder_ids" invisible="1"/>
                     </div>
                     <div class="oe_title">
                         <h1><field name="name" placeholder="Manufacturing Reference" nolabel="1"/></h1>
@@ -1144,7 +1144,7 @@
                     <filter string="No Routing" domain="[('routing_id','=', False)]" name="norouting" groups="mrp.group_mrp_routings"/>
                     <field name="product_id"/>
                     <field name="product_id" string="Raw Material" filter_domain="[('move_raw_ids.product_id','ilike',self)]"/>
-                    <field name="name" string="Work Center" filter_domain="[('routing_id.work_order_ids.workcenter_id','ilike',self)]"/>
+                    <field name="name" string="Work Center" filter_domain="[('routing_id.workorder_ids.workcenter_id','ilike',self)]"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
@@ -1364,7 +1364,6 @@
         <field name="model">mrp.production.work.order</field>
         <field name="arch" type="xml">
             <tree string="Work Orders" delete="0" create="0" decoration-success="date_planned_start&gt;=current_date and state == 'ready'" decoration-muted="state in ('done','cancel')" decoration-danger="date_planned_start&lt;current_date and state in ('ready')">
-                <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="date_planned_start"/>
                 <field name="workcenter_id" widget="selection"/>
@@ -1387,15 +1386,16 @@
                 <button name="button_start" type="object" string="Start Working" attrs="{'invisible': ['|', ('working_state', '=', 'blocked'), ('state', '!=', 'pending')]}"/>
                 <button name="button_start" type="object" string="Start Working" attrs="{'invisible': ['|', ('working_state', '=', 'blocked'), ('state', '!=', 'ready')]}" class="btn-success"/>
                 <button name="record_production" type="object" string="Record Production" class="btn-success" attrs="{'invisible': ['|', ('state', '!=', 'progress'), ('show_state', '=', False)]}"/>
-                <button name="button_pending" type="object" string="Pause" class="btn-warning" attrs="{'invisible': ['|', ('state', 'in', ('done', 'pending', 'ready')), ('show_state', '=', False)]}"/>
-                <button name="%(act_mrp_block_workcenter)d" type="action" string="Block" class="btn-danger" attrs="{'invisible': ['|', ('state', 'in', ('done', 'pending', 'ready')), ('show_state', '=', False)]}"/>
-                <button name="button_unblock" type="object" string="Unblock" class="btn-danger" attrs="{'invisible': [('working_state', '&lt;&gt;', 'blocked')]}"/>
-                <button name="button_start" type="object" string="Continue Production" class="btn-warning" attrs="{'invisible': ['|', '|', ('working_state', '=', 'blocked'), ('show_state', '=', True), ('state', 'in', ('done', 'pending', 'ready'))]}"></button>
-                <button name="button_start" type="object" string="Continue Production" attrs="{'invisible': ['|', ('working_state', '=', 'blocked'), ('state', '!=', 'done')]}"/>
+                <button name="button_pending" type="object" string="Pause" class="btn-warning" attrs="{'invisible': ['|', ('state', 'in', ('done', 'pending', 'ready', 'cancel')), ('show_state', '=', False)]}"/>
+                <button name="%(act_mrp_block_workcenter)d" type="action" string="Block" class="btn-danger" attrs="{'invisible': ['|', ('state', 'in', ('done', 'pending', 'ready', 'cancel')), ('show_state', '=', False)]}"/>
+                <button name="button_unblock" type="object" string="Unblock" class="btn-danger" attrs="{'invisible': [('working_state', '!=', 'blocked')]}"/>
+                <button name="button_start" type="object" string="Continue Production" class="btn-warning" attrs="{'invisible': ['|', '|', ('working_state', '=', 'blocked'), ('show_state', '=', True), ('state', 'in', ('done', 'pending', 'ready', 'cancel'))]}"></button>
+                <button name="button_start" type="object" string="Continue Production" attrs="{'invisible': ['|', '|', ('production_state', '=', 'done'), ('working_state', '=', 'blocked'), ('state', '!=', 'done')]}"/>
                 <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('confirmed', 'cancel'))]}"/>
                 <field name="state" widget="statusbar" statusbar_visible="pending,ready,progress,done"/>
                 <field name="show_state" invisible="1"/>
                 <field name="working_state" invisible="1"/>
+                <field name="production_state" invisible="1"/>
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box"/>
@@ -1409,7 +1409,6 @@
                             <field name="uom" widget="selection"/>
                             <field name="availability" nolabel="1" widget="bullet_state" options="{'classes': {'assigned': 'success', 'waiting': 'danger'}}" attrs="{'invisible': [('state', '=', 'done')]}"/>
                         </div>
-                        <field name="sequence" invisible="1"/>
                         <field name="is_produced" invisible="1"/>
                     </group>
                     <div class="alert alert-danger alert-dismissible text-left" role="alert" attrs="{'invisible': [('inv_message', '=', False)]}">

@@ -29,7 +29,7 @@ class mo_cost_structure(report_sxw.rml_parse):
         total_cost = 0.0
         for raw in order.move_raw_ids:
             total_cost += raw.product_uom_qty * raw.product_id.standard_price
-        for workorder in order.work_order_ids:
+        for workorder in order.workorder_ids:
             total_cost += (sum(workorder.time_ids.mapped('duration')) / 60) * workorder.workcenter_id.costs_hour
         return round(total_cost, 2)
 

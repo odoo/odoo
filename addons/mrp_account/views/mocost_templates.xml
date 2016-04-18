@@ -26,7 +26,7 @@
                                 <td><span t-field="l.product_id.standard_price"/></td>
                                 <td><span t-esc="l.product_uom_qty * l.product_id.standard_price"/></td>
                             </tr>
-                            <tr t-foreach="get_workorders(o.work_order_ids)" t-as="wo">
+                            <tr t-foreach="get_workorders(o.workorder_ids)" t-as="wo">
                                 <table class="table table-condensed">
                                     <thead>
                                         <h4>Work Order: <span t-esc="wo['name']"/></h4>

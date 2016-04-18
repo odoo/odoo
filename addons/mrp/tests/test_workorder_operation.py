@@ -62,13 +62,13 @@ class TestWorkOrderProcess(TestMrpUsers):
         # Create work order
         production_table.button_plan()
         # Check Work order created or not
-        self.assertEqual(len(production_table.work_order_ids), 3, "Workorder should be created 3 instead of %s"%(len(production_table.work_order_ids)))
+        self.assertEqual(len(production_table.workorder_ids), 3, "Workorder should be created 3 instead of %s"%(len(production_table.workorder_ids)))
 
         # ---------------------------------------------------------
         # Process all workorder and check it state.
         # ----------------------------------------------------------
 
-        workorders = production_table.work_order_ids.sorted(lambda x: x.sequence)
+        workorders = production_table.workorder_ids
         self.assertEqual(workorders[0].state, 'ready', "First workorder state should be ready.")
         self.assertEqual(workorders[1].state, 'pending', "Workorder state should be pending.")
         self.assertEqual(workorders[2].state, 'pending', "Workorder state should be pending.")

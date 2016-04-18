@@ -13,7 +13,7 @@ class TestOrderProcess(TestOrderDemo):
 
         def assert_equals(value1, value2, msg, float_compare=float_compare):
             assert float_compare(value1, value2, precision_digits=2) == 0, msg
-        #self.assertTrue(len(self.mrp_production_test1.work_order_ids), "Workcenter lines are not generated proper.")
+        #self.assertTrue(len(self.mrp_production_test1.workorder_ids), "Workcenter lines are not generated proper.")
 
 
    # I check details of Produce Move of Production Order to trace Final Product.
