@@ -14,7 +14,7 @@ class ProjectIssueReport(models.Model):
     date_closed = fields.Datetime('Date of Closing', readonly=True)
     date_last_stage_update = fields.Datetime('Last Stage Update', readonly=True)
     stage_id = fields.Many2one('project.task.type', 'Stage')
-    nbr = fields.Integer('# of Issues', readonly=True)  # TDE FIXME master: rename into nbr_issues
+    nbr_issues = fields.Integer('# of Issues', readonly=True)
     working_hours_open = fields.Float('Avg. Working Hours to Open', readonly=True, group_operator="avg")
     working_hours_close = fields.Float('Avg. Working Hours to Close', readonly=True, group_operator="avg")
     delay_open = fields.Float('Avg. Delay to Open', digits=(16, 2), readonly=True, group_operator="avg",
@@ -46,7 +46,7 @@ class ProjectIssueReport(models.Model):
                     c.company_id as company_id,
                     c.priority as priority,
                     c.project_id as project_id,
-                    1 as nbr,
+                    1 as nbr_issues,
                     c.partner_id,
                     c.channel,
                     c.task_id,
