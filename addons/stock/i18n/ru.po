@@ -7,13 +7,14 @@
 # Ostap <Ostap.Yakovenko@gmail.com>, 2015
 # Sergey Vilizhanin <sv@grimmette.ru>, 2016
 # Sergey Vilizhanin <sv@grimmette.ru>, 2015-2016
+# Viktor Pogrebniak <vp@aifil.ru>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2016-04-06 20:37+0000\n"
-"Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>\n"
+"PO-Revision-Date: 2016-04-13 12:47+0000\n"
+"Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -415,7 +416,7 @@ msgstr "<strong>Дата обязательства</strong>"
 msgid ""
 "<strong>Consumable products</strong> are always assumed to be in sufficient "
 "quantity in your stock, therefore their available quantities are not tracked"
-msgstr "<strong>Потребляемые продукты</strong> всегда считается, что в наличии в достаточном количестве, поэтому их свободное количество не отслеживается"
+msgstr "Предполагается, что <strong>потребляемые продукты</strong> всегда имеются на складе в достаточном количестве, поэтому учёт их остатков не ведётся"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
@@ -577,7 +578,7 @@ msgstr "<strong>Статус</strong>"
 msgid ""
 "<strong>Stockable products</strong> are subject to the full inventory "
 "management system: minimum stock rules, automatic procurement, etc."
-msgstr "<strong>Складируемые продукты</strong> субъект полной системы управления запасами : правила минимальных запасов, автоматические закупки и др."
+msgstr "Для <strong>складируемых продуктов</strong> используется полный механизм системы управления запасами: правила минимальных запасов, автоматические закупки и др."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
@@ -1270,7 +1271,7 @@ msgstr "Поздравляем!"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_lines_date_search
 msgid "Consumable"
-msgstr "Потребляемое"
+msgstr "Потребляемый"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_children_ids
@@ -5484,13 +5485,13 @@ msgstr "Складские перемещения, которые были об�
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_lines_date_search
 msgid "Stockable"
-msgstr "Хранимое"
+msgstr "Складируемый"
 
 #. module: stock
 #: code:addons/stock/product.py:400
 #, python-format
 msgid "Stockable Product"
-msgstr "Складируемый Продукт"
+msgstr "Складируемый продукт"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_supplied_wh_id
@@ -6867,7 +6868,7 @@ msgstr "_Отмена"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "a stockable Product"
-msgstr "складируемый Продукт"
+msgstr "складируемый продукт"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner

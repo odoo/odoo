@@ -256,6 +256,14 @@ class PurchaseOrder(models.Model):
     def print_quotation(self):
         self.write({'state': "sent"})
         return self.env['report'].get_action(self, 'purchase.report_purchasequotation')
+        for po in self.browse(cr, SUPERUSER_ID, ids, context=context):
+            for picking in po.picking_ids:
+                picking.move_lines.write({'purchase_line_id': False})
+            for invoice in po.invoice_ids:
+                po.write({'invoice_ids': [(3, invoice.id, _)]})
+            for po_line in po.order_line:
+                for invoice_line in po_line.invoice_lines:
+                    po_line.write({'invoice_lines': [(3, invoice_line.id, _)]})
 
     @api.multi
     def button_approve(self):

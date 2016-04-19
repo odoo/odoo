@@ -50,8 +50,29 @@ rm ngrok.zip
 cd "${__dir}"
 mv /tmp/ngrok "${USR_BIN}"
 
+# zero pad the image to be around 3.5 GiB, by default the image is only ~1.3 GiB
+dd if=/dev/zero bs=1M count=2048 >> posbox.img
+
+# resize partition table
+START_OF_ROOT_PARTITION=$(fdisk -l posbox.img | tail -n 1 | awk '{print $2}')
+(echo 'p';                          # print
+ echo 'd';                          # delete
+ echo '2';                          #   second partition
+ echo 'n';                          # create new partition
+ echo 'p';                          #   primary
+ echo '2';                          #   number 2
+ echo "${START_OF_ROOT_PARTITION}"; #   starting at previous offset
+ echo '';                           #   ending at default (fdisk should propose max)
+ echo 'p';                          # print
+ echo 'w') | fdisk posbox.img       # write and quit
+
 LOOP_MAPPER_PATH=$(kpartx -av posbox.img | tail -n 1 | cut -d ' ' -f 3)
 LOOP_MAPPER_PATH="/dev/mapper/${LOOP_MAPPER_PATH}"
+
+# resize filesystem
+e2fsck -f "${LOOP_MAPPER_PATH}" # resize2fs requires clean fs
+resize2fs "${LOOP_MAPPER_PATH}"
+
 mkdir "${MOUNT_POINT}"
 mount "${LOOP_MAPPER_PATH}" "${MOUNT_POINT}"
 
@@ -70,7 +91,7 @@ umount "${MOUNT_POINT}"
 
 # from http://paulscott.co.za/blog/full-raspberry-pi-raspbian-emulation-with-qemu/
 # ssh pi@localhost -p10022
-QEMU_OPTS=(-kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append 'root=/dev/sda2 panic=1 rootfstype=ext4 rw' -hda posbox.img -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::18069-:8069 -net nic)
+QEMU_OPTS=(-kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append 'root=/dev/sda2 rootfstype=ext4 rw' -hda posbox.img -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::18069-:8069 -net nic)
 if [ -z ${DISPLAY:-} ] ; then
     QEMU_OPTS+=(-nographic)
 fi
