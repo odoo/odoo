@@ -3,5 +3,3 @@
 
 import pos_invoice
 import pos_order_report
-import pos_receipt
-import pos_users_product
