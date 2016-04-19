@@ -34,7 +34,6 @@
                     <label for="template_id"/>
                     <div>
                         <field name="template_id" context="{'company_id': company_id}"
-                            on_change="onchange_template_id(template_id, partner_id, fiscal_position_id, pricelist_id)"
                             options="{'no_create': True, 'no_open': True}"/>
                     </div>
                 </xpath>
@@ -73,7 +72,7 @@
                                 <form string="Sales Quotation Template Lines">
                                     <group>
                                         <group>
-                                            <field name="product_id" on_change="on_change_product_id(product_id, product_uom_id)"/>
+                                            <field name="product_id"/>
                                             <field name="layout_category_id" groups="sale.group_sale_layout"/>
                                             <label for="product_uom_qty"/>
                                             <div>
@@ -98,11 +97,11 @@
                                 </form>
                                 <tree string="Sales Quotation Template Lines" editable="bottom">
                                     <field name="sequence" widget="handle"/>
-                                    <field name="product_id" on_change="on_change_product_id(product_id, product_uom_id)"/>
+                                    <field name="product_id"/>
                                     <field name="layout_category_id" groups="sale.group_sale_layout"/>
                                     <field name="name"/>
                                     <field name="product_uom_qty"/>
-                                    <field name="product_uom_id" groups="product.group_uom" on_change="product_uom_change(product_id, product_uom_id"/>
+                                    <field name="product_uom_id" groups="product.group_uom"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="price_unit"/>
                                     <field name="website_description" invisible="1"/>

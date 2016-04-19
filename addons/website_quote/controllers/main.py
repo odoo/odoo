@@ -159,7 +159,7 @@ class sale_quote(http.Controller):
 
         order_line = Order_Line_sudo.create(vals)
         order_line._compute_tax_id()
-        option.write({'line_id': order_line.id})
+        option.line_id = order_line
         return werkzeug.utils.redirect("/quote/%s/%s#pricing" % (order.id, token))
 
     # note dbo: website_sale code
@@ -202,7 +202,7 @@ class sale_quote(http.Controller):
                 'partner_id': order.partner_id.id,
                 'reference': Payment_Transaction_Sudo.get_next_reference(order.name),
                 'sale_order_id': order.id,
-                'callback_eval': "self.env['sale.order']._confirm_online_quote(self.sale_order_id.id, self)"
+                'callback_eval': "self.sale_order_id._confirm_online_quote(self)"
             })
             request.session['quote_%s_transaction_id' % order.id] = transaction.id
 
