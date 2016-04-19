@@ -125,7 +125,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             var def = window.Notification.requestPermission();
             if (def) {
                 def.then(function () {
-                    utils.send_native_notification('Permission granted', 'Odoo has now the permission to send you native notifications on this device.');
+                    utils.send_notification('Permission granted', 'Odoo has now the permission to send you native notifications on this device.');
                 });
             }
         },
