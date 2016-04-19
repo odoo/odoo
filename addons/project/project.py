@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, date
 from lxml import etree
-import time
 
 from openerp import api
 from openerp import SUPERUSER_ID
@@ -257,9 +255,6 @@ class project(osv.osv):
         (_check_dates, 'Error! project start-date must be lower than project end-date.', ['date_start', 'date'])
     ]
 
-    def set_template(self, cr, uid, ids, context=None):
-        return self.setActive(cr, uid, ids, value=False, context=context)
-
     def map_tasks(self, cr, uid, old_project_id, new_project_id, context=None):
         """ copy and map tasks from old to new project """
         if context is None:
@@ -288,45 +283,6 @@ class project(osv.osv):
             self.message_subscribe(cr, uid, res, partner_ids=[follower.partner_id.id], subtype_ids=[subtype.id for subtype in follower.subtype_ids])
         self.map_tasks(cr, uid, id, res, context=context)
         return res
-
-    def duplicate_template(self, cr, uid, ids, context=None):
-        context = dict(context or {})
-        data_obj = self.pool.get('ir.model.data')
-        result = []
-        for proj in self.browse(cr, uid, ids, context=context):
-            context.update({'analytic_project_copy': True})
-            new_date_start = time.strftime('%Y-%m-%d')
-            new_date_end = False
-            if proj.date_start and proj.date:
-                start_date = date(*time.strptime(proj.date_start,'%Y-%m-%d')[:3])
-                end_date = date(*time.strptime(proj.date,'%Y-%m-%d')[:3])
-                new_date_end = (datetime(*time.strptime(new_date_start,'%Y-%m-%d')[:3])+(end_date-start_date)).strftime('%Y-%m-%d')
-            context.update({'copy':True})
-            new_id = self.copy(cr, uid, proj.id, default = {
-                                    'name':_("%s (copy)") % (proj.name),
-                                    'date_start':new_date_start,
-                                    'date':new_date_end}, context=context)
-            result.append(new_id)
-
-        if result and len(result):
-            res_id = result[0]
-            form_view_id = data_obj._get_id(cr, uid, 'project', 'edit_project')
-            form_view = data_obj.read(cr, uid, form_view_id, ['res_id'])
-            tree_view_id = data_obj._get_id(cr, uid, 'project', 'view_project')
-            tree_view = data_obj.read(cr, uid, tree_view_id, ['res_id'])
-            search_view_id = data_obj._get_id(cr, uid, 'project', 'view_project_project_filter')
-            search_view = data_obj.read(cr, uid, search_view_id, ['res_id'])
-            return {
-                'name': _('Projects'),
-                'view_type': 'form',
-                'view_mode': 'form,tree',
-                'res_model': 'project.project',
-                'view_id': False,
-                'res_id': res_id,
-                'views': [(form_view['res_id'],'form'),(tree_view['res_id'],'tree')],
-                'type': 'ir.actions.act_window',
-                'search_view_id': search_view['res_id'],
-            }
 
     def create(self, cr, uid, vals, context=None):
         ir_values = self.pool.get('ir.values').get_default(cr, uid, 'project.config.settings', 'generate_project_alias')
