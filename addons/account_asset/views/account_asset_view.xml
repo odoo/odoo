@@ -44,7 +44,10 @@
                             months
                         </div>
                         <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','!=','end')]}"/>
+                    </group>
+                    <group string="Additional Options">
                         <field name="open_asset"/>
+                        <field name="group_entries"/>
                     </group>
                     <group attrs="{'invisible': [('type','=','sale')]}" string="Depreciation Method">
                         <field name="method" widget="radio"/>

@@ -34,6 +34,7 @@ class AccountAssetCategory(models.Model):
     method_end = fields.Date('Ending date')
     prorata = fields.Boolean(string='Prorata Temporis', help='Indicates that the first depreciation entry for this asset have to be done from the purchase date instead of the first of January')
     open_asset = fields.Boolean(string='Post Journal Entries', help="Check this if you want to automatically confirm the assets of this category when created by invoices.")
+    group_entries = fields.Boolean(string='Group Journal Entries', help="Check this if you want to group the generated entries by categories.")
     type = fields.Selection([('sale', 'Sale: Revenue Recognition'), ('purchase', 'Purchase: Asset')], required=True, index=True, default='purchase')
 
     @api.onchange('type')
@@ -115,8 +116,26 @@ class AccountAssetAsset(models.Model):
 
     @api.model
     def _cron_generate_entries(self):
-        assets = self.env['account.asset.asset'].search([('state', '=', 'open')])
-        assets._compute_entries(datetime.today())
+        self.compute_generated_entries(datetime.today())
+
+    @api.model
+    def compute_generated_entries(self, date, asset_type=None):
+        # Entries generated : one by grouped category and one by asset from ungrouped category
+        created_move_ids = []
+        asset_domain = [('state', '=', 'open')]
+        category_domain = []
+        if asset_type:
+            asset_domain += [('type', '=', asset_type)]
+            category_domain += [('type', '=', asset_type)]
+
+        ungrouped_assets = self.env['account.asset.asset'].search(asset_domain + [('category_id.group_entries', '=', False)])
+        created_move_ids += ungrouped_assets._compute_entries(date, group_entries=False)
+
+        for grouped_category in self.env['account.asset.category'].search(category_domain + [('group_entries', '=', True)]):
+            assets = self.env['account.asset.asset'].search(asset_domain + [('category_id', '=', grouped_category.id)])
+            created_move_ids += assets._compute_entries(date, group_entries=True)
+
+        return created_move_ids
 
     def _compute_board_amount(self, sequence, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, depreciation_date):
         amount = 0
@@ -347,11 +366,14 @@ class AccountAssetAsset(models.Model):
         return super(AccountAssetAsset, self).copy_data(default)[0]
 
     @api.multi
-    def _compute_entries(self, date):
+    def _compute_entries(self, date, group_entries=False):
         depreciation_ids = self.env['account.asset.depreciation.line'].search([
             ('asset_id', 'in', self.ids), ('depreciation_date', '<=', date),
             ('move_check', '=', False)])
-        return depreciation_ids.create_move()
+        if group_entries:
+            return depreciation_ids.create_grouped_move()
+        else:
+            return depreciation_ids.create_move()
 
     @api.model
     def create(self, vals):
@@ -403,49 +425,30 @@ class AccountAssetDepreciationLine(models.Model):
     def create_move(self, post_move=True):
         created_moves = self.env['account.move']
         for line in self:
+            category_id = line.asset_id.category_id
             depreciation_date = self.env.context.get('depreciation_date') or line.depreciation_date or fields.Date.context_today(self)
             company_currency = line.asset_id.company_id.currency_id
             current_currency = line.asset_id.currency_id
             amount = current_currency.compute(line.amount, company_currency)
-            sign = (line.asset_id.category_id.journal_id.type == 'purchase' or line.asset_id.category_id.journal_id.type == 'sale' and 1) or -1
+            sign = (category_id.journal_id.type == 'purchase' or category_id.journal_id.type == 'sale' and 1) or -1
             asset_name = line.asset_id.name + ' (%s/%s)' % (line.sequence, line.asset_id.method_number)
-            reference = line.asset_id.code
-            journal_id = line.asset_id.category_id.journal_id.id
-            partner_id = line.asset_id.partner_id.id
-            categ_type = line.asset_id.category_id.type
-            debit_account = line.asset_id.category_id.account_asset_id.id
-            credit_account = line.asset_id.category_id.account_depreciation_id.id
-            move_line_1 = {
-                'name': asset_name,
-                'account_id': credit_account,
-                'debit': 0.0,
-                'credit': amount,
-                'journal_id': journal_id,
-                'partner_id': partner_id,
+
+            move_line_1, move_line_2 = line._create_move_line(asset_name, category_id, amount, line.asset_id.partner_id, depreciation_date)
+            move_line_1.update({
                 'currency_id': company_currency != current_currency and current_currency.id or False,
                 'amount_currency': company_currency != current_currency and - sign * line.amount or 0.0,
-                'analytic_account_id': line.asset_id.category_id.account_analytic_id.id if categ_type == 'sale' else False,
-                'date': depreciation_date,
-            }
-            move_line_2 = {
-                'name': asset_name,
-                'account_id': debit_account,
-                'credit': 0.0,
-                'debit': amount,
-                'journal_id': journal_id,
-                'partner_id': partner_id,
+            })
+            move_line_2.update({
                 'currency_id': company_currency != current_currency and current_currency.id or False,
                 'amount_currency': company_currency != current_currency and sign * line.amount or 0.0,
-                'analytic_account_id': line.asset_id.category_id.account_analytic_id.id if categ_type == 'purchase' else False,
-                'date': depreciation_date,
-            }
+            })
             move_vals = {
-                'ref': reference,
+                'ref': line.asset_id.code,
                 'date': depreciation_date or False,
-                'journal_id': line.asset_id.category_id.journal_id.id,
+                'journal_id': category_id.journal_id.id,
                 'line_ids': [(0, 0, move_line_1), (0, 0, move_line_2)],
                 'asset_id': line.asset_id.id,
-                }
+            }
             move = self.env['account.move'].create(move_vals)
             line.write({'move_id': move.id, 'move_check': True})
             created_moves |= move
@@ -453,6 +456,62 @@ class AccountAssetDepreciationLine(models.Model):
         if post_move and created_moves:
             created_moves.post()
         return [x.id for x in created_moves]
+
+    @api.multi
+    def create_grouped_move(self, post_move=True):
+        if not self.exists():
+            return []
+
+        created_moves = self.env['account.move']
+        category_id = self[0].asset_id.category_id  # we can suppose that all lines have the same category
+        depreciation_date = self.env.context.get('depreciation_date') or fields.Date.context_today(self)
+        amount = 0.0
+        for line in self:
+            # Sum amount of all depreciation lines
+            company_currency = line.asset_id.company_id.currency_id
+            current_currency = line.asset_id.currency_id
+            amount += current_currency.compute(line.amount, company_currency)
+
+        name = category_id.name + _(' (grouped)')
+        move_line_1, move_line_2 = self._create_move_line(name, category_id, amount, line.asset_id.partner_id, depreciation_date)
+        move_vals = {
+            'ref': category_id.name,
+            'date': depreciation_date or False,
+            'journal_id': category_id.journal_id.id,
+            'line_ids': [(0, 0, move_line_1), (0, 0, move_line_2)],
+        }
+        move = self.env['account.move'].create(move_vals)
+        self.write({'move_id': move.id, 'move_check': True})
+        created_moves |= move
+
+        if post_move and created_moves:
+            self.post_lines_and_close_asset()
+            created_moves.post()
+        return [x.id for x in created_moves]
+
+    @api.model
+    def _create_move_line(self, name, category_id, amount, partner_id, date):
+        move_line_1 = {
+            'name': name,
+            'account_id': category_id.account_depreciation_id.id,
+            'debit': 0.0,
+            'credit': amount,
+            'journal_id': category_id.journal_id.id,
+            'partner_id': partner_id.id,
+            'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'sale' else False,
+            'date': date,
+        }
+        move_line_2 = {
+            'name': name,
+            'account_id': category_id.account_asset_id.id,
+            'credit': 0.0,
+            'debit': amount,
+            'journal_id': category_id.journal_id.id,
+            'partner_id': partner_id.id,
+            'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'purchase' else False,
+            'date': date,
+        }
+        return move_line_1, move_line_2
 
     @api.multi
     def post_lines_and_close_asset(self):
