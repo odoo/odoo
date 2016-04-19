@@ -32,10 +32,6 @@
                             <strong>Opening Date</strong>:<br/>
                             <span t-field="o.date"/>
                         </div>
-                        <!-- <div class="col-xs-3">
-                            <strong>Closing Date</strong>:<br/>
-                            <span t-field="o.closing_date"/>
-                        </div> -->
                         <div class="col-xs-3">
                             <strong>Starting Balance</strong>:<br/>
                             <span t-field="o.balance_start" t-field-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
@@ -71,7 +67,7 @@
                             <table class="table table-condensed">
                                 <tr class="border-black">
                                     <td><strong>Total</strong></td>
-                                    <td class="text-right"><span t-esc="formatLang(get_total(o.line_ids), currency_obj=res_company.currency_id)"/></td>
+                                    <td class="text-right"><span t-esc="sum([line.amount for line in o.line_ids])" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
                                 </tr>
                             </table>
                         </div>
