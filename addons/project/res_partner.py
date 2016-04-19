@@ -36,12 +36,12 @@ class res_partner(osv.osv):
         'task_count': fields.function(_task_count, string='# Tasks', type='integer'),
     }
 
-    def copy(self, cr, uid, record_id, default=None, context=None):
+    def copy(self, cr, uid, res_id, default=None, context=None):
         if default is None:
             default = {}
 
         default['task_ids'] = []
         return super(res_partner, self).copy(
-                cr, uid, record_id, default=default, context=context)
+                cr, uid, res_id, default=default, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

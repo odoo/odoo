@@ -96,3 +96,6 @@ class TestProjectBase(TestMail):
             'user_id': cls.user_projectmanager_id,
             'project_id': cls.project_pigs_id,
         }, {'mail_create_nolog': True})
+
+    def test_copy_partner_new_api(self):
+        self.env['res.partner'].search([], limit=1).copy()
