@@ -260,9 +260,6 @@ class project(osv.osv):
     def set_template(self, cr, uid, ids, context=None):
         return self.setActive(cr, uid, ids, value=False, context=context)
 
-    def reset_project(self, cr, uid, ids, context=None):
-        return self.setActive(cr, uid, ids, value=True, context=context)
-
     def map_tasks(self, cr, uid, old_project_id, new_project_id, context=None):
         """ copy and map tasks from old to new project """
         if context is None:
@@ -330,11 +327,6 @@ class project(osv.osv):
                 'type': 'ir.actions.act_window',
                 'search_view_id': search_view['res_id'],
             }
-
-    @api.multi
-    def setActive(self, value=True):
-        """ Set a project as active/inactive, and its tasks as well. """
-        self.write({'active': value})
 
     def create(self, cr, uid, vals, context=None):
         ir_values = self.pool.get('ir.values').get_default(cr, uid, 'project.config.settings', 'generate_project_alias')
