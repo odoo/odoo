@@ -1435,7 +1435,6 @@ class account_invoice_line(models.Model):
                         continue
                     res.append(dict(mres))
                     res[-1]['price'] = 0.0
-                    res[-1]['account_analytic_id'] = False
                 elif not tax_code_id:
                     continue
                 tax_code_found = True
