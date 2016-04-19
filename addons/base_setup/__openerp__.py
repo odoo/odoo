@@ -13,7 +13,6 @@ Shows you a list of applications features to install from.
     """,
     'depends': ['base', 'web_kanban'],
     'data': [
-        'views/base_setup_views.xml',
         'views/res_config_views.xml',
         'views/res_partner_views.xml',
     ],
