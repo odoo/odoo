@@ -22,16 +22,6 @@ internal transfer document is needed.
 """,
     'website': 'https://www.odoo.com/page/warehouse',
     'depends': ['purchase', 'sale_stock'],
-    'data': ['stock_dropshipping.xml'],
-    'test': [
-        '../account/test/account_minimal_test.xml',
-        '../stock_account/test/stock_valuation_account.xml',
-        'test/cancellation_propagated.yml',
-        'test/crossdock.yml',
-        'test/dropship.yml',
-        'test/procurementexception.yml',
-        'test/lifo_price.yml'
-    ],
+    'data': ['data/stock_dropshipping.xml'],
     'installable': True,
-    'auto_install': False,
 }
