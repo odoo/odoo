@@ -833,7 +833,10 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 def.reject();
             },
         };
-        Dialog.confirm(this, message, options);
+        var dialog = Dialog.confirm(this, message, options);
+        dialog.$modal.on('hidden.bs.modal', function() {
+            def.reject();
+        });
         return def;
     },
     /**

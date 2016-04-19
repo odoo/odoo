@@ -516,7 +516,7 @@ class AccountTax(models.Model):
         help="Account that will be set on invoice tax lines for invoices. Leave empty to use the expense account.", oldname='account_collected_id')
     refund_account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)], string='Tax Account on Refunds', ondelete='restrict',
         help="Account that will be set on invoice tax lines for refunds. Leave empty to use the expense account.", oldname='account_paid_id')
-    description = fields.Char(string='Label on Invoices')
+    description = fields.Char(string='Label on Invoices', translate=True)
     price_include = fields.Boolean(string='Included in Price', default=False,
         help="Check this if the price you use on the product and invoices includes this tax.")
     include_base_amount = fields.Boolean(string='Affect Base of Subsequent Taxes', default=False,
@@ -666,7 +666,7 @@ class AccountTax(models.Model):
 
             taxes.append({
                 'id': tax.id,
-                'name': tax.name,
+                'name': tax.with_context(**{'lang': partner.lang} if partner else {}).name,
                 'amount': tax_amount,
                 'sequence': tax.sequence,
                 'account_id': tax.account_id.id,

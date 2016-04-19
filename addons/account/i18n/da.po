@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-04-08 08:32+0000\n"
+"PO-Revision-Date: 2016-04-16 13:28+0000\n"
 "Last-Translator: Morten Schou <ms@msteknik.dk>\n"
 "Language-Team: Danish (http://www.transifex.com/odoo/odoo-9/language/da/)\n"
 "MIME-Version: 1.0\n"
@@ -100,7 +100,7 @@ msgstr "sekunder"
 #: model:ir.model.fields,field_description:account.field_account_config_settings_code_digits
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_code_digits
 msgid "# of Digits"
-msgstr "# tal"
+msgstr "# antal cifre"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
@@ -521,7 +521,7 @@ msgstr "<strong>Udgifter</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr ""
+msgstr "<strong>Konterings gruppe bemærkning:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -797,7 +797,7 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only once time on same taxes."
-msgstr ""
+msgstr "En afgifts konterings gruppe kan kun defineres en gang på samme afgift."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:388
@@ -1182,7 +1182,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Fiscal Position"
-msgstr ""
+msgstr "Konterings gruppe"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_template_form
@@ -1502,7 +1502,7 @@ msgstr ""
 #: sql_constraint:account.fiscal.position.account:0
 msgid ""
 "An account fiscal position could be defined only once time on same accounts."
-msgstr "En konto's finansielle/skattemæssige position kan kan angives én gang på samme konto."
+msgstr "En konto's konterings gruppe kan kun angives en gang på samme konto."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -1610,7 +1610,7 @@ msgstr "Anvend"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_auto_apply
 msgid "Apply automatically this fiscal position."
-msgstr "Gem automatisk denne regnskabs position"
+msgstr "Gem automatisk denne konterings gruppe"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_country_group_id
@@ -1907,7 +1907,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_tree
 msgid "Bill Date"
-msgstr ""
+msgstr "Faktura dato"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1995,7 +1995,7 @@ msgstr "Af salgsperson"
 msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
-msgstr ""
+msgstr "Ved at fjerne markering Aktiv, skjules konterings gruppen uden at blive slettet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_visible
@@ -2283,7 +2283,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_expects_chart_of_accounts
 msgid "Check this box if this company is a legal entity."
-msgstr ""
+msgstr "Markér dette felt hvis virksomheden er en juridisk enhed."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence
@@ -2333,7 +2333,7 @@ msgstr ""
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1864
 #, python-format
 msgid "Choose counterpart"
-msgstr ""
+msgstr "Vælg modpostering"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_bank_journal_form
@@ -2571,7 +2571,7 @@ msgstr "Konfiguration"
 #: code:addons/account/models/account_payment.py:414
 #, python-format
 msgid "Configuration Error !"
-msgstr ""
+msgstr "Konfigurationsfejl!"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:312
@@ -2690,7 +2690,7 @@ msgstr "Modpost"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_account_id
 msgid "Counterpart Account"
-msgstr ""
+msgstr "Modkonto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_country_id
@@ -3202,7 +3202,7 @@ msgstr ""
 #: model:account.account.type,name:account.data_account_type_depreciation
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Depreciation"
-msgstr ""
+msgstr "Afskrivning"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.cash_box_out_form
@@ -3475,7 +3475,7 @@ msgstr "Forfaldsdato beregning"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Due Month"
-msgstr ""
+msgstr "Forfaldsmåned"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_print_overdue
@@ -3705,7 +3705,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_search
 msgid "Favorites"
-msgstr ""
+msgstr "Favoritter"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -3807,42 +3807,42 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_position_template_tree
 #: model:ir.ui.view,arch_db:account.view_account_position_tree
 msgid "Fiscal Position"
-msgstr "Regnskabs position"
+msgstr "Konterings gruppe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_name
 #: model:ir.ui.view,arch_db:account.view_account_position_template_form
 #: model:ir.ui.view,arch_db:account.view_account_position_template_search
 msgid "Fiscal Position Template"
-msgstr ""
+msgstr "Konterings gruppe skabelon"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "Regnskabs positioner"
+msgstr "Konterings grupper"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Fiscal Year"
-msgstr "Finans år"
+msgstr "Regnskabs år"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Fiscal Year Last Day"
-msgstr ""
+msgstr "Sidste dag i regnskabs år"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_fiscalyear_last_day
 #: model:ir.model.fields,field_description:account.field_res_company_fiscalyear_last_day
 msgid "Fiscalyear last day"
-msgstr ""
+msgstr "Sidste dag i regnskabs år"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_fiscalyear_last_month
 #: model:ir.model.fields,field_description:account.field_res_company_fiscalyear_last_month
 msgid "Fiscalyear last month"
-msgstr ""
+msgstr "Sidste måned i regnskabs år"
 
 #. module: account
 #: selection:account.operation.template,amount_type:0
@@ -4859,7 +4859,7 @@ msgstr "Postering"
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 #: model:ir.ui.view,arch_db:account.view_move_line_form2
 msgid "Journal Item"
-msgstr ""
+msgstr "journal post"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_operation_template_label
@@ -5429,7 +5429,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_payment_communication
 #: model:ir.model.fields,field_description:account.field_account_register_payments_communication
 msgid "Memo"
-msgstr ""
+msgstr "Memo"
 
 #. module: account
 #. openerp-web
@@ -6512,7 +6512,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 #: model:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Post Journal Entries"
-msgstr ""
+msgstr "Bogfør journal poster"
 
 #. module: account
 #: selection:account.move,state:0 selection:account.payment,state:0
@@ -6974,7 +6974,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_payment_from_invoices
 #: model:ir.ui.view,arch_db:account.view_account_payment_invoice_form
 msgid "Register Payment"
-msgstr ""
+msgstr "Registrer betaling"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7116,7 +7116,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Review Fiscal Positions"
-msgstr ""
+msgstr "Gennemse konterings grupper"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7714,7 +7714,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Taxes Fiscal Position"
-msgstr ""
+msgstr "Afgift konterings gruppe"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_template_form
@@ -7804,17 +7804,17 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
 msgid "Template Account Fiscal Mapping"
-msgstr ""
+msgstr "Skabelon gruppe for konterings erstatning"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Template Tax Fiscal Position"
-msgstr ""
+msgstr "Skabelon afgift konterings gruppe"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr ""
+msgstr "Skabelon for konterings gruppe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_template_transfer_account_id
@@ -8004,7 +8004,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_partner_property_account_position_id
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr ""
+msgstr "Konterings gruppen bestemmer afgifter og konti brugt på partneren"
 
 #. module: account
 #: code:addons/account/models/account.py:272
@@ -8953,7 +8953,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_account_supplier
 #, python-format
 msgid "Vendors"
-msgstr ""
+msgstr "Leverandører"
 
 #. module: account
 #: selection:account.financial.report,type:0

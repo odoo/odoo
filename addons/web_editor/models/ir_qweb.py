@@ -350,7 +350,7 @@ class Image(orm.AbstractModel):
 
         alt = None
         if options.get('alt-field') and getattr(record, options['alt-field'], None):
-            alt = record[options['alt-field']]
+            alt = escape(record[options['alt-field']])
         elif options.get('alt'):
             alt = options['alt']
 

@@ -85,8 +85,10 @@ class AccountAnalyticLine(models.Model):
 
     @api.multi
     def write(self, values):
-        values = self._get_timesheet_cost(vals=values)
-        return super(AccountAnalyticLine, self).write(values)
+        for line in self:
+            values = line._get_timesheet_cost(vals=values)
+            super(AccountAnalyticLine, line).write(values)
+        return True
 
     @api.model
     def create(self, values):
