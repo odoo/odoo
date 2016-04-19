@@ -171,7 +171,6 @@
         <record id="view_project" model="ir.ui.view">
             <field name="name">project.project.tree</field>
             <field name="model">project.project</field>
-            <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree decoration-bf="message_needaction==True" decoration-muted="active == False" string="Projects">
                     <field name="sequence" widget="handle"/>

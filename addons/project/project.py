@@ -276,7 +276,6 @@ class project(osv.osv):
                         'name': task.name}
             map_task_id[task.id] =  task_obj.copy(cr, uid, task.id, defaults, context=context)
         self.write(cr, uid, [new_project_id], {'tasks':[(6,0, map_task_id.values())]})
-        task_obj.duplicate_task(cr, uid, map_task_id, context=context)
         return True
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -438,15 +437,6 @@ class task(osv.osv):
             vals['date_start'] = fields.datetime.now()
         return {'value': vals}
 
-    def duplicate_task(self, cr, uid, map_ids, context=None):
-        mapper = lambda t: map_ids.get(t.id, t.id)
-        for task in self.browse(cr, uid, map_ids.values(), context):
-            new_child_ids = set(map(mapper, task.child_ids))
-            new_parent_ids = set(map(mapper, task.parent_ids))
-            if new_child_ids or new_parent_ids:
-                task.write({'parent_ids': [(6,0,list(new_parent_ids))],
-                            'child_ids':  [(6,0,list(new_child_ids))]})
-
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
@@ -482,8 +472,6 @@ class task(osv.osv):
         'date_deadline': fields.date('Deadline', select=True, copy=False),
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True, copy=False, readonly=True),
         'project_id': fields.many2one('project.project', 'Project', ondelete='set null', select=True, track_visibility='onchange', change_default=True),
-        'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
-        'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
         'notes': fields.text('Notes'),
         'planned_hours': fields.float('Initially Planned Hours', help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
         'remaining_hours': fields.float('Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task."),
@@ -516,36 +504,6 @@ class task(osv.osv):
     }
     _order = "priority desc, sequence, date_start, name, id"
 
-    def _check_recursion(self, cr, uid, ids, context=None):
-        for id in ids:
-            visited_branch = set()
-            visited_node = set()
-            res = self._check_cycle(cr, uid, id, visited_branch, visited_node, context=context)
-            if not res:
-                return False
-
-        return True
-
-    def _check_cycle(self, cr, uid, id, visited_branch, visited_node, context=None):
-        if id in visited_branch: #Cycle
-            return False
-
-        if id in visited_node: #Already tested don't work one more time for nothing
-            return True
-
-        visited_branch.add(id)
-        visited_node.add(id)
-
-        #visit child using DFS
-        task = self.browse(cr, uid, id, context=context)
-        for child in task.child_ids:
-            res = self._check_cycle(cr, uid, child.id, visited_branch, visited_node, context=context)
-            if not res:
-                return False
-
-        visited_branch.remove(id)
-        return True
-
     def _check_dates(self, cr, uid, ids, context=None):
         if context == None:
             context = {}
@@ -558,7 +516,6 @@ class task(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive tasks.', ['parent_ids']),
         (_check_dates, 'Error ! Task starting date must be lower than its ending date.', ['date_start','date_end'])
     ]
 
@@ -646,18 +603,6 @@ class task(osv.osv):
             return stage_ids[0]
         return False
 
-    def _check_child_task(self, cr, uid, ids, context=None):
-        if context == None:
-            context = {}
-        tasks = self.browse(cr, uid, ids, context=context)
-        for task in tasks:
-            if task.child_ids:
-                for child in task.child_ids:
-                    if child.stage_id and not child.stage_id.fold:
-                        raise UserError(_("Child task still open.\nPlease cancel or complete child task first."))
-        return True
-
-
     def _store_history(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
             self.pool.get('project.task.history').create(cr, uid, {
@@ -710,13 +655,6 @@ class task(osv.osv):
         if any(item in vals for item in ['stage_id', 'remaining_hours', 'user_id', 'kanban_state']):
             self._store_history(cr, uid, ids, context=context)
         return result
-
-    def unlink(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        self._check_child_task(cr, uid, ids, context=context)
-        res = super(task, self).unlink(cr, uid, ids, context)
-        return res
 
     def _get_total_hours(self):
         return self.remaining_hours
@@ -913,8 +851,6 @@ class account_analytic_account(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
-        if vals.get('child_ids', False) and context.get('analytic_project_copy', False):
-            vals['child_ids'] = []
         analytic_account_id = super(account_analytic_account, self).create(cr, uid, vals, context=context)
         self.project_create(cr, uid, analytic_account_id, vals, context=context)
         return analytic_account_id
