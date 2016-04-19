@@ -1383,7 +1383,7 @@
                     </t>
                 </td>
                 <td id="tree-column" valign="middle" align="left" style="cursor: pointer;">
-                    <a t-att-id="'export-' + field.id"  t-att-string="field.string" href="javascript: void(0);" style="text-decoration: none;">
+                    <a t-att-id="'export-' + field.id"  t-att-string="field.string" t-att-import_compatible="field.import_compatible" href="javascript: void(0);" style="text-decoration: none;">
                         <t t-esc="field.string"/>
                     </a>
                 </td>
