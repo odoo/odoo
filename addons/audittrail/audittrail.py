@@ -309,7 +309,7 @@ class audittrail_objects_proxy(object_proxy):
         self.process_data(cr, uid_orig, pool, res_ids, model, method, old_values, new_values, field_list)
         return res
 
-    def get_data(self, cr, uid, pool, res_ids, model, method):
+    def get_data_context(self, cr, uid, pool, res_ids, model, method, context=None):
         """
         This function simply read all the fields of the given res_ids, and also recurisvely on
         all records of a x2m fields read that need to be logged. Then it returns the result in
@@ -328,6 +328,8 @@ class audittrail_objects_proxy(object_proxy):
                                            },
                 }
         """
+        if not context:
+            context = {}
         data = {}
         resource_pool = pool.get(model.model)
         # read all the fields of the given resources in super admin mode
@@ -357,12 +359,20 @@ class audittrail_objects_proxy(object_proxy):
                             # we need to remove current resource_id from the many2many to prevent an infinit loop
                             if resource_id in field_resource_ids:
                                 field_resource_ids.remove(resource_id)
-                        data.update(self.get_data(cr, SUPERUSER_ID, pool, field_resource_ids, x2m_model, method))
+                        for treated_resource_id in context.get('audittrail_treated_records', {}).get((model.model, resource_id), {}).get(x2m_model.model, []):
+                            if treated_resource_id in field_resource_ids:
+                                field_resource_ids.remove(treated_resource_id)
+                        audittrail_context = dict(context)
+                        audittrail_context.setdefault('audittrail_treated_records', {}).setdefault((model.model, resource_id), {}).setdefault(x2m_model.model, []).extend(field_resource_ids)
+                        data.update(self.get_data_context(cr, SUPERUSER_ID, pool, field_resource_ids, x2m_model, method, context=audittrail_context))
     
             data[(model.id, resource_id)] = {'text':values_text, 'value': values}
         return data
 
-    def prepare_audittrail_log_line(self, cr, uid, pool, model, resource_id, method, old_values, new_values, field_list=None):
+    def get_data(self, cr, uid, pool, res_ids, model, method):
+        return self.get_data_context(cr, uid, pool, res_ids, model, method)
+
+    def prepare_audittrail_log_line_context(self, cr, uid, pool, model, resource_id, method, old_values, new_values, field_list=None, context=None):
         """
         This function compares the old data (i.e before the method was executed) and the new data
         (after the method was executed) and returns a structure with all the needed information to
@@ -391,6 +401,8 @@ class audittrail_objects_proxy(object_proxy):
         The reason why the structure returned is build as above is because when modifying an existing
         record, we may have to log a change done in a x2many field of that object
         """
+        if not context:
+            context = {}
         if field_list is None:
             field_list = []
         key = (model.id, resource_id)
@@ -423,8 +435,13 @@ class audittrail_objects_proxy(object_proxy):
                         # we need to remove current resource_id from the many2many to prevent an infinit loop
                         if resource_id in res_ids:
                             res_ids.remove(resource_id)
+                    for treated_resource_id in context.get('audittrail_treated_records', {}).get((model.model, resource_id), {}).get(x2m_model.model, []):
+                        if treated_resource_id in res_ids:
+                            res_ids.remove(treated_resource_id)
+                    audittrail_context = dict(context)
+                    audittrail_context.setdefault('audittrail_treated_records', {}).setdefault((model.model, resource_id), {}).setdefault(x2m_model.model, []).extend(res_ids)
                     for res_id in res_ids:
-                        lines.update(self.prepare_audittrail_log_line(cr, SUPERUSER_ID, pool, x2m_model, res_id, method, old_values, new_values, field_list))
+                        lines.update(self.prepare_audittrail_log_line_context(cr, SUPERUSER_ID, pool, x2m_model, res_id, method, old_values, new_values, field_list, context=audittrail_context))
             # if the value value is different than the old value: record the change
             if key not in old_values or key not in new_values or old_values[key]['value'][field_name] != new_values[key]['value'][field_name]:
                 data = {
@@ -444,6 +461,10 @@ class audittrail_objects_proxy(object_proxy):
                 }
                 lines[key].append(data)
         return lines
+
+    def prepare_audittrail_log_line(self, cr, uid, pool, model, resource_id, method, old_values, new_values, field_list=None):
+        return self.prepare_audittrail_log_line_context(cr, uid, pool, model, resource_id, method, old_values, new_values, field_list=field_list)
+
 
     def process_data(self, cr, uid, pool, res_ids, model, method, old_values=None, new_values=None, field_list=None):
         """
