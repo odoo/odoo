@@ -83,7 +83,7 @@ class MailGroup(http.Controller):
             :param channel_id : the channel id to join/quit
             :param subscription : 'on' to unsubscribe the user, 'off' to subscribe
         """
-        subscribe = subscription == 'on'
+        unsubscribe = subscription == 'on'
         channel = request.env['mail.channel'].browse(int(channel_id))
         partner_ids = []
 
@@ -97,7 +97,7 @@ class MailGroup(http.Controller):
                 partner_ids = request.env['res.partner'].sudo().create({'name': name, 'email': email}).ids
 
         # add or remove channel members
-        if subscribe:
+        if unsubscribe:
             channel.check_access_rule('read')
             channel.sudo().write({'channel_partner_ids': [(3, partner_id) for partner_id in partner_ids]})
             return False
