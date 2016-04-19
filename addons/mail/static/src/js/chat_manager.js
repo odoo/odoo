@@ -689,8 +689,6 @@ var chat_manager = {
         }
     },
     toggle_star_status: function (message_id) {
-        var msg = _.findWhere(messages, { id: message_id });
-
         return MessageModel.call('toggle_message_starred', [[message_id]]);
     },
     unstar_all: function () {
