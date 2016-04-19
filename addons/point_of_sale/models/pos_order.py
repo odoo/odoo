@@ -364,6 +364,16 @@ class PosOrder(models.Model):
             amount_untaxed = currency.round(sum(line.price_subtotal for line in order.lines))
             order.amount_total = order.amount_tax + amount_untaxed
 
+    @api.onchange('fiscal_position_id')
+    def _onchange_fiscal_position_id(self):
+        """
+        Trigger the recompute of the taxes if the fiscal position is changed on the Pos order.
+        """
+        fpos = self.fiscal_position_id
+        for line in self.lines:
+            taxes = line.product_id.taxes_id.filtered(lambda tax: tax.company_id.id == self.company_id.id)
+            line.tax_ids = taxes and fpos.map_tax(taxes) or fpos.map_tax(line.tax_ids)
+
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         if self.partner_id:

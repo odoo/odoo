@@ -1308,6 +1308,7 @@ exports.Orderline = Backbone.Model.extend({
     },
     get_applicable_taxes: function(){
         var i;
+        var self = this;
         // Shenaningans because we need
         // to keep the taxes ordering.
         var ptaxes_ids = this.get_product().taxes_id;
@@ -1321,6 +1322,7 @@ exports.Orderline = Backbone.Model.extend({
                 taxes.push(this.pos.taxes[i]);
             }
         }
+        taxes = _.map(taxes, function(tax){return self._map_tax_fiscal_position(tax)});
         return taxes;
     },
     get_tax_details: function(){
