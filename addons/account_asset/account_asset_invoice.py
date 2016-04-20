@@ -3,6 +3,8 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from openerp import api, fields, models
+from openerp.exceptions import Warning
+from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 
@@ -14,6 +16,9 @@ class AccountInvoice(models.Model):
     def action_move_create(self):
         result = super(AccountInvoice, self).action_move_create()
         for inv in self:
+            if inv.number:
+                if self.env['account.asset.asset'].sudo().search([('code', '=', inv.number)]):
+                    raise Warning(_('You already have assets with the reference %s.\nPlease delete these assets before creating new ones for this invoice.') % (inv.number,))
             inv.invoice_line_ids.asset_create()
         return result
 
