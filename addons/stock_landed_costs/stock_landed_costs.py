@@ -230,8 +230,7 @@ class stock_landed_cost(osv.osv):
                 if not line.move_id:
                     continue
                 per_unit = line.final_cost / line.quantity
-                # FORWARDPORT UP TO SAAS-10
-                diff = per_unit - (line.former_cost / line.quantity if line.quantity else 1.0)
+                diff = per_unit - line.former_cost_per_unit
 
                 # If the precision required for the variable diff is larger than the accounting
                 # precision, inconsistencies between the stock valuation and the accounting entries
@@ -411,9 +410,9 @@ class stock_valuation_adjustment_lines(osv.osv):
         'weight': fields.float('Weight', digits_compute=dp.get_precision('Product Unit of Measure')),
         'volume': fields.float('Volume', digits_compute=dp.get_precision('Product Unit of Measure')),
         'former_cost': fields.float('Former Cost', digits_compute=dp.get_precision('Product Price')),
-        'former_cost_per_unit': fields.function(_amount_final, multi='cost', string='Former Cost(Per Unit)', type='float', digits_compute=dp.get_precision('Account'), store=True),
+        'former_cost_per_unit': fields.function(_amount_final, multi='cost', string='Former Cost(Per Unit)', type='float', store=True, digits=0),
         'additional_landed_cost': fields.float('Additional Landed Cost', digits_compute=dp.get_precision('Product Price')),
-        'final_cost': fields.function(_amount_final, multi='cost', string='Final Cost', type='float', digits_compute=dp.get_precision('Account'), store=True),
+        'final_cost': fields.function(_amount_final, multi='cost', string='Final Cost', type='float', store=True, digits=0),
     }
 
     _defaults = {
