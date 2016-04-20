@@ -1,43 +1,49 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import csv
 import io
 import unittest
 
-from openerp.tests.common import TransactionCase, can_import
-from openerp.modules.module import get_module_resource
-from openerp.tools import mute_logger
+from odoo.tests.common import TransactionCase, can_import
+from odoo.modules.module import get_module_resource
+from odoo.tools import mute_logger
 
-from .. import models
 
 ID_FIELD = {
     'id': 'id',
     'name': 'id',
     'string': "External ID",
+
     'required': False,
     'fields': [],
     'type': 'id',
 }
 
-def make_field(name='value', string='unknown', required=False, fields=[], field_type='id'):
+
+def make_field(name='value', string='Value', required=False, fields=[], field_type='id'):
     return [
         ID_FIELD,
         {'id': name, 'name': name, 'string': string, 'required': required, 'fields': fields, 'type': field_type},
     ]
+
 
 def sorted_fields(fields):
     """ recursively sort field lists to ease comparison """
     recursed = [dict(field, fields=sorted_fields(field['fields'])) for field in fields]
     return sorted(recursed, key=lambda field: field['id'])
 
+
 class BaseImportCase(TransactionCase):
+
     def assertEqualFields(self, fields1, fields2):
         self.assertEqual(sorted_fields(fields1), sorted_fields(fields2))
 
-class test_basic_fields(BaseImportCase):
+
+class TestBasicFields(BaseImportCase):
+
     def get_fields(self, field):
-        return self.registry('base_import.import')\
-            .get_fields(self.cr, self.uid, 'base_import.tests.models.' + field)
+        return self.env['base_import.import'].get_fields('base_import.tests.models.' + field)
 
     def test_base(self):
         """ A basic field is not required """
@@ -83,39 +89,36 @@ class test_basic_fields(BaseImportCase):
             {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': True, 'fields': [], 'type': 'id'},
         ]))
 
-class test_o2m(BaseImportCase):
+
+class TestO2M(BaseImportCase):
+
     def get_fields(self, field):
-        return self.registry('base_import.import')\
-            .get_fields(self.cr, self.uid, 'base_import.tests.models.' + field)
+        return self.env['base_import.import'].get_fields('base_import.tests.models.' + field)
 
     def test_shallow(self):
         self.assertEqualFields(self.get_fields('o2m'), make_field(field_type='one2many', fields=[
             ID_FIELD,
             # FIXME: should reverse field be ignored?
-            {'id': 'parent_id', 'name': 'parent_id', 'string': 'unknown', 'type': 'many2one', 'required': False, 'fields': [
+            {'id': 'parent_id', 'name': 'parent_id', 'string': 'Parent id', 'type': 'many2one', 'required': False, 'fields': [
                 {'id': 'parent_id', 'name': 'id', 'string': 'External ID', 'required': False, 'fields': [], 'type': 'id'},
                 {'id': 'parent_id', 'name': '.id', 'string': 'Database ID', 'required': False, 'fields': [], 'type': 'id'},
             ]},
-            {'id': 'value', 'name': 'value', 'string': 'unknown', 'required': False, 'fields': [], 'type': 'integer'},
+            {'id': 'value', 'name': 'value', 'string': 'Value', 'required': False, 'fields': [], 'type': 'integer'},
         ]))
 
-class test_match_headers_single(TransactionCase):
-    def test_match_by_name(self):
-        match = self.registry('base_import.import')._match_header(
-            'f0', [{'name': 'f0'}], {})
 
+class TestMatchHeadersSingle(TransactionCase):
+
+    def test_match_by_name(self):
+        match = self.env['base_import.import']._match_header('f0', [{'name': 'f0'}], {})
         self.assertEqual(match, [{'name': 'f0'}])
 
     def test_match_by_string(self):
-        match = self.registry('base_import.import')._match_header(
-            'some field', [{'name': 'bob', 'string': "Some Field"}], {})
-
+        match = self.env['base_import.import']._match_header('some field', [{'name': 'bob', 'string': "Some Field"}], {})
         self.assertEqual(match, [{'name': 'bob', 'string': "Some Field"}])
 
     def test_nomatch(self):
-        match = self.registry('base_import.import')._match_header(
-            'should not be', [{'name': 'bob', 'string': "wheee"}], {})
-
+        match = self.env['base_import.import']._match_header('should not be', [{'name': 'bob', 'string': "wheee"}], {})
         self.assertEqual(match, [])
 
     def test_recursive_match(self):
@@ -127,9 +130,7 @@ class test_match_headers_single(TransactionCase):
                 {'name': 'f1', 'string': "Sub field 2", 'fields': []},
             ]
         }
-        match = self.registry('base_import.import')._match_header(
-            'f0/f1', [f], {})
-
+        match = self.env['base_import.import']._match_header('f0/f1', [f], {})
         self.assertEqual(match, [f, f['fields'][1]])
 
     def test_recursive_nomatch(self):
@@ -143,21 +144,20 @@ class test_match_headers_single(TransactionCase):
                 {'name': 'f1', 'string': "Sub field 2", 'fields': []},
             ]
         }
-        match = self.registry('base_import.import')._match_header(
-            'f0/f2', [f], {})
-
+        match = self.env['base_import.import']._match_header('f0/f2', [f], {})
         self.assertEqual(match, [])
 
-class test_match_headers_multiple(TransactionCase):
+
+class TestMatchHeadersMultiple(TransactionCase):
+
     def test_noheaders(self):
         self.assertEqual(
-            self.registry('base_import.import')._match_headers(
-                [], [], {}),
-            (None, None)
+            self.env['base_import.import']._match_headers([], [], {}), (None, None)
         )
+
     def test_nomatch(self):
         self.assertEqual(
-            self.registry('base_import.import')._match_headers(
+            self.env['base_import.import']._match_headers(
                 iter([
                     ['foo', 'bar', 'baz', 'qux'],
                     ['v1', 'v2', 'v3', 'v4'],
@@ -190,47 +190,47 @@ class test_match_headers_multiple(TransactionCase):
             })
         )
 
-class test_preview(TransactionCase):
+
+class TestPreview(TransactionCase):
+
     def make_import(self):
-        Import = self.registry('base_import.import')
-        id = Import.create(self.cr, self.uid, {
+        import_wizard = self.env['base_import.import'].create({
             'res_model': 'res.users',
             'file': u"로그인,언어\nbob,1\n".encode('euc_kr'),
             'file_type': 'text/csv',
             'file_name': 'kr_data.csv',
         })
-        return Import, id
+        return import_wizard
 
-    @mute_logger('openerp.addons.base_import.models')
+    @mute_logger('openerp.addons.base_import.models.base_import')
     def test_encoding(self):
-        Import, id = self.make_import()
-        result = Import.parse_preview(self.cr, self.uid, id, {
-                'quoting': '"',
-                'separator': ',',
+        import_wizard = self.make_import()
+        result = import_wizard.parse_preview({
+            'quoting': '"',
+            'separator': ',',
         })
         self.assertTrue('error' in result)
 
-    @mute_logger('openerp.addons.base_import.models')
+    @mute_logger('openerp.addons.base_import.models.base_import')
     def test_csv_errors(self):
-        Import, id = self.make_import()
+        import_wizard = self.make_import()
 
-        result = Import.parse_preview(self.cr, self.uid, id, {
-                'quoting': 'foo',
-                'separator': ',',
-                'encoding': 'euc_kr',
+        result = import_wizard.parse_preview({
+            'quoting': 'foo',
+            'separator': ',',
+            'encoding': 'euc_kr',
         })
         self.assertTrue('error' in result)
 
-        result = Import.parse_preview(self.cr, self.uid, id, {
-                'quoting': '"',
-                'separator': 'bob',
-                'encoding': 'euc_kr',
+        result = import_wizard.parse_preview({
+            'quoting': '"',
+            'separator': 'bob',
+            'encoding': 'euc_kr',
         })
         self.assertTrue('error' in result)
 
     def test_csv_success(self):
-        Import = self.registry('base_import.import')
-        id = Import.create(self.cr, self.uid, {
+        import_wizard = self.env['base_import.import'].create({
             'res_model': 'base_import.tests.models.preview',
             'file': 'name,Some Value,Counter\n'
                     'foo,1,2\n'
@@ -239,7 +239,7 @@ class test_preview(TransactionCase):
             'file_type': 'text/csv'
         })
 
-        result = Import.parse_preview(self.cr, self.uid, id, {
+        result = import_wizard.parse_preview({
             'quoting': '"',
             'separator': ',',
             'headers': True,
@@ -250,9 +250,9 @@ class test_preview(TransactionCase):
         # Order depends on iteration order of fields_get
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
-            {'id': 'name', 'name': 'name', 'string': 'Name', 'required':False, 'fields': [], 'type': 'char'},
-            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required':True, 'fields': [], 'type': 'integer'},
-            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required':False, 'fields': [], 'type': 'integer'},
+            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char'},
+            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer'},
+            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer'},
         ])
         self.assertEqual(result['preview'], [
             ['foo', '1', '2'],
@@ -264,17 +264,15 @@ class test_preview(TransactionCase):
 
     @unittest.skipUnless(can_import('xlrd'), "XLRD module not available")
     def test_xls_success(self):
-
-        Import = self.registry('base_import.import')
         xls_file_path = get_module_resource('base_import', 'tests', 'test.xls')
         file_content = open(xls_file_path, 'rb').read()
-        id = Import.create(self.cr, self.uid, {
+        import_wizard = self.env['base_import.import'].create({
             'res_model': 'base_import.tests.models.preview',
             'file': file_content,
             'file_type': 'application/vnd.ms-excel'
         })
 
-        result = Import.parse_preview(self.cr, self.uid, id, {
+        result = import_wizard.parse_preview({
             'headers': True,
         })
         self.assertIsNone(result.get('error'))
@@ -282,9 +280,9 @@ class test_preview(TransactionCase):
         self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
-            {'id': 'name', 'name': 'name', 'string': 'Name', 'required':False, 'fields': [], 'type': 'char'},
-            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required':True, 'fields': [], 'type': 'integer'},
-            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required':False, 'fields': [], 'type': 'integer'},
+            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char'},
+            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer'},
+            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer'},
         ])
         self.assertEqual(result['preview'], [
             ['foo', '1', '2'],
@@ -296,16 +294,15 @@ class test_preview(TransactionCase):
 
     @unittest.skipUnless(can_import('xlrd.xlsx'), "XLRD/XLSX not available")
     def test_xlsx_success(self):
-        Import = self.registry('base_import.import')
         xlsx_file_path = get_module_resource('base_import', 'tests', 'test.xlsx')
         file_content = open(xlsx_file_path, 'rb').read()
-        id = Import.create(self.cr, self.uid, {
+        import_wizard = self.env['base_import.import'].create({
             'res_model': 'base_import.tests.models.preview',
             'file': file_content,
             'file_type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         })
 
-        result = Import.parse_preview(self.cr, self.uid, id, {
+        result = import_wizard.parse_preview({
             'headers': True,
         })
         self.assertIsNone(result.get('error'))
@@ -313,9 +310,9 @@ class test_preview(TransactionCase):
         self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
-            {'id': 'name', 'name': 'name', 'string': 'Name', 'required':False, 'fields': [], 'type': 'char'},
-            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required':True, 'fields': [], 'type': 'integer'},
-            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required':False, 'fields': [], 'type': 'integer'},
+            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char'},
+            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer'},
+            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer'},
         ])
         self.assertEqual(result['preview'], [
             ['foo', '1', '2'],
@@ -327,16 +324,15 @@ class test_preview(TransactionCase):
 
     @unittest.skipUnless(can_import('odf'), "ODFPY not available")
     def test_ods_success(self):
-        Import = self.registry('base_import.import')
         ods_file_path = get_module_resource('base_import', 'tests', 'test.ods')
         file_content = open(ods_file_path, 'rb').read()
-        id = Import.create(self.cr, self.uid, {
+        import_wizard = self.env['base_import.import'].create({
             'res_model': 'base_import.tests.models.preview',
             'file': file_content,
             'file_type': 'application/vnd.oasis.opendocument.spreadsheet'
         })
 
-        result = Import.parse_preview(self.cr, self.uid, id, {
+        result = import_wizard.parse_preview({
             'headers': True,
         })
         self.assertIsNone(result.get('error'))
@@ -344,9 +340,9 @@ class test_preview(TransactionCase):
         self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
-            {'id': 'name', 'name': 'name', 'string': 'Name', 'required':False, 'fields': [], 'type': 'char'},
-            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required':True, 'fields': [], 'type': 'integer'},
-            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required':False, 'fields': [], 'type': 'integer'},
+            {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char'},
+            {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer'},
+            {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer'},
         ])
         self.assertEqual(result['preview'], [
             ['foo', '1', '2'],
@@ -356,13 +352,13 @@ class test_preview(TransactionCase):
         # Ensure we only have the response fields we expect
         self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'debug'])
 
+
 class test_convert_import_data(TransactionCase):
     """ Tests conversion of base_import.import input into data which
     can be fed to Model.load
     """
     def test_all(self):
-        Import = self.registry('base_import.import')
-        id = Import.create(self.cr, self.uid, {
+        import_wizard = self.env['base_import.import'].create({
             'res_model': 'base_import.tests.models.preview',
             'file': 'name,Some Value,Counter\n'
                     'foo,1,2\n'
@@ -371,10 +367,10 @@ class test_convert_import_data(TransactionCase):
             'file_type': 'text/csv'
 
         })
-        record = Import.browse(self.cr, self.uid, id)
-        data, fields = Import._convert_import_data(
-            record, ['name', 'somevalue', 'othervalue'],
-            {'quoting': '"', 'separator': ',', 'headers': True,})
+        data, fields = import_wizard._convert_import_data(
+            ['name', 'somevalue', 'othervalue'],
+            {'quoting': '"', 'separator': ',', 'headers': True}
+        )
 
         self.assertItemsEqual(fields, ['name', 'somevalue', 'othervalue'])
         self.assertItemsEqual(data, [
@@ -387,8 +383,7 @@ class test_convert_import_data(TransactionCase):
         """ If ``False`` is provided as field mapping for a column,
         that column should be removed from importable data
         """
-        Import = self.registry('base_import.import')
-        id = Import.create(self.cr, self.uid, {
+        import_wizard = self.env['base_import.import'].create({
             'res_model': 'base_import.tests.models.preview',
             'file': 'name,Some Value,Counter\n'
                     'foo,1,2\n'
@@ -396,10 +391,10 @@ class test_convert_import_data(TransactionCase):
                     'qux,5,6\n',
             'file_type': 'text/csv'
         })
-        record = Import.browse(self.cr, self.uid, id)
-        data, fields = Import._convert_import_data(
-            record, ['name', False, 'othervalue'],
-            {'quoting': '"', 'separator': ',', 'headers': True,})
+        data, fields = import_wizard._convert_import_data(
+            ['name', False, 'othervalue'],
+            {'quoting': '"', 'separator': ',', 'headers': True}
+        )
 
         self.assertItemsEqual(fields, ['name', 'othervalue'])
         self.assertItemsEqual(data, [
@@ -412,8 +407,7 @@ class test_convert_import_data(TransactionCase):
         """ If a row is composed only of empty values (due to having
         filtered out non-empty values from it), it should be removed
         """
-        Import = self.registry('base_import.import')
-        id = Import.create(self.cr, self.uid, {
+        import_wizard = self.env['base_import.import'].create({
             'res_model': 'base_import.tests.models.preview',
             'file': 'name,Some Value,Counter\n'
                     'foo,1,2\n'
@@ -421,10 +415,10 @@ class test_convert_import_data(TransactionCase):
                     ',5,6\n',
             'file_type': 'text/csv'
         })
-        record = Import.browse(self.cr, self.uid, id)
-        data, fields = Import._convert_import_data(
-            record, ['name', False, 'othervalue'],
-            {'quoting': '"', 'separator': ',', 'headers': True,})
+        data, fields = import_wizard._convert_import_data(
+            ['name', False, 'othervalue'],
+            {'quoting': '"', 'separator': ',', 'headers': True}
+        )
 
         self.assertItemsEqual(fields, ['name', 'othervalue'])
         self.assertItemsEqual(data, [
@@ -433,8 +427,7 @@ class test_convert_import_data(TransactionCase):
         ])
 
     def test_empty_rows(self):
-        Import = self.registry('base_import.import')
-        id = Import.create(self.cr, self.uid, {
+        import_wizard = self.env['base_import.import'].create({
             'res_model': 'base_import.tests.models.preview',
             'file': 'name,Some Value\n'
                     'foo,1\n'
@@ -444,10 +437,10 @@ class test_convert_import_data(TransactionCase):
                     '\t \n',
             'file_type': 'text/csv'
         })
-        record = Import.browse(self.cr, self.uid, id)
-        data, fields = Import._convert_import_data(
-            record, ['name', 'somevalue'],
-            {'quoting': '"', 'separator': ',', 'headers': True,})
+        data, fields = import_wizard._convert_import_data(
+            ['name', 'somevalue'],
+            {'quoting': '"', 'separator': ',', 'headers': True}
+        )
 
         self.assertItemsEqual(fields, ['name', 'somevalue'])
         self.assertItemsEqual(data, [
@@ -456,45 +449,33 @@ class test_convert_import_data(TransactionCase):
         ])
 
     def test_nofield(self):
-        Import = self.registry('base_import.import')
-
-        id = Import.create(self.cr, self.uid, {
+        import_wizard = self.env['base_import.import'].create({
             'res_model': 'base_import.tests.models.preview',
             'file': 'name,Some Value,Counter\n'
                     'foo,1,2\n',
             'file_type': 'text/csv'
 
         })
-
-        record = Import.browse(self.cr, self.uid, id)
-        self.assertRaises(
-            ValueError,
-            Import._convert_import_data,
-            record, [],
-            {'quoting': '"', 'separator': ',', 'headers': True,})
+        self.assertRaises(ValueError, import_wizard._convert_import_data, [], {'quoting': '"', 'separator': ',', 'headers': True})
 
     def test_falsefields(self):
-        Import = self.registry('base_import.import')
-
-        id = Import.create(self.cr, self.uid, {
+        import_wizard = self.env['base_import.import'].create({
             'res_model': 'base_import.tests.models.preview',
             'file': 'name,Some Value,Counter\n'
                     'foo,1,2\n',
             'file_type': 'text/csv'
         })
 
-        record = Import.browse(self.cr, self.uid, id)
         self.assertRaises(
             ValueError,
-            Import._convert_import_data,
-            record, [False, False, False],
-            {'quoting': '"', 'separator': ',', 'headers': True,})
+            import_wizard._convert_import_data,
+            [False, False, False],
+            {'quoting': '"', 'separator': ',', 'headers': True})
 
     def test_newline_import(self):
         """
         Ensure importing keep newlines
         """
-        Import = self.registry('base_import.import')
         output = io.BytesIO()
         writer = csv.writer(output, quoting=csv.QUOTE_ALL)
 
@@ -503,17 +484,18 @@ class test_convert_import_data(TransactionCase):
         writer.writerow(["name", "Some Value"])
         writer.writerow(data_row)
 
-        id = Import.create(self.cr, self.uid, {
+        import_wizard = self.env['base_import.import'].create({
             'res_model': 'base_import.tests.models.preview',
             'file': output.getvalue(),
             'file_type': 'text/csv',
         })
-        record = Import.browse(self.cr, self.uid, id)
-        data, _ = Import._convert_import_data(
-            record, ['name', 'somevalue'],
-            {'quoting': '"', 'separator': ',', 'headers': True,})
+        data, _ = import_wizard._convert_import_data(
+            ['name', 'somevalue'],
+            {'quoting': '"', 'separator': ',', 'headers': True}
+        )
 
         self.assertItemsEqual(data, [data_row])
+
 
 class test_failures(TransactionCase):
     def test_big_attachments(self):
@@ -533,14 +515,12 @@ class test_failures(TransactionCase):
             ['foo', im.tobytes().encode('base64')]
         ])
 
-        Import = self.env['base_import.import']
-        imp = Import.create({
+        import_wizard = self.env['base_import.import'].create({
             'res_model': 'ir.attachment',
             'file': fout.getvalue(),
             'file_type': 'text/csv'
         })
-        [results] = imp.do(
+        results = import_wizard.do(
             ['name', 'db_datas'],
             {'headers': True, 'separator': ',', 'quoting': '"'})
-        self.assertFalse(
-            results, "results should be empty on successful import")
+        self.assertFalse(results, "results should be empty on successful import")
