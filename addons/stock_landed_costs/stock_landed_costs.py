@@ -230,7 +230,8 @@ class stock_landed_cost(osv.osv):
                 if not line.move_id:
                     continue
                 per_unit = line.final_cost / line.quantity
-                diff = per_unit - line.former_cost_per_unit
+                # FORWARDPORT UP TO SAAS-10
+                diff = per_unit - (line.former_cost / line.quantity if line.quantity else 1.0)
                 quants = [quant for quant in line.move_id.quant_ids]
                 quant_dict = {}
                 for quant in quants:
