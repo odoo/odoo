@@ -1,16 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <menuitem id="account_reports_co_statements_menu" name="Colombian Statements" parent="account.menu_finance_reports" sequence="3" groups="account.group_account_user"/>
-    
-    <data noupdate="0">
-        <!-- Chart Template -->
-        <record id="l10n_co_chart_template_generic" model="account.chart.template">
-            <field name="property_account_receivable_id" ref="co_puc_130505"/>
-            <field name="property_account_payable_id" ref="co_puc_220505"/>
-            <field name="property_account_expense_categ_id" ref="co_puc_613595"/>
-            <field name="property_account_income_categ_id" ref="co_puc_413595"/>
-            <field name="income_currency_exchange_account_id" ref="co_puc_421020"/>
-            <field name="expense_currency_exchange_account_id" ref="co_puc_530525"/>
-        </record>
-    </data>
+
+<menuitem id="account_reports_co_statements_menu" name="Colombian Statements" parent="account.menu_finance_reports" sequence="3" groups="account.group_account_user"/>
+
+<data noupdate="1">
+
+<record id="action_client_menu" model="ir.actions.client">
+  <field name="name">Open Account Dashboard Menu</field>
+  <field name="tag">reload</field>
+  <field name="params" eval="{'menu_id': ref('account.menu_board_journal_1')}"/>
+  </record>
+<record id="base.open_menu" model="ir.actions.todo">
+  <field name="action_id" ref="action_client_menu"/>
+  <field name="state">open</field>
+  </record>
+</data>
+
+<data noupdate="0">
+  
+<record id="account_trans" model="account.account.template">
+  <field name="name">cuenta auxiliar para cruzar transferencias internas</field>
+  <field name="code">11XX</field>
+  <field name="reconcile" eval="True"/>
+  <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+  </record>
+<record id="account_4212" model="account.account.template">
+  <field name="code" type="char">4212</field>
+  <field name="name" type="char">diferencias en cambios</field>
+  <field name="reconcile"/>
+  <field name="tax_ids"/>
+  <field name="user_type_id" ref="account.data_account_type_other_income"/>
+  </record>
+<record id="account_5307" model="account.account.template">
+  <field name="code" type="char">5307</field>
+  <field name="name" type="char">diferencias en cambios</field>
+  <field name="reconcile"/>
+  <field name="tax_ids"/>
+  <field name="user_type_id" ref="account.data_account_type_expenses"/>
+  </record>
+<record id="account_1305" model="account.account.template">
+  <field name="code" type="char">1305</field>
+  <field name="name" type="char">clientes</field>
+  <field name="reconcile" eval="True"/>
+  <field name="tax_ids"/>
+  <field name="user_type_id" ref="account.data_account_type_receivable"/>
+  </record>
+<record id="account_2205" model="account.account.template">
+  <field name="code" type="char">2205</field>
+  <field name="name" type="char">nacionales</field>
+  <field name="reconcile" eval="True"/>
+  <field name="tax_ids"/>
+  <field name="user_type_id" ref="account.data_account_type_payable"/>
+  </record>
+<record id="account_5195" model="account.account.template">
+  <field name="code" type="char">5195</field>
+  <field name="name" type="char">diversos</field>
+  <field name="reconcile"/>
+  <field name="tax_ids"/>
+  <field name="user_type_id" ref="account.data_account_type_expenses"/>
+  </record>
+<record id="account_4205" model="account.account.template">
+  <field name="code" type="char">4205</field>
+  <field name="name" type="char">otras ventas</field>
+  <field name="reconcile"/>
+  <field name="tax_ids"/>
+  <field name="user_type_id" ref="account.data_account_type_other_income"/>
+  </record>
+<record id="account_6205" model="account.account.template">
+  <field name="code" type="char">6205</field>
+  <field name="name" type="char">compra de mercanías</field>
+  <field name="reconcile"/>
+  <field name="tax_ids"/>
+  <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+  </record>
+<record id="account_41" model="account.account.template">
+  <field name="code" type="char">41</field>
+  <field name="name" type="char">ingresos operacionales</field>
+  <field name="reconcile"/>
+  <field name="tax_ids"/>
+  <field name="user_type_id" ref="account.data_account_type_revenue"/>
+  </record>
+<record id="account_61" model="account.account.template">
+  <field name="code" type="char">61</field>
+  <field name="name" type="char">costo de ventas y de prestación de servicios</field>
+  <field name="reconcile"/>
+  <field name="tax_ids"/>
+  <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+  </record>
+<record id="account_1430" model="account.account.template">
+  <field name="code" type="char">1430</field>
+  <field name="name" type="char">productos terminados</field>
+  <field name="reconcile"/>
+  <field name="tax_ids"/>
+  <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+  </record>
+<!-- Chart Template -->
+<record id="chart_template_niif" model="account.chart.template">
+  <field name="name">Colombian PUC-NIIF</field>
+  <field name="visible">True</field>
+  <field name="transfer_account_id" ref="account_trans"/>
+  <field name="code_digits">4</field>
+  <field name="currency_id" ref="base.COP"/>
+  <field name="use_anglo_saxon">False</field>
+  <field name="complete_tax_set">True</field>
+  <field name="income_currency_exchange_account_id" ref="account_4212"/>
+  <field name="expense_currency_exchange_account_id" ref="account_5307"/>
+  <field name="bank_account_code_prefix">1110-</field>
+  <field name="cash_account_code_prefix">1105-</field>
+  <field name="property_account_receivable_id" ref="account_1305"/>
+  <field name="property_account_payable_id" ref="account_2205"/>
+  <field name="property_account_expense_categ_id" ref="account_5195"/>
+  <field name="property_account_income_categ_id" ref="account_4205"/>
+  <field name="property_account_expense_id" ref="account_6205"/>
+  <field name="property_account_income_id" ref="account_41"/>
+  <field name="property_stock_account_input_categ_id" ref="account_6205"/>
+  <field name="property_stock_account_output_categ_id" ref="account_61"/>
+  <field name="property_stock_valuation_account_id" ref="account_1430"/>
+  </record>
+<record id="account_4212" model="account.account.template">
+  <field name="chart_template_id" ref="chart_template_niif"/>
+  </record>
+<record id="account_5307" model="account.account.template">
+  <field name="chart_template_id" ref="chart_template_niif"/>
+  </record>
+<record id="account_1305" model="account.account.template">
+  <field name="chart_template_id" ref="chart_template_niif"/>
+  </record>
+<record id="account_2205" model="account.account.template">
+  <field name="chart_template_id" ref="chart_template_niif"/>
+  </record>
+<record id="account_5195" model="account.account.template">
+  <field name="chart_template_id" ref="chart_template_niif"/>
+  </record>
+<record id="account_4205" model="account.account.template">
+  <field name="chart_template_id" ref="chart_template_niif"/>
+  </record>
+<record id="account_6205" model="account.account.template">
+  <field name="chart_template_id" ref="chart_template_niif"/>
+  </record>
+<record id="account_41" model="account.account.template">
+  <field name="chart_template_id" ref="chart_template_niif"/>
+  </record>
+<record id="account_61" model="account.account.template">
+  <field name="chart_template_id" ref="chart_template_niif"/>
+  </record>
+
+<record id="account_1430" model="account.account.template">
+  <field name="chart_template_id" ref="chart_template_niif"/>
+  </record>
+
+<record id="account_trans" model="account.account.template">
+  <field name="chart_template_id" ref="chart_template_niif"/>
+  </record>
+</data>
 </openerp>

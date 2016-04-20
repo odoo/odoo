@@ -1,30 +1,23 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-# Copyright (C) David Arnold (devCO).
-# Author        David Arnold (devCO), dar@devco.co
-# Co-Authors    Juan Pablo Aries (devCO), jpa@devco.co
-#               Hector Ivan Valencia Muñoz (TIX SAS)
-#               Nhomar Hernandez (Vauxoo)
-#               Humberto Ochoa (Vauxoo)
-
 {
-    'name': 'Colombian - Accounting',
-    'version': '0.8',
+    'name': 'Colombian - Accounting NIIF',
+    'author': 'DevCO Colombia SAS',
+    'maintainer': 'DevCO Colombia',
+    'website': 'http://devco.co',
+    'contributors': ['Juan Pablo Arias <jpa@devco.co>','David Arnold <dar@devco.co>'],
+    'version': '1.0',
     'category': 'Localization/Account Charts',
-    'description': 'Colombian Accounting and Tax Preconfiguration',
-    'author': 'David Arnold BA HSG (devCO)',
+    'description': 'Colombian Accounting Preconfiguration - IFRS ready',
     'depends': [
         'account',
         'base_vat',
     ],
     'data': [
-        'data/account.account.tag.csv',
-        'data/account_chart_template_before.xml',
-        'data/account.account.template.csv',
+        'data/data_account_type.xml',
+        'data/account_account_template.xml',
         'data/account_chart_template.xml',
-        'data/account.tax.template.csv',
-        'data/account_tax_group.xml',
         'data/account_chart_template.yml',
     ],
     'demo': [],
