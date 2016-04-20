@@ -2172,7 +2172,11 @@ class BaseModel(object):
         # (range, label) by just the formatted label, in-place
         for group in result:
             for df in dt:
-                if group.get(df, False) and (len(group[df])>1):
+                # could group on a date(time) field which is empty in some
+                # records, in which case as with m2o the _raw value will be
+                # `False` instead of a (value, label) pair. In that case,
+                # leave the `False` value alone
+                if group.get(df):
                     group[df] = group[df][1]
         return result
 
