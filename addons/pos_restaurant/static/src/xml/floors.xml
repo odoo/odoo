@@ -61,14 +61,18 @@
                     <t t-esc='widget.table.name' />
                 </span>
                 <span class="table-seats"><t t-esc="widget.table.seats" /></span>
-                <span class='table-handle top'></span>
-                <span class='table-handle bottom'></span>
-                <span class='table-handle left'></span>
-                <span class='table-handle right'></span>
-                <span class='table-handle top right'></span>
-                <span class='table-handle top left'></span>
-                <span class='table-handle bottom right'></span>
-                <span class='table-handle bottom left'></span>
+                <t t-if="widget.table.shape === 'round'">
+                    <span class='table-handle top'></span>
+                    <span class='table-handle bottom'></span>
+                    <span class='table-handle left'></span>
+                    <span class='table-handle right'></span>
+                </t>
+                <t t-if="widget.table.shape === 'square'">
+                    <span class='table-handle top right'></span>
+                    <span class='table-handle top left'></span>
+                    <span class='table-handle bottom right'></span>
+                    <span class='table-handle bottom left'></span>
+                </t>
             </div>
         </t>
     </t>
