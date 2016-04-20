@@ -1467,8 +1467,9 @@
                             </div>
                             <label for="delay"/>
                             <div>
-                                <field name="delay" widget="float_time" class="oe_inline"/>
-                                minutes
+                                <button style="pointer-events: none;" class="oe_inline label label-default">
+                                    <field name="delay" widget="mrp_time_counter"/>
+                                </button>
                             </div>
                         </group>
                     </group>
