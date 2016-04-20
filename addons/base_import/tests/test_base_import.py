@@ -21,7 +21,7 @@ ID_FIELD = {
 }
 
 
-def make_field(name='value', string='unknown', required=False, fields=[], field_type='id'):
+def make_field(name='value', string='Value', required=False, fields=[], field_type='id'):
     return [
         ID_FIELD,
         {'id': name, 'name': name, 'string': string, 'required': required, 'fields': fields, 'type': field_type},
@@ -99,11 +99,11 @@ class TestO2M(BaseImportCase):
         self.assertEqualFields(self.get_fields('o2m'), make_field(field_type='one2many', fields=[
             ID_FIELD,
             # FIXME: should reverse field be ignored?
-            {'id': 'parent_id', 'name': 'parent_id', 'string': 'unknown', 'type': 'many2one', 'required': False, 'fields': [
+            {'id': 'parent_id', 'name': 'parent_id', 'string': 'Parent id', 'type': 'many2one', 'required': False, 'fields': [
                 {'id': 'parent_id', 'name': 'id', 'string': 'External ID', 'required': False, 'fields': [], 'type': 'id'},
                 {'id': 'parent_id', 'name': '.id', 'string': 'Database ID', 'required': False, 'fields': [], 'type': 'id'},
             ]},
-            {'id': 'value', 'name': 'value', 'string': 'unknown', 'required': False, 'fields': [], 'type': 'integer'},
+            {'id': 'value', 'name': 'value', 'string': 'Value', 'required': False, 'fields': [], 'type': 'integer'},
         ]))
 
 
@@ -202,7 +202,7 @@ class TestPreview(TransactionCase):
         })
         return import_wizard
 
-    @mute_logger('odoo.addons.base_import.models.base_import')
+    @mute_logger('openerp.addons.base_import.models.base_import')
     def test_encoding(self):
         import_wizard = self.make_import()
         result = import_wizard.parse_preview({
@@ -211,7 +211,7 @@ class TestPreview(TransactionCase):
         })
         self.assertTrue('error' in result)
 
-    @mute_logger('odoo.addons.base_import.models.base_import')
+    @mute_logger('openerp.addons.base_import.models.base_import')
     def test_csv_errors(self):
         import_wizard = self.make_import()
 
