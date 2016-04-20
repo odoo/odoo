@@ -1,101 +1,76 @@
-from openerp.osv import orm, fields
+# -*- coding: utf-8 -*-
+from odoo import fields, models
 
-def name(n): return 'base_import.tests.models.%s' % n
 
-class char(orm.Model):
+def name(suffix_name):
+    return 'base_import.tests.models.%s' % suffix_name
+
+
+class Char(models.Model):
     _name = name('char')
 
-    _columns = {
-        'value': fields.char('unknown')
-    }
+    value = fields.Char()
 
-class char_required(orm.Model):
+class CharRequired(models.Model):
     _name = name('char.required')
 
-    _columns = {
-        'value': fields.char('unknown', required=True)
-    }
+    value = fields.Char(required=True)
 
-class char_readonly(orm.Model):
+class CharReadonly(models.Model):
     _name = name('char.readonly')
 
-    _columns = {
-        'value': fields.char('unknown', readonly=True)
-    }
+    value = fields.Char(readonly=True)
 
-class char_states(orm.Model):
+class CharStates(models.Model):
     _name = name('char.states')
 
-    _columns = {
-        'value': fields.char('unknown', readonly=True, states={'draft': [('readonly', False)]})
-    }
+    value = fields.Char(readonly=True, states={'draft': [('readonly', False)]})
 
-class char_noreadonly(orm.Model):
+class CharNoreadonly(models.Model):
     _name = name('char.noreadonly')
 
-    _columns = {
-        'value': fields.char('unknown', readonly=True, states={'draft': [('invisible', True)]})
-    }
+    value = fields.Char(readonly=True, states={'draft': [('invisible', True)]})
 
-class char_stillreadonly(orm.Model):
+class CharStillreadonly(models.Model):
     _name = name('char.stillreadonly')
 
-    _columns = {
-        'value': fields.char('unknown', readonly=True, states={'draft': [('readonly', True)]})
-    }
+    value = fields.Char(readonly=True, states={'draft': [('readonly', True)]})
 
 # TODO: complex field (m2m, o2m, m2o)
-class m2o(orm.Model):
+class M2o(models.Model):
     _name = name('m2o')
 
-    _columns = {
-        'value': fields.many2one(name('m2o.related'))
-    }
-class m2o_related(orm.Model):
+    value = fields.Many2one(name('m2o.related'))
+
+class M2oRelated(models.Model):
     _name = name('m2o.related')
 
-    _columns = {
-        'value': fields.integer()
-    }
-    _defaults = {
-        'value': 42
-    }
+    value = fields.Integer(default=42)
 
-class m2o_required(orm.Model):
+class M2oRequired(models.Model):
     _name = name('m2o.required')
 
-    _columns = {
-        'value': fields.many2one(name('m2o.required.related'), required=True)
-    }
-class m2o_required_related(orm.Model):
+    value = fields.Many2one(name('m2o.required.related'), required=True)
+
+class M2oRequiredRelated(models.Model):
     _name = name('m2o.required.related')
 
-    _columns = {
-        'value': fields.integer()
-    }
-    _defaults = {
-        'value': 42
-    }
+    value = fields.Integer(default=42)
 
-class o2m(orm.Model):
+class O2m(models.Model):
     _name = name('o2m')
 
-    _columns = {
-        'value': fields.one2many(name('o2m.child'), 'parent_id')
-    }
-class o2m_child(orm.Model):
+    value = fields.One2many(name('o2m.child'), 'parent_id')
+
+class O2mChild(models.Model):
     _name = name('o2m.child')
 
-    _columns = {
-        'parent_id': fields.many2one(name('o2m')),
-        'value': fields.integer()
-    }
+    parent_id = fields.Many2one(name('o2m'))
+    value = fields.Integer()
 
-class preview_model(orm.Model):
+class PreviewModel(models.Model):
     _name = name('preview')
 
-    _columns = {
-        'name': fields.char('Name'),
-        'somevalue': fields.integer('Some Value', required=True),
-        'othervalue': fields.integer('Other Variable'),
-    }
+    name = fields.Char('Name')
+    somevalue = fields.Integer(string='Some Value', required=True)
+    othervalue = fields.Integer(string='Other Variable')
