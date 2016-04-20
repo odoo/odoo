@@ -114,18 +114,16 @@ class crm_lead(FormatAddress, osv.osv):
     }
 
     def _compute_kanban_state(self, cr, uid, ids, fields, args, context=None):
-        """ Very interesting kanban state color. This makes complete sense. Or
-        not. """
         result = {}
         today = date.today()
         for lead in self.browse(cr, uid, ids, context=context):
-            result[lead.id] = 'grey'
+            result[lead.id] = 'red'
             if lead.date_action:
                 lead_date = datetime.strptime(lead.date_action, tools.DEFAULT_SERVER_DATE_FORMAT).date()
-                if lead_date > today:
+                if lead_date >= today:
                     result[lead.id] = 'green'
                 elif lead_date < today:
-                    result[lead.id] = 'red'
+                    result[lead.id] = 'grey'
         return result
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
@@ -174,7 +172,7 @@ class crm_lead(FormatAddress, osv.osv):
                         select=True, track_visibility='onchange', help='When sending mails, the default email address is taken from the sales team.'),
         'kanban_state': fields.function(
             _compute_kanban_state, string='Activity State', type="selection",
-            selection=[('grey', 'Normal'), ('red', 'Blocked'), ('green', 'Ready for next stage')]),
+            selection=[('grey', 'No next activity planned'), ('red', 'Next activity late'), ('green', 'Next activity is planned')]),
         'create_date': fields.datetime('Creation Date', readonly=True),
         'email_cc': fields.text('Global CC', help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'description': fields.text('Notes'),

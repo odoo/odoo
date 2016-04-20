@@ -10,12 +10,10 @@
     type: 'out_invoice'
     date_invoice: !eval time.strftime('%Y-%m')+'-01'
     invoice_line_ids:
-      - name: ''
-        product_id: product.consu_delivery_02
+      - product_id: product.consu_delivery_02
         price_unit: 642.0
         quantity: 5
-      - name: ''
-        product_id: product.consu_delivery_03
+      - product_id: product.consu_delivery_03
         price_unit: 280.0
         quantity: 5.0
 -
@@ -27,12 +25,10 @@
     type: 'out_invoice'
     date_invoice: !eval time.strftime('%Y-%m')+'-08'
     invoice_line_ids:
-      - name: ''
-        product_id: product.consu_delivery_03
+      - product_id: product.consu_delivery_03
         price_unit: 50.0
         quantity: 3
-      - name: ''
-        product_id: product.consu_delivery_01
+      - product_id: product.consu_delivery_01
         price_unit: 25
         quantity: 20
 -
@@ -44,12 +40,10 @@
     type: 'out_invoice'
     date_invoice: !eval time.strftime('%Y-%m')+'-08'
     invoice_line_ids:
-      - name: ''
-        product_id: product.consu_delivery_01
+      - product_id: product.consu_delivery_01
         price_unit: 90.0
         quantity: 5
-      - name: ''
-        product_id: product.consu_delivery_03
+      - product_id: product.consu_delivery_03
         price_unit: 15.0
         quantity: 5.0
 -
@@ -69,13 +63,11 @@
     type: 'in_invoice'
     date_invoice: !eval time.strftime('%Y-%m')+'-01'
     invoice_line_ids:
-      - name: ''
-        price_unit: 10.0
+      - price_unit: 10.0
         quantity: 1.0
         product_id: product.product_delivery_01
         uom_id: product.product_uom_unit
-      - name: ''
-        price_unit: 4.0
+      - price_unit: 4.0
         quantity: 1.0
         product_id: product.product_order_01
         uom_id: product.product_uom_unit

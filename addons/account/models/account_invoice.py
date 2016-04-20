@@ -620,6 +620,8 @@ class AccountInvoice(models.Model):
     def invoice_line_move_line_get(self):
         res = []
         for line in self.invoice_line_ids:
+            if line.quantity==0:
+                continue
             tax_ids = []
             for tax in line.invoice_line_tax_ids:
                 tax_ids.append((4, tax.id, None))

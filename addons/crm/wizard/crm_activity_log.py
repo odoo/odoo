@@ -12,7 +12,7 @@ class ActivityLog(models.TransientModel):
     _rec_name = 'title_action'
 
     next_activity_id = fields.Many2one('crm.activity', 'Activity')
-    last_activity_id = fields.Many2one('crm.activity', 'Previous Activity')
+    last_activity_id = fields.Many2one('crm.activity', 'Previous Activity', default=False)
     recommended_activity_id = fields.Many2one("crm.activity", "Recommended Activities")
     title_action = fields.Char('Summary')
     note = fields.Html('Note')
