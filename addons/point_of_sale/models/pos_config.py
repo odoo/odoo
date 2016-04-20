@@ -8,12 +8,6 @@ from odoo.exceptions import UserError
 class PosConfig(models.Model):
     _name = 'pos.config'
 
-    POS_CONFIG_STATE = [
-        ('active', 'Active'),
-        ('inactive', 'Inactive'),
-        ('deprecated', 'Deprecated')
-    ]
-
     def _default_sale_journal(self):
         return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.user.company_id.id)], limit=1)
 
@@ -72,7 +66,7 @@ class PosConfig(models.Model):
     receipt_footer = fields.Text(string='Receipt Footer', help="A short text that will be inserted as a footer in the printed receipt")
     proxy_ip = fields.Char(string='IP Address', size=45,
         help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty')
-    state = fields.Selection(POS_CONFIG_STATE, string='Status', required=True, readonly=True, copy=False, default=POS_CONFIG_STATE[0][0])
+    active = fields.Boolean(default=True)
     uuid = fields.Char(readonly=True, default=lambda self: str(uuid.uuid4()),
         help='A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data')
     sequence_id = fields.Many2one('ir.sequence', string='Order IDs Sequence', readonly=True,
@@ -197,18 +191,6 @@ class PosConfig(models.Model):
         for pos_config in self.filtered(lambda pos_config: pos_config.sequence_id):
             pos_config.sequence_id.unlink()
         return super(PosConfig, self).unlink()
-
-    @api.multi
-    def set_active(self):
-        self.write({'state': 'active'})
-
-    @api.multi
-    def set_inactive(self):
-        self.write({'state': 'inactive'})
-
-    @api.multi
-    def set_deprecate(self):
-        self.write({'state': 'deprecated'})
 
     # Methods to open the POS
     @api.multi
