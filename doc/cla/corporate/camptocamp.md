@@ -27,4 +27,5 @@ Romain Deheele romain.deheele@camptocamp.com https://github.com/rdeheele
 Maxime Wiot maxime.wiot@camptocamp.com https://github.com/maxime-c2c
 Ferdinand Gassauer ferdinand.gassauer@camptocamp.com https://github.com/ferdiga
 Jean-Baptiste Aubort jean-baptiste.aubort@camptocamp.com
+Cyril Gaudin cyril.gaudin@camptocamp.com https://github.com/cyrilgdn
 

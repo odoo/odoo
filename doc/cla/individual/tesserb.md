@@ -1,4 +1,4 @@
-United States of America, 2016-04-07
+United States, 2016-04-19
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
@@ -8,5 +8,4 @@ declaration.
 
 Signed,
 
-Stephen Medina stephen@lilmail.xyz https://github.com/stephen144
-Stephen Medina stephenm@lsm.org https://github.com/stephen144
+Cody Kitterman ckitterm@gmail.com https://github.com/tesserb
