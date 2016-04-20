@@ -13,7 +13,6 @@
 -
   !record {model: product.product, id: product_landed_cost_3}:
     name: "LC product 3"
-    standard_price: 10
     cost_method: real
     uom_id: product_uom_unit_round_1
     valuation: real_time
@@ -22,7 +21,6 @@
 -
   !record {model: product.product, id: product_landed_cost_4}:
     name: "LC product 4"
-    standard_price: 8
     cost_method: real
     uom_id: product_uom_unit_round_1
     valuation: real_time
@@ -59,15 +57,17 @@
   I receive picking LC_pick_3, and check how many quants are created
 -
   !python {model: stock.picking}: |
+    pick = self.browse(cr, uid, [ref("picking_landed_cost_3")], context=context)
+    pick.move_lines.price_unit = 1.0
+
     self.action_confirm(cr, uid, [ref("picking_landed_cost_3")], context=context)
     self.action_assign(cr, uid, [ref("picking_landed_cost_3")], context=context)
     self.action_done(cr, uid, [ref("picking_landed_cost_3")], context=context)
 
-    pick = self.browse(cr, uid, [ref("picking_landed_cost_3")], context=context)
     quants = pick.move_lines.quant_ids
     assert len(quants) == 1
     assert quants.qty == 13
-    assert quants.cost == 10.0
+    assert quants.cost == 1.0
 -
   I create a landed cost for picking 3
 -
@@ -111,22 +111,24 @@
     for valuation in landed_cost.valuation_adjustment_lines:
         quants = valuation.move_id.quant_ids
         assert quants.mapped('qty') == [12.0, 1.0]
-        assert quants.mapped('cost') == [11.15, 11.2]
+        assert quants.mapped('cost') == [2.15, 2.2]
 -
   We perform all the tests for LC_pick_4
 -
   I receive picking LC_pick_4, and check how many quants are created
 -
   !python {model: stock.picking}: |
+    pick = self.browse(cr, uid, [ref("picking_landed_cost_4")], context=context)
+    pick.move_lines.price_unit = 17.0/12.0
+
     self.action_confirm(cr, uid, [ref("picking_landed_cost_4")], context=context)
     self.action_assign(cr, uid, [ref("picking_landed_cost_4")], context=context)
     self.action_done(cr, uid, [ref("picking_landed_cost_4")], context=context)
 
-    pick = self.browse(cr, uid, [ref("picking_landed_cost_4")], context=context)
     quants = pick.move_lines.quant_ids
-    assert len(quants) == 1
-    assert quants.mapped('qty') == [12.0]
-    assert [round(c, 2) for c in quants.mapped('cost')] == [8.0]
+    assert len(quants) == 2
+    assert quants.mapped('qty') == [11.0, 1.0]
+    assert [round(c, 2) for c in quants.mapped('cost')] == [1.42, 1.38]
 -
   I create a landed cost for picking 4
 -
@@ -170,4 +172,4 @@
     for valuation in landed_cost.valuation_adjustment_lines:
         quants = valuation.move_id.quant_ids
         assert quants.mapped('qty') == [11.0, 1.0]
-        assert [round(c, 2) for c in quants.mapped('cost')] == [8.92, 8.88]
+        assert [round(c, 2) for c in quants.mapped('cost')] == [2.34, 2.26]
