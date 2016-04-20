@@ -638,6 +638,7 @@ form: module.record_id""" % (xml_id,)
                 xml_file=self.xml_filename,
                 xml_id=rec_id,
                 model=rec_model,
+                module=self.module
             )
 
         self._test_xml_id(rec_id)

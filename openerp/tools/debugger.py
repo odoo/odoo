@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
-# Copyright: 2014 - OpenERP S.A. <http://openerp.com>
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+import importlib
+import logging
 import types
 
+_logger = logging.getLogger(__name__)
+SUPPORTED_DEBUGGER = {'pdb', 'ipdb', 'pudb'}
+
+
 def post_mortem(config, info):
-    if config['debug_mode'] and isinstance(info[2], types.TracebackType):
-        try:
-            import pudb as pdb
-        except ImportError:
+    if config['dev_mode'] and isinstance(info[2], types.TracebackType):
+        debug = next((opt for opt in config['dev_mode'] if opt in SUPPORTED_DEBUGGER), None)
+        if debug:
             try:
-                import ipdb as pdb
+                # Try to import the xpdb from config (pdb, ipdb, pudb, ...)
+                importlib.import_module(debug).post_mortem(info[2])
             except ImportError:
-                import pdb
-        pdb.post_mortem(info[2])
+                _logger.error('Error while importing %s.' % debug)

@@ -154,7 +154,7 @@ class IrHttp(models.AbstractModel):
                 return attach
 
         # Don't handle exception but use werkeug debugger if server in --dev mode
-        if tools.config['dev_mode']:
+        if 'werkzeug' in tools.config['dev_mode']:
             raise
         try:
             return request._handle_exception(exception)
