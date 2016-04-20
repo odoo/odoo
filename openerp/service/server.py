@@ -920,12 +920,13 @@ def start(preload=None, stop=False):
         server = ThreadedServer(openerp.service.wsgi_server.application)
 
     watcher = None
-    if config['dev_mode']:
+    if 'reload' in config['dev_mode']:
         if watchdog:
             watcher = FSWatcher()
             watcher.start()
         else:
             _logger.warning("'watchdog' module not installed. Code autoreload feature is disabled")
+    if 'werkzeug' in config['dev_mode']:
         server.app = DebuggedApplication(server.app, evalex=True)
 
     rc = server.run(preload, stop)

@@ -195,7 +195,7 @@ actual arch.
 
         for view in self:
             arch_fs = None
-            if config['dev_mode'] and view.arch_fs and view.xml_id:
+            if 'xml' in config['dev_mode'] and view.arch_fs and view.xml_id:
                 # It is safe to split on / herebelow because arch_fs is explicitely stored with '/'
                 fullpath = get_resource_path(*view.arch_fs.split('/'))
                 arch_fs = get_view_arch_from_file(fullpath, view.xml_id)
@@ -208,6 +208,8 @@ actual arch.
             data = dict(arch_db=view.arch)
             if 'install_mode_data' in self._context:
                 imd = self._context['install_mode_data']
+                if '.' not in imd['xml_id']:
+                    imd['xml_id'] = '%s.%s' % (imd['module'], imd['xml_id'])
                 if self._name == imd['model'] and (not view.xml_id or view.xml_id == imd['xml_id']):
                     # we store the relative path to the resource instead of the absolute path, if found
                     # (it will be missing e.g. when importing data-only modules using base_import_module)
@@ -874,7 +876,7 @@ actual arch.
     # apply ormcache_context decorator unless in dev mode...
     @api.model
     @tools.conditional(
-        not config['dev_mode'],
+        'xml' not in config['dev_mode'],
         tools.ormcache('self._uid', 'view_id',
                        'tuple(map(self._context.get, self._read_template_keys()))'),
     )
@@ -904,7 +906,7 @@ actual arch.
 
     def clear_cache(self):
         """ Deprecated, use `clear_caches` instead. """
-        if not config['dev_mode']:
+        if 'xml' not in config['dev_mode']:
             self.clear_caches()
 
     def _contains_branded(self, node):

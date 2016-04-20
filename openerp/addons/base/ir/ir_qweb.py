@@ -251,7 +251,7 @@ class QWeb(models.AbstractModel):
 
         debugger = element.get('t-debug')
         if debugger is not None:
-            if tools.config['dev_mode']:
+            if 'qweb' in tools.config['dev_mode']:
                 __import__(debugger).set_trace()  # pdb, ipdb, pudb, ...
             else:
                 _logger.warning("@t-debug in template '%s' is only available in --dev mode" % qwebcontext['__template__'])

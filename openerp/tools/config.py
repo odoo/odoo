@@ -233,8 +233,9 @@ class configmanager(object):
 
         # Advanced options
         group = optparse.OptionGroup(parser, "Advanced options")
-        group.add_option('--dev', dest='dev_mode', action='store_true', my_default=False, help='enable developper mode')
-        group.add_option('--debug', dest='debug_mode', action='store_true', my_default=False, help='enable debug mode')
+        group.add_option('--dev', dest='dev_mode', type="string",
+                         help="Enable developer mode. Param: List of options separated by comma. "
+                              "Options : all, [pudb|ipdb|pdb], reload, qweb, werkzeug, xml")
         group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False,
                           help="stop the server after its initialization")
         group.add_option("--osv-memory-count-limit", dest="osv_memory_count_limit", my_default=False,
@@ -369,7 +370,7 @@ class configmanager(object):
                 'db_maxconn', 'import_partial', 'addons_path',
                 'xmlrpc', 'syslog', 'without_demo',
                 'dbfilter', 'log_level', 'log_db',
-                'log_db_level', 'geoip_database',
+                'log_db_level', 'geoip_database', 'dev_mode'
         ]
 
         for arg in keys:
@@ -388,7 +389,7 @@ class configmanager(object):
         # if defined but None take the configfile value
         keys = [
             'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
-            'debug_mode', 'dev_mode', 'smtp_ssl', 'load_language',
+            'dev_mode', 'smtp_ssl', 'load_language',
             'stop_after_init', 'logrotate', 'without_demo', 'xmlrpc', 'syslog',
             'list_db', 'proxy_mode',
             'test_file', 'test_enable', 'test_commit', 'test_report_directory',
@@ -435,6 +436,9 @@ class configmanager(object):
         self.options['update'] = opt.update and dict.fromkeys(opt.update.split(','), 1) or {}
         self.options['translate_modules'] = opt.translate_modules and map(lambda m: m.strip(), opt.translate_modules.split(',')) or ['all']
         self.options['translate_modules'].sort()
+
+        dev_split = opt.dev_mode and  map(str.strip, opt.dev_mode.split(',')) or []
+        self.options['dev_mode'] = 'all' in dev_split and dev_split + ['pdb', 'reload', 'qweb', 'werkzeug', 'xml'] or dev_split
 
         if opt.pg_path:
             self.options['pg_path'] = opt.pg_path
