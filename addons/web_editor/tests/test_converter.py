@@ -125,15 +125,17 @@ class TestConvertBack(common.TransactionCase):
         model = 'web_editor.converter.test'
         record = self.env[model].create({field: value})
 
+        t = etree.Element('t')
         e = etree.Element('span')
+        t.append(e)
         field_value = 'record.%s' % field
         e.set('t-field', field_value)
 
         qwebcontext = self.qwebcontext({'record': record})
-        rendered = self.env['ir.qweb'].render_tag_field(e, {'field': field_value}, '', qwebcontext)
-        element = html.fromstring(rendered, parser=html.HTMLParser(encoding='utf-8'))
+        rendered = self.env['ir.qweb'].compile(t)(qwebcontext)
 
-        converter = self.env['ir.qweb'].get_converter_for(element.get('data-oe-type'))
+        element = html.fromstring(rendered, parser=html.HTMLParser(encoding='utf-8'))
+        converter = self.env['ir.qweb'].get_field_for(element.get('data-oe-type'))
         value_back = converter.from_html(model, record._fields[field], element)
 
         if isinstance(expected, str):
@@ -188,27 +190,28 @@ class TestConvertBack(common.TransactionCase):
         """ the M2O field conversion (from html) is markedly different from
         others as it directly writes into the m2o and returns nothing at all.
         """
-        model = 'web_editor.converter.test'
         field = 'many2one'
 
         subrec1 = self.env['web_editor.converter.test.sub'].create({'name': "Foo"})
         subrec2 = self.env['web_editor.converter.test.sub'].create({'name': "Bar"})
-        record = self.env[model].create({field: subrec1.id})
+        record = self.env['web_editor.converter.test'].create({field: subrec1.id})
 
+        t = etree.Element('t')
         e = etree.Element('span')
+        t.append(e)
         field_value = 'record.%s' % field
         e.set('t-field', field_value)
 
         qwebcontext = self.qwebcontext({'record': record})
-        rendered = self.env['ir.qweb'].render_tag_field(e, {'field': field_value}, '', qwebcontext)
+        rendered = self.env['ir.qweb'].compile(t)(qwebcontext)
         element = html.fromstring(rendered, parser=html.HTMLParser(encoding='utf-8'))
 
         # emulate edition
         element.set('data-oe-many2one-id', str(subrec2.id))
         element.text = "New content"
 
-        converter = self.env['ir.qweb'].get_converter_for(element.get('data-oe-type'))
-        value_back = converter.from_html(model, record._fields[field], element)
+        converter = self.env['ir.qweb'].get_field_for(element.get('data-oe-type'))
+        value_back = converter.from_html('web_editor.converter.test', record._fields[field], element)
 
         self.assertIsNone(
             value_back, "the m2o converter should return None to avoid spurious"

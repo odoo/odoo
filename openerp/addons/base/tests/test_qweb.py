@@ -113,9 +113,8 @@ class TestQWeb(TransactionCase):
             self.assertEqual(
                 qweb.render(template, qwebcontext=ctx).strip().encode('utf-8'),
                 (result or u'').strip().encode('utf-8'),
-                template,
+                template
             )
-
 
 def load_tests(loader, suite, _):
     # can't override TestQWeb.__dir__ because dir() called on *class* not
