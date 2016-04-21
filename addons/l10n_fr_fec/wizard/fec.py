@@ -125,11 +125,11 @@ class AccountFrFec(models.TransientModel):
             aa.code AS CompteNum,
             replace(aa.name, '|', '/') AS CompteLib,
             CASE WHEN rp.ref IS null OR rp.ref = ''
-            THEN 'ID ' || rp.id
+            THEN COALESCE('ID ' || rp.id, '')
             ELSE rp.ref
             END
             AS CompAuxNum,
-            replace(rp.name, '|', '/') AS CompAuxLib,
+            COALESCE(replace(rp.name, '|', '/'), '') AS CompAuxLib,
             CASE WHEN am.ref IS null OR am.ref = ''
             THEN '-'
             ELSE replace(am.ref, '|', '/')
@@ -142,7 +142,10 @@ class AccountFrFec(models.TransientModel):
             CASE WHEN rec.name IS NULL THEN '' ELSE rec.name END AS EcritureLet,
             CASE WHEN aml.full_reconcile_id IS NULL THEN '' ELSE TO_CHAR(rec.create_date, 'YYYYMMDD') END AS DateLet,
             TO_CHAR(am.date, 'YYYYMMDD') AS ValidDate,
-            replace(CASE WHEN aml.amount_currency = 0 THEN '' ELSE to_char(aml.amount_currency, '999999999999999D99') END, '.', ',') AS Montantdevise,
+            CASE
+                WHEN aml.amount_currency IS NULL OR aml.amount_currency = 0 THEN ''
+                ELSE replace(to_char(aml.amount_currency, '999999999999999D99'), '.', ',')
+            END AS Montantdevise,
             CASE WHEN aml.currency_id IS NULL THEN '' ELSE rc.name END AS Idevise
         FROM
             account_move_line aml
