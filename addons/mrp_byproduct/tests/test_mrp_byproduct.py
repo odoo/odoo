@@ -15,7 +15,6 @@ class TestMrpByProduct(common.TransactionCase):
         self.product_33 = self.env.ref('product.product_delivery_01')
         self.product_uom = self.env.ref('product.product_uom_unit')
         self.location_src = self.env.ref('stock.stock_location_stock')
-        self.mrp_action = self.env.ref('mrp.menu_mrp_production_action')
 
     def test_00_mrp_byproduct(self):
         # I add a sub product in Bill of material for product External Hard Disk.
@@ -45,11 +44,10 @@ class TestMrpByProduct(common.TransactionCase):
 
         # I consume and produce the production of products.
         # I create record for selecting mode and quantity of products to produce.
-        product_consume = self.MrpProductProduce.create({'product_qty': 2.00})
+        product_consume = self.MrpProductProduce.with_context(context).create({'product_qty': 2.00})
         # I finish the production order.
         context = {"active_model": "mrp.production", "active_ids": [mnf_hardisk.id], "active_id": mnf_hardisk.id}
-        product_consume.with_context(context).do_produce()
-        
+        product_consume.do_produce()
         mnf_hardisk.post_inventory()
 
         # I see that stock moves of External Hard Disk including Headset USB are done now.
