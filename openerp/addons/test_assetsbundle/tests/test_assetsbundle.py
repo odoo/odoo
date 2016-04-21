@@ -4,7 +4,7 @@
 from openerp import api
 from openerp.tests import HttpCase
 from openerp.tests.common import TransactionCase
-from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebContext
+from openerp.addons.base.ir.ir_qweb import QWebContext
 from openerp.modules.module import get_resource_path
 
 from collections import Counter
@@ -19,7 +19,7 @@ class TestJavascriptAssetsBundle(TransactionCase):
         self.cssbundle_xmlid = 'test_assetsbundle.bundle2'
 
     def _get_asset(self, xmlid, env=None):
-        return self.en['ir.qweb']._get_asset(xmlid, QWebContext(env or self.env, {}))
+        return self.env['ir.qweb']._get_asset(xmlid, QWebContext(env or self.env, {}))
 
     def _any_ira_for_bundle(self, type):
         """ Returns all ir.attachments associated to a bundle, regardless of the verion.
@@ -98,7 +98,8 @@ class TestJavascriptAssetsBundle(TransactionCase):
         """
         bundle0 = self._get_asset(self.jsbundle_xmlid)
         bundle0.js()
-        html0 = bundle0.html
+        files0 = bundle0.files
+        remains0 = bundle0.remains
         version0 = bundle0.version
 
         self.assertEquals(len(self._any_ira_for_bundle('js')), 1)
@@ -120,10 +121,12 @@ class TestJavascriptAssetsBundle(TransactionCase):
 
         bundle1 = self._get_asset(self.jsbundle_xmlid, env=self.env(context={'check_view_ids': [newid]}))
         bundle1.js()
-        html1 = bundle1.html
+        files1 = bundle1.files
+        remains1 = bundle1.remains
         version1 = bundle1.version
 
-        self.assertNotEquals(html0, html1)
+        self.assertNotEquals(files0, files1)
+        self.assertEquals(remains0, remains1)
         self.assertNotEquals(version0, version1)
 
         # check if the previous attachment are correctly cleaned
@@ -228,7 +231,8 @@ class TestJavascriptAssetsBundle(TransactionCase):
         """
         bundle0 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 1}))
         bundle0.css()
-        html0 = bundle0.html
+        files0 = bundle0.files
+        remains0 = bundle0.remains
         version0 = bundle0.version
 
         self.assertEquals(len(self._any_ira_for_bundle('css')), 3)
@@ -250,10 +254,12 @@ class TestJavascriptAssetsBundle(TransactionCase):
 
         bundle1 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'check_view_ids': [newid], 'max_css_rules': 1}))
         bundle1.css()
-        html1 = bundle1.html
+        files1 = bundle1.files
+        remains1 = bundle1.remains
         version1 = bundle1.version
 
-        self.assertNotEquals(html0, html1)
+        self.assertNotEquals(files0, files1)
+        self.assertEquals(remains0, remains1)
         self.assertNotEquals(version0, version1)
 
         # check if the previous attachment are correctly cleaned
@@ -342,7 +348,8 @@ class TestAssetsBundleWithIRAMock(TransactionCase):
 
     def _bundle(self, should_create, should_unlink):
         self.counter.clear()
-        self.en['ir.qweb']._get_asset(self.lessbundle_xmlid, QWebContext(self.env, {})).to_html(debug='assets')
+        qw = QWebContext(self.env, {})
+        self.env['ir.qweb']._get_asset(self.lessbundle_xmlid, qw).to_html(debug='assets')
         self.assertEquals(self.counter['create'], int(should_create))
         self.assertEquals(self.counter['unlink'], int(should_unlink))
 
