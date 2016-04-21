@@ -142,6 +142,11 @@ class PaymentAcquirer(models.Model):
             request.close()
         return res
 
+    @api.v7
+    def render(self, cr, uid, id, reference, amount, currency_id, partner_id=False, values=None, context=None):
+        acquirer = self.browse(cr, uid, id, context=context)
+        return acquirer.render(reference, amount, currency_id, partner_id=partner_id, values=values)
+
 
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
