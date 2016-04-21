@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <!-- Search Views -->
 
@@ -212,7 +211,7 @@
                 <form string="Leave Detail">
                     <group>
                         <group>
-                            <field name="resource_id" on_change="onchange_resource(resource_id)"/>
+                            <field name="resource_id"/>
                             <field name="name" string="Reason"/>
                         </group>
                         <group>
@@ -259,5 +258,4 @@
        <menuitem action="resource.action_resource_calendar_form" id="menu_resource_calendar" parent="menu_resource_config" sequence="1"/>
        <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search" parent="menu_resource_config" sequence="2"/>
        <menuitem action="resource.action_resource_resource_tree" id="menu_resource_resource" parent="menu_resource_config" sequence="3"/>
-    </data>
-</openerp>
+</odoo>

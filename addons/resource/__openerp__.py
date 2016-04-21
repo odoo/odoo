@@ -2,10 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name' : 'Resource',
-    'version' : '1.1',
-    'category' : 'Hidden',
-    'website' : 'http://www.openerp.com',
+    'name': 'Resource',
+    'version': '1.1',
+    'category': 'Hidden',
     'description': """
 Module for resource management.
 ===============================
@@ -25,6 +24,4 @@ associated to every resource. It also manages the leaves of every resource.
         'test/resource.yml',
         'test/duplicate_resource.yml',
     ],
-    'installable': True,
-    'auto_install': False,
 }
