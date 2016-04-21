@@ -1901,6 +1901,7 @@ var Column = Class.extend({
             row_data[this.id].value, this, options.value_if_empty));
     }
 });
+ListView.Column = Column;
 
 var MetaColumn = Column.extend({
     meta: true,

@@ -47,10 +47,10 @@ var RTE_Translate = rte.Class.extend({
 
             return ajax.jsonRpc('/web/dataset/call', 'call', {
                 model: 'ir.translation',
-                method: 'write',
+                method: 'save_html',
                 args: [
                     [+$el.data('oe-translation-id')],
-                    {'value': translation_content, 'state': 'translated'},
+                    translation_content,
                     context || base.get_context()
                 ],
             });

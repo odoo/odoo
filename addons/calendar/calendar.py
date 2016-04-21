@@ -961,7 +961,9 @@ class calendar_event(osv.Model):
 
     def _check_closing_date(self, cr, uid, ids, context=None):
         for event in self.browse(cr, uid, ids, context=context):
-            if event.stop < event.start:
+            if event.start_datetime and event.stop_datetime < event.start_datetime:
+                return False
+            if event.start_date and event.stop_date < event.start_date:
                 return False
         return True
 
