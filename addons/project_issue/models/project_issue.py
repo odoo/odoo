@@ -80,6 +80,7 @@ class ProjectIssue(models.Model):
         # perform search
         project_task_types = ProjectTaskType.sudo(access_rights_uid).search(search_domain, order=order)
         result = project_task_types.sudo(access_rights_uid).name_get()
+        # TODO: sometimes, the order of the stages are wrong, try create then reload/Issues ?
         # restore order of the search
         project_task_type_ids = project_task_types.mapped('id')
         result.sort(lambda x, y: cmp(project_task_type_ids.index(x[0]), project_task_type_ids.index(y[0])))
@@ -306,6 +307,7 @@ class ProjectIssue(models.Model):
 
     @api.multi
     def email_split(self, msg):
+        print "email_split"
         email_list = tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or ''))
         # check left-part is not already an alias
         return filter(lambda x: x.split('@')[0] not in self.mapped('project_id.alias_name'), email_list)
@@ -316,6 +318,7 @@ class ProjectIssue(models.Model):
             through message_process.
             This override updates the document according to the email.
         """
+        print "message_new"
         # remove default author when going through the mail gateway. Indeed we
         # do not want to explicitly set user_id to False; however we do not
         # want the gateway user to be responsible if no other responsible is
@@ -340,6 +343,7 @@ class ProjectIssue(models.Model):
 
     @api.multi
     def message_update(self, msg, update_vals=None):
+        print "message_update"
         """ Override to update the issue according to the email. """
         email_list = self.email_split(msg)
         partner_ids = filter(None, self._find_partner_from_emails(email_list))

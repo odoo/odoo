@@ -5,6 +5,7 @@ from odoo.addons.project_issue.tests.common import TestIssueUsers
 
 class TestIssueDemo(TestIssueUsers):
 
+    # TODO: check all tests !
     def test_issue_demo(self):
         # Test the whole create project issue with project manager.
         self.ProjectIssue.sudo(self.project_manager.id).create({
