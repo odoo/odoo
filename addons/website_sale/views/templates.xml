@@ -746,7 +746,7 @@
   </xpath>
 </template>
 
-<template id="cart_lines" name="Shopping Cart">
+<template id="cart_lines" name="Shopping Cart Lines">
   <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="js_cart_lines well well-lg">
       Your cart is empty!
   </div>
@@ -790,13 +790,13 @@
                   </div>
               </td>
               <td class="text-center" id="td-price" name="price">
-                  <del t-attf-class="text-danger #{'' if line.product_id.lst_price &gt; line.discounted_price else 'hidden'}" style="text-decoration: line-through; white-space: nowrap;"
+                  <del t-attf-class="text-danger #{'' if line.product_id.lst_price &gt; line.price_reduce else 'hidden'}" style="text-decoration: line-through; white-space: nowrap;"
                     t-field="line.product_id.lst_price" t-field-options='{
                         "widget": "monetary",
                         "from_currency": "line.company_id.currency_id",
                         "display_currency": "website.currency_id"
                     }'/>
-                <span t-field="line.discounted_price" style="white-space: nowrap;" t-field-options='{
+                <span t-field="line.price_reduce" style="white-space: nowrap;" t-field-options='{
                      "widget": "monetary",
                      "display_currency": "website.currency_id"
                  }'/>
