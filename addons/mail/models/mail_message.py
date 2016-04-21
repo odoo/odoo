@@ -762,7 +762,7 @@ class Message(models.Model):
             # TDE: probably clean me
             parent_ids = [message.get('parent_id') for mid, message in message_values.iteritems()
                           if message.get('parent_id')]
-            self._cr.execute("""SELECT DISTINCT m.id FROM "%s" m
+            self._cr.execute("""SELECT DISTINCT m.id, partner_rel.res_partner_id, channel_partner.partner_id FROM "%s" m
                 LEFT JOIN "mail_message_res_partner_rel" partner_rel
                 ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = (%%s)
                 LEFT JOIN "mail_message_mail_channel_rel" channel_rel
@@ -772,7 +772,7 @@ class Message(models.Model):
                 LEFT JOIN "mail_channel_partner" channel_partner
                 ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = (%%s)
                 WHERE m.id = ANY (%%s)""" % self._table, (self.env.user.partner_id.id, self.env.user.partner_id.id, parent_ids,))
-            not_parent_ids = [mid[0] for mid in self._cr.fetchall()]
+            not_parent_ids = [mid[0] for mid in self._cr.fetchall() if any([mid[1], mid[2]])]
             notified_ids += [mid for mid, message in message_values.iteritems()
                              if message.get('parent_id') in not_parent_ids]
 

@@ -600,6 +600,13 @@ class SaleOrderLine(models.Model):
 
     @api.model
     def create(self, values):
+        onchange_fields = ['name', 'price_unit', 'product_uom', 'tax_id']
+        if values.get('order_id') and values.get('product_id') and any(f not in values for f in onchange_fields):
+            line = self.new(values)
+            line.product_id_change()
+            for field in onchange_fields:
+                if field not in values:
+                    values[field] = line._fields[field].convert_to_write(line[field])
         line = super(SaleOrderLine, self).create(values)
         if line.state == 'sale':
             if (not line.order_id.project_id and
