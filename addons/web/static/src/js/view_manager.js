@@ -14,7 +14,25 @@ var QWeb = core.qweb;
 var _t = core._t;
 
 var ViewManager = Widget.extend(ControlPanelMixin, {
-    template: "ViewManager",
+    className: "o_view_manager_content",
+    /**
+     * Called each time the view manager is attached into the DOM
+     */
+    on_attach_callback: function() {
+        this.is_in_DOM = true;
+        if (this.active_view && this.active_view.controller.on_attach_callback) {
+            this.active_view.controller.on_attach_callback();
+        }
+    },
+    /**
+     * Called each time the view manager is detached from the DOM
+     */
+    on_detach_callback: function() {
+        this.is_in_DOM = false;
+        if (this.active_view && this.active_view.controller.on_detach_callback) {
+            this.active_view.controller.on_detach_callback();
+        }
+    },
     /**
      * @param {Object} [dataset]
      * @param {Array} [views] List of [view_id, view_type[, fields_view]]
@@ -34,12 +52,11 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         this.active_view = null;
         this.registry = core.view_registry;
         this.title = this.action.name;
-        this.is_in_DOM = false; // used to know if the view manager is attached in the DOM
         _.each(views, function (view) {
             var view_type = view[1] || view.view_type;
             var View = self.registry.get(view_type);
             if (!View) {
-                console.error("View type", "'"+view[1]+"'", "is not present in the view registry.");
+                console.error("View type", "'"+view_type+"'", "is not present in the view registry.");
                 return;
             }
             var view_label = View.prototype.display_name;
@@ -48,9 +65,9 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 button_label: _.str.sprintf(_t('%(view_type)s view'), {'view_type': (view_label || view_type)}),
                 controller: null,
                 fields_view: view[2] || view.fields_view,
-                embedded_view: view.embedded_view,
                 icon: View.prototype.icon,
                 label: view_label,
+                mobile_friendly: View.prototype.mobile_friendly,
                 multi_record: View.prototype.multi_record,
                 options: view.options || {},
                 require_fields: View.prototype.require_fields,
@@ -81,12 +98,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             view.options = _.extend({
                 action: self.action,
             }, self.flags, self.flags[view.type], view.options);
-            view.$container = self.$(".oe-view-manager-view-" + view.type);
         });
-
-        this.$el.addClass("oe_view_manager_" + ((this.action && this.action.target) || 'current'));
-
-        this.control_elements = {};
         if (this.flags.search_view) {
             this.search_view_loaded = this.setup_search_view();
         }
@@ -224,33 +236,40 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         var view_control_elements = this.render_view_control_elements();
 
         // Show the view
-        this.active_view.$container.show();
         return $.when(view_controller.do_show(view_options)).done(function () {
             // Prepare the ControlPanel content and update it
             var cp_status = {
-                active_view_selector: '.oe-cp-switch-' + self.active_view.type,
+                active_view_selector: '.o_cp_switch_' + self.active_view.type,
                 breadcrumbs: self.action_manager && self.action_manager.get_breadcrumbs(),
-                cp_content: _.extend({}, self.control_elements, view_control_elements),
+                cp_content: _.extend({}, self.searchview_elements, view_control_elements),
                 hidden: self.flags.headless,
                 searchview: self.searchview,
                 search_view_hidden: view_controller.searchable === false || view_controller.searchview_hidden,
             };
             self.update_control_panel(cp_status);
 
-            if (old_view) {
-                // Detach the old view but not ui-autocomplete elements to let
-                // jquery-ui garbage-collect them
-                old_view.$container.contents().not('.ui-autocomplete').detach();
-
-                // Hide old view (at first rendering, there is no view to hide)
-                if (self.active_view !== old_view) {
-                    if (old_view.controller) old_view.controller.do_hide();
-                    if (old_view.$container) old_view.$container.hide();
+            // Detach the old view and store it
+            if (old_view && old_view !== self.active_view) {
+                // Store the scroll position
+                if (self.action_manager && self.action_manager.webclient) {
+                    old_view.controller.set_scrollTop(self.action_manager.webclient.get_scrollTop());
                 }
+                // Do not detach ui-autocomplete elements to let jquery-ui garbage-collect them
+                var $to_detach = self.$el.contents().not('.ui-autocomplete');
+                old_view.$fragment = framework.detach([{widget: old_view.controller}], {$to_detach: $to_detach});
             }
 
-            // Append the view fragment to its $container
-            framework.append(self.active_view.$container, view_fragment, self.is_in_DOM);
+            // If the user switches from a multi-record to a mono-record view,
+            // the action manager should be scrolled to the top.
+            if (old_view && old_view.controller.multi_record === true && view_controller.multi_record === false) {
+                view_controller.set_scrollTop(0);
+            }
+
+            // Append the view fragment to self.$el
+            framework.append(self.$el, view_fragment, {
+                in_DOM: self.is_in_DOM,
+                callbacks: [{widget: view_controller}],
+            });
         });
     },
     create_view: function(view, view_options) {
@@ -282,39 +301,50 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         return this.switch_mode(view_type);
     },
     /**
-     * Renders the switch buttons and adds listeners on them but does not append them to the DOM
-     * Sets $switch_buttons in control_elements to send to the ControlPanel
-     * @param {Object} [src] the source requesting the switch_buttons
-     * @param {Array} [views] the array of views
+     * Renders the switch buttons for multi- and mono-record views and adds
+     * listeners on them, but does not append them to the DOM
+     * Sets switch_buttons.$mono and switch_buttons.$multi to send to the ControlPanel
      */
     render_switch_buttons: function() {
-        if (this.flags.views_switcher && this.view_order.length > 1) {
-            var self = this;
+        var self = this;
 
-            // Render switch buttons but do not append them to the DOM as this will
-            // be done later, simultaneously to all other ControlPanel elements
-            this.control_elements.$switch_buttons = $(QWeb.render('ViewManager.switch-buttons', {views: self.view_order}));
+        // Partition the views according to their multi-/mono-record status
+        var views = _.partition(this.view_order, function(view) {
+            return view.multi_record === true;
+        });
+        var multi_record_views = views[0];
+        var mono_record_views = views[1];
 
-            // Create bootstrap tooltips
-            _.each(this.views, function(view) {
-                self.control_elements.$switch_buttons.siblings('.oe-cp-switch-' + view.type).tooltip();
-            });
+        // Inner function to render and prepare switch_buttons
+        var _render_switch_buttons = function(views) {
+            if (views.length > 1) {
+                var $switch_buttons = $(QWeb.render('ViewManager.switch-buttons', {views: views}));
+                // Create bootstrap tooltips
+                _.each(views, function(view) {
+                    $switch_buttons.filter('.o_cp_switch_' + view.type).tooltip();
+                });
+                // Add onclick event listener
+                $switch_buttons.filter('button').click(_.debounce(function(event) {
+                    var view_type = $(event.target).data('view-type');
+                    self.switch_mode(view_type);
+                }, 200, true));
+                return $switch_buttons;
+            }
+        };
 
-            // Add onclick event listener
-            this.control_elements.$switch_buttons.siblings('button').click(_.debounce(function(event) {
-                var view_type = $(event.target).data('view-type');
-                self.switch_mode(view_type);
-            }, 200, true));
-        }
+        // Render switch buttons but do not append them to the DOM as this will
+        // be done later, simultaneously to all other ControlPanel elements
+        this.switch_buttons = {};
+        this.switch_buttons.$multi = _render_switch_buttons(multi_record_views);
+        this.switch_buttons.$mono = _render_switch_buttons(mono_record_views);
     },
     /**
-     * Renders the control elements (buttons, sidebar, pager) of the current view
-     * This must be done when active_search is resolved (for KanbanViews)
+     * Renders the control elements (buttons, sidebar, pager) of the current view.
      * Fills this.active_view.control_elements dictionnary with the rendered
-     * elements and the adequate view switcher, to send to the ControlPanel
+     * elements and the adequate view switcher, to send to the ControlPanel.
      * Warning: it should be called before calling do_show on the view as the
      * sidebar is extended to listen on the load_record event triggered as soon
-     * as do_show is done (the sidebar should thus be instantiated before)
+     * as do_show is done (the sidebar should thus be instantiated before).
      */
     render_view_control_elements: function() {
         if (!this.active_view.control_elements) {
@@ -335,6 +365,15 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             elements = _.mapObject(elements, function($node) {
                 return $node && $node.contents();
             });
+            // Use the adequate view switcher (mono- or multi-record)
+            if (this.switch_buttons) {
+                if (this.active_view.multi_record) {
+                    elements.$switch_buttons = this.switch_buttons.$multi;
+                } else {
+                    elements.$switch_buttons = this.switch_buttons.$mono;
+                }
+            }
+
             // Store the rendered elements in the active_view to allow restoring them later
             this.active_view.control_elements = elements;
         }
@@ -342,10 +381,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
     },
     /**
      * Sets up the current viewmanager's search view.
-     * Sets $searchview and $searchview_buttons in control_elements to send to the ControlPanel
-     *
-     * @param {Number|false} view_id the view to use or false for a default one
-     * @returns {jQuery.Deferred} search view startup deferred
+     * Sets $searchview and $searchview_buttons in searchview_elements to send to the ControlPanel
      */
     setup_search_view: function() {
         var self = this;
@@ -361,6 +397,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 search_defaults[match[1]] = value;
             }
         });
+
         var options = {
             hidden: this.flags.search_view === false,
             disable_custom_filters: this.flags.search_disable_custom_filters,
@@ -374,8 +411,9 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
 
         this.searchview.on('search_data', this, this.search.bind(this));
         return $.when(this.searchview.appendTo($("<div>"))).done(function() {
-            self.control_elements.$searchview = self.searchview.$el;
-            self.control_elements.$searchview_buttons = self.searchview.$buttons.contents();
+            self.searchview_elements = {};
+            self.searchview_elements.$searchview = self.searchview.$el;
+            self.searchview_elements.$searchview_buttons = self.searchview.$buttons.contents();
         });
     },
     /**

@@ -1,3 +1,29 @@
+// ------------------------------------------------------------------
+// Typography
+// ------------------------------------------------------------------
+a {
+    color: @odoo-brand-optional;
+    &:hover {
+        color: darken(@odoo-brand-optional, 10%);
+    }
+}
+
+// ------------------------------------------------------------------
+//  General
+// ------------------------------------------------------------------
+.o_web_client {
+    background-color: @odoo-webclient-background-color;
+}
+.o_text_overflow {
+    .o-text-overflow();
+}
+.o_hidden {
+    display: none!important;
+}
+
+// ------------------------------------------------------------------
+// Misc. widgets
+// ------------------------------------------------------------------
 @notification-error-bg-color: #F16567;
 @notification-info-bg-color: #FCFBEA;
 .o_notification_manager {
@@ -5,7 +31,7 @@
     max-width: 100%;
 
     .o-position-absolute(@navbar-height, 0px);
-    z-index: 50;  // same as debug manager. Fixme: expose a variable
+    z-index: 1100; // Bootstrap modal z-index is 1050
 
     .o_notification {
         padding: 0;
@@ -48,4 +74,16 @@
             background-color: @notification-error-bg-color;
         }
     }
+}
+
+// Buttons
+.o_icon_button {
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+    outline: none;
+}
+
+.oe_highlight {
+    .btn-primary;
 }

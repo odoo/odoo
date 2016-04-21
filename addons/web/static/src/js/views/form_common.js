@@ -215,7 +215,7 @@ var CompletionFieldMixin = {
                             self._search_create_popup("search", data);
                         });
                     },
-                    classname: 'oe_m2o_dropdown_option'
+                    classname: 'o_m2o_dropdown_option'
                 });
             }
             // quick create
@@ -228,7 +228,7 @@ var CompletionFieldMixin = {
                     action: function() {
                         self._quick_create(search_val);
                     },
-                    classname: 'oe_m2o_dropdown_option'
+                    classname: 'o_m2o_dropdown_option'
                 });
             }
             // create...
@@ -238,14 +238,14 @@ var CompletionFieldMixin = {
                     action: function() {
                         self._search_create_popup("form", undefined, self._create_context(search_val));
                     },
-                    classname: 'oe_m2o_dropdown_option'
+                    classname: 'o_m2o_dropdown_option'
                 });
             }
             else if (values.length === 0) {
                 values.push({
                     label: _t("No results to show..."),
                     action: function() {},
-                    classname: 'oe_m2o_dropdown_option'
+                    classname: 'o_m2o_dropdown_option'
                 });
             }
 
@@ -275,7 +275,7 @@ var CompletionFieldMixin = {
     // all search/create popup handling
     _search_create_popup: function(view, ids, context) {
         var self = this;
-        new SelectCreateDialog(this, {
+        new SelectCreateDialog(this, _.extend({}, (this.options || {}), {
             res_model: self.field.relation,
             domain: self.build_domain(),
             context: new data.CompoundContext(self.build_context(), context || {}),
@@ -287,7 +287,7 @@ var CompletionFieldMixin = {
                 self.add_id(element_ids[0]);
                 self.focus();
             }
-        }).open();
+        })).open();
     },
     /**
      * To implement.
@@ -474,7 +474,7 @@ var FormWidget = Widget.extend(InvisibilityChangerMixin, {
                         debug: session.debug,
                         widget: widget
                     });
-                },
+                }
             }, options || {});
         //only show tooltip if we are in debug or if we have a help to show, otherwise it will display
         //as empty
@@ -666,16 +666,16 @@ var AbstractField = FormWidget.extend(FieldInterface, {
             this._check_css_flags();
         });
 
-        this.$translate = $(); // Enterprise compatibility
+        this.$translate = (_t.database.multi_lang && this.field.translate) ? $('<button/>', {
+            type: 'button',
+        }).addClass('o_field_translate fa fa-globe btn btn-link') : $();
     },
+
     renderElement: function() {
         var self = this;
         this._super();
-        if (this.field.translate && this.view) {
-            this.$el.addClass('oe_form_field_translatable');
-            this.$el.find('.oe_field_translate').click(this.on_translate);
-        }
-        this.$label = this.view ? this.view.$el.find('label[for=' + this.id_for_label + ']') : $();
+        this.$el.addClass('o_form_field');
+        this.$label = this.view ? this.view.$('label[for=' + this.id_for_label + ']') : $();
         this.do_attach_tooltip(this, this.$label[0] || this.$el);
         if (session.debug) {
             this.$label.off('dblclick').on('dblclick', function() {
@@ -707,16 +707,23 @@ var AbstractField = FormWidget.extend(FieldInterface, {
         });
         this.render_value();
         this._toggle_label();
+
+        if (this.view) {
+            this.$translate
+                .insertAfter(this.$el)
+                .on('click', _.bind(this.on_translate, this));
+        }
     },
     _toggle_label: function() {
         var empty = this.get('effective_readonly') && this.is_false();
+        this.$label.toggleClass('o_form_label_empty', empty).toggleClass('o_form_label_false', this.get('effective_readonly') && this.get('value') === false);
         this.$el.toggleClass('o_form_field_empty', empty);
     },
     /**
      * Private. Do not use.
      */
     _set_required: function() {
-        this.$el.toggleClass('oe_form_required', this.get("required"));
+        this.$el.toggleClass('o_form_required', this.get("required"));
     },
     set_value: function(value_) {
         this.set({'value': value_});
@@ -752,10 +759,11 @@ var AbstractField = FormWidget.extend(FieldInterface, {
         return this.get('value') === false;
     },
     _check_css_flags: function() {
-        if (this.field.translate) {
-            this.$el.find('.oe_field_translate').toggle(this.field_manager.get('actual_mode') !== "create");
-        }
-        this.$el.toggleClass('oe_form_invalid', !this.disable_utility_classes && !!this.field_manager.get('display_invalid_fields') && !this.is_valid());
+        var show_translate = (!this.get('effective_readonly') && this.field_manager.get('actual_mode') !== "create");
+        this.$translate.toggleClass('o_translate_active', !!show_translate);
+
+        this.$el.add(this.$label)
+            .toggleClass('o_form_invalid', !this.disable_utility_classes && !!this.field_manager.get('display_invalid_fields') && !this.is_valid());
     },
     focus: function() {
         return false;
@@ -770,11 +778,10 @@ var AbstractField = FormWidget.extend(FieldInterface, {
             self.do_action(r);
         });
     },
-
-    set_dimensions: function (height, width) {
+    set_dimensions: function(height, width) {
         this.$el.css({
             width: width,
-            minHeight: height
+            height: height,
         });
     },
     commit_value: function() {
@@ -802,7 +809,7 @@ var ViewDialog = Dialog.extend({ // FIXME should use ViewManager
         options.dialogClass = options.dialogClass || '';
         options.dialogClass += ' o_act_window';
 
-        this._super(parent, _.clone(options));
+        this._super(parent, $.extend(true, {}, options));
 
         this.res_model = options.res_model || null;
         this.res_id = options.res_id || null;
@@ -864,7 +871,7 @@ var FormViewDialog = ViewDialog.extend({
             ];
 
             if(!readonly) {
-                options.buttons.splice(0, 0, {text: _t("Save") + ((multi_select)? " " + _t(" & Close") : ""), classes: "btn-primary o_formdialog_save", click: function() { // o_formdialog_save class for web_tests!
+                options.buttons.splice(0, 0, {text: _t("Save") + ((multi_select)? " " + _t(" & Close") : ""), classes: "btn-primary", click: function() {
                         self.view_form.onchanges_mutex.def.then(function() {
                             if (!self.view_form.warning_displayed) {
                                 $.when(self.view_form.save()).done(function() {
@@ -923,6 +930,7 @@ var FormViewDialog = ViewDialog.extend({
             var fragment = document.createDocumentFragment();
             self.view_form.appendTo(fragment).then(function () {
                 self.view_form.do_show().then(function() {
+                    self.view_form.autofocus();
                     _super().$el.append(fragment);
                 });
             });
@@ -941,7 +949,7 @@ var SelectCreateListView = ListView.extend({
         this.popup.close();
     },
     do_select: function(ids, records) {
-        this._super(ids, records);
+        this._super.apply(this, arguments);
         this.popup.on_click_element(ids);
     }
 });
@@ -1022,7 +1030,7 @@ var SelectCreateDialog = ViewDialog.extend({
                 _.extend({'deletable': false,
                     'selectable': !self.options.disable_multiple_selection,
                     'import_enabled': false,
-                    '$buttons': self.$footer,
+                    '$buttons': self.$buttons,
                     'disable_editable_mode': true,
                     'pager': true,
                 }, self.options.list_view_options || {}));
@@ -1030,6 +1038,9 @@ var SelectCreateDialog = ViewDialog.extend({
                 e.cancel = true;
             });
             self.view_list.popup = self;
+            self.view_list.on('list_view_loaded', self, function() {
+                this.on_view_list_loaded();
+            });
 
             var buttons = [
                 {text: _t("Cancel"), classes: "btn-default o_form_button_cancel", close: true}
@@ -1076,6 +1087,7 @@ var SelectCreateDialog = ViewDialog.extend({
         this.close();
         return new FormViewDialog(this.__parentedParent, this.options).open();
     },
+    on_view_list_loaded: function() {},
 });
 
 var DomainEditorDialog = SelectCreateDialog.extend({
@@ -1095,11 +1107,11 @@ var DomainEditorDialog = SelectCreateDialog.extend({
     },
 
     get_domain: function (selected_ids) {
-        var group_domain = [],
-            domain;
-        if (this.$('input.oe_list_record_selector').prop('checked')) {
+        var group_domain = [];
+        var domain;
+        if (this.$('.o_list_record_selector input').prop('checked')) {
             if (this.view_list.grouped) {
-                var group_domain = _.chain(_.values(this.view_list.groups.children))
+                group_domain = _.chain(_.values(this.view_list.groups.children))
                                         .filter(function (child) { return child.records.length; })
                                         .map(function (c) { return c.datagroup.domain;})
                                         .value();
@@ -1117,6 +1129,11 @@ var DomainEditorDialog = SelectCreateDialog.extend({
             domain = [["id", "in", selected_ids]];
         }
         return this.dataset.domain.concat(group_domain).concat(domain || []);
+    },
+
+    on_view_list_loaded: function() {
+        this.$('.o_list_record_selector input').prop('checked', true);
+        this.$footer.find(".o_selectcreatepopup_search_select").prop('disabled', false);
     },
 });
 

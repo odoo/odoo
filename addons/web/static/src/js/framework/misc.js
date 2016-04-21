@@ -211,6 +211,16 @@ if ('nv' in window) {
     nv.tooltip.cleanup = function () {
         $('.nvtooltip').remove();
     };
+
+    // monkey patch nvd3 to prevent it to display a tooltip (position: absolute) with
+    // a negative `top`; with this patch the highest tooltip's position is still in the
+    // graph
+    var originalCalcTooltipPosition = nv.tooltip.calcTooltipPosition;
+    nv.tooltip.calcTooltipPosition = function () {
+        var container = originalCalcTooltipPosition.apply(this, arguments);
+        container.style.top = container.style.top.split('px')[0] < 0 ? 0 + 'px' : container.style.top;
+        return container;
+    };
 }
 
 // Bootstrap customization
@@ -303,11 +313,18 @@ $.extend( proto, {
 });
 
 /**
- * Private function that triggers an event on core.bus
+ * Private function to notify that something has been attached in the DOM
  * @param {htmlString or Element or Array or jQuery} [content] the content that
  * has been attached in the DOM
+ * @params {Array} [callbacks] array of {widget: w, callback_args: args} such
+ * that on_attach_callback() will be called on each w with arguments args
  */
-function _notify (content) {
+function _notify (content, callbacks) {
+    _.each(callbacks, function(c) {
+        if (c.widget && c.widget.on_attach_callback) {
+            c.widget.on_attach_callback(c.callback_args);
+        }
+    });
     core.bus.trigger('DOM_updated', content);
 }
 /**
@@ -315,12 +332,14 @@ function _notify (content) {
  * @param {jQuery} [$target] the node where content will be appended
  * @param {htmlString or Element or Array or jQuery} [content] DOM element,
  * array of elements, HTML string or jQuery object to append to $target
- * @param {jQuery} [trigger] true to trigger an event, false otherwise
+ * @param {Boolean} [options.in_DOM] true if $target is in the DOM
+ * @param {Array} [options.callbacks] array of objects describing the callbacks
+ * to perform (see _notify for a complete description)
  */
-function append ($target, content, trigger) {
+function append ($target, content, options) {
     $target.append(content);
-    if (trigger) {
-        _notify(content);
+    if (options && options.in_DOM) {
+        _notify(content, options.callbacks);
     }
 }
 /**
@@ -328,13 +347,37 @@ function append ($target, content, trigger) {
  * @param {jQuery} [$target] the node where content will be prepended
  * @param {htmlString or Element or Array or jQuery} [content] DOM element,
  * array of elements, HTML string or jQuery object to prepend to $target
- * @param {jQuery} [trigger] true to trigger an event, false otherwise
+ * @param {Boolean} [options.in_DOM] true if $target is in the DOM
+ * @param {Array} [options.callbacks] array of objects describing the callbacks
+ * to perform (see _notify for a complete description)
  */
-function prepend ($target, content, trigger) {
+function prepend ($target, content, options) {
     $target.prepend(content);
-    if (trigger) {
-        _notify(content);
+    if (options && options.in_DOM) {
+        _notify(content, options.callbacks);
     }
+}
+
+/**
+ * Detaches widgets from the DOM and performs their on_detach_callback()
+ * @param {Array} [to_detach] array of {widget: w, callback_args: args} such
+ * that w.$el will be detached and w.on_detach_callback(args) will be called
+ * @param {jQuery} [options.$to_detach] if given, detached instead of widgets' $el
+ * @return {jQuery} the detached elements
+ */
+function detach (to_detach, options) {
+    _.each(to_detach, function(d) {
+        if (d.widget.on_detach_callback) {
+            d.widget.on_detach_callback(d.callback_args);
+        }
+    });
+    var $to_detach = options && options.$to_detach;
+    if (!$to_detach) {
+        $to_detach = $(_.map(to_detach, function(d) {
+            return d.widget.el;
+        }));
+    }
+    return $to_detach.detach();
 }
 
 /**
@@ -358,6 +401,7 @@ return {
     redirect: redirect,
     append: append,
     prepend: prepend,
+    detach: detach,
     getPosition: getPosition,
 };
 

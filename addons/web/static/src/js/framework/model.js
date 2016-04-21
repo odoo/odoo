@@ -6,14 +6,12 @@ var session = require('web.session');
 
 var Model = Class.extend({
     /**
-    new openerp.web.Model([session,] model_name[, context[, domain]])
+    new openerp.web.Model(name[, context[, domain]])
 
     @constructs instance.web.Model
     @extends instance.web.Class
 
-    @param {openerp.web.Session} [session] The session object used to communicate with
-    the server.
-    @param {String} model_name name of the OpenERP model this object is bound to
+    @param {String} name name of the OpenERP model this object is bound to
     @param {Object} [context]
     @param {Array} [domain]
     */

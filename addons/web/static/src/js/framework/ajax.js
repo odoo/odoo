@@ -2,8 +2,8 @@ odoo.define('web.ajax', function (require) {
 "use strict";
 
 var core = require('web.core');
-var time = require('web.time');
 var utils = require('web.utils');
+var time = require('web.time');
 
 function genericJsonRpc (fct_name, params, fct) {
     var data = {
@@ -14,6 +14,7 @@ function genericJsonRpc (fct_name, params, fct) {
     };
     var xhr = fct(data);    
     var result = xhr.pipe(function(result) {
+        core.bus.trigger('rpc:result', data, result);
         if (result.error !== undefined) {
             if (result.error.data.arguments[0] !== "bus.Bus not available in test mode") {
                 console.error("Server application error", JSON.stringify(result.error));
@@ -42,7 +43,7 @@ function jsonRpc(url, fct_name, params, settings) {
             contentType: 'application/json'
         }));
     });
-};
+}
 
 function jsonpRpc(url, fct_name, params, settings) {
     settings = settings || {};
@@ -116,7 +117,7 @@ function jsonpRpc(url, fct_name, params, settings) {
             return deferred;
         }
     });
-};
+}
 
 // helper
 function realSetTimeout (fct, millis) {
@@ -140,7 +141,7 @@ function loadCSS(url) {
             'type': 'text/css'
         }));
     }
-};
+}
 
 function loadJS(url) {
     var def = $.Deferred();
@@ -165,7 +166,7 @@ function loadJS(url) {
         head.appendChild(script);
     }
     return def;
-};
+}
 
 /**
  * Cooperative file download implementation, for ajaxy APIs.
@@ -301,7 +302,7 @@ function post (controller_url, data) {
 
     var Def = $.Deferred();
     var postData = new FormData();
-    
+
     $.each(data, function(i,val) {
         postData.append(i, val);
     });
@@ -311,7 +312,7 @@ function post (controller_url, data) {
 
     var xhr = new XMLHttpRequest();
     if(xhr.upload) xhr.upload.addEventListener('progress', progressHandler(Def), false);
-      
+
     var ajaxDef = $.ajax(controller_url, {
         xhr: function() {return xhr;},
         data:           postData,
@@ -323,8 +324,6 @@ function post (controller_url, data) {
 
     return Def;
 }
-
-
 
 var loadXML = (function () {
     var loading = false;

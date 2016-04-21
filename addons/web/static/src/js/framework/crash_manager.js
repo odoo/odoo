@@ -40,22 +40,17 @@ var CrashManager = core.Class.extend({
         if (!this.active) {
             return;
         }
-        if (this.$indicator){
+        if (this.connection_lost) {
             return;
         }
         if (error.code == -32098) {
-            $.blockUI({ message: '' , overlayCSS: {'z-index': 9999, backgroundColor: '#FFFFFF', opacity: 0.0, cursor: 'wait'}});
-            this.$indicator = $('<div class="oe_indicator">' + _t("Trying to reconnect... ") + '<i class="fa fa-refresh"></i></div>');
-            this.$indicator.prependTo("body");
-            var timeinterval = setInterval(function(){
+            core.bus.trigger('connection_lost');
+            this.connection_lost = true;
+            var timeinterval = setInterval(function() {
                 ajax.jsonRpc('/web/webclient/version_info').then(function() {
                     clearInterval(timeinterval);
-                    self.$indicator.html(_t("You are back online"));
-                    self.$indicator.delay(2000).fadeOut('slow',function(){
-                        $(this).remove();
-                        self.$indicator.remove();
-                    });
-                    $.unblockUI();
+                    core.bus.trigger('connection_restored');
+                    self.connection_lost = false;
                 });
             }, 2000);
             return;
