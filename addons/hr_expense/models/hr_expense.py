@@ -212,9 +212,9 @@ class HrExpense(models.Model):
         for expense in self:
             if expense.date > maxdate:
                 maxdate = expense.date
-            if expense.journal_id not in journal_dict:
-                journal_dict[expense.journal_id] = []
-            journal_dict[expense.journal_id].append(expense)
+            jrn = expense.bank_journal_id if expense.payment_mode == 'company_account' else expense.journal_id
+            journal_dict.setdefault(jrn, [])
+            journal_dict[jrn].append(expense)
 
         for journal, expense_list in journal_dict.items():
             #create the move that will contain the accounting entries
