@@ -1,8 +1,7 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
         <!--  Add payment options to sale.order and invoice forms -->
-        <record model="ir.ui.view" id="payment_paypal_option_config">
+        <record id="payment_paypal_option_config" model="ir.ui.view">
             <field name="model">account.config.settings</field>
             <field name="inherit_id" ref="payment.payment_acquirer_installation"/>
             <field name="arch" type="xml">
@@ -11,5 +10,4 @@
                 </xpath>
             </field>
         </record>
-    </data>
-</openerp>
+</odoo>

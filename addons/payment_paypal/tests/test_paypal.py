@@ -1,25 +1,23 @@
 # -*- coding: utf-8 -*-
 
-from openerp.addons.payment.models.payment_acquirer import ValidationError
-from openerp.addons.payment.tests.common import PaymentAcquirerCommon
-from openerp.addons.payment_paypal.controllers.main import PaypalController
-from openerp.tools import mute_logger
-
-from lxml import objectify
 import urlparse
+from lxml import objectify
+
+from odoo.tools import mute_logger
+from odoo.addons.payment.tests.common import PaymentAcquirerCommon
+from odoo.addons.payment_paypal.controllers.main import PaypalController
+from odoo.addons.payment.models.payment_acquirer import ValidationError
 
 
 class PaypalCommon(PaymentAcquirerCommon):
 
     def setUp(self):
         super(PaypalCommon, self).setUp()
-        cr, uid = self.cr, self.uid
-        self.base_url = self.registry('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-
+        self.base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         # get the paypal account
-        model, self.paypal_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment', 'payment_acquirer_paypal')
+        self.paypal = self.env.ref('payment.payment_acquirer_paypal')
+        self.Transaction = self.env['payment.transaction']
         # tde+seller@openerp.com - tde+buyer@openerp.com - tde+buyer-it@openerp.com
-
         # some CC
         self.amex = (('378282246310005', '123'), ('371449635398431', '123'))
         self.amex_corporate = (('378734493671000', '123'))
@@ -36,22 +34,18 @@ class PaypalCommon(PaymentAcquirerCommon):
 class PaypalForm(PaypalCommon):
 
     def test_10_paypal_form_render(self):
-        cr, uid, context = self.cr, self.uid, {}
         # be sure not to do stupid things
-        self.payment_acquirer.write(cr, uid, self.paypal_id, {'paypal_email_account': 'tde+paypal-facilitator@openerp.com', 'fees_active': False}, context)
-        paypal = self.payment_acquirer.browse(cr, uid, self.paypal_id, context)
-        self.assertEqual(paypal.environment, 'test', 'test without test environment')
+        self.paypal.write({'paypal_email_account': 'tde+paypal-facilitator@openerp.com', 'fees_active': False})
+        self.assertEqual(self.paypal.environment, 'test', 'test without test environment')
 
         # ----------------------------------------
         # Test: button direct rendering
         # ----------------------------------------
 
         # render the button
-        res = self.payment_acquirer.render(
-            cr, uid, self.paypal_id,
+        res = self.paypal.render(
             'test_ref0', 0.01, self.currency_euro_id,
-            values=self.buyer_values,
-            context=context)
+            values=self.buyer_values,)
 
         form_values = {
             'cmd': '_xclick',
@@ -85,26 +79,22 @@ class PaypalForm(PaypalCommon):
             )
 
     def test_11_paypal_form_with_fees(self):
-        cr, uid, context = self.cr, self.uid, {}
         # be sure not to do stupid things
-        paypal = self.payment_acquirer.browse(self.cr, self.uid, self.paypal_id, None)
-        self.assertEqual(paypal.environment, 'test', 'test without test environment')
+        self.assertEqual(self.paypal.environment, 'test', 'test without test environment')
 
         # update acquirer: compute fees
-        self.payment_acquirer.write(cr, uid, self.paypal_id, {
+        self.paypal.write({
             'fees_active': True,
             'fees_dom_fixed': 1.0,
             'fees_dom_var': 0.35,
             'fees_int_fixed': 1.5,
             'fees_int_var': 0.50,
-        }, context)
+        })
 
         # render the button
-        res = self.payment_acquirer.render(
-            cr, uid, self.paypal_id,
+        res = self.paypal.render(
             'test_ref0', 12.50, self.currency_euro_id,
-            values=self.buyer_values,
-            context=context)
+            values=self.buyer_values)
 
         # check form result
         handling_found = False
@@ -116,12 +106,10 @@ class PaypalForm(PaypalCommon):
                 self.assertEqual(form_input.get('value'), '1.57', 'paypal: wrong computed fees')
         self.assertTrue(handling_found, 'paypal: fees_active did not add handling input in rendered form')
 
-    @mute_logger('openerp.addons.payment_paypal.models.paypal', 'ValidationError')
+    @mute_logger('odoo.addons.payment_paypal.models.paypal', 'ValidationError')
     def test_20_paypal_form_management(self):
-        cr, uid, context = self.cr, self.uid, {}
         # be sure not to do stupid things
-        paypal = self.payment_acquirer.browse(cr, uid, self.paypal_id, context)
-        self.assertEqual(paypal.environment, 'test', 'test without test environment')
+        self.assertEqual(self.paypal.environment, 'test', 'test without test environment')
 
         # typical data posted by paypal after client has successfully paid
         paypal_post_data = {
@@ -151,7 +139,6 @@ class PaypalForm(PaypalCommon):
             'receiver_id': u'dummy',
             'transaction_subject': u'',
             'business': u'dummy',
-            'test_ipn': u'1',
             'payer_id': u'VTDKRZQSAHYPS',
             'verify_sign': u'An5ns1Kso7MWUdW4ErQKJJJ4qi4-AVoiUf-3478q3vrSmqh08IouiYpM',
             'address_zip': u'75002',
@@ -169,39 +156,37 @@ class PaypalForm(PaypalCommon):
 
         # should raise error about unknown tx
         with self.assertRaises(ValidationError):
-            self.payment_transaction.form_feedback(cr, uid, paypal_post_data, 'paypal', context=context)
+            self.Transaction.form_feedback(paypal_post_data, 'paypal')
 
-        # create tx
-        tx_id = self.payment_transaction.create(
-            cr, uid, {
+        # create transaction
+        tx = self.Transaction.create(
+            {
                 'amount': 1.95,
-                'acquirer_id': self.paypal_id,
+                'acquirer_id': self.paypal.id,
                 'currency_id': self.currency_euro_id,
                 'reference': 'test_ref_2',
                 'partner_name': 'Norbert Buyer',
                 'partner_country_id': self.country_france_id,
-            }, context=context
+            }
         )
         # validate it
-        self.payment_transaction.form_feedback(cr, uid, paypal_post_data, 'paypal', context=context)
+        self.Transaction.form_feedback(paypal_post_data, 'paypal')
         # check
-        tx = self.payment_transaction.browse(cr, uid, tx_id, context=context)
         self.assertEqual(tx.state, 'pending', 'paypal: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.state_message, 'multi_currency', 'paypal: wrong state message after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
         self.assertFalse(tx.date_validate, 'paypal: validation date should not be updated whenr receiving pending notification')
 
         # update tx
-        self.payment_transaction.write(cr, uid, [tx_id], {
+        self.Transaction.write({
             'state': 'draft',
             'acquirer_reference': False,
-        }, context=context)
+        })
         # update notification from paypal
         paypal_post_data['payment_status'] = 'Completed'
         # validate it
-        self.payment_transaction.form_feedback(cr, uid, paypal_post_data, 'paypal', context=context)
+        self.Transaction.form_feedback(paypal_post_data, 'paypal')
         # check
-        tx = self.payment_transaction.browse(cr, uid, tx_id, context=context)
         self.assertEqual(tx.state, 'done', 'paypal: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
         self.assertEqual(tx.date_validate, '2013-11-18 03:21:19', 'paypal: wrong validation date')

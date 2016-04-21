@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <record id="acquirer_form_paypal" model="ir.ui.view">
-            <field name="name">acquirer.form.paypal</field>
+            <field name="name">payment.acquirer.form.inherit</field>
             <field name="model">payment.acquirer</field>
             <field name="inherit_id" ref="payment.acquirer_form"/>
             <field name="arch" type="xml">
@@ -35,6 +34,4 @@
                 </xpath>
             </field>
         </record>
-
-    </data>
-</openerp>
+</odoo>
