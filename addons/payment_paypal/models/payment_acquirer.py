@@ -7,11 +7,10 @@ import urlparse
 import werkzeug.urls
 import urllib2
 
-from odoo import api, fields, models
-from odoo.tools.float_utils import float_compare
-from odoo.tools.translate import _
+from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_paypal.controllers.main import PaypalController
+from odoo.tools.float_utils import float_compare
 
 _logger = logging.getLogger(__name__)
 
@@ -69,8 +68,7 @@ class PaymentAcquirer(models.Model):
         self.ensure_one()
         if not self.fees_active:
             return 0.0
-        country = self.env['res.country'].browse(country_id)
-        if self.company_id.country_id.id == country.id:
+        if self.company_id.country_id.id == country_id:
             percentage = self.fees_dom_var
             fixed = self.fees_dom_fixed
         else:
@@ -82,7 +80,7 @@ class PaymentAcquirer(models.Model):
     @api.multi
     def paypal_form_generate_values(self, values):
         self.ensure_one()
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
         paypal_tx_values = dict(values)
         paypal_tx_values.update({
@@ -148,7 +146,7 @@ class PaymentAcquirer(models.Model):
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
-    paypal_txn_type = fields.Char(string='Transaction type')
+    paypal_txn_type = fields.Char('Transaction type')
 
     # --------------------------------------------------
     # FORM RELATED METHODS
@@ -176,14 +174,15 @@ class PaymentTransaction(models.Model):
 
     @api.v7
     def _paypal_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
+        # TDE FIXME: clean v7 / v8 when payment module is migrated
         return tx._paypal_form_get_invalid_parameters(data)
 
     @api.v8
     def _paypal_form_get_invalid_parameters(self, data):
         invalid_parameters = []
-        if data.get('notify_version') != '3.8':
+        if data.get('notify_version')[0] != '3.4':
             _logger.warning(
-                'Received a notification from Paypal with version %s instead of 3.8. This could lead to issues when managing it.' %
+                'Received a notification from Paypal with version %s instead of 2.6. This could lead to issues when managing it.' %
                 data.get('notify_version')
             )
         if data.get('test_ipn'):

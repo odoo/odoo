@@ -43,7 +43,7 @@ class PaypalForm(PaypalCommon):
         # ----------------------------------------
 
         # render the button
-        [res] = self.paypal.render(
+        res = self.paypal.render(
             'test_ref0', 0.01, self.currency_euro_id,
             values=self.buyer_values,)
 
@@ -92,7 +92,7 @@ class PaypalForm(PaypalCommon):
         })
 
         # render the button
-        [res] = self.paypal.render(
+        res = self.paypal.render(
             'test_ref0', 12.50, self.currency_euro_id,
             values=self.buyer_values)
 
@@ -132,7 +132,7 @@ class PaypalForm(PaypalCommon):
             'address_country': u'France',
             'charset': u'windows-1252',
             'custom': u'',
-            'notify_version': u'3.8',
+            'notify_version': u'3.7',
             'address_name': u'Norbert Poilu',
             'pending_reason': u'multi_currency',
             'item_number': u'test_ref_2',
@@ -159,7 +159,7 @@ class PaypalForm(PaypalCommon):
             self.Transaction.form_feedback(paypal_post_data, 'paypal')
 
         # create transaction
-        transaction = self.Transaction.create(
+        tx = self.Transaction.create(
             {
                 'amount': 1.95,
                 'acquirer_id': self.paypal.id,
@@ -172,10 +172,10 @@ class PaypalForm(PaypalCommon):
         # validate it
         self.Transaction.form_feedback(paypal_post_data, 'paypal')
         # check
-        self.assertEqual(transaction.state, 'pending', 'paypal: wrong state after receiving a valid pending notification')
-        self.assertEqual(transaction.state_message, 'multi_currency', 'paypal: wrong state message after receiving a valid pending notification')
-        self.assertEqual(transaction.acquirer_reference, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
-        self.assertFalse(transaction.date_validate, 'paypal: validation date should not be updated whenr receiving pending notification')
+        self.assertEqual(tx.state, 'pending', 'paypal: wrong state after receiving a valid pending notification')
+        self.assertEqual(tx.state_message, 'multi_currency', 'paypal: wrong state message after receiving a valid pending notification')
+        self.assertEqual(tx.acquirer_reference, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
+        self.assertFalse(tx.date_validate, 'paypal: validation date should not be updated whenr receiving pending notification')
 
         # update tx
         self.Transaction.write({
@@ -187,6 +187,6 @@ class PaypalForm(PaypalCommon):
         # validate it
         self.Transaction.form_feedback(paypal_post_data, 'paypal')
         # check
-        self.assertEqual(transaction.state, 'done', 'paypal: wrong state after receiving a valid pending notification')
-        self.assertEqual(transaction.acquirer_reference, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
-        self.assertEqual(transaction.date_validate, '2013-11-18 03:21:19', 'paypal: wrong validation date')
+        self.assertEqual(tx.state, 'done', 'paypal: wrong state after receiving a valid pending notification')
+        self.assertEqual(tx.acquirer_reference, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
+        self.assertEqual(tx.date_validate, '2013-11-18 03:21:19', 'paypal: wrong validation date')
