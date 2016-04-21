@@ -1,0 +1,107 @@
+.o_web_client .o_export {
+
+    .o-flex(0, 1, 1000px);
+    .o-flex-display();
+    .o-flex-flow(column, nowrap);
+
+    > p, > .row {
+        .o-flex(0, 0, auto);
+    }
+
+    label {
+        vertical-align: top;
+        font-weight: normal;
+    }
+
+    .o_import_compat, .o_export_format {
+        display: inline-block;
+
+        > div {
+            margin-left: 5px;
+            .o-inline-flex-display();
+            .o-align-items(center);
+
+            > label, > input {
+                margin: 0 0 0 5px;
+            }
+        }
+    }
+
+    .o_export_panel {
+        .o-flex(1, 0, 0);
+        position: relative;
+
+        > div {
+            height: 100%;
+            .o-flex-display();
+            .o-flex-flow(column, nowrap);
+            .o-justify-content(center);
+
+            &.o_left_panel { // Needed because of chrome
+                .o-position-absolute(@top: 0, @bottom: 0, @left: 0, @right: 57%);
+            }
+            &.o_center_panel { // Needed because of chrome
+                .o-position-absolute(@top: 0, @bottom: 0, @left: 43%, @right: 43%);
+            }
+            &.o_right_panel { // Needed because of chrome
+                .o-position-absolute(@top: 0, @bottom: 0, @left: 57%, @right: 0);
+            }
+
+            > h4, > div {
+                .o-flex(0, 0, auto);
+            }
+
+            > button {
+                .o-flex(0, 0, auto);
+                margin-top: 10px;
+            }
+
+            .o_left_field_panel, .o_fields_list {
+                border: 1px solid @odoo-brand-lightsecondary;
+                overflow: auto;
+                .o-flex(1, 0, 0);
+            }
+            
+            .o_export_tree_item {
+                cursor: pointer;
+                position: relative;
+                padding-left: 20px;
+                .user-select(none);
+
+                &.o_selected > .o_tree_column {
+                    background-color: @odoo-brand-primary;
+                    color: white;
+                }
+           
+                .o_expand_parent {
+                    .o-position-absolute(@top: 4px, @left: 5px);
+                }
+                .o_tree_column {
+                    display: block;
+
+                    &.o_required {
+                        border-bottom: 2px solid @odoo-main-text-color;
+                    }
+                }
+
+                &:focus {
+                    outline: none;
+                }
+            }
+
+            .o_save_list, .o_exported_lists {
+                .o-flex-display();
+                .o-align-items(baseline);
+
+                > label, > button {
+                    margin: 0 0 5px;
+                    .o-flex(0, 0, auto);
+                }
+                > input, > select {
+                    width: 0;
+                    .o-flex(1, 0, auto);
+                }
+            }
+        }
+    }
+}

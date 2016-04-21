@@ -423,7 +423,6 @@ function swap(array, elem1, elem2) {
     array[i1] = elem2;
 }
 
-
 return {
     divmod: divmod,
     modf: modf,

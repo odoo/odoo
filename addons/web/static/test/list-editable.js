@@ -43,7 +43,7 @@ odoo.define_section('editor', ['web.ListEditor'], function (test, mock) {
                 tag: 'form',
                 attrs: {
                     version: '7.0',
-                    'class': 'oe_form_container'
+                    'class': 'o_list_editable_form'
                 },
                 children: children
             },

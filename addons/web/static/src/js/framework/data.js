@@ -320,6 +320,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
         this.index = null;
         this._sort = [];
         this._model = new Model(model, context);
+        this.orderer = new utils.DropMisordered();
     },
     previous: function () {
         this.index -= 1;
@@ -408,10 +409,11 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
     read_slice: function (fields, options) {
         var self = this;
         options = options || {};
-        return this._model.query(fields)
+        var query = this._model.query(fields)
                 .limit(options.limit || false)
                 .offset(options.offset || 0)
-                .all().done(function (records) {
+                .all();
+        return this.orderer.add(query).done(function (records) {
             self.ids = _(records).pluck('id');
         });
     },
@@ -761,12 +763,6 @@ var BufferedDataSet = DataSetStatic.extend({
             _.extend(cached.from_read, options.from_read);
             _.extend(cached.changes, options.changes);
             _.extend(cached.readonly_fields, options.readonly_fields);
-            // discard values from cached.changes that are in cached.from_read
-            _.each(cached.changes, function (v, k) {
-                if (cached.from_read[k] === v) {
-                    delete cached.changes[k];
-                }
-            });
             if (options.to_create !== undefined) cached.to_create = options.to_create;
             if (options.to_delete !== undefined) cached.to_delete = options.to_delete;
         }
