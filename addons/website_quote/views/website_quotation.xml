@@ -22,7 +22,8 @@
                         <th>Taxes</th>
                         <th><span t-if="True in [line.discount > 0 for line in quotation.order_line]">Discount</span></th>
                         <th class="text-right">Unit Price</th>
-                        <th class="text-right">Tax Excluded Price</th>
+                        <th class="text-right" groups="sale.group_show_price_subtotal">Price</th>
+                        <th class="text-right price_tax_included" groups="sale.group_show_price_total">Total Price</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -69,10 +70,13 @@
                                         <t t-esc="'%.2f' % ((1-line.discount / 100.0) * line.price_unit)"/>
                                     </div>
                               </td>
-                              <td>
-                                  <div class="text-right"
-                                      t-field="line.price_subtotal"
-                                      t-field-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
+                              <td class="text-right" groups="sale.group_show_price_subtotal">
+                                  <span t-field="l.price_subtotal"
+                                        t-field-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
+                              </td>
+                              <td class="text-right" groups="sale.group_show_price_total">
+                                  <span t-field="l.price_total"
+                                        t-field-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                               </td>
                               <td class="text-center">
                                   <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json hidden-print" t-if="line.option_line_id">
