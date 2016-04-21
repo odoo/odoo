@@ -153,7 +153,7 @@ class mail_group(osv.Model):
                 'thread_level': 1,
                 'header_description': self._generate_header_description(cr, uid, group, context=context),
                 'view_mailbox': True,
-                'compose_placeholder': 'Send a message to the group',
+                'compose_placeholder': _('Send a message to the group'),
             }
             cobj = self.pool.get('ir.actions.client')
             newref = cobj.copy(cr, SUPERUSER_ID, ref[1], default={'params': str(params), 'name': vals['name']}, context=context)
