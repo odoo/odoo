@@ -21,7 +21,4 @@ Worklogs can be maintained to signify number of hours spent by users to handle a
         'security/ir.model.access.csv',
         'security/portal_security.xml',
     ],
-    'demo': [],
-    'installable': True,
-    'auto_install': False,
 }
