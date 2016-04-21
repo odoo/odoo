@@ -11,6 +11,7 @@ var SearchView = require('web.SearchView');
 var session = require('web.session');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
+var Model = require('web.Model');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -675,6 +676,9 @@ var AbstractField = FormWidget.extend(FieldInterface, {
             this.$el.addClass('oe_form_field_translatable');
             this.$el.find('.oe_field_translate').click(this.on_translate);
         }
+        if (this.field.company_dependent && this.session.debug) {
+            this.$el.find('.oe_field_property').click(this.on_property_open);
+        }
         this.$label = this.view ? this.view.$el.find('label[for=' + this.id_for_label + ']') : $();
         this.do_attach_tooltip(this, this.$label[0] || this.$el);
         if (session.debug) {
@@ -768,6 +772,13 @@ var AbstractField = FormWidget.extend(FieldInterface, {
         var trans = new data.DataSet(this, 'ir.translation');
         return trans.call_button('translate_fields', [this.view.model, this.view.datarecord.id, this.name, this.view.dataset.get_context()]).done(function(r) {
             self.do_action(r);
+        });
+    },
+    on_property_open: function(e) {
+        var self = this;
+        e.stopImmediatePropagation();
+        new Model('ir.model.fields').call('get_property_action', [self.name, self.field_manager.model, self.field_manager.dataset.context]).then(function(result) {
+            self.do_action(result);
         });
     },
 
