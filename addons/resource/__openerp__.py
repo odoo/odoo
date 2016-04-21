@@ -18,9 +18,9 @@ associated to every resource. It also manages the leaves of every resource.
     'data': [
         'security/ir.model.access.csv',
         'security/resource_security.xml',
-        'resource_view.xml',
+        'views/resource_views.xml',
     ],
-    'demo': ['resource_demo.xml'],
+    'demo': ['data/resource_demo.xml'],
     'test': [
         'test/resource.yml',
         'test/duplicate_resource.yml',
