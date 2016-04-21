@@ -537,6 +537,9 @@ class view(osv.osv):
             if node is not None:
                 pos = spec.get('position', 'inside')
                 if pos == 'replace':
+                    for loc in spec.xpath(".//*[text()='$0']"):
+                        loc.text = ''
+                        loc.append(copy.deepcopy(node))
                     if node.getparent() is None:
                         source = copy.deepcopy(spec[0])
                     else:
