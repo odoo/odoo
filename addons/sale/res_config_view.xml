@@ -22,6 +22,12 @@
                         <field name="group_sale_layout" widget="radio"/>
                         <field name="auto_done_setting" widget="radio"/>
                         <field name="group_warning_sale" widget="radio"/>
+                        <label for="sale_show_tax"/>
+                        <div>
+                            <field name="sale_show_tax" class="oe_inline" widget="radio" on_change="onchange_sale_tax(sale_show_tax)"/>
+                            <field name="group_show_price_subtotal" class="oe_inline" invisible="1"/>
+                            <field name="group_show_price_total" class="oe_inline" invisible="1"/>
+                        </div>
                         <label for="sale_pricelist_setting" string="Sale Price"/>
                         <div>
                             <field name="sale_pricelist_setting" class="oe_inline" widget="radio" on_change="onchange_sale_price(sale_pricelist_setting)"/>

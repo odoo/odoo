@@ -66,9 +66,15 @@ class sale_configuration(osv.TransientModel):
             (1, 'Display 3 fields on sales orders: customer, invoice address, delivery address')
             ], "Addresses", implied_group='sale.group_delivery_invoice_address'),
         'sale_pricelist_setting': fields.selection([('fixed', 'A single sale price per product'), ('percentage', 'Different prices per customer segment'), ('formula', 'Advanced pricing based on formula')], required=True,
-        help='Fix Price: all price manage from products sale price.\n'
-             'Different prices per Customer: you can assign price on buying of minimum quantity in products sale tab.\n'
-             'Advanced pricing based on formula: You can have all the rights on pricelist'),
+            help='Fix Price: all price manage from products sale price.\n'
+                 'Different prices per Customer: you can assign price on buying of minimum quantity in products sale tab.\n'
+                 'Advanced pricing based on formula: You can have all the rights on pricelist'),
+        'group_show_price_subtotal': fields.boolean("Show subtotal", implied_group='sale.group_show_price_subtotal', group='base.group_portal,base.group_user,base.group_public'),
+        'group_show_price_total': fields.boolean("Show total", implied_group='sale.group_show_price_total', group='base.group_portal,base.group_user,base.group_public'),
+        'sale_show_tax': fields.selection([
+            ('total', 'Show line subtotals with taxes included (B2C)'),
+            ('subtotal', 'Show line subtotals without taxes (except if unit price includes taxes) (B2B)')], "Tax Display",
+            required=True),
         'default_invoice_policy': fields.selection([
             ('order', 'Invoice ordered quantities'),
             ('delivery', 'Invoice delivered quantities')
@@ -87,6 +93,7 @@ class sale_configuration(osv.TransientModel):
 
     _defaults = {
         'sale_pricelist_setting': 'fixed',
+        'sale_show_tax': 'subtotal',
         'default_invoice_policy': 'order',
     }
 
@@ -111,3 +118,13 @@ class sale_configuration(osv.TransientModel):
         if sale_pricelist_setting == 'formula':
             return {'value': {'group_pricelist_item': True, 'group_sale_pricelist': True, 'group_product_pricelist': False}}
         return {'value': {'group_pricelist_item': False, 'group_sale_pricelist': False, 'group_product_pricelist': False}}
+
+    def set_sale_tax_defaults(self, cr, uid, ids, context=None):
+        sale_tax = self.browse(cr, uid, ids, context=context).sale_show_tax
+        res = self.pool.get('ir.values').set_default(cr, SUPERUSER_ID, 'sale.config.settings', 'sale_show_tax', sale_tax)
+        return res
+
+    def onchange_sale_tax(self, cr, uid, ids, sale_show_tax, context=None):
+        res = {'value': dict(group_show_price_subtotal=False, group_show_price_total=False)}
+        res['value']['group_show_price_%s' % sale_show_tax] = True
+        return res

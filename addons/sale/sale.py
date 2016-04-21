@@ -618,10 +618,20 @@ class SaleOrderLine(models.Model):
                         qty_invoiced -= self.env['product.uom']._compute_qty_obj(invoice_line.uom_id, invoice_line.quantity, line.product_uom)
             line.qty_invoiced = qty_invoiced
 
-    @api.depends('price_subtotal', 'product_uom_qty')
+    @api.depends('price_unit', 'discount')
     def _get_price_reduce(self):
         for line in self:
-            line.price_reduce = line.price_subtotal / line.product_uom_qty if line.product_uom_qty else 0.0
+            line.price_reduce = line.price_unit * (1.0 - line.discount / 100.0)
+
+    @api.depends('price_total', 'product_uom_qty')
+    def _get_price_reduce_tax(self):
+        for line in self:
+            line.price_reduce_taxinc = line.price_total / line.product_uom_qty if line.product_uom_qty else 0.0
+
+    @api.depends('price_subtotal', 'product_uom_qty')
+    def _get_price_reduce_notax(self):
+        for line in self:
+            line.price_reduce_taxexcl = line.price_subtotal / line.product_uom_qty if line.product_uom_qty else 0.0
 
     @api.multi
     def _compute_tax_id(self):
@@ -723,6 +733,8 @@ class SaleOrderLine(models.Model):
 
     price_reduce = fields.Monetary(compute='_get_price_reduce', string='Price Reduce', readonly=True, store=True)
     tax_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
+    price_reduce_taxinc = fields.Monetary(compute='_get_price_reduce_tax', string='Price Reduce Tax inc', readonly=True, store=True)
+    price_reduce_taxexcl = fields.Monetary(compute='_get_price_reduce_notax', string='Price Reduce Tax excl', readonly=True, store=True)
 
     discount = fields.Float(string='Discount (%)', digits=dp.get_precision('Discount'), default=0.0)
 
