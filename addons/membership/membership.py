@@ -202,7 +202,7 @@ class Partner(osv.osv):
         return list_partner
 
     def _cron_update_membership(self, cr, uid, context=None):
-        partner_ids = self.search(cr, uid, [('membership_state', '=', 'paid')], context=context)
+        partner_ids = self.search(cr, uid, [('membership_state', 'in', ['invoiced', 'paid'])], context=context)
         if partner_ids:
             self._store_set_values(cr, uid, partner_ids, ['membership_state'], context=context)
 
