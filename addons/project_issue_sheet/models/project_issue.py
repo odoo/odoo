@@ -43,11 +43,3 @@ class project_issue(osv.osv):
             result['value']['analytic_account_id'] = account.id
 
         return result
-
-
-class account_analytic_line(osv.osv):
-    _inherit = 'account.analytic.line'
-    _description = 'account analytic line'
-    _columns = {
-        'issue_id' : fields.many2one('project.issue', 'Issue'),
-    }
