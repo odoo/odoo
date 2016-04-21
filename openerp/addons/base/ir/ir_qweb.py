@@ -712,6 +712,12 @@ class DateTimeConverter(osv.AbstractModel):
         lang = self.user_lang(cr, uid, context=context)
         locale = babel.Locale.parse(lang.code)
 
+        if isinstance(value, basestring):
+            value = datetime.datetime.strptime(
+                value, openerp.tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        value = fields.datetime.context_timestamp(
+            cr, uid, timestamp=value, context=context)
+
         if options and 'format' in options:
             pattern = options['format']
         else:
@@ -724,15 +730,10 @@ class DateTimeConverter(osv.AbstractModel):
         return babel.dates.format_datetime(value, format=pattern, locale=locale)
 
     def record_to_html(self, cr, uid, field_name, record, options, context=None):
-        value = record[field_name]
-        if isinstance(value, basestring):
-            value = datetime.datetime.strptime(
-                value, openerp.tools.DEFAULT_SERVER_DATETIME_FORMAT)
-        value = fields.datetime.context_timestamp(
-            cr, uid, timestamp=value, context=record.env.context)
         field = field = record._fields[field_name]
+        value = record[field_name]
         return self.value_to_html(
-            cr, uid, value, field, options=options, context=context)
+            cr, uid, value, field, options=options, context=dict(context, **record.env.context))
 
 class TextConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.text'
