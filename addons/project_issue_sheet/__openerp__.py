@@ -17,7 +17,7 @@ Worklogs can be maintained to signify number of hours spent by users to handle a
         'hr_timesheet_sheet',
     ],
     'data': [
-        'project_issue_sheet_view.xml',
+        'views/project_issue_view.xml',
         'security/ir.model.access.csv',
         'security/portal_security.xml',
     ],
