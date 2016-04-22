@@ -9,13 +9,22 @@ return ChatWindow.extend({
 
     start: function () {
         var self = this;
+        var direct_message_local_cache = {};
         return this._super().then(function () {
             if (self.options.thread_less) {
                 self.$el.addClass('o_thread_less');
                 self.$('.o_chat_search_input input')
                     .autocomplete({
                         source: function(request, response) {
-                            chat_manager.search_partner(request.term, 10).done(response);
+                            var term = request.term;
+                            if (term in direct_message_local_cache) {
+                                response(direct_message_local_cache[term]);
+                            } else {
+                                chat_manager.search_partner(term, 10).done( function(result) {
+                                    direct_message_local_cache[term] = result;
+                                    response(result);
+                                });
+                            }
                         },
                         select: function(event, ui) {
                             self.trigger('open_dm_session', ui.item.id);

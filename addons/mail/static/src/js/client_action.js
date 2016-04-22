@@ -300,6 +300,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
 
     render_sidebar: function () {
         var self = this;
+        var direct_message_local_cache = {};
         var $sidebar = $(QWeb.render("mail.chat.Sidebar", {
             active_channel_id: this.channel ? this.channel.id: undefined,
             channels: chat_manager.get_channels(),
@@ -337,7 +338,14 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.$('.o_mail_add_channel[data-type=dm]').find("input").autocomplete({
             source: function(request, response) {
                 self.last_search_val = _.escape(request.term);
-                chat_manager.search_partner(self.last_search_val).done(response);
+                if (self.last_search_val in direct_message_local_cache) {
+                    response(direct_message_local_cache[self.last_search_val]);
+                } else {
+                    chat_manager.search_partner(self.last_search_val).done( function(result) {
+                        direct_message_local_cache[self.last_search_val] = result;
+                        response(result);
+                    });
+                }
             },
             select: function(event, ui) {
                 var partner_id = ui.item.id;

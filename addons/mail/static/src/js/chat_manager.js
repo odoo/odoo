@@ -938,17 +938,32 @@ var chat_manager = {
     },
 
     search_partner: function (search_val, limit) {
-        return PartnerModel.call('im_search', [search_val, limit || 20], {}, {shadow: true}).then(function(result) {
-            var values = [];
-            _.each(result, function(user) {
-                var escaped_name = _.escape(user.name);
-                values.push(_.extend(user, {
-                    'value': escaped_name,
-                    'label': escaped_name,
-                }));
+        var values = [];
+        var search_regexp = new RegExp(utils.unaccent(search_val), 'i');
+        _.each(mention_partner_suggestions, function (partners) {
+            var filtered_partners = _.filter(partners, function (partner) {
+                if (partner.name && utils.unaccent(partner.name).search(search_regexp) !== -1) {
+                    values.push(_.extend(partner, {
+                        'value': partner.name,
+                        'label': partner.name,
+                    }));
+                }
             });
-            return values;
         });
+        if (!values.length) {
+            return PartnerModel.call('im_search', [search_val, limit || 20], {}, {shadow: true}).then(function(result) {
+                _.each(result, function(user) {
+                    var escaped_name = _.escape(user.name);
+                    values.push(_.extend(user, {
+                        'value': escaped_name,
+                        'label': escaped_name,
+                    }));
+                });
+                return values;
+            });
+        } else {
+            return $.when(values);
+        }
     },
 };
 
