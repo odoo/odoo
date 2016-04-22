@@ -78,16 +78,16 @@ class note_note(osv.osv):
         return result
 
     _columns = {
-        'name': fields.function(_get_note_first_line, 
-            string='Note Summary', 
+        'name': fields.function(_get_note_first_line,
+            string='Note Summary',
             type='text', store=True),
         'user_id': fields.many2one('res.users', 'Owner'),
         'memo': fields.html('Note Content'),
         'sequence': fields.integer('Sequence'),
-        'stage_id': fields.function(_get_stage_per_user, 
-            fnct_inv=_set_stage_per_user, 
-            string='Stage', 
-            type='many2one', 
+        'stage_id': fields.function(_get_stage_per_user,
+            fnct_inv=_set_stage_per_user,
+            string='Stage',
+            type='many2one',
             relation='note.stage'),
         'stage_ids': fields.many2many('note.stage','note_stage_rel','note_id','stage_id','Stages of Users'),
         'open': fields.boolean('Active', track_visibility='onchange'),
@@ -165,22 +165,3 @@ class note_note(osv.osv):
             'actions': [{'url': new_action, 'title': _('New Note')}]
         }
         return res
-
-
-class res_users(osv.Model):
-    _name = 'res.users'
-    _inherit = ['res.users']
-    def create(self, cr, uid, data, context=None):
-        user_id = super(res_users, self).create(cr, uid, data, context=context)
-        note_obj = self.pool['note.stage']
-        data_obj = self.pool['ir.model.data']
-        is_employee = self.has_group(cr, user_id, 'base.group_user')
-        if is_employee:
-            for n in range(5):
-                xmlid = 'note_stage_%02d' % (n,)
-                try:
-                    _model, stage_id = data_obj.get_object_reference(cr, SUPERUSER_ID, 'note', xmlid)
-                except ValueError:
-                    continue
-                note_obj.copy(cr, SUPERUSER_ID, stage_id, default={'user_id': user_id}, context=context)
-        return user_id
