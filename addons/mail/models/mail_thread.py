@@ -1730,10 +1730,7 @@ class MailThread(models.AbstractModel):
         for x in ('from', 'to', 'cc'):
             values.pop(x, None)
 
-        # Post the message
-        new_message = MailMessage.create(values)
-
-        # Post-process: subscribe author, update message_last_post
+        # Subscribe author, update message_last_post
         # Note: the message_last_post mechanism is no longer used.  This
         # will be removed in a later version.
         if (self._context.get('mail_save_message_last_post') and
@@ -1742,9 +1739,11 @@ class MailThread(models.AbstractModel):
             if not subtype_rec.internal:
                 # done with SUPERUSER_ID, because on some models users can post only with read access, not necessarily write access
                 self.sudo().write({'message_last_post': fields.Datetime.now()})
-        if new_message.author_id and model and self.ids and message_type != 'notification' and not self._context.get('mail_create_nosubscribe'):
-            self.message_subscribe([new_message.author_id.id])
-        return new_message
+        if values.get('author_id') and model and self.ids and message_type != 'notification' and not self._context.get('mail_create_nosubscribe'):
+            self.message_subscribe([values['author_id']])
+
+        # Post and return the message
+        return MailMessage.create(values)
 
     @api.multi
     def message_post_with_template(self, template_id, **kwargs):
