@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
-<openerp>
-  <data>
+<odoo>
     <!-- note Stage Form View -->
-    <record model="ir.ui.view" id="view_note_stage_form">
+    <record id="view_note_stage_form" model="ir.ui.view">
       <field name="name">note.stage.form</field>
       <field name="model">note.stage</field>
       <field name="arch" type="xml">
@@ -15,7 +14,7 @@
     </record>
 
     <!-- note Stage Tree View -->
-    <record model="ir.ui.view" id="view_note_stage_tree">
+    <record id="view_note_stage_tree" model="ir.ui.view">
       <field name="name">note.stage.tree</field>
       <field name="model">note.stage</field>
       <field name="field_parent"></field>
@@ -29,7 +28,7 @@
     </record>
 
     <!-- note Stage Action -->
-    <record model="ir.actions.act_window" id="action_note_stage">
+    <record id="action_note_stage" model="ir.actions.act_window">
         <field name="name">Stages</field>
         <field name="res_model">note.stage</field>
         <field name="view_mode">tree,form</field>
@@ -61,9 +60,8 @@
       </field>
     </record>
 
-
     <!-- New note Kanban View -->
-    <record model="ir.ui.view" id="view_note_note_kanban">
+    <record id="view_note_note_kanban" model="ir.ui.view">
       <field name="name">note.note.kanban</field>
       <field name="model">note.note</field>
       <field name="arch" type="xml">
@@ -94,8 +92,8 @@
                     </ul>
                 </div>
                   <span>
-                    <a name="onclick_note_is_done" type="object" t-if="record.open.raw_value"><i class="fa fa-check"/></a>
-                    <a name="onclick_note_not_done" type="object" t-if="!record.open.raw_value"><i class="fa fa-undo"/></a>
+                    <a name="action_close" type="object" t-if="record.open.raw_value"><i class="fa fa-check"/></a>
+                    <a name="action_open" type="object" t-if="!record.open.raw_value"><i class="fa fa-undo"/></a>
                   </span>
                 <!-- kanban note -->
                 <span t-attf-class="oe_kanban_content #{record.open.raw_value ? '' : 'note_text_line_through'}">
@@ -117,7 +115,7 @@
     </record>
 
     <!-- New note Tree View -->
-    <record model="ir.ui.view" id="view_note_note_tree">
+    <record id="view_note_note_tree" model="ir.ui.view">
       <field name="name">note.note.tree</field>
       <field name="model">note.note</field>
       <field name="arch" type="xml">
@@ -131,7 +129,7 @@
     </record>
 
     <!-- New note Form View -->
-    <record model="ir.ui.view" id="view_note_note_form">
+    <record id="view_note_note_form" model="ir.ui.view">
         <field name="name">note.note.form</field>
         <field name="model">note.note</field>
         <field name="arch" type="xml">
@@ -152,7 +150,7 @@
     </record>
 
     <!-- Search note  -->
-    <record model="ir.ui.view" id="view_note_note_filter">
+    <record id="view_note_note_filter" model="ir.ui.view">
       <field name="name">note.note.search</field>
       <field name="model">note.note</field>
       <field name="arch" type="xml">
@@ -169,7 +167,7 @@
     </record>
 
     <!-- Action -->
-    <record model="ir.actions.act_window" id="action_note_note">
+    <record id="action_note_note" model="ir.actions.act_window">
       <field name="name">Notes</field>
       <field name="res_model">note.note</field>
       <field name="view_type">form</field>
@@ -192,10 +190,31 @@
         </field>
     </record>
 
-    <menuitem name="Notes" id="menu_note_notes" sequence="3" action="note.action_note_note" web_icon="note,static/description/icon.png"/>
-    <menuitem name="Configuration" id="menu_note_configuration" sequence="100" parent="menu_note_notes" groups="base.group_no_one"/>
-    <menuitem name="Stages" id="menu_notes_stage" parent="menu_note_configuration" action="note.action_note_stage" sequence="21" />
-    <menuitem id="notes_tag_menu" parent="menu_note_configuration" action="note_tag_action" sequence="22"/>
+    <menuitem
+      id="menu_note_notes"
+      name="Notes"
+      sequence="3"
+      action="note.action_note_note"
+      web_icon="note,static/description/icon.png"/>
 
-  </data>
-</openerp>
+    <menuitem
+      id="menu_note_configuration"
+      name="Configuration"
+      sequence="100"
+      parent="menu_note_notes"
+      groups="base.group_no_one"/>
+
+    <menuitem
+      id="menu_notes_stage"
+      name="Stages"
+      parent="menu_note_configuration"
+      action="note.action_note_stage"
+      sequence="21"/>
+
+    <menuitem
+      id="notes_tag_menu"
+      parent="menu_note_configuration"
+      action="note_tag_action"
+      sequence="22"/>
+
+</odoo>
