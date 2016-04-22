@@ -1,26 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv
-from openerp import SUPERUSER_ID
+from odoo import api, models
 
 
-class res_users(osv.Model):
+class Users(models.Model):
 
     _name = 'res.users'
     _inherit = ['res.users']
 
-    def create(self, cr, uid, data, context=None):
-        user_id = super(res_users, self).create(cr, uid, data, context=context)
-        note_obj = self.pool['note.stage']
-        data_obj = self.pool['ir.model.data']
-        is_employee = self.has_group(cr, user_id, 'base.group_user')
-        if is_employee:
-            for n in range(5):
-                xmlid = 'note_stage_%02d' % (n,)
-                try:
-                    _model, stage_id = data_obj.get_object_reference(cr, SUPERUSER_ID, 'note', xmlid)
-                except ValueError:
-                    continue
-                note_obj.copy(cr, SUPERUSER_ID, stage_id, default={'user_id': user_id}, context=context)
-        return user_id
+    @api.model
+    def create(self, values):
+        user = super(Users, self).create(values)
+        # for new employee, create his own 5 base note stages
+        if user.has_group('base.group_user'):
+            for num in range(5):
+                stage = self.env.ref('note.note_stage_%02d' % (num,), raise_if_not_found=False)
+                if stage:
+                    stage.sudo().copy(default={'user_id': user.id})
+        return user
