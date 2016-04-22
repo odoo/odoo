@@ -1227,6 +1227,7 @@ exports.Orderline = Backbone.Model.extend({
             price:              this.get_unit_display_price(),
             discount:           this.get_discount(),
             product_name:       this.get_product().display_name,
+            product_name_wrapped: this.generate_wrapped_product_name(),
             price_display :     this.get_display_price(),
             price_with_tax :    this.get_price_with_tax(),
             price_without_tax:  this.get_price_without_tax(),
@@ -1234,6 +1235,36 @@ exports.Orderline = Backbone.Model.extend({
             product_description:      this.get_product().description,
             product_description_sale: this.get_product().description_sale,
         };
+    },
+    generate_wrapped_product_name: function() {
+        var MAX_LENGTH = 24; // 40 * line ratio of .6
+        var wrapped = [];
+        var name = this.get_product().display_name;
+        var current_line = "";
+
+        while (name.length > 0) {
+            var space_index = name.indexOf(" ");
+
+            if (space_index === -1) {
+                space_index = name.length;
+            }
+
+            if (current_line.length + space_index > MAX_LENGTH) {
+                if (current_line.length) {
+                    wrapped.push(current_line);
+                }
+                current_line = "";
+            }
+
+            current_line += name.slice(0, space_index + 1);
+            name = name.slice(space_index + 1);
+        }
+
+        if (current_line.length) {
+            wrapped.push(current_line);
+        }
+
+        return wrapped;
     },
     // changes the base price of the product for this orderline
     set_unit_price: function(price){

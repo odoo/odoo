@@ -663,6 +663,14 @@
         </div>
     </t>
 
+    <t t-name="XmlReceiptWrappedProductNameLines">
+        <t t-foreach="line.product_name_wrapped.slice(1)" t-as="wrapped_line">
+            <line>
+                <left><t t-esc="wrapped_line"/></left>
+            </line>
+        </t>
+    </t>
+
     <t t-name="XmlReceipt">
         <receipt align='center' width='40' value-thousands-separator='' >
             <t t-if='receipt.company.logo'>
@@ -714,12 +722,14 @@
                     <t t-set='simple' t-value='line.discount === 0 and line.unit_name === "Unit(s)" and line.quantity === 1' />
                     <t t-if='simple'>
                         <line>
-                            <left><t t-esc='line.product_name' /></left>
+                            <left><t t-esc='line.product_name_wrapped[0]' /></left>
                             <right><value><t t-esc='line.price_display' /></value></right>
                         </line>
+                        <t t-call="XmlReceiptWrappedProductNameLines"/>
                     </t>
                     <t t-if='!simple'>
-                        <line><left><t t-esc='line.product_name' /></left></line>
+                        <line><left><t t-esc='line.product_name_wrapped[0]' /></left></line>
+                        <t t-call="XmlReceiptWrappedProductNameLines"/>
                         <t t-if='line.discount !== 0'>
                             <line indent='1'><left>Discount: <t t-esc='line.discount' />%</left></line>
                         </t>
