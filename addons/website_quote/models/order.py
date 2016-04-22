@@ -213,15 +213,6 @@ class SaleOrder(models.Model):
         self.website_description = self.template_id.website_description
         self.require_payment = self.template_id.require_payment
 
-    # TODO: where this method used ??
-    def recommended_products(self, cr, uid, ids, context=None):
-        order_line = self.browse(cr, uid, ids[0], context=context).order_line
-        # product_pool = self.pool.get('product.product')
-        products = []
-        for line in order_line:
-            products += line.product_id.product_tmpl_id.recommended_products(context=context)
-        return products
-
     @api.multi
     def get_access_action(self):
         """ Override method that generated the link to access the document. Instead
