@@ -20,7 +20,7 @@ Use for update your text memo in real time with the following user that you invi
         'note',
     ],
     'data': [
-        'views/note_view.xml',
+        'views/note_views.xml',
     ],
     'installable': True,
     'application': False,
