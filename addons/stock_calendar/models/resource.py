@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
 
 from odoo import api, fields, models
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 
 
 class ResourceCalendarAttendance(models.Model):
@@ -16,16 +14,16 @@ class ResourceCalendarAttendance(models.Model):
 class ResourceCalendarLeaves(models.Model):
     _inherit = "resource.calendar.leaves"
 
-    group_id = fields.Many2one('procurement.group', 'Procurement Group')
+    group_id = fields.Many2one('procurement.group', string="Procurement Group")
 
 
 class ResourceCalendar(models.Model):
     _inherit = "resource.calendar"
 
     # Keep as it takes into account times
-    def get_leave_intervals(self, cr, uid, id, resource_id=None,
-                            start_datetime=None, end_datetime=None,
-                            context=None):
+    @api.multi
+    def get_leave_intervals(self, resource_id=None,
+                            start_datetime=None, end_datetime=None):
         """Get the leaves of the calendar. Leaves can be filtered on the resource,
         the start datetime or the end datetime.
 
@@ -43,15 +41,15 @@ class ResourceCalendar(models.Model):
         """
         # TDE FIXME: waw, overriding completely a method + changing its result
         # and its behavior, very nice. Please FIXME.
-        resource_calendar = self.browse(cr, uid, id, context=context)
+        self.ensure_one()
         leaves = []
-        for leave in resource_calendar.leave_ids:
+        for leave in self.leave_ids:
             if leave.resource_id and not resource_id == leave.resource_id.id:
                 continue
-            date_from = datetime.datetime.strptime(leave.date_from, DEFAULT_SERVER_DATETIME_FORMAT)
+            date_from = fields.Datetime.from_string(leave.date_from)
             if end_datetime and date_from > end_datetime:
                 continue
-            date_to = datetime.datetime.strptime(leave.date_to, DEFAULT_SERVER_DATETIME_FORMAT)
+            date_to = fields.Datetime.from_string(leave.date_to)
             if start_datetime and date_to < start_datetime:
                 continue
             leaves.append((date_from, date_to, leave.group_id.id))
@@ -61,7 +59,8 @@ class ResourceCalendar(models.Model):
     # Utility methods
     # --------------------------------------------------
 
-    def interval_remove_leaves(self, cr, uid, interval, leave_intervals, context=None):
+    @api.model
+    def interval_remove_leaves(self, interval, leave_intervals):
         """ Utility method that remove leave intervals from a base interval:
 
          - clean the leave intervals, to have an ordered list of not-overlapping
@@ -101,7 +100,7 @@ class ResourceCalendar(models.Model):
                 att_obj = self.pool.get("resource.calendar.attendance")
                 if leave[2]:
                     if len(current_interval) > 2:
-                        current_group = current_interval[2] and att_obj.browse(cr, uid, current_interval[2], context=context).group_id.id or False
+                        current_group = current_interval[2] and att_obj.browse(current_interval[2]).group_id.id or False
                     if leave[2] != current_group:
                         continue
             if leave[1] <= current_interval[0]:
