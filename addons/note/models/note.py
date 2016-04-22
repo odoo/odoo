@@ -1,130 +1,98 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import _, SUPERUSER_ID
-from openerp.osv import osv, fields
-from openerp.tools import html2plaintext
+from odoo import api, fields, models
+from odoo.tools import html2plaintext
 
-class note_stage(osv.osv):
-    """ Category of Note """
+
+class Stage(models.Model):
+
     _name = "note.stage"
     _description = "Note Stage"
-    _columns = {
-        'name': fields.char('Stage Name', translate=True, required=True),
-        'sequence': fields.integer('Sequence', help="Used to order the note stages"),
-        'user_id': fields.many2one('res.users', 'Owner', help="Owner of the note stage.", required=True, ondelete='cascade'),
-        'fold': fields.boolean('Folded by Default'),
-    }
-    _order = 'sequence asc'
-    _defaults = {
-        'fold': 0,
-        'user_id': lambda self, cr, uid, ctx: uid,
-        'sequence' : 1,
-    }
+    _order = 'sequence'
 
-class note_tag(osv.osv):
+    name = fields.Char('Stage Name', translate=True, required=True)
+    sequence = fields.Integer(help="Used to order the note stages", default=1)
+    user_id = fields.Many2one('res.users', string='Owner', required=True, ondelete='cascade', default=lambda self: self.env.uid, help="Owner of the note stage")
+    fold = fields.Boolean('Folded by Default')
+
+
+class Tag(models.Model):
+
     _name = "note.tag"
     _description = "Note Tag"
-    _columns = {
-        'name': fields.char('Tag Name', required=True),
-        'color': fields.integer('Color Index'),
-    }
+
+    name = fields.Char('Tag Name', required=True)
+    color = fields.Integer('Color Index')
+
     _sql_constraints = [
-            ('name_uniq', 'unique (name)', "Tag name already exists !"),
+        ('name_uniq', 'unique (name)', "Tag name already exists !"),
     ]
 
-class note_note(osv.osv):
-    """ Note """
+
+class Note(models.Model):
+
     _name = 'note.note'
     _inherit = ['mail.thread']
     _description = "Note"
-
-    #writing method (no modification of values)
-    def name_create(self, cr, uid, name, context=None):
-        rec_id = self.create(cr, uid, {'memo': name}, context=context)
-        return self.name_get(cr, uid, [rec_id], context)[0]
-
-    #read the first line (convert hml into text)
-    def _get_note_first_line(self, cr, uid, ids, name="", args={}, context=None):
-        res = {}
-        for note in self.browse(cr, uid, ids, context=context):
-            res[note.id] = (note.memo and html2plaintext(note.memo) or "").strip().replace('*','').split("\n")[0]
-
-        return res
-
-    def onclick_note_is_done(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'open': False, 'date_done': fields.date.today()}, context=context)
-
-    def onclick_note_not_done(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'open': True}, context=context)
-
-    #return the default stage for the uid user
-    def _get_default_stage_id(self,cr,uid,context=None):
-        ids = self.pool.get('note.stage').search(cr,uid,[('user_id','=',uid)], context=context)
-        return ids and ids[0] or False
-
-    def _set_stage_per_user(self, cr, uid, id, name, value, args=None, context=None):
-        note = self.browse(cr, uid, id, context=context)
-        if not value: return False
-        stage_ids = [value] + [stage.id for stage in note.stage_ids if stage.user_id.id != uid ]
-        return self.write(cr, uid, [id], {'stage_ids': [(6, 0, set(stage_ids))]}, context=context)
-
-    def _get_stage_per_user(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for record in self.browse(cr, uid, ids, context=context):
-            for stage in record.stage_ids:
-                if stage.user_id.id == uid:
-                    result[record.id] = stage.id
-        return result
-
-    _columns = {
-        'name': fields.function(_get_note_first_line,
-            string='Note Summary',
-            type='text', store=True),
-        'user_id': fields.many2one('res.users', 'Owner'),
-        'memo': fields.html('Note Content'),
-        'sequence': fields.integer('Sequence'),
-        'stage_id': fields.function(_get_stage_per_user,
-            fnct_inv=_set_stage_per_user,
-            string='Stage',
-            type='many2one',
-            relation='note.stage'),
-        'stage_ids': fields.many2many('note.stage','note_stage_rel','note_id','stage_id','Stages of Users'),
-        'open': fields.boolean('Active', track_visibility='onchange'),
-        'date_done': fields.date('Date done'),
-        'color': fields.integer('Color Index'),
-        'tag_ids' : fields.many2many('note.tag','note_tags_rel','note_id','tag_id','Tags'),
-    }
-    _defaults = {
-        'user_id': lambda self, cr, uid, ctx=None: uid,
-        'open' : 1,
-        'stage_id' : _get_default_stage_id,
-    }
     _order = 'sequence'
 
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
-        if groupby and groupby[0]=="stage_id":
+    def _get_default_stage_id(self):
+        return self.env['note.stage'].search([('user_id', '=', self.env.uid)], limit=1)
 
-            #search all stages
-            current_stage_ids = self.pool.get('note.stage').search(cr,uid,[('user_id','=',uid)], context=context)
+    name = fields.Text(compute='_compute_name', string='Note Summary', store=True)
+    user_id = fields.Many2one('res.users', string='Owner', default=lambda self: self.env.uid)
+    memo = fields.Html('Note Content')
+    sequence = fields.Integer('Sequence')
+    stage_id = fields.Many2one('note.stage', compute='_compute_stage_id',
+        inverse='_inverse_stage_id', default=_get_default_stage_id, string='Stage')
+    stage_ids = fields.Many2many('note.stage', 'note_stage_rel', 'note_id', 'stage_id', string='Stages of Users')
+    open = fields.Boolean(string='Active', track_visibility='onchange', default=True)
+    date_done = fields.Date('Date done')
+    color = fields.Integer(string='Color Index')
+    tag_ids = fields.Many2many('note.tag', 'note_tags_rel', 'note_id', 'tag_id', string='Tags')
 
-            if current_stage_ids: #if the user have some stages
-                stages = self.pool['note.stage'].browse(cr, uid, current_stage_ids, context=context)
+    @api.depends('memo')
+    def _compute_name(self):
+        """ Read the first line of the memo to determine the note name """
+        for note in self:
+            text = html2plaintext(note.memo) if note.memo else ''
+            note.name = text.strip().replace('*', '').split("\n")[0]
 
-                result = [{ #notes by stage for stages user
-                        '__context': {'group_by': groupby[1:]},
-                        '__domain': domain + [('stage_ids.id', '=', stage.id)],
-                        'stage_id': (stage.id, stage.name),
-                        'stage_id_count': self.search(cr,uid, domain+[('stage_ids', '=', stage.id)], context=context, count=True),
-                        '__fold': stage.fold,
-                    } for stage in stages]
+    @api.multi
+    def _compute_stage_id(self):
+        for note in self:
+            for stage in note.stage_ids.filtered(lambda stage: stage.user_id == self.env.user):
+                note.stage_id = stage
 
-                #note without user's stage
-                nb_notes_ws = self.search(cr,uid, domain+[('stage_ids', 'not in', current_stage_ids)], context=context, count=True)
+    @api.multi
+    def _inverse_stage_id(self):
+        for note in self.filtered('stage_id'):
+            note.stage_ids = note.stage_id + note.stage_ids.filtered(lambda stage: stage.user_id != self.env.user)
+
+    @api.model
+    def name_create(self, name):
+        return self.create({'memo': name}).name_get()[0]
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        if groupby and groupby[0] == "stage_id":
+            stages = self.env['note.stage'].search([('user_id', '=', self.env.uid)])
+            if stages:  # if the user has some stages
+                result = [{  # notes by stage for stages user
+                    '__context': {'group_by': groupby[1:]},
+                    '__domain': domain + [('stage_ids.id', '=', stage.id)],
+                    'stage_id': (stage.id, stage.name),
+                    'stage_id_count': self.search_count(domain + [('stage_ids', '=', stage.id)]),
+                    '__fold': stage.fold,
+                } for stage in stages]
+
+                # note without user's stage
+                nb_notes_ws = self.search_count(domain + [('stage_ids', 'not in', stages.ids)])
                 if nb_notes_ws:
                     # add note to the first column if it's the first stage
-                    dom_not_in = ('stage_ids', 'not in', current_stage_ids)
-                    if result and result[0]['stage_id'][0] == current_stage_ids[0]:
+                    dom_not_in = ('stage_ids', 'not in', stages.ids)
+                    if result and result[0]['stage_id'][0] == stages[0].id:
                         dom_in = result[0]['__domain'].pop()
                         result[0]['__domain'] = domain + ['|', dom_in, dom_not_in]
                         result[0]['stage_id_count'] += nb_notes_ws
@@ -134,34 +102,37 @@ class note_note(osv.osv):
                             '__context': {'group_by': groupby[1:]},
                             '__domain': domain + [dom_not_in],
                             'stage_id': (stages[0].id, stages[0].name),
-                            'stage_id_count':nb_notes_ws,
+                            'stage_id_count': nb_notes_ws,
                             '__fold': stages[0].name,
                         }] + result
-
-            else: # if stage_ids is empty
-
-                #note without user's stage
-                nb_notes_ws = self.search(cr,uid, domain, context=context, count=True)
+            else:  # if stage_ids is empty, get note without user's stage
+                nb_notes_ws = self.search_count(domain)
                 if nb_notes_ws:
-                    result = [{ #notes for unknown stage
+                    result = [{  # notes for unknown stage
                         '__context': {'group_by': groupby[1:]},
                         '__domain': domain,
                         'stage_id': False,
-                        'stage_id_count':nb_notes_ws
+                        'stage_id_count': nb_notes_ws
                     }]
                 else:
                     result = []
             return result
+        return super(Note, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
-        else:
-            return super(note_note, self).read_group(cr, uid, domain, fields, groupby,
-                offset=offset, limit=limit, context=context, orderby=orderby,lazy=lazy)
-
-    def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
-        res = super(note_note, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
-        new_action_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'note.action_note_note')
-        new_action = self._notification_link_helper(cr, uid, ids, 'new', context=context, action_id=new_action_id)
+    @api.multi
+    def _notification_get_recipient_groups(self, message, recipients):
+        res = super(Note, self)._notification_get_recipient_groups(message, recipients)
+        new_action_id = self.env['ir.model.data'].xmlid_to_res_id('note.action_note_note')
+        new_action = self._notification_link_helper('new', action_id=new_action_id)
         res['user'] = {
             'actions': [{'url': new_action, 'title': _('New Note')}]
         }
         return res
+
+    @api.multi
+    def action_close(self):
+        return self.write({'open': False, 'date_done': fields.date.today()})
+
+    @api.multi
+    def action_open(self):
+        return self.write({'open': True})
