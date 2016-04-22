@@ -49,7 +49,7 @@
                 <field name="date"/>
                 <field name="date_confirm"/>
                 <filter string="This Year" name="year" invisible="1" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
-                <filter name="Quotations" domain="[('state','=','draft')]"/>
+                <filter name="Quotations" string="Quotations" domain="[('state','=','draft')]"/>
                 <filter name="Sales" string="Sales" domain="[('state','not in',('draft', 'cancel'))]"/>
                 <separator/>
                 <filter string="My Sales" help="My Sales" domain="[('user_id','=',uid)]"/>
