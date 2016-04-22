@@ -84,7 +84,7 @@ function notify_incoming_message (msg, options) {
         web_client.set_title_part("_chat", tab_title);
     }
 
-    if (Notification && Notification.permission === "granted") {
+    if (window.Notification && Notification.permission === "granted") {
         if (bus.is_master) {
             send_native_notification(title, content);
         }
@@ -336,10 +336,8 @@ function make_channel (data, options) {
             messages: [],
         }},
     };
-    if (channel.type === "channel" && data.public !== "private") {
-        channel.type = "public";
-    } else if (data.public === "private") {
-        channel.type = "private";
+    if (channel.type === "channel") {
+        channel.type = data.public !== "private" ? "public" : "private";
     }
     if (_.size(data.direct_partner) > 0) {
         channel.type = "dm";
