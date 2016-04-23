@@ -1417,6 +1417,9 @@
                     </div>
                 </group>
                 <notebook>
+                <page string="Work Instruction" attrs="{'invisible': [('worksheet', '=', False)]}">
+                    <field name="worksheet" widget="image"/>
+                </page>
                 <page string="Current Production">
                     <group>
                         <group>
@@ -1435,9 +1438,6 @@
                             <field name="done_wo" invisible="1"/>
                         </tree>
                     </field>
-                </page>
-                <page string="Work Instruction" attrs="{'invisible': [('worksheet', '=', False)]}">
-                    <field name="worksheet" widget="image"/>
                 </page>
                 <page string="Time Tracking" groups="mrp.group_mrp_manager">
                     <group>
