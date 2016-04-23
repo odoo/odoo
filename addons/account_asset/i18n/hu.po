@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-15 09:26+0000\n"
-"PO-Revision-Date: 2016-04-12 10:04+0000\n"
+"PO-Revision-Date: 2016-04-21 10:35+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -1039,6 +1039,14 @@ msgstr "Ha egy eszközt létrehozott, annak állapota 'Tervezet'.\nMiután az es
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_name
 msgid "Year"
 msgstr "Év"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset_invoice.py:53
+#, python-format
+msgid ""
+"You already have assets with the reference %s.\n"
+"Please delete these assets before creating new ones for this invoice."
+msgstr "Már van vagyoni eszköze ezzel a hivatkozással %s.\nKérem törölje ezeket a vagyoni eszközeit, mielőtt újat hozna létre erre a számlára."
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:100

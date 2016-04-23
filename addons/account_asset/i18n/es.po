@@ -6,7 +6,7 @@
 # Alejandro Santana <alejandrosantana@anubia.es>, 2015
 # Javier Ramirez <elbomba887@gmail.com>, 2015
 # Martin Trigaux, 2016
-# Mateo Tibaquirá <nestormateo@gmail.com>, 2015
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2015
 # Oihane Crucelaegui <oihanecruce@gmail.com>, 2015
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2015
 msgid ""
@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-15 09:26+0000\n"
-"PO-Revision-Date: 2016-01-16 08:50+0000\n"
+"PO-Revision-Date: 2016-04-22 15:48+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -1043,6 +1043,14 @@ msgstr "Cuando crea un activo, su estado es 'Borrador'\nSi el activo es confirma
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_name
 msgid "Year"
 msgstr "Año"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset_invoice.py:53
+#, python-format
+msgid ""
+"You already have assets with the reference %s.\n"
+"Please delete these assets before creating new ones for this invoice."
+msgstr "Ya tiene activos con la referencia %s.\nPor favor, elimine estos activos antes de crear otros nuevos para esta factura."
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:100
