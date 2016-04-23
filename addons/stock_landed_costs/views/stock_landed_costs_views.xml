@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
-    <data>
+<odoo>
 
        <!-- Stock Landed Cost Form View -->
         <record id='view_stock_landed_cost_form' model='ir.ui.view'>
@@ -39,8 +38,7 @@
                             <form string="Cost Lines">
                                 <group>
                                     <group>
-                                        <field name="product_id"
-                                            on_change="onchange_product_id(product_id)" domain="[('landed_cost_ok', '=', True)]" context="{'default_landed_cost_ok': True, 'form_view_ref':'stock_landed_costs.view_stock_landed_cost_type_form'}"/>
+                                        <field name="product_id" domain="[('landed_cost_ok', '=', True)]" context="{'default_landed_cost_ok': True, 'form_view_ref':'stock_landed_costs.view_stock_landed_cost_type_form'}"/>
                                         <field name="price_unit"/>
                                     </group>
                                     <group>
@@ -52,7 +50,7 @@
                                 <field name="name"/>
                             </form>
                             <tree string="Cost Lines" editable="bottom">
-                                <field name="product_id" on_change="onchange_product_id(product_id)" domain="[('landed_cost_ok', '=', True)]" context="{'default_landed_cost_ok': True, 'form_view_ref':'stock_landed_costs.view_stock_landed_cost_type_form'}"/>
+                                <field name="product_id" domain="[('landed_cost_ok', '=', True)]" context="{'default_landed_cost_ok': True, 'form_view_ref':'stock_landed_costs.view_stock_landed_cost_type_form'}"/>
                                 <field name="name"/>
                                 <field name="account_id"/>
                                 <field name="split_method"/>
@@ -121,8 +119,8 @@
                     <field name="name" string="Name"/>
                     <field name="date"/>
                     <separator/>
-                    <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
-                    <filter string="Done" name="done" domain="[('state','=','done')]"/>
+                    <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
+                    <filter name="done" string="Done" domain="[('state','=','done')]"/>
                     <group expand="0" string="Group By">
                         <filter string="Month" context="{'group_by': 'date'}"/>
                         <filter string="Status" context="{'group_by': 'state'}"/>
@@ -146,7 +144,7 @@
         </record>
 
         <!-- Stock Landed Cost Menu -->
-        <menuitem action="action_stock_landed_cost" name="Landed Costs" parent="stock.menu_stock_inventory_control" id="menu_stock_landed_cost" sequence="99"/>
+        <menuitem id="menu_stock_landed_cost" name="Landed Costs" action="action_stock_landed_cost"  parent="stock.menu_stock_inventory_control"  sequence="99"/>
 
         <!-- Stock Landed Cost Type View -->
         <record id="view_stock_landed_cost_type_form" model="ir.ui.view">
@@ -159,7 +157,7 @@
                         <field name="image_medium" widget="image" class="oe_avatar"/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
-                                <label for="name" name='label_name' string="Product Name"/>
+                                <label name='label_name' for="name" string="Product Name"/>
                             </div>
                             <h1>
                                 <field name="name"/>
@@ -229,20 +227,19 @@
         </record>
 
         <record id="stock_landed_cost_type_action1" model="ir.actions.act_window.view">
-           <field eval="1" name="sequence"/>
+           <field name="sequence" eval="1"/>
            <field name="view_mode">tree</field>
            <field name="view_id" ref="stock_landed_cost_tree_view"/>
            <field name="act_window_id" ref="stock_landed_cost_type_action"/>
         </record>
 
         <record id="stock_landed_cost_type_action2" model="ir.actions.act_window.view">
-           <field eval="2" name="sequence"/>
+           <field name="sequence" eval="2"/>
            <field name="view_mode">form</field>
            <field name="view_id" ref="view_stock_landed_cost_type_form"/>
            <field name="act_window_id" ref="stock_landed_cost_type_action"/>
         </record>
 
-	<menuitem action="stock_landed_cost_type_action" name="Landed Cost Type" parent="stock.menu_warehouse_config" id="menu_stock_landed_cost_type" sequence="3"/>
+	<menuitem id="menu_stock_landed_cost_type" name="Landed Cost Type" action="stock_landed_cost_type_action" parent="stock.menu_warehouse_config" sequence="3"/>
 
-    </data>
-</openerp>
+</odoo>
