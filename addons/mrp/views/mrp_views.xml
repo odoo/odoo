@@ -249,6 +249,9 @@
                                 <div attrs="{'invisible': [('time_mode','=','auto'), ('wo_count','&gt;',0)]}">
                                     <field name="time_cycle_manual" widget="float_time" class="oe_inline"/> minutes
                                 </div>
+                            </group><group>
+                                <field name="batch"/>
+                                <field name="batch_size" attrs="{'invisible': [('batch','=','no')]}"/>
                             </group>
                         </group>
                         <notebook>

@@ -52,6 +52,12 @@ class MrpRoutingWorkcenter(models.Model):
     time_cycle = fields.Float(string='Duration', compute="_get_time_cycle")
     wo_count = fields.Integer(string="# of Work Orders", compute="_wo_count")
 
+    batch = fields.Selection([
+            ('no',  'Once all products are processed'),
+            ('yes', 'Once a minimum number of products is processed')
+        ], string='Next Operation', required=True, default='no')
+    batch_size = fields.Float(string='Quantity to Process', default=1.0)
+
     @api.multi
     def _wo_count(self):
         result = self.env['mrp.production.work.order'].read_group([('operation_id', 'in', self.mapped('id')),('state','=','done')], ['operation_id'], ['operation_id'])
