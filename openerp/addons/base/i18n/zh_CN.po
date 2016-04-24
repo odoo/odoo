@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2016-04-07 11:23+0000\n"
+"PO-Revision-Date: 2016-04-20 00:31+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -1741,7 +1741,7 @@ msgid ""
 "description provided by the CODA configuration tables is based upon the CODA\n"
 "V2.2 specifications.\n"
 "If required, you can manually adjust the descriptions via the CODA configuration menu.\n"
-msgstr "\n导入CODA银行报表模块.\n======================================\n\n支持来自比利时的银行账户在CODA平面文件V2格式.\n----------------------------------------------------------------------\n    *支持CODA v1格式.\n    * 支持CODA v2.2格式.\n    * 支持外国货币.\n    * 支持所有数据记录类型 (0, 1, 2, 3, 4, 8, 9).\n    * 分析和记录所有的交易代码和结构化的格式\n      通信 .\n    * 通过CODA配置参数自动分配财务报告作业.\n    * 支持每个银行账户的多个会计分类账.\n    * 支持在单一的Coda文件从不同的银行帐户计算出不同的结算单\n    * 支持“仅分析”CODA的银行帐户（在CODA银行帐户配置表中定义 type= 'info’）.\n    * 多语言CODA的解析，为英语地区，荷兰，法国 配置数据解析.\n\n机器可读的CODA 文件被解析和存储为人类可读的CODA银行报表。同时银行报表生成含有Coda信息的一个子集（只包含那些财务会计记录创建时要求的交易记录）。CODA银行的报表是“只读”对象，因此剩余可靠表达的原始Coda文件而非银行的声明将被修改为所需的会计业务流程.\n\nCODA银行帐户配置为类型“Info”只会产生CODA银行报表.\n\n在CODA处理的结果中移除一个对象将导致相关对象的移除。 一个包含多个银行报表的CODA文件的移除，也将删除与此文件相关的报表.\n\n取而代之的是产生银行对帐单手动调节，也可以重新导入CODA与信息更新的OpenERP数据库后失踪允许自动调节.\n\n下面的逻辑已经在CODA处理实现：\n~~~~~~~~~~~~~~~~~~~~~~~~~~\n 在某些情况下，在CODA V2中交易代码，交易类别或结构化通信代码已经被赋予了新的或更清楚地说明。这一说明由基于的CODA V2.2规格的CODA配置表提供.\n 如果需要，您可以通过CODA配置菜单的描述手动调整.\n"
+msgstr "\n导入CODA银行报表的模块.\n======================================\n\n支持来自比利时的银行账户在CODA平面文件V2格式.\n----------------------------------------------------------------------\n    *支持CODA v1格式.\n    * 支持CODA v2.2格式.\n    * 支持外国货币.\n    * 支持所有数据记录类型 (0, 1, 2, 3, 4, 8, 9).\n    * 分析和记录所有的交易代码和结构化的格式\n      通信 .\n    * 通过CODA配置参数自动分配财务报告作业.\n    * 支持每个银行账户的多个会计分类账.\n    * 支持在单一的Coda文件从不同的银行帐户计算出不同的结算单\n    * 支持“仅分析”CODA的银行帐户（在CODA银行帐户配置表中定义 type= 'info’）.\n    * 多语言CODA的解析，为英语地区，荷兰，法国 配置数据解析.\n\n机器可读的CODA 文件被解析和存储为人类可读的CODA银行报表。同时银行报表生成含有Coda信息的一个子集（只包含那些财务会计记录创建时要求的交易记录）。CODA银行的报表是“只读”对象，因此剩余可靠表达的原始Coda文件而非银行的声明将被修改为所需的会计业务流程.\n\nCODA银行帐户配置为类型“Info”只会产生CODA银行报表.\n\n在CODA处理的结果中移除一个对象将导致相关对象的移除。 一个包含多个银行报表的CODA文件的移除，也将删除与此文件相关的报表.\n\n取而代之的是产生银行对帐单手动调节，也可以重新导入CODA与信息更新的OpenERP数据库后失踪允许自动调节.\n\n下面的逻辑已经在CODA处理实现：\n~~~~~~~~~~~~~~~~~~~~~~~~~~\n 在某些情况下，在CODA V2中交易代码，交易类别或结构化通信代码已经被赋予了新的或更清楚地说明。这一说明由基于的CODA V2.2规格的CODA配置表提供.\n 如果需要，您可以通过CODA配置菜单的描述手动调整.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_payment
@@ -3320,7 +3320,7 @@ msgid ""
 "\n"
 "    **Note:** this module is not compatible with the module segmentation, since it's the same which has been renamed.\n"
 "    "
-msgstr "\n在此模块允许对业务伙伴进行细分。\n=================================================================\n\n它对早期细分模块的分析标准进行了改进。\n受益于对问卷调查的新定义，你可以重新组合调查问题成为一个新问卷，\n并用于业务伙伴。\n\n它们对早期的CRM和SRM分割的工具进行了合并，\n因为它们的功能是重叠的。\n\n    **注:** 这个模块与细分模块不兼容, 细分模块已被重新命名。\n    "
+msgstr "\n此模块允许用户对业务伙伴进行细分。\n=================================================================\n\n它对早期细分模块的分析标准进行了改进。\n受益于对问卷调查的新定义，你可以重新组合调查问题成为一个新问卷，\n并用于业务伙伴。\n\n它们对早期的CRM和SRM分割的工具进行了合并，\n因为它们的功能是重叠的。\n\n    **注:** 这个模块与细分模块不兼容, 细分模块已被重新命名。\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_anonymization
@@ -4467,7 +4467,7 @@ msgstr "会计"
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_and_finance
 msgid "Accounting & Finance"
-msgstr "会计 & 财务"
+msgstr "会计及财务"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_test
@@ -6414,7 +6414,7 @@ msgstr "不能加载基础模块"
 #: code:addons/base/res/res_partner.py:642
 #, python-format
 msgid "Couldn't create contact without email address!"
-msgstr "没有邮件地址，不能建立联系人"
+msgstr "不能建立没有电子邮件地址的联系人！"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country
@@ -6812,7 +6812,7 @@ msgstr "客户业务伙伴"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_profiling
 msgid "Customer Profiling"
-msgstr "客户分析"
+msgstr "客户剖析"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_customer
@@ -7418,7 +7418,7 @@ msgstr "Email"
 #: view:res.users:base.view_users_form
 #: view:res.users:base.view_users_simple_form
 msgid "Email Address"
-msgstr "Email地址"
+msgstr "电子邮件地址"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fetchmail
@@ -7937,7 +7937,7 @@ msgstr "财务和分析会计"
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "Find the ID of a record in the database"
-msgstr "在数据库中查找记录的id"
+msgstr "查找记录在数据库中的id"
 
 #. module: base
 #: model:res.country,name:base.fi
@@ -9386,7 +9386,7 @@ msgstr "开票"
 #. module: base
 #: model:ir.module.category,name:base.module_category_account_voucher
 msgid "Invoicing & Payments"
-msgstr "开票&付款"
+msgstr "开票及付款"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_journal
@@ -9837,7 +9837,7 @@ msgstr "线索转换为问题"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_lead
 msgid "Leads & Opportunities"
-msgstr "线索&商机"
+msgstr "线索及商机"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm
@@ -12029,7 +12029,7 @@ msgstr "产品"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product
 msgid "Products & Pricelists"
-msgstr "产品&价格表"
+msgstr "产品及价格表"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_expiry
@@ -12744,7 +12744,7 @@ msgstr "圣赫勒拿"
 #. module: base
 #: model:res.country,name:base.kn
 msgid "Saint Kitts & Nevis Anguilla"
-msgstr "圣基茨和尼维斯"
+msgstr "圣基茨及尼维斯"
 
 #. module: base
 #: model:res.country,name:base.lc
@@ -12769,7 +12769,7 @@ msgstr "圣多美和普林西比"
 #. module: base
 #: model:res.country,name:base.vc
 msgid "Saint Vincent & Grenadines"
-msgstr "圣文森特和格林纳丁斯"
+msgstr "圣文森特及格林纳丁斯"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sale
@@ -12798,7 +12798,7 @@ msgstr "销售"
 #. module: base
 #: view:res.partner:base.view_partner_form
 msgid "Sales & Purchases"
-msgstr "销售&采购"
+msgstr "销售及采购"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_analytic_plans
@@ -15229,7 +15229,7 @@ msgstr "视图"
 #. module: base
 #: report:ir.module.reference:0
 msgid "View :"
-msgstr "视图:"
+msgstr "视图："
 
 #. module: base
 #: field:ir.ui.view,arch:0 view:ir.ui.view.custom:base.view_view_custom_form
@@ -15339,7 +15339,7 @@ msgstr "仓库管理"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_picking_wave
 msgid "Warehouse Management: Waves"
-msgstr "仓库管理：波动"
+msgstr "仓库管理：波次"
 
 #. module: base
 #: code:addons/base/ir/ir_actions.py:827
@@ -15915,12 +15915,12 @@ msgstr "选择"
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "condition: True"
-msgstr "condition: True"
+msgstr "condition：True"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "condition: object.list_price > 5000"
-msgstr "condition: object.list_price > 5000"
+msgstr "condition：object.list_price > 5000"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
@@ -16111,7 +16111,7 @@ msgstr "语言: '%s' 的翻译函数没有找到"
 #: view:ir.actions.server:base.view_server_action_form
 msgid ""
 "object or obj: browse_record of the record on which the action is triggered"
-msgstr "object或obj: 触发动作的记录的browse_record"
+msgstr "object或obj：触发动作的记录的browse_record"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
@@ -16154,7 +16154,7 @@ msgstr "partner_name = obj.name + '_code'\n                                     
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "pool: ORM model pool (i.e. self.pool)"
-msgstr "pool: ORM 模型池 (例如：self.pool)"
+msgstr "pool：ORM 模型池 (例如：self.pool)"
 
 #. module: base
 #: code:addons/mail.py:285
@@ -16170,7 +16170,7 @@ msgstr "res_config_contents"
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "self: ORM model of the record on which the action is triggered"
-msgstr "self: 触发动作的记录的ORM模型"
+msgstr "self：触发动作的记录的ORM模型"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_access_rights
