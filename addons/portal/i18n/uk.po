@@ -3,15 +3,16 @@
 # * portal
 # 
 # Translators:
-# Bogdan, 2015
+# Bohdan Lisnenko, 2015
+# Bohdan Lisnenko, 2016
 # Zoriana Zaiats, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-12-09 12:41+0000\n"
-"Last-Translator: Bogdan\n"
+"PO-Revision-Date: 2016-04-23 09:31+0000\n"
+"Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +57,7 @@ msgid ""
 "                </p>\n"
 "            \n"
 "            "
-msgstr "\n⇥<p>\n${object.user_id.name or ''},\n</p>\n<p>\nВам надано доступ до ${user.company_id.name} ${object.wizard_id.portal_id.name}.\n</p>\n<p>\nДані вашого облікового запису:\n</p>\n<ul>\n<li>Ім’я користувача: ${object.user_id.login or ''}</li>\n</ul>\n<ul>\n<li>Портал: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n</ul>\n<ul>\n⇥<li>База даних: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n</ul>\n<p>\n⇥Ви можете встановити чи змінити свій пароль за таким посиланням:\n</p>\n<ul>\n<li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n</ul>\n<p>\n⇥${object.wizard_id.welcome_message or ''}\n</p>\n<p>---<br />\nOdoo - Бізнес програми з відкритим кодом<br />\nhttp://www.odoo.com<br />\n</p>"
+msgstr "\n<p>\n Шановний/а/ ${object.user_id.name or ''},\n</p>\n<p>\nВам надано доступ до ${user.company_id.name} ${object.wizard_id.portal_id.name}.\n</p>\n<p>\nДані вашого облікового запису:\n</p>\n<ul>\n<li>Ім’я користувача: ${object.user_id.login or ''}</li>\n</ul>\n<ul>\n<li>Портал: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n</ul>\n<ul>\n<li>База даних: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n</ul>\n<p>\nВи можете встановити чи змінити свій пароль за таким посиланням:\n</p>\n<ul>\n<li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n</ul>\n<p>\n${object.wizard_id.welcome_message or ''}\n</p>\n<p>---<br />\nOdoo - Бізнес програми з відкритим кодом<br />\nhttp://www.odoo.com<br />\n</p>"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_groups
