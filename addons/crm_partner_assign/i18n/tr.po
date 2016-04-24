@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-08 15:14+0000\n"
-"PO-Revision-Date: 2015-12-08 03:22+0000\n"
+"PO-Revision-Date: 2016-04-23 10:13+0000\n"
 "Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,7 @@ msgid ""
 "PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
 "% endif\n"
 "            "
-msgstr ""
+msgstr "\n            \n<p>Merhaba,</p>\n\n\n<p>Bölgenizde bulunan iş fırsatlarıyla temasa geçilmiştir. Dolayısıyla aşağıdaki adaylar için ${ctx['partner_id'].name} görevlendirilmiştir:</p>\n\n<ol>\n% for lead in ctx['partner_leads']:\n     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n% endfor\n</ol>\n\n% if ctx.get('partner_in_portal'):\n<p>Ayrıntıları almak için lütfen <a href=\"${object.get_portal_url()}\">İş Ortağı Portalınıza</a> to bağlanın. Her adayın üst sol köşesinde iki düğme vardır, adayla görüştükten sonra bu düğmelerden birine basmalısınız: \"İlgileniyorum\" ve \"ilgilenmiyorum\".</p>\n% else:\n<p>\n    Veritabanımıza erişiminiz için henüz bir portalınız yoktur. Lütfen \n    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email ve 'hesap yöneticinize %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) veya 'bize' başvurun}.\n</p>\n% endif\n<p>20 Günden önce adayla temas kurmazsanız aday başka bir iş ortağına gönderilecektir.</p>\n\n<p>Teşekkürler\n<pre>\n${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n</pre>\n% if not ctx['partner_id'].user_id:\nNot: Sizin için görevlendirilmiş bir hesap yöneticisi yok gibi görünüyor, lütfen bize başvurum.\n% endif\n            "
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,nbr:0
