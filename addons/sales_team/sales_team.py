@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 
 
@@ -16,7 +17,7 @@ class crm_team(osv.Model):
             context = {}
         if user_id is None:
             user_id = uid
-        team_ids = self.search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', 'in', user_id)], limit=1, context=context)
+        team_ids = self.search(cr, SUPERUSER_ID, ['|', ('user_id', '=', user_id), ('member_ids', 'in', user_id)], limit=1, context=context)
         team_id = team_ids[0] if team_ids else False
         if not team_id and context.get('default_team_id'):
             team_id = context['default_team_id']
