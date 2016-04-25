@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """ View validation code (using assertions, not the RNG schema). """
 
 import logging

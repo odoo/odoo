@@ -1,4 +1,5 @@
-#openerp.loggers.handlers. -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
+# openerp.loggers.handlers
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ConfigParser
