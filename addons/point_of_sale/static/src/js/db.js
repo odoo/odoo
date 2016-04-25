@@ -39,9 +39,6 @@ var PosDB = core.Class.extend({
         this.category_childs = {};
         this.category_parent    = {};
         this.category_search_string = {};
-        this.packagings_by_id = {};
-        this.packagings_by_product_tmpl_id = {};
-        this.packagings_by_barcode = {};
     },
 
     /* 
@@ -167,10 +164,6 @@ var PosDB = core.Class.extend({
         if (product.description_sale) {
             str += '|' + product.description_sale;
         }
-        var packagings = this.packagings_by_product_tmpl_id[product.product_tmpl_id] || [];
-        for (var i = 0; i < packagings.length; i++) {
-            str += '|' + packagings[i].barcode;
-        }
         str  = product.id + ':' + str.replace(/:/g,'') + '\n';
         return str;
     },
@@ -212,19 +205,6 @@ var PosDB = core.Class.extend({
             this.product_by_id[product.id] = product;
             if(product.barcode){
                 this.product_by_barcode[product.barcode] = product;
-            }
-        }
-    },
-    add_packagings: function(packagings){
-        for(var i = 0, len = packagings.length; i < len; i++){
-            var pack = packagings[i];
-            this.packagings_by_id[pack.id] = pack;
-            if(!this.packagings_by_product_tmpl_id[pack.product_tmpl_id[0]]){
-                this.packagings_by_product_tmpl_id[pack.product_tmpl_id[0]] = [];
-            }
-            this.packagings_by_product_tmpl_id[pack.product_tmpl_id[0]].push(pack);
-            if(pack.barcode){
-                this.packagings_by_barcode[pack.barcode] = pack;
             }
         }
     },
@@ -358,12 +338,9 @@ var PosDB = core.Class.extend({
     get_product_by_barcode: function(barcode){
         if(this.product_by_barcode[barcode]){
             return this.product_by_barcode[barcode];
+        } else {
+            return undefined;
         }
-        var pack = this.packagings_by_barcode[barcode];
-        if(pack){
-            return this.product_by_id[pack.product_tmpl_id[0]];
-        }
-        return undefined;
     },
     get_product_by_category: function(category_id){
         var product_ids  = this.product_by_category_id[category_id];

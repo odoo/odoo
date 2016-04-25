@@ -299,13 +299,6 @@ exports.PosModel = Backbone.Model.extend({
 
         },
     },{
-        model: 'product.packaging',
-        fields: ['barcode','product_tmpl_id'],
-        domain: null,
-        loaded: function(self, packagings){ 
-            self.db.add_packagings(packagings);
-        },
-    },{
         model:  'pos.category',
         fields: ['id','name','parent_id','child_id','image'],
         domain: null,
