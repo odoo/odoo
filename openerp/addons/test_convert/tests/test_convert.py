@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import collections
 import unittest
 from lxml import etree as ET
