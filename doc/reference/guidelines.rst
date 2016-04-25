@@ -16,7 +16,7 @@ Module structure
 
 Directories
 -----------
-A module is organised in a few directory :
+A module is organised in a few directories :
 
 - *data/* : demo and data xml
 - *models/* : models definition
@@ -129,7 +129,7 @@ When declaring a record in XML,
         <field name="arch" type="xml">
             <tree>
                 <field name="my_field_1"/>
-                <field name="my_field_2" string="My Label" widget="statusbar" statusbar_visible="draft,sent,progress,done" statusbar_colors='{"invoice_except":"red","waiting_date":"blue"}' />
+                <field name="my_field_2" string="My Label" widget="statusbar" statusbar_visible="draft,sent,progress,done" />
             </tree>
         </field>
     </record>
@@ -266,7 +266,7 @@ Inside these 3 groups, the imported lines are alphabetically sorted.
 Idioms
 ------
 
-- Prefer ``%`` over ``.format()``, prefer ``%(varname)`` instead of position (This is better for translation)
+- Prefer ``%`` over ``.format()``, prefer ``%(varname)`` instead of position (This is better for translations)
 - Try to avoid generators and decorators
 - Always favor *Readability* over *conciseness* or using the language features or idioms.
 - Use list comprehension, dict comprehension, and basic manipulation using ``map``, ``filter``, ``sum``, ... They make the code easier to read.

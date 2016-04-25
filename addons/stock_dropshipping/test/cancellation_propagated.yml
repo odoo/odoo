@@ -75,38 +75,34 @@
 -
   !python {model: procurement.order}: |
     # Retrieve related procurement
-    so = self.pool.get('sale.order').browse(cr, uid, ref('sale_order_product_mto'))
-    procu_ids = self.search(cr, uid, [('group_id.name', '=', so.name)])
-    assert len(procu_ids)>0, 'No procurement found for sale order %s (with id: %d)' %(so.name,so.id)
+    so1 = self.pool.get('sale.order').browse(cr, uid, ref('sale_order_product_mto'))
+    so2 = self.pool.get('sale.order').browse(cr, uid, ref('sale_order_product_mto2'))
+    procu_ids = self.browse(cr, uid, self.search(cr, uid, [('group_id.name', 'in', [so1.name, so2.name])]))
+    assert len(procu_ids)>0, 'No procurement found!'
     
     # Check that all procurements are running 
-    for procu in self.browse(cr,uid,procu_ids,context=context):
+    for procu in procu_ids:
         assert procu.state == u'running', 'Procurement with id: %d should be running but is with state : %s!' %(procu.id, procu.state)
     
     # Check that one purchase order has been created
-    purchase_ids = [proc.purchase_line_id.order_id for proc in self.browse(cr, uid, procu_ids) if proc.purchase_line_id]
+    purchase_ids = procu_ids.mapped('purchase_line_id').mapped('order_id')
     assert len(purchase_ids) == 1, 'No purchase order found !'
 
     # Check the two purchase order lines
-
     purchase_line = purchase_ids[0].order_line[0]
-    assert purchase_line.product_qty == 5.0, 'The product quantity of the first order line should be 5 and not %s' % (purchase_line.product_qty,)
+    assert purchase_line.product_qty == 29.0, 'The product quantity of the first order line should be 5 and not %s' % (purchase_line.product_qty,)
     assert purchase_line.product_uom.id == ref("product.product_uom_unit"), 'The product UoM ID of the first order line should be %s and not %s' % (ref("product.product_uom_unit"), purchase_line.product_uom.id,)
-    purchase_line = purchase_ids[0].order_line[1]
-    assert purchase_line.product_qty == 2.0, 'The product quantity of the first order line should be 2 and not %s' % (purchase_line.product_qty,)
-    assert purchase_line.product_uom.id == ref("product.product_uom_dozen"), 'The product UoM ID of the second order line should be %s and not %s' % (ref("product.product_uom_dozen"), purchase_line.product_uom.id,)
 
-    # Let us cancel the procurement related to the 2nd sales order first and check that the 2 Dozen(s) are subtracted correctly
-    so2 = self.pool.get('sale.order').browse(cr, uid, ref('sale_order_product_mto2'))
+    # Cancel the Sales Order 2
     self.cancel(cr, uid, [so2.order_line[0].procurement_ids[0].id], context=context)
-    assert so2.order_line[0].procurement_ids[0].state == u'cancel', 'Main procurement should be cancelled !'
+    assert so2.order_line[0].procurement_ids[0].state == u'cancel', 'Procurement 2 should be cancelled !'
+    assert purchase_line.product_qty == 5.0, 'The product quantity of the first order line should be 5 and not %s' % (purchase_line.product_qty,)
 
-    # Cancel the main procurement from the sale order in units
-    main_procu_id = self.search(cr, uid, [('origin', '=', so.name)])
-    assert len(main_procu_id) == 1, 'Main procurement not identified !'
-    self.cancel(cr, uid, main_procu_id, context=context)
-    assert self.browse(cr, uid, main_procu_id[0]).state == u'cancel', 'Main procurement should be cancelled !'
+    # Cancel the Sales Order 1
+    self.cancel(cr, uid, [so1.order_line[0].procurement_ids[0].id], context=context)
+    assert so1.order_line[0].procurement_ids[0].state == u'cancel', 'Procurement 1 should be cancelled !'
+    assert purchase_line.product_qty == 0.0, 'The product quantity of the first order line should be 5 and not %s' % (purchase_line.product_qty,)
     
     # Check that all procurements related are cancelled    
-    for procu in self.browse(cr, uid, procu_ids, context=context):
+    for procu in procu_ids:
         assert procu.state == u'cancel', 'Procurement %d should be cancelled but is with a state : %s!' %(procu.id, procu.state)

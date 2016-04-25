@@ -158,7 +158,8 @@ root can have the following attributes:
     as a string of the form ``yyyy-MM-dd``).
 
     ``{$name}`` can be ``bf`` (``font-weight: bold``), ``it``
-    (``font-style: italic``), or any bootstrap contextual color (``danger``,
+    (``font-style: italic``), or any `bootstrap contextual color
+    <http://getbootstrap.com/components/#available-variations>`_ (``danger``,
     ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
 ``create``, ``edit``, ``delete``
     allows *dis*\ abling the corresponding action in the view by setting the
@@ -362,7 +363,7 @@ system. Available semantic components are:
     .. todo:: list of widgets
 
        & options & specific attributes (e.g. widget=statusbar
-       statusbar_visible statusbar_colors clickable)
+       statusbar_visible clickable)
   ``options``
     JSON object specifying configuration option for the field's widget
     (including default widgets)
@@ -501,13 +502,16 @@ The states are shown following the order used in the field (the list in a
 selection field, etc). States that are always visible are specified with the
 attribute ``statusbar_visible``.
 
-``statusbar_colors`` can be used to give a custom color to specific states.
+``statusbar_colors``
+    can be used to give a custom color to specific states.
+
+    .. deprecated:: 9.0
+
 
 ::
 
     <field name="state" widget="statusbar"
-        statusbar_visible="draft,sent,progress,invoiced,done"
-        statusbar_colors="{'shipping_except':'red','waiting_date':'blue'}"/>
+        statusbar_visible="draft,sent,progress,invoiced,done" />
 
 The Sheet
 '''''''''

@@ -6,6 +6,7 @@ var gui = require('point_of_sale.gui');
 var keyboard = require('point_of_sale.keyboard');
 var models = require('point_of_sale.models');
 var core = require('web.core');
+var ajax = require('web.ajax');
 var CrashManager = require('web.CrashManager');
 
 
@@ -478,6 +479,14 @@ var Chrome = PosBaseWidget.extend({
     build_chrome: function() { 
         var self = this;
         FastClick.attach(document.body);
+
+        if ($.browser.chrome) {
+            var chrome_version = $.browser.version.split('.')[0];
+            if (parseInt(chrome_version, 10) >= 50) {
+                ajax.loadCSS('/point_of_sale/static/src/css/chrome50.css');
+            }
+        }
+
         this.renderElement();
 
         this.$('.pos-logo').click(function(){

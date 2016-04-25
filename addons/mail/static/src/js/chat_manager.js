@@ -261,10 +261,8 @@ function make_channel (data, options) {
             messages: [],
         }},
     };
-    if (channel.type === "channel" && data.public !== "private") {
-        channel.type = "public";
-    } else if (data.public === "private") {
-        channel.type = "private";
+    if (channel.type === "channel") {
+        channel.type = data.public !== "private" ? "public" : "private";
     }
     if (_.size(data.direct_partner) > 0) {
         channel.type = "dm";
