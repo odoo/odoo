@@ -1,4 +1,4 @@
-from openerp import models, SUPERUSER_ID
+from odoo import models
 
 class Lead(models.Model):
     _inherit = 'crm.lead'
@@ -7,6 +7,6 @@ class Lead(models.Model):
         values['medium_id'] = (
                 values.get('medium_id') or
                 self.default_get(['medium_id']).get('medium_id') or
-                self.sudo().env['ir.model.data'].xmlid_to_res_id('utm.utm_medium_website')
+                self.sudo().env.ref('utm.utm_medium_website').id
         )
         return values
