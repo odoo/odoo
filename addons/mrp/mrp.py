@@ -1124,6 +1124,7 @@ class mrp_production(osv.osv):
         data = {
             'name': production.name,
             'date': production.date_planned,
+            'date_expected': production.date_planned,
             'product_id': production.product_id.id,
             'product_uom': production.product_uom.id,
             'product_uom_qty': production.product_qty,

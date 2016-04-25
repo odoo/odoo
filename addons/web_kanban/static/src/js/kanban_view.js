@@ -130,16 +130,13 @@ var KanbanView = View.extend({
         return this.search_orderer
             .add(options.grouped ? this.load_groups(options) : this.load_records())
             .then(function (data) {
-                var new_ids;
                 _.extend(self, options);
                 if (options.grouped) {
-                    new_ids = _.union.apply(null, _.map(data.groups, function (group) {
+                    var new_ids = _.union.apply(null, _.map(data.groups, function (group) {
                         return group.dataset.ids;
                     }));
-                } else {
-                    new_ids = _.pluck(data.records, 'id');
+                    self.dataset.alter_ids(new_ids);
                 }
-                self.dataset.alter_ids(new_ids);
                 self.data = data;
             })
             .then(this.proxy('render'))
@@ -156,18 +153,20 @@ var KanbanView = View.extend({
     },
 
     load_records: function (offset, dataset) {
-        dataset = dataset || this.dataset;        
-        return dataset._model.query(this.fields_keys.concat(['__last_update']))
-                .limit(this.limit || false)
-                .offset(offset || 0)
-                .all()
-                .then(function (records) {
-                    return {
-                        records: records,
-                        is_empty: !records.length,
-                        grouped: false,
-                    };
-                });
+        var options = {
+            'limit': this.limit,
+            'offset': offset,
+        };
+        dataset = dataset || this.dataset;
+        return dataset
+            .read_slice(this.fields_keys.concat(['__last_update']), options)
+            .then(function(records) {
+                return {
+                    records: records,
+                    is_empty: !records.length,
+                    grouped: false,
+                };
+            });
     },
 
     load_groups: function (options) {

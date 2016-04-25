@@ -61,7 +61,7 @@ class stock_location(osv.osv):
             res[m.id] = m.name
             parent = m.location_id
             while parent:
-                res[m.id] = parent.name + ' / ' + res[m.id]
+                res[m.id] = parent.name + '/' + res[m.id]
                 parent = parent.location_id
         return res
 
