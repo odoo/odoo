@@ -1,4 +1,4 @@
-Tunisia,2016-04-24
+Tunisia,2016-04-25
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-mohamedhabibchallouf medhabib125@gmail.com https://github.com/mohamedhabibchallouf
+mohamedhabibchallouf ch.medhabib@siat.com.tn https://github.com/mohamedhabibchallouf
