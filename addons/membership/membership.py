@@ -363,7 +363,7 @@ class Partner(osv.osv):
             # create a record in cache, apply onchange then revert back to a dictionnary
             invoice_line = invoice_line_obj.new(cr, uid, line_values, context=context)
             invoice_line._onchange_product_id()
-            line_values = invoice_line._convert_to_write(invoice_line._cache)
+            line_values = invoice_line._convert_to_write({name: invoice_line[name] for name in invoice_line._cache})
             line_values['price_unit'] = amount
             invoice_obj.write(cr, uid, [invoice_id], {'invoice_line_ids': [(0, 0, line_values)]}, context=context)
             invoice_list.append(invoice_id)
