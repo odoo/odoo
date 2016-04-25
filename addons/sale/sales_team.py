@@ -18,7 +18,7 @@ class crm_team(osv.Model):
         res = dict.fromkeys(ids, 0)
         domain = [
             ('team_id', 'in', ids),
-            ('state', '=', 'manual'),
+            ('invoice_status', '=', 'to invoice'),
         ]
         amounts = obj.read_group(cr, uid, domain, ['amount_total', 'team_id'], ['team_id'], context=context)
         for rec in amounts:
