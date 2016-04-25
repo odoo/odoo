@@ -510,7 +510,7 @@ class Home(http.Controller):
             if uid is not False:
                 return http.redirect_with_hash(redirect)
             request.uid = old_uid
-            values['error'] = "Wrong login/password"
+            values['error'] = _("Wrong login/password")
         if request.env.ref('web.login', False):
             return request.render('web.login', values)
         else:
