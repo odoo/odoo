@@ -28,10 +28,9 @@ class ReportPartnerLedger(models.AbstractModel):
         sum = 0.0
         for r in res:
             r['displayed_name'] = '-'.join(
-                r['move_name'] not in ['', '/'] and [r['move_name']] or [] +
-                r['ref'] not in ['', '/'] and [r['ref']] or [] +
-                r['name'] not in ['', '/'] and [r['name']] or []
-                )
+                r[field_name] for field_name in ('move_name', 'ref', 'name')
+                if r[field_name] not in (None, '', '/')
+            )
             sum += r['debit'] - r['credit']
             r['progress'] = sum
             full_account.append(r)

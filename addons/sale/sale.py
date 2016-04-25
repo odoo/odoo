@@ -241,7 +241,6 @@ class SaleOrder(models.Model):
             'name': self.client_order_ref or '',
             'origin': self.name,
             'type': 'out_invoice',
-            'reference': self.client_order_ref or self.name,
             'account_id': self.partner_invoice_id.property_account_receivable_id.id,
             'partner_id': self.partner_invoice_id.id,
             'journal_id': journal_id,
@@ -308,8 +307,13 @@ class SaleOrder(models.Model):
                     inv_data = order._prepare_invoice()
                     invoice = inv_obj.create(inv_data)
                     invoices[group_key] = invoice
-                elif group_key in invoices and order.name not in invoices[group_key].origin.split(', '):
-                    invoices[group_key].write({'origin': invoices[group_key].origin + ', ' + order.name})
+                elif group_key in invoices:
+                    vals = {}
+                    if order.name not in invoices[group_key].origin.split(', '):
+                        vals['origin'] = invoices[group_key].origin + ', ' + order.name
+                    if order.client_order_ref and order.client_order_ref not in invoices[group_key].name.split(', '):
+                        vals['name'] = invoices[group_key].name + ', ' + order.client_order_ref
+                    invoices[group_key].write(vals)
                 if line.qty_to_invoice > 0:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
                 elif line.qty_to_invoice < 0 and final:
@@ -412,6 +416,7 @@ class SaleOrder(models.Model):
                         break
         if self.env['ir.values'].get_default('sale.config.settings', 'auto_done_setting'):
             self.action_done()
+        return True
 
     @api.multi
     def _create_analytic_account(self, prefix=None):
@@ -600,6 +605,13 @@ class SaleOrderLine(models.Model):
 
     @api.model
     def create(self, values):
+        onchange_fields = ['name', 'price_unit', 'product_uom', 'tax_id']
+        if values.get('order_id') and values.get('product_id') and any(f not in values for f in onchange_fields):
+            line = self.new(values)
+            line.product_id_change()
+            for field in onchange_fields:
+                if field not in values:
+                    values[field] = line._fields[field].convert_to_write(line[field])
         line = super(SaleOrderLine, self).create(values)
         if line.state == 'sale':
             if (not line.order_id.project_id and

@@ -437,7 +437,7 @@
                 <section class="full-content">
                     <div class='window'>
                         <section class='subwindow collapsed'>
-                            <div class='subwindow-container'>
+                            <div class='subwindow-container collapsed'>
                                 <div class='subwindow-container-fix client-details-contents'>
                                 </div>
                             </div>
@@ -1070,7 +1070,7 @@
                 </t>
                 <t t-if="product.to_weight">
                     <span class="price-tag">
-                        <t t-esc="widget.format_currency(product.price,'Product Price')+'/Kg'"/>
+                        <t t-esc="widget.format_currency(product.price,'Product Price')+'/'+widget.pos.units_by_id[product.uom_id[0]].name"/>
                     </span>
                 </t>
             </div>

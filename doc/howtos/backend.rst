@@ -236,7 +236,7 @@ record.
                 <field name="{a field name}">{a value}</field>
             </record>
         </data>
-    <openerp>
+    </openerp>
 
 * ``model`` is the name of the Odoo model for the record
 * ``id`` is an :term:`external identifier`, it allows referring to the record
@@ -293,7 +293,7 @@ action more easily.
 
 .. exercise:: Define new menu entries
 
-    Define new menu entries to access courses and sessions under the
+    Define new menu entries to access courses under the
     OpenAcademy menu entry. A user should be able to
 
     - display a list of all the courses
@@ -982,10 +982,6 @@ Tree views
 Tree views can take supplementary attributes to further customize their
 behavior:
 
-``colors``
-    .. deprecated:: 9.0
-        replaced by ``decoration-{$name}``
-
 ``decoration-{$name}``
     allow changing the style of a row's text based on the corresponding
     record's attributes.
@@ -997,7 +993,8 @@ behavior:
     as a string of the form ``yyyy-MM-dd``).
 
     ``{$name}`` can be ``bf`` (``font-weight: bold``), ``it``
-    (``font-style: italic``), or any bootstrap contextual color (``danger``,
+    (``font-style: italic``), or any `bootstrap contextual color
+    <http://getbootstrap.com/components/#available-variations>`_ (``danger``,
     ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
 
     .. code-block:: xml
@@ -1470,8 +1467,8 @@ hooks in the ORM, such an action is declared in XML with the tag ``act_window``.
 
     <act_window id="launch_the_wizard"
                 name="Launch the Wizard"
-                src_model="context_model_name"
-                res_model="wizard_model_name"
+                src_model="context.model.name"
+                res_model="wizard.model.name"
                 view_mode="form"
                 target="new"
                 key2="client_action_multi"/>
