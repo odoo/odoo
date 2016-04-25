@@ -77,8 +77,8 @@ class MrpProduction(models.Model):
     @api.depends('move_raw_ids.quantity_done', 'move_finished_ids.quantity_done')
     def _compute_post_visible(self):
         for order in self:
-            order.post_visible = any(order.move_raw_ids.filtered(lambda x: (x.quantity_done) > 0 and (x.state<>'done'))) or \
-                any(order.move_finished_ids.filtered(lambda x: (x.quantity_done) > 0 and (x.state<>'done')))
+            order.post_visible = any(order.move_raw_ids.filtered(lambda x: (x.quantity_done) > 0 and (x.state not in ['done', 'cancel']))) or \
+                any(order.move_finished_ids.filtered(lambda x: (x.quantity_done) > 0 and (x.state not in ['done', 'cancel'])))
 
     @api.multi
     def _has_moves(self):
@@ -283,10 +283,10 @@ class MrpProduction(models.Model):
             order._cal_price(moves_to_do)
             moves_to_finish = order.move_finished_ids.move_validate()
             for move in moves_to_finish:
-                quants = self.env['stock.quant']
                 #Group quants by lots
                 lot_quants = {}
                 raw_lot_quants = {}
+                quants = self.env['stock.quant']
                 if move.has_tracking != 'none':
                     for quant in move.quant_ids:
                         lot_quants.setdefault(quant.lot_id.id, self.env['stock.quant'])
@@ -304,6 +304,7 @@ class MrpProduction(models.Model):
                         lot_quants[lot].write({'consumed_quant_ids': [(6, 0, [x.id for x in raw_lot_quants[lot] | quants])]})
                 else:
                     move.quant_ids.write({'consumed_quant_ids': [(6, 0, [x.id for x in quants])]})
+            order.action_assign()
         return True
 
     @api.multi
