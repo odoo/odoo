@@ -67,7 +67,7 @@
                                     </t>
                                 </div>
                                 <div>
-                                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-esc="event.date_begin_located[:-3]"> </span> <i>to</i> <span itemprop="endDate" t-esc="event.date_end_located[:-3]"> </span> (<span t-field="event.date_tz"/>)
+                                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-field-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-field-options='{"hide_seconds":"True"}'> </span>
                                 </div>
                                 <div itemprop="location" t-field="event.address_id" t-field-options='{
                                     "widget": "contact",
@@ -269,8 +269,8 @@
         <div itemscope="itemscope" itemtype="http://schema.org/Event" class="container">
             <h1 itemprop="name" class="text-center" t-field="event.name"></h1>
             <h4 class="text-center text-muted">
-                <i class="fa fa-clock-o"></i>
-                <span itemprop="startDate"><t t-esc="event.date_begin_located[:-3]"/></span> to
+                <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-field-options='{"hide_seconds":"True"}'/> to
+                <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-field-options='{"hide_seconds":"True"}'/>
                 <span itemprop="endDate"><t t-esc="event.date_end_located[:-3]"/></span>
                 <t t-if="event.date_tz">(<span t-field="event.date_tz"/>)</t>
             </h4>
@@ -347,8 +347,8 @@
                     <h4>When</h4>
                 </div>
                 <div class="panel-body">
-                    <i class="fa fa-clock-o"></i> From <span t-esc="event.date_begin_located[:-3]"> </span><br/>
-                    <i class="fa fa-clock-o"></i> To <span t-esc="event.date_end_located[:-3]"> </span>
+                    <i class="fa fa-clock-o"></i> From <span t-field="event.with_context(tz=event.date_tz).date_begin" t-field-options='{"hide_seconds":"True"}'> </span><br/>
+                    <i class="fa fa-clock-o"></i> To <span t-field="event.with_context(tz=event.date_tz).date_end" t-field-options='{"hide_seconds":"True"}'> </span>
                 </div>
             </div>
 
