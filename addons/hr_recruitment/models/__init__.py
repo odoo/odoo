@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import hr_department
 import hr_recruitment
 import hr_employee
