@@ -5,7 +5,7 @@ import babel
 
 from odoo import fields, http
 from odoo.http import request
-from openerp.addons.website.controllers.backend import WebsiteBackend
+from odoo.addons.website.controllers.backend import WebsiteBackend
 
 
 class WebsiteCrmBackend(WebsiteBackend):
