@@ -1,11 +1,8 @@
 from openerp.tests.common import TransactionCase
-from openerp.tools import float_round
+from openerp.tools import float_round, float_compare
 
 
 class TestCostJournal(TransactionCase):
-    """
-
-    """
 
     def setUp(self):
         super(TestCostJournal, self).setUp()
@@ -49,12 +46,8 @@ class TestCostJournal(TransactionCase):
             'property_stock_account_output_categ': acc_out_id,
             })
 
-    def test_CostJournal(self):
-        '''
-        Test the total in the credit and debit amount from
-        account move line created from a picking with a product
-        with Real Time valuation
-        '''
+    def test_cost_journal(self):
+        '''Total in the credit and debit amount from account move line created from a picking with a product with Real Time valuation'''
         cr, uid = self.cr, self.uid
         # Creating picking out with a product with real time valuation
         pick_id = self.picking.\
@@ -123,8 +116,12 @@ class TestCostJournal(TransactionCase):
         prec = self.decimal.precision_get(cr, uid, 'Account')
         for line in self.move_line.browse(cr, uid, p_move_ids):
             # Verifying if the total is according to the account rounding
-            self.assertTrue(line.credit or line.debit ==
-                            float_round(self.product_id.standard_price * 2,
-                                        precision_digits=prec),
-                            'The amount in the journal item created from the '
-                            'picking is wrong computed')
+            twice_cost = float_round(self.product_id.standard_price * 2,
+                                     precision_digits=prec)
+            # Wired the rounding, to ensure no little differencesi i.e 4 vs 2
+            # in rounding can return a false green.
+            compared = float_compare(line.credit or line.debit, twice_cost,
+                                     precision_rounding=8)
+            self.assertEqual(compared, 0.00,
+                             'The amount in the journal item created from the '
+                             'picking is wrong computed')
