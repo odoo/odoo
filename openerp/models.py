@@ -1410,19 +1410,40 @@ class BaseModel(object):
         return False
 
     def user_has_groups(self, cr, uid, groups, context=None):
-        """Return true if the user is at least member of one of the groups
-           in groups_str. Typically used to resolve ``groups`` attribute
-           in view and model definitions.
+        """Return true if the user is member of at least one of the groups in
+        ``groups``, and is not a member of any of the groups in ``groups``
+        preceded by ``!``. Typically used to resolve ``groups`` attribute in
+        view and model definitions.
 
-           :param str groups: comma-separated list of fully-qualified group
-                              external IDs, e.g.: ``base.group_user,base.group_system``
-           :return: True if the current user is a member of one of the
-                    given groups
+        :param str groups: comma-separated list of fully-qualified group
+            external IDs, e.g., ``base.group_user,base.group_system``,
+            optionally preceded by ``!``
+        :return: True if the current user is a member of one of the given groups
+            not preceded by ``!`` and is not member of any of the groups
+            preceded by ``!``
         """
         from openerp.http import request
         Users = self.pool['res.users']
+
+        has_groups = []
+        not_has_groups = []
         for group_ext_id in groups.split(','):
             group_ext_id = group_ext_id.strip()
+            if group_ext_id[0] == '!':
+                not_has_groups.append(group_ext_id[1:])
+            else:
+                has_groups.append(group_ext_id)
+
+        for group_ext_id in not_has_groups:
+            if group_ext_id == 'base.group_no_one':
+                # check: the group_no_one is effective in debug mode only
+                if Users.has_group(cr, uid, group_ext_id) and request and request.debug:
+                    return False
+            else:
+                if Users.has_group(cr, uid, group_ext_id):
+                    return False
+
+        for group_ext_id in has_groups:
             if group_ext_id == 'base.group_no_one':
                 # check: the group_no_one is effective in debug mode only
                 if Users.has_group(cr, uid, group_ext_id) and request and request.debug:
@@ -1430,7 +1451,8 @@ class BaseModel(object):
             else:
                 if Users.has_group(cr, uid, group_ext_id):
                     return True
-        return False
+
+        return not has_groups
 
     def _get_default_form_view(self, cr, user, context=None):
         """ Generates a default single-line form view using all fields
