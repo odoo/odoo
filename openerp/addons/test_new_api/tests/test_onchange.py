@@ -145,7 +145,7 @@ class TestOnChange(common.TransactionCase):
         self.assertEqual(values, {
             'name': partner.name,
             'partner': partner.id,
-            'lines': [(6, 0, [line.id])],
+            'lines': [(5,), (4, line.id)],
         })
 
         # modify 'partner'
@@ -160,8 +160,9 @@ class TestOnChange(common.TransactionCase):
         self.assertEqual(result['value'], {
             'name': partner.name,
             'lines': [
-                (1, line.id, {'name': partner.name, 'partner': partner.id}),
-                (0, 0, {'name': partner.name, 'partner': partner.id}),
+                (5,),
+                (1, line.id, {'name': partner.name, 'partner': (partner.id, partner.name)}),
+                (0, 0, {'name': partner.name, 'partner': (partner.id, partner.name)}),
             ],
         })
 
