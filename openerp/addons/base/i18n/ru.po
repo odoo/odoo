@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-04-06 20:36+0000\n"
+"PO-Revision-Date: 2016-04-20 00:08+0000\n"
 "Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -6320,7 +6320,7 @@ msgid ""
 "correctly set. If an existing contact starts working for a new company then "
 "a new contact should be created under that new company. You can use the "
 "\"Discard\" button to abandon this change."
-msgstr "Изменение контактной информации будет произведено, если правильно заполнено. Не стоит использовать несколько контактов для одной и той же компании. Использовать кнопку \"сбросить\", чтобы восстановить эти изменения."
+msgstr "Изменить контактную информацию возможно только в том случае, если она ещё не заполнена корректно. Если существующий контакт переходит в новую компанию, то нужно создать новый контакт в этой новой компании. В дальнейшем можно использовать кнопку \"Сброс\", чтобы отменить это изменение."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:506
@@ -7146,7 +7146,7 @@ msgstr "Создать вопросы от кандидатов"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm
 msgid "Create Leads From Contact Form"
-msgstr "Создайте кандидатов из контактной формы"
+msgstr "Получение запросов со страницы контактов"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
@@ -8119,7 +8119,7 @@ msgstr "Домен"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_domain
 msgid "Domain Value"
-msgstr "Значение Домена"
+msgstr "Значение домена"
 
 #. module: base
 #: model:res.country,name:base.dm
@@ -8474,7 +8474,7 @@ msgstr "Отслеживание Расходов"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense
 msgid "Expenses Validation, Invoicing"
-msgstr "Утверждение расходов, Выставление Счета-фактуры"
+msgstr "Утверждение расходов, выставление счетов"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_exports_line_export_id
@@ -8539,7 +8539,7 @@ msgstr ""
 #. module: base
 #: selection:ir.ui.view,mode:0
 msgid "Extension View"
-msgstr "Вид Расширения"
+msgstr "Вид расширения"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_client_xml_id
@@ -9495,7 +9495,7 @@ msgstr "Помогает вам получить максимальную отд
 msgid ""
 "Helps you handle your accounting needs, if you are not an accountant, we "
 "suggest you to install only the Invoicing."
-msgstr "Помогает вам обрабатывать потребности вашего учета, если вы не бухгалтер, мы рекомендуем вам установить только выставление счетов."
+msgstr "Помогает вам вести бухгалтерский учёт - если вы не бухгалтер, мы рекомендуем вам установить только модуль работы со счетами."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_sales_management
@@ -10416,12 +10416,12 @@ msgstr "Адрес счета"
 #: model:ir.module.module,shortdesc:base.module_account
 #: model:ir.ui.menu,name:base.menu_invoiced
 msgid "Invoicing"
-msgstr "Выставление счета"
+msgstr "Счета"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_account_voucher
 msgid "Invoicing & Payments"
-msgstr "Выставление счетов и Платежи"
+msgstr "Счета и платежи"
 
 #. module: base
 #: model:res.country,name:base.ir
@@ -11494,7 +11494,7 @@ msgstr "Мартиника (Франция)"
 #. module: base
 #: model:ir.module.category,name:base.module_category_mass_mailing
 msgid "Mass Mailing"
-msgstr "Массовая Рассылка"
+msgstr "Массовая рассылка"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing
@@ -11534,7 +11534,7 @@ msgid ""
 "Medium-sized image of this contact. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr "Фото контакта среднего размера. Оно автоматически принимает размер 128х128 пикселей, с сохранением соотношения сторон. Используйте это поле в видах форм или видах канбан."
+msgstr "Фото контакта среднего размера. Оно автоматически принимает размер 128х128 пикселей с сохранением соотношения сторон. Используйте это поле в видах форм или в некоторых видах канбан."
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_association
@@ -12453,7 +12453,7 @@ msgstr "Онлайн вакансии"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_quote
 msgid "Online Proposals"
-msgstr "Онлайн Предложения"
+msgstr "Онлайн-предложения"
 
 #. module: base
 #: code:addons/base/res/res_config.py:551
@@ -12794,12 +12794,12 @@ msgstr "Партнер Назначение & Геолокализация"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_mass_mail
 msgid "Partner Mass Mailing"
-msgstr "Массовая Рассылка Партнерам"
+msgstr "Массовая рассылка для партнёров"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_partner
 msgid "Partner Module for Website"
-msgstr "Модуль Партнера для Вебсайта"
+msgstr "Модуль &quot;партнёры&quot; для сайта"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_category_form
@@ -13311,7 +13311,7 @@ msgstr "Проект"
 #. module: base
 #: model:ir.module.category,name:base.module_category_project_and_timesheet_management
 msgid "Project & Timesheet Management"
-msgstr "Управление Проектами и Расписаниями"
+msgstr "Управление проектами и табелями"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_forecast
@@ -13863,7 +13863,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_wkf_osv
 #: model:ir.ui.view,arch_db:base.view_workflow_instance_search
 msgid "Resource Object"
-msgstr ""
+msgstr "Ресурс"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_forecast
@@ -13888,7 +13888,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_multi
 msgid "Restrict to lists"
-msgstr ""
+msgstr "Органичить списками"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_16
@@ -14153,7 +14153,7 @@ msgstr "Отделы продаж"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet
 msgid "Sales Timesheet"
-msgstr ""
+msgstr "Табели продаж"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_mrp
@@ -14250,7 +14250,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_search_view_id
 msgid "Search View Ref."
-msgstr ""
+msgstr "Ссылка на поиск представления"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_module_filter
@@ -14359,7 +14359,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_quote
 msgid "Send Professional Quotations"
-msgstr ""
+msgstr "Рассылайте профессиональные предложения"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sign
@@ -14492,7 +14492,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_server_action_search
 #: model:ir.ui.view,arch_db:base.view_server_action_tree
 msgid "Server Actions"
-msgstr "Действия Сервера"
+msgstr "Действия сервера"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_services
@@ -14774,7 +14774,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Source Object"
-msgstr ""
+msgstr "Исходный объект"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_translation_form
@@ -15023,7 +15023,7 @@ msgstr "Заметки, совместная деятельность, памя�
 #. module: base
 #: model:ir.module.category,name:base.module_category_stock_management
 msgid "Stock Management"
-msgstr "Управление запасами"
+msgstr "Складской учёт"
 
 #. module: base
 #: selection:workflow.activity,kind:0
@@ -15334,7 +15334,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_target
 msgid "Target Window"
-msgstr ""
+msgstr "Целевой вид"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_vat
@@ -15796,7 +15796,7 @@ msgstr ""
 msgid ""
 "The selected language has been successfully installed. You must change the "
 "preferences of the user and open a new menu to view the changes."
-msgstr ""
+msgstr "Выбранный язык успешно установлен. Вам требуется сменить настройки пользователя и открыть новое меню для просмотра изменений."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade_install
@@ -15956,17 +15956,17 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet
 msgid "Time Tracking"
-msgstr ""
+msgstr "Трекер времени"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_issue_sheet
 msgid "Timesheet on Issues"
-msgstr ""
+msgstr "Табель для заявок"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_project_issue_sheet
 msgid "Timesheet on Website Project Issue"
-msgstr ""
+msgstr "Табель для заявок с сайта"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_sheet
@@ -15976,7 +15976,7 @@ msgstr "Табели"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_timesheet_sheet
 msgid "Timesheets, Attendances, Activities"
-msgstr "Табели, Посещаемость, Мероприятия"
+msgstr "Табели, посещаемость, мероприятия"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_tz
@@ -16842,17 +16842,17 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_view_editor
 msgid "View Editor"
-msgstr "Редактор Вида"
+msgstr "Редактор представления"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_mode
 msgid "View Mode"
-msgstr "Режим Вида"
+msgstr "Режим представления"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_name
 msgid "View Name"
-msgstr "Название Вида"
+msgstr "Название представления"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_currency_form
@@ -16862,7 +16862,7 @@ msgstr "Смотреть Курсы"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_id
 msgid "View Ref."
-msgstr "Ссылка на Вид"
+msgstr "Ссылка на представление"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_type
@@ -16870,7 +16870,7 @@ msgstr "Ссылка на Вид"
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_type
 #: model:ir.ui.view,arch_db:base.view_window_action_search
 msgid "View Type"
-msgstr "Тип Вида"
+msgstr "Тип представления"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports
@@ -16904,7 +16904,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_view_tree
 #: model:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Views"
-msgstr ""
+msgstr "Представления"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view
@@ -16916,7 +16916,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_inherit_children_ids
 msgid "Views which inherit from this one"
-msgstr ""
+msgstr "Представления, которые наследуются от данного"
 
 #. module: base
 #: model:res.country,name:base.vg
@@ -17045,7 +17045,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_website
 #, python-format
 msgid "Website"
-msgstr "Вебсайт"
+msgstr "Сайт"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website
@@ -17060,7 +17060,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_enterprise
 msgid "Website Enterprise"
-msgstr "Вебсайт Предприятия"
+msgstr "Сайт предприятия"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_portal_followup
@@ -17085,7 +17085,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_links
 msgid "Website Link Tracker"
-msgstr "Вебсайт: трекер ссылок"
+msgstr "Сайт: трекер ссылок"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_im_livechat
@@ -17125,12 +17125,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_portal
 msgid "Website Portal"
-msgstr "Вебсайт Портал"
+msgstr "Сайт: портал"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_portal_sale
 msgid "Website Portal for Sales"
-msgstr "Вебсайт Портал для Продаж"
+msgstr "Сайт: портал для продаж"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_project_issue
@@ -17257,7 +17257,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.ir_action_window
 #: model:ir.ui.menu,name:base.menu_ir_action_window
 msgid "Window Actions"
-msgstr ""
+msgstr "Действия форм"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_change_password_user_wizard_id
@@ -17325,7 +17325,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_workflow
 #: model:ir.ui.menu,name:base.menu_workflow_root
 msgid "Workflows"
-msgstr ""
+msgstr "Рабочие процессы"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_triggers_workitem_id
@@ -18201,7 +18201,7 @@ msgstr ""
 msgid ""
 "the user will be able to manage his own human resources stuff (leave "
 "request, timesheets, ...), if he is linked to an employee in the system."
-msgstr ""
+msgstr "пользователь сможет управлять своим рабочим графиком (запросы на отгулы, табели рабочего времени, ...), если он добавлен в систему в качестве сотрудника."
 
 #. module: base
 #: model:res.groups,comment:base.group_sale_salesman_all_leads

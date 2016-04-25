@@ -120,7 +120,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         if skip_modules and module_name in skip_modules:
             continue
 
-        _logger.info('loading module %s (%d/%d)', module_name, index, module_count)
+        _logger.debug('loading module %s (%d/%d)', module_name, index, module_count)
         migrations.migrate_module(package, 'pre')
         load_openerp_module(package.name)
 

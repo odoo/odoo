@@ -340,6 +340,10 @@ DebugManager.include({
 
     get_metadata: function() {
         var ds = this._view_manager.dataset;
+        if (!this.view.get_selected_ids().length) {
+            console.warn(_t("No metadata available"));
+            return
+        }        
         ds.call('get_metadata', [this._active_view.controller.get_selected_ids()]).done(function(result) {
             new Dialog(this, {
                 title: _.str.sprintf(_t("Metadata (%s)"), ds.model),

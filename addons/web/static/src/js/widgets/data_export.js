@@ -6,6 +6,7 @@ var crash_manager = require('web.crash_manager');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
 var framework = require('web.framework');
+var pyeval = require('web.pyeval');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -431,7 +432,7 @@ var DataExport = Dialog.extend({
                 fields: exported_fields,
                 ids: this.ids_to_export,
                 domain: this.domain,
-                context: this.dataset.context,
+                context: pyeval.eval('contexts', [this.dataset._model.context()]),
                 import_compat: !!this.$import_compat_radios.filter(':checked').val(),
             })},
             complete: framework.unblockUI,

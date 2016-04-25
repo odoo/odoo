@@ -3,6 +3,8 @@
 import logging
 from functools import partial
 
+import psycopg2
+
 from odoo import api, fields, models, tools, _
 from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
@@ -68,6 +70,23 @@ class PosOrder(models.Model):
             # bypass opening_control (necessary when using cash control)
             new_session.signal_workflow('open')
             return new_session
+
+    def _match_payment_to_invoice(self, order):
+        account_precision = self.env['decimal.precision'].precision_get('Account')
+
+        # ignore orders with an amount_paid of 0 because those are returns through the POS
+        if not float_is_zero(order['amount_return'], account_precision) and not float_is_zero(order['amount_paid'], account_precision):
+            cur_amount_paid = 0
+            payments_to_keep = []
+            for payment in order.get('statement_ids'):
+                if cur_amount_paid + payment[2]['amount'] > order['amount_total']:
+                    payment[2]['amount'] = order['amount_total'] - cur_amount_paid
+                    payments_to_keep.append(payment)
+                    break
+                cur_amount_paid += payment[2]['amount']
+                payments_to_keep.append(payment)
+            order['statement_ids'] = payments_to_keep
+            order['amount_return'] = 0
 
     @api.model
     def _process_order(self, pos_order):
@@ -463,11 +482,17 @@ class PosOrder(models.Model):
 
         for tmp_order in orders_to_save:
             to_invoice = tmp_order['to_invoice']
-            pos_order = self._process_order(tmp_order['data'])
+            order = tmp_order['data']
+            if to_invoice:
+                self._match_payment_to_invoice(order)
+            pos_order = self._process_order(order)
             order_ids.append(pos_order.id)
 
             try:
                 pos_order.signal_workflow('paid')
+            except psycopg2.OperationalError:
+                # do not hide transactional errors, the order(s) won't be saved!
+                raise
             except Exception as e:
                 _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
 
