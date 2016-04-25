@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-15 09:26+0000\n"
-"PO-Revision-Date: 2016-04-12 07:09+0000\n"
+"PO-Revision-Date: 2016-04-22 18:59+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/language/es_EC/)\n"
 "MIME-Version: 1.0\n"
@@ -1039,6 +1039,14 @@ msgstr "Cuando un activo es creado, el estado es 'Borrador'.\nSi el activo esta 
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_name
 msgid "Year"
 msgstr "Año"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset_invoice.py:53
+#, python-format
+msgid ""
+"You already have assets with the reference %s.\n"
+"Please delete these assets before creating new ones for this invoice."
+msgstr "Usted ya tiene activos con la referencia %s.\nPor favor, borre esos activos para poder crear nuevos desde esta factura."
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:100

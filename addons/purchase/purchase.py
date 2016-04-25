@@ -741,14 +741,14 @@ class ProcurementOrder(models.Model):
                         partner_id=procurement.purchase_line_id.partner_id,
                         quantity=product_qty,
                         date=procurement.purchase_line_id.order_id.date_order and procurement.purchase_line_id.order_id.date_order[:10],
-                        uom_id=procurement.product_uom)
+                        uom_id=procurement.purchase_line_id.product_uom)
 
                     price_unit = self.env['account.tax']._fix_tax_included_price(seller.price, procurement.purchase_line_id.product_id.supplier_taxes_id, procurement.purchase_line_id.taxes_id) if seller else 0.0
                     if price_unit and seller and procurement.purchase_line_id.order_id.currency_id and seller.currency_id != procurement.purchase_line_id.order_id.currency_id:
                         price_unit = seller.currency_id.compute(price_unit, procurement.purchase_line_id.order_id.currency_id)
 
-                    if seller and seller.product_uom != procurement.product_uom:
-                        price_unit = self.env['product.uom']._compute_price(seller.product_uom.id, price_unit, to_uom_id=procurement.product_uom.id)
+                    if seller and seller.product_uom != procurement.purchase_line_id.product_uom:
+                        price_unit = self.env['product.uom']._compute_price(seller.product_uom.id, price_unit, to_uom_id=procurement.purchase_line_id.product_uom.id)
 
                 procurement.purchase_line_id.product_qty = product_qty
                 procurement.purchase_line_id.price_unit = price_unit
@@ -812,12 +812,13 @@ class ProcurementOrder(models.Model):
     def _prepare_purchase_order_line(self, po, supplier):
         self.ensure_one()
 
+        procurement_uom_po_qty = self.env['product.uom']._compute_qty_obj(self.product_uom, self.product_qty, self.product_id.uom_po_id)
         seller = self.product_id._select_seller(
             self.product_id,
             partner_id=supplier.name,
-            quantity=self.product_qty,
+            quantity=procurement_uom_po_qty,
             date=po.date_order and po.date_order[:10],
-            uom_id=self.product_uom)
+            uom_id=self.product_id.uom_po_id)
 
         taxes = self.product_id.supplier_taxes_id
         fpos = po.fiscal_position_id
@@ -828,9 +829,6 @@ class ProcurementOrder(models.Model):
         price_unit = self.env['account.tax']._fix_tax_included_price(seller.price, self.product_id.supplier_taxes_id, taxes_id) if seller else 0.0
         if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
             price_unit = seller.currency_id.compute(price_unit, po.currency_id)
-
-        if seller and self.product_uom and seller.product_uom != self.product_uom:
-            price_unit = self.env['product.uom']._compute_price(seller.product_uom.id, price_unit, to_uom_id=self.product_uom.id)
 
         product_lang = self.product_id.with_context({
             'lang': supplier.name.lang,
@@ -844,9 +842,9 @@ class ProcurementOrder(models.Model):
 
         return {
             'name': name,
-            'product_qty': self.product_qty,
+            'product_qty': procurement_uom_po_qty,
             'product_id': self.product_id.id,
-            'product_uom': self.product_uom.id,
+            'product_uom': self.product_id.uom_po_id.id,
             'price_unit': price_unit,
             'date_planned': date_planned,
             'taxes_id': [(6, 0, taxes_id.ids)],
@@ -928,23 +926,21 @@ class ProcurementOrder(models.Model):
             # Create Line
             po_line = False
             for line in po.order_line:
-                if line.product_id == procurement.product_id and line.product_uom == procurement.product_uom:
+                if line.product_id == procurement.product_id and line.product_uom == procurement.product_id.uom_po_id:
+                    procurement_uom_po_qty = self.env['product.uom']._compute_qty_obj(procurement.product_uom, procurement.product_qty, procurement.product_id.uom_po_id)
                     seller = self.product_id._select_seller(
-                        self.product_id,
+                        procurement.product_id,
                         partner_id=partner,
-                        quantity=line.product_qty + procurement.product_qty,
+                        quantity=line.product_qty + procurement_uom_po_qty,
                         date=po.date_order and po.date_order[:10],
-                        uom_id=self.product_uom)
+                        uom_id=procurement.product_id.uom_po_id)
 
                     price_unit = self.env['account.tax']._fix_tax_included_price(seller.price, line.product_id.supplier_taxes_id, line.taxes_id) if seller else 0.0
                     if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
                         price_unit = seller.currency_id.compute(price_unit, po.currency_id)
 
-                    if seller and self.product_uom and seller.product_uom != self.product_uom:
-                        price_unit = self.env['product.uom']._compute_price(seller.product_uom.id, price_unit, to_uom_id=self.product_uom.id)
-
                     po_line = line.write({
-                        'product_qty': line.product_qty + procurement.product_qty,
+                        'product_qty': line.product_qty + procurement_uom_po_qty,
                         'price_unit': price_unit,
                         'procurement_ids': [(4, procurement.id)]
                     })

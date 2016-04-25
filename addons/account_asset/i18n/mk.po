@@ -3,13 +3,13 @@
 # * account_asset
 # 
 # Translators:
-# Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2015
+# Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-15 09:26+0000\n"
-"PO-Revision-Date: 2016-04-15 14:04+0000\n"
+"PO-Revision-Date: 2016-04-22 12:30+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/mk/)\n"
 "MIME-Version: 1.0\n"
@@ -739,7 +739,7 @@ msgstr "Измени средство"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Modify Depreciation"
-msgstr ""
+msgstr "Модификувај Амортизација"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
@@ -913,7 +913,7 @@ msgstr "Стартување"
 #. module: account_asset
 #: selection:account.asset.category,type:0
 msgid "Sale: Revenue Recognition"
-msgstr ""
+msgstr "Продажба: Прифаќање на приход"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
@@ -1038,6 +1038,14 @@ msgstr "Кога средството е креирано, статусот е '
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_name
 msgid "Year"
 msgstr "Година"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset_invoice.py:53
+#, python-format
+msgid ""
+"You already have assets with the reference %s.\n"
+"Please delete these assets before creating new ones for this invoice."
+msgstr ""
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:100
