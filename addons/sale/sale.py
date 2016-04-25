@@ -667,7 +667,7 @@ class SaleOrderLine(models.Model):
             line.product_id_change()
             for field in onchange_fields:
                 if field not in values:
-                    values[field] = line._fields[field].convert_to_write(line[field])
+                    values[field] = line._fields[field].convert_to_write(line[field], line)
         line = super(SaleOrderLine, self).create(values)
         if line.state == 'sale':
             if (not line.order_id.project_id and
