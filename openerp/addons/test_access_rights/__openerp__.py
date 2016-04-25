@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     'name': 'test of access rights and rules',
     'description': "Testing of access restrictions",
