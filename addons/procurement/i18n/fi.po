@@ -1,21 +1,25 @@
-# Finnish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * procurement
+# 
+# Translators:
+# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2015
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
+# Marko Happonen <marko.happonen@sprintit.fi>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Finnish <fi@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2016-04-11 14:14+0000\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
+"Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:36+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_exceptions
@@ -24,25 +28,17 @@ msgid ""
 "                 Click to create a Procurement.\n"
 "              </p>\n"
 "              <p>\n"
-"                <b>Procurement Orders</b> represent the need for a certain "
-"quantity of products, at a given time, in a given location.\n"
+"                <b>Procurement Orders</b> represent the need for a certain quantity of products, at a given time, in a given location.\n"
 "              </p>\n"
 "              <p>\n"
-"                <b>Sales Orders</b> are one typical source of Procurement "
-"Orders (but these are distinct documents). \n"
-"                <br/>Depending on the procurement parameters and the product "
-"configuration, the procurement engine will attempt to satisfy the need by "
-"reserving products from stock, ordering products from a supplier, or passing "
-"a manufacturing order, etc...\n"
+"                <b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). \n"
+"                <br/>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc...\n"
 "              </p>\n"
 "              <p>\n"
-"                A <b>Procurement Exception</b> occurs when the system cannot "
-"find a way to fulfill a procurement. Some exceptions will resolve themselves "
-"automatically, but others require manual intervention (those are identified "
-"by a specific error message in the chatter).\n"
+"                A <b>Procurement Exception</b> occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message in the chatter).\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                 Valitse tehdäksesi uuden hankinnan.\n              </p>\n              <p>\n                <b>Hankintatilaukset</b> kuvaavat tarvetta hankkia tietty määrä tuotetta, tietyllä ajanhetkellä toimitettuna tiettyyn paikkaan.\n              </p>\n              <p>\n                <b>Myyntitilaukset</b> ovat yksi lähde hankintatilauksille (mutta ovat kaksi eri dokumenttia).\n                <br/>Riippuen hankinnan luonteesta ja tuotevalikoimasta, Odoon hankinta-automaatti yrittää täyttää tarpeen varaamalla tuotteita varastosta, tilaamalla tuotteita toimittajilta tai tekemällä tuotantotilauksen jne..\n              </p>\n              <p>\n               <b>Hankintapoikkeus/virhe</b> tapahtuu kun järjestelmä ei pysty täyttämään hankintatilausta. Jotkut poikkeukset pystytään ratkaisemaan automaattisesti, mutta jotkin  tarvitsevat manuaalista käsittelyä (nämä on merkitty virheviestillä).\n              </p>\n            "
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -51,18 +47,14 @@ msgid ""
 "                 Click to create a procurement order.  \n"
 "              </p>\n"
 "              <p>\n"
-"                A <b>procurement order</b> is used to record a need for a "
-"specific\n"
-"                product at a specific location. Procurement orders are "
-"usually\n"
-"                created automatically from <i>sales orders, pull logistic "
-"rules or\n"
+"                A <b>procurement order</b> is used to record a need for a specific\n"
+"                product at a specific location. Procurement orders are usually\n"
+"                created automatically from <i>sales orders, pull logistic rules or\n"
 "                minimum stock rules.</i>\n"
 "              </p>\n"
 "              <p>\n"
 "                When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fullfil the need: "
-"purchase\n"
+"                creates the necessary operations to fullfil the need: purchase\n"
 "                order proposition, manufacturing order, etc.\n"
 "              </p>\n"
 "            "
@@ -71,7 +63,7 @@ msgstr ""
 #. module: procurement
 #: field:procurement.rule,action:0
 msgid "Action"
-msgstr ""
+msgstr "Toiminto"
 
 #. module: procurement
 #: field:procurement.rule,active:0
@@ -81,7 +73,7 @@ msgstr "Aktiivinen"
 #. module: procurement
 #: selection:procurement.group,move_type:0
 msgid "All at once"
-msgstr ""
+msgstr "Kaikki kerralla"
 
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
@@ -112,20 +104,20 @@ msgstr ""
 #. module: procurement
 #: help:procurement.order,rule_id:0
 msgid ""
-"Chosen rule for the procurement resolution. Usually chosen by the system but "
-"can be manually set by the procurement manager to force an unusual behavior."
+"Chosen rule for the procurement resolution. Usually chosen by the system but"
+" can be manually set by the procurement manager to force an unusual "
+"behavior."
 msgstr ""
 
 #. module: procurement
-#: field:procurement.order,company_id:0
-#: field:procurement.rule,company_id:0
+#: field:procurement.order,company_id:0 field:procurement.rule,company_id:0
 msgid "Company"
 msgstr "Yritys"
 
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Compute all procurements in the background."
-msgstr ""
+msgstr "Suorita ajastimet taustalla"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
@@ -138,30 +130,28 @@ msgid "Confirmed"
 msgstr "Vahvistettu"
 
 #. module: procurement
-#: field:procurement.group,create_uid:0
-#: field:procurement.order,create_uid:0
+#: field:procurement.group,create_uid:0 field:procurement.order,create_uid:0
 #: field:procurement.order.compute.all,create_uid:0
 #: field:procurement.rule,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Luonut"
 
 #. module: procurement
-#: field:procurement.group,create_date:0
-#: field:procurement.order,create_date:0
+#: field:procurement.group,create_date:0 field:procurement.order,create_date:0
 #: field:procurement.order.compute.all,create_date:0
 #: field:procurement.rule,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Luotu"
 
 #. module: procurement
 #: help:procurement.order,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Viimeisen viestin päivämäärä"
 
 #. module: procurement
 #: field:procurement.group,move_type:0
 msgid "Delivery Method"
-msgstr ""
+msgstr "Toimitustapa"
 
 #. module: procurement
 #: field:procurement.order,name:0
@@ -196,7 +186,7 @@ msgstr "Lisätiedot"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Fixed"
-msgstr ""
+msgstr "Kiinteä"
 
 #. module: procurement
 #: field:procurement.rule,group_id:0
@@ -229,17 +219,13 @@ msgstr ""
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Sisältää viestien yhteenvedon (viestien määrän,...). Tämä yhteenveto on "
-"valmiiksi  html-muodossa, jotta se voidaan viedä kanban näkymään."
+msgstr "Sisältää viestien yhteenvedon (viestien määrän,...). Tämä yhteenveto on valmiiksi  html-muodossa, jotta se voidaan viedä kanban näkymään."
 
 #. module: procurement
-#: field:procurement.group,id:0
-#: field:procurement.order,id:0
-#: field:procurement.order.compute.all,id:0
-#: field:procurement.rule,id:0
+#: field:procurement.group,id:0 field:procurement.order,id:0
+#: field:procurement.order.compute.all,id:0 field:procurement.rule,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: procurement
 #: help:procurement.order,message_unread:0
@@ -265,23 +251,21 @@ msgstr "on seuraaja"
 #. module: procurement
 #: field:procurement.order,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Viimeinen viestipvm"
 
 #. module: procurement
-#: field:procurement.group,write_uid:0
-#: field:procurement.order,write_uid:0
+#: field:procurement.group,write_uid:0 field:procurement.order,write_uid:0
 #: field:procurement.order.compute.all,write_uid:0
 #: field:procurement.rule,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Viimeksi päivittänyt"
 
 #. module: procurement
-#: field:procurement.group,write_date:0
-#: field:procurement.order,write_date:0
+#: field:procurement.group,write_date:0 field:procurement.order,write_date:0
 #: field:procurement.order.compute.all,write_date:0
 #: field:procurement.rule,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Viimeksi päivitetty"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
@@ -314,7 +298,7 @@ msgid "Name"
 msgstr "Nimi"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:213
+#: code:addons/procurement/procurement.py:212
 #, python-format
 msgid "No rule matching this procurement"
 msgstr ""
@@ -337,7 +321,7 @@ msgstr "Huomautukset"
 #. module: procurement
 #: selection:procurement.group,move_type:0
 msgid "Partial"
-msgstr ""
+msgstr "Osittainen"
 
 #. module: procurement
 #: field:procurement.order,priority:0
@@ -380,12 +364,12 @@ msgstr ""
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Hankintasääntö"
 
 #. module: procurement
 #: view:procurement.group:procurement.procurement_group_form_view
 msgid "Procurement group"
-msgstr ""
+msgstr "Hankintaryhmä"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
@@ -453,7 +437,7 @@ msgstr ""
 #. module: procurement
 #: field:procurement.group,name:0
 msgid "Reference"
-msgstr ""
+msgstr "Viite"
 
 #. module: procurement
 #: help:procurement.order,origin:0
@@ -465,7 +449,7 @@ msgstr ""
 #. module: procurement
 #: field:procurement.order,rule_id:0
 msgid "Rule"
-msgstr ""
+msgstr "Sääntö"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
@@ -491,7 +475,7 @@ msgstr "Ajoitettu päivä"
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
 msgid "Scheduled Month"
-msgstr ""
+msgstr "Suunniteltu kuukausi"
 
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
@@ -501,7 +485,7 @@ msgstr "Jaksottimen parametrit"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Scheduling"
-msgstr ""
+msgstr "Aikataulutus"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
@@ -511,7 +495,7 @@ msgstr "Hae hankinta"
 #. module: procurement
 #: field:procurement.rule,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Järjestysluku"
 
 #. module: procurement
 #: field:procurement.order,origin:0
@@ -547,7 +531,7 @@ msgstr "Lukemattomat viestit"
 #. module: procurement
 #: field:procurement.order,product_uos_qty:0
 msgid "UoS Quantity"
-msgstr "my määrä"
+msgstr "Myynnin määräyksikkö"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -563,3 +547,8 @@ msgstr "Erittäin kiireellinen"
 #: view:procurement.order:procurement.procurement_form_view
 msgid "e.g. SO005"
 msgstr ""
+
+#. module: procurement
+#: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
+msgid "or"
+msgstr "tai"

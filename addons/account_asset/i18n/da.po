@@ -1,26 +1,28 @@
-# Danish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_asset
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# jonas jensen <j.jensen@tcomp.dk>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Danish <da@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2016-04-19 09:37+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Danish (http://www.transifex.com/odoo/odoo-8/language/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 06:49+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: da\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_asset
 #: field:account.asset.asset,entry_count:0
 msgid "# Asset Entries"
-msgstr ""
+msgstr "# Aktiv angivelser"
 
 #. module: account_asset
 #: field:asset.asset.report,nbr:0
@@ -31,10 +33,8 @@ msgstr "# af afskrivnings linier"
 #: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
 msgid ""
 "<p>\n"
-"            From this report, you can have an overview on all depreciation. "
-"The\n"
-"            tool search can also be used to personalise your Assets reports "
-"and\n"
+"            From this report, you can have an overview on all depreciation. The\n"
+"            tool search can also be used to personalise your Assets reports and\n"
 "            so, match this analysis to your needs;\n"
 "          </p>\n"
 "        "
@@ -48,39 +48,38 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.asset,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktive"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 msgid "Add an internal note here..."
-msgstr ""
+msgstr "Tilføj et internt notat her ..."
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciated_value:0
 msgid "Amount Already Depreciated"
-msgstr ""
+msgstr "Beløb Allerede Afskrives"
 
 #. module: account_asset
 #: field:asset.asset.report,depreciation_value:0
 msgid "Amount of Depreciation Lines"
-msgstr ""
+msgstr "Antal afskrevne linjer"
 
 #. module: account_asset
 #: view:account.asset.category:account_asset.view_account_asset_category_form
 msgid "Analytic Information"
-msgstr ""
+msgstr "Analytisk Information"
 
 #. module: account_asset
 #: field:account.asset.category,account_analytic_id:0
 msgid "Analytic account"
-msgstr ""
+msgstr "Analytisk konto"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 #: view:account.asset.asset:account_asset.view_account_asset_search
 #: field:account.asset.depreciation.line,asset_id:0
-#: field:account.asset.history,asset_id:0
-#: field:account.move.line,asset_id:0
+#: field:account.asset.history,asset_id:0 field:account.move.line,asset_id:0
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 #: field:asset.asset.report,asset_id:0
 #: model:ir.model,name:account_asset.model_account_asset_asset
@@ -90,7 +89,7 @@ msgstr "Aktiv"
 #. module: account_asset
 #: field:account.asset.category,account_asset_id:0
 msgid "Asset Account"
-msgstr ""
+msgstr "Konto for aktiv"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal
@@ -104,7 +103,7 @@ msgstr "Aktiv kategori"
 #: field:account.invoice.line,asset_category_id:0
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Asset Category"
-msgstr ""
+msgstr "Kategorier for aktiver"
 
 #. module: account_asset
 #: view:asset.modify:account_asset.asset_modify_form
@@ -123,9 +122,14 @@ msgid "Asset History"
 msgstr ""
 
 #. module: account_asset
+#: field:asset.modify,asset_method_time:0
+msgid "Asset Method Time"
+msgstr ""
+
+#. module: account_asset
 #: field:account.asset.asset,name:0
 msgid "Asset Name"
-msgstr ""
+msgstr "Navn på aktiver"
 
 #. module: account_asset
 #: view:account.asset.category:account_asset.view_account_asset_category_form
@@ -133,7 +137,7 @@ msgstr ""
 #: field:asset.asset.report,asset_category_id:0
 #: model:ir.model,name:account_asset.model_account_asset_category
 msgid "Asset category"
-msgstr ""
+msgstr "Aktiv kategori"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
@@ -168,7 +172,7 @@ msgstr "AnlægsAktiv analyse"
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_search
 msgid "Assets in closed state"
-msgstr ""
+msgstr "Aktiv er lukket"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_search
@@ -178,18 +182,18 @@ msgstr "AnlægsAktiver i status kladde og åben"
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Assets in draft state"
-msgstr ""
+msgstr "Anlæg i status kladde"
 
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Assets in running state"
-msgstr ""
+msgstr "Anlæg er aktivt"
 
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:account_asset.view_asset_depreciation_confirmation_wizard
 #: view:asset.modify:account_asset.asset_modify_form
 msgid "Cancel"
-msgstr ""
+msgstr "Annuller"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
@@ -209,8 +213,7 @@ msgid "Children Assets"
 msgstr "Under anlægsaktiver"
 
 #. module: account_asset
-#: help:account.asset.asset,method:0
-#: help:account.asset.category,method:0
+#: help:account.asset.asset,method:0 help:account.asset.category,method:0
 msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
@@ -221,12 +224,9 @@ msgstr ""
 #: help:account.asset.asset,method_time:0
 #: help:account.asset.category,method_time:0
 msgid ""
-"Choose the method to use to compute the dates and number of depreciation "
-"lines.\n"
-"  * Number of Depreciations: Fix the number of depreciation lines and the "
-"time between 2 depreciations.\n"
-"  * Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
+"Choose the method to use to compute the dates and number of depreciation lines.\n"
+"  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
+"  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
 msgstr ""
 
 #. module: account_asset
@@ -237,15 +237,14 @@ msgid ""
 msgstr ""
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0
-#: selection:asset.asset.report,state:0
+#: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
 msgid "Close"
-msgstr ""
+msgstr "Luk"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_search
 msgid "Closed"
-msgstr ""
+msgstr "Lukket"
 
 #. module: account_asset
 #: field:account.asset.asset,company_id:0
@@ -256,8 +255,7 @@ msgid "Company"
 msgstr "Firma"
 
 #. module: account_asset
-#: field:account.asset.asset,method:0
-#: field:account.asset.category,method:0
+#: field:account.asset.asset,method:0 field:account.asset.category,method:0
 msgid "Computation Method"
 msgstr ""
 
@@ -265,12 +263,12 @@ msgstr ""
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 #: view:asset.depreciation.confirmation.wizard:account_asset.view_asset_depreciation_confirmation_wizard
 msgid "Compute"
-msgstr ""
+msgstr "Beregn"
 
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:account_asset.view_asset_depreciation_confirmation_wizard
 msgid "Compute Asset"
-msgstr ""
+msgstr "Beregn anlæg"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
@@ -302,7 +300,7 @@ msgstr ""
 #: field:asset.depreciation.confirmation.wizard,create_uid:0
 #: field:asset.modify,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Oprettet af"
 
 #. module: account_asset
 #: field:account.asset.asset,create_date:0
@@ -312,27 +310,27 @@ msgstr ""
 #: field:asset.depreciation.confirmation.wizard,create_date:0
 #: field:asset.modify,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Oprettet den"
 
 #. module: account_asset
 #: field:account.asset.asset,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_search
 msgid "Current"
-msgstr ""
+msgstr "Aktuel"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,amount:0
 msgid "Current Depreciation"
-msgstr ""
+msgstr "Aktuel afskrivning"
 
 #. module: account_asset
 #: field:account.asset.history,date:0
 msgid "Date"
-msgstr ""
+msgstr "Dato"
 
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
@@ -342,7 +340,7 @@ msgstr "Dato for køb af aktiv"
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Date of depreciation"
-msgstr ""
+msgstr "Afskrivnings dato"
 
 #. module: account_asset
 #: selection:account.asset.asset,method:0
@@ -413,7 +411,7 @@ msgstr ""
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 #: selection:asset.asset.report,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Udkast"
 
 #. module: account_asset
 #: field:account.asset.asset,method_end:0
@@ -425,8 +423,7 @@ msgstr "Slut dato"
 
 #. module: account_asset
 #: field:account.asset.category,method_end:0
-#: field:account.asset.history,method_end:0
-#: field:asset.modify,method_end:0
+#: field:account.asset.history,method_end:0 field:asset.modify,method_end:0
 msgid "Ending date"
 msgstr "Slut dato"
 
@@ -451,7 +448,7 @@ msgstr "Fejl!"
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Udvidede filtre"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
@@ -466,18 +463,18 @@ msgstr "Brutto beløb"
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
 msgid "Gross Value"
-msgstr ""
+msgstr "Brutto værdi"
 
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Group By"
-msgstr ""
+msgstr "Gruppér efter"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 #: field:account.asset.asset,history_ids:0
 msgid "History"
-msgstr ""
+msgstr "Historik"
 
 #. module: account_asset
 #: field:account.asset.history,name:0
@@ -485,35 +482,29 @@ msgid "History name"
 msgstr ""
 
 #. module: account_asset
-#: field:account.asset.asset,id:0
-#: field:account.asset.category,id:0
-#: field:account.asset.depreciation.line,id:0
-#: field:account.asset.history,id:0
+#: field:account.asset.asset,id:0 field:account.asset.category,id:0
+#: field:account.asset.depreciation.line,id:0 field:account.asset.history,id:0
 #: field:asset.asset.report,id:0
-#: field:asset.depreciation.confirmation.wizard,id:0
-#: field:asset.modify,id:0
+#: field:asset.depreciation.confirmation.wizard,id:0 field:asset.modify,id:0
 msgid "ID"
-msgstr ""
+msgstr "Id"
 
 #. module: account_asset
-#: help:account.asset.asset,prorata:0
-#: help:account.asset.category,prorata:0
+#: help:account.asset.asset,prorata:0 help:account.asset.category,prorata:0
 msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first January"
-msgstr ""
-"Angiver at første nedskrivning for dette aktiv skal udføres fra købsdato i "
-"stedet for 1. januar"
+msgstr "Angiver at første nedskrivning for dette aktiv skal udføres fra købsdato i stedet for 1. januar"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Faktura"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Faktura linie"
 
 #. module: account_asset
 #: help:account.asset.asset,salvage_value:0
@@ -523,14 +514,14 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.category,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Journal"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:349
 #: model:ir.model,name:account_asset.model_account_move_line
 #, python-format
 msgid "Journal Items"
-msgstr ""
+msgstr "journal poster"
 
 #. module: account_asset
 #: field:account.asset.asset,write_uid:0
@@ -540,7 +531,7 @@ msgstr ""
 #: field:asset.depreciation.confirmation.wizard,write_uid:0
 #: field:asset.modify,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Sidst opdateret af"
 
 #. module: account_asset
 #: field:account.asset.asset,write_date:0
@@ -550,7 +541,7 @@ msgstr ""
 #: field:asset.depreciation.confirmation.wizard,write_date:0
 #: field:asset.modify,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Sidst opdateret den"
 
 #. module: account_asset
 #: selection:account.asset.asset,method:0
@@ -568,31 +559,29 @@ msgstr "Rediger"
 #: model:ir.actions.act_window,name:account_asset.action_asset_modify
 #: model:ir.model,name:account_asset.model_asset_modify
 msgid "Modify Asset"
-msgstr ""
+msgstr "Rediger anlæg"
 
 #. module: account_asset
 #: field:account.asset.category,name:0
 msgid "Name"
-msgstr ""
+msgstr "Navn"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,remaining_value:0
 msgid "Next Period Depreciation"
-msgstr ""
+msgstr "Næste periode for afskrivning"
 
 #. module: account_asset
-#: field:account.asset.asset,note:0
-#: field:account.asset.category,note:0
+#: field:account.asset.asset,note:0 field:account.asset.category,note:0
 #: field:account.asset.history,note:0
 msgid "Note"
-msgstr ""
+msgstr "Notat"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 #: view:account.asset.category:account_asset.view_account_asset_category_form
 #: view:account.asset.history:account_asset.view_account_asset_history_form
-#: view:asset.modify:account_asset.asset_modify_form
-#: field:asset.modify,note:0
+#: view:asset.modify:account_asset.asset_modify_form field:asset.modify,note:0
 msgid "Notes"
 msgstr "Noter"
 
@@ -605,7 +594,7 @@ msgstr "Noter"
 #: selection:account.asset.history,method_time:0
 #: field:asset.modify,method_number:0
 msgid "Number of Depreciations"
-msgstr ""
+msgstr "Antal afskrivninger"
 
 #. module: account_asset
 #: field:account.asset.asset,method_period:0
@@ -621,12 +610,12 @@ msgstr ""
 #: field:account.asset.asset,partner_id:0
 #: field:asset.asset.report,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: account_asset
 #: field:asset.depreciation.confirmation.wizard,period_id:0
 msgid "Period"
-msgstr ""
+msgstr "Periode"
 
 #. module: account_asset
 #: field:account.asset.category,method_period:0
@@ -640,7 +629,7 @@ msgstr "Periode længde"
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 #: field:asset.asset.report,move_check:0
 msgid "Posted"
-msgstr ""
+msgstr "Posteret"
 
 #. module: account_asset
 #: field:asset.asset.report,posted_value:0
@@ -650,11 +639,10 @@ msgstr "Bogført beløb"
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Posted depreciation lines"
-msgstr ""
+msgstr "Bogførte afskrivnings linier"
 
 #. module: account_asset
-#: field:account.asset.asset,prorata:0
-#: field:account.asset.category,prorata:0
+#: field:account.asset.asset,prorata:0 field:account.asset.category,prorata:0
 msgid "Prorata Temporis"
 msgstr ""
 
@@ -674,7 +662,7 @@ msgstr ""
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Purchase Month"
-msgstr ""
+msgstr "Indkøbs måned"
 
 #. module: account_asset
 #: field:asset.modify,name:0
@@ -706,12 +694,12 @@ msgstr ""
 #. module: account_asset
 #: view:account.asset.category:account_asset.view_account_asset_category_search
 msgid "Search Asset Category"
-msgstr ""
+msgstr "Søg anlægs kategori"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Rækkefølge"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
@@ -739,10 +727,9 @@ msgid "State of Asset"
 msgstr ""
 
 #. module: account_asset
-#: field:account.asset.asset,state:0
-#: field:asset.asset.report,state:0
+#: field:account.asset.asset,state:0 field:asset.asset.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: account_asset
 #: help:account.asset.asset,method_period:0
@@ -753,10 +740,8 @@ msgstr "Tiden mellem afskrivninger i måneder"
 #: help:account.asset.history,method_time:0
 msgid ""
 "The method to use to compute the dates and number of depreciation lines.\n"
-"Number of Depreciations: Fix the number of depreciation lines and the time "
-"between 2 depreciations.\n"
-"Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
+"Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
+"Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
 msgstr ""
 
 #. module: account_asset
@@ -786,21 +771,27 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.history,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Bruger"
 
 #. module: account_asset
 #: help:account.asset.asset,state:0
 msgid ""
 "When an asset is created, the status is 'Draft'.\n"
-"If the asset is confirmed, the status goes in 'Running' and the depreciation "
-"lines can be posted in the accounting.\n"
-"You can manually close an asset when the depreciation is over. If the last "
-"line of depreciation is posted, the asset automatically goes in that status."
+"If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
+"You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
 
 #. module: account_asset
 #: field:asset.asset.report,name:0
 msgid "Year"
+msgstr "År"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset_invoice.py:53
+#, python-format
+msgid ""
+"You already have assets with the reference %s.\n"
+"Please delete these assets before creating new ones for this invoice."
 msgstr ""
 
 #. module: account_asset
@@ -812,4 +803,10 @@ msgstr ""
 #. module: account_asset
 #: view:asset.modify:account_asset.asset_modify_form
 msgid "months"
-msgstr ""
+msgstr "måneder"
+
+#. module: account_asset
+#: view:asset.depreciation.confirmation.wizard:account_asset.view_asset_depreciation_confirmation_wizard
+#: view:asset.modify:account_asset.asset_modify_form
+msgid "or"
+msgstr "eller"

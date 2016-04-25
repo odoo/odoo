@@ -4,14 +4,15 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2016
 # jonas jensen <j.jensen@tcomp.dk>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2015-12-19 11:10+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-04-16 13:07+0000\n"
+"Last-Translator: Hans Henrik Gabelgaard <hhg@gabelgaard.org>\n"
 "Language-Team: Danish (http://www.transifex.com/odoo/odoo-8/language/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -111,7 +112,7 @@ msgstr " Centralisering"
 #: code:addons/account/static/src/js/account_widgets.js:521
 #, python-format
 msgid " seconds"
-msgstr ""
+msgstr "sekunder"
 
 #. module: account
 #: field:analytic.entries.report,nbr:0
@@ -153,13 +154,13 @@ msgstr "# transaktioner"
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
-msgstr "${object.company_id.name} Ordre (Ref ${object.name or 'n/a' })"
+msgstr "${object.company_id.name} Faktura (Ref ${object.name or 'n/a' })"
 
 #. module: account
 #: code:addons/account/account.py:1861
 #, python-format
 msgid "%s (Copy)"
-msgstr ""
+msgstr "%s (Kopi)"
 
 #. module: account
 #: code:addons/account/account.py:635 code:addons/account/account.py:786
@@ -579,7 +580,7 @@ msgstr "En valgt transaktions linie er allerede udlignet."
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only once time on same taxes."
-msgstr ""
+msgstr "En afgifts konterings gruppe kan kun defineres en gang på samme afgift."
 
 #. module: account
 #: view:website:account.report_centraljournal
@@ -1101,7 +1102,7 @@ msgstr "Tilladte konti (tom hvis ingen kontrol)"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Fiscal Position"
-msgstr ""
+msgstr "Konterings gruppe"
 
 #. module: account
 #: view:account.fiscal.position:account.view_account_position_form
@@ -2042,7 +2043,7 @@ msgstr "Efter sælgere"
 msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
-msgstr ""
+msgstr "Ved at fjerne markering Aktiv, skjules konterings gruppen uden at blive slettet"
 
 #. module: account
 #: field:account.chart.template,visible:0
@@ -2312,7 +2313,7 @@ msgstr ""
 #. module: account
 #: field:account.journal,centralisation:0
 msgid "Centralized Counterpart"
-msgstr ""
+msgstr "Centraliseret Modpostering"
 
 #. module: account
 #: view:website:account.report_centraljournal
@@ -2472,7 +2473,7 @@ msgstr "Tjek totalen på leverandør fakturaer"
 #. module: account
 #: field:account.period.close,sure:0
 msgid "Check this box"
-msgstr ""
+msgstr "Markér dette felt"
 
 #. module: account
 #: help:res.partner,vat_subjected:0
@@ -2489,7 +2490,7 @@ msgstr ""
 #. module: account
 #: help:account.config.settings,expects_chart_of_accounts:0
 msgid "Check this box if this company is a legal entity."
-msgstr ""
+msgstr "Markér dette felt hvis virksomheden er en juridisk enhed."
 
 #. module: account
 #: help:account.move,to_check:0
@@ -2585,7 +2586,7 @@ msgstr "Vælg regnskabs år"
 #: code:addons/account/static/src/js/account_widgets.js:1297
 #, python-format
 msgid "Choose counterpart"
-msgstr ""
+msgstr "Vælg modpostering"
 
 #. module: account
 #: view:account.automatic.reconcile:account.account_automatic_reconcile_view1
@@ -3880,7 +3881,7 @@ msgstr "Forfaldsdato beregning"
 #: view:account.invoice:account.view_account_invoice_filter
 #: view:account.invoice.report:account.view_account_invoice_report_search
 msgid "Due Month"
-msgstr ""
+msgstr "Forfaldsmåned"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_print_overdue
@@ -4465,7 +4466,7 @@ msgstr ""
 #: view:account.fiscal.position.template:account.view_account_position_template_search
 #: field:account.fiscal.position.template,name:0
 msgid "Fiscal Position Template"
-msgstr ""
+msgstr "Konterings gruppe skabelon"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
@@ -5514,7 +5515,7 @@ msgstr "Faktura delvist betalt: %s%s of %s%s (%s%s remaining)."
 #: code:addons/account/account_invoice.py:1642
 #, python-format
 msgid "Invoice sent"
-msgstr ""
+msgstr "Faktura afsendt"
 
 #. module: account
 #: field:account.config.settings,sale_sequence_prefix:0
@@ -5776,7 +5777,7 @@ msgstr "Afstem kasseklade"
 #: view:account.move.line:account.view_move_line_form
 #: view:account.move.line:account.view_move_line_form2
 msgid "Journal Item"
-msgstr ""
+msgstr "journal post"
 
 #. module: account
 #: code:addons/account/account_move_line.py:892
@@ -6753,7 +6754,7 @@ msgstr "November"
 #. module: account
 #: field:account.invoice,number:0 field:account.move,name:0
 msgid "Number"
-msgstr ""
+msgstr "Nummer"
 
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
@@ -9459,7 +9460,7 @@ msgstr "Afgifter/moms"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Taxes Fiscal Position"
-msgstr ""
+msgstr "Afgift konterings gruppe"
 
 #. module: account
 #: view:account.fiscal.position:account.view_account_position_form
@@ -9500,12 +9501,12 @@ msgstr "Skabelon"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
 msgid "Template Account Fiscal Mapping"
-msgstr ""
+msgstr "Skabelon gruppe for konterings konvertering"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Template Tax Fiscal Position"
-msgstr ""
+msgstr "Skabelon afgift konterings gruppe"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
@@ -9698,7 +9699,7 @@ msgstr ""
 #: help:res.partner,property_account_position:0
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr ""
+msgstr "Konterings gruppen bestemmer afgifter og konti brugt på partneren"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -11497,7 +11498,7 @@ msgstr ""
 #: code:addons/account/account_invoice.py:1311
 #, python-format
 msgid "You must first select a partner!"
-msgstr ""
+msgstr "Du skal først vælge en partner!"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_reconcile.py:154
@@ -11509,7 +11510,7 @@ msgstr "Du skal vælge konti til afstemning"
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:57
 #, python-format
 msgid "You must set a period length greater than 0."
-msgstr ""
+msgstr "Du skal angive en periode på mere end 0."
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:59
@@ -11598,7 +11599,7 @@ msgstr "dage"
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 msgid "e.g. sales@odoo.com"
-msgstr ""
+msgstr "f.eks. sales@odoo.com"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -11680,7 +11681,7 @@ msgstr "Periode afslutning"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:45
 #, python-format
 msgid "reconciliations with the ctrl-enter shortcut."
-msgstr ""
+msgstr "udlign med ctrl+enter genvej."
 
 #. module: account
 #. openerp-web
@@ -11699,7 +11700,7 @@ msgstr "res_config_contents"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:43
 #, python-format
 msgid "seconds per transaction."
-msgstr ""
+msgstr "sekunder pr. transaktion."
 
 #. module: account
 #: view:res.partner:account.view_partner_property_form
@@ -11716,7 +11717,7 @@ msgstr "titel"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:43
 #, python-format
 msgid "to reconcile"
-msgstr ""
+msgstr "til udligning"
 
 #. module: account
 #. openerp-web

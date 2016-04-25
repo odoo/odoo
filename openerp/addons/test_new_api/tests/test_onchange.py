@@ -149,6 +149,45 @@ class TestOnChange(common.TransactionCase):
             }),
         ])
 
+    def test_onchange_one2many_multi(self):
+        """ test the effect of multiple onchange methods on one2many fields """
+        partner = self.env.ref('base.res_partner_1')
+        multi = self.env['test_new_api.multi'].create({'partner': partner.id})
+        line = multi.lines.create({'multi': multi.id})
+
+        field_onchange = multi._onchange_spec()
+        self.assertEqual(field_onchange, {
+            'name': '1',
+            'partner': '1',
+            'lines': None,
+            'lines.name': None,
+            'lines.partner': None,
+        })
+
+        values = multi._convert_to_write({key: multi[key] for key in ('name', 'partner', 'lines')})
+        self.assertEqual(values, {
+            'name': partner.name,
+            'partner': partner.id,
+            'lines': [(6, 0, [line.id])],
+        })
+
+        # modify 'partner'
+        #   -> set 'partner' on all lines
+        #   -> recompute 'name'
+        #       -> set 'name' on all lines
+        partner = self.env.ref('base.res_partner_2')
+        values['partner'] = partner.id
+        values['lines'].append((0, 0, {'name': False, 'partner': False}))
+        self.env.invalidate_all()
+        result = multi.onchange(values, 'partner', field_onchange)
+        self.assertEqual(result['value'], {
+            'name': partner.name,
+            'lines': [
+                (1, line.id, {'name': partner.name, 'partner': partner.id}),
+                (0, 0, {'name': partner.name, 'partner': partner.id}),
+            ],
+        })
+
     def test_onchange_specific(self):
         """ test the effect of field-specific onchange method """
         discussion = self.env.ref('test_new_api.discussion_0')
