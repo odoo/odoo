@@ -300,7 +300,7 @@ class ir_http(osv.AbstractModel):
                 mimetype = obj.mimetype
             elif filename:
                 mimetype = mimetypes.guess_type(filename)[0]
-            elif getattr(env[model]._fields[field], 'attachment', False):
+            if not mimetype and getattr(env[model]._fields[field], 'attachment', False):
                 # for binary fields, fetch the ir_attachement for mimetype check
                 attach_mimetype = env['ir.attachment'].search_read(domain=[('res_model', '=', model), ('res_id', '=', id), ('res_field', '=', field)], fields=['mimetype'], limit=1)
                 mimetype = attach_mimetype and attach_mimetype[0]['mimetype']
