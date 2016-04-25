@@ -393,15 +393,18 @@
                     color: white !important;
                 }
             }
-            &:hover .o_kanban_config i {
-                visibility: visible;
+            &:hover .o_kanban_config, .o_kanban_config.open {
+                display: inline-block;
+                margin-left: 4px;
             }
-            .o_kanban_config i {
-                .o-kanban-icon;
-                visibility: hidden;
-                color: #ccc;
-                &:hover {
-                    background-color: darken(@gray-light, 10%);
+            .o_kanban_config {
+                display: none;
+                i {
+                    .o-kanban-icon;
+                    color: #ccc;
+                    &:hover {
+                        background-color: darken(@gray-light, 10%);
+                    }
                 }
             }
 
@@ -427,7 +430,7 @@
                 overflow: visible;
             }
             > .o_kanban_record, .o_kanban_quick_add, .o_kanban_config, .o_kanban_load_more {
-                display: none;
+                display: none!important;
             }
             &:hover {
                 cursor: pointer;
