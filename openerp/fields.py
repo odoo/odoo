@@ -52,11 +52,12 @@ def copy_cache(records, env):
         if record not in done:
             done.add(record)
             target = record.with_env(env)
-            for name, value in record._cache.iteritems():
+            for name in record._cache:
+                field = record._fields[name]
+                value = record[name]
                 if isinstance(value, BaseModel):
                     todo.update(value)
-                    value = value.with_env(env)
-                target._cache[name] = value
+                target._cache[name] = field.convert_to_cache(value, target, validate=False)
 
 
 def resolve_mro(model, name, predicate):
@@ -81,19 +82,16 @@ def default_new_to_old(field, value):
     """ Convert the new-API default ``value`` to the old API. """
     if callable(value):
         from openerp import api
-        return api.model(lambda model: field.convert_to_write(value(model)))
+        return api.model(lambda model: field.convert_to_write(value(model), model))
     else:
         return value
 
 def default_old_to_new(field, value):
     """ Convert the old-API default ``value`` to the new API. """
     if callable(value):
-        return lambda model: field.convert_to_cache(
-            value(model._model, model._cr, model._uid, model._context),
-            model, validate=False,
-        )
+        return lambda model: value(model._model, model._cr, model._uid, model._context)
     else:
-        return lambda model: field.convert_to_cache(value, model, validate=False)
+        return lambda model: value
 
 def default_old_to_old(field, value):
     """ Convert the old-API default ``value`` to the old API. """
@@ -758,57 +756,60 @@ class Field(object):
     # Conversion of values
     #
 
-    def null(self, env):
-        """ return the null value for this field in the given environment """
+    def null(self, record):
+        """ Return the null value for this field in the record format. """
         return False
 
     def convert_to_cache(self, value, record, validate=True):
-        """ convert ``value`` to the cache level in ``env``; ``value`` may come from
-            an assignment, or have the format of methods :meth:`BaseModel.read`
-            or :meth:`BaseModel.write`
+        """ Convert ``value`` to the cache format; ``value`` may come from an
+        assignment, or have the format of methods :meth:`BaseModel.read` or
+        :meth:`BaseModel.write`. If the value represents a recordset, it should
+        be added for prefetching on ``record``.
 
-            :param record: the target record for the assignment, or an empty recordset
-
-            :param bool validate: when True, field-specific validation of
-                ``value`` will be performed
+        :param bool validate: when True, field-specific validation of ``value``
+            will be performed
         """
         return value
 
-    def convert_to_read(self, value, use_name_get=True):
-        """ convert ``value`` from the cache to a value as returned by method
-            :meth:`BaseModel.read`
+    def convert_to_record(self, value, record):
+        """ Convert ``value`` from the cache format to the record format.
+        If the value represents a recordset, it should share the prefetching of
+        ``record``.
+        """
+        return value
 
-            :param bool use_name_get: when True, value's diplay name will
-                be computed using :meth:`BaseModel.name_get`, if relevant
-                for the field
+    def convert_to_read(self, value, record, use_name_get=True):
+        """ Convert ``value`` from the record format to the format returned by
+        method :meth:`BaseModel.read`.
+
+        :param bool use_name_get: when True, the value's display name will be
+            computed using :meth:`BaseModel.name_get`, if relevant for the field
         """
         return False if value is None else value
 
-    def convert_to_write(self, value):
-        """ convert ``value`` from the cache to a valid value for method
-            :meth:`BaseModel.write`.
+    def convert_to_write(self, value, record):
+        """ Convert ``value`` from the record format to the format of method
+        :meth:`BaseModel.write`.
         """
-        return self.convert_to_read(value)
+        return self.convert_to_read(value, record)
 
-    def convert_to_onchange(self, value, fnames=None):
-        """ convert ``value`` from the cache to a value as returned by method
-            :meth:`BaseModel.onchange`.
+    def convert_to_onchange(self, value, record, fnames=()):
+        """ Convert ``value`` from the record format to the format returned by
+        method :meth:`BaseModel.onchange`.
 
-            :param fnames: an optional collection of field names to convert
-                (for relational fields only)
+        :param fnames: an optional collection of field names to convert
+            (for relational fields only)
         """
-        return self.convert_to_read(value)
+        return self.convert_to_read(value, record)
 
-    def convert_to_export(self, value, env):
-        """ convert ``value`` from the cache to a valid value for export. The
-            parameter ``env`` is given for managing translations.
-        """
+    def convert_to_export(self, value, record):
+        """ Convert ``value`` from the record format to the export format. """
         if not value:
             return ''
-        return value if env.context.get('export_raw_data') else ustr(value)
+        return value if record._context.get('export_raw_data') else ustr(value)
 
-    def convert_to_display_name(self, value, record=None):
-        """ convert ``value`` from the cache to a suitable display name. """
+    def convert_to_display_name(self, value, record):
+        """ Convert ``value`` from the record format to a suitable display name. """
         return ustr(value)
 
     ############################################################################
@@ -821,28 +822,23 @@ class Field(object):
         if record is None:
             return self         # the field is accessed through the owner class
 
-        if not record:
-            # null record -> return the null value for this field
-            return self.null(record.env)
-
-        # only a single record may be accessed
-        record.ensure_one()
-
-        try:
-            return record._cache[self]
-        except KeyError:
-            pass
-
-        # cache miss, retrieve value
-        if record.id:
-            # normal record -> read or compute value for this field
-            self.determine_value(record)
+        if record:
+            # only a single record may be accessed
+            record.ensure_one()
+            try:
+                value = record._cache[self]
+            except KeyError:
+                # cache miss, determine value and retrieve it
+                if record.id:
+                    self.determine_value(record)
+                else:
+                    self.determine_draft_value(record)
+                value = record._cache[self]
         else:
-            # draft record -> compute the value or let it be null
-            self.determine_draft_value(record)
+            # null record -> return the null value for this field
+            value = self.convert_to_cache(False, record, validate=False)
 
-        # the result should be in cache now
-        return record._cache[self]
+        return self.convert_to_record(value, record)
 
     def __set__(self, record, value):
         """ set the value of field ``self`` on ``record`` """
@@ -862,7 +858,7 @@ class Field(object):
             record._cache[self] = value
             if env.in_onchange:
                 for invf in record._field_inverses[self]:
-                    invf._update(value, record)
+                    invf._update(record[self.name], record)
                 record._set_dirty(self.name)
 
             # determine more dependent fields, and invalidate them
@@ -872,7 +868,8 @@ class Field(object):
 
         else:
             # simply write to the database, and update cache
-            record.write({self.name: self.convert_to_write(value)})
+            write_value = self.convert_to_write(self.convert_to_record(value, record), record)
+            record.write({self.name: write_value})
             record._cache[self] = value
 
     ############################################################################
@@ -885,7 +882,8 @@ class Field(object):
         # initialize the fields to their corresponding null value in cache
         computed = records._field_computed[self]
         for field in computed:
-            records._cache[field] = field.null(records.env)
+            for record in records:
+                record._cache[field] = field.convert_to_cache(False, record, validate=False)
             records.env.computed[field].update(records._ids)
         if isinstance(self.compute, basestring):
             getattr(records, self.compute)()
@@ -947,14 +945,15 @@ class Field(object):
 
         else:
             # this is a non-stored non-computed field
-            record._cache[self] = self.null(env)
+            record._cache[self] = self.convert_to_cache(False, record, validate=False)
 
     def determine_draft_value(self, record):
         """ Determine the value of ``self`` for the given draft ``record``. """
         if self.compute:
             self._compute_value(record)
         else:
-            record._cache[self] = SpecialValue(self.null(record.env))
+            null = self.convert_to_cache(False, record, validate=False)
+            record._cache[self] = SpecialValue(null)
 
     def determine_inverse(self, records):
         """ Given the value of ``self`` on ``records``, inverse the computation. """
@@ -1047,8 +1046,8 @@ class Boolean(Field):
     def convert_to_cache(self, value, record, validate=True):
         return bool(value)
 
-    def convert_to_export(self, value, env):
-        if env.context.get('export_raw_data'):
+    def convert_to_export(self, value, record):
+        if record._context.get('export_raw_data'):
             return value
         return ustr(value)
 
@@ -1068,7 +1067,7 @@ class Integer(Field):
             return value.get('id', False)
         return int(value or 0)
 
-    def convert_to_read(self, value, use_name_get=True):
+    def convert_to_read(self, value, record, use_name_get=True):
         # Integer values greater than 2^31-1 are not supported in pure XMLRPC,
         # so we have to pass them as floats :-(
         if value and value > xmlrpclib.MAXINT:
@@ -1079,9 +1078,9 @@ class Integer(Field):
         # special case, when an integer field is used as inverse for a one2many
         records._cache[self] = value.id or 0
 
-    def convert_to_export(self, value, env):
+    def convert_to_export(self, value, record):
         if value or value == 0:
-            return value if env.context.get('export_raw_data') else ustr(value)
+            return value if record._context.get('export_raw_data') else ustr(value)
         return ''
 
 
@@ -1125,9 +1124,9 @@ class Float(Field):
         digits = self.digits
         return float_round(value, precision_digits=digits[1]) if digits else value
 
-    def convert_to_export(self, value, env):
+    def convert_to_export(self, value, record):
         if value or value == 0.0:
-            return value if env.context.get('export_raw_data') else ustr(value)
+            return value if record._context.get('export_raw_data') else ustr(value)
         return ''
 
 
@@ -1165,11 +1164,12 @@ class Monetary(Field):
             "Field %s with unknown currency_field %r" % (self, self.currency_field)
 
     def convert_to_cache(self, value, record, validate=True):
-        currency = record[self.currency_field]
-        # FIXME @rco-odoo: currency may not be already initialized if it is a
-        # function or related field!
-        if currency:
-            return currency.round(float(value or 0.0))
+        if validate:
+            currency = record[self.currency_field]
+            # FIXME @rco-odoo: currency may not be already initialized if it is
+            # a function or related field!
+            if currency:
+                return currency.round(float(value or 0.0))
         return float(value or 0.0)
 
 
@@ -1255,6 +1255,7 @@ class Char(_String):
             return False
         return ustr(value)[:self.size]
 
+
 class Text(_String):
     """ Very similar to :class:`~.Char` but used for longer contents, does not
     have a size and usually displayed as a multiline text box.
@@ -1271,6 +1272,7 @@ class Text(_String):
         if value is None or value is False:
             return False
         return ustr(value)
+
 
 class Html(_String):
     type = 'html'
@@ -1362,10 +1364,10 @@ class Date(Field):
             return value[:DATE_LENGTH]
         return self.to_string(value)
 
-    def convert_to_export(self, value, env):
+    def convert_to_export(self, value, record):
         if not value:
             return ''
-        return self.from_string(value) if env.context.get('export_raw_data') else ustr(value)
+        return self.from_string(value) if record._context.get('export_raw_data') else ustr(value)
 
 
 class Datetime(Field):
@@ -1433,12 +1435,12 @@ class Datetime(Field):
             return value
         return self.to_string(value)
 
-    def convert_to_export(self, value, env):
+    def convert_to_export(self, value, record):
         if not value:
             return ''
-        return self.from_string(value) if env.context.get('export_raw_data') else ustr(value)
+        return self.from_string(value) if record._context.get('export_raw_data') else ustr(value)
 
-    def convert_to_display_name(self, value, record=None):
+    def convert_to_display_name(self, value, record):
         assert record, 'Record expected'
         return Datetime.to_string(Datetime.context_timestamp(record, Datetime.from_string(value)))
 
@@ -1544,11 +1546,11 @@ class Selection(Field):
             return False
         raise ValueError("Wrong value for %s: %r" % (self, value))
 
-    def convert_to_export(self, value, env):
+    def convert_to_export(self, value, record):
         if not isinstance(self.selection, list):
             # FIXME: this reproduces an existing buggy behavior!
             return value if value else ''
-        for item in self._description_selection(env):
+        for item in self._description_selection(record.env):
             if item[0] == value:
                 return item[1]
         return False
@@ -1569,24 +1571,31 @@ class Reference(Selection):
             "Reference field %s with non-integer size %r" % (self, self.size)
 
     def convert_to_cache(self, value, record, validate=True):
+        # cache format: (res_model, res_id) or False
+        def process(res_model, res_id):
+            record._prefetch[res_model].add(res_id)
+            return (res_model, res_id)
+
         if isinstance(value, BaseModel):
-            if ((not validate or value._name in self.get_values(record.env))
-                    and len(value) <= 1):
-                return value.with_env(record.env) or False
+            if not validate or (value._name in self.get_values(record.env) and len(value) <= 1):
+                return process(value._name, value.id) if value else False
         elif isinstance(value, basestring):
             res_model, res_id = value.split(',')
-            return record.env[res_model].browse(int(res_id))
+            return process(res_model, int(res_id))
         elif not value:
             return False
         raise ValueError("Wrong value for %s: %r" % (self, value))
 
-    def convert_to_read(self, value, use_name_get=True):
+    def convert_to_record(self, value, record):
+        return value and record.env[value[0]].browse([value[1]], record._prefetch)
+
+    def convert_to_read(self, value, record, use_name_get=True):
         return "%s,%s" % (value._name, value.id) if value else False
 
-    def convert_to_export(self, value, env):
+    def convert_to_export(self, value, record):
         return value.name_get()[0][1] if value else ''
 
-    def convert_to_display_name(self, value, record=None):
+    def convert_to_display_name(self, value, record):
         return ustr(value and value.display_name)
 
 
@@ -1625,8 +1634,8 @@ class _Relational(Field):
     _column_domain = property(attrgetter('domain'))
     _column_context = property(attrgetter('context'))
 
-    def null(self, env):
-        return env[self.comodel_name]
+    def null(self, record):
+        return record.env[self.comodel_name]
 
     def modified(self, records):
         # Invalidate cache for inverse fields, too. Note that the recomputation
@@ -1682,47 +1691,54 @@ class Many2one(_Relational):
     _column_auto_join = property(attrgetter('auto_join'))
 
     def _update(self, records, value):
-        """ Update the cached value of ``self`` for ``records`` with ``value``. """
-        records._cache[self] = value
+        """ Update the cached value of ``self`` for ``records`` with ``value``.
+        This is used to reflect the assignment ``value[name] = records``, where
+        ``name`` is the inverse field of ``self``.
+        """
+        records._cache[self] = self.convert_to_cache(value, records, validate=False)
 
     def convert_to_cache(self, value, record, validate=True):
-        if isinstance(value, (NoneType, int, long)):
-            return record.env[self.comodel_name].browse(value)
-        if isinstance(value, BaseModel):
-            if value._name == self.comodel_name and len(value) <= 1:
-                return value.with_env(record.env)
+        # cache format: tuple(ids)
+        def process(ids):
+            return record._prefetch[self.comodel_name].update(ids) or ids
+
+        if type(value) in IdType:
+            return process((value,))
+        elif isinstance(value, BaseModel):
+            if not validate or (value._name == self.comodel_name and len(value) <= 1):
+                return process(value._ids)
             raise ValueError("Wrong value for %s: %r" % (self, value))
         elif isinstance(value, tuple):
-            return record.env[self.comodel_name].browse(value[0])
+            return process((value[0],))
         elif isinstance(value, dict):
-            return record.env[self.comodel_name].new(value)
+            return process(record.env[self.comodel_name].new(value)._ids)
         else:
-            return self.null(record.env)
+            return ()
 
-    def convert_to_read(self, value, use_name_get=True):
+    def convert_to_record(self, value, record):
+        return record.env[self.comodel_name]._browse(value, record.env, record._prefetch)
+
+    def convert_to_read(self, value, record, use_name_get=True):
         if use_name_get and value:
             # evaluate name_get() as superuser, because the visibility of a
             # many2one field value (id and name) depends on the current record's
             # access rights, and not the value's access rights.
             try:
-                value_sudo = value.sudo()
-                # performance trick: make sure that all records of the same
-                # model as value in value.env will be prefetched in value_sudo.env
-                value_sudo.env.prefetch[value._name].update(value.env.prefetch[value._name])
-                return value_sudo.name_get()[0]
+                # performance: value.sudo() prefetches the same records as value
+                return value.sudo().name_get()[0]
             except MissingError:
                 # Should not happen, unless the foreign key is missing.
                 return False
         else:
             return value.id
 
-    def convert_to_write(self, value):
+    def convert_to_write(self, value, record):
         return value.id
 
-    def convert_to_export(self, value, env):
+    def convert_to_export(self, value, record):
         return value.name_get()[0][1] if value else ''
 
-    def convert_to_display_name(self, value, record=None):
+    def convert_to_display_name(self, value, record):
         return ustr(value.display_name)
 
 
@@ -1738,8 +1754,9 @@ class UnionUpdate(SpecialValue):
         # in order to read the current field's value, remove self from cache
         del record._cache[field]
         # read the current field's value, and update it in cache only
-        record._cache[field] = new_value = record[field.name] | value
-        return new_value
+        value = field.convert_to_cache(record[field.name] | value, record, validate=False)
+        record._cache[field] = value
+        return value
 
 
 class _RelationalMulti(_Relational):
@@ -1749,14 +1766,19 @@ class _RelationalMulti(_Relational):
         """ Update the cached value of ``self`` for ``records`` with ``value``. """
         for record in records:
             if self in record._cache:
-                record._cache[self] = record[self.name] | value
+                value = self.convert_to_cache(record[self.name] | value, record, validate=False)
             else:
-                record._cache[self] = UnionUpdate(self, record, value)
+                value = UnionUpdate(self, record, value)
+            record._cache[self] = value
 
     def convert_to_cache(self, value, record, validate=True):
+        # cache format: tuple(ids)
+        def process(ids):
+            return record._prefetch[self.comodel_name].update(ids) or ids
+
         if isinstance(value, BaseModel):
-            if value._name == self.comodel_name:
-                return value.with_env(record.env)
+            if not validate or (value._name == self.comodel_name):
+                return process(value._ids)
         elif isinstance(value, list):
             # value is a list of record ids or commands
             comodel = record.env[self.comodel_name]
@@ -1785,39 +1807,43 @@ class _RelationalMulti(_Relational):
                     ids.add(comodel.new(command).id)
                 else:
                     ids.add(command)
-            # return result as a recordset
-            return comodel.browse(list(ids))
+            # return result as a tuple
+            return process(tuple(ids))
         elif not value:
-            return self.null(record.env)
+            return ()
         raise ValueError("Wrong value for %s: %s" % (self, value))
 
-    def convert_to_read(self, value, use_name_get=True):
+    def convert_to_record(self, value, record):
+        return record.env[self.comodel_name]._browse(value, record.env, record._prefetch)
+
+    def convert_to_read(self, value, record, use_name_get=True):
         return value.ids
 
-    def convert_to_write(self, value):
+    def convert_to_write(self, value, record):
         # make result with new and existing records
         result = [(5,)]
         for record in value:
             if not record.id:
-                values = dict(record._cache)
+                values = {name: record[name] for name in record._cache}
                 values = record._convert_to_write(values)
                 result.append((0, 0, values))
             elif record._is_dirty():
-                values = {k: record._cache[k] for k in record._get_dirty()}
+                values = {name: record[name] for name in record._get_dirty()}
                 values = record._convert_to_write(values)
                 result.append((1, record.id, values))
             else:
                 result.append((4, record.id))
         return result
 
-    def convert_to_onchange(self, value, fnames=None):
+    def convert_to_onchange(self, value, record, fnames=()):
         # return the recordset value as a list of commands; the commands may
         # give all fields values, the client is responsible for figuring out
         # which fields are actually dirty
-        fields = [(name, value._fields[name]) for name in (fnames or []) if name != 'id']
+        converters = [(name, value._fields[name].convert_to_onchange)
+                      for name in fnames if name != 'id']
         result = [(5,)]
         for record in value:
-            vals = {name: field.convert_to_onchange(record[name]) for name, field in fields}
+            vals = {name: convert(record[name], record) for name, convert in converters}
             if not record.id:
                 result.append((0, 0, vals))
             elif vals:
@@ -1826,10 +1852,10 @@ class _RelationalMulti(_Relational):
                 result.append((4, record.id))
         return result
 
-    def convert_to_export(self, value, env):
+    def convert_to_export(self, value, record):
         return ','.join(name for id, name in value.name_get()) if value else ''
 
-    def convert_to_display_name(self, value, record=None):
+    def convert_to_display_name(self, value, record):
         raise NotImplementedError()
 
     def _compute_related(self, records):
@@ -1898,11 +1924,11 @@ class One2many(_RelationalMulti):
     _column_auto_join = property(attrgetter('auto_join'))
     _column_limit = property(attrgetter('limit'))
 
-    def convert_to_onchange(self, value, fnames=None):
+    def convert_to_onchange(self, value, record, fnames=()):
         if fnames:
             # do not serialize self's inverse field
             fnames = [name for name in fnames if name != self.inverse_name]
-        return super(One2many, self).convert_to_onchange(value, fnames)
+        return super(One2many, self).convert_to_onchange(value, record, fnames)
 
 
 class Many2many(_RelationalMulti):
@@ -2016,8 +2042,9 @@ class Id(Field):
     def __set__(self, record, value):
         raise TypeError("field 'id' cannot be assigned")
 
+
 # imported here to avoid dependency cycle issues
 from openerp import SUPERUSER_ID
-from .exceptions import Warning, AccessError, MissingError
-from .models import check_pg_name, BaseModel, MAGIC_COLUMNS
+from .exceptions import AccessError, MissingError
+from .models import check_pg_name, BaseModel, IdType
 from .osv import fields
