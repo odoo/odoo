@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 from openerp.tests import common
 from openerp.tools import get_cache_key_counter

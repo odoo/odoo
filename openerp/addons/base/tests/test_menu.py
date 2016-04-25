@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import openerp.tests.common as common
 
 class test_menu(common.TransactionCase):
