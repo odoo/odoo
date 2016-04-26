@@ -1379,21 +1379,6 @@ class BaseModel(object):
                             break
 
                         res.append( (data_res_id2 and 1 or 0, data_res_id2 or 0, newrow) )
-
-                elif field_type == 'many2one':
-                    relation = fields_def[field_name]['relation']
-                    res = _get_id(relation, line[i], current_module, mode)
-
-                elif field_type == 'many2many':
-                    relation = fields_def[field_name]['relation']
-                    res = many_ids(line[i], relation, current_module, mode)
-
-                elif field_type == 'integer':
-                    res = line[i] and int(line[i]) or 0
-                elif field_type == 'boolean':
-                    res = line[i].lower() not in ('0', 'false', 'off')
-                elif field_type == 'float':
-                    res = line[i] and float(line[i]) or 0.0
                 elif field_type == 'selection':
                     for key, val in fields_def[field_name]['selection']:
                         if tools.ustr(line[i]) in [tools.ustr(key), tools.ustr(val)]:
@@ -1405,9 +1390,32 @@ class BaseModel(object):
                             tools.ustr(line[i]), tools.ustr(field_name))
                         warning.append(_("Key/value '%s' not found in selection field '%s'") % (
                             tools.ustr(line[i]), tools.ustr(field_name)))
-
                 else:
-                    res = line[i]
+                    # i added a try/ catch in order to compile all errors on the line
+                    try:
+                        if field_type == 'many2one':
+                            relation = fields_def[field_name]['relation']
+                            res = _get_id(relation, line[i], current_module, mode)
+
+                        elif field_type == 'many2many':
+                            relation = fields_def[field_name]['relation']
+                            res = many_ids(line[i], relation, current_module, mode)
+
+                        elif field_type == 'integer':
+                            res = line[i] and int(line[i]) or 0
+                        elif field_type == 'boolean':
+                            res = line[i].lower() not in ('0', 'false', 'off')
+                        elif field_type == 'float':
+                            res = line[i] and float(line[i]) or 0.0
+                        else:
+                            res = line[i]
+                    except ValueError, e:
+                        if context and context.get('atomic_import', False):
+                            message = unicode(e)
+                            warning.append(message)
+                        else:
+                            # keep initial ORM behavior
+                            raise
 
                 row[field_name] = res or False
 
