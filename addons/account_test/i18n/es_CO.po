@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-11-12 04:23+0000\n"
+"PO-Revision-Date: 2016-02-11 14:01+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-8/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
@@ -46,7 +46,7 @@ msgstr "Activo(a)"
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
-msgstr ""
+msgstr "Comprobar si las líneas del movimiento están compensadas y tienen la misma fecha y periodo"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_02
@@ -65,7 +65,7 @@ msgstr ""
 msgid ""
 "Check on bank statement that the Closing Balance = Starting Balance + sum of"
 " statement lines"
-msgstr ""
+msgstr "Comprobar en los extractos bancarios que el saldo de cierre = saldo de inicio + suma de las líneas del extracto"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_08
@@ -82,14 +82,14 @@ msgstr "Verificar que las facturas pagadas/conciliadas no están en estado 'Abie
 msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
-msgstr ""
+msgstr "Comprobar que los apuntes contables conciliados que definen cuentas a cobrar y a pagar pertenecen a facturas conciliadas"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
 msgid ""
 "Check that reconciled invoice for Sales/Purchases has reconciled entries for"
 " Payable and Receivable Accounts"
-msgstr ""
+msgstr "Comprobar que la factura conciliada para ventas/compras tiene apuntes conciliados para las cuentas a cobrar y a pagar"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06_1
@@ -99,12 +99,12 @@ msgstr ""
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
 msgid "Check the balance: Debit sum = Credit sum"
-msgstr ""
+msgstr "Comprobar el saldo: suma del débito = suma del crédito"
 
 #. module: account_test
 #: view:accounting.assert.test:account_test.account_assert_form
 msgid "Code Help"
-msgstr ""
+msgstr "Ayuda del Código"
 
 #. module: account_test
 #: view:accounting.assert.test:account_test.account_assert_form
@@ -129,7 +129,7 @@ msgid ""
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
-msgstr ""
+msgstr "El código siempre debe establecer una variable llamada 'result' con el resultado de la prueba, que puede ser una lista o un diccionario. Si 'result' es una lista vacía, significa que la prueba ha sido satisfactoria. En caso contrario, se tratará de traducir e imprimir lo que hay dentro de 'result'.\n\nSi el resultado de la prueba es un diccionario, se puede establecer una variable llamada 'column_order' para elegir en qué orden se quieren imprimir el contenido de 'result'.\n\nEn caso de necesitarlas, se pueden usar las siguientes variables en el código:\n    * cr: cursor a la base de datos\n    * uid: id. del usuario actual\n\nEn cualquier caso, el código debe ser sentencias Python legales con correcta indentación (si fuera necesario).\n\nEjemplo: \n    sql = '''SELECT id, name, ref, date\n             FROM account_move_line \n             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n          '''\n    cr.execute(sql)\n    result = cr.dictfetchall()"
 
 #. module: account_test
 #: field:accounting.assert.test,create_uid:0
@@ -195,7 +195,7 @@ msgstr "Secuencia"
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_01
 msgid "Test 1: General balance"
-msgstr ""
+msgstr "Prueba 1: Balance general"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_02
@@ -205,7 +205,7 @@ msgstr ""
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_03
 msgid "Test 3: Movement lines"
-msgstr ""
+msgstr "Prueba 3: Líneas de movimiento"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_04
@@ -216,17 +216,17 @@ msgstr ""
 #: model:accounting.assert.test,name:account_test.account_test_05
 msgid ""
 "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
-msgstr ""
+msgstr "Prueba 5.1 : Líneas de contabilidad a cobrar y a pagar de facturas no conciliadas"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2
 msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
-msgstr ""
+msgstr "Prueba 5.2 : Facturas conciliadas y cuentas a cobrar/a pagar"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06
 msgid "Test 6 : Invoices status"
-msgstr ""
+msgstr "Prueba 6: Estado de las facturas"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06_1

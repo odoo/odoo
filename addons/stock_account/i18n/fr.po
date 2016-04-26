@@ -4,14 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Lionel Sausin <ls@numerigraphe.com>, 2015
+# Lionel Sausin <ls@numerigraphe.com>, 2015-2016
 # Saad Thaifa <saad.thaifa@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-11-26 02:24+0000\n"
+"PO-Revision-Date: 2016-03-11 16:50+0000\n"
 "Last-Translator: Lionel Sausin <ls@numerigraphe.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr ""
 #. module: stock_account
 #: view:stock.history:stock_account.view_stock_history_report_tree
 msgid "# of Products"
-msgstr "Nb. de produits"
+msgstr "Nb. d'articles"
 
 #. module: stock_account
 #: view:product.template:stock_account.view_template_property_form
@@ -252,7 +252,7 @@ msgstr "Quand la valorisation en temps réel est activée sur un article, le sys
 msgid ""
 "Install the module that allows to affect landed costs on pickings, and split"
 " them onto the different products."
-msgstr "Installer le module qui permet d'imputer les frais de douane sur les réceptions et les répartir sur les différents produits."
+msgstr "Installer le module qui permet d'imputer les frais de douane sur les réceptions et les répartir sur les différents articles."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -339,7 +339,7 @@ msgstr "Gérer les méthodes de valorisation des stocks"
 #. module: stock_account
 #: view:stock.history:stock_account.view_stock_history_report_search
 msgid "Move"
-msgstr "N° d'écriture"
+msgstr "Mouvement"
 
 #. module: stock_account
 #: code:addons/stock_account/product.py:116
@@ -432,7 +432,7 @@ msgstr "Catégorie d'articles"
 #. module: stock_account
 #: field:stock.history,quantity:0
 msgid "Product Quantity"
-msgstr "Quantité produit"
+msgstr "Quantité d'articles"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -507,7 +507,7 @@ msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific period (usually every year).\n"
 "                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
-msgstr "Prix Standard : Le prix de revient est mis à jour manuellement à la fin d'une période donnée (généralement une fois par an).\nPrix moyen : Le prix de revient est recalculé à chaque arrivage et utilisé pour l'évaluation du produit.\nPrix réel : Le prix de revient affiché est le prix du dernier produit sortant (il sera utilisé en cas de perte de stocks par exemple)."
+msgstr "Prix Standard : Le prix de revient est mis à jour manuellement à la fin d'une période donnée (généralement une fois par an).\nPrix moyen : Le prix de revient est recalculé à chaque arrivage et utilisé pour l'évaluation de l'article.\nPrix réel : Le prix de revient affiché est le prix du dernier article sortant (il sera utilisé en cas de perte de stocks par exemple)."
 
 #. module: stock_account
 #: field:product.category,property_stock_account_input_categ:0
@@ -601,7 +601,7 @@ msgid ""
 "being moved from an internal location into this location, instead of the "
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr "Utilisé pour la valorisation de l'inventaire en temps réel. Quand il mis sur un emplacement virtuel (type autre que \"Interne\"), ce compte sera utilisé pour enregistrer la valeur des produits qui ont été déplacés depuis un emplacement interne vers cet emplacement, à la place du compte générique de stock de sortie décrit dans le produit. Ceci n'a pas d'effet pour les emplacements internes."
+msgstr "Utilisé pour la valorisation de l'inventaire en temps réel. Quand il mis sur un emplacement virtuel (type autre que \"Interne\"), ce compte sera utilisé pour enregistrer la valeur des articles qui ont été déplacés depuis un emplacement interne vers cet emplacement, à la place du compte générique de stock de sortie décrit dans l'article. Ceci n'a pas d'effet pour les emplacements internes."
 
 #. module: stock_account
 #: help:stock.location,valuation_out_account_id:0
@@ -611,7 +611,7 @@ msgid ""
 "being moved out of this location and into an internal location, instead of "
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr "Utilisé pour la valorisation du stock en temps réel. Lorsqu'on le définit sur un emplacement virtuel, ce compte est utilisé pour valoriser les produits qui sont déplacés de cet emplacement à un emplacement interne, à la place du compte de sortie de stock générique défini sur l'article. Ceci est sans effet sur les emplacements internes."
+msgstr "Utilisé pour la valorisation du stock en temps réel. Lorsqu'on le définit sur un emplacement virtuel, ce compte est utilisé pour valoriser les articles qui sont déplacés de cet emplacement à un emplacement interne, à la place du compte de sortie de stock générique défini sur l'article. Ceci est sans effet sur les emplacements internes."
 
 #. module: stock_account
 #: field:stock.history,price_unit_on_quant:0
@@ -651,7 +651,7 @@ msgid ""
 "specific valuation account set on the destination location. This is the "
 "default value for all products in this category. It can also directly be set"
 " on each product"
-msgstr "Quand vous choisissez la valorisation en temps-réel de l'inventaire, les écritures de contrepartie des sorties de stock seront comptabilisés dans ce compte, à moins qu'il y ait un compte de valorisation spécifique définit sur l'emplacement de destination. Ceci est la valeur par défaut pour tous les produits de cette catégorie. Il peut aussi directement être définit sur chaque produit."
+msgstr "Quand vous choisissez la valorisation en temps-réel de l'inventaire, les écritures de contrepartie des sorties de stock seront comptabilisés dans ce compte, à moins qu'il y ait un compte de valorisation spécifique définit sur l'emplacement de destination. Ceci est la valeur par défaut pour tous les articles de cette catégorie. Il peut aussi directement être définit sur chaque article."
 
 #. module: stock_account
 #: help:product.template,property_stock_account_output:0
@@ -660,7 +660,7 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr "Lorsque la valorisation du stock est faite en temps réel, les écritures de contrepartie de toutes les livraisons seront passées sur ce compte, à moins qu'un compte de valorisation particulier soit défini sur l'emplacement destination. Lorsqu'il n'est pas précisé sur le produit, celui de la catégorie de produit est utilisé."
+msgstr "Lorsque la valorisation du stock est faite en temps réel, les écritures de contrepartie de toutes les livraisons seront passées sur ce compte, à moins qu'un compte de valorisation particulier soit défini sur l'emplacement destination. Lorsqu'il n'est pas précisé sur l'article, celui de la catégorie d'article est utilisé."
 
 #. module: stock_account
 #: help:product.category,property_stock_journal:0

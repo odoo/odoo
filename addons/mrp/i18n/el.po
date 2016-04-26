@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-01-02 22:27+0000\n"
+"PO-Revision-Date: 2016-03-16 21:49+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -414,7 +414,7 @@ msgstr "Ακυρωμένες"
 #: code:addons/mrp/stock.py:183
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
-msgstr ""
+msgstr "Δεν μπορεί να αναλωθεί μια κίνηση με αρνητική ή μηδενική ποσότητα."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:605
@@ -534,23 +534,23 @@ msgstr "Επιβεβαίωση Παραγωγής"
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
 msgid "Consume & Produce"
-msgstr ""
+msgstr "Ανάλωση & Παραγωγή"
 
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "Consume Lines"
-msgstr ""
+msgstr "Γραμμή Ανάλωσης"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.move_consume
 #: view:stock.move.consume:mrp.view_stock_move_consume_wizard
 msgid "Consume Move"
-msgstr ""
+msgstr "Κίνηση Ανάλωσης"
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
 msgid "Consume Only"
-msgstr ""
+msgstr "Αναλώσιμα Μόνο"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_consume
@@ -568,7 +568,7 @@ msgstr "Αναλωθέντα Προϊόντα"
 #. module: mrp
 #: field:stock.move,consumed_for:0
 msgid "Consumed for"
-msgstr ""
+msgstr "Αναλωθέντα για"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141
@@ -999,7 +999,7 @@ msgstr ""
 #: view:product.product:mrp.product_product_form_view_bom_button
 #: view:product.template:mrp.product_template_form_view_bom_button
 msgid "Manufacturing"
-msgstr "Μεταποίηση"
+msgstr "Παραγωγή"
 
 #. module: mrp
 #: field:mrp.bom,product_efficiency:0 field:mrp.bom.line,product_efficiency:0
@@ -1037,7 +1037,7 @@ msgstr ""
 #: view:mrp.production:mrp.view_production_calendar
 #: view:mrp.production:mrp.view_production_graph
 msgid "Manufacturing Orders"
-msgstr ""
+msgstr "Εντολές Παραγωγής"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action2
@@ -1304,13 +1304,13 @@ msgstr "Παραγωγή"
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_byproduct:0
 msgid "Produce several products from one manufacturing order"
-msgstr ""
+msgstr "Παραγωγή διάφορων προϊόντων από μία εντολή παραγωγής"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 #: field:mrp.production,move_created_ids2:0
 msgid "Produced Products"
-msgstr ""
+msgstr "Παραχθέντα Προϊόντα"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -1343,12 +1343,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
 msgid "Product Produce"
-msgstr ""
+msgstr "Παραγωγή Προϊόντος"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce_line
 msgid "Product Produce Consume lines"
-msgstr ""
+msgstr "Γραμμές Ανάλωσης Παραγωγής Προϊόντος"
 
 #. module: mrp
 #: field:change.production.qty,product_qty:0
@@ -1448,7 +1448,7 @@ msgstr "Νο Εντολής Παραγωγής:"
 #. module: mrp
 #: field:stock.move,production_id:0
 msgid "Production Order for Produced Products"
-msgstr ""
+msgstr "Εντολή Παραγωγής για Παραχθέντα Προϊόντα"
 
 #. module: mrp
 #: field:stock.move,raw_material_production_id:0
@@ -1496,13 +1496,13 @@ msgstr "Προϊόντα"
 #. module: mrp
 #: field:mrp.product.produce,consume_lines:0
 msgid "Products Consumed"
-msgstr ""
+msgstr "Αναλωθέντα Προϊόντα"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 #: field:mrp.production,move_lines:0 view:website:mrp.report_mrporder
 msgid "Products to Consume"
-msgstr ""
+msgstr "Προϊόντα για Ανάλωση"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -1513,7 +1513,7 @@ msgstr ""
 #: view:mrp.production:mrp.mrp_production_form_view
 #: field:mrp.production,move_created_ids:0
 msgid "Products to Produce"
-msgstr ""
+msgstr "Προϊόντα για Παραγωγή"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
@@ -1948,7 +1948,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "To Consume"
-msgstr ""
+msgstr "Προς Ανάλωση"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:162 code:addons/mrp/report/price.py:213

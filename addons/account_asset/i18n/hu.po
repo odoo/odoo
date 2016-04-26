@@ -4,14 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Kris Krnacs, 2015
+# krnkris, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-10-23 18:33+0000\n"
-"Last-Translator: Kris Krnacs\n"
+"PO-Revision-Date: 2016-04-21 10:35+0000\n"
+"Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-8/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -124,7 +124,7 @@ msgstr "Eszközök előzménye"
 #. module: account_asset
 #: field:asset.modify,asset_method_time:0
 msgid "Asset Method Time"
-msgstr "Vagyon értéktárgy elszámolási idő mód"
+msgstr "Vagyoni eszköz elszámolási idő mód"
 
 #. module: account_asset
 #: field:account.asset.asset,name:0
@@ -785,6 +785,14 @@ msgstr "Ha egy eszközt létrehozott, annak állapota 'Tervezet'.\nMiután az es
 #: field:asset.asset.report,name:0
 msgid "Year"
 msgstr "Év"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset_invoice.py:53
+#, python-format
+msgid ""
+"You already have assets with the reference %s.\n"
+"Please delete these assets before creating new ones for this invoice."
+msgstr "Már van tárgyi eszköze ezzel a hivatkozással %s.\nKérem törölje az eszközt, mielőtt újat hozna létre erre a számlára."
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:81

@@ -125,7 +125,7 @@ class stock_history(osv.osv):
                 product_categ_id,
                 SUM(quantity) as quantity,
                 date,
-                price_unit_on_quant,
+                SUM(price_unit_on_quant * quantity) / SUM(quantity) as price_unit_on_quant,
                 source
                 FROM
                 ((SELECT
@@ -155,8 +155,7 @@ class stock_history(osv.osv):
                     product_template ON product_template.id = product_product.product_tmpl_id
                 WHERE quant.qty>0 AND stock_move.state = 'done' AND dest_location.usage in ('internal', 'transit')
                   AND (
-                    (source_location.company_id is null and dest_location.company_id is not null) or
-                    (source_location.company_id is not null and dest_location.company_id is null) or
+                    not (source_location.company_id is null and dest_location.company_id is null) or
                     source_location.company_id != dest_location.company_id or
                     source_location.usage not in ('internal', 'transit'))
                 ) UNION ALL
@@ -187,11 +186,10 @@ class stock_history(osv.osv):
                     product_template ON product_template.id = product_product.product_tmpl_id
                 WHERE quant.qty>0 AND stock_move.state = 'done' AND source_location.usage in ('internal', 'transit')
                  AND (
-                    (dest_location.company_id is null and source_location.company_id is not null) or
-                    (dest_location.company_id is not null and source_location.company_id is null) or
+                    not (dest_location.company_id is null and source_location.company_id is null) or
                     dest_location.company_id != source_location.company_id or
                     dest_location.usage not in ('internal', 'transit'))
                 ))
                 AS foo
-                GROUP BY move_id, location_id, company_id, product_id, product_categ_id, date, price_unit_on_quant, source
+                GROUP BY move_id, location_id, company_id, product_id, product_categ_id, date, source
             )""")

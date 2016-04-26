@@ -3,15 +3,15 @@
 # * account
 # 
 # Translators:
-# Belkacem Mohammed <belkacem77@gmail.com>, 2015
+# Belkacem Mohammed <belkacem77@gmail.com>, 2015-2016
 # Belkacem Mohammed <belkacem77@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2015-11-28 08:22+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-03-06 11:11+0000\n"
+"Last-Translator: Belkacem Mohammed <belkacem77@gmail.com>\n"
 "Language-Team: Kabyle (http://www.transifex.com/odoo/odoo-8/language/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -88,7 +88,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n <div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \"> <p>Azul ${object.partner_id.name},</p> <p>Tella tfaturt tamaynut iheggan ikeč: </p> <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\"> &nbsp;&nbsp;<strong>Timsisɣal</strong><br /> &nbsp;&nbsp;Uṭṭun n tfaturt: <strong>${object.number}</strong><br /> &nbsp;&nbsp;Asemday n tfaturt: <strong>${object.amount_total} ${object.currency_id.name}</strong><br /> &nbsp;&nbsp;Azemz n tfaturt: ${object.date_invoice}<br /> % if object.origin: &nbsp;&nbsp;Timsisɣal n tladna: ${object.origin}<br /> % endif % if object.user_id: &nbsp;&nbsp;Anermis-ik: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a> % endif </p> % if object.paypal_url: <br/> <p>Tzemreḍ diɣen a tefruḍ s srid s Paypal:</p> <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\"> <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/> </a> % endif <br/> <p>Tzemreḍ aɣ-d-nermeseḍ ma ɣuṛ-ek istiqsiyen..</p> <p>Tanemirt-ik imi tferneḍ ${object.company_id.name or 'Takebbwanit-nneɣ'}!</p> <br/> <br/> <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\"> <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\"> <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3> </div> <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\"> <span style=\"color: #222; margin-bottom: 5px; display: block; \"> % if object.company_id.street: ${object.company_id.street}<br/> % endif % if object.company_id.street2: ${object.company_id.street2}<br/> % endif % if object.company_id.city or object.company_id.zip: ${object.company_id.zip} ${object.company_id.city}<br/> % endif % if object.company_id.country_id: ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/> % endif </span> % if object.company_id.phone: <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \"> Tiliɣri:&nbsp; ${object.company_id.phone} </div> % endif % if object.company_id.website: <div> Asmel Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a> </div> %endif <p></p> </div> </div>"
 
 #. module: account
 #: help:account.invoice,state:0
@@ -111,7 +111,7 @@ msgstr " Aslemmes"
 #: code:addons/account/static/src/js/account_widgets.js:521
 #, python-format
 msgid " seconds"
-msgstr ""
+msgstr "tasinin"
 
 #. module: account
 #: field:analytic.entries.report,nbr:0
@@ -5246,14 +5246,14 @@ msgstr "Idda deg azal n udasil"
 #: model:account.account.type,name:account.data_account_type_income
 #: model:account.financial.report,name:account.account_financial_report_income0
 msgid "Income"
-msgstr "Produits"
+msgstr "Ifarisen"
 
 #. module: account
 #: view:account.chart.template:account.view_account_chart_template_seacrh
 #: field:product.category,property_account_income_categ:0
 #: field:product.template,property_account_income:0
 msgid "Income Account"
-msgstr "Compte de revenus"
+msgstr "Amiḍan n ifarisen"
 
 #. module: account
 #: field:account.chart.template,property_account_income:0
@@ -5268,7 +5268,7 @@ msgstr "Catégorie de compte produits"
 #. module: account
 #: model:account.account.type,name:account.account_type_income_view1
 msgid "Income View"
-msgstr "Vue des revenus"
+msgstr "Timeẓri n ifarisen"
 
 #. module: account
 #: help:account.tax,include_base_amount:0
