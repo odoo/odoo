@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <!-- Opportunities by user and team pivot View -->
         <record id="crm_opportunity_report_view_pivot" model="ir.ui.view">
@@ -154,7 +153,7 @@
              <field name="view_type">form</field>
              <field name="view_mode">pivot,graph</field>
              <field name="context">{'search_default_opportunity': True, 'search_default_current': True, 'active_test': True, 'search_default_my': True}</field>
-            <field name="view_ids" 
+            <field name="view_ids"
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot')}),
                           (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph')})]"/>
@@ -173,7 +172,7 @@ teams of the sales pipeline.</field>
              <field name="view_type">form</field>
              <field name="view_mode">graph,pivot</field>
              <field name="context">{'search_default_opportunity': True, 'search_default_current': True, 'active_test': True, 'search_default_my': True}</field>
-            <field name="view_ids" 
+            <field name="view_ids"
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph')}),
                           (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot')})]"/>
@@ -190,15 +189,20 @@ with the the sales teams.</field>
             <field name="view_type">form</field>
             <field name="view_mode">pivot,graph</field>
             <field name="context">{'search_default_current': True, 'active_test': True}</field>
-            <field name="view_ids" 
+            <field name="view_ids"
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot_lead')}),
                           (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph_lead')})]"/>
             <field name="help">This report analyses the source of your leads
 (including those converted into opportunities).</field>
         </record>
-        <menuitem id="crm_opportunity_report_menu_lead" name="Leads"
-             parent="base.menu_sale_report" groups="crm.group_use_lead" action="crm_opportunity_report_action_lead" sequence="6"/>
 
-    </data>
-</openerp>
+        <menuitem
+            id="crm_opportunity_report_menu_lead"
+            name="Leads"
+            parent="base.menu_sale_report"
+            action="crm_opportunity_report_action_lead"
+            groups="crm.group_use_lead"
+            sequence="6"/>
+
+</odoo>

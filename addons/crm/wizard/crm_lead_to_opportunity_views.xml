@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
-    <data>
+<odoo>
 
         <record id="view_crm_lead2opportunity_partner" model="ir.ui.view">
             <field name="name">crm.lead2opportunity.partner.form</field>
@@ -11,7 +10,7 @@
                         <field name="name" widget="radio"/>
                     </group>
                     <group string="Assign this opportunity to">
-                        <field name="user_id" on_change="on_change_user(user_id, team_id, context)" domain="[('share', '=', False)]"/>
+                        <field name="user_id" domain="[('share', '=', False)]"/>
                         <field name="team_id" widget="selection"/>
                     </group>
                     <group string="Opportunities" attrs="{'invisible': [('name', '!=', 'merge')]}">
@@ -31,7 +30,7 @@
                         </field>
                     </group>
                     <group name="action" attrs="{'invisible': [('name', '!=', 'convert')]}" string="Customers" col="1">
-                        <field name="action" nolabel="1" widget="radio" on_change="onchange_action(action, context)" />
+                        <field name="action" nolabel="1" widget="radio"/>
                         <group col="2">
                             <field name="partner_id" domain="[('customer', '=', True)]" context="{'search_default_customer': 1}" attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"/>
                         </group>
@@ -52,7 +51,7 @@
                     <separator string="Conversion Options"/>
                     <group>
                         <field name="name" class="oe_inline" widget="radio"/>
-                        <field name="deduplicate" class="oe_inline" on_change="on_change_deduplicate(deduplicate, context)"/>
+                        <field name="deduplicate" class="oe_inline"/>
                     </group>
                     <group string="Assign these opportunities to">
                         <field name="team_id"/>
@@ -102,7 +101,8 @@
             <field name="target">new</field>
         </record>
 
-        <act_window id="action_crm_send_mass_convert"
+        <act_window
+            id="action_crm_send_mass_convert"
             multi="True"
             key2="client_action_multi" name="Convert to opportunities"
             res_model="crm.lead2opportunity.partner.mass" src_model="crm.lead"
@@ -112,5 +112,4 @@
             groups="sales_team.group_sale_salesman"
         />
 
-    </data>
-</openerp>
+</odoo>

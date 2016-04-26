@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
-    <data>
+<odoo>
         <!--
             crm.lead.tag views
         -->
@@ -38,10 +37,8 @@
                 context="{'default_duration': 4.0, 'default_opportunity_id': active_id}"
                 view_type="form"/>
 
-
-        <!-- CRM Lead Form View  -->
-        <record model="ir.ui.view" id="crm_case_form_view_leads">
-        <field name="name">CRM - Leads Form</field>
+        <record id="crm_case_form_view_leads" model="ir.ui.view">
+        <field name="name">crm.lead.form.lead</field>
         <field name="model">crm.lead</field>
         <field name="arch" type="xml">
             <form string="Leads Form">
@@ -64,7 +61,6 @@
                         <group>
                             <!-- Preload all the partner's information -->
                             <field name="partner_id" string="Customer"
-                                on_change="on_change_partner_id(partner_id)"
                                 options='{"create_name_field": "name"}'
                                 context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_fax': fax, 'default_email': email_from, 'default_user_id': user_id, 'default_team_id': team_id}" groups="base.group_no_one"/>
                             <field name="partner_name" string="Company Name"/>
@@ -73,7 +69,7 @@
                                 <field name="street" placeholder="Street..." class="o_address_street"/>
                                 <field name="street2" placeholder="Street 2..." class="o_address_street"/>
                                 <field name="city" placeholder="City" class="o_address_city"/>
-                                <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' on_change="onchange_state(state_id)"/>
+                                <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
                                 <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                 <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                             </div>
@@ -91,7 +87,7 @@
                             <field name="fax"/>
                         </group>
                         <group>
-                            <field name="user_id" on_change="on_change_user(user_id, context)" domain="[('share', '=', False)]"
+                            <field name="user_id" domain="[('share', '=', False)]"
                                 context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'sales_team.group_sale_salesman_all_leads'], 'team_id': team_id}"/>
                             <field name="team_id" widget="selection" domain="[('use_leads','=',True)]"/>
                             <field name="type" invisible="1"/>
@@ -137,9 +133,8 @@
         </field>
         </record>
 
-        <!-- CRM Lead Pivot View -->
-        <record model="ir.ui.view" id="crm_case_pivot_view_leads">
-            <field name="name">Opportunities</field>
+        <record id="crm_case_pivot_view_leads" model="ir.ui.view">
+            <field name="name">crm.lead.pivot.lead</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
                 <pivot string="Opportunities" display_quantity="true">
@@ -149,9 +144,8 @@
             </field>
         </record>
 
-        <!-- CRM Lead Graph View -->
-        <record model="ir.ui.view" id="crm_case_graph_view_leads">
-            <field name="name">Opportunities</field>
+        <record id="crm_case_graph_view_leads" model="ir.ui.view">
+            <field name="name">crm.lead.graph.lead</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
                 <graph string="Opportunities" type="bar">
@@ -161,9 +155,8 @@
             </field>
         </record>
 
-        <!-- CRM Lead Tree View -->
-        <record model="ir.ui.view" id="crm_case_tree_view_leads">
-            <field name="name">Leads</field>
+        <record id="crm_case_tree_view_leads" model="ir.ui.view">
+            <field name="name">crm.lead.tree.lead</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
                 <tree string="Leads" decoration-bf="message_needaction==True" decoration-muted="probability == 100">
@@ -189,22 +182,18 @@
             </field>
         </record>
 
-
-        <!-- CRM Lead Calendar View -->
-        <record model="ir.ui.view" id="crm_case_calendar_view_leads">
-            <field name="name">CRM - Leads Calendar</field>
+        <record  id="crm_case_calendar_view_leads" model="ir.ui.view">
+            <field name="name">crm.lead.calendar.lead</field>
             <field name="model">crm.lead</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <calendar string="Leads Generation"
-                    date_start="date_action" color="user_id">
+                <calendar string="Leads Generation" date_start="date_action" color="user_id">
                     <field name="name"/>
                     <field name="partner_name"/>
                 </calendar>
             </field>
         </record>
 
-        <!-- CRM Lead simplified Form View -->
         <record id="view_create_opportunity_simplified" model="ir.ui.view">
             <field name="name">crm.lead.form.simple</field>
             <field name="model">crm.lead</field>
@@ -232,6 +221,7 @@
                 </form>
             </field>
         </record>
+
         <record id="create_opportunity_simplified" model="ir.actions.act_window">
             <field name="name">Create an Opportunity</field>
             <field name="res_model">crm.lead</field>
@@ -241,9 +231,8 @@
             <field name="target">new</field>
         </record>
 
-        <!-- CRM Lead Kanban View  -->
-        <record model="ir.ui.view" id="crm_case_kanban_view_leads">
-            <field name="name">CRM - Leads Kanban</field>
+        <record id="crm_case_kanban_view_leads" model="ir.ui.view">
+            <field name="name">crm.lead.kanban.lead</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban" on_create="crm.create_opportunity_simplified">
@@ -317,9 +306,8 @@
             </field>
         </record>
 
-        <!-- CRM Lead Search View -->
         <record id="view_crm_case_leads_filter" model="ir.ui.view">
-            <field name="name">CRM - Leads Search</field>
+            <field name="name">crm.lead.search.lead</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
                 <search string="Search Leads">
@@ -362,9 +350,8 @@
         <!--
             crm.lead (as Opportunity) views
         -->
-        <!-- Opportunities Form View -->
-        <record model="ir.ui.view" id="crm_case_form_view_oppor">
-            <field name="name">Opportunities</field>
+        <record id="crm_case_form_view_oppor" model="ir.ui.view">
+            <field name="name">crm.lead.form.opportunity</field>
             <field name="model">crm.lead</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
@@ -426,15 +413,14 @@
                         <group>
                             <group>
                                 <field name="partner_id"
-                                    on_change="on_change_partner_id(partner_id)"
                                     string="Customer" domain="[('customer', '=', True)]"
                                     context="{'search_default_customer': 1,
-                                        'default_name': partner_name, 'default_street': street, 
-                                        'default_street2': street2, 'default_city': city, 
-                                        'default_state_id': state_id, 'default_zip': zip, 
-                                        'default_country_id': country_id, 'default_function': function, 
-                                        'default_phone': phone, 'default_mobile': mobile, 
-                                        'default_fax': fax, 'default_email': email_from, 
+                                        'default_name': partner_name, 'default_street': street,
+                                        'default_street2': street2, 'default_city': city,
+                                        'default_state_id': state_id, 'default_zip': zip,
+                                        'default_country_id': country_id, 'default_function': function,
+                                        'default_phone': phone, 'default_mobile': mobile,
+                                        'default_fax': fax, 'default_email': email_from,
                                         'default_user_id': user_id, 'default_team_id': team_id}"/>
                                 <field name="email_from" string="Email" widget="email"/>
                                 <field name="phone" widget="phone"/>
@@ -446,8 +432,7 @@
                                     <div class="o_row mr16">
                                         <field name="next_activity_id"
                                                options="{'no_create': True, 'no_open': True}"
-                                               domain="['|',('team_id','=',False),('team_id','=',team_id)]"
-                                               on_change="onchange_next_activity_id(next_activity_id)"/>
+                                               domain="['|',('team_id','=',False),('team_id','=',team_id)]"/>
                                         <span class="oe_form_field"
                                               attrs="{'invisible': ['|', ('next_activity_id', '=', False), ('date_action', '=', False)]}">&#160;on&#160;</span>
                                         <field name="date_action" attrs="{'invisible': [('next_activity_id', '=', False)]}" placeholder="Choose a date..."/>
@@ -461,7 +446,7 @@
                             </group>
 
                             <group>
-                                <field name="user_id" on_change="on_change_user(user_id, context)" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'sales_team.group_sale_salesman_all_leads'], 'team_id': team_id}" domain="[('share', '=', False)]"/>
+                                <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'sales_team.group_sale_salesman_all_leads'], 'team_id': team_id}" domain="[('share', '=', False)]"/>
                                 <field name="team_id" widget="selection"/>
                             </group>
                             <group>
@@ -485,7 +470,7 @@
                                         <field name="street" placeholder="Street..." class="o_address_street"/>
                                         <field name="street2" placeholder="Street 2..." class="o_address_street"/>
                                         <field name="city" placeholder="City" class="o_address_city"/>
-                                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' on_change="onchange_state(state_id)"/>
+                                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
                                         <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                         <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                     </div>
@@ -525,9 +510,8 @@
             </field>
         </record>
 
-        <!-- Opportunities Tree View -->
-        <record model="ir.ui.view" id="crm_case_tree_view_oppor">
-            <field name="name">Opportunities Tree</field>
+        <record id="crm_case_tree_view_oppor" model="ir.ui.view">
+            <field name="name">crm.lead.tree.opportunity</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
                 <tree string="Opportunities" decoration-bf="message_needaction==True" decoration-muted="probability == 100" decoration-danger="date_action and (date_action &lt; current_date)">
@@ -572,9 +556,8 @@
             </field>
         </record>
 
-        <!-- Opportunities Search View -->
         <record id="view_crm_case_opportunities_filter" model="ir.ui.view">
-            <field name="name">CRM - Opportunities Search</field>
+            <field name="name">crm.lead.search.opportunity</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
                 <search string="Search Opportunities">
@@ -704,7 +687,11 @@
         <!--
             Menu Actions
         -->
-        <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="5"/>
+        <menuitem
+            id="sales_team.menu_sales"
+            name="Sales"
+            parent="sales_team.menu_base_partner"
+            sequence="5"/>
 
         <!-- Lead Menu -->
         <record model="ir.actions.act_window" id="crm_lead_all_leads">
@@ -734,8 +721,13 @@
             </field>
         </record>
 
-        <menuitem name="Leads" id="menu_crm_leads" parent="base.menu_sales" sequence="1"
-            action="crm_lead_all_leads" groups="crm.group_use_lead"/>
+        <menuitem
+            id="menu_crm_leads"
+            name="Leads"
+            parent="sales_team.menu_sales"
+            sequence="1"
+            action="crm_lead_all_leads"
+            groups="crm.group_use_lead"/>
 
         <!-- 'My Pipeline' menu : Server action, act_window_views and act_windows -->
         <record model="ir.actions.act_window" id="crm_lead_opportunities">
@@ -800,6 +792,7 @@
                     'default_user_id': uid,
                     'search_default_assigned_to_me': 1,
             }</field>
+            <field name="view_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
             <field name="help" type="html">
                 <p>
@@ -813,7 +806,11 @@
             </field>
         </record>
 
-        <menuitem id="menu_crm_opportunities" action="action_your_pipeline" parent="base.menu_sales" sequence="4"/>
+        <menuitem
+            id="menu_crm_opportunities"
+            action="action_your_pipeline"
+            parent="sales_team.menu_sales"
+            sequence="4"/>
 
         <!-- Next Activities Menu -->
         <record id="crm_lead_action_activities" model="ir.actions.act_window">
@@ -841,8 +838,12 @@
             </field>
         </record>
 
-        <menuitem id="crm_lead_menu_activities" name="Next Activities" sequence="5"
-            parent="base.menu_sales" action="crm_lead_action_activities" />
+        <menuitem
+            id="crm_lead_menu_activities"
+            name="Next Activities"
+            parent="sales_team.menu_sales"
+            sequence="5"
+            action="crm_lead_action_activities" />
 
         <!-- Configuration/Lead & Opporotunities/Lead Tags Menu -->
         <record id="crm_lead_tag_action" model="ir.actions.act_window">
@@ -862,9 +863,13 @@
             </field>
         </record>
 
-        <menuitem action="crm_lead_tag_action"
-            id="menu_crm_lead_categ" name="Lead Tags"
-            parent="base.menu_crm_config_lead" sequence="1" groups="base.group_no_one"/>
+        <menuitem
+            id="menu_crm_lead_categ"
+            name="Lead Tags"
+            action="crm_lead_tag_action"
+            parent="sales_team.menu_crm_config_lead"
+            sequence="1"
+            groups="base.group_no_one"/>
 
         <!-- Configuration/Lead & Opporotunities/Lost Reasons Menu -->
         <record id="crm_lost_reason_action" model="ir.actions.act_window">
@@ -883,7 +888,11 @@
             </field>
         </record>
 
-        <menuitem action="crm_lost_reason_action" id="menu_crm_lost_reason" parent="base.menu_crm_config_lead" sequence="6" groups="base.group_no_one"/>
+        <menuitem
+            id="menu_crm_lost_reason"
+            action="crm_lost_reason_action"
+            parent="sales_team.menu_crm_config_lead"
+            sequence="6"
+            groups="base.group_no_one"/>
 
-    </data>
-</openerp>
+</odoo>

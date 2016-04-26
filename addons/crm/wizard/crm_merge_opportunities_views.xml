@@ -1,15 +1,13 @@
 <?xml version="1.0"?>
-<openerp>
-    <data>
-
+<odoo>
         <!-- Merge Opportunities  -->
-        <record model="ir.ui.view" id="merge_opportunity_form">
+        <record id="merge_opportunity_form" model="ir.ui.view">
             <field name="name">crm.merge.opportunity.form</field>
             <field name="model">crm.merge.opportunity</field>
             <field name="arch" type="xml">
                 <form string="Merge Leads/Opportunities">
                     <group string="Assign opportunities to">
-                        <field name="user_id" class="oe_inline" on_change="on_change_user(user_id, team_id, context)"/>
+                        <field name="user_id" class="oe_inline"/>
                         <field name="team_id" class="oe_inline"/>
                     </group>
                     <group string="Select Leads/Opportunities">
@@ -36,7 +34,7 @@
         </record>
 
         <!--  Merge leads/opportunities action -->
-        <record model="ir.actions.act_window" id="merge_opportunity_act">
+        <record id="merge_opportunity_act" model="ir.actions.act_window">
             <field name="name">Merge leads/opportunities</field>
             <field name="res_model">crm.merge.opportunity</field>
             <field name="view_type">form</field>
@@ -45,13 +43,16 @@
             <field name="target">new</field>
         </record>
 
-        <act_window id="action_merge_opportunities"
+        <act_window
+            id="action_merge_opportunities"
+            name="Merge leads/opportunities"
             multi="True"
-            key2="client_action_multi" name="Merge leads/opportunities"
-            res_model="crm.merge.opportunity" src_model="crm.lead"
-            view_mode="form" target="new" view_type="form"
-            groups="sales_team.group_sale_salesman"
-            />
+            key2="client_action_multi"
+            res_model="crm.merge.opportunity"
+            src_model="crm.lead"
+            view_mode="form"
+            target="new"
+            view_type="form"
+            groups="sales_team.group_sale_salesman" />
 
-    </data>
-</openerp>
+</odoo>

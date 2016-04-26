@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import fields, models
-from openerp import tools
+from odoo import fields, models, tools
 
 
-class crm_activity_report(models.Model):
+class ActivityReport(models.Model):
     """ CRM Lead Analysis """
+
     _name = "crm.activity.report"
     _auto = False
     _description = "CRM Activity Analysis"
@@ -30,9 +30,9 @@ class crm_activity_report(models.Model):
     active = fields.Boolean('Active', readonly=True)
     probability = fields.Float('Probability', group_operator='avg', readonly=True)
 
-    def init(self, cr):
-        tools.drop_view_if_exists(cr, 'crm_activity_report')
-        cr.execute("""
+    def init(self):
+        tools.drop_view_if_exists(self._cr, 'crm_activity_report')
+        self._cr.execute("""
             CREATE OR REPLACE VIEW crm_activity_report AS (
                 select
                     m.id,

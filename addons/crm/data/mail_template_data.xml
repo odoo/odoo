@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
         <!-- notify to admin of module installation -->
@@ -90,9 +91,9 @@
                                 <span style="font-style:italic;">You’re not alone</span>
                             </p>
                             <p dir="ltr" style="font-size:13px;margin-top:0pt;margin-bottom:8pt;">
-                                <span>We would be delighted to assist you along the way. Contact us at 
+                                <span>We would be delighted to assist you along the way. Contact us at
                                 <a href="mailto:help@odoo.com"><span style="text-decoration:underline;">
-                                help@odoo.com</span></a> if you have any question. You can also discover 
+                                help@odoo.com</span></a> if you have any question. You can also discover
                                 how to get the best out of Odoo CRM with our </span>
                                 <a href="https://www.odoo.com/documentation/user/9.0/crm.html">
                                 <span style="text-decoration:underline;">User Documentation</span></a>
@@ -114,7 +115,7 @@
 
         <function
             id="mail_template_function_module_install_crm"
-            model="mail.template" 
+            model="mail.template"
             name="send_mail"
             eval="[ref('mail_template_data_module_install_crm'), ref('base.module_crm')]"/>
 

@@ -1,44 +1,44 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
     <data noupdate="1">
 
         <!--  crm categories -->
-        <record model="crm.lead.tag" id="categ_oppor1">
+        <record id="categ_oppor1" model="crm.lead.tag">
             <field name="name">Product</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="color" eval="1"/>
         </record>
-        <record model="crm.lead.tag" id="categ_oppor2">
+        <record id="categ_oppor2" model="crm.lead.tag">
             <field name="name">Software</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="color" eval="2"/>
         </record>
-        <record model="crm.lead.tag" id="categ_oppor3">
+        <record id="categ_oppor3" model="crm.lead.tag">
             <field name="name">Services</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="color" eval="3"/>
         </record>
-        <record model="crm.lead.tag" id="categ_oppor4">
+        <record id="categ_oppor4" model="crm.lead.tag">
             <field name="name">Information</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="color" eval="4"/>
         </record>
-        <record model="crm.lead.tag" id="categ_oppor5">
+        <record id="categ_oppor5" model="crm.lead.tag">
             <field name="name">Design</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="color" eval="5"/>
         </record>
-        <record model="crm.lead.tag" id="categ_oppor6">
+        <record id="categ_oppor6" model="crm.lead.tag">
             <field name="name">Training</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="color" eval="6"/>
         </record>
-        <record model="crm.lead.tag" id="categ_oppor7">
+        <record id="categ_oppor7" model="crm.lead.tag">
             <field name="name">Consulting</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="color" eval="7"/>
         </record>
-        <record model="crm.lead.tag" id="categ_oppor8">
+        <record id="categ_oppor8" model="crm.lead.tag">
             <field name="name">Other</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="color" eval="8"/>
@@ -461,7 +461,7 @@ Andrew</p>]]></field>
             <p>I am interested in your company's products and I plan to buy a new laptop having latest technologies as well as an affordable price.</p>
             <p>Could you please send me the product catalog?</p>]]></field>
             <field name="message_type">email</field>
-            <field name="subtype_id" ref="mail.mt_comment"/>          
+            <field name="subtype_id" ref="mail.mt_comment"/>
         </record>
         <record id="msg_case15_2" model="mail.message">
             <field name="subject">Re: Plan to buy RedHat servers</field>
@@ -826,4 +826,4 @@ Andrew</p>]]></field>
                   {'install_mode': True}"/>
 
     </data>
-</openerp>
+</odoo>
