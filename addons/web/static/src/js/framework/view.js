@@ -106,7 +106,7 @@ var View = Widget.extend({
         if (action_data.special === 'cancel') {
             return handler({"type":"ir.actions.act_window_close"});
         } else if (action_data.type === "object") {
-            var args = [[record_id]];
+            var args = record_id ? [[record_id]] : [dataset.ids];
             if (action_data.args) {
                 try {
                     // Warning: quotes and double quotes problem due to json and xml clash
