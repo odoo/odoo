@@ -17,19 +17,21 @@
                         <div class="oe_kanban_global_click">
                             <div class="oe_kanban_vignette">
                                 <div class="oe_attachment">
-                                    <div class="oe_name">
-                                        <field name="name"/>
+                                    <div class="row">
+                                        <div class="col-xs-7 o_kanban_primary_left" t-if="record.type.raw_value == 'binary'">
+                                            <a t-attf-href="/web/content/#{record.id.value}?download=1">
+                                                <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
+                                                <div t-if="!webimage" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
+                                                <div t-if="webimage" class="o_kanban_attachment_image">
+                                                    <img t-attf-src="/web/image/#{record.id.value}?download=1"/>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="col-xs-5 o_kanban_primary_right text-center" style="margin-top: 10%;">
+                                            <field name="name"/>
+                                        </div>
                                     </div>
-                                    <div t-if="record.type.raw_value == 'binary'">
-                                        <a t-attf-href="/web/content/#{record.id.value}?download=1">
-                                            <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
-                                            <div t-if="!webimage" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
-                                            <div t-if="webimage" class="o_kanban_attachment_image">
-                                                <img t-attf-src="/web/image/#{record.id.value}?download=1"/>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="oe_kanban_bottom_left">
+                                    <div class="oe_kanban_bottom_left" style="margin: 7px;">
                                         <field name="priority" widget="priority"/>
                                     </div>
                                 </div>

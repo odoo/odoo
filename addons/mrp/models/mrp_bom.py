@@ -242,7 +242,7 @@ class MrpBomLine(models.Model):
             'res_model': 'ir.attachment',
             'type': 'ir.actions.act_window',
             'view_id': attachment_view,
-            'views': [(attachment_view, 'kanban')],
+            'views': [(attachment_view, 'kanban'), (False, 'form')],
             'view_mode': 'kanban,tree,form',
             'view_type': 'form',
             'help': _('''<p class="oe_view_nocontent_create">
