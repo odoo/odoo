@@ -48,13 +48,11 @@
                         <strong>Work Orders</strong>
                         <table class="table table-condensed">
                             <tr>
-                                <td class="text-center"><strong>Sequence</strong></td>
                                 <td class="text-center"><strong>Name</strong></td>
                                 <td class="text-center"><strong>WorkCenter</strong></td>
                                 <td class="text-center"><strong>No. Of Minutes</strong></td>
                             </tr>
                             <tr t-foreach="o.workorder_ids" t-as="line2">
-                                <td class="text-center"><span t-field="line2.sequence"/></td>
                                 <td class="text-center"><span t-field="line2.name"/></td>
                                 <td class="text-center"><span t-field="line2.workcenter_id.name"/></td>
                                 <td class="text-center"><span t-field="line2.duration"/></td>
