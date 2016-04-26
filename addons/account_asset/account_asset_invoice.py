@@ -19,7 +19,7 @@ class AccountInvoice(models.Model):
             if inv.number:
                 asset_ids = self.env['account.asset.asset'].sudo().search([('invoice_id', '=', inv.id), ('company_id', '=', inv.company_id.id)])
                 if asset_ids:
-                    asset_ids .write({'active': False})
+                    asset_ids.write({'active': False})
             inv.invoice_line_ids.asset_create()
         return result
 
