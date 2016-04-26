@@ -304,8 +304,26 @@ class ir_translation(osv.osv):
                 translations[res_id] = value
         return translations
 
+    CACHED_MODELS = {'ir.model.fields', 'ir.ui.view'}
+
+    def _modified_model(self, model_name):
+        """ Invalidate the ormcache if necessary, depending on ``model_name``.
+        This should be called when modifying translations of type 'model'.
+        """
+        if model_name in self.CACHED_MODELS:
+            self.clear_caches()
+
+    @api.multi
+    def _modified(self):
+        """ Invalidate the ormcache if necessary, depending on the translations ``self``. """
+        for trans in self:
+            if trans.type != 'model' or trans.name.split(',')[0] in self.CACHED_MODELS:
+                self.clear_caches()
+                break
+
     def _set_ids(self, cr, uid, name, tt, lang, ids, value, src=None):
-        self.clear_caches()
+        self._modified_model(name.split(',')[0])
+
         cr.execute('update ir_translation '
                   'set value=%s '
                   '  , src=%s '
@@ -552,7 +570,7 @@ class ir_translation(osv.osv):
     def create(self, vals):
         record = super(ir_translation, self.sudo()).create(vals).with_env(self.env)
         record.check('create')
-        self.clear_caches()
+        record._modified()
         return record
 
     @api.multi
@@ -564,13 +582,13 @@ class ir_translation(osv.osv):
         self.check('write')
         result = super(ir_translation, self.sudo()).write(vals)
         self.check('write')
-        self.clear_caches()
+        self._modified()
         return result
 
     @api.multi
     def unlink(self):
         self.check('unlink')
-        self.clear_caches()
+        self._modified()
         return super(ir_translation, self.sudo()).unlink()
 
     @api.model
@@ -618,7 +636,7 @@ class ir_translation(osv.osv):
                     'src': record[field.name] or None,
                     'module': module
                 })
-        self.clear_caches()
+        self._modified_model(field.model_name)
 
     @api.model
     def translate_fields(self, model, id, field=None):
