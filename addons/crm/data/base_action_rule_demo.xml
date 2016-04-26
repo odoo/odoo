@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
     <data noupdate="1">
         <!-- demo automated actions add messge on new lead after 5 days -->
         <record id="filter_draft_lead" model="ir.filters">
@@ -56,4 +56,4 @@ object.write({'team_id': sales_team.id})
             <field name="server_action_ids" eval="[(6,0,[ref('action_set_team_sales_department')])]"/>
         </record>
     </data>
-</openerp>
+</odoo>

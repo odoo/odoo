@@ -1,24 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <!-- Top menu item -->
         <!--
             This menu item's purpose is to overwrite another one defined in
             the base module in order to set new groups.
         -->
-        <menuitem name="CRM"
+        <menuitem
             id="sales_team.menu_base_partner"
-            web_icon="crm,static/description/icon.png"/>
+            name="CRM"
+            groups="sales_team.group_sale_manager,sales_team.group_sale_salesman"
+            web_icon="crm,static/description/icon.png"
+            sequence="6"/>
 
-        <menuitem id="base.menu_crm_config_lead" name="Leads &amp; Opportunities"
-            parent="sales_team.menu_sale_config" sequence="5" groups="sales_team.group_sale_manager"/>
+        <menuitem
+            id="sales_team.menu_crm_config_lead"
+            name="Leads &amp; Opportunities"
+            parent="sales_team.menu_sale_config"
+            sequence="5"
+            groups="sales_team.group_sale_manager"/>
 
-        <menuitem id="base.menu_crm_config_opportunity" name="Opportunities"
-            parent="sales_team.menu_sale_config" sequence="1" groups="sales_team.group_sale_manager"/>
+        <menuitem
+            id="sales_team.menu_crm_config_opportunity"
+            name="Opportunities"
+            parent="sales_team.menu_sale_config"
+            sequence="1"
+            groups="sales_team.group_sale_manager"/>
 
-        <menuitem id="sales_team.menu_sale_config_sales" name="Sales"
-            parent="sales_team.menu_sale_config" sequence="0" groups="sales_team.group_sale_manager"/>
+        <menuitem
+            id="sales_team.menu_sale_config_sales"
+            name="Sales"
+            parent="sales_team.menu_sale_config"
+            sequence="0"
+            groups="sales_team.group_sale_manager"/>
 
-    </data>
-</openerp>
+</odoo>

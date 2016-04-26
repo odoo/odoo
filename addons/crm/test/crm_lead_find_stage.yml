@@ -28,6 +28,6 @@
 -
   !python {model: crm.lead}: |
     opp = self.browse(cr, uid, ref('test_crm_lead_new'))
-    stage_id = self.stage_find(cr, uid , [opp], opp.team_id.id or False,[('probability','=',100.0)], context)
+    stage_id = opp.stage_find(opp.team_id.id or False,[('probability','=',100.0)])
     assert stage_id == opp.stage_id.id, "Stage of opportunity is incorrect!"
 

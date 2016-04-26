@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <record id="crm_activity_report_view_graph" model="ir.ui.view">
             <field name="name">crm.activity.report.graph</field>
@@ -57,9 +56,14 @@
            <field name="context">{}</field>
            <field name="domain">[]</field>
        </record>
-       <menuitem name="Activities" id="crm_activity_report_menu"
+
+       <menuitem
+            id="crm_activity_report_menu"
+            name="Activities"
             groups="sales_team.group_sale_manager"
-            parent="base.menu_sale_report" action="crm_activity_report_action" sequence="7"/>
+            parent="base.menu_sale_report"
+            action="crm_activity_report_action"
+            sequence="7"/>
 
        <record id="crm_activity_report_action_team" model="ir.actions.act_window">
            <field name="name">Activities Analysis</field>
@@ -70,5 +74,4 @@
            <field name="domain">[]</field>
        </record>
 
-    </data>
-</openerp>
+</odoo>
