@@ -11,6 +11,14 @@ aim to improve the quality of the code (better readability of source,
 ...) and  Odoo Apps. Indeed, proper code ought ease maintenance, aid
 debugging, lower complexity and promote reliability.
 
+.. warning::
+
+    These guidelines are written with new modules and new files in mind. When
+    modifying existing files, the original style of the file strictly supersedes
+    any other style guidelines. In other words, never modify existing files in
+    order to apply these guidelines, to avoid disrupting the revision history of
+    each line. For more details, see our `pull request guide <https://odoo.com/submit-pr>`_.
+
 Module structure
 ================
 
