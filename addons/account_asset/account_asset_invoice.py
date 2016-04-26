@@ -47,11 +47,12 @@ class account_invoice_line(osv.osv):
     def asset_create(self, cr, uid, lines, context=None):
         context = context or {}
         asset_obj = self.pool.get('account.asset.asset')
+        asset_ids = []
         for line in lines:
             if line.invoice_id.number:
-                if asset_obj.search(cr, SUPERUSER_ID, [('code', '=', line.invoice_id.number)], context=context):
-                    raise osv.except_osv(_('Warning!'), _('You already have assets with the reference %s.\nPlease delete these assets before creating new ones for this invoice.') % (line.invoice_id.number))
-
+                #FORWARDPORT UP TO SAAS-6
+                asset_ids += asset_obj.search(cr, SUPERUSER_ID, [('code', '=', line.invoice_id.number), ('company_id', '=', line.company_id.id)], context=context)
+        asset_obj.write(cr, SUPERUSER_ID, asset_ids, {'active': False})
         for line in lines:
             if line.asset_category_id:
                 vals = {
