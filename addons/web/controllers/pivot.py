@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from openerp import http
 import json
 from openerp.http import request, serialize_exception as _serialize_exception

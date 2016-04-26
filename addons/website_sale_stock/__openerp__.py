@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 {
     'name': 'Website Sale Stock - Website Delivery Informations',
     'version': '0.0.1',

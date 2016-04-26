@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 """html2text: Turn HTML into equivalent Markdown-structured text."""
 __version__ = "2.36"
 __author__ = "Aaron Swartz (me@aaronsw.com)"

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import base64
 from operator import itemgetter
 import psycopg2

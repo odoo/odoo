@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from openerp.api import Environment
 import openerp.tests
 @openerp.tests.common.at_install(False)

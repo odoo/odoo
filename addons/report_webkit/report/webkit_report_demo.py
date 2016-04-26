@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 from openerp.addons.report_webkit.webkit_report import webkit_report_extender
 from openerp import SUPERUSER_ID

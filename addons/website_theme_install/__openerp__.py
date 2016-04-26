@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 {
     'name': 'Website Theme Install',
     'description': "Propose to install a theme on website installation",

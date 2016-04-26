@@ -1,3 +1,4 @@
-# -*- coding: utf-8 -*
+# -*- coding: utf-8 -*-
+
 import main
 import website_mail

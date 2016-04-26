@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 {
     'name': 'Gauge Widget for Kanban',
     'category': 'Hidden',

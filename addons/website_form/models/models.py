@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import itertools
 
 from openerp import tools

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 {
     'name' : 'Odoo Live Support',
     'version': '1.0',

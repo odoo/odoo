@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 {
     'name': 'eCommerce Optional Products',
     'category': 'Website',

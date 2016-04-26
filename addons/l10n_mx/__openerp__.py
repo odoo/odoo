@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 #    Coded by: Alejandro Negrin anegrin@vauxoo.com,
 #    Planified by: Alejandro Negrin, Humberto Arocha, Moises Lopez

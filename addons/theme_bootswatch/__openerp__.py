@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 {
     'name': 'Bootswatch Theme',
     'summary': 'Support for Bootswatch themes in master',
