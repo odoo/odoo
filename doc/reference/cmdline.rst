@@ -111,11 +111,21 @@ Running the server
 
     runs tests after installing modules
 
-.. option:: --debug
+.. option:: --dev <feature,feature,...,feature>
 
-    when an unexpected error is raised (not a warning or an access error),
-    automatically starts :mod:`python:pdb` before logging and returning the
-    error
+    * ``all``: all the features below are activated
+
+    * ``xml``: read template qweb from xml file directly instead of database.
+      Once a template has been modified in database, it will be not be read from
+      the xml file until the next update/init.
+
+    * ``reload``: restart server when python file are updated (may not be detected
+      depending on the text editor used)
+
+    * ``qweb``: break in the evaluation of qweb template when a node contains ``t-debug='debugger'``
+
+    * ``(i)p(u)db``: start the chosen python debugger in the code when an
+      unexpected error is raised before logging and returning the error.
 
 .. _reference/cmdline/server/database:
 
