@@ -201,9 +201,10 @@ class MrpProduction(models.Model):
     @api.multi
     def button_plan(self):
         orders_new = self.filtered(lambda x: x.routing_id and x.state == 'confirmed')
+        uom_obj = self.env['product.uom']
         # Create all work orders if not already created
         for order in orders_new:
-            quantity = order.product_uom_id._compute_qty(order.product_qty, order.bom_id.product_uom_id.id)
+            quantity = uom_obj._compute_qty(order.product_uom_id.id, order.product_qty, order.bom_id.product_uom_id.id)
             order.bom_id.explode(order.product_id, quantity, method_wo=order._workorders_create)
         orders_new.write({'state': 'planned'})
 
@@ -872,7 +873,7 @@ class MrpUnbuild(models.Model):
     def _generate_moves(self):
         for unbuild in self:
             bom = unbuild._get_bom()
-            factor = unbuild.product_uom_id._compute_qty(unbuild.product_qty, bom.product_uom_id.id)
+            factor = self.env['product.uom']._compute_qty(unbuild.product_uom_id.id, unbuild.product_qty, bom.product_uom_id.id)
             bom.explode(unbuild.product_id, factor / bom.product_qty, method=self._generate_move)
             unbuild.consume_line_id.action_confirm()
         return True

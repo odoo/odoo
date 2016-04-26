@@ -148,25 +148,30 @@ class StockMove(models.Model):
     @api.multi
     def move_validate(self):
         '''
-            Functions as an action_done (better to put this logic from action_done itself)
+            Functions as an action_done (better to put this logic in action_done itself when possible)
         '''
         quant_obj = self.env['stock.quant']
         moves_todo = self.env['stock.move']
+        uom_obj = self.env['product.uom']
         for move in self:
             if move.state in ('done', 'cancel'):
                 continue
-            if move.quantity_done <= 0:
+            rounding = move.product_uom.rounding
+            if float_compare(move.quantity_done, 0.0, precision_rounding=rounding) <= 0:
                 continue
             moves_todo |= move
-            if move.quantity_done > move.product_uom_qty:
-                remaining_qty = move.quantity_done - move.product_uom_qty #Convert to UoM of move
-                extra_move = move.copy(default={'quantity_done': remaining_qty, 'product_uom_qty': remaining_qty, 'production_id': move.production_id.id, 'raw_material_production_id': move.raw_material_production_id.id})
+            if float_compare(move.quantity_done, move.product_uom_qty, precision_rounding=rounding) > 0:
+                remaining_qty = move.quantity_done - move.product_uom_qty # In UoM of move
+                extra_move = move.copy(default={'quantity_done': remaining_qty, 'product_uom_qty': remaining_qty, 'production_id': move.production_id.id, 
+                                                'raw_material_production_id': move.raw_material_production_id.id})
                 move.quantity_done = move.product_uom_qty
                 extra_move.action_confirm()
                 moves_todo |= extra_move
         for move in moves_todo:
-            if move.quantity_done < move.product_uom_qty:
-                new_move = self.env['stock.move'].split(move, move.product_qty - move.quantity_done)
+            if float_compare(move.quantity_done, move.product_uom_qty, precision_rounding=rounding):
+                # Need to do some kind of conversion here
+                qty_split = uom_obj._compute_qty(move.product_uom.id, move.product_uom_qty - move.quantity_done, move.product_id.uom_id.id)
+                new_move = self.env['stock.move'].split(move, qty_split)
                 self.browse(new_move).quantity_done = 0.0
             #TODO: code for when quantity > move.product_qty (extra move or change qty?)
             if move.has_tracking == 'none':
@@ -174,15 +179,15 @@ class StockMove(models.Model):
                 self.env['stock.quant'].quants_move(quants, move, move.location_dest_id)
             else:
                 for movelot in move.move_lot_ids:
-                    quants = quant_obj.quants_get_preferred_domain(movelot.quantity_done, move, lot_id=movelot.lot_id.id)
-                    self.env['stock.quant'].quants_move(quants, move, move.location_dest_id, lot_id = movelot.lot_id.id)
+                    if float_compare(movelot.quantity_done, 0, precision_rounding=rounding) > 0:
+                        quants = quant_obj.quants_get_preferred_domain(movelot.quantity_done, move, lot_id=movelot.lot_id.id)
+                        self.env['stock.quant'].quants_move(quants, move, move.location_dest_id, lot_id = movelot.lot_id.id)
             quant_obj.quants_unreserve(move)
             move.write({'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
             #Next move in production order
             if move.move_dest_id:
                 move.move_dest_id.action_assign()
         return moves_todo
-
 
     @api.multi
     def split_move_lot(self):
@@ -245,7 +250,7 @@ class StockMove(models.Model):
         bom_point = self.env['mrp.bom'].sudo()._bom_find(product=self.product_id)
         if bom_point and bom_point.bom_type == 'phantom':
             processed_ids = self - self
-            factor = self.product_uom.sudo()._compute_qty(self.product_uom_qty, bom_point.product_uom_id.id) / bom_point.product_qty
+            factor = self.env['product.uom']._compute_qty(self.product_uom.id, self.product_uom_qty, bom_point.product_uom_id.id) / bom_point.product_qty
             bom_point.sudo().explode(self.product_id, factor, method=self._generate_move_phantom)
             to_explode_again_ids = self.search([('split_from', '=', self.id)])
             if to_explode_again_ids:
