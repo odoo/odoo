@@ -35,7 +35,7 @@ var row_decoration = [
 
 var ListView = View.extend({
     _template: 'ListView',
-    accesskey: "L",
+    accesskey: "l",
     defaults: _.extend({}, View.prototype.defaults, {
         // records can be selected one by one
         selectable: true,
