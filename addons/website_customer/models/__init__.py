@@ -1,1 +1,1 @@
-import website_customer
+import res_partner
