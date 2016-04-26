@@ -2,9 +2,8 @@
 <openerp>
     <data>
         <!--
-            LEADS/OPPORTUNITIES CATEGORIES
+            crm.lead.tag views
         -->
-
         <record id="crm_lead_tag_form" model="ir.ui.view">
             <field name="name">crm.lead.tag.form</field>
             <field name="model">crm.lead.tag</field>
@@ -28,29 +27,8 @@
             </field>
         </record>
 
-        <record id="crm_lead_tag_action" model="ir.actions.act_window">
-            <field name="name">Lead Tags</field>
-            <field name="res_model">crm.lead.tag</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="crm_lead_tag_tree"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new sales tag.
-              </p><p>
-                Create specific tags that fit your company's activities
-                to better classify and analyse your leads and opportunities.
-                Such categories could for instance reflect your product
-                structure or the different types of sales you do.
-              </p>
-            </field>
-        </record>
-
-        <menuitem action="crm_lead_tag_action"
-            id="menu_crm_lead_categ" name="Lead Tags"
-            parent="base.menu_crm_config_lead" sequence="1" groups="base.group_no_one"/>
-
         <!--
-            LEADS
+            crm.lead (as Lead) views
         -->
         <act_window
                 id="act_crm_opportunity_calendar_event_new"
@@ -381,7 +359,9 @@
             </field>
         </record>
 
-
+        <!--
+            crm.lead (as Opportunity) views
+        -->
         <!-- Opportunities Form View -->
         <record model="ir.ui.view" id="crm_case_form_view_oppor">
             <field name="name">Opportunities</field>
@@ -575,6 +555,23 @@
             </field>
         </record>
 
+        <record id="crm_lead_view_tree_activity" model="ir.ui.view">
+            <field name="name">crm.lead.tree.opportunity.next.activity</field>
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <tree string="Next Activity" decoration-danger="date_action and (date_action &lt; current_date)" default_order="date_action">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="date_action"/>
+                    <field name="next_activity_id"/>
+                    <field name="title_action"/>
+                    <field name="stage_id"/>
+                    <field name="planned_revenue"/>
+                    <field name="date_deadline"/>
+                </tree>
+            </field>
+        </record>
+
         <!-- Opportunities Search View -->
         <record id="view_crm_case_opportunities_filter" model="ir.ui.view">
             <field name="name">CRM - Opportunities Search</field>
@@ -631,20 +628,30 @@
             </field>
         </record>
 
-        <record id="crm_lead_view_tree_activity" model="ir.ui.view">
-            <field name="name">crm.lead.next.activity.tree</field>
-            <field name="model">crm.lead</field>
+        <!--
+            crm.lost.reason views
+        -->
+        <record id="crm_lost_reason_view_search" model="ir.ui.view">
+            <field name="name">crm.lost.reason.view.search</field>
+            <field name="model">crm.lost.reason</field>
             <field name="arch" type="xml">
-                <tree string="Next Activity" decoration-danger="date_action and (date_action &lt; current_date)" default_order="date_action">
-                    <field name="name"/>
-                    <field name="partner_id"/>
-                    <field name="date_action"/>
-                    <field name="next_activity_id"/>
-                    <field name="title_action"/>
-                    <field name="stage_id"/>
-                    <field name="planned_revenue"/>
-                    <field name="date_deadline"/>
-                </tree>
+                <search string="Search Opportunities">
+                    <filter string="Include archived" name="archived"
+                            domain="['|', ('active', '=', True), ('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="crm_lost_reason_view_form" model="ir.ui.view">
+            <field name="name">crm.lost.reason.form</field>
+            <field name="model">crm.lost.reason</field>
+            <field name="arch" type="xml">
+                <form string="Channel">
+                    <group>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </form>
             </field>
         </record>
 
@@ -674,6 +681,9 @@
             <field name="ref_ir_act_window" ref="crm.action_lead_mass_mail"/>
         </record>
 
+        <!--
+            'Mark as Lost' in action dropdown
+        -->
         <record id="action_mark_as_lost" model="ir.actions.server">
             <field name="name">Mark as lost</field>
             <field name="model_id" ref="model_crm_lead"/>
@@ -690,6 +700,190 @@
             <field name="name">Mark as lost</field>
             <field eval="'ir.actions.server,%d'%action_mark_as_lost" name="value"/>
         </record>
+
+        <!--
+            Menu Actions
+        -->
+        <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="5"/>
+
+        <!-- Lead Menu -->
+        <record model="ir.actions.act_window" id="crm_lead_all_leads">
+            <field name="name">Leads</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">tree,kanban,graph,pivot,calendar,form</field>
+            <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
+            <field name="view_id" ref="crm_case_tree_view_leads"/>
+            <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
+            <field name="context">{
+                    'default_type':'lead',
+                    'search_default_type': 'lead',
+                    'needaction_menu_ref': 'crm.menu_crm_opportunities',
+                    'search_default_to_process':1,
+                }
+            </field>
+            <field name="help" type="html">
+                <p>
+                    Use leads if you need a qualification step before creating an
+                    opportunity or a customer. It can be a business card you received,
+                    a contact form filled in your website, or a file of unqualified
+                    prospects you import, etc.
+                </p><p>
+                    Once qualified, the lead can be converted into a business
+                    opportunity and/or a new customer in your address book.
+                </p>
+            </field>
+        </record>
+
+        <menuitem name="Leads" id="menu_crm_leads" parent="base.menu_sales" sequence="1"
+            action="crm_lead_all_leads" groups="crm.group_use_lead"/>
+
+        <!-- 'My Pipeline' menu : Server action, act_window_views and act_windows -->
+        <record model="ir.actions.act_window" id="crm_lead_opportunities">
+            <field name="name">Opportunities</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">kanban,tree,graph,pivot,form,calendar</field>
+            <field name="domain">[('type','=','opportunity')]</field>
+            <field name="context">{
+                    'default_type': 'opportunity',
+                    'default_user_id': uid
+                }
+            </field>
+            <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
+            <field name="help" type="html">
+                <p>
+                    Odoo helps you keep track of your sales pipeline to follow
+                    up potential sales and better forecast your future revenues.
+                </p><p>
+                    You will be able to plan meetings and phone calls from
+                    opportunities, convert them into quotations, attach related
+                    documents, track all discussions, and much more.
+                </p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_crm_tag_kanban_view_oppor11">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="crm_case_kanban_view_leads"/>
+            <field name="act_window_id" ref="crm_lead_opportunities"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_oppor11">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="crm_case_tree_view_oppor"/>
+            <field name="act_window_id" ref="crm_lead_opportunities"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_crm_tag_form_view_oppor11">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="crm_case_form_view_oppor"/>
+            <field name="act_window_id" ref="crm_lead_opportunities"/>
+        </record>
+
+        <record id="action_your_pipeline" model="ir.actions.server">
+            <field name="name">My Pipeline</field>
+            <field name="model_id" ref="crm.model_crm_team"/>
+            <field name="state">code</field>
+            <field name="code">action = self.action_your_pipeline(cr, uid, context=context)</field>
+            <field eval="True" name="condition"/>
+        </record>
+
+        <record model="ir.actions.act_window" id="crm_lead_opportunities_tree_view">
+            <field name="name">Your Pipeline</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">kanban,tree,graph,pivot,form,calendar</field>
+            <field name="domain">[('type','=','opportunity')]</field>
+            <field name="context">{
+                    'default_type': 'opportunity',
+                    'default_user_id': uid,
+                    'search_default_assigned_to_me': 1,
+            }</field>
+            <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
+            <field name="help" type="html">
+                <p>
+                    Odoo helps you keep track of your sales pipeline to follow
+                    up potential sales and better forecast your future revenues.
+                </p><p>
+                    You will be able to plan meetings and phone calls from
+                    opportunities, convert them into quotations, attach related
+                    documents, track all discussions, and much more.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_crm_opportunities" action="action_your_pipeline" parent="base.menu_sales" sequence="4"/>
+
+        <!-- Next Activities Menu -->
+        <record id="crm_lead_action_activities" model="ir.actions.act_window">
+            <field name="name">Next Activities</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
+            <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
+            <field name="view_ids"
+                   eval="[(5, 0, 0), (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_lead_view_tree_activity')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('crm_case_form_view_oppor')}),
+                          (0, 0, {'view_mode': 'kanban'}), (0, 0, {'view_mode': 'calendar'}), (0, 0, {'view_mode': 'pivot'}), (0, 0, {'view_mode': 'graph'})]"/>
+            <field name="domain">[('type','=','opportunity'), ('date_action', '!=', False)]</field>
+            <field name="context">{
+                    'default_type': 'opportunity',
+                    'default_user_id': uid,
+                    'search_default_assigned_to_me': 1
+                }
+            </field>
+            <field name="help" type="html">
+                <p>
+                   Here is the list of your next activities. Those are linked to your opportunities.
+                   To set a next activity, go on an opportunity and add one. It will then appear in this list.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="crm_lead_menu_activities" name="Next Activities" sequence="5"
+            parent="base.menu_sales" action="crm_lead_action_activities" />
+
+        <!-- Configuration/Lead & Opporotunities/Lead Tags Menu -->
+        <record id="crm_lead_tag_action" model="ir.actions.act_window">
+            <field name="name">Lead Tags</field>
+            <field name="res_model">crm.lead.tag</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="crm_lead_tag_tree"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new sales tag.
+              </p><p>
+                Create specific tags that fit your company's activities
+                to better classify and analyse your leads and opportunities.
+                Such categories could for instance reflect your product
+                structure or the different types of sales you do.
+              </p>
+            </field>
+        </record>
+
+        <menuitem action="crm_lead_tag_action"
+            id="menu_crm_lead_categ" name="Lead Tags"
+            parent="base.menu_crm_config_lead" sequence="1" groups="base.group_no_one"/>
+
+        <!-- Configuration/Lead & Opporotunities/Lost Reasons Menu -->
+        <record id="crm_lost_reason_action" model="ir.actions.act_window">
+            <field name="name">Lost Reasons</field>
+            <field name="res_model">crm.lost.reason</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new lost reason.
+              </p><p>
+                Use lost reasons to explain why an opportunity is lost.
+              </p><p>
+                Some examples of lost reasons: "We don't have people/skill", "Price too high"
+              </p>
+            </field>
+        </record>
+
+        <menuitem action="crm_lost_reason_action" id="menu_crm_lost_reason" parent="base.menu_crm_config_lead" sequence="6" groups="base.group_no_one"/>
 
     </data>
 </openerp>

@@ -53,29 +53,25 @@ Dashboard for CRM will include:
         'security/crm_security.xml',
         'security/ir.model.access.csv',
 
+        'wizard/base_partner_merge_views.xml',
         'wizard/crm_activity_log_views.xml',
         'wizard/crm_lead_lost_views.xml',
         'wizard/crm_lead_to_opportunity_views.xml',
         'wizard/crm_merge_opportunities_views.xml',
+        'wizard/base_partner_merge_views.xml',
+
+        'report/crm_activity_report_views.xml',
+        'report/crm_opportunity_report_views.xml',
 
         'views/crm_templates.xml',
         'views/crm_views.xml',
         'views/crm_activity_views.xml',
         'views/crm_stage_views.xml',
         'views/crm_lead_views.xml',
-        'crm_lead_menu.xml',  # TODO : move into crm_lead_views.xml
-        'views/crm_activity_views.xml',
         'views/calendar_views.xml',
         'views/res_partner_views.xml',
         'views/res_config_views.xml',
-
-        'wizard/base_partner_merge_views.xml',
-
-        'report/crm_activity_report_views.xml',
-        'report/crm_opportunity_report_views.xml',
-
         'views/crm_team_views.xml',
-        'sales_team_dashboard.xml',  # TODO : merge with crm_Team_views
     ],
     'demo': [
         'data/crm_demo.xml',
