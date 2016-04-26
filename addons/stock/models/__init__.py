@@ -12,6 +12,7 @@ import stock_inventory
 import stock_location
 import stock_move
 import stock_pack_operation
+import stock_production_lot
 import stock_picking
 import stock_quant
 import stock_warehouse
