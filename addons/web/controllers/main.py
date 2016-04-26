@@ -487,7 +487,7 @@ class Home(http.Controller):
                     redirect = '/web'
                 return http.redirect_with_hash(redirect)
             request.uid = old_uid
-            values['error'] = "Wrong login/password"
+            values['error'] = _("Wrong login/password")
         return request.render('web.login', values)
 
 class WebClient(http.Controller):

@@ -101,7 +101,7 @@
     # Cancel the Sales Order 1
     self.cancel(cr, uid, [so1.order_line[0].procurement_ids[0].id], context=context)
     assert so1.order_line[0].procurement_ids[0].state == u'cancel', 'Procurement 1 should be cancelled !'
-    assert purchase_line.product_qty == 0.0, 'The product quantity of the first order line should be 5 and not %s' % (purchase_line.product_qty,)
+    assert len(purchase_ids.order_line) == 0, 'The PO line should have been unlinked!'
     
     # Check that all procurements related are cancelled    
     for procu in procu_ids:
