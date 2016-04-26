@@ -25,7 +25,7 @@ var ColumnQuickCreate = quick_create.ColumnQuickCreate;
 var fields_registry = kanban_widgets.registry;
 
 var KanbanView = View.extend({
-    accesskey: "K",
+    accesskey: "k",
     className: "o_kanban_view",
     custom_events: {
         'kanban_record_open': 'open_record',
