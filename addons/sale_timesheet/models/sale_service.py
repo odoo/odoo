@@ -72,6 +72,10 @@ class procurement_order(osv.osv):
             'project_id': project and project.id or False,
             'company_id': procurement.company_id.id,
         },context=context)
+        task = project_task.browse(cr, uid, task_id, context=context)
+        task.message_post_with_view('mail.message_origin_link',
+            values={'self': task, 'origin': procurement},
+            subtype_id=self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mail.mt_note'))
         self.write(cr, uid, [procurement.id], {'task_id': task_id}, context=context)
         self.project_task_create_note(cr, uid, [procurement.id], context=context)
         return task_id

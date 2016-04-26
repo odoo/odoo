@@ -158,6 +158,27 @@ class AccountInvoice(models.Model):
             return diff_res
         return []
 
+    @api.model
+    def create(self, vals):
+        invoice = super(AccountInvoice, self).create(vals)
+        purchase = invoice.invoice_line_ids.mapped('purchase_line_id.order_id')
+        if purchase:
+            invoice.message_post_with_view('mail.message_origin_link',
+                values={'self': invoice, 'origin': purchase},
+                subtype_id=self.env.ref('mail.mt_note').id)
+        return invoice
+
+    @api.multi
+    def write(self, vals):
+        purchase_old = self.invoice_line_ids.mapped('purchase_line_id.order_id')
+        invoice = super(AccountInvoice, self).write(vals)
+        purchase_new = self.invoice_line_ids.mapped('purchase_line_id.order_id')
+        purchase = (purchase_old | purchase_new) - (purchase_old & purchase_new)
+        if purchase:
+            self.message_post_with_view('mail.message_origin_link',
+                values={'self': self, 'origin': purchase,  'edit': True},
+                subtype_id=self.env.ref('mail.mt_note').id)
+        return invoice
 
 class AccountInvoiceLine(models.Model):
     """ Override AccountInvoice_line to add the link to the purchase order line it is related to"""

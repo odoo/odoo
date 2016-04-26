@@ -98,6 +98,10 @@ class procurement_order(osv.osv):
                 #create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
                 vals = self._prepare_mo_vals(cr, uid, procurement, context=context)
                 produce_id = production_obj.create(cr, SUPERUSER_ID, vals, context=dict(context, force_company=procurement.company_id.id))
+                mo = production_obj.browse(cr, uid, produce_id, context=context)
+                mo.message_post_with_view('mail.message_origin_link',
+                    values={'self': mo, 'origin': procurement},
+                    subtype_id=self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mail.mt_note'))
                 res[procurement.id] = produce_id
                 self.write(cr, uid, [procurement.id], {'production_id': produce_id})
                 self.production_order_create_note(cr, uid, procurement, context=context)

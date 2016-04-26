@@ -200,6 +200,10 @@ class purchase_requisition(osv.osv):
             purchase_id = purchase_order.create(cr, uid, self._prepare_purchase_order(cr, uid, requisition, supplier, context=context), context=context)
             purchase_order.message_post(cr, uid, [purchase_id], body=_("RFQ created"), context=context)
             res[requisition.id] = purchase_id
+            purchase = purchase_order.browse(cr, uid, purchase_id, context=context)
+            purchase.message_post_with_view('mail.message_origin_link',
+                values={'self': purchase, 'origin': requisition},
+                subtype_id=self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mail.mt_note'))
             for line in requisition.line_ids:
                 purchase_order_line.create(cr, uid, self._prepare_purchase_order_line(cr, uid, requisition, line, purchase_id, supplier, context=context), context=context)
         return res
@@ -427,6 +431,10 @@ class procurement_order(osv.osv):
                     })],
                 })
                 self.message_post(cr, uid, [procurement.id], body=_("Purchase Requisition created"), context=context)
+                purchase_requisition = requisition_obj.browse(cr, uid, requisition_id, context=context)
+                purchase_requisition.message_post_with_view('mail.message_origin_link',
+                    values={'self': purchase_requisition, 'origin': procurement},
+                    subtype_id=self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mail.mt_note'))
                 procurement.write({'requisition_id': requisition_id})
                 req_ids += [procurement.id]
                 res += [procurement.id]
