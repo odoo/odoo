@@ -924,7 +924,7 @@ class view(osv.osv):
 
     # apply ormcache_context decorator unless in dev mode...
     @tools.conditional(not config['dev_mode'],
-        tools.ormcache_context('uid', 'view_id',
+        tools.ormcache_context('frozenset(self.pool["res.users"].browse(cr, uid, uid).groups_id.ids)', 'view_id',
             keys=('lang', 'inherit_branding', 'editable', 'translatable', 'edit_translations')))
     def _read_template(self, cr, uid, view_id, context=None):
         arch = self.read_combined(cr, uid, view_id, fields=['arch'], context=context)['arch']
@@ -1026,7 +1026,7 @@ class view(osv.osv):
         # Deprecated: templates are translated once read from database
         return arch
 
-    @openerp.tools.ormcache('uid', 'id')
+    @openerp.tools.ormcache('id')
     def get_view_xmlid(self, cr, uid, id):
         imd = self.pool['ir.model.data']
         domain = [('model', '=', 'ir.ui.view'), ('res_id', '=', id)]
