@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import logging
 import werkzeug
 
 from openerp import SUPERUSER_ID
@@ -10,6 +11,8 @@ from openerp.addons.website.models.website import slug
 
 PPG = 20 # Products Per Page
 PPR = 4  # Products Per Row
+
+_logger = logging.getLogger(__name__)
 
 class table_compute(object):
     def __init__(self):
@@ -105,6 +108,8 @@ class QueryURL(object):
 
 def get_pricelist():
     return request.website.get_current_pricelist()
+    if not pricelist:
+        _logger.error('Fail to find pricelist for partner "%s" (id %s)', partner.name, partner.id)
 
 class website_sale(http.Controller):
 
