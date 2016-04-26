@@ -741,7 +741,13 @@ class Message(models.Model):
                 ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = (%%s)
                 WHERE m.id = ANY (%%s)""" % self._table, (self.env.user.partner_id.id, self.env.user.partner_id.id, self.ids,))
             for mid, rmod, rid, author_id, parent_id, partner_id, channel_id in self._cr.fetchall():
-                message_values[mid] = {'model': rmod, 'res_id': rid, 'author_id': author_id, 'parent_id': parent_id, 'partner_id': partner_id, 'channel_id': channel_id}
+                message_values[mid] = {
+                    'model': rmod,
+                    'res_id': rid,
+                    'author_id': author_id,
+                    'parent_id': parent_id,
+                    'notified': any((message_values[mid].get('notified'), partner_id, channel_id))
+                }
         else:
             self._cr.execute("""SELECT DISTINCT id, model, res_id, author_id, parent_id FROM "%s" WHERE id = ANY (%%s)""" % self._table, (self.ids,))
             for mid, rmod, rid, author_id, parent_id in self._cr.fetchall():
@@ -780,7 +786,7 @@ class Message(models.Model):
         other_ids = set(self.ids).difference(set(author_ids), set(notified_ids))
         model_record_ids = _generate_model_record_ids(message_values, other_ids)
         if operation in ['read', 'write']:
-            notified_ids = [mid for mid, message in message_values.iteritems() if message.get('partner_id') or message.get('channel_id')]
+            notified_ids = [mid for mid, message in message_values.iteritems() if message.get('notified')]
         elif operation == 'create':
             for doc_model, doc_ids in model_record_ids.items():
                 followers = self.env['mail.followers'].sudo().search([
