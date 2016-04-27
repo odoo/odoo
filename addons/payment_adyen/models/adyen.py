@@ -2,7 +2,9 @@
 
 import base64
 import json
-from hashlib import sha1
+import binascii
+from collections import OrderedDict
+import hashlib
 import hmac
 import logging
 import urlparse
@@ -39,8 +41,57 @@ class AcquirerAdyen(osv.Model):
         'adyen_skin_hmac_key': fields.char('Skin HMAC Key', required_if_provider='adyen'),
     }
 
+    def _adyen_generate_merchant_sig_sha256(self, acquirer, inout, values):
+        """ Generate the shasign for incoming or outgoing communications., when using the SHA-256
+        signature.
+
+        :param browse acquirer: the payment.acquirer browse record. It should
+                                have a shakey in shaky out
+        :param string inout: 'in' (openerp contacting ogone) or 'out' (adyen
+                             contacting openerp). In this last case only some
+                             fields should be contained (see e-Commerce basic)
+        :param dict values: transaction values
+        :return string: shasign
+        """
+        def escapeVal(val):
+            return val.replace('\\', '\\\\').replace(':', '\\:')
+
+        def signParams(parms):
+            signing_string = ':'.join(map(escapeVal, parms.keys() + parms.values()))
+            hm = hmac.new(hmac_key, signing_string, hashlib.sha256)
+            return base64.b64encode(hm.digest())
+
+        assert inout in ('in', 'out')
+        assert acquirer.provider == 'adyen'
+
+        if inout == 'in':
+            # All the fields sent to Adyen must be included in the signature. ALL the fucking
+            # fields, despite what is claimed in the documentation. For example, in
+            # https://docs.adyen.com/developers/hpp-manual, it is stated: "The resURL parameter does
+            # not need to be included in the signature." It's a trap, it must be included as well!
+            keys = [
+                'merchantReference', 'paymentAmount', 'currencyCode', 'shipBeforeDate', 'skinCode',
+                'merchantAccount', 'sessionValidity', 'merchantReturnData', 'shopperEmail',
+                'shopperReference', 'allowedMethods', 'blockedMethods', 'offset',
+                'shopperStatement', 'recurringContract', 'billingAddressType',
+                'deliveryAddressType', 'brandCode', 'countryCode', 'shopperLocale', 'orderData',
+                'offerEmail', 'resURL',
+            ]
+        else:
+            keys = [
+                'authResult', 'merchantReference', 'merchantReturnData', 'paymentMethod',
+                'pspReference', 'shopperLocale', 'skinCode',
+            ]
+
+        hmac_key = binascii.a2b_hex(acquirer.adyen_skin_hmac_key.encode('ascii'))
+        raw_values = {k: values.get(k.encode('ascii'), '') for k in keys if k in values}
+        raw_values_ordered = OrderedDict(sorted(raw_values.items(), key=lambda t: t[0]))
+
+        return signParams(raw_values_ordered)
+
     def _adyen_generate_merchant_sig(self, acquirer, inout, values):
-        """ Generate the shasign for incoming or outgoing communications.
+        """ Generate the shasign for incoming or outgoing communications, when using the SHA-1
+        signature (deprecated by Adyen).
 
         :param browse acquirer: the payment.acquirer browse record. It should
                                 have a shakey in shaky out
@@ -66,7 +117,7 @@ class AcquirerAdyen(osv.Model):
 
         sign = ''.join('%s' % get_value(k) for k in keys).encode('ascii')
         key = acquirer.adyen_skin_hmac_key.encode('ascii')
-        return base64.b64encode(hmac.new(key, sign, sha1).digest())
+        return base64.b64encode(hmac.new(key, sign, hashlib.sha1).digest())
 
     def adyen_form_generate_values(self, cr, uid, id, values, context=None):
         base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
@@ -74,21 +125,42 @@ class AcquirerAdyen(osv.Model):
         # tmp
         import datetime
         from dateutil import relativedelta
-        tmp_date = datetime.date.today() + relativedelta.relativedelta(days=1)
 
-        values.update({
-            'merchantReference': values['reference'],
-            'paymentAmount': '%d' % int(float_round(values['amount'], 2) * 100),
-            'currencyCode': values['currency'] and values['currency'].name or '',
-            'shipBeforeDate': tmp_date,
-            'skinCode': acquirer.adyen_skin_code,
-            'merchantAccount': acquirer.adyen_merchant_account,
-            'shopperLocale': values.get('partner_lang'),
-            'sessionValidity': tmp_date,
-            'resURL': '%s' % urlparse.urljoin(base_url, AdyenController._return_url),
-            'merchantReturnData': json.dumps({'return_url': '%s' % values.pop('return_url')}) if values.get('return_url') else False,
-            'merchantSig': self._adyen_generate_merchant_sig(acquirer, 'in', values),
-        })
+        if acquirer.provider == 'adyen' and len(acquirer.adyen_skin_hmac_key) == 64:
+            tmp_date = datetime.datetime.today() + relativedelta.relativedelta(days=1)
+
+            values.update({
+                'merchantReference': values['reference'],
+                'paymentAmount': '%d' % int(float_round(values['amount'], 2) * 100),
+                'currencyCode': values['currency'] and values['currency'].name or '',
+                'shipBeforeDate': tmp_date.strftime('%Y-%m-%d'),
+                'skinCode': acquirer.adyen_skin_code,
+                'merchantAccount': acquirer.adyen_merchant_account,
+                'shopperLocale': values.get('partner_lang', ''),
+                'sessionValidity': tmp_date.isoformat('T')[:19] + "Z",
+                'resURL': '%s' % urlparse.urljoin(base_url, AdyenController._return_url),
+                'merchantReturnData': json.dumps({'return_url': '%s' % values.pop('return_url')}) if values.get('return_url', '') else False,
+                'shopperEmail': values.get('partner_email', ''),
+            })
+            values['merchantSig'] = self._adyen_generate_merchant_sig_sha256(acquirer, 'in', values)
+
+        else:
+            tmp_date = datetime.date.today() + relativedelta.relativedelta(days=1)
+
+            values.update({
+                'merchantReference': values['reference'],
+                'paymentAmount': '%d' % int(float_round(values['amount'], 2) * 100),
+                'currencyCode': values['currency'] and values['currency'].name or '',
+                'shipBeforeDate': tmp_date,
+                'skinCode': acquirer.adyen_skin_code,
+                'merchantAccount': acquirer.adyen_merchant_account,
+                'shopperLocale': values.get('partner_lang'),
+                'sessionValidity': tmp_date,
+                'resURL': '%s' % urlparse.urljoin(base_url, AdyenController._return_url),
+                'merchantReturnData': json.dumps({'return_url': '%s' % values.pop('return_url')}) if values.get('return_url') else False,
+                'merchantSig': self._adyen_generate_merchant_sig(acquirer, 'in', values),
+            })
+
         return values
 
     def adyen_get_form_action_url(self, cr, uid, id, context=None):
@@ -123,7 +195,10 @@ class TxAdyen(osv.Model):
         tx = self.pool['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
 
         # verify shasign
-        shasign_check = self.pool['payment.acquirer']._adyen_generate_merchant_sig(tx.acquirer_id, 'out', data)
+        if len(tx.acquirer_id.adyen_skin_hmac_key) == 64:
+            shasign_check = self.pool['payment.acquirer']._adyen_generate_merchant_sig_sha256(tx.acquirer_id, 'out', data)
+        else:
+            shasign_check = self.pool['payment.acquirer']._adyen_generate_merchant_sig(tx.acquirer_id, 'out', data)
         if shasign_check != data.get('merchantSig'):
             error_msg = _('Adyen: invalid merchantSig, received %s, computed %s') % (data.get('merchantSig'), shasign_check)
             _logger.warning(error_msg)
