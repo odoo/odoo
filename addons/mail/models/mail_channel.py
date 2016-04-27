@@ -214,6 +214,11 @@ class Channel(models.Model):
         message = super(Channel, self.with_context(mail_create_nosubscribe=True)).message_post(body=body, subject=subject, message_type=message_type, subtype=subtype, parent_id=parent_id, attachments=attachments, content_subtype=content_subtype, **kwargs)
         return message
 
+    def init(self, cr):
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('mail_channel_partner_seen_message_id_idx',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX mail_channel_partner_seen_message_id_idx ON mail_channel_partner (channel_id,partner_id,seen_message_id)')
+
     #------------------------------------------------------
     # Instant Messaging API
     #------------------------------------------------------
