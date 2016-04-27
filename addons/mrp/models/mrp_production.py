@@ -445,7 +445,7 @@ class MrpProduction(models.Model):
     @api.multi
     def do_unreserve(self):
         for production in self:
-            production.move_raw_ids.do_unreserve()
+            production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')).do_unreserve()
 
     @api.multi
     def button_unreserve(self):
@@ -490,7 +490,6 @@ class MrpProductionWorkcenterLine(models.Model):
     def _compute_delay(self):
         for workorder in self:
             duration = sum(workorder.time_ids.mapped('duration'))
-            print 'ICI', duration, workorder.time_ids.mapped('duration')
             workorder.delay = duration
             workorder.delay_unit = round(duration / max(workorder.qty_produced, 1), 2)
             if duration:

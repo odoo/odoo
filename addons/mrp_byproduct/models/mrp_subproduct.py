@@ -11,11 +11,7 @@ class MrpSubproduct(models.Model):
     product_id = fields.Many2one('product.product', string='Product', required=True)
     product_qty = fields.Float('Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
     product_uom_id = fields.Many2one('product.uom', 'Unit of Measure', required=True, oldname='product_uom')
-    subproduct_type = fields.Selection([('fixed', 'Fixed'), ('variable', 'Variable')], string='Quantity Type', required=True, default='variable', help="Define how the quantity of byproducts will be set on the production orders using this BoM.\
-                    'Fixed' depicts a situation where the quantity of created byproduct is always equal to the quantity set on the BoM, regardless of how many are created in the production order.\
-                    By opposition, 'Variable' means that the quantity will be computed as\
-                    '(quantity of byproduct set on the BoM / quantity of manufactured product set on the BoM * quantity of manufactured product in the production order.)'")
-    bom_id = fields.Many2one('mrp.bom', string='BoM', ondelete='cascade')
+    bom_id = fields.Many2one('mrp.bom', string='BoM')
     operation_id = fields.Many2one('mrp.routing.workcenter', 'Produced at Operation')
 
     @api.onchange('product_id')

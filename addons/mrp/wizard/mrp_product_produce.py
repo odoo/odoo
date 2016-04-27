@@ -16,12 +16,13 @@ class MrpProductProduce(models.TransientModel):
         if self._context and self._context.get('active_id'):
             production = self.env['mrp.production'].browse(self._context['active_id'])
             #serial_raw = production.move_raw_ids.filtered(lambda x: x.product_id.tracking == 'serial')
-            serial_finished = production.move_finished_ids.filtered(lambda x: x.product_id.tracking == 'serial')
+            main_product_moves = production.move_finished_ids.filtered(lambda x: x.product_id.id == production.product_id.id)
+            serial_finished = (production.product_id.tracking == 'serial')
             serial = bool(serial_finished)
             if serial_finished:
                 quantity = 1.0
             else:
-                quantity = production.product_qty - sum(production.move_finished_ids.mapped('quantity_done'))
+                quantity = production.product_qty - sum(main_product_moves.mapped('quantity_done'))
                 quantity = quantity if (quantity > 0) else 0
             lines = []
             existing_lines = []
@@ -72,14 +73,14 @@ class MrpProductProduce(models.TransientModel):
     def do_produce(self):
         # Nothing to do for lots since values are created using default data (stock.move.lots)
         moves = self.production_id.move_raw_ids
+        quantity = self.product_qty
         for move in moves.filtered(lambda x: x.product_id.tracking == 'none' and x.state not in ('done', 'cancel')):
-            quantity = self.product_qty
             if move.unit_factor:
                 move.quantity_done_store += quantity * move.unit_factor
         moves = self.production_id.move_finished_ids.filtered(lambda x: x.product_id.tracking == 'none' and x.state not in ('done', 'cancel'))
         for move in moves:
             if move.product_id.id == self.production_id.product_id.id:
-                move.quantity_done_store += self.product_qty
+                move.quantity_done_store += quantity
             elif move.unit_factor:
                 move.quantity_done_store += quantity * move.unit_factor
         self.check_finished_move_lots()

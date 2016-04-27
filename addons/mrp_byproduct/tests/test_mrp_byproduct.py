@@ -22,8 +22,7 @@ class TestMrpByProduct(common.TransactionCase):
                                           'product_uom_id': self.product_uom.id,
                                           'subproduct_ids': [(0, 0, {'product_id': self.product_33.id,
                                                                      'product_uom_id': self.product_uom.id,
-                                                                     'product_qty': 2.0,
-                                                                     'subproduct_type': 'fixed'})]})
+                                                                     'product_qty': 2.0,})]})
         # I create a production order for External Hard Disk
         mnf_hardisk = self.MrpProduction.create({'product_id': self.product_28.id,
                                                  'product_qty': 2.0,
