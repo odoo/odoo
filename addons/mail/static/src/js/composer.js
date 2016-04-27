@@ -230,6 +230,9 @@ var MentionManager = Widget.extend({
         return _.findWhere(selection, {'name': match[0].slice(1)}).id;
     },
 
+    reset_suggestions: function () {
+        this.set('mention_suggestions', []);
+    },
     reset_selections: function () {
         _.each(this.listeners, function (listener) {
             listener.selection = [];
@@ -485,7 +488,8 @@ var BasicComposer = Widget.extend({
                 break;
             // ESCAPE: close mention propositions
             case $.ui.keyCode.ESCAPE:
-                this.set('mention_partners', []);
+                event.stopPropagation();
+                this.mention_manager.reset_suggestions();
                 break;
             // ENTER, UP, DOWN: check if navigation in mention propositions
             case $.ui.keyCode.ENTER:
