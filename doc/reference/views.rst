@@ -93,6 +93,8 @@ how the matched node should be altered:
     the content of the inheritance spec is appended to the matched node
 ``replace``
     the content of the inheritance spec replaces the matched node
+``replacecontent``
+    the content of the inheritance spec replaces the content of matched node
 ``after``
     the content of the inheritance spec is added to the matched node's
     parent, after the matched node
@@ -109,6 +111,12 @@ how the matched node should be altered:
     * if the ``attribute`` element has no body, the attribute named after
       its ``name`` is removed from the matched node. If no such attribute
       exists, an error is raised
+``unwrap``
+    unwraps the matched node
+
+For ``replace`` and ``replacecontent`` specs, content of a spec node
+containing exactly the string ``$0`` will be replace by the matching node,
+allowing wraping.
 
 A view's specs are applied sequentially.
 
