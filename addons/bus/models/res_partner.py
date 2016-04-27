@@ -48,12 +48,10 @@ class ResPartner(models.Model):
                 END as im_status
             FROM res_users U
                 JOIN res_partner P ON P.id = U.partner_id
-                JOIN res_groups_users_rel R ON R.uid = U.id
                 LEFT JOIN bus_presence B ON B.user_id = U.id
             WHERE P.name ILIKE %s
                 AND P.id NOT IN %s
                 AND U.active = 't'
-                AND R.gid = %s
             LIMIT %s
-        """, ("%s seconds" % DISCONNECTION_TIMER, "%s seconds" % AWAY_TIMER, name, tuple(excluded_partner_ids), self.env.ref('base.group_user').id, limit))
+        """, ("%s seconds" % DISCONNECTION_TIMER, "%s seconds" % AWAY_TIMER, name, tuple(excluded_partner_ids), limit))
         return self.env.cr.dictfetchall()

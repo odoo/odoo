@@ -937,19 +937,23 @@ var chat_manager = {
         return utils.parse_and_transform(message_body, utils.inline);
     },
 
-    search_partner: function (search_val, limit) {
-        var values = [];
+    mention_fetch_partners: function(search_val) {
+        var suggestions = [];
         var search_regexp = new RegExp(utils.unaccent(search_val), 'i');
         _.each(mention_partner_suggestions, function (partners) {
             var filtered_partners = _.filter(partners, function (partner) {
-                if (partner.name && utils.unaccent(partner.name).search(search_regexp) !== -1) {
-                    values.push(_.extend(partner, {
+                if (session.partner_id != partner.id && search_regexp.test(partner.name)) {
+                    suggestions.push(_.extend(partner, {
                         'value': partner.name,
                         'label': partner.name,
                     }));
                 }
             });
         });
+        return suggestions;
+    },
+    search_partner: function (search_val, limit) {
+        var values = this.mention_fetch_partners(search_val);
         if (!values.length) {
             return PartnerModel.call('im_search', [search_val, limit || 20], {}, {shadow: true}).then(function(result) {
                 _.each(result, function(user) {
