@@ -1378,7 +1378,7 @@ class account_move_line(osv.osv):
             account_id = 'account_collected_id'
             base_sign = 'base_sign'
             tax_sign = 'tax_sign'
-            if journal.type in ('purchase_refund', 'sale_refund') or (journal.type in ('cash', 'bank') and total < 0):
+            if journal.type in ('purchase_refund', 'sale_refund') or (journal.type in ('cash', 'bank') and total < 0 and tax_id.type_tax_use != 'sale'):
                 base_code = 'ref_base_code_id'
                 tax_code = 'ref_tax_code_id'
                 account_id = 'account_paid_id'
