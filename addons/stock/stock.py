@@ -4672,6 +4672,7 @@ class stock_warehouse_orderpoint(osv.osv):
     """
     _name = "stock.warehouse.orderpoint"
     _description = "Minimum Inventory Rule"
+    _order = 'llc'
 
     def subtract_procurements_from_orderpoints(self, cr, uid, orderpoint_ids, context=None):
         '''This function returns quantity of product that needs to be deducted from the orderpoint computed quantity because there's already a procurement created with aim to fulfill it.
@@ -4721,6 +4722,7 @@ class stock_warehouse_orderpoint(osv.osv):
 
     _columns = {
         'name': fields.char('Name', required=True, copy=False),
+        'llc': fields.integer('Low Level Code', readonly=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the orderpoint without removing it."),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, ondelete="cascade"),
         'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="cascade"),
@@ -4747,6 +4749,7 @@ class stock_warehouse_orderpoint(osv.osv):
          ], 'Lead Type', required=True)
     }
     _defaults = {
+        'llc': 0,
         'active': lambda *a: 1,
         'lead_days': lambda *a: 1,
         'lead_type': lambda *a: 'supplier',
