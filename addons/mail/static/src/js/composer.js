@@ -37,7 +37,6 @@ var MentionManager = Widget.extend({
         this.composer = parent;
         this.options = _.extend({}, options, {
             min_length: 0,
-            typing_speed: 200,
         });
 
         this.open = false;
@@ -182,19 +181,17 @@ var MentionManager = Widget.extend({
             }
         }
 
-        // start a timeout to fetch data with the current 'mention word'. The timer avoid to start
-        // an RPC for each pushed key when the user is still typing.
-        // The 'typing_speed' option should approach the time for a human to type a letter.
-        clearTimeout(this.mention_fetch_timer);
-        this.mention_fetch_timer = setTimeout(function () {
-            if (self.active_listener) {
-                $.when(listener.fetch_callback(self.mention_word)).then(function (suggestions) {
+        if (this.active_listener) {
+            var mention_word = this.mention_word;
+            $.when(this.active_listener.fetch_callback(mention_word)).then(function (suggestions) {
+                if (mention_word === self.mention_word) {
+                    // update suggestions only if mention_word didn't change in the meantime
                     self.set('mention_suggestions', suggestions);
-                });
-            } else {
-                self.set('mention_suggestions', []); // close the dropdown
-            }
-        }, this.options.typing_speed);
+                }
+            });
+        } else {
+            this.set('mention_suggestions', []); // close the dropdown
+        }
     },
 
     /**
@@ -589,18 +586,26 @@ var BasicComposer = Widget.extend({
     },
 
     // Mention
+    mention_fetch_throttled: function (model, method, kwargs) {
+        // Delays the execution of the RPC to prevent unnecessary RPCs when the user is still typing
+        var def = $.Deferred();
+        clearTimeout(this.mention_fetch_timer);
+        this.mention_fetch_timer = setTimeout(function () {
+            return model.call(method, kwargs).then(function (results) {
+                def.resolve(results);
+            });
+        }, 200);
+        return def;
+    },
     mention_fetch_channels: function (search) {
-        var kwargs = {
+        return this.mention_fetch_throttled(this.ChannelModel, 'get_mention_suggestions', {
             limit: this.options.mention_fetch_limit,
             search: search,
-        };
-        return this.ChannelModel
-            .call('get_mention_suggestions', kwargs)
-            .then(function (suggestions) {
-                return _.partition(suggestions, function (suggestion) {
-                    return _.contains(['public', 'groups'], suggestion.public);
-                });
+        }).then(function (suggestions) {
+            return _.partition(suggestions, function (suggestion) {
+                return _.contains(['public', 'groups'], suggestion.public);
             });
+        });
     },
     mention_fetch_partners: function (search) {
         var self = this;
@@ -623,11 +628,10 @@ var BasicComposer = Widget.extend({
             });
             if (!suggestions.length && !self.options.mention_partners_restricted) {
                 // no result found among prefetched partners, fetch other suggestions
-                var kwargs = {
+                suggestions = self.mention_fetch_throttled(self.PartnerModel, 'get_mention_suggestions', {
                     limit: limit,
                     search: search,
-                };
-                suggestions = self.PartnerModel.call('get_mention_suggestions', kwargs);
+                });
             }
             return suggestions;
         });
