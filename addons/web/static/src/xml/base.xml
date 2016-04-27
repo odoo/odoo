@@ -57,73 +57,6 @@
     </div>
 </form>
 
-<div t-name="WebClient.database_expiration_panel">
-    <div class="database_expiration_panel" id="announcement_bar_table">
-        <div t-attf-class="alert alert-#{diffDays&lt;6?'danger':(diffDays&lt;16?'warning':'info')}" role="alert">
-            <a href="#" class="oe_instance_hide_panel pull-right" t-translation="off">&amp;times;</a>
-            <span>
-                <span class="oe_instance_expires"></span>
-                <span class="oe_instance_register">
-                    <t t-if="!has_mail">
-                        You will be able to register your database once you have installed your first app.
-                    </t>
-                    <t t-if="has_mail">
-                        <t t-if="diffDays == 30">
-                            <t t-set="delay">1 month</t>
-                        </t>
-                        <t t-if="diffDays != 30">
-                            <t t-set="delay"><t t-esc="diffDays"/> days</t>
-                        </t>
-                        <t t-if="diffDays &gt; 0">
-                            <t t-if="dbexpiration_reason == 'demo'">
-                                This demo database will expire in <span t-esc="delay"/>.
-                            </t>
-                            <t t-if="dbexpiration_reason != 'demo'">
-                                This database will expire in <span t-esc="delay"/>.
-                            </t>
-                        </t>
-                        <t t-if="diffDays &lt; 1">
-                            This database has expired.
-                        </t>
-                        <!-- only show corrective actions to an admin (group_system) -->
-                        <t t-if="warning=='admin'">
-                            <t t-if="dbexpiration_reason == 'trial' or dbexpiration_reason == 'demo' or dbexpiration_reason === false">
-                                <a class="oe_instance_register_show" href="#">Register your subscription</a> or <a class="oe_instance_buy" href="#">buy a subscription</a>.
-                            </t>
-                            <t t-if="dbexpiration_reason == 'renewal'">
-                                <a class="oe_instance_renew" href="#">Renew your subscription</a>.
-                            </t>
-                            <t t-if="dbexpiration_reason == 'upsell'">
-                                You have more users than your subscription allows.<br/>
-                                <a class="oe_instance_upsell" href="#">Add more users</a>
-                            </t>
-                        </t>
-                        <t t-if="warning=='user'">
-                            Log in as an administrator to correct the issue.
-                        </t>
-                    </t>
-                </span>
-            </span>
-            <span class="oe_instance_register oe_instance_success">
-                Thank you, your registration was successful! Your database is valid until <span class="valid_date"/>.
-            </span>
-            <span class="oe_instance_register oe_instance_error">
-                Something went wrong while registering your database. You can try again or contact our support at <a href='mailto:help@odoo.com' t-translation="off">help@odoo.com</a>.
-            </span>
-            <form class="form-inline oe_instance_register oe_instance_register_form">
-                <br/>
-                <div class="form-group">
-                    <label for="enterprise_code">Subscription Code: </label>
-                    <input type="text" class="form-control" id="enterprise_code"
-                           placeholder="Paste code here"
-                           title="Your subscription code"/>
-                </div>
-                <button class="btn btn-sm btn-primary" id="confirm_enterprise_code">Register</button>
-            </form>
-        </div>
-    </div>
-</div>
-
 <div t-name="ActionManager" class="o_content"/>
 
 <t t-name="ControlPanel">
@@ -1350,24 +1283,24 @@
     </li>
 </t>
 
-<div t-name="UserMenu.about" class="oe_about">
+<div t-name="UserMenu.about">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-offset-2 col-md-offset-2 col-sm-8 col-md-8 user-details">
-                <div class="user-image text-center">
+            <div class="col-sm-offset-2 col-sm-8">
+                <div class="text-center">
                     <img src="/web/static/src/img/logo2.png" alt="Odoo (Formerly OpenERP)" title="Odoo (Formerly OpenERP)" class="img-circle"/>
                 </div>
-                <div class="user-info-block text-center">
+                <div class="text-center">
                     <div class="user-heading">
                         <h3>
                             Version <t t-esc="db_info.server_version"/>
-                            (Enterprise Edition)
+                            (Community Edition)
                         </h3>
                         <t t-if="db_info.expiration_date">
                             <h5>Database expiration: <t t-esc="new moment(db_info.expiration_date).format('LL')"/></h5>
                         </t>
                     </div>
-                    <div class="user-body">
+                    <div>
                         <div class="tab-content">
                             <div id="settings" class="tab-pane active">
                                 <h4>Copyright © 2004-2015 Odoo S.A.</h4>
