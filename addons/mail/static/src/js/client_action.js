@@ -339,7 +339,15 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             },
             select: function(event, ui) {
                 var partner_id = ui.item.id;
-                chat_manager.create_channel(partner_id, "dm");
+                var dm = chat_manager.get_dm_from_partner_id(partner_id);
+                if (dm) {
+                    self.set_channel(dm);
+                } else {
+                    chat_manager.create_channel(partner_id, "dm");
+                }
+                // clear the input
+                $(this).val('');
+                return false;
             },
             focus: function(event) {
                 event.preventDefault();
