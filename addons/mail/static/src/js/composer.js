@@ -19,6 +19,7 @@ var NON_BREAKING_SPACE = '\u00a0';
 var MENTION_PARTNER_DELIMITER = '@';
 var MENTION_CHANNEL_DELIMITER = '#';
 var MENTION_CANNED_RESPONSE_DELIMITER = ':';
+var MENTION_COMMAND_DELIMITER = '/';
 
 // The MentionManager allows the Composer to register listeners. For each
 // listener, it detects if the user is currently typing a mention (starting by a
@@ -99,6 +100,7 @@ var MentionManager = Widget.extend({
     // Public API
     /**
      * Registers a new listener, described by an object containing the following keys
+     * @param {boolean} [beginning_only] true to enable autocomplete only at first position of input
      * @param {char} [delimiter] the mention delimiter
      * @param {function} [fetch_callback] the callback to fetch mention suggestions
      * @param {boolean} [generate_links] true to wrap mentions in <a> links
@@ -169,8 +171,12 @@ var MentionManager = Widget.extend({
         var text_val = this.composer.$input.val();
         var cursor_position = this._get_selection_positions().start;
         var left_string = text_val.substring(0, cursor_position);
-        function validate_keyword (delimiter) {
-            var search_str = text_val.substring(left_string.lastIndexOf(delimiter) - 1, cursor_position);
+        function validate_keyword (delimiter, beginning_only) {
+            var delimiter_position = left_string.lastIndexOf(delimiter) - 1;
+            if (beginning_only && delimiter_position > 0) {
+                return false;
+            }
+            var search_str = text_val.substring(delimiter_position, cursor_position);
             var pattern = "(^"+delimiter+"|(^\\s"+delimiter+"))";
             var regex_start = new RegExp(pattern, "g");
             search_str = search_str.replace(/^\s\s*|^[\n\r]/g, '');
@@ -184,7 +190,7 @@ var MentionManager = Widget.extend({
         this.active_listener = undefined;
         for (var i=0; i<this.listeners.length; i++) {
             var listener = this.listeners[i];
-            this.mention_word = validate_keyword(listener.delimiter);
+            this.mention_word = validate_keyword(listener.delimiter, listener.beginning_only);
 
             if (this.mention_word !== false) {
                 this.active_listener = listener;
@@ -355,6 +361,7 @@ var BasicComposer = Widget.extend({
     init: function (parent, options) {
         this._super.apply(this, arguments);
         this.options = _.defaults(options || {}, {
+            commands_enabled: true,
             context: {},
             input_baseline: 18,
             input_max_height: 150,
@@ -398,6 +405,15 @@ var BasicComposer = Widget.extend({
             selection: this.options.default_mention_selections[MENTION_CANNED_RESPONSE_DELIMITER],
             suggestion_template: 'mail.MentionCannedResponseSuggestions',
         });
+        if (this.options.commands_enabled) {
+            this.mention_manager.register({
+                beginning_only: true,
+                delimiter: MENTION_COMMAND_DELIMITER,
+                fetch_callback: this.mention_get_commands.bind(this),
+                selection: this.options.default_mention_selections[MENTION_COMMAND_DELIMITER],
+                suggestion_template: 'mail.MentionCommandSuggestions',
+            });
+        }
 
         // Emojis
         this.emoji_container_classname = 'o_composer_emoji';
@@ -453,10 +469,12 @@ var BasicComposer = Widget.extend({
         // Return a deferred as this function is extended with asynchronous
         // behavior for the chatter composer
         var value = _.escape(this.$input.val()).replace(/\n|\r/g, '<br/>');
+        var commands = this.options.commands_enabled ? this.mention_manager.get_listener_selection('/') : [];
         return $.when({
             content: this.mention_manager.generate_links(value),
             attachment_ids: _.pluck(this.get('attachment_ids'), 'id'),
             partner_ids: _.uniq(_.pluck(this.mention_manager.get_listener_selection('@'), 'id')),
+            command: commands.length > 0 ? commands[0].name : undefined,
         });
     },
 
@@ -689,8 +707,17 @@ var BasicComposer = Widget.extend({
             return canned_responses[i];
         });
     },
+    mention_get_commands: function (search) {
+        var search_regexp = new RegExp(_.str.escapeRegExp(utils.unaccent(search)), 'i');
+        return _.filter(this.mention_commands, function (command) {
+            return search_regexp.test(command.name);
+        }).slice(0, this.options.mention_fetch_limit);
+    },
     mention_set_prefetched_partners: function (prefetched_partners) {
         this.mention_prefetched_partners = prefetched_partners;
+    },
+    mention_set_enabled_commands: function (commands) {
+        this.mention_commands = commands;
     },
     mention_get_listener_selections: function () {
         return this.mention_manager.get_listener_selections();

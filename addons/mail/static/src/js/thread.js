@@ -41,7 +41,7 @@ var Thread = Widget.extend({
         "click .o_thread_message_reply": function (event) {
             this.selected_id = $(event.currentTarget).data('message-id');
             this.$('.o_thread_message').removeClass('o_thread_selected_message');
-            this.$('.o_thread_message[data-message-id=' + this.selected_id + ']')
+            this.$('.o_thread_message[data-message-id="' + this.selected_id + '"]')
                 .addClass('o_thread_selected_message');
             this.trigger('select_message', this.selected_id);
             event.stopPropagation();
@@ -194,7 +194,7 @@ var Thread = Widget.extend({
     remove_message_and_render: function (message_id, messages, options) {
         var self = this;
         var done = $.Deferred();
-        this.$('.o_thread_message[data-message-id=' + message_id + ']').fadeOut({
+        this.$('.o_thread_message[data-message-id="' + message_id + '"]').fadeOut({
             done: function () { self.render(messages, options); done.resolve();},
             duration: 200,
         });
@@ -209,7 +209,7 @@ var Thread = Widget.extend({
     scroll_to: function (options) {
         options = options || {};
         if (options.id !== undefined) {
-            var $target = this.$('.o_thread_message[data-message-id=' + options.id + ']');
+            var $target = this.$('.o_thread_message[data-message-id="' + options.id + '"]');
             if (options.only_if_necessary) {
                 var delta = $target.parent().height() - $target.height();
                 var offset = delta < 0 ? 0 : delta - ($target.offset().top - $target.offsetParent().offset().top);

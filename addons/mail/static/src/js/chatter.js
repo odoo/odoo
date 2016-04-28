@@ -478,6 +478,7 @@ var Chatter = form_common.AbstractField.extend({
         var old_composer = this.composer;
         // create the new composer
         this.composer = new ChatterComposer(this, this.thread_dataset, {
+            commands_enabled: false,
             context: this.context,
             input_min_height: 50,
             input_max_height: Number.MAX_VALUE, // no max_height limit for the chatter
