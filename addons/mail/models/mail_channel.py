@@ -575,3 +575,11 @@ class Channel(models.Model):
             del(channel['message_id'])
             channel['last_message'] = message
         return channels_preview.values()
+
+
+class MailBlacklist(models.Model):
+    _name = 'mail.blacklist'
+    _description = 'Emails or partners blacklisted'
+
+    partner_id = fields.Many2one('res.partner', string='Sender', ondelete='cascade', required=True)
+    comment = fields.Char('Reason')

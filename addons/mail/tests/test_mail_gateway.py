@@ -717,3 +717,11 @@ class TestMailgateway(TestMail):
 
             self.assertEqual(msg_fw.model, 'mail.channel')
             self.assertFalse(msg_fw.parent_id)
+
+    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models', 'openerp.addons.mail.models.mail_mail')
+    def test_blacklist(self):
+        """ Testing blacklisted user. """
+        msg1_pids = [self.env.user.partner_id.id, self.partner_1.id]
+        # Raoul has been naughty and is blacklisted
+        self.env['mail.blacklist'].create({'partner_id': self.user_employee.partner_1.id})
+        msg1 = self.env['mail.thread'].sudo(self.user_employee).message_post(partner_ids=msg1_pids)

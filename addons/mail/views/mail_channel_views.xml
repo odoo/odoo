@@ -171,6 +171,16 @@
             name="Channels" action="mail_channel_action_view"
             groups="base.group_no_one"/>
 
+        <record id="mail_blacklist_action" model="ir.actions.act_window">
+            <field name="name">Blacklists</field>
+            <field name="res_model">mail.blacklist</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="mail_blacklist_menu" parent="base.menu_email" sequence="90"
+            name="Blacklists" action="mail_blacklist_action"
+            groups="base.group_no_one"/>
 
 
     <record id="mail_channel_action_client_chat" model="ir.actions.client">
