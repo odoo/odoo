@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+
         <record id="crm.model_crm_lead" model="ir.model">         
             <field name="website_form_default_field_id" ref="crm.field_crm_lead_description" />
             <field name="website_form_access">True</field>
@@ -35,5 +36,10 @@
             <field name="use_leads">True</field>
             <field name="use_opportunities" eval="False"/>
         </record>
+
+        <record model="website" id="website.default_website">
+            <field name="salesteam_id" ref="website.salesteam_website_sales"/>
+        </record>
+
     </data>
 </odoo>

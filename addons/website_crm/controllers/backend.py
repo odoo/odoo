@@ -15,9 +15,8 @@ class WebsiteCrmBackend(WebsiteBackend):
 
         results = super(WebsiteCrmBackend, self).fetch_dashboard_data(date_from, date_to)
 
-        # TODO: when only website_crm install without website_sale it will crash due to `website_ids` added to crm.team by website_sale
         lead_domain = [
-            # ('team_id.website_ids', '!=', False),
+            ('team_id.website_ids', '!=', False),
         ]
 
         leads = request.env['crm.lead'].search(
