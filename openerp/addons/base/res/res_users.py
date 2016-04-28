@@ -115,10 +115,11 @@ class res_groups(osv.osv):
         if 'name' in vals:
             if vals['name'].startswith('-'):
                 raise UserError(_('The name of the group can not start with "-"'))
-        res = super(res_groups, self).write(cr, uid, ids, vals, context=context)
+        # invalidate caches before updating groups, since the recomputation of
+        # field 'share' depends on method has_group()
         self.pool['ir.model.access'].call_cache_clearing_methods(cr)
         self.pool['res.users'].has_group.clear_cache(self.pool['res.users'])
-        return res
+        return super(res_groups, self).write(cr, uid, ids, vals, context=context)
 
 class ResUsersLog(osv.Model):
     _name = 'res.users.log'
@@ -363,17 +364,22 @@ class res_users(osv.osv):
                     user.partner_id.write({'company_id': user.company_id.id})
             # clear default ir values when company changes
             self.pool['ir.values'].get_defaults_dict.clear_cache(self.pool['ir.values'])
+
         # clear caches linked to the users
-        self.pool['ir.model.access'].call_cache_clearing_methods(cr)
-        clear = partial(self.pool['ir.rule'].clear_cache, cr)
-        map(clear, ids)
-        db = cr.dbname
-        if db in self.__uid_cache:
-            for id in ids:
-                if id in self.__uid_cache[db]:
-                    del self.__uid_cache[db][id]
-        self.context_get.clear_cache(self)
-        self.has_group.clear_cache(self)
+        if 'groups_id' in values:
+            self.pool['ir.model.access'].call_cache_clearing_methods(cr)
+            clear = partial(self.pool['ir.rule'].clear_cache, cr)
+            map(clear, ids)
+            self.has_group.clear_cache(self)
+        if any(key.startswith('context_') or key in ('lang', 'tz') for key in values):
+            self.context_get.clear_cache(self)
+        if any(key in values for key in ['active'] + USER_PRIVATE_FIELDS):
+            db = cr.dbname
+            if db in self.__uid_cache:
+                for id in ids:
+                    if id in self.__uid_cache[db]:
+                        del self.__uid_cache[db][id]
+
         return res
 
     def unlink(self, cr, uid, ids, context=None):
@@ -646,13 +652,12 @@ class users_implied(osv.osv):
     _inherit = 'res.users'
 
     def create(self, cr, uid, values, context=None):
-        groups = values.pop('groups_id', None)
-        user_id = super(users_implied, self).create(cr, uid, values, context)
-        if groups:
-            # delegate addition of groups to add implied groups
-            self.write(cr, uid, [user_id], {'groups_id': groups}, context)
-            self.pool['ir.ui.view'].clear_cache()
-        return user_id
+        if 'groups_id' in values:
+            # complete 'groups_id' with implied groups
+            user = self.new(cr, uid, values, context=context)
+            gs = user.groups_id | user.groups_id.mapped('trans_implied_ids')
+            values['groups_id'] = type(self).groups_id.convert_to_write(gs)
+        return super(users_implied, self).create(cr, uid, values, context)
 
     def write(self, cr, uid, ids, values, context=None):
         if not isinstance(ids,list):
@@ -664,7 +669,6 @@ class users_implied(osv.osv):
                 gs = set(concat(g.trans_implied_ids for g in user.groups_id))
                 vals = {'groups_id': [(4, g.id) for g in gs]}
                 super(users_implied, self).write(cr, uid, [user.id], vals, context)
-            self.pool['ir.ui.view'].clear_cache()
         return res
 
 #----------------------------------------------------------
