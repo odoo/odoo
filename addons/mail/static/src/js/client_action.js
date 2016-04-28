@@ -105,7 +105,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         "click .o_mail_partner_unpin": function (event) {
             event.stopPropagation();
             var channel_id = $(event.target).data("channel-id");
-            this.unsubscribe_from_channel(chat_manager.get_channel(channel_id));
+            chat_manager.unsubscribe(chat_manager.get_channel(channel_id));
         },
         "click .o_snackbar_undo": function (event) {
             event.preventDefault();
@@ -259,7 +259,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 chat_manager.bus.on('anyone_listening', self, function (channel, query) {
                     query.is_displayed = query.is_displayed || (channel.id === self.channel.id && self.thread.is_at_bottom());
                 });
-                chat_manager.bus.on('unsubscribe_from_channel', self, self.render_sidebar);
+                chat_manager.bus.on('unsubscribe_from_channel', self, self.on_channel_unsubscribed);
                 chat_manager.bus.on('update_needaction', self, self.throttled_render_sidebar);
                 chat_manager.bus.on('update_starred', self, self.throttled_render_sidebar);
                 chat_manager.bus.on('update_channel_unread_counter', self, self.throttled_render_sidebar);
@@ -469,20 +469,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             });
         });
     },
-    unsubscribe_from_channel: function (channel) {
-        var self = this;
-        chat_manager
-            .unsubscribe(channel)
-            .then(this.render_sidebar.bind(this))
-            .then(this.set_channel.bind(this, chat_manager.get_channel("channel_inbox")))
-            .then(function () {
-                if (_.contains(['public', 'private'], channel.type)) {
-                    var msg = _.str.sprintf(_t('You unsubscribed from <b>%s</b>.'), channel.name);
-                    self.do_notify(_t("Unsubscribed"), msg);
-                }
-                delete self.channels_scrolltop[channel.id];
-            });
-    },
 
     get_thread_rendering_options: function (messages) {
         // Compute position of the 'New messages' separator, only once when joining
@@ -642,6 +628,13 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             this.set_channel(channel);
         }
     },
+    on_channel_unsubscribed: function (channel_id) {
+        if (this.channel.id === channel_id) {
+            this.set_channel(chat_manager.get_channel("channel_inbox"));
+        }
+        this.render_sidebar();
+        delete this.channels_scrolltop[channel_id];
+    },
     on_composer_input_focused: function () {
         var composer = this.channel.mass_mailing ? this.extended_composer : this.basic_composer;
         var commands = chat_manager.get_commands(this.channel);
@@ -656,7 +649,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
 
     on_click_button_unsubscribe: function () {
-        this.unsubscribe_from_channel(this.channel);
+        chat_manager.unsubscribe(this.channel);
     },
     on_click_button_settings: function() {
         this.do_action({

@@ -484,8 +484,18 @@ function on_channel_notification (message) {
 
 function on_partner_notification (data) {
     if (data.info === "unsubscribe") {
-        remove_channel(chat_manager.get_channel(data.id));
-        chat_manager.bus.trigger("unsubscribe_from_channel", data.id);
+        var channel = chat_manager.get_channel(data.id);
+        if (channel) {
+            var msg;
+            if (_.contains(['public', 'private'], channel.type)) {
+                msg = _.str.sprintf(_t('You unsubscribed from <b>%s</b>.'), channel.name);
+            } else {
+                msg = _.str.sprintf(_t('You unpinned your conversation with <b>%s</b>.'), channel.name);
+            }
+            remove_channel(channel);
+            chat_manager.bus.trigger("unsubscribe_from_channel", data.id);
+            web_client.do_notify(_("Unsubscribed"), msg);
+        }
     } else if (data.type === 'toggle_star') {
         on_toggle_star_notification(data);
     } else if (data.type === 'mark_as_read') {
@@ -863,15 +873,11 @@ var chat_manager = {
     },
 
     unsubscribe: function (channel) {
-        var def;
         if (_.contains(['public', 'private'], channel.type)) {
-            def = ChannelModel.call('action_unfollow', [[channel.id]]);
+            return ChannelModel.call('action_unfollow', [[channel.id]]);
         } else {
-            def = ChannelModel.call('channel_pin', [channel.uuid, false]);
+            return ChannelModel.call('channel_pin', [channel.uuid, false]);
         }
-        return def.then(function () {
-            remove_channel(channel);
-        });
     },
     close_chat_session: function (channel_id) {
         var channel = this.get_channel(channel_id);

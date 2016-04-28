@@ -628,3 +628,12 @@ class Channel(models.Model):
             You can insert canned responses in your message by typing <b>:shortcut</b>.<br>""")
 
         self._send_transient_message(partner, msg)
+
+    def _define_command_leave(self):
+        return {'help': _("Leave this channel")}
+
+    def _execute_command_leave(self, **kwargs):
+        if self.channel_type == 'channel':
+            self.action_unfollow()
+        else:
+            self.channel_pin(self.uuid, False)
