@@ -90,12 +90,27 @@ class account_move_line(osv.osv):
         if context.get('periods'):
             query_params['period_ids'] = tuple(context['periods'])
             if initial_bal:
-                query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN %(fiscalyear_ids)s" + periods_special + ")" + where_move_state + where_move_lines_by_date
-                period_ids = fiscalperiod_obj.search(cr, uid, [('id', 'in', context['periods'])], order='date_start', limit=1)
-                if period_ids and period_ids[0]:
-                    first_period = fiscalperiod_obj.browse(cr, uid, period_ids[0], context=context)
-                    query_params['date_start'] = first_period.date_start
-                    query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN %(fiscalyear_ids)s AND date_start <= %(date_start)s AND id NOT IN %(period_ids)s" + periods_special + ")" + where_move_state + where_move_lines_by_date
+                # Remove period_from value from context, it should not be taken in initial balance
+                if context['period_from'] in context['periods']:
+                    context['periods'].remove(context['period_from'])
+                query_params['period_ids'] = tuple(context['periods'])
+                # The parameter start date should be the start date of the period_from
+                from_period = fiscalperiod_obj.browse(cr, uid, context.get('period_from'), context=context)
+                query_params['date_start'] = from_period.date_start                
+                # If we check periods_special, we should take in consideration all periods from fiscalyear before date_start
+                if 'periods_special' in context and bool(context.get('periods_special')):
+                    query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN %(fiscalyear_ids)s AND id IN %(period_ids)s)" + where_move_state + where_move_lines_by_date
+                else:
+                    # If periods_special is not checked, we should take in consideration all normal periods before date_start from all fiscalyears
+                    period_ids = fiscalperiod_obj.search(cr, uid, [('id', 'in', context['periods'])], order='date_start', limit=1)
+                    if period_ids and period_ids[0]:
+                        first_period = fiscalperiod_obj.browse(cr, uid, period_ids[0], context=context)
+                        if first_period.special:
+                            # When moving to Odoo from other systems, we should have a first opening period, set as special where to input all opening entries. We should take that period in consideration as well
+                            query = obj+".state <> 'draft' AND ("+obj+".period_id IN (SELECT id FROM account_period WHERE date_start <= %(date_start)s AND id IN %(period_ids)s AND special is not True) OR "+obj+".period_id = %s" % first_period.id + ")" + where_move_state + where_move_lines_by_date
+                        else:
+                            # Else take all previous periods
+                            query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE id IN %(period_ids)s" + periods_special + ")" + where_move_state + where_move_lines_by_date
             else:
                 query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN %(fiscalyear_ids)s AND id IN %(period_ids)s" + periods_special + ")" + where_move_state + where_move_lines_by_date
         else:
