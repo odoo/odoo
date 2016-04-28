@@ -484,7 +484,7 @@ class PaymentMethod(osv.Model):
 
             data = {
                 'FILE_REFERENCE': alias,
-                'TRANSACTION_CODE': 'ATR',
+                'TRANSACTION_CODE': 'MTR',
                 'OPERATION': 'SAL',
                 'NB_PAYMENTS': 1,   # even if we do not actually have any payment, ogone want it to not be 0
                 'FILE': normalize('NFKD', line).encode('ascii','ignore'),  # Ogone Batch must be ASCII only
