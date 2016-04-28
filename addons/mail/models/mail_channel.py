@@ -637,3 +637,23 @@ class Channel(models.Model):
             self.action_unfollow()
         else:
             self.channel_pin(self.uuid, False)
+
+    def _define_command_who(self):
+        return {
+            'channel_types': ['channel', 'chat'],
+            'help': _("List users in the current channel")
+        }
+
+    def _execute_command_who(self, **kwargs):
+        partner = self.env.user.partner_id
+        members = [
+            '<a href="#" data-oe-id='+str(p.id)+' data-oe-model="res.partner">@'+p.name+'</a>'
+            for p in self.channel_partner_ids[:30] if p != partner
+        ]
+        if len(members) == 0:
+            msg = _("You are alone in this channel.")
+        else:
+            dots = "..." if len(members) != len(self.channel_partner_ids) - 1 else ""
+            msg = _("Users in this channel: %s %s and you.") % (", ".join(members), dots)
+
+        self._send_transient_message(partner, msg)
