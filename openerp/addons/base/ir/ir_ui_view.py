@@ -398,12 +398,15 @@ actual arch.
         if self.pool._init and not self._context.get('load_all_views'):
             # Module init currently in progress, only consider views from
             # modules whose code is already loaded
-            conditions.extend([
-                '|',
-                ('model_ids.module', 'in', tuple(self.pool._init_modules)),
-                ('id', 'in', self._context.get('check_view_ids') or (0,)),
-            ])
-        views = self.search(conditions)
+
+            # Search terms inside an OR branch in a domain
+            # cannot currently use relationships that are
+            # not required. The root cause is the INNER JOIN
+            # used to implement it.
+            views = self.search(conditions + [('model_ids.module', 'in', tuple(self.pool._init_modules))])
+            views = self.search(conditions + [('id', 'in', list(self._context.get('check_view_ids') or (0,)) + map(int, views))])
+        else:
+            views = self.search(conditions)
 
         return [(view.arch, view.id)
                 for view in views.sudo()
