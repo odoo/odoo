@@ -330,6 +330,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             focus: function(event) {
                 event.preventDefault();
             },
+            html: true,
         });
 
         this.$('.o_mail_add_channel[data-type=dm]').find("input").autocomplete({
