@@ -778,10 +778,6 @@ class WebsiteSale(http.Controller):
             'payment_tx_id': request.session['sale_transaction_id']
         })
 
-        # confirm the quotation
-        if tx.acquirer_id.auto_confirm == 'at_pay_now':
-            order.with_context(send_email=True).action_confirm()
-
         return tx.acquirer_id.with_context(submit_class='btn btn-primary', submit_txt=_('Pay Now')).sudo().render(
             tx.reference,
             order.amount_total,

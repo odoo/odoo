@@ -219,9 +219,6 @@ class sale_quote(http.Controller):
                     'payment_tx_id': tx_id
                 }, context=context)
 
-        # confirm the quotation
-        if tx.acquirer_id.auto_confirm == 'at_pay_now':
-            request.registry['sale.order'].action_confirm(cr, SUPERUSER_ID, [order.id], context=dict(request.context, send_email=True))
         return payment_obj.render(
             request.cr, SUPERUSER_ID, tx.acquirer_id.id,
             tx.reference,

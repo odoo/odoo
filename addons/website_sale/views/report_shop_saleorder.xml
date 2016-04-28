@@ -18,7 +18,7 @@
                                 <t t-if="doc.payment_acquirer_id.auto_confirm == 'none'">
                                     <t t-raw="doc.payment_acquirer_id.pending_msg"/>
                                 </t>
-                                <t t-if="doc.payment_acquirer_id.auto_confirm == 'at_pay_confirm'">
+                                <t t-if="doc.payment_acquirer_id.auto_confirm in ['confirm_so', 'generate_and_pay_invoice']">
                                     <t t-if="doc.payment_tx_id.state == 'pending'">
                                         <t t-raw="doc.payment_acquirer_id.pending_msg"/>
                                     </t>

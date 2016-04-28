@@ -11,12 +11,31 @@ class PaymentAcquirer(models.Model):
     _name = 'payment.acquirer'
     _inherit = ['payment.acquirer','website.published.mixin']
 
-
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     # link with the sale order
     sale_order_id = fields.Many2one('sale.order', string='Sale Order')
+
+    def _generate_and_pay_invoice(self, tx, acquirer_name):
+        created_invoice = tx.sale_order_id.action_invoice_create()
+        created_invoice = self.env['account.invoice'].browse(created_invoice)
+
+        if created_invoice:
+            _logger.info('<%s> transaction completed, auto-generated invoice %s (ID %s) for %s (ID %s)',
+                         acquirer_name, created_invoice.name, created_invoice.id, tx.sale_order_id.name, tx.sale_order_id.id)
+
+            created_invoice.signal_workflow('invoice_open')
+            if tx.acquirer_id.journal_id:
+                created_invoice.pay_and_reconcile(tx.acquirer_id.journal_id, pay_amount=created_invoice.amount_total)
+                if created_invoice.payment_ids:
+                    created_invoice.payment_ids[0].payment_transaction_id = tx
+            else:
+                _logger.warning('<%s> transaction completed, could not auto-generate payment for %s (ID %s) (no journal set on acquirer)',
+                                acquirer_name, tx.sale_order_id.name, tx.sale_order_id.id)
+        else:
+            _logger.warning('<%s> transaction completed, could not auto-generate invoice for %s (ID %s)',
+                            acquirer_name, tx.sale_order_id.name, tx.sale_order_id.id)
 
     @api.model
     def form_feedback(self, data, acquirer_name):
@@ -36,9 +55,12 @@ class PaymentTransaction(models.Model):
                 # verify SO/TX match, excluding tx.fees which are currently not included in SO
                 amount_matches = float_compare(tx.amount, tx.sale_order_id.amount_total, 2) == 0
                 if amount_matches:
-                    if tx.state == 'done' and tx.acquirer_id.auto_confirm == 'at_pay_confirm':
+                    if tx.state == 'done' and tx.acquirer_id.auto_confirm in ['confirm_so', 'generate_and_pay_invoice']:
                         _logger.info('<%s> transaction completed, auto-confirming order %s (ID %s)', acquirer_name, tx.sale_order_id.name, tx.sale_order_id.id)
                         tx.sale_order_id.with_context(send_email=True).action_confirm()
+
+                        if tx.acquirer_id.auto_confirm == 'generate_and_pay_invoice':
+                            self._generate_and_pay_invoice(tx, acquirer_name)
                     elif tx.state not in ['cancel', 'error'] and tx.sale_order_id.state == 'draft':
                         _logger.info('<%s> transaction pending/to confirm manually, sending quote email for order %s (ID %s)', acquirer_name, tx.sale_order_id.name, tx.sale_order_id.id)
                         tx.sale_order_id.force_quotation_send()
