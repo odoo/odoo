@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Front-end/Back-end integration -->
-    <template groups="base.group_user" id="user_navbar" inherit_id="website.layout">
+    <template id="user_navbar" inherit_id="website.layout">
         <xpath expr="//body" position="attributes">
-            <attribute name="class">o_connected_user</attribute>
+            <attribute name="t-att-class">'o_connected_user' if env['ir.ui.view'].user_has_groups('base.group_user') else ''</attribute>
         </xpath>
         <xpath expr="//body/div['id=wrawrap']" position="before">
-            <nav t-if="website and menu_data" id="oe_main_menu_navbar" class="o_main_navbar">
+            <nav groups="base.group_user" t-if="website and menu_data" id="oe_main_menu_navbar" class="o_main_navbar">
                 <ul id="oe_applications">
                     <li class="dropdown active">
                         <a class="dropdown full" data-toggle="dropdown" href="#">
@@ -92,7 +92,7 @@
 
         <!-- Add new page/content modal -->
         <xpath expr="//body/div['id=wrawrap']" position="after">
-            <div class="modal" id="o_website_add_page_modal">
+            <div groups="base.group_user" class="modal" id="o_website_add_page_modal">
                 <div class="modal-dialog modal-lg">
                     <ul>
                         <li groups="base.group_website_designer"><a href="#" data-action="new_page"><i class="fa fa-file-o"/><p>New Page</p></a></li>

@@ -299,6 +299,13 @@ actual arch.
                         raise ValidationError(_('Invalid view definition'))
         return True
 
+    @api.constrains('type', 'groups_id')
+    def _check_groups(self):
+        for view in self:
+            if view.type == 'qweb' and view.groups_id:
+                print view.key, view.groups_id
+                raise ValidationError(_("Qweb view can not have 'Groups' define on the record. Use 'groups' atttributes inside the view definition"))
+
     _sql_constraints = [
         ('inheritance_mode',
          "CHECK (mode != 'extension' OR inherit_id IS NOT NULL)",

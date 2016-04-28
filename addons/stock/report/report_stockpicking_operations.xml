@@ -96,7 +96,9 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr t-foreach="o.pack_operation_ids" t-as="pack_operation">
+                                <t t-set="pack_operation_ids" t-value="o.pack_operation_ids"/>
+                                <t groups="base.group_portal" t-set="pack_operation_ids" t-value="o.pack_operation_ids.sudo()"/>
+                                <tr t-foreach="pack_operation_ids" t-as="pack_operation">
                                     <td><span t-field="pack_operation.product_id"/><br/>
                                         <span t-field="pack_operation.product_id.description_picking"/>
                                         <t t-if="not pack_operation.product_id and pack_operation.package_id"><span  t-field="pack_operation.package_id"/></t></td>
