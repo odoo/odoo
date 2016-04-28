@@ -15,9 +15,9 @@ class AccountAssetCategory(models.Model):
     active = fields.Boolean(default=True)
     name = fields.Char(required=True, index=True, string="Asset Type")
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
-    account_asset_id = fields.Many2one('account.account', string='Expense Account', required=True, domain=[('internal_type','=','other'), ('deprecated', '=', False)])
-    account_income_recognition_id = fields.Many2one('account.account', string='Recognition Income Account', domain=[('internal_type','=','other'), ('deprecated', '=', False)], oldname='account_expense_depreciation_id')
+    account_asset_id = fields.Many2one('account.account', string='Asset Account', required=True, domain=[('internal_type','=','other'), ('deprecated', '=', False)])
     account_depreciation_id = fields.Many2one('account.account', string='Depreciation Account', required=True, domain=[('internal_type','=','other'), ('deprecated', '=', False)])
+    account_depreciation_expense_id = fields.Many2one('account.account', string='Depr. Expense Account', domain=[('internal_type','=','other'), ('deprecated', '=', False)], oldname='account_income_recognition_id')
     journal_id = fields.Many2one('account.journal', string='Journal', required=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env['res.company']._company_default_get('account.asset.category'))
     method = fields.Selection([('linear', 'Linear'), ('degressive', 'Degressive')], string='Computation Method', required=True, default='linear',
@@ -36,6 +36,10 @@ class AccountAssetCategory(models.Model):
     open_asset = fields.Boolean(string='Post Journal Entries', help="Check this if you want to automatically confirm the assets of this category when created by invoices.")
     group_entries = fields.Boolean(string='Group Journal Entries', help="Check this if you want to group the generated entries by categories.")
     type = fields.Selection([('sale', 'Sale: Revenue Recognition'), ('purchase', 'Purchase: Asset')], required=True, index=True, default='purchase')
+
+    @api.onchange('account_asset_id')
+    def onchange_account_asset(self):
+        self.account_depreciation_id = self.account_asset_id
 
     @api.onchange('type')
     def onchange_type(self):
@@ -503,7 +507,7 @@ class AccountAssetDepreciationLine(models.Model):
         }
         move_line_2 = {
             'name': name,
-            'account_id': category_id.account_asset_id.id,
+            'account_id': category_id.account_depreciation_expense_id.id,
             'credit': 0.0,
             'debit': amount,
             'journal_id': category_id.journal_id.id,
