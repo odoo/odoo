@@ -75,5 +75,11 @@
             <span class="o_mention_info"><t t-esc="suggestion.substitution"/></span>
         </t>
     </t>
+    <t t-name="mail.MentionCommandSuggestions" t-extend="mail.AbstractMentionSuggestions">
+        <t t-jquery=".o_mention_proposition a" t-operation="append">
+            <span class="o_mention_name">/<t t-esc="suggestion.name"/></span>
+            <span class="o_mention_info"><t t-esc="suggestion.help"/></span>
+        </t>
+    </t>
 
 </templates>

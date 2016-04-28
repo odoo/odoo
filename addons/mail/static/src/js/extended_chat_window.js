@@ -30,8 +30,10 @@ return ChatWindow.extend({
             });
             basic_composer.once('input_focused', self, function () {
                 var channel = chat_manager.get_channel(this.channel_id);
-                var suggestions = chat_manager.get_mention_partner_suggestions(channel);
-                basic_composer.mention_set_prefetched_partners(suggestions);
+                var commands = chat_manager.get_commands(channel);
+                var partners = chat_manager.get_mention_partner_suggestions(channel);
+                basic_composer.mention_set_enabled_commands(commands);
+                basic_composer.mention_set_prefetched_partners(partners);
             });
             def = basic_composer.replace(self.$('.o_chat_composer'));
         }

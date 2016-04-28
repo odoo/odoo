@@ -2,11 +2,13 @@
 
 from email.utils import formataddr
 
+import re
 import uuid
 
 from openerp import _, api, fields, models, modules, tools
 from openerp.exceptions import UserError
 from openerp.osv import expression
+from openerp.tools import ormcache
 
 
 
@@ -573,3 +575,56 @@ class Channel(models.Model):
             del(channel['message_id'])
             channel['last_message'] = message
         return channels_preview.values()
+
+    #------------------------------------------------------
+    # Commands
+    #------------------------------------------------------
+    @api.model
+    @ormcache()
+    def get_mention_commands(self):
+        """ Returns the allowed commands in channels """
+        commands = []
+        for n in dir(self):
+            match = re.search('^_define_command_(.+?)$', n)
+            if match:
+                command = getattr(self, n)()
+                command['name'] = match.group(1)
+                commands.append(command)
+        return commands
+
+    @api.multi
+    def execute_command(self, command='', **kwargs):
+        """ Executes a given command """
+        self.ensure_one()
+        command_callback = getattr(self, '_execute_command_' + command, False)
+        if command_callback:
+            command_callback(**kwargs)
+
+    def _send_transient_message(self, partner_to, content):
+        """ Notifies partner_to that a message (not stored in DB) has been
+            written in this channel """
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner_to.id), {
+            'body': "<span class='o_mail_notification'>" + content + "</span>",
+            'channel_ids': [self.id],
+            'info': 'transient_message',
+        })
+
+    def _define_command_help(self):
+        return {'help': _("Show an helper message")}
+
+    def _execute_command_help(self, **kwargs):
+        partner = self.env.user.partner_id
+        if self.channel_type == 'channel':
+            msg = _("You are in channel <b>#%s</b>.") % self.name
+            if self.public == 'private':
+                msg += _(" This channel is private. People must be invited to join it.")
+        else:
+            channel_partners = self.env['mail.channel.partner'].search([('partner_id', '!=', partner.id), ('channel_id', '=', self.id)])
+            msg = _("You are in a private conversation with <b>@%s</b>.") % channel_partners[0].partner_id.name
+        msg += _("""<br><br>
+            You can mention someone by typing <b>@username</b>, this will grab its attention.<br>
+            You can mention a channel by typing <b>#channel</b>.<br>
+            You can execute a command by typing <b>/command</b>.<br>
+            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>""")
+
+        self._send_transient_message(partner, msg)

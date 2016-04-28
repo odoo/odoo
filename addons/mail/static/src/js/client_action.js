@@ -643,9 +643,11 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         }
     },
     on_composer_input_focused: function () {
-        var suggestions = chat_manager.get_mention_partner_suggestions(this.channel);
         var composer = this.channel.mass_mailing ? this.extended_composer : this.basic_composer;
-        composer.mention_set_prefetched_partners(suggestions);
+        var commands = chat_manager.get_commands(this.channel);
+        var partners = chat_manager.get_mention_partner_suggestions(this.channel);
+        composer.mention_set_enabled_commands(commands);
+        composer.mention_set_prefetched_partners(partners);
     },
 
     on_click_button_invite: function () {
