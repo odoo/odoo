@@ -79,8 +79,8 @@ class PaymentAcquirer(osv.Model):
             help="Make this payment acquirer available (Customer invoices, etc.)"),
         'auto_confirm': fields.selection(
             [('none', 'No automatic confirmation'),
-             ('at_pay_confirm', 'At payment with acquirer confirmation'),
-             ('at_pay_now', 'At payment no acquirer confirmation needed')],
+             ('confirm_so', 'Confirm the SO on acquirer confirmation'),
+             ('generate_and_pay_invoice', 'On acquirer confirmation, confirm the SO, generate the invoice and pay it')],
             string='Order Confirmation', required=True),
         'pending_msg': fields.html('Pending Message', translate=True, help='Message displayed, if order is in pending state after having done the payment process.'),
         'done_msg': fields.html('Done Message', translate=True, help='Message displayed, if order is done successfully after having done the payment process.'),
@@ -96,6 +96,7 @@ class PaymentAcquirer(osv.Model):
         'module_id': fields.many2one('ir.module.module', string='Corresponding Module'),
         'module_state': fields.related('module_id', 'state', type='char', string='Installation State'),
         'description': fields.html('Description'),
+        'journal_id': fields.many2one('account.journal', 'Accounting Journal', help="Account journal used for automatic payment reconciliation."),
     }
 
     image = openerp.fields.Binary("Image", attachment=True,
@@ -113,7 +114,7 @@ class PaymentAcquirer(osv.Model):
         'company_id': lambda self, cr, uid, obj, ctx=None: self.pool['res.users'].browse(cr, uid, uid).company_id.id,
         'environment': 'test',
         'website_published': False,
-        'auto_confirm': 'at_pay_confirm',
+        'auto_confirm': 'confirm_so',
         'pending_msg': '<i>Pending,</i> Your online payment has been successfully processed. But your order is not validated yet.',
         'done_msg': '<i>Done,</i> Your online payment has been successfully processed. Thank you for your order.',
         'cancel_msg': '<i>Cancel,</i> Your payment has been cancelled.',
