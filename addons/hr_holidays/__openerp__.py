@@ -51,10 +51,6 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
     'qweb': [
         'static/src/xml/*.xml',
     ],
-    'test': [
-        'test/test_hr_holiday.yml',
-        'test/hr_holidays_report.yml',
-    ],
     'installable': True,
     'application': True,
     'auto_install': False,
