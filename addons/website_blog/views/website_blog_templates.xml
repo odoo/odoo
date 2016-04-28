@@ -480,9 +480,9 @@
 </template>
 
 <!-- User Navbar -->
-<template id="content_new_blogpost" inherit_id="website.user_navbar" groups="base.group_website_designer">
+<template id="content_new_blogpost" inherit_id="website.user_navbar">
     <xpath expr="//div[@id='o_website_add_page_modal']//ul" position="inside">
-        <li><a href="#" data-action="new_blog_post"><i class="fa fa-rss"/><p>New Blog Post</p></a></li>
+        <li groups="base.group_website_designer"><a href="#" data-action="new_blog_post"><i class="fa fa-rss"/><p>New Blog Post</p></a></li>
     </xpath>
 </template>
 

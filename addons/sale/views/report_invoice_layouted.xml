@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-<template id="report_invoice_layouted" inherit_id="account.report_invoice_document" groups="sale.group_sale_layout">
-    <xpath expr="//table" position="replace">
-        <t t-foreach="o.order_lines_layouted()" t-as="page">
+<template id="report_invoice_layouted" inherit_id="account.report_invoice_document">
+    <xpath expr="//table" position="attributes">
+        <attribute name="groups">!sale.group_sale_layout</attribute>
+    </xpath>
+    <xpath expr="//table" position="after">
+        <t groups="sale.group_sale_layout" t-foreach="o.order_lines_layouted()" t-as="page">
             <table class="table table-condensed">
                 <thead>
                     <tr>
@@ -70,9 +73,12 @@
     </xpath>
 </template>
 
-    <template id="report_invoice_document_inherit_sale" inherit_id="account.report_invoice_document" groups="sale.group_delivery_invoice_address">
-        <xpath expr="//div[@name='invoice_address']" position="replace">
-            <div class="col-xs-5 col-xs-offset-7">
+    <template id="report_invoice_document_inherit_sale" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@name='invoice_address']" position="attributes">
+            <attribute name="groups">!sale.group_delivery_invoice_address</attribute>
+        </xpath>
+        <xpath expr="//div[@name='invoice_address']" position="before">
+            <div class="col-xs-5 col-xs-offset-7" groups="sale.group_delivery_invoice_address">
                 <strong t-if="o.partner_shipping_id == o.partner_id">Invoicing and shipping address:</strong>
                 <strong t-if="o.partner_shipping_id != o.partner_id">Invoicing address:</strong>
                 <div t-field="o.partner_id"
