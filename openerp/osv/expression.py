@@ -961,7 +961,8 @@ class expression(object):
                 if right is not False:
                     if isinstance(right, basestring):
                         op = {'!=': '=', 'not like': 'like', 'not ilike': 'ilike'}.get(operator, operator)
-                        ids2 = [x[0] for x in comodel.name_search(cr, uid, right, [], op, context=context, limit=None)]
+                        domain = field._description_domain(model.browse(cr, uid, [], context=context).env)
+                        ids2 = [x[0] for x in comodel.name_search(cr, uid, right, domain, op, context=context, limit=cr.IN_MAX)]
                         if ids2:
                             operator = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
                     elif isinstance(right, collections.Iterable):
@@ -1012,7 +1013,8 @@ class expression(object):
                     if right is not False:
                         if isinstance(right, basestring):
                             op = {'!=': '=', 'not like': 'like', 'not ilike': 'ilike'}.get(operator, operator)
-                            res_ids = [x[0] for x in comodel.name_search(cr, uid, right, [], op, context=context)]
+                            domain = field._description_domain(model.browse(cr, uid, [], context=context).env)
+                            res_ids = [x[0] for x in comodel.name_search(cr, uid, right, domain, op, context=context, limit=cr.IN_MAX)]
                             if res_ids:
                                 operator = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
                         else:
@@ -1061,7 +1063,8 @@ class expression(object):
                             operator = dict_op[operator]
                         elif isinstance(right, list) and operator in ['!=', '=']:  # for domain (FIELD,'=',['value1','value2'])
                             operator = dict_op[operator]
-                        res_ids = [x[0] for x in comodel.name_search(cr, uid, right, [], operator, limit=None, context=c)]
+                        domain = field._description_domain(model.browse(cr, uid, [], context=context).env)
+                        res_ids = [x[0] for x in comodel.name_search(cr, uid, right, domain, operator, limit=cr.IN_MAX, context=c)]
                         if operator in NEGATIVE_TERM_OPERATORS:
                             res_ids.append(False)  # TODO this should not be appended if False was in 'right'
                         return left, 'in', res_ids
