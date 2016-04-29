@@ -112,14 +112,9 @@ class MailMail(models.Model):
             ids = self.search(filters).ids
         res = None
         try:
-            # Force auto-commit - this is meant to be called by
-            # the scheduler, and we can't allow rolling back the status
-            # of previously sent emails! Does not auto_commit if in
-            # testing mode
-            if (not self.pool._init or getattr(threading.currentThread(), 'testing', False)):
-                res = self.browse(ids).send(auto_commit=False)
-            else:
-                res = self.browse(ids).send(auto_commit=True)
+            # auto-commit except in testing mode
+            auto_commit = not getattr(threading.currentThread(), 'testing', False)
+            res = self.browse(ids).send(auto_commit=auto_commit)
         except Exception:
             _logger.exception("Failed processing mail queue")
         return res
