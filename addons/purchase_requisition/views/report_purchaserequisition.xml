@@ -21,8 +21,7 @@
                         </div>
                         <div class="col-xs-3">
                             <strong>Selection Type:</strong><br/>
-                            <span t-if="o.exclusive=='exclusive'">Purchase Requisitions (exclusive)</span>
-                            <span t-if="o.exclusive=='multiple'">Multiple Requisitions</span>
+                            <span t-esc="o.type_id.name">Multiple Requisitions</span>
                         </div>
                         <div class="col-xs-3">
                             <strong>Source:</strong><br/>
