@@ -685,7 +685,8 @@ class DateConverter(osv.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     def value_to_html(self, cr, uid, value, field, options=None, context=None):
-        if not value or len(value)<10: return ''
+        if not value or (isinstance(value, basestring) and len(value) < 10):
+            return ''
         lang = self.user_lang(cr, uid, context=context)
         locale = babel.Locale.parse(lang.code)
 
