@@ -153,7 +153,7 @@ class mrp_production_workcenter_line(osv.osv):
                         if moves.filtered(lambda r: r.product_id.tracking != 'none'):
                             button_produce_done = False
                         else:
-                            prod_obj_pool.action_produce(cr,uid, production.id, production.product_qty, 'consume_produce', context = None)
+                            prod_obj_pool.action_produce(cr,uid, [production.id], production.product_qty, 'consume_produce', context = None)
                 if button_produce_done:
                     prod_obj_pool.signal_workflow(cr, uid, [oper_obj.production_id.id], 'button_produce_done')
         return

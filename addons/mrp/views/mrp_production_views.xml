@@ -23,11 +23,11 @@
                     </div>
                     <group>
                         <group>
-                            <field name="product_id" on_change="product_id_change(product_id, product_qty)" domain="[('bom_ids','!=',False),('bom_ids.type','!=','phantom')]" context='{"default_type": "product"}'/>
+                            <field name="product_id" domain="[('bom_ids','!=',False),('bom_ids.type','!=','phantom')]" context='{"default_type": "product"}'/>
                             <field name="product_tmpl_id" invisible="1"/>
                             <label for="product_qty"/>
                             <div class="o_row">
-                                <field name="product_qty" on_change="product_id_change(product_id, product_qty)"/>
+                                <field name="product_qty"/>
                                 <field name="product_uom" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
                                 <button type="action"
                                     name="%(mrp.action_change_production_qty)d"
@@ -42,13 +42,13 @@
                                             '&amp;',
                                                 ('product_tmpl_id.product_variant_ids','=',product_id),
                                                 ('product_id','=',False)]"
-                                context="{'default_product_id': product_id, 'default_product_tmpl_id': product_tmpl_id}" on_change="bom_id_change(bom_id)" required="1"/>
+                                context="{'default_product_id': product_id, 'default_product_tmpl_id': product_tmpl_id}" required="1"/>
                             <field name="routing_id" groups="mrp.group_mrp_routings"/>
                             <field name="user_id"/>
                             <field name="origin"/>
                         </group>
                         <group groups="stock.group_stock_multi_locations">
-                            <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
+                            <field name="location_src_id" domain="[('usage','=','internal')]"/>
                             <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                         </group>
                     </group>

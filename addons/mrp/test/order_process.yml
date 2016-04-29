@@ -8,7 +8,7 @@
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp_production_test1"), context=context)
-    order.action_compute(context=context)
+    order.action_compute()
 -
   I check production lines after compute.
 -
@@ -145,9 +145,7 @@
     mode: 'consume_produce'
 -
   !python {model: mrp.product.produce}: |
-    qty = self.browse(cr, uid, ref('mrp_product_produce1')).product_qty
-    lines = self.on_change_qty(cr, uid, [ref('mrp_product_produce1')], qty, [], context=context)
-    self.write(cr, uid, [ref('mrp_product_produce1')], lines['value'], context=context)
+    self.on_change_qty(cr, uid, [ref('mrp_product_produce1')], context=context)
     self.do_produce(cr, uid, [ref('mrp_product_produce1')], context=context)
 -
   I check production order after produced.
