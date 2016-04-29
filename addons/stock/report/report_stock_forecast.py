@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
-
-from openerp import fields, models
-from openerp import tools
+from odoo import api, fields, models, tools
 
 
-class report_stock_forecast(models.Model):
+class ReportStockForecat(models.Model):
     _name = 'report.stock.forecast'
     _auto = False
 
@@ -15,9 +13,10 @@ class report_stock_forecast(models.Model):
     cumulative_quantity = fields.Float(string='Cumulative Quantity', readonly=True)
     quantity = fields.Float(readonly=True)
 
-    def init(self, cr):
-        tools.drop_view_if_exists(cr, 'report_stock_forecast')
-        cr.execute("""CREATE or REPLACE VIEW report_stock_forecast AS (SELECT
+    @api.model_cr
+    def init(self):
+        tools.drop_view_if_exists(self._cr, 'report_stock_forecast')
+        self._cr.execute("""CREATE or REPLACE VIEW report_stock_forecast AS (SELECT
         MIN(id) as id,
         product_id as product_id,
         date as date,
