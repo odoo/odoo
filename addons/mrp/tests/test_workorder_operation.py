@@ -15,13 +15,35 @@ class TestWorkOrderProcess(common.TransactionCase):
         self.Inventory = self.env['stock.inventory']
         self.InventoryLine = self.env['stock.inventory.line']
         self.source_location_id = self.ref('stock.stock_location_14')
+        self.warehouse = self.env.ref('stock.warehouse0')
 
+    def create_product(self, name, uom_id, route_ids=None):
+        return self.Product.create({
+            'name': name,
+            'type': 'product',
+            'tracking': 'lot',
+            'uom_id': uom_id,
+            'uom_po_id': uom_id,
+            'route_ids': route_ids})
+
+    def create_bom_lines(self, bom_id, product_id, qty, uom_id):
+        self.MrpBomLine.create({
+            'product_id': product_id,
+            'product_qty': qty,
+            'bom_id': bom_id,
+            'product_uom_id': uom_id})
+
+    def create_inventory_line(self, inventory, product, qty, lot_id=False):
+        self.InventoryLine.create({
+            'inventory_id': inventory.id,
+            'product_id': product.id,
+            'product_uom_id': product.uom_id.id,
+            'product_qty': qty,
+            'prod_lot_id': lot_id,
+            'location_id': self.source_location_id})
 
     def test_00_workorder_process(self):
         """ Testing consume quants and produced quants with workorder """
-
-        # Create manufacturing order
-
         dining_table = self.env.ref("mrp.product_product_computer_desk")
         product_table_sheet = self.env.ref('mrp.product_product_computer_desk_head')
         product_table_leg = self.env.ref('mrp.product_product_computer_desk_leg')
@@ -43,32 +65,17 @@ class TestWorkOrderProcess(common.TransactionCase):
         lot_sheet = self.Lot.create({'product_id': product_table_sheet.id})
         lot_leg = self.Lot.create({'product_id': product_table_leg.id})
         lot_bolt = self.Lot.create({'product_id': product_bolt.id})
+
+        # Initialize inventory
+        # --------------------
         inventory = self.Inventory.create({
             'name': 'Inventory Product Table',
             'filter': 'partial'})
         inventory.prepare_inventory()
         self.assertFalse(inventory.line_ids, "Inventory line should not created.")
-        self.InventoryLine.create({
-            'inventory_id': inventory.id,
-            'product_id': product_table_sheet.id,
-            'product_uom_id': product_table_sheet.uom_id.id,
-            'product_qty': 20,
-            'prod_lot_id': lot_sheet.id,
-            'location_id': self.source_location_id})
-        self.InventoryLine.create({
-            'inventory_id': inventory.id,
-            'product_id': product_table_leg.id,
-            'product_uom_id': product_table_leg.uom_id.id,
-            'product_qty': 20,
-            'prod_lot_id': lot_leg.id,
-            'location_id': self.source_location_id})
-        self.InventoryLine.create({
-            'inventory_id': inventory.id,
-            'product_id': product_bolt.id,
-            'product_uom_id': product_bolt.uom_id.id,
-            'product_qty': 20,
-            'prod_lot_id': lot_bolt.id,
-            'location_id': self.source_location_id})
+        self.create_inventory_line(inventory, product_table_sheet, 20, lot_sheet.id)
+        self.create_inventory_line(inventory, product_table_leg, 20, lot_leg.id)
+        self.create_inventory_line(inventory, product_bolt, 20, lot_bolt.id)
         inventory.action_done()
 
         # Create work order
@@ -141,7 +148,7 @@ class TestWorkOrderProcess(common.TransactionCase):
 
         consume_quants = move_table_sheet.quant_ids + move_leg.quant_ids + move_table_bolt.quant_ids
 
-        # Check for produced quant correctly linked with consumed quants or not. 
+        # Check for produced quant correctly linked with consumed quants or not.
 
         finish_move = production_table.move_finished_ids.filtered(lambda x : x.product_id.id == dining_table.id)
         finished_quant = finish_move.quant_ids[0]
@@ -160,29 +167,12 @@ class TestWorkOrderProcess(common.TransactionCase):
         """ Testing consume quants and produced quants without workorder """
         unit = self.ref("product.product_uom_unit")
         custom_laptop = self.env.ref("product.product_product_27")
-
-        def create_product(name, uom_id):
-            return self.Product.create({
-                'name': name,
-                'type': 'product',
-                'tracking': 'lot',
-                'uom_id': uom_id,
-                'uom_po_id': uom_id})
-
-        def create_bom_lines(bom_id, product_id, qty, uom_id):
-            self.MrpBomLine.create({
-                'product_id': product_id,
-                'product_qty': qty,
-                'bom_id': bom_id,
-                'product_uom_id': uom_id})
-
         custom_laptop.tracking = 'lot'
 
         # Create new product charger and keybord
         # --------------------------------------
-
-        product_charger = create_product('Charger', unit)
-        product_keybord = create_product('Usb Keybord', unit)
+        product_charger = self.create_product('Charger', unit)
+        product_keybord = self.create_product('Usb Keybord', unit)
 
         # Create bill of material for customized laptop.
 
@@ -190,8 +180,8 @@ class TestWorkOrderProcess(common.TransactionCase):
                 'product_tmpl_id': custom_laptop.product_tmpl_id.id,
                 'product_qty': 10,
                 'product_uom_id': unit})
-        create_bom_lines(bom_custom_laptop.id, product_charger.id, 20, unit)
-        create_bom_lines(bom_custom_laptop.id, product_keybord.id, 20, unit)
+        self.create_bom_lines(bom_custom_laptop.id, product_charger.id, 20, unit)
+        self.create_bom_lines(bom_custom_laptop.id, product_keybord.id, 20, unit)
 
         # Create production order for customize laptop.
 
@@ -205,34 +195,25 @@ class TestWorkOrderProcess(common.TransactionCase):
         mo_custom_laptop.action_assign()
 
         # Check production order status of availablity
+
         self.assertEqual(mo_custom_laptop.availability, 'waiting', "Production order should be in waiting state.")
 
         # --------------------------------------------------
         # Set inventory for rawmaterial charger and keybord
         # --------------------------------------------------
 
-
         lot_charger = self.Lot.create({'product_id': product_charger.id})
         lot_keybord = self.Lot.create({'product_id': product_keybord.id})
+
+        # Initialize Inventory
+        # --------------------
         inventory = self.Inventory.create({
             'name': 'Inventory Product Table',
             'filter': 'partial'})
         inventory.prepare_inventory()
         self.assertFalse(inventory.line_ids, "Inventory line should not created.")
-        self.InventoryLine.create({
-            'inventory_id': inventory.id,
-            'product_id': product_charger.id,
-            'product_uom_id': product_charger.uom_id.id,
-            'product_qty': 20,
-            'prod_lot_id': lot_charger.id,
-            'location_id': self.source_location_id})
-        self.InventoryLine.create({
-            'inventory_id': inventory.id,
-            'product_id': product_keybord.id,
-            'product_uom_id': product_keybord.uom_id.id,
-            'product_qty': 20,
-            'prod_lot_id': lot_keybord.id,
-            'location_id': self.source_location_id})
+        self.create_inventory_line(inventory, product_charger, 20, lot_charger.id)
+        self.create_inventory_line(inventory, product_keybord, 20, lot_keybord.id)
         inventory.action_done()
 
         # Check consumed move status
@@ -304,8 +285,7 @@ class TestWorkOrderProcess(common.TransactionCase):
         # Check consume and produce quants
         # --------------------------------
 
-        # Check consumed quants of lot2
-
+        # Check consumed quants of lot1
         for consume_quant in finshed_quant_lot_001[0].consumed_quant_ids:
             self.assertEqual(consume_quant.qty, 12, "Wrong quantity of quants of consume quants")
             self.assertEqual(consume_quant.produced_quant_ids[0].lot_id.id , finshed_quant_lot_001[0].lot_id.id , "Wrong produced quant lot on consume quants")
@@ -313,25 +293,109 @@ class TestWorkOrderProcess(common.TransactionCase):
 
         self.assertEqual(len(finshed_quant_lot_001[0].consumed_quant_ids), 2, "Wrong consumed quant linked with produced quant for lot %s "%laptop_lot_001.name)
 
-        # Check consumed quants of lot2
 
-        # TODO : Need to check why consumed quants not linked.
         # Check total no of quants linked with produced quants.
-
         self.assertEqual(len(finshed_quant_lot_002[0].consumed_quant_ids), 2, "Wrong consumed quant linked with produced quant for lot %s "%laptop_lot_002.name)
 
+        # Check consumed quants of lot2
         for consume_quant in finshed_quant_lot_002[0].consumed_quant_ids:
             self.assertEqual(consume_quant.qty, 8, "Wrong quantity of quants of consume quants")
             self.assertEqual(consume_quant.produced_quant_ids[0].lot_id.id , finshed_quant_lot_002[0].lot_id.id , "Wrong produced quant lot on consume quants")
             self.assertEqual(consume_quant.produced_quant_ids[0].id , finshed_quant_lot_002[0].id , "Wrong produced quant on consume quants")
 
-
         # Check total quantity consumed of charger, keybord
         # --------------------------------------------------
-
         charger_quants = mo_custom_laptop.move_raw_ids.filtered(lambda x : x.product_id.id == product_charger.id and x.state == 'done').mapped('quant_ids')
         keybord_moves = mo_custom_laptop.move_raw_ids.filtered(lambda x : x.product_id.id == product_keybord.id and x.state == 'done').mapped('quant_ids')
-
-
         self.assertEqual(sum(charger_quants.mapped('qty')) , 20 , "Wrong consumed quants quantity of charger.")
         self.assertEqual(sum(keybord_moves.mapped('qty')) , 20 , "Wrong consumed quants quantity of keybord.")
+
+    def test_02_different_uom_on_bomlines(self):
+        """ Testing bill of material with diffrent unit of measure."""
+
+
+
+        route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
+        route_mto = self.warehouse.mto_pull_id.route_id.id
+        unit = self.ref("product.product_uom_unit")
+        dozen = self.ref("product.product_uom_dozen")
+        kg = self.ref("product.product_uom_kgm")
+        gm = self.ref("product.product_uom_gram")
+        # Create Product A, B, C
+        product_A =  self.create_product('Product A', dozen, [(6, 0, [route_manufacture, route_mto])])
+        product_B =  self.create_product('Product B', dozen)
+        product_C =  self.create_product('Product C', kg)
+
+        # Bill of materials
+        # -----------------
+
+        #===================================
+        # Product A 1 Unit
+        #     Product B 4 Unit
+        #     Product C 600 gram
+        # -----------------------------------
+
+        bom_a = self.MrpBom.create({
+                'product_tmpl_id': product_A.product_tmpl_id.id,
+                'product_qty': 2,
+                'product_uom_id': unit})
+        self.create_bom_lines(bom_a.id, product_B.id, 4, unit)
+        self.create_bom_lines(bom_a.id, product_C.id, 600, gm)
+        #create_bom_lines(bom_a.id, product_d.id, 4, self.uom_unit.id, 'make_to_order')
+
+        # Create production order with product A 10 Unit.
+        # -----------------------------------------------
+
+        mo_custom_product = self.env['mrp.production'].create({
+            'product_id': product_A.id,
+            'product_qty': 10,
+            'product_uom_id': unit,
+            'bom_id': bom_a.id})
+
+        move_product_b = mo_custom_product.move_raw_ids.filtered(lambda x : x.product_id == product_B)
+        move_product_c = mo_custom_product.move_raw_ids.filtered(lambda x : x.product_id == product_C)
+
+        # Check move correctly created or not.
+        self.assertEqual(move_product_b.product_uom_qty, 20 , "Wrong consume quantity of raw materials.")
+        self.assertEqual(move_product_b.product_uom.id, unit, "Wrong unit of measure in rawmaterial.")
+        self.assertEqual(move_product_c.product_uom_qty, 3000, "Wrong consume quantity of raw materials.")
+        self.assertEqual(move_product_c.product_uom.id, gm, "Wrong unit of measure in rawmaterial.")
+
+        # Lot create for product B and product C
+        # ---------------------------------------
+        lot_a = self.Lot.create({'product_id': product_A.id})
+        lot_b = self.Lot.create({'product_id': product_B.id})
+        lot_c = self.Lot.create({'product_id': product_C.id})
+
+        # Inventory Update
+        # ----------------
+        inventory = self.Inventory.create({
+            'name': 'Inventory Product B and C',
+            'filter': 'partial'})
+        inventory.prepare_inventory()
+        self.assertFalse(inventory.line_ids, "Inventory line should not created.")
+        self.create_inventory_line(inventory, product_B, 3, lot_b.id)
+        self.create_inventory_line(inventory, product_C, 3, lot_c.id)
+        inventory.action_done()
+
+        # Start Production ...
+        # --------------------
+
+        mo_custom_product.action_assign()
+        context = {"active_ids": [mo_custom_product.id], "active_id": mo_custom_product.id}
+        product_consume = self.MrpProductProduce.with_context(context).create({'product_qty': 10})
+        # laptop_lot_002 = self.Lot.create({'product_id': custom_laptop.id})
+        product_consume.lot_id = lot_a.id
+        self.assertEquals(len(product_consume.consume_line_ids), 2, "Wrong move lot linked to produce wizard.")
+        product_consume.consume_line_ids.filtered(lambda x : x.product_id == product_C).write({'quantity_done': 3000})
+        product_consume.consume_line_ids.filtered(lambda x : x.product_id == product_B).write({'quantity_done': 20})
+        product_consume.do_produce()
+        mo_custom_product.post_inventory()
+
+        # Check correct quant linked with move or not
+        # -------------------------------------------
+        self.assertEqual(len(move_product_b.quant_ids), 1, "Wrong quants on move of product B")
+        self.assertEqual(len(move_product_c.quant_ids), 1, "Wrong quants on move of product C")
+        self.assertEqual(move_product_b.quant_ids.qty, move_product_b.product_qty , "Wrong quantity on quants of product B")
+        self.assertEqual(move_product_c.quant_ids.qty, 3 , "Wrong quantity on quants of product B")
+        self.assertEqual(move_product_c.quant_ids.product_uom_id.id, kg , "Wrong quantity on quants of product B")

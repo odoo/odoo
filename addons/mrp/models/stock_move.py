@@ -88,6 +88,7 @@ class StockMove(models.Model):
     @api.multi
     def create_lots(self):
         lots = self.env['stock.move.lots']
+        uom_obj = self.env['product.uom']
         for move in self:
             unlink_move_lots = move.move_lot_ids.filtered(lambda x : x.quantity_done == 0)
             unlink_move_lots.unlink()
@@ -98,10 +99,11 @@ class StockMove(models.Model):
                 old_move_lot.setdefault(key, []).append(movelot)
             for quant in move.reserved_quant_ids:
                 key = (quant.lot_id.id or False)
+                quantity = uom_obj._compute_qty(move.product_id.uom_id.id, quant.qty, move.product_uom.id)
                 if group_new_quant.get(key):
-                    group_new_quant[key] += quant.qty
+                    group_new_quant[key] += quantity
                 else:
-                    group_new_quant[key] = quant.qty
+                    group_new_quant[key] = quantity
             for key in group_new_quant:
                 quantity = group_new_quant[key]
                 if old_move_lot.get(key):
@@ -168,6 +170,7 @@ class StockMove(models.Model):
                 extra_move.action_confirm()
                 moves_todo |= extra_move
         for move in moves_todo:
+
             if float_compare(move.quantity_done, move.product_uom_qty, precision_rounding=rounding):
                 # Need to do some kind of conversion here
                 qty_split = uom_obj._compute_qty(move.product_uom.id, move.product_uom_qty - move.quantity_done, move.product_id.uom_id.id)
@@ -180,7 +183,8 @@ class StockMove(models.Model):
             else:
                 for movelot in move.move_lot_ids:
                     if float_compare(movelot.quantity_done, 0, precision_rounding=rounding) > 0:
-                        quants = quant_obj.quants_get_preferred_domain(movelot.quantity_done, move, lot_id=movelot.lot_id.id)
+                        qty = uom_obj._compute_qty(move.product_uom.id, move.quantity_done, move.product_id.uom_id.id)
+                        quants = quant_obj.quants_get_preferred_domain(qty, move, lot_id=movelot.lot_id.id)
                         self.env['stock.quant'].quants_move(quants, move, move.location_dest_id, lot_id = movelot.lot_id.id)
             quant_obj.quants_unreserve(move)
             move.write({'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
