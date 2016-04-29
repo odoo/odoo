@@ -1005,23 +1005,12 @@ class QwebWidgetMonetary(osv.AbstractModel):
     _inherit = 'ir.qweb.widget'
 
     def _format(self, inner, options, qwebcontext):
-        inner = self.pool['ir.qweb'].eval(inner, qwebcontext)
-        display = self.pool['ir.qweb'].eval_object(options['display_currency'], qwebcontext)
-        precision = int(round(math.log10(display.rounding)))
-        fmt = "%.{0}f".format(-precision if precision < 0 else 0)
-        lang_code = qwebcontext.context.get('lang') or 'en_US'
-        formatted_amount = self.pool['res.lang'].format(
-            qwebcontext.cr, qwebcontext.uid, [lang_code], fmt, inner, grouping=True, monetary=True
-        )
-        pre = post = u''
-        if display.position == 'before':
-            pre = u'{symbol}\N{NO-BREAK SPACE}'
-        else:
-            post = u'\N{NO-BREAK SPACE}{symbol}'
-
-        return u'{pre}{0}{post}'.format(
-            formatted_amount, pre=pre, post=post
-        ).format(symbol=display.symbol,)
+        field_name = 'field'
+        record = {field_name: self.pool['ir.qweb'].eval(inner, qwebcontext)}
+        options['_qweb_context'] = qwebcontext
+        return self.pool['ir.qweb.field.monetary'].record_to_html(
+            qwebcontext.cr, qwebcontext.uid, field_name, record, options,
+            context=qwebcontext.context)
 
 class QwebWidgetDate(osv.AbstractModel):
     """ QWeb widget that mimics the ``ir.qweb.field.date`` behaviour. """
@@ -1058,8 +1047,7 @@ class QwebWidgetFloat(osv.AbstractModel):
 
     def _format(self, inner, options, qwebcontext):
         inner = self.pool['ir.qweb'].eval(inner, qwebcontext)
-        field = lambda: None
-        field.digits = tuple(options.get('digits') or (None, None))
+        field = fields.float(digits=options.get('digits'))
         return self.pool['ir.qweb.field.float'].value_to_html(
             qwebcontext.cr, qwebcontext.uid, inner, field,
             options=options, context=qwebcontext.context)
