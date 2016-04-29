@@ -937,7 +937,7 @@ var chat_manager = {
         var def = $.Deferred();
         var values = [];
         // search among prefetched partners
-        var search_regexp = new RegExp(utils.unaccent(search_val), 'i');
+        var search_regexp = new RegExp(_.str.escapeRegExp(utils.unaccent(search_val)), 'i');
         _.each(mention_partner_suggestions, function (partners) {
             if (values.length < limit) {
                 values = values.concat(_.filter(partners, function (partner) {
