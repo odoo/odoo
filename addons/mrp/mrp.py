@@ -1011,6 +1011,11 @@ class mrp_production(osv.osv):
                     total_consume_moves.append(extra_move_id)
 
         if production_mode == 'consume_produce':
+            # add production lines that have already been consumed since the last 'consume & produce'
+            last_production_date = production.move_created_ids2 and max(production.move_created_ids2.mapped('date')) or False
+            already_consumed_lines = production.move_lines2.filtered(lambda l: l.date > last_production_date)
+            total_consume_moves += already_consumed_lines.ids
+
             price_unit = 0
             for produce_product in production.move_created_ids:
                 is_main_product = (produce_product.product_id.id == production.product_id.id) and production.product_id.cost_method=='real'
