@@ -14,16 +14,13 @@ keep track and order all your purchase orders.
 """,
     'depends' : ['purchase'],
     'demo': ['purchase_requisition_demo.xml'],
-    'data': ['views/purchase_requisition.xml',
-              'security/purchase_tender.xml',
-              'wizard/purchase_requisition_partner_view.xml',
-              'wizard/bid_line_qty_view.xml',
-              'purchase_requisition_data.xml',
-              'purchase_requisition_view.xml',
-              'purchase_requisition_report.xml',
-              'purchase_requisition_workflow.xml',
-              'security/ir.model.access.csv','purchase_requisition_sequence.xml',
-              'views/report_purchaserequisition.xml',
+    'data': [
+        'security/purchase_tender.xml',
+        'purchase_requisition_data.xml',
+        'purchase_requisition_view.xml',
+        'purchase_requisition_report.xml',
+        'security/ir.model.access.csv',
+        'views/report_purchaserequisition.xml',
     ],
     'auto_install': False,
     'test': [
@@ -31,9 +28,6 @@ keep track and order all your purchase orders.
         'test/purchase_requisition_demo.yml',
         'test/cancel_purchase_requisition.yml',
         'test/purchase_requisition.yml',
-    ],
-    'qweb': [
-        'static/src/xml/purchase_requisition.xml',
     ],
     'installable': True,
 }

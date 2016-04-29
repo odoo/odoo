@@ -7,7 +7,7 @@
   I cancel requisition.
 -
   !python {model: purchase.requisition}: |
-    self.tender_cancel(cr, uid, [ref("requisition1")])
+    self.action_cancel(cr, uid, [ref("requisition1")])
 -
   I check requisition after cancelled.
 -
@@ -17,7 +17,7 @@
   I reset requisition as "New".
 -
   !python {model: purchase.requisition}: |
-    self.tender_reset(cr, uid, [ref('requisition1')])
+    self.action_draft(cr, uid, [ref('requisition1')])
 -
   I duplicate requisition.
 -
