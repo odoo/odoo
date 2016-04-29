@@ -61,7 +61,7 @@ class stock_location(osv.osv):
             res[m.id] = m.name
             parent = m.location_id
             while parent:
-                res[m.id] = parent.name + ' / ' + res[m.id]
+                res[m.id] = parent.name + '/' + res[m.id]
                 parent = parent.location_id
         return res
 
@@ -3796,7 +3796,7 @@ class stock_warehouse(osv.osv):
         wh_loc_id = location_obj.create(cr, uid, loc_vals, context=context)
         vals['view_location_id'] = wh_loc_id
         #create all location
-        def_values = self.default_get(cr, uid, {'reception_steps', 'delivery_steps'})
+        def_values = self.default_get(cr, uid, ['reception_steps', 'delivery_steps'])
         reception_steps = vals.get('reception_steps',  def_values['reception_steps'])
         delivery_steps = vals.get('delivery_steps', def_values['delivery_steps'])
         context_with_inactive = context.copy()

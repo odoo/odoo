@@ -453,7 +453,13 @@
                                 <field name="partner_id"
                                     on_change="on_change_partner_id(partner_id)"
                                     string="Customer"
-                                    context="{'default_name': partner_name, 'default_email': email_from, 'default_phone': phone}"/>
+                                    context="{'default_name': partner_name, 'default_street': street, 
+                                        'default_street2': street2, 'default_city': city, 
+                                        'default_state_id': state_id, 'default_zip': zip, 
+                                        'default_country_id': country_id, 'default_function': function, 
+                                        'default_phone': phone, 'default_mobile': mobile, 
+                                        'default_fax': fax, 'default_email': email_from, 
+                                        'default_user_id': user_id, 'default_team_id': team_id}"/>
                                 <field name="email_from" string="Email" widget="email"/>
                                 <field name="phone" widget="phone"/>
                             </group>

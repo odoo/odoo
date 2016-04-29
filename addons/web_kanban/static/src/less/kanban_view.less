@@ -383,7 +383,7 @@
                 font-size: 18px;
                 font-weight: 300;
                 .o-flex(1, 1, auto);
-                white-space: nowrap;
+                .o-text-overflow();
                 padding-top: 5px;
             }
             .o_kanban_quick_add i {
@@ -393,15 +393,18 @@
                     color: white !important;
                 }
             }
-            &:hover .o_kanban_config i {
-                visibility: visible;
+            &:hover .o_kanban_config, .o_kanban_config.open {
+                display: inline-block;
+                margin-left: 4px;
             }
-            .o_kanban_config i {
-                .o-kanban-icon;
-                visibility: hidden;
-                color: #ccc;
-                &:hover {
-                    background-color: darken(@gray-light, 10%);
+            .o_kanban_config {
+                display: none;
+                i {
+                    .o-kanban-icon;
+                    color: #ccc;
+                    &:hover {
+                        background-color: darken(@gray-light, 10%);
+                    }
                 }
             }
 
@@ -424,9 +427,10 @@
                 top: 40px;
                 left: 15px;
                 position: absolute;
+                overflow: visible;
             }
             > .o_kanban_record, .o_kanban_quick_add, .o_kanban_config, .o_kanban_load_more {
-                display: none;
+                display: none!important;
             }
             &:hover {
                 cursor: pointer;
