@@ -956,7 +956,7 @@ class expression(object):
                     call_null_m2m = True
                     if right is not False:
                         if isinstance(right, basestring):
-                            res_ids = [x[0] for x in relational_model.name_search(cr, uid, right, [], operator, context=context)]
+                            res_ids = [x[0] for x in relational_model.name_search(cr, uid, right, [], operator, context=context, limit=None)]
                             if res_ids:
                                 operator = 'in'
                         else:
