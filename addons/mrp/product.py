@@ -32,16 +32,15 @@ class product_template(osv.osv):
     _defaults = {
         'produce_delay': 0,
     }
-    
-    
+
     def action_view_mos(self, cr, uid, ids, context=None):
-        products = self._get_products(cr, uid, ids, context=context)
-        result = self._get_act_window_dict(cr, uid, 'mrp.act_product_mrp_production', context=context)
-        if len(ids) == 1 and len(products) == 1:
-            result['context'] = "{'default_product_id': " + str(products[0]) + ", 'search_default_product_id': " + str(products[0]) + "}"
+        product_ids = [variant.id for template in self.browse(cr, uid, ids, context=context) for variant in template.product_variant_ids]
+        result = self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'mrp', 'act_product_mrp_production')
+        if len(ids) == 1 and len(product_ids) == 1:
+            result['context'] = {'default_product_id': product_ids[0], 'search_default_product_id': product_ids[0]}
         else:
-            result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
-            result['context'] = "{}"
+            result['domain'] = [('product_id', 'in', product_ids)]
+            result['context'] = {}
         return result
 
 
@@ -59,7 +58,7 @@ class product_product(osv.osv):
     }
 
     def action_view_bom(self, cr, uid, ids, context=None):
-        result = self.pool.get("product.template")._get_act_window_dict(cr, uid, 'mrp.product_open_bom', context=context)
+        result = self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'mrp', 'product_open_bom')
         templates = [product.product_tmpl_id.id for product in self.browse(cr, uid, ids, context=context)]
         # bom specific to this variant or global to template
         context = {
