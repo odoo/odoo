@@ -3,113 +3,106 @@
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from openerp.osv import osv, fields
-from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp import SUPERUSER_ID
 
-class procurement_rule(osv.osv):
+from odoo import api, fields, models, _
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+
+
+class ProcurementRule(models.Model):
     _inherit = 'procurement.rule'
 
-    def _get_action(self, cr, uid, context=None):
-        return [('manufacture', _('Manufacture'))] + super(procurement_rule, self)._get_action(cr, uid, context=context)
+    @api.model
+    def _get_action(self):
+        return [('manufacture', _('Manufacture'))] + super(ProcurementRule, self)._get_action()
 
 
-class procurement_order(osv.osv):
+class ProcurementOrder(models.Model):
     _inherit = 'procurement.order'
-    _columns = {
-        'bom_id': fields.many2one('mrp.bom', 'BoM', ondelete='cascade', select=True),
-        'property_ids': fields.many2many('mrp.property', 'procurement_property_rel', 'procurement_id','property_id', 'Properties'),
-        'production_id': fields.many2one('mrp.production', 'Manufacturing Order'),
-    }
 
-    def propagate_cancels(self, cr, uid, ids, context=None):
-        for procurement in self.browse(cr, uid, ids, context=context):
-            if procurement.rule_id.action == 'manufacture' and procurement.production_id:
-                self.pool.get('mrp.production').action_cancel(cr, uid, [procurement.production_id.id], context=context)
-        return super(procurement_order, self).propagate_cancels(cr, uid, ids, context=context)
+    bom_id = fields.Many2one('mrp.bom', 'BoM', ondelete='cascade', select=True)
+    property_ids = fields.Many2many('mrp.property', 'procurement_property_rel', 'procurement_id','property_id', 'Properties')
+    production_id = fields.Many2one('mrp.production', 'Manufacturing Order')
 
-    def _run(self, cr, uid, ids, context=None):
-        procurement = self.browse(cr, uid, ids[0], context=context)
-        if procurement.rule_id and procurement.rule_id.action == 'manufacture':
-            #make a manufacturing order for the procurement
-            return self.make_mo(cr, uid, [procurement.id], context=context)[procurement.id]
-        return super(procurement_order, self)._run(cr, uid, ids, context=context)
+    @api.multi
+    def propagate_cancels(self):
+        to_propagate = self.filtered(lambda procurement: procurement.rule_id.action == 'manufacture' and procurement.production_id).mapped('production_id')
+        if to_propagate:
+            to_propagate.action_cancel()
+        return super(ProcurementOrder, self).propagate_cancels()
 
-    def _check(self, cr, uid, ids, context=None):
-        procurement = self.browse(cr, uid, ids[0], context=context)
-        if procurement.production_id and procurement.production_id.state == 'done':  # TOCHECK: no better method? 
+    @api.multi
+    def _run(self):
+        if self.rule_id and self.rule_id.action == 'manufacture':
+            # make a manufacturing order for the procurement
+            return self.make_mo()[self.id]
+        return super(ProcurementOrder, self)._run()
+
+    @api.multi
+    def _check(self):
+        if self.production_id and self.production_id.state == 'done':  # TOCHECK: no better method? 
             return True
-        return super(procurement_order, self)._check(cr, uid, ids, context=context)
+        return super(ProcurementOrder, self)._check()
 
-    def check_bom_exists(self, cr, uid, ids, context=None):
+    @api.multi
+    def check_bom_exists(self):
         """ Finds the bill of material for the product from procurement order.
         @return: True or False
         """
-        for procurement in self.browse(cr, uid, ids, context=context):
-            properties = [x.id for x in procurement.property_ids]
-            bom_id = self.pool.get('mrp.bom')._bom_find(cr, uid, product_id=procurement.product_id.id,
-                                                        properties=properties, context=context)
-            if not bom_id:
+        for procurement in self:
+            # TDE FIXME: properties -> property_ids
+            bom = self.env['mrp.bom']._bom_find(product_id=procurement.product_id.id, properties=procurement.property_ids.ids)
+            if not bom:
                 return False
         return True
 
-    def _get_date_planned(self, cr, uid, procurement, context=None):
-        format_date_planned = datetime.strptime(procurement.date_planned,
+    def _get_date_planned(self):
+        format_date_planned = datetime.strptime(self.date_planned,
                                                 DEFAULT_SERVER_DATETIME_FORMAT)
-        date_planned = format_date_planned - relativedelta(days=procurement.product_id.produce_delay or 0.0)
-        date_planned = date_planned - relativedelta(days=procurement.company_id.manufacturing_lead)
+        date_planned = format_date_planned - relativedelta(days=self.product_id.produce_delay or 0.0)
+        date_planned = date_planned - relativedelta(days=self.company_id.manufacturing_lead)
         return date_planned
 
-    def _prepare_mo_vals(self, cr, uid, procurement, context=None):
-        res_id = procurement.move_dest_id and procurement.move_dest_id.id or False
-        newdate = self._get_date_planned(cr, uid, procurement, context=context)
-        bom_obj = self.pool.get('mrp.bom')
-        if procurement.bom_id:
-            bom_id = procurement.bom_id.id
-            routing_id = procurement.bom_id.routing_id.id
+    def _prepare_mo_vals(self):
+        BoM = self.env['mrp.bom'].with_context(company_id=self.company_id.id)
+        if self.bom_id:
+            bom = self.bom_id
+            routing_id = self.bom_id.routing_id.id
         else:
-            properties = [x.id for x in procurement.property_ids]
-            bom_id = bom_obj._bom_find(cr, uid, product_id=procurement.product_id.id,
-                                       properties=properties, context=dict(context, company_id=procurement.company_id.id))
-            bom = bom_obj.browse(cr, uid, bom_id, context=context)
+            bom = BoM._bom_find(product_id=self.product_id.id,
+                                properties=self.property_ids.ids)
             routing_id = bom.routing_id.id
         return {
-            'origin': procurement.origin,
-            'product_id': procurement.product_id.id,
-            'product_qty': procurement.product_qty,
-            'product_uom': procurement.product_uom.id,
-            'location_src_id': procurement.rule_id.location_src_id.id or procurement.location_id.id,
-            'location_dest_id': procurement.location_id.id,
-            'bom_id': bom_id,
+            'origin': self.origin,
+            'product_id': self.product_id.id,
+            'product_qty': self.product_qty,
+            'product_uom': self.product_uom.id,
+            'location_src_id': self.rule_id.location_src_id.id or self.location_id.id,
+            'location_dest_id': self.location_id.id,
+            'bom_id': bom.id,
             'routing_id': routing_id,
-            'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
-            'move_prod_id': res_id,
-            'company_id': procurement.company_id.id,
+            'date_planned': self._get_date_planned().strftime('%Y-%m-%d %H:%M:%S'),  # TDE FIXME: use tools
+            'move_prod_id': self.move_dest_id.id,
+            'company_id': self.company_id.id,
         }
 
-    def make_mo(self, cr, uid, ids, context=None):
+    @api.multi
+    def make_mo(self):
         """ Make Manufacturing(production) order from procurement
         @return: New created Production Orders procurement wise
         """
         res = {}
-        production_obj = self.pool.get('mrp.production')
-        procurement_obj = self.pool.get('procurement.order')
-        for procurement in procurement_obj.browse(cr, uid, ids, context=context):
-            if self.check_bom_exists(cr, uid, [procurement.id], context=context):
-                #create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
-                vals = self._prepare_mo_vals(cr, uid, procurement, context=context)
-                produce_id = production_obj.create(cr, SUPERUSER_ID, vals, context=dict(context, force_company=procurement.company_id.id))
-                res[procurement.id] = produce_id
-                self.write(cr, uid, [procurement.id], {'production_id': produce_id})
-                self.production_order_create_note(cr, uid, procurement, context=context)
-                production_obj.action_compute(cr, uid, [produce_id], properties=[x.id for x in procurement.property_ids])
-                production_obj.signal_workflow(cr, uid, [produce_id], 'button_confirm')
+        Production = self.env['mrp.production']
+        for procurement in self:
+            ProductionSudo = Production.sudo().with_context(force_company=procurement.company_id.id)
+            if procurement.check_bom_exists():
+                # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
+                production = ProductionSudo.create(procurement._prepare_mo_vals())
+                res[procurement.id] = production.id
+                procurement.write({'production_id': production.id})
+                procurement.message_post(body=_("Manufacturing Order <em>%s</em> created.") % (production.name))
+                production.action_compute(properties=procurement.property_ids.ids)
+                production.signal_workflow('button_confirm')
             else:
                 res[procurement.id] = False
-                self.message_post(cr, uid, [procurement.id], body=_("No BoM exists for this product!"), context=context)
+                procurement.message_post(body=_("No BoM exists for this product!"))
         return res
-
-    def production_order_create_note(self, cr, uid, procurement, context=None):
-        body = _("Manufacturing Order <em>%s</em> created.") % (procurement.production_id.name,)
-        self.message_post(cr, uid, [procurement.id], body=body, context=context)

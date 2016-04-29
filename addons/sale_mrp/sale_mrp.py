@@ -102,14 +102,14 @@ class StockMove(models.Model):
             res['property_ids'] = [(6, 0, self.procurement_id.property_ids.ids)]
         return res
 
-    @api.model
-    def _action_explode(self, move):
+    @api.multi
+    def _action_explode(self):
         """ Explodes pickings.
         @param move: Stock moves
         @return: True
         """
-        property_ids = move.procurement_id.sale_line_id.property_ids.ids
-        return super(StockMove, self.with_context(property_ids=property_ids))._action_explode(move)
+        property_ids = self.procurement_id.sale_line_id.property_ids.ids
+        return super(StockMove, self.with_context(property_ids=property_ids))._action_explode()
 
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
