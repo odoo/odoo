@@ -248,7 +248,7 @@ class Users(models.Model):
                 # will face unexpected 'Access Denied' exceptions.
                 raise UserError(_('Please use the change password wizard (in User Preferences or User menu) to change your own password.'))
             else:
-                self.password = self.new_password
+                user.password = user.new_password
 
     @api.depends('groups_id')
     def _compute_share(self):
