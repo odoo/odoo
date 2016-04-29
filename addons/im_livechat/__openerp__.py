@@ -30,6 +30,7 @@ Help your customers with this chat, and analyse their feedback.
     ],
     'demo': [
         "data/im_livechat_channel_demo.xml",
+        'data/mail_shortcode_demo.xml',
     ],
     'depends': ["mail", "rating"],
     'qweb': [
