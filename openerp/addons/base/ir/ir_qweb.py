@@ -1023,6 +1023,47 @@ class QwebWidgetMonetary(osv.AbstractModel):
             formatted_amount, pre=pre, post=post
         ).format(symbol=display.symbol,)
 
+class QwebWidgetDate(osv.AbstractModel):
+    """ QWeb widget that mimics the ``ir.qweb.field.date`` behaviour. """
+    _name = 'ir.qweb.widget.date'
+    _inherit = 'ir.qweb.widget'
+
+    def _format(self, inner, options, qwebcontext):
+        inner = self.pool['ir.qweb'].eval(inner, qwebcontext)
+        return self.pool['ir.qweb.field.date'].value_to_html(
+            qwebcontext.cr, qwebcontext.uid, inner, None,
+            options=options, context=qwebcontext.context)
+
+class QwebWidgetDateTime(osv.AbstractModel):
+    """ QWeb widget that mimics the ``ir.qweb.field.datetime`` behaviour. """
+    _name = 'ir.qweb.widget.datetime'
+    _inherit = 'ir.qweb.widget'
+
+    def _format(self, inner, options, qwebcontext):
+        inner = self.pool['ir.qweb'].eval(inner, qwebcontext)
+        return self.pool['ir.qweb.field.datetime'].value_to_html(
+            qwebcontext.cr, qwebcontext.uid, inner, None,
+            options=options, context=qwebcontext.context)
+
+class QwebWidgetFloat(osv.AbstractModel):
+    """ QWeb widget that mimics the ``ir.qweb.field.float`` behaviour.
+
+    .. rubric:: Set the precision
+
+    The precision can be set by setting the ``digits`` parameter, e.g.,
+    ``t-esc-options='{"widget": "float", "digits": [16, 4]}'``
+    """
+    _name = 'ir.qweb.widget.float'
+    _inherit = 'ir.qweb.widget'
+
+    def _format(self, inner, options, qwebcontext):
+        inner = self.pool['ir.qweb'].eval(inner, qwebcontext)
+        field = lambda: None
+        field.digits = tuple(options.get('digits') or (None, None))
+        return self.pool['ir.qweb.field.float'].value_to_html(
+            qwebcontext.cr, qwebcontext.uid, inner, field,
+            options=options, context=qwebcontext.context)
+
 class HTMLSafe(object):
     """ HTMLSafe string wrapper, Werkzeug's escape() has special handling for
     objects with a ``__html__`` methods but AFAIK does not provide any such
