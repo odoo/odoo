@@ -1,49 +1,78 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
+from odoo import api, fields, models, workflow, _
+from odoo import SUPERUSER_ID
+from odoo.tools import float_compare
+from odoo.exceptions import UserError
 
-from openerp import api
-from openerp.osv import fields
-from openerp.osv import osv
-from openerp.tools.translate import _
-from openerp import SUPERUSER_ID
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare
-from openerp.exceptions import UserError
 
-class StockMove(osv.osv):
+class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    _columns = {
-        'production_id': fields.many2one('mrp.production', 'Production Order for Produced Products', select=True, copy=False),
-        'raw_material_production_id': fields.many2one('mrp.production', 'Production Order for Raw Materials', select=True),
-        'consumed_for': fields.many2one('stock.move', 'Consumed for', help='Technical field used to make the traceability of produced products'),
-    }
+    production_id = fields.Many2one(
+        'mrp.production', 'Production Order for Produced Products',
+        copy=False, index=True)
+    raw_material_production_id = fields.Many2one(
+        'mrp.production', 'Production Order for Raw Materials',
+        index=True)
+    consumed_for = fields.Many2one(
+        'stock.move', 'Consumed for',
+        help='Technical field used to make the traceability of produced products')
 
-    def get_code_from_locs(self, cr, uid, ids, location_id=False, location_dest_id=False, context=None):
+    # @api.multi
+    # def write(self, vals):
+    #     res = super(StockMove, self).write(vals)
+    #     if vals.get('state') == 'assigned':
+    #         orders = self.filtered(lambda move: move.raw_material_production_id.state == 'confirmed').mapped('raw_material_production_id')
+    #         orders = orders.filtered(lambda order: order.test_ready)
+    #         for order in orders:
+    #             workflow.trg_validate(self._uid, 'mrp.production', order.id, 'moves_ready', self._cr)
+    #     return res
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        res = super(StockMove, self).write(cr, uid, ids, vals, context=context)
+        from openerp import workflow
+        if vals.get('state') == 'assigned':
+            moves = self.browse(cr, uid, ids, context=context)
+            orders = list(set([x.raw_material_production_id.id for x in moves if x.raw_material_production_id and x.raw_material_production_id.state == 'confirmed']))
+            for order_id in orders:
+                if self.pool.get('mrp.production').test_ready(cr, uid, [order_id]):
+                    workflow.trg_validate(uid, 'mrp.production', order_id, 'moves_ready', cr)
+        return res
+
+    @api.multi
+    def get_code_from_locs(self, location_id=False, location_dest_id=False):
         """
         Returns the code the picking type should have.  This can easily be used
         to check if a move is internal or not
         move, location_id and location_dest_id are browse records
         """
-        move = self.browse(cr, uid, ids[0], context=context)
-        # TDE note: called only in MRP
         code = 'internal'
-        src_loc = location_id or move.location_id
-        dest_loc = location_dest_id or move.location_dest_id
+        src_loc = location_id or self.location_id
+        dest_loc = location_dest_id or self.location_dest_id
         if src_loc.usage == 'internal' and dest_loc.usage != 'internal':
             code = 'outgoing'
         if src_loc.usage != 'internal' and dest_loc.usage == 'internal':
             code = 'incoming'
         return code
 
-    def check_tracking(self, cr, uid, ids, ops, context=None):
-        super(StockMove, self).check_tracking(cr, uid, ids, ops, context=context)
-        move = self.browse(cr, uid, ids[0], context=context)
-        if move.raw_material_production_id and move.product_id.tracking!='none' and move.location_dest_id.usage == 'production' and move.raw_material_production_id.product_id.tracking != 'none' and not move.consumed_for:
-            raise UserError(_("Because the product %s requires it, you must assign a serial number to your raw material %s to proceed further in your production. Please use the 'Produce' button to do so.") % (move.raw_material_production_id.product_id.name, move.product_id.name))
+    @api.multi
+    def check_tracking(self, ops):
+        super(StockMove, self).check_tracking(ops)
+        for move in self:
+            if move.raw_material_production_id and \
+                    move.product_id.tracking !='none' and \
+                    move.location_dest_id.usage == 'production' and \
+                    move.raw_material_production_id.product_id.tracking != 'none' and \
+                    not move.consumed_for:
+                raise UserError(
+                    _("Because the product %s requires it, you must assign a serial number to your raw material %s to proceed further in your production. Please use the 'Produce' button to do so.") % (
+                        move.raw_material_production_id.product_id.name, move.product_id.name))
 
-    def _action_explode(self, cr, uid, move, context=None):
+    def _action_explode(self, cr, uid, ids, context=None):
         """ Explodes pickings.
         @param move: Stock moves
         @return: True
@@ -57,6 +86,7 @@ class StockMove(osv.osv):
         uom_obj = self.pool.get("product.uom")
         to_explode_again_ids = []
         property_ids = context.get('property_ids') or []
+        move = self.browse(cr, uid, ids[0], context=context)
         bis = bom_obj._bom_find(cr, SUPERUSER_ID, product_id=move.product_id.id, properties=property_ids)
         bom_point = bom_obj.browse(cr, SUPERUSER_ID, bis, context=context)
         if bis and bom_point.type == 'phantom':
@@ -98,13 +128,13 @@ class StockMove(osv.osv):
                             proc = proc_obj.copy(cr, uid, move.procurement_id.id, default=valdef, context=context)
                         else:
                             proc = proc_obj.create(cr, uid, valdef, context=context)
-                        proc_obj.run(cr, uid, [proc], context=context) #could be omitted
-            
-            #check if new moves needs to be exploded
+                        proc_obj.run(cr, uid, [proc], context=context)  # could be omitted
+
+            # check if new moves needs to be exploded
             if to_explode_again_ids:
                 for new_move in self.browse(cr, uid, to_explode_again_ids, context=context):
-                    processed_ids.extend(self._action_explode(cr, uid, new_move, context=context))
-            
+                    processed_ids.extend(new_move._action_explode())
+
             if not move.split_from and move.procurement_id:
                 # Check if procurements have been made to wait for
                 moves = move.procurement_id.move_ids
@@ -114,27 +144,28 @@ class StockMove(osv.osv):
             if processed_ids and move.state == 'assigned':
                 # Set the state of resulting moves according to 'assigned' as the original move is assigned
                 move_obj.write(cr, uid, list(set(processed_ids) - set([move.id])), {'state': 'assigned'}, context=context)
-                
-            #delete the move with original product which is not relevant anymore
+
+            # delete the move with original product which is not relevant anymore
             move_obj.unlink(cr, SUPERUSER_ID, [move.id], context=context)
-            #return list of newly created move
+            # return list of newly created move
             return processed_ids
 
         return [move.id]
 
-    def action_confirm(self, cr, uid, ids, context=None):
-        move_ids = []
-        for move in self.browse(cr, uid, ids, context=context):
-            #in order to explode a move, we must have a picking_type_id on that move because otherwise the move
-            #won't be assigned to a picking and it would be weird to explode a move into several if they aren't
-            #all grouped in the same picking.
+    @api.multi
+    def action_confirm(self):
+        moves = self.env['stock.move']
+        for move in self:
+            # in order to explode a move, we must have a picking_type_id on that move because otherwise the move
+            # won't be assigned to a picking and it would be weird to explode a move into several if they aren't
+            # all grouped in the same picking.
             if move.picking_type_id:
-                move_ids.extend(self._action_explode(cr, uid, move, context=context))
+                moves |= moves.browse(move._action_explode())
             else:
-                move_ids.append(move.id)
+                moves |= move
 
-        #we go further with the list of ids potentially changed by action_explode
-        return super(StockMove, self).action_confirm(cr, uid, move_ids, context=context)
+        # we go further with the list of ids potentially changed by action_explode
+        return super(StockMove, moves).action_confirm()
 
     def action_consume(self, cr, uid, ids, product_qty, location_id=False, restrict_lot_id=False, restrict_partner_id=False,
                        consumed_for=False, context=None):
@@ -208,17 +239,4 @@ class StockMove(osv.osv):
             if move.production_id.id:
                 self.write(cr, uid, new_moves, {'production_id': move.production_id.id}, context=context)
             res += new_moves
-        return res
-
-    def write(self, cr, uid, ids, vals, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        res = super(StockMove, self).write(cr, uid, ids, vals, context=context)
-        from openerp import workflow
-        if vals.get('state') == 'assigned':
-            moves = self.browse(cr, uid, ids, context=context)
-            orders = list(set([x.raw_material_production_id.id for x in moves if x.raw_material_production_id and x.raw_material_production_id.state == 'confirmed']))
-            for order_id in orders:
-                if self.pool.get('mrp.production').test_ready(cr, uid, [order_id]):
-                    workflow.trg_validate(uid, 'mrp.production', order_id, 'moves_ready', cr)
         return res

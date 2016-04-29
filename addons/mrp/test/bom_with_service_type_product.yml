@@ -53,8 +53,7 @@
     mode: 'consume_produce'
 -
   !python {model: mrp.product.produce}: |
-    lines = self.on_change_qty(cr, uid, [ref('mrp_product_produce_1')], 1.0, [], context=context)
-    self.write(cr, uid, [ref('mrp_product_produce_1')], lines['value'], context=context)
+    self.on_change_qty(cr, uid, [ref('mrp_product_produce_1')], context=context)
     self.do_produce(cr, uid, [ref('mrp_product_produce_1')], context=context)
 -
   I check production order after produced.

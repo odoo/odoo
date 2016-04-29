@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv,fields
+from odoo import fields, models
 
-class company(osv.osv):
+
+class Company(models.Model):
     _inherit = 'res.company'
-    _columns = {
-        'manufacturing_lead': fields.float('Manufacturing Lead Time', required=True,
-            help="Security days for each manufacturing operation."),
-    }
-    _defaults = {
-        'manufacturing_lead': lambda *a: 0.0,
-    }
+
+    manufacturing_lead = fields.Float(
+        'Manufacturing Lead Time', default=0.0, required=True,
+        help="Security days for each manufacturing operation.")

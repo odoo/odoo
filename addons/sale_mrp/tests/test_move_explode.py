@@ -71,8 +71,8 @@ class TestMoveExplode(common.TransactionCase):
     def test_00_bom_find(self):
         """Check that _bom_find searches the bom corresponding to the properties passed or takes the bom with the smallest
             sequence."""
-        res_id = self.MrpBom._bom_find(product_tmpl_id=self.template.id, product_id=None, properties=[self.mrp_property.id])
-        self.assertEqual(res_id, self.bom_prop.id)
+        bom = self.MrpBom._bom_find(product_tmpl_id=self.template.id, product_id=None, properties=[self.mrp_property.id])
+        self.assertEqual(bom, self.bom_prop)
 
     def test_00_bom_explode(self):
         """Check that _bom_explode only takes the lines with the right properties."""
