@@ -268,8 +268,8 @@ class ProcurementOrder(models.Model):
     @api.model
     def _run_move_create(self, procurement):
         vals = super(ProcurementOrder, self)._run_move_create(procurement)
-        if self.sale_line_id:
-            vals.update({'sequence': self.sale_line_id.sequence})
+        if procurement.sale_line_id:
+            vals.update({'sequence': procurement.sale_line_id.sequence})
         return vals
 
 
