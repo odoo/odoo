@@ -34,6 +34,7 @@ var emoji_substitutions = {};
 var needaction_counter = 0;
 var starred_counter = 0;
 var mention_partner_suggestions = [];
+var canned_responses = [];
 var discuss_menu_id;
 var global_unread_counter = 0;
 var pinned_dm_partners = [];  // partner_ids we have a pinned DM with
@@ -757,6 +758,10 @@ var chat_manager = {
         return channel.members_deferred;
     },
 
+    get_canned_responses: function () {
+        return canned_responses;
+    },
+
     get_emojis: function() {
         return emojis;
     },
@@ -988,11 +993,17 @@ function init () {
         needaction_counter = result.needaction_inbox_counter;
         starred_counter = result.starred_counter;
         mention_partner_suggestions = result.mention_partner_suggestions;
-        emojis = result.emoji;
-        _.each(emojis, function(emoji) {
-            emoji_substitutions[_.escape(emoji.source)] = emoji.substitution;
-        });
         discuss_menu_id = result.menu_id;
+
+        // Shortcodes: canned responses and emojis
+        _.each(result.shortcodes, function (s) {
+            if (s.shortcode_type === 'text') {
+                canned_responses.push(_.pick(s, ['id', 'source', 'substitution']));
+            } else {
+                emojis.push(_.pick(s, ['id', 'source', 'substitution', 'description']));
+                emoji_substitutions[_.escape(s.source)] = s.substitution;
+            }
+        });
 
         bus.start_polling();
     });

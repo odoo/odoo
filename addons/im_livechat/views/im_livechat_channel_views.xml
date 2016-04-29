@@ -174,6 +174,35 @@
             </field>
         </record>
 
+        <!-- Canned responses -->
+        <record id="im_livechat_canned_response_view_tree" model="ir.ui.view">
+            <field name="name">im_livechat.canned_response.tree</field>
+            <field name="model">mail.shortcode</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="source"/>
+                    <field name="substitution"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="im_livechat_canned_response_action" model="ir.actions.act_window">
+            <field name="name">Canned Responses</field>
+            <field name="res_model">mail.shortcode</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="im_livechat_canned_response_view_tree"/>
+            <field name="domain">[('shortcode_type','=','text')]</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new canned response.
+              </p><p>
+                Canned responses allow you to insert prewritten responses in
+                your messages by typing <i>:shortcut</i>. The shortcut is
+                replaced directly in your message, so that you can still edit
+                it before sending.
+              </p>
+            </field>
+        </record>
 
         <!-- Menu items -->
         <menuitem
@@ -198,6 +227,14 @@
             action="mail_channel_action"
             groups="im_livechat_group_user"
             sequence="10"/>
+
+        <menuitem
+            id="canned_responses"
+            name="Canned Responses"
+            parent="menu_livechat_root"
+            action="im_livechat_canned_response_action"
+            groups="im_livechat_group_user"
+            sequence="15"/>
 
     </data>
 </openerp>

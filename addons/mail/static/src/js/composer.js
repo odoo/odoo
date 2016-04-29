@@ -18,6 +18,7 @@ var NON_BREAKING_SPACE = '\u00a0';
 
 var MENTION_PARTNER_DELIMITER = '@';
 var MENTION_CHANNEL_DELIMITER = '#';
+var MENTION_CANNED_RESPONSE_DELIMITER = ':';
 
 // The MentionManager allows the Composer to register listeners. For each
 // listener, it detects if the user is currently typing a mention (starting by a
@@ -59,8 +60,12 @@ var MentionManager = Widget.extend({
         var selected_suggestion = _.find(_.flatten(this.get('mention_suggestions')), function (s) {
             return s.id === id;
         });
-        // replace white spaces with non-breaking spaces to facilitate mentions detection in text
-        selected_suggestion.name = selected_suggestion.name.replace(/ /g, NON_BREAKING_SPACE);
+        var substitution = selected_suggestion.substitution;
+        if (!substitution) { // no substitution string given, so use the mention name instead
+            // replace white spaces with non-breaking spaces to facilitate mentions detection in text
+            selected_suggestion.name = selected_suggestion.name.replace(/ /g, NON_BREAKING_SPACE);
+            substitution = this.active_listener.delimiter + selected_suggestion.name;
+        }
         var get_mention_index = function (matches, cursor_position) {
             for (var i=0; i<matches.length; i++) {
                 if (cursor_position <= matches[i].index) {
@@ -84,10 +89,11 @@ var MentionManager = Widget.extend({
         var cursor_position = this._get_selection_positions().start;
         var text_left = text_input.substring(0, cursor_position-(this.mention_word.length+1));
         var text_right = text_input.substring(cursor_position, text_input.length);
-        var text_input_new = text_left + this.active_listener.delimiter + selected_suggestion.name + ' ' + text_right;
+        var text_input_new = text_left + substitution + ' ' + text_right;
         this.composer.$input.val(text_input_new);
-        this._set_cursor_position(text_left.length+selected_suggestion.name.length+2);
+        this._set_cursor_position(text_left.length+substitution.length+2);
         this.set('mention_suggestions', []);
+        this.composer.focus(); // to trigger autoresize
     },
 
     // Public API
@@ -95,11 +101,16 @@ var MentionManager = Widget.extend({
      * Registers a new listener, described by an object containing the following keys
      * @param {char} [delimiter] the mention delimiter
      * @param {function} [fetch_callback] the callback to fetch mention suggestions
-     * @param {string} [model] the model used for redirection
-     * @param {string} [redirect_classname] the classname of the <a> wrapping the mention
+     * @param {boolean} [generate_links] true to wrap mentions in <a> links
+     * @param {string} [model] (optional) the model used for redirection
+     * @param {string} [redirect_classname] (optional) the classname of the <a> wrapping the mention
+     * @param {array} [selection] (optional) initial mentions for each listener
+     * @param {string} [suggestion_template] the template of suggestions' dropdown
      */
     register: function (listener) {
         this.listeners.push(_.defaults(listener, {
+            model: '',
+            redirect_classname: '',
             selection: [],
         }));
     },
@@ -202,6 +213,9 @@ var MentionManager = Widget.extend({
         var base_href = session.url("/web");
         var mention_link = "<a href='%s' class='%s' data-oe-id='%s' data-oe-model='%s' target='_blank'>%s%s</a>";
         _.each(this.listeners, function (listener) {
+            if (!listener.generate_links) {
+                return;
+            }
             var selection = listener.selection;
             if (selection.length) {
                 var matches = self._get_match(s, listener);
@@ -266,12 +280,29 @@ var MentionManager = Widget.extend({
         return result;
     },
     _render_suggestions: function () {
-        if (_.flatten(this.get('mention_suggestions')).length) {
-            this.$el.html(QWeb.render('mail.ChatComposer.MentionSuggestions', {
-                suggestions: this.get('mention_suggestions'),
+        var suggestions = [];
+        if (_.find(this.get('mention_suggestions'), _.isArray)) {
+            // Array of arrays -> Flatten and insert dividers between groups
+            var insert_divider = false;
+            _.each(this.get('mention_suggestions'), function (suggestion_group) {
+                if (suggestion_group.length > 0) {
+                    if (insert_divider) {
+                        suggestions.push({ divider: true });
+                    }
+                    suggestions = suggestions.concat(suggestion_group);
+                    insert_divider = true;
+                }
+            });
+        } else {
+            suggestions = this.get('mention_suggestions');
+        }
+        if (suggestions.length) {
+            this.$el.html(QWeb.render(this.active_listener.suggestion_template, {
+                suggestions: suggestions,
             }));
             this.$el
                 .addClass('open')
+                .find('ul').css("max-width", this.composer.$input.width())
                 .find('.o_mention_proposition').first().addClass('active');
             this.open = true;
         } else {
@@ -346,16 +377,26 @@ var BasicComposer = Widget.extend({
         this.mention_manager.register({
             delimiter: MENTION_PARTNER_DELIMITER,
             fetch_callback: this.mention_fetch_partners.bind(this),
+            generate_links: true,
             model: 'res.partner',
             redirect_classname: 'o_mail_redirect',
             selection: this.options.default_mention_selections[MENTION_PARTNER_DELIMITER],
+            suggestion_template: 'mail.MentionPartnerSuggestions',
         });
         this.mention_manager.register({
             delimiter: MENTION_CHANNEL_DELIMITER,
             fetch_callback: this.mention_fetch_channels.bind(this),
+            generate_links: true,
             model: 'mail.channel',
             redirect_classname: 'o_channel_redirect',
             selection: this.options.default_mention_selections[MENTION_CHANNEL_DELIMITER],
+            suggestion_template: 'mail.MentionChannelSuggestions',
+        });
+        this.mention_manager.register({
+            delimiter: MENTION_CANNED_RESPONSE_DELIMITER,
+            fetch_callback: this.mention_get_canned_responses.bind(this),
+            selection: this.options.default_mention_selections[MENTION_CANNED_RESPONSE_DELIMITER],
+            suggestion_template: 'mail.MentionCannedResponseSuggestions',
         });
 
         // Emojis
@@ -621,8 +662,8 @@ var BasicComposer = Widget.extend({
             _.each(prefetched_partners, function (partners) {
                 if (limit > 0) {
                     var filtered_partners = _.filter(partners, function (partner) {
-                        return partner.email && partner.email.search(search_regexp) !== -1 ||
-                               partner.name && utils.unaccent(partner.name).search(search_regexp) !== -1;
+                        return partner.email && search_regexp.test(partner.email) ||
+                               partner.name && search_regexp.test(utils.unaccent(partner.name));
                     });
                     if (filtered_partners.length) {
                         suggestions.push(filtered_partners.slice(0, limit));
@@ -638,6 +679,14 @@ var BasicComposer = Widget.extend({
                 });
             }
             return suggestions;
+        });
+    },
+    mention_get_canned_responses: function (search) {
+        var canned_responses = chat_manager.get_canned_responses();
+        var matches = fuzzy.filter(utils.unaccent(search), _.pluck(canned_responses, 'source'));
+        var indexes = _.pluck(matches.slice(0, this.options.mention_fetch_limit), 'index');
+        return _.map(indexes, function (i) {
+            return canned_responses[i];
         });
     },
     mention_set_prefetched_partners: function (prefetched_partners) {
