@@ -15,12 +15,12 @@
                     </div>
                     <group>
                         <group>
-                            <field name="product_tmpl_id" on_change="onchange_product_tmpl_id(product_tmpl_id, product_qty, context)"/>
+                            <field name="product_tmpl_id"/>
                             <field name="product_id" groups="product.group_product_variant"/>
                             <label for="product_qty" string="Quantity"/>
                             <div>
-                                <field name="product_qty" class="oe_inline" on_change="onchange_product_tmpl_id(product_tmpl_id, product_qty, context)"/>
-                                <field name="product_uom" options="{'no_open':True,'no_create':True}" class="oe_inline" on_change="onchange_uom(product_tmpl_id, product_uom)" groups="product.group_uom"/>
+                                <field name="product_qty" class="oe_inline"/>
+                                <field name="product_uom" options="{'no_open':True,'no_create':True}" class="oe_inline" groups="product.group_uom"/>
                             </div>
                             <label for="routing_id" class="oe_inline" groups="mrp.group_mrp_routings"/>
                             <div groups="mrp.group_mrp_routings">
@@ -38,9 +38,9 @@
                             <field name="bom_line_ids" widget="one2many_list">
                                 <tree string="Components" editable="bottom">
                                     <field name="sequence" widget="handle"/>
-                                    <field name="product_id" on_change="onchange_product_id(product_id, product_qty)"/>
+                                    <field name="product_id"/>
                                     <field name="product_qty"/>
-                                    <field name="product_uom" options="{'no_open':True,'no_create':True}" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
+                                    <field name="product_uom" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
                                     <field name="product_rounding" groups="mrp.group_rounding_efficiency"/>
                                     <field name="product_efficiency" groups="mrp.group_rounding_efficiency"/>
                                     <field name="date_start"/>
@@ -146,11 +146,11 @@
                 <tree string="Components" editable="top">
                     <field name="sequence" widget="handle"/>
                     <field name="bom_id"/>
-                    <field name="product_id" on_change="onchange_product_id(product_id)"/>
+                    <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_rounding"/>
                     <field name="product_efficiency"/>
-                    <field name="product_uom" options="{'no_open':True,'no_create':True}" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
+                    <field name="product_uom" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
                     <field name="routing_id"/>
