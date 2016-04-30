@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2015-06-24 12:54+0000\n"
+"PO-Revision-Date: 2016-04-07 16:31+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-7/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -140,7 +140,7 @@ msgstr "هي المبلغ المخطط لحصوله و يمكن إستهلاكه
 #. module: account_asset
 #: help:account.asset.asset,method_period:0
 msgid "The amount of time between two depreciations, in months"
-msgstr ""
+msgstr "مقدار الوقت بين إهلاكين, بالأشهر"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciation_date:0
@@ -256,12 +256,12 @@ msgstr "تغيير المدة"
 #: help:account.asset.category,method_number:0
 #: help:account.asset.history,method_number:0
 msgid "The number of depreciations needed to depreciate your asset"
-msgstr ""
+msgstr "عدد مرات الإهلاك اللازمة لإهلاك الأصل الخاص بك."
 
 #. module: account_asset
 #: view:account.asset.category:0
 msgid "Analytic Information"
-msgstr ""
+msgstr "معلومات تحليلية"
 
 #. module: account_asset
 #: field:account.asset.category,account_analytic_id:0
@@ -283,7 +283,7 @@ msgstr "التناسب الزمني يمكن تطبيقه لأمر \"عدد ال
 #. module: account_asset
 #: field:account.asset.depreciation.line,remaining_value:0
 msgid "Next Period Depreciation"
-msgstr ""
+msgstr "إهلاك الفترة القادمة"
 
 #. module: account_asset
 #: help:account.asset.history,method_period:0
@@ -332,7 +332,7 @@ msgstr "بحث فئة الأصول"
 #. module: account_asset
 #: view:asset.modify:0
 msgid "months"
-msgstr ""
+msgstr "أشهر"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice_line
@@ -400,7 +400,7 @@ msgid ""
 "When an asset is created, the status is 'Draft'.\n"
 "If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
 "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
-msgstr ""
+msgstr "عند إنشاء أصل، فإن حالته تكون 'مسودة'.\nإذا تم تأكيد الأصل، فإن حالته تتحول إلى 'جاري'، ويمكن ترحيل بنود الإهلاك في الحسابات.\nيمكنك إقفال الإهلاك يدوياً عندما تنتهي كافة الإهلاكات. إذا تم ترحيل آخر بند محاسبي في الإهلاكات، سيتم تغيير حالة الأصل تلقائياً إلى مقفل."
 
 #. module: account_asset
 #: field:account.asset.asset,state:0 field:asset.asset.report,state:0
@@ -526,7 +526,7 @@ msgstr "عناصر دفتر اليومية"
 #. module: account_asset
 #: view:asset.modify:0
 msgid "Asset Durations to Modify"
-msgstr ""
+msgstr "فترات تعديل الأصول "
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_date:0 view:asset.asset.report:0
@@ -556,7 +556,7 @@ msgstr "الحالي"
 #: code:addons/account_asset/account_asset.py:82
 #, python-format
 msgid "You cannot delete an asset that contains posted depreciation lines."
-msgstr ""
+msgstr "لا يمكنك حذف أصل يحتوي على خطوط إهلاك مؤجلة."
 
 #. module: account_asset
 #: view:account.asset.category:0
@@ -566,7 +566,7 @@ msgstr "طريقة الأستهلاك"
 #. module: account_asset
 #: field:account.asset.depreciation.line,amount:0
 msgid "Current Depreciation"
-msgstr ""
+msgstr "الإهلاك الحالي"
 
 #. module: account_asset
 #: field:account.asset.asset,name:0
@@ -609,7 +609,7 @@ msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
-msgstr ""
+msgstr "اختر طريقة لحساب مبالغ بنود الإهلاك:\n* خطية: تحتسب بالمعادلة: القيمة الإجمالية / عدد الإهلاكات\n* متناقصة: تحتسب بالمعادلة: القيمة المتبقية × معامل الإهلاك"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_check:0
@@ -626,12 +626,12 @@ msgid ""
 "            so, match this analysis to your needs;\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p>\nمن هذا التقرير يمكنك أن تلقي نظرة عامة على كافة الإهلاكات.\nيمكنك كذلك استخدام شريط البحث لتخصيص تقارير الأصول\nوبالتالي استخراج التقارير التي تحتاجها بالضبط.\n</p>"
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
 msgid "Gross Value"
-msgstr ""
+msgstr "القيمة الإجمالية"
 
 #. module: account_asset
 #: field:account.asset.category,name:0
@@ -675,7 +675,7 @@ msgstr "إنشاء حركات الأصول"
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Add an internal note here..."
-msgstr ""
+msgstr "إضافة ملاحظة داخلية..."
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,sequence:0
