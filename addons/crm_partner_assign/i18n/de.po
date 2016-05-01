@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-08 15:14+0000\n"
-"PO-Revision-Date: 2016-01-16 11:11+0000\n"
+"PO-Revision-Date: 2016-04-25 13:55+0000\n"
 "Last-Translator: Ralf Hilgenstock <rh@dialoge.info>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-8/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,7 @@ msgid ""
 "PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
 "% endif\n"
 "            "
-msgstr ""
+msgstr "\n            \n<p>Hallo,</p>\n\n\n<p>Wir sind durch Interessenten Ihrer Region angesprochen worden. Daher wurden die folgenen Interessenten übertragen an ${ctx['partner_id'].name}:</p>\n\n<ol>\n% for lead in ctx['partner_leads']:\n     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Unbestimmter Betreff'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Ansprechpartner nicht festgelegt'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Land nicht festgelegt' }, ${lead.lead_id.email_from or 'Email nicht festgelegt'}, ${lead.lead_id.phone or ''} </li></br>\n% endfor\n</ol>\n\n% if ctx.get('partner_in_portal'):\n<p>Schauen Sie bitte in Ihr <a href=\"${object.get_portal_url()}\">Partner Portal</a> für Einzelheiten. Zu jedem Lead sind in der linken oberen Ecke zwei Schaltflächen, die Sie nutzen sollten nachdem Sie mit dem Lead Kontakt aufgenommen haben: \"Ich bin interessiert\" & \"Ich bin nicht interessiert\".</p>\n% else:\n<p>\n    Sie haben noch keinen Zugang zu unserem Portal. Bitte sprechen Sie \n    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'Ihren Benutzerverwalter %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'uns'} an.\n</p>\n% endif\n<p>Der Lead wird einem anderen Partner übermittelt, wenn Sie diesen nicht innerhalb von 20 Tagen ansprechen.</p>\n\n<p>Vielen Dank,</p>\n\n<pre>\n${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n</pre>\n% if not ctx['partner_id'].user_id:\nP.S.: Es sieht so aus, als wäre Ihnen kein Benutzerverwalter zugeordnet, sprechen Sie uns bitte an.\n% endif\n            "
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,nbr:0
