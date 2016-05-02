@@ -521,13 +521,14 @@ var KanbanView = View.extend({
 
     open_action: function (event) {
         var self = this;
-        var node_context = event.data.context || {};
-        var context = new data.CompoundContext(node_context);
-        context.set_eval_context({
-            active_id: event.target.id,
-            active_ids: [event.target.id],
-            active_model: this.model,
-        });
+        if (event.data.context) {
+            event.data.context = new data.CompoundContext(event.data.context)
+                .set_eval_context({
+                    active_id: event.target.id,
+                    active_ids: [event.target.id],
+                    active_model: this.model,
+                });
+        }
         this.do_execute_action(event.data, this.dataset, event.target.id).then(function () {
             self.reload_record(event.target);
         });
