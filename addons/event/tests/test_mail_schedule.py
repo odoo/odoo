@@ -56,11 +56,11 @@ class TestMailSchedule(TestEventCommon):
         # verify that subscription scheduler was auto-executed after each registration
         self.assertEqual(len(schedulers[0].mail_registration_ids), 2, 'event: incorrect number of mail scheduled date')
 
-        mails = self.env['mail.mail'].search([('subject', 'ilike', 'subscription'), ('date', '>=', datetime.datetime.strftime(now, tools.DEFAULT_SERVER_DATETIME_FORMAT))], order='date DESC', limit=3)
-        self.assertEqual(len(mails), 2, 'event: wrong number of subscription mail sent')
+        mails = self.env['mail.mail'].search([('subject', 'ilike', 'registration'), ('date', '>=', datetime.datetime.strftime(now, tools.DEFAULT_SERVER_DATETIME_FORMAT))], order='date DESC', limit=3)
+        self.assertEqual(len(mails), 2, 'event: wrong number of registration mail sent')
 
         for registration in schedulers[0].mail_registration_ids:
-            self.assertTrue(registration.mail_sent, 'event: wrongly confirmed mailing on subscription')
+            self.assertTrue(registration.mail_sent, 'event: wrongly confirmed mailing on registration')
 
         # check before event scheduler
         schedulers = self.EventMail.search([('event_id', '=', test_event.id), ('interval_type', '=', 'before_event')])

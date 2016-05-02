@@ -220,7 +220,7 @@ class WebsiteEventController(http.Controller):
     def _process_tickets_details(self, data):
         nb_register = int(data.get('nb_register-0', 0))
         if nb_register:
-            return [{'id': 0, 'name': 'Subscription', 'quantity': nb_register, 'price': 0}]
+            return [{'id': 0, 'name': 'Registration', 'quantity': nb_register, 'price': 0}]
         return []
 
     @http.route(['/event/<model("event.event"):event>/registration/new'], type='json', auth="public", methods=['POST'], website=True)
