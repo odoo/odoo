@@ -20,7 +20,7 @@ class res_partner(osv.osv):
     _columns = {
         'sale_order_count': fields.function(_sale_order_count, string='# of Sales Order', type='integer'),
         'sale_order_ids': fields.one2many('sale.order', 'partner_id', 'Sales Order'),
-        'sale_warn': fields.selection(WARNING_MESSAGE, 'Sales Order', help=WARNING_HELP, required=True),
+        'sale_warn': fields.selection(WARNING_MESSAGE, 'Sales Order', default='no-message', help=WARNING_HELP, required=True),
         'sale_warn_msg': fields.text('Message for Sales Order'),
     }
 
