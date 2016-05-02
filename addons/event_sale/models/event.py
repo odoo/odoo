@@ -16,7 +16,7 @@ class Event(models.Model):
         if not product:
             return self.env['event.event.ticket']
         return [{
-            'name': _('Subscription'),
+            'name': _('Registration'),
             'product_id': product.id,
             'price': 0,
         }]

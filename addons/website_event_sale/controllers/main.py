@@ -60,7 +60,7 @@ class WebsiteEventSaleController(WebsiteEventController):
         product = request.env.ref('event_sale.product_product_event', raise_if_not_found=False)
         if product:
             context['default_event_ticket_ids'] = [[0, 0, {
-                'name': _('Subscription'),
+                'name': _('Registration'),
                 'product_id': product.id,
                 'deadline': False,
                 'seats_max': 1000,
