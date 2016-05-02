@@ -37,20 +37,19 @@ So, that we can compare the theoretic delay and real delay.
     'website': 'https://www.odoo.com/page/manufacturing',
     'depends': ['mrp'],
     'data': [
-        'data/report_paperformat.xml',
+        'data/report_paperformat_data.xml',
         'security/ir.model.access.csv',
-        'mrp_operation_data.xml',
-        'mrp_operations_workflow.xml',
-        'mrp_operations_view.xml',
-        'mrp_operations_report.xml',
+        'data/mrp_operations_code_data.xml',
+        'data/mrp_operations_data_workflow.xml',
+        'data/mrp_operations_data_workflow_instance.xml',
+        'views/mrp_operations_views.xml',
+        'views/mrp_production_views.xml',
+        'report/mrp_operations_reports.xml',
         'report/mrp_workorder_analysis_view.xml',
-        'views/report_wcbarcode.xml',
-        'mrp_operations_workflow_instance.xml'
+        'report/mrp_operations_templates_barcode.xml',
     ],
-    'demo': [ 
-             'mrp_operations_demo.yml'
-    ],
-    'test': [ 
+    'demo': ['data/mrp_production_demo.yml'],
+    'test': [
         'test/workcenter_operations.yml',
     ],
     'installable': True,
