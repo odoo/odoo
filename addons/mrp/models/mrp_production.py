@@ -934,18 +934,43 @@ class MrpUnbuild(models.Model):
     def button_unbuild(self):
         self.ensure_one()
         self._make_unbuild_consume_line()
+        self._generate_moves()
         #Search quants that passed production order
+        move = self.consume_line_id
         if self.mo_id:
             main_finished_moves = self.mo_id.move_finished_ids.filtered(lambda x: x.product_id.id == self.mo_id.product_id.id)
-            quants_to_reserve = self.env['stock.quant'].search([('history_ids', 'in', [x.id for x in main_finished_moves]), 
-                                                                ('location_id', 'child_of', ''), 
-                                                                ('product_id', '', '')])
-        
-        
-        self._generate_moves()
+            domain = [('qty', '>', 0), ('history_ids', 'in', [x.id for x in main_finished_moves])]
+            qty = self.product_qty # Convert to qty on product UoM
+            quants = self.env['stock.quant'].quants_get_preferred_domain(qty, move, domain=domain, preferred_domain_list=[], lot_id=self.lot_id.id)
+        else:
+            quants = self.env['stock.quant'].quants_get_preferred_domain(qty, move, domain=domain, preferred_domain_list=[], lot_id=self.lot_id.id)
+        self.env['stock.quant'].quants_reserve(quants, move)
+#        self.consume_line_id.action_done()
+        if move.has_tracking != 'none':
+            if not self.lot_id.id:
+                raise UserError(_('Should have a lot for the finished product'))
+            self.env['stock.move.lots'].create({'move_id': move.id,
+                                                'lot_id': self.lot_id.id,
+                                                'quantity_done': move.product_uom_qty,
+                                                'quantity': move.product_uom_qty})
+        self.consume_line_id.move_validate()
+        original_quants = self.env['stock.quant']
+        for quant in self.consume_line_id.quant_ids:
+            original_quants |= quant.consumed_quant_ids
+        for produce_move in self.produce_line_ids:
+            if produce_move.has_tracking != 'none':
+                original = original_quants.filtered(lambda x: x.product_id.id == produce_move.product_id.id)
+                self.env['stock.move.lots'].create({'move_id': produce_move.id,
+                                                    'lot_id': original.lot_id.id,
+                                                    'quantity_done': produce_move.product_uom_qty,
+                                                    'quantity': produce_move.product_uom_qty,})
+        self.produce_line_ids.move_validate()
+        produced_quant_ids = self.env['stock.quant']
+        for move in self.produce_line_ids:
+            produced_quant_ids |= move.quant_ids
+        self.consume_line_id.quant_ids.write({'produced_quant_ids': [(6, 0, produced_quant_ids)]})
         # TODO : Need to assign quants which consumed at build product.
-        self.quant_move_rel()
-        self.consume_line_id.action_done()
+        #self.quant_move_rel()
         self.write({'state': 'done'})
 
 
