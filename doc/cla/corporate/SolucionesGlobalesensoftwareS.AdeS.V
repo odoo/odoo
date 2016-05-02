@@ -10,3 +10,4 @@ juanhernandez9 jose.hernandez@cedetecgrupomc.com https://github.com/juanhernande
 ragnheidur arturo.palmero@cedetecgrupomc.com https://github.com/ragnheidur
 CesarCedetec cesar.olvera@cedetecgrupomc.com https://github.com/CesarCedetec
 MauricioPiCa mauricio.pina@grupoceti.com https://github.com/MauricioPiCa
+
