@@ -7,7 +7,7 @@ import time
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
-from odoo.addons.procurement import procurement
+from odoo.addons.procurement.models import procurement
 from odoo.exceptions import UserError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_round, float_is_zero
