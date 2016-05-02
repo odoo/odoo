@@ -265,59 +265,6 @@
         action="mrp_production_wc_action_planning"
         sequence="2"/>
 
-    <!-- Operation codes -->
-
-    <record model="ir.ui.view" id="mrp_production_code_tree_view">
-        <field name="name">mrp.production.code.tree</field>
-        <field name="model">mrp_operations.operation.code</field>
-        <field name="arch" type="xml">
-            <tree string="Production Operation Code">
-                <field name="name"/>
-                <field name="code"/>
-                <field name="start_stop"/>
-            </tree>
-        </field>
-    </record>
-    <record model="ir.ui.view" id="mrp_production_code_form_view">
-        <field name="name">mrp.production.code.form</field>
-        <field name="model">mrp_operations.operation.code</field>
-        <field name="arch" type="xml">
-            <form string="Production Operation Code">
-                <group col="4">
-                    <field name="name"/>
-                    <field name="code"/>
-                    <field name="start_stop"/>
-                </group>
-            </form>
-        </field>
-    </record>
-
-    <record model="ir.actions.act_window" id="mrp_production_code_action">
-        <field name="name">Operation Codes</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">mrp_operations.operation.code</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="mrp_production_code_tree_view"/>
-    </record>
-
-    <!-- Operations -->
-
-    <record model="ir.ui.view" id="mrp_production_operation_tree_view">
-        <field name="name">mrp.production.operation.tree</field>
-        <field name="model">mrp_operations.operation</field>
-        <field name="arch" type="xml">
-            <tree string="Production Operation" editable="top">
-                <field name="production_id"/>
-                <field name="workcenter_id"/>
-                <field name="code_id"/>
-                <field name="date_start"/>
-                <field name="date_finished"/>
-                <field name="order_date"/>
-            </tree>
-        </field>
-    </record>
-
      <record id="graph_in_hrs_workcenter" model="ir.ui.view">
             <field name="name">graph.in.hrs.workcenter</field>
             <field name="model">mrp.production.workcenter.line</field>
@@ -328,37 +275,6 @@
                 </graph>
             </field>
         </record>
-
-    <record model="ir.actions.act_window" id="mrp_production_operation_action">
-        <field name="name">Operations</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">mrp_operations.operation</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,calendar,form</field>
-        <field name="view_id" ref="mrp_production_operation_tree_view"/>
-    </record>
-    <record id="mrp_production_reorder_form_view" model="ir.ui.view">
-        <field name="name">mrp.production.allow_reorder.form</field>
-        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
-        <field name="model">mrp.production</field>
-        <field name="arch" type="xml">
-            <field name="date_finished" position="after">
-                <field name="allow_reorder"/>
-            </field>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="operation_calendar_view">
-            <field name="name">mrp.perations.calendar</field>
-            <field name="model">mrp_operations.operation</field>
-            <field name="priority" eval="2"/>
-            <field name="arch" type="xml">
-                <calendar string="Calendar View" date_start="order_date" color="workcenter_id">
-                    <field name="date_start"/>
-                    <field name="date_finished"/>
-                </calendar>
-            </field>
-    </record>
 
 </data>
 </openerp>
