@@ -100,9 +100,9 @@
                             <label for="number_of_days_temp" string="Duration"/>
                             <div>
                                 <div attrs="{'invisible': [('type', '=', 'add')]}">
-                                    <field name="date_from" on_change="onchange_date_from(date_to, date_from)" attrs="{'required':[('type', '=', 'remove')]}" class="oe_inline"/>
+                                    <field name="date_from" on_change="onchange_date_from(date_to, date_from, employee_id, context)" attrs="{'required':[('type', '=', 'remove')]}" class="oe_inline"/>
                                     <label string="-" class="oe_inline"/>
-                                    <field name="date_to" on_change="onchange_date_to(date_to, date_from)"  attrs="{'required':[('type', '=', 'remove')]}" class="oe_inline"/>
+                                    <field name="date_to" on_change="onchange_date_to(date_to, date_from, employee_id, context)"  attrs="{'required':[('type', '=', 'remove')]}" class="oe_inline"/>
                                 </div>
                                 <div>
                                     <field name="number_of_days_temp" class="oe_inline"/> days
