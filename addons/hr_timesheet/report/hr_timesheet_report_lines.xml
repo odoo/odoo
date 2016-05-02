@@ -1,11 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
-        <record id="act_hr_timesheet_report" model="ir.actions.act_window">
+        <record id="act_hr_timesheet_line" model="ir.actions.act_window">
+            <field name="domain">[]</field> <!-- reset to empty -->
+            <field name="context">{}</field> <!-- reset to empty -->
             <field name="name">Activities</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_ids" eval="[
-                (0, False, {'view_mode': 'pivot', 'view_id': ref('hr_timesheet.view_hr_timesheet_line_pivot') }),
+                (0, False, {'view_mode': 'pivot' }),
                 (0, False, {'view_mode': 'tree', 'view_id': ref('hr_timesheet.hr_timesheet_line_tree')}),
                 (0, False, {'view_mode': 'form'})
             ]"/>
@@ -23,9 +24,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_timesheets_reports" name="Reports"
-            parent="timesheet_menu_root" sequence="99" groups="base.group_hr_manager"/>
-        <menuitem id="menu_hr_activity_analysis" parent="menu_timesheets_reports" action="act_hr_timesheet_report"
-            name="Activity Analysis"/>
+        <menuitem id="menu_hr_working_hours" parent="menu_timesheets_reports" action="act_hr_timesheet_line"
+            name="Activity Analysis (lines)"/>
     </data>
-</openerp>
+</odoo>
