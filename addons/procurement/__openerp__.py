@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
 {
-    'name' : 'Procurements',
-    'version' : '1.0',
+    'name': 'Procurements',
+    'version': '1.0',
     'website': 'https://www.odoo.com/page/manufacturing',
     'category' : 'Hidden',
     'depends' : ['base', 'product'],
