@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-04-29 16:13+0000\n"
+"PO-Revision-Date: 2016-05-01 11:05+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -122,7 +122,7 @@ msgstr "<span>Баланс каси</span>"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Last Closing Date</span>"
-msgstr "<span>Остання дата закриття</span>"
+msgstr "<span>Останнє закриття</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -227,7 +227,7 @@ msgstr "<strong>Разом без знижок</strong>"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
 msgid "<strong>No. Of Articles</strong>:<br/>"
-msgstr ""
+msgstr "<strong>К-сть одиниць</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
@@ -1376,7 +1376,7 @@ msgstr "Різниця між теоретичним та реальним ба�
 #: code:addons/point_of_sale/static/src/xml/pos.xml:139
 #, python-format
 msgid "Disc"
-msgstr ""
+msgstr "Зниж"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos_disc
@@ -1954,7 +1954,7 @@ msgstr "Сума рахунку"
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 #: selection:pos.order,state:0 selection:report.pos.order,state:0
 msgid "Invoiced"
-msgstr "Включено в рахунок"
+msgstr "В рахунку"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_invoice
@@ -2539,7 +2539,7 @@ msgstr "Деталі КТ"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
 msgid "POS Lines"
-msgstr "Рядки ПТ"
+msgstr "Список продажу через КТ"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_line_form
@@ -2737,14 +2737,14 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:472
 #, python-format
 msgid "Please select a payment method."
-msgstr ""
+msgstr "Будь ласка, оберіть спосіб оплати."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:1875
 #, python-format
 msgid "Please select the Customer"
-msgstr ""
+msgstr "Будь ласка, оберіть клієнта"
 
 #. module: point_of_sale
 #: model:stock.picking.type,name:point_of_sale.picking_type_posout
@@ -2844,7 +2844,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:point_of_sale.product_pos_category_action
 #: model:ir.ui.menu,name:point_of_sale.menu_product_pos_category
 msgid "Pos Product Categories"
-msgstr ""
+msgstr "Категорії товарів КТ"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_confirm
@@ -3107,7 +3107,7 @@ msgstr "Ресторан: активувати керування столами
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Resume"
-msgstr "Резюме"
+msgstr "Продовжити"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1075
@@ -3408,7 +3408,7 @@ msgstr "Позначити як застарілий"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "Set to Inactive"
-msgstr "Зробити невктивним"
+msgstr "Зробити неактивним"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_global_settings
@@ -3670,7 +3670,7 @@ msgstr "ІПН"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_tax_ids_after_fiscal_position
 #: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
 msgid "Taxes"
-msgstr "Taxes"
+msgstr "Податки"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3696,7 +3696,7 @@ msgstr "шаблон користувача для створення корис
 #: code:addons/point_of_sale/static/src/xml/pos.xml:490
 #, python-format
 msgid "Tendered"
-msgstr ""
+msgstr "Оплачено"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1276
@@ -4044,7 +4044,7 @@ msgstr "Сьогодні"
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_payment_report
 msgid "Today's Payment"
-msgstr "Сьогоднішній платіж"
+msgstr "Сьогоднішні платежі"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_payment
@@ -4232,7 +4232,7 @@ msgstr "Підтвердити"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Validate Closing & Post Entries"
-msgstr ""
+msgstr "Підтвердити та зробити проведення"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.partner_product_6
@@ -4392,7 +4392,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/screens.js:1876
 #, python-format
 msgid "You need to select the customer before you can invoice an order."
-msgstr ""
+msgstr "Ви повинні обрати клієнта перед тим, як виставляти йому рахунок."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:491
@@ -4455,7 +4455,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1098
 #, python-format
 msgid "at"
-msgstr "Дата"
+msgstr "за"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_barcode_rule
@@ -4526,7 +4526,7 @@ msgstr "для замовлення"
 #: code:addons/point_of_sale/point_of_sale.py:171
 #, python-format
 msgid "not used"
-msgstr "не використано"
+msgstr "не використовується"
 
 #. module: point_of_sale
 #. openerp-web
