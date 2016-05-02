@@ -1,33 +1,32 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv
+from odoo import api, models
 
 
-class mrp_production(osv.osv):
+class Production(models.Model):
     _description = 'Production'
-    _inherit= 'mrp.production'
+    _inherit = 'mrp.production'
 
-
-    def action_confirm(self, cr, uid, ids, context=None):
+    @api.multi
+    def action_confirm(self):
         """ Confirms production order and calculates quantity based on subproduct_type.
         @return: Newly generated picking Id.
         """
-        move_obj = self.pool.get('stock.move')
-        picking_id = super(mrp_production,self).action_confirm(cr, uid, ids, context=context)
-        product_uom_obj = self.pool.get('product.uom')
-        for production in self.browse(cr, uid, ids):
-            source = production.product_id.property_stock_production.id
+        Move = self.env['stock.move']
+        picking_id = super(Production, self).action_confirm()
+        UoM = self.env['product.uom']
+        for production in self:
             if not production.bom_id:
                 continue
+            source = production.product_id.property_stock_production.id
             for sub_product in production.bom_id.sub_products:
-                product_uom_factor = product_uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, production.bom_id.product_uom.id)
+                product_uom_factor = UoM._compute_qty_obj(production.product_uom, production.product_qty, production.bom_id.product_uom)
                 qty1 = sub_product.product_qty
-                if sub_product.subproduct_type == 'variable':
-                    if production.product_qty:
-                        qty1 *= product_uom_factor / (production.bom_id.product_qty or 1.0)
+                if sub_product.subproduct_type == 'variable' and production.product_qty:
+                    qty1 *= product_uom_factor / (production.bom_id.product_qty or 1.0)
                 data = {
-                    'name': 'PROD:'+production.name,
+                    'name': 'PROD:%s' % production.name,
                     'date': production.date_planned,
                     'product_id': sub_product.product_id.id,
                     'product_uom_qty': qty1,
@@ -39,12 +38,12 @@ class mrp_production(osv.osv):
                     'origin': production.name,
                     'subproduct_id': sub_product.id
                 }
-                move_id = move_obj.create(cr, uid, data, context=context)
-                move_obj.action_confirm(cr, uid, [move_id], context=context)
-
+                move = Move.create(data)
+                move.action_confirm()
         return picking_id
 
-    def _get_subproduct_factor(self, cr, uid, move, context=None):
+    @api.model
+    def _get_subproduct_factor(self, move):
         """Compute the factor to compute the quantity of products to produce. By default,
             it's always equal to the quantity encoded in the production order or the production wizard, but with
             the module mrp_byproduct installed it can differ for byproducts having type 'variable'.
@@ -56,16 +55,17 @@ class mrp_production(osv.osv):
             if subproduct_record.bom_id.product_qty:
                 subproduct_factor = subproduct_record.product_qty / subproduct_record.bom_id.product_qty
                 return subproduct_factor
-        return super(mrp_production, self)._get_subproduct_factor(cr, uid, move, context=context)
+        return super(Production, self)._get_subproduct_factor(move)
 
-    def _calculate_produce_line_qty(self, cr, uid, move, quantity, context=None):
+    @api.model
+    def _calculate_produce_line_qty(self, move, quantity):
         """ Compute the quantity and remainig quantity of products to produce.
         :param move: stock.move record that needs to be produced, identify the product to produce.
         :param quantity: quantity to produce, in the uom of the production order.
         :return: The quantity and remaining quantity of product produce.
         """
         if move.subproduct_id.subproduct_type == 'variable':
-            subproduct_factor = self._get_subproduct_factor(cr, uid, move, context=context)
+            subproduct_factor = self._get_subproduct_factor(move)
             # Needed when producing more than maximum quantity
             qty = min(subproduct_factor * quantity, move.product_qty)
             remaining_qty = subproduct_factor * quantity - qty
@@ -73,4 +73,4 @@ class mrp_production(osv.osv):
         elif move.subproduct_id.subproduct_type == 'fixed':
             return move.product_qty, 0
         # no subproduct
-        return super(mrp_production, self)._calculate_produce_line_qty(cr, uid, move, quantity, context=context)
+        return super(Production, self)._calculate_produce_line_qty(move, quantity)
