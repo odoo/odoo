@@ -1023,7 +1023,9 @@ var ClientListScreenWidget = ScreenWidget.extend({
         if (this.editing_client) {
             this.$('.detail.barcode').val(code.code);
         } else if (this.pos.db.get_partner_by_barcode(code.code)) {
-            this.display_client_details('show',this.pos.db.get_partner_by_barcode(code.code));
+            var partner = this.pos.db.get_partner_by_barcode(code.code);
+            this.new_client = partner;
+            this.display_client_details('show', partner);
         }
     },
     perform_search: function(query, associate_result){
