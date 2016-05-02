@@ -17,6 +17,8 @@ from openerp.exceptions import UserError
 # unit_per_cycle : how many units are produced for one cycle
 
 class mrp_production_workcenter_line(osv.osv):
+    _inherit = 'mrp.production.workcenter.line'
+    _order = "sequence, date_planned"
 
     def _get_date_end(self, cr, uid, ids, field_name, arg, context=None):
         """ Finds ending date.
@@ -74,9 +76,6 @@ class mrp_production_workcenter_line(osv.osv):
             res.append(('id', 'in', ids))
 
         return res
-
-    _inherit = 'mrp.production.workcenter.line'
-    _order = "sequence, date_planned"
 
     _columns = {
        'state': fields.selection([('draft','Draft'),('cancel','Cancelled'),('pause','Pending'),('startworking', 'In Progress'),('done','Finished')],'Status', readonly=True, copy=False,
