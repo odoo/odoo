@@ -93,7 +93,7 @@ class QWeb(models.AbstractModel):
             if method.startswith('render_'):
                 _logger.warning("Method '%s' found in ir.qweb, please remove it." % method)
 
-        return template_function(qwebcontext).encode('utf-8')
+        return template_function(qwebcontext)
 
     def get_field_for(self, field_type, cr=None, uid=None, context=None):
         """ returns a :class:`~openerp.models.Model` used to render a

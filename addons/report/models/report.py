@@ -128,7 +128,7 @@ class Report(osv.Model):
                 'doc_model': report.model,
                 'docs': docs,
             }
-            return self.render(cr, uid, [], report.report_name, docargs, context=context)
+            return self.render(cr, uid, [], report.report_name, docargs, context=context).encode('utf-8')
 
     @api.v8
     def get_html(self, records, report_name, data=None):
@@ -162,8 +162,6 @@ class Report(osv.Model):
         # the html version.
         if isinstance(cr, TestCursor):
             return html
-
-        html = html.decode('utf-8')  # Ensure the current document is utf-8 encoded.
 
         # Get the ir.actions.report.xml record we are working on.
         report = self._get_report_from_name(cr, uid, report_name)
