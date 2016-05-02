@@ -1726,6 +1726,12 @@ class MailThread(models.AbstractModel):
         if author_id is None:  # keep False values
             author_id = self.env['mail.message']._get_default_author().id
 
+        author = self.env['res.partner'].browse(author_id)
+        if self.env['mail.blacklist'].sudo().search_count([('partner_id', '=', author_id)]) or \
+                    self.env['mail.blacklist'].sudo().search_count([('partner_id.email', 'ilike', author.email)]):
+            _logger.warning("Blacklisted author '%s'" % author.email)
+            return False
+
         # 1: Handle content subtype: if plaintext, converto into HTML
         if content_subtype == 'plaintext':
             body = tools.plaintext2html(body)
