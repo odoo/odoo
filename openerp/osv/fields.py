@@ -630,20 +630,21 @@ class binary(_column):
             ('res_field', '=', name),
             ('res_id', '=', id),
         ])
-        if value:
-            if att:
-                att.write({'datas': value})
+        with att.env.norecompute():
+            if value:
+                if att:
+                    att.write({'datas': value})
+                else:
+                    att.create({
+                        'name': name,
+                        'res_model': obj._name,
+                        'res_field': name,
+                        'res_id': id,
+                        'type': 'binary',
+                        'datas': value,
+                    })
             else:
-                att.create({
-                    'name': name,
-                    'res_model': obj._name,
-                    'res_field': name,
-                    'res_id': id,
-                    'type': 'binary',
-                    'datas': value,
-                })
-        else:
-            att.unlink()
+                att.unlink()
         return []
 
 class selection(_column):
