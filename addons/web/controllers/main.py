@@ -32,7 +32,7 @@ except ImportError:
 
 import openerp
 import openerp.modules.registry
-from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
+from openerp.addons.base.ir.ir_qweb import AssetsBundle
 from openerp.modules import get_resource_path
 from openerp.tools import topological_sort
 from openerp.tools.translate import _

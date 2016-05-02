@@ -10,7 +10,7 @@ from openerp.http import request
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
 from openerp.exceptions import ValidationError
-from openerp.addons.base.ir.ir_qweb import nl2br
+from openerp.addons.base.ir.ir_qweb.fields import nl2br
 
 class WebsiteForm(http.Controller):
 

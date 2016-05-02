@@ -88,7 +88,7 @@
                                 <td class="text-right" style="padding-bottom: 32px"><strong>Subtotal:</strong></td>
                                 <td class="text-right" style="padding-bottom: 32px">
                                     <t t-set="subtotal" t-value="sum(line.price_subtotal for line in layout_category['lines'])"/>
-                                    <strong data-id="total_amount" t-esc="subtotal" t-esc-options='{"widget": "monetary","display_currency": "quotation.pricelist_id.currency_id"}'/>
+                                    <strong data-id="total_amount" t-esc="format(subtotal, 'monetary', quotation.pricelist_id.currency_id)"/>
                                 </td>
                                 <td></td>
                             </tr>

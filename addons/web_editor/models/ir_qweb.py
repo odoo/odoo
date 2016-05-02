@@ -6,6 +6,7 @@ as well as render a few fields differently.
 Also, adds methods to convert values back to openerp models.
 """
 
+import ast
 import cStringIO
 import datetime
 import itertools
@@ -22,6 +23,8 @@ from dateutil import parser
 from lxml import etree, html
 from PIL import Image as I
 import openerp.modules
+
+from odoo import api
 
 import openerp
 from openerp.osv import orm, fields
@@ -43,20 +46,26 @@ class QWeb(orm.AbstractModel):
 
     re_remove_spaces = re.compile('\s+')
 
-    def render_tag_snippet(self, element, template_attributes, generated_attributes, qwebcontext):
-        cr = qwebcontext['request'].cr
-        uid = qwebcontext['request'].uid
-        view_reg = self.pool['ir.ui.view']
-        page_xmlid = self.eval_format(template_attributes["snippet"], qwebcontext)
-        view = view_reg.browse(cr, uid, view_reg.search(cr, uid, [('key', '=', page_xmlid)]))
-        generated_attributes += " " + "".join([
-            'data-oe-name="%s"' % view.name,
-            'data-oe-type="snippet"',
-            'data-oe-thumbnail="%s"' % template_attributes.get('thumbnail', "oe-thumbnail")])
+    def _compile_directive_snippet(self, el, ast_calls):
+        el.set('t-call', el.attrib.pop('t-snippet'))
+        qwebcontext = ir_qweb.QWebContext(self.env, {})
+        name = self.env['ir.ui.view'].search([('key', '=', el.attrib.get('t-call'))]).display_name
+        thumbnail = el.attrib.pop('t-thumbnail', "oe-thumbnail")
+        div = u'<div name="%s" data-oe-type="snippet" data-oe-thumbnail="%s">' % (escape(ir_qweb.unicodifier(name)), escape(ir_qweb.unicodifier(thumbnail)))
+        return [self._append(ast.Str(div))] + self._compile_node(el, ast_calls) + [self._append(ast.Str(u'</div>'))]
 
-        template_attributes['call'] = template_attributes['snippet']
-        return self.render_tag_call(element, template_attributes, generated_attributes, qwebcontext)
+    def _compile_directive_tag(self, el, ast_calls):
+        if el.get('t-placeholder'):
+            el.set('t-att-placeholder', el.attrib.pop('t-placeholder'))
+        return super(QWeb, self)._compile_directive_tag(el, ast_calls)
 
+    def _directives_eval_order(self):
+        directives = super(QWeb, self)._directives_eval_order()
+        directives.insert(directives.index('call'), 'snippet')
+        return directives
+
+    def _nondirectives_ignore(self):
+        return {'t-thumbnail'} | super(QWeb, self)._nondirectives_ignore()
 
 #------------------------------------------------------
 # QWeb fields
@@ -67,36 +76,28 @@ class Field(orm.AbstractModel):
     _name = 'ir.qweb.field'
     _inherit = 'ir.qweb.field'
 
-    def attributes(self, cr, uid, field_name, record, options,
-                   source_element, g_att, t_att, qweb_context, context=None):
-        if options is None:
-            options = {}
-        field = record._model._fields[field_name]
-        attrs = []
+    @api.model
+    def attributes(self, record, field_name, options, qwebcontext):
+        attrs = super(Field, self).attributes(record, field_name, options, qwebcontext)
+        field = record._fields[field_name]
 
-        placeholder = options.get('placeholder') \
-                   or source_element.get('placeholder') \
-                   or getattr(field, 'placeholder', None)
+        placeholder = options.get('placeholder') or getattr(field, 'placeholder', None)
         if placeholder:
-            attrs.append(('placeholder', placeholder))
+            attrs['placeholder'] = placeholder
 
-        if context and context.get('edit_translations') and context.get('translatable') and field.type in ('char', 'text') and field.translate:
+        if options['translate'] and field.type in ('char', 'text'):
             name = "%s,%s" % (record._model._name, field_name)
-            domain = [('name', '=', name), ('res_id', '=', record.id), ('type', '=', 'model'), ('lang', '=', context.get('lang'))]
+            domain = [('name', '=', name), ('res_id', '=', record.id), ('type', '=', 'model'), ('lang', '=', qwebcontext.env.context.get('lang'))]
             translation = record.env['ir.translation'].search(domain, limit=1)
-            attrs.append(('data-oe-translation-state', translation and translation.state or 'to_translate'))
+            attrs['data-oe-translation-state'] = translation and translation.state or 'to_translate'
 
-        return itertools.chain(
-            super(Field, self).attributes(cr, uid, field_name, record, options,
-                                          source_element, g_att, t_att,
-                                          qweb_context, context=context),
-            attrs
-        )
+        return attrs
 
     def value_from_string(self, value):
         return value
 
-    def from_html(self, cr, uid, model, field, element, context=None):
+    @api.model
+    def from_html(self, model, field, element):
         return self.value_from_string(element.text_content().strip())
 
 
@@ -111,8 +112,9 @@ class Float(orm.AbstractModel):
     _name = 'ir.qweb.field.float'
     _inherit = 'ir.qweb.field.float'
 
-    def from_html(self, cr, uid, model, field, element, context=None):
-        lang = self.user_lang(cr, uid, context=context)
+    @api.model
+    def from_html(self, model, field, element):
+        lang = self.user_lang()
 
         value = element.text_content().strip()
 
@@ -124,32 +126,26 @@ class ManyToOne(orm.AbstractModel):
     _name = 'ir.qweb.field.many2one'
     _inherit = 'ir.qweb.field.many2one'
 
-    def attributes(self, cr, uid, field_name, record, options,
-                   source_element, g_att, t_att, qweb_context,
-                   context=None):
-        attrs = super(ManyToOne, self).attributes(
-            cr, uid, field_name, record, options, source_element, g_att, t_att,
-            qweb_context, context=context)
+    @api.model
+    def attributes(self, record, field_name, options, qwebcontext):
+        attrs = super(ManyToOne, self).attributes(record, field_name, options, qwebcontext)
         many2one = getattr(record, field_name)
         if many2one:
-            data = [('data-oe-many2one-id', many2one.id),
-                    ('data-oe-many2one-model', many2one._name)]
-            return itertools.chain(attrs, data)
-        else:
-            return attrs
+            attrs['data-oe-many2one-id'] = many2one.id
+            attrs['data-oe-many2one-model'] = many2one._name
+        return attrs
 
-    def from_html(self, cr, uid, model, field, element, context=None):
-        Model = self.pool[element.get('data-oe-model')]
-        M2O = self.pool[field.comodel_name]
-        field_name = element.get('data-oe-field')
+    @api.model
+    def from_html(self, model, field, element):
+        Model = self.env[element.get('data-oe-model')]
         id = int(element.get('data-oe-id'))
+        M2O = self.env[field.comodel_name]
+        field_name = element.get('data-oe-field')
         many2one_id = int(element.get('data-oe-many2one-id'))
-
-        if many2one_id and M2O.exists(cr, uid, [many2one_id]):
+        record = many2one_id and M2O.browse(many2one_id)
+        if record and record.exists():
             # save the new id of the many2one
-            Model.write(cr, uid, [id], {
-                field_name: many2one_id
-            }, context=context)
+            Model.browse(id).write({field_name: many2one_id})
 
         # not necessary, but might as well be explicit about it
         return None
@@ -159,22 +155,18 @@ class Contact(orm.AbstractModel):
     _name = 'ir.qweb.field.contact'
     _inherit = 'ir.qweb.field.contact'
 
-    def attributes(self, cr, uid, field_name, record, options,
-                   source_element, g_att, t_att, qweb_context,
-                   context=None):
-        attrs = super(Contact, self).attributes(
-            cr, uid, field_name, record, options, source_element, g_att, t_att,
-            qweb_context, context=context)
-        if getattr(record, field_name):
-            return itertools.chain(attrs, [('data-oe-contact-options', json.dumps(options))])
-        else:
-            return attrs
+    @api.model
+    def attributes(self, record, field_name, options, qwebcontext):
+        attrs = super(Contact, self).attributes(record, field_name, options, qwebcontext)
+        attrs['data-oe-contact-options'] = json.dumps(options)
+        return attrs
 
     # helper to call the rendering of contact field
-    def get_record_to_html(self, cr, uid, ids, options=None, context=None):
-        node = self.record_to_html(cr, uid, 'record', {
-            'record': self.pool['res.partner'].browse(cr, uid, ids[0], context=context)},
-            options=options, context=context)
+    @api.model
+    def get_record_to_html(self, ids, options=None):
+        node = self.record_to_html('record', {
+            'record': self.env['res.partner'].browse(ids[0])},
+            options=options)
         return node and node.__html__()
 
 
@@ -193,15 +185,14 @@ class Date(orm.AbstractModel):
     _name = 'ir.qweb.field.date'
     _inherit = 'ir.qweb.field.date'
 
-    def attributes(self, cr, uid, field_name, record, options,
-                   source_element, g_att, t_att, qweb_context,
-                   context=None):
-        attrs = super(Date, self).attributes(
-            cr, uid, field_name, record, options, source_element, g_att, t_att,
-            qweb_context, context=None)
-        return itertools.chain(attrs, [('data-oe-original', record[field_name])])
+    @api.model
+    def attributes(self, record, field_name, options, qwebcontext):
+        attrs = super(Date, self).attributes(record, field_name, options, qwebcontext)
+        attrs['data-oe-original'] = record[field_name]
+        return attrs
 
-    def from_html(self, cr, uid, model, field, element, context=None):
+    @api.model
+    def from_html(self, model, field, element):
         value = element.text_content().strip()
         if not value:
             return False
@@ -214,9 +205,9 @@ class DateTime(orm.AbstractModel):
     _name = 'ir.qweb.field.datetime'
     _inherit = 'ir.qweb.field.datetime'
 
-    def attributes(self, cr, uid, field_name, record, options,
-                   source_element, g_att, t_att, qweb_context,
-                   context=None):
+    @api.model
+    def attributes(self, record, field_name, options, qwebcontext):
+        attrs = super(DateTime, self).attributes(record, field_name, options, qwebcontext)
         value = record[field_name]
         if isinstance(value, basestring):
             value = datetime.datetime.strptime(
@@ -224,19 +215,13 @@ class DateTime(orm.AbstractModel):
         if value:
             # convert from UTC (server timezone) to user timezone
             value = fields.datetime.context_timestamp(
-                cr, uid, timestamp=value, context=context)
+                self._cr, self._uid, timestamp=value, context=qwebcontext.context)
             value = value.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        attrs['data-oe-original'] = value
+        return attrs
 
-        attrs = super(DateTime, self).attributes(
-            cr, uid, field_name, record, options, source_element, g_att, t_att,
-            qweb_context, context=None)
-        return itertools.chain(attrs, [
-            ('data-oe-original', value)
-        ])
-
-    def from_html(self, cr, uid, model, field, element, context=None):
-        if context is None:
-            context = {}
+    @api.model
+    def from_html(self, model, field, element):
         value = element.text_content().strip()
         if not value:
             return False
@@ -245,8 +230,7 @@ class DateTime(orm.AbstractModel):
         dt = parser.parse(value)
 
         # convert back from user's timezone to UTC
-        tz_name = context.get('tz') \
-            or self.pool['res.users'].read(cr, openerp.SUPERUSER_ID, uid, ['tz'], context=context)['tz']
+        tz_name = self.env.context.get('tz') or self.env.user.tz
         if tz_name:
             try:
                 user_tz = pytz.timezone(tz_name)
@@ -268,7 +252,8 @@ class Text(orm.AbstractModel):
     _name = 'ir.qweb.field.text'
     _inherit = 'ir.qweb.field.text'
 
-    def from_html(self, cr, uid, model, field, element, context=None):
+    @api.model
+    def from_html(self, model, field, element):
         return html_to_text(element)
 
 
@@ -276,10 +261,10 @@ class Selection(orm.AbstractModel):
     _name = 'ir.qweb.field.selection'
     _inherit = 'ir.qweb.field.selection'
 
-    def from_html(self, cr, uid, model, field, element, context=None):
-        record = self.browse(cr, uid, [], context=context)
+    @api.model
+    def from_html(self, model, field, element):
         value = element.text_content().strip()
-        selection = field.get_description(record.env)['selection']
+        selection = field.get_description(self.env)['selection']
         for k, v in selection:
             if isinstance(v, str):
                 v = ustr(v)
@@ -294,7 +279,8 @@ class HTML(orm.AbstractModel):
     _name = 'ir.qweb.field.html'
     _inherit = 'ir.qweb.field.html'
 
-    def from_html(self, cr, uid, model, field, element, context=None):
+    @api.model
+    def from_html(self, model, field, element):
         content = []
         if element.text:
             content.append(element.text)
@@ -313,20 +299,13 @@ class Image(orm.AbstractModel):
     _name = 'ir.qweb.field.image'
     _inherit = 'ir.qweb.field.image'
 
-    def to_html(self, cr, uid, field_name, record, options,
-                source_element, t_att, g_att, qweb_context, context=None):
-        assert source_element.tag != 'img',\
+    @api.model
+    def record_to_html(self, record, field_name, options, qwebcontext=None):
+        assert options['tagName'] != 'img',\
             "Oddly enough, the root tag of an image field can not be img. " \
             "That is because the image goes into the tag, or it gets the " \
             "hose again."
 
-        return super(Image, self).to_html(
-            cr, uid, field_name, record, options,
-            source_element, t_att, g_att, qweb_context, context=context)
-
-    def record_to_html(self, cr, uid, field_name, record, options=None, context=None):
-        if options is None:
-            options = {}
         aclasses = ['img', 'img-responsive'] + options.get('class', '').split()
         classes = ' '.join(itertools.imap(escape, aclasses))
 
@@ -350,11 +329,12 @@ class Image(orm.AbstractModel):
 
         img = '<img class="%s" src="%s" style="%s"%s/>' % \
             (classes, src, options.get('style', ''), ' alt="%s"' % alt if alt else '')
-        return ir_qweb.HTMLSafe(img)
+        return ir_qweb.unicodifier(img)
 
     local_url_re = re.compile(r'^/(?P<module>[^]]+)/static/(?P<rest>.+)$')
 
-    def from_html(self, cr, uid, model, field, element, context=None):
+    @api.model
+    def from_html(self, model, field, element):
         url = element.find('img').get('src')
 
         url_object = urlparse.urlsplit(url)
@@ -370,7 +350,7 @@ class Image(orm.AbstractModel):
                 model = query.get('model', fragments[3])
                 oid = query.get('id', fragments[4].split('_')[0])
                 field = query.get('field', fragments[5])
-            item = self.pool[model].browse(cr, uid, int(oid), context=context)
+            item = self.env[model].browse(int(oid))
             return item[field]
 
         if self.local_url_re.match(url_object.path):
@@ -432,8 +412,9 @@ class Monetary(orm.AbstractModel):
     _name = 'ir.qweb.field.monetary'
     _inherit = 'ir.qweb.field.monetary'
 
-    def from_html(self, cr, uid, model, field, element, context=None):
-        lang = self.user_lang(cr, uid, context=context)
+    @api.model
+    def from_html(self, model, field, element):
+        lang = self.user_lang()
 
         value = element.find('span').text.strip()
 
@@ -445,15 +426,14 @@ class Duration(orm.AbstractModel):
     _name = 'ir.qweb.field.duration'
     _inherit = 'ir.qweb.field.duration'
 
-    def attributes(self, cr, uid, field_name, record, options,
-                   source_element, g_att, t_att, qweb_context,
-                   context=None):
-        attrs = super(Duration, self).attributes(
-            cr, uid, field_name, record, options, source_element, g_att, t_att,
-            qweb_context, context=None)
-        return itertools.chain(attrs, [('data-oe-original', record[field_name])])
+    @api.model
+    def attributes(self, record, field_name, options, qwebcontext):
+        attrs = super(Duration, self).attributes(record, field_name, options, qwebcontext)
+        attrs['data-oe-original'] = record[field_name]
+        return attrs
 
-    def from_html(self, cr, uid, model, field, element, context=None):
+    @api.model
+    def from_html(self, model, field, element):
         value = element.text_content().strip()
 
         # non-localized value

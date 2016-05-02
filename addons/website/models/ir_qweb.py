@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from openerp.addons.web.http import request
 from openerp.osv import orm
+import ast
+from openerp.addons.base.ir.ir_qweb import utils
 
 
 class QWeb(orm.AbstractModel):
@@ -26,24 +28,46 @@ class QWeb(orm.AbstractModel):
         'style',
     ]
 
-    def render_attribute(self, element, name, value, qwebcontext):
+    def _website_build_attribute(self, tagName, name, value, qwebcontext):
         context = qwebcontext.context or {}
         if not context.get('rendering_bundle'):
-            if name == self.URL_ATTRS.get(element.tag) and qwebcontext.get('url_for'):
-                value = qwebcontext.get('url_for')(value)
-            elif request and getattr(request, 'website', None) and request.website.cdn_activated and (name == self.URL_ATTRS.get(element.tag) or name == self.CDN_TRIGGERS.get(element.tag)):
-                value = request.website.get_cdn_url(value)
-        return super(QWeb, self).render_attribute(element, name, value, qwebcontext)
+            if name == self.URL_ATTRS.get(tagName) and qwebcontext.get('url_for'):
+                return qwebcontext.get('url_for')(value or '')
+            elif request and request.website and request.website.cdn_activated and (name == self.URL_ATTRS.get(tagName) or name == self.CDN_TRIGGERS.get(tagName)):
+                return request.website.get_cdn_url(value or '')
+        return value
 
-    def render_text(self, text, element, qwebcontext):
-        compress = request and not request.debug and getattr(request, 'website', None) and request.website.compress_html
-        if compress and element.tag not in self.PRESERVE_WHITESPACE:
-            text = self.re_remove_spaces.sub(' ', text)
-        return super(QWeb, self).render_text(text, element, qwebcontext)
+    def _wrap_build_attributes(self, el, items):
+        url_att = self.URL_ATTRS.get(el.tag)
+        cdn_att = self.CDN_TRIGGERS.get(el.tag)
+        for item in items:
+            if isinstance(item, tuple) and (item[0] == url_att or item[0] == cdn_att):
+                items[items.index(item)] = (item[0], ast.Call(
+                    func=ast.Attribute(
+                        value=ast.Name(id='self', ctx=ast.Load()),
+                        attr='_website_build_attribute',
+                        ctx=ast.Load()
+                    ),
+                    args=[
+                        ast.Str(el.tag),
+                        ast.Str(item[0]),
+                        item[1],
+                        ast.Name(id='qwebcontext', ctx=ast.Load()),
+                    ], keywords=[],
+                    starargs=None, kwargs=None
+                ))
+        return items
 
-    def render_tail(self, tail, element, qwebcontext):
-        compress = request and not request.debug and getattr(request, 'website', None) and request.website.compress_html
-        if compress and element.getparent().tag not in self.PRESERVE_WHITESPACE:
-            # No need to recurse because those tags children are not html5 parser friendly
-            tail = self.re_remove_spaces.sub(' ', tail.rstrip())
-        return super(QWeb, self).render_tail(tail, element, qwebcontext)
+    def _serialize_static_attributes(self, el):
+        items = super(QWeb, self)._serialize_static_attributes(el)
+        return self._wrap_build_attributes(el, items)
+
+    def _compile_dynamic_attributes(self, el):
+        items = super(QWeb, self)._compile_dynamic_attributes(el)
+        return self._wrap_build_attributes(el, items)
+
+    def _compile_dynamic_att(self, tagName, atts, qwebcontext):
+        atts = super(QWeb, self)._compile_dynamic_att(tagName, atts, qwebcontext)
+        for name, value in atts.iteritems():
+            atts[name] = self.build_attribute(tagName, name, value, qwebcontext)
+        return atts

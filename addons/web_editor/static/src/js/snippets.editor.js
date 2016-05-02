@@ -213,8 +213,8 @@ var BuildingBlock = Widget.extend({
             }).on('click', function () {$(this).tooltip('hide');});
 
         // t-snippet
-        $html.find('[data-oe-type="snippet"][data-oe-name]').each(function () {
-            var $div = $('<div/>').insertAfter(this).append(this).attr('name', $(this).data('oe-name'));
+        $html.find('[data-oe-type="snippet"]').each(function () {
+            $(this).children().attr('data-oe-type', "snippet").attr('data-oe-thumbnail', $(this).data('oe-thumbnail'));
         });
         // end
 

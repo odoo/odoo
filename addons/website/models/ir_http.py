@@ -11,7 +11,7 @@ import werkzeug.utils
 
 import openerp
 from openerp.addons.base import ir
-from openerp.addons.base.ir import ir_qweb
+from odoo.exceptions import QWebException
 from openerp.addons.website.models.website import slug, url_for, _UNSLUG_RE
 from openerp.http import request
 from openerp.tools import config
@@ -247,7 +247,7 @@ class ir_http(orm.AbstractModel):
                     # if parent excplicitely returns a plain response, then we don't touch it
                     return response
             except Exception, e:
-                if 'werkzeug' in config['dev_mode'] and (not isinstance(exception, ir_qweb.QWebException) or not exception.qweb.get('cause')):
+                if 'werkzeug' in config['dev_mode'] and (not isinstance(exception, QWebException) or not exception.qweb.get('cause')):
                     raise
                 exception = e
 
@@ -267,7 +267,7 @@ class ir_http(orm.AbstractModel):
             if isinstance(exception, openerp.exceptions.AccessError):
                 code = 403
 
-            if isinstance(exception, ir_qweb.QWebException):
+            if isinstance(exception, QWebException):
                 values.update(qweb_exception=exception)
                 if isinstance(exception.qweb.get('cause'), openerp.exceptions.AccessError):
                     code = 403

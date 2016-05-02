@@ -106,7 +106,7 @@
                                         <div class="col-sm-9">
                                             <span name="form_amount" class="form-control" t-esc="amount"/>
                                             <!--
-                                            <span name="form_amount" class="form-control" t-esc="amount" t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                                            <span name="form_amount" class="form-control" t-esc="format(amount, 'monetary', currency)"/>
                                             -->
                                         </div>
                                     </div>
@@ -149,7 +149,7 @@
                                 <div class="form-group">
                                     <label for="form_amount" class="col-sm-3 control-label">Amount</label>
                                     <div class="col-sm-9">
-                                        <span name="form_amount" class="form-control" t-esc="tx.amount" t-esc-options='{"widget": "monetary", "display_currency": "tx.currency_id"}'/>
+                                        <span name="form_amount" class="form-control" t-esc="format(tx.amount, 'monetary', tx.currency_id)"/>
                                     </div>
                                 </div>
                                 <div class="col-sm-12">

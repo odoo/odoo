@@ -51,10 +51,10 @@
                                 <td><span t-field="aml.account_id.code"/></td>
                                 <td><span t-esc="aml.partner_id and aml.partner_id.name[:23] or ''"/></td>
                                 <td><span t-esc="aml.name[:35]"/></td>
-                                <td><span t-esc="aml.debit" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
-                                <td><span t-esc="aml.credit" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                                <td><span t-esc="format(aml.debit, 'monetary', res_company.currency_id)"/></td>
+                                <td><span t-esc="format(aml.credit, 'monetary', res_company.currency_id)"/></td>
                                 <td t-if="data['form']['amount_currency'] and aml.amount_currency">
-                                    <span t-esc="aml.amount_currency" t-esc-options='{"widget": "monetary", "display_currency": "aml.currency_id"}'/>
+                                    <span t-esc="format(aml.amount_currency, 'monetary', aml.currency_id)"/>
                                 </td>
                             </tr>
                         </tbody>
@@ -65,8 +65,8 @@
                             <table class="table table-condensed">
                                 <tr>
                                     <td><strong>Total</strong></td>
-                                    <td><span t-esc="sum_debit(data, o)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
-                                    <td><span t-esc="sum_credit(data, o)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                                    <td><span t-esc="format(sum_debit(data, o), 'monetary', res_company.currency_id)"/></td>
+                                    <td><span t-esc="format(sum_credit(data, o), 'monetary', res_company.currency_id)"/></td>
                                 </tr>
                             </table>
                         </div>
@@ -87,8 +87,8 @@
                                     <t t-set="taxes" t-value="get_taxes(data, o)"/>
                                     <tr t-foreach="taxes" t-as="tax">
                                         <td><span t-esc="tax.name"/></td>
-                                        <td><span t-esc="taxes[tax]['base_amount']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
-                                        <td><span t-esc="taxes[tax]['tax_amount']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                                        <td><span t-esc="format(taxes[tax]['base_amount'], 'monetary', res_company.currency_id)"/></td>
+                                        <td><span t-esc="format(taxes[tax]['tax_amount'], 'monetary', res_company.currency_id)"/></td>
                                     </tr>
                                 </tbody>
                             </table>
