@@ -844,7 +844,7 @@ class MrpUnbuild(models.Model):
     product_qty = fields.Float('Quantity', required=True, states={'done': [('readonly', True)]})
     product_uom_id = fields.Many2one('product.uom', string="Unit of Measure", required=True, states={'done': [('readonly', True)]})
     bom_id = fields.Many2one('mrp.bom', 'Bill of Material', required=True, domain=[('product_tmpl_id', '=', 'product_id.product_tmpl_id')], states={'done': [('readonly', True)]})  # Add domain
-    mo_id = fields.Many2one('mrp.production', string='Manufacturing Order', states={'done': [('readonly', True)]})
+    mo_id = fields.Many2one('mrp.production', string='Manufacturing Order', states={'done': [('readonly', True)]}, domain="[('product_id', '=', product_id), ('state', 'in', ['done', 'cancel'])]")
     lot_id = fields.Many2one('stock.production.lot', 'Lot', domain="[('product_id','=', product_id)]", states={'done': [('readonly', True)]})
     location_id = fields.Many2one('stock.location', 'Location', required=True, default=_src_id_default, states={'done': [('readonly', True)]})
     consume_line_id = fields.Many2one('stock.move', readonly=True)
@@ -882,9 +882,6 @@ class MrpUnbuild(models.Model):
         if not vals.get('name', False):
             vals['name'] = self.env['ir.sequence'].next_by_code('mrp.unbuild') or 'New'
         unbuild = super(MrpUnbuild, self).create(vals)
-        unbuild._make_unbuild_consume_line()
-        unbuild.consume_line_id.action_assign()
-        unbuild._generate_moves()
         return unbuild
 
     def _make_unbuild_consume_line(self):
@@ -904,7 +901,7 @@ class MrpUnbuild(models.Model):
         return rec
 
     @api.multi
-    def _generate_move(self, bom_line, quantity, result=None):
+    def _generate_move(self, bom_line, quantity, **kw):
         self.ensure_one()
         data = {
             'name': self.name,
@@ -935,7 +932,17 @@ class MrpUnbuild(models.Model):
 
     @api.multi
     def button_unbuild(self):
-        self.consume_line_id.action_assign()
+        self.ensure_one()
+        self._make_unbuild_consume_line()
+        #Search quants that passed production order
+        if self.mo_id:
+            main_finished_moves = self.mo_id.move_finished_ids.filtered(lambda x: x.product_id.id == self.mo_id.product_id.id)
+            quants_to_reserve = self.env['stock.quant'].search([('history_ids', 'in', [x.id for x in main_finished_moves]), 
+                                                                ('location_id', 'child_of', ''), 
+                                                                ('product_id', '', '')])
+        
+        
+        self._generate_moves()
         # TODO : Need to assign quants which consumed at build product.
         self.quant_move_rel()
         self.consume_line_id.action_done()
@@ -963,6 +970,7 @@ class MrpUnbuild(models.Model):
             quants = quants | quant.consumed_quant_ids
         return quants
 
+    
     #TODO: need quants defined here
     @api.multi
     def quant_move_rel(self):

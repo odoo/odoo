@@ -1974,8 +1974,13 @@
                         </div>
                         <group>
                             <group>
-                                <field name="product_id"/>
-                                <field name="bom_id"/>
+                                <field name="product_id" domain="[('bom_ids', '!=', False)]"/>
+                                <field name="bom_id" domain="['|',
+                                            ('product_id','=',product_id),
+                                            '&amp;',
+                                                ('product_tmpl_id.product_variant_ids','=',product_id),
+                                                ('product_id','=',False),
+                                                ('bom_type', '=', 'normal')]"/>
                                 <label for="product_qty"/>
                                 <div class="o_row">
                                     <field name="product_qty"/>

@@ -63,7 +63,6 @@ class StockMove(models.Model):
     move_lot_ids = fields.One2many('stock.move.lots', 'move_id', string='Lots')
     bom_line_id = fields.Many2one('mrp.bom.line', string="BoM Line")
     unit_factor = fields.Float('Unit Factor')
-    bom_sequence = fields.Integer('BoM sequence')
     is_done = fields.Boolean('Done', compute='_compute_is_done', help='Technical Field to order moves', store=True)
 
 
@@ -81,7 +80,7 @@ class StockMove(models.Model):
 
     @api.multi
     def check_move_lots(self):
-        moves_todo = self.filtered(lambda x: x.raw_material_production_id and x.state not in ('done', 'cancel') )
+        moves_todo = self.filtered(lambda x: (x.raw_material_production_id or x.raw_material_unbuild_id) and x.state not in ('done', 'cancel') )
         return moves_todo.create_lots()
 
 
@@ -170,21 +169,25 @@ class StockMove(models.Model):
                 extra_move.action_confirm()
                 moves_todo |= extra_move
         for move in moves_todo:
-
             if float_compare(move.quantity_done, move.product_uom_qty, precision_rounding=rounding):
                 # Need to do some kind of conversion here
                 qty_split = uom_obj._compute_qty(move.product_uom.id, move.product_uom_qty - move.quantity_done, move.product_id.uom_id.id)
                 new_move = self.env['stock.move'].split(move, qty_split)
                 self.browse(new_move).quantity_done = 0.0
             #TODO: code for when quantity > move.product_qty (extra move or change qty?)
+            main_domain = [('qty', '>', 0)]
+            preferred_domain = [('reservation_id', '=', move.id)]
+            fallback_domain = [('reservation_id', '=', False)]
+            fallback_domain2 = ['&', ('reservation_id', '!=', move.id), ('reservation_id', '!=', False)]
+            preferred_domain_list = [preferred_domain] + [fallback_domain] + [fallback_domain2]
             if move.has_tracking == 'none':
-                quants = quant_obj.quants_get_preferred_domain(move.product_qty, move)
+                quants = quant_obj.quants_get_preferred_domain(move.product_qty, move, domain=main_domain, preferred_domain_list=preferred_domain_list)
                 self.env['stock.quant'].quants_move(quants, move, move.location_dest_id)
             else:
                 for movelot in move.move_lot_ids:
                     if float_compare(movelot.quantity_done, 0, precision_rounding=rounding) > 0:
                         qty = uom_obj._compute_qty(move.product_uom.id, move.quantity_done, move.product_id.uom_id.id)
-                        quants = quant_obj.quants_get_preferred_domain(qty, move, lot_id=movelot.lot_id.id)
+                        quants = quant_obj.quants_get_preferred_domain(qty, move, lot_id=movelot.lot_id.id, domain=main_domain, preferred_domain_list=preferred_domain_list)
                         self.env['stock.quant'].quants_move(quants, move, move.location_dest_id, lot_id = movelot.lot_id.id)
             quant_obj.quants_unreserve(move)
             move.write({'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
