@@ -1818,9 +1818,15 @@ class _RelationalMulti(_Relational):
 
     def _compute_related(self, records):
         """ Compute the related field ``self`` on ``records``. """
-        for record in records:
-            other, field = self.traverse_related(record)
-            record[self.name] = other[field.name]
+        super(_RelationalMulti, self)._compute_related(records)
+        if self.related_sudo:
+            # determine which records in the relation are actually accessible
+            target = records.mapped(self.name)
+            target_ids = set(target.search([('id', 'in', target.ids)]).ids)
+            accessible = lambda target: target.id in target_ids
+            # filter values to keep the accessible records only
+            for record in records:
+                record[self.name] = record[self.name].filtered(accessible)
 
 
 class One2many(_RelationalMulti):
