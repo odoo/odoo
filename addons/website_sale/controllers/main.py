@@ -615,7 +615,6 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/confirm_order'], type='http', auth="public", website=True)
     def confirm_order(self, **post):
-
         order = request.website.sale_get_order()
         if not order:
             return request.redirect("/shop")

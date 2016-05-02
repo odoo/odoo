@@ -37,18 +37,17 @@ class view(osv.osv):
     def extract_embedded_fields(self, cr, uid, arch, context=None):
         return arch.xpath('//*[@data-oe-model != "ir.ui.view"]')
 
-    def save_embedded_field(self, cr, uid, el, context=None):
-        Model = self.pool[el.get('data-oe-model')]
+    @api.model
+    def save_embedded_field(self, el):
+        Model = self.env[el.get('data-oe-model')]
         field = el.get('data-oe-field')
 
-        converter = self.pool['ir.qweb'].get_converter_for(el.get('data-oe-type'))
-        value = converter.from_html(cr, uid, Model, Model._fields[field], el)
+        converter = self.env['ir.qweb'].get_field_for(el.get('data-oe-type'))
+        value = converter.from_html(Model, Model._fields[field], el)
 
         if value is not None:
             # TODO: batch writes?
-            Model.write(cr, uid, [int(el.get('data-oe-id'))], {
-                field: value
-            }, context=context)
+            Model.browse(int(el.get('data-oe-id'))).write({field: value})
 
     def _pretty_arch(self, arch):
         # remove_blank_string does not seem to work on HTMLParser, and
