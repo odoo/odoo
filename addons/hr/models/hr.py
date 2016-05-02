@@ -245,6 +245,7 @@ class Department(models.Model):
     _name = "hr.department"
     _description = "Hr Department"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _order = "name"
 
     name = fields.Char('Department Name', required=True)
     active = fields.Boolean('Active', default=True)
