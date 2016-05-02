@@ -276,16 +276,30 @@ class hr_holidays(osv.osv):
             result['value'] = {'department_id': employee.department_id.id}
         return result
 
-    # TODO: can be improved using resource calendar method
-    def _get_number_of_days(self, date_from, date_to):
+    def _get_number_of_days(self, cr, uid, date_from, date_to, employee_id, context=None):
         """Returns a float equals to the timedelta between two dates given as string."""
+        resource_obj = self.pool['resource.resource']
+        employee_obj = self.pool['hr.employee']
+        model_data_obj = self.pool['ir.model.data']
+        uom_obj = self.pool['product.uom']
 
         DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
         from_dt = datetime.datetime.strptime(date_from, DATETIME_FORMAT)
         to_dt = datetime.datetime.strptime(date_to, DATETIME_FORMAT)
+
+        if employee_id:
+            employee = employee_obj.browse(cr, uid, [employee_id], context=context)
+            resource_ids = resource_obj.search(cr, uid, [('user_id', '=', employee.user_id.id)], limit=1, context=context)
+            resource = resource_obj.browse(cr, uid, resource_ids, context=context)
+            if resource and resource.calendar_id:
+                hours = resource.calendar_id.get_working_hours(from_dt, to_dt, resource_id=resource.id, compute_leaves=True)
+                uom_hour = model_data_obj.xmlid_to_object(cr, uid, 'product.product_uom_hour')
+                uom_day = model_data_obj.xmlid_to_object(cr, uid, 'product.product_uom_day')
+                if uom_hour and uom_day:
+                    return uom_obj._compute_qty_obj(cr, uid, uom_hour, hours[0], uom_day, context=context)
+
         timedelta = to_dt - from_dt
-        diff_day = timedelta.days + float(timedelta.seconds) / 86400
-        return diff_day
+        return math.ceil(timedelta.days + float(timedelta.seconds) / 86400)
 
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
@@ -293,7 +307,7 @@ class hr_holidays(osv.osv):
                 raise UserError(_('You cannot delete a leave which is in %s state.') % (rec.state,))
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
 
-    def onchange_date_from(self, cr, uid, ids, date_to, date_from):
+    def onchange_date_from(self, cr, uid, ids, date_to, date_from, employee_id, context=None):
         """
         If there are no date set for date_to, automatically set one 8 hours later than
         the date_from.
@@ -312,14 +326,14 @@ class hr_holidays(osv.osv):
 
         # Compute and update the number of days
         if (date_to and date_from) and (date_from <= date_to):
-            diff_day = self._get_number_of_days(date_from, date_to)
-            result['value']['number_of_days_temp'] = round(math.floor(diff_day))+1
+            diff_day = self._get_number_of_days(cr, uid, date_from, date_to, employee_id, context=context)
+            result['value']['number_of_days_temp'] = diff_day
         else:
             result['value']['number_of_days_temp'] = 0
 
         return result
 
-    def onchange_date_to(self, cr, uid, ids, date_to, date_from):
+    def onchange_date_to(self, cr, uid, ids, date_to, date_from, employee_id, context=None):
         """
         Update the number_of_days.
         """
@@ -331,8 +345,8 @@ class hr_holidays(osv.osv):
 
         # Compute and update the number of days
         if (date_to and date_from) and (date_from <= date_to):
-            diff_day = self._get_number_of_days(date_from, date_to)
-            result['value']['number_of_days_temp'] = round(math.floor(diff_day))+1
+            diff_day = self._get_number_of_days(cr, uid, date_from, date_to, employee_id, context=context)
+            result['value']['number_of_days_temp'] = diff_day
         else:
             result['value']['number_of_days_temp'] = 0
         return result
