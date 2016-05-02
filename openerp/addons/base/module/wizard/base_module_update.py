@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields, api
+from odoo import api, fields, models
 
-class base_module_update(models.TransientModel):
+
+class BaseModuleUpdate(models.TransientModel):
     _name = "base.module.update"
     _description = "Update Module"
 
@@ -10,10 +11,11 @@ class base_module_update(models.TransientModel):
     added = fields.Integer('Number of modules added', readonly=True)
     state = fields.Selection([('init', 'init'), ('done', 'done')], 'Status', readonly=True, default='init')
 
-    @api.one
+    @api.multi
     def update_module(self):
-        self.updated, self.added = self.env['ir.module.module'].update_list()
-        self.state = 'done'
+        for this in self:
+            updated, added = self.env['ir.module.module'].update_list()
+            this.write({'updated': updated, 'added': added, 'state': 'done'})
         return False
 
     @api.multi

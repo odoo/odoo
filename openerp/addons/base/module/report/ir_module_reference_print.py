@@ -1,42 +1,39 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, api
+from odoo import api, models
 
 class IrModelReferenceReport(models.AbstractModel):
     _name = 'report.base.report_irmodulereference'
 
     @api.model
     def _object_find(self, module):
-        model_data_obj = self.env['ir.model.data']
-        models_data = model_data_obj.search([('model','=','ir.model'), ('module','=',module.name)])
-        res_ids = [model_data.res_id for model_data in models_data]
+        Data = self.env['ir.model.data']
+        data = Data.search([('model','=','ir.model'), ('module','=',module.name)])
+        res_ids = data.mapped('res_id')
         return self.env['ir.model'].browse(res_ids)
 
     @api.multi
     def _fields_find(self, model, module):
-        res = []
-        model_obj = self.env[model]
-        model_fields = self.env['ir.model.fields']
-        fname_wildcard = 'field_' + model_obj._name.replace('.', '_') + '_%'
-        module_fields_ids = self.env['ir.model.data'].search([('model', '=', 'ir.model.fields'), ('module', '=', module.name), ('name', 'like', fname_wildcard)])
-        module_fields_res_ids = [x.res_id for x in module_fields_ids]
-        if module_fields_res_ids:
-            module_fields_names = [x.name for x in model_fields.browse(module_fields_res_ids)]
-            res = model_obj.fields_get(allfields=module_fields_names).items()
-            res.sort()
-        return res
+        Data = self.env['ir.model.data']
+        fname_wildcard = 'field_' + model.replace('.', '_') + '_%'
+        data = Data.search([('model', '=', 'ir.model.fields'), ('module', '=', module.name), ('name', 'like', fname_wildcard)])
+        if data:
+            res_ids = data.mapped('res_ids')
+            fnames = self.env['ir.model.fields'].browse(res_ids).mapped('name')
+            return sorted(self.env[model].fields_get(fnames).iteritems())
+        return []
 
     @api.multi
     def render_html(self, data=None):
-        report_obj = self.env['report']
-        module_report = report_obj._get_report_from_name('base.report_irmodulereference')
+        Report = self.env['report']
+        report = Report._get_report_from_name('base.report_irmodulereference')
         selected_modules = self.env['ir.module.module'].browse(self.ids)
         docargs = {
             'doc_ids': self.ids,
-            'doc_model': module_report.model,
+            'doc_model': report.model,
             'docs': selected_modules,
             'findobj': self._object_find,
             'findfields': self._fields_find,
         }
-        return report_obj.render('base.report_irmodulereference', docargs)
+        return Report.render('base.report_irmodulereference', docargs)
