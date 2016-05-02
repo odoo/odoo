@@ -619,7 +619,7 @@ var BasicComposer = Widget.extend({
             // filter prefetched partners with the given search string
             var suggestions = [];
             var limit = self.options.mention_fetch_limit;
-            var search_regexp = new RegExp(self.unaccent(search), 'i');
+            var search_regexp = new RegExp(_.str.escapeRegExp(self.unaccent(search)), 'i');
             _.each(prefetched_partners, function (partners) {
                 if (limit > 0) {
                     var filtered_partners = _.filter(partners, function (partner) {
