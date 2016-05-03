@@ -362,6 +362,8 @@ class res_partner(osv.Model, format_address):
 
     @api.multi
     def on_change_company_type(self, company_type):
+        if self.parent_id and company_type == 'company':
+            raise UserError(_("The contact %s will not be displayed as company contact for %s.") % (self.name, self.parent_id.name))
         return {'value': {'is_company': company_type == 'company'}}
 
     def _update_fields_values(self, cr, uid, partner, fields, context=None):
