@@ -3,75 +3,23 @@
 
 import random
 
+from openerp.osv import osv, fields
+from openerp.tools.translate import _
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp.exceptions import UserError
+
 from openerp.addons.base_geolocalize.models.res_partner import geo_find, geo_query_address
-from openerp.osv import osv
-from openerp.osv import fields
-
-
-class res_partner_grade(osv.osv):
-    _order = 'sequence'
-    _name = 'res.partner.grade'
-    _columns = {
-        'sequence': fields.integer('Sequence'),
-        'active': fields.boolean('Active'),
-        'name': fields.char('Level Name'),
-        'partner_weight': fields.integer('Level Weight',
-            help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
-    }
-    _defaults = {
-        'active': lambda *args: 1,
-        'partner_weight':1
-    }
-
-class res_partner_activation(osv.osv):
-    _name = 'res.partner.activation'
-    _order = 'sequence'
-
-    _columns = {
-        'sequence' : fields.integer('Sequence'),
-        'name' : fields.char('Name', required=True),
-    }
-
-
-class res_partner(osv.osv):
-    _inherit = "res.partner"
-    _columns = {
-        'partner_weight': fields.integer('Level Weight',
-            help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
-        'grade_id': fields.many2one('res.partner.grade', 'Level'),
-        'activation' : fields.many2one('res.partner.activation', 'Activation', select=1),
-        'date_partnership' : fields.date('Partnership Date'),
-        'date_review' : fields.date('Latest Partner Review'),
-        'date_review_next' : fields.date('Next Partner Review'),
-        # customer implementation
-        'assigned_partner_id': fields.many2one(
-            'res.partner', 'Implemented by',
-        ),
-        'implemented_partner_ids': fields.one2many(
-            'res.partner', 'assigned_partner_id',
-            string='Implementation References',
-        ),
-    }
-    _defaults = {
-        'partner_weight': lambda *args: 0
-    }
-    
-    def onchange_grade_id(self, cr, uid, ids, grade_id, context=None):
-        res = {'value' :{'partner_weight':0}}
-        if grade_id:
-            partner_grade = self.pool.get('res.partner.grade').browse(cr, uid, grade_id)
-            res['value']['partner_weight'] = partner_grade.partner_weight
-        return res
-
 
 class crm_lead(osv.osv):
-    _inherit = "crm.lead"
+    _inherit = 'crm.lead'
+
     _columns = {
         'partner_latitude': fields.float('Geo Latitude', digits=(16, 5)),
         'partner_longitude': fields.float('Geo Longitude', digits=(16, 5)),
         'partner_assigned_id': fields.many2one('res.partner', 'Assigned Partner',track_visibility='onchange' , help="Partner this case has been forwarded/assigned to.", select=True),
         'date_assign': fields.date('Assignation Date', help="Last date this case was forwarded/assigned to a partner"),
     }
+
     def _merge_data(self, cr, uid, ids, oldest, fields, context=None):
         fields += ['partner_latitude', 'partner_longitude', 'partner_assigned_id', 'date_assign']
         return super(crm_lead, self)._merge_data(cr, uid, ids, oldest, fields, context=context)
@@ -208,3 +156,41 @@ class crm_lead(osv.osv):
                         res_partner_ids[lead.id] = partner_id
                         break
         return res_partner_ids
+
+    def get_interested_action(self, cr, uid, interested, context=None):
+        try:
+            model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', 'crm_lead_channel_interested_act')
+        except ValueError:
+            raise UserError(_("The CRM Channel Interested Action is missing"))
+        action = self.pool[model].read(cr, uid, [action_id], context=context)[0]
+        action_context = eval(action['context'])
+        action_context['interested'] = interested
+        action['context'] = str(action_context)
+        return action
+
+    def case_interested(self, cr, uid, ids, context=None):
+        return self.get_interested_action(cr, uid, True, context=context)
+
+    def case_disinterested(self, cr, uid, ids, context=None):
+        return self.get_interested_action(cr, uid, False, context=context)
+
+    def assign_salesman_of_assigned_partner(self, cr, uid, ids, context=None):
+        salesmans_leads = {}
+        for lead in self.browse(cr, uid, ids, context=context):
+            if (lead.stage_id.probability > 0 and lead.stage_id.probability < 100) or lead.stage_id.sequence == 1: 
+                if lead.partner_assigned_id and lead.partner_assigned_id.user_id and lead.partner_assigned_id.user_id != lead.user_id:
+                    salesman_id = lead.partner_assigned_id.user_id.id
+                    if salesmans_leads.get(salesman_id):
+                        salesmans_leads[salesman_id].append(lead.id)
+                    else:
+                        salesmans_leads[salesman_id] = [lead.id]
+        for salesman_id, lead_ids in salesmans_leads.items():
+            salesteam_id = self.on_change_user(cr, uid, lead_ids, salesman_id, context=None)['value'].get('team_id')
+            self.write(cr, uid, lead_ids, {'user_id': salesman_id, 'team_id': salesteam_id}, context=context)
+
+    def set_tag_assign(self, cr, uid, ids, assign, context=None):
+        ASSIGNED = 'tag_portal_lead_assigned'
+        RECYCLE = 'tag_portal_lead_recycle'
+        tag_to_add = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', assign and ASSIGNED or RECYCLE)[1]
+        tag_to_rem = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', assign and RECYCLE or ASSIGNED)[1]
+        self.write(cr, uid, ids, {'tag_ids': [(3, tag_to_rem, False), (4, tag_to_add, False)]}, context=context)
