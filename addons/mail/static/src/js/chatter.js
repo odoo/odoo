@@ -354,7 +354,7 @@ var Chatter = form_common.AbstractField.extend({
         // Empty thread and display a spinner after 1s to indicate that it is loading
         this.thread.$el.empty();
         web_utils.reject_after(web_utils.delay(1000), fetch_def).then(function () {
-            self.thread.$el.append(QWeb.render('mail.ChatterSpinner', {}));
+            self.thread.$el.append(QWeb.render('Spinner'));
         });
 
         return fetch_def.then(function (raw_messages) {
