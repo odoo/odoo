@@ -45,6 +45,7 @@
                         <span class="o_last_message_date"> <t t-esc="channel.last_message_date"/> </span>
                     </div>
                     <div class="o_last_message_preview">
+                        <t t-esc="channel.last_message.displayed_author"/>:
                         <t t-raw="channel.last_message_preview"/>
                     </div>
                 </div>

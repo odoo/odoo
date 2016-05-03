@@ -248,7 +248,7 @@ class account_payment(models.Model):
         invoice_defaults = self.resolve_2many_commands('invoice_ids', rec.get('invoice_ids'))
         if invoice_defaults and len(invoice_defaults) == 1:
             invoice = invoice_defaults[0]
-            rec['communication'] = invoice['reference']
+            rec['communication'] = invoice['reference'] or invoice['name'] or invoice['number']
             rec['currency_id'] = invoice['currency_id'][0]
             rec['payment_type'] = invoice['type'] in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
             rec['partner_type'] = MAP_INVOICE_TYPE_PARTNER_TYPE[invoice['type']]
@@ -371,7 +371,7 @@ class account_payment(models.Model):
         if self.payment_difference_handling == 'reconcile' and self.payment_difference:
             writeoff_line = self._get_shared_move_line_vals(0, 0, 0, move.id, False)
             debit_wo, credit_wo, amount_currency_wo, currency_id = aml_obj.with_context(date=self.payment_date).compute_amount_fields(self.payment_difference, self.currency_id, self.company_id.currency_id, invoice_currency)
-            writeoff_line['name'] = _('Write-Off')
+            writeoff_line['name'] = _('Counterpart')
             writeoff_line['account_id'] = self.writeoff_account_id.id
             writeoff_line['debit'] = debit_wo
             writeoff_line['credit'] = credit_wo

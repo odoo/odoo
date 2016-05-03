@@ -156,8 +156,9 @@
 
         <record id="conf_cog" model="account.account.template">
             <field name="code">210</field>
-            <field name="name">Cost of Goods Sold</field>
-            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="name">Cost of Revenue</field>
+            <!-- FORWARDPORT UP TO SAAS-10 -->
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]"/>
         </record>
