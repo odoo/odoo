@@ -168,11 +168,7 @@ class PosOrder(models.Model):
         # Oldlin trick
         invoice_line = InvoiceLine.sudo().new(inv_line)
         invoice_line._onchange_product_id()
-        invoice_line.invoice_line_tax_ids = invoice_line.invoice_line_tax_ids.filtered(lambda t: t.company_id.id == line.order_id.company_id.id).ids
-        fiscal_position_id = line.order_id.fiscal_position_id
-        if fiscal_position_id:
-            invoice_line.invoice_line_tax_ids = fiscal_position_id.map_tax(invoice_line.invoice_line_tax_ids)
-        invoice_line.invoice_line_tax_ids = invoice_line.invoice_line_tax_ids.ids
+        invoice_line.invoice_line_tax_ids = line.tax_ids
         # We convert a new id object back to a dictionary to write to
         # bridge between old and new api
         inv_line = invoice_line._convert_to_write({name: invoice_line[name] for name in invoice_line._cache})
@@ -281,7 +277,7 @@ class PosOrder(models.Model):
                 })
 
                 # Create the tax lines
-                taxes = line.tax_ids_after_fiscal_position.filtered(lambda t: t.company_id.id == current_company.id)
+                taxes = line.tax_ids.filtered(lambda t: t.company_id.id == current_company.id)
                 if not taxes:
                     continue
                 for tax in taxes.compute_all(line.price_unit * (100.0 - line.discount) / 100.0, cur, line.qty)['taxes']:
@@ -367,6 +363,16 @@ class PosOrder(models.Model):
             order.amount_tax = currency.round(sum(self._amount_line_tax(line, order.fiscal_position_id) for line in order.lines))
             amount_untaxed = currency.round(sum(line.price_subtotal for line in order.lines))
             order.amount_total = order.amount_tax + amount_untaxed
+
+    @api.onchange('fiscal_position_id')
+    def _onchange_fiscal_position_id(self):
+        """
+        Trigger the recompute of the taxes if the fiscal position is changed on the Pos order.
+        """
+        fpos = self.fiscal_position_id
+        for line in self.lines:
+            taxes = line.product_id.taxes_id.filtered(lambda tax: tax.company_id.id == self.company_id.id)
+            line.tax_ids = taxes and fpos.map_tax(taxes) or fpos.map_tax(line.tax_ids)
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -673,8 +679,7 @@ class PosOrderLine(models.Model):
     discount = fields.Float(string='Discount (%)', digits=0, default=0.0)
     order_id = fields.Many2one('pos.order', string='Order Ref', ondelete='cascade')
     create_date = fields.Datetime(string='Creation Date', readonly=True)
-    tax_ids = fields.Many2many('account.tax', string='Taxes', readonly=True)
-    tax_ids_after_fiscal_position = fields.Many2many('account.tax', compute='_get_tax_ids_after_fiscal_position', string='Taxes')
+    tax_ids = fields.Many2many('account.tax', string='Taxes')
 
     @api.depends('price_unit', 'tax_ids', 'qty', 'discount', 'product_id')
     def _compute_amount_line_all(self):
@@ -705,7 +710,10 @@ class PosOrderLine(models.Model):
                 self.product_id.id, self.qty or 1.0, self.order_id.partner_id.id)[self.order_id.pricelist_id.id]
             self._onchange_qty()
             self.price_unit = price
-            self.tax_ids = self.product_id.taxes_id
+            taxes = self.product_id.taxes_id.filtered(lambda t: t.company_id.id == self.order_id.company_id.id)
+            if self.order_id.fiscal_position_id:
+                taxes = self.order_id.fiscal_position_id.map_tax(taxes)
+            self.tax_ids = taxes
 
     @api.onchange('qty', 'discount', 'price_unit', 'tax_ids')
     def _onchange_qty(self):
@@ -714,12 +722,7 @@ class PosOrderLine(models.Model):
                 raise UserError(_('You have to select a pricelist in the sale form !'))
             price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
             self.price_subtotal = self.price_subtotal_incl = price * self.qty
-            if (self.product_id.taxes_id):
-                taxes = self.product_id.taxes_id.compute_all(price, self.order_id.pricelist_id.currency_id, self.qty, product=self.product_id, partner=False)
+            if self.tax_ids:
+                taxes = self.tax_ids.compute_all(price, self.order_id.pricelist_id.currency_id, self.qty, product=self.product_id, partner=False)
                 self.price_subtotal = taxes['total_excluded']
                 self.price_subtotal_incl = taxes['total_included']
-
-    @api.multi
-    def _get_tax_ids_after_fiscal_position(self):
-        for line in self:
-            line.tax_ids_after_fiscal_position = line.order_id.fiscal_position_id.map_tax(line.tax_ids)
