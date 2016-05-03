@@ -118,7 +118,6 @@ class Lead2OpportunityPartner(models.TransientModel):
         """
         self.ensure_one()
         Lead = self.env['crm.lead']
-
         opp_ids = self.opportunity_ids.ids
         values = {
             'team_id': self.team_id.id,
@@ -128,20 +127,20 @@ class Lead2OpportunityPartner(models.TransientModel):
             values['partner_id'] = self.partner_id.id
 
         if self.name == 'merge':
-            lead_id = self.env['crm.lead'].browse(opp_ids).merge_opportunity()
-            lead_ids = [lead_id]
-            lead_data = Lead.browse(lead_id).read(['type', 'user_id'])[0]
+            lead = self.env['crm.lead'].browse(opp_ids).merge_opportunity()
+            lead_ids = [lead.id]
+            lead_data = lead.read(['type', 'user_id'])[0]
             if lead_data['type'] == "lead":
                 values.update({'lead_ids': lead_ids, 'user_ids': [self.user_id.id]})
                 self.with_context(active_ids=lead_ids)._convert_opportunity(values)
             elif not self._context.get('no_force_assignation') or not lead_data['user_id']:
                 values.update({'user_id': self.user_id.id})
-                Lead.browse(lead_id).write(values)
+                lead.write(values)
         else:
             lead_ids = self._context.get('active_ids', [])
             values.update({'lead_ids': lead_ids, 'user_ids': [self.user_id.id]})
             self._convert_opportunity(values)
-            for lead in Lead.browse(lead_ids):
+            for lead in self.env['crm.lead'].browse(lead_ids):
                 if lead.partner_id and lead.partner_id.user_id != lead.user_id:
                     self.env['res.partner'].browse(lead.partner_id.id).write({'user_id': lead.user_id.id})
 
@@ -240,9 +239,9 @@ class Lead2OpportunityMassConvert(models.TransientModel):
                     lead = self.env['crm.lead'].browse(lead_id)
                     duplicated_leads = self._get_duplicated_leads(lead.partner_id.id, lead.partner_id.email if lead.partner_id else lead.email_from)
                     if len(duplicated_leads) > 1:
-                        lead_id = duplicated_leads.merge_opportunity()
+                        lead = duplicated_leads.merge_opportunity()
                         merged_lead_ids.extend(duplicated_leads.ids)
-                        remaining_lead_ids.append(lead_id)
+                        remaining_lead_ids.append(lead.id)
             active_ids = set(self._context.get('active_ids', []))
             active_ids = active_ids.difference(merged_lead_ids)
             active_ids = active_ids.union(remaining_lead_ids)
