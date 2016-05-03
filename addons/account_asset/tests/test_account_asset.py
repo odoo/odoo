@@ -36,7 +36,7 @@ class TestAccountAsset(common.TransactionCase):
 
         # I check the move line is created.
         asset = self.env['account.asset.asset'].browse([self.ref("account_asset.account_asset_asset_vehicles_test0")])[0]
-        self.assertEqual(len(asset.depreciation_line_ids), len(asset.account_move_ids),
+        self.assertEqual(len(asset.depreciation_line_ids), asset.entry_count,
             'Move lines not created correctly')
 
         # I Check that After creating all the moves of depreciation lines the state "Close".

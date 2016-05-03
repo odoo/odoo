@@ -55,7 +55,6 @@ class AccountAssetAsset(models.Model):
     _description = 'Asset/Revenue Recognition'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
-    account_move_ids = fields.Many2many('account.move', 'account_move_account_asset_rel', 'asset_id', 'move_id', compute="_entry_count", store=True, string='Entries', readonly=True, states={'draft': [('readonly', False)]})
     entry_count = fields.Integer(compute='_entry_count', string='# Asset Entries')
     name = fields.Char(string='Asset Name', required=True, readonly=True, states={'draft': [('readonly', False)]})
     code = fields.Char(string='Reference', size=32, readonly=True, states={'draft': [('readonly', False)]})
@@ -99,8 +98,9 @@ class AccountAssetAsset(models.Model):
         for asset in self:
             if asset.state in ['open', 'close']:
                 raise UserError(_('You cannot delete a document is in %s state.') % (asset.state,))
-            if asset.account_move_ids:
-                raise UserError(_('You cannot delete a document that contains posted entries.'))
+            for depreciation_line in asset.depreciation_line_ids:
+                if depreciation_line.move_id:
+                    raise UserError(_('You cannot delete a document that contains posted entries.'))
         return super(AccountAssetAsset, self).unlink()
 
     @api.multi
@@ -111,8 +111,8 @@ class AccountAssetAsset(models.Model):
         """
         self.env.cr.execute("""
             SELECT a.id as id, COALESCE(MAX(m.date),a.date) AS date
-            FROM account_move_account_asset_rel rel
-            LEFT JOIN account_asset_asset a ON (rel.asset_id = a.id)
+            FROM account_asset_asset a
+            LEFT JOIN account_asset_depreciation_line rel ON (rel.asset_id = a.id)
             LEFT JOIN account_move m ON (rel.move_id = m.id)
             WHERE a.id IN %s
             GROUP BY a.id, m.date """, (tuple(self.ids),))
@@ -324,9 +324,8 @@ class AccountAssetAsset(models.Model):
     @api.depends('depreciation_line_ids.move_id')
     def _entry_count(self):
         for asset in self:
-            res = self.env['account.asset.depreciation.line'].search_read(domain=[('asset_id', '=', asset.id), ('move_id', '!=', False)], fields=['move_id'])
-            asset.account_move_ids = [x['move_id'][0] for x in res]
-            asset.entry_count = len(asset.account_move_ids)
+            res = self.env['account.asset.depreciation.line'].search_count([('asset_id', '=', asset.id), ('move_id', '!=', False)])
+            asset.entry_count = res or 0
 
     @api.one
     @api.constrains('prorata', 'method_time')
@@ -395,7 +394,9 @@ class AccountAssetAsset(models.Model):
     def open_entries(self):
         move_ids = []
         for asset in self:
-            move_ids += asset.account_move_ids.ids
+            for depreciation_line in asset.depreciation_line_ids:
+                if depreciation_line.move_id:
+                    move_ids.append(depreciation_line.move_id.id)
         return {
             'name': _('Journal Entries'),
             'view_type': 'form',
