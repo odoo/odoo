@@ -421,7 +421,7 @@
 
 <!-- Util template -->
 <template id="publish_management">
-    <div groups="base.group_website_publisher" t-ignore="true" class="pull-right css_editable_mode_hidden" t-att-style="style or ''">
+    <div groups="base.group_website_publisher" t-ignore="true" class="pull-right css_editable_mode_hidden" t-att-style="style or None">
         <div t-attf-class="btn-group js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
             <button class="btn btn-danger js_publish_btn">Not Published</button>
             <button class="btn btn-success js_publish_btn">Published</button>
@@ -449,15 +449,15 @@
 </template>
 
 <template id="pager" name="Pager">
-    <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination" t-att-style="style or ''">
-        <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else '' ">
-            <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else ''">Prev</a>
+    <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination" t-att-style="style or None">
+        <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else None ">
+            <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None">Prev</a>
         </li>
         <t t-foreach="pager['pages']" t-as="page">
-            <li t-att-class=" 'active' if page['num'] == pager['page']['num'] else '' "> <a t-att-href="page['url']" t-raw="page['num']"></a></li>
+            <li t-att-class=" 'active' if page['num'] == pager['page']['num'] else None "> <a t-att-href="page['url']" t-raw="page['num']"></a></li>
         </t>
-        <li t-att-class=" 'disabled' if pager['page']['num'] == pager['page_count'] else '' ">
-            <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else ''">Next</a>
+        <li t-att-class=" 'disabled' if pager['page']['num'] == pager['page_count'] else None ">
+            <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else None">Next</a>
         </li>
     </ul>
 </template>
@@ -537,7 +537,7 @@
                                 <li t-attf-class="prev #{'active' if obj['page'] == 1 else '' }">
                                     <a t-att-href=" '%s,%s-%s' % (obj['kanban_url'], obj['column_id'].id, (obj['page'] &gt; 1 and obj['page']-1 or 1)) ">Prev</a></li>
                                 <t t-foreach="range(obj['page_start'], obj['page_end']+1)" t-as="p">
-                                    <li t-att-class=" 'active' if obj['page'] == p else '' ">
+                                    <li t-att-class=" 'active' if obj['page'] == p else None ">
                                         <a t-att-href=" '%s,%s-%s' % (obj['kanban_url'], obj['column_id'].id, p)" t-esc="p"></a></li>
                                 </t>
                                 <li t-attf-class="next #{'active' if obj['page'] == obj['page_end'] else '' }">

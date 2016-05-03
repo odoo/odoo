@@ -43,7 +43,6 @@
                     </thead>
                     <t t-foreach="issues" t-as="issue">
                         <tr>
-
                             <td>
                                 <a t-attf-href="/my/issues/#{issue.id}?{{ keep_query() }}">Issue <t t-esc="issue.id"/></a>
                             </td>

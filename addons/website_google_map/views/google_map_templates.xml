@@ -9,7 +9,7 @@
         <title>World Map</title>
         <link rel="stylesheet" type="text/css" href="/website_google_map/static/src/css/website_google_map.css" />
     </head>
-    <body t-att-data-partner-url="partner_url or ''">
+    <body t-att-data-partner-url="partner_url or None">
         <script>
             var odoo_partner_data = <t t-raw="partner_data"/>;
         </script>

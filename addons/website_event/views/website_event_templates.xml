@@ -150,7 +150,7 @@
         <div class="col-md-3 css_noprint" id="left_column">
             <ul class="nav nav-pills nav-stacked">
                 <t t-foreach="dates" t-as="date">
-                    <li t-att-class="searches.get('date') == date[0] and 'active' or ''" t-if="date[3] or (date[0] in ('old','all'))">
+                    <li t-att-class="searches.get('date') == date[0] and 'active' or None" t-if="date[3] or (date[0] in ('old','all'))">
                         <a t-attf-href="/event?{{ keep_query('country', 'type', date=date[0]) }}"><t t-esc="date[1]"/>
                             <span t-if="date[3]" class="badge pull-right"><t t-esc="date[3]"/></span>
                         </a>
@@ -166,7 +166,7 @@
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="types" t-as="type">
                 <li t-if="type['event_type_id']"
-                    t-att-class="searches.get('type') == str(type['event_type_id'] and type['event_type_id'][0]) and 'active' or ''">
+                    t-att-class="searches.get('type') == str(type['event_type_id'] and type['event_type_id'][0]) and 'active' or None">
                     <a t-attf-href="/event?{{ keep_query('country', 'date', type=type['event_type_id'][0]) }}"><t t-esc="type['event_type_id'][1]"/>
                         <span class="badge pull-right"><t t-esc="type['event_type_id_count']"/></span>
                     </a>
@@ -180,12 +180,12 @@
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="countries" t-as="country">
-                <li t-if="country['country_id']" t-att-class="searches.get('country') == str(country['country_id'] and country['country_id'][0]) and 'active' or ''">
+                <li t-if="country['country_id']" t-att-class="searches.get('country') == str(country['country_id'] and country['country_id'][0]) and 'active' or None">
                     <a t-attf-href="/event?{{ keep_query('type', 'date', country=country['country_id'][0]) }}"><t t-esc="country['country_id'][1]"/>
                         <span class="badge pull-right"><t t-esc="country['country_id_count']"/></span>
                     </a>
                 </li>
-                <li t-if="not country['country_id']" t-att-class="searches.get('country') == 'online' and 'active' or ''">
+                <li t-if="not country['country_id']" t-att-class="searches.get('country') == 'online' and 'active' or None">
                     <a t-attf-href="/event?{{ keep_query('type', 'date', country='online') }}">
                         <span>Online Events</span>
                         <span class="badge pull-right"><t t-esc="country['country_id_count']"/></span>
