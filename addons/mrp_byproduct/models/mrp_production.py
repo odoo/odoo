@@ -18,7 +18,6 @@ class MrpProduction(models.Model):
         for production in self.filtered(lambda p: p.bom_id):
             source = production.product_id.property_stock_production
             for sub_product in production.bom_id.subproduct_ids:
-                import pdb; pdb.set_trace()
                 product_uom_factor = uom_obj._compute_qty(production.product_uom_id.id, production.product_qty, production.bom_id.product_uom_id.id)
                 #TODO:production.product_uom_id._compute_qty(production.product_qty, production.bom_id.product_uom_id.id)
                 qty1 = sub_product.product_qty
