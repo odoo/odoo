@@ -41,15 +41,15 @@ class Task(models.Model):
 
             if task.stage_id and task.stage_id.fold:
                 task.progress = 100.0
-            elif (task.planned_hours > 0.0 and task.effective_hours):
-                task.progress = round(min(100.0 * (task.effective_hours + task.children_hours) / task.planned_hours, 99.99), 2)
+            elif (task.planned_hours > 0.0):
+                task.progress = round(100.0 * (task.effective_hours + task.children_hours) / task.planned_hours, 2)
             else:
                 task.progress = 0.0
 
     remaining_hours = fields.Float(compute='_hours_get', store=True, string='Remaining Hours', help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
     effective_hours = fields.Float(compute='_hours_get', store=True, string='Hours Spent', help="Computed using the sum of the task work done.")
     total_hours = fields.Float(compute='_hours_get', store=True, string='Total', help="Computed as: Time Spent + Remaining Time.")
-    progress = fields.Float(compute='_hours_get', store=True, string='Progress (%)', group_operator="avg", help="If the task has a progress of 99.99% you should close the task if it's finished or reevaluate the time", default=0.0)
+    progress = fields.Float(compute='_hours_get', store=True, string='Working Time Recorded', group_operator="avg", default=0.0)
     delay_hours = fields.Float(compute='_hours_get', store=True, string='Delay Hours', help="Computed as difference between planned hours by the project manager and the total hours of the task.")
     children_hours = fields.Float(compute='_hours_get', store=True, string='Sub-tasks Hours', help="Sum of the planned hours of all sub-tasks (when a sub-task is closed or its spent hours exceed its planned hours, spent hours are counted instead)")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
