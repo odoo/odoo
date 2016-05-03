@@ -14,21 +14,24 @@ class procurement_order(osv.osv):
         'task_id': fields.many2one('project.task', 'Task', copy=False),
     }
 
-    def _is_procurement_task(self, cr, uid, procurement, context=None):
+    def _is_procurement_task(self, cr, uid, ids, context=None):
+        procurement = self.browse(cr, uid, ids[0], context=context)
         return procurement.product_id.type == 'service' and procurement.product_id.track_service=='task' or False
 
-    def _assign(self, cr, uid, procurement, context=None):
-        res = super(procurement_order, self)._assign(cr, uid, procurement, context=context)
+    def _assign(self, cr, uid, ids, context=None):
+        procurement = self.browse(cr, uid, ids[0], context=context)
+        res = super(procurement_order, self)._assign(cr, uid, ids, context=context)
         if not res:
             #if there isn't any specific procurement.rule defined for the product, we may want to create a task
-            return self._is_procurement_task(cr, uid, procurement, context=context)
+            return procurement._is_procurement_task()
         return res
 
-    def _run(self, cr, uid, procurement, context=None):
-        if self._is_procurement_task(cr, uid, procurement, context=context) and not procurement.task_id:
+    def _run(self, cr, uid, ids, context=None):
+        procurement = self.browse(cr, uid, ids[0], context=context)
+        if procurement._is_procurement_task() and not procurement.task_id:
             #create a task for the procurement
             return self._create_service_task(cr, uid, procurement, context=context)
-        return super(procurement_order, self)._run(cr, uid, procurement, context=context)
+        return super(procurement_order, self)._run(cr, uid, ids, context=context)
 
     def _convert_qty_company_hours(self, cr, uid, procurement, context=None):
         product_uom = self.pool.get('product.uom')

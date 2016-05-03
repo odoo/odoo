@@ -1,1 +1,1 @@
-from . import test_uom, test_pricelist
+from . import common, test_uom, test_pricelist

@@ -1137,7 +1137,9 @@ class mrp_production(osv.osv):
             'group_id': procurement and procurement.group_id.id,
         }
         move_id = stock_move.create(cr, uid, data, context=context)
-        return stock_move.action_confirm(cr, uid, [move_id], context=context)[0]
+        # TDE FIXME: necessary return ?
+        stock_move.action_confirm(cr, uid, [move_id], context=context)
+        return move_id
 
     def _get_raw_material_procure_method(self, cr, uid, product, location_id=False, location_dest_id=False, context=None):
         '''This method returns the procure_method to use when creating the stock move for the production raw materials
@@ -1178,12 +1180,12 @@ class mrp_production(osv.osv):
         move = stock_move.browse(cr, uid, move_id, context=context)
         src_loc = loc_obj.browse(cr, uid, source_location_id, context=context)
         dest_loc = loc_obj.browse(cr, uid, dest_location_id, context=context)
-        code = stock_move.get_code_from_locs(cr, uid, move, src_loc, dest_loc, context=context)
+        code = stock_move.get_code_from_locs(cr, uid, [move.id], src_loc, dest_loc, context=context)
         if code == 'outgoing':
             check_loc = src_loc
         else:
             check_loc = dest_loc
-        wh = loc_obj.get_warehouse(cr, uid, check_loc, context=context)
+        wh = loc_obj.get_warehouse(cr, uid, [check_loc.id], context=context)
         domain = [('code', '=', code)]
         if wh: 
             domain += [('warehouse_id', '=', wh)]
@@ -1230,7 +1232,7 @@ class mrp_production(osv.osv):
             #this saves us a browse in create()
             'price_unit': product.standard_price,
             'origin': production.name,
-            'warehouse_id': loc_obj.get_warehouse(cr, uid, production.location_src_id, context=context),
+            'warehouse_id': loc_obj.get_warehouse(cr, uid, [production.location_src_id.id], context=context),
             'group_id': production.move_prod_id.group_id.id,
         }, context=context)
         

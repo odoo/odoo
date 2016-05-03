@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from openerp.addons.stock.tests.common import TestStockCommon
-from openerp.tools import mute_logger, float_round
+from odoo.addons.stock.tests.common import TestStockCommon
+from odoo.tools import mute_logger, float_round
 
 
 class TestStockFlow(TestStockCommon):
@@ -309,7 +309,7 @@ class TestStockFlow(TestStockCommon):
 
         # Confirm back order of incoming shipment.
         back_order_in.action_confirm()
-        self.assertEqual(back_order_in.state, 'assigned', 'Wrong state of incoming shipment back order.')
+        self.assertEqual(back_order_in.state, 'assigned', 'Wrong state of incoming shipment back order: %s instead of %s' % (back_order_in.state, 'assigned'))
         for move in back_order_in.move_lines:
             self.assertEqual(move.state, 'assigned', 'Wrong state of move line.')
 
@@ -917,7 +917,7 @@ class TestStockFlow(TestStockCommon):
         #-----------------------------------------------------------------------
 
         # Check incoming shipment state.
-        self.assertEqual(picking_in.state, 'done', 'Incoming shipment state should be done.')
+        self.assertEqual(picking_in.state, 'done', 'Incoming shipment state: %s instead of %s' % (picking_in.state, 'done'))
         # Check incoming shipment move lines state.
         for move in picking_in.move_lines:
             self.assertEqual(move.state, 'done', 'Wrong state of move lines.')
