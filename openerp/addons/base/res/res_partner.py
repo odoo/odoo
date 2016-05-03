@@ -112,6 +112,8 @@ class PartnerTitle(models.Model):
     name = fields.Char(string='Title', required=True, translate=True)
     shortcut = fields.Char(string='Abbreviation', translate=True)
 
+    _sql_constraints = [('name_uniq', 'unique (name)', "Title name already exists !")]
+
 
 class Partner(models.Model, FormatAddress):
     _description = 'Partner'
