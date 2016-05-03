@@ -15,9 +15,9 @@ class AccountAssetCategory(models.Model):
     active = fields.Boolean(default=True)
     name = fields.Char(required=True, index=True, string="Asset Type")
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
-    account_asset_id = fields.Many2one('account.account', string='Asset Account', required=True, domain=[('internal_type','=','other'), ('deprecated', '=', False)], help="Account used for the initial asset buy")
-    account_depreciation_id = fields.Many2one('account.account', string='Depreciation Account', required=True, domain=[('internal_type','=','other'), ('deprecated', '=', False)])
-    account_depreciation_expense_id = fields.Many2one('account.account', string='Depr. Expense Account', required=True, domain=[('internal_type','=','other'), ('deprecated', '=', False)], oldname='account_income_recognition_id')
+    account_asset_id = fields.Many2one('account.account', string='Asset Account', required=True, domain=[('internal_type','=','other'), ('deprecated', '=', False)], help="Account used to record the purchase of the asset at its original price.")
+    account_depreciation_id = fields.Many2one('account.account', string='Depreciation Entries: Asset Account', required=True, domain=[('internal_type','=','other'), ('deprecated', '=', False)], help="Account used in the depreciation entries, to decrease the asset value.")
+    account_depreciation_expense_id = fields.Many2one('account.account', string='Depreciation Entries: Expense Account', required=True, domain=[('internal_type','=','other'), ('deprecated', '=', False)], oldname='account_income_recognition_id', help="Account used in the periodical entries, to record a part of the asset as expense.")
     journal_id = fields.Many2one('account.journal', string='Journal', required=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env['res.company']._company_default_get('account.asset.category'))
     method = fields.Selection([('linear', 'Linear'), ('degressive', 'Degressive')], string='Computation Method', required=True, default='linear',
