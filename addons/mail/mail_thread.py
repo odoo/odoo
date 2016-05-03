@@ -1081,7 +1081,8 @@ class mail_thread(osv.AbstractModel):
                                 'Routing mail from %s to %s with Message-Id %s: direct alias match: %r',
                                 email_from, email_to, message_id, route)
                             routes.append(route)
-                    return routes
+                    if routes:
+                        return routes
 
         # 5. Fallback to the provided parameters, if they work
         if not thread_id:
