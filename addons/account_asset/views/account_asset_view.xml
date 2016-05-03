@@ -30,9 +30,14 @@
                         <field name="account_asset_id" nolabel="1" attrs="{'invisible': [('type','=', False)]}"/>
                         <div>
                             <label for="account_depreciation_id" string="Depreciation Account" attrs="{'invisible': [('type','!=','purchase')]}"/>
-                            <label for="account_depreciation_id" string="Income Account" attrs="{'invisible': [('type','!=','sale')]}"/>
+                            <label for="account_depreciation_id" string="Recognition Account" attrs="{'invisible': [('type','!=','sale')]}"/>
                         </div>
                         <field name="account_depreciation_id" nolabel="1"/>
+                        <div>
+                            <label for="account_depreciation_expense_id" string="Depreciation Expense Account" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                            <label for="account_depreciation_expense_id" string="Recognition Income Account" attrs="{'invisible': [('type','!=','sale')]}"/>
+                        </div>
+                        <field name="account_depreciation_expense_id" nolabel="1"/>
                         <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                     </group>
                     <group string="Periodicity">
@@ -44,7 +49,10 @@
                             months
                         </div>
                         <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','!=','end')]}"/>
+                    </group>
+                    <group string="Additional Options">
                         <field name="open_asset"/>
+                        <field name="group_entries"/>
                     </group>
                     <group attrs="{'invisible': [('type','=','sale')]}" string="Depreciation Method">
                         <field name="method" widget="radio"/>
@@ -236,28 +244,6 @@
                 <field name="asset_category_id"
                     domain="[('type', '=', 'purchase')]"
                     context="{'default_type': 'purchase'}"/>
-            </field>
-        </field>
-    </record>
-
-    <record id="view_account_move_form_asset_inherit" model="ir.ui.view">
-        <field name="name">Journal Entries (form)</field>
-        <field name="model">account.move</field>
-        <field name="inherit_id" ref="account.view_move_form"/>
-        <field name="arch" type="xml">
-            <field name="journal_id" position="after">
-                <field name="asset_id"/>
-            </field>
-        </field>
-    </record>
-
-    <record id="view_account_move_filter_asset_inherit" model="ir.ui.view">
-        <field name="name">Journal Entries (Search)</field>
-        <field name="model">account.move</field>
-        <field name="inherit_id" ref="account.view_account_move_filter"/>
-        <field name="arch" type="xml">
-            <field name="journal_id" position="after">
-                <field name="asset_id"/>
             </field>
         </field>
     </record>
