@@ -1135,6 +1135,7 @@ class AccountMoveLine(models.Model):
             'name': self.name,
             'date': self.date,
             'account_id': self.analytic_account_id.id,
+            'tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
             'unit_amount': self.quantity,
             'product_id': self.product_id and self.product_id.id or False,
             'product_uom_id': self.product_uom_id and self.product_uom_id.id or False,
