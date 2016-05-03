@@ -57,7 +57,7 @@ class TestLead2opportunity2win(TestCrmCases):
         self.assertEqual(crm_case_2.stage_id.id, default_stage_id, "Stage of probability is incorrect!")
 
         # I loose the second opportunity
-        crm_case_2.case_mark_lost()
+        crm_case_2.action_set_lost()
 
         # I check details of the opportunity after the loose
         self.assertEqual(crm_case_2.probability, 0.0, "Revenue probability should be 0.0!")
