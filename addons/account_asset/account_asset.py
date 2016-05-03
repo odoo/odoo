@@ -55,7 +55,7 @@ class AccountAssetAsset(models.Model):
     _description = 'Asset/Revenue Recognition'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
-    account_move_ids = fields.Many2many('account.move', 'account_move_account_asset_rel', 'asset_id', 'move_id', compute="_entry_count", string='Entries', readonly=True, states={'draft': [('readonly', False)]})
+    account_move_ids = fields.Many2many('account.move', 'account_move_account_asset_rel', 'asset_id', 'move_id', compute="_entry_count", store=True, string='Entries', readonly=True, states={'draft': [('readonly', False)]})
     entry_count = fields.Integer(compute='_entry_count', string='# Asset Entries')
     name = fields.Char(string='Asset Name', required=True, readonly=True, states={'draft': [('readonly', False)]})
     code = fields.Char(string='Reference', size=32, readonly=True, states={'draft': [('readonly', False)]})
