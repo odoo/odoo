@@ -468,7 +468,7 @@
         <h4>Our Blogs</h4>
         <ul class="nav nav-pills nav-stacked">
             <t t-foreach="blogs" t-as="nav_blog">
-                <li t-att-class="nav_blog.id == blog.id and 'active' or ''">
+                <li t-att-class="nav_blog.id == blog.id and 'active' or None">
                     <a t-attf-href="#{blog_url(blog=nav_blog, tag=False, date_begin=False, date_end=False)}">
                         <span t-field="nav_blog.name"/>
                     </a>

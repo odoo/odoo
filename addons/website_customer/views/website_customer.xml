@@ -97,7 +97,7 @@
         <ul class="nav nav-pills nav-stacked mt16 mb32">
             <t t-foreach="countries" t-as="country_dict">
                 <t t-if="country_dict['country_id']">
-                    <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or ''">
+                    <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or None">
                         <a t-attf-href="/customers/#{ tag and 'tag/%s/' % slug(tag) or '' }#{ country_dict['country_id'][0] and 'country/%s' % slug(country_dict['country_id']) or '' }#{ search_path }">
                             <span class="badge pull-right" t-esc="country_dict['country_id_count'] or '0'"/>
                             <t t-esc="country_dict['country_id'][1]"/>

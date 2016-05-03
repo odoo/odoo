@@ -204,7 +204,7 @@
         </div>
         <div t-if="question.display_mode == 'columns' or not token" class="row js_radio">
             <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-md-#{question.column_nb}">
-                <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else ''">
+                <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else None">
                     <input type="radio" t-att-name="prefix" t-att-value='label.id' />
                     <span t-field='label.value'/>
                 </label>
@@ -226,7 +226,7 @@
     <template id="multiple_choice" name="Multiple choice">
         <div class="row">
             <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-md-#{question.column_nb}">
-                <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else ''">
+                <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else None">
                     <input type="checkbox" t-att-name="'%s_%s' % (prefix, label.id)" t-att-value='label.id' />
                     <span t-field='label.value'/>
                 </label>

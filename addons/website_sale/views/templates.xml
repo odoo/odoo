@@ -42,7 +42,7 @@
 </template>
 
 <template id="search" name="Search hidden fields">
-  <form t-att-action="keep('/shop'+ ('/category/'+slug(category)) if category else '', search=0)" method="get" t-att-class="search_class">
+  <form t-att-action="keep('/shop'+ ('/category/'+slug(category)) if category else None, search=0)" method="get" t-att-class="search_class">
 
     <t t-if="attrib_values">
       <t t-foreach="attrib_values" t-as="a">
@@ -215,7 +215,7 @@
 <!-- Add to cart button-->
 
 <template id="categories_recursive" name="Category list">
-  <li t-att-class="'active' if c.id == int(category or 0) else ''">
+  <li t-att-class="'active' if c.id == int(category or 0) else None">
       <a t-att-href="keep('/shop/category/' + slug(c), category=0)" t-field="c.name"></a>
       <ul t-if="c.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
           <t t-foreach="c.child_id" t-as="c">
@@ -243,7 +243,7 @@
 </template>
 
 <template id="option_collapse_categories_recursive" name="Collapse Category Recursive">
-  <li t-att-class="'active' if categ.id == int(category or 0) else ''">
+  <li t-att-class="'active' if categ.id == int(category or 0) else None">
       <i t-if="categ.child_id" t-attf-class="text-primary fa #{'fa-chevron-down' if categ.id in parent_category_ids else 'fa-chevron-right'}"/>
       <a t-att-href="keep('/shop/category/' + slug(categ), category=0)" t-field="categ.name"></a>
       <ul t-if="categ.child_id" class="nav nav-pills nav-stacked nav-hierarchy" t-att-style="'display:block;' if categ.id in parent_category_ids else 'display:none;'">
@@ -280,16 +280,16 @@
                         <select class="form-control" name="attrib">
                           <option value=""/>
                           <t t-foreach="a.value_ids" t-as="v">
-                            <option t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="'selected' if v.id in attrib_set else ''"/>
+                            <option t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="v.id in attrib_set"/>
                           </t>
                         </select>
                       </t>
                       <t t-if="a.type == 'radio'">
                         <ul class="nav nav-pills nav-stacked">
                             <t t-foreach="a.value_ids" t-as="v">
-                                <li t-att-class="'active' if v.id in attrib_set else ''">
+                                <li t-att-class="'active' if v.id in attrib_set else None">
                                     <label style="margin: 0 20px;">
-                                        <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else ''"/>
+                                        <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None"/>
                                         <span style="font-weight: normal" t-field="v.name"/>
                                     </label>
                                 </li>
@@ -303,7 +303,7 @@
                               <input type="checkbox"
                                   name="attrib"
                                   t-att-value="'%s-%s' % (a.id,v.id)"
-                                  t-att-checked="'checked' if v.id in attrib_set else ''"
+                                  t-att-checked="'checked' if v.id in attrib_set else None"
                                   t-att-title="v.name"/>
                           </label>
                         </t>
@@ -468,7 +468,7 @@
     </t>
     <t t-if="len(product.product_variant_ids) &gt; 1">
       <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="variant_id">
-        <input type="radio" name="product_id" class="js_product_change" t-att-checked="'checked' if variant_id_index == 0 else ''" t-att-value="variant_id.id" t-att-data-lst_price="variant_id.lst_price" t-att-data-price="variant_id.price"/>
+        <input type="radio" name="product_id" class="js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-att-value="variant_id.id" t-att-data-lst_price="variant_id.lst_price" t-att-data-price="variant_id.price"/>
         <span t-esc="variant_id.name_get()[0][1]"/>
         <span class="badge" t-if="variant_id.price_extra">
           <t t-esc="variant_id.price_extra > 0 and '+' or ''"/><span t-field="variant_id.price_extra" style="white-space: nowrap;" t-field-options='{
@@ -513,7 +513,7 @@
               <t t-foreach="variant_id.value_ids" t-as="value_id">
                   <li class="form-group js_attribute_value" style="margin: 0;">
                       <label class="control-label" style="margin: 0 20px;">
-                          <input type="radio" class="js_variant_change" t-att-checked="'checked' if not inc else ''" t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)" t-att-value="value_id.id" style="vertical-align: top; margin-right: 10px;"/>
+                          <input type="radio" class="js_variant_change" t-att-checked="'checked' if not inc else None" t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)" t-att-value="value_id.id" style="vertical-align: top; margin-right: 10px;"/>
                           <span t-field="value_id.name"/>
                           <span class="badge" t-if="value_id.price_extra">
                               <t t-esc="value_id.price_extra > 0 and '+' or ''"/><span t-field="value_id.price_extra" style="white-space: nowrap;" t-field-options='{
@@ -536,7 +536,7 @@
                   <label t-attf-style="background-color:#{value_id.html_color or value_id.name}"
                       t-attf-class="css_attribute_color #{'active' if not inc else ''}">
                     <input type="radio" class="js_variant_change"
-                      t-att-checked="'checked' if not inc else ''"
+                      t-att-checked="'checked' if not inc else None"
                       t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)"
                       t-att-value="value_id.id"
                       t-att-title="value_id.name"/>
@@ -951,7 +951,7 @@
       <form t-if="website_sale_order and website_sale_order.website_order_line" action="/shop/pricelist" method="post" class="mb32">
           <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
           <div class="input-group">
-              <input name="promo" class='form-control' type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or ''"/>
+              <input name="promo" class='form-control' type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or None"/>
               <div class="input-group-btn">
                   <a class="btn btn-default a-submit">Apply</a>
               </div>
@@ -1062,33 +1062,33 @@
                       </select>
                   </div>
               </div>
-              <div t-if="not only_services" class="js_shipping row mb16" t-att-style="not shipping_id and 'display:none' or ''">
+              <div t-if="not only_services" class="js_shipping row mb16" t-att-style="not shipping_id and 'display:none' or None">
                   <h3 class="oe_shipping col-lg-12 mt16">Shipping Information</h3>
 
                   <div t-attf-class="form-group #{error.get('shipping_name') and 'has-error' or ''} col-lg-6">
                       <label class="control-label" for="shipping_name">Name (Shipping)</label>
-                      <input type="text" name="shipping_name" class="form-control" t-att-value="checkout.get('shipping_name', '')" t-att-readonly="'readonly' if shipping_id &gt;= 0 else ''"/>
+                      <input type="text" name="shipping_name" class="form-control" t-att-value="checkout.get('shipping_name', '')" t-att-readonly="'readonly' if shipping_id &gt;= 0 else None"/>
                   </div>
                   <div t-attf-class="form-group #{error.get('shipping_phone') and 'has-error' or ''} col-lg-6">
                       <label class="control-label" for="shipping_phone">Phone</label>
-                      <input type="tel" name="shipping_phone" class="form-control" t-att-value="checkout.get('shipping_phone', '')" t-att-readonly="  'readonly' if shipping_id &gt;= 0 else ''"/>
+                      <input type="tel" name="shipping_phone" class="form-control" t-att-value="checkout.get('shipping_phone', '')" t-att-readonly="  'readonly' if shipping_id &gt;= 0 else None"/>
                   </div>
                   <div t-attf-class="form-group #{error.get('shipping_street') and 'has-error' or ''} col-lg-6">
                       <label class="control-label" for="shipping_street">Street</label>
-                      <input type="text" name="shipping_street" class="form-control" t-att-value="checkout.get('shipping_street', '')" t-att-readonly=" 'readonly' if shipping_id &gt;= 0 else ''"/>
+                      <input type="text" name="shipping_street" class="form-control" t-att-value="checkout.get('shipping_street', '')" t-att-readonly=" 'readonly' if shipping_id &gt;= 0 else None"/>
                   </div>
                   <div class="clearfix"/>
                   <div t-attf-class="form-group #{error.get('shipping_city') and 'has-error' or ''} col-lg-6">
                       <label class="control-label" for="shipping_city">City</label>
-                      <input type="text" name="shipping_city" class="form-control" t-att-value="checkout.get('shipping_city', '')" t-att-readonly=" 'readonly' if shipping_id &gt;= 0 else ''"/>
+                      <input type="text" name="shipping_city" class="form-control" t-att-value="checkout.get('shipping_city', '')" t-att-readonly=" 'readonly' if shipping_id &gt;= 0 else None"/>
                   </div>
                   <div t-attf-class="form-group #{error.get('shipping_zip') and 'has-error' or ''} col-lg-6">
                       <label class="control-label label-optional" for="shipping_zip">Zip / Postal Code</label>
-                      <input type="text" name="shipping_zip" class="form-control" t-att-value="checkout.get('shipping_zip', '')" t-att-readonly=" 'readonly' if shipping_id &gt;= 0 else ''"/>
+                      <input type="text" name="shipping_zip" class="form-control" t-att-value="checkout.get('shipping_zip', '')" t-att-readonly=" 'readonly' if shipping_id &gt;= 0 else None"/>
                   </div>
                   <div t-attf-class="form-group #{error.get('shipping_country_id') and 'has-error' or ''} col-lg-6">
                       <label class="control-label" for="shipping_country_id">Country</label>
-                      <select name="shipping_country_id" class="form-control" t-att-disabled="  'disabled' if shipping_id &gt;= 0 else ''">
+                      <select name="shipping_country_id" class="form-control" t-att-disabled="  'disabled' if shipping_id &gt;= 0 else None">
                           <option value="">Country...</option>
                           <t t-foreach="countries or []" t-as="country">
                               <option t-att-value="country.id" t-att-selected="country.id == checkout.get('shipping_country_id')"><t t-esc="country.name"/></option>
@@ -1097,7 +1097,7 @@
                   </div>
                   <div t-attf-class="form-group #{error.get('shipping_state_id') and 'has-error' or ''} col-lg-6">
                       <label class="control-label label-optional" for="shipping_state_id">State / Province</label>
-                      <select name="shipping_state_id" class="form-control" t-att-disabled="  'disabled' if shipping_id &gt;= 0 else ''">
+                      <select name="shipping_state_id" class="form-control" t-att-disabled="  'disabled' if shipping_id &gt;= 0 else None">
                           <option value="">State / Province...</option>
                           <t t-foreach="states or []" t-as="state">
                               <option t-att-value="state.id" style="display:none;" t-att-data-country_id="state.country_id.id" t-att-selected="state.id == checkout.get('shipping_state_id')"><t t-esc="state.name"/></option>

@@ -3,7 +3,7 @@
     <!-- Front-end/Back-end integration -->
     <template id="user_navbar" inherit_id="website.layout">
         <xpath expr="//body" position="attributes">
-            <attribute name="t-att-class">'o_connected_user' if env['ir.ui.view'].user_has_groups('base.group_user') else ''</attribute>
+            <attribute name="t-att-class">'o_connected_user' if env['ir.ui.view'].user_has_groups('base.group_user') else None</attribute>
         </xpath>
         <xpath expr="//body/div['id=wrawrap']" position="before">
             <nav groups="base.group_user" t-if="website and menu_data" id="oe_main_menu_navbar" class="o_main_navbar">
@@ -15,7 +15,7 @@
                         <ul class="dropdown-menu">
                             <li t-as="menu" t-foreach="menu_data['children']">
                                 <t t-set="debug_param" t-value="'?&amp;debug=' if debug else ''"/>
-                                <a t-att-class="'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'" t-att-data-action-id="menu['action'] and menu['action'].split(',')[1] or ''" t-att-data-action-model="menu['action'] and menu['action'].split(',')[0] or ''" t-att-data-menu="menu['id']" t-att-href="'/web%s#menu_id=%s&amp;action=%s' % (debug_param, menu['id'], menu['action'] and menu['action'].split(',')[1] or '')">
+                                <a t-att-class="'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'" t-att-data-action-id="menu['action'] and menu['action'].split(',')[1] or None" t-att-data-action-model="menu['action'] and menu['action'].split(',')[0] or None" t-att-data-menu="menu['id']" t-att-href="'/web%s#menu_id=%s&amp;action=%s' % (debug_param, menu['id'], menu['action'] and menu['action'].split(',')[1] or '')">
                                     <i t-attf-class="fa #{menu.get('icon')} fa-lg fa-fw" t-if="menu.get('icon')"/>
                                     <span class="oe_menu_text">
                                         <t t-esc="menu['name']"/>

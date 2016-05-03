@@ -156,7 +156,7 @@
         <ul class="nav nav-pills nav-stacked">
             <li t-att-class="'' if searches.get('tag') else 'active'"><a t-attf-href="/event/#{ slug(event) }/track">All Tags</a></li>
             <t t-foreach="tags" t-as="tag">
-                <li t-att-class="searches.get('tag') == tag.id and 'active' or ''">
+                <li t-att-class="searches.get('tag') == tag.id and 'active' or None">
                     <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag) }">
                         <t t-esc="tag.name"/>
                     </a>

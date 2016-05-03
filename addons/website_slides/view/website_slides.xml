@@ -494,7 +494,7 @@
                         </div>
                         <div class="mt8 mb32">
                             <ul class="nav nav-tabs" role="tablist">
-                                <li t-att-class="not comments and 'active' or ''">
+                                <li t-att-class="not comments and 'active' or None">
                                     <a href="#about" role="tab" data-toggle="tab">
                                         <i class="fa fa-home"></i> About
                                     </a>
@@ -504,7 +504,7 @@
                                         <i class="fa fa-share-alt"></i> Share
                                     </a>
                                 </li>
-                                <li t-att-class="comments and 'active' or ''">
+                                <li t-att-class="comments and 'active' or None">
                                     <a href="#discuss" role="tab" data-toggle="tab">
                                         <i class="fa fa-comments-o"></i> Comments
                                     </a>

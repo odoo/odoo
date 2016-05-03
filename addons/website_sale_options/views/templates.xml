@@ -15,7 +15,7 @@
     <attribute name="t-if">not line.linked_line_id</attribute>
   </xpath>
   <xpath expr="//table[@id='cart_products']/tbody//tr" position="attributes">
-    <attribute name="t-att-class">'optional_product info' if line.linked_line_id else ''</attribute>
+    <attribute name="t-att-class">'optional_product info' if line.linked_line_id else None</attribute>
   </xpath>
   <xpath expr="//table[@id='cart_products']/tbody//td[@id='td-qty']" position="inside">
     <t t-if="line.linked_line_id">

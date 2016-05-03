@@ -68,24 +68,24 @@
                 </div>
                 <div class="collapse navbar-collapse" id="oe-help-navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li t-att-class="sorting == 'relevancy desc' and 'active' or '' ">
+                        <li t-att-class="sorting == 'relevancy desc' and 'active' or None ">
                             <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'search', 'post_type', 'filters', sorting='relevancy desc') }}">Trending</a>
                         </li>
-                        <li t-att-class="sorting == 'create_date desc' and 'active' or '' ">
+                        <li t-att-class="sorting == 'create_date desc' and 'active' or None ">
                             <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'search', 'post_type', 'filters', sorting='create_date desc') }}">Newest</a>
                         </li>
-                        <li t-att-class="searches.get('users') and 'active' or '' ">
+                        <li t-att-class="searches.get('users') and 'active' or None ">
                             <a t-attf-href="/forum/#{ slug(forum) }/users">People</a>
                         </li>
-                        <li t-att-class="searches.get('tags') and 'active' or '' ">
+                        <li t-att-class="searches.get('tags') and 'active' or None ">
                             <a t-attf-href="/forum/#{ slug(forum) }/tag">Tags</a>
                         </li>
-                        <li t-att-class="searches.get('badges') and 'active' or '' ">
+                        <li t-att-class="searches.get('badges') and 'active' or None ">
                             <a t-attf-href="/forum/#{ slug(forum) }/badge">Badges</a>
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li t-if="not is_public_user" t-att-class="searches.get('my_profile') and 'active' or '' ">
+                        <li t-if="not is_public_user" t-att-class="searches.get('my_profile') and 'active' or None ">
                             <a t-attf-href="/forum/#{ slug(forum) }/user/#{uid}">
                                 <span t-field="user_id.name"/> (k: <t t-esc="user_id.karma"/>)
                             </a>
@@ -418,33 +418,33 @@
               </a>
               <ul class="dropdown-menu">
                   <li class="dropdown-header">Filter on</li>
-                  <li t-att-class="filters == 'all' and 'active' or '' ">
+                  <li t-att-class="filters == 'all' and 'active' or None ">
                       <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='all')">All</a>
                   </li>
-                  <li t-att-class="filters == 'unanswered' and 'active' or '' ">
+                  <li t-att-class="filters == 'unanswered' and 'active' or None ">
                       <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='unanswered')">Unanswered</a>
                   </li>
-                  <li t-if="uid" t-att-class="filters == 'followed' and 'active' or '' ">
+                  <li t-if="uid" t-att-class="filters == 'followed' and 'active' or None ">
                       <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='followed')">Followed</a>
                   </li>
                   <li t-if="tag" class="dropdown-header">Tags</li>
-                  <li t-if="tag" t-att-class="tag and 'active' or '' ">
+                  <li t-if="tag" t-att-class="tag and 'active' or None ">
                       <a href=""><t t-esc="tag.name"/></a>
                   </li>
                   <li class="dropdown-header">Sort by</li>
-                  <li t-att-class="sorting == 'relevancy desc' and 'active' or '' ">
+                  <li t-att-class="sorting == 'relevancy desc' and 'active' or None ">
                       <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='relevancy desc')">Relevance</a>
                   </li>
-                  <li t-att-class="sorting == 'write_date desc' and 'active' or '' ">
+                  <li t-att-class="sorting == 'write_date desc' and 'active' or None ">
                       <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='write_date desc')">Last activity date</a>
                   </li>
-                  <li t-att-class="sorting == 'create_date desc' and 'active' or '' ">
+                  <li t-att-class="sorting == 'create_date desc' and 'active' or None ">
                       <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='create_date desc')">Newest</a>
                   </li>
-                  <li t-att-class="sorting == 'child_count desc' and 'active' or '' ">
+                  <li t-att-class="sorting == 'child_count desc' and 'active' or None ">
                       <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='child_count desc')">Most answered</a>
                   </li>
-                  <li t-att-class="sorting == 'vote_count desc' and 'active' or '' ">
+                  <li t-att-class="sorting == 'vote_count desc' and 'active' or None ">
                       <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='vote_count desc')">Most voted</a>
                   </li>
               </ul>
@@ -875,7 +875,7 @@
                             <a t-attf-class="fa fa-reply" href="#post_reply"> Reply</a>
                         </li>
                         <li t-if="question.post_type == 'question'">
-                            <a style="cursor: pointer" t-att-data-toggle="question.can_comment and 'collapse' or ''"
+                            <a style="cursor: pointer" t-att-data-toggle="question.can_comment and 'collapse' or None"
                                 t-attf-class="fa fa-comment-o #{not question.can_comment and 'karma_required text-muted' or ''}"
                                 t-attf-data-karma="#{not question.can_comment and question.karma_comment or 0}"
                                 t-attf-data-target="#comment#{ question._name.replace('.','') + '-' + str(question.id) }">
@@ -988,7 +988,7 @@
                     <li t-if="question.post_type == 'question'">
                         <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
                             t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
-                            style="cursor: pointer" t-att-data-toggle="answer.can_comment and 'collapse' or ''"
+                            style="cursor: pointer" t-att-data-toggle="answer.can_comment and 'collapse' or None"
                             t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Comment
                         </a>
                     </li>
@@ -1166,13 +1166,13 @@
                     <b class="caret"/>
                 </a>
                 <ul class="dropdown-menu">
-                    <li t-att-class="queue_type == 'validation' and 'active' or '' ">
+                    <li t-att-class="queue_type == 'validation' and 'active' or None ">
                         <a t-attf-href="/forum/#{slug(forum)}/validation_queue">Pending</a>
                     </li>
-                    <li t-att-class="queue_type == 'flagged' and 'active' or '' ">
+                    <li t-att-class="queue_type == 'flagged' and 'active' or None ">
                         <a t-attf-href="/forum/#{slug(forum)}/flagged_queue">Flagged</a>
                     </li>
-                    <li t-if="uid" t-att-class="queue_type == 'offensive' and 'active' or '' ">
+                    <li t-if="uid" t-att-class="queue_type == 'offensive' and 'active' or None ">
                         <a t-attf-href="/forum/#{slug(forum)}/offensive_posts">Offensive</a>
                     </li>
                 </ul>
