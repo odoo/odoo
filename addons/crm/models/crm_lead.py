@@ -65,7 +65,7 @@ class Lead(FormatAddress, models.Model):
 
     def _default_stage_id(self):
         team = self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid)
-        return self.stage_find(team.id, [('fold', '=', False)])
+        return self.stage_find(team_id=team.id, domain=[('fold', '=', False)])
 
     name = fields.Char('Opportunity', required=True, index=True)
     partner_id = fields.Many2one('res.partner', string='Customer', track_visibility='onchange', index=True,
@@ -172,6 +172,7 @@ class Lead(FormatAddress, models.Model):
         # restore order of the search
         order_mapping = dict((item[0], stage_ids.index(item[0])) for item in result)  # match stage_id with its index
         result.sort(key=lambda item: order_mapping.get(item[0]))
+
         fold = {}
         for stage in stages:
             fold[stage.id] = stage.fold or False
@@ -363,10 +364,6 @@ class Lead(FormatAddress, models.Model):
         """ Lost semantic: probability = 0, active = False """
         return self.write({'probability': 0, 'active': False})
 
-    # TODO JEM : check, nad remove this
-    # Backward compatibility
-    case_mark_lost = action_set_lost
-
     @api.multi
     def action_set_active(self):
         return self.write({'active': True})
@@ -379,13 +376,9 @@ class Lead(FormatAddress, models.Model):
     def action_set_won(self):
         """ Won semantic: probability = 100 (active untouched) """
         for lead in self:
-            stage_id = lead.stage_find(lead.team_id.id, [('probability', '=', 100.0), ('on_change', '=', True)])
+            stage_id = lead.stage_find(domain=[('probability', '=', 100.0), ('on_change', '=', True)])
             lead.write({'stage_id': stage_id, 'probability': 100})
         return True
-
-    # TODO JEM : check, nad remove this
-    # Backward compatibility
-    case_mark_won = action_set_won
 
     @api.multi
     def action_schedule_meeting(self):
@@ -414,9 +407,9 @@ class Lead(FormatAddress, models.Model):
     # ----------------------------------------
     # Business Methods
     # ----------------------------------------
-    # TODO JEM : team_id should be optional
+
     @api.multi
-    def stage_find(self, team_id, domain=None, order='sequence'):
+    def stage_find(self, team_id=False, domain=None, order='sequence'):
         """ Determine the stage of the current lead with its teams, the given domain and the given team_id
             :param team_id
             :param domain : base search domain for stage
@@ -435,7 +428,8 @@ class Lead(FormatAddress, models.Model):
         else:
             search_domain = [('team_id', '=', False)]
         # AND with the domain in parameter
-        search_domain += list(domain)
+        if domain:
+            search_domain += list(domain)
         # perform search, return the first found
         stage = self.env['crm.stage'].search(search_domain, order=order, limit=1)
         if stage:
@@ -711,7 +705,7 @@ class Lead(FormatAddress, models.Model):
             'date_conversion': fields.Datetime.now(),
         }
         if not self.stage_id:
-            stage_id = self.stage_find(team_id, [])
+            stage_id = self.stage_find(team_id=team_id)
             value['stage_id'] = stage_id
             if stage_id:
                 value['probability'] = self.env['crm.stage'].browse(stage_id).probability
@@ -1012,11 +1006,10 @@ class Lead(FormatAddress, models.Model):
         max_date = fields.Datetime.to_string(datetime.now() + timedelta(days=8))
         meetings_domain = [
             ('start', '>=', min_date),
-            ('start', '<=', max_date)
+            ('start', '<=', max_date),
+            ('partner_ids', 'in', [self.env.user.partner_id.id])
         ]
-        #TODO JEM : remove this stupid context key
-        # We need to add 'mymeetings' in the context for the search to be correct.
-        meetings = self.env['calendar.event'].with_context(mymeetings=1).search(meetings_domain)
+        meetings = self.env['calendar.event'].search(meetings_domain)
         for meeting in meetings:
             if meeting['start']:
                 start = datetime.strptime(meeting['start'], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()

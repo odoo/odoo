@@ -37,43 +37,6 @@ class Partner(models.Model):
         for partner in self:
             partner.activities_count = mapped_data.get(partner.id, 0)
 
-    # TODO JEM : it is still used ?
-    @api.v7
-    def redirect_partner_form(self, cr, uid, partner_id, context=None):
-        search_view = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'view_res_partner_filter')
-        value = {
-            'domain': "[]",
-            'view_type': 'form',
-            'view_mode': 'form,tree',
-            'res_model': 'res.partner',
-            'res_id': int(partner_id),
-            'view_id': False,
-            'context': context,
-            'type': 'ir.actions.act_window',
-            'search_view_id': search_view and search_view[1] or False
-        }
-        return value
-
-    # TODO JEM : it is still used ?
-    @api.v7
-    def make_opportunity(self, cr, uid, ids, opportunity_summary, planned_revenue=0.0, probability=0.0, partner_id=None, context=None):
-        lead_obj = self.pool.get('crm.lead')
-        tag_ids = self.pool['crm.lead.tag'].search(cr, uid, [])
-        opportunity_ids = {}
-        for partner in self.browse(cr, uid, ids, context=context):
-            if not partner_id:
-                partner_id = partner.id
-            opportunity_id = lead_obj.create(cr, uid, {
-                'name' : opportunity_summary,
-                'planned_revenue' : planned_revenue,
-                'probability' : probability,
-                'partner_id' : partner_id,
-                'tag_ids' : tag_ids and tag_ids[0] or [],
-                'type': 'opportunity'
-            }, context=context)
-            opportunity_ids[partner_id] = opportunity_id
-        return opportunity_ids
-
     @api.multi
     def schedule_meeting(self):
         partner_ids = self.ids

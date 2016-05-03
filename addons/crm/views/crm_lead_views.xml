@@ -673,7 +673,7 @@
             <field name="state">code</field>
             <field name="code">
                 if context.get('active_model') == 'crm.lead' and context.get('active_ids'):
-                    self.case_mark_lost(cr, uid, context['active_ids'], context=context)
+                    self.action_set_lost(cr, uid, context['active_ids'], context=context)
             </field>
         </record>
 
