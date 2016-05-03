@@ -3,7 +3,7 @@ Soluciones Globales en software S.A de S.V.  Agrees to the terms of the Odoo Cor
 I declare that I am authorized and able to make this agreement and sign this
 declaration.
 Signed,
-mnunez-sgsoft anajuaristi@avanzosc.es https://github.com/mnunez-sgsoft
+DesarrolloSGSOFT mauricio.nunez@sgsoft.com.mx https://github.com/sgsoft-mx
 List of contributors:
 mnunez-sgsoft mauricio.nunez@cedetecgrupomc.com https://github.com/mnunez-sgsoft 
 juanhernandez9 jose.hernandez@cedetecgrupomc.com https://github.com/juanhernandez94
