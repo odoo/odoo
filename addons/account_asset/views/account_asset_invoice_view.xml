@@ -7,7 +7,7 @@
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account.invoice_supplier_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='quantity']" position="before">
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_id']" position="before">
                 <field string="Asset Category" name="asset_category_id" domain="[('type','=','purchase')]" context="{'default_type':'purchase'}"/>
             </xpath>
         </field>

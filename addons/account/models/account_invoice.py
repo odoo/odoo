@@ -1222,7 +1222,6 @@ class AccountInvoiceLine(models.Model):
     def _onchange_uom_id(self):
         warning = {}
         result = {}
-        self._onchange_product_id()
         if not self.uom_id:
             self.price_unit = 0.0
         if self.product_id and self.uom_id:

@@ -12,18 +12,14 @@ class AssetDepreciationConfirmationWizard(models.TransientModel):
     def asset_compute(self):
         self.ensure_one()
         context = self._context
-        assets = self.env['account.asset.asset'].search([('state', '=', 'open'), ('category_id.type', '=', context.get('asset_type'))])
-        created_move_ids = assets._compute_entries(self.date)
-        if context.get('asset_type') == 'purchase':
-            title = _('Created Asset Moves')
-        else:
-            title = _('Created Revenue Moves')
+        created_move_ids = self.env['account.asset.asset'].compute_generated_entries(self.date, asset_type=context.get('asset_type'))
+
         return {
-            'name': title,
+            'name': _('Created Asset Moves') if context.get('asset_type') == 'purchase' else _('Created Revenue Moves'),
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.move',
             'view_id': False,
-            'domain': "[('id','in',["+','.join(map(str, created_move_ids))+"])]",
+            'domain': "[('id','in',[" + ','.join(map(str, created_move_ids)) + "])]",
             'type': 'ir.actions.act_window',
         }
