@@ -84,7 +84,7 @@ var MessagingMenu = Widget.extend({
         var self = this;
 
         // Display spinner while waiting for channels preview
-        this.$channels_preview.html(QWeb.render('mail.chat.Spinner'));
+        this.$channels_preview.html(QWeb.render('Spinner'));
 
         chat_manager.is_ready.then(function () {
             var channels = _.filter(chat_manager.get_channels(), function (channel) {
