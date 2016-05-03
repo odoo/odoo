@@ -340,9 +340,9 @@ class resource_calendar(osv.osv):
         tz_info = fields.datetime.context_timestamp(cr, uid, work_dt, context=context).tzinfo
         for calendar_working_day in self.get_attendances_for_weekdays(cr, uid, id, [start_dt.weekday()], context):
             x = work_dt.replace(hour=int(calendar_working_day.hour_from),
-                                minute=int(60.0*math.modf(calendar_working_day.hour_from)[0]))
+                                minute=int(round(60.0*math.modf(calendar_working_day.hour_from)[0])))
             y = work_dt.replace(hour=int(calendar_working_day.hour_to),
-                                minute=int(60.0*math.modf(calendar_working_day.hour_to)[0]))
+                                minute=int(round(60.0*math.modf(calendar_working_day.hour_to)[0])))
             x = x.replace(tzinfo=tz_info).astimezone(pytz.UTC).replace(tzinfo=None)
             y = y.replace(tzinfo=tz_info).astimezone(pytz.UTC).replace(tzinfo=None)
             working_interval = (x, y)
