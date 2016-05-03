@@ -251,5 +251,5 @@ class MrpBomLine(models.Model):
                         documents to your project.
                     </p>'''),
             'limit': 80,
-            #'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
+            'context': "{'default_res_model': '%s','default_res_id': %d}" % ('product.product', self.product_id.id)
         }
