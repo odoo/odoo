@@ -20,6 +20,6 @@ class AssetDepreciationConfirmationWizard(models.TransientModel):
             'view_mode': 'tree,form',
             'res_model': 'account.move',
             'view_id': False,
-            'domain': "[('id','in',["+','.join(map(str, created_move_ids))+"])]",
+            'domain': "[('id','in',[" + ','.join(map(str, created_move_ids)) + "])]",
             'type': 'ir.actions.act_window',
         }

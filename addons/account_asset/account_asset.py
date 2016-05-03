@@ -15,9 +15,9 @@ class AccountAssetCategory(models.Model):
     active = fields.Boolean(default=True)
     name = fields.Char(required=True, index=True, string="Asset Type")
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
-    account_asset_id = fields.Many2one('account.account', string='Asset Account', required=True, domain=[('internal_type','=','other'), ('deprecated', '=', False)])
+    account_asset_id = fields.Many2one('account.account', string='Asset Account', required=True, domain=[('internal_type','=','other'), ('deprecated', '=', False)], help="Account used for the initial asset buy")
     account_depreciation_id = fields.Many2one('account.account', string='Depreciation Account', required=True, domain=[('internal_type','=','other'), ('deprecated', '=', False)])
-    account_depreciation_expense_id = fields.Many2one('account.account', string='Depr. Expense Account', domain=[('internal_type','=','other'), ('deprecated', '=', False)], oldname='account_income_recognition_id')
+    account_depreciation_expense_id = fields.Many2one('account.account', string='Depr. Expense Account', required=True, domain=[('internal_type','=','other'), ('deprecated', '=', False)], oldname='account_income_recognition_id')
     journal_id = fields.Many2one('account.journal', string='Journal', required=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env['res.company']._company_default_get('account.asset.category'))
     method = fields.Selection([('linear', 'Linear'), ('degressive', 'Degressive')], string='Computation Method', required=True, default='linear',
@@ -33,7 +33,7 @@ class AccountAssetCategory(models.Model):
            "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond.")
     method_end = fields.Date('Ending date')
     prorata = fields.Boolean(string='Prorata Temporis', help='Indicates that the first depreciation entry for this asset have to be done from the purchase date instead of the first of January')
-    open_asset = fields.Boolean(string='Post Journal Entries', help="Check this if you want to automatically confirm the assets of this category when created by invoices.")
+    open_asset = fields.Boolean(string='Auto-confirm Assets', help="Check this if you want to automatically confirm the assets of this category when created by invoices.")
     group_entries = fields.Boolean(string='Group Journal Entries', help="Check this if you want to group the generated entries by categories.")
     type = fields.Selection([('sale', 'Sale: Revenue Recognition'), ('purchase', 'Purchase: Asset')], required=True, index=True, default='purchase')
 
@@ -55,7 +55,7 @@ class AccountAssetAsset(models.Model):
     _description = 'Asset/Revenue Recognition'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
-    account_move_ids = fields.One2many('account.move', 'asset_id', string='Entries', readonly=True, states={'draft': [('readonly', False)]})
+    account_move_ids = fields.Many2many('account.move', 'account_move_account_asset_rel', 'asset_id', 'move_id', compute="_entry_count", string='Entries', readonly=True, states={'draft': [('readonly', False)]})
     entry_count = fields.Integer(compute='_entry_count', string='# Asset Entries')
     name = fields.Char(string='Asset Name', required=True, readonly=True, states={'draft': [('readonly', False)]})
     code = fields.Char(string='Reference', size=32, readonly=True, states={'draft': [('readonly', False)]})
@@ -111,10 +111,11 @@ class AccountAssetAsset(models.Model):
         """
         self.env.cr.execute("""
             SELECT a.id as id, COALESCE(MAX(m.date),a.date) AS date
-            FROM account_asset_asset a
-            LEFT JOIN account_move m ON (m.asset_id = a.id)
+            FROM account_move_account_asset_rel rel
+            LEFT JOIN account_asset_asset a ON (rel.asset_id = a.id)
+            LEFT JOIN account_move m ON (rel.move_id = m.id)
             WHERE a.id IN %s
-            GROUP BY a.id, a.date """, (tuple(self.ids),))
+            GROUP BY a.id, m.date """, (tuple(self.ids),))
         result = dict(self.env.cr.fetchall())
         return result
 
@@ -320,10 +321,12 @@ class AccountAssetAsset(models.Model):
         self.currency_id = self.company_id.currency_id.id
 
     @api.multi
-    @api.depends('account_move_ids')
+    @api.depends('depreciation_line_ids.move_id')
     def _entry_count(self):
         for asset in self:
-            asset.entry_count = self.env['account.move'].search_count([('asset_id', '=', asset.id)])
+            res = self.env['account.asset.depreciation.line'].search_read(domain=[('asset_id', '=', asset.id), ('move_id', '!=', False)], fields=['move_id'])
+            asset.account_move_ids = [x['move_id'][0] for x in res]
+            asset.entry_count = len(asset.account_move_ids)
 
     @api.one
     @api.constrains('prorata', 'method_time')
@@ -368,7 +371,7 @@ class AccountAssetAsset(models.Model):
 
     @api.multi
     def _compute_entries(self, date, group_entries=False):
-        depreciation_ids = self.env['account.asset.depreciation.line'].search([
+        depreciation_ids = self.env['account.asset.depreciation.line'].with_context(depreciation_date=date).search([
             ('asset_id', 'in', self.ids), ('depreciation_date', '<=', date),
             ('move_check', '=', False)])
         if group_entries:
@@ -390,6 +393,9 @@ class AccountAssetAsset(models.Model):
 
     @api.multi
     def open_entries(self):
+        move_ids = []
+        for asset in self:
+            move_ids += asset.account_move_ids.ids
         return {
             'name': _('Journal Entries'),
             'view_type': 'form',
@@ -397,7 +403,7 @@ class AccountAssetAsset(models.Model):
             'res_model': 'account.move',
             'view_id': False,
             'type': 'ir.actions.act_window',
-            'context': dict(self.env.context or {}, search_default_asset_id=self.id, default_asset_id=self.id),
+            'domain': [('id', 'in', move_ids)]
         }
 
 
@@ -438,18 +444,18 @@ class AccountAssetDepreciationLine(models.Model):
                 'debit': 0.0,
                 'credit': amount,
                 'journal_id': category_id.journal_id.id,
-                'partner_id': line.partner_id.id,
+                'partner_id': line.asset_id.partner_id.id,
                 'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'sale' else False,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
                 'amount_currency': company_currency != current_currency and - sign * line.amount or 0.0,
             }
             move_line_2 = {
                 'name': asset_name,
-                'account_id': category_id.account_asset_id.id,
+                'account_id': category_id.account_depreciation_expense_id.id,
                 'credit': 0.0,
                 'debit': amount,
                 'journal_id': category_id.journal_id.id,
-                'partner_id': line.partner_id.id,
+                'partner_id': line.asset_id.partner_id.id,
                 'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'purchase' else False,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
                 'amount_currency': company_currency != current_currency and sign * line.amount or 0.0,
@@ -459,7 +465,6 @@ class AccountAssetDepreciationLine(models.Model):
                 'date': depreciation_date or False,
                 'journal_id': category_id.journal_id.id,
                 'line_ids': [(0, 0, move_line_1), (0, 0, move_line_2)],
-                'asset_id': line.asset_id.id,
             }
             move = self.env['account.move'].create(move_vals)
             line.write({'move_id': move.id, 'move_check': True})
@@ -516,7 +521,7 @@ class AccountAssetDepreciationLine(models.Model):
             created_moves.post()
         return [x.id for x in created_moves]
 
-    @api.multi
+    api.multi
     def post_lines_and_close_asset(self):
         # we re-evaluate the assets to determine whether we can close them
         for line in self:
@@ -562,11 +567,11 @@ class AccountAssetDepreciationLine(models.Model):
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    asset_id = fields.Many2one('account.asset.asset', string='Asset', ondelete="restrict")
+    asset_depreciation_ids = fields.One2many('account.asset.depreciation.line', 'move_id', string='Assets Depreciation Lines', ondelete="restrict")
 
     @api.multi
     def post(self):
         for move in self:
-            if move.asset_id:
-                move.asset_id.depreciation_line_ids.post_lines_and_close_asset()
+            for depreciation_line in move.asset_depreciation_ids:
+                depreciation_line.post_lines_and_close_asset()
         return super(AccountMove, self).post()

@@ -248,28 +248,6 @@
         </field>
     </record>
 
-    <record id="view_account_move_form_asset_inherit" model="ir.ui.view">
-        <field name="name">Journal Entries (form)</field>
-        <field name="model">account.move</field>
-        <field name="inherit_id" ref="account.view_move_form"/>
-        <field name="arch" type="xml">
-            <field name="journal_id" position="after">
-                <field name="asset_id"/>
-            </field>
-        </field>
-    </record>
-
-    <record id="view_account_move_filter_asset_inherit" model="ir.ui.view">
-        <field name="name">Journal Entries (Search)</field>
-        <field name="model">account.move</field>
-        <field name="inherit_id" ref="account.view_account_move_filter"/>
-        <field name="arch" type="xml">
-            <field name="journal_id" position="after">
-                <field name="asset_id"/>
-            </field>
-        </field>
-    </record>
-
     <record model="ir.actions.act_window" id="action_account_asset_asset_form">
         <field name="name">Assets</field>
         <field name="res_model">account.asset.asset</field>
