@@ -9,8 +9,10 @@ class ProductTemplate(models.Model):
 
     @api.multi
     def _bom_orders_count(self):
+        bom_data = self.env['mrp.bom'].read_group([('product_tmpl_id', 'in', self.ids)], ['product_tmpl_id'], ['product_tmpl_id'])
+        result = dict((data['product_tmpl_id'][0], data['product_tmpl_id_count']) for data in bom_data)
         for product_tmpl in self:
-            product_tmpl.bom_count = self.env['mrp.bom'].search_count([('product_tmpl_id', '=', product_tmpl.id)])
+            product_tmpl.bom_count = result.get(product_tmpl.id, 0)
 
     @api.multi
     def _bom_orders_count_mo(self):
@@ -39,8 +41,10 @@ class ProductProduct(models.Model):
 
     @api.multi
     def _bom_orders_count(self):
+        production_data = self.env['mrp.production'].read_group([('product_id', 'in', self.ids)], ['product_id'], ['product_id'])
+        result = dict((data['product_id'][0], data['product_id_count']) for data in production_data)
         for product in self:
-            product.mo_count = self.env['mrp.production'].search_count([('product_id', '=', product.id)])
+            product.mo_count = result.get(product.id, 0)
 
     mo_count = fields.Integer(compute='_bom_orders_count', string='# Manufacturing Orders')
 
