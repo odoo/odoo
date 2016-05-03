@@ -17,13 +17,9 @@ class Partner(models.Model):
 
     @api.multi
     def _compute_opportunity_count(self):
-        # TODO JEM : remove the try/except by putting a group on button
-        try:
-            for partner in self:
-                operator = 'child_of' if partner.is_company else '='  # the opportunity count should counts the opportunities of this company and all its contacts
-                partner.opportunity_count = self.env['crm.lead'].search_count([('partner_id', operator, partner.id), ('type', '=', 'opportunity')])
-        except:
-            pass
+        for partner in self:
+            operator = 'child_of' if partner.is_company else '='  # the opportunity count should counts the opportunities of this company and all its contacts
+            partner.opportunity_count = self.env['crm.lead'].search_count([('partner_id', operator, partner.id), ('type', '=', 'opportunity')])
 
     @api.multi
     def _compute_meeting_count(self):

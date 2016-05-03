@@ -48,7 +48,7 @@ class Team(models.Model):
                 team.alias_id.write(team.get_alias_values())
         return result
 
-    #TODO JEM : refactor this stuff with xml action, proper customization, ...
+    #TODO JEM : refactor this stuff with xml action, proper customization,
     @api.model
     def action_your_pipeline(self):
         action = self.env.ref('crm.crm_lead_opportunities_tree_view').read()[0]
