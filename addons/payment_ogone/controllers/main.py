@@ -3,9 +3,9 @@ import logging
 import pprint
 import werkzeug
 
-from openerp import http, SUPERUSER_ID
-from openerp.http import request
-from openerp.addons.payment.models.payment_acquirer import ValidationError
+from odoo import http
+from odoo.http import request
+from odoo.addons.payment.models.payment_acquirer import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -25,8 +25,7 @@ class OgoneController(http.Controller):
     def ogone_form_feedback(self, **post):
         """ Ogone contacts using GET, at least for accept """
         _logger.info('Ogone: entering form_feedback with post data %s', pprint.pformat(post))  # debug
-        cr, uid, context = request.cr, SUPERUSER_ID, request.context
-        request.registry['payment.transaction'].form_feedback(cr, uid, post, 'ogone', context=context)
+        request.env['payment.transaction'].sudo().form_feedback(post, 'ogone')
         return werkzeug.utils.redirect(post.pop('return_url', '/'))
 
     @http.route(['/payment/ogone/s2s/create_json'], type='json', auth='public', csrf=False)
@@ -46,11 +45,10 @@ class OgoneController(http.Controller):
 
     @http.route(['/payment/ogone/s2s/feedback'], auth='none', csrf=False)
     def feedback(self, **kwargs):
-        cr, uid, context = request.cr, SUPERUSER_ID, request.context
-        payment = request.registry.get('payment.transaction')
+        Sudo_Payment = request.env['payment.transaction']
         try:
-            tx = payment._ogone_form_get_tx_from_data(cr, uid, kwargs, context=context)
-            payment._ogone_s2s_validate(tx)
+            tx = Sudo_Payment._ogone_form_get_tx_from_data(kwargs)
+            Sudo_Payment._ogone_s2s_validate(tx)
         except ValidationError:
             return 'ko'
 
