@@ -416,6 +416,45 @@ var DropMisordered = Class.extend({
     },
 });
 
+var DropPrevious = Class.extend({
+    /**
+     * Registers a new deferred and rejects the previous one
+     * @param {$.Deferred} the new deferred
+     * @returns {$.Promise}
+     */
+    add: function (deferred) {
+        if (this.current_def) { this.current_def.reject(); }
+        var res = $.Deferred();
+        deferred.then(res.resolve, res.reject);
+        this.current_def = res;
+        return res.promise();
+    }
+});
+
+/**
+ * Rejects a deferred as soon as a reference deferred is either resolved or rejected
+ * @param {$.Deferred} [target_def] the deferred to potentially reject
+ * @param {$.Deferred} [reference_def] the reference target
+ * @returns {$.Deferred}
+ */
+function reject_after(target_def, reference_def) {
+    var res = $.Deferred();
+    target_def.then(res.resolve, res.reject);
+    reference_def.always(res.reject);
+    return res.promise();
+}
+
+/**
+ * Returns a deferred resolved after 'wait' milliseconds
+ * @param {int} [wait] the delay in ms
+ * @return {$.Deferred}
+ */
+function delay (wait) {
+    var def = $.Deferred();
+    setTimeout(def.resolve, wait);
+    return def;
+}
+
 function swap(array, elem1, elem2) {
     var i1 = array.indexOf(elem1);
     var i2 = array.indexOf(elem2);
@@ -448,6 +487,9 @@ return {
     assert: assert,
     xor: xor,
     DropMisordered: DropMisordered,
+    DropPrevious: DropPrevious,
+    reject_after: reject_after,
+    delay: delay,
     swap: swap,
 };
 
