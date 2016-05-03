@@ -39,10 +39,9 @@ class MergeOpportunity(models.TransientModel):
     @api.multi
     def action_merge(self):
         self.ensure_one()
-        merge_opportunity_id = self.opportunity_ids.merge_opportunity(self.user_id.id, self.team_id.id)
+        merge_opportunity = self.opportunity_ids.merge_opportunity(self.user_id.id, self.team_id.id)
 
         # The newly created lead might be a lead or an opp: redirect toward the right view
-        merge_opportunity = self.env['crm.lead'].browse(merge_opportunity_id)
         if merge_opportunity.type == 'opportunity':
             return merge_opportunity.redirect_opportunity_view()
         else:

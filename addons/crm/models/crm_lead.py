@@ -599,7 +599,6 @@ class Lead(FormatAddress, models.Model):
         self._merge_opportunity_history(opportunities)
         self._merge_opportunity_attachments(opportunities)
 
-    #TODO JEM : make it return record
     @api.multi
     def merge_opportunity(self, user_id=False, team_id=False):
         """ Merge opportunities in one. Different cases of merge:
@@ -609,7 +608,7 @@ class Lead(FormatAddress, models.Model):
             updated with values from other opportunities to merge.
             :param user_id : the id of the saleperson. If not given, will be determined by `_merge_data`.
             :param team : the id of the sales team. If not given, will be determined by `_merge_data`.
-            :return int id: id of the resulting lead/opportunity
+            :return crm.lead record resulting of th merge
         """
         if len(self.ids) <= 1:
             raise UserError(_('Please select more than one element (lead or opportunity) from the list view.'))
@@ -658,7 +657,7 @@ class Lead(FormatAddress, models.Model):
         # we use the SUPERUSER to avoid access rights issues because as the user had the rights to see the records it should be safe to do so
         opportunities_tail.sudo().unlink()
 
-        return opportunities_head.id
+        return opportunities_head
 
     @api.multi
     def get_duplicated_leads(self, partner_id, include_lost=False):
