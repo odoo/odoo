@@ -771,7 +771,7 @@ class Orderpoint(models.Model):
     def onchange_warehouse_id(self):
         """ Finds location id for changed warehouse. """
         if self.warehouse_id:
-            self.location_id = self.warehoues_id.lot_stock_id.id
+            self.location_id = self.warehouse_id.lot_stock_id.id
 
     @api.onchange('product_id')
     def onchange_product_id(self):
