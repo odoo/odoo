@@ -1449,6 +1449,8 @@ class BaseModel(object):
             etree.SubElement(group, 'field', name=fname)
             if field.type == 'text':
                 etree.SubElement(group, 'newline')
+
+        etree.SubElement(group, 'separator')
         return view
 
     def _get_default_search_view(self, cr, user, context=None):
