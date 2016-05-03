@@ -1,11 +1,10 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
 
         <!--Partner Activation -->
 
         <record model="ir.ui.view" id="res_partner_activation_form">
-            <field name="name">openerp_custom.res.partner.activation.form</field>
+            <field name="name">res.partner.activation.form</field>
             <field name="model">res.partner.activation</field>
             <field name="arch" type="xml">
                 <form string="Activation">
@@ -17,7 +16,7 @@
             </field>
         </record>
         <record model="ir.ui.view" id="res_partner_activation_tree">
-            <field name="name">openerp_custom.res.partner.activation.tree</field>
+            <field name="name">res.partner.activation.tree</field>
             <field name="model">res.partner.activation</field>
             <field name="arch" type="xml">
                 <tree string="Activation">
@@ -136,5 +135,4 @@
         </field>
     </record>
 
-    </data>
-</openerp>
+</odoo>
