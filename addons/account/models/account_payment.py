@@ -248,7 +248,7 @@ class account_payment(models.Model):
         invoice_defaults = self.resolve_2many_commands('invoice_ids', rec.get('invoice_ids'))
         if invoice_defaults and len(invoice_defaults) == 1:
             invoice = invoice_defaults[0]
-            rec['communication'] = invoice['reference']
+            rec['communication'] = invoice['reference'] or invoice['name'] or invoice['number']
             rec['currency_id'] = invoice['currency_id'][0]
             rec['payment_type'] = invoice['type'] in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
             rec['partner_type'] = MAP_INVOICE_TYPE_PARTNER_TYPE[invoice['type']]
