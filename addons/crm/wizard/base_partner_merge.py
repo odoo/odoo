@@ -441,21 +441,20 @@ class MergePartnerAutomatic(models.TransientModel):
     # ----------------------------------------
 
     @api.multi
-    def close_cb(self):
+    def action_close(self):
         self.ensure_one()
         return {'type': 'ir.actions.act_window_close'}
 
     @api.multi
-    def next_cb(self):
+    def action_skip(self):
         """ Skip this wizard line. Don't compute any thing, and simply redirect to the new step."""
         self.ensure_one()
         if self.current_line_id:
             self.current_line_id.unlink()
-        return self._next_screen()
+        return self._action_next_screen()
 
-    #TODO JEM : rename with action_ prefix
     @api.multi
-    def _next_screen(self):
+    def _action_next_screen(self):
         """ return the action of the next screen ; this means the wizard is set to treat the
             next wizard line. Each line is a subset of partner that can be merged together.
             If no line left, the end screen will be displayed (but an action is still returned).
@@ -521,7 +520,7 @@ class MergePartnerAutomatic(models.TransientModel):
         _logger.info("counter: %s", counter)
 
     @api.multi
-    def start_process_cb(self):
+    def action_start_manual_process(self):
         """ Start the process 'Merge with Manual Check'. Fill the wizard according to the group_by and exclude
             options, and redirect to the first step (treatment of first wizard line). After, for each subset of
             partner to merge, the wizard will be actualized.
@@ -532,16 +531,16 @@ class MergePartnerAutomatic(models.TransientModel):
         groups = self._compute_selected_groupby()
         query = self._generate_query(groups, self.maximum_group)
         self._process_query(query)
-        return self._next_screen()
+        return self._action_next_screen()
 
     @api.multi
-    def automatic_process_cb(self):
+    def action_start_automatic_process(self):
         """ Start the process 'Merge Automatically'. This will fill the wizard with the same mechanism as 'Merge
             with Manual Check', but instead of refreshing wizard with the current line, it will automatically process
             all lines by merging partner grouped according to the checked options.
         """
         self.ensure_one()
-        self.start_process_cb()  # here we don't redirect to the next screen, since it is automatic process
+        self.action_start_manual_process()  # here we don't redirect to the next screen, since it is automatic process
         self.refresh()   # TODO JEM : deprecated, what to do ?
 
         for line in self.line_ids:
@@ -617,14 +616,14 @@ class MergePartnerAutomatic(models.TransientModel):
         }
 
     @api.multi
-    def update_all_process_cb(self):
+    def action_update_all_process(self):
         self.ensure_one()
         self.parent_migration_process_cb()
 
         # NOTE JEM : seems louche to create a new wizard instead of reuse the current one with updated options.
         # since it is like this from the initial commit of this wizard, I don't change it. yet ...
         wizard = self.create({'group_by_vat': True, 'group_by_email': True, 'group_by_name': True})
-        wizard.automatic_process_cb()
+        wizard.action_start_automatic_process()
 
         # NOTE JEM : no idea if this query is usefull
         self._cr.execute("""
@@ -637,10 +636,10 @@ class MergePartnerAutomatic(models.TransientModel):
                 is_company IS NOT NULL
         """)
 
-        return self._next_screen()
+        return self._action_next_screen()
 
     @api.multi
-    def merge_cb(self):
+    def action_merge(self):
         """ Merge Contact button. Merge the selected partners, and redirect to
             the end screen (since there is no other wizard line to process.
         """
@@ -661,4 +660,4 @@ class MergePartnerAutomatic(models.TransientModel):
         if self.current_line_id:
             self.current_line_id.unlink()
 
-        return self._next_screen()
+        return self._action_next_screen()

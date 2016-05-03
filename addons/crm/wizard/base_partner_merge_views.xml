@@ -71,32 +71,32 @@
                         </group>
                     </sheet>
                     <footer>
-                        <button name='merge_cb' string='Merge Contacts'
+                        <button name='action_merge' string='Merge Contacts'
                             class='oe_highlight'
                             type='object'
                             attrs="{'invisible': [('state', 'in', ('option', 'finished' ))]}" />
-                        <button name='next_cb' string='Skip these contacts'
+                        <button name='action_skip' string='Skip these contacts'
                             type='object'
                             attrs="{'invisible': [('state', '!=', 'selection')]}" />
-                        <button name='start_process_cb'
+                        <button name='action_start_manual_process'
                             string='Merge with Manual Check'
                             type='object'  class='oe_highlight'
                             attrs="{'invisible': [('state', '!=', 'option')]}" />
-                        <button name='automatic_process_cb'
+                        <button name='action_start_automatic_process'
                             string='Merge Automatically'
                             type='object' class='oe_highlight'
                             confirm="Are you sure to execute the automatic merge of your contacts ?"
                             attrs="{'invisible': [('state', '!=', 'option')]}" />
-                        <button name='update_all_process_cb'
+                        <button name='action_update_all_process'
                             string='Merge Automatically all process'
                             type='object'
                             confirm="Are you sure to execute the list of automatic merges of your contacts ?"
                             attrs="{'invisible': [('state', '!=', 'option')]}" />
                         <span class="or_cancel" attrs="{'invisible': [('state', '=', 'finished')]} ">or
-                            <button name="close_cb" special="nosave" string="Cancel" type="object" class="oe_link oe_inline"/>
+                            <button name="action_close" special="nosave" string="Cancel" type="object" class="oe_link oe_inline"/>
                         </span>
                         <span class="or_cancel" attrs="{'invisible': [('state', '!=', 'finished')]} ">
-                            <button name="close_cb" special="nosave"
+                            <button name="action_close" special="nosave"
                                 string="Close"
                                 type="object"
                                 class="oe_link oe_inline"/>
