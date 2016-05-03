@@ -44,18 +44,18 @@
                     </h1>
                     <group>
                         <group>
-                            <field name="product_id" on_change="onchange_product_id(product_id)" domain="[('type', 'in', ['product', 'consu'])]"/>
+                            <field name="product_id" domain="[('type', 'in', ['product', 'consu'])]"/>
                             <label for="product_qty"/>
                             <div>
                                 <field name="product_qty" class="oe_inline"/> 
-                                <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(product_id, product_uom)" class="oe_inline"/>
+                                <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
                             </div>
                             <field name="lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}" groups="stock.group_production_lot"/>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id,address_id)" attrs="{'required':[('invoice_method','!=','none')]}"/>
+                            <field name="partner_id" attrs="{'required':[('invoice_method','!=','none')]}"/>
                             <field name="address_id" groups="sale.group_delivery_invoice_address"/>
                         </group>
                         <group>
-                            <field name="location_id" on_change="onchange_location_id(location_id)" groups="stock.group_stock_multi_locations" domain="[('usage', 'in', ('internal', 'customer'))]"/>
+                            <field name="location_id" groups="stock.group_stock_multi_locations" domain="[('usage', 'in', ('internal', 'customer'))]"/>
                             <field name="location_dest_id" groups="stock.group_stock_multi_locations" domain="[('usage', 'in', ('internal', 'customer'))]"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="guarantee_limit"/>
@@ -69,7 +69,7 @@
                                     <page string="Repair Line">
                                         <group col="4">
                                             <field name="name"/>
-                                            <field name="product_id" on_change="product_id_change(parent.pricelist_id, product_id, product_uom, product_uom_qty, parent.partner_id, False, context)"/>
+                                            <field name="product_id"/>
                                             <label for="product_uom_qty"/>
                                             <div>
                                                 <field name="product_uom_qty" class="oe_inline"/>
@@ -77,7 +77,7 @@
                                             </div>
                                             <field name="price_unit"/>
                                             <field name="price_subtotal" widget="monetary"/>
-                                            <field name="type"  on_change="onchange_operation_type(type,parent.guarantee_limit,parent.company_id,context)"/>
+                                            <field name="type"/>
                                             <field name="to_invoice"/>
                                             <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale')]"/>
                                             <field name="invoiced"/>
@@ -94,8 +94,8 @@
                                  </notebook>
                             </form>
                             <tree string="Operations" editable="bottom">
-                                <field name="type" on_change="onchange_operation_type(type,parent.guarantee_limit,parent.company_id,context)"/>
-                                <field name="product_id" on_change="product_id_change(parent.pricelist_id, product_id, product_uom, product_uom_qty, parent.partner_id, False, context)"/>
+                                <field name="type"/>
+                                <field name="product_id"/>
                                 <field name='name'/>
                                 <field name="lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}" groups="stock.group_production_lot"/>
                                 <field name="location_id" groups="stock.group_stock_multi_locations"/>
@@ -140,7 +140,7 @@
                                 <group string="Product Information">
                                     <group>
                                         <field name="to_invoice"/>
-                                        <field name="product_id" on_change="product_id_change(parent.pricelist_id, product_id, product_uom, product_uom_qty, parent.partner_id, parent.guarantee_limit, context)"/>
+                                        <field name="product_id"/>
                                         <label for="product_uom_qty"/>
                                         <div>
                                             <field name="product_uom_qty" string="Quantity" class="oe_inline"/>
@@ -163,7 +163,7 @@
                                 </group>
                             </form>
                             <tree string="Fees" editable="bottom">
-                                <field name="product_id" on_change="product_id_change(parent.pricelist_id, product_id, product_uom, product_uom_qty, parent.partner_id,parent.guarantee_limit, context)"/>
+                                <field name="product_id"/>
                                 <field name='name'/>
                                 <field name="product_uom_qty" string="Quantity"/>
                                 <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
