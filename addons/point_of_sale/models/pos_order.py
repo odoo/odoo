@@ -412,6 +412,18 @@ class PosOrder(models.Model):
         self.write({'state': 'invoiced'})
 
     @api.multi
+    def action_view_invoice(self):
+        return {
+            'name': _('Customer Invoice'),
+            'view_mode': 'form',
+            'view_id': self.env.ref('account.invoice_form').id,
+            'res_model': 'account.invoice',
+            'context': "{'type':'out_invoice'}",
+            'type': 'ir.actions.act_window',
+            'res_id': self.invoice_id.id,
+        }
+
+    @api.multi
     def action_invoice(self):
         Invoice = self.env['account.invoice']
 
