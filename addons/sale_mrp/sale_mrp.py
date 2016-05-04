@@ -144,6 +144,4 @@ class AccountInvoiceLine(models.Model):
                         average_price_unit += factor * self._compute_average_price(prod_qty_done, prod_quantity, prod_moves)
                     price_unit = average_price_unit or price_unit
                     price_unit = uom_obj._compute_qty_obj(self.uom_id, price_unit, self.product_id.uom_id, round=False)
-                    return price_unit
-                else:
-                    return price_unit
+        return price_unit
