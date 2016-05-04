@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
-    <data>
-        <record model='ir.ui.view' id='fleet_vehicle_model_form'>
+<odoo>
+        <record id='fleet_vehicle_model_view_form' model='ir.ui.view'>
             <field name="name">fleet.vehicle.model.form</field>
             <field name="model">fleet.vehicle.model</field>
             <field name="arch" type="xml">
@@ -14,7 +13,7 @@
                         </h1>
                         <label for="brand_id" class="oe_edit_only"/>
                         <h2>
-                            <field name="brand_id" on_change="on_change_brand(brand_id)" placeholder="e.g. Tesla"/>
+                            <field name="brand_id" placeholder="e.g. Tesla"/>
                         </h2>
                     </div>
                     <notebook>
@@ -42,7 +41,7 @@
             </field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_model_tree'>
+        <record id='fleet_vehicle_model_view_tree' model='ir.ui.view'>
             <field name="name">fleet.vehicle.model.tree</field>
             <field name="model">fleet.vehicle.model</field>
             <field name="arch" type="xml">
@@ -53,7 +52,7 @@
             </field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_model_search'>
+        <record id='fleet_vehicle_model_view_search' model='ir.ui.view'>
             <field name="name">fleet.vehicle.model.search</field>
             <field name="model">fleet.vehicle.model</field>
             <field name="arch" type="xml">
@@ -66,7 +65,7 @@
             </field>
         </record>
 
-        <record model='ir.actions.act_window' id='fleet_vehicle_model_act'>
+        <record id='fleet_vehicle_model_action' model='ir.actions.act_window'>
             <field name="name">Vehicle Model</field>
             <field name="res_model">fleet.vehicle.model</field>
             <field name="view_type">form</field>
@@ -81,7 +80,7 @@
             </field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_model_brand_tree'>
+        <record id='fleet_vehicle_model_brand_view_tree' model='ir.ui.view'>
             <field name="name">fleet.vehicle.model.brand.tree</field>
             <field name="model">fleet.vehicle.model.brand</field>
             <field name="arch" type="xml">
@@ -91,7 +90,7 @@
             </field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_model_brand_form'>
+        <record id='fleet_vehicle_model_brand_view_form' model='ir.ui.view'>
             <field name="name">fleet.vehicle.model.brand.form</field>
             <field name="model">fleet.vehicle.model.brand</field>
             <field name="arch" type="xml">
@@ -109,7 +108,7 @@
             </field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_model_brand_kanban'>
+        <record id='fleet_vehicle_model_brand_view_kanban' model='ir.ui.view'>
             <field name="name">fleet.vehicle.model.brandkanban</field>
             <field name="model">fleet.vehicle.model.brand</field>
             <field name="arch" type="xml">
@@ -136,7 +135,7 @@
             </field>
         </record>
 
-        <record model='ir.actions.act_window' id='fleet_vehicle_model_brand_act'>
+        <record id='fleet_vehicle_model_brand_action' model='ir.actions.act_window'>
             <field name="name">Model make of Vehicle</field>
             <field name="res_model">fleet.vehicle.model.brand</field>
             <field name="view_type">form</field>
@@ -148,7 +147,7 @@
             </field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_state_tree'>
+        <record id='fleet_vehicle_state_view_tree' model='ir.ui.view'>
             <field name="name">fleet.vehicle.state.tree</field>
             <field name="model">fleet.vehicle.state</field>
             <field name="arch" type="xml">
@@ -160,7 +159,7 @@
             </field>
         </record>
 
-        <record model='ir.actions.act_window' id='fleet_vehicle_state_act'>
+        <record id='fleet_vehicle_state_action' model='ir.actions.act_window'>
             <field name="name">Vehicle Status</field>
             <field name="res_model">fleet.vehicle.state</field>
             <field name="view_type">form</field>
@@ -175,13 +174,13 @@
             </field>
         </record>
 
-        <menuitem name="Fleet" id="menu_root" sequence="115" groups="group_fleet_user" icon="fa-car" web_icon="fleet,static/description/icon.png"/>
-        <menuitem name="Configuration" parent="menu_root" id="fleet_configuration" sequence="100" groups="group_fleet_manager"/>
-        <menuitem action="fleet_vehicle_model_act" parent="fleet_configuration" id="fleet_vehicle_model_menu" groups="base.group_no_one"/>
-        <menuitem action="fleet_vehicle_model_brand_act" parent="fleet_configuration" id="fleet_vehicle_model_brand_menu" groups="base.group_no_one"/>
-        <menuitem action="fleet_vehicle_state_act" parent="fleet_configuration" id="fleet_vehicle_state_menu" groups="group_fleet_manager"/>
+        <menuitem name="Fleet" id="menu_root" sequence="115" groups="fleet_group_user" icon="fa-car" web_icon="fleet,static/description/icon.png"/>
+        <menuitem name="Configuration" parent="menu_root" id="fleet_configuration" sequence="100" groups="fleet_group_manager"/>
+        <menuitem action="fleet_vehicle_model_action" parent="fleet_configuration" id="fleet_vehicle_model_menu" groups="base.group_no_one"/>
+        <menuitem action="fleet_vehicle_model_brand_action" parent="fleet_configuration" id="fleet_vehicle_model_brand_menu" groups="base.group_no_one"/>
+        <menuitem action="fleet_vehicle_state_action" parent="fleet_configuration" id="fleet_vehicle_state_menu" groups="fleet_group_manager"/>
 
-        <record model='ir.ui.view' id='fleet_vehicle_form'>
+        <record id='fleet_vehicle_view_form' model='ir.ui.view'>
             <field name="name">fleet.vehicle.form</field>
             <field name="model">fleet.vehicle</field>
             <field name="arch" type="xml">
@@ -198,7 +197,7 @@
                                 type="object"
                                 class="oe_stat_button"
                                 icon="fa-book"
-                                context="{'xml_id':'fleet_vehicle_log_contract_act'}"
+                                context="{'xml_id':'fleet_vehicle_log_contract_action'}"
                                 help="show the contract for this vehicle">
                                 <field name="contract_count" widget="statinfo" string="Contracts"/>
                             </button>
@@ -207,14 +206,14 @@
                                 class="oe_stat_button"
                                 icon="fa-usd"
                                 help="show all the costs for this vehicle"
-                                groups="fleet.group_fleet_manager">
+                                groups="fleet.fleet_group_manager">
                                 <field name="cost_count" widget="statinfo" string="Costs"/>
                             </button>
                             <button name="return_action_to_open"
                                 type="object"
                                 class="oe_stat_button"
                                 icon="fa-wrench"
-                                context="{'xml_id':'fleet_vehicle_log_services_act'}"
+                                context="{'xml_id':'fleet_vehicle_log_services_action'}"
                                 help="show the services logs for this vehicle" >
                                 <field name="service_count" widget="statinfo" string="Services"/>
                             </button>
@@ -222,7 +221,7 @@
                                 type="object"
                                 class="oe_stat_button"
                                 icon="fa-flask"
-                                context="{'xml_id':'fleet_vehicle_log_fuel_act'}"
+                                context="{'xml_id':'fleet_vehicle_log_fuel_action'}"
                                 help="show the fuel logs for this vehicle" >
                                 <field name="fuel_logs_count" widget="statinfo" string="Fuel"/>
                             </button>
@@ -230,7 +229,7 @@
                                 type="object"
                                 class="oe_stat_button"
                                 icon="fa-tachometer"
-                                context="{'xml_id':'fleet_vehicle_odometer_act'}"
+                                context="{'xml_id':'fleet_vehicle_odometer_action'}"
                                 help="show the odometer logs for this vehicle" >
                                 <field name="odometer_count" widget="statinfo" string="Odometer"/>
                             </button>
@@ -239,7 +238,7 @@
                         <div class="oe_title">
                             <label for="model_id" class="oe_edit_only"/>
                             <h1>
-                                <field name="model_id" on_change="on_change_model(model_id)" placeholder="e.g. Model S"/>
+                                <field name="model_id" placeholder="e.g. Model S"/>
                             </h1>
                             <label for="license_plate" class="oe_edit_only"/>
                             <h2>
@@ -294,7 +293,7 @@
                 </form>
             </field>
         </record>
-        <record model='ir.ui.view' id='fleet_vehicle_tree'>
+        <record id='fleet_vehicle_view_tree' model='ir.ui.view'>
             <field name="name">fleet.vehicle.tree</field>
             <field name="model">fleet.vehicle</field>
             <field name="arch" type="xml">
@@ -315,7 +314,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="fleet_vehicle_search">
+        <record id="fleet_vehicle_view_search" model="ir.ui.view">
             <field name="name">fleet.vehicle.search</field>
             <field name="model">fleet.vehicle</field>
             <field name="arch" type="xml">
@@ -337,7 +336,7 @@
         </record>
 
 
-        <record model='ir.ui.view' id='fleet_vehicle_kanban'>
+        <record id='fleet_vehicle_view_kanban' model='ir.ui.view'>
             <field name="name">fleet.vehicle.kanban</field>
             <field name="model">fleet.vehicle</field>
             <field name="arch" type="xml">
@@ -377,10 +376,10 @@
                                         </li>
                                     </ul>
                                     <div class="o_kanban_button">
-                                        <a t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value" data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action btn btn-sm btn-warning" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
+                                        <a t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value" data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action btn btn-sm btn-warning" data-context='{"xml_id":"fleet_vehicle_log_contract_action"}'>
                                             <field name="contract_renewal_name"/> <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s)</t>
                                         </a>
-                                        <a t-if="record.contract_renewal_overdue.raw_value" data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action btn btn-sm btn-danger" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
+                                        <a t-if="record.contract_renewal_overdue.raw_value" data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action btn btn-sm btn-danger" data-context='{"xml_id":"fleet_vehicle_log_contract_action"}'>
                                             <field name="contract_renewal_name"/> <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s)</t>
                                         </a>
                                     </div>
@@ -393,7 +392,7 @@
         </record>
 
 
-        <record model='ir.actions.act_window' id='fleet_vehicle_act'>
+        <record id='fleet_vehicle_action' model='ir.actions.act_window'>
             <field name="name">Vehicles</field>
             <field name="res_model">fleet.vehicle</field>
             <field name="view_type">form</field>
@@ -412,21 +411,21 @@
             </field>
         </record>
 
-        <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" sequence="2" groups="group_fleet_user"/>
-        <menuitem action="fleet_vehicle_act" parent="fleet_vehicles" id="fleet_vehicle_menu" groups="group_fleet_user"/>
+        <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" sequence="2" groups="fleet_group_user"/>
+        <menuitem action="fleet_vehicle_action" parent="fleet_vehicles" id="fleet_vehicle_menu" groups="fleet_group_user"/>
 
 
 
-        <record model='ir.ui.view' id='fleet_vehicle_log_contract_form'>
+        <record id='fleet_vehicle_log_contract_view_form' model='ir.ui.view'>
             <field name="name">fleet.vehicle.log_contract.form</field>
             <field name="model">fleet.vehicle.log.contract</field>
             <field name="arch" type="xml">
                 <form string="Contract logs">
                     <header>
-                        <button modifiers="{'invisible': [['state', '=', 'closed']]}" name="contract_close" states="open" type="object" class="oe_highlight" string="Terminate Contract" groups="fleet.group_fleet_manager"/>
-                        <button modifiers="{'invisible': [['state', '=', 'closed']]}" name="contract_close" states="toclose" type="object" class="oe_highlight" string="Terminate Contract" groups="fleet.group_fleet_manager"/>
-                        <button modifiers="{'invisible': [['state', 'not in', ['closed']]]}" name="contract_open" states="closed" type="object" class="oe_highlight" string="Set Contract In Progress" groups="fleet.group_fleet_manager"/>
-                        <button class="oe_highlight" name="act_renew_contract" type="object" string="Renew Contract" help="Create a new contract automatically with all the same informations except for the date that will start at the end of current contract" groups="fleet.group_fleet_manager"/>
+                        <button modifiers="{'invisible': [['state', '=', 'closed']]}" name="contract_close" states="open" type="object" class="oe_highlight" string="Terminate Contract" groups="fleet.fleet_group_manager"/>
+                        <button modifiers="{'invisible': [['state', '=', 'closed']]}" name="contract_close" states="toclose" type="object" class="oe_highlight" string="Terminate Contract" groups="fleet.fleet_group_manager"/>
+                        <button modifiers="{'invisible': [['state', 'not in', ['closed']]]}" name="contract_open" states="closed" type="object" class="oe_highlight" string="Set Contract In Progress" groups="fleet.fleet_group_manager"/>
+                        <button class="oe_highlight" name="act_renew_contract" type="object" string="Renew Contract" help="Create a new contract automatically with all the same informations except for the date that will start at the end of current contract" groups="fleet.fleet_group_manager"/>
                         <field name="state" widget="statusbar" />
                     </header>
                     <sheet>
@@ -437,7 +436,7 @@
                         </div>
                         <group col="2">
                             <group string="Contract details">
-                                <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
+                                <field name="vehicle_id"/>
                                 <field name="cost_subtype_id" required="1" domain="['|',('category','=','contract'),('category','=','both')]"/>
                                 <field name="amount" string="Activation Cost" help="Cost that is paid only once at the creation of the contract"/>
                                 <label for="cost_generated"/>
@@ -469,7 +468,7 @@
                         <notebook>
                             <page string="Included Services">
                                 <group>
-                                    <field name="cost_ids" context="{'vehicle_id': vehicle_id}" nolabel="1" on_change="on_change_indic_cost(cost_ids)">
+                                    <field name="cost_ids" context="{'vehicle_id': vehicle_id}" nolabel="1">
                                         <tree editable="bottom">
                                             <field name="cost_subtype_id" string="Service" domain="[('category','=','service')]"/>
                                             <field name="amount" sum="Price" string="Indicative Cost" />
@@ -500,7 +499,6 @@
         </record>
 
         <act_window
-
             id="act_renew_contract"
             name="Renew Contract"
             res_model="fleet.vehicle.log.contract"
@@ -510,7 +508,7 @@
             />
 
 
-        <record model='ir.ui.view' id='fleet_vehicle_log_contract_tree'>
+        <record id='fleet_vehicle_log_contract_view_tree' model='ir.ui.view'>
             <field name="name">fleet.vehicle.log.contract.tree</field>
             <field name="model">fleet.vehicle.log.contract</field>
             <field name="arch" type="xml">
@@ -530,7 +528,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="fleet_vehicle_log_contract_graph">
+        <record id="fleet_vehicle_log_contract_view_graph" model="ir.ui.view">
            <field name="name">fleet.vehicle.log.contract.graph</field>
            <field name="model">fleet.vehicle.log.contract</field>
            <field name="arch" type="xml">
@@ -552,7 +550,7 @@
             </field>
         </record>
 
-        <record model='ir.actions.act_window' id='fleet_vehicle_log_contract_act'>
+        <record id='fleet_vehicle_log_contract_action' model='ir.actions.act_window'>
             <field name="name">Vehicles Contracts</field>
             <field name="res_model">fleet.vehicle.log.contract</field>
             <field name="view_type">form</field>
@@ -571,16 +569,16 @@
             </field>
         </record>
 
-        <menuitem action="fleet_vehicle_log_contract_act" parent="fleet_vehicles" id="fleet_vehicle_log_contract_menu" groups="group_fleet_user"/>
+        <menuitem action="fleet_vehicle_log_contract_action" parent="fleet_vehicles" id="fleet_vehicle_log_contract_menu" groups="fleet_group_user"/>
 
-       <record model='ir.ui.view' id='fleet_vehicle_odometer_form'>
+       <record id='fleet_vehicle_odometer_view_form' model='ir.ui.view'>
             <field name="name">fleet.vehicle.odometer.form</field>
             <field name="model">fleet.vehicle.odometer</field>
             <field name="arch" type="xml">
                 <form string="Odometer Logs">
                     <sheet>
                         <group>
-                            <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
+                            <field name="vehicle_id"/>
                                 <div>
                                     <field name="value" class="oe_inline"/>
                                     <field name="unit" class="oe_inline"/>
@@ -592,20 +590,20 @@
             </field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_odometer_tree'>
+        <record id='fleet_vehicle_odometer_view_tree' model='ir.ui.view'>
             <field name="name">fleet.vehicle.odometer.tree</field>
             <field name="model">fleet.vehicle.odometer</field>
             <field name="arch" type="xml">
                 <tree string="Odometer Logs" editable="top">
                     <field name="date" />
-                    <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
+                    <field name="vehicle_id"/>
                     <field name="value" />
                     <field name="unit" />
                 </tree>
             </field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_odometer_search'>
+        <record id='fleet_vehicle_odometer_view_search' model='ir.ui.view'>
             <field name="name">fleet.vehicle.odometer.search</field>
             <field name="model">fleet.vehicle.odometer</field>
             <field name="arch" type="xml">
@@ -621,7 +619,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="fleet_vehicle_odometer_graph">
+        <record id="fleet_vehicle_odometer_view_graph" model="ir.ui.view">
            <field name="name">fleet.vehicle.odometer.graph</field>
            <field name="model">fleet.vehicle.odometer</field>
            <field name="arch" type="xml">
@@ -632,7 +630,7 @@
             </field>
         </record>
 
-        <record model='ir.actions.act_window' id='fleet_vehicle_odometer_act'>
+        <record id='fleet_vehicle_odometer_action' model='ir.actions.act_window'>
             <field name="name">Vehicles Odometer</field>
             <field name="res_model">fleet.vehicle.odometer</field>
             <field name="view_type">form</field>
@@ -650,9 +648,9 @@
             </field>
         </record>
 
-        <menuitem action="fleet_vehicle_odometer_act" parent="fleet_vehicles" id="fleet_vehicle_odometer_menu" groups="group_fleet_user"/>
+        <menuitem action="fleet_vehicle_odometer_action" parent="fleet_vehicles" id="fleet_vehicle_odometer_menu" groups="fleet_group_user"/>
 
-        <record model='ir.ui.view' id='fleet_vehicle_log_fuel_form'>
+        <record id='fleet_vehicle_log_fuel_view_form' model='ir.ui.view'>
             <field name="name">fleet.vehicle.log.fuel.form</field>
             <field name="model">fleet.vehicle.log.fuel</field>
             <field name="arch" type="xml">
@@ -660,12 +658,12 @@
                     <sheet>
                         <group>
                             <group string="Vehicle Details">
-                                <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
+                                <field name="vehicle_id"/>
                             </group>
                             <group string="Refueling Details">
-                                <field name="liter" on_change="on_change_liter(liter,price_per_liter,amount)"/>
-                                <field name="price_per_liter" on_change="on_change_price_per_liter(liter,price_per_liter,amount)" />
-                                <field name="amount" on_change="on_change_amount(liter,price_per_liter,amount)"/>
+                                <field name="liter"/>
+                                <field name="price_per_liter"/>
+                                <field name="amount"/>
                             </group>
                         </group>
                         <group>
@@ -689,7 +687,7 @@
             </field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_log_fuel_tree'>
+        <record id='fleet_vehicle_log_fuel_view_tree' model='ir.ui.view'>
             <field name="name">fleet.vehicle.log.fuel.tree</field>
             <field name="model">fleet.vehicle.log.fuel</field>
             <field name="arch" type="xml">
@@ -708,7 +706,7 @@
             </field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_log_fuel_search'>
+        <record id='fleet_vehicle_log_fuel_view_search' model='ir.ui.view'>
             <field name="name">fleet.vehicle.log.fuel.search</field>
             <field name="model">fleet.vehicle.log.fuel</field>
             <field name="arch" type="xml">
@@ -725,7 +723,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="fleet_vehicle_log_fuel_graph">
+        <record id="fleet_vehicle_log_fuel_view_graph" model="ir.ui.view">
            <field name="name">fleet.vehicle.log.fuel.graph</field>
            <field name="model">fleet.vehicle.log.fuel</field>
            <field name="arch" type="xml">
@@ -736,7 +734,7 @@
             </field>
         </record>
 
-        <record model='ir.actions.act_window' id='fleet_vehicle_log_fuel_act'>
+        <record id='fleet_vehicle_log_fuel_action' model='ir.actions.act_window'>
             <field name="name">Vehicles Fuel Logs</field>
             <field name="res_model">fleet.vehicle.log.fuel</field>
             <field name="view_type">form</field>
@@ -753,10 +751,10 @@
             </field>
         </record>
 
-        <menuitem action="fleet_vehicle_log_fuel_act" parent="fleet_vehicles" id="fleet_vehicle_log_fuel_menu" groups="group_fleet_user"/>
+        <menuitem action="fleet_vehicle_log_fuel_action" parent="fleet_vehicles" id="fleet_vehicle_log_fuel_menu" groups="fleet_group_user"/>
 
 
-        <record model='ir.ui.view' id='fleet_vehicle_log_services_form'>
+        <record id='fleet_vehicle_log_services_view_form' model='ir.ui.view'>
             <field name="name">fleet.vehicle.log.services.form</field>
             <field name="model">fleet.vehicle.log.services</field>
             <field name="arch" type="xml">
@@ -764,7 +762,7 @@
                     <sheet>
                         <group col="2">
                             <group string="Services Details">
-                                <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
+                                <field name="vehicle_id"/>
                                 <field name="cost_subtype_id" string="Service Type" domain="['|',('category','=','service'),('category','=','both')]" required="1"/>
                                 <field name="amount"/>
                             </group>
@@ -800,7 +798,7 @@
             </field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_log_services_tree'>
+        <record id='fleet_vehicle_log_services_view_tree' model='ir.ui.view'>
             <field name="name">fleet.vehicle.log.services.tree</field>
             <field name="model">fleet.vehicle.log.services</field>
             <field name="arch" type="xml">
@@ -817,7 +815,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="fleet_vehicle_log_services_graph">
+        <record id="fleet_vehicle_log_services_view_graph" model="ir.ui.view">
            <field name="name">fleet.vehicle.log.services.graph</field>
            <field name="model">fleet.vehicle.log.services</field>
            <field name="arch" type="xml">
@@ -829,7 +827,7 @@
             </field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_log_services_search'>
+        <record id='fleet_vehicle_log_services_view_search' model='ir.ui.view'>
             <field name="name">fleet.vehicle.log.services.search</field>
             <field name="model">fleet.vehicle.log.services</field>
             <field name="arch" type="xml">
@@ -840,7 +838,7 @@
             </field>
         </record>
 
-        <record model='ir.actions.act_window' id='fleet_vehicle_log_services_act'>
+        <record id='fleet_vehicle_log_services_action' model='ir.actions.act_window'>
             <field name="name">Vehicles Services Logs</field>
             <field name="res_model">fleet.vehicle.log.services</field>
             <field name="view_type">form</field>
@@ -856,9 +854,9 @@
             </field>
         </record>
 
-        <menuitem action="fleet_vehicle_log_services_act" parent="fleet_vehicles" id="fleet_vehicle_log_services_menu" groups="group_fleet_user"/>
+        <menuitem action="fleet_vehicle_log_services_action" parent="fleet_vehicles" id="fleet_vehicle_log_services_menu" groups="fleet_group_user"/>
 
-        <record id="fleet_vehicle_tag_view_form" model="ir.ui.view">
+        <record id="fleet_vehicle_tag_view_view_form" model="ir.ui.view">
             <field name="name">fleet.vehicle.tag.form</field>
             <field name="model">fleet.vehicle.tag</field>
             <field name="arch" type="xml">
@@ -883,7 +881,7 @@
 
         <menuitem id="fleet_vehicle_tag_menu" parent="fleet_configuration" action="fleet_vehicle_tag_action" sequence="112" groups="base.group_no_one"/>
 
-        <record model='ir.ui.view' id='fleet_vehicle_service_types_tree'>
+        <record id='fleet_vehicle_service_types_view_tree' model='ir.ui.view'>
             <field name="name">fleet.service.type.tree</field>
             <field name="model">fleet.service.type</field>
             <field name="arch" type="xml">
@@ -897,7 +895,7 @@
         <!--
             fleet.vehicle.cost
             -->
-        <record model='ir.actions.act_window' id='fleet_vehicle_service_types_act'>
+        <record id='fleet_vehicle_service_types_action' model='ir.actions.act_window'>
             <field name="name">Service Types</field>
             <field name="res_model">fleet.service.type</field>
             <field name="view_type">form</field>
@@ -911,9 +909,9 @@
             </field>
         </record>
 
-        <menuitem action="fleet_vehicle_service_types_act" parent="fleet_configuration" id="fleet_vehicle_service_types_menu" groups="base.group_no_one"/>
+        <menuitem action="fleet_vehicle_service_types_action" parent="fleet_configuration" id="fleet_vehicle_service_types_menu" groups="base.group_no_one"/>
 
-        <record model='ir.ui.view' id='fleet_vehicle_cost_tree'>
+        <record id='fleet_vehicle_cost_view_tree' model='ir.ui.view'>
             <field name="name">fleet.vehicle.cost.tree</field>
             <field name="model">fleet.vehicle.cost</field>
             <field name="arch" type="xml">
@@ -925,7 +923,7 @@
             </field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_effective_costs_report_pivot'>
+        <record id='fleet_vehicle_cost_view_pivot' model='ir.ui.view'>
             <field name="name">fleet.vehicle.cost.pivot</field>
             <field name="model">fleet.vehicle.cost</field>
             <field name="arch" type="xml">
@@ -938,7 +936,7 @@
             </field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_effective_costs_report'>
+        <record id='fleet_vehicle_cost_view_graph' model='ir.ui.view'>
             <field name="name">fleet.vehicle.cost.graph</field>
             <field name="model">fleet.vehicle.cost</field>
             <field name="arch" type="xml">
@@ -950,7 +948,7 @@
             </field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_indicative_costs_report_pivot'>
+        <record id='fleet_vehicle_cost_indicative_view_pivot' model='ir.ui.view'>
             <field name="name">fleet.vehicle.cost.pivot</field>
             <field name="model">fleet.vehicle.cost</field>
             <field name="arch" type="xml">
@@ -962,7 +960,7 @@
             </field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_indicative_costs_report'>
+        <record id='fleet_vehicle_cost_indicative_view_graph' model='ir.ui.view'>
             <field name="name">fleet.vehicle.cost.graph</field>
             <field name="model">fleet.vehicle.cost</field>
             <field name="arch" type="xml">
@@ -974,7 +972,7 @@
             </field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_costs_search'>
+        <record id='fleet_vehicle_costs_view_search' model='ir.ui.view'>
             <field name="name">fleet.vehicle.cost.search</field>
             <field name="model">fleet.vehicle.cost</field>
             <field name="arch" type="xml">
@@ -998,7 +996,7 @@
             </field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_costs_form'>
+        <record id='fleet_vehicle_costs_view_form' model='ir.ui.view'>
             <field name="name">fleet.vehicle.cost.form</field>
             <field name="model">fleet.vehicle.cost</field>
             <field name="arch" type="xml">
@@ -1020,7 +1018,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="fleet_vehicle_costs_graph">
+        <record id="fleet_vehicle_costs_view_graph" model="ir.ui.view">
            <field name="name">fleet.vehicle.cost.graph</field>
            <field name="model">fleet.vehicle.cost</field>
            <field name="arch" type="xml">
@@ -1032,7 +1030,7 @@
             </field>
         </record>
 
-        <record model='ir.actions.act_window' id='fleet_vehicle_costs_act'>
+        <record id='fleet_vehicle_costs_action' model='ir.actions.act_window'>
             <field name="name">Vehicle Costs</field>
             <field name="res_model">fleet.vehicle.cost</field>
             <field name="view_type">form</field>
@@ -1049,6 +1047,5 @@
             </field>
         </record>
 
-        <menuitem action="fleet_vehicle_costs_act" parent="fleet_vehicles" id="fleet_vehicle_costs_menu" groups="group_fleet_manager"/>
-    </data>
-</openerp>
+        <menuitem action="fleet_vehicle_costs_action" parent="fleet_vehicles" id="fleet_vehicle_costs_menu" groups="fleet_group_manager"/>
+</odoo>

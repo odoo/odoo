@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
       <!--Users-->
       <record id="base.user_demo" model="res.users">
-        <field name="groups_id" eval="[(4, ref('fleet.group_fleet_manager'))]" />
+        <field name="groups_id" eval="[(4, ref('fleet.fleet_group_manager'))]" />
       </record>
 
       <record id="vehicle_state_inshop" model="fleet.vehicle.state">
@@ -942,5 +941,4 @@
         <field name="date">2012-01-01</field>
         <field name="parent_id" ref="log_contract_5_fleet_vehicle_cost" />
       </record>
-    </data>
-</openerp>
+</odoo>
