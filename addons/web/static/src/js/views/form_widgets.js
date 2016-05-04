@@ -455,7 +455,13 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
 
         if (this.get('value')) {
             var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
-            var domain = pyeval.eval('domain', this.get('value'));
+            try{
+                var domain = pyeval.eval('domain', this.get('value'));
+            }
+            catch(e){
+                this.do_warn(_t('Error: Bad domain'), _t('The domain is wrong.'));
+                return;
+            }
             var ds = new data.DataSetStatic(self, model, self.build_context());
             ds.call('search_count', [domain]).then(function (results) {
                 self.$('.o_count').text(results + _t(' selected records'));
