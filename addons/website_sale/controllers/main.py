@@ -576,7 +576,7 @@ class WebsiteSale(http.Controller):
             partner = Partner.sudo().create(billing_info)
         order.write({'partner_id': partner.id})
         order.onchange_partner_id()
-        order.write({'partner_invoice_id': partner_id})
+        order.write({'partner_invoice_id': partner.id})
 
         # create a new shipping partner
         if checkout.get('shipping_id') == -1:
