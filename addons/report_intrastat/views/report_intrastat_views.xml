@@ -1,42 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-        <!-- Country -->
-        <record id="view_country_tree" model="ir.ui.view">
-            <field name="name">res.country.tree</field>
-            <field name="model">res.country</field>
-            <field name="inherit_id" ref="base.view_country_tree"/>
-            <field name="arch" type="xml">
-                <field name="code" position="after">
-                    <field name="intrastat"/>
-                </field>
-            </field>
-        </record>
-
-        <record id="view_country_form" model="ir.ui.view">
-            <field name="name">res.country.form</field>
-            <field name="model">res.country</field>
-            <field name="inherit_id" ref="base.view_country_form"/>
-            <field name="arch" type="xml">
-                <field name="code" position="after">
-                    <field name="intrastat"/>
-                </field>
-            </field>
-        </record>
-
-        <!-- Product -->
-        <record id="product_template_form_view" model="ir.ui.view">
-            <field name="name">product.template.form</field>
-            <field name="model">product.template</field>
-            <field name="inherit_id" ref="product.product_template_form_view"/>
-            <field name="arch" type="xml">
-                <field name="categ_id" position="after">
-                    <field name="intrastat_id"/>
-                </field>
-            </field>
-        </record>
-
-        <!-- Intrastat code -->
+<odoo>
         <record id="view_report_intrastat_code_tree" model="ir.ui.view">
             <field name="name">report.intrastat.code.tree</field>
             <field name="model">report.intrastat.code</field>
@@ -72,7 +35,7 @@
 
 
         <record id="view_report_intrastat_tree" model="ir.ui.view">
-            <field name="name">report.intrastat.view</field>
+            <field name="name">report.intrastat.tree</field>
             <field name="model">report.intrastat</field>
             <field name="arch" type="xml">
                 <tree string="Intrastat Data" create="false">
@@ -114,5 +77,4 @@
 
         <menuitem action="action_report_intrastat_tree_all" id="menu_report_intrastat_all" 
                 parent="stock.menu_warehouse_report" sequence="6"/>
-    </data>
-</openerp>
+</odoo>
