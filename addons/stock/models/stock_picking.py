@@ -970,7 +970,7 @@ class Picking(models.Model):
     def put_in_pack(self):
         # TDE FIXME: reclean me
         QuantPackage = self.env["stock.quant.package"]
-        package_id = False
+        package = False
         for pick in self:
             operations = [x for x in pick.pack_operation_ids if x.qty_done > 0 and (not x.result_package_id)]
             pack_operation_ids = self.env['stock.pack.operation']
@@ -989,8 +989,8 @@ class Picking(models.Model):
                 pack_operation_ids |= op
             if operations:
                 pack_operation_ids.check_tracking()
-                package_id = QuantPackage.create({})
-                pack_operation_ids.write({'result_package_id': package_id})
+                package = QuantPackage.create({})
+                pack_operation_ids.write({'result_package_id': package.id})
             else:
                 raise UserError(_('Please process some quantities to put in the pack first!'))
-        return package_id
+        return package
