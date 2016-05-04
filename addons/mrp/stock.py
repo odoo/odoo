@@ -298,13 +298,3 @@ class stock_warehouse(osv.osv):
         if warehouse.manufacture_pull_id:
             pull_obj.write(cr, uid, warehouse.manufacture_pull_id.id, {'name': warehouse.manufacture_pull_id.name.replace(warehouse.name, name, 1)}, context=context)
         return res
-
-    def _get_all_products_to_resupply(self, cr, uid, warehouse, context=None):
-        res = super(stock_warehouse, self)._get_all_products_to_resupply(cr, uid, warehouse, context=context)
-        if warehouse.manufacture_pull_id and warehouse.manufacture_pull_id.route_id:
-            for product_id in res:
-                for route in self.pool.get('product.product').browse(cr, uid, product_id, context=context).route_ids:
-                    if route.id == warehouse.manufacture_pull_id.route_id.id:
-                        res.remove(product_id)
-                        break
-        return res

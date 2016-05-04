@@ -123,16 +123,6 @@ class stock_warehouse(osv.osv):
         routes |= self.filtered(lambda self: self.buy_to_resupply and self.buy_pull_id and self.buy_pull_id.route_id).mapped('buy_pull_id').mapped('route_id')
         return routes
 
-    def _get_all_products_to_resupply(self, cr, uid, warehouse, context=None):
-        res = super(stock_warehouse, self)._get_all_products_to_resupply(cr, uid, warehouse, context=context)
-        if warehouse.buy_pull_id and warehouse.buy_pull_id.route_id:
-            for product_id in res:
-                for route in self.pool.get('product.product').browse(cr, uid, product_id, context=context).route_ids:
-                    if route.id == warehouse.buy_pull_id.route_id.id:
-                        res.remove(product_id)
-                        break
-        return res
-
     def _handle_renaming(self, cr, uid, ids, name, code, context=None):
         res = super(stock_warehouse, self)._handle_renaming(cr, uid, ids, name, code, context=context)
         warehouse = self.browse(cr, uid, ids[0], context=context)
