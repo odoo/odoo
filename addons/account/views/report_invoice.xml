@@ -85,7 +85,7 @@
                         </td>
                         <td class="text-right">
                             <span t-field="l.price_subtotal" 
-                                t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                t-field-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                         </td>
                     </tr>
                 </tbody>
@@ -97,7 +97,7 @@
                         <tr class="border-black">
                             <td><strong>Subtotal</strong></td>
                             <td class="text-right">
-                                <span t-field="o.amount_untaxed" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                <span t-field="o.amount_untaxed" t-field-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                             </td>
                         </tr>
                         <t t-foreach="o._get_tax_amount_by_group()" t-as="amount_by_group">
@@ -111,7 +111,7 @@
                         <tr class="border-black">
                             <td><strong>Total</strong></td>
                             <td class="text-right">
-                                 <span t-field="o.amount_total" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                 <span t-field="o.amount_total" t-field-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                             </td>
                         </tr>
                     </table>

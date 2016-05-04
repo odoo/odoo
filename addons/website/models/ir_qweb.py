@@ -2,7 +2,6 @@
 from openerp.addons.web.http import request
 from openerp.osv import orm
 import ast
-from openerp.addons.base.ir.ir_qweb import utils
 
 
 class QWeb(orm.AbstractModel):
@@ -29,7 +28,7 @@ class QWeb(orm.AbstractModel):
     ]
 
     def _website_build_attribute(self, tagName, name, value, qwebcontext):
-        context = qwebcontext.context or {}
+        context = qwebcontext.env.context or {}
         if not context.get('rendering_bundle'):
             if name == self.URL_ATTRS.get(tagName) and qwebcontext.get('url_for'):
                 return qwebcontext.get('url_for')(value or '')

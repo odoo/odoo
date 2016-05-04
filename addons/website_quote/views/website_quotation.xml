@@ -61,7 +61,7 @@
                               </td>
                               <td class="text-right">
                                     <div t-field="line.price_unit"
-                                        t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'
+                                        t-field-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'
                                         t-att-style="line.discount and 'text-decoration: line-through' or None"
                                         t-att-class="(line.discount and 'text-danger' or '') + ' text-right'"/>
                                     <!-- TODO: apply monetary widget formating -->
@@ -72,7 +72,7 @@
                               <td>
                                   <div class="text-right"
                                       t-field="line.price_subtotal"
-                                      t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
+                                      t-field-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                               </td>
                               <td class="text-center">
                                   <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json hidden-print" t-if="line.option_line_id">
@@ -99,7 +99,7 @@
                             <td></td><td></td><td></td><td></td>
                             <td class="text-right"><strong>Subtotal:</strong></td>
                             <td class="text-right">
-                                <strong data-id="total_amount" t-field="quotation.amount_untaxed" t-field-options='{"widget": "monetary","display_currency": "quotation.pricelist_id.currency_id"}'/>
+                                <strong data-id="total_amount" t-field="quotation.amount_untaxed" t-field-options='{"widget": "monetary","display_currency": quotation.pricelist_id.currency_id}'/>
                             </td>
                             <td></td>
                         </tr>
@@ -108,7 +108,7 @@
                             <td></td><td></td><td></td><td></td>
                             <td class="text-right">Taxes:</td>
                             <td class="text-right">
-                                <span data-id="total_amount" t-field="quotation.amount_tax" t-field-options='{"widget": "monetary","display_currency": "quotation.pricelist_id.currency_id"}'/>
+                                <span data-id="total_amount" t-field="quotation.amount_tax" t-field-options='{"widget": "monetary","display_currency": quotation.pricelist_id.currency_id}'/>
                             </td>
                             <td></td>
                         </tr>
@@ -116,7 +116,7 @@
                             <td></td><td></td><td></td><td></td>
                             <td class="text-right"><strong>Total:</strong></td>
                             <td class="text-right">
-                                <strong data-id="total_amount" t-field="quotation.amount_total" t-field-options='{"widget": "monetary","display_currency": "quotation.pricelist_id.currency_id"}'/>
+                                <strong data-id="total_amount" t-field="quotation.amount_total" t-field-options='{"widget": "monetary","display_currency": quotation.pricelist_id.currency_id}'/>
                             </td>
                             <td></td>
                         </tr>
@@ -220,22 +220,22 @@
                                   <p class="text-muted mb8">Your advantage:</p>
                                   <t t-if="quotation.amount_untaxed == quotation.amount_total">
                                       <strong t-field="quotation.amount_total"
-                                          t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
+                                          t-field-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                                       <strong t-field="quotation.amount_undiscounted"
-                                          t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'
+                                          t-field-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'
                                           style="text-decoration: line-through"
                                           class="text-danger"/>
                                   </t>
                                   <t t-if="quotation.amount_untaxed != quotation.amount_total">
                                       <strong t-field="quotation.amount_untaxed"
-                                          t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
+                                          t-field-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                                       <strong t-field="quotation.amount_undiscounted"
-                                          t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'
+                                          t-field-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'
                                           style="text-decoration: line-through"
                                           class="text-danger"/>
                                       <br />
                                       (<span t-field="quotation.amount_total"
-                                          t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/> Incl. tax)
+                                          t-field-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/> Incl. tax)
                                   </t>
                               </div>
                          </div>
@@ -292,7 +292,7 @@
                                   <span>I agree that by signing this proposal, I
                                   accept it on the behalf of </span><b t-field="quotation.company_id"/><span>, for an amount of </span>
                                   <b data-id="total_amount" t-field="quotation.amount_total"
-                                    t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
+                                    t-field-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                                   <span>with payment terms: </span><b t-field="quotation.payment_term_id"/>.
                               </p>
                               <div id="signer" class="form-group">
@@ -319,7 +319,7 @@
                                 <span>I agree that by paying this proposal, I
                                 accept it on the behalf of </span><b t-field="quotation.company_id"/><span>, for an amount of </span>
                                 <b data-id="total_amount" t-field="quotation.amount_total"
-                                  t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
+                                  t-field-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                                 <span>with payment terms: </span><b t-field="quotation.payment_term_id"/>.
                             </p>
                           </div>
@@ -587,7 +587,7 @@
                             <td>
                                 <strong class="text-right">
                                     <div t-field="option.price_unit"
-                                    t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'
+                                    t-field-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'
                                     t-att-style="option.discount and 'text-decoration: line-through' or None"
                                     t-att-class="option.discount and 'text-danger' or None"/>
                                     <div t-if="option.discount">
@@ -699,7 +699,7 @@
                           <span class="label label-default"><i class="fa fa-fw fa-clock-o"/> Expired</span>
                         </t>
                       </td>
-                      <td><span t-field="quotation.amount_total" t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
+                      <td><span t-field="quotation.amount_total" t-field-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                       </td>
               </tr>
           </t>
