@@ -18,22 +18,15 @@ class CrmLeadForwardToPartner(models.TransientModel):
     body = fields.Html(string='Contents', help='Automatically sanitized HTML contents')
 
     def _convert_to_assignation_line(self, lead, partner):
-        lead_location = []
-        partner_location = []
-        if lead.country_id:
-            lead_location.append(lead.country_id.name)
-        if lead.city:
-            lead_location.append(lead.city)
-        if partner.country_id:
-            partner_location.append(partner.country_id.name)
-        if partner.city:
-            partner_location.append(partner.city)
-        return {'lead_id': lead.id,
-                'lead_location': ", ".join(lead_location),
-                'partner_assigned_id': partner.id,
-                'partner_location': ", ".join(partner_location),
-                'lead_link': self.get_lead_portal_url(lead.id, lead.type),
-                }
+        lead_location = filter(None, [lead.country_id.name, lead.city])
+        partner_location = filter(None, [partner.country_id.name, partner.city])
+        return {
+            'lead_id': lead.id,
+            'lead_location': ", ".join(lead_location),
+            'partner_assigned_id': partner.id,
+            'partner_location': ", ".join(partner_location),
+            'lead_link': self.get_lead_portal_url(lead.id, lead.type),
+        }
 
     @api.model
     def default_get(self, fields):
@@ -117,7 +110,7 @@ class CrmLeadForwardToPartner(models.TransientModel):
         return "%s/?db=%s" % (self.env['ir.config_parameter'].get_param('web.base.url'), self._cr.dbname)
 
 
-class CrmLeadAssignation (models.TransientModel):
+class CrmLeadAssignation(models.TransientModel):
     _name = 'crm.lead.assignation'
 
     forward_id = fields.Many2one('crm.lead.forward.to.partner', string='Partner Assignation')
@@ -129,26 +122,9 @@ class CrmLeadAssignation (models.TransientModel):
 
     @api.onchange('lead_id')
     def _onchange_lead_id(self):
-        lead = self.lead_id
-        if not lead:
-            self.lead_location = False
-        else:
-            lead_location = []
-            if lead.country_id:
-                lead_location.append(lead.country_id.name)
-            if lead.city:
-                lead_location.append(lead.city)
-            self.lead_location = ", ".join(lead_location)
+        self.lead_location = ", ".join(filter(None, [self.lead_id.country_id.name, self.lead_id.city]))
 
     @api.onchange('partner_assigned_id')
     def _onchange_partner_assigned_id(self):
         partner = self.partner_assigned_id
-        if not partner:
-            self.lead_location = False
-        else:
-            partner_location = []
-            if partner.country_id:
-                partner_location.append(partner.country_id.name)
-            if partner.city:
-                partner_location.append(partner.city)
-            self.partner_location = ", ".join(partner_location)
+        self.partner_location = ", ".join(filter(None, [partner.country_id.name, partner.city]))
