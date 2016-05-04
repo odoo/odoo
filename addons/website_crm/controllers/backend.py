@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
-from openerp import http
-from openerp.http import request
-from dateutil.relativedelta import relativedelta
-from datetime import datetime, date, timedelta
-from math import floor
-import time
-import operator
+from datetime import timedelta
+
 import babel
 
-from openerp.addons.website.controllers.backend import WebsiteBackend
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
+from odoo import fields, http
+from odoo.http import request
+from odoo.addons.website.controllers.backend import WebsiteBackend
 
 
 class WebsiteCrmBackend(WebsiteBackend):
@@ -19,28 +15,28 @@ class WebsiteCrmBackend(WebsiteBackend):
 
         results = super(WebsiteCrmBackend, self).fetch_dashboard_data(date_from, date_to)
 
-        date_from = datetime.strptime(date_from, DEFAULT_SERVER_DATE_FORMAT)
-        date_to = datetime.strptime(date_to, DEFAULT_SERVER_DATE_FORMAT)
-
         lead_domain = [
             ('team_id.website_ids', '!=', False),
         ]
 
-        lead_ids = request.env['crm.lead'].search(
+        leads = request.env['crm.lead'].search(
             lead_domain + [
-                ('create_date', '>=', date_from.strftime(DEFAULT_SERVER_DATE_FORMAT)),
-                ('create_date', '<=', date_to.strftime(DEFAULT_SERVER_DATE_FORMAT))],
+                ('create_date', '>=', date_from),
+                ('create_date', '<=', date_to)],
             )
 
-        leads = [{
-            'create_date': datetime.strptime(lead.create_date, DEFAULT_SERVER_DATETIME_FORMAT).strftime(DEFAULT_SERVER_DATE_FORMAT),
+        leads_data = [{
+            'create_date': fields.Date.to_string(fields.Date.from_string(lead.create_date)),  # convert Datetime to Date
             'campaign_id': lead.campaign_id.name,
             'medium_id': lead.medium_id.name,
             'source_id': lead.source_id.name,
-        } for lead in lead_ids]
+        } for lead in leads]
 
-        leads_graph = self._compute_lead_graph(date_from, date_to, lead_domain)
-        previous_leads_graph = self._compute_lead_graph(date_from - timedelta(days=(date_to - date_from).days), date_from, lead_domain, previous=True)
+        py_obj_date_from = fields.Date.from_string(date_from)
+        py_obj_date_to = fields.Date.from_string(date_to)
+
+        leads_graph = self._compute_lead_graph(py_obj_date_from, py_obj_date_to, lead_domain)
+        previous_leads_graph = self._compute_lead_graph(py_obj_date_from - timedelta(days=(py_obj_date_to - py_obj_date_from).days), py_obj_date_from, lead_domain, previous=True)
 
         results['dashboards']['leads'] = {
             'graph': [
@@ -53,7 +49,7 @@ class WebsiteCrmBackend(WebsiteBackend):
                     'key': 'Previous Leads',
                 },
             ],
-            'leads': leads,
+            'leads': leads_data,
         }
 
         return results
@@ -61,21 +57,20 @@ class WebsiteCrmBackend(WebsiteBackend):
     def _compute_lead_graph(self, date_from, date_to, lead_domain, previous=False):
 
         days_between = (date_to - date_from).days
-        date_list = [(date_from + timedelta(days=x)) for x in range(0, days_between + 1)]
+        date_list = [(date_from + timedelta(days=x)) for x in range(days_between + 1)]
 
         daily_leads = request.env['crm.lead'].read_group(
             domain=lead_domain + [
-                ('create_date', '>=', date_from.strftime(DEFAULT_SERVER_DATE_FORMAT)),
-                ('create_date', '<=', date_to.strftime(DEFAULT_SERVER_DATE_FORMAT))],
+                ('create_date', '>=', fields.Date.to_string(date_from)),
+                ('create_date', '<=', fields.Date.to_string(date_to))],
             fields=['create_date'],
             groupby='create_date:day')
 
         daily_leads_dict = {l['create_date:day']: l['create_date_count'] for l in daily_leads}
 
         leads_graph = [{
-            '0': d.strftime(DEFAULT_SERVER_DATE_FORMAT) if not previous else (d + timedelta(days=days_between)).strftime(DEFAULT_SERVER_DATE_FORMAT),
+            '0': fields.Date.to_string(d) if not previous else fields.Date.to_string(d + timedelta(days=days_between)),
             # Respect read_group format in models.py
             '1': daily_leads_dict.get(babel.dates.format_date(d, format='dd MMM yyyy', locale=request.env.context.get('lang', 'en_US')), 0)
         } for d in date_list]
-
         return leads_graph

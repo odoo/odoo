@@ -55,7 +55,7 @@ WebsiteBackend.include({
     on_field_selection: function(ev) {
         this.lead_field = ev.currentTarget.value;
         this.compute_percentages();
-        this.$('.js_leads_table').replaceWith(QWeb.render("website.LeadsTable", {'widget': this}));
+        this.$('.js_leads_table').replaceWith(QWeb.render("website_crm.LeadsTable", {'widget': this}));
     },
 });
 
