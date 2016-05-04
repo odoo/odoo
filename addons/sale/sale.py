@@ -729,6 +729,7 @@ class SaleOrderLine(models.Model):
     currency_id = fields.Many2one(related='order_id.currency_id', store=True, string='Currency', readonly=True)
     company_id = fields.Many2one(related='order_id.company_id', string='Company', store=True, readonly=True)
     order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer')
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
 
     state = fields.Selection([
         ('draft', 'Quotation'),
@@ -779,6 +780,7 @@ class SaleOrderLine(models.Model):
             'product_id': self.product_id.id or False,
             'invoice_line_tax_ids': [(6, 0, self.tax_id.ids)],
             'account_analytic_id': self.order_id.project_id.id,
+            'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
         }
         return res
 
