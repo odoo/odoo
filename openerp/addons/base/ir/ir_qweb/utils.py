@@ -284,27 +284,6 @@ class QWebTemplateNotFound(QWebException):
     pass
 
 
-class FileSystemLoader(object):
-    def __init__(self, path):
-        # TODO: support multiple files #add_file() + add cache
-        self.path = path
-        self.doc = etree.parse(path).getroot()
-
-    def __iter__(self):
-        for node in self.doc:
-            name = node.get('t-name')
-            if name:
-                yield name
-
-    def __call__(self, name):
-        for node in self.doc:
-            if node.get('t-name') == name:
-                root = etree.Element('templates')
-                root.append(deepcopy(node))
-                arch = etree.tostring(root, encoding='utf-8', xml_declaration=True)
-                return arch
-
-
 class QWebContext(dict):
     def __init__(self, env, data, loader=None, templates=None):
         self.env = env

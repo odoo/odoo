@@ -9,7 +9,7 @@ import re
 
 from lxml import etree
 
-from odoo.addons.base.ir.ir_qweb import QWebContext, FileSystemLoader
+from odoo.addons.base.ir.ir_qweb import QWebContext
 from odoo.modules import get_module_resource
 from odoo.tests.common import TransactionCase
 
@@ -67,7 +67,29 @@ class TestQWebTField(TransactionCase):
             self.engine.render_node(field, self.context({'company': None}))
 
 
-class TestQWeb(TransactionCase):
+from copy import deepcopy
+class FileSystemLoader(object):
+    def __init__(self, path):
+        # TODO: support multiple files #add_file() + add cache
+        self.path = path
+        self.doc = etree.parse(path).getroot()
+
+    def __iter__(self):
+        for node in self.doc:
+            name = node.get('t-name')
+            if name:
+                yield name
+
+    def __call__(self, name):
+        for node in self.doc:
+            if node.get('t-name') == name:
+                root = etree.Element('templates')
+                root.append(deepcopy(node))
+                arch = etree.tostring(root, encoding='utf-8', xml_declaration=True)
+                return arch
+
+
+class TestQWeb(common.TransactionCase):
     matcher = re.compile(r'^qweb-test-(.*)\.xml$')
 
     @classmethod
