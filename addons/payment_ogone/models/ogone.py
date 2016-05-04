@@ -1,33 +1,33 @@
 # -*- coding: utf-'8' "-*-"
 
 import datetime
-from hashlib import sha1
 import logging
-from lxml import etree, objectify
-from openerp.tools.translate import _
-from pprint import pformat
 import time
-from unicodedata import normalize
-from urllib import urlencode
 import urllib2
 import urlparse
+from hashlib import sha1
+from pprint import pformat
+from unicodedata import normalize
+from urllib import urlencode
 
-from openerp import SUPERUSER_ID
-from openerp.addons.payment.models.payment_acquirer import ValidationError
-from openerp.addons.payment_ogone.controllers.main import OgoneController
-from openerp.addons.payment_ogone.data import ogone
-from openerp.osv import osv, fields
-from openerp.tools import float_round, DEFAULT_SERVER_DATE_FORMAT
-from openerp.tools.float_utils import float_compare, float_repr
-from openerp.tools.safe_eval import safe_eval
+from lxml import etree, objectify
+
+from odoo import api, fields, models, _
+from odoo.addons.payment.models.payment_acquirer import ValidationError
+from odoo.addons.payment_ogone.controllers.main import OgoneController
+from odoo.addons.payment_ogone.data import ogone
+from odoo.tools import float_round, DEFAULT_SERVER_DATE_FORMAT
+from odoo.tools.float_utils import float_compare, float_repr
+from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
 
-class PaymentAcquirerOgone(osv.Model):
+class PaymentAcquirerOgone(models.Model):
     _inherit = 'payment.acquirer'
 
-    def _get_ogone_urls(self, cr, uid, environment, context=None):
+    @api.model
+    def _get_ogone_urls(self, environment):
         """ Ogone URLS:
 
          - standard order: POST address for form-based
@@ -41,22 +41,21 @@ class PaymentAcquirerOgone(osv.Model):
             'ogone_afu_agree_url': 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % (environment,),
         }
 
-    def _get_providers(self, cr, uid, context=None):
-        providers = super(PaymentAcquirerOgone, self)._get_providers(cr, uid, context=context)
+    @api.model
+    def _get_providers(self):
+        providers = super(PaymentAcquirerOgone, self)._get_providers()
         providers.append(['ogone', 'Ogone'])
         return providers
 
-    _columns = {
-        'ogone_pspid': fields.char('PSPID', required_if_provider='ogone'),
-        'ogone_userid': fields.char('API User ID', required_if_provider='ogone'),
-        'ogone_password': fields.char('API User Password', required_if_provider='ogone'),
-        'ogone_shakey_in': fields.char('SHA Key IN', size=32, required_if_provider='ogone'),
-        'ogone_shakey_out': fields.char('SHA Key OUT', size=32, required_if_provider='ogone'),
-        'ogone_alias_usage': fields.char('Alias Usage', help="""If you want to use Ogone Aliases,
-                                                                this default Alias Usage will be presented to
-                                                                the customer as the reason you want to
-                                                                keep his payment data""")
-    }
+    ogone_pspid = fields.Char('PSPID', required_if_provider='ogone')
+    ogone_userid = fields.Char('API User ID', required_if_provider='ogone')
+    ogone_password = fields.Char('API User Password', required_if_provider='ogone')
+    ogone_shakey_in = fields.Char('SHA Key IN', size=32, required_if_provider='ogone')
+    ogone_shakey_out = fields.Char('SHA Key OUT', size=32, required_if_provider='ogone')
+    ogone_alias_usage = fields.Char('Alias Usage', help="""If you want to use Ogone Aliases,
+                                                            this default Alias Usage will be presented to
+                                                            the customer as the reason you want to
+                                                            keep his payment data""")
 
     def _ogone_generate_shasign(self, acquirer, inout, values):
         """ Generate the shasign for incoming or outgoing communications.
@@ -146,12 +145,13 @@ class PaymentAcquirerOgone(osv.Model):
         shasign = sha1(sign).hexdigest()
         return shasign
 
-    def ogone_form_generate_values(self, cr, uid, id, values, context=None):
-        base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
-        acquirer = self.browse(cr, uid, id, context=context)
+    @api.multi
+    def ogone_form_generate_values(self, values):
+        self.ensure_one()
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         ogone_tx_values = dict(values)
         temp_ogone_tx_values = {
-            'PSPID': acquirer.ogone_pspid,
+            'PSPID': self.ogone_pspid,
             'ORDERID': values['reference'],
             'AMOUNT': float_repr(float_round(values['amount'], 2) * 100, 0),
             'CURRENCY': values['currency'] and values['currency'].name or '',
@@ -172,20 +172,23 @@ class PaymentAcquirerOgone(osv.Model):
         if values.get('type') == 'form_save':
             temp_ogone_tx_values.update({
                 'ALIAS': 'ODOO-NEW-ALIAS-%s' % time.time(),    # something unique,
-                'ALIASUSAGE': values.get('alias_usage') or acquirer.ogone_alias_usage,
+                'ALIASUSAGE': values.get('alias_usage') or self.ogone_alias_usage,
             })
-        shasign = self._ogone_generate_shasign(acquirer, 'in', temp_ogone_tx_values)
+        shasign = self._ogone_generate_shasign(self, 'in', temp_ogone_tx_values)
         temp_ogone_tx_values['SHASIGN'] = shasign
         ogone_tx_values.update(temp_ogone_tx_values)
         return ogone_tx_values
 
-    def ogone_get_form_action_url(self, cr, uid, id, context=None):
-        acquirer = self.browse(cr, uid, id, context=context)
-        return self._get_ogone_urls(cr, uid, acquirer.environment, context=context)['ogone_standard_order_url']
+    @api.multi
+    def ogone_get_form_action_url(self):
+        self.ensure_one()
+        # acquirer = self.browse(cr, uid, id, context=context)
+        return self._get_ogone_urls(self.environment)['ogone_standard_order_url']
 
-    def ogone_s2s_form_validate(self, cr, uid, id, data, context=None):
+    @api.multi
+    def ogone_s2s_form_validate(self, data, context=None):
+        self.ensure_one()
         error = dict()
-        error_message = []
 
         mandatory_fields = ["cc_number", "cc_cvc", "cc_holder_name", "cc_expiry", "cc_brand"]
         # Validation
@@ -195,7 +198,8 @@ class PaymentAcquirerOgone(osv.Model):
 
         return False if error else True
 
-    def ogone_s2s_form_process(self, cr, uid, data, context=None):
+    @api.model
+    def ogone_s2s_form_process(self, data):
         values = {
             'cc_number': data.get('cc_number'),
             'cc_cvc': int(data.get('cc_cvc')),
@@ -205,11 +209,11 @@ class PaymentAcquirerOgone(osv.Model):
             'acquirer_id': int(data.get('acquirer_id')),
             'partner_id': int(data.get('partner_id'))
         }
-        pm_id = self.pool['payment.method'].create(cr, SUPERUSER_ID, values, context=context)
+        pm_id = self.env['payment.method'].sudo().create(values).id
         return pm_id
 
 
-class PaymentTxOgone(osv.Model):
+class PaymentTxOgone(models.Model):
     _inherit = 'payment.transaction'
     # ogone status
     _ogone_valid_tx_status = [5, 9]
@@ -221,7 +225,8 @@ class PaymentTxOgone(osv.Model):
     # FORM RELATED METHODS
     # --------------------------------------------------
 
-    def _ogone_form_get_tx_from_data(self, cr, uid, data, context=None):
+    @api.model
+    def _ogone_form_get_tx_from_data(self, data):
         """ Given a data dict coming from ogone, verify it and find the related
         transaction record. Create a payment method if an alias is returned."""
         reference, pay_id, shasign, alias = data.get('orderID'), data.get('PAYID'), data.get('SHASIGN'), data.get('ALIAS')
@@ -231,19 +236,19 @@ class PaymentTxOgone(osv.Model):
             raise ValidationError(error_msg)
 
         # find tx -> @TDENOTE use paytid ?
-        tx_ids = self.search(cr, uid, [('reference', '=', reference)], context=context)
-        if not tx_ids or len(tx_ids) > 1:
+        tx = self.search([('reference', '=', reference)], limit=1)
+        if not tx or len(tx) > 1:
             error_msg = _('Ogone: received data for reference %s') % (reference)
-            if not tx_ids:
+            if not tx:
                 error_msg += _('; no order found')
             else:
                 error_msg += _('; multiple order found')
             _logger.info(error_msg)
             raise ValidationError(error_msg)
-        tx = self.pool['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
+        # tx = self.pool['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
 
         # verify shasign
-        shasign_check = self.pool['payment.acquirer']._ogone_generate_shasign(tx.acquirer_id, 'out', data)
+        shasign_check = self.env['payment.acquirer']._ogone_generate_shasign(tx.acquirer_id, 'out', data)
         if shasign_check.upper() != shasign.upper():
             error_msg = _('Ogone: invalid shasign, received %s, computed %s, for data %s') % (shasign, shasign_check, data)
             _logger.info(error_msg)
@@ -254,21 +259,22 @@ class PaymentTxOgone(osv.Model):
 
         # alias was created on ogone server, store it
         if alias:
-            method_obj = self.pool['payment.method']
+            PaymentMethod = self.env['payment.method']
             domain = [('acquirer_ref', '=', alias)]
             cardholder = data.get('CN')
-            if not method_obj.search_count(cr, uid, domain, context=context):
+            if not PaymentMethod.search_count(domain):
                 _logger.info('Ogone: saving alias %s for partner %s' % (data.get('CARDNO'), tx.partner_id))
-                ref = method_obj.create(cr, uid, {'name': data.get('CARDNO') + (' - ' + cardholder if cardholder else ''),
-                                                  'partner_id': tx.partner_id.id,
-                                                  'acquirer_id': tx.acquirer_id.id,
-                                                  'acquirer_ref': alias
-                                                  })
-                tx.write({'payment_method_id': ref})
+                ref = PaymentMethod.create({'name': data.get('CARDNO') + (' - ' + cardholder if cardholder else ''),
+                                              'partner_id': tx.partner_id.id,
+                                              'acquirer_id': tx.acquirer_id.id,
+                                              'acquirer_ref': alias
+                                            })
+                tx.payment_method_id = ref.id
 
         return tx
 
-    def _ogone_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
+    @api.model
+    def _ogone_form_get_invalid_parameters(self, tx, data):
         invalid_parameters = []
 
         # TODO: txn_id: should be false at draft, set afterwards, and verified with txn details
@@ -282,7 +288,8 @@ class PaymentTxOgone(osv.Model):
 
         return invalid_parameters
 
-    def _ogone_form_validate(self, cr, uid, tx, data, context=None):
+    @api.model
+    def _ogone_form_validate(self, tx, data):
         if tx.state == 'done':
             _logger.info('Ogone: trying to validate an already validated tx (ref %s)', tx.reference)
             return True
@@ -295,13 +302,13 @@ class PaymentTxOgone(osv.Model):
                 'acquirer_reference': data['PAYID'],
             }
             if data.get('ALIAS') and tx.partner_id and tx.type == 'form_save' and not tx.payment_method_id:
-                pm_id = self.pool['payment.method'].create(cr, uid, {
+                pm = self.env['payment.method'].create({
                     'partner_id': tx.partner_id.id,
                     'acquirer_id': tx.acquirer_id.id,
                     'acquirer_ref': data.get('ALIAS'),
                     'name': '%s - %s' % (data.get('CARDNO'), data.get('CN'))
-                }, context=context)
-                vals.update(payment_method_id=pm_id)
+                })
+                vals.update(payment_method_id=pm.id)
             tx.write(vals)
             if tx.callback_eval:
                 safe_eval(tx.callback_eval, {'self': tx})
@@ -333,29 +340,30 @@ class PaymentTxOgone(osv.Model):
     # --------------------------------------------------
     # S2S RELATED METHODS
     # --------------------------------------------------
-    def ogone_s2s_do_transaction(self, cr, uid, id, context=None, **kwargs):
+    @api.multi
+    def ogone_s2s_do_transaction(self, **kwargs):
+        self.ensure_one()
         # TODO: create tx with s2s type
-        tx = self.browse(cr, uid, id, context=context)
-        account = tx.acquirer_id
-        reference = tx.reference or "ODOO-%s-%s" % (datetime.datetime.now().strftime('%y%m%d_%H%M%S'), tx.partner_id.id)
+        account = self.acquirer_id
+        reference = self.reference or "ODOO-%s-%s" % (datetime.datetime.now().strftime('%y%m%d_%H%M%S'), self.partner_id.id)
 
         data = {
             'PSPID': account.ogone_pspid,
             'USERID': account.ogone_userid,
             'PSWD': account.ogone_password,
             'ORDERID': reference,
-            'AMOUNT': long(tx.amount * 100),
-            'CURRENCY': tx.currency_id.name,
+            'AMOUNT': long(self.amount * 100),
+            'CURRENCY': self.currency_id.name,
             'OPERATION': 'SAL',
             'ECI': 2,   # Recurring (from MOTO)
-            'ALIAS': tx.payment_method_id.acquirer_ref,
+            'ALIAS': self.payment_method_id.acquirer_ref,
             'RTIMEOUT': 30,
         }
 
         if kwargs.get('3d_secure'):
             data.update({
                 'FLAG3D': 'Y',
-                'LANGUAGE': tx.partner_id.lang or 'en_US',
+                'LANGUAGE': self.partner_id.lang or 'en_US',
             })
 
             for url in 'accept decline exception'.split():
@@ -365,9 +373,9 @@ class PaymentTxOgone(osv.Model):
                     key = '{0}URL'.format(url).upper()
                     data[key] = val
 
-        data['SHASIGN'] = self.pool['payment.acquirer']._ogone_generate_shasign(tx.acquirer_id, 'in', data)
+        data['SHASIGN'] = self.env['payment.acquirer']._ogone_generate_shasign(self.acquirer_id, 'in', data)
 
-        direct_order_url = 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % (tx.acquirer_id.environment)
+        direct_order_url = 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % (self.acquirer_id.environment)
 
         _logger.debug("Ogone data %s", pformat(data))
         request = urllib2.Request(direct_order_url, urlencode(data))
@@ -381,51 +389,53 @@ class PaymentTxOgone(osv.Model):
             _logger.exception('Invalid xml response from ogone')
             raise
 
-        return self._ogone_s2s_validate_tree(tx, tree)
+        return self._ogone_s2s_validate_tree(tree)
 
-    def _ogone_s2s_validate(self, tx):
-        tree = self._ogone_s2s_get_tx_status(tx)
-        return self._ogone_s2s_validate_tree(tx, tree)
+    @api.multi
+    def _ogone_s2s_validate(self):
+        tree = self._ogone_s2s_get_tx_status()
+        return self._ogone_s2s_validate_tree(tree)
 
-    def _ogone_s2s_validate_tree(self, tx, tree, tries=2):
-        if tx.state not in ('draft', 'pending'):
-            _logger.info('Ogone: trying to validate an already validated tx (ref %s)', tx.reference)
+    @api.multi
+    def _ogone_s2s_validate_tree(self, tree, tries=2):
+        if self.state not in ('draft', 'pending'):
+            _logger.info('Ogone: trying to validate an already validated tx (ref %s)', self.reference)
             return True
 
         status = int(tree.get('STATUS') or 0)
         if status in self._ogone_valid_tx_status:
-            tx.write({
+            self.write({
                 'state': 'done',
                 'date_validate': datetime.date.today().strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'acquirer_reference': tree.get('PAYID'),
             })
-            if tree.get('ALIAS') and tx.partner_id and tx.type == 'form_save' and not tx.payment_method_id:
-                pm = tx.env['payment.method'].create({
-                    'partner_id': tx.partner_id.id,
-                    'acquirer_id': tx.acquirer_id.id,
+            if tree.get('ALIAS') and self.partner_id and self.type == 'form_save' and not self.payment_method_id:
+                pm = self.env['payment.method'].create({
+                    'partner_id': self.partner_id.id,
+                    'acquirer_id': self.acquirer_id.id,
                     'acquirer_ref': tree.get('ALIAS'),
                     'name': tree.get('CARDNO'),
                 })
-                tx.write({'payment_method_id': pm.id})
-            if tx.callback_eval:
-                safe_eval(tx.callback_eval, {'self': tx})
+                self.write({'payment_method_id': pm.id})
+            if self.callback_eval:
+                safe_eval(self.callback_eval, {'self': self})
             return True
         elif status in self._ogone_cancel_tx_status:
-            tx.write({
+            self.write({
                 'state': 'cancel',
                 'acquirer_reference': tree.get('PAYID'),
             })
         elif status in self._ogone_pending_tx_status:
-            tx.write({
+            self.write({
                 'state': 'pending',
                 'acquirer_reference': tree.get('PAYID'),
                 'html_3ds': str(tree.HTML_ANSWER).decode('base64')
             })
         elif (not status or status in self._ogone_wait_tx_status) and tries > 0:
             time.sleep(500)
-            tx.write({'acquirer_reference': tree.get('PAYID')})
-            tree = self._ogone_s2s_get_tx_status(tx)
-            return self._ogone_s2s_validate_tree(tx, tree, tries - 1)
+            self.write({'acquirer_reference': tree.get('PAYID')})
+            tree = self._ogone_s2s_get_tx_status()
+            return self._ogone_s2s_validate_tree(tree, tries - 1)
         else:
             error = 'Ogone: feedback error: %(error_str)s\n\n%(error_code)s: %(error_msg)s' % {
                 'error_str': tree.get('NCERRORPLUS'),
@@ -433,26 +443,27 @@ class PaymentTxOgone(osv.Model):
                 'error_msg': ogone.OGONE_ERROR_MAP.get(tree.get('NCERROR')),
             }
             _logger.info(error)
-            tx.write({
+            self.write({
                 'state': 'error',
                 'state_message': error,
                 'acquirer_reference': tree.get('PAYID'),
             })
             return False
 
-    def _ogone_s2s_get_tx_status(self, tx):
-        account = tx.acquirer_id
+    @api.multi
+    def _ogone_s2s_get_tx_status(self):
+        self.ensure_one()
+        account = self.acquirer_id
         #reference = tx.reference or "ODOO-%s-%s" % (datetime.datetime.now().strftime('%Y%m%d_%H%M%S'), tx.partner_id.id)
 
         data = {
-            'PAYID': tx.acquirer_reference,
+            'PAYID': self.acquirer_reference,
             'PSPID': account.ogone_pspid,
             'USERID': account.ogone_userid,
             'PSWD': account.ogone_password,
         }
 
-        query_direct_url = 'https://secure.ogone.com/ncol/%s/querydirect.asp' % (tx.acquirer_id.environment)
-
+        query_direct_url = 'https://secure.ogone.com/ncol/%s/querydirect.asp' % (self.acquirer_id.environment)
         _logger.debug("Ogone data %s", pformat(data))
         request = urllib2.Request(query_direct_url, urlencode(data))
         result = urllib2.urlopen(request).read()
@@ -468,14 +479,15 @@ class PaymentTxOgone(osv.Model):
         return tree
 
 
-class PaymentMethod(osv.Model):
+class PaymentMethod(models.Model):
     _inherit = 'payment.method'
 
-    def ogone_create(self, cr, uid, values, context=None):
+    @api.model
+    def ogone_create(self, values):
         if values.get('cc_number'):
             # create a alias via batch
             values['cc_number'] = values['cc_number'].replace(' ', '')
-            acquirer = self.pool['payment.acquirer'].browse(cr, uid, values['acquirer_id'])
+            acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
             alias = 'ODOO-NEW-ALIAS-%s' % time.time()
 
             expiry = str(values['cc_expiry'][:2]) + str(values['cc_expiry'][-2:])
@@ -487,14 +499,13 @@ class PaymentMethod(osv.Model):
                 'TRANSACTION_CODE': 'ATR',
                 'OPERATION': 'SAL',
                 'NB_PAYMENTS': 1,   # even if we do not actually have any payment, ogone want it to not be 0
-                'FILE': normalize('NFKD', line).encode('ascii','ignore'),  # Ogone Batch must be ASCII only
+                'FILE': normalize('NFKD', line).encode('ascii', 'ignore'),  # Ogone Batch must be ASCII only
                 'REPLY_TYPE': 'XML',
                 'PSPID': acquirer.ogone_pspid,
                 'USERID': acquirer.ogone_userid,
                 'PSWD': acquirer.ogone_password,
                 'PROCESS_MODE': 'CHECKANDPROCESS',
             }
-
             url = 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % (acquirer.environment,)
             request = urllib2.Request(url, urlencode(data))
 
@@ -522,7 +533,7 @@ class PaymentMethod(osv.Model):
                 error = '%s\n\n%s: %s' % (error_str, error_code, error_msg)
                 _logger.error(error)
                 raise Exception(error)
-
+                
             return {
                 'acquirer_ref': alias,
                 'name': 'XXXXXXXXXXXX%s - %s' % (values['cc_number'][-4:], values['cc_holder_name'])
