@@ -9,8 +9,10 @@ var utils = require('mail.utils');
 var config = require('web.config');
 var core = require('web.core');
 var form_common = require('web.form_common');
+var web_utils = require('web.utils');
 
 var _t = core._t;
+var QWeb = core.qweb;
 
 // -----------------------------------------------------------------------------
 // Chat Composer for the Chatter
@@ -284,6 +286,7 @@ var Chatter = form_common.AbstractField.extend({
         this.model = this.view.dataset.model;
         this.res_id = undefined;
         this.context = this.options.context || {};
+        this.dp = new web_utils.DropPrevious();
     },
 
     willStart: function () {
@@ -344,7 +347,17 @@ var Chatter = form_common.AbstractField.extend({
         var self = this;
         options = options || {};
         options.ids = ids;
-        return chat_manager.get_messages(options).then(function (raw_messages) {
+
+        // Ensure that only the last loaded thread is rendered to prevent displaying the wrong thread
+        var fetch_def = this.dp.add(chat_manager.get_messages(options));
+
+        // Empty thread and display a spinner after 1s to indicate that it is loading
+        this.thread.$el.empty();
+        web_utils.reject_after(web_utils.delay(1000), fetch_def).then(function () {
+            self.thread.$el.append(QWeb.render('mail.ChatterSpinner', {}));
+        });
+
+        return fetch_def.then(function (raw_messages) {
             self.thread.render(raw_messages, {display_load_more: raw_messages.length < ids.length});
         });
     },
