@@ -18,10 +18,9 @@ This module allows you to easily add extra costs on pickings and decide the spli
     ],
     'data': [
         'security/ir.model.access.csv',
-        'stock_landed_costs_sequence.xml',
-        'product_view.xml',
-        'stock_landed_costs_view.xml',
-        'stock_landed_costs_data.xml',
+        'data/stock_landed_cost_data.xml',
+        'views/product_views.xml',
+        'views/stock_landed_cost_views.xml',
     ],
     'test': [
         '../account/test/account_minimal_test.xml',
