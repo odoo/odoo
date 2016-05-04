@@ -1,14 +1,11 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# This test can be run stand-alone with something like:
-# > PYTHONPATH=. python2 openerp/tests/test_misc.py
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import cgi
 import unittest
 
-from openerp.tools import html_sanitize, append_content_to_html, plaintext2html, email_split
-import test_mail_examples
+from odoo.tools import html_sanitize, append_content_to_html, plaintext2html, email_split
+from . import test_mail_examples
 
 
 class TestSanitizer(unittest.TestCase):
@@ -325,7 +322,3 @@ class TestEmailTools(unittest.TestCase):
         ]
         for text, expected in cases:
             self.assertEqual(email_split(text), expected, 'email_split is broken')
-
-
-if __name__ == '__main__':
-    unittest.main()

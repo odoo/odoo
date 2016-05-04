@@ -1,58 +1,50 @@
-import unittest
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.exceptions import ValidationError
-import openerp.tests.common as common
-from openerp.tools import mute_logger
+from odoo.exceptions import ValidationError
+from odoo.tools import mute_logger
+import odoo.tests.common as common
+import odoo.workflow
 
 
 class TestServerActionsBase(common.TransactionCase):
 
     def setUp(self):
         super(TestServerActionsBase, self).setUp()
-        cr, uid = self.cr, self.uid
-
-        # Models
-        self.ir_actions_server = self.registry('ir.actions.server')
-        self.ir_actions_client = self.registry('ir.actions.client')
-        self.ir_values = self.registry('ir.values')
-        self.ir_model = self.registry('ir.model')
-        self.ir_model_fields = self.registry('ir.model.fields')
-        self.res_partner = self.registry('res.partner')
-        self.res_country = self.registry('res.country')
 
         # Data on which we will run the server action
-        self.test_country_id = self.res_country.create(cr, uid, {
+        self.test_country = self.env['res.country'].create({
             'name': 'TestingCountry',
             'code': 'TY',
             'address_format': 'SuperFormat',
         })
-        self.test_country = self.res_country.browse(cr, uid, self.test_country_id)
-        self.test_partner_id = self.res_partner.create(cr, uid, {
+        self.test_partner = self.env['res.partner'].create({
             'name': 'TestingPartner',
             'city': 'OrigCity',
-            'country_id': self.test_country_id,
+            'country_id': self.test_country.id,
         })
-        self.test_partner = self.res_partner.browse(cr, uid, self.test_partner_id)
         self.context = {
-            'active_id': self.test_partner_id,
             'active_model': 'res.partner',
+            'active_id': self.test_partner.id,
         }
 
         # Model data
-        self.res_partner_model_id = self.ir_model.search(cr, uid, [('model', '=', 'res.partner')])[0]
-        self.res_partner_name_field_id = self.ir_model_fields.search(cr, uid, [('model', '=', 'res.partner'), ('name', '=', 'name')])[0]
-        self.res_partner_city_field_id = self.ir_model_fields.search(cr, uid, [('model', '=', 'res.partner'), ('name', '=', 'city')])[0]
-        self.res_partner_country_field_id = self.ir_model_fields.search(cr, uid, [('model', '=', 'res.partner'), ('name', '=', 'country_id')])[0]
-        self.res_partner_parent_field_id = self.ir_model_fields.search(cr, uid, [('model', '=', 'res.partner'), ('name', '=', 'parent_id')])[0]
-        self.res_country_model_id = self.ir_model.search(cr, uid, [('model', '=', 'res.country')])[0]
-        self.res_country_name_field_id = self.ir_model_fields.search(cr, uid, [('model', '=', 'res.country'), ('name', '=', 'name')])[0]
-        self.res_country_code_field_id = self.ir_model_fields.search(cr, uid, [('model', '=', 'res.country'), ('name', '=', 'code')])[0]
+        Model = self.env['ir.model']
+        Fields = self.env['ir.model.fields']
+        self.res_partner_model = Model.search([('model', '=', 'res.partner')])
+        self.res_partner_name_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'name')])
+        self.res_partner_city_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'city')])
+        self.res_partner_country_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'country_id')])
+        self.res_partner_parent_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'parent_id')])
+        self.res_country_model = Model.search([('model', '=', 'res.country')])
+        self.res_country_name_field = Fields.search([('model', '=', 'res.country'), ('name', '=', 'name')])
+        self.res_country_code_field = Fields.search([('model', '=', 'res.country'), ('name', '=', 'code')])
 
         # create server action to
-        self.act_id = self.ir_actions_server.create(cr, uid, {
+        self.action = self.env['ir.actions.server'].create({
             'name': 'TestAction',
             'condition': 'True',
-            'model_id': self.res_partner_model_id,
+            'model_id': self.res_partner_model.id,
             'state': 'code',
             'code': 'obj.write({"comment": "MyComment"})',
         })
@@ -61,346 +53,318 @@ class TestServerActionsBase(common.TransactionCase):
 class TestServerActions(TestServerActionsBase):
 
     def test_00_action(self):
-        cr, uid = self.cr, self.uid
-
         # Do: eval 'True' condition
-        self.ir_actions_server.run(cr, uid, [self.act_id], self.context)
-        self.test_partner.refresh()
+        self.action.with_context(self.context).run()
         self.assertEqual(self.test_partner.comment, 'MyComment', 'ir_actions_server: invalid condition check')
         self.test_partner.write({'comment': False})
 
         # Do: eval False condition, that should be considered as True (void = True)
-        self.ir_actions_server.write(cr, uid, [self.act_id], {'condition': False})
-        self.ir_actions_server.run(cr, uid, [self.act_id], self.context)
-        self.test_partner.refresh()
+        self.action.write({'condition': False})
+        self.action.with_context(self.context).run()
         self.assertEqual(self.test_partner.comment, 'MyComment', 'ir_actions_server: invalid condition check')
 
         # Do: create contextual action
-        self.ir_actions_server.create_action(cr, uid, [self.act_id])
+        self.action.create_action()
 
         # Test: ir_values created
-        ir_values_ids = self.ir_values.search(cr, uid, [('name', '=', 'Run TestAction')])
-        self.assertEqual(len(ir_values_ids), 1, 'ir_actions_server: create_action should have created an entry in ir_values')
-        ir_value = self.ir_values.browse(cr, uid, ir_values_ids[0])
-        self.assertEqual(ir_value.value, 'ir.actions.server,%s' % self.act_id, 'ir_actions_server: created ir_values should reference the server action')
-        self.assertEqual(ir_value.model, 'res.partner', 'ir_actions_server: created ir_values should be linked to the action base model')
+        ir_values = self.env['ir.values'].search([('name', '=', 'Run TestAction')])
+        self.assertEqual(len(ir_values), 1, 'ir_actions_server: create_action should have created an entry in ir_values')
+        self.assertEqual(ir_values.value, 'ir.actions.server,%s' % self.action.id, 'ir_actions_server: created ir_values should reference the server action')
+        self.assertEqual(ir_values.model, 'res.partner', 'ir_actions_server: created ir_values should be linked to the action base model')
 
         # Do: remove contextual action
-        self.ir_actions_server.unlink_action(cr, uid, [self.act_id])
+        self.action.unlink_action()
 
         # Test: ir_values removed
-        ir_values_ids = self.ir_values.search(cr, uid, [('name', '=', 'Run TestAction')])
-        self.assertEqual(len(ir_values_ids), 0, 'ir_actions_server: unlink_action should remove the ir_values record')
+        ir_values = self.env['ir.values'].search([('name', '=', 'Run TestAction')])
+        self.assertEqual(len(ir_values), 0, 'ir_actions_server: unlink_action should remove the ir_values record')
 
     def test_10_code(self):
-        cr, uid = self.cr, self.uid
-        self.ir_actions_server.write(cr, uid, self.act_id, {
+        self.action.write({
             'state': 'code',
-            'code': """partner_name = obj.name + '_code'
-self.pool["res.partner"].create(cr, uid, {"name": partner_name}, context=context)
-workflow"""
+            'code': ("partner_name = obj.name + '_code'\n"
+                     "obj.env['res.partner'].create({'name': partner_name})\n"
+                     "workflow"),
         })
-        run_res = self.ir_actions_server.run(cr, uid, [self.act_id], context=self.context)
+        run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: code server action correctly finished should return False')
 
-        pids = self.res_partner.search(cr, uid, [('name', 'ilike', 'TestingPartner_code')])
-        self.assertEqual(len(pids), 1, 'ir_actions_server: 1 new partner should have been created')
+        partners = self.test_partner.search([('name', 'ilike', 'TestingPartner_code')])
+        self.assertEqual(len(partners), 1, 'ir_actions_server: 1 new partner should have been created')
 
     def test_20_trigger(self):
-        cr, uid = self.cr, self.uid
+        Workflow = self.env['workflow']
+        WorkflowActivity = self.env['workflow.activity']
+        WorkflowTransition = self.env['workflow.transition']
 
         # Data: code server action (at this point code-based actions should work)
-        act_id2 = self.ir_actions_server.create(cr, uid, {
+        action2 = self.action.create({
             'name': 'TestAction2',
             'type': 'ir.actions.server',
             'condition': 'True',
-            'model_id': self.res_partner_model_id,
+            'model_id': self.res_partner_model.id,
             'state': 'code',
             'code': 'obj.write({"comment": "MyComment"})',
         })
-        act_id3 = self.ir_actions_server.create(cr, uid, {
+        action3 = self.action.create({
             'name': 'TestAction3',
             'type': 'ir.actions.server',
             'condition': 'True',
-            'model_id': self.res_country_model_id,
+            'model_id': self.res_country_model.id,
             'state': 'code',
             'code': 'obj.write({"code": "ZZ"})',
         })
 
         # Data: create workflows
-        partner_wf_id = self.registry('workflow').create(cr, uid, {
+        partner_workflow = Workflow.create({
             'name': 'TestWorkflow',
             'osv': 'res.partner',
             'on_create': True,
         })
-        partner_act1_id = self.registry('workflow.activity').create(cr, uid, {
+        partner_activity1 = WorkflowActivity.create({
             'name': 'PartnerStart',
-            'wkf_id': partner_wf_id,
-            'flow_start': True
+            'wkf_id': partner_workflow.id,
+            'flow_start': True,
         })
-        partner_act2_id = self.registry('workflow.activity').create(cr, uid, {
+        partner_activity2 = WorkflowActivity.create({
             'name': 'PartnerTwo',
-            'wkf_id': partner_wf_id,
+            'wkf_id': partner_workflow.id,
             'kind': 'function',
             'action': 'True',
-            'action_id': act_id2,
+            'action_id': action2.id,
         })
-        partner_trs1_id = self.registry('workflow.transition').create(cr, uid, {
+        partner_transition1 = WorkflowTransition.create({
             'signal': 'partner_trans',
-            'act_from': partner_act1_id,
-            'act_to': partner_act2_id
+            'act_from': partner_activity1.id,
+            'act_to': partner_activity2.id,
         })
-        country_wf_id = self.registry('workflow').create(cr, uid, {
+        country_workflow = Workflow.create({
             'name': 'TestWorkflow',
             'osv': 'res.country',
             'on_create': True,
         })
-        country_act1_id = self.registry('workflow.activity').create(cr, uid, {
+        country_activity1 = WorkflowActivity.create({
             'name': 'CountryStart',
-            'wkf_id': country_wf_id,
-            'flow_start': True
+            'wkf_id': country_workflow.id,
+            'flow_start': True,
         })
-        country_act2_id = self.registry('workflow.activity').create(cr, uid, {
+        country_activity2 = WorkflowActivity.create({
             'name': 'CountryTwo',
-            'wkf_id': country_wf_id,
+            'wkf_id': country_workflow.id,
             'kind': 'function',
             'action': 'True',
-            'action_id': act_id3,
+            'action_id': action3.id,
         })
-        country_trs1_id = self.registry('workflow.transition').create(cr, uid, {
+        country_transition1 = WorkflowTransition.create({
             'signal': 'country_trans',
-            'act_from': country_act1_id,
-            'act_to': country_act2_id
+            'act_from': country_activity1.id,
+            'act_to': country_activity2.id,
         })
 
         # Data: re-create country and partner to benefit from the workflows
-        self.test_country_id = self.res_country.create(cr, uid, {
+        country = self.test_country.create({
             'name': 'TestingCountry2',
             'code': 'T2',
         })
-        self.test_country = self.res_country.browse(cr, uid, self.test_country_id)
-        self.test_partner_id = self.res_partner.create(cr, uid, {
+        partner = self.test_partner.create({
             'name': 'TestingPartner2',
-            'country_id': self.test_country_id,
+            'country_id': country.id,
         })
-        self.test_partner = self.res_partner.browse(cr, uid, self.test_partner_id)
-        self.context = {
-            'active_id': self.test_partner_id,
-            'active_model': 'res.partner',
-        }
+        context = dict(self.context, active_id=partner.id)
 
         # Run the action on partner object itself ('base')
-        self.ir_actions_server.write(cr, uid, [self.act_id], {
+        self.action.write({
             'state': 'trigger',
             'use_relational_model': 'base',
-            'wkf_model_id': self.res_partner_model_id,
-            'wkf_transition_id': partner_trs1_id,
+            'wkf_model_id': self.res_partner_model.id,
+            'wkf_transition_id': partner_transition1.id,
         })
-        self.ir_actions_server.run(cr, uid, [self.act_id], self.context)
-        self.test_partner.refresh()
-        self.assertEqual(self.test_partner.comment, 'MyComment', 'ir_actions_server: incorrect signal trigger')
+        self.action.with_context(context).run()
+        self.assertEqual(partner.comment, 'MyComment', 'ir_actions_server: incorrect signal trigger')
 
         # Run the action on related country object ('relational')
-        self.ir_actions_server.write(cr, uid, [self.act_id], {
+        self.action.write({
             'use_relational_model': 'relational',
-            'wkf_model_id': self.res_country_model_id,
-            'wkf_field_id': self.res_partner_country_field_id,
-            'wkf_transition_id': country_trs1_id,
+            'wkf_model_id': self.res_country_model.id,
+            'wkf_field_id': self.res_partner_country_field.id,
+            'wkf_transition_id': country_transition1.id,
         })
-        self.ir_actions_server.run(cr, uid, [self.act_id], self.context)
-        self.test_country.refresh()
-        self.assertEqual(self.test_country.code, 'ZZ', 'ir_actions_server: incorrect signal trigger')
+        self.action.with_context(context).run()
+        self.assertEqual(country.code, 'ZZ', 'ir_actions_server: incorrect signal trigger')
 
-        # Clear workflow cache, otherwise openerp will try to create workflows even if it has been deleted
-        from openerp.workflow import clear_cache
-        clear_cache(cr, uid)
+        # Clear workflow cache, otherwise odoo will try to create workflows even if it has been deleted
+        odoo.workflow.clear_cache(self.cr, self.uid)
 
     def test_30_client(self):
-        cr, uid = self.cr, self.uid
-        client_action_id = self.registry('ir.actions.client').create(cr, uid, {
+        client_action = self.env['ir.actions.client'].create({
             'name': 'TestAction2',
             'tag': 'Test',
         })
-        self.ir_actions_server.write(cr, uid, [self.act_id], {
+        self.action.write({
             'state': 'client_action',
-            'action_id': client_action_id,
+            'action_id': client_action.id,
         })
-        res = self.ir_actions_server.run(cr, uid, [self.act_id], context=self.context)
+        res = self.action.with_context(self.context).run()
         self.assertEqual(res['name'], 'TestAction2', 'ir_actions_server: incorrect return result for a client action')
 
     def test_40_crud_create(self):
-        cr, uid = self.cr, self.uid
         _city = 'TestCity'
         _name = 'TestNew'
 
         # Do: create a new record in the same model and link it
-        self.ir_actions_server.write(cr, uid, [self.act_id], {
+        self.action.write({
             'state': 'object_create',
             'use_create': 'new',
             'link_new_record': True,
-            'link_field_id': self.res_partner_parent_field_id,
-            'fields_lines': [(0, 0, {'col1': self.res_partner_name_field_id, 'value': _name}),
-                             (0, 0, {'col1': self.res_partner_city_field_id, 'value': _city})],
+            'link_field_id': self.res_partner_parent_field.id,
+            'fields_lines': [(0, 0, {'col1': self.res_partner_name_field.id, 'value': _name}),
+                             (0, 0, {'col1': self.res_partner_city_field.id, 'value': _city})],
         })
-        run_res = self.ir_actions_server.run(cr, uid, [self.act_id], context=self.context)
+        run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
         # Test: new partner created
-        pids = self.res_partner.search(cr, uid, [('name', 'ilike', _name)])
-        self.assertEqual(len(pids), 1, 'ir_actions_server: TODO')
-        partner = self.res_partner.browse(cr, uid, pids[0])
+        partner = self.test_partner.search([('name', 'ilike', _name)])
+        self.assertEqual(len(partner), 1, 'ir_actions_server: TODO')
         self.assertEqual(partner.city, _city, 'ir_actions_server: TODO')
         # Test: new partner linked
-        self.test_partner.refresh()
-        self.assertEqual(self.test_partner.parent_id.id, pids[0], 'ir_actions_server: TODO')
+        self.assertEqual(self.test_partner.parent_id, partner, 'ir_actions_server: TODO')
 
         # Do: copy current record
-        self.ir_actions_server.write(cr, uid, [self.act_id], {'fields_lines': [[5]]})
-        self.ir_actions_server.write(cr, uid, [self.act_id], {
+        self.action.write({
             'state': 'object_create',
             'use_create': 'copy_current',
             'link_new_record': False,
-            'fields_lines': [(0, 0, {'col1': self.res_partner_name_field_id, 'value': 'TestCopyCurrent'}),
-                             (0, 0, {'col1': self.res_partner_city_field_id, 'value': 'TestCity'})],
+            'fields_lines': [(5,),
+                             (0, 0, {'col1': self.res_partner_name_field.id, 'value': 'TestCopyCurrent'}),
+                             (0, 0, {'col1': self.res_partner_city_field.id, 'value': 'TestCity'})],
         })
-        run_res = self.ir_actions_server.run(cr, uid, [self.act_id], context=self.context)
+        run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
         # Test: new partner created
-        pids = self.res_partner.search(cr, uid, [('name', 'ilike', 'TestingPartner (copy)')])  # currently res_partner overrides default['name'] whatever its value
-        self.assertEqual(len(pids), 1, 'ir_actions_server: TODO')
-        partner = self.res_partner.browse(cr, uid, pids[0])
+        partner = self.test_partner.search([('name', 'ilike', 'TestingPartner (copy)')])  # currently res_partner overrides default['name'] whatever its value
+        self.assertEqual(len(partner), 1, 'ir_actions_server: TODO')
         self.assertEqual(partner.city, 'TestCity', 'ir_actions_server: TODO')
-        self.assertEqual(partner.country_id.id, self.test_partner.country_id.id, 'ir_actions_server: TODO')
+        self.assertEqual(partner.country_id, self.test_partner.country_id, 'ir_actions_server: TODO')
 
         # Do: create a new record in another model
-        self.ir_actions_server.write(cr, uid, [self.act_id], {'fields_lines': [[5]]})
-        self.ir_actions_server.write(cr, uid, [self.act_id], {
+        self.action.write({
             'state': 'object_create',
             'use_create': 'new_other',
-            'crud_model_id': self.res_country_model_id,
+            'crud_model_id': self.res_country_model.id,
             'link_new_record': False,
-            'fields_lines': [(0, 0, {'col1': self.res_country_name_field_id, 'value': 'obj.name', 'type': 'equation'}),
-                             (0, 0, {'col1': self.res_country_code_field_id, 'value': 'obj.name[0:2]', 'type': 'equation'})],
+            'fields_lines': [(5,),
+                             (0, 0, {'col1': self.res_country_name_field.id, 'value': 'obj.name', 'type': 'equation'}),
+                             (0, 0, {'col1': self.res_country_code_field.id, 'value': 'obj.name[0:2]', 'type': 'equation'})],
         })
-        run_res = self.ir_actions_server.run(cr, uid, [self.act_id], context=self.context)
+        run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
         # Test: new country created
-        cids = self.res_country.search(cr, uid, [('name', 'ilike', 'TestingPartner')])
-        self.assertEqual(len(cids), 1, 'ir_actions_server: TODO')
-        country = self.res_country.browse(cr, uid, cids[0])
+        country = self.test_country.search([('name', 'ilike', 'TestingPartner')])
+        self.assertEqual(len(country), 1, 'ir_actions_server: TODO')
         self.assertEqual(country.code, 'TE', 'ir_actions_server: TODO')
 
         # Do: copy a record in another model
-        self.ir_actions_server.write(cr, uid, [self.act_id], {'fields_lines': [[5]]})
-        self.ir_actions_server.write(cr, uid, [self.act_id], {
+        self.action.write({
             'state': 'object_create',
             'use_create': 'copy_other',
-            'crud_model_id': self.res_country_model_id,
+            'crud_model_id': self.res_country_model.id,
             'link_new_record': False,
-            'ref_object': 'res.country,%s' % self.test_country_id,
-            'fields_lines': [(0, 0, {'col1': self.res_country_name_field_id, 'value': 'NewCountry', 'type': 'value'}),
-                             (0, 0, {'col1': self.res_country_code_field_id, 'value': 'NY', 'type': 'value'})],
+            'ref_object': 'res.country,%s' % self.test_country.id,
+            'fields_lines': [(5,),
+                             (0, 0, {'col1': self.res_country_name_field.id, 'value': 'NewCountry', 'type': 'value'}),
+                             (0, 0, {'col1': self.res_country_code_field.id, 'value': 'NY', 'type': 'value'})],
         })
-        run_res = self.ir_actions_server.run(cr, uid, [self.act_id], context=self.context)
+        run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
         # Test: new country created
-        cids = self.res_country.search(cr, uid, [('name', 'ilike', 'NewCountry')])
-        self.assertEqual(len(cids), 1, 'ir_actions_server: TODO')
-        country = self.res_country.browse(cr, uid, cids[0])
+        country = self.test_country.search([('name', 'ilike', 'NewCountry')])
+        self.assertEqual(len(country), 1, 'ir_actions_server: TODO')
         self.assertEqual(country.code, 'NY', 'ir_actions_server: TODO')
         self.assertEqual(country.address_format, 'SuperFormat', 'ir_actions_server: TODO')
 
     def test_50_crud_write(self):
-        cr, uid = self.cr, self.uid
         _name = 'TestNew'
 
         # Do: create a new record in the same model and link it
-        self.ir_actions_server.write(cr, uid, [self.act_id], {
+        self.action.write({
             'state': 'object_write',
             'use_write': 'current',
-            'fields_lines': [(0, 0, {'col1': self.res_partner_name_field_id, 'value': _name})],
+            'fields_lines': [(0, 0, {'col1': self.res_partner_name_field.id, 'value': _name})],
         })
-        run_res = self.ir_actions_server.run(cr, uid, [self.act_id], context=self.context)
+        run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
         # Test: new partner created
-        pids = self.res_partner.search(cr, uid, [('name', 'ilike', _name)])
-        self.assertEqual(len(pids), 1, 'ir_actions_server: TODO')
-        partner = self.res_partner.browse(cr, uid, pids[0])
+        partner = self.test_partner.search([('name', 'ilike', _name)])
+        self.assertEqual(len(partner), 1, 'ir_actions_server: TODO')
         self.assertEqual(partner.city, 'OrigCity', 'ir_actions_server: TODO')
 
         # Do: copy current record
-        self.ir_actions_server.write(cr, uid, [self.act_id], {'fields_lines': [[5]]})
-        self.ir_actions_server.write(cr, uid, [self.act_id], {
+        self.action.write({
             'use_write': 'other',
-            'crud_model_id': self.res_country_model_id,
-            'ref_object': 'res.country,%s' % self.test_country_id,
-            'fields_lines': [(0, 0, {'col1': self.res_country_name_field_id, 'value': 'obj.name', 'type': 'equation'})],
+            'crud_model_id': self.res_country_model.id,
+            'ref_object': 'res.country,%s' % self.test_country.id,
+            'fields_lines': [(5,), (0, 0, {'col1': self.res_country_name_field.id, 'value': 'obj.name', 'type': 'equation'})],
         })
-        run_res = self.ir_actions_server.run(cr, uid, [self.act_id], context=self.context)
+        run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
         # Test: new country created
-        cids = self.res_country.search(cr, uid, [('name', 'ilike', 'TestNew')])
-        self.assertEqual(len(cids), 1, 'ir_actions_server: TODO')
+        country = self.test_country.search([('name', 'ilike', 'TestNew')])
+        self.assertEqual(len(country), 1, 'ir_actions_server: TODO')
 
         # Do: copy a record in another model
-        self.ir_actions_server.write(cr, uid, [self.act_id], {'fields_lines': [[5]]})
-        self.ir_actions_server.write(cr, uid, [self.act_id], {
+        self.action.write({
             'use_write': 'expression',
-            'crud_model_id': self.res_country_model_id,
+            'crud_model_id': self.res_country_model.id,
             'write_expression': 'object.country_id',
-            'fields_lines': [(0, 0, {'col1': self.res_country_name_field_id, 'value': 'NewCountry', 'type': 'value'})],
+            'fields_lines': [(5,), (0, 0, {'col1': self.res_country_name_field.id, 'value': 'NewCountry', 'type': 'value'})],
         })
-        run_res = self.ir_actions_server.run(cr, uid, [self.act_id], context=self.context)
+        run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
         # Test: new country created
-        cids = self.res_country.search(cr, uid, [('name', 'ilike', 'NewCountry')])
-        self.assertEqual(len(cids), 1, 'ir_actions_server: TODO')
+        country = self.test_country.search([('name', 'ilike', 'NewCountry')])
+        self.assertEqual(len(country), 1, 'ir_actions_server: TODO')
 
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
     def test_60_multi(self):
-        cr, uid = self.cr, self.uid
-
         # Data: 2 server actions that will be nested
-        act1_id = self.ir_actions_server.create(cr, uid, {
+        action1 = self.action.create({
             'name': 'Subaction1',
             'sequence': 1,
-            'model_id': self.res_partner_model_id,
+            'model_id': self.res_partner_model.id,
             'state': 'code',
             'code': 'action = {"type": "ir.actions.act_window"}',
         })
-        act2_id = self.ir_actions_server.create(cr, uid, {
+        action2 = self.action.create({
             'name': 'Subaction2',
             'sequence': 2,
-            'model_id': self.res_partner_model_id,
+            'model_id': self.res_partner_model.id,
             'state': 'object_create',
             'use_create': 'copy_current',
         })
-        act3_id = self.ir_actions_server.create(cr, uid, {
+        action3 = self.action.create({
             'name': 'Subaction3',
             'sequence': 3,
-            'model_id': self.res_partner_model_id,
+            'model_id': self.res_partner_model.id,
             'state': 'code',
             'code': 'action = {"type": "ir.actions.act_url"}',
         })
-        self.ir_actions_server.write(cr, uid, [self.act_id], {
+        self.action.write({
             'state': 'multi',
-            'child_ids': [(6, 0, [act1_id, act2_id, act3_id])],
+            'child_ids': [(6, 0, [action1.id, action2.id, action3.id])],
         })
 
         # Do: run the action
-        res = self.ir_actions_server.run(cr, uid, [self.act_id], context=self.context)
+        res = self.action.with_context(self.context).run()
 
         # Test: new partner created
-        pids = self.res_partner.search(cr, uid, [('name', 'ilike', 'TestingPartner (copy)')])  # currently res_partner overrides default['name'] whatever its value
-        self.assertEqual(len(pids), 1, 'ir_actions_server: TODO')
+        # currently res_partner overrides default['name'] whatever its value
+        partner = self.test_partner.search([('name', 'ilike', 'TestingPartner (copy)')])
+        self.assertEqual(len(partner), 1, 'ir_actions_server: TODO')
         # Test: action returned
         self.assertEqual(res.get('type'), 'ir.actions.act_url')
 
         # Test loops
         with self.assertRaises(ValidationError):
-            self.ir_actions_server.write(cr, uid, [self.act_id], {
-                'child_ids': [(6, 0, [self.act_id])]
+            self.action.write({
+                'child_ids': [(6, 0, [self.action.id])]
             })
-
-
-if __name__ == '__main__':
-    unittest.main()
