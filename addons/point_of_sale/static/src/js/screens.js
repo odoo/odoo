@@ -61,7 +61,7 @@ var ScreenWidget = PosBaseWidget.extend({
         var self = this;
         if (self.pos.scan_product(code)) {
             if (self.barcode_product_screen) {
-                self.gui.show_screen(self.barcode_product_screen);
+                self.gui.show_screen(self.barcode_product_screen, null, null, true);
             }
         } else {
             this.barcode_error_action(code);
@@ -402,7 +402,21 @@ var ActionpadWidget = PosBaseWidget.extend({
         var self = this;
         this._super();
         this.$('.pay').click(function(){
-            self.gui.show_screen('payment');
+            var order = self.pos.get_order();
+            var has_valid_product_lot = _.every(order.orderlines.models, function(line){
+                return line.has_valid_product_lot();
+            });
+            if(!has_valid_product_lot){
+                self.gui.show_popup('confirm',{
+                    'title': _t('Empty Serial/Lot Number'),
+                    'body':  _t('One or more product(s) required serial/lot number.'),
+                    confirm: function(){
+                        self.gui.show_screen('payment');
+                    },
+                });
+            }else{
+                self.gui.show_screen('payment');
+            }
         });
         this.$('.set-customer').click(function(){
             self.gui.show_screen('clientlist');
@@ -439,6 +453,8 @@ var OrderWidget = PosBaseWidget.extend({
         this.pos.get_order().select_orderline(orderline);
         this.numpad_state.reset();
     },
+
+
     set_value: function(val) {
     	var order = this.pos.get_order();
     	if (order.get_selected_orderline()) {
@@ -495,6 +511,12 @@ var OrderWidget = PosBaseWidget.extend({
             el_node = el_node.childNodes[0];
             el_node.orderline = orderline;
             el_node.addEventListener('click',this.line_click_handler);
+        var el_lot_icon = el_node.querySelector('.line-lot-icon');
+        if(el_lot_icon){
+            el_lot_icon.addEventListener('click', (function() {
+                this.show_product_lot(orderline);
+            }.bind(this)));
+        }
 
         orderline.node = el_node;
         return el_node;
@@ -558,6 +580,11 @@ var OrderWidget = PosBaseWidget.extend({
 
         this.el.querySelector('.summary .total > .value').textContent = this.format_currency(total);
         this.el.querySelector('.summary .total .subentry .value').textContent = this.format_currency(taxes);
+    },
+    show_product_lot: function(orderline){
+        this.pos.get_order().select_orderline(orderline);
+        var order = this.pos.get_order();
+        order.display_lot_popup();
     },
 });
 
