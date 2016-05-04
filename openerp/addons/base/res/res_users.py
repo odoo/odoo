@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
+import uuid
 
 from collections import defaultdict
+from datetime import datetime, timedelta
 from itertools import chain, repeat
 from lxml import etree
 from lxml.builder import E
+from passlib.context import CryptContext
+from psycopg2 import OperationalError
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
@@ -14,6 +18,17 @@ from odoo.service.db import check_super
 from odoo.tools import partition
 
 _logger = logging.getLogger(__name__)
+
+default_crypt_context = CryptContext(
+    # kdf which can be verified by the context. The default encryption kdf is
+    # the first of the list
+    ['pbkdf2_sha512', 'md5_crypt', 'plaintext'],
+    # deprecated algorithms are still verified as usual, but ``needs_update``
+    # will indicate that the stored hash should be replaced by a more recent
+    # algorithm. Passlib 1.6 supports an `auto` value which deprecates any
+    # algorithm but the default, but Ubuntu LTS only provides 1.5 so far.
+    deprecated=['md5_crypt', 'plaintext'],
+)
 
 # Only users who can modify the user (incl. the user herself) see the real contents of these fields
 USER_PRIVATE_FIELDS = ['password']
@@ -157,6 +172,7 @@ class ResUsersLog(models.Model):
     _order = 'id desc'
     # Currenly only uses the magical fields: create_uid, create_date,
     # for recording logins. To be extended for other uses (chat presence, etc.)
+    token_id = fields.Many2one('res.users.token', string='Token used', readonly=True, ondelete='set null')
 
 
 class Users(models.Model):
@@ -171,12 +187,23 @@ class Users(models.Model):
     _description = 'Users'
     _inherits = {'res.partner': 'partner_id'}
     _order = 'name, login'
-    __uid_cache = defaultdict(dict)             # {dbname: {uid: password}}
 
     # User can write on a few of his own fields (but not his groups for example)
     SELF_WRITEABLE_FIELDS = ['signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz']
     # User can read a few of his own fields
     SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz', 'tz_offset', 'groups_id', 'partner_id', '__last_update', 'action_id']
+
+    def __init__(self, pool, cr):
+        super(Users, self).__init__(pool, cr)
+        try:
+            # hasattr with name mangling
+            pool.__uid_cache
+        except AttributeError:
+            pool.__uid_cache = defaultdict(dict)  # {uid: {password: {}, token: {}}}
+
+    def clear_caches(self):
+        self.pool.__uid_cache = defaultdict(dict)
+        return super(Users, self).clear_caches()
 
     def _default_groups(self):
         default_user = self.env.ref('base.default_user', raise_if_not_found=False)
@@ -185,16 +212,36 @@ class Users(models.Model):
     def _companies_count(self):
         return self.env['res.company'].sudo().search_count([])
 
+    @api.one
+    @api.depends('token_ids')
+    def _get_password(self):
+        self.password = ''
+
+    @api.multi
+    def _set_password(self):
+        if self.env.uid == SUPERUSER_ID:
+            for user in self:
+                token = self.env['res.users.token'].search([('user_id', '=', user.id), ('type', '=', 'password')])
+                if token:
+                    token.write({'token': user.password})
+                if not token and user.password:
+                    token = token.create({
+                        'user_id': user.id,
+                        'type': 'password',
+                        'token': user.password,
+                    })
+
     partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', auto_join=True,
         string='Related Partner', help='Partner-related data of the user')
     login = fields.Char(required=True, help="Used to log into the system")
-    password = fields.Char(default='', invisible=True, copy=False,
+    password = fields.Char(compute='_get_password', inverse='_set_password', invisible=True, copy=False,
         help="Keep empty if you don't want the user to be able to connect on the system.")
-    new_password = fields.Char(string='Set Password',
-        compute='_compute_password', inverse='_inverse_password',
-        help="Specify a value only when creating a user or if you're "\
-             "changing the user's password, otherwise leave empty. After "\
-             "a change of password, the user has to login again.")
+    # The below `token_ids` field is set for tehnical reasons, for the @api.depends of the compute method.
+    # The compute method is supposed to always return an empty string
+    # But without this @api.depends, the password field actually contains the password when browsing the user
+    # directly after creation.
+    token_ids = fields.One2many('res.users.token', 'user_id', string="Tokens")
+    api_token_ids = fields.One2many('res.users.token', 'user_id', string="API Keys", domain=[('type', '=', 'apikey')])
     signature = fields.Html()
     active = fields.Boolean(default=True)
     action_id = fields.Many2one('ir.actions.actions', string='Home Action',
@@ -231,24 +278,6 @@ class Users(models.Model):
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
     ]
-
-    def _compute_password(self):
-        for user in self:
-            user.password = ''
-
-    def _inverse_password(self):
-        for user in self:
-            if not user.new_password:
-                # Do not update the password if no value is provided, ignore silently.
-                # For example web client submits False values for all empty fields.
-                continue
-            if user == self.env.user:
-                # To change their own password, users must use the client-specific change password wizard,
-                # so that the new password is immediately used for further RPC requests, otherwise the user
-                # will face unexpected 'Access Denied' exceptions.
-                raise UserError(_('Please use the change password wizard (in User Preferences or User menu) to change your own password.'))
-            else:
-                self.password = self.new_password
 
     @api.depends('groups_id')
     def _compute_share(self):
@@ -365,9 +394,6 @@ class Users(models.Model):
         # clear caches linked to the users
         self.env['ir.model.access'].call_cache_clearing_methods()
         self.env['ir.rule'].clear_caches()
-        db = self._cr.dbname
-        for id in self.ids:
-            self.__uid_cache[db].pop(id, None)
         self.context_get.clear_cache(self)
         self.has_group.clear_cache(self)
         return res
@@ -376,9 +402,6 @@ class Users(models.Model):
     def unlink(self):
         if SUPERUSER_ID in self.ids:
             raise UserError(_('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
-        db = self._cr.dbname
-        for id in self.ids:
-            self.__uid_cache[db].pop(id, None)
         return super(Users, self).unlink()
 
     @api.model
@@ -432,15 +455,43 @@ class Users(models.Model):
     @api.model
     def check_credentials(self, password):
         """ Override this method to plug additional authentication methods"""
-        user = self.sudo().search([('id', '=', self._uid), ('password', '=', password)])
-        if not user:
+        resUsersToken = self.env['res.users.token']
+        for token_type, token_label in resUsersToken._get_type_selection():
+            prefix_length = resUsersToken._get_type_prefix_length()[token_type]
+            self.env.cr.execute("""
+                SELECT id, hash
+                FROM res_users_token
+                WHERE
+                    user_id=%s AND
+                    type=%s AND
+                    prefix=%s AND
+                    (expiry_date IS NULL or expiry_date >= %s)
+            """, (self.env.uid, token_type, password[:prefix_length], fields.Datetime.now()))
+            for token_id, token_hash in self.env.cr.fetchall():
+                token = resUsersToken.sudo().browse(token_id)
+                match, replacement = token._crypt_context().verify_and_update(password, token_hash)
+                if replacement is not None and not self.env.registry.in_test_mode:
+                    try:
+                        token._set_encrypted_token(replacement)
+                    except OperationalError:
+                        # It doesn't matter if the replacement token can't be set because of a concurrent update.
+                        # It will be done later.
+                        pass
+                    except Exception:
+                        # The inability to set the replacement token should not prevent the user to sign in,
+                        # but should be referenced in the logs as an exception for the administrator to be aware of it.
+                        _logger.exception(_('Error when attempting to set replacement token'))
+                        pass
+                if match and token.validate(password):
+                    return token
+        else:
             raise AccessDenied()
 
     @api.model
-    def _update_last_login(self):
+    def _update_last_login(self, token_id=None):
         # only create new records to avoid any side-effect on concurrent transactions
         # extra records will be deleted by the periodical garbage collection
-        self.env['res.users.log'].create({}) # populated by defaults
+        self.env['res.users.log'].create({'token_id': token_id})  # `create_uid` populated by defaults
 
     def _login(self, db, login, password):
         if not password:
@@ -451,8 +502,8 @@ class Users(models.Model):
                 res = self.search(cr, SUPERUSER_ID, [('login','=',login)])
                 if res:
                     user_id = res[0]
-                    self.check_credentials(cr, user_id, password)
-                    self._update_last_login(cr, user_id)
+                    token = self.check_credentials(cr, user_id, password)
+                    self._update_last_login(cr, user_id, token_id=token.id)
         except AccessDenied:
             _logger.info("Login failed for db:%s login:%s", db, login)
             user_id = False
@@ -489,14 +540,31 @@ class Users(models.Model):
         if not passwd:
             # empty passwords disallowed for obvious security reasons
             raise AccessDenied()
-        if self.__uid_cache[db].get(uid) == passwd:
-            return
+        if passwd in self.pool.__uid_cache[uid]:
+            if self._check_uid_cache_values(passwd, self.pool.__uid_cache[uid][passwd]):
+                return
+            else:
+                self.pool.__uid_cache[uid].pop(passwd)
         cr = self.pool.cursor()
         try:
-            self.check_credentials(cr, uid, passwd)
-            self.__uid_cache[db][uid] = passwd
+            token = self.check_credentials(cr, uid, passwd)
+            cache_values = self._prepare_uid_cache_values(cr, uid, passwd, token)
+            self.pool.__uid_cache[uid].update({passwd: cache_values})
         finally:
             cr.close()
+
+    @api.model
+    def _prepare_uid_cache_values(self, passwd, token):
+        return {'expiry_date': token.expiry_date}
+
+    def _check_uid_cache_values(self, passwd, cached_values):
+        expiry_date = cached_values.get('expiry_date') or None
+        if expiry_date:
+            expiry_date = datetime.strptime(expiry_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            now = datetime.strptime(fields.Datetime.now(), tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            if expiry_date < now:
+                return False
+        return True
 
     @api.model
     def change_password(self, old_passwd, new_passwd):
@@ -568,6 +636,101 @@ class Users(models.Model):
     @api.model
     def get_company_currency_id(self):
         return self.env.user.company_id.currency_id.id
+
+
+class UsersToken(models.Model):
+    _name = "res.users.token"
+    _order = "id desc"
+
+    def init(self):
+        self.env.cr.execute("""
+            DO $$
+                BEGIN
+                    ALTER TABLE res_users_token ADD COLUMN hash varchar NOT NULL;
+                EXCEPTION
+                    WHEN duplicate_column THEN null;
+                END;
+            $$;
+        """)
+
+    @api.model
+    def _get_type_selection(self):
+        return [('password', 'Password'), ('apikey', 'API Key')]
+
+    def _get_type_prefix_length(self):
+        return defaultdict(lambda: 3, {'password': 0, 'apikey': 3})
+
+    user_id = fields.Many2one('res.users', string='User', required=True, readonly=True, ondelete='cascade')
+    token = fields.Char(compute='_get_token', inverse='_set_token', string='Token')
+    prefix = fields.Char(string='Prefix', readonly=True, default='')
+    expiry_date = fields.Datetime(string='Expiration date')
+    type = fields.Selection('_get_type_selection', required=True, readonly=True)
+    comment = fields.Text(string='Comment')
+
+    def encrypt(self, token):
+        return self._crypt_context().encrypt(token)
+
+    @api.one
+    @api.depends('prefix')
+    def _get_token(self):
+        self.token = self.prefix
+
+    @api.multi
+    def _set_token(self):
+        for record in self:
+            if self.token:
+                token_prefix = self.token[:self._get_type_prefix_length()[self.type]]
+                token_hash = self.encrypt(self.token)
+                self.env.cr.execute("UPDATE res_users_token SET hash=%s, prefix=%s WHERE id = %s", (token_hash, token_prefix, record.id))
+            elif record.type == 'password':
+                record.unlink()
+            else:
+                raise UserError(_('You cannot set an access token without setting a token'))
+
+    @api.multi
+    def write(self, values):
+        res = super(UsersToken, self).write(values)
+        self.env['res.users'].clear_caches()
+        return res
+
+    @api.multi
+    def unlink(self):
+        res = super(UsersToken, self).unlink()
+        self.env['res.users'].clear_caches()
+        return res
+
+    def _set_encrypted_token(self, encrypted):
+        """ Store the provided encrypted password to the database, and clears
+        any plaintext password
+        """
+        self.env.cr.execute(
+            "UPDATE res_users_token SET hash=%s WHERE id=%s",
+            (encrypted, self.id))
+
+    def _crypt_context(self):
+        """ Passlib CryptContext instance used to encrypt and verify
+        passwords. Can be overridden if technical, legal or political matters
+        require different kdfs than the provided default.
+
+        Requires a CryptContext as deprecation and upgrade notices are used
+        internally
+        """
+        return default_crypt_context
+
+    @api.v8
+    def validate(self, token):
+        """ Return True or False if the token is valid or not (respectively).
+            This method is meant to be overridden in addons that want
+            to make their tokens validated on another concept than the
+            expiration date.
+        """
+        self.ensure_one()
+        return True
+
+    @api.v7
+    def validate(self, cr, uid, ids, token, context=None):
+        return UsersToken.validate(self.browse(cr, uid, ids, context=context), token)
+
 
 #
 # Implied groups
@@ -944,3 +1107,40 @@ class ChangePasswordUser(models.TransientModel):
             line.user_id.write({'password': line.new_passwd})
         # don't keep temporary passwords in the database longer than necessary
         self.write({'new_passwd': False})
+
+
+class CreateAPIKey(models.TransientModel):
+    _name = "res.users.api_key.create"
+
+    user_id = fields.Many2one('res.users', string='User', required=True, ondelete='cascade')
+    expiry_date = fields.Datetime('Expiration date', default=lambda self: (fields.Datetime.from_string(fields.Datetime.now()) + timedelta(days=180)).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT))
+    comment = fields.Text(string='Comment')
+    api_key = fields.Char(string="API Key", compute="_get_api_key")
+
+    @api.one
+    def _get_api_key(self):
+        self.api_key = self.env.context.get('api_key')
+
+    @api.multi
+    def apply(self):
+        self.ensure_one()
+        api_key = str(uuid.uuid4())
+        self.env['res.users.token'].create({
+            'user_id': self.user_id.id,
+            'token': api_key,
+            'expiry_date': self.expiry_date,
+            'type': 'apikey',
+            'comment': self.comment,
+        })
+        view_id = self.env['ir.model.data'].xmlid_to_res_id('base.res_users_api_key_create_view')
+        return {
+            'name': 'API Key created',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'res.users.api_key.create',
+            'type': 'ir.actions.act_window',
+            'res_id': self.id,
+            'context': dict(self.env.context, api_key=api_key),
+            'target': 'new',
+        }

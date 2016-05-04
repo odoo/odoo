@@ -34,6 +34,47 @@
             view_type="form" view_mode="form"
             key2="client_action_multi" target="new"
             groups="base.group_erp_manager"/>
+        <record id="res_users_api_key_create_view" model="ir.ui.view">
+            <field name="name">Create API Key</field>
+            <field name="model">res.users.api_key.create</field>
+            <field name="arch" type="xml">
+                <form string="API Key">
+                    <group attrs="{'invisible': [('api_key', '!=', False)]}">
+                        <field name="user_id" invisible="context.get('default_user_id')"/>
+                        <field name="expiry_date"/>
+                        <field name="comment"/>
+                    </group>
+                    <div attrs="{'invisible': [('api_key', '=', False)]}">
+                        <p>
+                            Here is your API Key:<br/>
+                            <field name="api_key"/>
+                        </p>
+                        <p>
+                            This key has to remain secret. Treat it like a password.<br/>
+                            This is your only opportunity to copy it and paste it where you need it.
+                        </p>
+                    </div>
+                    <footer>
+                        <div attrs="{'invisible': [('api_key', '!=', False)]}">
+                            <button string="Create" name="apply" type="object" class="btn-primary"/>
+                            <button string="Cancel" special="cancel" class="btn-default"/>
+                        </div>
+                        <div attrs="{'invisible': [('api_key', '=', False)]}">
+                            <button string="OK" class="btn-primary" special="cancel"/>
+                        </div>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="res_users_api_key_create_action" model="ir.actions.act_window">
+            <field name="name">Create API Key</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.users.api_key.create</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="res_users_api_key_create_view"/>
+            <field name="target">new</field>
+        </record>
 
         <!-- res.groups -->
         <record id="view_groups_search" model="ir.ui.view">
@@ -211,6 +252,25 @@
                                 <group string="Messaging and Social" name="messaging">
                                     <field name="signature"/>
                                 </group>
+                            </page>
+                            <page name="api_keys" string="API Keys" groups="base.group_no_one">
+                                <group>
+                                    <button string="Create" name="%(res_users_api_key_create_action)d" type="action" class="btn-primary" context="{'default_user_id': id}"/>
+                                </group>
+                                <field name="api_token_ids">
+                                    <tree string="API Keys" create="0">
+                                        <field name="prefix"/>
+                                        <field name="expiry_date"/>
+                                        <field name="comment"/>
+                                    </tree>
+                                    <form string="API Key">
+                                        <group >
+                                            <field name="prefix"/>
+                                            <field name="expiry_date"/>
+                                            <field name="comment"/>
+                                        </group>
+                                    </form>
+                                </field>
                             </page>
                         </notebook>
                     </sheet>

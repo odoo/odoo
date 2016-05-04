@@ -60,11 +60,18 @@ CREATE TABLE res_users (
     id serial NOT NULL,
     active boolean default True,
     login varchar(64) NOT NULL UNIQUE,
-    password varchar(64) default null,
     -- No FK references below, will be added later by ORM
     -- (when the destination rows exist)
     company_id integer, -- references res_company,
     partner_id integer, -- references res_partner,
+    primary key(id)
+);
+
+CREATE TABLE res_users_token (
+    id serial NOT NULL,
+    user_id integer NOT NULL,
+    type character varying NOT NULL,
+    hash character varying,
     primary key(id)
 );
 
@@ -205,6 +212,8 @@ insert into res_partner (id, name, company_id) VALUES (1, 'My Company', 1);
 insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('main_partner', 'base', 'res.partner', true, 1);
 select setval('res_partner_id_seq', 2);
 
-insert into res_users (id, login, password, active, partner_id, company_id) VALUES (1, 'admin', 'admin', true, 1, 1);
+insert into res_users (id, login, active, partner_id, company_id) VALUES (1, 'admin', true, 1, 1);
+insert into res_users_token(id, user_id, type, hash) VALUES (1, 1, 'password', 'admin');
 insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('user_root', 'base', 'res.users', true, 1);
 select setval('res_users_id_seq', 2);
+select setval('res_users_token_id_seq', 2);
