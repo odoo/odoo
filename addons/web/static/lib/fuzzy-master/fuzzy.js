@@ -61,7 +61,7 @@ fuzzy.match = function(pattern, string, opts) {
       patternIdx += 1;
 
       // consecutive characters should increase the score more than linearly
-      currScore += 1 + currScore;
+      currScore += 1 + currScore - idx/1000;
     } else {
       currScore = 0;
     }
