@@ -443,8 +443,6 @@ class Partner(models.Model, FormatAddress):
             any(self[f] for f in address_fields) and not any(parent[f] for f in address_fields):
             addr_vals = self._update_fields_values(address_fields)
             parent.update_address(addr_vals)
-            if not parent.is_company:
-                parent.write({'is_company': True})
 
     def _clean_website(self, website):
         (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(website)
