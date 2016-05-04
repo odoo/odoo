@@ -10,6 +10,7 @@
     'data': [
         'security/ir.model.access.csv',
         'data/google_drive_data.xml',
+        'views/res_config_views.xml',
         'views/google_drive_views.xml',
         'views/google_drive_templates.xml',
     ],
