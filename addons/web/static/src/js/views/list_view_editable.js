@@ -721,13 +721,13 @@ ListView.include(/** @lends instance.web.ListView# */{
     keyup_UP: function (e) {
         var self = this;
         return this._key_move_record(e, 'pred', function (el, cursor) {
-            return self._at_start(cursor, el);
+            return self._at_start(cursor, el) && !$(el).is('select,.ui-autocomplete-input');
         });
     },
     keyup_DOWN: function (e) {
         var self = this;
         return this._key_move_record(e, 'succ', function (el, cursor) {
-            return self._at_end(cursor, el);
+            return self._at_end(cursor, el) && !$(el).is('select,.ui-autocomplete-input');
         });
     },
 

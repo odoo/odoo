@@ -450,6 +450,19 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_confirm(self, cr, uid, ids, context=None):
+        for record in self.browse(cr, uid, ids, context=context):
+            if record.department_id:
+                # Subscribe the followers of the department following the `confirmed` subtype
+                # It's done manually because `message_auto_subscribe` only works on fields for which
+                # the value is passed to the `create` or `write` methods,
+                # it doesn't work for related/computed fields
+                # This can be removed as soon as `department_id` on `hr.holidays` becomes a regular
+                # fields or as soon as `message_auto_subscribe` works with related/computed fields.
+                confirmed_subtype = self.pool['ir.model.data'].xmlid_to_object(cr, uid, 'hr_holidays.mt_department_holidays_confirmed', context=context)
+                self.message_subscribe(cr, uid, [record.id], [
+                    follower.partner_id.id for follower in record.department_id.message_follower_ids
+                    if confirmed_subtype in follower.subtype_ids
+                ], context=context)
         return self.write(cr, uid, ids, {'state': 'confirm'})
 
     def holidays_refuse(self, cr, uid, ids, context=None):
