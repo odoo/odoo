@@ -866,7 +866,7 @@ class QWeb(models.AbstractModel):
                         ast.Str(expression),
                         ast.Name(id='default_content', ctx=ast.Load()),
                         ast.Str(node_name),
-                        options and utils.compile_format(options) or ast.Name(id='None', ctx=ast.Load()),
+                        options and utils.compile_expr(options) or ast.Dict(keys=[], values=[]),
                         ast.Name(id='qwebcontext', ctx=ast.Load()),
                     ],
                     keywords=[], starargs=None, kwargs=None
@@ -949,7 +949,6 @@ class QWeb(models.AbstractModel):
         return (files, remains)
 
     def _get_field(self, record, field_name, expression, default_content, tagName, options, qwebcontext):
-        options = options and json.loads(options) or {}
         field = record._fields[field_name]
 
         field_type = options.get('widget', field.type)

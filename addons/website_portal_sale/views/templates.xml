@@ -91,7 +91,7 @@
                             <span class="label label-default"><i class="fa fa-fw fa-clock-o"/> Expired</span>
                           </t>
                         </td>
-                        <td><span t-field="quotation.amount_total" t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
+                        <td><span t-field="quotation.amount_total" t-field-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                         </td>
                     </tr>
                 </t>
@@ -136,7 +136,7 @@
                                 <span class="label label-default"><i class="fa fa-fw fa-check"/> Done</span>
                             </t>
                         </td>
-                        <td><span t-field="order.amount_total" t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/></td>
+                        <td><span t-field="order.amount_total" t-field-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/></td>
                     </tr>
                 </t>
             </table>
@@ -186,7 +186,7 @@
                         <td>
                           <a t-if="invoice.state == 'open'" t-attf-href="/website_payment/pay?reference=#{invoice.number}&amp;amount=#{invoice.residual}&amp;currency_id=#{invoice.currency_id.id}&amp;country_id=#{invoice.partner_id.country_id.id}" alt="Pay Now" class="btn btn-xs btn-primary"><i class="fa fa-arrow-circle-right"/> Pay Now</a>
                         </td>
-                        <td><span t-field="invoice.residual" t-field-options='{"widget": "monetary", "display_currency": "invoice.currency_id"}'/></td>
+                        <td><span t-field="invoice.residual" t-field-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
                     </tr>
                 </t>
             </table>
@@ -319,7 +319,7 @@
                               <span t-esc="ol.product_id.name"/>
                             </div>
                           <div class="col-md-2 text-right">
-                            <span t-field="ol.price_unit" t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
+                            <span t-field="ol.price_unit" t-field-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                           </div>
                           <div class="col-md-2 text-right">
                             <t t-if="ol._name == 'sale.order.line'">
@@ -330,7 +330,7 @@
                             </t>
                           </div>
                           <div class="col-md-2 text-right">
-                            <span t-field="ol.price_subtotal" t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
+                            <span t-field="ol.price_subtotal" t-field-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                           </div>
                         </div>
                       </t>
@@ -350,7 +350,7 @@
                               Untaxed Amount:
                             </div>
                             <div class="col-md-2 text-right">
-                              <span t-field="order.amount_untaxed" t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
+                              <span t-field="order.amount_untaxed" t-field-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                             </div>
                           </div>
                           <div class="row">
@@ -358,7 +358,7 @@
                               Taxes:
                             </div>
                             <div class="col-md-2 text-right">
-                              <span t-field="order.amount_tax" t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
+                              <span t-field="order.amount_tax" t-field-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                             </div>
                           </div>
                           <div class="row">
@@ -366,7 +366,7 @@
                               <strong>Total:</strong>
                             </div>
                             <div class="col-md-2 text-right">
-                              <strong><span t-field="order.amount_total" t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/></strong>
+                              <strong><span t-field="order.amount_total" t-field-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/></strong>
                             </div>
                           </div>
                         </div>

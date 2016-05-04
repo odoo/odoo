@@ -6,7 +6,7 @@ from PIL import Image
 from cStringIO import StringIO
 import babel
 from openerp.tools import html_escape as escape, posix_to_ldml
-from .utils import QWebContext, eval_expr, unicodifier
+from .utils import QWebContext, unicodifier
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -308,7 +308,7 @@ class MonetaryConverter(models.AbstractModel):
             display_currency = record[field.currency_field]
         #otherwise fall back to old method
         if not display_currency:
-            display_currency = self.display_currency(options['display_currency'], qwebcontext)
+            display_currency = options['display_currency']
 
         # lang.format mandates a sprintf-style format. These formats are non-
         # minimal (they have a default fixed precision instead), and
@@ -320,8 +320,7 @@ class MonetaryConverter(models.AbstractModel):
         from_amount = record[field_name]
 
         if options.get('from_currency'):
-            from_currency = self.display_currency(options['from_currency'], qwebcontext)
-            from_amount = from_currency.compute(from_amount, display_currency)
+            from_amount = options['from_currency'].compute(from_amount, display_currency)
 
         lang = self.user_lang()
         formatted_amount = lang.format(fmt, display_currency.round(from_amount),
@@ -338,11 +337,6 @@ class MonetaryConverter(models.AbstractModel):
         ).format(
             symbol=display_currency.symbol,
         )
-
-    @api.model
-    def display_currency(self, currency, qwebcontext):
-        return eval_expr(currency, qwebcontext)
-
 
 TIMEDELTA_UNITS = (
     ('year',   3600 * 24 * 365),

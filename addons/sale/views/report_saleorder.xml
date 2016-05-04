@@ -97,7 +97,7 @@
                                     </td>
                                     <td class="text-right">
                                         <span t-field="l.price_subtotal"
-                                            t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+                                            t-field-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
                                     </td>
                                 </tr>
                             </t>
@@ -128,7 +128,7 @@
                             <td><strong>Total Without Taxes</strong></td>
                             <td class="text-right">
                                 <span t-field="doc.amount_untaxed"
-                                    t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+                                    t-field-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
                             </td>
                         </tr>
                         <t t-foreach="doc._get_tax_amount_by_group()" t-as="amount_by_group">
@@ -143,7 +143,7 @@
                             <td><strong>Total</strong></td>
                             <td class="text-right">
                                 <span t-field="doc.amount_total"
-                                    t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+                                    t-field-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
                             </td>
                         </tr>
                     </table>
