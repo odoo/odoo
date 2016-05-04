@@ -93,6 +93,11 @@ msgid "Absence by Today"
 msgstr ""
 
 #. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+msgid "Absent Employee(s), Whose leaves request are either confirmed or validated on today"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_employee_action_from_department
 msgid "Absent Employees"
 msgstr ""
@@ -181,6 +186,11 @@ msgid "Allocation to Approve"
 msgstr ""
 
 #. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Allocations"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_limit
 msgid "Allow to Override Limit"
 msgstr ""
@@ -223,6 +233,15 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.hr_holidays_leaves_assign_tree_view
 msgid "Assign Leaves"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_resource_calendar_uom_id
+msgid "Average hours of work per day.\n"
+"                    It is used in an employee leave request to compute the number of days consumed based on the resource calendar.\n"
+"                    It can be used to handle various contract types, e.g.:\n"
+"                    - 38 Hours/Week, 5 Days/Week: 1 Day = 7.6 Hours\n"
+"                    - 45 Hours/Week, 5 Days/Week: 1 Day = 9.0 Hours"
 msgstr ""
 
 #. module: hr_holidays
@@ -355,6 +374,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept_create_date
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_create_date
 msgid "Created on"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Current"
 msgstr ""
 
 #. module: hr_holidays
@@ -519,6 +543,16 @@ msgid "HR Leaves Summary Report By Employee"
 msgstr ""
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_uom_id
+msgid "Hours per Day"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_department
+msgid "Hr Department"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_remaining_leaves_user_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_id
@@ -667,6 +701,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_holidays.menu_open_department_leave_approve
 #: model:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
 #: model:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Leaves"
 msgstr ""
 
@@ -1047,6 +1082,11 @@ msgid "Reset to Draft"
 msgstr ""
 
 #. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_resource_calendar
+msgid "Resource Calendar"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Search Leave"
 msgstr ""
@@ -1347,4 +1387,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "to"
 msgstr ""
-
