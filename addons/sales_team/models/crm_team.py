@@ -15,7 +15,7 @@ class CrmTeam(models.Model):
     def _get_default_team_id(self, user_id=None):
         if not user_id:
             user_id = self.env.uid
-        team_id = self.env['crm.team'].search(
+        team_id = self.env['crm.team'].sudo().search(
             ['|', ('user_id', '=', user_id), ('member_ids', 'in', [user_id])],
             limit=1)
         if not team_id and 'default_team_id' in self.env.context:

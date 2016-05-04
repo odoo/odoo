@@ -41,7 +41,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
         if wizard.comment:
             message += '<p>%s</p>' % wizard.comment
         for active_id in context.get('active_ids', []):
-            lead_obj.message_post(cr, uid, active_id, body=message, subtype="mail.mt_comment", context=context)
+            lead_obj.message_post(cr, uid, active_id, body=message, subtype="mail.mt_note", context=context)
         if values:
             lead_obj.write(cr, SUPERUSER_ID, context.get('active_ids', []), values)
             lead_obj.set_tag_assign(cr, SUPERUSER_ID, context.get('active_ids', []), False)

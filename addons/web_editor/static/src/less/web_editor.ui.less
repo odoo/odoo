@@ -643,8 +643,10 @@
     width: auto;
     text-align: center;
     box-shadow: none;
+    
     .popover-content {
         height: @odoo-navbar-height;
+
         .btn {
             height: @odoo-navbar-height;
             border: none;
@@ -684,13 +686,6 @@
                     background-color: @o-we-tab-active-bg;
                     color: white;
                 }
-
-                > i {
-                    visibility: hidden;
-                }
-                &.checked > i {
-                    visibility: visible;
-                }
             }
         }
         #colors_preview {
@@ -707,24 +702,39 @@
 
         // COLORPICKER
         .note-color {
-            .dropdown-toggle {
-                width: auto;
-            }
-            .o_foreground_toggle > button:before {
-                font-family: FontAwesome;
-                content: '\f1fc';
-            }
-            .o_background_toggle > button:before {
-                font-family: FontAwesome;
-                content: '\f0c3';
-            }
-
             border: 1px solid @o-we-color-divider;
             border-width: 0 1px;
-            .dropdown-menu {
-                min-width: 250px!important;
-                padding: 0!important;
+        }
+    }
+}
+
+.note-popover .popover, .note-editor {
+    .dropdown-menu {
+        > li > a {
+            > i {
+                visibility: hidden;
             }
+            &.checked > i {
+                visibility: visible;
+            }
+        }
+    }
+
+    .note-color {
+        .dropdown-toggle {
+            width: auto;
+        }
+        .o_foreground_toggle > button:before {
+            font-family: FontAwesome;
+            content: '\f1fc';
+        }
+        .o_background_toggle > button:before {
+            font-family: FontAwesome;
+            content: '\f0c3';
+        }
+        .dropdown-menu {
+            min-width: 250px!important;
+            padding: 0!important;
         }
     }
 }

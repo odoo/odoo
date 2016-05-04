@@ -315,7 +315,16 @@ class Company(models.Model):
         if not vals.get('name') or vals.get('partner_id'):
             self.clear_caches()
             return super(Company, self).create(vals)
-        partner = self.env['res.partner'].create({'name': vals['name'], 'is_company': True, 'image': vals.get('logo'), 'customer': False})
+        partner = self.env['res.partner'].create({
+            'name': vals['name'],
+            'is_company': True,
+            'image': vals.get('logo'),
+            'customer': False,
+            'email': vals.get('email'),
+            'phone': vals.get('phone'),
+            'website': vals.get('website'),
+            'vat': vals.get('vat'),
+        })
         vals['partner_id'] = partner.id
         self.clear_caches()
         company = super(Company, self).create(vals)
