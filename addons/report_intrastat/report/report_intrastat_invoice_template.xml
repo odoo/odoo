@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 <template id="report_intrastatinvoice_document">
     <t t-call="report.external_layout">
-        <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
+        <t t-set="o" t-value="o.with_context(lang = o.partner_id.lang)"/>
         <div class="page">
             <div class="row">
                 <div class="col-xs-5 col-xs-offset-7">
@@ -144,5 +143,4 @@
         </t>
     </t>
 </template>
-</data>
-</openerp>
+</odoo>

@@ -3,7 +3,6 @@
 
 {
     'name': 'Intrastat Reporting',
-    'version': '1.0',
     'category': 'Accounting & Finance',
     'description': """
 A module that adds intrastat reports.
@@ -20,8 +19,5 @@ European Union.""",
         'security/report_intrastat_security.xml',
         'views/report_intrastat_views.xml',
     ],
-    'demo': [],
-    'test': ['../account/test/account_minimal_test.xml', 'test/report_intrastat_report.yml'],
-    'installable': True,
-    'auto_install': False,
+    'tests': ['../account/test/account_minimal_test.xml', 'test/report_intrastat_report.yml'],
 }
