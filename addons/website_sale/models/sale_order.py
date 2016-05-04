@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 import random
 
 from odoo import api, models, fields, tools, _
@@ -7,6 +8,7 @@ from odoo.http import request
 from odoo.exceptions import UserError
 import odoo.addons.decimal_precision as dp
 
+_logger = logging.getLogger(__name__)
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
@@ -219,6 +221,7 @@ class Website(models.Model):
         # then this pricelist will always be considered as available
         available_pricelists = self.get_pricelist_available()
         pl = None
+        partner = self.env.user.partner_id
         if request.session.get('website_sale_current_pl'):
             # `website_sale_current_pl` is set only if the user specifically chose it:
             #  - Either, he chose it from the pricelist selection
@@ -228,7 +231,6 @@ class Website(models.Model):
                 pl = None
                 request.session.pop('website_sale_current_pl')
         if not pl:
-            partner = self.env.user.partner_id
             # If the user has a saved cart, it take the pricelist of this cart, except if
             # the order is no longer draft (It has already been confirmed, or cancelled, ...)
             pl = partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
@@ -245,6 +247,8 @@ class Website(models.Model):
                 # then this special pricelist is amongs these available pricelists, and therefore it won't fall in this case.
                 pl = available_pricelists[0]
 
+        if not pl:
+            _logger.error('Fail to find pricelist for partner "%s" (id %s)', partner.name, partner.id)
         return pl
 
     @api.multi

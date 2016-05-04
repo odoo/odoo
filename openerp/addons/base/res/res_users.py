@@ -628,7 +628,7 @@ class UsersImplied(models.Model):
             # complete 'groups_id' with implied groups
             user = self.new(values)
             gs = user.groups_id | user.groups_id.mapped('trans_implied_ids')
-            values['groups_id'] = type(self).groups_id.convert_to_write(gs)
+            values['groups_id'] = type(self).groups_id.convert_to_write(gs, user.groups_id)
         return super(UsersImplied, self).create(values)
 
     @api.multi
