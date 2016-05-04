@@ -74,11 +74,6 @@
                     <field name="child_ids" invisible="1" />
                     <field name="subtask_project_id" invisible="1" />
                 </field>
-                <field name="partner_id" position="after">
-                    <field name="parent_id" attrs="{'invisible' : [('parent_id', '=', False)]}" />
-                    <field name="child_ids" invisible="1" />
-                    <field name="subtask_project_id" invisible="1" />
-                </field>
                 <xpath expr="//notebook/page[@name='description_page']" position="after">
                     <page string="Timesheets">
                     <field name="timesheet_ids" context="{'default_project_id': project_id}">
