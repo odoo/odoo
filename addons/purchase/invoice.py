@@ -62,6 +62,7 @@ class AccountInvoice(models.Model):
                 'quantity': qty,
                 'discount': 0.0,
                 'account_analytic_id': line.account_analytic_id.id,
+                'analytic_tag_ids': line.analytic_tag_ids.ids,
                 'invoice_line_tax_ids': invoice_line_tax_ids.ids
             }
             account = new_lines.get_invoice_line_account('in_invoice', line.product_id, self.purchase_id.fiscal_position_id, self.env.user.company_id)
