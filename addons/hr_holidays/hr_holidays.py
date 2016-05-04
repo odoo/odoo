@@ -289,8 +289,8 @@ class hr_holidays(osv.osv):
 
         if employee_id:
             employee = employee_obj.browse(cr, uid, [employee_id], context=context)
-            resource_ids = resource_obj.search(cr, uid, [('user_id', '=', employee.user_id.id)], limit=1, context=context)
-            resource = resource_obj.browse(cr, uid, resource_ids, context=context)
+            resource_ids = resource_obj.search(cr, SUPERUSER_ID, [('user_id', '=', employee.user_id.id)], limit=1, context=context)
+            resource = resource_obj.browse(cr, SUPERUSER_ID, resource_ids, context=context)
             if resource and resource.calendar_id:
                 hours = resource.calendar_id.get_working_hours(from_dt, to_dt, resource_id=resource.id, compute_leaves=True)
                 uom_hour = resource.calendar_id.uom_id
