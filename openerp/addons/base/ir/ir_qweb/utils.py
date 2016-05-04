@@ -5,12 +5,8 @@ import itertools
 from collections import Sized, Mapping, defaultdict
 from openerp.tools import safe_eval
 from odoo.exceptions import QWebException
-from copy import deepcopy
-from lxml import etree
 import sys
 import re
-
-import __builtin__
 
 
 def base_module():
@@ -23,7 +19,8 @@ def base_module():
     * unicodifier (empty string for a None or False, otherwise unicode string)
     """
 
-    return ast.parse("""from collections import OrderedDict
+    return ast.parse("""import __builtin__
+from collections import OrderedDict
 import itertools
 from openerp.addons.base.ir.ir_qweb.utils import unicodifier, foreach_iterator
 from openerp.tools import safe_eval, html_escape as escape
@@ -121,7 +118,7 @@ def get_attr_bool(attr, default=False):
 
 class Contextifier(ast.NodeTransformer):
     """ For user-provided template expressions, replaces any ``name`` by
-    :sampe:`qwebcontext.eval_dict['{name}']` so all variable accesses are
+    :sampe:`qwebcontext.get('{name}')` so all variable accesses are
     performed on the qwebcontext rather than in the "native" scope
     """
 
@@ -141,14 +138,27 @@ class Contextifier(ast.NodeTransformer):
             return node
 
         return ast.copy_location(
-            ast.Subscript(
-                value=ast.Attribute(
+            # qwebcontext.get(name, getattr(__builtin__, name, None))
+            ast.Call(
+                func=ast.Attribute(
                     value=ast.Name(id='qwebcontext', ctx=ast.Load()),
-                    attr='eval_dict',
+                    attr='get',
                     ctx=ast.Load()
                 ),
-                slice=ast.Index(ast.Str(node.id)),
-                ctx=ast.Load()),
+                args=[
+                    ast.Str(node.id),
+                    ast.Call(
+                        func=ast.Name(id='getattr', ctx=ast.Load()),
+                        args=[
+                            ast.Name(id='__builtin__', ctx=ast.Load()),
+                            ast.Str(node.id),
+                            ast.Name(id='None', ctx=ast.Load()),
+                        ], keywords=[],
+                        starargs=None, kwargs=None
+                    )
+                ], keywords=[],
+                starargs=None, kwargs=None
+            ),
             node
         )
 
@@ -274,29 +284,6 @@ class QWebTemplateNotFound(QWebException):
     pass
 
 
-def eval_expr(expr, qwebcontext):
-    try:
-        if expr == "0":
-            return qwebcontext.get(0, '')
-        return qwebcontext.safe_eval(expr)
-    except Exception:
-        template = qwebcontext.get('__template__')
-        raise_qweb_exception(message="Could not evaluate expression %r" % expr, expression=expr, template=template)
-
-def eval_format_expr(expr, qwebcontext):
-    expr, replacements = _FORMAT_REGEX.subn(
-        lambda m: unicodifier(eval_expr(m.group(1) or m.group(2), qwebcontext)),
-        expr
-    )
-    if replacements:
-        return expr
-    try:
-        return str(expr % qwebcontext)
-    except Exception:
-        template = qwebcontext.get('__template__')
-        raise_qweb_exception(message="Format error for expression %r" % expr, expression=expr, template=template)
-
-
 class FileSystemLoader(object):
     def __init__(self, path):
         # TODO: support multiple files #add_file() + add cache
@@ -318,36 +305,6 @@ class FileSystemLoader(object):
                 return arch
 
 
-class EvalDict(Mapping):
-    """ Mapping proxying on an evaluation context, also builtins
-
-    * prevents access to cr and loader
-    * acts as a defaultdict(lambda: None) so code can try to access unset
-      variables and will just get None
-    """
-    def __init__(self, ctx):
-        self._ctx = ctx
-
-    def __iter__(self):
-        return (k for k in self._ctx if k not in ('cr', 'loader'))
-
-    def __len__(self):
-        l = len(self._ctx)
-        if 'cr' in self._ctx:
-            l -= 1
-        if 'loader' in self._ctx:
-            l -= 1
-        return l
-
-    def __getitem__(self, key):
-        if key in ('cr', 'loader'):
-            return None
-        try:
-            return self._ctx[key]
-        except KeyError:
-            return getattr(__builtin__, key, None)
-
-
 class QWebContext(dict):
     def __init__(self, env, data, loader=None, templates=None):
         self.env = env
@@ -355,7 +312,6 @@ class QWebContext(dict):
         super(QWebContext, self).__init__(data)
         self['defined'] = lambda key: key in self
         self.templates = templates or {}
-        self.eval_dict = EvalDict(self)
 
     # deprecated, use 'env' instead
     cr = property(lambda self: self.env.cr)
