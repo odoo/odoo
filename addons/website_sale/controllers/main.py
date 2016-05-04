@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import logging
 import werkzeug
 
 from odoo import http, tools, _
@@ -10,7 +9,6 @@ from odoo.addons.website.models.website import slug
 PPG = 20  # Products Per Page
 PPR = 4   # Products Per Row
 
-_logger = logging.getLogger(__name__)
 class TableCompute(object):
 
     def __init__(self):
@@ -105,9 +103,6 @@ class QueryURL(object):
 
 
 class WebsiteSale(http.Controller):
-    if not pricelist:
-        _logger.error('Fail to find pricelist for partner "%s" (id %s)', partner.name, partner.id)
-
     def get_attribute_value_ids(self, product):
         """ list of selectable attributes of a product
 
