@@ -1,11 +1,12 @@
-import unittest
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import openerp.tests.common as common
+from odoo.tests.common import TransactionCase
 
-class test_res_lang(common.TransactionCase):
+class test_res_lang(TransactionCase):
 
     def test_00_intersperse(self):
-        from openerp.addons.base.res.res_lang import intersperse
+        from odoo.addons.base.res.res_lang import intersperse
 
         assert intersperse("", []) == ("", 0)
         assert intersperse("0", []) == ("0", 0)

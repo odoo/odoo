@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models
-from openerp.tools import mute_logger
-from openerp.tests import common
-from openerp.exceptions import AccessError
+from odoo import models
+from odoo.tools import mute_logger
+from odoo.tests import common
+from odoo.exceptions import AccessError
 
 
 class TestAPI(common.TransactionCase):
@@ -84,7 +86,7 @@ class TestAPI(common.TransactionCase):
         ids = map(int, partners)
 
         # modify those partners, and check that partners has not changed
-        self.registry('res.partner').write(self.cr, self.uid, ids, {'active': False})
+        partners.write({'active': False})
         self.assertEqual(ids, map(int, partners))
 
         # redo the search, and check that the result is now empty
@@ -94,7 +96,7 @@ class TestAPI(common.TransactionCase):
     @mute_logger('openerp.models')
     def test_06_fields(self):
         """ Check that relation fields return records, recordsets or nulls. """
-        user = self.registry('res.users').browse(self.cr, self.uid, self.uid)
+        user = self.env.user
         self.assertIsRecord(user, 'res.users')
         self.assertIsRecord(user.partner_id, 'res.partner')
         self.assertIsRecordset(user.groups_id, 'res.groups')
