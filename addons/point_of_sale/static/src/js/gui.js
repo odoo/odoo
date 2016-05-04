@@ -85,14 +85,14 @@ var Gui = core.Class.extend({
     // example loading a 'product_details' screen for a specific product.
     // - refresh: if you want the screen to cycle trough show / hide even
     // if you are already on the same screen.
-    show_screen: function(screen_name,params,refresh) {
+    show_screen: function(screen_name,params,refresh,skip_close_popup) {
         var screen = this.screen_instances[screen_name];
         if (!screen) {
             console.error("ERROR: show_screen("+screen_name+") : screen not found");
         }
-
-        this.close_popup();
-
+        if (!skip_close_popup){
+            this.close_popup();
+        }
         var order = this.pos.get_order();
         if (order) {
             var old_screen_name = order.get_screen_data('screen');

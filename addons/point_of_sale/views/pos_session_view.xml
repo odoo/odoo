@@ -62,6 +62,9 @@
                             type="action" context="{'balance': 'end', 'bank_statement_id': cash_register_id, 'default_pos_id': config_id}">
                             <span class="o_stat_text">Set Closing Balance</span>
                         </button>
+                        <button class="oe_stat_button" name="action_stock_picking" type="object" icon="fa-arrows-v" attrs="{'invisible':[('picking_count', '=', 0)]}">
+                            <field name="picking_count" widget="statinfo" string="Picking Errors"/>
+                        </button>
                     </div>
                     <h1 class="oe_title">
                         Session:

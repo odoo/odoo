@@ -589,15 +589,41 @@ class PosOrder(models.Model):
             if picking_id:
                 picking_id.action_confirm()
                 picking_id.force_assign()
-                # Mark pack operations as done
-                for pack in picking_id.pack_operation_ids:
-                    pack.write({'qty_done': pack.product_qty})
+                order.set_pack_operation_lot()
                 picking_id.action_done()
             elif Move:
                 Move.action_confirm()
                 Move.force_assign()
                 Move.action_done()
         return True
+
+    def set_pack_operation_lot(self):
+        """Set Serial/Lot number in pack operations to mark the pack operation done."""
+
+        StockProductionLot = self.env['stock.production.lot']
+        PosPackOperationLot = self.env['pos.pack.operation.lot']
+
+        for order in self:
+            for pack_operation in order.picking_id.pack_operation_ids:
+                qty = 0
+                qty_done = 0
+                pack_lots = []
+                pos_pack_lots = PosPackOperationLot.search([('order_id', '=',  order.id), ('product_id', '=', pack_operation.product_id.id)])
+                pack_lot_names = [pos_pack.lot_name for pos_pack in pos_pack_lots]
+
+                if pack_lot_names:
+                    for lot_name in list(set(pack_lot_names)):
+                        stock_production_lot = StockProductionLot.search([('name', '=', lot_name), ('product_id', '=', pack_operation.product_id.id)])
+                        if stock_production_lot:
+                            if stock_production_lot.product_id.tracking == 'lot':
+                                qty = pack_lot_names.count(lot_name)
+                            else:
+                                qty = 1.0
+                            qty_done += qty
+                            pack_lots.append({'lot_id': stock_production_lot.id, 'qty': qty})
+                else:
+                    qty_done = pack_operation.product_qty
+                pack_operation.write({'pack_lot_ids': map(lambda x: (0, 0, x), pack_lots), 'qty_done': qty_done})
 
     def add_payment(self, data):
         """Create a new payment for the order"""
@@ -704,6 +730,7 @@ class PosOrderLine(models.Model):
     create_date = fields.Datetime(string='Creation Date', readonly=True)
     tax_ids = fields.Many2many('account.tax', string='Taxes', readonly=True)
     tax_ids_after_fiscal_position = fields.Many2many('account.tax', compute='_get_tax_ids_after_fiscal_position', string='Taxes')
+    pack_lot_ids = fields.One2many('pos.pack.operation.lot', 'pos_order_line_id', string='Lot/serial Number')
 
     @api.depends('price_unit', 'tax_ids', 'qty', 'discount', 'product_id')
     def _compute_amount_line_all(self):
@@ -752,3 +779,13 @@ class PosOrderLine(models.Model):
     def _get_tax_ids_after_fiscal_position(self):
         for line in self:
             line.tax_ids_after_fiscal_position = line.order_id.fiscal_position_id.map_tax(line.tax_ids)
+
+
+class PosOrderLineLot(models.Model):
+    _name = "pos.pack.operation.lot"
+    _description = "Specify product lot/serial number in pos order line"
+
+    pos_order_line_id = fields.Many2one('pos.order.line')
+    order_id = fields.Many2one('pos.order', related="pos_order_line_id.order_id")
+    lot_name = fields.Char('Lot Name')
+    product_id = fields.Many2one('product.product', related='pos_order_line_id.product_id')
