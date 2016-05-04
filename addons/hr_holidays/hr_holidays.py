@@ -293,7 +293,7 @@ class hr_holidays(osv.osv):
             resource = resource_obj.browse(cr, uid, resource_ids, context=context)
             if resource and resource.calendar_id:
                 hours = resource.calendar_id.get_working_hours(from_dt, to_dt, resource_id=resource.id, compute_leaves=True)
-                uom_hour = model_data_obj.xmlid_to_object(cr, uid, 'product.product_uom_hour')
+                uom_hour = resource.calendar_id.uom_id
                 uom_day = model_data_obj.xmlid_to_object(cr, uid, 'product.product_uom_day')
                 if uom_hour and uom_day:
                     return uom_obj._compute_qty_obj(cr, uid, uom_hour, hours[0], uom_day, context=context)
@@ -546,6 +546,22 @@ class hr_holidays(osv.osv):
             'actions': actions
         }
         return res
+
+
+class resource_calendar(osv.osv):
+    _inherit = "resource.calendar"
+    _columns = {
+        'uom_id': fields.many2one("product.uom", "Hours per Day", required=True,
+            help="""Average hours of work per day.
+                    It is used in an employee leave request to compute the number of days consumed based on the resource calendar.
+                    It can be used to handle various contract types, e.g.:
+                    - 38 Hours/Week, 5 Days/Week: 1 Day = 7.6 Hours
+                    - 45 Hours/Week, 5 Days/Week: 1 Day = 9.0 Hours"""),
+    }
+
+    _defaults = {
+        'uom_id': lambda self, cr, uid, c: self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'product.product_uom_hour')
+    }
 
 
 class resource_calendar_leaves(osv.osv):
