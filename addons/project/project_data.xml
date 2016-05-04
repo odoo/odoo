@@ -195,7 +195,7 @@
         <record id="msg_task_4" model="mail.message">
             <field name="subject">Converse with your customers and colleagues</field>
             <field name="model">project.task</field>
-            <field name="author_id" ref="base.user_root"/>
+            <field name="author_id" ref="base.partner_root"/>
             <field name="res_id" ref="project_task_data_4"/>
             <field name="body">Use this chatter to send emails. Add new people in the followers list, to make them aware about the main changes about this task!</field>
             <field name="message_type">email</field>
@@ -261,7 +261,7 @@
             <field name="subject">How to open the implementation guide ?</field>
             <field name="model">project.task</field>
             <field name="res_id" ref="project_task_data_8"/>
-            <field name="author_id" ref="base.user_root"/>
+            <field name="author_id" ref="base.partner_root"/>
             <field name="body"><![CDATA[Click on this icon in the upper right corner to open the planner<br/>
             Best regards,<br/>Me.</p>]]></field>
             <field name="message_type">comment</field>
@@ -320,7 +320,7 @@
             <field name="subject">How to open the planner ?</field>
             <field name="model">project.task</field>
             <field name="res_id" ref="project_task_data_14"/>
-            <field name="author_id" ref="base.user_root"/>
+            <field name="author_id" ref="base.partner_root"/>
             <field name="body"><![CDATA[Look at this beautiful bird !]]></field>
             <field name="message_type">comment</field>
             <field name="attachment_ids" eval="[(6, 0, [ref('msg_task_data_14_attach')])]"/>
