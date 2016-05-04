@@ -119,7 +119,7 @@ class ReportGeneralLedger(models.AbstractModel):
         if data['form'].get('journal_ids', False):
             codes = [journal.code for journal in self.env['account.journal'].search([('id', 'in', data['form']['journal_ids'])])]
 
-        accounts = self.env['account.account'].search([])
+        accounts = docs if self.model == 'account.account' else self.env['account.account'].search([])
         accounts_res = self.with_context(data['form'].get('used_context',{}))._get_account_move_entry(accounts, init_balance, sortby, display_account)
         docargs = {
             'doc_ids': self.ids,
