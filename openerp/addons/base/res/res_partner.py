@@ -237,7 +237,9 @@ class res_partner(osv.Model, format_address):
                  'fields, this one serves as interface. Due to the old API '
                  'limitations with interface function field, we implement it '
                  'by hand instead of a true function field. When migrating to '
-                 'the new API the code should be simplified.'),
+                 'the new API the code should be simplified. Changing the'
+                 'company_type of a company contact into a company will not display'
+                 'this contact as a company contact but as a standalone company.'),
         'use_parent_address': fields.boolean('Use Company Address', help="Select this if you want to set company's address information  for this contact"),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
