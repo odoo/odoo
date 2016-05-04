@@ -504,6 +504,9 @@ actual arch.
             if node is not None:
                 pos = spec.get('position', 'inside')
                 if pos == 'replace':
+                    for loc in spec.xpath(".//*[text()='$0']"):
+                        loc.text = ''
+                        loc.append(copy.deepcopy(node))
                     if node.getparent() is None:
                         source = copy.deepcopy(spec[0])
                     else:
@@ -877,7 +880,7 @@ actual arch.
     @api.model
     @tools.conditional(
         'xml' not in config['dev_mode'],
-        tools.ormcache('self._uid', 'view_id',
+        tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'view_id',
                        'tuple(map(self._context.get, self._read_template_keys()))'),
     )
     def _read_template(self, view_id):
@@ -987,7 +990,7 @@ actual arch.
         return arch
 
     @api.multi
-    @tools.ormcache('self._uid', 'self.id')
+    @tools.ormcache('self.id')
     def get_view_xmlid(self):
         domain = [('model', '=', 'ir.ui.view'), ('res_id', '=', self.id)]
         xmlid = self.env['ir.model.data'].search_read(domain, ['module', 'name'])[0]

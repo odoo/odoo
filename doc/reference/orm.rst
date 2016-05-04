@@ -678,6 +678,7 @@ Model Reference
     .. automethod:: write
 
     .. automethod:: read
+    .. automethod:: read_group
 
     .. rubric:: Research
 

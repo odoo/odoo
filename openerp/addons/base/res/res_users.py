@@ -146,10 +146,11 @@ class Groups(models.Model):
         if 'name' in vals:
             if vals['name'].startswith('-'):
                 raise UserError(_('The name of the group can not start with "-"'))
-        res = super(Groups, self).write(vals)
+        # invalidate caches before updating groups, since the recomputation of
+        # field 'share' depends on method has_group()
         self.env['ir.model.access'].call_cache_clearing_methods()
         self.env['res.users'].has_group.clear_cache(self.env['res.users'])
-        return res
+        return super(Groups, self).write(vals)
 
 
 class ResUsersLog(models.Model):
@@ -248,7 +249,7 @@ class Users(models.Model):
                 # will face unexpected 'Access Denied' exceptions.
                 raise UserError(_('Please use the change password wizard (in User Preferences or User menu) to change your own password.'))
             else:
-                self.password = self.new_password
+                user.password = user.new_password
 
     @api.depends('groups_id')
     def _compute_share(self):
@@ -362,14 +363,19 @@ class Users(models.Model):
                     user.partner_id.write({'company_id': user.company_id.id})
             # clear default ir values when company changes
             self.env['ir.values'].get_defaults_dict.clear_cache(self.env['ir.values'])
+
         # clear caches linked to the users
-        self.env['ir.model.access'].call_cache_clearing_methods()
-        self.env['ir.rule'].clear_caches()
-        db = self._cr.dbname
-        for id in self.ids:
-            self.__uid_cache[db].pop(id, None)
-        self.context_get.clear_cache(self)
-        self.has_group.clear_cache(self)
+        if 'groups_id' in values:
+            self.env['ir.model.access'].call_cache_clearing_methods()
+            self.env['ir.rule'].clear_caches()
+            self.has_group.clear_cache(self)
+        if any(key.startswith('context_') or key in ('lang', 'tz') for key in values):
+            self.context_get.clear_cache(self)
+        if any(key in values for key in ['active'] + USER_PRIVATE_FIELDS):
+            db = self._cr.dbname
+            for id in self.ids:
+                self.__uid_cache[db].pop(id, None)
+
         return res
 
     @api.multi
@@ -618,13 +624,12 @@ class UsersImplied(models.Model):
 
     @api.model
     def create(self, values):
-        groups = values.pop('groups_id', None)
-        user = super(UsersImplied, self).create(values)
-        if groups:
-            # delegate addition of groups to add implied groups
-            user.write({'groups_id': groups})
-            self.env['ir.ui.view'].clear_caches()
-        return user
+        if 'groups_id' in values:
+            # complete 'groups_id' with implied groups
+            user = self.new(values)
+            gs = user.groups_id | user.groups_id.mapped('trans_implied_ids')
+            values['groups_id'] = type(self).groups_id.convert_to_write(gs)
+        return super(UsersImplied, self).create(values)
 
     @api.multi
     def write(self, values):
@@ -635,7 +640,6 @@ class UsersImplied(models.Model):
                 gs = set(concat(g.trans_implied_ids for g in user.groups_id))
                 vals = {'groups_id': [(4, g.id) for g in gs]}
                 super(UsersImplied, self).write(vals)
-            self.env['ir.ui.view'].clear_caches()
         return res
 
 #

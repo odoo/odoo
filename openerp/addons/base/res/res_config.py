@@ -493,6 +493,8 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         # groups: which groups are implied by the group Employee
         for name, groups, implied_group in classified['group']:
             res[name] = all(implied_group in group.implied_ids for group in groups)
+            if self._fields[name].type == 'selection':
+                res[name] = int(res[name])
 
         # modules: which modules are installed/to install
         for name, module in classified['module']:

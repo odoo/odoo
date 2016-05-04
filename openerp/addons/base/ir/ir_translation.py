@@ -291,6 +291,23 @@ class IrTranslation(models.Model):
                 translations[res_id] = value
         return translations
 
+    CACHED_MODELS = {'ir.model.fields', 'ir.ui.view'}
+
+    def _modified_model(self, model_name):
+        """ Invalidate the ormcache if necessary, depending on ``model_name``.
+        This should be called when modifying translations of type 'model'.
+        """
+        if model_name in self.CACHED_MODELS:
+            self.clear_caches()
+
+    @api.multi
+    def _modified(self):
+        """ Invalidate the ormcache if necessary, depending on the translations ``self``. """
+        for trans in self:
+            if trans.type != 'model' or trans.name.split(',')[0] in self.CACHED_MODELS:
+                self.clear_caches()
+                break
+
     @api.model
     def _set_ids(self, name, tt, lang, ids, value, src=None):
         """ Update the translations of records.
@@ -302,7 +319,7 @@ class IrTranslation(models.Model):
         :param value: the value of the translation
         :param src: the source of the translation
         """
-        self.clear_caches()
+        self._modified_model(name.split(',')[0])
 
         # update existing translations
         self._cr.execute("""UPDATE ir_translation
@@ -540,7 +557,7 @@ class IrTranslation(models.Model):
     def create(self, vals):
         record = super(IrTranslation, self.sudo()).create(vals).with_env(self.env)
         record.check('create')
-        self.clear_caches()
+        record._modified()
         return record
 
     @api.multi
@@ -552,13 +569,13 @@ class IrTranslation(models.Model):
         self.check('write')
         result = super(IrTranslation, self.sudo()).write(vals)
         self.check('write')
-        self.clear_caches()
+        self._modified()
         return result
 
     @api.multi
     def unlink(self):
         self.check('unlink')
-        self.clear_caches()
+        self._modified()
         return super(IrTranslation, self.sudo()).unlink()
 
     @api.model
@@ -606,7 +623,7 @@ class IrTranslation(models.Model):
                     'src': record[field.name] or None,
                     'module': module
                 })
-        self.clear_caches()
+        self._modified_model(field.model_name)
 
     @api.model
     def translate_fields(self, model, id, field=None):

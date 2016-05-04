@@ -11,7 +11,7 @@
                         <field name="name" widget="radio"/>
                     </group>
                     <group string="Assign this opportunity to">
-                        <field name="user_id" on_change="on_change_user(user_id, team_id, context)"/>
+                        <field name="user_id" on_change="on_change_user(user_id, team_id, context)" domain="[('share', '=', False)]"/>
                         <field name="team_id" widget="selection"/>
                     </group>
                     <group string="Opportunities" attrs="{'invisible': [('name', '!=', 'merge')]}">
@@ -56,7 +56,7 @@
                     </group>
                     <group string="Assign these opportunities to">
                         <field name="team_id"/>
-                        <field name="user_ids" widget="many2many_tags"/>
+                        <field name="user_ids" widget="many2many_tags" domain="[('share', '=', False)]"/>
                         <!-- Uncomment me in trunk -->
                         <!-- <field name="force_assignation" /> -->
                     </group>

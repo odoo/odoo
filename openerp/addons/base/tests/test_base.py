@@ -124,7 +124,6 @@ class test_base(common.TransactionCase):
         self.assertEquals(p1.type, 'contact', 'Default type must be "contact", not the copied parent type')
         ironshield.refresh()
         self.assertEqual(ironshield.street, p1.street, 'Address fields should be copied to company')
-        self.assertTrue(ironshield.is_company, 'Company flag should be turned on after first contact creation')
 
     def test_40_res_partner_address_getc(self):
         """ Test address_get address resolution mechanism: it should first go down through descendants,
@@ -283,8 +282,8 @@ class test_base(common.TransactionCase):
 
     def test_60_read_group(self):
         cr, uid = self.cr, self.uid
-        title_sir = self.res_partner_title.create(cr, uid, {'name': 'Sir'})
-        title_lady = self.res_partner_title.create(cr, uid, {'name': 'Lady'})
+        title_sir = self.res_partner_title.create(cr, uid, {'name': 'Sir...'})
+        title_lady = self.res_partner_title.create(cr, uid, {'name': 'Lady...'})
         test_users = [
             {'name': 'Alice', 'login': 'alice', 'color': 1, 'function': 'Friend', 'date': '2015-03-28', 'title': title_lady},
             {'name': 'Alice', 'login': 'alice2', 'color': 0, 'function': 'Friend',  'date': '2015-01-28', 'title': title_lady},
@@ -348,7 +347,7 @@ class test_base(common.TransactionCase):
         groups_data = self.res_users.read_group(cr, uid, domain, fields=['function', 'color', 'title'], groupby=['title'])
         self.assertEqual(len(groups_data), 2, "Incorrect number of results when grouping on a field")
         # m2o is returned as a (id, label) pair
-        self.assertEqual([(title_lady, 'Lady'), (title_sir, 'Sir')], [g['title'] for g in groups_data], 'Incorrect ordering of the list')
+        self.assertEqual([(title_lady, 'Lady...'), (title_sir, 'Sir...')], [g['title'] for g in groups_data], 'Incorrect ordering of the list')
         self.assertEqual([4, 2], [g['title_count'] for g in groups_data], 'Incorrect number of results')
         self.assertEqual([10, -1], [g['color'] for g in groups_data], 'Incorrect aggregation of int column')
 
@@ -356,7 +355,7 @@ class test_base(common.TransactionCase):
         groups_data = self.res_users.read_group(cr, uid, domain, fields=['function', 'color', 'title'], groupby=['title'], orderby="title desc")
         self.assertEqual(len(groups_data), 2, "Incorrect number of results when grouping on a field")
         # m2o is returned as a (id, label) pair
-        self.assertEqual([(title_sir, 'Sir'), (title_lady, 'Lady')], [g['title'] for g in groups_data], 'Incorrect ordering of the list')
+        self.assertEqual([(title_sir, 'Sir...'), (title_lady, 'Lady...')], [g['title'] for g in groups_data], 'Incorrect ordering of the list')
         self.assertEqual([2, 4], [g['title_count'] for g in groups_data], 'Incorrect number of results')
         self.assertEqual([-1, 10], [g['color'] for g in groups_data], 'Incorrect aggregation of int column')
 
@@ -364,7 +363,7 @@ class test_base(common.TransactionCase):
         groups_data = self.res_users.read_group(cr, uid, domain, fields=['function', 'color', 'title'], groupby=['title'], orderby="color desc, title desc")
         self.assertEqual(len(groups_data), 2, "Incorrect number of results when grouping on a field")
         # m2o is returned as a (id, label) pair
-        self.assertEqual([(title_lady, 'Lady'), (title_sir, 'Sir')], [g['title'] for g in groups_data], 'Incorrect ordering of the result')
+        self.assertEqual([(title_lady, 'Lady...'), (title_sir, 'Sir...')], [g['title'] for g in groups_data], 'Incorrect ordering of the result')
         self.assertEqual([4, 2], [g['title_count'] for g in groups_data], 'Incorrect number of results')
         self.assertEqual([10, -1], [g['color'] for g in groups_data], 'Incorrect aggregation of int column')
 
@@ -372,7 +371,7 @@ class test_base(common.TransactionCase):
         groups_data = self.res_users.read_group(cr, uid, domain, fields=['function', 'color', 'title'], groupby=['title'], orderby='color')
         self.assertEqual(len(groups_data), 2, "Incorrect number of results when grouping on a field")
         # m2o is returned as a (id, label) pair
-        self.assertEqual([(title_sir, 'Sir'), (title_lady, 'Lady')], [g['title'] for g in groups_data], 'Incorrect ordering of the list')
+        self.assertEqual([(title_sir, 'Sir...'), (title_lady, 'Lady...')], [g['title'] for g in groups_data], 'Incorrect ordering of the list')
         self.assertEqual([2, 4], [g['title_count'] for g in groups_data], 'Incorrect number of results')
         self.assertEqual([-1, 10], [g['color'] for g in groups_data], 'Incorrect aggregation of int column')
 

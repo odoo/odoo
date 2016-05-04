@@ -53,6 +53,9 @@ class SaleOrder(models.Model):
         """
         for order in self:
             invoice_ids = order.order_line.mapped('invoice_lines').mapped('invoice_id')
+            # Search for invoices which have been 'cancelled' (filter_refund = 'modify' in
+            # 'account.invoice.refund')
+            invoice_ids |= invoice_ids.search([('origin', 'like', order.name)])
             # Search for refunds as well
             refund_ids = self.env['account.invoice'].browse()
             if invoice_ids:
@@ -322,7 +325,7 @@ class SaleOrder(models.Model):
         """
         Create the invoice associated to the SO.
         :param grouped: if True, invoices are grouped by SO id. If False, invoices are grouped by
-                        (partner, currency)
+                        (partner_invoice_id, currency)
         :param final: if True, refunds will be generated if necessary
         :returns: list of created invoices
         """
@@ -331,7 +334,7 @@ class SaleOrder(models.Model):
         invoices = {}
 
         for order in self:
-            group_key = order.id if grouped else (order.partner_id.id, order.currency_id.id)
+            group_key = order.id if grouped else (order.partner_invoice_id.id, order.currency_id.id)
             for line in order.order_line.sorted(key=lambda l: l.qty_to_invoice < 0):
                 if float_is_zero(line.qty_to_invoice, precision_digits=precision):
                     continue
@@ -909,6 +912,17 @@ class AccountInvoice(models.Model):
         for (order, name) in todo:
             order.message_post(body=_("Invoice %s paid") % (name))
         return res
+
+    @api.model
+    def _refund_cleanup_lines(self, lines):
+        result = super(AccountInvoice, self)._refund_cleanup_lines(lines)
+        if self.env.context.get('mode') == 'modify':
+            for i in xrange(0, len(lines)):
+                for name, field in lines[i]._fields.iteritems():
+                    if name == 'sale_line_ids':
+                        result[i][2][name] = [(6, 0, lines[i][name].ids)]
+                        lines[i][name] = False
+        return result
 
     @api.multi
     def order_lines_layouted(self):

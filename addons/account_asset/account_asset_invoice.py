@@ -17,8 +17,9 @@ class AccountInvoice(models.Model):
         result = super(AccountInvoice, self).action_move_create()
         for inv in self:
             if inv.number:
-                if self.env['account.asset.asset'].sudo().search([('code', '=', inv.number)]):
-                    raise Warning(_('You already have assets with the reference %s.\nPlease delete these assets before creating new ones for this invoice.') % (inv.number,))
+                asset_ids = self.env['account.asset.asset'].sudo().search([('invoice_id', '=', inv.id), ('company_id', '=', inv.company_id.id)])
+                if asset_ids:
+                    asset_ids.write({'active': False})
             inv.invoice_line_ids.asset_create()
         return result
 
