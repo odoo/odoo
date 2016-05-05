@@ -37,6 +37,7 @@ class Task(models.Model):
             task.effective_hours = sum(task.timesheet_ids.mapped('unit_amount'))
             task.remaining_hours = task.planned_hours - task.effective_hours - task.children_hours
             task.total_hours = max(task.planned_hours, task.effective_hours)
+            task.total_hours_spent = task.effective_hours + task.children_hours
             task.delay_hours = max(-task.remaining_hours, 0.0)
 
             if task.stage_id and task.stage_id.fold:
@@ -49,6 +50,7 @@ class Task(models.Model):
     remaining_hours = fields.Float(compute='_hours_get', store=True, string='Remaining Hours', help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
     effective_hours = fields.Float(compute='_hours_get', store=True, string='Hours Spent', help="Computed using the sum of the task work done.")
     total_hours = fields.Float(compute='_hours_get', store=True, string='Total', help="Computed as: Time Spent + Remaining Time.")
+    total_hours_spent = fields.Float(compute='_hours_get', store=True, string='Total Hours', help="Computed as: Time Spent + Sub-tasks Hours.")
     progress = fields.Float(compute='_hours_get', store=True, string='Working Time Recorded', group_operator="avg", default=0.0)
     delay_hours = fields.Float(compute='_hours_get', store=True, string='Delay Hours', help="Computed as difference between planned hours by the project manager and the total hours of the task.")
     children_hours = fields.Float(compute='_hours_get', store=True, string='Sub-tasks Hours', help="Sum of the planned hours of all sub-tasks (when a sub-task is closed or its spent hours exceed its planned hours, spent hours are counted instead)")
