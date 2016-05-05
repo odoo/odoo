@@ -22,6 +22,7 @@
 from operator import itemgetter
 import time
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp import api
 
@@ -317,7 +318,8 @@ class res_partner(osv.osv):
         return False
 
     def mark_as_reconciled(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'last_reconciliation_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
+        self.pool['account.move.reconcile'].check_access_rights(cr, uid, 'write')
+        return self.write(cr, SUPERUSER_ID, ids, {'last_reconciliation_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
     _columns = {
         'vat_subjected': fields.boolean('VAT Legal Statement', help="Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement."),
