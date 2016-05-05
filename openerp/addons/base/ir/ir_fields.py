@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
 import functools
-import operator
 import itertools
 import time
 
@@ -246,7 +245,7 @@ class ir_fields_converter(orm.Model):
         tnx_ids = Translations.search(
             cr, uid, [('type', 'in', types), ('src', '=', src)], context=context)
         tnx = Translations.read(cr, uid, tnx_ids, ['value'], context=context)
-        result = tnx_cache[types][src] = map(operator.itemgetter('value'), tnx)
+        result = tnx_cache[types][src] = [t['value'] for t in tnx if t['value'] is not False]
         return result
 
     def _str_to_selection(self, cr, uid, model, column, value, context=None):
