@@ -84,50 +84,42 @@ class Lead(models.Model):
 
     @api.multi
     def search_geo_partner(self):
+        def _filter_partners(partners, lat, long, lat1, long1):
+            return partners.filtered(lambda p:
+                p.partner_latitude > lat - lat1 and
+                p.partner_latitude < lat + lat1 and
+                p.partner_longitude > long - long1 and
+                p.partner_longitude < long + long1
+            )
         Partner = self.env['res.partner']
         partners_dict = {}
         self.assign_geo_localize()
         for lead in self.filtered(lambda lead: lead.country_id):
-            partners = Partner
             latitude = lead.partner_latitude
             longitude = lead.partner_longitude
             if latitude and longitude:
-                # 1. first way: in the same country, small area
+                # Search partners from anywhere in same country
                 partners = Partner.search([
                     ('partner_weight', '>', 0),
-                    ('partner_latitude', '>', latitude - 2), ('partner_latitude', '<', latitude + 2),
-                    ('partner_longitude', '>', longitude - 1.5), ('partner_longitude', '<', longitude + 1.5),
                     ('country_id', '=', lead.country_id.id),
                 ])
+                # Try to filter partners by area
+                if partners:
+                    # 1. first way: in the same country, small area
+                    partners_by_area = _filter_partners(partners, latitude, longitude, 2, 1.5)
 
-                # 2. second way: in the same country, big area
-                if not partners:
-                    partners = Partner.search([
-                        ('partner_weight', '>', 0),
-                        ('partner_latitude', '>', latitude - 4), ('partner_latitude', '<', latitude + 4),
-                        ('partner_longitude', '>', longitude - 3), ('partner_longitude', '<' , longitude + 3),
-                        ('country_id', '=', lead.country_id.id),
-                    ])
+                    # 2. second way: in the same country, big area
+                    if not partners_by_area:
+                        partners_by_area = _filter_partners(partners, latitude, longitude, 4, 3)
 
-                # 3. third way: in the same country, extra large area
-                if not partners:
-                    partners = Partner.search([
-                        ('partner_weight','>', 0),
-                        ('partner_latitude','>', latitude - 8), ('partner_latitude','<', latitude + 8),
-                        ('partner_longitude','>', longitude - 8), ('partner_longitude','<', longitude + 8),
-                        ('country_id', '=', lead.country_id.id),
-                    ])
+                    # 3. third way: in the same country, extra large area
+                    if not partners_by_area:
+                        partners_by_area = _filter_partners(partners, latitude, longitude, 8, 8)
 
-                # 5. fifth way: anywhere in same country
-                if not partners:
-                    # still haven't found any, let's take all partners in the country!
-                    partners = Partner.search([
-                        ('partner_weight', '>', 0),
-                        ('country_id', '=', lead.country_id.id),
-                    ])
-
-                # 6. sixth way: closest partner whatsoever, just to have at least one result
-                if not partners:
+                    # 4. fourth way: if not found any partners by area then take all partners in the country
+                    partners = partners_by_area or partners
+                else:
+                    # 5. fifth way: closest partner whatsoever, just to have at least one result
                     # warning: point() type takes (longitude, latitude) as parameters in this order!
                     self._cr.execute("""SELECT id, distance
                                   FROM  (select id, (point(partner_longitude, partner_latitude) <-> point(%s,%s)) AS distance FROM res_partner
@@ -138,7 +130,7 @@ class Lead(models.Model):
                                   ORDER BY distance LIMIT 1""", (longitude, latitude))
                     res = self._cr.dictfetchone()
                     if res:
-                        partners += Partner.browse(res['id'])
+                        partners = Partner.browse(res['id'])
 
                 total_weight = 0
                 toassign = []
