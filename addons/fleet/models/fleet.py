@@ -657,8 +657,4 @@ class FleetVehicleLogContract(models.Model):
         self.scheduler_manage_auto_costs()
         self.scheduler_manage_contract_expiration()
 
-class FleetContractState(models.Model):
-    _name = 'fleet.contract.state'
-    _description = 'Contains the different possible status of a leasing contract'
 
-    name = fields.Char('Contract Status', required=True)
