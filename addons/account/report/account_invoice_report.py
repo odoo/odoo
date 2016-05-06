@@ -46,7 +46,7 @@ class AccountInvoiceReport(models.Model):
     price_average = fields.Float(string='Average Price', readonly=True, group_operator="avg")
     user_currency_price_average = fields.Float(string="Average Price", compute='_compute_amounts_in_user_currency', digits=0)
     currency_rate = fields.Float(string='Currency Rate', readonly=True)
-    nbr = fields.Integer(string='# of Invoices', readonly=True)  # TDE FIXME master: rename into nbr_lines
+    nbr = fields.Integer(string='# of Lines', readonly=True)  # TDE FIXME master: rename into nbr_lines
     type = fields.Selection([
         ('out_invoice', 'Customer Invoice'),
         ('in_invoice', 'Vendor Bill'),
@@ -102,12 +102,12 @@ class AccountInvoiceReport(models.Model):
 
     def _sub_select(self):
         select_str = """
-                SELECT min(ail.id) AS id,
+                SELECT ail.id AS id,
                     ai.date_invoice AS date,
                     ail.product_id, ai.partner_id, ai.payment_term_id, ail.account_analytic_id,
                     u2.name AS uom_name,
                     ai.currency_id, ai.journal_id, ai.fiscal_position_id, ai.user_id, ai.company_id,
-                    count(ail.*) AS nbr,
+                    1 AS nbr,
                     ai.type, ai.state, pt.categ_id, ai.date_due, ai.account_id, ail.account_id AS account_line_id,
                     ai.partner_bank_id,
                     SUM(CASE
@@ -146,7 +146,7 @@ class AccountInvoiceReport(models.Model):
 
     def _group_by(self):
         group_by_str = """
-                GROUP BY ail.product_id, ail.account_analytic_id, ai.date_invoice, ai.id,
+                GROUP BY ail.id, ail.product_id, ail.account_analytic_id, ai.date_invoice, ai.id,
                     ai.partner_id, ai.payment_term_id, u2.name, u2.id, ai.currency_id, ai.journal_id,
                     ai.fiscal_position_id, ai.user_id, ai.company_id, ai.type, ai.state, pt.categ_id,
                     ai.date_due, ai.account_id, ail.account_id, ai.partner_bank_id, ai.residual_company_signed,
