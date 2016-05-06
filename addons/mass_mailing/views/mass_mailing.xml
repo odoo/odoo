@@ -485,8 +485,8 @@
                                         <field name="create_date" readonly="1" attrs="{'invisible': [('create_date', '=', False)]}"/>
                                         <field name="sent_date" readonly="1" attrs="{'invisible': [('sent_date', '=', False)]}"/>
                                     </group>
-                                    <group string="Campaign">
-                                        <field name="mass_mailing_campaign_id" groups="mass_mailing.group_mass_mailing_campaign" string="Campaign" on_change="onchange_mass_mailing_campaign_id(mass_mailing_campaign_id)"/>
+                                    <group string="Campaign" groups="mass_mailing.group_mass_mailing_campaign">
+                                        <field name="mass_mailing_campaign_id" string="Campaign" on_change="onchange_mass_mailing_campaign_id(mass_mailing_campaign_id)"/>
                                         <label for="contact_ab_pc"/>
                                         <div>
                                             <field name="contact_ab_pc" class="oe_inline"/> %
