@@ -129,9 +129,9 @@ class project(osv.osv):
 
     def _get_visibility_selection(self, cr, uid, context=None):
         """ Overriden in portal_project to offer more options """
-        return [('portal', _('Customer Project: visible in portal if the customer is a follower')),
-                ('employees', _('All Employees Project: all employees can access')),
-                ('followers', _('Private Project: followers only'))]
+        return [('portal', _('Customer project')),
+                ('employees', _('All employees')),
+                ('followers', _('Private: followers only'))]
 
     def attachment_tree_view(self, cr, uid, ids, context):
         task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
