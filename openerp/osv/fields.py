@@ -947,6 +947,7 @@ class many2many(_column):
         args['relation'] = self._rel
         args['column1'] = self._id1
         args['column2'] = self._id2
+        args['auto_join'] = self._auto_join
         args['limit'] = self._limit
         return args
 
