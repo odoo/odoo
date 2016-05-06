@@ -448,6 +448,14 @@ class TestNewFields(common.TransactionCase):
             [('author_partner.name', '=', 'Demo User')])
         self.assertEqual(messages, self.env.ref('test_new_api.message_0_1'))
 
+    def test_60_x2many_domain(self):
+        """ test the cache consistency of a x2many field with a domain """
+        discussion = self.env.ref('test_new_api.discussion_0')
+        message = discussion.messages[0]
+        self.assertNotIn(message, discussion.important_messages)
+
+        message.important = True
+        self.assertIn(message, discussion.important_messages)
 
 
 class TestMagicFields(common.TransactionCase):

@@ -971,7 +971,7 @@ class Field(object):
         # invalidate the fields that depend on self, and prepare recomputation
         spec = [(self, records._ids)]
         for field, path in self._triggers:
-            if path and field.store:
+            if path and field.compute and field.store:
                 # don't move this line to function top, see log
                 env = records.env(user=SUPERUSER_ID, context={'active_test': False})
                 target = env[field.model_name].search([(path, 'in', records.ids)])
@@ -1722,6 +1722,15 @@ class _RelationalMulti(_Relational):
             # filter values to keep the accessible records only
             for record in records:
                 record[self.name] = record[self.name].filtered(accessible)
+
+    def setup_triggers(self, env):
+        super(_RelationalMulti, self).setup_triggers(env)
+        # also invalidate self when fields appearing in the domain are modified
+        if isinstance(self.domain, list):
+            comodel = env[self.comodel_name]
+            for arg in self.domain:
+                if isinstance(arg, (tuple, list)) and isinstance(arg[0], basestring):
+                    self._setup_dependency([self.name], comodel, arg[0].split('.'))
 
 
 class One2many(_RelationalMulti):
