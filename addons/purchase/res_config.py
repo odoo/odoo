@@ -34,10 +34,10 @@ class purchase_config_settings(osv.osv_memory):
             help="Calls for tenders are used when you want to generate requests for quotations to several vendors for a given set of products.\n"
                  "You can configure per product if you directly do a Request for Quotation "
                  "to one vendor or if you want a Call for Tenders to compare offers from several vendors."),
-        'group_warning': fields.selection([
+        'group_warning_purchase': fields.selection([
             (0, 'All the products and the customers can be used in purchase orders'),
             (1, 'An informative or blocking warning can be set on a product or a customer')
-            ], "Warning", implied_group='purchase.group_warning'),
+            ], "Warning", implied_group='purchase.group_warning_purchase'),
         'module_stock_dropshipping': fields.selection([
             (0, 'Suppliers always deliver to your warehouse(s)'),
             (1, "Allow suppliers to deliver directly to your customers")
