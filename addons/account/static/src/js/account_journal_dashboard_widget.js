@@ -22,6 +22,7 @@ var JournalDashboardGraph = kanban_widgets.AbstractField.extend({
                     self.$svg.addClass('o_graph_linechart');
 
                     self.chart = nv.models.lineChart();
+                    self.chart.forceY([0]);
                     self.chart.options({
                         x: function(d, u) { return u },
                         margin: {'left': 0, 'right': 0, 'top': 0, 'bottom': 0},
