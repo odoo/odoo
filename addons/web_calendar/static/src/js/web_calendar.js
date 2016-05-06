@@ -94,6 +94,9 @@ var CalendarView = View.extend({
         confirm_on_delete: true,
     }),
     display_name: _lt('Calendar'),
+    events: {
+        'click .o_calendar_sidebar_toggler': 'toggle_full_width',
+    },
     icon: 'fa-calendar',
     quick_create_instance: widgets.QuickCreate,
     template: "CalendarView",
@@ -217,6 +220,7 @@ var CalendarView = View.extend({
     },
     start: function () {
         this.$calendar = this.$(".o_calendar_widget");
+        this.$sidebar_container = this.$(".o_calendar_sidebar_container");
         this.$el.addClass(this.fields_view.arch.attrs.class);
         this.shown.done(this._do_show_init.bind(this));
         return this._super();
@@ -269,6 +273,20 @@ var CalendarView = View.extend({
         } else {
             this.$('.o_calendar_buttons').replaceWith(this.$buttons);
         }
+    },
+    toggle_full_width: function () {
+        var full_width = (localStorage.web_calendar_full_width !== 'true');
+        localStorage.web_calendar_full_width = full_width;
+        this.toggle_sidebar(!full_width);
+        this.$calendar.fullCalendar('render'); // to reposition the events
+    },
+    toggle_sidebar: function (display) {
+        this.sidebar.do_toggle(display);
+        this.$('.o_calendar_sidebar_toggler')
+            .toggleClass('fa-close', display)
+            .toggleClass('fa-chevron-left', !display)
+            .attr('title', display ? _('Close Sidebar') : _('Open Sidebar'));
+        this.$sidebar_container.toggleClass('o_sidebar_hidden', !display);
     },
     get_fc_init_options: function () {
         //Documentation here : http://arshaw.com/fullcalendar/docs/
@@ -358,7 +376,7 @@ var CalendarView = View.extend({
         if (!this.sidebar) {
             var translate = get_fc_defaultOptions();
             this.sidebar = new widgets.Sidebar(this);
-            defs.push(this.sidebar.appendTo(this.$('.o_calendar_sidebar_container')));
+            defs.push(this.sidebar.appendTo(this.$sidebar_container));
 
             this.$small_calendar = this.$(".o_calendar_mini");
             this.$small_calendar.datepicker({ 
@@ -369,6 +387,10 @@ var CalendarView = View.extend({
             });
 
             defs.push(this.extraSideBar());
+
+            // Add show/hide button and possibly hide the sidebar
+            this.$sidebar_container.append($('<i>').addClass('o_calendar_sidebar_toggler fa'));
+            this.toggle_sidebar((localStorage.web_calendar_full_width !== 'true'));
         }
         this.$calendar.fullCalendar(this.get_fc_init_options());
 
