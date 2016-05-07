@@ -1,34 +1,26 @@
-# -*- coding: ascii -*-
-import copy
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.import copy
 import logging
 
 from itertools import groupby
-from lxml import etree, html
+from lxml import etree
 
-from openerp import SUPERUSER_ID, api, tools
-from openerp.addons.website.models import website
-from openerp.http import request
-from openerp.osv import osv, fields
+from . import website
+from odoo import api, fields, models, tools
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
-
-class view(osv.osv):
+class View(models.Model):
     _name = "ir.ui.view"
     _inherit = ["ir.ui.view", "website.seo.metadata"]
-    _columns = {
-        'page': fields.boolean("Whether this view is a web page template (complete)"),
-        'customize_show': fields.boolean("Show As Optional Inherit"),
-        'website_id': fields.many2one('website', ondelete='cascade', string="Website"),
-    }
 
-    _defaults = {
-        'page': False,
-        'customize_show': False,
-    }
+    page = fields.Boolean("Whether this view is a web page template (complete)")
+    customize_show = fields.Boolean("Show As Optional Inherit")
+    website_id = fields.Many2one('website', ondelete='cascade', string="Website")
 
-    def unlink(self, cr, uid, ids, context=None):
-        res = super(view, self).unlink(cr, uid, ids, context=context)
+    def unlink(self):
+        res = super(View, self).unlink()
         self.clear_caches()
         return res
 
@@ -51,31 +43,30 @@ class view(osv.osv):
         Filter current recordset only keeping the most suitable view per distinct key
         """
         filtered = self.browse([])
-        for _, group in groupby(self, key=lambda r:r.key):
-            filtered += sorted(group, key=lambda r:r._sort_suitability_key())[0]
+        for _, group in groupby(self, key=lambda r: r.key):
+            filtered += sorted(group, key=lambda r: r._sort_suitability_key())[0]
         return filtered
 
-    def _view_obj(self, cr, uid, view_id, context=None):
+    def _view_obj(self, view_id):
         if isinstance(view_id, basestring):
-            if 'website_id' in (context or {}):
-                domain = [('key', '=', view_id), '|', ('website_id', '=', False), ('website_id', '=', context.get('website_id'))]
-                rec_id = self.search(cr, uid, domain, order='website_id', context=context)
+            if 'website_id' in self.env.context:
+                domain = [('key', '=', view_id), '|', ('website_id', '=', False), ('website_id', '=', self.env.context['website_id'])]
+                rec = self.search(domain, order='website_id')
             else:
-                rec_id = self.search(cr, uid, [('key', '=', view_id)], context=context)
-            if rec_id:
-                return self.browse(cr, uid, rec_id, context=context).filter_duplicate()
+                rec = self.search([('key', '=', view_id)])
+            if rec:
+                return rec.filter_duplicate()
             else:
-                return self.pool['ir.model.data'].xmlid_to_object(
-                    cr, uid, view_id, raise_if_not_found=True, context=context)
+                return self.evn.ref(view_id)
         elif isinstance(view_id, (int, long)):
-            return self.browse(cr, uid, view_id, context=context)
+            return self.browse(view_id)
 
         # assume it's already a view object (WTF?)
         return view_id
 
     # Returns all views (called and inherited) related to a view
     # Used by translation mechanism, SEO and optional templates
-    def _views_get(self, cr, uid, view_id, options=True, bundles=False, context=None, root=True):
+    def _views_get(self, view_id, options=True, bundles=False, root=True):
         """ For a given view ``view_id``, should return:
 
         * the view itself
@@ -85,10 +76,9 @@ class view(osv.osv):
         """
 
         try:
-            view = self._view_obj(cr, uid, view_id, context=context)
+            view = self._view_obj(view_id)
         except ValueError:
             _logger.warning("Could not find view object with view_id '%s'" % (view_id))
-            # Shall we log that ? Yes, you should !
             return []
 
         while root and view.inherit_id:
@@ -102,49 +92,46 @@ class view(osv.osv):
             xpath += "| //t[@t-call-assets]"
         for child in node.xpath(xpath):
             try:
-                called_view = self._view_obj(cr, uid, child.get('t-call', child.get('t-call-assets')), context=context)
+                called_view = self._view_obj(child.get('t-call', child.get('t-call-assets')))
             except ValueError:
                 continue
             if called_view not in result:
-                result += self._views_get(cr, uid, called_view, options=options, bundles=bundles, context=context)
+                result += self._views_get(called_view, options=options, bundles=bundles)
 
         extensions = view.inherit_children_ids
         if not options:
             # only active children
-            extensions = (v for v in view.inherit_children_ids if v.active)
+            extensions = view.inherit_children_ids.filtered('active')
 
         # Keep options in a deterministic order regardless of their applicability
         for extension in sorted(extensions, key=lambda v: v.id):
-            for r in self._views_get(
-                    cr, uid, extension,
+            for r in self._views_get(extension,
                     # only return optional grandchildren if this child is enabled
                     options=extension.active,
-                    context=context, root=False):
+                    root=False):
                 if r not in result:
                     result.append(r)
         return result
 
-    @tools.ormcache_context('uid', 'xml_id', keys=('website_id',))
-    def get_view_id(self, cr, uid, xml_id, context=None):
-        if context and 'website_id' in context and not isinstance(xml_id, (int, long)):
-            domain = [('key', '=', xml_id), '|', ('website_id', '=', context['website_id']), ('website_id', '=', False)]
-            [view_id] = self.search(cr, uid, domain, order='website_id', limit=1, context=context) or [None]
+    @api.model
+    @tools.ormcache_context('self.env.uid', 'xml_id', keys=('website_id',))
+    def get_view_id(self, xml_id):
+        if 'website_id' in self.env.context and not isinstance(xml_id, (int, long)):
+            domain = [('key', '=', xml_id), '|', ('website_id', '=', self.env.context['website_id']), ('website_id', '=', False)]
+            view_id = self.search(domain, order='website_id', limit=1).id or [None]
             if not view_id:
                 _logger.warning("Could not find view object with xml_id '%s'" % (xml_id))
-                raise ValueError('View %r in website %r not found' % (xml_id, context['website_id']))
+                raise ValueError('View %r in website %r not found' % (xml_id, self.env.context['website_id']))
         else:
-            view_id = super(view, self).get_view_id(cr, uid, xml_id, context=context)
+            view_id = super(View, self).get_view_id(xml_id)
         return view_id
 
-    @api.cr_uid_ids_context
-    def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
+    @api.multi
+    def render(self, values=None, engine='ir.qweb'):
+        local_context = {}
         if request and getattr(request, 'website_enabled', False):
             engine = 'ir.qweb'
-
-            if isinstance(id_or_xml_id, list):
-                id_or_xml_id = id_or_xml_id[0]
-
-            qcontext = self._prepare_qcontext(cr, uid, context=context)
+            qcontext = self._prepare_qcontext()
 
             # add some values
             if values:
@@ -153,78 +140,71 @@ class view(osv.osv):
             # in edit mode ir.ui.view will tag nodes
             if not qcontext.get('translatable') and not qcontext.get('rendering_bundle'):
                 if qcontext.get('editable'):
-                    context = dict(context, inherit_branding=True)
-                elif request.registry['res.users'].has_group(cr, uid, 'base.group_website_publisher'):
-                    context = dict(context, inherit_branding_auto=True)
+                    local_context['inherit_branding'] = True
+                elif self.env.user.has_group('base.group_website_publisher'):
+                    local_context['inherit_branding_auto'] = True
 
-            view_obj = request.website.get_template(id_or_xml_id)
             if 'main_object' not in qcontext:
-                qcontext['main_object'] = view_obj
+                qcontext['main_object'] = self
 
             values = qcontext
+        return super(View, self.with_context(**local_context)).render(values=values, engine=engine)
 
-        return super(view, self).render(cr, uid, id_or_xml_id, values=values, engine=engine, context=context)
-
-    def _prepare_qcontext(self, cr, uid, context=None):
-        if not context:
-            context = {}
-
-        company = self.pool['res.company'].browse(cr, SUPERUSER_ID, request.website.company_id.id, context=context)
-
+    @api.model
+    def _prepare_qcontext(self):
+        local_context = dict(self.env.context)
+        company = self.env['res.company'].sudo().browse(request.website.company_id.id)
         editable = request.website.is_publisher()
-        translatable = editable and context.get('lang') != request.website.default_lang_code
+        translatable = editable and local_context.get('lang') != request.website.default_lang_code
         editable = not translatable and editable
 
         qcontext = dict(
-            context.copy(),
+            local_context,
             website=request.website,
             url_for=website.url_for,
             slug=website.slug,
             res_company=company,
-            user_id=self.pool.get("res.users").browse(cr, uid, uid),
+            user_id=self.env['res.users'].browse(self._uid),
             default_lang_code=request.website.default_lang_code,
             languages=request.website.get_languages(),
             translatable=translatable,
             editable=editable,
-            menu_data=self.pool['ir.ui.menu'].load_menus_root(cr, uid, context=context) if request.website.is_user() else None,
+            menu_data=self.env['ir.ui.menu'].load_menus_root() if request.website.is_user() else None,
         )
         return qcontext
 
-    def customize_template_get(self, cr, uid, key, full=False, bundles=False, context=None):
+    def customize_template_get(self, key, full=False, bundles=False):
         """ Get inherit view's informations of the template ``key``. By default, only
         returns ``customize_show`` templates (which can be active or not), if
         ``full=True`` returns inherit view's informations of the template ``key``.
         ``bundles=True`` returns also the asset bundles
         """
-        imd = self.pool['ir.model.data']
-        theme_view_id = imd.xmlid_to_res_id(cr, uid, 'website.theme')
-        user = self.pool['res.users'].browse(cr, uid, context=context)
-        user_groups = set(user.groups_id)
-        views = self._views_get(
-            cr, uid, key, bundles=bundles,
-            context=dict(context or {}, active_test=False))
+        IrModelData = self.env['ir.model.data']
+        theme_view_id = IrModelData.xmlid_to_res_id('website.theme')
+        user_groups = set(self.env.user.groups_id)
+        views = self.with_context(active_test=False)._views_get(key, bundles=bundles)
         done = set()
         result = []
-        for v in views:
-            if not user_groups.issuperset(v.groups_id):
+        for view in views:
+            if not user_groups.issuperset(view.groups_id):
                 continue
-            if full or (v.customize_show and v.inherit_id.id != theme_view_id):
-                if v.inherit_id not in done:
+            if full or (view.customize_show and view.inherit_id.id != theme_view_id):
+                if view.inherit_id not in done:
                     result.append({
-                        'name': v.inherit_id.name,
-                        'id': v.id,
-                        'key': v.key,
-                        'inherit_id': v.inherit_id.id,
+                        'name': view.inherit_id.name,
+                        'id': view.id,
+                        'key': view.key,
+                        'inherit_id': view.inherit_id.id,
                         'header': True,
                         'active': False
                     })
-                    done.add(v.inherit_id)
+                    done.add(view.inherit_id)
                 result.append({
-                    'name': v.name,
-                    'id': v.id,
-                    'key': v.key,
-                    'inherit_id': v.inherit_id.id,
+                    'name': view.name,
+                    'id': view.id,
+                    'key': view.key,
+                    'inherit_id': view.inherit_id.id,
                     'header': False,
-                    'active': v.active,
+                    'active': view.active,
                 })
         return result
