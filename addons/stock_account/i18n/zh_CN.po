@@ -3,14 +3,15 @@
 # * stock_account
 # 
 # Translators:
-# jeffery chen fan <jeffery9@gmail.com>, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:26+0000\n"
-"PO-Revision-Date: 2016-03-12 02:06+0000\n"
-"Last-Translator: Joroy <13637815@qq.com>\n"
+"PO-Revision-Date: 2016-05-07 03:34+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -151,7 +152,7 @@ msgstr "日期"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_deferred_revenue_category_id
 msgid "Deferred Revenue Type"
-msgstr "待摊收益类型"
+msgstr "递延收入类型"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_display_name
@@ -182,7 +183,7 @@ msgstr "ID"
 msgid ""
 "If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
 "If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
-msgstr "如果成本价增加，库存核算科目为借方，出库科目为贷方，其值=(相差的金额 * 数量)。\n如果成本价减少，库存核算科目为贷方，入库科目为借方。"
+msgstr "如果成本价增加，库存计价科目为借方，出库科目为贷方，其值=(相差的金额 * 数量)。\n如果成本价减少，库存计价科目为贷方，入库科目为借方。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_valuation
@@ -193,7 +194,7 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr "如果一个产品能够被不断的估值，系统将会自动创建与标识为特别“成本方法”的带有产品价格的库存移动一致的会计分录在产品种类上设置的库存变变更科目的余额将代表目前的库存价值而入库科目和出库科目将会是产品出入库的对应科目"
+msgstr "如果一个产品启用了永续计价，系统将会自动创建与标识为特别“成本方法”的带有产品价格的库存移动一致的会计分录在产品种类上设置的库存变变更科目的余额将代表目前的库存价值而入库科目和出库科目将会是产品出入库的对应科目"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_valuation
@@ -205,7 +206,7 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr "如果一个产品能够被不断的估值，系统将会自动创建与标识为特别“成本方法”的带有产品价格的库存移动一致的会计分录在产品种类上设置的库存变变更科目的余额将代表目前的库存价值而入库科目和出库科目将会是产品出入库的对应科目"
+msgstr "如果一个产品启用了永续计价，系统将会自动创建与标识为特别“成本方法”的带有产品价格的库存移动一致的会计分录在产品种类上设置的库存变变更科目的余额将代表目前的库存价值而入库科目和出库科目将会是产品出入库的对应科目"
 
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
@@ -217,7 +218,7 @@ msgstr "在产品的成本计算中包含到岸成本"
 msgid ""
 "Install the module that allows to affect landed costs on pickings, and split"
 " them onto the different products."
-msgstr "安装，允许影响到采摘到岸成本的模块，然后将它们拆分到不同的产品。"
+msgstr "安装此模块，允许影响分拣的到岸成本，将它们拆分到不同的产品。"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -227,7 +228,7 @@ msgstr "库存"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Locations"
-msgstr "库存库位"
+msgstr "库存位置"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_valuation
@@ -276,13 +277,13 @@ msgstr "最后修改日"
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_write_uid
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_write_uid
 msgid "Last Updated by"
-msgstr "最后更新"
+msgstr "最近更新者"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_write_date
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_write_date
 msgid "Last Updated on"
-msgstr "最后更新"
+msgstr "最近更新时间"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_location_id
@@ -293,7 +294,7 @@ msgstr "位置"
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_inventory_valuation
 msgid "Manage Inventory Valuation and Costing Methods"
-msgstr "管理库存评估和成本核算方法"
+msgstr "管理库存计价和成本方法"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -304,7 +305,7 @@ msgstr "分录"
 #: code:addons/stock_account/product.py:124
 #, python-format
 msgid "No difference between standard price and new price!"
-msgstr "标准价和新价格之间没有不同！"
+msgstr "标准价和新价格之间没有差异！"
 
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
@@ -320,7 +321,7 @@ msgstr "作业日期"
 #: selection:product.category,property_valuation:0
 #: selection:product.template,property_valuation:0
 msgid "Periodic (manual)"
-msgstr "定期的（手工）"
+msgstr "定期（手工）"
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
@@ -331,7 +332,7 @@ msgstr "定期库存计价（建议）"
 #: selection:product.category,property_valuation:0
 #: selection:product.template,property_valuation:0
 msgid "Perpetual (automated)"
-msgstr "持续的（自动的）"
+msgstr "永续（自动的）"
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
@@ -371,7 +372,7 @@ msgstr "产品生命时间"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_quantity
 msgid "Product Quantity"
-msgstr "数量"
+msgstr "产品数量"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_removal_time
@@ -399,7 +400,7 @@ msgstr "份"
 #: selection:product.category,property_cost_method:0
 #: selection:product.template,property_cost_method:0
 msgid "Real Price"
-msgstr "实际价"
+msgstr "实际价格"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
@@ -420,7 +421,7 @@ msgstr "序列号"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_source
 msgid "Source"
-msgstr "原文"
+msgstr "来源"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_uos_id
@@ -482,7 +483,7 @@ msgstr "库存分类账"
 #: model:ir.model,name:stock_account.model_stock_move
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_move_id
 msgid "Stock Move"
-msgstr "库存调拨"
+msgstr "库存移动"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_output_categ_id
