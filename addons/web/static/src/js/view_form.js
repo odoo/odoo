@@ -726,14 +726,16 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         $(e.target).attr("disabled", true);
         return this.save().done(function(result) {
             self.trigger("save", result);
-            self.reload().then(function() {
+            self.reload().always(function(){
+                $(e.target).attr("disabled", false);
+            }).then(function() {
                 self.to_view_mode();
                 var menu = instance.webclient.menu;
                 if (menu) {
                     menu.do_reload_needaction();
                 }
             });
-        }).always(function(){
+        }).fail(function(){
             $(e.target).attr("disabled", false);
         });
     },
