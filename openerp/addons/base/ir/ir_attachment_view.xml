@@ -66,8 +66,8 @@
                 <search string="Attachments">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('datas_fname','ilike',self)]" string="Attachment"/>
                     <field name="create_date"/>
-                    <filter string="URL" domain="[('type','=','url')]"/>
-                    <filter string="Binary" domain="[('type','=','binary')]"/>
+                    <filter name="url_filter" string="URL" domain="[('type','=','url')]"/>
+                    <filter name="binary_filter" string="Binary" domain="[('type','=','binary')]"/>
                     <separator/>
                     <filter name="my_documents_filter"
                         string="My Document(s)"
