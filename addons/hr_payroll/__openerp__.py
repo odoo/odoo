@@ -3,7 +3,6 @@
 
 {
     'name': 'Payroll',
-    'version': '1.0',
     'category': 'Human Resources',
     'sequence': 38,
     'description': """
@@ -21,7 +20,6 @@ Generic Payroll system.
     """,
     'website': 'https://www.odoo.com/page/employees',
     'depends': [
-        'hr',
         'hr_contract',
         'hr_holidays',
         'decimal_precision',
@@ -29,13 +27,13 @@ Generic Payroll system.
     ],
     'data': [
         'security/hr_payroll_security.xml',
+        'security/ir.model.access.csv',
         'wizard/hr_payroll_payslips_by_employees_views.xml',
         'views/hr_payroll_views.xml',
         'views/hr_payroll_workflow.xml',
         'data/hr_payroll_sequence.xml',
         'views/hr_payroll_report.xml',
         'data/hr_payroll_data.xml',
-        'security/ir.model.access.csv',
         'wizard/hr_payroll_contribution_register_report_views.xml',
         'views/res_config_views.xml',
         'views/report_contributionregister_templates.xml',
@@ -46,7 +44,4 @@ Generic Payroll system.
         'test/payslip.yml',
     ],
     'demo': ['data/hr_payroll_demo.xml'],
-    'installable': True,
-    'auto_install': False,
-    'application': False,
 }
