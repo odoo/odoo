@@ -110,3 +110,12 @@ class ProductTemplate(models.Model):
     asset_category_id = fields.Many2one('account.asset.category', string='Asset Type', ondelete="restrict")
     deferred_revenue_category_id = fields.Many2one('account.asset.category', string='Deferred Revenue Type', ondelete="restrict")
 
+    @api.onchange('deferred_revenue_category_id')
+    def onchange_deferred_revenue(self):
+        if self.deferred_revenue_category_id:
+            self.property_account_income = self.deferred_revenue_category_id.account_asset_id
+
+    @api.onchange('asset_category_id')
+    def onchange_asset(self):
+        if self.asset_category_id:
+            self.property_account_expense = self.asset_category_id.account_asset_id
