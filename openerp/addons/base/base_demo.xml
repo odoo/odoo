@@ -46,7 +46,12 @@
         </record>
 
         <record model="res.partner" id="base.partner_root">
-            <field name="email">admin@yourcompany.example.com</field>
+            <field name="street2">40 Chaussée de Namur</field>
+            <field name="city">Grand-Rosière</field>
+            <field name="zip">1367</field>
+            <field name='country_id' ref='base.be'/>
+            <field name="phone">0032 81 81 37 00</field>
+            <field name="email">info@odoo.com</field>
             <field name="tz">Europe/Brussels</field>
             <field name="image" type="base64" file="base/static/img/partner_root-image.jpg"/>
         </record>
