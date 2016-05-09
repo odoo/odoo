@@ -95,6 +95,15 @@ class AccountInvoiceLine(models.Model):
 
         return res
 
+    @api.multi
+    def _set_additional_fields(self, invoice_type):
+        for line in self:
+            if invoice_type == 'out_invoice':
+                line.asset_category_id = line.product_id.product_tmpl_id.deferred_revenue_category_id.id
+            elif invoice_type == 'in_invoice':
+                line.asset_category_id = line.product_id.product_tmpl_id.asset_category_id.id
+        super(AccountInvoiceLine, self)._set_additional_fields(invoice_type)
+
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
