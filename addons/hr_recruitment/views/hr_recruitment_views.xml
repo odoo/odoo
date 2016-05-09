@@ -549,12 +549,33 @@
         id="menu_crm_case_categ0_act_job" action="crm_case_categ0_act_job" sequence="2" groups="base.group_no_one"/>
 
     <!-- Resume and Letters -->
+    <record id="ir_attachment_view_search_inherit_hr_recruitment" model="ir.ui.view">
+        <field name="name">ir.attachment.search.inherit.recruitment</field>
+        <field name="model">ir.attachment</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="base.view_attachment_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='create_date']" position="after">
+                <field name="index_content" string="Content"/>
+            </xpath>
+            <xpath expr="//filter[@name='my_documents_filter']" position="attributes">
+                <attribute name='invisible'>1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='url_filter']" position="attributes">
+                <attribute name='invisible'>1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='binary_filter']" position="attributes">
+                <attribute name='invisible'>1</attribute>
+            </xpath>
+        </field>
+    </record>
     <record model="ir.actions.act_window" id="hr_applicant_resumes">
         <field name="name">Resumes and Letters</field>
         <field name="res_model">ir.attachment</field>
         <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_id" ref="mail.view_document_file_kanban"/>
+        <field name="search_view_id" ref="ir_attachment_view_search_inherit_hr_recruitment"/>
         <field name="domain">[('res_model','=','hr.applicant')]</field>
         <field name="context">{'create': False}</field>
         <field name="help" type="html">
