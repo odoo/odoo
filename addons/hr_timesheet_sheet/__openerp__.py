@@ -30,10 +30,10 @@ The validation can be configured in the company:
     'data': [
         'security/ir.model.access.csv',
         'security/hr_timesheet_sheet_security.xml',
-        'hr_timesheet_sheet_view.xml',
         'hr_timesheet_workflow.xml',
         'hr_timesheet_sheet_data.xml',
         'views/hr_timesheet_sheet.xml',
+        'hr_timesheet_sheet_view.xml',
         'hr_dashboard.xml',
     ],
     'test':['../account/test/account_minimal_test.xml', 'test/test_hr_timesheet_sheet.yml'],
