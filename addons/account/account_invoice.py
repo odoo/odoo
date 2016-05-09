@@ -1493,6 +1493,19 @@ class account_invoice_line(models.Model):
                 unique_tax_ids = product_change_result['value']['invoice_line_tax_id']
         return {'value': {'invoice_line_tax_id': unique_tax_ids}}
 
+    @api.multi
+    def _set_additional_fields(self, invoice_type):
+        # Do not forwardport
+        """ Some modules, such as Purchase, provide a feature to add automatically pre-filled
+            invoice lines. However, these modules might not be aware of extra fields which are
+            added by extensions of the accounting module.
+            This method is intended to be overridden by these extensions, so that any new field can
+            easily be auto-filled as well.
+            :param invoice : account.invoice corresponding record
+            :rtype line : account.invoice.line record
+        """
+        pass
+
 
 class account_invoice_tax(models.Model):
     _name = "account.invoice.tax"

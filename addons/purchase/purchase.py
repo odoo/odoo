@@ -695,6 +695,7 @@ class purchase_order(osv.osv):
                 acc_id = self._choose_account_from_po_line(cr, uid, po_line, context=context)
                 inv_line_data = self._prepare_inv_line(cr, uid, acc_id, po_line, context=context)
                 inv_line_id = inv_line_obj.create(cr, uid, inv_line_data, context=context)
+                inv_line_obj._set_additional_fields(cr, uid, [inv_line_id], 'in_invoice', context=context)
                 inv_lines.append(inv_line_id)
                 po_line.write({'invoice_lines': [(4, inv_line_id)]})
 

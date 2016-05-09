@@ -1006,7 +1006,9 @@ class sale_order_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             vals = self._prepare_order_line_invoice_line(cr, uid, line, False, context)
             if vals:
-                inv_id = self.pool.get('account.invoice.line').create(cr, uid, vals, context=context)
+                ail = self.pool['account.invoice.line']
+                inv_id = ail.create(cr, uid, vals, context=context)
+                ail._set_additional_fields(cr, uid, [inv_id], 'out_invoice', context=context)
                 self.write(cr, uid, [line.id], {'invoice_lines': [(4, inv_id)]}, context=context)
                 sales.add(line.order_id.id)
                 create_ids.append(inv_id)
