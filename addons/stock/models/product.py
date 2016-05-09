@@ -68,6 +68,37 @@ class Product(models.Model):
     reordering_min_qty = fields.Float(compute='_compute_nbr_reordering_rules')
     reordering_max_qty = fields.Float(compute='_compute_nbr_reordering_rules')
 
+    @api.multi
+    def _compute_reception_count(self):
+        res = dict([(id, {'reception_count': 0}) for id in self.ids])
+        Move = self.env['stock.move']
+        moves = Move.read_group([
+            ('product_id', 'in', self.ids),
+            ('location_id.usage', '!=', 'internal'),
+            ('location_dest_id.usage', '=', 'internal'),
+            ('state','in',('confirmed','assigned','pending'))
+        ], ['product_id'], ['product_id'])
+        for move in moves:
+            product_id = move['product_id'][0]
+            self[product_id].reception_count = move['product_id_count']
+        return True
+
+    @api.multi
+    def _compute_delivery_count(self):
+        res = dict([(id, {'delivery_count': 0}) for id in self.ids])
+        Move = self.env['stock.move']
+        moves = Move.read_group([
+            ('product_id', 'in', self.ids),
+            ('location_id.usage', '=', 'internal'),
+            ('location_dest_id.usage', '!=', 'internal'),
+            ('state','in',('confirmed','assigned','pending'))
+        ], ['product_id'], ['product_id'])
+        for move in moves:
+            product_id = move['product_id'][0]
+            self[product_id].delivery_count = move['product_id_count']
+        return True
+
+
     @api.depends('stock_quant_ids', 'stock_move_ids')
     def _compute_quantities(self):
         res = self._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
