@@ -56,7 +56,7 @@
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
             <field name="partner_ref" position="after">
-                <field name="requisition_id" on_change="_onchange_requisition_id(requisition_id, partner_id)"
+                <field name="requisition_id"
                     domain="[('state', 'in', ('in_progress', 'open')), ('vendor_id', 'in', (partner_id, False))]"/>
             </field>
             <xpath expr="//field[@name='order_line']/tree" position="inside">
@@ -147,7 +147,7 @@
                     <page string="Products">
                         <field name="line_ids">
                             <tree string="Products" editable="bottom">
-                                <field name="product_id" on_change="_onchange_product_id(product_id,product_uom_id,parent.account_analytic_id,account_analytic_id,parent.schedule_date,schedule_date)"/>
+                                <field name="product_id"/>
                                 <field name="product_qty"/>
                                 <field name="qty_ordered"/>
                                 <field name="product_uom_id" groups="product.group_uom"/>
