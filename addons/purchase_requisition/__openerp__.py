@@ -22,10 +22,4 @@ keep track and order all your purchase orders.
         'report/purchase_requisition_report.xml',
         'report/report_purchaserequisition.xml',
     ],
-    'test': [
-        'test/purchase_requisition_users.yml',
-        'test/purchase_requisition_demo.yml',
-        'test/cancel_purchase_requisition.yml',
-        'test/purchase_requisition.yml',
-    ],
 }
