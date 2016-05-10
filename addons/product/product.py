@@ -86,7 +86,7 @@ class product_uom(osv.osv):
         'rounding': fields.float('Rounding Precision', digits=0, required=True,
             help="The computed quantity will be a multiple of this value. "\
                  "Use 1.0 for a Unit of Measure that cannot be further split, such as a piece."),
-        'active': fields.boolean('Active', help="By unchecking the active field you can disable a unit of measure without deleting it."),
+        'active': fields.boolean('Active', help="Uncheck the active field to disable a unit of measure without deleting it."),
         'uom_type': fields.selection([('bigger','Bigger than the reference Unit of Measure'),
                                       ('reference','Reference Unit of Measure for this category'),
                                       ('smaller','Smaller than the reference Unit of Measure')],'Type', required=1),
@@ -1245,8 +1245,8 @@ class product_packaging(osv.osv):
         'name' : fields.char('Packaging Type', required=True),
         'sequence': fields.integer('Sequence', help="The first in the sequence is the default one."),
         'product_tmpl_id': fields.many2one('product.template', string='Product'),
-        'qty' : fields.float('Quantity by Package',
-            help="The total number of products you can put by pallet or box."),
+        'qty' : fields.float('Quantity per Package',
+            help="The total number of products you can have per pallet or box."),
     }
     _defaults = {
         'sequence' : 1,
