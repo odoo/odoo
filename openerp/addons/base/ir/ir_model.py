@@ -868,10 +868,11 @@ class ir_model_data(osv.osv):
         self.loads = self.pool.model_data_reference_ids
 
     def _auto_init(self, cr, context=None):
-        super(ir_model_data, self)._auto_init(cr, context)
+        res = super(ir_model_data, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_model_data_module_name_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_model_data_module_name_index ON ir_model_data (module, name)')
+        return res
 
     @tools.ormcache()
     def _get_id(self, cr, uid, module, xml_id):
