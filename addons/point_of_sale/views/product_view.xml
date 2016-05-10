@@ -91,4 +91,15 @@
         groups="product.group_sale_pricelist"
         sequence="20"/>
 
+    <record id="product_uom_categ_form_view" model="ir.ui.view">
+        <field name="name">product.uom.categ.form.inherit</field>
+        <field name="model">product.uom.categ</field>
+        <field name="inherit_id" ref="product.product_uom_categ_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="is_pos_groupable" groups="base.group_no_one"/>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>

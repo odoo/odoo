@@ -178,13 +178,9 @@ exports.PosModel = Backbone.Model.extend({
         context: function(self){ return { active_test: false }; },
         loaded: function(self,units){
             self.units = units;
-            var units_by_id = {};
-            for(var i = 0, len = units.length; i < len; i++){
-                units_by_id[units[i].id] = units[i];
-                units[i].groupable = ( units[i].category_id[0] === 1 );
-                units[i].is_unit   = ( units[i].id === 1 );
-            }
-            self.units_by_id = units_by_id;
+            _.each(units, function(unit){
+                self.units_by_id[unit.id] = unit;
+            });
         }
     },{
         model:  'res.partner',
@@ -1349,7 +1345,7 @@ exports.Orderline = Backbone.Model.extend({
     can_be_merged_with: function(orderline){
         if( this.get_product().id !== orderline.get_product().id){    //only orderline of the same product can be merged
             return false;
-        }else if(!this.get_unit() || !this.get_unit().groupable){
+        }else if(!this.get_unit() || !this.get_unit().is_pos_groupable){
             return false;
         }else if(this.get_product_type() !== orderline.get_product_type()){
             return false;
@@ -2140,10 +2136,15 @@ exports.Order = Backbone.Model.extend({
             }
         }
 
-        var last_orderline = this.get_last_orderline();
-        if( last_orderline && last_orderline.can_be_merged_with(line) && options.merge !== false){
-            last_orderline.merge(line);
-        }else{
+        var to_merge_orderline;
+        for (var i = 0; i < this.orderlines.length; i++) {
+            if(this.orderlines.at(i).can_be_merged_with(line) && options.merge !== false){
+                to_merge_orderline = this.orderlines.at(i);
+            }
+        }
+        if (to_merge_orderline){
+            to_merge_orderline.merge(line);
+        } else {
             this.orderlines.add(line);
         }
         this.select_orderline(this.get_last_orderline());
