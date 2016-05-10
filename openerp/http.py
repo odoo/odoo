@@ -306,6 +306,7 @@ class WebRequest(object):
             # case, the request cursor is unusable. Rollback transaction to create a new one.
             if self._cr:
                 self._cr.rollback()
+                self.env.clear()
             return self.endpoint(*a, **kw)
 
         if self.db:
