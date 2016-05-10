@@ -891,7 +891,7 @@ class account_analytic_account(osv.osv):
         'use_tasks': fields.boolean('Tasks', help="Check this box to manage internal activities through this project"),
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', string="Company UOM", type='many2one', relation='product.uom'),
         'project_ids': fields.one2many('project.project', 'analytic_account_id', 'Projects'),
-        'project_count': fields.function(_compute_project_count, 'Project Count', type='integer')
+        'project_count': fields.function(_compute_project_count, string='Project Count', type='integer')
     }
 
     def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
