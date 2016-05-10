@@ -887,7 +887,7 @@ class MonetaryConverter(osv.AbstractModel):
         lang = self.pool['res.lang']
         formatted_amount = lang.format(cr, uid, [lang_code],
             fmt, Currency.round(cr, uid, display_currency, from_amount),
-            grouping=True, monetary=True)
+            grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}')
 
         pre = post = u''
         if display_currency.position == 'before':
@@ -1049,7 +1049,7 @@ class QwebWidgetMonetary(osv.AbstractModel):
         lang_code = qwebcontext.context.get('lang') or 'en_US'
         formatted_amount = self.pool['res.lang'].format(
             qwebcontext.cr, qwebcontext.uid, [lang_code], fmt, inner, grouping=True, monetary=True
-        )
+        ).replace(r' ', u'\N{NO-BREAK SPACE}')
         pre = post = u''
         if display.position == 'before':
             pre = u'{symbol}\N{NO-BREAK SPACE}'
