@@ -258,7 +258,6 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
                 type: "many2one",
                 domain: [
                     ['id', 'not in', _.pluck(this.projects, "project")],
-                    ['account_type', '=', 'normal'], // TODO: Do not forward-port to master
                 ],
                 modifiers: '{"required": true}',
             },
