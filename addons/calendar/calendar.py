@@ -35,8 +35,8 @@ def calendar_id2real_id(calendar_id=None, with_date=False):
     @return: real event id
     """
     if calendar_id and isinstance(calendar_id, (basestring)):
-        res = calendar_id.split('-')
-        if len(res) >= 2:
+        res = filter(None, calendar_id.split('-'))
+        if len(res) == 2:
             real_id = res[0]
             if with_date:
                 real_date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT, time.strptime(res[1], "%Y%m%d%H%M%S"))
