@@ -849,7 +849,7 @@ result = rules.NET > categories.NET * 0.10''',
         'quantity': '1.0',
      }
 
-    @api.cr_uid_ids_context
+    @api.cr_uid_records_context
     def _recursive_search_of_rules(self, cr, uid, rule_ids, context=None):
         """
         @param rule_ids: list of browse record
