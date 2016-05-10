@@ -181,7 +181,10 @@ class account_payment(models.Model):
     def _compute_payment_difference(self):
         if len(self.invoice_ids) == 0:
             return
-        self.payment_difference = self._compute_total_invoices_amount() - self.amount
+        if self.invoice_ids[0].type in ['in_invoice', 'out_refund']:
+            self.payment_difference = self.amount - self._compute_total_invoices_amount()
+        else:
+            self.payment_difference = self._compute_total_invoices_amount() - self.amount
 
     company_id = fields.Many2one(store=True)
 
