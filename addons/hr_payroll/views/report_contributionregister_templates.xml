@@ -35,13 +35,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="get_payslip_lines(o)" t-as="r">
-                                <td><span t-esc="r.get('payslip_name')"/></td>
-                                <td><span t-esc="r['code']"/></td>
-                                <td><span t-esc="r['name']"/></td>
-                                <td><span t-esc="formatLang(r['quantity'])"/></td>
-                                <td><span t-esc="formatLang(r['amount'])"/></td>
-                                <td><span t-esc=" formatLang(r['total'], currency_obj=o.company_id and o.company_id.currency_id)"/></td>
+                            <tr t-foreach="lines_data.get(o.id, [])" t-as="line">
+                                <td><span t-esc="line.slip_id.name"/></td>
+                                <td><span t-esc="line.code"/></td>
+                                <td><span t-esc="line.name"/></td>
+                                <td><span t-esc="line.quantity"/></td>
+                                <td class="text-right">
+                                    <span t-esc="line.amount"
+                                          t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="line.total"
+                                          t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -52,7 +58,7 @@
                                 <tr class="border-black">
                                     <td><strong>Total</strong></td>
                                     <td class="text-right">
-                                        <span t-esc="formatLang(sum_total(), currency_obj = o.company_id and o.company_id.currency_id)"/>
+                                        <span t-esc="lines_total.get(o.id)" t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                 </tr>
                             </table>
