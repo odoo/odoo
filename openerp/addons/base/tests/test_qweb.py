@@ -1,92 +1,78 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import cgi
+import collections
 import json
 import os.path
-import glob
 import re
-import collections
 
 from lxml import etree
 
-import openerp.modules
-from openerp.addons.base.ir.ir_qweb import QWebContext, FileSystemLoader
-from openerp.tests import common
+from odoo.addons.base.ir.ir_qweb import QWebContext, FileSystemLoader
+from odoo.modules import get_module_resource
+from odoo.tests.common import TransactionCase
 
-class TestQWebTField(common.TransactionCase):
+
+class TestQWebTField(TransactionCase):
     def setUp(self):
         super(TestQWebTField, self).setUp()
-        self.env = self.env(context={'inherit_branding': True})
-        self.engine = self.env['ir.qweb']
+        self.env_branding = self.env(context={'inherit_branding': True})
+        self.engine = self.env_branding['ir.qweb']
 
     def context(self, values):
-        return QWebContext(self.env, values)
+        return QWebContext(self.env_branding, values)
 
     def test_trivial(self):
         field = etree.Element('span', {'t-field': u'company.name'})
+        company = self.env['res.company'].create({'name': "My Test Company"})
 
-        Companies = self.registry('res.company')
-        company_id = Companies.create(self.cr, self.uid, {
-            'name': "My Test Company"
-        })
-        result = self.engine.render_node(field, self.context({
-            'company': Companies.browse(self.cr, self.uid, company_id),
-        }))
-
+        result = self.engine.render_node(field, self.context({'company': company}))
         self.assertEqual(
             result,
             '<span data-oe-model="res.company" data-oe-id="%d" '
                   'data-oe-field="name" data-oe-type="char" '
                   'data-oe-expression="company.name">%s</span>' % (
-                company_id,
-                "My Test Company",))
+                company.id,
+                "My Test Company",
+            ),
+        )
 
     def test_i18n(self):
         field = etree.Element('span', {'t-field': u'company.name'})
-
-        Companies = self.registry('res.company')
         s = u"Testing «ταБЬℓσ»: 1<2 & 4+1>3, now 20% off!"
-        company_id = Companies.create(self.cr, self.uid, {
-            'name': s,
-        })
-        result = self.engine.render_node(field, self.context({
-            'company': Companies.browse(self.cr, self.uid, company_id),
-        }))
+        company = self.env['res.company'].create({'name': s})
 
+        result = self.engine.render_node(field, self.context({'company': company}))
         self.assertEqual(
             result,
             '<span data-oe-model="res.company" data-oe-id="%d" '
                   'data-oe-field="name" data-oe-type="char" '
                   'data-oe-expression="company.name">%s</span>' % (
-                company_id,
-                cgi.escape(s.encode('utf-8')),))
+                company.id,
+                cgi.escape(s.encode('utf-8')),
+            ),
+        )
 
     def test_reject_crummy_tags(self):
         field = etree.Element('td', {'t-field': u'company.name'})
 
-        with self.assertRaisesRegexp(
-                AssertionError,
-                r'^RTE widgets do not work correctly'):
-            self.engine.render_node(field, self.context({
-                'company': None
-            }))
+        with self.assertRaisesRegexp(AssertionError, r'^RTE widgets do not work correctly'):
+            self.engine.render_node(field, self.context({'company': None}))
 
     def test_reject_t_tag(self):
         field = etree.Element('t', {'t-field': u'company.name'})
 
-        with self.assertRaisesRegexp(
-                AssertionError,
-                r'^t-field can not be used on a t element'):
-            self.engine.render_node(field, self.context({
-                'company': None
-            }))
+        with self.assertRaisesRegexp(AssertionError, r'^t-field can not be used on a t element'):
+            self.engine.render_node(field, self.context({'company': None}))
 
-class TestQWeb(common.TransactionCase):
-    matcher = re.compile('^qweb-test-(.*)\.xml$')
+
+class TestQWeb(TransactionCase):
+    matcher = re.compile(r'^qweb-test-(.*)\.xml$')
 
     @classmethod
     def get_cases(cls):
         path = cls.qweb_test_file_path()
-
         return (
             cls("test_qweb_{}".format(cls.matcher.match(f).group(1)))
             for f in os.listdir(path)
@@ -94,12 +80,10 @@ class TestQWeb(common.TransactionCase):
             if f != 'qweb-test-extend.xml'
             if cls.matcher.match(f)
         )
+
     @classmethod
     def qweb_test_file_path(cls):
-        path = os.path.dirname(
-            openerp.modules.get_module_resource(
-                'web', 'static', 'lib', 'qweb', 'qweb2.js'))
-        return path
+        return os.path.dirname(get_module_resource('web', 'static', 'lib', 'qweb', 'qweb2.js'))
 
     def __getattr__(self, item):
         if not item.startswith('test_qweb_'):
@@ -129,8 +113,9 @@ class TestQWeb(common.TransactionCase):
             self.assertEqual(
                 qweb.render(template, qwebcontext=ctx).strip(),
                 (result or u'').strip().encode('utf-8'),
-                template
+                template,
             )
+
 
 def load_tests(loader, suite, _):
     # can't override TestQWeb.__dir__ because dir() called on *class* not

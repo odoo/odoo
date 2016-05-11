@@ -1,13 +1,15 @@
-# This test can be run stand-alone with something like:
-# > PYTHONPATH=. python2 openerp/tests/test_view_validation.py
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from lxml import etree
 from StringIO import StringIO
 import unittest
 
-from openerp.tools.view_validation import (valid_page_in_book, valid_att_in_form, valid_type_in_colspan,
-                                           valid_type_in_col, valid_att_in_field, valid_att_in_label,
-                                           valid_field_in_graph, valid_field_in_tree
-                                           )
+from odoo.tools.view_validation import (
+    valid_page_in_book, valid_att_in_form, valid_type_in_colspan,
+    valid_type_in_col, valid_att_in_field, valid_att_in_label,
+    valid_field_in_graph, valid_field_in_tree,
+)
 
 invalid_form = etree.parse(StringIO('''\
 <form>
@@ -92,7 +94,7 @@ valid_tree = etree.parse(StringIO('''\
 ''')).getroot()
 
 
-class test_view_validation(unittest.TestCase):
+class TestViewValidation(unittest.TestCase):
     """ Test the view validation code (but not the views themselves). """
 
     def test_page_validation(self):
@@ -125,7 +127,3 @@ class test_view_validation(unittest.TestCase):
     def test_col_datatype_validation(self):
         assert not valid_type_in_col(invalid_form)
         assert valid_type_in_col(valid_form)
-
-
-if __name__ == '__main__':
-    unittest.main()

@@ -1,8 +1,11 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.tests import common
-from openerp.tools import get_cache_key_counter
+from odoo.tests.common import TransactionCase
+from odoo.tools import get_cache_key_counter
 
-class TestOrmcache(common.TransactionCase):
+
+class TestOrmcache(TransactionCase):
     def test_ormcache(self):
         """ Test the effectiveness of the ormcache() decorator. """
         IMD = self.env['ir.model.data']

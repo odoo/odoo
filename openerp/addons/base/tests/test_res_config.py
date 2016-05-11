@@ -1,13 +1,15 @@
-import unittest
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import openerp
-import openerp.tests.common as common
+from odoo import exceptions
+from odoo.tests.common import TransactionCase
 
-class test_res_config(common.TransactionCase):
+
+class TestResConfig(TransactionCase):
 
     def setUp(self):
-        super(test_res_config, self).setUp()
-        self.res_config = self.registry('res.config.settings')
+        super(TestResConfig, self).setUp()
+        self.ResConfig = self.env['res.config.settings']
 
         # Define the test values
         self.menu_xml_id = 'base.menu_action_res_users'
@@ -17,15 +19,13 @@ class test_res_config(common.TransactionCase):
         # Note: see the get_config_warning() doc for a better example
 
         # Fetch the expected values
-        module_name, menu_xml_id = self.menu_xml_id.split('.')
-        dummy, menu_id = self.registry('ir.model.data').get_object_reference(self.cr, self.uid, module_name, menu_xml_id)
-        ir_ui_menu = self.registry('ir.ui.menu').browse(self.cr, self.uid, menu_id, context=None)
+        menu = self.env.ref(self.menu_xml_id)
 
         model_name, field_name = self.full_field_name.rsplit('.', 1)
 
-        self.expected_path = ir_ui_menu.complete_name
-        self.expected_action_id = ir_ui_menu.action.id
-        self.expected_name = self.registry(model_name).fields_get(self.cr, self.uid, allfields=[field_name], context=None)[field_name]['string']
+        self.expected_path = menu.complete_name
+        self.expected_action_id = menu.action.id
+        self.expected_name = self.env[model_name].fields_get([field_name])[field_name]['string']
         self.expected_final_error_msg = self.error_msg % {
             'field:res.partner.lang': self.expected_name,
             'menu:base.menu_action_res_users': self.expected_path
@@ -36,7 +36,7 @@ class test_res_config(common.TransactionCase):
 
     def test_00_get_option_path(self):
         """ The get_option_path() method should return a tuple containing a string and an integer """
-        res = self.res_config.get_option_path(self.cr, self.uid, self.menu_xml_id, context=None)
+        res = self.ResConfig.get_option_path(self.menu_xml_id)
 
         # Check types
         self.assertIsInstance(res, tuple)
@@ -50,7 +50,7 @@ class test_res_config(common.TransactionCase):
 
     def test_10_get_option_name(self):
         """ The get_option_name() method should return a string """
-        res = self.res_config.get_option_name(self.cr, self.uid, self.full_field_name, context=None)
+        res = self.ResConfig.get_option_name(self.full_field_name)
 
         # Check type
         self.assertIsInstance(res, basestring)
@@ -60,10 +60,10 @@ class test_res_config(common.TransactionCase):
 
     def test_20_get_config_warning(self):
         """ The get_config_warning() method should return a RedirectWarning """
-        res = self.res_config.get_config_warning(self.cr, self.error_msg, context=None)
+        res = self.ResConfig.get_config_warning(self.error_msg)
 
         # Check type
-        self.assertIsInstance(res, openerp.exceptions.RedirectWarning)
+        self.assertIsInstance(res, exceptions.RedirectWarning)
 
         # Check returned value
         self.assertEqual(res.args[0], self.expected_final_error_msg)
@@ -71,10 +71,10 @@ class test_res_config(common.TransactionCase):
 
     def test_30_get_config_warning_wo_menu(self):
         """ The get_config_warning() method should return a Warning exception """
-        res = self.res_config.get_config_warning(self.cr, self.error_msg_wo_menu, context=None)
+        res = self.ResConfig.get_config_warning(self.error_msg_wo_menu)
 
         # Check type
-        self.assertIsInstance(res, openerp.exceptions.Warning)
+        self.assertIsInstance(res, exceptions.Warning)
 
         # Check returned value
         self.assertEqual(res.args[0], self.expected_final_error_msg_wo_menu)
