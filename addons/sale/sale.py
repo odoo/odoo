@@ -54,7 +54,9 @@ class SaleOrder(models.Model):
             invoice_ids = order.order_line.mapped('invoice_lines').mapped('invoice_id')
             # Search for invoices which have been 'cancelled' (filter_refund = 'modify' in
             # 'account.invoice.refund')
-            invoice_ids |= invoice_ids.search([('origin', 'like', order.name)])
+            # use like as origin may contains multiple references (e.g. 'SO01, SO02')
+            refunds = invoice_ids.search([('origin', 'like', order.name)])
+            invoice_ids |= refunds.filtered(lambda r: order.name in [origin.strip() for origin in r.origin.split(',')])
             # Search for refunds as well
             refund_ids = self.env['account.invoice'].browse()
             if invoice_ids:
