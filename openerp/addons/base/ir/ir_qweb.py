@@ -140,6 +140,29 @@ class QWeb(models.AbstractModel):
         type(self)._render_tag = self.prefixed_methods('render_tag_')
         type(self)._render_att = self.prefixed_methods('render_att_')
 
+    # TEMP IMPORT FROM CHM BRANCH
+    def xformat(self, value, formating, *args, **kwargs):
+        format = getattr(self, '_format_func_%s' % formating, None)
+        if not format:
+            raise "Unknown formating '%s'" % (formating,)
+        return format(value, *args, **kwargs)
+
+    def _format_func_monetary(self, value, display_currency=None, from_currency=None):
+        precision = int(round(math.log10(display_currency.rounding)))
+        fmt = "%.{0}f".format(-precision if precision < 0 else 0)
+        lang_code = self.env.context.get('lang') or 'en_US'
+        lang = self.env['res.lang']._lang_get(lang_code)
+        formatted_amount = lang.format(fmt, value, grouping=True, monetary=True)
+        pre = post = u''
+        if display_currency.position == 'before':
+            pre = u'{symbol}\N{NO-BREAK SPACE}'
+        else:
+            post = u'\N{NO-BREAK SPACE}{symbol}'
+        return u'{pre}{0}{post}'.format(
+            formatted_amount, pre=pre, post=post
+        ).format(symbol=display_currency.symbol,)
+    # END TEMP IMPORT FROM CHM BRANCH
+
     def prefixed_methods(self, prefix):
         """ Extracts all methods prefixed by ``prefix``, and returns a mapping
         of (t-name, method) where the t-name is the method name with prefix
@@ -240,6 +263,7 @@ class QWeb(models.AbstractModel):
             qwebcontext['__caller__'] = stack[-1]
         stack.append(template)
         qwebcontext['xmlid'] = str(stack[0]) # Temporary fix
+        qwebcontext['format'] = self.xformat
 
         element = self.get_template(template, qwebcontext)
         element.attrib.pop("name", False)
