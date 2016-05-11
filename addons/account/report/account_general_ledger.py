@@ -110,7 +110,7 @@ class ReportGeneralLedger(models.AbstractModel):
     @api.multi
     def render_html(self, data):
         self.model = self.env.context.get('active_model')
-        docs = self.env[self.model].browse(self.env.context.get('active_id'))
+        docs = self.env[self.model].browse(self.env.context.get('active_ids', []))
 
         init_balance = data['form'].get('initial_balance', True)
         sortby = data['form'].get('sortby', 'sort_date')
