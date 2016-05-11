@@ -73,7 +73,6 @@ class crm_team(osv.Model):
         if user_team_id:
             action_context.update({
                 'default_team_id': user_team_id,
-                'search_default_team_id': user_team_id
             })
 
         tree_view_id = IrModelData.xmlid_to_res_id(cr, uid, 'crm.crm_case_tree_view_oppor')

@@ -143,12 +143,10 @@
                                     <field name="source_id"/>
                                     <field name="referred"/>
                                 </group>
-                                <group string="Opportunity" name="misc">
-                                    <field name="probability" groups="base.group_no_one"/>
-                                </group>
                                 <group string="Analysis" groups="base.group_no_one">
                                     <field name="date_open"/>
                                     <field name="date_closed"/>
+                                    <field name="probability"/>
                                 </group>
                             </group>
                         </page>
@@ -275,7 +273,7 @@
                                         <strong><field name="name"/></strong>
                                     </div>
                                     <div class="text-muted">
-                                        <t t-if="record.planned_revenue.raw_value"><field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/></t> <span t-if="record.partner_id.value">, <t t-esc="record.partner_id.value"/></span>
+                                        <t t-if="record.planned_revenue.raw_value"><field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/><span t-if="record.partner_id.value">,</span></t> <span t-if="record.partner_id.value"> <t t-esc="record.partner_id.value"/></span>
                                     </div>
 
                                     <div class="o_kanban_footer">
