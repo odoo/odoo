@@ -27,7 +27,7 @@ function reload_favorite_list(result) {
     .query(["partner_id"])
     .filter([["id", "=", self.dataset.context.uid]])
     .first()
-    .done(function(result) {
+    .then(function(result) {
         var sidebar_items = {};
         var filter_value = result.partner_id[0];
         var filter_item = {
@@ -49,7 +49,7 @@ function reload_favorite_list(result) {
         };
         sidebar_items[-1] = filter_item;
         //Get my coworkers/contacts
-        new Model("calendar.contacts").query(["partner_id"]).filter([["user_id", "=",self.dataset.context.uid]]).all().then(function(result) {
+        return new Model("calendar.contacts").query(["partner_id"]).filter([["user_id", "=",self.dataset.context.uid]]).all().then(function(result) {
             _.each(result, function(item) {
                 filter_value = item.partner_id[0];
                 filter_item = {
@@ -70,7 +70,6 @@ function reload_favorite_list(result) {
             self.sidebar.filter.add_favorite_calendar();
             self.sidebar.filter.destroy_filter();
         }).done(function () {
-            self.$calendar.fullCalendar('refetchEvents');
             if (current.ir_model_m2o) {
                 current.ir_model_m2o.set_value(false);
             }
@@ -82,7 +81,7 @@ CalendarView.include({
     extraSideBar: function() {
         var result = this._super();
         if (this.useContacts) {
-            return result.then(reload_favorite_list(this));
+            return result.then(reload_favorite_list.bind(this, this));
         }
         return result;
     },
@@ -153,7 +152,7 @@ widgets.SidebarFilter.include({
             });
         }));
         return $.when.apply(null, defs).then(function() {
-            return reload_favorite_list(self);
+            return reload_favorite_list(self).then(self.trigger_up.bind(self, 'reload_events'));
         });
     },
     destroy_filter: function(e) {
@@ -167,7 +166,7 @@ widgets.SidebarFilter.include({
                     self.ds_message.call('search', [[['partner_id', '=', parseInt(id)]]]).then(function(record) {
                         return self.ds_message.unlink(record);
                     }).done(function() {
-                        reload_favorite_list(self);
+                        reload_favorite_list(self).then(self.trigger_up.bind(self, 'reload_events'));
                     });
                 },
             });

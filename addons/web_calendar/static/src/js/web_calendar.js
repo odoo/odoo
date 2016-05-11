@@ -84,6 +84,11 @@ function isNullOrUndef(value) {
 }
 
 var CalendarView = View.extend({
+    custom_events: {
+        reload_events: function () {
+            this.$calendar.fullCalendar('refetchEvents');
+        },
+    },
     defaults: _.extend({}, View.prototype.defaults, {
         confirm_on_delete: true,
     }),
@@ -348,10 +353,11 @@ var CalendarView = View.extend({
     },
 
     init_calendar: function() {
+        var defs = [];
         if (!this.sidebar) {
             var translate = get_fc_defaultOptions();
             this.sidebar = new widgets.Sidebar(this);
-            this.sidebar.appendTo(this.$('.o_calendar_sidebar_container'));
+            defs.push(this.sidebar.appendTo(this.$('.o_calendar_sidebar_container')));
 
             this.$small_calendar = this.$(".o_calendar_mini");
             this.$small_calendar.datepicker({ 
@@ -361,11 +367,11 @@ var CalendarView = View.extend({
                 firstDay: translate.firstDay,
             });
 
-            this.extraSideBar();                
+            defs.push(this.extraSideBar());
         }
         this.$calendar.fullCalendar(this.get_fc_init_options());
 
-        return $.when();
+        return $.when.apply($, defs);
     },
     extraSideBar: function() {
         return $.when();

@@ -216,7 +216,7 @@ var SidebarFilter = Widget.extend({
         } else {
             this.view.all_filters[e.target.value].is_checked = e.target.checked;
         }
-        this.view.$calendar.fullCalendar('refetchEvents');
+        this.trigger_up('reload_events');
     },
     select_previous: function(e) {
         $(e.target).siblings('input').trigger('click');
