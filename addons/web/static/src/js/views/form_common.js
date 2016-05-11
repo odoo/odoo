@@ -190,9 +190,10 @@ var CompletionFieldMixin = {
             exclusion_domain.push(['id', 'not in', ids_blacklist]);
         }
 
+        var empty_search = !search_val.trim();
         return this.orderer.add(dataset.name_search(
-                search_val, new data.CompoundDomain(self.build_domain(), exclusion_domain),
-                'ilike', this.limit + 1, self.build_context())).then(function(data) {
+                empty_search ? ["", " ", "  ", "   "] : search_val, new data.CompoundDomain(self.build_domain(), exclusion_domain),
+                empty_search ? "not in" : 'ilike', this.limit + 1, self.build_context())).then(function (data) {
             self.last_search = data;
             // possible selections for the m2o
             var values = _.map(data, function(x) {
