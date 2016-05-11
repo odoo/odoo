@@ -5,7 +5,7 @@
 
 The main duty of this module is to compile a domain expression into a
 SQL query. A lot of things should be documented here, but as a first
-step in the right direction, some tests in test_osv_expression.yml
+step in the right direction, some tests in test_expression.py
 might give you some additional information.
 
 For legacy reasons, a domain uses an inconsistent two-levels abstract

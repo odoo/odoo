@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import unittest
 
-import openerp
-from openerp.tools.misc import mute_logger
-from openerp.tests import common
+import odoo
+from odoo.tests import common
+from odoo.tools.misc import mute_logger
 
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
 def registry():
-    return openerp.modules.registry.RegistryManager.get(common.get_db_name())
+    return odoo.registry(common.get_db_name())
 
 
-class test_cr_execute(unittest.TestCase):
+class TestExecute(unittest.TestCase):
     """ Try cr.execute with wrong parameters """
 
     @mute_logger('openerp.sql_db')
