@@ -37,6 +37,7 @@ Dashboard / Reports for MRP will include:
         'security/mrp_security.xml',
         'security/ir.model.access.csv',
         'data/mrp_data.xml',
+        'data/mrp_data.yml',
         'wizard/mrp_product_produce_view.xml',
         'wizard/change_production_qty_view.xml',
         'wizard/stock_move_view.xml',
