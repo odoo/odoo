@@ -4,3 +4,4 @@
 import models
 import project_issue
 import report
+import project_issue_config_settings

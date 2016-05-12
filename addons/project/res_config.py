@@ -10,14 +10,6 @@ class project_configuration(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'module_sale_service': fields.selection([
-            (0, "No automatic task creation"),
-            (1, 'Generate tasks from sale orders')
-            ], "Sale Service",
-            help='This feature automatically creates project tasks from service products in sale orders. '
-                 'In order to make it work,  the product has to be a service and \'Create Task Automatically\' '
-                 'has to be flagged on the procurement tab in the product form.\n'
-                 '-This installs the module sale_service.'),
         'module_pad': fields.selection([
             (0, "Task description is a plain text"),
             (1, "Collaborative rich text on task description")
@@ -30,24 +22,11 @@ class project_configuration(osv.osv_memory):
             (1, 'Allow activating customer rating on projects, at issue completion')
             ], "Rating",
             help="This allows customers to give rating on provided services"),
-        'module_project_issue_sheet': fields.selection([
-            (0, "Do not track working hours on issues"),
-            (1, "Activate timesheets on issues")
-            ], "Timesheets Invoicing",
-            help='Provides timesheet support for the issues/bugs management in project.\n'
-                 '-This installs the module project_issue_sheet.'),
-        'group_time_work_estimation_tasks': fields.selection([
-            (0, "Do not estimate working time on tasks"),
-            (1, "Manage time estimation on tasks")
-            ], "Time on Tasks",
-            implied_group='project.group_time_work_estimation_tasks',
-            help="Allows you to compute Time Estimation on tasks."),
         'generate_project_alias': fields.selection([
             (0, "Do not create an email alias automatically"),
             (1, "Automatically generate an email alias at the project creation")
             ], "Project Alias",
             help="Odoo will generate an email alias at the project creation from project name."),
-        'module_project_timesheet_synchro': fields.boolean("Timesheet app for Chrome/Android/iOS"),
         'module_project_forecast': fields.boolean("Forecasts, planning and Gantt charts"),
     }
 

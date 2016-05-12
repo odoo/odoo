@@ -34,6 +34,7 @@ The validation can be configured in the company:
         'hr_timesheet_sheet_data.xml',
         'views/hr_timesheet_sheet.xml',
         'hr_timesheet_sheet_view.xml',
+        'hr_timesheet_sheet_config_settings_views.xml',
         'hr_dashboard.xml',
     ],
     'test':['../account/test/account_minimal_test.xml', 'test/test_hr_timesheet_sheet.yml'],
