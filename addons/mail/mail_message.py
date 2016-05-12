@@ -879,7 +879,6 @@ class mail_message(osv.Model):
             cr, uid, newid, partners_to_notify=list(partners_to_notify), context=context,
             force_send=force_send, user_signature=user_signature
         )
-        message.refresh()
 
         # An error appear when a user receive a notification without notifying
         # the parent message -> add a read notification for the parent
