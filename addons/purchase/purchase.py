@@ -367,6 +367,18 @@ class purchase_order(osv.osv):
 
         return super(purchase_order, self).unlink(cr, uid, unlink_ids, context=context)
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        # FORWARDPORT UP TO SAAS-6
+        new_id = super(purchase_order, self).copy(cr, uid, id, context=context)
+        for po in self.browse(cr, uid, [new_id], context=context):
+            for line in po.order_line:
+                vals = self.pool.get('purchase.order.line').onchange_product_id(
+                    cr, uid, line.id, po.pricelist_id.id, line.product_id.id, line.product_qty,
+                    line.product_uom.id, po.partner_id.id, date_order=po.date_order, context=context
+                )
+                line.write({'date_planned': vals['value']['date_planned']})
+        return new_id
+
     def set_order_line_status(self, cr, uid, ids, status, context=None):
         line = self.pool.get('purchase.order.line')
         order_line_ids = []

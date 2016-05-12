@@ -5759,6 +5759,7 @@ class BaseModel(object):
                         name: rec[name] for name in names
                     })
                     with rec.env.norecompute():
+                        map(rec._recompute_done, field.computed_fields)
                         rec._write(values)
                 except MissingError:
                     pass

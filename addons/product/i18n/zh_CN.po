@@ -5,19 +5,20 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
 # glovebx <ruinning@163.com>, 2015
-# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
-# 珠海-老天 <liangjia@qq.com>, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2015
 # liyes <bodetools@gmail.com>, 2015
 # mrshelly <mrshelly@hotmail.com>, 2015
 # THL <wt39181819@gmail.com>, 2015
-# 珠海-老天 <liangjia@qq.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-03-12 02:21+0000\n"
-"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
+"PO-Revision-Date: 2016-05-07 03:42+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1001,7 +1002,7 @@ msgstr "代码"
 msgid ""
 "Coefficient to convert default Unit of Measure to Unit of Sale\n"
 " uos = uom * coeff"
-msgstr "从默认计量单位转换（UoM）到销售单位（UoS）的系数。\nUoS = UoM * 系数"
+msgstr "转换默认计量单位（UoM）到销售单位（UoS）的系数。\nUoS = UoM * 系数"
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_2
@@ -1299,14 +1300,14 @@ msgstr "错误！你不能在价格表项目里指派这个主价格表作为其
 msgid ""
 "Error! You cannot define a rounding factor for the company's main currency "
 "that is smaller than the decimal precision of 'Account'."
-msgstr "错误！公司本位币的舍入系数不能定义得小于”科目“的小数位数"
+msgstr "错误！公司本位币的四舍五入系数不能定义得小于”科目“的小数位数"
 
 #. module: product
 #: constraint:decimal.precision:0
 msgid ""
 "Error! You cannot define the decimal precision of 'Account' as greater than "
 "the rounding factor of the company's main currency"
-msgstr "错误！你不能定义 科目的小数位数大于 公司本位币的舍入系统。"
+msgstr "错误！你不能定义'科目'的精度大于 公司本位币的四舍五入系数。"
 
 #. module: product
 #: constraint:product.packaging:0
@@ -1361,7 +1362,7 @@ msgstr "关注者"
 msgid ""
 "For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
 "Expressed in the default UoM of the product."
-msgstr "为了应用这个规则，购买/销售 数量必须大于或等于这个字段内指定的最小数量。\n这个字段在产品的默认计量单位中指定。"
+msgstr "为了应用这个规则，购买/销售 数量必须大于或等于这个字段内指定的最小数量。\n以产品的默认计量单位表示。"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_7_product_template
@@ -1628,7 +1629,7 @@ msgstr "内部分类"
 #: field:product.product,code:0 field:product.product,default_code:0
 #: field:product.template,default_code:0
 msgid "Internal Reference"
-msgstr "内部单号"
+msgstr "内部货号"
 
 #. module: product
 #: help:product.product,ean13:0
@@ -1829,7 +1830,7 @@ msgstr "管理第二个计量单位"
 #. module: product
 #: view:product.pricelist.item:product.product_pricelist_item_form_view
 msgid "Max. Margin"
-msgstr "最大利润"
+msgstr "最大毛利"
 
 #. module: product
 #: field:product.pricelist.item,price_max_margin:0
@@ -1873,7 +1874,7 @@ msgstr "消息和通信历史"
 #. module: product
 #: view:product.pricelist.item:product.product_pricelist_item_form_view
 msgid "Min. Margin"
-msgstr "最小上浮金额"
+msgstr "最小毛利"
 
 #. module: product
 #: field:product.pricelist.item,price_min_margin:0
@@ -2036,7 +2037,7 @@ msgstr "PC 组装 SC234"
 #. module: product
 #: selection:product.ul,type:0
 msgid "Pack"
-msgstr "包裹"
+msgstr "打包"
 
 #. module: product
 #: field:product.packaging,ul:0
@@ -2056,7 +2057,7 @@ msgstr "每层的包裹"
 #: view:product.packaging:product.product_packaging_tree_view_product
 #: view:product.template:product.product_template_form_view
 msgid "Packaging"
-msgstr "包装物"
+msgstr "包装形式"
 
 #. module: product
 #: selection:product.ul,type:0
@@ -2163,7 +2164,7 @@ msgstr "价格名称"
 #. module: product
 #: field:product.pricelist.item,price_round:0
 msgid "Price Rounding"
-msgstr "价格舍入"
+msgstr "价格四舍五入"
 
 #. module: product
 #: field:product.pricelist.item,price_surcharge:0
@@ -2435,7 +2436,7 @@ msgstr "产品价格类型"
 #: model:ir.actions.act_window,name:product.product_category_action
 #: model:ir.ui.menu,name:product.menu_products_category
 msgid "Products by Category"
-msgstr "产品类别"
+msgstr "产品 按类别"
 
 #. module: product
 #: code:addons/product/product.py:841
@@ -2547,12 +2548,12 @@ msgstr "右父项"
 #. module: product
 #: view:product.pricelist.item:product.product_pricelist_item_form_view
 msgid "Rounding Method"
-msgstr "舍入方法"
+msgstr "四舍五入方法"
 
 #. module: product
 #: field:product.uom,rounding:0
 msgid "Rounding Precision"
-msgstr "舍入精度"
+msgstr "四舍五入精度"
 
 #. module: product
 #: model:product.template,name:product.product_product_45_product_template
@@ -2675,7 +2676,7 @@ msgstr "软件"
 #. module: product
 #: model:product.public.category,name:product.Speakers
 msgid "Speakers"
-msgstr "关注者"
+msgstr "演讲人"
 
 #. module: product
 #: help:product.pricelist.item,categ_id:0
