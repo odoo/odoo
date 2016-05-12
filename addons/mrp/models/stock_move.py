@@ -186,7 +186,7 @@ class StockMove(models.Model):
             else:
                 for movelot in move.move_lot_ids:
                     if float_compare(movelot.quantity_done, 0, precision_rounding=rounding) > 0:
-                        qty = uom_obj._compute_qty(move.product_uom.id, move.quantity_done, move.product_id.uom_id.id)
+                        qty = uom_obj._compute_qty(move.product_uom.id, movelot.quantity_done, move.product_id.uom_id.id)
                         quants = quant_obj.quants_get_preferred_domain(qty, move, lot_id=movelot.lot_id.id, domain=main_domain, preferred_domain_list=preferred_domain_list)
                         self.env['stock.quant'].quants_move(quants, move, move.location_dest_id, lot_id = movelot.lot_id.id)
             move.quants_unreserve()

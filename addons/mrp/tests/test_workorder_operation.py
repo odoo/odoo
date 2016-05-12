@@ -141,7 +141,6 @@ class TestWorkOrderProcess(common.TransactionCase):
         # ----------------------------------------
         # Check consume quants and produce quants.
         # ----------------------------------------
-
         self.assertEqual(sum(move_table_sheet.quant_ids.mapped('qty')) , 1, "Wrong quantity of consumed product %s"% move_table_sheet.product_id.name)
         self.assertEqual(sum(move_leg.quant_ids.mapped('qty')), 4, "Wrong quantity of consumed product %s"% move_leg.product_id.name)
         self.assertEqual(sum(move_table_bolt.quant_ids.mapped('qty')), 4, "Wrong quantity of consumed product %s"% move_table_bolt.product_id.name)
