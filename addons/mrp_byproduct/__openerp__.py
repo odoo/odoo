@@ -27,7 +27,7 @@ With this module:
         'views/mrp_bom_views.xml'
     ],
     'demo': [],
-    'test': ['test/mrp_byproduct.yml'],
+    'test': [],
     'installable': True,
     'auto_install': False,
 }
