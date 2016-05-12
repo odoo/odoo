@@ -23,16 +23,13 @@ function reload_favorite_list(result) {
     if (result.view) {
         self = result.view;
     }
-    return new Model("res.users")
-    .query(["partner_id"])
-    .filter([["id", "=", self.dataset.context.uid]])
-    .first()
-    .then(function(result) {
+    return session.is_bound
+    .then(function() {
         var sidebar_items = {};
-        var filter_value = result.partner_id[0];
+        var filter_value = session.partner_id;
         var filter_item = {
             value: filter_value,
-            label: result.partner_id[1] + _lt(" [Me]"),
+            label: session.name + _lt(" [Me]"),
             color: self.get_color(filter_value),
             avatar_model: self.avatar_model,
             is_checked: true,
@@ -49,31 +46,34 @@ function reload_favorite_list(result) {
         };
         sidebar_items[-1] = filter_item;
         //Get my coworkers/contacts
-        return new Model("calendar.contacts").query(["partner_id"]).filter([["user_id", "=",self.dataset.context.uid]]).all().then(function(result) {
-            _.each(result, function(item) {
-                filter_value = item.partner_id[0];
-                filter_item = {
-                    value: filter_value,
-                    label: item.partner_id[1],
-                    color: self.get_color(filter_value),
-                    avatar_model: self.avatar_model,
-                    is_checked: true
-                };
-                sidebar_items[filter_value] = filter_item;
-            });
+        return new Model("calendar.contacts")
+            .query(["partner_id"])
+            .filter([["user_id", "=",session.uid]])
+            .all()
+            .then(function(result) {
+                _.each(result, function(item) {
+                    filter_value = item.partner_id[0];
+                    filter_item = {
+                        value: filter_value,
+                        label: item.partner_id[1],
+                        color: self.get_color(filter_value),
+                        avatar_model: self.avatar_model,
+                        is_checked: true
+                    };
+                    sidebar_items[filter_value] = filter_item;
+                });
 
-            self.all_filters = sidebar_items;
-            self.now_filter_ids = $.map(self.all_filters, function(o) { return o.value; });
-            
-            self.sidebar.filter.events_loaded(self.get_all_filters_ordered());
-            self.sidebar.filter.set_filters();
-            self.sidebar.filter.add_favorite_calendar();
-            self.sidebar.filter.destroy_filter();
-        }).done(function () {
-            if (current.ir_model_m2o) {
-                current.ir_model_m2o.set_value(false);
-            }
-        });
+                self.all_filters = sidebar_items;
+                self.now_filter_ids = $.map(self.all_filters, function(o) { return o.value; });
+
+                self.sidebar.filter.events_loaded(self.get_all_filters_ordered());
+                self.sidebar.filter.set_filters();
+                self.sidebar.filter.add_favorite_calendar();
+            }).done(function () {
+                if (current.ir_model_m2o) {
+                    current.ir_model_m2o.set_value(false);
+                }
+            });
     });
 }
 
@@ -97,6 +97,13 @@ CalendarView.include({
 });
 
 widgets.SidebarFilter.include({
+    events: _.extend(widgets.SidebarFilter.prototype.events, {
+        'click .oe_remove_follower': 'destroy_filter',
+    }),
+    init: function () {
+        this._super.apply(this, arguments);
+        this.ds_contacts = new data.DataSet(this, 'calendar.contacts', session.context);
+    },
     events_loaded: function() {
         this._super.apply(this, arguments);
         this.reinitialize_m2o();
@@ -139,37 +146,25 @@ widgets.SidebarFilter.include({
     add_filter: function() {
         var self = this;
         var defs = [];
-        defs.push(new Model("res.users")
-        .query(["partner_id"])
-        .filter([["id", "=",this.view.dataset.context.uid]])
-        .first()
-        .done(function(result){
-            $.map(self.ir_model_m2o.display_value, function(element,index) {
-                if (result.partner_id[0] != index){
-                    self.ds_message = new data.DataSetSearch(self, 'calendar.contacts');
-                    defs.push(self.ds_message.call("create", [{'partner_id': index}]));
-                }
-            });
-        }));
+        _.each(this.ir_model_m2o.display_value, function(element, index) {
+            if (session.partner_id !== index) {
+                defs.push(self.ds_contacts.call("create", [{'partner_id': index}]));
+            }
+        });
         return $.when.apply(null, defs).then(function() {
             return reload_favorite_list(self).then(self.trigger_up.bind(self, 'reload_events'));
         });
     },
     destroy_filter: function(e) {
         var self = this;
-        this.$(".oe_remove_follower").on('click', function(e) {
-            self.ds_message = new data.DataSetSearch(self, 'calendar.contacts');
-            var id = $(e.currentTarget)[0].dataset.id;
+        var id = $(e.currentTarget).data('id');
 
-            Dialog.confirm(self, _t("Do you really want to delete this filter from favorite?"), {
-                confirm_callback: function() {
-                    self.ds_message.call('search', [[['partner_id', '=', parseInt(id)]]]).then(function(record) {
-                        return self.ds_message.unlink(record);
-                    }).done(function() {
-                        reload_favorite_list(self).then(self.trigger_up.bind(self, 'reload_events'));
-                    });
-                },
-            });
+        Dialog.confirm(this, _t("Do you really want to delete this filter from favorites ?"), {
+            confirm_callback: function() {
+                self.ds_contacts.call('unlink_from_partner_id', [id])
+                    .then(reload_favorite_list.bind(self, self))
+                    .then(self.trigger_up.bind(self, 'reload_events'));
+            },
         });
     },
 });
