@@ -78,8 +78,7 @@
             <field name="model_id" ref="mrp.model_mrp_production"/>
             <field name="state">code</field>
             <field name="code">
-                if context.get('active_model') == 'mrp.production' and context.get('active_ids'):
-                    self.button_plan(cr, uid, context['active_ids'], context=context)
+                object.browse(object.env.context['active_ids']).button_plan()
             </field>
         </record>
 
