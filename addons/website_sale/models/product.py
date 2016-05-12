@@ -132,6 +132,11 @@ class ProductTemplate(models.Model):
             res[product.id] = "/shop/product/%s" % (product.id,)
         return res
 
+    @api.multi
+    def display_price(self, pricelist, qty=1, public=False, **kw):
+        self.ensure_one()
+        return self.product_variant_ids and self.product_variant_ids[0].display_price(pricelist, qty=qty, public=public) or 0
+
 
 class Product(models.Model):
     _inherit = "product.product"
@@ -140,6 +145,19 @@ class Product(models.Model):
     def website_publish_button(self):
         self.ensure_one()
         return self.product_tmpl_id.website_publish_button()
+
+    @api.multi
+    def display_price(self, pricelist, qty=1, public=False, **kw):
+        self.ensure_one()
+        partner = self.env.user.partner_id
+        context = {
+            'pricelist': pricelist.id,
+            'quantity': qty,
+            'partner': partner
+        }
+        ret = self.env.user.has_group('sale.group_show_price_subtotal') and 'total_excluded' or 'total_included'
+        taxes = partner.property_account_position_id.map_tax(self.taxes_id)
+        return taxes.compute_all(public and self.lst_price or self.with_context(context).price, pricelist.currency_id, qty, product=self, partner=partner)[ret]
 
 
 class ProductAttribute(models.Model):

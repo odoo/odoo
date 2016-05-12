@@ -6,9 +6,9 @@ import random
 from odoo import api, models, fields, tools, _
 from odoo.http import request
 from odoo.exceptions import UserError
-import odoo.addons.decimal_precision as dp
 
 _logger = logging.getLogger(__name__)
+
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
@@ -372,6 +372,11 @@ class Website(models.Model):
             'sale_transaction_id': False,
             'website_sale_current_pl': False,
         })
+
+    @api.model
+    def get_product_price(self, product, qty=1, public=False, **kw):
+        pricelist = request.website.get_current_pricelist()
+        return product.display_price(pricelist, qty=qty, public=public)
 
 
 class WebsitePricelist(models.Model):
