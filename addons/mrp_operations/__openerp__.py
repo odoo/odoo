@@ -52,6 +52,6 @@ So, that we can compare the theoretic delay and real delay.
     'test': [
         'test/workcenter_operations.yml',
     ],
-    'installable': True,
+    'installable': False,
     'auto_install': False,
 }
