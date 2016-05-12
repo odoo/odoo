@@ -19,7 +19,7 @@ class TaxAdjustments(models.TransientModel):
     credit_account_id = fields.Many2one('account.account', string='Credit account', required=True, domain=[('deprecated', '=', False)])
     amount = fields.Monetary(currency_field='company_currency_id', required=True)
     company_currency_id = fields.Many2one('res.currency', readonly=True, default=lambda self: self.env.user.company_id.currency_id)
-    tax_id = fields.Many2one('account.tax', string='Adjustment Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'none'), ('amount_type', '=', 'fixed'), ('amount', '=', 0)], required=True)
+    tax_id = fields.Many2one('account.tax', string='Adjustment Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'none'), ('tax_adjustment', '=', True)], required=True)
 
     @api.multi
     def _create_move(self):
@@ -52,7 +52,7 @@ class TaxAdjustments(models.TransientModel):
         #create the adjustment move
         move_id = self._create_move()
         #return an action showing the created move
-        action = self.env.ref('account.action_move_line_form')
+        action = self.env.ref(self.env.context.get('action', 'account.action_move_line_form'))
         result = action.read()[0]
         result['views'] = [(False, 'form')]
         result['res_id'] = move_id

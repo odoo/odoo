@@ -64,6 +64,8 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/report_financial.xml',
         'wizard/account_report_aged_partner_balance_view.xml',
         'views/report_agedpartnerbalance.xml',
+        'views/tax_adjustments.xml',
+        'wizard/wizard_tax_adjustments_view.xml',
     ],
     'demo': [
         'demo/account_demo.xml',

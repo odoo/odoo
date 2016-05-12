@@ -8,6 +8,7 @@ from openerp.exceptions import RedirectWarning, UserError, ValidationError
 from openerp.tools.misc import formatLang
 from openerp.tools import float_is_zero, float_compare
 from openerp.tools.safe_eval import safe_eval
+from lxml import etree
 
 #----------------------------------------------------------
 # Entries
@@ -92,6 +93,14 @@ class AccountMove(models.Model):
     statement_line_id = fields.Many2one('account.bank.statement.line', string='Bank statement line reconciled with this entry', copy=False, readonly=True)
     # Dummy Account field to search on account.move by account_id
     dummy_account_id = fields.Many2one('account.account', related='line_ids.account_id', string='Account', store=False)
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        res = super(AccountMove, self).fields_view_get(
+            view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        if self._context.get('vat_domain'):
+            res['fields']['line_ids']['views']['tree']['fields']['tax_line_id']['domain'] = [('tag_ids', 'in', [self.env.ref(self._context.get('vat_domain')).id])]
+        return res
 
     @api.model
     def create(self, vals):
