@@ -22,6 +22,8 @@ function reload_favorite_list(result) {
     if (result.view) {
         self = result.view;
     }
+    // Untick all filters if there is an active partner in the context to disable sidebar's filters
+    var active_partner = (self.dataset.context.active_model === 'res.partner');
     return session.is_bound
     .then(function() {
         var sidebar_items = {};
@@ -31,7 +33,7 @@ function reload_favorite_list(result) {
             label: session.name + _lt(" [Me]"),
             color: self.get_color(filter_value),
             avatar_model: self.avatar_model,
-            is_checked: true,
+            is_checked: !active_partner,
         };
         sidebar_items[filter_value] = filter_item;
 
@@ -56,7 +58,7 @@ function reload_favorite_list(result) {
                         label: item.partner_id[1],
                         color: self.get_color(filter_value),
                         avatar_model: self.avatar_model,
-                        is_checked: true,
+                        is_checked: !active_partner,
                         can_be_removed: true,
                     };
                     sidebar_items[filter_value] = filter_item;
