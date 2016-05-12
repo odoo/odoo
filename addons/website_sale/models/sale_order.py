@@ -373,6 +373,11 @@ class Website(models.Model):
             'website_sale_current_pl': False,
         })
 
+    @api.model
+    def get_product_price(self, product, qty=1, public=False, **kw):
+        pricelist = request.website.get_current_pricelist()
+        return product.get_an_estimated_price(pricelist, qty=qty, public=public)
+
 
 class WebsitePricelist(models.Model):
     _name = 'website_pricelist'
