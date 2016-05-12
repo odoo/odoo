@@ -11,7 +11,7 @@
                     <field name="survey_id"/>
                     <field name="email"/>
                     <field name="partner_id"/>
-                    <filter string="Completed" domain="[('state', '=', 'done')]"/>
+                    <filter name="completed" string="Completed" domain="[('state', '=', 'done')]"/>
                     <filter string="Partially completed" domain="[('state', '=', 'skip')]"/>
                     <filter string="New" domain="[('state', '=', 'new')]"/>
                     <filter string="Test" domain="[('state','=', 'test')]"/>
@@ -125,9 +125,15 @@
                         <field name="stage_id" widget="statusbar" clickable="True" />
                     </header>
                     <sheet>
-                        <div class="oe_button_box" name="button_box" attrs="{'invisible': [('is_closed', '=', False)]}">
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" attrs="{'invisible': [('is_closed', '=', False)]}">
                                 <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                            <button name="action_survey_user_input"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-pencil-square-o">
+                                <field string="Answers" name="tot_comp_survey" widget="statinfo"/>
                             </button>
                         </div>
                         <div class="oe_title" style="width: 100%;">
@@ -606,6 +612,29 @@
                     </group>
                 </form>
             </field>
+        </record>
+
+        <record id="survey_action_server_clean_test_answers" model="ir.actions.server">
+            <field name="name">Clean test answers</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_survey_survey" />
+            <field name="state">code</field>
+            <field name="code">
+                if context.get('active_ids'):
+                    test_answers = self.pool['survey.user_input'].search(cr, uid, [('survey_id', 'in', context['active_ids']), ('test_entry', '=', 'True')], context=context)
+                    self.pool['survey.user_input'].unlink(cr, uid, test_answers, context=context)
+            </field>
+        </record>
+
+        <record id="survey_values_action_clean_test_answers" model="ir.values">
+            <field name="name">Survey clean test answers</field>
+            <field name="action_id" ref="survey_action_server_clean_test_answers" />
+            <field name="value" eval="'ir.actions.server,' + str(ref('survey_action_server_clean_test_answers'))"/>
+            <field name="key">action</field>
+            <field name="model_id" ref="model_survey_survey" />
+            <field name="model">survey.survey</field>
+            <field name="key2">client_action_multi</field>
         </record>
 
         <!-- MENU ELEMENTS -->
