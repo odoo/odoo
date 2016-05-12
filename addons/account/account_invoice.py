@@ -629,9 +629,9 @@ class account_invoice(models.Model):
         line_ids = self.move_line_id_payment_get()
         if not line_ids:
             return False
-        query = "SELECT reconcile_id FROM account_move_line WHERE id IN %s"
+        query = "SELECT count(*) FROM account_move_line WHERE reconcile_id IS NULL AND id IN %s"
         self._cr.execute(query, (tuple(line_ids),))
-        return all(row[0] for row in self._cr.fetchall())
+        return self._cr.fetchone()[0] == 0
 
     @api.multi
     def button_reset_taxes(self):
