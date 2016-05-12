@@ -19,7 +19,6 @@ var QWeb = core.qweb;
 
 function reload_favorite_list(result) {
     var self = result;
-    var current = result;
     if (result.view) {
         self = result.view;
     }
@@ -33,7 +32,6 @@ function reload_favorite_list(result) {
             color: self.get_color(filter_value),
             avatar_model: self.avatar_model,
             is_checked: true,
-            is_remove: false,
         };
         sidebar_items[filter_value] = filter_item;
 
@@ -58,7 +56,8 @@ function reload_favorite_list(result) {
                         label: item.partner_id[1],
                         color: self.get_color(filter_value),
                         avatar_model: self.avatar_model,
-                        is_checked: true
+                        is_checked: true,
+                        can_be_removed: true,
                     };
                     sidebar_items[filter_value] = filter_item;
                 });
@@ -68,11 +67,6 @@ function reload_favorite_list(result) {
 
                 self.sidebar.filter.events_loaded(self.get_all_filters_ordered());
                 self.sidebar.filter.set_filters();
-                self.sidebar.filter.add_favorite_calendar();
-            }).done(function () {
-                if (current.ir_model_m2o) {
-                    current.ir_model_m2o.set_value(false);
-                }
             });
     });
 }
@@ -81,7 +75,10 @@ CalendarView.include({
     extraSideBar: function() {
         var result = this._super();
         if (this.useContacts) {
-            return result.then(reload_favorite_list.bind(this, this));
+            var self = this;
+            return result.then(reload_favorite_list.bind(this, this)).then(function () {
+                self.sidebar.filter.initialize_m2o();
+            });
         }
         return result;
     },
@@ -104,20 +101,8 @@ widgets.SidebarFilter.include({
         this._super.apply(this, arguments);
         this.ds_contacts = new data.DataSet(this, 'calendar.contacts', session.context);
     },
-    events_loaded: function() {
-        this._super.apply(this, arguments);
-        this.reinitialize_m2o();
-    },
-    add_favorite_calendar: function() {
-        if (this.dfm)
-            return;
-        this.initialize_m2o();
-    },
     reinitialize_m2o: function() {
-        if (this.dfm) {
-            this.dfm.destroy();
-            this.dfm = undefined;
-        }
+        this.dfm.destroy();
         this.initialize_m2o();
     },
     initialize_m2o: function() {
@@ -151,9 +136,10 @@ widgets.SidebarFilter.include({
                 defs.push(self.ds_contacts.call("create", [{'partner_id': index}]));
             }
         });
-        return $.when.apply(null, defs).then(function() {
-            return reload_favorite_list(self).then(self.trigger_up.bind(self, 'reload_events'));
-        });
+        return $.when.apply(null, defs)
+            .then(reload_favorite_list.bind(this, this)
+            .then(this.reinitialize_m2o.bind(this))
+            .then(this.trigger_up.bind(this, 'reload_events'));
     },
     destroy_filter: function(e) {
         var self = this;
@@ -163,6 +149,7 @@ widgets.SidebarFilter.include({
             confirm_callback: function() {
                 self.ds_contacts.call('unlink_from_partner_id', [id])
                     .then(reload_favorite_list.bind(self, self))
+                    .then(self.reinitialize_m2o.bind(self))
                     .then(self.trigger_up.bind(self, 'reload_events'));
             },
         });
