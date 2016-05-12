@@ -48,4 +48,14 @@
             </data>
         </field>
     </record>
+
+    <record id="action_hr_department" model="ir.actions.act_window">
+        <field name="name">Departments</field>
+        <field name="res_model">hr.department</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_hr_department" name="Departments"
+            parent="menu_hr_recruitment_configuration" action="action_hr_department"/>
 </odoo>
