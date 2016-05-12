@@ -3,4 +3,5 @@
 
 import hr_timesheet_sheet
 import hr_department
+import hr_timesheet_sheet_config_settings
 import wizard
