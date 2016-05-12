@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2016-04-15 12:00+0000\n"
+"PO-Revision-Date: 2016-05-07 03:39+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -320,7 +320,7 @@ msgid ""
 "                secondary currency set.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                点击添加一个账户.\n              </p><p>\n                在处理多币种交易时，由于兑换汇率的变化，可能会产生兑换增益或者损失。这个菜单提供给您一个假定在今天终结交易预测的损益。只有在账户有多币种时需要配置。\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击添加一个账户.\n              </p><p>\n                在处理多币种交易时，由于兑换汇率的变化，可能会发生兑换增益或者损失。这个菜单提供给您一个假定在今天终结交易预测的损益。只有在账户有多币种时需要配置。\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree1
@@ -1327,7 +1327,7 @@ msgstr "允许调节"
 #. module: account
 #: field:account.config.settings,group_multi_currency:0
 msgid "Allow multi currencies"
-msgstr "允许多种货币"
+msgstr "允许多货币"
 
 #. module: account
 #: field:account.config.settings,group_proforma_invoices:0
@@ -4272,7 +4272,7 @@ msgstr "错误！\n不能创建递归的科目。"
 #. module: account
 #: field:account.account,exchange_rate:0
 msgid "Exchange Rate"
-msgstr "兑换汇率"
+msgstr "汇率"
 
 #. module: account
 #: field:res.company,expects_chart_of_accounts:0
@@ -4717,13 +4717,13 @@ msgstr "完整会计功能：分类账，法定报告，会计科目表 等等"
 #. module: account
 #: selection:account.aged.trial.balance,direction_selection:0
 msgid "Future"
-msgstr "将来"
+msgstr "未来"
 
 #. module: account
 #: field:account.config.settings,income_currency_exchange_account_id:0
 #: field:res.company,income_currency_exchange_account_id:0
 msgid "Gain Exchange Rate Account"
-msgstr "增益兑换汇率科目"
+msgstr "汇率增益科目"
 
 #. module: account
 #: selection:account.analytic.journal,type:0 selection:account.journal,type:0
@@ -5004,7 +5004,7 @@ msgstr "记住交谈者的主要特征（信息的编号，。。。），此主
 #: field:validate.account.move,id:0 field:validate.account.move.lines,id:0
 #: field:wizard.multi.charts.accounts,id:0
 msgid "ID"
-msgstr "编号"
+msgstr "ID"
 
 #. module: account
 #: field:account.journal.period,icon:0
@@ -6253,7 +6253,7 @@ msgstr "损失科目"
 #: field:account.config.settings,expense_currency_exchange_account_id:0
 #: field:res.company,expense_currency_exchange_account_id:0
 msgid "Loss Exchange Rate Account"
-msgstr "损失兑换汇率科目"
+msgstr "汇率损失科目"
 
 #. module: account
 #: code:addons/account/account.py:3198
@@ -6625,7 +6625,7 @@ msgstr "无跟进"
 #: code:addons/account/account_invoice.py:799
 #, python-format
 msgid "No Invoice Lines!"
-msgstr "没有发票明细行"
+msgstr "无发票明细行"
 
 #. module: account
 #: code:addons/account/account_invoice.py:1311
@@ -7245,7 +7245,7 @@ msgstr "用支票支付您的供应商"
 #: model:account.account.type,name:account.data_account_type_payable
 #: selection:account.entries.report,type:0
 msgid "Payable"
-msgstr "应付"
+msgstr "应付账款"
 
 #. module: account
 #: view:account.chart.template:account.view_account_chart_template_seacrh
@@ -7270,12 +7270,12 @@ msgstr "应付科目"
 #. module: account
 #: field:res.partner,debit_limit:0
 msgid "Payable Limit"
-msgstr "应付限额"
+msgstr "应付账款限额"
 
 #. module: account
 #: view:account.statement.from.invoice.lines:account.view_account_statement_from_invoice_lines
 msgid "Payable and Receivables"
-msgstr "应收和应付"
+msgstr "应收账款和应付账款"
 
 #. module: account
 #: view:account.invoice:account.invoice_supplier_form
@@ -7967,7 +7967,7 @@ msgstr "应收科目"
 #: view:website:account.report_agedpartnerbalance
 #, python-format
 msgid "Receivable and Payable Accounts"
-msgstr "应收与应付科目"
+msgstr "应收账款与应付账款科目"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -9671,14 +9671,14 @@ msgstr "为这张发票在分类账分录中使用的商业实体"
 msgid ""
 "The company of the gain exchange rate account must be the same than the "
 "company selected."
-msgstr "选择的增益兑换汇率科目不属性对应的公司科目。"
+msgstr "选择的汇率增益科目不属性对应的公司科目。"
 
 #. module: account
 #: constraint:account.config.settings:0
 msgid ""
 "The company of the loss exchange rate account must be the same than the "
 "company selected."
-msgstr "选择的损失兑换汇率科目不属性对应的公司科目。"
+msgstr "选择的汇率损失科目不属性对应的公司科目。"
 
 #. module: account
 #: help:account.tax,type:0
@@ -10467,7 +10467,7 @@ msgstr "已开票总计"
 #. module: account
 #: field:res.partner,debit:0
 msgid "Total Payable"
-msgstr "应付款总计"
+msgstr "应付账款总计"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_tree
@@ -11039,7 +11039,7 @@ msgstr "余额不等于零"
 #: view:website:account.report_generalledger
 #: view:website:account.report_trialbalance
 msgid "With movements"
-msgstr "有变动"
+msgstr "有运动"
 
 #. module: account
 #: view:account.statement.operation.template:account.view_account_statement_operation_template_search
@@ -11547,7 +11547,7 @@ msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr "您应该在会计配置配置“增益兑换汇率科目”，自动管理与汇率之间的差额的会计分录的预订"
+msgstr "您应该在会计配置配置“汇率增益科目”，自动管理与汇率之间的差额的会计分录的预订"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:686
@@ -11556,7 +11556,7 @@ msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr "您应该在会计配置配置“损失兑换汇率科目”，自动管理与汇率之间的差额的会计分录的预订"
+msgstr "您应该在会计配置配置“汇率损失科目”，自动管理与汇率之间的差额的会计分录的预订"
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:57
