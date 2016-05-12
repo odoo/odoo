@@ -93,6 +93,16 @@ CalendarView.include({
     }
 });
 
+var FieldMany2One = core.form_widget_registry.get('many2one');
+var SidebarFilterM2O = FieldMany2One.extend({
+    get_search_blacklist: function () {
+        return this._super.apply(this, arguments).concat(this.filter_ids);
+    },
+    set_filter_ids: function (filter_ids) {
+        this.filter_ids = filter_ids;
+    },
+});
+
 widgets.SidebarFilter.include({
     events: _.extend(widgets.SidebarFilter.prototype.events, {
         'click .oe_remove_follower': 'destroy_filter',
@@ -106,15 +116,13 @@ widgets.SidebarFilter.include({
         this.initialize_m2o();
     },
     initialize_m2o: function() {
-        var self = this;
-        this.dfm = new form_common.DefaultFieldManager(self);
+        this.dfm = new form_common.DefaultFieldManager(this);
         this.dfm.extend_field_desc({
             partner_id: {
                 relation: "res.partner",
             },
         });
-        var FieldMany2One = core.form_widget_registry.get('many2one');
-        this.ir_model_m2o = new FieldMany2One(self.dfm, {
+        this.m2o = new SidebarFilterM2O(this.dfm, {
             attrs: {
                 class: 'o_add_favorite_calendar',
                 name: "partner_id",
@@ -123,15 +131,14 @@ widgets.SidebarFilter.include({
                 placeholder: _t("Add Favorite Calendar"),
             },
         });
-        this.ir_model_m2o.appendTo(this.$el);
-        this.ir_model_m2o.on('change:value', self, function() { 
-            self.add_filter();
-        });
+        this.m2o.set_filter_ids(_.pluck(this.view.all_filters, 'value'));
+        this.m2o.appendTo(this.$el);
+        this.m2o.on('change:value', this, this.add_filter.bind(this));
     },
     add_filter: function() {
         var self = this;
         var defs = [];
-        _.each(this.ir_model_m2o.display_value, function(element, index) {
+        _.each(this.m2o.display_value, function(element, index) {
             if (session.partner_id !== index) {
                 defs.push(self.ds_contacts.call("create", [{'partner_id': index}]));
             }
