@@ -39,6 +39,10 @@ var Dialog = Widget.extend({
     close: function () {
         this.$el.modal('hide');
     },
+    destroy: function () {
+        this._super();
+        $("body:has('> .modal:visible')").addClass('modal-open');
+    },
     stop_escape: function(event) {
         if($(".modal.in").length>0 && event.which == 27){
             event.stopPropagation();
