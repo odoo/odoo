@@ -38,7 +38,6 @@ Dashboard for CRM will include:
         'resource',
         'fetchmail',
         'utm',
-        'web_tip',
         'web_planner',
     ],
     'data': [
@@ -47,7 +46,6 @@ Dashboard for CRM will include:
         'data/crm_stage_data.xml',
         'data/sales_config_settings_data.xml',
         'crm_lead_data.xml',
-        'crm_tip_data.xml',
 
         'security/crm_security.xml',
         'security/ir.model.access.csv',

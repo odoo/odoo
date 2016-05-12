@@ -8,7 +8,7 @@ Odoo link module for web tips.
 
 """,
     'version': '0.1',
-    'depends': ['web_tip', 'mail'],
+    'depends': ['mail'],
     'data': [
         'views/mail_tip.xml',
     ],
