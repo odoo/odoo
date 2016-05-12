@@ -348,7 +348,7 @@
             <field name="name">sale.order.form.editable.list</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
-            <field name="groups_id" eval="[(4, ref('product.group_uos')), (4, ref('product.group_stock_packaging')), (4, ref('sale.group_mrp_properties'))]"/>
+            <field name="groups_id" eval="[(4, ref('product.group_stock_packaging')), (4, ref('sale.group_mrp_properties'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='order_line']/tree" position="attributes">
                     <attribute name="editable"/>
