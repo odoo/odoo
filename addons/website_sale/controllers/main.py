@@ -111,15 +111,16 @@ class WebsiteSale(http.Controller):
         """
         # product attributes with at least two choices
         visible_attrs_ids = product.mapped('attribute_line_ids.attribute_id').filtered(lambda attr: len(attr.value_ids) > 1).ids
-        to_currency = request.website.get_current_pricelist().currency_id
+        pl = request.website.get_current_pricelist()
+        to_currency = pl.currency_id
         attribute_value_ids = []
         for variant in product.product_variant_ids:
             if to_currency != product.currency_id:
-                price = variant.currency_id.compute(variant.lst_price, to_currency)
+                price = variant.currency_id.compute(variant.display_price(pl, public=True), to_currency)
             else:
-                price = variant.lst_price
+                price = variant.display_price(pl, public=True)
             visible_attribute_ids = [v.id for v in variant.attribute_value_ids if v.attribute_id.id in visible_attrs_ids]
-            attribute_value_ids.append([variant.id, visible_attribute_ids, variant.price, price])
+            attribute_value_ids.append([variant.id, visible_attribute_ids, variant.display_price(pl), price])
         return attribute_value_ids
 
     def _get_search_order(self, post):
@@ -976,9 +977,6 @@ class WebsiteSale(http.Controller):
         return ret
 
     @http.route(['/shop/get_unit_price'], type='json', auth="public", methods=['POST'], website=True)
-    def get_unit_price(self, product_ids, add_qty, use_order_pricelist=False, **kw):
+    def get_unit_price(self, product_ids, add_qty, **kw):
         products = request.env['product.product'].browse(product_ids)
-        partner = request.env.user.partner_id
-        pricelist = request.website.get_current_pricelist()
-        prices = pricelist.price_rule_get_multi([(product, add_qty, partner) for product in products])
-        return {product_id: prices[product_id][pricelist.id][0] for product_id in product_ids}
+        return {product.id: request.website.get_product_price(product, qty=add_qty) / add_qty for product in products}
