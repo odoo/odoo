@@ -128,6 +128,8 @@ class Discussion(models.Model):
     participants = fields.Many2many('res.users')
     messages = fields.One2many('test_new_api.message', 'discussion')
     message_concat = fields.Text(string='Message concatenate')
+    important_messages = fields.One2many('test_new_api.message', 'discussion',
+                                         domain=[('important', '=', True)])
 
     @api.onchange('moderator')
     def _onchange_moderator(self):
@@ -152,6 +154,7 @@ class Message(models.Model):
     author_partner = fields.Many2one(
         'res.partner', compute='_compute_author_partner',
         search='_search_author_partner')
+    important = fields.Boolean()
 
     @api.one
     @api.constrains('author', 'discussion')
