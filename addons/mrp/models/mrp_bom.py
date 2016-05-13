@@ -139,7 +139,7 @@ class BoM(models.Model):
             'workcenter_id': workcenter.id,
             'sequence': level + (routing_workcenter.sequence or 0),
             'cycle': cycle,
-            'hour': float(routing_workcenter.hour_nbr * mult + ((workcenter.time_start or 0.0) + (workcenter.time_stop or 0.0) + cycle * (workcenter.time_cycle or 0.0)) * (workcenter.time_efficiency or 1.0)),
+            'hour': float(routing_workcenter.hour_nbr * mult + ((workcenter.time_start or 0.0) + (workcenter.time_stop or 0.0) + cycle * (workcenter.time_cycle or 0.0)) * (workcenter.time_efficiency or 100)),
         }
 
     @api.model
