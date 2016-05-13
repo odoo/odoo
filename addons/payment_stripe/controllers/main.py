@@ -30,10 +30,13 @@ class StripeController(http.Controller):
 
         Expects the result from the user input from checkout.js popup"""
         acquirer = request.env['payment.acquirer'].browse(int(post.get('acquirer_id')))
-        order = request.env['sale.order'].sudo().browse(int(request.session.get('sale_order_id')))
+
+        sale_order_id = int(request.session.get('sale_order_id') or post.get('sale_order_id'))
+
+        order = request.env['sale.order'].sudo().browse(sale_order_id)
         tx = request.env['payment.transaction'].sudo().create({
             'acquirer_id': acquirer.id,
-            'reference': str(post.get('invoice_num')),
+            'reference': 'STRIPE-%s' % order.id,
             'amount': float(post.get('amount')),
             'currency_id': request.env['res.currency'].search([('name', '=', post.get('currency'))], limit=1).id,
             'partner_id': request.env.user.partner_id.id,
