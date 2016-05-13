@@ -634,10 +634,10 @@ def trans_export(lang, modules, buffer, format, cr):
         if format == 'csv':
             writer = csv.writer(buffer, 'UNIX')
             # write header first
-            writer.writerow(("module","type","name","res_id","src","value"))
+            writer.writerow(("module","type","name","res_id","src","value","comments"))
             for module, type, name, res_id, src, trad, comments in rows:
-                # Comments are ignored by the CSV writer
-                writer.writerow((module, type, name, res_id, src, trad))
+                comments = '\n'.join(comments)
+                writer.writerow((module, type, name, res_id, src, trad, comments))
         elif format == 'po':
             writer = TinyPoFile(buffer)
             writer.write_infos(modules)

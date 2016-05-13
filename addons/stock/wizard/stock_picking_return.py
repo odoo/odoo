@@ -42,6 +42,8 @@ class ReturnPicking(models.TransientModel):
             if picking.state != 'done':
                 raise UserError(_("You may only return Done pickings"))
             for move in picking.move_lines:
+                if move.scrapped:
+                    continue
                 if move.move_dest_id:
                     move_dest_exists = True
                 # Sum the quants in that location that can be returned (they should have been moved by the moves that were included in the returned picking)

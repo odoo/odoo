@@ -110,7 +110,7 @@ class ReportGeneralLedger(models.AbstractModel):
     @api.multi
     def render_html(self, data):
         self.model = self.env.context.get('active_model')
-        docs = self.env[self.model].browse(self.env.context.get('active_id'))
+        docs = self.env[self.model].browse(self.env.context.get('active_ids', []))
 
         init_balance = data['form'].get('initial_balance', True)
         sortby = data['form'].get('sortby', 'sort_date')
@@ -119,7 +119,7 @@ class ReportGeneralLedger(models.AbstractModel):
         if data['form'].get('journal_ids', False):
             codes = [journal.code for journal in self.env['account.journal'].search([('id', 'in', data['form']['journal_ids'])])]
 
-        accounts = self.env['account.account'].search([])
+        accounts = docs if self.model == 'account.account' else self.env['account.account'].search([])
         accounts_res = self.with_context(data['form'].get('used_context',{}))._get_account_move_entry(accounts, init_balance, sortby, display_account)
         docargs = {
             'doc_ids': self.ids,

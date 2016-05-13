@@ -2469,7 +2469,7 @@ class BaseModel(object):
     def _m2o_add_foreign_key_unchecked(self, source_table, source_field, dest_model, ondelete, module):
         fk_def = (source_table, source_field, dest_model._table, ondelete or 'set null', module)
         self._foreign_keys.add(fk_def)
-        _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s", *fk_def)
+        _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s", *fk_def[:-1])
 
     def _drop_constraint(self, cr, source_table, constraint_name):
         cr.execute("ALTER TABLE %s DROP CONSTRAINT %s" % (source_table,constraint_name))

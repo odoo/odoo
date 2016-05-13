@@ -121,8 +121,15 @@ class SaleOrder(models.Model):
     @api.depends('project_id.line_ids')
     def _compute_timesheet_ids(self):
         for order in self:
-            order.timesheet_ids = self.env['account.analytic.line'].search([('project_id', '!=', False), ('account_id', '=', order.project_id.id)]) if order.project_id else []
-            order.timesheet_count = round(sum([line.unit_amount for line in order.timesheet_ids]), 2)
+            if order.project_id:
+                order.timesheet_ids = self.env['account.analytic.line'].search(
+                    [('so_line', 'in', order.order_line.ids),
+                     '|',
+                        ('amount', '<=', 0.0),
+                        ('project_id', '!=', False)])
+            else:
+                order.timesheet_ids = []
+            order.timesheet_count = len(order.timesheet_ids)
 
     @api.multi
     @api.constrains('order_line')
