@@ -27,8 +27,6 @@ class MrpProduction(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    property_ids = fields.Many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties', readonly=True, states={'draft': [('readonly', False)]})
-
     @api.multi
     def _get_delivered_qty(self):
         self.ensure_one()
@@ -60,58 +58,9 @@ class SaleOrderLine(models.Model):
             return 0.0
         return super(SaleOrderLine, self)._get_delivered_qty()
 
-    @api.multi
-    def _get_bom_component_qty(self, bom):
-        product_uom_qty_bom = self.env['product.uom']._compute_qty_obj(self.product_uom, self.product_uom_qty, bom.product_uom)
-        bom_exploded = self.env['mrp.bom']._bom_explode(bom, self.product_id, product_uom_qty_bom)[0]
-        components = {}
-        for bom_line in bom_exploded:
-            product = bom_line['product_id']
-            uom = bom_line['product_uom']
-            qty = bom_line['product_qty']
-            if components.get(product, False):
-                if uom != components[product]['uom']:
-                    from_uom_id = uom
-                    to_uom_id = components[product]['uom']
-                    qty = self.env['product.uom']._compute_qty(from_uom_id, qty, to_uom_id=to_uom_id)
-                components[product]['qty'] += qty
-            else:
-                # To be in the uom reference of the product
-                to_uom = self.env['product.product'].browse([product])[0].uom_id.id
-                if uom != to_uom:
-                    qty = self.env['product.uom']._compute_qty(uom, qty, to_uom_id=to_uom)
-                components[product] = {'qty': qty, 'uom': to_uom}
-        return components
-
-
-
-    @api.multi
-    def _prepare_order_line_procurement(self, group_id=False):
-        vals = super(SaleOrderLine, self)._prepare_order_line_procurement(group_id=group_id)
-        vals['property_ids'] = [(6, 0, self.property_ids.ids)]
-        return vals
-
-
-class StockMove(models.Model):
-    _inherit = 'stock.move'
-
-    @api.multi
-    def _prepare_procurement_from_move(self):
-        res = super(StockMove, self)._prepare_procurement_from_move()
-        if res and self.procurement_id and self.procurement_id.property_ids:
-            res['property_ids'] = [(6, 0, self.procurement_id.property_ids.ids)]
-        return res
-
-    @api.multi
-    def _action_explode(self):
-        """ Explodes pickings.
-        @param move: Stock moves
-        @return: True
-        """
-        property_ids = self.procurement_id.sale_line_id.property_ids.ids
-        return super(StockMove, self.with_context(property_ids=property_ids))._action_explode()
 
 class AccountInvoiceLine(models.Model):
+    # TDE FIXME: what is this code ??
     _inherit = "account.invoice.line"
 
     def _get_anglo_saxon_price_unit(self):

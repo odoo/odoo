@@ -29,6 +29,6 @@ Share and Publish Videos, Presentations and Documents'
     'demo': [
         'data/website_slides_demo.xml'
     ],
-    'installable': True,
+    'installable': False,
     'application': True,
 }

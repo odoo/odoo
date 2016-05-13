@@ -31,7 +31,7 @@ class TestMrpCommon(common2.TestStockCommon):
         cls.bom_1 = cls.env['mrp.bom'].create({
             'product_id': cls.product_1.id,
             'product_tmpl_id': cls.product_1.product_tmpl_id.id,
-            'product_uom': cls.product_1.uom_id.id,
+            'product_uom_id': cls.product_1.uom_id.id,
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [

@@ -20,7 +20,6 @@ class ProcurementOrder(models.Model):
     _inherit = 'procurement.order'
 
     bom_id = fields.Many2one('mrp.bom', 'BoM', ondelete='cascade', select=True)
-    property_ids = fields.Many2many('mrp.property', 'procurement_property_rel', 'procurement_id','property_id', 'Properties')
     production_id = fields.Many2one('mrp.production', 'Manufacturing Order')
 
     @api.multi
@@ -32,6 +31,7 @@ class ProcurementOrder(models.Model):
 
     @api.multi
     def _run(self):
+        self.ensure_one()
         if self.rule_id and self.rule_id.action == 'manufacture':
             # make a manufacturing order for the procurement
             return self.make_mo()[self.id]
@@ -39,7 +39,8 @@ class ProcurementOrder(models.Model):
 
     @api.multi
     def _check(self):
-        if self.production_id and self.production_id.state == 'done':  # TOCHECK: no better method? 
+        self.ensure_one()
+        if self.production_id and self.production_id.state == 'done':  # TOCHECK: no better method?
             return True
         return super(ProcurementOrder, self)._check()
 
@@ -49,38 +50,37 @@ class ProcurementOrder(models.Model):
         @return: True or False
         """
         for procurement in self:
-            # TDE FIXME: properties -> property_ids
-            bom = self.env['mrp.bom']._bom_find(product_id=procurement.product_id.id, properties=procurement.property_ids.ids)
+            bom = self.env['mrp.bom']._bom_find(product=procurement.product_id)
             if not bom:
                 return False
         return True
 
     def _get_date_planned(self):
-        format_date_planned = datetime.strptime(self.date_planned,
-                                                DEFAULT_SERVER_DATETIME_FORMAT)
+        # TDE FIXME: dead code, was called in prepare mo vals
+        format_date_planned = fields.Datetime.from_string(self.date_planned)
         date_planned = format_date_planned - relativedelta(days=self.product_id.produce_delay or 0.0)
         date_planned = date_planned - relativedelta(days=self.company_id.manufacturing_lead)
         return date_planned
 
     def _prepare_mo_vals(self):
-        BoM = self.env['mrp.bom'].with_context(company_id=self.company_id.id)
+        BoM = self.env['mrp.bom'].with_context(company_id=self.company_id.id, force_company=self.company_id.id)  # TDE FIXME: context bullshit
         if self.bom_id:
             bom = self.bom_id
-            routing_id = self.bom_id.routing_id.id
         else:
-            bom = BoM._bom_find(product_id=self.product_id.id,
-                                properties=self.property_ids.ids)
-            routing_id = bom.routing_id.id
+            bom = BoM._bom_find(product=self.product_id,
+                                picking_type=self.rule_id.picking_type_id)
         return {
             'origin': self.origin,
             'product_id': self.product_id.id,
             'product_qty': self.product_qty,
-            'product_uom': self.product_uom.id,
+            'product_uom_id': self.product_uom.id,
             'location_src_id': self.rule_id.location_src_id.id or self.location_id.id,
             'location_dest_id': self.location_id.id,
             'bom_id': bom.id,
-            'routing_id': routing_id,
-            'date_planned': self._get_date_planned().strftime('%Y-%m-%d %H:%M:%S'),  # TDE FIXME: use tools
+            'date_planned': self.date_planned,
+            'procurement_group_id': self.group_id.id,
+            'propagate': self.rule_id.propagate,
+            'picking_type_id': self.rule_id.picking_type_id.id or self.warehouse_id.manu_type_id.id,
             'move_prod_id': self.move_dest_id.id,
             'company_id': self.company_id.id,
         }
@@ -100,8 +100,6 @@ class ProcurementOrder(models.Model):
                 res[procurement.id] = production.id
                 procurement.write({'production_id': production.id})
                 procurement.message_post(body=_("Manufacturing Order <em>%s</em> created.") % (production.name))
-                production.action_compute(properties=procurement.property_ids.ids)
-                production.signal_workflow('button_confirm')
             else:
                 res[procurement.id] = False
                 procurement.message_post(body=_("No BoM exists for this product!"))

@@ -9,7 +9,7 @@
     'category': 'Manufacturing',
     'sequence': 14,
     'summary': 'Manufacturing Orders, Bill of Materials, Routings',
-    'depends': ['product', 'procurement', 'stock_account', 'resource', 'report'],
+    'depends': ['product', 'stock', 'resource'],
     'description': """
 Manage the Manufacturing process in Odoo
 ===========================================
@@ -36,28 +36,42 @@ Dashboard / Reports for MRP will include:
     'data': [
         'security/mrp_security.xml',
         'security/ir.model.access.csv',
-        'data/mrp_data_workflow.xml',
+        # 'data/mrp_data_workflow.xml',
         'data/mrp_data.xml',
         'wizard/mrp_product_produce_views.xml',
         'wizard/change_production_qty_views.xml',
         'wizard/stock_move_consume_views.xml',
+        'wizard/mrp_workcenter_block_view.xml',
+
         'views/mrp_views_menus.xml',
-        'views/mrp_property_views.xml',
+
+        'views/stock_move_views.xml',
+
+
+        # 'views/mrp_property_views.xml',
         'views/mrp_workcenter_views.xml',
-        'views/mrp_routing_views.xml',
+
         'views/mrp_production_views.xml',
+        'views/mrp_routing_views.xml',
+
         'views/mrp_bom_views.xml',
         'views/procurement_views.xml',
         'views/product_views.xml',
         'views/stock_warehouse_views.xml',
+
+        'views/stock_picking_views.xml',
+
         'views/res_company_views.xml',
         'views/mrp_config_settings_views.xml',
+        'views/mrp.xml',
         'report/mrp_report_views_main.xml',
         'report/mrp_report_views.xml',
         'report/mrp_production_templates.xml',
         'report/mrp_bom_templates.xml',
     ],
-    'demo': ['data/mrp_demo.xml'],
+    'demo': [
+        'data/mrp_demo.xml',
+        'data/mrp_lot_demo.yml'],
     'test': [],
     'installable': True,
     'application': True,

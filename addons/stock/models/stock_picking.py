@@ -227,6 +227,8 @@ class Picking(models.Model):
         readonly=True, required=True,
         states={'draft': [('readonly', False)]})
     move_lines = fields.One2many('stock.move', 'picking_id', string="Stock Moves", copy=True)
+    has_scrap_move = fields.Boolean(
+        'Has Scrap Moves', compute='_has_scrap_move')
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Picking Type',
         required=True,
@@ -340,6 +342,11 @@ class Picking(models.Model):
     @api.one
     def _set_min_date(self):
         self.move_lines.write({'date_expected': self.min_date})
+
+    @api.one
+    def _has_scrap_move(self):
+        # TDE FIXME: better implementation
+        self.has_scrap_move = bool(self.pool['stock.move'].search_count([('picking_id', '=', self.id), ('scrapped', '=', True)]))
 
     @api.one
     def _compute_quant_reserved_exist(self):
@@ -994,3 +1001,28 @@ class Picking(models.Model):
             else:
                 raise UserError(_('Please process some quantities to put in the pack first!'))
         return package
+
+    def button_scrap(self, cr, uid, ids, context=None):
+        picking = self.browse(cr, uid, ids, context=context)
+        view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'stock.stock_scrap_form_view2')
+        return {
+            'name': _('Scrap'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'stock.scrap',
+            'view_id': view_id,
+            'type': 'ir.actions.act_window',
+            'context': {'default_picking_id': ids[0], 'product_ids': picking.pack_operation_product_ids.mapped('product_id').ids},
+            'target': 'new',
+        }
+
+    def button_scrapped_moves(self, cr, uid, ids, context=None):
+        action_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'stock.action_move_form2')
+        scrap_moves = self.pool['stock.move'].search(cr, uid, [('picking_id', '=', ids[0]), ('scrapped', '=', True), ('state', '=', 'done')], context=context)
+        if action_id:
+            action = self.pool['ir.actions.act_window'].read(cr, uid, action_id, [], context=context)
+            action['domain'] = [('id', 'in', scrap_moves)]
+            action_context = eval(action['context'])
+            action_context['scrap_move'] = True
+            action['context'] = str(action_context)
+            return action
