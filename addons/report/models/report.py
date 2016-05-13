@@ -126,11 +126,11 @@ class Report(osv.Model):
         """
         # If the report is using a custom model to render its html, we must use it.
         # Otherwise, fallback on the generic html rendering.
-        try:
-            report_model_name = 'report.%s' % report_name
-            particularreport_obj = self.pool[report_model_name]
+        report_model_name = 'report.%s' % report_name
+        particularreport_obj = self.pool.get(report_model_name)
+        if particularreport_obj is not None:
             return particularreport_obj.render_html(cr, uid, ids, data=data, context=context)
-        except KeyError:
+        else:
             report = self._get_report_from_name(cr, uid, report_name)
             report_obj = self.pool[report.model]
             docs = report_obj.browse(cr, uid, ids, context=context)
