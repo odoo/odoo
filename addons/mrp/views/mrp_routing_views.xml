@@ -10,8 +10,7 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="workcenter_id"/>
-                    <field name="cycle_nbr"/>
-                    <field name="hour_nbr"/>
+                    <field name="time_cycle" widget="float_time"/>
                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -23,18 +22,34 @@
                 <form string="Routing Work Centers">
                     <sheet>
                         <group>
-                            <group>
+                            <group name="description">
                                 <field name="name"/>
                                 <field name="workcenter_id"/>
-                                <field name="sequence" groups="base.group_no_one"/>
-                            </group><group>
-                                <field name="cycle_nbr"/>
-                                <field name="hour_nbr" widget="float_time"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                <field name="sequence" groups="base.group_no_one"/>
+                            </group><group name="workorder">
+                                <field name="workorder_count" invisible="1"/>
+                                <field name="time_mode" widget="radio"/>
+                                <label for="time_mode_batch" attrs="{'invisible': [('time_mode', '=', 'manual')]}"/>
+                                <div attrs="{'invisible': [('time_mode', '=', 'manual')]}">
+                                    last
+                                    <field name="time_mode_batch" class="oe_inline"/>
+                                    work orders
+                                </div>
+                                <label for="time_cycle_manual" attrs="{'invisible': [('time_mode', '=', 'auto'), ('workorder_count', '!=' , 0)]}" string="Default Duration"/>
+                                <div attrs="{'invisible':  [('time_mode', '=', 'auto'), ('workorder_count', '!=' , 0)]}">
+                                    <field name="time_cycle_manual" widget="float_time" class="oe_inline"/> minutes
+                                </div>
                             </group>
                         </group>
-                        <label for="note"/>
-                        <field name="note"/>
+                        <notebook>
+                            <page string="Description">
+                                <field name="note"/>
+                            </page>
+                            <page string="Work Sheet">
+                                <field name="worksheet" widget="image"/>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
@@ -49,14 +64,24 @@
                 <form string="Routing">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            <button name="%(action_mrp_routing_time)d" type="action" class="oe_stat_button" icon="fa-clock-o">
+                                <div class="o_form_field o_stat_info">
+                                    <span class="o_stat_text">Time<br/> Analysis</span>
+                                </div>
                             </button>
+                            <button class="oe_stat_button" name="toggle_active" type="object" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                    options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="code"/>
+                            </h1>
                         </div>
                         <group>
                             <group>
                                 <field name="name"/>
-                                <field name="code"/>
                             </group>
                             <group>
                                 <field name="location_id"/>
@@ -65,7 +90,7 @@
                         </group>
                         <notebook>
                             <page string="Work Center Operations">
-                                <field name="workcenter_lines" string="Operation"/>
+                                <field name="operation_ids"/>
                             </page>
                             <page string="Notes">
                                 <field name="note"/>
@@ -123,7 +148,7 @@
         </record>
         <menuitem id="menu_mrp_routing_action"
           action="mrp_routing_action"
-          parent="menu_mrp_configuration"
+          parent="menu_mrp_bom"
           groups="group_mrp_routings"
           sequence="50"/>
     </data>

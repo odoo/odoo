@@ -8,28 +8,31 @@
             <field name="arch" type="xml">
                 <form string="Bill of Material">
                     <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                        </button>
-                    </div>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object"
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                    options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
                     <group>
                         <group>
                             <field name="product_tmpl_id"/>
                             <field name="product_id" groups="product.group_product_variant"/>
                             <label for="product_qty" string="Quantity"/>
-                            <div>
-                                <field name="product_qty" class="oe_inline"/>
-                                <field name="product_uom" options="{'no_open':True,'no_create':True}" class="oe_inline" groups="product.group_uom"/>
+                            <div class="o_row">
+                                <field name="product_qty"/>
+                                <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
                             </div>
-                            <label for="routing_id" class="oe_inline" groups="mrp.group_mrp_routings"/>
-                            <div groups="mrp.group_mrp_routings">
-                                <field name="routing_id" class="oe_inline"/>
-                            </div>
+                            <field name="routing_id" groups="mrp.group_mrp_routings"/>
                         </group>
                         <group>
                             <field name="code"/>
                             <field name="type" widget="radio"/>
+                            <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
+                                When processing a sales order for this product, the delivery order
+                                will contain the raw materials, instead of the finished product.
+                            </p>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         </group>
                     </group>
@@ -39,36 +42,25 @@
                                 <tree string="Components" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id"/>
+                                    <field name="has_attachments" invisible="1"/>
+                                    <button name="action_see_attachments" type="object" icon="fa-files-o" attrs="{'invisible': [('has_attachments', '=', False)]}"/>
+                                    <button name="action_see_attachments" type="object" icon="fa-file" attrs="{'invisible': [('has_attachments', '=', True)]}"/>
                                     <field name="product_qty"/>
-                                    <field name="product_uom" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
-                                    <field name="product_rounding" groups="mrp.group_rounding_efficiency"/>
-                                    <field name="product_efficiency" groups="mrp.group_rounding_efficiency"/>
-                                    <field name="date_start"/>
-                                    <field name="date_stop"/>
+                                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
                                     <field name="attribute_value_ids" widget="many2many_tags" domain="[('product_ids.product_tmpl_id', '=', parent.product_tmpl_id)]" groups="product.group_product_variant"/>
-                                    <field name="property_ids" widget="many2many_tags" groups="product.group_mrp_properties"/>
+                                    <field name="operation_id" groups="mrp.group_mrp_routings" domain="[('routing_id', '=', parent.routing_id)]"/>
                                 </tree>
                             </field>
                         </page>
-                        <page string="Properties" groups="base.group_no_one">
+                        <page string="Miscellaneous">
                             <group>
                                 <group>
-                                    <field name="position"/>
                                     <field name="sequence"/>
                                 </group>
                                 <group>
-                                    <field name="date_start"/>
-                                    <field name="date_stop"/>
-                                    <field name="product_rounding"/>
-                                    <field name="product_efficiency"/>
+                                    <field name="ready_to_produce" string="Manufacturing Readiness"/>
+                                    <field name="picking_type_id" string="Operation"/>
                                 </group>
-                            </group>
-                            <separator string="Properties" groups="product.group_mrp_properties"/>
-                            <group>
-                                <group>
-                                    <field name="property_ids" widget="many2many_tags" groups="product.group_mrp_properties"/>
-                                </group>
-                                <group/>
                             </group>
                         </page>
                     </notebook>
@@ -90,7 +82,8 @@
                     <field name="code"/>
                     <field name="product_id" groups="product.group_product_variant"/>
                     <field name="product_qty"/>
-                    <field name="product_uom" groups="product.group_uom"/>
+                    <field name="product_uom_id" groups="product.group_uom"/>
+                    <field name="routing_id" groups="mrp.group_mrp_routings"/>
                 </tree>
             </field>
         </record>
@@ -99,16 +92,15 @@
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
                 <search string="Search Bill Of Material">
-                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                    <field name="code"/>
+                    <field name="code" filter_domain="['|',('code','ilike',self),('product_tmpl_id','ilike',self)]"/>
                     <field name="bom_line_ids" string="Components"/>
                     <field name="product_tmpl_id" string="Product"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" domain="[]" context="{'group_by':'product_tmpl_id'}"/>
-                        <filter string='Default Unit of Measure' domain="[]" context="{'group_by' : 'product_uom'}"/>
+                        <filter string='Default Unit of Measure' domain="[]" context="{'group_by' : 'product_uom_id'}"/>
                         <filter string="Routings" domain="[]" context="{'group_by':'routing_id'}"/>
-                        <filter string="Valid From Month" domain="[]" context="{'group_by':'date_start'}" help="Valid From Date by Month"/>
                    </group>
                 </search>
             </field>
@@ -148,14 +140,9 @@
                     <field name="bom_id"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
-                    <field name="product_rounding"/>
-                    <field name="product_efficiency"/>
-                    <field name="product_uom" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
-                    <field name="date_start"/>
-                    <field name="date_stop"/>
+                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
                     <field name="routing_id"/>
                     <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
-                    <field name="property_ids" widget="many2many_tags" groups="product.group_mrp_properties"/>
                 </tree>
             </field>
         </record>
@@ -167,10 +154,8 @@
                 <tree string="Bill of Materials">
                     <field name="sequence" invisible="1"/>
                     <field name="product_id"/>
-                    <field name="product_uom" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
+                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
-                    <field name="date_start"/>
-                    <field name="date_stop"/>
                 </tree>
             </field>
         </record>
@@ -184,14 +169,13 @@
                     <group expand="0" string="Group By...">
                         <filter string="Bill Of Material" domain="[]" context="{'group_by':'bom_id'}"/>
                         <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string='Default Unit of Measure' domain="[]" context="{'group_by' : 'product_uom'}"/>
+                        <filter string='Default Unit of Measure' domain="[]" context="{'group_by' : 'product_uom_id'}"/>
                         <filter string="Routings" domain="[]" context="{'group_by':'routing_id'}"/>
-                        <filter string=" Valid From Month" domain="[]" context="{'group_by':'date_start'}" help="Valid From Date by Month"/>
                    </group>
                 </search>
             </field>
         </record>
-        <record id="action2" model="ir.actions.act_window">
+        <record id="mrp_bom_line_action_from_bom" model="ir.actions.act_window">
             <field name="name">Bill of Materials Structure</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom.line</field>
@@ -204,7 +188,7 @@
             <field eval="'client_action_multi'" name="key2"/>
             <field eval="'mrp.bom'" name="model"/>
             <field name="name">Bill of Materials Structure</field>
-            <field eval="'ir.actions.act_window,'+str(action2)" name="value"/>
+            <field eval="'ir.actions.act_window,'+str(mrp_bom_line_action_from_bom)" name="value"/>
         </record>
 
         <record id="template_open_bom" model="ir.actions.act_window">

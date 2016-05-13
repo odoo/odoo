@@ -42,9 +42,9 @@ class product_product(models.Model):
                 price += uom_obj._compute_price(sbom.product_id.uom_id.id, sbom.product_id.standard_price, sbom.product_uom_id.id) * my_qty
         if bom.routing_id:
             total_cost = 0.0
-            for order in bom.routing_id.workorder_ids:
+            for order in bom.routing_id.operation_ids:
                 total_cost += (order.time_cycle_manual/60) * order.workcenter_id.costs_hour
-            workcenter_cost = total_cost / len(bom.routing_id.workorder_ids)
+            workcenter_cost = total_cost / len(bom.routing_id.operation_ids)
             price += uom_obj._compute_price(bom.product_uom_id.id, workcenter_cost, bom.product_id.uom_id.id)
         # Convert on product UoM quantities
         if price > 0:

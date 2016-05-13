@@ -114,6 +114,10 @@ class StockSettings(models.TransientModel):
         ], "Warehouses and Locations usage level")
     group_stock_multi_locations = fields.Boolean('Manage several stock locations', implied_group='stock.group_stock_multi_locations')
     group_stock_multi_warehouses = fields.Boolean('Manage several warehouses', implied_group='stock.group_stock_multi_warehouses')
+    # module_mrp_plm = fields.Selection([
+    #     (0, "No product lifecycle management"),
+    #     (1, "Manage engineering changes, versions and documents")
+    #     ], "PLM")
 
     @api.onchange('warehouse_and_location_usage_level')
     def onchange_warehouse_and_location_usage_level(self):

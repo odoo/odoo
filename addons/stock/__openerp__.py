@@ -48,7 +48,6 @@ Dashboard / Reports for Inventory Management will include:
     'data': [
         'security/stock_security.xml',
         'security/ir.model.access.csv',
-
         'views/stock_menu_views.xml',
 
         'report/report_stock_forecast.xml',
@@ -61,13 +60,14 @@ Dashboard / Reports for Inventory Management will include:
         'report/report_deliveryslip.xml',
         'report/report_stockinventory.xml',
 
-        'wizard/stock_move_scrap_views.xml',
         'wizard/stock_change_product_qty_views.xml',
         'wizard/stock_picking_return_views.xml',
         'wizard/make_procurement_views.xml',
         'wizard/procurement_orderpoint_compute_views.xml',
         'wizard/stock_immediate_transfer_views.xml',
         'wizard/stock_backorder_confirmation_views.xml',
+
+        'views/stock_scrap_views.xml',
 
         'views/res_partner_views.xml',
         'views/product_strategy_views.xml',

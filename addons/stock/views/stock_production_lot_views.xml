@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+        <record model="ir.actions.act_window" id="lot_open_quants">
+            <field name="name">Quants</field>
+            <field name="context">{'search_default_lot_id': active_id}</field>
+            <field name="res_model">stock.quant</field>
+        </record>
+
     <record id="view_production_lot_form" model="ir.ui.view">
         <field name="name">stock.production.lot.form</field>
         <field name="model">stock.production.lot</field>
@@ -7,7 +13,9 @@
             <form string="Lots/Serial Numbers">
                 <sheet>
                 <div class="oe_button_box" name="button_box">
-                    <button name="action_traceability" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="object" attrs="{'invisible': [('quant_ids','=',[])]}"/>
+                        <button name="%(lot_open_quants)d" icon="fa-arrows" class="oe_stat_button" string="Locate" type="action" attrs="{'invisible': [('quant_ids','=',[])]}"/>
+                        <button name="action_traceability" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="object" attrs="{'invisible': [('quant_ids','=',[])]}"/>
+                        <field name="quant_ids" invisible="True"/>
                 </div>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
@@ -18,6 +26,11 @@
                 <group name="main_group">
                     <group>
                         <field name="product_id"/>
+                            <label for="product_qty"/>
+                            <div class="o_row">
+                                <field name="product_qty"/>
+                                <field name="product_uom_id" groups="product.group_uom"/>
+                            </div>
                         <field name="ref"/>
                     </group>
                 </group>

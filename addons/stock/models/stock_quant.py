@@ -377,7 +377,7 @@ class Quant(models.Model):
             return reservations
             # return self._Reservation(reserved_quants, qty, qty, move, None)
 
-        restrict_lot_id = lot_id if pack_operation else move.restrict_lot_id.id
+        restrict_lot_id = lot_id if pack_operation else move.restrict_lot_id.id or lot_id
         removal_strategy = move.get_removal_strategy()
 
         domain = self._quants_get_reservation_domain(

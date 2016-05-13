@@ -9,8 +9,7 @@
                 <tree string="Work Center Loads">
                     <field name="name"/>
                     <field name="workcenter_id"/>
-                    <field name="cycle"/>
-                    <field name="hour"/>
+                    <field name="duration"/>
                 </tree>
             </field>
         </record>
@@ -21,8 +20,7 @@
             <field name="arch" type="xml">
                 <graph string="Work Center load" type="bar">
                     <field name="name"/>
-                    <field name="cycle" operator="+"/>
-                    <field name="hour" operator="+"/>
+                    <field name="duration" operator="+"/>
                     <field group="True" name="workcenter_id"/>
                 </graph>
             </field>

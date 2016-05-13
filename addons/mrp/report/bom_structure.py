@@ -1,8 +1,8 @@
 ## -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv
-from openerp.report import report_sxw
+from odoo import models
+from odoo.report import report_sxw
 
 
 class bom_structure(report_sxw.rml_parse):
@@ -21,7 +21,7 @@ class bom_structure(report_sxw.rml_parse):
                 res['pname'] = l.product_id.name_get()[0][1]
                 res['pcode'] = l.product_id.default_code
                 res['pqty'] = l.product_qty
-                res['uname'] = l.product_uom.name
+                res['uname'] = l.product_uom_id.name
                 res['level'] = level
                 res['code'] = l.bom_id.code
                 result.append(res)
@@ -38,7 +38,7 @@ class bom_structure(report_sxw.rml_parse):
         return children
 
 
-class report_mrpbomstructure(osv.AbstractModel):
+class report_mrpbomstructure(models.AbstractModel):
     _name = 'report.mrp.report_mrpbomstructure'
     _inherit = 'report.abstract_report'
     _template = 'mrp.report_mrpbomstructure'

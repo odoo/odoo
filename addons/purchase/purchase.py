@@ -391,7 +391,7 @@ class PurchaseOrder(models.Model):
                 picking = self.env['stock.picking'].create(res)
                 moves = order.order_line.filtered(lambda r: r.product_id.type in ['product', 'consu'])._create_stock_moves(picking)
                 moves.action_confirm()
-                moves.force_assign()
+                order.order_line.mapped('move_ids').force_assign()
                 picking.message_post_with_view('mail.message_origin_link',
                     values={'self': picking, 'origin': order},
                     subtype_id=self.env.ref('mail.mt_note').id)
@@ -514,47 +514,14 @@ class PurchaseOrderLine(models.Model):
             if line.product_id.type not in ['consu', 'product']:
                 line.qty_received = line.product_qty
                 continue
-            bom_delivered = self.sudo()._get_bom_delivered(line.sudo())
-            if bom_delivered and any(bom_delivered.values()):
-                total = line.product_qty
-            elif bom_delivered:
-                total = 0.0
-            else:
-                total = 0.0
-                for move in line.move_ids:
-                    if move.state == 'done':
-                        if move.product_uom != line.product_uom:
-                            total += productuom._compute_qty_obj(move.product_uom, move.product_uom_qty, line.product_uom)
-                        else:
-                            total += move.product_uom_qty
-            line.qty_received = total
-
-    def _get_bom_delivered(self, line):
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        bom_delivered = {}
-        # There is no dependencies between purchase and mrp
-        if 'mrp.bom' in self.env:
-            # In the case of a kit, we need to check if all components are shipped. We use a all or
-            # nothing policy. A product can have several BoMs, we don't know which one was used when the
-            # delivery was created.
-            for bom in line.product_id.product_tmpl_id.bom_ids:
-                if bom.type != 'phantom':
-                    continue
-                bom_delivered[bom.id] = False
-                product_uom_qty_bom = self.env['product.uom']._compute_qty_obj(line.product_uom, line.product_qty, bom.product_uom)
-                bom_exploded = self.env['mrp.bom']._bom_explode(bom, line.product_id, product_uom_qty_bom)[0]
-                for bom_line in bom_exploded:
-                    qty = 0.0
-                    for move in line.move_ids:
-                        if move.state == 'done' and move.product_id.id == bom_line.get('product_id', False):
-                            qty += self.env['product.uom']._compute_qty(move.product_uom.id, move.product_uom_qty, bom_line['product_uom'])
-                    if float_compare(qty, bom_line['product_qty'], precision_digits=precision) < 0:
-                        bom_delivered[bom.id] = False
-                        break
+            total = 0.0
+            for move in line.move_ids:
+                if move.state == 'done':
+                    if move.product_uom != line.product_uom:
+                        total += productuom._compute_qty_obj(move.product_uom, move.product_uom_qty, line.product_uom)
                     else:
-                        bom_delivered[bom.id] = True
-        return bom_delivered
-
+                        total += move.product_uom_qty
+            line.qty_received = total
 
     name = fields.Text(string='Description', required=True)
     product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True)

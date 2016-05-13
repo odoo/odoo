@@ -12,8 +12,7 @@ class WorkCenterLoad(models.Model):
 
     name = fields.Char('Week', required=True)
     workcenter_id = fields.Many2one('mrp.workcenter', 'Work Center', required=True)
-    cycle = fields.Float('Number of Cycles')
-    hour = fields.Float('Number of Hours')
+    duration = fields.Float('Duration')
 
     @api.model_cr
     def init(self):
@@ -21,17 +20,16 @@ class WorkCenterLoad(models.Model):
             create or replace view report_workcenter_load as (
                 SELECT
                     min(wl.id) as id,
-                    to_char(p.date_planned,'YYYY:mm:dd') as name,
-                    SUM(wl.hour) AS hour,
-                    SUM(wl.cycle) AS cycle,
+                    to_char(p.date_planned_start,'YYYY:mm:dd') as name,
+                    SUM(wl.duration_expected) AS duration,
                     wl.workcenter_id as workcenter_id
                 FROM
-                    mrp_production_workcenter_line wl
+                    mrp_workorder wl
                     LEFT JOIN mrp_production p
                         ON p.id = wl.production_id
                 GROUP BY
                     wl.workcenter_id,
-                    to_char(p.date_planned,'YYYY:mm:dd')
+                    to_char(p.date_planned_start,'YYYY:mm:dd')
             )""")
 
 
