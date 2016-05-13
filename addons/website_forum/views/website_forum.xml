@@ -780,7 +780,7 @@
                     <i t-if="question.post_type == 'discussion'" t-attf-class="fa fa-comments-o" t-att-title="question.post_type.capitalize()" />
                     <i t-if="question.post_type == 'link'" t-attf-class="fa fa-link" t-att-title="question.post_type.capitalize()" />
                     <span>By </span>
-                    <a t-att-href="(question.create_uid.id == request.session.uid or question.create_uid.sudo().website_published) and '/forum/%s/user/%s' % (slug(forum), question.create_uid.id) or '#'"
+                    <a t-att-href="(question.create_uid.id == request.session.uid or question.create_uid.sudo().website_published) and '/forum/%s/user/%s' % (slug(forum), question.create_uid.id) or None"
                         t-field="question.create_uid"
                         t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                         style="display: inline-block;"/>

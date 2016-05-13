@@ -12,4 +12,5 @@ class AccountBalanceReport(models.TransientModel):
 
     def _print_report(self, data):
         data = self.pre_print_report(data)
-        return self.env['report'].get_action(self, 'account.report_trialbalance', data=data)
+        records = self.env[data['model']].browse(data.get('ids', []))
+        return self.env['report'].get_action(records, 'account.report_trialbalance', data=data)
