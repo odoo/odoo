@@ -91,7 +91,7 @@ var KanbanColumn = Widget.extend({
                 connectWith: '.o_kanban_group',
                 revert: 0,
                 delay: 0,
-                items: '> .o_kanban_record',
+                items: '> .o_kanban_record:not(.o_updating)',
                 helper: 'clone',
                 cursor: 'move',
                 over: function () {
@@ -117,6 +117,7 @@ var KanbanColumn = Widget.extend({
                         // adding record to this column
                         self.records.push(record);
                         record.setParent(self);
+                        ui.item.addClass('o_updating');
                         self.trigger_up('kanban_column_add_record', {record: record});
                     }
                     self.update_column();
