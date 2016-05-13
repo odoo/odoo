@@ -357,7 +357,7 @@ def init_models(models, cr, context):
         model._auto_end()
         cr.commit()
     for _, func, args in sorted(context['todo'], key=itemgetter(0)):
-        func(cr, *args)
+        func(*args)
     if models:
         models[0].recompute()
     cr.commit()
