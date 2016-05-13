@@ -58,6 +58,8 @@ class stock_return_picking(osv.osv_memory):
                 raise UserError(_("You may only return pickings that are Done!"))
 
             for move in pick.move_lines:
+                if move.scrapped:
+                    continue
                 if move.move_dest_id:
                     chained_move_exist = True
                 #Sum the quants in that location that can be returned (they should have been moved by the moves that were included in the returned picking)

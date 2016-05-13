@@ -341,7 +341,17 @@ var DateField = Field.extend(/** @lends instance.web.search.DateField# */{
         return time.date_to_str(facetValue.get('value'));
     },
     complete: function (needle) {
-        var m = moment(needle);
+        // Make sure the needle has a correct format before the creation of the moment object. See
+        // issue https://github.com/moment/moment/issues/1407
+        var t, v;
+        try {
+            t = (this.attrs && this.attrs.type === 'datetime') ? 'datetime' : 'date';
+            v = formats.parse_value(needle, {'widget': t});
+        } catch (e) {
+            return $.when(null);
+        }
+
+        var m = moment(v, t === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD');
         if (!m.isValid()) { return $.when(null); }
         var d = m.toDate();
         var date_string = formats.format_value(d, this.attrs);
