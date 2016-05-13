@@ -751,12 +751,9 @@ class product_template(osv.osv):
         (_check_uom, 'Error: The default Unit of Measure and the purchase Unit of Measure must be in the same category.', ['uom_id', 'uom_po_id']),
     ]
 
-    def name_get(self, cr, user, ids, context=None):
-        if context is None:
-            context = {}
-        if 'partner_id' in context:
-            pass
-        return super(product_template, self).name_get(cr, user, ids, context)
+    def name_get(self, cr, uid, ids, context=None):
+        return [(product.id, '%s%s' % (product.code and '[%s] ' % product.code or '', product.name))
+                for product in self.browse(cr, uid, ids, context=context)]
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         # Only use the product.product heuristics if there is a search term and the domain
