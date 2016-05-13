@@ -67,7 +67,10 @@ class ReturnPicking(models.TransientModel):
             if 'original_location_id' in fields:
                 res.update({'original_location_id': picking.location_id.id})
             if 'location_id' in fields:
-                res.update({'location_id': picking.location_id.id})
+                location_id = picking.location_id.id
+                if picking.picking_type_id.return_picking_type_id.default_location_dest_id.return_location:
+                    location_id = picking.picking_type_id.return_picking_type_id.default_location_dest_id.id
+                res['location_id'] = location_id
         return res
 
     @api.multi
