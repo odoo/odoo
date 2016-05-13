@@ -111,11 +111,11 @@ class PickingType(models.Model):
     @api.onchange('code')
     def onchange_picking_code(self):
         if self.code == 'incoming':
-            self.default_location_src_id = self.env.ref('stock_location_suppliers').id
-            self.default_location_dest_id = self.env.ref('stock_location_stock').id
+            self.default_location_src_id = self.env.ref('stock.stock_location_suppliers').id
+            self.default_location_dest_id = self.env.ref('stock.stock_location_stock').id
         elif self.code == 'outgoing':
-            self.default_location_src_id = self.env.ref('stock_location_stock').id
-            self.default_location_dest_id = self.env.ref('stock_location_customers').id
+            self.default_location_src_id = self.env.ref('stock.stock_location_stock').id
+            self.default_location_dest_id = self.env.ref('stock.stock_location_customers').id
 
     @api.multi
     def _get_action(self, action_xmlid):
