@@ -93,6 +93,7 @@
                     <field name="manual"/>
                     <field name="name"/>
                     <field name="account_id" groups="base.group_account_user"/>
+                    <field name="base"/>
                     <field name="amount"/>
                     <field name="currency_id" invisible="1"/>
                 </tree>
@@ -111,6 +112,7 @@
                         <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id), ('account_type', '=', 'normal')]" groups="analytic.group_analytic_accounting"/>
                         <field name="manual"/>
                         <field name="amount"/>
+                        <field name="base"/>
                         <field name="currency_id" invisible="1"/>
                     </group>
                 </form>
