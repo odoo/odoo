@@ -3,17 +3,18 @@
 # * payment
 # 
 # Translators:
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
 # Joshua Jan <popkar77@gmail.com>, 2016
 # liulixia <liu.lixia@elico-corp.com>, 2015
 # Luke <cialuo@qq.com>, 2015
-# 珠海-老天 <liangjia@qq.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-03-12 01:56+0000\n"
-"Last-Translator: Joroy <13637815@qq.com>\n"
+"PO-Revision-Date: 2016-05-07 03:34+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,32 +32,32 @@ msgstr "此事务会通过带有‘self’参数的safe_eval来执行。例如�
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_adyen
 msgid "-It installs the module payment_adyen."
-msgstr "-安装模块 payment_adyen 。"
+msgstr "-安装 payment_adyen模块。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_authorize
 msgid "-It installs the module payment_authorize."
-msgstr "需要安装模块payment_authorize"
+msgstr "-安装payment_authorize模块。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_buckaroo
 msgid "-It installs the module payment_buckaroo."
-msgstr "-为此将安装“ payment_buckaroo”模块。"
+msgstr "-安装“ payment_buckaroo”模块。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_ogone
 msgid "-It installs the module payment_ogone."
-msgstr "-它安装模块“payment_ogone”。"
+msgstr "-安装“payment_ogone”模块。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_paypal
 msgid "-It installs the module payment_paypal."
-msgstr "-为此将安装 payment_paypal 模块。"
+msgstr "-安装 payment_paypal 模块。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_transfer
 msgid "-It installs the module payment_transfer."
-msgstr "-它安装模块“payment_transfer”。"
+msgstr "-安装“payment_transfer”模块。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
@@ -113,12 +114,12 @@ msgstr "总额"
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
 msgid "At payment no acquirer confirmation needed"
-msgstr "付款时候不须收款确认信息"
+msgstr "付款时无须收单方确认"
 
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
 msgid "At payment with acquirer confirmation"
-msgstr "付款时有收款确认"
+msgstr "付款时收单方确认"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_buckaroo
@@ -154,7 +155,7 @@ msgstr "配置"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_acquirer_installation
 msgid "Configure payment acquiring methods"
-msgstr "配置支付收购办法"
+msgstr "配置支付托收方法"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_method_count
@@ -265,7 +266,7 @@ msgstr "费用"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_fees
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr "结算金额;由系统设置中的采购设置自动生成"
+msgstr "费用金额; 由系统设置，因为它依赖于收单方"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_state_message
@@ -353,7 +354,7 @@ msgstr "最后更新"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
-msgstr "创建采购付款单据(客户发票等)"
+msgstr "使此付款收单方可用(客户发票等)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_medium
@@ -457,14 +458,14 @@ msgstr "业务伙伴名称"
 #: model:ir.model,name:payment.model_payment_acquirer
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Acquirer"
-msgstr "付款 托收方"
+msgstr "付款收单方"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
 #: model:ir.ui.menu,name:payment.payment_acquirer_menu
 #: model:ir.ui.view,arch_db:payment.acquirer_list
 msgid "Payment Acquirers"
-msgstr "收单银行"
+msgstr "付款收单方"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_method_id
@@ -482,7 +483,7 @@ msgstr "付款方法"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "支付交易"
+msgstr "付款交易"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
@@ -494,7 +495,7 @@ msgstr "支付交易"
 #: model:ir.ui.view,arch_db:payment.transaction_form
 #: model:ir.ui.view,arch_db:payment.transaction_list
 msgid "Payment Transactions"
-msgstr "支付交易"
+msgstr "付款交易"
 
 #. module: payment
 #: model:ir.ui.menu,name:payment.finance_payment_menu
@@ -543,7 +544,7 @@ msgstr "引用"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_acquirer_reference
 msgid "Reference of the TX as stored in the acquirer database"
-msgstr "存储在主数据库的TX作为参考"
+msgstr "存储在收单方数据库中的TX参考"
 
 #. module: payment
 #: constraint:payment.acquirer:0
@@ -626,7 +627,7 @@ msgstr "这个字段保持着这个供应方的图片，限制为1024x1024px"
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
 "                                            It is be rendered with qWeb with the following evaluation context:"
-msgstr "这个模板渲染了带有必要价值的接收方按钮\n　　　　　　　　　　　　　　　　　　它被带有估值上下文的Qweb渲染"
+msgstr "这个模板使用全部的必须值渲染收单方按钮\n　　　　　　　　　　　　　　　　　　它使用以下评估上下文用Qweb渲染"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_type
@@ -676,12 +677,12 @@ msgstr "会计.配置.设定"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "acquirer: payment.acquirer browse record"
-msgstr "采购: payment.acquirer 浏览数据"
+msgstr "acquirer: payment.acquirer 浏览记录"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "amount: the transaction amount, a float"
-msgstr "金额:交易金额,浮点数"
+msgstr "amount:交易金额,浮点数"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -691,12 +692,12 @@ msgstr "context:当前上下相关字典"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
-msgstr "货币：货币交易浏览记录"
+msgstr "currency:货币交易浏览记录"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
-msgstr "联系人:客户浏览历史(不完全)"
+msgstr "partner:客户浏览历史(不完全)"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form

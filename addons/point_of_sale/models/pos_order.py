@@ -63,9 +63,20 @@ class PosOrder(models.Model):
              ('user_id', '=', closed_session.user_id.id)],
             limit=1, order="start_at DESC")
 
+        _logger.warning('session %s (ID: %s) was closed but received order %s (total: %s) belonging to it',
+                        closed_session.name,
+                        closed_session.id,
+                        order['name'],
+                        order['amount_total'])
+
         if open_session:
+            _logger.warning('using session %s (ID: %s) for order %s instead',
+                            open_session.name,
+                            open_session.id,
+                            order['name'])
             return open_session
         else:
+            _logger.warning('attempting to create new session for order %s', order['name'])
             new_session = PosSession.create({'config_id': closed_session.config_id.id})
             # bypass opening_control (necessary when using cash control)
             new_session.signal_workflow('open')
