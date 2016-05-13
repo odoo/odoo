@@ -156,7 +156,7 @@ class product_pricelist(osv.osv):
             'AND (categ_id IS NULL OR categ_id = any(%s)) '
             'AND (pricelist_id = %s) '
             'AND ((i.date_start IS NULL OR i.date_start<=%s) AND (i.date_end IS NULL OR i.date_end>=%s))'
-            'ORDER BY applied_on, sequence, min_quantity desc',
+            'ORDER BY applied_on, min_quantity desc',
             (prod_tmpl_ids, prod_ids, categ_ids, pricelist.id, date, date))
 
         item_ids = [x[0] for x in cr.fetchall()]
