@@ -1511,7 +1511,8 @@ exports.Order = Backbone.Model.extend({
         } else {
             this.sequence_number = this.pos.pos_session.sequence_number++;
             this.uid  = this.generate_unique_id();
-            this.name = _t("Order ") + this.uid; 
+            this.name = _t("Order ") + this.uid;
+            this.validation_date = undefined;
         }
 
         this.on('change',              function(){ this.save_to_db("order:change"); }, this);
@@ -1539,6 +1540,7 @@ exports.Order = Backbone.Model.extend({
         this.session_id    = json.pos_session_id;
         this.uid = json.uid;
         this.name = _t("Order ") + this.uid;
+        this.validation_date = json.creation_date;
 
         if (json.fiscal_position_id) {
             var fiscal_position = _.find(this.pos.fiscal_positions, function (fp) {
@@ -1605,7 +1607,7 @@ exports.Order = Backbone.Model.extend({
             user_id: this.pos.cashier ? this.pos.cashier.id : this.pos.user.id,
             uid: this.uid,
             sequence_number: this.sequence_number,
-            creation_date: this.creation_date,
+            creation_date: this.validation_date, // todo: rename creation_date in master
             fiscal_position_id: this.fiscal_position ? this.fiscal_position.id : false
         };
     },
@@ -1769,6 +1771,11 @@ exports.Order = Backbone.Model.extend({
             return 0;
         }
     },
+
+    initialize_validation_date: function () {
+        this.validation_date = this.validation_date || new Date();
+    },
+
     set_tip: function(tip) {
         var tip_product = this.pos.db.get_product_by_id(this.pos.config.tip_product_id[0]);
         var lines = this.get_orderlines();

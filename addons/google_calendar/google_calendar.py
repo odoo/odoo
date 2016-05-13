@@ -405,6 +405,21 @@ class google_calendar(osv.AbstractModel):
         data_json = json.dumps(data)
         return gs_pool._do_request(cr, uid, url, data_json, headers, type='PUT', context=context)
 
+    def create_from_google(self, cr, uid, event, partner_id, context=None):
+        context_tmp = dict(context, NewMeeting=True)
+        res = self.update_from_google(cr, uid, False, event.GG.event, "create", context=context_tmp)
+        event.OE.event_id = res
+        meeting = self.pool['calendar.event'].browse(cr, uid, res, context=context)
+        attendee_record_id = self.pool['calendar.attendee'].search(cr, uid, [('partner_id', '=', partner_id), ('event_id', '=', res)], context=context)
+        self.pool['calendar.attendee'].write(cr, uid, attendee_record_id, {'oe_synchro_date': meeting.oe_update_date, 'google_internal_event_id': event.GG.event['id']}, context=context_tmp)
+        if meeting.recurrency:
+            attendee_ids = self.pool['calendar.attendee'].search(cr, SUPERUSER_ID, [('google_internal_event_id', '=ilike', '%s\_%%' % event.GG.event['id'])], context=context)
+            attendees = self.pool['calendar.attendee'].browse(cr, SUPERUSER_ID, attendee_ids, context=context)
+            excluded_recurrent_event_ids = set(attendee.event_id for attendee in attendees)
+            for event in excluded_recurrent_event_ids:
+                event.write({'recurrent_id': meeting.id, 'recurrent_id_date': event.start, 'user_id': meeting.user_id.id})
+        return event
+
     def update_from_google(self, cr, uid, event, single_event_dict, type, context):
         if context is None:
             context = []
@@ -814,14 +829,8 @@ class google_calendar(osv.AbstractModel):
                 if isinstance(actToDo, NothingToDo):
                     continue
                 elif isinstance(actToDo, Create):
-                    context_tmp = context.copy()
-                    context_tmp['NewMeeting'] = True
                     if actSrc == 'GG':
-                        res = self.update_from_google(cr, uid, False, event.GG.event, "create", context=context_tmp)
-                        event.OE.event_id = res
-                        meeting = calendar_event.browse(cr, uid, res, context=context)
-                        attendee_record_id = att_obj.search(cr, uid, [('partner_id', '=', myPartnerID), ('event_id', '=', res)], context=context)
-                        self.pool['calendar.attendee'].write(cr, uid, attendee_record_id, {'oe_synchro_date': meeting.oe_update_date, 'google_internal_event_id': event.GG.event['id']}, context=context_tmp)
+                        self.create_from_google(cr, uid, event, myPartnerID, context=context)
                     elif actSrc == 'OE':
                         raise "Should be never here, creation for OE is done before update !"
                     #TODO Add to batch
@@ -844,10 +853,12 @@ class google_calendar(osv.AbstractModel):
                             parent_event = {}
                             if not event_to_synchronize[base_event][0][1].OE.event_id:
                                 main_ev = att_obj.search_read(cr, uid, [('google_internal_event_id', '=', event.GG.event['id'].rsplit('_', 1)[0])], fields=['event_id'], context=context_novirtual)
-                                event_to_synchronize[base_event][0][1].OE.event_id = main_ev[0].get('event_id')[0]
-
-                            parent_event['id'] = "%s-%s" % (event_to_synchronize[base_event][0][1].OE.event_id, new_google_event_id)
-                            res = self.update_from_google(cr, uid, parent_event, event.GG.event, "copy", context)
+                                event_to_synchronize[base_event][0][1].OE.event_id = main_ev[0].get('event_id')[0] if main_ev else None
+                            if event_to_synchronize[base_event][0][1].OE.event_id:
+                                parent_event['id'] = "%s-%s" % (event_to_synchronize[base_event][0][1].OE.event_id, new_google_event_id)
+                                res = self.update_from_google(cr, uid, parent_event, event.GG.event, "copy", context)
+                            else:
+                                self.create_from_google(cr, uid, event, myPartnerID, context=context)
                         else:
                             parent_oe_id = event_to_synchronize[base_event][0][1].OE.event_id
                             if parent_oe_id:
@@ -958,12 +969,12 @@ class res_users(osv.Model):
     _inherit = 'res.users'
 
     _columns = {
-        'google_calendar_rtoken': fields.char('Refresh Token'),
-        'google_calendar_token': fields.char('User token'),
-        'google_calendar_token_validity': fields.datetime('Token Validity'),
-        'google_calendar_last_sync_date': fields.datetime('Last synchro date'),
+        'google_calendar_rtoken': fields.char('Refresh Token', copy=False),
+        'google_calendar_token': fields.char('User token', copy=False),
+        'google_calendar_token_validity': fields.datetime('Token Validity', copy=False),
+        'google_calendar_last_sync_date': fields.datetime('Last synchro date', copy=False),
         'google_calendar_cal_id': fields.char('Calendar ID', help='Last Calendar ID who has been synchronized. If it is changed, we remove \
-all links between GoogleID and Odoo Google Internal ID')
+all links between GoogleID and Odoo Google Internal ID', copy=False)
     }
 
 

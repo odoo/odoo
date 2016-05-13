@@ -672,7 +672,7 @@ class AccountMoveLine(models.Model):
                 amount_currency_str = formatLang(self.env, abs(actual_debit or actual_credit), currency_obj=line_currency)
                 total_amount_currency_str = formatLang(self.env, total_amount, currency_obj=line_currency)
                 ctx = context.copy()
-                ctx.update({'date': line.date})
+                ctx.update({'date': target_date or line.date})
                 total_amount = line_currency.with_context(ctx).compute(total_amount, target_currency)
                 actual_debit = line_currency.with_context(ctx).compute(actual_debit, target_currency)
                 actual_credit = line_currency.with_context(ctx).compute(actual_credit, target_currency)
@@ -1279,12 +1279,15 @@ class AccountPartialReconcile(models.Model):
         total_debit = 0
         total_credit = 0
         total_amount_currency = 0
-        currency = None
+        #make sure that all partial reconciliations share the same secondary currency otherwise it's not
+        #possible to compute the exchange difference entry and it has to be done manually.
+        currency = list(partial_rec_set)[0].currency_id
         maxdate = None
         aml_to_balance = None
         for partial_rec in partial_rec_set:
-            if currency is None:
-                currency = partial_rec.currency_id
+            if partial_rec.currency_id != currency:
+                #no exchange rate entry will be created
+                currency = None
             for aml in [partial_rec.debit_move_id, partial_rec.credit_move_id]:
                 if aml not in aml_set:
                     if aml.amount_residual or aml.amount_residual_currency:
@@ -1295,6 +1298,11 @@ class AccountPartialReconcile(models.Model):
                     aml_set |= aml
                     if aml.currency_id and aml.currency_id == currency:
                         total_amount_currency += aml.amount_currency
+                    elif partial_rec.currency_id and partial_rec.currency_id == currency:
+                        #if the aml has no secondary currency but is reconciled with other journal item(s) in secondary currency, the amount
+                        #currency is recorded on the partial rec and in order to check if the reconciliation is total, we need to convert the
+                        #aml.balance in that foreign currency
+                        total_amount_currency += aml.company_id.currency_id.with_context(date=aml.date).compute(aml.balance, partial_rec.currency_id)
                 for x in aml.matched_debit_ids | aml.matched_credit_ids:
                     partial_rec_set[x] = None
         #then, if the total debit and credit are equal, or the total amount in currency is 0, the reconciliation is full

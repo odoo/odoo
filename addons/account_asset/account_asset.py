@@ -287,7 +287,7 @@ class AccountAssetAsset(models.Model):
         self.write({'state': 'draft'})
 
     @api.one
-    @api.depends('value', 'salvage_value', 'depreciation_line_ids')
+    @api.depends('value', 'salvage_value', 'depreciation_line_ids.move_check', 'depreciation_line_ids.amount')
     def _amount_residual(self):
         total_amount = 0.0
         for line in self.depreciation_line_ids:
