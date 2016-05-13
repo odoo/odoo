@@ -1490,7 +1490,7 @@
     <t t-name="CustomerFacingDisplayOrderLines">
         <t t-foreach="orderlines" t-as="orderline">
             <tr class="product-cell">
-                <td>
+                <td class="text-center">
                     <img t-att-src='orderline.product.image_base64' alt="" class="img"/>
                 </td>
                 <td><t t-esc="orderline.product.display_name"/></td>
