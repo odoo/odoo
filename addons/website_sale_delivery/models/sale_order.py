@@ -122,7 +122,7 @@ class SaleOrder(models.Model):
     def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
         """ Override to update carrier quotation if quantity changed """
 
-        self._delivery_unset(cr, uid, ids, context=context)
+        self._delivery_unset()
         values = super(SaleOrder, self)._cart_update(product_id, line_id, add_qty, set_qty, **kwargs)
 
         if add_qty or set_qty is not None:
