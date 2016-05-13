@@ -537,7 +537,7 @@ ALL_LANGUAGES = {
         'lv_LV': u'Latvian / latviešu valoda',
         'mk_MK': u'Macedonian / македонски јазик',
         'mn_MN': u'Mongolian / монгол',
-        'my_MY': u'Burmese / မြန်မာဘာသာ',
+        'my_MM': u'Burmese / မြန်မာဘာသာ',
         'nb_NO': u'Norwegian Bokmål / Norsk bokmål',
         'nl_NL': u'Dutch / Nederlands',
         'nl_BE': u'Dutch (BE) / Nederlands (BE)',
