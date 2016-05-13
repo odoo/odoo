@@ -23,9 +23,6 @@
                     <field name="bom_id" domain="[('product_id','=',product_id)]"/>
                     <field name="production_id" attrs="{'invisible': [('production_id','=',False)]}"/>
                 </field>
-                <field name="origin" position="after">
-                    <field name="property_ids" widget="many2many_tags" groups="product.group_mrp_properties"/>
-                </field>
                </data>
             </field>
         </record>

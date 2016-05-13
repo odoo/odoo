@@ -6,7 +6,6 @@
 
 from odoo.addons.procurement.tests.common import TestStockCommon
 
-
 class TestBase(TestStockCommon):
 
     def test_base(self):

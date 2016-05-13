@@ -752,7 +752,7 @@ class product_template(osv.osv):
     ]
 
     def name_get(self, cr, uid, ids, context=None):
-        return [(product.id, '%s%s' % (product.code and '[%s] ' % product.code or '', product.name))
+        return [(product.id, '%s%s' % (product.default_code and '[%s] ' % product.default_code or '', product.name))
                 for product in self.browse(cr, uid, ids, context=context)]
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):

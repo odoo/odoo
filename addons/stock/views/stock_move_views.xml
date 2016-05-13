@@ -52,7 +52,7 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done')) and date > current_date" string="Moves" create="0">
-                    <field name="name" invisible="1"/>
+                    <field name="name"/>
                     <field name="picking_id" string="Reference"/>
                     <field name="origin"/>
                     <field name="picking_type_id" invisible="1"/>
@@ -60,15 +60,10 @@
                     <field name="product_id"/>
                     <field name="product_uom_qty"/>
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
-                    <button name="%(stock.move_scrap)d"
-                        string="Scrap Products" type="action"
-                        icon="fa-sign-in text-warning" context="{'scrap': True}"
-                        states="draft,waiting,confirmed,assigned"
-                        groups="stock.group_stock_user"/>
                     <field name="location_id" groups="stock.group_stock_multi_locations"/>
                     <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                     <field name="date" groups="base.group_no_one"/>
-                    <field name="date_expected"/>
+                    <field name="date_expected" invisible="context.get('scrap_move')"/>  <!-- TDE FIXME: woooooo -->
                     <field name="state"/>
                 </tree>
             </field>
@@ -88,11 +83,6 @@
                     <field name="create_date" invisible="1" />
                     <field name="date_expected" invisible="1" />
                     <field name="picking_type_id" invisible="1"/>
-                    <button name="%(stock.move_scrap)d"
-                       string="Scrap Products" type="action"
-                       icon="fa-sign-in text-warning" context="{'scrap': True}"
-                       states="draft,waiting,confirmed,assigned"
-                       groups="stock.group_stock_user"/>
                     <field name="scrapped" invisible="1"/>
                     <field name="availability" invisible="1"/>
                     <field name="reserved_availability" invisible="1"/>
@@ -121,9 +111,6 @@
                                 <div class="o_row">
                                     <field name="product_uom_qty"/>
                                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
-                                    <button name="%(stock.move_scrap)d" class="btn-default"
-                                            string="Scrap" type="action" context="{'scrap': True}"
-                                            states="draft,waiting,confirmed,assigned" icon="fa-sign-in text-warning"/>
                                 </div>
                                 <field name="name"/>
                             </group>
@@ -179,11 +166,6 @@
                         <div>
                             <field name="product_uom_qty"/>
                             <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit Of Measure" groups="product.group_uom" class="oe_inline"/>
-                            <button name="%(stock.move_scrap)d"
-                                string="Scrap" type="action"
-                                icon="fa-sign-in text-warning" context="{'scrap': True}"
-                                states="draft,waiting,confirmed,assigned"
-                                groups="base.group_user"/>
                         </div>
                         <field name="product_tmpl_id" invisible="1"/>
                     </group>
@@ -318,11 +300,6 @@
                     <field name="location_id" invisible="1"/>
                     <field name="location_dest_id" invisible="1"/>
                     <field name="create_date" invisible="1"/>
-                    <button name="%(stock.move_scrap)d"
-                        string="Scrap Products" type="action"
-                        icon="fa-sign-in text-warning" context="{'scrap': True}"
-                        states="draft,waiting,confirmed,assigned"
-                        groups="stock.group_stock_user"/>
                     <field name="state"/>
                 </tree>
             </field>

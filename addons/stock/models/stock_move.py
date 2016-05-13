@@ -116,8 +116,7 @@ class StockMove(models.Model):
              "The other possibility allows you to directly create a procurement on the source location (and thus ignore "
              "its current stock) to gather products. If we want to chain moves and have this one to wait for the previous,"
              "this second option should be chosen.")
-    # used for colors in tree views - TDE FIXME: weird error - has a relation (comodel_name ?)
-    scrapped = fields.Boolean('Scrapped', related='location_dest_id.scrap_location', readonly=True)
+    scrapped = fields.Boolean('Scrapped', related='location_dest_id.scrap_location', readonly=True, store=True)
     quant_ids = fields.Many2many('stock.quant', 'stock_quant_move_rel', 'move_id', 'quant_id', 'Moved Quants', copy=False)
     reserved_quant_ids = fields.One2many('stock.quant', 'reservation_id', 'Reserved quants')
     linked_move_operation_ids = fields.One2many(
@@ -310,7 +309,6 @@ class StockMove(models.Model):
             pickings.message_track(pickings.fields_get(['state']), initial_values)
         return res
 
-
     # Misc tools
     # ------------------------------------------------------------
 
@@ -341,7 +339,17 @@ class StockMove(models.Model):
         return ancestors
     find_move_ancestors = get_ancestors
 
+    def _filter_closed_moves(self):
+        """ Helper methods when having to avoid working on moves that are
+        already done or canceled. In a lot of cases you may handle a batch
+        of stock moves, some being already done / canceled, other being still
+        under computation. Instead of having to use filtered everywhere and
+        forgot some of them, use this tool instead. """
+        return self.filtered(lambda move: move.state not in ('done', 'cancel'))
 
+
+    # Main actions
+    # ------------------------------------------------------------
 
     @api.multi
     def do_unreserve(self):
@@ -485,7 +493,7 @@ class StockMove(models.Model):
         for key, moves in to_assign.items():
             moves.assign_picking()
         self._push_apply()
-        return True
+        return self
 
     def set_default_price_unit_from_product(self):
         """ Set price to move, important in inter-company moves or receipts with only one partner """
@@ -890,42 +898,6 @@ class StockMove(models.Model):
         if any(move.state not in ('draft', 'cancel') for move in self):
             raise UserError(_('You can only delete draft moves.'))
         return super(StockMove, self).unlink()
-
-    @api.returns('self')
-    @api.multi
-    def action_scrap(self, quantity, location_id, restrict_lot_id=False, restrict_partner_id=False):
-        """ Move the scrap/damaged product into scrap location. Returns scrapped lines. """
-        # quantity should be given in MOVE UOM TDE FIXME: actually solve this comment
-        if quantity <= 0:
-            raise UserError(_('Please provide a positive quantity to scrap.'))
-
-        Quant = self.env["stock.quant"]
-        scrap_moves = self.env['stock.move']
-        for move in self:
-            new_move = move.copy({
-                'location_id': move.location_dest_id.id if move.state == 'done' else move.location_id.id,
-                'product_uom_qty': quantity,
-                'state': move.state,
-                'scrapped': True,
-                'location_dest_id': location_id,
-                'restrict_lot_id': restrict_lot_id,
-                'restrict_partner_id': restrict_partner_id,
-            })
-            scrap_moves |= new_move
-            if move.picking_id:
-                move.picking_id.message_post(body=_("%s %s %s has been <b>moved to</b> scrap.") % (quantity, move.product_id.uom_id.name or '', move.product_id.name))
-
-            # We "flag" the quant from which we want to scrap the products. To do so:
-            #    - we select the quants related to the move we scrap from
-            #    - we reserve the quants with the scrapped move
-            # See self.action_done, et particularly how is defined the "preferred_domain" for clarification
-
-            if move.state == 'done' and new_move.location_id.usage not in ('supplier', 'inventory', 'production'):
-                # We use scrap_move data since a reservation makes sense for a move not already done
-                quants = Quant.quants_get_preferred_domain(quantity, new_move, domain=[('qty', '>', 0), ('history_ids', 'in', [move.id])])
-                Quant.quants_reserve(quants, new_move)
-        scrap_moves.action_done()
-        return scrap_moves
 
     @api.multi
     def split(self, qty, restrict_lot_id=False, restrict_partner_id=False):

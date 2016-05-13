@@ -22,12 +22,12 @@
     company_id: base.main_company
     product_tmpl_id: product_manu_product_template
     product_id: product_manu
-    product_uom: product.product_uom_unit
+    product_uom_id: product.product_uom_unit
     product_qty: 1.0
     type: normal
     bom_line_ids:
       - product_id: product.consu_delivery_01
-        product_uom: product.product_uom_unit
+        product_uom_id: product.product_uom_unit
         product_qty: 1.0
 -
   And set routes on product to be MTO and manufacture

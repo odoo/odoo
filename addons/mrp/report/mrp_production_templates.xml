@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 <template id="report_mrporder">
     <t t-call="report.html_container">
         <t t-foreach="docs" t-as="o">
@@ -17,19 +16,19 @@
                         <div class="col-xs-3">
                             <strong>Product:</strong><br/>
                             <span t-field="o.product_id.code"/>
-                            <span t-esc="o.product_id.name_get()[0][1]"/>
+                            <span t-field="o.product_id.name"/>
                         </div>
                         <div class="col-xs-3">
                             <strong>Quantity:</strong><br/>
                             <span t-field="o.product_qty"/>
-                            <span t-field="o.product_uom.name" groups="product.group_uom"/>
+                            <span t-field="o.product_uom_id.name" groups="product.group_uom"/>
                         </div>
                     </div>
 
                     <div class="row mt32 mb32">
                         <div class="col-xs-3">
                             <strong>Scheduled Date:</strong><br/>
-                            <span t-field="o.date_planned"/>
+                            <span t-field="o.date_planned_start"/><span t-if="o.date_planned_finished"> - <span t-field="o.date_planned_finished"/></span>
                         </div>
                         <div class="col-xs-3">
                             <strong>Printing date:</strong><br/>
@@ -45,29 +44,25 @@
                         </div>
                     </div>
 
-                    <div t-if="o.workcenter_lines">
+                    <div t-if="o.workorder_ids">
                         <strong>Work Orders</strong>
                         <table class="table table-condensed">
                             <tr>
-                                <td class="text-center"><strong>Sequence</strong></td>
                                 <td class="text-center"><strong>Name</strong></td>
                                 <td class="text-center"><strong>WorkCenter</strong></td>
-                                <td class="text-center"><strong>No. Of Cycles</strong></td>
-                                <td class="text-center"><strong>No. Of Hours</strong></td>
+                                <td class="text-center"><strong>No. Of Minutes</strong></td>
                             </tr>
-                            <tr t-foreach="o.workcenter_lines" t-as="line2">
-                                <td class="text-center"><span t-field="line2.sequence"/></td>
+                            <tr t-foreach="o.workorder_ids" t-as="line2">
                                 <td class="text-center"><span t-field="line2.name"/></td>
                                 <td class="text-center"><span t-field="line2.workcenter_id.name"/></td>
-                                <td class="text-center"><span t-field="line2.cycle"/></td>
-                                <td class="text-center"><span t-field="line2.hour"/></td>
+                                <td class="text-center"><span t-field="line2.duration_expected"/></td>
                             </tr>
                         </table>
                     </div>
 
-                    <h3 t-if="o.move_lines">Bill Of Material</h3>
+                    <h3 t-if="o.move_raw_ids">Bill Of Material</h3>
 
-                    <table class="table table-condensed" t-if="o.move_lines or o.move_lines2">
+                    <table class="table table-condensed" t-if="o.move_raw_ids">
                         <thead>
                             <tr>
                                 <th><strong>Product</strong></th>
@@ -81,11 +76,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-if="o.move_lines">
+                            <t t-if="o.move_raw_ids">
                                 <tr>
                                     <td colspan="4"><strong>Products to Consume</strong></td>
                                 </tr>
-                                <tr t-foreach="o.move_lines" t-as="line">
+                                <tr t-foreach="o.move_raw_ids" t-as="line">
                                     <td>
                                         <span t-field="line.product_id.code"/>
                                         <span t-field="line.product_id.name"/>
@@ -102,27 +97,6 @@
                                     </td>
                                 </tr>
                             </t>
-                            <t t-if="o.move_lines2">
-                                <tr>
-                                    <td colspan="4"><strong>Consumed Products</strong></td>
-                                </tr>
-                                <tr t-foreach="o.move_lines2" t-as="line2">
-                                    <td>
-                                        <span t-field="line2.product_id.code"/>
-                                        <span t-field="line2.product_id.name"/>
-                                    </td>
-                                    <td class="text-right">
-                                        <span t-field="line2.product_uom_qty"/>
-                                        <span t-field="line2.product_uom.name"/>
-                                    </td>
-                                    <td class="text-center" groups="stock.group_stock_multi_locations">
-                                        <span t-field="line2.location_id.name"/>
-                                    </td>
-                                    <td class="text-center" groups="stock.group_stock_multi_locations">
-                                        <span t-field="line2.location_dest_id.name"/>
-                                    </td>
-                                </tr>
-                            </t>
                         </tbody>
                     </table>
                     <div class="oe_structure"/>
@@ -131,5 +105,4 @@
         </t>
     </t>
 </template>
-</data>
-</openerp>
+</odoo>
