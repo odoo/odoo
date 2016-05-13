@@ -65,11 +65,12 @@ class Users(models.Model):
             self.env['mail.channel'].search([('group_ids', 'in', user_group_ids)])._subscribe_users()
         return write_res
 
-    def copy_data(self, *args, **kwargs):
-        data = super(Users, self).copy_data(*args, **kwargs)
+    @api.multi
+    def copy_data(self, default=None):
+        data = super(Users, self).copy_data(default)[0]
         if data and data.get('alias_name'):
             data['alias_name'] = data['login']
-        return data
+        return [data]
 
     def _create_welcome_message(self):
         self.ensure_one()

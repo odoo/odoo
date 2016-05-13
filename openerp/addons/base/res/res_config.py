@@ -316,12 +316,12 @@ class ResConfigInstaller(models.TransientModel, ResConfigModuleInstallationMixin
         return dict(defaults, **dict.fromkeys(self.already_installed(), True))
 
     @api.model
-    def fields_get(self, fields=None, write_access=True, attributes=None):
+    def fields_get(self, fields=None, attributes=None):
         """ If an addon is already installed, set it to readonly as
         res.config.installer doesn't handle uninstallations of already
         installed addons
         """
-        fields = super(ResConfigInstaller, self).fields_get(fields, write_access=write_access, attributes=attributes)
+        fields = super(ResConfigInstaller, self).fields_get(fields, attributes=attributes)
 
         for name in self.already_installed():
             if name not in fields:

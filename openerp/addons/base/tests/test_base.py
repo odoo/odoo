@@ -400,6 +400,10 @@ class TestPartnerRecursion(TransactionCase):
         self.p2 = res_partner.create({'name': 'Elmtree Child 1', 'parent_id': self.p1.id})
         self.p3 = res_partner.create({'name': 'Elmtree Grand-Child 1.1', 'parent_id': self.p2.id})
 
+    def test_100_res_partner_recursion(self):
+        self.assertTrue(self.p3._check_recursion())
+        self.assertTrue((self.p1 + self.p2 + self.p3)._check_recursion())
+
     # split 101, 102, 103 tests to force SQL rollback between them
 
     def test_101_res_partner_recursion(self):

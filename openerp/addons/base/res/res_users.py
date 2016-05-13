@@ -876,8 +876,8 @@ class UsersView(models.Model):
                 values[f] = selected and selected[-1] or False
 
     @api.model
-    def fields_get(self, allfields=None, write_access=True, attributes=None):
-        res = super(UsersView, self).fields_get(allfields=allfields, write_access=write_access, attributes=attributes)
+    def fields_get(self, allfields=None, attributes=None):
+        res = super(UsersView, self).fields_get(allfields, attributes=attributes)
         # add reified groups fields
         if not self.env.user._is_admin():
             return res
