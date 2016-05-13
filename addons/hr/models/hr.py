@@ -269,7 +269,7 @@ class Department(models.Model):
         for record in self:
             name = record.name
             if record.parent_id:
-                name = "%s / %s" % (record.parent_id.name_get()[1], name)
+                name = "%s / %s" % (record.parent_id.name_get()[0][1], name)
             result.append((record.id, name))
         return result
 
