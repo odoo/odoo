@@ -494,6 +494,7 @@ var FieldDate = common.AbstractField.extend(common.ReinitializeFieldMixin, {
                 self.replaceElement(self.datewidget.$el);
                 self.datewidget.$input.addClass('o_form_input');
                 self.setupFocus(self.datewidget.$input);
+                self.append_company_dependent();
             });
         }
     },
@@ -516,6 +517,13 @@ var FieldDate = common.AbstractField.extend(common.ReinitializeFieldMixin, {
         }
         return false;
     },
+    append_company_dependent: function() {
+        if (!this.get("effective_readonly") && this.datewidget) {
+            this.$company_dependent_icon = this.$company_dependent
+                .insertAfter(this.datewidget.$el.find(".o_datepicker_input"))
+                .on('click', _.bind(this.on_property_open, this));
+        }
+    }
 });
 
 var FieldDatetime = FieldDate.extend({
@@ -620,6 +628,14 @@ var FieldBoolean = common.AbstractField.extend({
     is_false: function() {
         return false;
     },
+    append_company_dependent: function() {
+        if (!this.get("effective_readonly")) {
+            this.$company_dependent_icon = this.$company_dependent
+                .insertAfter(this.$el)
+                .addClass("o_field_property_boolean")
+                .on('click', _.bind(this.on_property_open, this));
+        }
+    }
 });
 
 /**
@@ -739,6 +755,13 @@ var FieldSelection = common.AbstractField.extend(common.ReinitializeFieldMixin, 
             }
         });
     },
+    _check_visibility: function() {
+        this._super()
+        if (this.$company_dependent.length){
+            var toggle = this.get("effective_readonly") || this.get("effective_invisible")
+            this.$company_dependent.toggleClass('o_form_invisible', toggle)
+        }
+    },
     initialize_field: function() {
         common.ReinitializeFieldMixin.initialize_field.call(this);
         this.on("change:domain", this, this.query_values);
@@ -816,6 +839,7 @@ var FieldSelection = common.AbstractField.extend(common.ReinitializeFieldMixin, 
                 }))
             }
             this.$el.val(JSON.stringify(found[0]));
+            this.append_company_dependent();
         } else {
             this.$el.text(found[1]);
         }
@@ -1279,6 +1303,14 @@ var FieldBinaryImage = FieldBinary.extend({
             minHeight: height,
         });
     },
+    append_company_dependent: function() {
+        if (!this.get("effective_readonly")) {
+            this.$company_dependent_icon = this.$company_dependent
+                .insertAfter(this.$el.find(".o_form_image_controls"))
+                .addClass("o_field_property_image")
+                .on('click', _.bind(this.on_property_open, this));
+        }
+    }
 });
 
 var FieldStatus = common.AbstractField.extend({

@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+import re
 from operator import itemgetter
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 TYPE2FIELD = {
     'char': 'value_text',
@@ -22,6 +24,18 @@ TYPE2FIELD = {
 
 class Property(models.Model):
     _name = 'ir.property'
+
+    def _compute_value(self):
+        for prop in self:
+            try:
+                if not prop.value_reference:
+                    field = TYPE2FIELD.get(prop.type)
+                    prop.value = getattr(prop, field)
+                else:
+                    model, resource_id = prop.value_reference.split(",")
+                    prop.value = self.env[model].browse(int(resource_id)).display_name
+            except Exception:
+                _logger.warn("Wrong value. either model or record is not exists")
 
     name = fields.Char(index=True)
     res_id = fields.Char(string='Resource', index=True, help="If not set, acts as a default value for new resources",)
@@ -47,6 +61,14 @@ class Property(models.Model):
                             required=True,
                             default='many2one',
                             index=True)
+    value = fields.Char(compute='_compute_value')
+
+    @api.constrains('value_reference')
+    def _check_value(self):
+        for prop in self.filtered('value_reference'):
+            pattern = re.compile('([a-zA-Z.]+),(\d+)')
+            if not re.search(pattern, prop.value_reference):
+                raise ValidationError(_('Please enter value in (model,id) format'))
 
     @api.multi
     def _update_values(self, values):
