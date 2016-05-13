@@ -17,70 +17,11 @@ var _t = core._t;
 var _lt = core._lt;
 var QWeb = core.qweb;
 
-function reload_favorite_list(result) {
-    var self = result;
-    if (result.view) {
-        self = result.view;
-    }
-    // Untick all filters if there is an active partner in the context to disable sidebar's filters
-    var active_partner = (self.dataset.context.active_model === 'res.partner');
-    return session.is_bound
-    .then(function() {
-        var sidebar_items = {};
-        var filter_value = session.partner_id;
-        var filter_item = {
-            value: filter_value,
-            label: session.name + _lt(" [Me]"),
-            color: self.get_color(filter_value),
-            avatar_model: self.avatar_model,
-            is_checked: !active_partner,
-        };
-        sidebar_items[filter_value] = filter_item;
-
-        filter_item = {
-            value: -1,
-            label: _lt("Everybody's calendars"),
-            color: self.get_color(-1),
-            avatar_model: self.avatar_model,
-            is_checked: false
-        };
-        sidebar_items[-1] = filter_item;
-        //Get my coworkers/contacts
-        return new Model("calendar.contacts")
-            .query(["partner_id"])
-            .filter([["user_id", "=",session.uid]])
-            .all()
-            .then(function(result) {
-                _.each(result, function(item) {
-                    filter_value = item.partner_id[0];
-                    filter_item = {
-                        value: filter_value,
-                        label: item.partner_id[1],
-                        color: self.get_color(filter_value),
-                        avatar_model: self.avatar_model,
-                        is_checked: !active_partner,
-                        can_be_removed: true,
-                    };
-                    sidebar_items[filter_value] = filter_item;
-                });
-
-                self.all_filters = sidebar_items;
-                self.now_filter_ids = $.map(self.all_filters, function(o) { return o.value; });
-
-                self.sidebar.filter.events_loaded(self.get_all_filters_ordered());
-                self.sidebar.filter.set_filters();
-            });
-    });
-}
-
 CalendarView.include({
     extraSideBar: function() {
         var result = this._super();
         if (this.useContacts) {
-            var self = this;
-            return result.then(reload_favorite_list.bind(this, this)).then(function () {
-                self.sidebar.filter.initialize_m2o();
-            });
+            return result.then(this.sidebar.filter.initialize_favorites.bind(this.sidebar.filter));
         }
         return result;
     },
@@ -107,15 +48,15 @@ var SidebarFilterM2O = FieldMany2One.extend({
 
 widgets.SidebarFilter.include({
     events: _.extend(widgets.SidebarFilter.prototype.events, {
-        'click .oe_remove_follower': 'destroy_filter',
+        'click .o_remove_contact': 'on_remove_filter',
     }),
+
     init: function () {
         this._super.apply(this, arguments);
         this.ds_contacts = new data.DataSet(this, 'calendar.contacts', session.context);
     },
-    reinitialize_m2o: function() {
-        this.dfm.destroy();
-        this.initialize_m2o();
+    initialize_favorites: function () {
+        return this.load_favorite_list().then(this.initialize_m2o.bind(this));
     },
     initialize_m2o: function() {
         this.dfm = new form_common.DefaultFieldManager(this);
@@ -135,31 +76,82 @@ widgets.SidebarFilter.include({
         });
         this.m2o.set_filter_ids(_.pluck(this.view.all_filters, 'value'));
         this.m2o.appendTo(this.$el);
-        this.m2o.on('change:value', this, this.add_filter.bind(this));
+        this.m2o.on('change:value', this, this.on_add_filter.bind(this));
     },
-    add_filter: function() {
+    load_favorite_list: function () {
+        var self = this;
+        // Untick sidebar's filters if there is an active partner in the context
+        var active_partner = (this.view.dataset.context.active_model === 'res.partner');
+        return session.is_bound.then(function() {
+            self.view.all_filters = {};
+            self.view.now_filter_ids = [];
+            self._add_filter(session.partner_id, session.name + _lt(" [Me]"), !active_partner);
+            self._add_filter(-1, _lt("Everybody's calendars"), false, false);
+            //Get my coworkers/contacts
+            return new Model("calendar.contacts")
+                .query(["partner_id"])
+                .filter([["user_id", "=", session.uid]])
+                .all()
+                .then(function(result) {
+                    _.each(result, function(item) {
+                        self._add_filter(item.partner_id[0], item.partner_id[1], !active_partner, true);
+                    });
+
+                    self.view.now_filter_ids = _.pluck(self.view.all_filters, 'value');
+
+                    self.render();
+                });
+        });
+    },
+    reload: function () {
+        this.trigger_up('reload_events');
+        this.render();
+        this.m2o.set_filter_ids(_.pluck(this.view.all_filters, 'value'));
+        this.m2o.set_value(false);
+    },
+    _add_filter: function (value, label, is_checked, can_be_removed) {
+        this.view.all_filters[value] = {
+            value: value,
+            label: label,
+            color: this.view.get_color(value),
+            avatar_model: this.view.avatar_model,
+            is_checked: is_checked || false,
+            can_be_removed: can_be_removed || false,
+        };
+        if (is_checked) {
+            this.view.now_filter_ids.push(value);
+        }
+    },
+    _remove_filter: function (value) {
+        delete this.view.all_filters[value];
+        var index = this.view.now_filter_ids.indexOf(value);
+        if (index >= 0) {
+            this.view.now_filter_ids.splice(index, 1);
+        }
+    },
+    on_add_filter: function() {
         var self = this;
         var defs = [];
         _.each(this.m2o.display_value, function(element, index) {
             if (session.partner_id !== index) {
-                defs.push(self.ds_contacts.call("create", [{'partner_id': index}]));
+                defs.push(self.ds_contacts.call("create", [{'partner_id': index}]).then(function () {
+                    self._add_filter(parseInt(index), element, true, true);
+                    self.reload();
+                }));
             }
         });
-        return $.when.apply(null, defs)
-            .then(reload_favorite_list.bind(this, this)
-            .then(this.reinitialize_m2o.bind(this))
-            .then(this.trigger_up.bind(this, 'reload_events'));
+        return $.when.apply(null, defs).then(this.reload.bind(this));
     },
-    destroy_filter: function(e) {
+    on_remove_filter: function(e) {
         var self = this;
         var id = $(e.currentTarget).data('id');
 
         Dialog.confirm(this, _t("Do you really want to delete this filter from favorites ?"), {
             confirm_callback: function() {
-                self.ds_contacts.call('unlink_from_partner_id', [id])
-                    .then(reload_favorite_list.bind(self, self))
-                    .then(self.reinitialize_m2o.bind(self))
-                    .then(self.trigger_up.bind(self, 'reload_events'));
+                self.ds_contacts.call('unlink_from_partner_id', [id]).then(function () {
+                    self._remove_filter(id);
+                    self.reload();
+                });
             },
         });
     },
