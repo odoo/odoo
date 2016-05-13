@@ -617,7 +617,7 @@ class Channel(models.Model):
         self.ensure_one()
         command_callback = getattr(self, '_execute_command_' + command, False)
         if command_callback:
-            command_callback(**kwargs)
+            return command_callback(**kwargs)
 
     def _send_transient_message(self, partner_to, content):
         """ Notifies partner_to that a message (not stored in DB) has been

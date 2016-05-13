@@ -675,7 +675,13 @@ var chat_manager = {
                 content_subtype: 'html',
                 subtype: 'mail.mt_comment',
                 command: data.command,
-            }));
+            })).then(function (action){
+                // open wizard/action using command in channel.
+                if (_.isObject(action) && action.type){
+                    action.context = $.extend(action.context, {active_id: options.channel_id})
+                    return web_client.do_action(action)
+                }
+            });
         }
         if ('model' in options && 'res_id' in options) {
             // post a message in a chatter
