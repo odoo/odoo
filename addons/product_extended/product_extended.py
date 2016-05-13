@@ -65,7 +65,7 @@ class product_template(osv.osv):
             for wline in bom.routing_id.workcenter_lines:
                 wc = wline.workcenter_id
                 cycle = wline.cycle_nbr
-                hour = (wc.time_start + wc.time_stop + cycle * wc.time_cycle) *  (wc.time_efficiency or 1.0)
+                hour = (wc.time_start + wc.time_stop + cycle * wc.time_cycle) *  (wc.time_efficiency or 100)
                 price += wc.costs_cycle * cycle + wc.costs_hour * hour
                 price = self.pool.get('product.uom')._compute_price(cr,uid,bom.product_uom.id, price, bom.product_id.uom_id.id)
         

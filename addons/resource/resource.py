@@ -675,7 +675,7 @@ class resource_resource(osv.osv):
 
     _defaults = {
         'resource_type' : 'user',
-        'time_efficiency' : 1,
+        'time_efficiency' : 100,
         'active' : True,
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.resource', context=context)
     }

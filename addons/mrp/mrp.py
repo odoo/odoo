@@ -258,7 +258,7 @@ class mrp_bom(osv.osv):
             'workcenter_id': wc.id,
             'sequence': level + (wc_use.sequence or 0),
             'cycle': cycle,
-            'hour': float(wc_use.hour_nbr * mult + ((wc.time_start or 0.0) + (wc.time_stop or 0.0) + cycle * (wc.time_cycle or 0.0)) * (wc.time_efficiency or 1.0)),
+            'hour': float(wc_use.hour_nbr * mult + ((wc.time_start or 0.0) + (wc.time_stop or 0.0) + cycle * (wc.time_cycle or 0.0)) * (wc.time_efficiency or 100)),
         }
 
     def _prepare_consume_line(self, cr, uid, bom_line_id, quantity, context=None):
