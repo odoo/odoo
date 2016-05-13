@@ -1,6 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record id="account_analytic_tag_tree_view" model="ir.ui.view">
+            <field name="name">account.analytic.tag.tree</field>
+            <field name="model">account.analytic.tag</field>
+            <field name="arch" type="xml">
+                <tree string="Analytic Accounts Tags">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="account_analytic_tag_form_view" model="ir.ui.view">
+            <field name="name">account.analytic.tag.form</field>
+            <field name="model">account.analytic.tag</field>
+            <field name="arch" type="xml">
+                <form string="Analytic Accounts Tags">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_analytic_tag_action" model="ir.actions.act_window">
+            <field name="name">Analytic Accounts Tags</field>
+            <field name="res_model">account.analytic.tag</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new tag.
+              </p>
+            </field>
+        </record>
+
         <record id="view_account_analytic_line_tree" model="ir.ui.view">
             <field name="name">account.analytic.line.tree</field>
             <field name="model">account.analytic.line</field>
