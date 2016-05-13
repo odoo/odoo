@@ -1887,6 +1887,8 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 this.pos.proxy.open_cashbox();
         }
 
+        order.initialize_validation_date();
+
         if (order.is_to_invoice()) {
             var invoiced = this.pos.push_and_invoice_order(order);
             this.invoicing = true;

@@ -874,7 +874,7 @@ class MonetaryConverter(models.AbstractModel):
 
         lang = self.user_lang()
         formatted_amount = lang.format(fmt, display_currency.round(from_amount),
-                                       grouping=True, monetary=True)
+                                       grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}')
 
         pre = post = u''
         if display_currency.position == 'before':
@@ -1039,7 +1039,7 @@ class QwebWidgetMonetary(models.AbstractModel):
         fmt = "%.{0}f".format(-precision if precision < 0 else 0)
         lang_code = qwebcontext.context.get('lang') or 'en_US'
         lang = qwebcontext.env['res.lang']._lang_get(lang_code)
-        formatted_amount = lang.format(fmt, inner, grouping=True, monetary=True)
+        formatted_amount = lang.format(fmt, inner, grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}')
         pre = post = u''
         if display.position == 'before':
             pre = u'{symbol}\N{NO-BREAK SPACE}'
