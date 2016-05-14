@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-21 09:18+0000\n"
-"PO-Revision-Date: 2015-11-02 16:19+0000\n"
+"PO-Revision-Date: 2016-05-14 16:55+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_product_product_mo_count
 #: model:ir.model.fields,field_description:mrp.field_product_template_mo_count
 msgid "# Manufacturing Orders"
-msgstr ""
+msgstr "Výrobní příkazy"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:332
@@ -152,7 +152,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_product_efficiency
 msgid "A factor of 0.9 means a loss of 10% during the production process."
-msgstr ""
+msgstr "Činitel 0.9 znamená ztrátu 10% v průběhu výrobního procesu."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_product_efficiency
@@ -1056,7 +1056,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_manufacture_to_resupply
 msgid "Manufacture in this Warehouse"
-msgstr ""
+msgstr "Vyrobit v tomto skladu"
 
 #. module: mrp
 #: selection:mrp.bom,type:0
@@ -1918,7 +1918,7 @@ msgstr "Seznam úkonů (seznam výrobních středisek) pro vyrobení konečného
 msgid ""
 "This allows to add state, date_start,date_stop in production order operation lines (in the \"Work Centers\" tab).\n"
 "-This installs the module mrp_operations."
-msgstr ""
+msgstr "Tímto povolíte pole state, date_start,date_stop v řádcích výrobních příkazů (na záložce \"Výrobní střediska\").\n               Bude nainstalován modul mrp_operations."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_efficiency
@@ -1969,7 +1969,7 @@ msgstr "Počet pracovních hodin výrobního střediska pro provedení úkonu v�
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "To Consume"
-msgstr ""
+msgstr "Ke spotřebě"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_cycle_total
@@ -2046,13 +2046,13 @@ msgstr "Platné od"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Valid From Date by Month"
-msgstr ""
+msgstr "Platné ode dne v měsíci"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Valid From Month"
-msgstr ""
+msgstr "Platné od měsíce"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_date_stop
@@ -2064,13 +2064,13 @@ msgstr "Platné do"
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_date_start
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_date_stop
 msgid "Validity of component. Keep empty if it's always valid."
-msgstr ""
+msgstr "Platnost této komponenty. Nechte prázdné pokud je vždy platná."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_date_start
 #: model:ir.model.fields,help:mrp.field_mrp_bom_date_stop
 msgid "Validity of this BoM. Keep empty if it's always valid."
-msgstr ""
+msgstr "Platnost tohoto kusovníku. Nechte prázdné pokud je vždy platný."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_attribute_value_ids
@@ -2098,14 +2098,14 @@ msgstr "Varování"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_website_message_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Zprávy Webové stránky"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_website_message_ids
 #: model:ir.model.fields,help:mrp.field_mrp_production_website_message_ids
 #: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Historie komunikace Webové stránky"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_inout_date
@@ -2125,7 +2125,7 @@ msgid ""
 "Weekly Stock Value Variation enables you to track the stock value evolution "
 "linked to manufacturing activities, receipts of products and delivery "
 "orders."
-msgstr ""
+msgstr "Týdenní změna hodnoty zásob vám umožňuje sledovat změnu hodnoty zásob v návaznosti na aktivitu výroby, příjem výrobku a dodání objednávek."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse_manufacture_to_resupply
@@ -2251,7 +2251,7 @@ msgid ""
 "Without this module: A + B + C -> D.\n"
 "With this module: A + B + C -> D + E.\n"
 "-This installs the module mrp_byproduct."
-msgstr ""
+msgstr "Polotovary můžete nastavit v kusovníku.\n                Bez tohoto modulu: A + B + C -> D.\n                S tímto modulem: A + B + C -> D + E.\n                Bude nainstalován modul module mrp_byproduct."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:348
@@ -2259,7 +2259,7 @@ msgstr ""
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
-msgstr ""
+msgstr "Nemůžete smazat kusovník, se kterým běží výroba. Nejdřív ji prosím ukončete nebo zrušte."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
