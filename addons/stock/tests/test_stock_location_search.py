@@ -10,6 +10,7 @@ class TestStockLocationSearch(common.TransactionCase):
         self.location_barcode = self.env.ref('stock.stock_location_3')
         self.location_barcode_id = self.location_barcode.id
         self.barcode = self.location_barcode.barcode
+        self.name = self.location_barcode.name
 
     def test_10_location_search_by_barcode(self):
         """Search stock location by barcode"""
@@ -20,7 +21,7 @@ class TestStockLocationSearch(common.TransactionCase):
 
     def test_20_location_search_by_name(self):
         """Search stock location by name"""
-        location_names = self.location.name_search(name='IT Vendors')
+        location_names = self.location.name_search(name=self.name)
         location_ids_found = [
             location_name[0] for location_name in location_names]
         self.assertTrue(self.location_barcode_id in location_ids_found)
