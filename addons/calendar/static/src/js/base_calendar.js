@@ -11,6 +11,8 @@ var Notification = require('web.notification').Notification;
 var session = require('web.session');
 var WebClient = require('web.WebClient');
 var widgets = require('web_calendar.widgets');
+var formats = require('web.formats');
+var utils = require('web.utils');
 
 var FieldMany2ManyTags = core.form_widget_registry.get('many2many_tags');
 var _t = core._t;
@@ -77,6 +79,74 @@ function reload_favorite_list(result) {
         });
     });
 }
+
+widgets.QuickCreate.include({
+    start: function() {
+        this._super.apply(this, arguments);
+        if(this.dataset.model == 'calendar.event') {
+            this.$input.attr("placeholder",_t("14h to 16h Meeting, 2pm Meeting at Location"));
+        }
+    },
+    compute_fields_value: function(start, stop, location, message){
+        var time_format = ['hha', 'HH:mm', 'hh:mma', 'HH'],
+            start_date = moment(this.data_template.start.slice(0,10)),
+            stop_date = moment(this.data_template.stop.slice(0,10)),
+            start_time = moment(start, time_format),
+            stop_time = stop ? moment(stop, time_format) : start_time.add(1, 'hours');
+
+        if(stop){
+            if (start_time.hours() > stop_time.hours()) {
+                stop_date = stop_date.add(1, 'days');
+            }
+        } else{
+            if (start_time.hours() >= 23) {
+                stop_date = stop_date.add(1,'days');
+            }
+        }
+        if (start_time.isValid() &&  stop_time.isValid()){
+            var start_datetime = (start_date.hours(start_time.hours()), start_date.minutes(start_time.minutes()));
+            var stop_datetime = (stop_date.hours(stop_time.hours()), stop_date.minutes(stop_time.minutes()));
+            return {'start_datetime': start_datetime,
+                    'stop_datetime': stop_datetime,
+                    'location': location,
+                    'message':message
+                };
+        }
+        return {};
+    },
+    set_field_from_message: function(data){
+        var time_range = utils.parse_time_range(data.name);
+        if(time_range.length){
+            var computed_fields = this.compute_fields_value.apply(this, time_range),
+                start_datetime = computed_fields.start_datetime,
+                stop_datetime = computed_fields.stop_datetime;
+            if (start_datetime && stop_datetime){
+                data.allday = false;
+                data.start = formats.parse_value(start_datetime, {type: 'datetime'});
+                data.stop = formats.parse_value(stop_datetime, {type: 'datetime'});
+                if(computed_fields.location){
+                    data.location =computed_fields.location;
+                }
+                if(computed_fields.message){
+                    data.name = computed_fields.message;
+                }
+            }
+        }
+    },
+    quick_create: function(data, options) {
+        if(this.dataset.model == 'calendar.event' && data.name) {
+            this.set_field_from_message(data);
+        }
+        return this._super.apply(this, arguments);
+    },
+
+    slow_create: function(_data) {
+        if(this.dataset.model == 'calendar.event' && _data.name) {
+            this.set_field_from_message(_data);
+        }
+        return this._super.apply(this, arguments);
+    },
+});
 
 CalendarView.include({
     extraSideBar: function() {
