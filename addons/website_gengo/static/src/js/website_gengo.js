@@ -18,8 +18,8 @@ if (!translate.edit_translations) {
 
 ajax.loadXML('/website_gengo/static/src/xml/website.gengo.xml', qweb);
 
-website.TopBar.include({
-    events: _.extend({}, website.TopBar.prototype.events, {
+translate.Class.include({
+    events: _.extend({}, translate.Class.prototype.events, {
         'click a[data-action=translation_gengo_post]': 'translation_gengo_post',
         'click a[data-action=translation_gengo_info]': 'translation_gengo_info',
     }),
@@ -57,16 +57,14 @@ website.TopBar.include({
                     dialog.$el.modal('hide');
                     self.$el.find('.gengo_post').addClass("hidden");
                     self.$el.find('.gengo_wait').removeClass("hidden");
-                    var trans ={}
+                    var trans = [];
                     $('[data-oe-translation-state="to_translate"], [data-oe-translation-state="None"]').each(function () {
                         var $node = $(this);
                         var data = $node.data();
-                        if (!trans[data.oeTranslationViewId]) {
-                            trans[data.oeTranslationViewId] = [];
-                        }
-                        trans[data.oeTranslationViewId].push({
-                            initial_content: qweb.tools.html_escape(self.getInitialContent(this)),
-                            new_content: qweb.tools.html_escape(self.getInitialContent(this)),
+
+                        var val = ($node.is('img')) ? $node.attr('alt') : $node.text();
+                        trans.push({
+                            initial_content: qweb.tools.html_escape(val),
                             translation_id: data.oeTranslationId || null,
                             gengo_translation: gengo_service_level,
                             gengo_comment:"\nOriginal Page: " + document.URL
@@ -76,10 +74,11 @@ website.TopBar.include({
                         'data': trans,
                         'lang': base.get_context()['lang'],
                     }).then(function () {
+                        $("[data-oe-translation-state='to_translate'], [data-oe-translation-state='None']").attr('data-oe-translation-state', 'inprogress');
                         self.$el.find('.gengo_wait').addClass("hidden");
                         self.$el.find('.gengo_inprogress,.gengo_discard').removeClass("hidden");
                         ajax.jsonRpc('/website/post_gengo_jobs', 'call', {});
-                        self.save();
+                        self.save_and_reload();
                     }).fail(function () {
                         alert("Could not Post translation");
                     });
@@ -96,7 +95,7 @@ website.TopBar.include({
     translation_gengo_info: function () {
         var repr =  $(document.documentElement).data('mainObject');
         var translated_ids = [];
-        $('.oe_translatable_text').not(".oe_translatable_inprogress").each(function(){
+        $('[data-oe-translation-state="translated"]').each(function () {
             translated_ids.push($(this).attr('data-oe-translation-id'));
         });
         ajax.jsonRpc('/website/get_translated_length', 'call', {
