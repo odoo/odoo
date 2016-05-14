@@ -600,7 +600,7 @@ class ProductChangeMixin(object):
                             product, product_uom_qty, partner_id, {'uom': uom,})[pricelist]
 
                 if price is False:
-                     warning = {
+                    warning = {
                         'title':'No valid pricelist line found !',
                         'message':
                             "Couldn't find a pricelist line matching this product and quantity.\n"

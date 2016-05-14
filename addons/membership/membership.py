@@ -275,9 +275,9 @@ class Partner(osv.osv):
         member_line_obj = self.pool.get('membership.membership_line')
         for partner in self.browse(cr, uid, ids, context=context):
             if partner.associate_member:
-                 partner_id = partner.associate_member.id
+                partner_id = partner.associate_member.id
             else:
-                 partner_id = partner.id
+                partner_id = partner.id
             res[partner.id] = {
                  'membership_start': False,
                  'membership_stop': False,
@@ -294,7 +294,7 @@ class Partner(osv.osv):
                 line_id1 = member_line_obj.search(cr, uid, [('partner', '=', partner_id),('date_cancel','=',False)],
                             limit=1, order='date_to desc', context=context)
                 if line_id1:
-                      res[partner.id]['membership_stop'] = member_line_obj.read(cr, uid, line_id1[0],
+                    res[partner.id]['membership_stop'] = member_line_obj.read(cr, uid, line_id1[0],
                                 ['date_to'], context=context)['date_to']
 
             if name == 'membership_cancel':
@@ -438,7 +438,7 @@ class Partner(osv.osv):
             if line_value['invoice_line_tax_id']:
                 tax_value = invoice_tax_obj.compute(cr, uid, invoice_id).values()
                 for tax in tax_value:
-                       invoice_tax_obj.create(cr, uid, tax, context=context)
+                    invoice_tax_obj.create(cr, uid, tax, context=context)
         #recompute the membership_state of those partners
         self.pool.get('res.partner').write(cr, uid, ids, {})
         return invoice_list

@@ -26,7 +26,7 @@ import pooler
 
 class account_invoice_confirm(osv.osv_memory):
     """
-    This wizard will confirm the all the selected draft invoices
+    This wizard will confirm all the selected draft invoices
     """
 
     _name = "account.invoice.confirm"
@@ -49,7 +49,7 @@ account_invoice_confirm()
 
 class account_invoice_cancel(osv.osv_memory):
     """
-    This wizard will cancel the all the selected invoices.
+    This wizard will cancel all the selected invoices.
     If in the journal, the option allow cancelling entry is not selected then it will give warning message.
     """
 

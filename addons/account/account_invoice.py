@@ -501,7 +501,7 @@ class account_invoice(osv.osv):
             pterm_list.sort()
             res = {'value':{'date_due': pterm_list[-1]}}
         else:
-             raise osv.except_osv(_('Data Insufficient !'), _('The payment term of supplier does not have a payment term line!'))
+            raise osv.except_osv(_('Data Insufficient !'), _('The payment term of supplier does not have a payment term line!'))
         return res
 
     def onchange_invoice_line(self, cr, uid, ids, lines):
@@ -816,12 +816,12 @@ class account_invoice(osv.osv):
             context = {}
         for inv in self.browse(cr, uid, ids, context=context):
             if not inv.journal_id.sequence_id:
-                raise osv.except_osv(_('Error !'), _('Please define sequence on the journal related to this invoice.'))
+                raise osv.except_osv(_('Error!'), _('Please define sequence on the journal related to this invoice.'))
             if not inv.invoice_line:
-                raise osv.except_osv(_('No Invoice Lines !'), _('Please create some invoice lines.'))
+                raise osv.except_osv(_('No Invoice Lines!'), _('Please create some invoice lines.'))
             if inv.move_id:
                 continue
-            
+
             ctx = context.copy()
             ctx.update({'lang': inv.partner_id.lang})
             if not inv.date_invoice:
@@ -847,7 +847,7 @@ class account_invoice(osv.osv):
                         total_percent += line.value_amount
                 total_fixed = (total_fixed * 100) / (inv.amount_total or 1.0)
                 if (total_fixed + total_percent) > 100:
-                    raise osv.except_osv(_('Error !'), _("Can not create the invoice !\nThe related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. The latest line of your payment term must be of type 'balance' to avoid rounding issues."))
+                    raise osv.except_osv(_('Error!'), _("Cannot create the invoice.\nThe related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. In order to avoid rounding issues, the latest line of your payment term must be of type 'balance'."))
 
             # one move line per tax line
             iml += ait_obj.move_line_get(cr, uid, inv.id)
@@ -986,7 +986,7 @@ class account_invoice(osv.osv):
     def action_number(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        #TODO: not correct fix but required a frech values before reading it.
+        #TODO: not correct fix but required a fresh values before reading it.
         self.write(cr, uid, ids, {})
 
         for obj_inv in self.browse(cr, uid, ids, context=context):
@@ -1432,7 +1432,7 @@ class account_invoice_line(osv.osv):
             prod = self.pool.get('product.product').browse(cr, uid, product, context=context)
             prod_uom = self.pool.get('product.uom').browse(cr, uid, uom, context=context)
             if prod.uom_id.category_id.id != prod_uom.category_id.id:
-                 warning = {
+                warning = {
                     'title': _('Warning!'),
                     'message': _('You selected an Unit of Measure which is not compatible with the product.')
             }

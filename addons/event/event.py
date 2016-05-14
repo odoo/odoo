@@ -70,8 +70,8 @@ class event_event(osv.osv):
         if not product_id:
             return {'value': {'unit_price': False}}
         else:
-           unit_price=self.pool.get('product.product').price_get(cr, uid, [product_id])[product_id]
-           return {'value': {'unit_price': unit_price}}
+            unit_price=self.pool.get('product.product').price_get(cr, uid, [product_id])[product_id]
+            return {'value': {'unit_price': unit_price}}
 
     def button_draft(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
@@ -395,7 +395,7 @@ class event_registration(osv.osv):
             val_invoice['value'].update({'partner_id': reg.partner_invoice_id.id})
             partner_address_id = val_invoice['value']['address_invoice_id']
             if not partner_address_id:
-               raise osv.except_osv(_('Error !'),
+                raise osv.except_osv(_('Error !'),
                         _("Registered partner doesn't have an address to make the invoice."))
 
             value = inv_lines_pool.product_id_change(cr, uid, [], reg.event_id.product_id.id, uom =False, partner_id=reg.partner_invoice_id.id, fposition_id=reg.partner_invoice_id.property_account_position.id)
@@ -422,9 +422,9 @@ class event_registration(osv.osv):
                     self.do_close(cr, uid, [k.id], context={'invoice_id': res})
 
             else:
-               for k, v in val:
-                   res = self._make_invoice(cr, uid, k, [v], context=context)
-                   self.do_close(cr, uid, [k.id], context={'invoice_id': res})
+                for k, v in val:
+                    res = self._make_invoice(cr, uid, k, [v], context=context)
+                    self.do_close(cr, uid, [k.id], context={'invoice_id': res})
             if res: new_invoice_ids.append(res)
         return new_invoice_ids
 

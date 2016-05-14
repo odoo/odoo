@@ -31,7 +31,7 @@ Manages job positions and the recruitment process.
 
 It's integrated with the survey module to allow you to define interview for different jobs.
 
-This module is integrated with the mail gateway to automatically tracks email
+This module is integrated with the mail gateway to automatically track email
 sent to jobs@YOURCOMPANY.com. It's also integrated with the document management
 system to store and search in your CV base.
     """,
