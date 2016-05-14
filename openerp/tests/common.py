@@ -205,9 +205,9 @@ class SavepointCase(SingleTransactionCase):
     """
     def setUp(self):
         self._savepoint_id = next(savepoint_seq)
-        self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
+        self.cr.execute('SAVEPOINT test_%s' % self._savepoint_id)
     def tearDown(self):
-        self.cr.execute('ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
+        self.cr.execute('ROLLBACK TO SAVEPOINT test_%s' % self._savepoint_id)
         self.env.clear()
         self.registry.clear_caches()
 
