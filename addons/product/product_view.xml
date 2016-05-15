@@ -55,11 +55,9 @@
                 <tree string="Product">
                     <field name="name"/>
                     <field name="standard_price"/>
-                    <field name="volume"/>
-                    <field name="weight"/>
+                    <field name="weight" string="Weight"/>
                     <field name="categ_id"/>
                     <field name="type"/>
-                    <field name="state"/>
                     <field name="uom_id" invisible="1"/>
                 </tree>
             </field>
@@ -444,7 +442,6 @@
                     <field name="price" invisible="not context.get('pricelist',False)"/>
                     <field name="uom_id" options="{'no_open': True, 'no_create': True}"/>
                     <field name="barcode"/>
-                    <field name="state" invisible="1"/>
                     <field name="product_tmpl_id" invisible="1"/>
                 </tree>
             </field>
