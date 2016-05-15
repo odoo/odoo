@@ -18,6 +18,8 @@ class sale_order_line(osv.osv):
 
     def _get_real_price_currency(self, cr, uid, product_id, res_dict, qty, uom, pricelist, context=None):
         """Retrieve the price before applying the pricelist"""
+        if context is None:
+            context = {}
         item_obj = self.pool['product.pricelist.item']
         product_obj = self.pool['product.product']
         field_name = 'lst_price'
@@ -32,7 +34,9 @@ class sale_order_line(osv.osv):
                 field_name = 'standard_price'
             currency_id = item.pricelist_id.currency_id
 
-        product = product_obj.browse(cr, uid, product_id, context=context)
+        product_context = dict(context)
+        product_context.pop('uom', None)
+        product = product_obj.browse(cr, uid, product_id, context=product_context)
         if not currency_id:
             currency_id = product.company_id.currency_id
             cur_factor = 1.0
