@@ -5,13 +5,14 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # hoxhe aits <hoxhe0@gmail.com>, 2015
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-10-06 05:31+0000\n"
-"Last-Translator: hoxhe aits <hoxhe0@gmail.com>\n"
+"PO-Revision-Date: 2016-05-12 15:23+0000\n"
+"Last-Translator: Mohammed Ibrahim <m.ibrahim@mussder.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgid ""
 "* If the payslip is under verification, the status is 'Waiting'.             \n"
 "* If the payslip is confirmed then status is set to 'Done'.            \n"
 "* When user cancel payslip the status is 'Rejected'."
-msgstr ""
+msgstr "* عند إنشاء قسيمة دفع الحالة تكون \"مسوده \".\n* إذا كان قسيمة الدفع قيد التحقق، الحاله تكون \"انتظار\".\n* واذا تم تأكيد هذه القسيمه الحالة تكون \" تم \" .\n* عند إلغاء المستخدم قسيمة الدفع الحاله تكون 'مرفوض '. "
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
@@ -45,7 +46,7 @@ msgid ""
 "                estate or anyone that collect or inject money on payslips.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nإضغط لإضافه تسجيل مساهمه جديد .\n</p><p>\nسجل المساهمة هو طرف ثالث متضمن في الراتب\nدفع الموظفين. ويمكن أن يكون الضمان الاجتماعي، و\nالعقارات أو أي شخص أن جمع أو حقن المال على كشوف.\n</p>"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
@@ -164,12 +165,12 @@ msgstr "الفئة"
 #. module: hr_payroll
 #: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
 msgid "Child Rules"
-msgstr ""
+msgstr "القواعد الفرعيه "
 
 #. module: hr_payroll
 #: field:hr.payslip.line,child_ids:0 field:hr.salary.rule,child_ids:0
 msgid "Child Salary Rule"
-msgstr ""
+msgstr "قواعد المرتب الفرعيه "
 
 #. module: hr_payroll
 #: field:hr.payroll.structure,children_ids:0
@@ -180,7 +181,7 @@ msgstr "فرعي"
 #. module: hr_payroll
 #: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
 msgid "Children Definition"
-msgstr ""
+msgstr "التعريف الفرعى "
 
 #. module: hr_payroll
 #: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
@@ -265,7 +266,7 @@ msgstr "تسجيل المساهمة"
 #. module: hr_payroll
 #: view:payslip.lines.contribution.register:hr_payroll.view_payslip_lines_contribution_register
 msgid "Contribution Register's Payslip Lines"
-msgstr ""
+msgstr "مساهمة التسجيل في خطوط قسيمة الدفع "
 
 #. module: hr_payroll
 #: view:hr.contribution.register:hr_payroll.hr_contribution_register_filter
@@ -278,7 +279,7 @@ msgstr "تسجيلات مساهمة"
 #. module: hr_payroll
 #: help:hr.config.settings,module_hr_payroll_account:0
 msgid "Create journal entries from payslips"
-msgstr ""
+msgstr "إنشاء قيود يوميه من قسائم الدفع "
 
 #. module: hr_payroll
 #: field:hr.contribution.register,create_uid:0
@@ -343,7 +344,7 @@ msgid ""
 "the contract chosen. If you let empty the field contract, this field isn't "
 "mandatory anymore and thus the rules applied will be all the rules set on "
 "the structure of all contracts of the employee valid for the chosen period"
-msgstr ""
+msgstr "يحدد القواعد التي يجب تطبيقها لهذه القسيمة، وفقا للعقد الذي تم اختياره. إذا ما تركت حقل العقد فارغا ، هذا الحقل ليس إلزاميا بعد الآن، وبالتالي القواعد المطبقة سوف تكون جميع القواعد المنصوص على هيكل الراتب فى عقود الموظف صالحة للفترة المختارة "
 
 #. module: hr_payroll
 #: view:hr.contribution.register:hr_payroll.hr_contribution_register_form
@@ -382,7 +383,7 @@ msgstr "تمّ"
 #. module: hr_payroll
 #: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
 msgid "Done Payslip Batches"
-msgstr ""
+msgstr "دفعات قسيمة الدفع التى تمت "
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_filter
@@ -400,7 +401,7 @@ msgstr "مسودة"
 #. module: hr_payroll
 #: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
 msgid "Draft Payslip Batches"
-msgstr ""
+msgstr "دفعات قسيمه الدفع فى الحاله مسوده "
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_filter
@@ -457,7 +458,7 @@ msgstr "خطأ!"
 #. module: hr_payroll
 #: help:hr.payslip.line,register_id:0 help:hr.salary.rule,register_id:0
 msgid "Eventual third party involved in the salary payment of the employees."
-msgstr ""
+msgstr "طرف ثالث في نهاية المطاف تشارك في دفع رواتب الموظفين . "
 
 #. module: hr_payroll
 #: field:hr.payslip.line,amount_fix:0
@@ -486,7 +487,7 @@ msgstr "توليد"
 #: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_by_employees
 msgid "Generate Payslips"
-msgstr ""
+msgstr "توليد قسائم الدفع "
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_employees
@@ -525,19 +526,19 @@ msgstr "رقم الهوية"
 msgid ""
 "If its checked, indicates that all payslips generated from here are refund "
 "payslips."
-msgstr ""
+msgstr "إذا تم تحديدها ، هذا يشير إلى أن جميع قسائم الدفع المتولدة من هنا  هى كشوف مردوده  "
 
 #. module: hr_payroll
 #: help:hr.payslip.line,active:0 help:hr.salary.rule,active:0
 msgid ""
 "If the active field is set to false, it will allow you to hide the salary "
 "rule without removing it."
-msgstr ""
+msgstr "إذا تم تعيين الحقل النشط إلى \"خطأ \"، سوف تسمح لك لإخفاء قاعده المرتب دون إزالته . "
 
 #. module: hr_payroll
 #: help:hr.payslip,credit_note:0
 msgid "Indicates this payslip has a refund of another"
-msgstr ""
+msgstr "يشير هذه القسيمة أن لها استرداد آخر "
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
@@ -563,7 +564,7 @@ msgid ""
 "It is used in computation for percentage and fixed amount.For e.g. A rule "
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
-msgstr ""
+msgstr "يتم استخدامه في حساب نسبة و كمية ثابتة. للحصول على سبيل المثال هناك قاعدة لوجبة قسيمة بعد أن حددت مبلغ 1 € لكل يوم عمل يمكن أن يكون كميته محددة في التعبير مثل \nworked_days.WORK100.number_of_days. "
 
 #. module: hr_payroll
 #: help:hr.payslip.input,amount:0
@@ -571,7 +572,7 @@ msgid ""
 "It is used in computation. For e.g. A rule for sales having 1% commission of"
 " basic salary for per product can defined in expression like result = "
 "inputs.SALEURO.amount * contract.wage*0.01."
-msgstr ""
+msgstr "يتم استخدامه في حساب. على سبيل المثال؛ هناك قاعدة للمبيعات وجود قاعده  1٪ من الراتب الأساسي للكل منتج يمكن تعريفها في التعبير مثل نتيجة = inputs.SALEURO.amount * contract.wage * 0.01. "
 
 #. module: hr_payroll
 #: field:hr.contribution.register,write_uid:0
@@ -599,7 +600,7 @@ msgstr "آخر تحديث فى"
 #. module: hr_payroll
 #: field:hr.config.settings,module_hr_payroll_account:0
 msgid "Link your payroll to accounting system"
-msgstr ""
+msgstr "ربط الرواتب الخاصه بك بالنظام المحاسبى ."
 
 #. module: hr_payroll
 #: help:hr.salary.rule.category,parent_id:0
@@ -705,32 +706,32 @@ msgstr "مجموعة ظرف المرتب"
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.payslip_details_report
 msgid "PaySlip Details"
-msgstr ""
+msgstr "تفاصيل قسيمه الدفع "
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_payslip_lines_contribution_register
 msgid "PaySlip Lines"
-msgstr ""
+msgstr "خطوط قسيمه الدفع "
 
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.action_contribution_register
 msgid "PaySlip Lines By Conribution Register"
-msgstr ""
+msgstr "خطوط قسيمه الدفع مع تسجيل المساهمه "
 
 #. module: hr_payroll
 #: view:website:hr_payroll.report_contributionregister
 msgid "PaySlip Lines by Contribution Register"
-msgstr ""
+msgstr "خطوط قسيمه الدفع مع تسجيل المساهمه  "
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
 msgid "PaySlip Lines by Contribution Registers"
-msgstr ""
+msgstr "خطوط قسيمه الدفع مع تسجيل المساهمه "
 
 #. module: hr_payroll
 #: view:website:hr_payroll.report_contributionregister
 msgid "PaySlip Name"
-msgstr ""
+msgstr "اسم قسيمه الدفع "
 
 #. module: hr_payroll
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_reporting
@@ -777,7 +778,7 @@ msgstr "مدخل ظرف المرتب"
 #. module: hr_payroll
 #: field:hr.payslip,input_line_ids:0
 msgid "Payslip Inputs"
-msgstr ""
+msgstr "مدخلات قسيمه الدفع "
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
@@ -796,18 +797,18 @@ msgstr "مفرادات المرتب"
 #. module: hr_payroll
 #: view:website:hr_payroll.report_payslipdetails
 msgid "Payslip Lines by Contribution Register"
-msgstr ""
+msgstr "خطوط قسيمه الدفع بتسجيل المساهمه "
 
 #. module: hr_payroll
 #: field:hr.payslip,name:0
 msgid "Payslip Name"
-msgstr ""
+msgstr "اسم قسيمه الدفع "
 
 #. module: hr_payroll
 #: field:hr.payslip,worked_days_line_ids:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
 msgid "Payslip Worked Days"
-msgstr ""
+msgstr "ايام عمل قسيمه الدفع "
 
 #. module: hr_payroll
 #: view:hr.employee:hr_payroll.payroll_hr_employee_view_form
@@ -826,7 +827,7 @@ msgstr "أظرف الرواتب"
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_run_tree
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payslip_run
 msgid "Payslips Batches"
-msgstr ""
+msgstr "دفع قسائم الدفع "
 
 #. module: hr_payroll
 #: view:hr.payslip.employees:hr_payroll.view_hr_payslip_by_employees
@@ -870,13 +871,13 @@ msgstr "كود بايثون"
 #: field:hr.payslip.line,condition_python:0
 #: field:hr.salary.rule,condition_python:0
 msgid "Python Condition"
-msgstr ""
+msgstr "شرط بايثون "
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Python Expression"
-msgstr ""
+msgstr "خطأ بايثون"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,quantity:0 field:hr.salary.rule,quantity:0
@@ -932,7 +933,7 @@ msgstr "رد"
 #: code:addons/hr_payroll/hr_payroll.py:334
 #, python-format
 msgid "Refund Payslip"
-msgstr ""
+msgstr "رد قسيمه الدفع "
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:324
@@ -948,7 +949,7 @@ msgstr "خط التسجيل"
 #. module: hr_payroll
 #: view:website:hr_payroll.report_contributionregister
 msgid "Register Name:"
-msgstr ""
+msgstr "اسم التسجيل "
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
@@ -977,13 +978,13 @@ msgstr "حساب الراتب"
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
 msgid "Salary Rule Categories"
-msgstr ""
+msgstr "فئات قاعده المرتب "
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
 msgid "Salary Rule Categories Hierarchy"
-msgstr ""
+msgstr "تسلسل فئات قواعد المرتب "
 
 #. module: hr_payroll
 #: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
@@ -996,7 +997,7 @@ msgstr "فئة قاعدة المرتب"
 #: field:hr.rule.input,input_id:0
 #: model:ir.model,name:hr_payroll.model_hr_rule_input
 msgid "Salary Rule Input"
-msgstr ""
+msgstr "مدخلات قاعده المرتب "
 
 #. module: hr_payroll
 #: view:hr.payroll.structure:hr_payroll.view_hr_employee_grade_form
@@ -1014,7 +1015,7 @@ msgstr "قانون الأجور"
 #: code:addons/hr_payroll/hr_payroll.py:658
 #, python-format
 msgid "Salary Slip of %s for %s"
-msgstr ""
+msgstr "زلة راتب٪ ق ل ٪s"
 
 #. module: hr_payroll
 #: field:hr.contract,struct_id:0
@@ -1029,7 +1030,7 @@ msgstr "هيكل المرتب"
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_list_form
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_view
 msgid "Salary Structures"
-msgstr ""
+msgstr "هياكل المرتب "
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_tree
@@ -1040,7 +1041,7 @@ msgstr "التسلسل الهرمي للراتب"
 #. module: hr_payroll
 #: field:hr.contract,schedule_pay:0
 msgid "Scheduled Pay"
-msgstr ""
+msgstr "الدفع المجدول "
 
 #. module: hr_payroll
 #: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
@@ -1050,7 +1051,7 @@ msgstr "بحث عن مجموعة ظرف المرتب"
 #. module: hr_payroll
 #: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
 msgid "Search Payslip Lines"
-msgstr ""
+msgstr "بحث خطوط قسيمه الدفع "
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_filter
@@ -1121,7 +1122,7 @@ msgstr "طريقة حساب لكمية القاعدة."
 #: help:hr.payslip.input,contract_id:0
 #: help:hr.payslip.worked_days,contract_id:0
 msgid "The contract for which applied this input"
-msgstr ""
+msgstr "العقد الذى يطبق هذه المدخلات "
 
 #. module: hr_payroll
 #: help:hr.payslip.line,condition_range_max:0
@@ -1133,7 +1134,7 @@ msgstr "أعلى قيمة، تطبق لهذه القاعدة"
 #: help:hr.payslip.line,condition_range_min:0
 #: help:hr.salary.rule,condition_range_min:0
 msgid "The minimum amount, applied for this rule."
-msgstr ""
+msgstr "الحد الأدنى للكميه ، لتطبيق لهذه القاعدة . "
 
 #. module: hr_payroll
 #: help:hr.payslip.line,condition_range:0
@@ -1178,7 +1179,7 @@ msgstr "تستخدم لترتيب متتابعة الحساب"
 #: help:hr.payslip.line,appears_on_payslip:0
 #: help:hr.salary.rule,appears_on_payslip:0
 msgid "Used to display the salary rule on payslip."
-msgstr ""
+msgstr "تستخدم لعرض قاعده المرتب على قسيمة الدفع . "
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
@@ -1216,31 +1217,31 @@ msgstr "أيام العمل و الدخول"
 #: code:addons/hr_payroll/hr_payroll.py:856
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
-msgstr ""
+msgstr "أساس نسبه الخطأ أو كمية محددة لقاعده المرتب  %s (%s). "
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:862
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
-msgstr ""
+msgstr "خطأ كود بايثون المحدد لقاعده المرتب %s (%s)."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:885
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
-msgstr ""
+msgstr "خطأ كود بايثون المحدد لقاعده المرتب %s (%s)."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:851
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
-msgstr ""
+msgstr "خطأ الكميه المحددة لقاعده المرتب %s (%s)."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:879
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
-msgstr ""
+msgstr "حالة خاطئة المحدد قاعده المرتب  %s (%s). "
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:353
@@ -1252,7 +1253,7 @@ msgstr "لا يمكنك حذف قسيمة الدفع وهي ليست مسودة 
 #: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:52
 #, python-format
 msgid "You must select employee(s) to generate payslip(s)."
-msgstr ""
+msgstr "يجب تحديد الموظفين (s) لتوليد كشوف (s) "
 
 #. module: hr_payroll
 #: view:payslip.lines.contribution.register:hr_payroll.view_payslip_lines_contribution_register
