@@ -206,8 +206,12 @@ class website_sale(http.Controller):
             url = "/shop/category/%s" % slug(category)
         if attrib_list:
             post['attrib'] = attrib_list
+        
         pager = request.website.pager(url=url, total=product_count, page=page, step=PPG, scope=7, url_args=post)
-        product_ids = product_obj.search(cr, uid, domain, limit=PPG, offset=pager['offset'], order='website_published desc, website_sequence desc', context=context)
+        product_ids = product_obj.search(
+            cr, uid, domain, limit=PPG, offset=pager['offset'],
+            order=product_obj._order,
+            context=context)
         products = product_obj.browse(cr, uid, product_ids, context=context)
 
         style_obj = pool['product.style']
