@@ -43,7 +43,7 @@
                     <group string="Periodicity">
                         <field name="method_time" string="Time Method Based On" widget="radio" attrs="{'invisible': [('type','!=','purchase')]}"/>
                         <field name="method_number" string="Number of Entries" attrs="{'invisible':['|',('method_time','!=','number'),'&amp;',('type','=', False)], 'required':[('method_time','=','number')]}"/>
-                        <label for="method_period" string="Every"/>
+                        <label for="method_period" string="One Entry Every"/>
                         <div>
                             <field name="method_period" nolabel="1" attrs="{'invisible': [('type','=', False)]}" class="oe_inline"/>
                             months
