@@ -414,7 +414,7 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
     append_company_dependent: function() {
         if (!this.get("effective_readonly")) {
             this.$company_dependent_icon = this.$company_dependent
-                .insertAfter(this.$el.find(".o_dropdown_button"))
+                .appendTo(this.$el)
                 .addClass("o_field_property_m2o")
                 .on('click', _.bind(this.on_property_open, this));
         }

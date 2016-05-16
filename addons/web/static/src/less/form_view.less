@@ -213,32 +213,32 @@
     //Property Icon
     .o_field_property {
         padding: 0px !important;
-        vertical-align: top;
-        margin: 0 0 0 -32px;
-        display: inline-block;
-        width: auto !important;
         cursor: pointer;
-        display: none;
         &.o_property_active {
+            position: absolute;
             display: inline-block;
         }
         &.o_field_property_m2o {
-            position: absolute;
-            top: 0px;
-            right: 20px;
+            margin: 0;
         }
-        &.o_field_property_image {
-            vertical-align: bottom;
-            margin: 0px;
+        &.o_field_property_controls {
+            position: absolute;
+            margin: 0;
+        }
+        &.o_field_property_textarea {
+            margin: 0;
         }
     }
     .o_field_property_boolean {
-        position: relative;
         top: 0;
-        margin: 0;
     }
-    .o_property_translate {
-        margin: 0 15px 0 -37px !important
+    .o_field_property_image {
+        position: absolute;
+        top: 0;
+        margin: 0px;
+    }
+    .o_field_property_selection {
+        position: relative;
     }
 
     // Dropdowns input (many2one, ...)

@@ -640,16 +640,14 @@
 <t t-name="FieldChar">
     <span t-if="widget.get('effective_readonly')"/>
 
-    <t t-if="!widget.get('effective_readonly')">
-        <input class="o_form_input"
-            t-att-barcode_events="widget.options.barcode_events"
-            t-att-type="widget.password ? 'password' : 'text'"
-            t-att-id="widget.id_for_label"
-            t-att-tabindex="widget.node.attrs.tabindex"
-            t-att-autofocus="widget.node.attrs.autofocus"
-            t-att-placeholder="widget.node.attrs.placeholder"
-            t-att-maxlength="widget.field.size"/>
-    </t>
+    <input t-if="!widget.get('effective_readonly')" class="o_form_input"
+        t-att-barcode_events="widget.options.barcode_events"
+        t-att-type="widget.password ? 'password' : 'text'"
+        t-att-id="widget.id_for_label"
+        t-att-tabindex="widget.node.attrs.tabindex"
+        t-att-autofocus="widget.node.attrs.autofocus"
+        t-att-placeholder="widget.node.attrs.placeholder"
+        t-att-maxlength="widget.field.size"/>
 </t>
 <t t-name="FormSelection">
     <div class="btn-group o_kanban_selection">
@@ -681,16 +679,14 @@
 <t t-name="FieldText">
     <span t-if="widget.get('effective_readonly')" class="o_form_textarea"/>
 
-    <t t-if="!widget.get('effective_readonly')">
-        <textarea
-            class="o_form_textarea"
-            rows="6"
-            t-att-name="widget.name"
-            t-att-tabindex="widget.node.attrs.tabindex"
-            t-att-autofocus="widget.node.attrs.autofocus"
-            t-att-placeholder="!widget.get('effective_readonly') ? widget.node.attrs.placeholder : ''"
-            t-att-maxlength="widget.field.size"/>
-    </t>
+    <textarea t-if="!widget.get('effective_readonly')"
+        class="o_form_textarea"
+        rows="6"
+        t-att-name="widget.name"
+        t-att-tabindex="widget.node.attrs.tabindex"
+        t-att-autofocus="widget.node.attrs.autofocus"
+        t-att-placeholder="!widget.get('effective_readonly') ? widget.node.attrs.placeholder : ''"
+        t-att-maxlength="widget.field.size"/>
 </t>
 <t t-name="FieldCharDomain">
     <div>
