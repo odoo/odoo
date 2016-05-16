@@ -36,8 +36,6 @@
             report_type="qweb-pdf"
             name="account.report_invoice"
             file="account.report_invoice"
-            attachment_use="True"
-            attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
         />
 
         <report 
@@ -164,5 +162,11 @@
             parent="account.menu_finance_generic_reporting"
             sequence="3"
         />
+    </data>
+    <data noupdate="1">
+        <record id="account.account_invoices" model="ir.actions.report.xml">
+            <field name="attachment_use">True</field>
+            <field name="attachment">(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')</field>
+        </record>
     </data>
 </openerp>
