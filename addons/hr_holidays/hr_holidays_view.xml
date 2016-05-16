@@ -69,8 +69,7 @@
                           date_start="date_from" date_stop="date_to"
                           mode="month"
                           quick_add="False" avatar_model="hr.employee">
-                    <field name="employee_id"/>
-                    <field name="holiday_status_id"/>
+                    <field name="display_name"/>
                 </calendar>
             </field>
         </record>
@@ -93,6 +92,9 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                 </header>
                 <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name"/></h1>
+                    </div>
                     <group>
                         <group>
                             <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>

@@ -231,7 +231,7 @@ class hr_holidays(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         res = []
         for leave in self.browse(cr, uid, ids, context=context):
-            res.append((leave.id, leave.name or _("%s on %s") % (leave.employee_id.name, leave.holiday_status_id.name)))
+            res.append((leave.id, _("%s on %s : %.2f day(s)") % (leave.employee_id.name, leave.holiday_status_id.name, leave.number_of_days_temp)))
         return res
 
     def _create_resource_leave(self, cr, uid, leaves, context=None):
@@ -369,10 +369,6 @@ class hr_holidays(osv.osv):
         context = dict(context, mail_create_nolog=True, mail_create_nosubscribe=True)
         if not self._check_state_access_right(cr, uid, values, context):
             raise AccessError(_('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
-        if not values.get('name'):
-            employee_name = self.pool['hr.employee'].browse(cr, uid, employee_id, context=context).name
-            holiday_type = self.pool['hr.holidays.status'].browse(cr, uid, values.get('holiday_status_id'), context=context).name
-            values['name'] = _("%s on %s") % (employee_name, holiday_type)
         hr_holiday_id = super(hr_holidays, self).create(cr, uid, values, context=context)
         self.add_follower(cr, uid, [hr_holiday_id], employee_id, context=context)
         return hr_holiday_id
