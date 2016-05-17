@@ -80,7 +80,8 @@ class ReturnPicking(models.TransientModel):
         for move in return_moves:
             to_check_moves = self.env['stock.move'] | move.move_dest_id
             while to_check_moves:
-                current_move = to_check_moves.pop()
+                current_move = to_check_moves[-1]
+                to_check_moves = to_check_moves[:-1]
                 if current_move.state not in ('done', 'cancel') and current_move.reserved_quant_ids:
                     unreserve_moves |= current_move
                 split_move_ids = self.env['stock.move'].search([('split_from', '=', current_move.id)])

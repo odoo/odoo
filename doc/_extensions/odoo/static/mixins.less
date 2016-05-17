@@ -1,4 +1,196 @@
-// Mixins
+// ================================================
+// ================  Mixins =======================
+// ================================================
+
+// Utilities
+// ------------------------------------------------------------------
+.o-no-select {
+    pointer-events: none;
+    cursor: default;
+    &, & * {
+        &::selection {
+            background: transparent;
+        }
+        &::-moz-selection {
+            background: transparent;
+        }
+    }
+}
+
+.o-position-absolute(@top: auto, @right: auto, @bottom: auto, @left: auto) {
+    position: absolute;
+    top: @top;
+    left: @left;
+    bottom: @bottom;
+    right: @right;
+}
+
+.o-transform-origin(@x: 50%, @y: 50%, @z: 0) {
+    -ms-transform-origin: @x @y @z;
+    -webkit-transform-origin: @x @y @z;
+    -moz-transform-origin: @x @y @z;
+    transform-origin: @x @y @z;
+}
+
+.o-transition(@property: all, @duration: 0s, @timing-function: ease, @transition-delay: 0s) {
+    -webkit-transition: @property @duration @timing-function @transition-delay;
+    -moz-transition: @property @duration @timing-function @transition-delay;
+    -o-transition: @property @duration @timing-function @transition-delay;
+    transition: @property @duration @timing-function @transition-delay;
+}
+
+// Backgrounds
+// ------------------------------------------------------------------
+.o-svg-bg(@file_name,@file_ext,@x:50%, @y:50%, @repeat: no-repeat, @folder: '') {
+    @std-url: url("img/@{folder}@{file_name}.@{file_ext}");
+    @svg-url: url("img/@{folder}@{file_name}.svg");
+    background-image: @std-url;
+    background-image: @svg-url;
+    background-position: @x @y;
+    background-repeat: @repeat;
+}
+
+.o-retina-bg(@img,@x:50%, @y:50%, @repeat: no-repeat, @folder: '') {
+    @std-url: url("img/@{folder}@{img}");
+    background-image: @std-url;
+    background-position: @x @y;
+    background-repeat: @repeat;
+
+    @media
+    only screen and (-webkit-min-device-pixel-ratio: 2),
+    only screen and (   min--moz-device-pixel-ratio: 2),
+    only screen and (     -o-min-device-pixel-ratio: 2/1),
+    only screen and (        min-device-pixel-ratio: 2),
+    only screen and (                min-resolution: 192dpi),
+    only screen and (                min-resolution: 2dppx) {
+    @2x-url: url("img/@{folder}@{website-2x-prefix}@{img}");
+        background-image: @2x-url;
+    }
+}
+
+.o-gradient(@deg: 99deg , @startColor: @o-violet-dark, @endColor: @o-violet-darker, @startOffset: 10%, @endOffset: 90%) {
+    background: mix(@startColor, @endColor);
+    background: -webkit-linear-gradient(@deg, @startColor @startOffset, @endColor @endOffset);
+    background: -moz-linear-gradient(@deg, @startColor @startOffset, @endColor @endOffset);
+    background: -ms-linear-gradient(@deg, @startColor @startOffset, @endColor @endOffset);
+    background: -o-linear-gradient(@deg, @startColor @startOffset, @endColor @endOffset);
+    background: linear-gradient(@deg, @startColor @startOffset, @endColor @endOffset);
+}
+
+// Logos
+// ------------------------------------------------------------------
+.o-logo-size(@height) {
+    @ratio: 3.135;
+    .size((@height * @ratio), @height);
+    background-size: auto @height;
+}
+.generate-logo-classes(@n, @i: 15) when (@i =< @n) {
+    .o_logo_@{i} {
+        .o-logo-size(@i*1px)
+    }
+    .generate-logo-classes(@n, (@i * 2));
+}
+
+.o_logo {
+    .o-svg-bg("odoo_logo","png", 0, 0, no-repeat, "logos/" );
+    display: inline-block;
+    .o-logo-size(30px); // 30px height is default size
+
+    &.center-block,
+    &.o_logo_responsive_half {
+        position: relative;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+    }
+
+    &.o_logo_responsive {
+        background-size: cover;
+        width: 100%;
+        height: 0;
+        padding-bottom: 31.9%;
+    }
+
+    &.o_logo_responsive_half {
+        background-size: cover;
+        width: 50%;
+        height: 0;
+        padding-bottom: 15.94%;
+    }
+}
+
+// Generate Logo's sizes classes
+// heights:  15 - 30 - 60 - 120 - 240
+// ------------------------------------------------------------------
+.generate-logo-classes(240);
+
+&.o_logo_inverse {
+    background-position: 100% 0;
+    &.o_logo_15.center-block {
+        background-position: 102% 0;
+    }
+}
+
+// Elevation Shadows
+// Visual cue indicating the amount of separation between surfaces.
+// An object’s elevation determines the appearance of its shadow.
+// ------------------------------------------------------------------
+.deep-1-shadow() {
+    box-shadow: 0  1px  1px 0 rgba(0, 0, 0, 0.17);
+}
+.deep-2-shadow() {
+    box-shadow: 0  6px 10px 0 rgba(0, 0, 0, 0.1), 0 2px 2px 0 rgba(0, 0, 0, 0.05);
+}
+.deep-3-shadow() {
+    box-shadow: 0 13px 25px 0 rgba(0, 0, 0, 0.1), 0 11px 7px 0 rgba(0, 0, 0, 0.09);
+}
+.deep-4-shadow() {
+    box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.1), 0 14px 12px 0 rgba(0, 0, 0, 0.07);
+}
+.deep-5-shadow() {
+    box-shadow: 0 27px 55px 0 rgba(0, 0, 0, 0.1), 0 17px 17px 0 rgba(0, 0, 0, 0.05);
+}
+.deep-transition() {
+    .o-transition(box-shadow, 0.3s, @o-ease);
+}
+
+.deep-1() {
+    .deep-1-shadow();
+
+    &.deep_hover:hover {
+        .deep-transition();
+        .deep-2-shadow();
+    }
+}
+.deep-2() {
+    .deep-2-shadow();
+
+    &.deep_hover:hover {
+        .deep-transition();
+        .deep-3-shadow();
+    }
+}
+.deep-3() {
+    .deep-3-shadow();
+
+    &.deep_hover:hover {
+        .deep-transition();
+        .deep-4-shadow();
+    }
+}
+.deep-4() {
+    .deep-4-shadow();
+
+    &.deep_hover:hover {
+        .deep-transition();
+        .deep-5-shadow();
+    }
+}
+.deep-5() {
+    .deep-5-shadow();
+}
+
+
 .transform(@args) {
   -webkit-transform : @args;
   -moz-transform    : @args;
@@ -7,20 +199,16 @@
   transform         : @args;
 }
 
-.antialiased{
-  -moz-osx-font-smoothing : grayscale;
-  -webkit-font-smoothing  : antialiased;
-  text-rendering          : geometricPrecision;
+//-- Material Design Icons
+.mdi-icon(@content) {
+    font-family: 'Material-Design-Icons';
+    content: @content;
+    display: inline-block;
+    text-rendering: geometricPrecision;
+    font-size: 1em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
-
-.mdi-icon {
-  font-family: 'Material-Design-Icons';
-  display: inline-block;
-  text-rendering: geometricPrecision;
-  .antialiased;
-}
-
-
 
 .keyframes(@name; @arguments) {
   @-moz-keyframes @name { @arguments(); }
@@ -28,6 +216,104 @@
   @keyframes @name { @arguments(); }
 }
 
+//-- Documentation Dropdown style
+.o-doc-dropdown {
+    > a.dropdown-toggle {
+        padding: 0 5px 0 10px;
+        &:after {
+            .mdi-icon( "\e7c1");
+
+            @media screen and (max-width: @screen-xs-max) {
+                font-size: 1.5em
+            }
+        }
+    }
+
+    &.open {
+        z-index: 1;
+        position: relative;
+        background-color: @gray-light;
+        color: @header-link-normal;
+
+        @media screen and (min-width: @screen-sm-min){
+            background-color: @w-header-white;
+        }
+
+        .dropdown-toggle {
+            color: @header-link-normal;
+
+            &:hover {
+                color: @headings-color;
+            }
+        }
+
+        .dropdown-menu {
+            margin-top: 0;
+            border: none;
+            border-radius: 0;
+            text-align: left;
+            min-width: 100%;
+            background-color: @w-header-white;
+            padding-bottom: @w-header-height/4;
+            .deep-1();
+
+            > li > a {
+                font-size: 12px;
+                display: block;
+                color: @header-link-normal;
+                float: none;
+                text-transform: none;
+                font-weight: @fw_medium;
+
+                @media screen and (max-width: @screen-xs-max) {
+                    padding-left: 10px;
+                }
+            }
+            > li.active > a {
+                color: white;
+                background-color: desaturate(@brand-primary, 40%);
+            }
+
+            @media screen and (max-width: @screen-xs-max) {
+                position: static;
+            }
+            @media screen and (min-width: @screen-sm-min) {
+                background-color: @w-header-white;
+            }
+        }
+    }
+
+    &.o_dropdown_mobile_nav {
+        margin-left: 0;
+
+        > .dropdown-toggle {
+            &:after {
+                .o-position-absolute(0, 0);
+            }
+        }
+
+        .o_breadcrumb_dropdown_menu > li{
+            > a {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            > a:before {
+                content: "|";
+                margin-right: 0.5em;
+            }
+            &:nth-child(1) > a:before {
+                display: none;
+            }
+            &:nth-child(2) > a:before {
+                padding-left: 0.5em;
+            }
+            &:nth-child(3) > a:before {
+                padding-left: 1em;
+            }
+        }
+    }
+}
 
 
 // Shadows
@@ -36,21 +322,27 @@
 .shadow-none {
   .box-shadow(none);
 }
-.shadow-0 {
-  .box-shadow(0 1px 4px rgba(0, 0, 0, 0.1));
+
+.deep-1 {
+    box-shadow: 0  1px  1px 0 rgba(0, 0, 0, 0.17);
 }
-.shadow-1 {
-  box-shadow: 0 1.5px 4px rgba(0, 0, 0, 0.24), 0 1.5px 6px rgba(0, 0, 0, 0.12);
+.deep-2 {
+    box-shadow: 0  6px 10px 0 rgba(0, 0, 0, 0.1), 0 2px 2px 0 rgba(0, 0, 0, 0.05);
 }
-.shadow-2 {
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.23), 0 3px 12px rgba(0, 0, 0, 0.16);
+.deep-3 {
+    box-shadow: 0 13px 25px 0 rgba(0, 0, 0, 0.1), 0 11px 7px 0 rgba(0, 0, 0, 0.09);
 }
-.shadow-3 {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.23), 0 10px 40px rgba(0, 0, 0, 0.19);
+.deep-4 {
+    box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.1), 0 14px 12px 0 rgba(0, 0, 0, 0.07);
 }
-.shadow-4 {
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.22), 0 14px 56px rgba(0, 0, 0, 0.25);
+.deep-5 {
+    box-shadow: 0 27px 55px 0 rgba(0, 0, 0, 0.1), 0 17px 17px 0 rgba(0, 0, 0, 0.05);
 }
-.shadow-5 {
-  box-shadow: 0 15px 24px rgba(0, 0, 0, 0.22), 0 19px 76px rgba(0, 0, 0, 0.3);
+
+// overwrite bootstrap inline forcing
+.img-responsive {
+  display: inline-block;
+}
+.img-responsive.center-block {
+  display: block;
 }

@@ -242,7 +242,7 @@ class IrTranslation(models.Model):
 
     @api.model_cr_context
     def _auto_init(self):
-        super(IrTranslation, self)._auto_init()
+        res = super(IrTranslation, self)._auto_init()
         cr = self._cr
 
         cr.execute("SELECT indexname FROM pg_indexes WHERE indexname LIKE 'ir_translation_%'")
@@ -266,6 +266,7 @@ class IrTranslation(models.Model):
         if 'ir_translation_ltn' not in indexes:
             cr.execute('CREATE INDEX ir_translation_ltn ON ir_translation (name, lang, type)')
             cr.commit()
+        return res
 
     @api.model
     def _check_selection_field_value(self, field, value):

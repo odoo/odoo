@@ -3,9 +3,11 @@
 # * crm
 # 
 # Translators:
+# Bole <bole@dajmi5.com>, 2016
 # Bole <bole@dajmi5.com>, 2015
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2015
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
+# Jasmina Otročak <jasmina@uvid.hr>, 2016
 # Marko Carević <marko.carevic@live.com>, 2016
 # Matija Pildek <matija.pildek@storm.hr>, 2016
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2015
@@ -14,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-05-06 11:46+0000\n"
+"PO-Revision-Date: 2016-05-10 13:47+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -65,7 +67,7 @@ msgid ""
 "<li>ID: ${object.id}</li>\n"
 "<li>Description: ${object.description}</li>\n"
 "</ul>"
-msgstr ""
+msgstr "<p>Na ovoj prilici nije bilo aktivnosti barem 5 dana. U nastavku su neki detalji:</p>\n<ul>\n<li>Name: ${object.name}</li>\n<li>ID: ${object.id}</li>\n<li>Description: ${object.description}</li>\n</ul>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -735,7 +737,7 @@ msgstr "Arhivirano"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Are you sure to execute the automatic merge of your contacts ?"
-msgstr ""
+msgstr "Jeste li sigurni da želite automatski spojiti svoje kontakte ?"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -785,7 +787,7 @@ msgstr "Autor"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Automatic Merge Wizard"
-msgstr ""
+msgstr "Čarobnjak za automatsko spajanje"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_sale_config_settings_generate_sales_team_alias
@@ -830,7 +832,7 @@ msgstr "Oboje"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_bounce
 msgid "Bounce"
-msgstr ""
+msgstr "Odbij"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_sale_config_settings
@@ -1045,12 +1047,12 @@ msgstr "Čestitamo, završili ste!"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Consumers"
-msgstr ""
+msgstr "Potrošači"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Contact Information"
-msgstr ""
+msgstr "Informacije o kontaktu"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_contact_name
@@ -1078,7 +1080,7 @@ msgstr "Akcija konverzije"
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_date_conversion
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Conversion Date"
-msgstr ""
+msgstr "Datum konverzije"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -1180,7 +1182,7 @@ msgstr "Kreirajte svoje proizvode"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Create your templates of offers"
-msgstr ""
+msgstr "Stvorite predloške ponuda"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_create_uid
@@ -1239,7 +1241,7 @@ msgstr "Trenutno"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_current_line_id
 msgid "Current Line"
-msgstr ""
+msgstr "Trenutna stavka"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:996
@@ -3295,7 +3297,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid ""
 "Show all opportunities for which the next action date is today or before"
-msgstr ""
+msgstr "Prikaži sve prilike za koje je rok za slijedeći korak prošao ili je danas "
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -3515,7 +3517,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "The first stage is usually \"New\" and the last one is \"Won\""
-msgstr ""
+msgstr "Prva faza je uobičajeno \"Novo\", a zadnja je \"Dobiven\""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_model_id
@@ -3596,7 +3598,7 @@ msgstr "Aktivnosti ovog tjedna"
 msgid ""
 "This email address has been preconfigured as the default\n"
 "                                    for your sales department.<br/>"
-msgstr ""
+msgstr "Ova e-mail adresa je predefinirana\nza Vaš odjel prodaje.<br/>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_type
@@ -3662,7 +3664,7 @@ msgstr "Ova meta ne postoji."
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Time to Close a Deal"
-msgstr ""
+msgstr "Vrijeme do realizacije dogovora"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3797,7 +3799,7 @@ msgstr ""
 msgid ""
 "Use opportunities to keep track of your sales pipeline, follow\n"
 "                up potential sales and better forecast your future revenues."
-msgstr ""
+msgstr "Koristite prilike kako biste pratili vaše prodajne lijevke,\npopratite potencijale prodaje i bolje predvidite buduće prihode. "
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4197,7 +4199,7 @@ msgstr "pošaljite nam e-mail"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "support team"
-msgstr ""
+msgstr "Tim za podršku"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
