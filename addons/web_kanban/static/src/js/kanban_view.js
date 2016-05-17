@@ -805,16 +805,6 @@ function transform_qweb_template (node, fvg, many2manys) {
                 if (node.attrs['data-string']) {
                     node.attrs.title = node.attrs['data-string'];
                 }
-                if (node.attrs['data-icon']) {
-                    node.children = [{
-                        tag: 'img',
-                        attrs: {
-                            src: session.prefix + '/web/static/src/img/icons/' + node.attrs['data-icon'] + '.png',
-                            width: '16',
-                            height: '16'
-                        }
-                    }];
-                }
                 if (node.tag == 'a' && node.attrs['data-type'] != "url") {
                     node.attrs.href = '#';
                 } else {

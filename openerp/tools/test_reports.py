@@ -92,7 +92,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                 wizard form.
         :param wiz_buttons: a list of button names, or button icon strings, which
                 should be preferred to press during the wizard.
-                Eg. 'OK' or 'gtk-print'
+                Eg. 'OK' or 'fa-print'
         :param our_module: the name of the calling module (string), like 'account'
     """
     if not our_module and isinstance(action_id, basestring):
@@ -200,7 +200,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                     if button.getAttribute('special') == 'cancel':
                         cancel_found = True
                         continue
-                    if button.getAttribute('icon') == 'gtk-cancel':
+                    if button.getAttribute('icon') == 'fa-times-circle':
                         cancel_found = True
                         continue
                     if button.getAttribute('default_focus') == '1':

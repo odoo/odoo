@@ -20,8 +20,8 @@
               <field name="medium_id" invisible="1"/>
               <field name="team_id" invisible="context.get('invisible_team', True)"/>
 
-              <button string="I'm interested" name="case_interested" icon="gtk-index" type="object"/>
-              <button string="I'm not interested" name="case_disinterested" icon="gtk-close" type="object"/>
+              <button string="I'm interested" name="case_interested" icon="fa-file-text-o" type="object"/>
+              <button string="I'm not interested" name="case_disinterested" icon="fa-times text-danger" type="object"/>
             </tree>
             </field>
         </record>
@@ -32,8 +32,8 @@
             <field name="arch" type="xml">
               <form string="Leads">
                 <header>
-                  <button string="I'm interested" name="case_interested" icon="gtk-index" type="object"/>
-                  <button string="I'm not interested" name="case_disinterested" icon="gtk-close" type="object"/>
+                  <button string="I'm interested" name="case_interested" icon="fa-file-text-o" type="object"/>
+                  <button string="I'm not interested" name="case_disinterested" icon="fa-times text-danger" type="object"/>
                 </header>
                 <sheet>
                   <group>

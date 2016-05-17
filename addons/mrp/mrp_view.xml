@@ -6,7 +6,6 @@
         <menuitem id="base.menu_mrp_root"
             name="Manufacturing"
             groups="group_mrp_user,group_mrp_manager"
-            icon="fa-wrench"
             web_icon="mrp,static/description/icon.png"
             sequence="35"/>
 
@@ -653,12 +652,12 @@
                                             <field name="state" invisible="1"/>
                                             <button name="%(mrp.move_consume)d"
                                                 string="Consume Products" type="action"
-                                                icon="gtk-go-forward" context="{'consume': True}"
+                                                icon="fa-arrow-right text-success" context="{'consume': True}"
                                                 states="assigned"
                                                  />
                                             <button name="%(stock.move_scrap)d"
                                                 string="Scrap Products" type="action"
-                                                icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
+                                                icon="fa-sign-in text-warning" context="{'scrap': True}"
                                                 states="draft,waiting,confirmed,assigned"/>
                                         </tree>
                                     </field>
@@ -700,7 +699,7 @@
                                             <field name="scrapped" invisible="1"/>
                                             <field name="state" invisible="1"/>
                                             <button name="%(stock.move_scrap)d"
-                                                string="Scrap Products" type="action" icon="terp-gtk-jump-to-ltr"
+                                                string="Scrap Products" type="action" icon="fa-sign-in text-warning"
                                                 states="done,cancel"/>
                                         </tree>
                                     </field>
@@ -710,7 +709,7 @@
                         <page string="Work Orders" groups="mrp.group_mrp_routings">
                             <button name="action_compute" states="draft"
                                 string="Compute Data" type="object"
-                                icon="terp-stock_format-scientific"/>
+                                icon="fa-calculator"/>
                             <field name="workcenter_lines" options="{'reload_on_button': true}">
                                 <form string="Production Work Centers">
                                     <group col="4">
@@ -733,7 +732,7 @@
                         <page string="Scheduled Products">
                             <button name="action_compute" states="draft"
                                 string="Compute Data" type="object"
-                                icon="terp-stock_format-scientific"/>
+                                icon="fa-calculator"/>
                             <field name="product_lines"/>
                         </page>
                         <page string="Extra Information">
