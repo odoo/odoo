@@ -715,7 +715,7 @@ class AccountMoveLine(models.Model):
             :param new_mv_line_dicts: list of dicts containing values suitable fot account_move_line.create()
         """
         if len(self) < 1 or len(self) + len(new_mv_line_dicts) < 2:
-            raise UserError(_('Error!'), _('A reconciliation must involve at least 2 move lines.'))
+            raise UserError(_('A reconciliation must involve at least 2 move lines.'))
 
         # Create writeoff move lines
         if len(new_mv_line_dicts) > 0:
