@@ -82,7 +82,7 @@ class HrEquipment(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if ('employee_id' in init_values and self.employee_id) or ('department_id' in init_values and self.department_id):
-            return 'hr_equipment.mt_mat_assign'
+            return 'maintenance.mt_mat_assign'
         return super(HrEquipment, self)._track_subtype(init_values)
 
     @api.multi
@@ -227,9 +227,9 @@ class HrEquipmentRequest(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'stage_id' in init_values and self.stage_id.sequence <= 1:
-            return 'hr_equipment.mt_req_created'
+            return 'maintenance.mt_req_created'
         elif 'stage_id' in init_values and self.stage_id.sequence > 1:
-            return 'hr_equipment.mt_req_status'
+            return 'maintenance.mt_req_status'
         return super(HrEquipmentRequest, self)._track_subtype(init_values)
 
     name = fields.Char('Subjects', required=True)
