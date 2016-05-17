@@ -1910,7 +1910,7 @@ var ColumnHandle = Column.extend({
 var ColumnMany2OneButton = Column.extend({
     _format: function (row_data, options) {
         this.has_value = !!row_data[this.id].value;
-        this.icon = this.has_value ? 'gtk-yes' : 'gtk-no';
+        this.icon = this.has_value ? 'fa-circle o_toggle_button_success' : 'fa-circle text-danger';
         this.string = this.has_value ? _t('View') : _t('Create');
         return QWeb.render('Many2OneButton.cell', {
             'widget': this,
@@ -1997,7 +1997,7 @@ var ColumnToggleButton = Column.extend({
         var button_tips = JSON.parse(this.options);
         var fieldname = this.field_name;
         var has_value = row_data[fieldname] && !!row_data[fieldname].value;
-        this.icon = has_value ? 'gtk-yes' : 'gtk-normal';
+        this.icon = has_value ? 'fa-circle o_toggle_button_success' : 'fa-circle text-muted';
         this.string = has_value ? _t(button_tips ? button_tips['active']: ''): _t(button_tips ? button_tips['inactive']: '');
         return QWeb.render('toggle_button', {
             widget: this,

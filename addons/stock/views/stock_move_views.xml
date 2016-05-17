@@ -62,7 +62,7 @@
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                     <button name="%(stock.move_scrap)d"
                         string="Scrap Products" type="action"
-                        icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
+                        icon="fa-sign-in text-warning" context="{'scrap': True}"
                         states="draft,waiting,confirmed,assigned"
                         groups="stock.group_stock_user"/>
                     <field name="location_id" groups="stock.group_stock_multi_locations"/>
@@ -90,7 +90,7 @@
                     <field name="picking_type_id" invisible="1"/>
                     <button name="%(stock.move_scrap)d"
                        string="Scrap Products" type="action"
-                       icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
+                       icon="fa-sign-in text-warning" context="{'scrap': True}"
                        states="draft,waiting,confirmed,assigned"
                        groups="stock.group_stock_user"/>
                     <field name="scrapped" invisible="1"/>
@@ -123,7 +123,7 @@
                                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
                                     <button name="%(stock.move_scrap)d" class="btn-default"
                                             string="Scrap" type="action" context="{'scrap': True}"
-                                            states="draft,waiting,confirmed,assigned"/> <!-- FIXME icon="terp-gtk-jump-to-ltr" -->
+                                            states="draft,waiting,confirmed,assigned" icon="fa-sign-in text-warning"/>
                                 </div>
                                 <field name="name"/>
                             </group>
@@ -181,7 +181,7 @@
                             <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit Of Measure" groups="product.group_uom" class="oe_inline"/>
                             <button name="%(stock.move_scrap)d"
                                 string="Scrap" type="action"
-                                icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
+                                icon="fa-sign-in text-warning" context="{'scrap': True}"
                                 states="draft,waiting,confirmed,assigned"
                                 groups="base.group_user"/>
                         </div>
@@ -320,7 +320,7 @@
                     <field name="create_date" invisible="1"/>
                     <button name="%(stock.move_scrap)d"
                         string="Scrap Products" type="action"
-                        icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
+                        icon="fa-sign-in text-warning" context="{'scrap': True}"
                         states="draft,waiting,confirmed,assigned"
                         groups="stock.group_stock_user"/>
                     <field name="state"/>

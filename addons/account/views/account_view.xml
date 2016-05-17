@@ -1222,7 +1222,7 @@
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_account_moves_all_a" icon="STOCK_JUSTIFY_FILL" id="menu_action_account_moves_all" parent="account.menu_finance_entries" sequence="1" groups="base.group_no_one" />
+        <menuitem action="action_account_moves_all_a" id="menu_action_account_moves_all" parent="account.menu_finance_entries" sequence="1" groups="base.group_no_one" />
         <record id="action_account_moves_all_tree" model="ir.actions.act_window">
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
@@ -1390,7 +1390,6 @@
             </field>
         </record>
         <menuitem
-            icon="STOCK_JUSTIFY_FILL"
             action="action_move_journal_line"
             id="menu_action_move_journal_line_form"
             parent="account.menu_finance_entries"
@@ -1950,8 +1949,8 @@
                     <field name="type"/>
                     <field name="account_report_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Parent Report" icon="terp-folder-orange" domain="" context="{'group_by':'parent_id'}"/>
-                        <filter string="Report Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Parent Report" domain="" context="{'group_by':'parent_id'}"/>
+                        <filter string="Report Type" domain="[]" context="{'group_by':'type'}"/>
                     </group>
                 </search>
             </field>

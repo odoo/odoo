@@ -414,8 +414,7 @@
 <button t-name="ListView.row.button" type="button"
         t-att-title="widget.string" t-att-disabled="disabled || undefined"
         t-attf-class="o_icon_button #{disabled ? 'oe_list_button_disabled' : ''}"
-        ><img t-if="!widget.icon.indexOf('fa-') == 0" t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
-        t-att-alt="widget.string"/><i t-if="widget.icon.indexOf('fa-') == 0" t-attf-class="fa #{widget.icon}" t-att-title="widget.string"/>
+        ><i t-attf-class="fa #{widget.icon}" t-att-title="widget.string"/>
 </button>
 <t t-extend="ListView.row">
     <!-- adds back padding to row being rendered after edition, if necessary
@@ -745,7 +744,7 @@
     </div>
 </t>
 <t t-name="Many2OneButton.cell">
-    <img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png" t-att-alt="widget.string" width="16" height="16"/>
+    <i t-attf-class="fa #{widget.icon}" t-att-title="widget.string"/>
 </t>
 <t t-name="FieldMany2ManyTag">
     <t t-foreach="elements" t-as="el">
@@ -1216,7 +1215,7 @@
 
 <t t-name="toggle_button">
     <button type="button" class="o_icon_button" t-att-title="widget.string">
-        <img t-attf-src="#{prefix || _s}/web/static/src/img/icons/#{widget.icon}.png" t-att-alt="widget.string"/>
+        <i t-attf-class="fa #{widget.icon}" t-att-title="widget.string"/>
     </button>
 </t>
 
