@@ -2462,6 +2462,10 @@ define(['summernote/summernote'], function () {
             .attr('src', '//player.youku.com/embed/' + youkuMatch[1]);
         } else {
           // this is not a known video link. Now what, Cat? Now what?
+          $video = $('<iframe webkitallowfullscreen mozallowfullscreen allowfullscreen>')
+            .attr('width', '640')
+            .attr('height', '360')
+            .attr('src', url);
         }
 
         $video.attr('frameborder', 0);
