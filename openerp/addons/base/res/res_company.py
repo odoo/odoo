@@ -125,7 +125,7 @@ class Company(models.Model):
     rml_header1 = fields.Char(string='Company Tagline', help="Appears by default on the top right corner of your printed documents (report header).")
     rml_header2 = fields.Text(string='RML Internal Header', required=True, default=_header2)
     rml_header3 = fields.Text(string='RML Internal Header for Landscape Reports', required=True, default=_header3)
-    rml_footer = fields.Text(string='Report Footer', help="Footer text displayed at the bottom of all reports.")
+    rml_footer = fields.Text(string='Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
     rml_footer_readonly = fields.Text(related='rml_footer', string='Report Footer', readonly=True)
     custom_footer = fields.Boolean(help="Check this to define the report footer manually. Otherwise it will be filled in automatically.")
     font = fields.Many2one('res.font', string="Font", default=lambda self: self._get_font(),
