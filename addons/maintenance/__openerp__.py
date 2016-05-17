@@ -10,13 +10,13 @@
     'depends': ['hr'],
     'summary': 'Equipments, Assets, Internal Hardware, Allocation Tracking',
     'data': [
-        'security/hr_equipment.xml',
+        'security/maintenance.xml',
         'security/ir.model.access.csv',
-        'data/hr_equipment_data.xml',
-        'views/res_config_views.xml',
-        'views/hr_equipment_views.xml',
+        'data/maintenance_data.xml',
+        'views/maintenance_config_settings_views.xml',
+        'views/maintenance_views.xml',
     ],
-    'demo': ['data/hr_equipment_demo.xml'],
+    'demo': ['data/maintenance_demo.xml'],
     'installable': True,
     'application': True,
 }
