@@ -129,10 +129,11 @@ def main(args):
     csv.field_size_limit(500 * 1024 * 1024)
 
     if config["db_name"]:
-        try:
-            openerp.service.db._create_empty_database(config["db_name"])
-        except openerp.service.db.DatabaseExists:
-            pass
+        for db_name in config['db_name'].split(','):
+            try:
+                openerp.service.db._create_empty_database(db_name)
+            except openerp.service.db.DatabaseExists:
+                pass
 
     if config["test_file"]:
         config["test_enable"] = True
