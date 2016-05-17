@@ -77,10 +77,11 @@ class ViewCustom(models.Model):
 
     @api.model_cr_context
     def _auto_init(self):
-        super(ViewCustom, self)._auto_init()
+        res = super(ViewCustom, self)._auto_init()
         self._cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = 'ir_ui_view_custom_user_id_ref_id'")
         if not self._cr.fetchone():
             self._cr.execute("CREATE INDEX ir_ui_view_custom_user_id_ref_id ON ir_ui_view_custom (user_id, ref_id)")
+        return res
 
 
 def _hasclass(context, *cls):
@@ -307,10 +308,11 @@ actual arch.
 
     @api.model_cr_context
     def _auto_init(self):
-        super(View, self)._auto_init()
+        res = super(View, self)._auto_init()
         self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_ui_view_model_type_inherit_id\'')
         if not self._cr.fetchone():
             self._cr.execute('CREATE INDEX ir_ui_view_model_type_inherit_id ON ir_ui_view (model, inherit_id)')
+        return res
 
     def _compute_defaults(self, values):
         if 'inherit_id' in values:

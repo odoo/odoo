@@ -239,11 +239,12 @@ class IrAttachment(models.Model):
 
     @api.model_cr_context
     def _auto_init(self):
-        super(IrAttachment, self)._auto_init()
+        res = super(IrAttachment, self)._auto_init()
         self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_attachment_res_idx',))
         if not self._cr.fetchone():
             self._cr.execute('CREATE INDEX ir_attachment_res_idx ON ir_attachment (res_model, res_id)')
             self._cr.commit()
+        return res
 
     @api.model
     def check(self, mode, values=None):
