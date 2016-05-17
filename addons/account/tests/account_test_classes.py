@@ -15,4 +15,5 @@ class AccountingTestCase(HttpCase):
         super(AccountingTestCase, self).setUp()
         domain = [('company_id', '=', self.env.ref('base.main_company').id)]
         if not self.env['account.account'].search_count(domain):
+            super(AccountingTestCase, self).tearDown()
             self.skipTest("No Chart of account found")
