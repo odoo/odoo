@@ -6,7 +6,8 @@
 # Fabian Liesch <fabian.liesch@gmail.com>, 2015
 # Henry Mineehen <info@mineehen.de>, 2015
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
-# Renko Spiekermann <renkosp@gmail.com>, 2015
+# darenkster <renkosp@gmail.com>, 2015
+# Rudolf Schnapka <rs@techno-flex.de>, 2016
 # Tina Rittmüller <tr@ife.de>, 2016
 # Wolfgang Taferner, 2015-2016
 msgid ""
@@ -14,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-15 09:26+0000\n"
-"PO-Revision-Date: 2016-04-21 08:23+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-05-13 09:49+0000\n"
+"Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -171,12 +172,12 @@ msgstr "Anlage Abschreibungszeile"
 #: code:addons/account_asset/account_asset.py:271
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
-msgstr ""
+msgstr "Anlage verkauft oder vernichtet. Posten erwartet Validierung."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_asset
 msgid "Asset/Revenue Recognition"
-msgstr ""
+msgstr "Anlage-/Umsatzrealisierung"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
@@ -199,7 +200,7 @@ msgstr "Anlagenanalyse"
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
 msgid "Assets and Revenues"
-msgstr ""
+msgstr "Anlagen und Umsätze"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
@@ -396,7 +397,7 @@ msgstr "Datum der letzten Nachricht."
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Deferred Revenue Account"
-msgstr ""
+msgstr "Konto Noch nicht realisierter Umsatz"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_product_template_deferred_revenue_category_id
@@ -449,6 +450,16 @@ msgid "Depreciation Entry"
 msgstr "Abschreibungsbuchung"
 
 #. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
+msgid "Depreciation Asset Account"
+msgstr "Anlagenabschreibungskonto"
+
+#. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
+msgid "Depreciation Expense Account"
+msgstr "Abschreibungsaufwandskonto"
+
+#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Depreciation Information"
 msgstr "Informationen zur Abschreibung"
@@ -478,7 +489,7 @@ msgstr "Abschreibungsbezeichnung"
 #: code:addons/account_asset/wizard/account_asset_change_duration.py:82
 #, python-format
 msgid "Depreciation board modified"
-msgstr ""
+msgstr "Abschreibungsspiegel verändert"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:489
@@ -500,13 +511,13 @@ msgstr "Anzeigename"
 #: code:addons/account_asset/account_asset.py:274
 #, python-format
 msgid "Disposal Move"
-msgstr ""
+msgstr "Verschrottungsbuchung"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:277
 #, python-format
 msgid "Disposal Moves"
-msgstr ""
+msgstr "Verschrottungsbuchungen"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:468
@@ -568,12 +579,12 @@ msgstr "Beobachter (Partner)"
 msgid ""
 "From this report, you can have an overview on all depreciations. The\n"
 "            search bar can also be used to personalize your assets depreciation reporting."
-msgstr ""
+msgstr "In diesem Report erhalten Sie einen Überblick über alle Abschreibungen. Die Suche kann auch zur \nindividualsierten Auswertung über die Anlageabschreibungen benutzt werden.\n        "
 
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
 msgid "Generate Assets Entries"
-msgstr ""
+msgstr "Erzeuge Anlagenposten"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
@@ -593,7 +604,7 @@ msgstr "Bruttoerlös"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Gross value of asset"
-msgstr ""
+msgstr "Bruttowert der Anlage"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -637,14 +648,14 @@ msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first January / Start date of fiscal "
 "year"
-msgstr ""
+msgstr "Bedeutet, dass Abschreibungsbeginn das Kaufdatum ist und nicht der erste Tag des Kalender-/Geschäftsjahres."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_prorata
 msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first of January"
-msgstr ""
+msgstr "Bedeutet, dass der erste Abschreibungsposten zum Kaufdatum und nicht zum ersten Januar angelegt wird"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice
@@ -754,7 +765,7 @@ msgstr "Monat"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_mrr
 msgid "Monthly Recurring Revenue"
-msgstr ""
+msgstr "Monatlich wiederkehrender Umsatz"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_remaining_value
@@ -823,7 +834,7 @@ msgstr "Zeitraum"
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
 msgid "Post Depreciation Lines"
-msgstr ""
+msgstr "Abschreibungspositionen buchen"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_open_asset
@@ -892,7 +903,7 @@ msgstr "Begründung"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_income_recognition_id
 msgid "Recognition Income Account"
-msgstr ""
+msgstr "Konto für realisierten Gewinn"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_code
@@ -918,7 +929,7 @@ msgstr "Laufend"
 #. module: account_asset
 #: selection:account.asset.category,type:0
 msgid "Sale: Revenue Recognition"
-msgstr ""
+msgstr "Verkauf: Erfolgswirksamer Umsatz"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
@@ -982,7 +993,7 @@ msgstr "Die Anzahl an Abschreibungen, die das Anlagegut über die Nutzungsdauer 
 msgid ""
 "This wizard will post installment/depreciation lines for the selected month.<br/>\n"
 "                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well."
-msgstr ""
+msgstr "Dieser Assistent bucht Zu-/Abschreibungspositionen im gewählten Monat,<br/>\nDies erzeugt auch Journalposten für alle zugehörigen, erfolgswirksamen Tilgungs-/Zuschreibungpositionen dieser Periode."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_time
@@ -993,7 +1004,7 @@ msgstr "Zeitmethode"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Time Method Based On"
-msgstr ""
+msgstr "Zeit-Verfahren basiert auf"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_type
@@ -1050,7 +1061,7 @@ msgstr "Jahr"
 msgid ""
 "You already have assets with the reference %s.\n"
 "Please delete these assets before creating new ones for this invoice."
-msgstr ""
+msgstr "Sie haben bereits Anlagen mit Referenz %s.\nBitte entfernen Sie diese Anlagen, vor der Erstellung Neuer, zu dieser Rechnung."
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:100
@@ -1062,19 +1073,19 @@ msgstr "Sie können kein Dokument löschen, welches im %s Staus ist."
 #: code:addons/account_asset/account_asset.py:102
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
-msgstr ""
+msgstr "Sie dürfen ein Dokument, mit gebuchten Posten, nicht löschen."
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:497
 #, python-format
 msgid "You cannot delete posted depreciation lines."
-msgstr ""
+msgstr "Sie dürfen gebuchte Abschreibungspositionen nicht löschen."
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:499
 #, python-format
 msgid "You cannot delete posted installment lines."
-msgstr ""
+msgstr "Sie dürfen gebuchte Zuschreibungen nicht löschen."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard

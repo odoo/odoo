@@ -1,0 +1,23 @@
+{# warning: if doc structure change, these rules may have to change as well #}
+
+{# =====  VARIABLES  ====== #}
+{% set master_doc_short_name = 'Developer Doc' %}
+
+{% if pagename == master_doc %}
+    <li><a href="{{ pathto(master_doc) }}" class="active">{{ master_doc_short_name }}</a></li>
+{% else %}
+    {% for parent in parents %}
+        {% if loop.length > 1%}
+            {% if loop.first %}
+                <li><a href="{{ pathto(master_doc) }}">{{ master_doc_short_name }}</a></li>
+            {% else %}
+                {% if loop.index == 2 %}
+                    <li><a href="{{ parent.link|e }}">{{parent.title}}</a></li>
+                {% endif %}
+            {% endif %}
+        {% else %}
+            <li><a href="{{ pathto(master_doc) }}">{{ master_doc_short_name }}</a></li>
+        {% endif %}
+    {% endfor %}
+    <li class="active"><a href="#">{{ meta.get('main-title', title) }}</a></li>
+{% endif %}

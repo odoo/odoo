@@ -861,13 +861,14 @@ class IrModelData(models.Model):
 
     @api.model_cr_context
     def _auto_init(self):
-        super(IrModelData, self)._auto_init()
+        res = super(IrModelData, self)._auto_init()
         self._cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = 'ir_model_data_module_name_uniq_index'")
         if not self._cr.fetchone():
             self._cr.execute('CREATE UNIQUE INDEX ir_model_data_module_name_uniq_index ON ir_model_data (module, name)')
         self._cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = 'ir_model_data_model_res_id_index'")
         if not self._cr.fetchone():
             self._cr.execute('CREATE INDEX ir_model_data_model_res_id_index ON ir_model_data (model, res_id)')
+        return res
 
     @api.multi
     def name_get(self):
