@@ -1,6 +1,139 @@
+// Based on http://www.odoo.com/openerp_website/static/src/less/variables.less
+// ============================================================================
+
+// Prefixes
+// ==============================================
+@website-2x-prefix       : "2x_";
+
+
+// Odoo Colours
+// ==============================================
+
+@odoo-brand-optional     : #21b799;
+@odoo-brand-primary      : #9E588B;
+
+//== Odoo Colours
+@o-violet-dark           : #875A7B;
+@o-violet-darker         : #62495B;
+
+@o-inverse               : #47738F;
+@o-inverse-dark          : #5B7687;
+@o-inverse-darker        : #485761;
+
+
+//== Grayscale
+@gray-lightest           : #F9F9F9;
+@gray-lighter            : #F2F2F2;
+@gray-light              : #dcddde;
+@gray                    : #888888;
+@gray-dark               : #6B6D70;
+@gray-darker             : #282F33;
+@gray-darkest            : darken(saturate(@gray-darker, 1%), 3%);
+
+//== UI Colors
+@brand-primary           : @odoo-brand-optional;
+@brand-success           : #50AF51;
+@brand-info              : #4B9EB6;
+@brand-warning           : #F0AD4E;
+@brand-danger            : #D9534F;
+
+//== Apps' Families Colours
+@color-alpha             : @brand-primary;
+@color-alpha-dark        : #18856F;
+@color-alpha-light       : #26D1AF;
+@color-alpha-lightest    : #2AEBC4;
+
+@color-beta              : #5B899E;
+@color-beta-dark         : #3D5D6B;
+@color-beta-light        : #699FB8;
+@color-beta-lightest     : #77B5D1;
+
+@color-gamma             : #E46F78;
+@color-gamma-dark        : #B0565C;
+@color-gamma-light       : #FC7C84;
+@color-gamma-lightest    : #FC959C;
+
+@color-delta             : #5C5B80;
+@color-delta-dark        : #37364D;
+@color-delta-light       : #6E6D99;
+@color-delta-lightest    : #807FB3;
+
+@color-epsilon           : #D5653E;
+@color-epsilon-dark      : #A34E2F;
+@color-epsilon-light     : #F07346;
+@color-epsilon-lightest  : #FF8D63;
+
+
+
+@doc_paper_dark          : @gray-lighter;
+@doc_paper               : #fff;
+
+@doc_exercise            : #938E94;
+@doc_code-bg             : @gray-darkest;
+@doc_lime                : #CDDC39;
+@doc_orange              : #FF5722;
+@doc_cyan                : #0097A7;
+
+
+// Typography
+// ===============================================
+
+//== Fonts
+@import url(https://fonts.googleapis.com/css?family=Work+Sans:300,400,500,600,700&subset=latin,latin-ext);
+
+//== Font sizes/weigths
+@font-size-base : 15px;
+
+@fw_light       : 300;
+@fw_regular     : 400;
+@fw_medium      : 500;
+@fw_semibold    : 600;
+@fw_bold        : 700;
+
+//== Paragraphs
+@font-family-base        : -apple-system, BlinkMacSystemFont, Helvetica, "Helvetica Neue", Arial, sans-serif;
+@text-color              : saturate(@gray-dark, 5%);
+
+//== Headings
+@headings-color          : saturate(@gray-darker, 15%);
+@headings-font-family    : "Work Sans", sans-serif;
+@headings-font-weight    : @fw_light;
+@headings-small-color    : @headings-color;
+
+@display1-size           : 6rem;
+@display2-size           : 5.5rem;
+@display3-size           : 4.5rem;
+@display4-size           : 3.5rem;
+
+//== Global textual link color.
+@link-color              : @o-violet-dark;
+@link-hover-color        : desaturate(@odoo-brand-primary, 10%);
+@link-hover-decoration   : none;
+
+//== Mute color.
+@text-muted              : @gray;
+
+
+// Layouting
+// ===============================================
+@body-bg: @gray-lightest;
+
+//== Header
+@w-header-height         : 50px;
+@w-sub-nav-height        : 40px;
+@w-header-white          : #FCFCFC;
+@header-link-normal      : darken(@text-color,5%);
+
+//== Footer
+@footer-heigth           : 300px;
+@footer-bg-color         : @gray-darker;
+@footer-bottom-bg-color  : @gray-darkest;
+@footer-text             : @gray-light;
+@footer-text-mute        : @gray;
+
 
 // ==========================
-// == Variables =============
+// == Docs Variables ========
 // ==========================
 
 // Z-Index Scale (private vars)
@@ -21,50 +154,8 @@
 
 @zIndex--main: 0;
 @zIndex--mask: @zIndex-7;
-@zIndex--header: 100;
 @zIndex--float_action: @zIndex-8;
 @zIndex--toggle_side_menu: @zIndex-8;
-@zIndex--dev: none;
-
-
-// Colors
-// --------------------------------------------------
-
-// Base Colors
-@doc_accent  : #21b799;
-@doc_violet  : #9E588B;
-
-@doc_exercise: #938E94;
-@doc_success : #50AF51;
-@doc_info    : #4B9EB6;
-@doc_warning : #F0AD4E;
-@doc_danger  : #D9534F;
-
-@doc_bg      : #DDDFE4;
-@doc_bg      : #E5E5E5;
-@doc_paper   : #fff;
-@doc_paper_dark: #F4F4F4;
-
-@doc_code-bg : #21242A;
-
-@doc_lime    : #CDDC39;
-@doc_orange  : #FF5722;
-@doc_cyan    : #0097A7;
-
-// Typography
-@doc_text    : #232B41;
-@doc_heading : #393F4F;
-
-
-// Bootstrap Branding Colors
-@brand-success:         @doc_success;
-@brand-info:            @doc_info;
-@brand-warning:         @doc_warning;
-@brand-danger:          @doc_danger;
-
-
-// Layout
-@body-bg: @doc_bg;
 
 
 // Cards
@@ -73,16 +164,9 @@
 @card_margin-bottom: 20px;
 
 
-// Media Queries
-// --------------------------------------------------
-@w-size-small  :  480px;
-@w-size-medium :  992px;
-@w-size-large  : 1170px;
-@w-size-xlarge : 1440px;
-
-
 
 // Easing Curves
-@ease-material:   cubic-bezier(.55, 0, .1, 1);
-@ease-material-2: cubic-bezier(0.215, 0.61, 0.355, 1);
-@ease-material-3: cubic-bezier(0.4, 0, 0.2, 1);
+// --------------------------------------------------
+@o-ease          : cubic-bezier(.55,0,.1,1);
+@ease-material-2 : cubic-bezier(0.215, 0.61, 0.355, 1);
+@ease-material-3 : cubic-bezier(0.4, 0, 0.2, 1);
