@@ -746,7 +746,6 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 self.to_view_mode();
                 core.bus.trigger('do_reload_needaction');
                 core.bus.trigger('form_view_saved', self);
-                self.enable_button();
             });
         }).always(function(){
             self.enable_button();
