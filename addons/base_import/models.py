@@ -501,7 +501,7 @@ class ir_import(orm.TransientModel):
     def _convert_import_data(self, record, fields, options, context=None):
         """ Extracts the input browse_record and fields list (with
         ``False``-y placeholders for fields to *not* import) into a
-        format Model.import_data can use: a fields list without holes
+        format Model.load can use: a fields list without holes
         and the precisely matching data matrix
 
         :param browse_record record:

@@ -991,89 +991,6 @@ class BaseModel(object):
             self = self.with_context(export_raw_data=True)
         return {'datas': self.__export_rows(fields_to_export)}
 
-    def import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
-        """
-        .. deprecated:: 7.0
-            Use :meth:`~load` instead
-
-        Import given data in given module
-
-        This method is used when importing data via client menu.
-
-        Example of fields to import for a sale.order::
-
-            .id,                         (=database_id)
-            partner_id,                  (=name_search)
-            order_line/.id,              (=database_id)
-            order_line/name,
-            order_line/product_id/id,    (=xml id)
-            order_line/price_unit,
-            order_line/product_uom_qty,
-            order_line/product_uom/id    (=xml_id)
-
-        This method returns a 4-tuple with the following structure::
-
-            (return_code, errored_resource, error_message, unused)
-
-        * The first item is a return code, it is ``-1`` in case of
-          import error, or the last imported row number in case of success
-        * The second item contains the record data dict that failed to import
-          in case of error, otherwise it's 0
-        * The third item contains an error message string in case of error,
-          otherwise it's 0
-        * The last item is currently unused, with no specific semantics
-
-        :param fields: list of fields to import
-        :param datas: data to import
-        :param mode: 'init' or 'update' for record creation
-        :param current_module: module name
-        :param noupdate: flag for record creation
-        :param filename: optional file to store partial import state for recovery
-        :returns: 4-tuple in the form (return_code, errored_resource, error_message, unused)
-        :rtype: (int, dict or 0, str or 0, str or 0)
-        """
-        context = dict(context) if context is not None else {}
-        context['_import_current_module'] = current_module
-
-        fields = map(fix_import_export_id_paths, fields)
-        ir_model_data_obj = self.pool.get('ir.model.data')
-
-        def log(m):
-            if m['type'] == 'error':
-                raise Exception(m['message'])
-
-        if config.get('import_partial') and filename:
-            with open(config.get('import_partial'), 'rb') as partial_import_file:
-                data = pickle.load(partial_import_file)
-                position = data.get(filename, 0)
-
-        position = 0
-        try:
-            for res_id, xml_id, res, info in self._convert_records(cr, uid,
-                            self._extract_records(cr, uid, fields, datas,
-                                                  context=context, log=log),
-                            context=context, log=log):
-                ir_model_data_obj._update(cr, uid, self._name,
-                     current_module, res, mode=mode, xml_id=xml_id,
-                     noupdate=noupdate, res_id=res_id, context=context)
-                position = info.get('rows', {}).get('to', 0) + 1
-                if config.get('import_partial') and filename and (not (position%100)):
-                    with open(config.get('import_partial'), 'rb') as partial_import:
-                        data = pickle.load(partial_import)
-                    data[filename] = position
-                    with open(config.get('import_partial'), 'wb') as partial_import:
-                        pickle.dump(data, partial_import)
-                    if context.get('defer_parent_store_computation'):
-                        self._parent_store_compute(cr)
-                    cr.commit()
-        except Exception, e:
-            cr.rollback()
-            return -1, {}, 'Line %d : %s' % (position + 1, tools.ustr(e)), ''
-
-        if context.get('defer_parent_store_computation'):
-            self._parent_store_compute(cr)
-        return position, 0, 0, 0
-
     def load(self, cr, uid, fields, data, context=None):
         """
         Attempts to load the data matrix, and returns a list of ids (or
@@ -1099,9 +1016,14 @@ class BaseModel(object):
 
         fg = self.fields_get(cr, uid, context=context)
 
-        mode = 'init'
-        current_module = ''
-        noupdate = False
+        # determine values of mode, current_module and noupdate
+        context = context or {}
+        mode = context.get('mode', 'init')
+        current_module = context.get('module', '')
+        noupdate = context.get('noupdate', False)
+
+        # add current module in context for the conversion of xml ids
+        context = dict(context, _import_current_module=current_module)
 
         ids = []
         for id, xid, record, info in self._convert_records(cr, uid,

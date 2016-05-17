@@ -358,7 +358,7 @@ class test_preview(TransactionCase):
 
 class test_convert_import_data(TransactionCase):
     """ Tests conversion of base_import.import input into data which
-    can be fed to Model.import_data
+    can be fed to Model.load
     """
     def test_all(self):
         Import = self.registry('base_import.import')
