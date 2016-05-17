@@ -4,4 +4,5 @@
 import controllers
 import models
 import report
+import stock_scrap
 import wizard

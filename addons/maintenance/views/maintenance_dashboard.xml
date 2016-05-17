@@ -1,0 +1,115 @@
+<odoo>
+    <template id="assets_backend" name="maintenance assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/maintenance/static/src/less/maintenance_team_dashboard.less"/>
+        </xpath>
+    </template>
+
+    <record id="maintenance_team_kanban" model="ir.ui.view">
+        <field name="name">maintenance.team.kanban</field>
+        <field name="model">maintenance.team</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard o_maintenance_team_kanban" create="0">
+                <field name="name"/>
+                <field name="color"/>
+                <field name="todo_request_ids"/>
+                <field name="todo_request_count"/>
+                <field name="todo_request_count_date"/>
+                <field name="todo_request_count_high_priority"/>
+                <field name="todo_request_count_block"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)}">
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary"><field name="name"/></div>
+                                </div>
+                                <div class="o_kanban_manage_button_section">
+                                    <a class="o_kanban_manage_toggle_button" href="#">More <i class="fa fa-caret-down"/></a>
+                                </div>
+                            </div>
+                            <div class="container o_kanban_card_content o_visible">
+                                <div class="row">
+                                    <div class="col-xs-6 o_kanban_primary_left">
+                                        <button class="btn btn-primary" name="%(equipment_todo_request_action_from_dashboard)d" type="action">
+                                            <t t-esc="record.todo_request_count.value"/> To Do
+                                        </button>
+                                    </div>
+                                    <div class="col-xs-6 o_kanban_primary_right">
+                                        <div class="row">
+                                            <div class="col-xs-9">
+                                                <a name="%(equipment_request_action_cal)d" type="action" domain="[('maintenance_team_id', '=', active_id)]">
+                                                    Scheduled
+                                                </a>
+                                            </div>
+                                            <div class="col-xs-3">
+                                                <t t-esc="record.todo_request_count_date.value"/>
+                                            </div>
+                                            <div class="col-xs-9">
+                                                <a name="%(equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_top_priority': 1}">
+                                                    Top Priorities
+                                                </a>
+                                            </div>
+                                            <div class="col-xs-3">
+                                                <t t-esc="record.todo_request_count_high_priority.value"/>
+                                            </div>
+                                             <div class="col-xs-9">
+                                                <a name="%(equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_kanban_state_block': 1}">
+                                                    Blocked
+                                                </a>
+                                            </div>
+                                            <div class="col-xs-3">
+                                                <t t-esc="record.todo_request_count_block.value"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><div class="container o_kanban_card_manage_pane o_invisible">
+                                <div class="row">
+                                    <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                        <div class="o_kanban_card_manage_title">
+                                            <span>View</span>
+                                        </div>
+                                        <div>
+                                            <a name="%(equipment_todo_request_action_from_dashboard)d" type="action">
+                                                All
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <a name="%(equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_todo': 1}">
+                                                To Do
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <a name="%(equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_progress': 1}">
+                                                In Progress
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <a name="%(equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_done': 1}">
+                                                Done
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_new">
+                                        <div class="o_kanban_card_manage_title">
+                                            <span>Reports</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                                    <div class="col-xs-8">
+                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                    </div>
+                                    <div class="col-xs-4 text-right">
+                                        <a type="edit">Settings</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

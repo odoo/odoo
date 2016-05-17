@@ -23,11 +23,11 @@ With this module:
     'website': 'https://www.odoo.com/page/manufacturing',
     'depends': ['base', 'mrp'],
     'data': [
-       'security/ir.model.access.csv',
-       'mrp_byproduct_view.xml'
+        'security/ir.model.access.csv',
+        'views/mrp_bom_views.xml'
     ],
     'demo': [],
-    'test': ['test/mrp_byproduct.yml'],
+    'test': [],
     'installable': True,
     'auto_install': False,
 }

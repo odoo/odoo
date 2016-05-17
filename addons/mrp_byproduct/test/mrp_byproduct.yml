@@ -66,11 +66,9 @@
   I finish the production order.
 -
   !python {model: mrp.product.produce}: |
-    qty = self.browse(cr, uid, ref('mrp_product_produce0')).product_qty
     ctx = context.copy()
     ctx['active_id'] = ref("mrp_production_mo0")
-    lines = self.on_change_qty(cr, uid, [ref('mrp_product_produce0')], qty, [], context=ctx)
-    self.write(cr, uid, [ref('mrp_product_produce0')], lines['value'], context=context)
+    self.on_change_qty(cr, uid, [ref('mrp_product_produce0')], context=ctx)
     self.do_produce(cr, uid, [ref("mrp_product_produce0")], {"active_model": "mrp.production", "active_ids":[ref("mrp_production_mo0")], "active_id": ref("mrp_production_mo0")})
 -
   I see that stock moves of External Hard Disk including Headset USB are done now.
