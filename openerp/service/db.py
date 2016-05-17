@@ -7,6 +7,7 @@ import shutil
 import tempfile
 import threading
 import traceback
+import xml.etree.ElementTree as ET
 import zipfile
 
 from functools import wraps
@@ -36,7 +37,7 @@ def check_super(passwd):
     raise openerp.exceptions.AccessDenied()
 
 # This should be moved to openerp.modules.db, along side initialize().
-def _initialize_db(id, db_name, demo, lang, user_password):
+def _initialize_db(id, db_name, demo, lang, user_password, login='admin', country_code=None):
     try:
         db = openerp.sql_db.db_connect(db_name)
         with closing(db.cursor()) as cr:
@@ -54,8 +55,18 @@ def _initialize_db(id, db_name, demo, lang, user_password):
                 mids = modobj.search(cr, SUPERUSER_ID, [('state', '=', 'installed')])
                 modobj.update_translations(cr, SUPERUSER_ID, mids, lang)
 
-            # update admin's password and lang
+            if country_code:
+                countries = registry['res.country'].search_read(cr, SUPERUSER_ID, [('code', 'ilike', country_code)], fields=['id'])
+                if countries:
+                    registry['res.company'].write(cr, SUPERUSER_ID, 1, {'country_id': countries[0]['id']})
+
+            # update admin's password and lang and login
             values = {'password': user_password, 'lang': lang}
+            if login:
+                values['login'] = login
+                emails = openerp.tools.email_split(login)
+                if emails:
+                    values['email'] = emails[0]
             registry['res.users'].write(cr, SUPERUSER_ID, [SUPERUSER_ID], values)
 
             cr.execute('SELECT login, password FROM res_users ORDER BY login')
@@ -75,11 +86,11 @@ def _create_empty_database(name):
             cr.autocommit(True)     # avoid transaction block
             cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (name, chosen_template))
 
-def exp_create_database(db_name, demo, lang, user_password='admin'):
+def exp_create_database(db_name, demo, lang, user_password='admin', login='admin', country_code=None):
     """ Similar to exp_create but blocking."""
     _logger.info('Create database `%s`.', db_name)
     _create_empty_database(db_name)
-    _initialize_db(id, db_name, demo, lang, user_password)
+    _initialize_db(id, db_name, demo, lang, user_password, login, country_code)
     return True
 
 def exp_duplicate_database(db_original_name, db_name):
@@ -331,6 +342,15 @@ def exp_list(document=False):
 
 def exp_list_lang():
     return openerp.tools.scan_languages()
+
+def exp_list_countries():
+    list_countries = []
+    root = ET.parse(os.path.join(openerp.tools.config['root_path'], 'addons/base/res/res_country_data.xml')).getroot()
+    for country in root.find('data').findall('record[@model="res.country"]'):
+        name = country.find('field[@name="name"]').text
+        code = country.find('field[@name="code"]').text
+        list_countries.append([code, name])
+    return sorted(list_countries, key=lambda c: c[1])
 
 def exp_server_version():
     """ Return the version of the server
