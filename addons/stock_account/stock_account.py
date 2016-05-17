@@ -126,6 +126,20 @@ class stock_location(osv.osv):
                                                         "This has no effect for internal locations."),
     }
 
+    def onchange_usage(self, cr, uid, ids, usage, context=None):
+        result = {
+            'valuation_in_account_id': False,
+            'valuation_out_account_id': False
+        }
+        if usage in ('inventory', 'production'):
+            expense_type_id = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'account.data_account_type_expenses')
+            valuation_account_ids = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', expense_type_id)], limit=1, context=context)
+            if valuation_account_ids:
+                result = {
+                    'valuation_in_account_id': valuation_account_ids[0],
+                    'valuation_out_account_id': valuation_account_ids[0],
+                }
+        return {'value': result}
 #----------------------------------------------------------
 # Quants
 #----------------------------------------------------------
