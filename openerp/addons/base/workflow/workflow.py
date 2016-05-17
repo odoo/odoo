@@ -136,7 +136,7 @@ class WorkflowInstance(models.Model):
 
     @api.model_cr_context
     def _auto_init(self):
-        super(WorkflowInstance, self)._auto_init()
+        res = super(WorkflowInstance, self)._auto_init()
         cr = self._cr
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname=%s', ['wkf_instance_res_type_res_id_state_index'])
         if not cr.fetchone():
@@ -144,6 +144,7 @@ class WorkflowInstance(models.Model):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname=%s', ['wkf_instance_res_id_wkf_id_index'])
         if not cr.fetchone():
             cr.execute('CREATE INDEX wkf_instance_res_id_wkf_id_index ON wkf_instance (res_id, wkf_id)')
+        return res
 
 
 class WorkflowWorkitem(models.Model):
@@ -176,8 +177,9 @@ class WorkflowTriggers(models.Model):
 
     @api.model_cr_context
     def _auto_init(self):
-        super(WorkflowTriggers, self)._auto_init()
+        res = super(WorkflowTriggers, self)._auto_init()
         cr = self._cr
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname=%s', ['wkf_triggers_res_id_model_index'])
         if not cr.fetchone():
             cr.execute('CREATE INDEX wkf_triggers_res_id_model_index ON wkf_triggers (res_id, model)')
+        return res

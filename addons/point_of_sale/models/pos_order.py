@@ -101,20 +101,22 @@ class PosOrder(models.Model):
 
     @api.model
     def _process_order(self, pos_order):
+        prec_acc = self.env['decimal.precision'].precision_get('Account')
         pos_session = self.env['pos.session'].browse(pos_order['pos_session_id'])
         if pos_session.state == 'closing_control' or pos_session.state == 'closed':
             pos_order['pos_session_id'] = self._get_valid_session(pos_order).id
         order = self.create(self._order_fields(pos_order))
         journal_ids = set()
         for payments in pos_order['statement_ids']:
-            order.add_payment(self._payment_fields(payments[2]))
+            if not float_is_zero(payments[2]['amount'], precision_digits=prec_acc):
+                order.add_payment(self._payment_fields(payments[2]))
             journal_ids.add(payments[2]['journal_id'])
 
         if pos_session.sequence_number <= pos_order['sequence_number']:
             pos_session.write({'sequence_number': pos_order['sequence_number'] + 1})
             pos_session.refresh()
 
-        if not float_is_zero(pos_order['amount_return'], self.env['decimal.precision'].precision_get('Account')):
+        if not float_is_zero(pos_order['amount_return'], prec_acc):
             cash_journal_id = pos_session.cash_journal_id.id
             if not cash_journal_id:
                 # Select for change one of the cash journals used in this
