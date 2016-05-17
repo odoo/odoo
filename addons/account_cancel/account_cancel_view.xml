@@ -79,7 +79,6 @@
                     <attribute name="options">{'reload_on_button': true}</attribute>
                 </field>
                 <xpath expr="//field[@name='amount']" position="after">
-                    <field name="journal_entry_id" invisible="1"/>
                     <button name="cancel" attrs="{'invisible': [('journal_entry_id', '=', False)]}" string="Cancel" type="object" icon="gtk-undo"/>
                 </xpath>
             </field>
