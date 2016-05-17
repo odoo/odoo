@@ -45,83 +45,213 @@
 {%- endblock -%}
 
 {%- block header -%}
-  <header class="{{ ' '.join(classes) }}">
-    <figure class="card top">
-      <span class="card-img" {% if meta['banner'] %}style="background-image: url('{{ pathto('_static/' + meta['banner'], True) }}');"{% endif %}></span>
-    </figure>
-  </header>
-  <nav id="main_navbar" class="navbar {{ ' '.join(classes) }}">
-    <div class="container-fluid">
-      <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="navbar-header">
-        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".navbar-main">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <nav class="nav navbar-nav navbar-left">
-          <li id="main-back"><a href="{{ pathto(master_doc) }}" class="mdi-navigation-arrow-back"></a></li>
-          <li>
-            <h1 id="main_title">{{ meta.get('main-title', title) }}</h1>
-          </li>
-        </nav>
+  <header class="o_main_header o_has_sub_nav o_inverted {{ ' '.join(classes) }}">
+    <div class="o_main_header_main">
+      <a class="pull-left o_logo" href="/"></a>
+      <a href="#" class="o_mobile_menu_toggle visible-xs-block pull-right">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="mdi-navigation-menu"></span>
+      </a>
+      <div class="o_header_buttons">
+        <a href="http://www.odoo.com/trial" class="btn btn-primary">Start Now</a>
       </div>
-
-      <nav class="collapse navbar-collapse navbar-main navbar-right" role="navigation">
-        {% if versions %}
-          <ul class="navbar-nav navbar-right nav">
-            <li class="versions">
-              <a class="dropdown-toggle" data-toggle="dropdown">
-                {{ version }} <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu" role="menu">
-                {% for name, url in versions %}
-                  <li><a href="{{ url }}">{{ name }}</a></li>
-                {% endfor %}
-              </ul>
-            </li>
-          </ul>
-        {% endif %}
-        {{ toctree(titles_only=True, maxdepth=2, includehidden=True, collapse=False, navbar='main') }}
-      </nav>
+      <ul class="o_primary_nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle">Apps</a>
+          <div class="dropdown-menu o_secondary_nav">
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-3 o_website_apps">
+                  <div class="o_nav_app_family">
+                    <span></span> Websites
+                    <div>Build great user experience</div>
+                  </div>
+                  <ul>
+                    <li><a href="https://www.odoo.com/page/website-builder">Website Builder</a></li>
+                    <li><a href="https://www.odoo.com/page/e-commerce">eCommerce</a></li>
+                    <li><a href="https://www.odoo.com/page/blog-engine">Blogs</a></li>
+                    <li><a href="https://www.odoo.com/page/community-builder">Forums</a></li>
+                    <li><a href="https://www.odoo.com/page/slides">Slides</a></li>
+                    <li><a href="https://adspike.odoo.com">SEA</a></li>
+                  </ul>
+                </div>
+                <div class="col-sm-3 o_sale_apps">
+                  <div class="o_nav_app_family">
+                    <span></span> Sales
+                    <div>Boost your success rate</div>
+                  </div>
+                  <ul>
+                    <li><a href="https://www.odoo.com/page/sales">Sales</a></li>
+                    <li><a href="https://www.odoo.com/page/crm">CRM</a></li>
+                    <li><a href="https://www.odoo.com/page/billing">Invoicing</a></li>
+                    <li class="dropdown">
+                      <a href="#0" class="dropdown-toggle">Point of Sale</a>
+                      <ul>
+                        <li><a href="https://www.odoo.com/page/point-of-sale">Shops</a></li>
+                        <li><a href="https://www.odoo.com/page/pos-restaurant">Restaurants</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="https://www.odoo.com/page/subscriptions">Subscriptions</a></li>
+                    <li><a href="https://www.odoo.com/page/sign">Sign</a></li>
+                  </ul>
+                </div>
+                <div class="col-sm-3 o_operation_apps">
+                  <div class="o_nav_app_family">
+                    <span></span> Operations
+                    <div>It's all about efficiency</div>
+                  </div>
+                  <ul>
+                    <li><a href="https://www.odoo.com/page/accounting/">Accounting</a></li>
+                    <li><a href="https://www.odoo.com/page/project-management/">Project</a></li>
+                    <li class="dropdown">
+                      <a href="#0" class="dropdown-toggle">Human Resources</a>
+                      <ul>
+                        <li><a href="https://www.odoo.com/page/recruitment">Recruitment</a></li>
+                        <li><a href="https://www.odoo.com/page/employees">Employees</a></li>
+                        <li><a href="https://www.odoo.com/page/expenses">Expenses</a></li>
+                        <li><a href="https://www.odoo.com/page/appraisal">Appraisal</a></li>
+                        <li><a href="https://www.odoo.com/page/fleet">Fleet</a></li>
+                        <li><a href="https://www.odoo.com/page/leaves">Leaves</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="https://www.odoo.com/page/warehouse">Inventory</a></li>
+                    <li><a href="https://www.odoo.com/page/purchase">Purchase</a></li>
+                    <li class="dropdown">
+                      <a href="#0" class="dropdown-toggle">Manufacturing</a>
+                      <ul>
+                        <li><a href="https://www.odoo.com/page/manufacturing">MRP</a></li>
+                        <li><a href="https://www.odoo.com/page/plm">PLM</a></li>
+                        <li><a href="https://www.odoo.com/page/maintenance">Maintenance</a></li>
+                        <li><a href="https://www.odoo.com/page/quality">Quality</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-sm-3 o_productivity_apps">
+                  <div class="o_nav_app_family">
+                    <span></span> Productivity Tools
+                    <div>Great Tools = Happy People</div>
+                  </div>
+                  <ul>
+                    <li class="dropdown">
+                      <a href="#0" class="dropdown-toggle">Communication</a>
+                      <ul>
+                        <li><a href="https://www.odoo.com/page/discuss">Discuss</a></li>
+                        <li><a href="https://www.odoo.com/page/discuss-groups">Mailing Lists</a></li>
+                        <li><a href="https://www.odoo.com/page/notes">Notes</a></li>
+                        <li><a href="#">Help desk</a></li>
+                        <li><a href="#">Appointment</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="https://www.odoo.com/page/timesheet">Timesheet</a></li>
+                    <li><a href="https://www.odoo.com/page/email-marketing">Email Marketing</a></li>
+                    <li><a href="https://www.odoo.com/page/events">Events</a></li>
+                    <li><a href="https://www.odoo.com/page/survey">Survey</a></li>
+                    <li><a href="https://www.odoo.com/page/live-chat">Live Chat</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <a href="http://www.odoo.com/apps/modules" class="o_store_link"><i class="fa fa-cube fa-fw"></i> Third party apps</a>
+          </div>
+        </li>
+        <li><a href="https://www.odoo.com/page/tour">Tour</a></li>
+        <li><a href="https://www.odoo.com/pricing">Pricing</a></li>
+        <li><a href="https://www.odoo.com/page/docs">Docs</a></li>
+      </ul>
     </div>
-  </nav>
+    <nav class="navbar o_sub_nav">
+      <div class="container">
+        <div class="navbar-header visible-xs">
+            <button type="button" class="navbar-toggle collapsed text-left btn-block" data-toggle="collapse" data-target="#o_sub-menu" aria-expanded="false">
+              Navigate
+              <span class="mdi-hardware-keyboard-arrow-down pull-right"></span>
+            </button>
+        </div>
+
+        <div class="collapse navbar-collapse" id="o_sub-menu">
+          <ol class="o_breadcrumb breadcrumb nav navbar-left">
+              {% block breadcrumb_desktop %}
+              {% include "breadcrumb_list.html" %}
+              {% endblock %}
+          </ol>
+
+          <div class="call-to-action navbar-right hidden-xs">
+            <a href="http://www.odoo.com/trial" class="btn btn-primary">Start Now</a>
+          </div>
+
+          <ul class="navbar-nav navbar-right nav o_sub_nav_actions">
+            {% if pagename != master_doc %}
+              <li class="divider"></li>
+            {% endif%}
+
+            {% block switchers_desktop %}
+            {% include "switchers_list.html" %}
+            {% endblock %}
+          </ul>
+
+          <ul class="nav navbar-nav navbar-right">
+            {% if languages or versions %}
+              <li class="divider"></li>
+            {% endif %}
+
+            {% block sub_menu_desktop %}
+            {% include "sub-menu_list.html" %}
+            {% endblock %}
+
+            {% if languages or versions %}
+              <li class="divider"></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
 {%- endblock -%}
 
 {%- block content -%}
-  {% if 'code-column' in meta %}
-    {% set container = 'container-fluid' %}
-  {% else %}
-    {% set container = 'container' %}
-  {% endif %}
-  <main class="{{ container }} {{ ' '.join(classes) }}">
-    {% if pagename != master_doc %}
-    <div class="row">
-      {% if 'has-toc' not in meta %}
-      <aside>
-        <div class="navbar-aside text-center">
-          <div class="logo_box">
-            <span class="logo"></span>
-            Documentation
-          </div>
-          {{ toc }}
-          {% if github_link %}
-          <p class="gith-container"><a href="{{ github_link(mode='edit') }}" class="gith-link">
-              Edit on GitHub
-          </a></p>
-          {% endif %}
-        </div>
-      </aside>
-      {% endif %}
-      <article class="doc-body {% if 'has-toc' in meta %}doc-toc{% endif %}">
-        {% endif %}
-        {% block body %} {% endblock %}
-      {% if pagename != master_doc %}</article>
-    </div>
+  <div id="wrap" class="{{' '.join(classes) }}">
+    {% if meta['banner'] %}
+    {% set has_banner = 'has_banner' %}
     {% endif %}
-    <div id="mask"></div>
-  </main>
+    <figure class="card top {{ has_banner }}">
+      <span class="card-img" {% if meta['banner'] %}style="background-image: url('{{ pathto('_static/' + meta['banner'], True) }}');"{% endif %}></span>
+      <div class="container text-center">
+        <h1> {{ meta.get('main-title', title) }} </h1>
+      </div>
+    </figure>
+    {% if 'code-column' in meta %}
+    {% set container = 'container-fluid' %}
+    {% else %}
+    {% set container = 'container' %}
+    {% endif %}
+    <div class="{{ container}} {{ ' '.join(classes) }}">
+      <main class="container-fluid {{ ' '.join(classes) }}">
+        {% if pagename != master_doc %}
+        <div class="row">
+          {% if 'has-toc' not in meta %}
+          <aside>
+            <div class="navbar-aside text-center">
+              {{ toc }}
+              {% if github_link %}
+              <p class="gith-container"><a href="{{ github_link(mode='edit') }}" class="gith-link">
+                  Edit on GitHub
+              </a></p>
+              {% endif %}
+            </div>
+          </aside>
+          {% endif %}
+          <article class="doc-body {% if 'has-toc' in meta %}doc-toc{% endif %}">
+            {% endif %}
+            {% block body %} {% endblock %}
+          {% if pagename != master_doc %}</article>
+        </div>
+        {% endif %}
+        <div id="mask"></div>
+      </main>
+    </div>
+  </div>
 
   <div class="floating_action_container">
     <a id="floating_action" class="ripple" href="#">
@@ -138,4 +268,76 @@
       </ul>
     </div>
   </div>
+  <footer>
+    <div id="footer" class="container">
+      <span class="o_logo o_logo_inverse center-block o_footer_logo"></span>
+      <div class="row">
+        <div class="col-sm-7 col-md-7 col-lg-6">
+          <div class="row">
+            <div class="col-xs-6 col-sm-4">
+              <span class="menu_title">Community</span>
+              <ul>
+                <li><a href="https://github.com/odoo/odoo">Github</a></li>
+                <li><a href="http://www.odoo.com/page/download">Download</a></li>
+                <li class="divider"></li>
+                <li><a href="http://runbot.odoo.com/runbot/repo/git-github-com-odoo-enterprise-7">Runbot</a></li>
+                <li><a href="https://github.com/odoo/odoo/wiki/Translations">Translations</a></li>
+                <li class="divider"></li>
+                <li><a href="http://www.odoo.com/page/odoo-community">Mailing Lists</a></li>
+                <li><a href="http://www.odoo.com/forum/help-1">Forum</a></li>
+              </ul>
+            </div>
+            <div class="col-xs-6 col-sm-4">
+              <span class="menu_title">Services</span>
+              <ul>
+                <li><a href="http://www.odoo.com/pricing">Editions</a></li>
+                <li><a href="http://www.odoo.com/pricing-online">Cloud Pricing</a></li>
+                <li><a href="http://www.odoo.com/page/upgrade">Upgrade</a></li>
+                <li class="divider"></li>
+                <li><a href="http://www.odoo.com/partners">Find a partner</a></li>
+                <li><a href="http://www.odoo.com/page/become-a-partner">Become a partner</a></li>
+                <li class="divider"></li>
+                <li><a href="http://www.odoo.com/page/education-program">Education</a></li>
+                <li class="divider"></li>
+                <li><a href="http://www.odoo.com/page/security">Security</a></li>
+              </ul>
+            </div>
+            <div class="col-sm-4 mb64">
+              <span class="menu_title">About us</span>
+              <ul>
+                <li><a href="http://www.odoo.com/page/about-us">Our company</a></li>
+                <li><a href="http://www.odoo.com/page/contactus">Contact</a></li>
+                <li class="divider" />
+                <li><a href="http://www.odoo.com/event">Events</a></li>
+                <li><a href="http://www.odoo.com/blog/">Blog</a></li>
+                <li><a href="http://www.odoo.com/blog/6">Customers</a></li>
+                <li class="divider" />
+                <li><a href="http://www.odoo.com/jobs">Jobs</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-5 col-md-4 col-md-offset-1 col-lg-5 col-lg-offset-1">
+          <p>
+            <small>
+              Odoo is a suite of open source business apps that cover all your company needs: CRM, eCommerce, accounting, inventory, point of sale, project management, etc.
+              <br/><br/>
+              Odoo's unique value proposition is to be at the same time very easy to use and fully integrated.
+            </small>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="o_footer_bottom">
+      <div class="container">
+        <a class="small" href="http://www.odoo.com/page/website-builder">Website made with <span class="o_logo o_logo_inverse o_logo_15"></span></a>
+        <div class="social-links pull-right">
+          <a href="http://www.odoo.com/web/about/facebook"><i class="fa fa-facebook"></i></a>
+          <a href="http://www.odoo.com/web/about/twitter"><i class="fa fa-twitter"></i></a>
+          <a href="http://www.odoo.com/web/about/linkedin"><i class="fa fa-linkedin"></i></a>
+          <a href="mailto:info@odoo.com"><i class="fa fa-envelope"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
 {%- endblock -%}

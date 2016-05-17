@@ -37,37 +37,57 @@
       <input type="hidden" name="master_pwd" class="form-control" value="admin"/>
     {% else %}
       <label for="master_pwd" class="control-label">Master Password</label>
-      <input type="password" name="master_pwd" class="form-control" required="required" autofocus="autofocus"/>
+      <input id="master_pwd" type="password" name="master_pwd" class="form-control" required="required" autofocus="autofocus"/>
     {% endif %}
   </div>
 {%- endmacro %}
 
 {% macro create_form() -%}
-  <p>Fill in this form to create an Odoo database. You may create
-  databases for different companies or for different goals (testing,
-  production). Once the database is created, you will be able to
-  install your first application.</p>
+  <p>Odoo is up and running! <br />
+  Create a new database by filling out the form,
+  you'll be able to install your first app in a minute.</p>
   {{ master_input() }}
   <div class="form-group">
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-md-12">
         <label for="name" class="control-label">Database Name</label>
-        <input type="text" name="name" class="form-control" required="required" autocomplete="off"/>
+        <input id="name" type="text" name="name" class="form-control" required="required" autocomplete="off"/>
       </div>
-      <div class="col-md-4">
-        <label for="name" class="control-label">Language</label>
-        <select name="lang" class="form-control" required="required" autocomplete="off">
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="row">
+      <div class="col-md-12">
+        <label for="login" class="control-label">Email</label>
+        <input id="login" type="text" name="login" class="form-control" autocomplete="off"/>
+      </div>
+    </div>
+  </div>
+  <div class="form-group has-feedback">
+    <label for="password" class="control-label">Password</label>
+    <input id="password" type="password" name="password" class="form-control" required="required" autocomplete="off"/>
+    <span class="fa fa-eye o_little_eye form-control-feedback" aria-hidden="true" style="cursor: pointer; pointer-events: auto"></span>
+  </div>
+  <div class="form-group">
+    <div class="row">
+      <div class="col-md-6">
+        <label for="lang" class="control-label">Language</label>
+        <select id="lang" name="lang" class="form-control" required="required" autocomplete="off">
           {% for lang in langs %}
               <option {% if lang[0] == "en_US" %}selected="selected" {% endif %}value="{{ lang[0] }}">{{ lang[1] }}</option>
           {% endfor %}
         </select>
       </div>
+      <div class="col-md-6">
+          <label for="country" class="control-label">Country</label>
+          <select id="country" name="country_code" class="form-control" autocomplete="off">
+              <option value=""></option>
+            {% for country in countries %}
+              <option value="{{ country[0] }}">{{ country[1] }}</option>
+            {% endfor %}
+            </select>
+        </div>
     </div>
-  </div>
-  <div class="form-group has-feedback">
-    <label for="password" class="control-label">Password of <em>admin</em> user</label>
-    <input type="password" name="password" class="form-control" required="required" autocomplete="off"/>
-    <span class="fa fa-eye o_little_eye form-control-feedback" aria-hidden="true" style="cursor: pointer; pointer-events: auto"></span>
   </div>
   <div class="form-group">
     <div class="checkbox">
@@ -173,11 +193,11 @@
             {{ master_input() }}
             <div class="form-group">
               <label for="backup_file" class="control-label">File</label>
-              <input type="file" name="backup_file" class="required"/>
+              <input id="backup_file" type="file" name="backup_file" class="required"/>
             </div>
             <div class="form-group">
               <label for="name" class="control-label">Database Name</label>
-              <input type="text" name="name" class="form-control" required="required"/>
+              <input id="name" type="text" name="name" class="form-control" required="required"/>
             </div>
             <div class="form-group">
               <div class="checkbox">
@@ -211,7 +231,7 @@
             {{ master_input() }}
             <div class="form-group has-feedback">
               <label for="master_pwd_new" class="control-label">New Master Password</label>
-              <input type="password" name="master_pwd_new" class="form-control" required="required" autocomplete="off"/>
+              <input id="master_pwd_new" type="password" name="master_pwd_new" class="form-control" required="required" autocomplete="off"/>
               <span class="fa fa-eye o_little_eye form-control-feedback" aria-hidden="true" style="cursor: pointer; pointer-events: auto"></span>
             </div>
           </div>
@@ -237,11 +257,11 @@
             {{ master_input() }}
             <div class="form-group">
               <label for="name" class="control-label">Database Name</label>
-              <input type="text" name="name" class="form-control" required="required" readonly="readonly"/>
+              <input id="name" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
             </div>
             <div class="form-group">
               <label for="new_name" class="control-label">New Name</label>
-              <input type="text" name="new_name" class="form-control" required="required"/>
+              <input id="new_name" type="text" name="new_name" class="form-control" required="required"/>
             </div>
           </div>
           <div class="modal-footer">
@@ -265,7 +285,7 @@
             {{ master_input() }}
             <div class="form-group">
               <label for="name" class="control-label">Database</label>
-              <input type="text" name="name" class="form-control" required="required" readonly="readonly"/>
+              <input id="name" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
             </div>
           </div>
           <div class="modal-footer">
@@ -289,11 +309,11 @@
             {{ master_input() }}
             <div class="form-group">
               <label for="name" class="control-label">Database Name</label>
-              <input type="text" name="name" class="form-control" required="required" readonly="readonly"/>
+              <input id="name" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
             </div>
             <div class="form-group">
               <label for="backup_format" class="control-label">Backup Format</label>
-              <select name="backup_format" id="backup_format" class="form-control" required="required">
+              <select id="backup_format" name="backup_format" id="backup_format" class="form-control" required="required">
                 <option value="zip">zip (includes filestore)</option>
                 <option value="dump">pg_dump custom format (without filestore)</option>
               </select>

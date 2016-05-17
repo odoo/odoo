@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 14:27+0000\n"
-"PO-Revision-Date: 2016-05-07 03:34+0000\n"
+"PO-Revision-Date: 2016-05-13 12:34+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -135,7 +135,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/chat_manager.js:53
 #, python-format
 msgid " from "
-msgstr "从"
+msgstr ""
 
 #. module: mail
 #: model:mail.template,subject:mail.mail_template_data_notification_email_default
@@ -329,7 +329,7 @@ msgstr "需要行动"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_default
 msgid "Activated by default when subscribing."
-msgstr "订阅时，默认激活"
+msgstr "订阅时默认激活"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -525,7 +525,7 @@ msgstr "附件"
 msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "messagethrough this field."
-msgstr "附件是通过模型 / res_id连接于文档并通过此字段链接到信息。"
+msgstr "附件是通过模型 / res_id连接于文档并通过此字段链接到消息。"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -1118,7 +1118,7 @@ msgstr "Email配置"
 #: model:ir.model.fields,field_description:mail.field_res_partner_notify_email
 #: model:ir.model.fields,field_description:mail.field_res_users_notify_email
 msgid "Email Messages and Notifications"
-msgstr "Email消息和通知"
+msgstr "Email消息以及通知"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
@@ -1187,7 +1187,7 @@ msgstr "Email消息"
 #: model:ir.ui.menu,name:mail.menu_mail_mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Emails"
-msgstr "Emails"
+msgstr "电子邮件"
 
 #. module: mail
 #: code:addons/mail/models/update.py:91
@@ -1206,18 +1206,18 @@ msgstr "无异常错误。可能是由于没有计算收件人发送电子邮件
 #. module: mail
 #: sql_constraint:mail.followers:0
 msgid "Error, a channel cannot follow twice the same object."
-msgstr "出错，一个频道不能关注同一个对象二次。"
+msgstr "错误，一个频道不能关注同一个对象两次。"
 
 #. module: mail
 #: sql_constraint:mail.followers:0
 msgid "Error, a partner cannot follow twice the same object."
-msgstr "错误，合作伙伴不能遵循相同的对象两次。"
+msgstr "错误，业务伙伴不能关注同一个对象两次。"
 
 #. module: mail
 #: sql_constraint:mail.followers:0
 msgid ""
 "Error: A follower must be either a partner or a channel (but not both)."
-msgstr "错误：一个关注者必须是一个业务伙伴或者一个渠道(但不是同时两者)"
+msgstr "错误：一个关注者必须是一个业务伙伴或者一个频道(但不是同时两者)"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0 selection:mail.channel,public:0
@@ -1232,7 +1232,7 @@ msgstr "扩展过滤器..."
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_base_config_settings_fail_counter
 msgid "Fail Mail"
-msgstr "发送失败的邮件"
+msgstr "失败的邮件"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -1335,7 +1335,7 @@ msgstr "关注者(频道)"
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_res_users_message_partner_ids
 msgid "Followers (Partners)"
-msgstr "关注者（合作伙伴）"
+msgstr "关注者(业务伙伴)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_subscription_form
@@ -1345,14 +1345,14 @@ msgstr "关注者表单"
 #. module: mail
 #: selection:mail.alias,alias_contact:0
 msgid "Followers only"
-msgstr "仅关注"
+msgstr "仅关注者"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:103
 #, python-format
 msgid "Following"
-msgstr "正在关注"
+msgstr "正在关注中"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_email_from
@@ -1410,7 +1410,7 @@ msgstr "隐藏"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_hidden
 msgid "Hide the subtype in the follower options"
-msgstr "隐藏在跟随选项的子类型"
+msgstr "在关注者选项隐藏子类型"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_id
@@ -1503,7 +1503,7 @@ msgstr "如果你设置了电子邮件域名重定向到这个Odoo服务器，�
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
 msgid "Important messages"
-msgstr "重要信息"
+msgstr "重要消息"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:141
@@ -1605,7 +1605,7 @@ msgstr "仅邀请人员"
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_is_follower
 #: model:ir.model.fields,field_description:mail.field_res_users_message_is_follower
 msgid "Is Follower"
-msgstr "是否关注者"
+msgstr "是关注者"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_notification
@@ -1719,7 +1719,7 @@ msgstr "离开当前频道"
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite_channel_ids
 msgid ""
 "List of channels that will be added as listeners of the current document."
-msgstr "将被添加为当前文档的侦听器的通道列表。"
+msgstr "将被添加为当前文档的侦听器的频道列表。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite_partner_ids
@@ -1775,7 +1775,7 @@ msgstr "记录一个内部的说明，它不会被发送给跟随者，但它可
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Mail Channel Form"
-msgstr "邮件渠道表单"
+msgstr "邮件频道表单"
 
 #. module: mail
 #: code:addons/mail/models/mail_mail.py:306
@@ -2114,14 +2114,14 @@ msgstr "无法匹配"
 #: code:addons/mail/static/src/xml/thread.xml:17
 #, python-format
 msgid "No message matches your search. Try to change your search filters."
-msgstr "找不到与你查找相匹配的。试着更改搜索过滤"
+msgstr "找不到与你查找相匹配的消息。试着更改搜索过滤"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:28
 #, python-format
 msgid "No starred message"
-msgstr "没有主角信息"
+msgstr "没有标星的消息"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_no_auto_thread
@@ -2660,7 +2660,7 @@ msgstr "富文本内容"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_body_html
 msgid "Rich-text/HTML message"
-msgstr "富文本/HTML 消息"
+msgstr "富文本/HTML消息"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_body_html
@@ -2749,7 +2749,7 @@ msgstr "现在发送"
 #: code:addons/mail/static/src/xml/chatter.xml:67
 #, python-format
 msgid "Send a message"
-msgstr "发送信息"
+msgstr "发送消息"
 
 #. module: mail
 #. openerp-web
@@ -3123,19 +3123,19 @@ msgstr "追踪值被保存在一个单一的模型中。这个字段允许重新
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
 msgid "Tracking"
-msgstr "跟踪"
+msgstr "追踪"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_tree
 msgid "Tracking Value"
-msgstr "跟踪值"
+msgstr "追踪值"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_tracking_value
 #: model:ir.ui.menu,name:mail.menu_mail_tracking_value
 msgid "Tracking Values"
-msgstr "跟踪值"
+msgstr "追踪值"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_tracking_value_ids
@@ -3219,7 +3219,7 @@ msgstr "取关所有"
 #: code:addons/mail/static/src/xml/client_action.xml:126
 #, python-format
 msgid "Unstar all messages"
-msgstr "未星标信息"
+msgstr "取消全部消息的星标"
 
 #. module: mail
 #. openerp-web
@@ -3288,7 +3288,7 @@ msgstr "用户"
 #: code:addons/mail/models/mail_thread.py:595
 #, python-format
 msgid "View"
-msgstr "视图"
+msgstr "查看"
 
 #. module: mail
 #. openerp-web
@@ -3297,7 +3297,7 @@ msgstr "视图"
 msgid ""
 "Warning! \n"
 " If you remove a follower, he won't be notified of any email or discussion on this document. Do you really want to remove this follower ?"
-msgstr "警告! \n如果你删除了一个粉丝，任何电子邮件或在此文档之上的讨论都不再通知这个粉丝了。你真的想要删除这个粉丝吗 ?"
+msgstr "警告! \n如果你删除了一个关注者，任何电子邮件或在此文档之上的讨论都不再通知这个关注者了。你真的想要删除这个关注者吗 ?"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_sub_model_object_field
@@ -3323,7 +3323,7 @@ msgstr "无论消息是内部记录（只适用评论模式）"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Who can follow the group's activities?"
-msgstr "谁能跟进群的活动?"
+msgstr "谁能关注群组的活动?"
 
 #. module: mail
 #. openerp-web

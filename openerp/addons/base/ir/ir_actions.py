@@ -443,10 +443,11 @@ class ir_actions_act_window_view(osv.osv):
         'multi': False,
     }
     def _auto_init(self, cr, context=None):
-        super(ir_actions_act_window_view, self)._auto_init(cr, context)
+        res = super(ir_actions_act_window_view, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'act_window_view_unique_mode_per_action\'')
         if not cr.fetchone():
             cr.execute('CREATE UNIQUE INDEX act_window_view_unique_mode_per_action ON ir_act_window_view (act_window_id, view_mode)')
+        return res
 
 
 class ir_actions_act_window_close(osv.osv):
