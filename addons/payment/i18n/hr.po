@@ -1,46 +1,47 @@
-# Croatian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-09-01 09:51+0000\n"
-"Last-Translator: Goran Kliska <gkliska@gmail.com>\n"
-"Language-Team: Croatian <hr@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2016-05-13 13:31+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Croatian (http://www.transifex.com/odoo/odoo-8/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-02 07:34+0000\n"
-"X-Generator: Launchpad (build 17192)\n"
+"Content-Transfer-Encoding: \n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: payment
 #: help:account.config.settings,module_payment_adyen:0
 msgid "-It installs the module payment_adyen."
-msgstr ""
+msgstr "-Instalira modul payment_adyen."
 
 #. module: payment
 #: help:account.config.settings,module_payment_buckaroo:0
 msgid "-It installs the module payment_buckaroo."
-msgstr ""
+msgstr "-Instalira modul payment_buckaroo."
 
 #. module: payment
 #: help:account.config.settings,module_payment_ogone:0
 msgid "-It installs the module payment_ogone."
-msgstr ""
+msgstr "-Instalira modul payment_ogone."
 
 #. module: payment
 #: help:account.config.settings,module_payment_paypal:0
 msgid "-It installs the module payment_paypal."
-msgstr ""
+msgstr "-Instalira modul payment_paypal."
 
 #. module: payment
 #: field:payment.transaction,acquirer_id:0
 msgid "Acquirer"
-msgstr ""
+msgstr "Stjecatelj"
 
 #. module: payment
 #: field:payment.transaction,acquirer_reference:0
@@ -93,8 +94,7 @@ msgid "Country"
 msgstr "Država"
 
 #. module: payment
-#: field:payment.acquirer,create_uid:0
-#: field:payment.transaction,create_uid:0
+#: field:payment.acquirer,create_uid:0 field:payment.transaction,create_uid:0
 msgid "Created by"
 msgstr "Kreirao"
 
@@ -117,7 +117,7 @@ msgstr "Valuta"
 #. module: payment
 #: help:payment.transaction,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Datum zadnjeg zapisa"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -152,32 +152,32 @@ msgstr "Naknade"
 #. module: payment
 #: help:payment.transaction,fees:0
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr ""
+msgstr "Iznos naknade; postavlja sustav jer ovisi o stjecatelju"
 
 #. module: payment
 #: help:payment.transaction,state_message:0
 msgid "Field used to store error and/or validation messages for information"
-msgstr ""
+msgstr "Polje se koristi za pohranu pogreške i/ili poruke o potvrdi za informacije "
 
 #. module: payment
 #: field:payment.acquirer,fees_dom_fixed:0
 msgid "Fixed domestic fees"
-msgstr ""
+msgstr "Fiksne domaće naknade"
 
 #. module: payment
 #: field:payment.acquirer,fees_int_fixed:0
 msgid "Fixed international fees"
-msgstr ""
+msgstr "Fiksne međunarodne naknade"
 
 #. module: payment
 #: field:payment.transaction,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Pratitelji"
 
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Form"
-msgstr ""
+msgstr "Ekran"
 
 #. module: payment
 #: field:payment.acquirer,view_template_id:0
@@ -187,30 +187,29 @@ msgstr ""
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_search
 msgid "Group By"
-msgstr ""
+msgstr "Grupiraj po"
 
 #. module: payment
 #: help:payment.transaction,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Sadrži sažetak konverzacije (broj poruka..). Ovaj sažetak je u html formatu da bi mogao biti ubačen u kanban pogled."
 
 #. module: payment
-#: field:payment.acquirer,id:0
-#: field:payment.transaction,id:0
+#: field:payment.acquirer,id:0 field:payment.transaction,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: payment
 #: help:payment.transaction,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
 
 #. module: payment
 #: field:payment.transaction,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Je pratitelj"
 
 #. module: payment
 #: field:payment.transaction,partner_lang:0
@@ -220,19 +219,17 @@ msgstr ""
 #. module: payment
 #: field:payment.transaction,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Datum zadnje poruke"
 
 #. module: payment
-#: field:payment.acquirer,write_uid:0
-#: field:payment.transaction,write_uid:0
+#: field:payment.acquirer,write_uid:0 field:payment.transaction,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Promijenio"
 
 #. module: payment
-#: field:payment.acquirer,write_date:0
-#: field:payment.transaction,write_date:0
+#: field:payment.acquirer,write_date:0 field:payment.transaction,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Vrijeme promjene"
 
 #. module: payment
 #: help:payment.acquirer,website_published:0
@@ -262,82 +259,81 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,validation:0
 msgid "Manual"
-msgstr ""
+msgstr "Ručno"
 
 #. module: payment
-#: field:payment.acquirer,pre_msg:0
-#: field:payment.transaction,state_message:0
+#: field:payment.acquirer,pre_msg:0 field:payment.transaction,state_message:0
 msgid "Message"
-msgstr ""
+msgstr "Poruka"
 
 #. module: payment
 #: help:payment.acquirer,post_msg:0
 msgid "Message displayed after having done the payment process."
-msgstr ""
+msgstr "Poruka se prikazuje nakon postupka plaćanja."
 
 #. module: payment
 #: help:payment.acquirer,pre_msg:0
 msgid "Message displayed to explain and help the payment process."
-msgstr ""
+msgstr "Poruka se prikazuje za objašnjavanje i pomoć u postupku plaćanja."
 
 #. module: payment
 #: field:payment.transaction,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Poruke"
 
 #. module: payment
 #: help:payment.transaction,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Poruke i povijest komuniciranja"
 
 #. module: payment
 #: field:payment.acquirer,name:0
 msgid "Name"
-msgstr ""
+msgstr "Naziv"
 
 #. module: payment
 #: field:payment.transaction,reference:0
 msgid "Order Reference"
-msgstr ""
+msgstr "Referenca narudžbe"
 
 #. module: payment
 #: field:payment.transaction,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: payment
 #: field:payment.transaction,partner_name:0
 msgid "Partner Name"
-msgstr ""
+msgstr "Ime partnera"
 
 #. module: payment
 #: field:payment.transaction,partner_reference:0
 msgid "Partner Reference"
-msgstr ""
+msgstr "Šifra partnera"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:273
+#: code:addons/payment/models/payment_acquirer.py:274
 #, python-format
 msgid "Pay safely online"
-msgstr ""
+msgstr "Sigurno online plaćanje"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer
 #: view:payment.acquirer:payment.acquirer_form
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Stjecatelj plaćanja"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
 #: model:ir.ui.menu,name:payment.payment_acquirer_menu
 #: view:payment.acquirer:payment.acquirer_list
 msgid "Payment Acquirers"
-msgstr ""
+msgstr "Stjecatelj plaćanja"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Transakcija plaćanja"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
@@ -345,22 +341,22 @@ msgstr ""
 #: view:payment.transaction:payment.transaction_form
 #: view:payment.transaction:payment.transaction_list
 msgid "Payment Transactions"
-msgstr ""
+msgstr "Transakcija plaćanja"
 
 #. module: payment
 #: model:ir.ui.menu,name:payment.root_payment_menu
 msgid "Payments"
-msgstr ""
+msgstr "Plaćanja"
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Pending"
-msgstr ""
+msgstr "Na čekanju"
 
 #. module: payment
 #: field:payment.transaction,partner_phone:0
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #. module: payment
 #: field:payment.acquirer,validation:0
@@ -370,13 +366,13 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,environment:0
 msgid "Production"
-msgstr ""
+msgstr "Proizvodnja"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_search
 #: field:payment.acquirer,provider:0
 msgid "Provider"
-msgstr ""
+msgstr "Davatelj "
 
 #. module: payment
 #: help:payment.transaction,acquirer_reference:0
@@ -391,43 +387,42 @@ msgstr ""
 #. module: payment
 #: constraint:payment.acquirer:0
 msgid "Required fields not filled"
-msgstr ""
+msgstr "Nije popunjeno obavezno polje"
 
 #. module: payment
 #: view:payment.transaction:payment.transaction_form
 msgid "Send a message to the group"
-msgstr ""
+msgstr "Pošalji poruku grupi"
 
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Server To Server"
-msgstr ""
+msgstr "Poslužitelj do poslužitelja"
 
 #. module: payment
 #: help:payment.acquirer,validation:0
-msgid ""
-"Static payments are payments like transfer, that require manual steps."
+msgid "Static payments are payments like transfer, that require manual steps."
 msgstr ""
 
 #. module: payment
 #: field:payment.transaction,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: payment
 #: field:payment.transaction,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Sažetak"
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
 msgid "Test"
-msgstr ""
+msgstr "Test"
 
 #. module: payment
 #: field:payment.acquirer,post_msg:0
 msgid "Thanks Message"
-msgstr ""
+msgstr "Poruka zahvale"
 
 #. module: payment
 #: sql_constraint:payment.transaction:0
@@ -438,54 +433,53 @@ msgstr ""
 #: view:payment.acquirer:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
-"                                    It is be rendered with qWeb with the "
-"following evaluation context:"
+"                                    It is be rendered with qWeb with the following evaluation context:"
 msgstr ""
 
 #. module: payment
 #: field:payment.transaction,type:0
 msgid "Type"
-msgstr ""
+msgstr "Tip"
 
 #. module: payment
 #: field:payment.transaction,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Nepročitane poruke"
 
 #. module: payment
 #: field:payment.transaction,date_validate:0
 msgid "Validation Date"
-msgstr ""
+msgstr "Provjera valjanosti datuma"
 
 #. module: payment
 #: field:payment.acquirer,fees_dom_var:0
 msgid "Variable domestic fees (in percents)"
-msgstr ""
+msgstr "Domaća varijabilna naknada (u postocima)"
 
 #. module: payment
 #: field:payment.acquirer,fees_int_var:0
 msgid "Variable international fees (in percents)"
-msgstr ""
+msgstr "Međunarodna varijabilna naknada (u postocima)"
 
 #. module: payment
 #: field:payment.acquirer,website_published:0
 msgid "Visible in Portal / Website"
-msgstr ""
+msgstr "Vidljivo na portalu / web stranici"
 
 #. module: payment
 #: field:payment.transaction,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Website poruke"
 
 #. module: payment
 #: help:payment.transaction,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Povijest komunikacije Web stranice"
 
 #. module: payment
 #: field:payment.transaction,partner_zip:0
 msgid "Zip"
-msgstr ""
+msgstr "Poštanski kod"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
@@ -522,7 +516,7 @@ msgstr ""
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "reference: the transaction reference number"
-msgstr ""
+msgstr "referenca: referentni broj transakcije"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
