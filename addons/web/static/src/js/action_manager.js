@@ -573,11 +573,11 @@ var ActionManager = Widget.extend({
             return this.do_action(action_client, options);
         } else if (_.isNumber(action) || _.isString(action)) {
             var self = this;
-            var additional_context = {
+            var additional_context = _.extend({
                 active_id : options.additional_context.active_id,
                 active_ids : options.additional_context.active_ids,
                 active_model : options.additional_context.active_model
-            };
+            }, options.additional_context);
             return data_manager.load_action(action, additional_context).then(function(result) {
                 return self.do_action(result, options);
             });
