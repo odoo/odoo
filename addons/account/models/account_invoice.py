@@ -1095,6 +1095,7 @@ class AccountInvoiceLine(models.Model):
     currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True)
     company_currency_id = fields.Many2one('res.currency', related='invoice_id.company_currency_id', readonly=True)
 
+    # add hard-coded domain to product_id, try to merge existing domain with it
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         res = super(AccountInvoiceLine, self).fields_view_get(
@@ -1102,10 +1103,16 @@ class AccountInvoiceLine(models.Model):
         if self._context.get('type'):
             doc = etree.XML(res['arch'])
             for node in doc.xpath("//field[@name='product_id']"):
+                domain = ''
                 if self._context['type'] in ('in_invoice', 'in_refund'):
-                    node.set('domain', "[('purchase_ok', '=', True)]")
+                    domain = "[('purchase_ok', '=', True)]"
                 else:
-                    node.set('domain', "[('sale_ok', '=', True)]")
+                    domain = "[('sale_ok', '=', True)]"
+                initial_domain = node.get('domain')
+                if initial_domain:
+                    # manually merge lists, no need to safe_eval them
+                    domain = initial_domain[:-1] + ', ' + domain[1:]
+                node.set('domain', domain)
             res['arch'] = etree.tostring(doc)
         return res
 
