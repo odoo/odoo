@@ -71,6 +71,44 @@ def amount_to_text_fr(number, currency):
     return final_result
 
 #-------------------------------------------------------------
+# Chinese
+#-------------------------------------------------------------
+def amount_to_text_zh(number, currency):
+    """
+    数字大写
+    来自：http://topic.csdn.net/u/20091129/20/b778a93d-9f8f-4829-9297-d05b08a23f80.html 
+
+    传入浮点类型的值返回 unicode 字符串
+    """
+    number_map = [u"零", u"壹", u"贰", u"叁", u"肆", u"伍", u"陆", u"柒", u"捌", u"玖"]
+    unit = [u"分", u"角", u"元", u"拾", u"佰", u"仟", u"万", u"拾", u"佰", u"仟", u"亿",
+            u"拾", u"佰", u"仟", u"万", u"拾", u"佰", u"仟", u"兆"]
+
+    nums = map(int, list(str('%0.2f' % number).replace('.', '')))
+    units_name = currency
+    words = []
+    zflag = 0  # 标记连续0次数，以删除万字，或适时插入零字
+    start = len(nums) - 3
+    for i in range(start, -3, -1):  # 使i对应实际位数，负数为角分
+        if 0 != nums[start - i] or len(words) == 0:
+            if zflag:
+                words.append(number_map[0])
+                zflag = 0
+            words.append(number_map[nums[start - i]])
+            words.append(unit[i + 2])
+        elif 0 == i or (0 == i % 4 and zflag < 3):  # 控制‘万/元’
+            words.append(unit[i + 2])
+            zflag = 0
+        else:
+            zflag += 1
+
+    if words[-1] != unit[0]:  # 结尾非‘分’补整字
+        words.append(u"整")
+
+    word_string = ''.join(words)
+    return units_name + word_string
+
+#-------------------------------------------------------------
 # Dutch
 #-------------------------------------------------------------
 
