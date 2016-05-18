@@ -12,9 +12,9 @@ This module app will allow portal user(s) to see their tasks under 'My Account' 
     'data': [
         'security/project_security.xml',
         'views/project_views.xml',
+        'views/website_project_templates.xml',
     ],
     'demo': [
         'demo/project_demo.xml',
     ],
-    'auto_install': True
 }
