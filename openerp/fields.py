@@ -1020,7 +1020,7 @@ class Field(object):
                 target = records - computed
             elif path and env.in_onchange:
                 target = (target.browse(env.cache[field]) - computed).filtered(
-                    lambda rec: rec._mapped_cache(path) & records
+                    lambda rec: rec if path == 'id' else rec._mapped_cache(path) & records
                 )
             else:
                 target = target.browse(env.cache[field]) - computed

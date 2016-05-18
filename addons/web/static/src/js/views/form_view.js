@@ -740,9 +740,9 @@ var FormView = View.extend(common.FieldManagerMixin, {
             return;
         }
         this.disable_button();
-        return this.save().done(function(result) {
+        return this.save().then(function(result) {
             self.trigger("save", result);
-            self.reload().then(function() {
+            return self.reload().then(function() {
                 self.to_view_mode();
                 core.bus.trigger('do_reload_needaction');
                 core.bus.trigger('form_view_saved', self);
