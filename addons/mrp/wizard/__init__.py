@@ -3,4 +3,4 @@
 
 import mrp_product_produce
 import change_production_qty
-import stock_move
+import stock_move_consume
