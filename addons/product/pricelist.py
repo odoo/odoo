@@ -85,9 +85,17 @@ class product_pricelist(osv.osv):
             comp = self.pool.get('res.company').browse(cr, uid, comp_id)
         return comp.currency_id.id
 
+    def _get_item_ids(self, cr, uid, ctx):
+        ProductPricelistItem = self.pool.get('product.pricelist.item')
+        fields_list = ProductPricelistItem._defaults.keys()
+        vals = ProductPricelistItem.default_get(cr, uid, fields_list, context=ctx)
+        vals['compute_price'] = 'formula'
+        return [[0, False, vals]]
+
     _defaults = {
         'active': lambda *a: 1,
-        "currency_id": _get_currency
+        "currency_id": _get_currency,
+        'item_ids': _get_item_ids,
     }
 
     def price_rule_get_multi(self, cr, uid, ids, products_by_qty_by_partner, context=None):
@@ -183,14 +191,22 @@ class product_pricelist(osv.osv):
                 if is_product_template:
                     if rule.product_tmpl_id and product.id != rule.product_tmpl_id.id:
                         continue
-                    if rule.product_id and \
-                            (product.product_variant_count > 1 or product.product_variant_ids[0].id != rule.product_id.id):
+                    if rule.product_id and not (product.product_variant_count == 1 and product.product_variant_ids[0].id == rule.product_id.id):
                         # product rule acceptable on template if has only one variant
                         continue
                 else:
                     if rule.product_tmpl_id and product.product_tmpl_id.id != rule.product_tmpl_id.id:
                         continue
                     if rule.product_id and product.id != rule.product_id.id:
+                        continue
+
+                if rule.categ_id:
+                    cat = product.categ_id
+                    while cat:
+                        if cat.id == rule.categ_id.id:
+                            break
+                        cat = cat.parent_id
+                    if not cat:
                         continue
 
                 if rule.base == 'pricelist' and rule.base_pricelist_id:
@@ -233,8 +249,7 @@ class product_pricelist(osv.osv):
                 break
             # Final price conversion into pricelist currency
             if suitable_rule and suitable_rule.compute_price != 'fixed' and suitable_rule.base != 'pricelist':
-                user_company = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id
-                price = self.pool['res.currency'].compute(cr, uid, user_company.currency_id.id, pricelist.currency_id.id, price, context=context)
+                price = self.pool['res.currency'].compute(cr, uid, product.currency_id.id, pricelist.currency_id.id, price, round=False, context=context)
 
             results[product.id] = (price, suitable_rule and suitable_rule.id or False)
         return results
@@ -283,7 +298,7 @@ class product_pricelist_item(osv.osv):
         'base': fields.selection([('list_price', 'Public Price'), ('standard_price', 'Cost'), ('pricelist', 'Other Pricelist')], string="Based on", required=True,
             help='Base price for computation. \n Public Price: The base price will be the Sale/public Price. \n Cost Price : The base price will be the cost price. \n Other Pricelist : Computation of the base price based on another Pricelist.'),
         'base_pricelist_id': fields.many2one('product.pricelist', 'Other Pricelist'),
-        'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
+        'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', ondelete='cascade', select=True),
         'price_surcharge': fields.float('Price Surcharge',
             digits_compute= dp.get_precision('Product Price'), help='Specify the fixed amount to add or substract(if negative) to the amount calculated with the discount.'),
         'price_discount': fields.float('Price Discount', digits=(16,2)),
@@ -304,7 +319,7 @@ class product_pricelist_item(osv.osv):
         'date_start': fields.date('Start Date', help="Starting date for the pricelist item validation"),
         'date_end': fields.date('End Date', help="Ending valid for the pricelist item validation"),
         'compute_price': fields.selection([('fixed', 'Fix Price'), ('percentage', 'Percentage (discount)'), ('formula', 'Formula')], select=True, default='fixed'),
-        'fixed_price': fields.float('Fixed Price'),
+        'fixed_price': fields.float('Fixed Price', digits_compute=dp.get_precision('Product Price')),
         'percent_price': fields.float('Percentage Price'),
     }
 
@@ -323,6 +338,18 @@ class product_pricelist_item(osv.osv):
 
 class product_pricelist_item_new(models.Model):
     _inherit = "product.pricelist.item"
+
+    _applied_on_field_map = {
+        '0_product_variant': 'product_id',
+        '1_product': 'product_tmpl_id',
+        '2_product_category': 'categ_id',
+    }
+
+    _compute_price_field_map = {
+        'fixed': ['fixed_price'],
+        'percentage': ['percent_price'],
+        'formula': ['price_discount', 'price_surcharge', 'price_round', 'price_min_margin', 'price_max_margin'],
+    }
 
     @api.one
     @api.depends('categ_id', 'product_tmpl_id', 'product_id', 'compute_price', 'fixed_price', \
@@ -347,3 +374,16 @@ class product_pricelist_item_new(models.Model):
     #functional fields used for usability purposes
     name = Fields.Char(compute='_get_pricelist_item_name_price', string='Name', multi='item_name_price', help="Explicit rule name for this pricelist line.")
     price = Fields.Char(compute='_get_pricelist_item_name_price', string='Price', multi='item_name_price', help="Explicit rule name for this pricelist line.")
+
+    @api.onchange('applied_on')
+    def _onchange_applied_on(self):
+        for applied_on, field in self._applied_on_field_map.iteritems():
+            if self.applied_on != applied_on:
+                setattr(self, field, False)
+
+    @api.onchange('compute_price')
+    def _onchange_compute_price(self):
+        for compute_price, field in self._compute_price_field_map.iteritems():
+            if self.compute_price != compute_price:
+                for f in field:
+                    setattr(self, f, 0.0)

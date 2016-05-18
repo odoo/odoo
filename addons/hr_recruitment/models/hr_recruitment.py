@@ -86,10 +86,12 @@ class Applicant(models.Model):
 
     def _default_stage_id(self):
         if self._context.get('default_job_id'):
-            return self.env['hr.recruitment.stage'].search([
+            ids = self.env['hr.recruitment.stage'].search([
                 ('job_ids', '=', self._context['default_job_id']),
                 ('fold', '=', False)
-            ], order='sequence asc', limit=1).ids[0]
+            ], order='sequence asc', limit=1).ids
+            if ids:
+                return ids[0]
         return False
 
     def _default_company_id(self):
@@ -226,10 +228,11 @@ class Applicant(models.Model):
             department_id = job.department_id.id
             user_id = job.user_id.id
             if not self.stage_id:
-                stage_id = self.env['hr.recruitment.stage'].search([
+                stage_ids = self.env['hr.recruitment.stage'].search([
                     ('job_ids', '=', job.id),
                     ('fold', '=', False)
-                ], order='sequence asc', limit=1).ids[0]
+                ], order='sequence asc', limit=1).ids
+                stage_id = stage_ids[0] if stage_ids else False
 
         return {'value': {
             'department_id': department_id,
@@ -389,13 +392,17 @@ class Applicant(models.Model):
             through message_process.
             This override updates the document according to the email.
         """
+        # remove default author when going through the mail gateway. Indeed we
+        # do not want to explicitly set user_id to False; however we do not
+        # want the gateway user to be responsible if no other responsible is
+        # found.
+        self = self.with_context(default_user_id=False)
         val = msg.get('from').split('<')[0]
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
             'partner_name': val,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
-            'user_id': False,
             'partner_id': msg.get('author_id', False),
         }
         if msg.get('priority'):

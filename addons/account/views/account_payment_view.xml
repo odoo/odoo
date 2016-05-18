@@ -189,9 +189,9 @@
                                 <field name="payment_method_id" widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)]}"/>
                                 <field name="payment_method_code" invisible="1"/>
                                 <label for="amount"/>
-                                <div name="amount_div">
-                                    <field name="amount" class="oe_inline"/>
-                                    <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency" class="oe_inline" invisible="1"/>
+                                <div name="amount_div" class="o_row">
+                                    <field name="amount"/>
+                                    <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
                                 </div>
                             </group>
                             <group>

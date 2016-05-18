@@ -80,7 +80,7 @@ var KanbanView = View.extend({
         this.model = dataset.model;
         this.quick_creatable = options.quick_creatable;
         this.no_content_msg = options.action && (options.action.get_empty_list_help || options.action.help);
-
+        this.search_orderer = new utils.DropMisordered();
     },
 
     view_loading: function(fvg) {
@@ -90,6 +90,11 @@ var KanbanView = View.extend({
 
         this.fields_keys = _.keys(this.fields_view.fields);
 
+        // use default order if defined in xml description
+        var default_order = this.fields_view.arch.attrs.default_order;
+        if (!this.dataset._sort.length && default_order) {
+            this.dataset.set_sort(default_order.split(','));
+        }
         // add qweb templates
         for (var i=0, ii=this.fields_view.arch.children.length; i < ii; i++) {
             var child = this.fields_view.arch.children[i];
@@ -108,16 +113,32 @@ var KanbanView = View.extend({
     },
 
     do_search: function(domain, context, group_by) {
-        this.search_domain = domain;
-        this.search_context = context;
-        this.group_by_field = group_by[0] || this.default_group_by;
-        this.grouped = group_by.length || this.default_group_by;
+        var self = this;
+        var group_by_field = group_by[0] || this.default_group_by;
+        var field = this.fields_view.fields[group_by_field];
+        var grouped_by_m2o = field && (field.type === 'many2one');
 
-        var field = this.fields_view.fields[this.group_by_field];
-        this.grouped_by_m2o = field  && (field.type === 'many2one');
-        this.relation = this.grouped_by_m2o ? field.relation : undefined;
+        var options = {
+            search_domain: domain,
+            search_context: context,
+            group_by_field: group_by_field,
+            grouped: group_by.length || this.default_group_by,
+            grouped_by_m2o: grouped_by_m2o,
+            relation: (grouped_by_m2o ? field.relation : undefined),
+        };
 
-        return this.load_data()
+        return this.search_orderer
+            .add(options.grouped ? this.load_groups(options) : this.load_records())
+            .then(function (data) {
+                _.extend(self, options);
+                if (options.grouped) {
+                    var new_ids = _.union.apply(null, _.map(data.groups, function (group) {
+                        return group.dataset.ids;
+                    }));
+                    self.dataset.alter_ids(new_ids);
+                }
+                self.data = data;
+            })
             .then(this.proxy('render'))
             .then(this.proxy('update_pager'));
     },
@@ -129,14 +150,6 @@ var KanbanView = View.extend({
 
     do_reload: function() {
         this.do_search(this.search_domain, this.search_context, [this.group_by_field]);
-    },
-
-    load_data: function () {
-        var self = this;
-        var deferred = this.grouped ? this.load_groups() : this.load_records();
-        return deferred.then(function (data) {
-            self.data = data;
-        });
     },
 
     load_records: function (offset, dataset) {
@@ -156,13 +169,13 @@ var KanbanView = View.extend({
             });
     },
 
-    load_groups: function () {
+    load_groups: function (options) {
         var self = this;
-        var group_by_field = this.group_by_field || this.default_group_by;
-        this.fields_keys = _.uniq(this.fields_keys.concat(group_by_field));
+        var group_by_field = options.group_by_field;
+        var fields_keys = _.uniq(this.fields_keys.concat(group_by_field));
 
-        return new Model(this.model, this.search_context, this.search_domain)
-        .query(this.fields_keys)
+        return new Model(this.model, options.search_context, options.search_domain)
+        .query(fields_keys)
         .group_by([group_by_field])
         .then(function (groups) {
 
@@ -199,8 +212,8 @@ var KanbanView = View.extend({
 
             // fetch group data (display information)
             var group_ids = _.without(_.map(groups, function (elem) { return elem.attributes.value[0];}), undefined);
-            if (self.grouped_by_m2o && group_ids.length) {
-                return new data.DataSet(self, self.relation)
+            if (options.grouped_by_m2o && group_ids.length) {
+                return new data.DataSet(self, options.relation)
                     .read_ids(group_ids, _.union(['display_name'], group_by_fields_to_read))
                     .then(function(results) {
                         _.each(groups, function (group) {
@@ -217,7 +230,7 @@ var KanbanView = View.extend({
                 _.each(groups, function (group) {
                     var value = group.attributes.value;
                     group.id = value instanceof Array ? value[0] : value;
-                    var field = self.fields_view.fields[self.group_by_field];
+                    var field = self.fields_view.fields[options.group_by_field];
                     if (field && field.type === "selection") {
                         value= _.find(field.selection, function (s) { return s[0] === group.id; });
                     }
@@ -364,6 +377,7 @@ var KanbanView = View.extend({
             this.$el.addClass('o_kanban_grouped');
             this.render_grouped(fragment);
         } else if (this.data.is_empty) {
+            this.$el.addClass('o_kanban_ungrouped');
             this.render_no_content(fragment);
         } else {
             this.$el.addClass('o_kanban_ungrouped');
@@ -409,8 +423,34 @@ var KanbanView = View.extend({
 
     render_grouped: function (fragment) {
         var self = this;
+
+        // FORWARDPORT UP TO SAAS-10, NOT IN MASTER!
+        // Drag'n'drop activation/deactivation
+        var group_by_field_attrs = this.fields_view.fields[this.group_by_field];
+
+        // Group_by field might not be in the Kanban view, so we need to get it somewhere else...
+        // This somewhere else is on the search view.
+        if (group_by_field_attrs === undefined) {
+            if (this.ViewManager.searchview.groupby_menu && this.ViewManager.searchview.groupby_menu.groupable_fields) {
+                group_by_field_attrs = _.find(this.ViewManager.searchview.groupby_menu.groupable_fields, function(field) {
+                    return field.name === self.group_by_field;
+                })
+            }
+        }
+        // Deactivate the drag'n'drop if:
+        // - field is a date or datetime since we group by month
+        // - field is readonly
+        var draggable = true;
+        if (group_by_field_attrs) {
+            if (group_by_field_attrs.type === "date" || group_by_field_attrs.type === "datetime") {
+                var draggable = false;
+            }
+            else if (group_by_field_attrs.readonly !== undefined) {
+                var draggable = !(group_by_field_attrs.readonly);
+            }
+        }
         var record_options = _.extend(this.record_options, {
-            draggable: true,
+            draggable: draggable,
         });
 
         var column_options = this.get_column_options();
@@ -423,6 +463,7 @@ var KanbanView = View.extend({
         this.$el.sortable({
             axis: 'x',
             items: '> .o_kanban_group',
+            handle: '.o_kanban_header',
             cursor: 'move',
             revert: 150,
             delay: 100,
@@ -536,11 +577,11 @@ var KanbanView = View.extend({
             dataset.read_ids(_.uniq(rel.ids), ['name', 'color']).done(function(result) {
                 result.forEach(function(record) {
                     // Does not display the tag if color = 0
-                    if (record['color']){
+                    if (record.color){
                         var $tag = $('<span>')
-                            .addClass('o_tag o_tag_color_' + record['color'])
-                            .attr('title', _.str.escapeHTML(record['name']));
-                        $(rel.elements[record['id']]).append($tag);
+                            .addClass('o_tag o_tag_color_' + record.color)
+                            .attr('title', _.str.escapeHTML(record.name));
+                        $(rel.elements[record.id]).append($tag);
                     }
                 });
                 // we use boostrap tooltips for better and faster display
@@ -620,7 +661,7 @@ var KanbanView = View.extend({
                 self.reload_record(record);
                 self.resequence_column(column);
             }
-        });
+        }).fail(this.do_reload);
     },
 
     update_record: function(event) {
@@ -699,11 +740,12 @@ var KanbanView = View.extend({
         return this.load_records(offset, column.dataset).then(function (result) {
             _.each(result.records, function (r) {
                 column.add_record(r, {no_update: true});
+                self.dataset.add_ids([r.id]);
             });
             column.offset += self.limit;
             column.remaining = Math.max(column.remaining - self.limit, 0);
             column.update_column();
-            self.postprocess_m2m_tags(column.records);
+            self.postprocess_m2m_tags(column.records.slice(column.offset));
         });
     },
 

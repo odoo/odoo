@@ -57,7 +57,6 @@ class OAuthLogin(Home):
             return_url = request.httprequest.url_root + 'auth_oauth/signin'
             state = self.get_state(provider)
             params = dict(
-                debug=request.debug,
                 response_type='token',
                 client_id=provider['client_id'],
                 redirect_uri=return_url,

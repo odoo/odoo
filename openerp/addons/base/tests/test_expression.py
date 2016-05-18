@@ -1,6 +1,7 @@
 import unittest
 
 import openerp
+import openerp.osv.expression as expression
 from openerp.osv.expression import get_unaccent_wrapper
 from openerp.osv.orm import BaseModel
 import openerp.tests.common as common
@@ -500,6 +501,25 @@ class test_expression(common.TransactionCase):
         norm_domain = ['&', '&', '&'] + domain
         assert norm_domain == expression.normalize_domain(domain), "Non-normalized domains should be properly normalized"
         
+    def test_40_negating_long_expression(self):
+        source = ['!','&',('user_id','=',4),('partner_id','in',[1,2])]
+        expect = ['|',('user_id','!=',4),('partner_id','not in',[1,2])]
+        self.assertEqual(expression.distribute_not(source), expect,
+            "distribute_not on expression applied wrongly")
+
+        pos_leaves = [[('a', 'in', [])], [('d', '!=', 3)]]
+        neg_leaves = [[('a', 'not in', [])], [('d', '=', 3)]]
+
+        source = expression.OR([expression.AND(pos_leaves)] * 1000)
+        expect = source
+        self.assertEqual(expression.distribute_not(source), expect,
+            "distribute_not on long expression without negation operator should not alter it")
+
+        source = ['!'] + source
+        expect = expression.AND([expression.OR(neg_leaves)] * 1000)
+        self.assertEqual(expression.distribute_not(source), expect,
+            "distribute_not on long expression applied wrongly")
+
     def test_translate_search(self):
         Country = self.registry('res.country')
         be = self.ref('base.be')

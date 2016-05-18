@@ -12,8 +12,8 @@ import urllib2
 import werkzeug.wrappers
 
 import openerp
-from openerp.addons.web.controllers.main import WebClient
-from openerp.addons.web_editor.controllers.main import Web_Editor
+from openerp.addons.base.ir.ir_qweb import AssetsBundle
+from openerp.addons.web.controllers.main import WebClient, Binary
 from openerp.addons.web import http
 from openerp.http import request
 
@@ -38,9 +38,9 @@ class Website(openerp.addons.web.controllers.main.Home):
         else:
             first_menu = main_menu.child_id and main_menu.child_id[0]
             if first_menu:
-                if not (first_menu.url.startswith(('/page/', '/?', '/#')) or (first_menu.url=='/')):
+                if first_menu.url and (not (first_menu.url.startswith(('/page/', '/?', '/#')) or (first_menu.url == '/'))):
                     return request.redirect(first_menu.url)
-                if first_menu.url.startswith('/page/'):
+                if first_menu.url and first_menu.url.startswith('/page/'):
                     return request.registry['ir.http'].reroute(first_menu.url)
         return self.page(page)
 
@@ -51,7 +51,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     @http.route(website=True, auth="public")
     def web_login(self, redirect=None, *args, **kw):
         r = super(Website, self).web_login(redirect=redirect, *args, **kw)
-        if request.params['login_success'] and not redirect:
+        if not redirect and request.params['login_success']:
             if request.registry['res.users'].has_group(request.cr, request.uid, 'base.group_user'):
                 redirect = '/web?' + request.httprequest.query_string
             else:
@@ -105,7 +105,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         content = None
 
         def create_sitemap(url, content):
-            ira.create(cr, uid, dict(
+            return ira.create(cr, uid, dict(
                 datas=content.encode('base64'),
                 mimetype=mimetype,
                 type='binary',
@@ -129,34 +129,30 @@ class Website(openerp.addons.web.controllers.main.Home):
                 ira.unlink(cr, uid, sitemap_ids, context=context)
 
             pages = 0
-            first_page = None
             locs = request.website.sudo(user=request.website.user_id.id).enumerate_pages()
             while True:
-                start = pages * LOC_PER_SITEMAP
                 values = {
-                    'locs': islice(locs, start, start + LOC_PER_SITEMAP),
+                    'locs': islice(locs, 0, LOC_PER_SITEMAP),
                     'url_root': request.httprequest.url_root[:-1],
                 }
                 urls = iuv.render(cr, uid, 'website.sitemap_locs', values, context=context)
                 if urls.strip():
-                    page = iuv.render(cr, uid, 'website.sitemap_xml', dict(content=urls), context=context)
-                    if not first_page:
-                        first_page = page
+                    content = iuv.render(cr, uid, 'website.sitemap_xml', dict(content=urls), context=context)
                     pages += 1
-                    create_sitemap('/sitemap-%d.xml' % pages, page)
+                    last = create_sitemap('/sitemap-%d.xml' % pages, content)
                 else:
                     break
             if not pages:
                 return request.not_found()
             elif pages == 1:
-                content = first_page
+                ira.write(cr, uid, last, dict(url="/sitemap.xml", name="/sitemap.xml"), context=context)
             else:
                 # Sitemaps must be split in several smaller files with a sitemap index
                 content = iuv.render(cr, uid, 'website.sitemap_index_xml', dict(
                     pages=range(1, pages + 1),
                     url_root=request.httprequest.url_root,
                 ), context=context)
-            create_sitemap('/sitemap.xml', content)
+                create_sitemap('/sitemap.xml', content)
 
         return request.make_response(content, [('Content-Type', mimetype)])
 
@@ -180,8 +176,11 @@ class Website(openerp.addons.web.controllers.main.Home):
     # Edit
     #------------------------------------------------------
     @http.route('/website/add/<path:path>', type='http', auth="user", website=True)
-    def pagenew(self, path, noredirect=False, add_menu=None):
-        xml_id = request.registry['website'].new_page(request.cr, request.uid, path, context=request.context)
+    def pagenew(self, path, noredirect=False, add_menu=None, template=False):
+        if template:
+            xml_id = request.registry['website'].new_page(request.cr, request.uid, path, template=template, context=request.context)
+        else:
+            xml_id = request.registry['website'].new_page(request.cr, request.uid, path, context=request.context)
         if add_menu:
             request.registry['website.menu'].create(
                 request.cr, request.uid, {
@@ -303,7 +302,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         return [enable, disable]
 
     @http.route(['/website/theme_customize'], type='json', auth="public", website=True)
-    def theme_customize(self, enable, disable):
+    def theme_customize(self, enable, disable, get_bundle=False):
         """ enable or Disable lists of ``xml_id`` of the inherit templates
         """
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
@@ -316,6 +315,10 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         set_active(disable, False)
         set_active(enable, True)
+
+        if get_bundle:
+            bundle = AssetsBundle('website.assets_frontend', cr=http.request.cr, uid=http.request.uid, context={}, registry=http.request.registry)
+            return bundle.to_html()
 
         return True
 
@@ -369,3 +372,29 @@ class Website(openerp.addons.web.controllers.main.Home):
         if res:
             return res
         return request.redirect('/')
+
+
+#------------------------------------------------------
+# Retrocompatibility routes
+#------------------------------------------------------
+class WebsiteBinary(openerp.http.Controller):
+    @http.route([
+        '/website/image',
+        '/website/image/<xmlid>',
+        '/website/image/<xmlid>/<int:width>x<int:height>',
+        '/website/image/<xmlid>/<field>',
+        '/website/image/<xmlid>/<field>/<int:width>x<int:height>',
+        '/website/image/<model>/<id>/<field>',
+        '/website/image/<model>/<id>/<field>/<int:width>x<int:height>'
+    ], type='http', auth="public", website=False, multilang=False)
+    def content_image(self, id=None, max_width=0, max_height=0, **kw):
+        if max_width:
+            kw['width'] = max_width
+        if max_height:
+            kw['height'] = max_height
+        if id:
+            id, _, unique = id.partition('_')
+            kw['id'] = int(id)
+            if unique:
+                kw['unique'] = unique
+        return Binary().content_image(**kw)

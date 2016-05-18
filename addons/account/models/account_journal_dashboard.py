@@ -134,6 +134,7 @@ class account_journal(models.Model):
 
     @api.multi
     def get_journal_dashboard_datas(self):
+        currency = self.currency_id or self.company_id.currency_id
         number_to_reconcile = last_balance = account_sum = 0
         ac_bnk_stmt = []
         title = ''
@@ -149,7 +150,8 @@ class account_journal(models.Model):
             # optimization to read sum of balance from account_move_line
             account_ids = tuple(filter(None, [self.default_debit_account_id.id, self.default_credit_account_id.id]))
             if account_ids:
-                query = """SELECT sum(balance) FROM account_move_line WHERE account_id in %s;"""
+                amount_field = 'balance' if not self.currency_id else 'amount_currency'
+                query = """SELECT sum(%s) FROM account_move_line WHERE account_id in %%s;""" % (amount_field,)
                 self.env.cr.execute(query, (account_ids,))
                 query_results = self.env.cr.dictfetchall()
                 if query_results and query_results[0].get('sum') != None:
@@ -158,23 +160,30 @@ class account_journal(models.Model):
         elif self.type in ['sale', 'purchase']:
             title = _('Bills to pay') if self.type == 'purchase' else _('Invoices owed to you')
             # optimization to find total and sum of invoice that are in draft, open state
-            query = """SELECT state, count(id) AS count, sum(amount_total) AS total FROM account_invoice WHERE journal_id = %s AND state NOT IN ('paid', 'cancel') GROUP BY state;"""
+            query = """SELECT state, amount_total, currency_id AS currency FROM account_invoice WHERE journal_id = %s AND state NOT IN ('paid', 'cancel');"""
             self.env.cr.execute(query, (self.id,))
             query_results = self.env.cr.dictfetchall()
             today = datetime.today()
-            query = """SELECT count(id) AS count_late, sum(amount_total) AS total FROM account_invoice WHERE journal_id = %s AND date < %s AND state = 'open';"""
+            query = """SELECT amount_total, currency_id AS currency FROM account_invoice WHERE journal_id = %s AND date < %s AND state = 'open';"""
             self.env.cr.execute(query, (self.id, today))
             late_query_results = self.env.cr.dictfetchall()
+            sum_draft = 0.0
+            number_draft = 0
+            number_waiting = 0
             for result in query_results:
+                cur = self.env['res.currency'].browse(result.get('currency'))
                 if result.get('state') in ['draft', 'proforma', 'proforma2']:
-                    number_draft = result.get('count')
-                    sum_draft = result.get('total')
+                    number_draft += 1
+                    sum_draft += cur.compute(result.get('amount_total'), currency)
                 elif result.get('state') == 'open':
-                    number_waiting = result.get('count')
-                    sum_waiting = result.get('total')
-            if late_query_results and late_query_results[0].get('count_late') != None:
-                number_late = late_query_results[0].get('count_late')
-                sum_late = late_query_results[0].get('total')
+                    number_waiting += 1
+                    sum_waiting += cur.compute(result.get('amount_total'), currency)
+            sum_late = 0.0
+            number_late = 0
+            for result in late_query_results:
+                cur = self.env['res.currency'].browse(result.get('currency'))
+                number_late += 1
+                sum_late += cur.compute(result.get('amount_total'), currency)
 
         return {
             'number_to_reconcile': number_to_reconcile,
@@ -272,13 +281,15 @@ class account_journal(models.Model):
                 action_name = 'action_move_journal_line'
 
         _journal_invoice_type_map = {
-            'sale': 'out_invoice',
-            'purchase': 'in_invoice',
-            'bank': 'bank',
-            'cash': 'cash',
-            'general': 'general',
+            ('sale', None): 'out_invoice',
+            ('purchase', None): 'in_invoice',
+            ('sale', 'refund'): 'out_refund',
+            ('purchase', 'refund'): 'in_refund',
+            ('bank', None): 'bank',
+            ('cash', None): 'cash',
+            ('general', None): 'general',
         }
-        invoice_type = _journal_invoice_type_map[self.type]
+        invoice_type = _journal_invoice_type_map[(self.type, self._context.get('invoice_type'))]
 
         ctx = self._context.copy()
         ctx.update({
@@ -292,6 +303,7 @@ class account_journal(models.Model):
         model, action_id = ir_model_obj.get_object_reference(self._cr, self._uid, 'account', action_name)
         action = self.pool[model].read(self._cr, self._uid, action_id, context=self._context)
         action['context'] = ctx
+        action['domain'] = self._context.get('use_domain', [])
         return action
 
     @api.multi

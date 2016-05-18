@@ -85,6 +85,7 @@ class lang(osv.osv):
                 format = format.replace(pattern, replacement)
             return str(format)
 
+        conv = locale.localeconv()
         lang_info = {
             'code': lang,
             'iso_code': iso_lang,
@@ -92,8 +93,9 @@ class lang(osv.osv):
             'translatable': 1,
             'date_format' : fix_datetime_format(locale.nl_langinfo(locale.D_FMT)),
             'time_format' : fix_datetime_format(locale.nl_langinfo(locale.T_FMT)),
-            'decimal_point' : fix_xa0(str(locale.localeconv()['decimal_point'])),
-            'thousands_sep' : fix_xa0(str(locale.localeconv()['thousands_sep'])),
+            'decimal_point' : fix_xa0(str(conv['decimal_point'])),
+            'thousands_sep' : fix_xa0(str(conv['thousands_sep'])),
+            'grouping' : str(conv.get('grouping', [])),
         }
         lang_id = False
         try:
@@ -178,6 +180,11 @@ class lang(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
              ids = [ids]
+
+        if 'code' in vals:
+            for rec in self.browse(cr, uid, ids, context):
+                if rec.code != vals['code']:
+                    raise UserError(_("Language code cannot be modified."))
 
         if vals.get('active') == False:
             users = self.pool.get('res.users')

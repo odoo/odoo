@@ -128,6 +128,8 @@ class Discussion(models.Model):
     participants = fields.Many2many('res.users')
     messages = fields.One2many('test_new_api.message', 'discussion')
     message_concat = fields.Text(string='Message concatenate')
+    important_messages = fields.One2many('test_new_api.message', 'discussion',
+                                         domain=[('important', '=', True)])
 
     @api.onchange('moderator')
     def _onchange_moderator(self):
@@ -149,6 +151,10 @@ class Message(models.Model):
     size = fields.Integer(compute='_compute_size', search='_search_size')
     double_size = fields.Integer(compute='_compute_double_size')
     discussion_name = fields.Char(related='discussion.name')
+    author_partner = fields.Many2one(
+        'res.partner', compute='_compute_author_partner',
+        search='_search_author_partner')
+    important = fields.Boolean()
 
     @api.one
     @api.constrains('author', 'discussion')
@@ -194,6 +200,44 @@ class Message(models.Model):
         size = self.size
         self.double_size = self.double_size + size
 
+    @api.one
+    @api.depends('author', 'author.partner_id')
+    def _compute_author_partner(self):
+        self.author_partner = author.partner_id
+
+    @api.model
+    def _search_author_partner(self, operator, value):
+        return [('author.partner_id', operator, value)]
+
+
+class Multi(models.Model):
+    """ Model for testing multiple onchange methods in cascade that modify a
+        one2many field several times.
+    """
+    _name = 'test_new_api.multi'
+
+    name = fields.Char(related='partner.name', readonly=True)
+    partner = fields.Many2one('res.partner')
+    lines = fields.One2many('test_new_api.multi.line', 'multi')
+
+    @api.onchange('name')
+    def _onchange_name(self):
+        for line in self.lines:
+            line.name = self.name
+
+    @api.onchange('partner')
+    def _onchange_partner(self):
+        for line in self.lines:
+            line.partner = self.partner
+
+
+class MultiLine(models.Model):
+    _name = 'test_new_api.multi.line'
+
+    multi = fields.Many2one('test_new_api.multi', ondelete='cascade')
+    name = fields.Char()
+    partner = fields.Many2one('res.partner')
+
 
 class MixedModel(models.Model):
     _name = 'test_new_api.mixed'
@@ -221,3 +265,11 @@ class MixedModel(models.Model):
         return [(model.model, model.name)
                 for model in models
                 if not model.model.startswith('ir.')]
+
+
+class BoolModel(models.Model):
+    _name = 'domain.bool'
+
+    bool_true = fields.Boolean('b1', default=True)
+    bool_false = fields.Boolean('b2', default=False)
+    bool_undefined = fields.Boolean('b3')

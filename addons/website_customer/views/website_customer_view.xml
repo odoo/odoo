@@ -15,7 +15,7 @@
         </record>
 
         <record id="view_partner_tag_form" model="ir.ui.view">
-            <field name="name">Partner Tags</field>
+            <field name="name">Website Tags</field>
             <field name="model">res.partner.tag</field>
             <field name="arch" type="xml">
                 <form string="Partner Tag">
@@ -29,11 +29,11 @@
             </field>
         </record>
         <record id="view_partner_tag_list" model="ir.ui.view">
-            <field name="name">Partner Tags</field>
+            <field name="name">Website Tags</field>
             <field name="model">res.partner.tag</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Partner Tags">
+                <tree string="Website Tags">
                     <field name="name"/>
                     <field name="classname"/>
                     <field name="website_published"/>
@@ -43,7 +43,7 @@
         </record>
 
         <record id="action_partner_tag_form" model="ir.actions.act_window">
-            <field name="name">Partner Tags</field>
+            <field name="name">Website Tags</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.tag</field>
             <field name="view_type">form</field>
@@ -61,7 +61,7 @@
         <menuitem
             action="action_partner_tag_form"
             id="menu_partner_tag_form"
-            name="Tags"
+            name="Website Tags"
             sequence="2"
             parent="base.menu_config_address_book"
             groups="base.group_no_one"

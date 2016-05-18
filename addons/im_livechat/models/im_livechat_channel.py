@@ -3,6 +3,7 @@ import json
 import openerp
 import random
 import re
+from datetime import datetime, timedelta
 
 from openerp import api, fields, models
 from openerp import tools
@@ -40,18 +41,18 @@ class ImLivechatChannel(models.Model):
         compute='_are_you_inside', store=False, readonly=True)
     script_external = fields.Text('Script (external)', compute='_compute_script_external', store=False, readonly=True)
     nbr_channel = fields.Integer('Number of conversation', compute='_compute_nbr_channel', store=False, readonly=True)
-    rating_percentage_satisfaction = fields.Integer('% Happy', compute='_compute_percentage_satisfaction', store=False, default=-1)
+    rating_percentage_satisfaction = fields.Integer(
+        '% Happy', compute='_compute_percentage_satisfaction', store=False, default=-1,
+        help="Percentage of happy ratings over the past 7 days")
 
     # images fields
     image = fields.Binary('Image', default=_default_image, attachment=True,
         help="This field holds the image used as photo for the group, limited to 1024x1024px.")
-    image_medium = fields.Binary('Medium',
-        compute='_compute_image', store=True, attachment=True,
+    image_medium = fields.Binary('Medium', attachment=True,
         help="Medium-sized photo of the group. It is automatically "\
              "resized as a 128x128px image, with aspect ratio preserved. "\
              "Use this field in form views or some kanban views.")
-    image_small = fields.Binary('Thumbnail',
-        compute='_compute_image', store=True, attachment=True,
+    image_small = fields.Binary('Thumbnail', attachment=True,
         help="Small-sized photo of the group. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
@@ -65,12 +66,6 @@ class ImLivechatChannel(models.Model):
     @api.one
     def _are_you_inside(self):
         self.are_you_inside = bool(self.env.uid in [u.id for u in self.user_ids])
-
-    @api.one
-    @api.depends('image')
-    def _compute_image(self):
-        self.image_medium = tools.image_resize_image_medium(self.image)
-        self.image_small = tools.image_resize_image_small(self.image)
 
     @api.multi
     def _compute_script_external(self):
@@ -99,13 +94,24 @@ class ImLivechatChannel(models.Model):
     @api.depends('channel_ids.rating_ids')
     def _compute_percentage_satisfaction(self):
         for record in self:
-            repartition = record.channel_ids.rating_get_grades()
+            dt = fields.Datetime.to_string(datetime.utcnow() - timedelta(days=7))
+            repartition = record.channel_ids.rating_get_grades([('create_date', '>=', dt)])
             total = sum(repartition.values())
             if total > 0:
                 happy = repartition['great']
                 record.rating_percentage_satisfaction = ((happy*100) / total) if happy > 0 else 0
             else:
                 record.rating_percentage_satisfaction = -1
+
+    @api.model
+    def create(self, vals):
+        tools.image_resize_images(vals)
+        return super(ImLivechatChannel, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        tools.image_resize_images(vals)
+        return super(ImLivechatChannel, self).write(vals)
 
     # --------------------------
     # Action Methods
@@ -170,7 +176,7 @@ class ImLivechatChannel(models.Model):
             'anonymous_name': anonymous_name,
             'channel_type': 'livechat',
             'name': ', '.join([anonymous_name, user.name]),
-            'public': 'public',
+            'public': 'private',
             'email_send': False,
         })
         return mail_channel.sudo().with_context(im_livechat_operator_partner_id=operator_partner_id).channel_info()[0]
@@ -187,35 +193,19 @@ class ImLivechatChannel(models.Model):
         }
 
     @api.model
-    def match_rules(self, request, channel_id, username='Visitor'):
-        info = {
-            'server_url': self.env['ir.config_parameter'].get_param('web.base.url'),
-            'options': self.sudo().get_channel_infos(channel_id),
-        }
-        info['options']["default_username"] = username
-        # find the country from the request
-        country_id = False
-        country_code = request.session.geoip and request.session.geoip.get('country_code') or False
-        if country_code:
-            country_ids = self.env['res.country'].sudo().search([('code', '=', country_code)])
-            if country_ids:
-                country_id = country_ids[0]
-        # extract url
-        url = request.httprequest.headers.get('Referer') or request.httprequest.base_url
-        # find the match rule for the given country and url
-        rule = self.env['im_livechat.channel.rule'].sudo().match_rule(channel_id, url, country_id)
-        if rule:
-            if rule.action == 'hide_button':
-                # don't return the initialization script, since its blocked (in the country)
-                return False
-            rule_data = {
-                'action': rule.action,
-                'auto_popup_timer': rule.auto_popup_timer,
-                'regex_url': rule.regex_url,
-            }
-        info['rule'] = rule and rule_data or False
+    def get_livechat_info(self, channel_id, username='Visitor'):
+        info = {}
+        info['available'] = len(self.browse(channel_id).get_available_users()) > 0
+        info['server_url'] = self.env['ir.config_parameter'].get_param('web.base.url')
+        if info['available']:
+            info['options'] = self.sudo().get_channel_infos(channel_id)
+            info['options']["default_username"] = username
         return info
 
+    # FIXME: to remove in master
+    @api.model
+    def match_rules(self, request, channel_id, username='Visitor'):
+        pass
 
 class ImLivechatChannelRule(models.Model):
     """ Channel Rules

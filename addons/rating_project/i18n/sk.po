@@ -3,12 +3,13 @@
 # * rating_project
 # 
 # Translators:
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-10-14 18:32+0000\n"
+"PO-Revision-Date: 2015-12-19 13:03+0000\n"
 "Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -56,23 +57,23 @@ msgid ""
 "</body>\n"
 "                \n"
 "            "
-msgstr ""
+msgstr "\n<body>\n<div style=\"max-width:600px; height:auto; margin-left:30px;\">\n<div style=\"margin-left:30px;align=center;\">\nDrahý ${object.partner_id.name},\n</div><br>\n<div style=\"margin-left:30px;align=center;\" width=\"60%\">\nDúfame že poskytnutý servis splnil vaše očakávania.\n<br>Ak máte akékoľvek ďalšie otázky či pripomienky, neváhajte odpovedať na tento e-mail.\n<br><br>Prosím, pomôžte nám zlepšiť sa ohodnotením služieb, ktoré poskytujeme.\n</div><br>\n<table style=\"margin-left:50px;\" width=\"70%\">\n<tr>\n<td>\n<a href=\"/rating/${object.access_token}/10\">\n<img alt=\"Great\" src=\"rating/static/src/img/rating_10.png\" title=\"It was great\"/>\n</a>\n</td>\n<td>\n<a href=\"/rating/${object.access_token}/5\">\n<img alt=\"Okay\" src=\"rating/static/src/img/rating_5.png\" title=\"It was okay\"/>\n</a>\n</td>\n<td>\n<a href=\"/rating/${object.access_token}/0\">\n<img alt=\"Bad\" src=\"rating/static/src/img/rating_0.png\" title=\"It wasn't good\"/>\n</a>\n</td>\n</tr>\n</table><br>\n<h4 style=\"margin-left:30px;font-weight:normal;\">Ďakujeme </h4>\n<h4 style=\"margin-left:30px;font-weight:normal;\">${object.rated_partner_id.name or ''} </h4>\n</div>\n</body>"
 
 #. module: rating_project
 #: model:mail.template,subject:rating_project.rating_project_request_email_template
 msgid "${object.res_name}"
-msgstr ""
+msgstr "${object.res_name}"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_task
 msgid "% Happy"
-msgstr ""
+msgstr "% Spokojný"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid "Auto Kanban state validation"
-msgstr ""
+msgstr "Kanban stav autovalidácie"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
@@ -80,29 +81,29 @@ msgid ""
 "Automatically modify the kanban state when the customer reply to the feedback for this stage.\n"
 " * A great feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
-msgstr ""
+msgstr "Automaticky meniť kanban stav, keď zákazník odpovie na spätnú väzbu pre túto fázu.\n* Skvelá spätná väzba od zákazníka bude aktualizovať kanban stav na \"pripravený na novú fázu\" (zelený bod).\n* Priemerná alebo zlá spätná väzba nastaví kanban stav na \"blokovaný\" (červený bod).\n"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_is_visible_happy_customer
 msgid "Customer Satisfaction"
-msgstr ""
+msgstr "Spokojnosť zákazníkov"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_project_is_visible_happy_customer
 msgid ""
 "Display informations about rating of the project on kanban and form view. "
 "This buttons will only be displayed if at least a rating exists."
-msgstr ""
+msgstr "Zobraziť informácie o hodnotení projektu v kanban a formulárovom zobrazení. Tieto tlačidlá sa zobrazia iba pokiaľ už existuje hodnotenie."
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
 msgid "On tasks"
-msgstr ""
+msgstr "Na úlohách"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "Percentage of happy people about this project"
-msgstr ""
+msgstr "Percento ľudí spokojných s týmto projektom"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_project
@@ -113,19 +114,19 @@ msgstr "Projekt"
 #: model:ir.model,name:rating_project.model_rating_rating
 #: model:ir.model.fields,field_description:rating_project.field_project_task_rating_ids
 msgid "Rating"
-msgstr ""
+msgstr "Hodnotenie"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_rating_template_id
 msgid "Rating Email Template"
-msgstr ""
+msgstr "Emailová šablóna hodnotenia"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_rating_template_id
 msgid ""
 "Select an email template. An email will be sent to the customer when the "
 "task reach this step."
-msgstr ""
+msgstr "Vyberte emailovú šablónu. Email bude poslaný zákaznikovi keď úloha dosiahne túto fázu."
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task

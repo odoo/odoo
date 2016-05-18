@@ -7,6 +7,7 @@ Miscellaneous tools used by OpenERP.
 """
 
 from functools import wraps
+import cPickle
 import cProfile
 from contextlib import contextmanager
 import subprocess
@@ -19,6 +20,7 @@ import threading
 import time
 import werkzeug.utils
 import zipfile
+from cStringIO import StringIO
 from collections import defaultdict, Hashable, Iterable, Mapping, OrderedDict
 from itertools import islice, izip, groupby
 from lxml import etree
@@ -44,7 +46,10 @@ _logger = logging.getLogger(__name__)
 
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 # We include the *Base ones just in case, currently they seem to be subclasses of the _* ones.
-SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.CommentBase, etree.PIBase)
+SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.CommentBase, etree.PIBase, etree._Entity)
+
+# Configure default global parser
+etree.set_default_parser(etree.XMLParser(resolve_entities=False))
 
 #----------------------------------------------------------
 # Subprocesses
@@ -452,6 +457,7 @@ ALL_LANGUAGES = {
         'cs_CZ': u'Czech / Čeština',
         'da_DK': u'Danish / Dansk',
         'de_DE': u'German / Deutsch',
+        'de_CH': u'German (CH) / Deutsch (CH)',
         'el_GR': u'Greek / Ελληνικά',
         'en_AU': u'English (AU)',
         'en_GB': u'English (UK)',
@@ -498,6 +504,7 @@ ALL_LANGUAGES = {
         'lv_LV': u'Latvian / latviešu valoda',
         'mk_MK': u'Macedonian / македонски јазик',
         'mn_MN': u'Mongolian / монгол',
+        'my_MM': u'Burmese / မြန်မာဘာသာ',
         'nb_NO': u'Norwegian Bokmål / Norsk bokmål',
         'nl_NL': u'Dutch / Nederlands',
         'nl_BE': u'Dutch (BE) / Nederlands (BE)',
@@ -984,7 +991,6 @@ def stripped_sys_argv(*strip_args):
 
     return [x for i, x in enumerate(args) if not strip(args, i)]
 
-
 class ConstantMapping(Mapping):
     """
     An immutable mapping returning the provided value for every single key.
@@ -1050,14 +1056,15 @@ def dumpstacks(sig=None, frame=None):
     _logger.info("\n".join(code))
 
 def freehash(arg):
-    if isinstance(arg, Mapping):
-        return hash(frozendict(arg))
-    elif isinstance(arg, Iterable):
-        return hash(frozenset(arg))
-    elif isinstance(arg, Hashable):
+    try:
         return hash(arg)
-    else:
-        return id(arg)
+    except Exception:
+        if isinstance(arg, Mapping):
+            return hash(frozendict(arg))
+        elif isinstance(arg, Iterable):
+            return hash(frozenset(map(freehash, arg)))
+        else:
+            return id(arg)
 
 class frozendict(dict):
     """ An implementation of an immutable dictionary. """
@@ -1165,3 +1172,24 @@ def _consteq(str1, str2):
     return len(str1) == len(str2) and sum(ord(x)^ord(y) for x, y in zip(str1, str2)) == 0
 
 consteq = getattr(passlib.utils, 'consteq', _consteq)
+
+class Pickle(object):
+    @classmethod
+    def load(cls, stream, errors=False):
+        unpickler = cPickle.Unpickler(stream)
+        # pickle builtins: str/unicode, int/long, float, bool, tuple, list, dict, None
+        unpickler.find_global = None
+        try:
+            return unpickler.load()
+        except Exception:
+            _logger.warning('Failed unpickling data, returning default: %r', errors, exc_info=True)
+            return errors
+
+    @classmethod
+    def loads(cls, text):
+        return cls.load(StringIO(text))
+
+    dumps = cPickle.dumps
+    dump = cPickle.dump
+
+pickle = Pickle

@@ -36,7 +36,11 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
                 self.do_signup(qcontext)
                 return super(AuthSignupHome, self).web_login(*args, **kw)
             except (SignupError, AssertionError), e:
-                qcontext['error'] = _(e.message)
+                if request.env["res.users"].sudo().search([("login", "=", qcontext.get("login"))]):
+                    qcontext["error"] = _("Another user is already registered using this email address.")
+                else:
+                    _logger.error(e.message)
+                    qcontext['error'] = _("Could not create a new account.")
 
         return request.render('auth_signup.signup', qcontext)
 
@@ -62,7 +66,7 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
                 qcontext['error'] = _("Could not reset your password")
                 _logger.exception('error when resetting password')
             except Exception, e:
-                qcontext['error'] = _(e.message)
+                qcontext['error'] = e.message
 
 
         return request.render('auth_signup.reset_password', qcontext)
@@ -89,6 +93,7 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
                     qcontext.setdefault(k, v)
             except:
                 qcontext['error'] = _("Invalid signup token")
+                qcontext['invalid_token'] = True
         return qcontext
 
     def do_signup(self, qcontext):
@@ -96,7 +101,9 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
         values = dict((key, qcontext.get(key)) for key in ('login', 'name', 'password'))
         assert any([k for k in values.values()]), "The form was not properly filled in."
         assert values.get('password') == qcontext.get('confirm_password'), "Passwords do not match; please retype them."
-        values['lang'] = request.lang
+        supported_langs = [lang['code'] for lang in request.registry['res.lang'].search_read(request.cr, openerp.SUPERUSER_ID, [], ['code'])]
+        if request.lang in supported_langs:
+            values['lang'] = request.lang
         self._signup_with_values(qcontext.get('token'), values)
         request.cr.commit()
 

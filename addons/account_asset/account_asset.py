@@ -14,7 +14,7 @@ class AccountAssetCategory(models.Model):
 
     active = fields.Boolean(default=True)
     name = fields.Char(required=True, index=True, string="Asset Type")
-    account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
+    account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account', domain=[('account_type', '=', 'normal')])
     account_asset_id = fields.Many2one('account.account', string='Asset Account', required=True, domain=[('internal_type','=','other'), ('deprecated', '=', False)])
     account_income_recognition_id = fields.Many2one('account.account', string='Recognition Income Account', domain=[('internal_type','=','other'), ('deprecated', '=', False)], oldname='account_expense_depreciation_id')
     account_depreciation_id = fields.Many2one('account.account', string='Depreciation Account', required=True, domain=[('internal_type','=','other'), ('deprecated', '=', False)])
@@ -35,10 +35,6 @@ class AccountAssetCategory(models.Model):
     prorata = fields.Boolean(string='Prorata Temporis', help='Indicates that the first depreciation entry for this asset have to be done from the purchase date instead of the first of January')
     open_asset = fields.Boolean(string='Post Journal Entries', help="Check this if you want to automatically confirm the assets of this category when created by invoices.")
     type = fields.Selection([('sale', 'Sale: Revenue Recognition'), ('purchase', 'Purchase: Asset')], required=True, index=True, default='purchase')
-
-    @api.onchange('account_asset_id')
-    def onchange_account_asset(self):
-        self.account_depreciation_id = self.account_asset_id
 
     @api.onchange('type')
     def onchange_type(self):
@@ -291,7 +287,7 @@ class AccountAssetAsset(models.Model):
         self.write({'state': 'draft'})
 
     @api.one
-    @api.depends('value', 'salvage_value', 'depreciation_line_ids')
+    @api.depends('value', 'salvage_value', 'depreciation_line_ids.move_check', 'depreciation_line_ids.amount')
     def _amount_residual(self):
         total_amount = 0.0
         for line in self.depreciation_line_ids:
@@ -410,7 +406,7 @@ class AccountAssetDepreciationLine(models.Model):
             depreciation_date = self.env.context.get('depreciation_date') or line.depreciation_date or fields.Date.context_today(self)
             company_currency = line.asset_id.company_id.currency_id
             current_currency = line.asset_id.currency_id
-            amount = company_currency.compute(line.amount, current_currency)
+            amount = current_currency.compute(line.amount, company_currency)
             sign = (line.asset_id.category_id.journal_id.type == 'purchase' or line.asset_id.category_id.journal_id.type == 'sale' and 1) or -1
             asset_name = line.asset_id.name + ' (%s/%s)' % (line.sequence, line.asset_id.method_number)
             reference = line.asset_id.code
@@ -426,7 +422,7 @@ class AccountAssetDepreciationLine(models.Model):
                 'credit': amount,
                 'journal_id': journal_id,
                 'partner_id': partner_id,
-                'currency_id': company_currency != current_currency and current_currency or False,
+                'currency_id': company_currency != current_currency and current_currency.id or False,
                 'amount_currency': company_currency != current_currency and - sign * line.amount or 0.0,
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id if categ_type == 'sale' else False,
                 'date': depreciation_date,
@@ -438,7 +434,7 @@ class AccountAssetDepreciationLine(models.Model):
                 'debit': amount,
                 'journal_id': journal_id,
                 'partner_id': partner_id,
-                'currency_id': company_currency != current_currency and current_currency or False,
+                'currency_id': company_currency != current_currency and current_currency.id or False,
                 'amount_currency': company_currency != current_currency and sign * line.amount or 0.0,
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id if categ_type == 'purchase' else False,
                 'date': depreciation_date,

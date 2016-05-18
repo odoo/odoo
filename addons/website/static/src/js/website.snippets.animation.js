@@ -105,12 +105,19 @@ animation.registry.parallax = animation.Class.extend({
 animation.registry.share = animation.Class.extend({
     selector: ".oe_share",
     start: function () {
+        var url_regex = /(\?(?:|.*&)(?:u|url|body)=)(.*?)(&|#|$)/;
+        var title_regex = /(\?(?:|.*&)(?:title|text|subject)=)(.*?)(&|#|$)/;
         var url = encodeURIComponent(window.location.href);
         var title = encodeURIComponent($("title").text());
         this.$("a").each(function () {
             var $a = $(this);
-            var url_regex = /\{url\}|%7Burl%7D/, title_regex = /\{title\}|%7Btitle%7D/;
-            $a.attr("href", $(this).attr("href").replace(url_regex, url).replace(title_regex, title));
+            $a.attr("href", function(i, href) {
+                return href.replace(url_regex, function (match, a, b, c) {
+                    return a + url + c;
+                }).replace(title_regex, function (match, a, b, c) {
+                    return a + title + c;
+                });
+            });
             if ($a.attr("target") && $a.attr("target").match(/_blank/i) && !$a.closest('.o_editable').length) {
                 $a.on('click', function () {
                     window.open(this.href,'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=600');
@@ -124,7 +131,7 @@ animation.registry.share = animation.Class.extend({
 animation.registry.media_video = animation.Class.extend({
     selector: ".media_iframe_video",
     start: function () {
-        if (!this.$target.has('.media_iframe_video_size')) {
+        if (!this.$target.has('.media_iframe_video_size').length) {
             var editor = '<div class="css_editable_mode_display">&nbsp;</div>';
             var size = '<div class="media_iframe_video_size">&nbsp;</div>';
             this.$target.html(editor+size+'<iframe src="'+_.escape(this.$target.data("src"))+'" frameborder="0" allowfullscreen="allowfullscreen"></iframe>');

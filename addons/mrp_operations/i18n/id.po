@@ -1,0 +1,658 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mrp_operations
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-14 10:27+0000\n"
+"PO-Revision-Date: 2015-12-02 23:35+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/id/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_nbr
+msgid "# of Lines"
+msgstr "batas akhir daftar"
+
+#. module: mrp_operations
+#: model:ir.model.fields,help:mrp_operations.field_mrp_production_workcenter_line_state
+msgid ""
+"* When a work order is created it is set in 'Draft' status.\n"
+"* When user sets work order in start mode that time it will be set in 'In Progress' status.\n"
+"* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n"
+"* When the user cancels the work order it will be set in 'Canceled' status.\n"
+"* When order is completely processed that time it is set in 'Finished' status."
+msgstr "Ketika Orde kerja dibuat itu terletak di 'Draft' status.\nKetika pengguna set urutan kerja dalam modus mulai yang waktu itu akan diatur dalam status 'Dalam proses'.\n* Ketika urutan kerja adalah dalam menjalankan modus, selama waktu itu, jika pengguna ingin menghentikan atau untuk membuat perubahan dalam rangka kemudian dapat mengatur dalam 'Tertunda' status.\nKetika pengguna membatalkan perintah kerja ini akan menetapkan status 'Dibatalkan'.\nKetika pesanan selesai diproses saat itu terletak di 'Selesai' status."
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Actual Production Date"
+msgstr "Tanggal produksi aktual"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_bom_id
+msgid "Bill of Material"
+msgstr "bahan baku"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.operation_calendar_view
+msgid "Calendar View"
+msgstr "Tampilan kalender"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Cancel"
+msgstr "Batalkan"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Cancel Order"
+msgstr "Batalkan order"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "Canceled"
+msgstr "Dibatalkan"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Cancelled"
+msgstr "Dibatalkan"
+
+#. module: mrp_operations
+#: model:ir.model.fields,help:mrp_operations.field_mrp_production_allow_reorder
+msgid ""
+"Check this to be able to move independently all production orders, without "
+"moving dependent ones."
+msgstr "Periksa ini untuk dapat bergerak secara independen semua perintah produksi, tanpa memindahkan orang-orang yang tergantung."
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_stock_move_move_dest_id_lines
+msgid "Children Moves"
+msgstr "Anak-anak bergerak"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_form
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
+msgid "Click to start a new work order."
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_code
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_id_10488
+msgid "Code"
+msgstr "Kode"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_confirm_action
+msgid "Confirmed Work Orders"
+msgstr "Pesanan dikonfirmasi kerja"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_create_uid
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_create_date
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Current"
+msgstr "Arus"
+
+#. module: mrp_operations
+#: model:ir.filters,name:mrp_operations.filter_mrp_workorder_current_production
+msgid "Current Production"
+msgstr "Produksi saat ini"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_date
+msgid "Date"
+msgstr "Tanggal"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_delay
+msgid "Delay"
+msgstr "Tunda"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_display_name
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_display_name
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+#: selection:mrp.production.workcenter.line,production_state:0
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Done"
+msgstr "selesai"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: selection:mrp.production.workcenter.line,production_state:0
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+msgid "Draft"
+msgstr "Konsep"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Duration"
+msgstr "Durasi"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_date_finished
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_date_finished
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_date_planned_end
+msgid "End Date"
+msgstr "Tanggal berakhir"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Finish Order"
+msgstr "Menyelesaikan pesanan"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+msgid "Finished"
+msgstr "Selesai"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_allow_reorder
+msgid "Free Serialisation"
+msgstr "Serialisasi gratis"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_draft_action
+msgid "Future Work Orders"
+msgstr "Masa depan kerja perintah"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Group By"
+msgstr "Dikelompokan berdasarkan .."
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.graph_in_hrs_workcenter
+msgid "Hours by Work Center"
+msgstr "Jam kerja Pusat"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_id
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_id
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_id
+msgid "ID"
+msgstr "ID"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "In Production"
+msgstr "Dalam produksi"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+msgid "In Progress"
+msgstr "Dalam Proses"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:438
+#, python-format
+msgid ""
+"In order to Finish the operation, it must be in the Start or Resume state!"
+msgstr "Untuk menyelesaikan operasi, itu harus dalam keadaan mulai atau melanjutkan!"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:429
+#, python-format
+msgid ""
+"In order to Pause the operation, it must be in the Start or Resume state!"
+msgstr "Untuk menjeda operasi, itu harus dalam keadaan mulai atau melanjutkan!"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:433
+#, python-format
+msgid "In order to Resume the operation, it must be in the Pause state!"
+msgstr "Untuk melanjutkan operasi, itu harus dalam keadaan jeda!"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Information"
+msgstr "Informasi"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation___last_update
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code___last_update
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder___last_update
+msgid "Last Modified on"
+msgstr "Terakhir Dimodifikasi pada"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_write_uid
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_write_uid
+msgid "Last Updated by"
+msgstr "Diperbaharui oleh"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_write_date
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_write_date
+msgid "Last Updated on"
+msgstr "Diperbaharui pada"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Late"
+msgstr "Terlambat"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Pesanan  Pabrikan"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:105
+#, python-format
+msgid "Manufacturing order cannot be started in state \"%s\"!"
+msgstr "Manufaktur pesanan tidak dapat dijalankan dalam keadaan \"%s\"!"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:445
+#, python-format
+msgid "No operation to cancel."
+msgstr "Operasi No untuk membatalkan."
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
+msgid "Operation Codes"
+msgstr "Operasi kode"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_name
+msgid "Operation Name"
+msgstr "Nama operasi"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:425
+#, python-format
+msgid ""
+"Operation has already started! You can either Pause/Finish/Cancel the "
+"operation."
+msgstr "Operasi sudah dimulai! Anda dapat baik jeda/selesai/membatalkan operasi."
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:441
+#, python-format
+msgid "Operation is Already Cancelled!"
+msgstr "Operasi ini sudah dibatalkan!"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:448
+#, python-format
+msgid "Operation is already finished!"
+msgstr "Operasi sudah selesai!"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:418
+#, python-format
+msgid "Operation is not started yet!"
+msgstr "Operasi adalah belum dimulai!"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
+#: model:ir.ui.view,arch_db:mrp_operations.workcenter_line_calendar
+#: model:ir.ui.view,arch_db:mrp_operations.workcenter_line_gantt
+msgid "Operations"
+msgstr "Operasi"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_order_date
+msgid "Order Date"
+msgstr "Tanggal Order"
+
+#. module: mrp_operations
+#: selection:mrp.workorder,state:0
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Pause"
+msgstr "Jeda"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Pause Work Order"
+msgstr "Urutan kerja jeda"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: selection:mrp.production.workcenter.line,state:0
+msgid "Pending"
+msgstr "Ditunda"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Planned Date"
+msgstr "Tanggal yang di rencanakan"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Planned Month"
+msgstr "Direncanakan bulan"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_product
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_product_id
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Product"
+msgstr "Produk"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_category_id
+msgid "Product Category"
+msgstr "Kategori Produk"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_product_qty
+msgid "Product Qty"
+msgstr "Produk Qty"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_product_tmpl_id
+msgid "Product Template"
+msgstr "Produk Template"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Product to Produce"
+msgstr "Produk untuk menghasilkan"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_production_id
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_production_id
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Production"
+msgstr "Produksi"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_operation_tree_view
+msgid "Production Operation"
+msgstr "Operasi produksi"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_code_form_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_code_tree_view
+msgid "Production Operation Code"
+msgstr "Kode operasi produksi"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_production_state
+msgid "Production Status"
+msgstr "Status produksi"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Production Workcenter"
+msgstr "Workcenter produksi"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Production started late"
+msgstr "Produksi dimulai akhir"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_qty
+msgid "Qty"
+msgstr "Qty"
+
+#. module: mrp_operations
+#: model:ir.filters,name:mrp_operations.filter_mrp_workorder_quantity_produced
+msgid "Quantity Produced"
+msgstr "Kuantitas yang dihasilkan"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "Ready to Produce"
+msgstr "Siap Menghasilkan"
+
+#. module: mrp_operations
+#: model:ir.ui.menu,name:mrp_operations.menu_report_mrp_workorders_tree
+msgid "Reports"
+msgstr "Laporan"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_user_id
+msgid "Responsible"
+msgstr "Tanggung-jawab"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Resume"
+msgstr "Lanjutkan"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Resume Work Order"
+msgstr "Urutan kerja resume"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_routing_id
+msgid "Routing"
+msgstr "Penghalaan"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_date_planned
+msgid "Scheduled Date"
+msgstr "Tanggal terjadwal"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Scheduled Date by Month"
+msgstr "Dijadwalkan Tanggal Menurut Bulan"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Scheduled Month"
+msgstr "Dijadwalkan Bulan"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Search"
+msgstr "Penelusuran"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Search Work Orders"
+msgstr "Cari kerja perintah"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Set Draft"
+msgstr "Menetapkan rancangan"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Set to Draft"
+msgstr "Atur menjadi draft"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Start"
+msgstr "Start"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_date_start
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_date_start
+msgid "Start Date"
+msgstr "Tanggal Mulai"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Start Working"
+msgstr "Berhenti Bekerja"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Started"
+msgstr "Mulai"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_start_stop
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_state
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_state
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Status"
+msgstr "Status"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_stock_move
+msgid "Stock Move"
+msgstr "Perpindahan Stok"
+
+#. module: mrp_operations
+#: model:ir.model.fields,help:mrp_operations.field_mrp_production_workcenter_line_delay
+msgid "The elapsed time between operation start and stop in this Work Center"
+msgstr "Waktu berlalu antara operasi mulai dan berhenti di pusat pekerjaan ini"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
+msgid ""
+"To manufacture or assemble products, and use raw materials and\n"
+"            finished products you must also handle manufacturing operations.\n"
+"            Manufacturing operations are often called Work Orders. The various\n"
+"            operations will have different impacts on the costs of\n"
+"            manufacturing and planning depending on the available workload."
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_total_cycles
+msgid "Total Cycles"
+msgstr "Jumlah Siklus"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_total_hours
+msgid "Total Hours"
+msgstr "Total jam"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_uom
+msgid "Unit of Measure"
+msgstr "Satuan Ukuran"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "Waiting Goods"
+msgstr "Menunggu barang"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_workcenter_id
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_workcenter_id
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Work Center"
+msgstr "Kerja Pusat"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_resource_planning
+msgid "Work Centers"
+msgstr "Pusat pekerjaan"
+
+#. module: mrp_operations
+#: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
+msgid "Work Centers Barcode"
+msgstr "Pusat-pusat pekerjaan Barcode"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.action_report_mrp_workorder
+#: model:ir.model,name:mrp_operations.model_mrp_production_workcenter_line
+msgid "Work Order"
+msgstr "Perintah kerja"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_workorder
+msgid "Work Order Report"
+msgstr "Kerja perintah laporan"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
+#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_order
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_tree_view_inherit
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_graph
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_pivot
+msgid "Work Orders"
+msgstr "gratis work orders"
+
+#. module: mrp_operations
+#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
+msgid "Work Orders By Resource"
+msgstr "Kerja perintah oleh sumber daya"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_planning
+msgid "Work Orders Planning"
+msgstr "Kerja perintah perencanaan"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_form
+msgid ""
+"Work Orders is the list of operations to be performed for each\n"
+"            manufacturing order. Once you start the first work order of a\n"
+"            manufacturing order, the manufacturing order is automatically\n"
+"            marked as started. Once you finish the latest operation of a\n"
+"            manufacturing order, the MO is automatically done and the related\n"
+"            products are produced."
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_delay
+msgid "Working Hours"
+msgstr "Jam kerja"
+
+#. module: mrp_operations
+#: model:ir.filters,name:mrp_operations.filter_mrp_workorder_workload
+msgid "Workload"
+msgstr "Beban kerja"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_operations_operation
+msgid "mrp_operations.operation"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_operations_operation_code
+msgid "mrp_operations.operation.code"
+msgstr ""

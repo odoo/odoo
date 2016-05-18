@@ -1,0 +1,916 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * lunch
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"PO-Revision-Date: 2016-03-10 13:15+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
+#: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
+msgid "- Click on the"
+msgstr ""
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
+msgid "<span class=\"o_stat_text\">Balance</span>"
+msgstr ""
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.report_lunch_order
+msgid "<strong>Total</strong>"
+msgstr "<strong>Total</strong>"
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_control_accounts
+msgid ""
+"A cashmove can either be an expense or a payment.<br>\n"
+"                An expense is automatically created at the order receipt.<br>\n"
+"                A payment represents the employee reimbursement to the company."
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_order_action_tree
+msgid ""
+"A lunch order is defined by its user, date and order lines.\n"
+"                Each order line corresponds to a product, an additional note and a price.\n"
+"                Before selecting your order lines, don't forget to read the warnings displayed in the reddish area."
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_product_action
+msgid "A product is defined by its name, category, price and vendor."
+msgstr ""
+
+#. module: lunch
+#. openerp-web
+#: code:addons/lunch/static/src/xml/lunch.xml:15
+#, python-format
+msgid "Add"
+msgstr "Adaugă"
+
+#. module: lunch
+#: code:addons/lunch/models/lunch.py:251
+#, python-format
+msgid "Alert"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_alert_action
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_alerts
+#: model:ir.ui.menu,name:lunch.lunch_alert_menu
+msgid "Alerts"
+msgstr "Alerte"
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_alert_action
+msgid ""
+"Alerts are used to warn employee from possible issues concerning the lunch orders.\n"
+"                To create a lunch alert you have to define its recurrency, the time interval during which the alert should be executed and the message to display."
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_amount
+msgid "Amount"
+msgstr "Suma"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert_end_hour
+msgid "And"
+msgstr "Si"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_balance_visible
+msgid "Balance visible"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert_start_hour
+msgid "Between"
+msgstr "Intre"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
+msgid "By Employee"
+msgstr "Dupa Angajat"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
+msgid "By User"
+msgstr "Dupa Utilizator"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+msgid "By Vendor"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_cashmove_description
+msgid "Can be an order or a payment"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_cashmove_amount
+msgid ""
+"Can be positive (payment) or negative (order or payment if user wants to get"
+" his money back)"
+msgstr ""
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
+#: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
+msgid "Cancel"
+msgstr "Anulează"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_order_line_action_cancel
+msgid "Cancel meals"
+msgstr "Anuleaza mesele de pranz"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
+#: selection:lunch.order,state:0 selection:lunch.order.line,state:0
+msgid "Cancelled"
+msgstr "Anulat(a)"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_cashmove
+msgid "Cash Move"
+msgstr "Miscare numerar"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_cash_move_balance
+msgid "Cash move balance"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_name
+#: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Category"
+msgstr "Categorie"
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_alert_action
+msgid "Click to create a lunch alert."
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_product_category_action
+msgid "Click to create a lunch category."
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_order_action_tree
+msgid "Click to create a lunch order."
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_control_accounts
+msgid "Click to create a new payment."
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
+msgid "Click to create a payment."
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_product_action
+msgid "Click to create a product for lunch."
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_company_id
+msgid "Company"
+msgstr "Companie"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_config
+msgid "Configuration"
+msgstr "Configurare"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_control_accounts
+#: model:ir.ui.menu,name:lunch.lunch_cashmove_menu_control_accounts
+msgid "Control Accounts"
+msgstr "Controlul Conturilor"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_order_line_action_control_suppliers
+msgid "Control Vendors"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert_create_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_create_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_create_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_create_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_create_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_create_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_create_uid
+msgid "Created by"
+msgstr "Creat de"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert_create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_create_date
+msgid "Created on"
+msgstr "Creat în"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_currency_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_currency_id
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_date
+msgid "Date"
+msgstr "Data"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert_specific_day
+msgid "Day"
+msgstr "Zi"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_description
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_description
+#: model:ir.ui.view,arch_db:lunch.report_lunch_order
+msgid "Description"
+msgstr "Descriere"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert_display
+msgid "Display"
+msgstr "Afisare"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert_display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_display_name
+msgid "Display Name"
+msgstr "Afiseaza nume"
+
+#. module: lunch
+#. openerp-web
+#: code:addons/lunch/static/src/xml/lunch.xml:7
+#, python-format
+msgid "Don't forget the alerts displayed in the reddish area"
+msgstr "Nu uitati de avertismentele afisate in zona rosie"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.lunch_cashmove_menu_payment
+msgid "Employee Payments"
+msgstr "Platile Angajatilor"
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_order_line_lucky_is_max_budget
+msgid "Enable this option to set a maximal budget for your lucky order."
+msgstr ""
+
+#. module: lunch
+#: selection:lunch.alert,alert_type:0
+msgid "Every Day"
+msgstr "Zilnic"
+
+#. module: lunch
+#: selection:lunch.alert,alert_type:0
+msgid "Every Week"
+msgstr "In fiecare saptamana"
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_alert_action
+msgid ""
+"Example: <br>\n"
+"                - Recurency: Everyday<br>\n"
+"                - Time interval: from 00h00 am to 11h59 pm<br>\n"
+"                - Message: \"You must order before 10h30 am\""
+msgstr ""
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
+msgid "Feeling Lucky"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert_friday
+msgid "Friday"
+msgstr "Vineri"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+#: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Group By"
+msgstr "Grupează după"
+
+#. module: lunch
+#: model:ir.module.category,description:lunch.module_lunch_category
+msgid ""
+"Helps you handle your lunch needs, if you are a manager you will be able to "
+"create new products, cashmoves and to confirm or cancel orders."
+msgstr "Va ajuta sa gestionati necesarul pentru pranz, daca sunteti manager veti putea sa creati produse noi, miscari de numerar si sa confirmati sau sa anulati comenzi."
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_product_category_action
+msgid "Here you can access all categories for the lunch products."
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
+msgid ""
+"Here you can see the employees' payment. A payment is a cash move from the "
+"employee to the company."
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
+msgid "Here you can see today's orders grouped by vendors."
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_account
+msgid ""
+"Here you can see your cash moves.<br>A cash moves can be either an expense or a payment.\n"
+"                An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager."
+msgstr ""
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
+msgid "I'm feeling lucky"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_order_line_lucky
+#: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
+msgid "I'm feeling lucky today !"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_is_max_budget
+msgid "I'm not feeling rich"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id_1805
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_id
+msgid "ID"
+msgstr "ID"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_state
+msgid "Is an order or a payment"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert___last_update
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove___last_update
+#: model:ir.model.fields,field_description:lunch.field_lunch_order___last_update
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line___last_update
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky___last_update
+#: model:ir.model.fields,field_description:lunch.field_lunch_product___last_update
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category___last_update
+msgid "Last Modified on"
+msgstr "Ultima modificare la"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert_write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_write_uid
+msgid "Last Updated by"
+msgstr "Ultima actualizare făcută de"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert_write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_write_date
+msgid "Last Updated on"
+msgstr "Ultima actualizare în"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
+msgid "List"
+msgstr "Lista"
+
+#. module: lunch
+#: model:ir.module.category,name:lunch.module_lunch_category
+#: model:ir.ui.menu,name:lunch.menu_lunch
+msgid "Lunch"
+msgstr "Pranz"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_alert
+msgid "Lunch Alert"
+msgstr "Alerta Pranz"
+
+#. module: lunch
+#: code:addons/lunch/models/lunch.py:223
+#, python-format
+msgid "Lunch Cashmove"
+msgstr ""
+
+#. module: lunch
+#: code:addons/lunch/models/lunch.py:62
+#: model:ir.actions.report.xml,name:lunch.action_report_lunch_order
+#: model:ir.model,name:lunch.model_lunch_order
+#: model:ir.ui.view,arch_db:lunch.report_lunch_order
+#, python-format
+msgid "Lunch Order"
+msgstr "Comanda pranz"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_admin
+#: model:res.groups,name:lunch.group_lunch_manager
+msgid "Manager"
+msgstr "Manager"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_max_budget
+msgid "Max Budget"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert_message
+#: model:ir.ui.view,arch_db:lunch.lunch_alert_view_form
+msgid "Message"
+msgstr "Mesaj"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert_monday
+msgid "Monday"
+msgstr "Luni"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
+msgid "My Account grouped"
+msgstr "Contul meu grupat"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_title
+msgid "My Lunch"
+msgstr ""
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
+msgid "My Orders"
+msgstr "Comenzile Mele"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.report_lunch_order
+msgid "Name/Date"
+msgstr "Nume/Data"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
+#: selection:lunch.order,state:0 selection:lunch.order.line,state:0
+msgid "New"
+msgstr "Nou(a)"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_order_action_form
+#: model:ir.ui.menu,name:lunch.lunch_order_menu_form
+msgid "New Order"
+msgstr "Comanda Noua"
+
+#. module: lunch
+#: code:addons/lunch/wizard/lucky_order.py:37
+#, python-format
+msgid "No product is matching your request. Now you will starve to death."
+msgstr ""
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+msgid "Not Received"
+msgstr "Nu a fost primit"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_note
+msgid "Note"
+msgstr "Nota"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_order_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_order_id
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
+#: model:ir.ui.view,arch_db:lunch.report_lunch_order
+#: selection:lunch.cashmove,state:0
+msgid "Order"
+msgstr "Comanda"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+msgid "Order Month"
+msgstr "Comanzi/Lună"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
+msgid "Order lines Tree"
+msgstr "Arbore linii comanda"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_order_line_action_order
+msgid "Order meals"
+msgstr "Comanda mese de pranz"
+
+#. module: lunch
+#: selection:lunch.order.line,state:0
+msgid "Ordered"
+msgstr "Comandat"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
+msgid "Orders Form"
+msgstr "Formular de comanda"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+msgid "Orders Tree"
+msgstr "Arbore Comenzi"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_order_line_action_by_supplier
+#: model:ir.ui.menu,name:lunch.lunch_order_line_menu_control_suppliers
+msgid "Orders by Vendor"
+msgstr ""
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
+#: selection:lunch.cashmove,state:0
+msgid "Payment"
+msgstr "Plata"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.lunch_order_menu_tree
+msgid "Previous Orders"
+msgstr "Comenzile Anterioare"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_previous_order_ids
+msgid "Previous order ids"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_price
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_price
+msgid "Price"
+msgstr "Preț"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_product_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_product_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_name
+msgid "Product"
+msgstr "Produs"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_product_category_action
+#: model:ir.ui.menu,name:lunch.lunch_product_category_menu
+msgid "Product Categories"
+msgstr "Categorii de produse"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_category_id
+msgid "Product Category"
+msgstr "Categoria Produsului"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
+msgid "Product Category:"
+msgstr ""
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Product Search"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_product_action
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_order_line_ids
+#: model:ir.ui.menu,name:lunch.lunch_product_menu
+msgid "Products"
+msgstr "Produse"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
+#: model:ir.ui.view,arch_db:lunch.lunch_product_view_form
+msgid "Products Form"
+msgstr "Formular Produse"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_product_view_tree
+msgid "Products Tree"
+msgstr "Arbore Produse"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
+msgid "Receive"
+msgstr "Primire"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_order_line_action_confirm
+msgid "Receive meals"
+msgstr "Primire mese"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
+#: selection:lunch.order,state:0 selection:lunch.order.line,state:0
+msgid "Received"
+msgstr "Primit"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert_alert_type
+msgid "Recurrency"
+msgstr "Recurenta"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
+msgid "Register Cash Moves"
+msgstr "Inregistrati Mutarile de Numerar"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert_saturday
+msgid "Saturday"
+msgstr "Sambata"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_alert_view_form
+msgid "Schedule Date"
+msgstr "Programați Data"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_alert_view_form
+msgid "Schedule Hour"
+msgstr "Programati Ora"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_alert_view_search
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+msgid "Search"
+msgstr "Căutați"
+
+#. module: lunch
+#. openerp-web
+#: code:addons/lunch/static/src/xml/lunch.xml:5
+#, python-format
+msgid "Select a product and put your order comments on the note."
+msgstr "Selectati un produs si introduceti comentariile legate de comanda in nota."
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
+msgid "Select your order"
+msgstr "Selecteaza comanda"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
+msgid "Select your vendor"
+msgstr ""
+
+#. module: lunch
+#: selection:lunch.alert,alert_type:0
+msgid "Specific Day"
+msgstr "O Anumita Zi"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_state
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_state
+msgid "Status"
+msgstr "Stare"
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
+msgid "Summary of all lunch orders, grouped by vendor and by date."
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert_sunday
+msgid "Sunday"
+msgstr "Duminica"
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_order_company_id
+msgid "The company this user is currently working for."
+msgstr "Compania pentru care acest utilizator lucreaza in prezent."
+
+#. module: lunch
+#: code:addons/lunch/models/lunch.py:98
+#, python-format
+msgid "The date of your order is in the past."
+msgstr ""
+
+#. module: lunch
+#. openerp-web
+#: code:addons/lunch/static/src/xml/lunch.xml:4
+#, python-format
+msgid "This is the first time you order a meal"
+msgstr "Aceasta este prima data cand comandati o masa de pranz"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert_thursday
+msgid "Thursday"
+msgstr "Joi"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+msgid "Today"
+msgstr "Astăzi"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.lunch_order_line_menu_by_supplier
+msgid "Today's Orders"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_total
+#: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree
+#: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree_2
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+msgid "Total"
+msgstr "Total"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert_tuesday
+msgid "Tuesday"
+msgstr "Marti"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.report_lunch_order
+msgid "Unit Price"
+msgstr "Pret unitar"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_user_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_user_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_user_id
+#: model:res.groups,name:lunch.group_lunch_user
+msgid "User"
+msgstr "Utilizator"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
+msgid "Users"
+msgstr "Utilizatori"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_supplier_ids
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_supplier
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_supplier
+#: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Vendor"
+msgstr "Furnizor"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+msgid "Vendor Orders by Month"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert_wednesday
+msgid "Wednesday"
+msgstr "Miercuri"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_alert_view_form
+msgid "Write the message you want to display during the defined period..."
+msgstr "Scrieti mesajul pe care doriti sa il afisati in timpul perioadei definite..."
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_account
+msgid "Your Account"
+msgstr "Contul dumneavoastra"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.lunch_cashmove_menu_form
+msgid "Your Lunch Account"
+msgstr "Contul Dumneavoastra pentru Pranz"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_order_action_tree
+msgid "Your Orders"
+msgstr "Comenzile Dumneavoastra"
+
+#. module: lunch
+#. openerp-web
+#: code:addons/lunch/static/src/xml/lunch.xml:6
+#, python-format
+msgid "Your favorite meals will be created based on your last orders."
+msgstr "Mancarurile dumneavoastra preferate vor fi create pe baza ultimelor dumneavoastra comenzi."
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_form
+msgid "cashmove form"
+msgstr "formular de mutare numerar"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree
+#: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree_2
+msgid "cashmove tree"
+msgstr "arbore miscari de numerar"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_cashmove
+#: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
+msgid "lunch cashmove"
+msgstr "mutare numerar pentru pranz"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
+msgid "lunch employee payment"
+msgstr "plata pranzului angajatului"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_order_line
+msgid "lunch order line"
+msgstr "linia comenzii de pranz"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
+msgid "lunch orders"
+msgstr "comenzi pentru masa de pranz"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_product
+msgid "lunch product"
+msgstr "produs pranz"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_product_category
+msgid "lunch product category"
+msgstr "categorie de produse pentru pranz"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_order_line_lucky
+msgid "lunch.order.line.lucky"
+msgstr ""
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
+msgid "or"
+msgstr "sau"
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
+msgid "red X to announce that the order isn't available"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
+#: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
+msgid ""
+"to announce that the order is ordered <br>\n"
+"                - Click on the"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
+#: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
+msgid ""
+"to announce that the order is received <br>\n"
+"                - Click on the"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
+msgid "to announce that the order isn't available"
+msgstr ""

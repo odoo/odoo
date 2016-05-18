@@ -277,6 +277,7 @@ var EventDispatcherMixin = _.extend({}, ParentedMixin, {
         this._trigger_up(event);
     },
     _trigger_up: function(event) {
+        var parent;
         this.__edispatcherEvents.trigger(event.name, event);
         if (!event.is_stopped() && (parent = this.getParent())) {
             parent._trigger_up(event);
@@ -324,9 +325,8 @@ var PropertiesMixin = _.extend({}, EventDispatcherMixin, {
             // remove this, or move it elsewhere.  Also, learn OO programming.
             if (key === 'value' && self.field && self.field.type === 'float' && tmp && val){
                 var digits = self.field.digits;
-                if (digits !== 0){
-                    digits = digits ? digits[1] : 2;
-                    if (utils.float_is_zero(tmp - val, digits)) {
+                if (_.isArray(digits)) {
+                    if (utils.float_is_zero(tmp - val, digits[1])) {
                         return;
                     }
                 }
@@ -354,4 +354,3 @@ return {
 };
 
 });
-

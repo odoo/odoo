@@ -10,8 +10,9 @@
         <field name="arch" type="xml">
             <form string="Asset category">
                 <group>
-                    <div class="oe_title oe_inline">
-                        <label for="name" class="oe_edit_only"/>
+                    <div class="oe_title">
+                        <label for="name" string="Asset Type" class="oe_edit_only" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                        <label for="name" string="Deferred Revenue Type" class="oe_edit_only" attrs="{'invisible': [('type','==','purchase')]}"/>
                         <h1>
                             <field name="name" placeholder="e.g. Computers"/>
                         </h1>
@@ -23,12 +24,12 @@
                     <group string="Journal Entries">
                         <field name="journal_id"/>
                         <div>
-                            <label for="account_asset_id" string="Asset Account" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                            <label for="account_asset_id" string="Depreciation Asset Account" attrs="{'invisible': [('type','!=','purchase')]}"/>
                             <label for="account_asset_id" string="Deferred Revenue Account" attrs="{'invisible': [('type','!=','sale')]}"/>
                         </div>
                         <field name="account_asset_id" nolabel="1" attrs="{'invisible': [('type','=', False)]}"/>
                         <div>
-                            <label for="account_depreciation_id" string="Depreciation Account" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                            <label for="account_depreciation_id" string="Depreciation Expense Account" attrs="{'invisible': [('type','!=','purchase')]}"/>
                             <label for="account_depreciation_id" string="Income Account" attrs="{'invisible': [('type','!=','sale')]}"/>
                         </div>
                         <field name="account_depreciation_id" nolabel="1"/>
@@ -127,7 +128,7 @@
                                 <label for="partner_id" string="Vendor" attrs="{'invisible': [('type','!=','purchase')]}"/>
                             </div>
                             <field name="partner_id" string="Partner" nolabel="1"/>
-                            <field name="invoice_id" string="Invoice"/>
+                            <field name="invoice_id" string="Invoice" options="{'no_create': True}"/>
                         </group>
                     </group>
                     <notebook colspan="4">

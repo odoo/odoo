@@ -308,6 +308,7 @@
                             require('web.core').csrf_token = token;
                             require('qweb').default_dict.csrf_token = token;
                         });
+                        odoo.db_info = <t t-raw="db_info"/>;
                     </script>
                     <t t-call-assets="web.assets_backend"/>
                     &lt;!--[if lte IE 9]&gt; <link rel="stylesheet" href="/web/static/src/css/ie.css"/> &lt;![endif]--&gt;

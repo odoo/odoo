@@ -36,7 +36,7 @@ class test_inherits(common.TransactionCase):
         # the field daughter.name must have required=False and "Baz" as default
         field = daughter._fields['name']
         self.assertFalse(field.required)
-        self.assertEqual(field.default(mother), "Baz")
+        self.assertEqual(field.default(daughter), "Baz")
         self.assertEqual(daughter._defaults.get('name'), "Baz")
         self.assertEqual(daughter.default_get(['name']), {'name': "Baz"})
 
@@ -76,3 +76,20 @@ class test_inherits(common.TransactionCase):
         # search the partner from the daughter record
         partners = self.env['res.partner'].search([('daughter_ids', 'in', daughter.ids)])
         self.assertIn(partner_demo, partners)
+
+
+class test_override_property(common.TransactionCase):
+
+    def test_override_with_function_field(self):
+        """ test overriding a property field by a function field """
+        record = self.env['test.inherit.property'].create({'name': "Stuff"})
+        # record.property_foo is not a property field
+        self.assertEqual(record.property_foo, 42)
+        self.assertFalse(type(record).property_foo.company_dependent)
+
+    def test_override_with_computed_field(self):
+        """ test overriding a property field by a computed field """
+        record = self.env['test.inherit.property'].create({'name': "Stuff"})
+        # record.property_bar is not a property field
+        self.assertEqual(record.property_bar, 42)
+        self.assertFalse(type(record).property_bar.company_dependent)

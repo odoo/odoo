@@ -12,11 +12,12 @@ class crm_lead(models.Model):
     def _get_sale_amount_total(self):
         total = 0.0
         nbr = 0
+        company_currency = self.company_currency or self.env.user.company_id.currency_id
         for order in self.order_ids:
-            if order.state == 'draft':
+            if order.state in ('draft', 'sent'):
                 nbr += 1
-            if order.state not in ('draft', 'cancel'):
-                total += order.currency_id.compute(order.amount_untaxed, self.company_currency)
+            if order.state not in ('draft', 'sent', 'cancel'):
+                total += order.currency_id.compute(order.amount_untaxed, company_currency)
         self.sale_amount_total = total
         self.sale_number = nbr
 
@@ -34,7 +35,8 @@ class crm_lead(models.Model):
         account_invoice_domain = [
             ('state', 'in', ['open', 'paid']),
             ('user_id', '=', uid),
-            ('date', '>=', date.today().replace(day=1) - relativedelta(months=+1))
+            ('date', '>=', date.today().replace(day=1) - relativedelta(months=+1)),
+            ('type', 'in', ['out_invoice', 'out_refund'])
         ]
 
         invoice_ids = self.pool.get('account.invoice').search_read(cr, uid, account_invoice_domain, ['date', 'amount_untaxed_signed'], context=context)
@@ -47,5 +49,4 @@ class crm_lead(models.Model):
                     res['invoiced']['last_month'] += inv['amount_untaxed_signed']
 
         res['invoiced']['target'] = self.pool('res.users').browse(cr, uid, uid, context=context).target_sales_invoiced
-
         return res

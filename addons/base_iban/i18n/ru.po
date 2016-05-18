@@ -3,13 +3,14 @@
 # * base_iban
 # 
 # Translators:
+# Sergey Vilizhanin <sv@grimmette.ru>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 16:35+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-02-22 17:29+0000\n"
+"Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,21 +27,13 @@ msgstr "Банковские счета"
 #: code:addons/base_iban/base_iban.py:57
 #, python-format
 msgid "Cannot compute the BBAN because the account number is not an IBAN."
-msgstr ""
+msgstr "Нельзя вычислить BBAN потому, что номер счета не является IBAN."
 
 #. module: base_iban
 #: code:addons/base_iban/base_iban.py:26
 #, python-format
 msgid "No IBAN !"
-msgstr ""
-
-#. module: base_iban
-#: code:addons/base_iban/base_iban.py:82
-#, python-format
-msgid ""
-"Please define BIC/Swift code on bank for bank type IBAN Account to make "
-"valid payments."
-msgstr ""
+msgstr "Не IBAN !"
 
 #. module: base_iban
 #: code:addons/base_iban/base_iban.py:34
@@ -48,7 +41,7 @@ msgstr ""
 msgid ""
 "The IBAN does not seem to be correct. You should have entered something like this %s\n"
 "Where B = National bank code, S = Branch code, C = Account No, k = Check digit"
-msgstr ""
+msgstr "IBAN не кажется правильным. Вы должны ввести что-то вроде этого %s\nГде B = Национальный банковский код S = Код Филиала, C = № счета, k = Контрольная цифра"
 
 #. module: base_iban
 #: code:addons/base_iban/base_iban.py:30
@@ -60,4 +53,4 @@ msgstr "IBAN является недействительным, он долже�
 #: code:addons/base_iban/base_iban.py:40
 #, python-format
 msgid "This IBAN does not pass the validation check, please verify it."
-msgstr ""
+msgstr "Этот IBAN не проходит проверку правильности, проверьте его."

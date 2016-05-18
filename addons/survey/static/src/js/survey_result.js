@@ -50,12 +50,14 @@ if(!$('.js_surveyresult').length) {
 
     //initialize discreteBar Chart
     function init_bar_chart(){
-        return nv.models.discreteBarChart()
+        var chart = nv.models.discreteBarChart()
             .x(function(d) { return d.text; })
             .y(function(d) { return d.count; })
             .staggerLabels(true)
-            .tooltips(false)
             .showValues(true);
+
+        chart.tooltip.enabled(false);
+        return chart;
     }
 
     //initialize Pie Chart

@@ -528,10 +528,10 @@
 
         <!-- Categories -->
         <record id="view_partner_category_form" model="ir.ui.view">
-            <field name="name">Partner Tags</field>
+            <field name="name">Contact Tags</field>
             <field name="model">res.partner.category</field>
             <field name="arch" type="xml">
-                <form string="Partner Tag">
+                <form string="Contact Tag">
                     <group col="4">
                         <field name="name"/>
                         <field name="active"/>
@@ -541,17 +541,17 @@
             </field>
         </record>
         <record id="view_partner_category_list" model="ir.ui.view">
-            <field name="name">Partner Tags</field>
+            <field name="name">Contact Tags</field>
             <field name="model">res.partner.category</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Partner Tags">
+                <tree string="Contact Tags">
                     <field name="complete_name"/>
                 </tree>
             </field>
         </record>
         <record id="action_partner_category_form" model="ir.actions.act_window">
-            <field name="name">Partner Tags</field>
+            <field name="name">Contact Tags</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.category</field>
             <field name="view_type">form</field>
@@ -566,7 +566,7 @@
             </field>
         </record>
 
-        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Tags" sequence="1" parent="menu_config_address_book" groups="base.group_no_one"/>
+        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Contact Tags" sequence="1" parent="menu_config_address_book" groups="base.group_no_one"/>
 
     </data>
 </openerp>

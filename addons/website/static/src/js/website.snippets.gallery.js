@@ -228,11 +228,11 @@ options.registry.gallery = options.Class.extend({
         var $container = this.$target.find(".container:first");
         var editor = new widget.MediaDialog(this.$target.closest('.o_editable'), null, {select_images: true});
         editor.appendTo(document.body);
-        var index = Math.max(_.map(this.$target.find("img").get(), function (img) { return img.dataset.index | 0; })) + 1;
+        var index = Math.max(0, _.max(_.map(this.$target.find("img").get(), function (img) { return img.dataset.index | 0; })) + 1);
         editor.on('saved', this, function (attachments) {
             for (var i = 0 ; i < attachments.length; i++) {
                 var img = $('<img class="img img-responsive mb8 mt8"/>')
-                    .attr("src", attachments[i].url)
+                    .attr("src", attachments[i].src)
                     .attr('data-index', index+i)
                     .data('index', index+i)
                     .appendTo($container);
@@ -335,7 +335,6 @@ options.registry.gallery_img = options.Class.extend({
         if (type !== "click") return;
 
         var $parent = this.$target.closest("section");
-        this.buildingBlock.create_overlay($parent);
         var editor = $parent.data('snippet-editor').styles.gallery;
         var imgs = $parent.find('img').get();
         imgs.sort(function (a,b) { return $(a).data('index')-$(b).data('index'); });

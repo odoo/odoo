@@ -138,7 +138,7 @@
                               <a t-if="order_valid" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
                                   <i class="fa fa-check"></i> Accept Order
                               </a>
-                              <a t-if="not order_valid" href="#discussion" class="btn btn-info btn-block">
+                              <a t-if="not order_valid" href="#discussion" class="btn btn-info btn-block o_normalwhitespace">
                                   <strong>This offer expired!</strong><br/>
                                   Contact us for new quote.
                               </a>
@@ -225,11 +225,20 @@
                           Your transaction is waiting confirmation.
                           <span t-if='tx_post_msg' t-raw="tx_post_msg"/>
                       </div>
+                      <div class="alert alert-warning alert-dismissable" t-if="message==4 and quotation.state != 'sent'">
+                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                          This order 
+                            <t t-if="quotation.state=='draft'">has not yet been sent</t>
+                            <t t-if="quotation.state=='cancel'">has already been cancelled</t>
+                            <t t-if="quotation.state not in ('cancel','draft')">has already been validated</t>
+                          ! You can <a href="#discussion">contact us</a> for
+                          any question.
+                      </div>
 
                       <!-- modal relative to the actions Accept/Reject/Cancel -->
                       <div class="modal fade" id="modalaccept" role="dialog" aria-hidden="true">
                         <div class="modal-dialog" t-if="not quotation.require_payment and not need_payment">
-                           <form id="accept" method="POST" t-attf-action="/quote/accept/#{quotation.id}/?token=#{quotation.access_token}" class="js_accept_json modal-content js_website_submit_form">
+                           <form id="accept" method="POST" t-att-data-order-id="quotation.id" t-att-data-token="quotation.access_token" class="js_accept_json modal-content js_website_submit_form">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
@@ -634,7 +643,7 @@
                           <span class="label label-default"><i class="fa fa-fw fa-clock-o"/> Expired</span>
                         </t>
                       </td>
-                      <td><span t-esc="quotation.amount_total" t-esc-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
+                      <td><span t-field="quotation.amount_total" t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
                       </td>
               </tr>
           </t>

@@ -233,7 +233,7 @@ var EditMenuDialog = widget.Dialog.extend({
                 id: _.uniqueId('new-'),
                 name: link.text,
                 url: link.url,
-                new_window: link.newWindow,
+                new_window: link.isNewWindow,
                 parent_id: false,
                 sequence: 0,
                 children: [],
@@ -256,7 +256,7 @@ var EditMenuDialog = widget.Dialog.extend({
                 _.extend(menu_obj, {
                     'name': link.text,
                     'url': link.url,
-                    'new_window': link.newWindow,
+                    'new_window': link.isNewWindow,
                 });
                 var $menu = self.$('[data-menu-id="' + id + '"]');
                 $menu.find('.js_menu_label').first().text(menu_obj.name);
@@ -310,7 +310,7 @@ var MenuEntryDialog = widget.LinkDialog.extend({
     template: 'website.contentMenu.dialog.add',
     init: function (editor, data) {
         data.text = data.name || '';
-        data.newWindow = data.new_window;
+        data.isNewWindow = data.new_window;
         this.data = data;
         return this._super.apply(this, arguments);
     },

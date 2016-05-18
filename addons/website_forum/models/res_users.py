@@ -30,18 +30,24 @@ class Users(models.Model):
     def _get_user_badge_level(self):
         """ Return total badge per level of users
         TDE CLEANME: shouldn't check type is forum ? """
-        badge_groups = self.env['gamification.badge.user'].read_group(
-            [('level', 'in', ['gold', 'silver', 'bronze'])],
-            ['user_id', 'level', 'badge_id'],
-            ['user_id', 'level'],
-            lazy=False)
-        badge_data = dict()
-        for group in badge_groups:
-            badge_data.setdefault(group['user_id'][0], dict())[group['level']] = group['__count']
         for user in self:
-            user.gold_badge = badge_data.get(user.id) and badge_data[user.id].get('gold', 0) or 0
-            user.silver_badge = badge_data.get(user.id) and badge_data[user.id].get('silver', 0) or 0
-            user.bronze_badge = badge_data.get(user.id) and badge_data[user.id].get('bronze', 0) or 0
+            user.gold_badge = 0
+            user.silver_badge = 0
+            user.bronze_badge = 0
+
+        self.env.cr.execute("""
+            SELECT bu.user_id, b.level, count(1)
+            FROM gamification_badge_user bu, gamification_badge b
+            WHERE bu.user_id IN %s
+              AND bu.badge_id = b.id
+              AND b.level IS NOT NULL
+            GROUP BY bu.user_id, b.level
+            ORDER BY bu.user_id;
+        """, [tuple(self.ids)])
+
+        for (user_id, level, count) in self.env.cr.fetchall():
+            # levels are gold, silver, bronze but fields have _badge postfix
+            self.browse(user_id)['{}_badge'.format(level)] = count
 
     @api.model
     def _generate_forum_token(self, user_id, email):

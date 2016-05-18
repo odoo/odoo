@@ -20,7 +20,7 @@ Tour.register({
     id:   'rte',
     name: "Test RTE",
     mode: 'test',
-    path: '/web_editor/field/html?callback=FieldTextHtml_0&enable_editor=1&datarecord=%7B%7D',
+    path: '/web_editor/field/html?debug&callback=FieldTextHtml_0&enable_editor=1&datarecord=%7B%7D',
     steps: [
         {
             title:     "Change html for this test",
@@ -132,7 +132,7 @@ Tour.register({
         },
         {
             waitFor:   '#editable_area > section .row > div:first:has( font:last:containsExact(Bat) )',
-            element:   '.note-air-popover button[data-event="undo"]',
+            element:   '.note-image-popover button[data-event="undo"]',
             title:     "undo",
         },
         {

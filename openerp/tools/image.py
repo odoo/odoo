@@ -8,7 +8,7 @@ except ImportError:
 
 from PIL import Image
 from PIL import ImageEnhance
-from random import randint
+from random import randrange
 
 # ----------------------------------------
 # Image resizing
@@ -213,7 +213,7 @@ def image_colorize(original, randomize=True, color=(255, 255, 255)):
     image = Image.new('RGB', original.size)
     # generate the background color, past it as background
     if randomize:
-        color = (randint(32, 224), randint(32, 224), randint(32, 224))
+        color = (randrange(32, 224, 24), randrange(32, 224, 24), randrange(32, 224, 24))
     image.paste(color)
     image.paste(original, mask=original)
     # return the new image
@@ -255,6 +255,24 @@ def image_get_resized_images(base64_source, return_big=False, return_medium=True
     if return_small:
         return_dict[small_name] = image_resize_image_small(base64_source, avoid_if_small=avoid_resize_small)
     return return_dict
+
+def image_resize_images(vals, big_name='image', medium_name='image_medium', small_name='image_small'):
+    """ Update ``vals`` with image fields resized as expected. """
+    if big_name in vals:
+        vals.update(image_get_resized_images(vals[big_name],
+                        return_big=True, return_medium=True, return_small=True,
+                        big_name=big_name, medium_name=medium_name, small_name=small_name,
+                        avoid_resize_big=True, avoid_resize_medium=False, avoid_resize_small=False))
+    elif medium_name in vals:
+        vals.update(image_get_resized_images(vals[medium_name],
+                        return_big=True, return_medium=True, return_small=True,
+                        big_name=big_name, medium_name=medium_name, small_name=small_name,
+                        avoid_resize_big=True, avoid_resize_medium=True, avoid_resize_small=False))
+    elif small_name in vals:
+        vals.update(image_get_resized_images(vals[small_name],
+                        return_big=True, return_medium=True, return_small=True,
+                        big_name=big_name, medium_name=medium_name, small_name=small_name,
+                        avoid_resize_big=True, avoid_resize_medium=True, avoid_resize_small=True))
 
 
 if __name__=="__main__":

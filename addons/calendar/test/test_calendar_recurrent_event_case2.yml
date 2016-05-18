@@ -91,5 +91,12 @@
      meetings = self.browse(cr, uid, meeting_ids, context)
      for meeting in meetings:
         assert meeting.description == 'Review code of the module: sync_google_calendar.', 'Description not changed for id: %s' %meeting.id
-        
-
+-
+  I update the description of two meetings, and check that both have been updated
+-
+  !python {model: calendar.event}: |
+    DESCRIPTION = "Some description"
+    ids = [ref('calendar_event_testmeeting0'), ref('calendar_event_sprintreview0')]
+    self.write(cr, uid, ids, {'description': DESCRIPTION}, context=context)
+    for i, event in enumerate(self.browse(cr, uid, ids, context)):
+      assert event.description == DESCRIPTION, "Event %d has not been updated" % i

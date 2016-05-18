@@ -3,6 +3,7 @@
 
 from openerp import models, fields, api, _
 from openerp.exceptions import UserError
+import openerp.addons.decimal_precision as dp
 
 
 class SaleOrder(models.Model):
@@ -91,10 +92,19 @@ class SaleOrder(models.Model):
         }
         if self.order_line:
             values['sequence'] = self.order_line[-1].sequence + 1
-        SaleOrderLine.create(values)
+        sol = SaleOrderLine.create(values)
+        return sol
 
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     is_delivery = fields.Boolean(string="Is a Delivery", default=False)
+    product_qty = fields.Float(compute='_compute_product_qty', string='Quantity', digits=dp.get_precision('Product Unit of Measure'))
+
+    @api.depends('product_id', 'product_uom', 'product_uom_qty')
+    def _compute_product_qty(self):
+        for line in self:
+            if not line.product_id or not line.product_uom or not line.product_uom_qty:
+                return 0.0
+            line.product_qty = self.env['product.uom']._compute_qty_obj(line.product_uom, line.product_uom_qty, line.product_id.uom_id)
