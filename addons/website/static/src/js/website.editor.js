@@ -22,7 +22,6 @@ website.TopBar.include({
         'click [data-action="edit"]': 'edit',
     },
     start: function () {
-        var self = this;
         $("#wrapwrap").find("[data-oe-model] .oe_structure.oe_empty, [data-oe-model].oe_structure.oe_empty, [data-oe-type=html]:empty")
             .filter(".oe_not_editable")
             .filter(".oe_no_empty")
@@ -39,6 +38,7 @@ website.TopBar.include({
         this.$el.addClass('editing_mode');
         editor.editor_bar = new editor.Class(this);
         editor.editor_bar.prependTo(document.body);
+        $('.o_homepage_editor_welcome_message').remove();
     },
 });
 
@@ -117,7 +117,7 @@ widget.LinkDialog.include({
             minimumInputLength: 1,
             placeholder: _t("New or existing page"),
             query: function (q) {
-                if (q.term == last) return;
+                if (q.term === last) return;
                 last = q.term;
                 $.when(
                     self.page_exists(q.term),
@@ -203,6 +203,18 @@ widget.LinkDialog.include({
             context: base.get_context(),
         });
     },
+});
+
+/**
+ * Display a welcome message on the homepage when it is empty and that the user is connected.
+ */
+base.ready().then(function () {
+    if (location.search.indexOf("enable_editor") < 0 && $(".editor_enable").length === 0) {
+        var $wrap = $("#wrapwrap.homepage #wrap");
+        if ($wrap.length && $wrap.html().trim() === "") {
+            $wrap.html(qweb.render("website.homepage_editor_welcome_message"));
+        }
+    }
 });
 
 });
