@@ -1054,6 +1054,8 @@ take the following attributes:
   If a value is set, the last grouping level is folded
 ``round_dnd_dates``
   enables rounding the task's start and end dates to the nearest scale marks
+``drag_resize``
+  resizing of the tasks, default is ``true``
 
 .. ``progress``
     name of a field providing the completion percentage for the record's event,
