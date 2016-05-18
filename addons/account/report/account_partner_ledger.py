@@ -5,7 +5,7 @@ from openerp import api, models
 
 
 class ReportPartnerLedger(models.AbstractModel):
-    _name = 'report.account_extra_reports.report_partnerledger'
+    _name = 'report.account.report_partnerledger'
 
     def _lines(self, data, partner):
         full_account = []
@@ -107,4 +107,4 @@ class ReportPartnerLedger(models.AbstractModel):
             'lines': self._lines,
             'sum_partner': self._sum_partner,
         }
-        return self.env['report'].render('account_extra_reports.report_partnerledger', docargs)
+        return self.env['report'].render('account.report_partnerledger', docargs)
