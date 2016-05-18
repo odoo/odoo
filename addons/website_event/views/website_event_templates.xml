@@ -428,7 +428,12 @@
         <button type="submit" t-if="event.state == 'confirm' and (event.seats_availability == 'unlimited' or event.seats_available)"
             class="btn btn-primary btn-lg pull-right a-submit" t-attf-id="#{event.id}">Register Now</button>
         <div t-if="not event.state == 'confirm'" class="alert alert-info">
-            Event registration not yet started. 
+            <t t-if="event.state == 'draft'">
+                Event registration not yet started.
+            </t>
+            <t t-if="event.state != 'draft'">
+                Event registration is closed.
+            </t>
             <t t-if="uid">
                 <i class="fa fa-plus-circle"><a t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event"> <em>Configure and Launch Event Registration</em></a></i>
             </t>
