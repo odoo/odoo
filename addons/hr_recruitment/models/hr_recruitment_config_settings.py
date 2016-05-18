@@ -11,6 +11,4 @@ class RecruitmentSettings(models.TransientModel):
     module_document = fields.Selection(selection=[
             (0, "Do not manage CVs and motivation letter"),
             (1, 'Allow the automatic indexation of resumes')
-            ], string='Resumes',
-            help='Manage your CV\'s and motivation letter related to all applicants.\n'
-                            '-This installs the module document_ftp. This will install the knowledge management  module in order to allow you to search using specific keywords through  the content of all documents (PDF, .DOCx...)')
+            ], string='Resumes')
