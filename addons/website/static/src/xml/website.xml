@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-extend="Dialog">
-        <t t-jquery=".modal-dialog">
-            $(this).parent().addClass('o_website_modal');
-        </t>
-    </t>
-
     <div t-name="website.mobile_preview">
         <iframe id="mobile-viewport" t-att-src="widget.mobile_src"/>
     </div>

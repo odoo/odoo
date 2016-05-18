@@ -11,11 +11,14 @@ body .modal {
 
         .modal-content {
             border-radius: 0;
-            background-color: @o-we-color-paper;
+            color: initial!important;
+            background-color: @o-we-color-paper!important;
             .modal-header .o_subtitle {
                 margin-left: 10px;
             }
             .modal-body {
+                color: inherit!important;
+                background-color: transparent!important;
                 .o_modal_header {
                     .o-webclient-padding(@top: 10px, @bottom: 10px);
                     .clearfix();
@@ -41,7 +44,7 @@ body .modal {
                 }
             }
         }
-        
+
         @media (min-width: @screen-sm-min) {
             .modal-dialog {
                 height: 100%;
@@ -78,8 +81,8 @@ body .modal {
             }
 
             .modal-content {
-                background-color: black;
-                color: lightgray;
+                background-color: black!important;
+                color: lightgray!important;
                 border: 3px outset gray;
                 border-radius: 20px;
                 box-shadow: 0 0 100em 0 white;
@@ -143,7 +146,7 @@ body .modal {
                     width: 33%;
                     margin: 2em 0;
                     padding: 0 15px;
-                    
+
                     a {
                         display: block;
                         font-size: 34px;
@@ -157,7 +160,7 @@ body .modal {
                             line-height: 104px;
                             background-color: #2C2C36;
                             color: white;
-                            
+
                             .o-transition(all, 0.5s, cubic-bezier(0.19, 1, 0.22, 1));
                         }
                         p {
@@ -189,7 +192,7 @@ body .modal {
             line-height: 1.2;
             font-size: small;
             font-family: arial, sans-serif;
-            h3 { 
+            h3 {
                 font-size: medium;
             }
             .r {

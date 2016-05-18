@@ -12,7 +12,7 @@ function genericJsonRpc (fct_name, params, fct) {
         params: params,
         id: Math.floor(Math.random() * 1000 * 1000 * 1000)
     };
-    var xhr = fct(data);    
+    var xhr = fct(data);
     var result = xhr.pipe(function(result) {
         core.bus.trigger('rpc:result', data, result);
         if (result.error !== undefined) {
@@ -119,7 +119,7 @@ function jsonpRpc(url, fct_name, params, settings) {
     });
 }
 
-// helper function to make a rpc with a function name hardcoded to 'call' 
+// helper function to make a rpc with a function name hardcoded to 'call'
 function rpc(url, params, settings) {
     return jsonRpc(url, 'call', params, settings);
 }
