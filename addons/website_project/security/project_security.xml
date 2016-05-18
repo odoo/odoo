@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Add portal in existing rule -->
+        <record id="project.project_public_members_rule" model="ir.rule">
+            <field name="name">Project: employees: portal, employees or followers</field>
+            <field name="domain_force">[
+            '|',
+                ('privacy_visibility', 'in', ['portal', 'employees']),
+                ('message_partner_ids', 'in', [user.partner_id.id])
+            ]</field>
+        </record>
+
+        <record id="project.task_visibility_rule" model="ir.rule">
+            <field name="name">Project/Task: employees: portal or employee or (followers and following)</field>
+            <field name="domain_force">[
+            '|',
+                ('project_id.privacy_visibility', 'in', ['portal', 'employees']),
+                '|',
+                    '&amp;',
+                        ('project_id.privacy_visibility', '=', 'followers'),
+                        ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                    '|',
+                        ('message_partner_ids', 'in', [user.partner_id.id]),
+                        # to subscribe check access to the record, follower is not enough at creation
+                        ('user_id', '=', user.id)
+            ]</field>
+        </record>
+
+        <!-- Portal -->
+        <record id="project.portal_project_rule" model="ir.rule">
+            <field name="name">Project: portal users: portal or following</field>
+            <field name="domain_force">[
+                '|',
+                    '&amp;',
+                        ('privacy_visibility', '=', 'portal'),
+                        ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+                    '&amp;',
+                        ('privacy_visibility', '=', 'followers'),
+                        ('message_partner_ids', 'in', [user.partner_id.id])
+            ]</field>
+        </record>
+
+        <record id="project.portal_task_rule" model="ir.rule">
+            <field name="name">Project/Task: portal users: (portal and colleagues following) or (followers and following)</field>
+            <field name="domain_force">[
+            '|',
+                '|',
+                    '&amp;',
+                        ('project_id.privacy_visibility', '=', 'portal'),
+                        ('project_id.message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+                    '&amp;',
+                        ('project_id.privacy_visibility', '=', 'followers'),
+                        ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                '&amp;',
+                    # on employee project can receive messages but not access the object
+                    ('project_id.privacy_visibility', '!=', 'employees'),
+                    ('message_partner_ids', 'in', [user.partner_id.id])
+            ]</field>
+        </record>
+    </data>
+</odoo>

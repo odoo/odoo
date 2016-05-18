@@ -10,6 +10,7 @@ This module app will allow portal user(s) to see their tasks under 'My Account' 
 
     'depends': ['project', 'website_portal'],
     'data': [
+        'security/project_security.xml',
         'views/project_views.xml',
     ],
     'demo': [
