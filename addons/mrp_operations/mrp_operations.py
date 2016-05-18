@@ -6,6 +6,7 @@ from openerp.osv import osv
 import operator
 import time
 from datetime import datetime
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
@@ -28,21 +29,30 @@ class mrp_production_workcenter_line(osv.osv):
         """ Finds ending date.
         @return: Dictionary of values.
         """
-        ops = self.browse(cr, uid, ids, context=context)
-        date_and_hours_by_cal = [(op.date_planned, op.hour, op.workcenter_id.calendar_id.id) for op in ops if op.date_planned]
-
-        intervals = self.pool.get('resource.calendar').interval_get_multi(cr, uid, date_and_hours_by_cal)
-
+        calendar_obj = self.pool.get('resource.calendar')
         res = {}
-        for op in ops:
+        for op in self.browse(cr, uid, ids, context=context):
             res[op.id] = False
-            if op.date_planned:
-                i = intervals.get((op.date_planned, op.hour, op.workcenter_id.calendar_id.id))
-                if i:
-                    res[op.id] = i[-1][1].strftime('%Y-%m-%d %H:%M:%S')
-                else:
-                    res[op.id] = op.date_planned
+            if not op.date_planned:
+                continue
+            date_planned_dt = datetime.strptime(op.date_planned, DEFAULT_SERVER_DATETIME_FORMAT)
+            hours = calendar_obj.schedule_hours(cr, uid, op.workcenter_id.calendar_id.id, op.hour, day_dt=date_planned_dt, context=context)
+            if hours:
+                res[op.id] = hours[-1][-1].strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return res
+
+    def _set_date_end(self, cr, uid, ids, field_name, value, arg, context=None):
+        """ Finds starting date.
+        @return: boolean.
+        """
+        if value:
+            calendar_obj = self.pool.get('resource.calendar')
+            for op in self.browse(cr, uid, ids, context=context):
+                date_planned_end_dt = datetime.strptime(value, DEFAULT_SERVER_DATETIME_FORMAT)
+                hours = calendar_obj.schedule_hours(cr, uid, op.workcenter_id.calendar_id.id, -op.hour, day_dt=date_planned_end_dt, context=context)
+                if hours:
+                    self.write(cr, uid, op.id, {'date_planned': hours[0][0].strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+        return False
 
     def onchange_production_id(self, cr, uid, ids, production_id, context=None):
         if not production_id:
@@ -92,7 +102,7 @@ class mrp_production_workcenter_line(osv.osv):
                                        "* When the user cancels the work order it will be set in 'Canceled' status.\n" \
                                        "* When order is completely processed that time it is set in 'Finished' status."),
        'date_planned': fields.datetime('Scheduled Date', select=True),
-       'date_planned_end': fields.function(_get_date_end, string='End Date', type='datetime', fnct_search=_search_date_planned_end),
+       'date_planned_end': fields.function(_get_date_end, string='End Date', type='datetime', fnct_inv=_set_date_end, fnct_search=_search_date_planned_end),
        'date_start': fields.datetime('Start Date'),
        'date_finished': fields.datetime('End Date'),
        'delay': fields.float('Working Hours',help="The elapsed time between operation start and stop in this Work Center",readonly=True),
