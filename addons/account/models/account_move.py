@@ -1309,7 +1309,7 @@ class AccountPartialReconcile(models.Model):
         aml_ids = aml_set.ids
         #then, if the total debit and credit are equal, or the total amount in currency is 0, the reconciliation is full
         digits_rounding_precision = aml_set[0].company_id.currency_id.rounding
-        if float_is_zero(total_amount_currency, precision_rounding=digits_rounding_precision) or float_compare(total_debit, total_credit, precision_rounding=currency.rounding) == 0:
+        if (currency and float_is_zero(total_amount_currency, precision_rounding=currency.rounding)) or float_compare(total_debit, total_credit, precision_rounding=digits_rounding_precision) == 0:
             exchange_move_id = False
             exchange_partial_rec_id = False
             if currency and aml_to_balance:
