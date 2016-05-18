@@ -31,13 +31,6 @@
                 <div class="o_menu_brand">Website</div>
 
                 <ul class="o_menu_sections">
-                    <!-- Promote -->
-                    <li class="dropdown" groups="base.group_website_designer">
-                        <a class="dropdown-toggle waves" data-toggle="dropdown" href="#" id="promote-menu-button">Promote</a>
-                        <ul class="dropdown-menu oe_promote_menu" role="menu">
-                            <li><a data-action="promote-current-page" href="#" title="Promote page on the web">Optimize SEO</a></li>
-                        </ul>
-                    </li>
                     <!-- Content -->
                     <li class="dropdown content" groups="base.group_website_publisher" t-if="editable">
                         <a id="content-menu-button" class="dropdown-toggle waves" data-toggle="dropdown" href="#">Content</a>
@@ -59,8 +52,15 @@
                             <li class="divider"/>
                         </ul>
                     </li>
+                    <!-- Promote -->
+                    <li class="dropdown" groups="base.group_website_designer">
+                        <a class="dropdown-toggle waves" data-toggle="dropdown" href="#" id="promote-menu-button">Promote</a>
+                        <ul class="dropdown-menu oe_promote_menu" role="menu">
+                            <li><a data-action="promote-current-page" href="#" title="Promote page on the web">Optimize SEO</a></li>
+                        </ul>
+                    </li>
                     <!-- Help -->
-                    <li class="dropdown">
+                    <li class="dropdown" groups="base.group_no_one">
                         <a class="dropdown-toggle waves" data-toggle="dropdown" href="#" id="help-menu-button">Help</a>
                         <ul class="dropdown-menu" id="help-menu" role="menu">
                             <li class="dropdown-header">HELP &amp; TUTORIALS</li>
