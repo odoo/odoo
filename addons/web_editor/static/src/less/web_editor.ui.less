@@ -180,6 +180,10 @@ html[lang] > body.editor_enable{
                         opacity: 0.8;
                     }
                 }
+
+                &:nth-child(2n+1) {
+                    clear: left;
+                }
             }
         }
     }
@@ -495,7 +499,7 @@ html[lang] > body.editor_enable{
                     cursor: e-resize;
                     width: @odoo-handle-edge-size;
                     .o-position-absolute(@o-handles-offset-to-hide, auto, -@o-handles-offset-to-hide, 0);
-                
+
                     &:after {
                         .o-position-absolute(@top: 50%, @left: -@odoo-handle-border-width);
                         margin-top: -@o-handle-size/2;
@@ -506,7 +510,7 @@ html[lang] > body.editor_enable{
                     cursor: w-resize;
                     width: @odoo-handle-edge-size;
                     .o-position-absolute(@o-handles-offset-to-hide, 0, -@o-handles-offset-to-hide, auto);
-                
+
                     &:after {
                         .o-position-absolute(@top: 50%, @right: -@odoo-handle-border-width);
                         margin-top: -@o-handle-size/2;
@@ -657,7 +661,7 @@ html[lang] > body.editor_enable{
     width: auto;
     text-align: center;
     box-shadow: none;
-    
+
     .popover-content {
         height: @odoo-navbar-height;
 
@@ -785,7 +789,7 @@ table.colorpicker {
             padding: 0;
             list-style: none;
             text-align: center;
-            
+
             > li {
                 display: block;
                 float: none;
@@ -944,7 +948,7 @@ body.editor_enable {
         padding-top: @odoo-navbar-height;
         > main {
             height: 100%;
-            #editable_area {  
+            #editable_area {
                 position: relative;
                 overflow: hidden;
                 max-width: 600px;
