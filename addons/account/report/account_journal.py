@@ -5,7 +5,7 @@ from openerp import api, models
 
 
 class ReportJournal(models.AbstractModel):
-    _name = 'report.account_extra_reports.report_journal'
+    _name = 'report.account.report_journal'
 
     def lines(self, target_move, journal_ids, sort_selection, data):
         if isinstance(journal_ids, int):
@@ -112,4 +112,4 @@ class ReportJournal(models.AbstractModel):
             'sum_debit': self._sum_debit,
             'get_taxes': self._get_taxes,
         }
-        return self.env['report'].render('account_extra_reports.report_journal', docargs)
+        return self.env['report'].render('account.report_journal', docargs)
