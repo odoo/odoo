@@ -8,10 +8,12 @@ var core = require('web.core');
 var _ = require('_');
 var _t = core._t;
 var SelectCreateDialog = form_common.SelectCreateDialog;
+var QWeb = core.qweb;
 
 reconciliation_widgets.bankStatementReconciliationLine.include({
     events: _.defaults({
         "click .create_counter_part_so": "createCounterPartSO",
+        "click .go_to_so": "goToSO",
     }, reconciliation_widgets.bankStatementReconciliationLine.prototype.events),
 
     init: function() {
@@ -33,15 +35,18 @@ reconciliation_widgets.bankStatementReconciliationLine.include({
         var self = this;
         // Prevent the widget from going to 'match' mode
         e.stopPropagation();
-        vals = {
-            name: $(e.target).data('sale_order_name'),
-            credit : $(e.target).data('sale_order_amount'),
-            debit : 0,
-            account_id : this.init_data.rec_account_id,
-        }
-        new Model("account.move.line").call("create", [vals])
-        var $link_to_so = $(QWeb.render("bank_statement_reconciliation_line_link_to_so", {so_id: $(e.target).data('sale_order_id')}));
-        $(e.target).after($link_to_so);
+        new Model("account.bank.statement.line").call("so_counterpart_creation", [[self.st_line.id], $(e.target).data('sale_order_id')]).then(function (result) {
+            var $link_to_so = $(QWeb.render("bank_statement_reconciliation_line_link_to_so", {so_id: $(e.target).data('sale_order_id')}));
+            $(e.target).parents('div.so-selection').after($link_to_so);
+        });
+    },
+
+    goToSO: function(e) {
+        var self = this;
+        // Prevent the widget from going to 'match' mode
+        var action = self.getParent().action_open_sale_order;
+        action.res_id = $(e.target).data('so_id');
+        self.do_action(action);
     },
 
     openSaleOrder: function(e) {

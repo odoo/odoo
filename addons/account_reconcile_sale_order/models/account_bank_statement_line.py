@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models
+from openerp import models, api
 
 
 class AccountBankStatementLine(models.Model):
@@ -23,8 +23,6 @@ class AccountBankStatementLine(models.Model):
         sale_orders = self.find_matching_sale_orders()
         if sale_orders:
             ret['sale_orders'] = [[k.id, k.name, k.amount_total] for k in sale_orders]
-            ret['rec_account_id'] = self.env['account.account'].search(['internal_type', '=', 'receivable'], limit=1).id
-            #ret['reconciliation_proposition'] = sale_order.get_move_lines_for_reconciliation_widget(self.id)
         return ret
 
     def find_matching_sale_orders(self):
@@ -41,3 +39,14 @@ class AccountBankStatementLine(models.Model):
         sale_orders = self.env['sale.order'].search(domain_so)
 
         return sale_orders
+
+    @api.multi
+    def so_counterpart_creation(self, sale_order_id):
+        sale_order = self.env['sale.order'].browse(sale_order_id)
+        vals = {
+            'name': sale_order.name,
+            'debit': self.amount < 0 and -self.amount or 0.0,
+            'credit': self.amount > 0 and self.amount or 0.0,
+            'account_id': self.env['account.account'].search([('internal_type', '=', 'receivable')], limit=1).id,
+        }
+        self.process_reconciliation(new_aml_dicts=[vals])
