@@ -1064,7 +1064,7 @@
                         <t t-raw="file.name || file.filename"/>
                     </span>
                     <t t-if="(!file.upload or file.percent_loaded&gt;=100)">
-                        <a class="o_image" t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-att-data-mimetype="file.mimetype" t-attf-data-src="/web/image/#{file.id}/100x80">
+                        <a class="o_image" target="_blank" t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-att-data-mimetype="file.mimetype" t-attf-data-src="/web/image/#{file.id}/100x80">
                             <t t-raw="file.name || file.filename"/>
                         </a>
                         <span class="fa fa-stack oe_delete" title="Delete this file" t-attf-data-id="#{file.id}">
@@ -1079,7 +1079,7 @@
             <t t-foreach="widget.get('value')" t-as="id">
                 <t t-set="file" t-value="widget.data[id]"/>
                 <div>
-                    <a t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
+                    <a target="_blank" t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
                         <t t-raw="file.name || file.filename"/>
                     </a>
                 </div>
