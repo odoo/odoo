@@ -29,7 +29,7 @@
                     <field name="project_id"/>
                     <field name="user_id"/>
                     <field name="stage_id"/>
-                    <filter string="My Tasks" domain="[('user_id','=',uid)]"/>
+                    <filter string="My Tasks" name="my_tasks" domain="[('user_id','=',uid)]"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                     <separator/>
                     <filter string="New" name="draft" domain="[('stage_id.sequence', '&lt;=', 1)]"/>
@@ -452,7 +452,7 @@
             <field name="name">Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
-            <field name="context">{}</field>
+            <field name="context">{'search_default_my_tasks': 1}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
                 <p>

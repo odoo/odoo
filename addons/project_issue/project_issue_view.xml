@@ -99,7 +99,7 @@
                     <field name="project_id" groups="base.group_user"/>
                     <field name="tag_ids"/>
                     <field name="stage_id" domain="[]"/>
-                    <filter string="My Issues" domain="[('user_id','=',uid)]"/>
+                    <filter string="My Issues" name="my_issues" domain="[('user_id','=',uid)]"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                     <separator/>
                     <filter string="New" name="draft" domain="[('stage_id.sequence', '=', 1)]"/>
