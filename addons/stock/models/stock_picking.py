@@ -497,12 +497,16 @@ class Picking(models.Model):
         computed_putaway_locations = dict(
             (product, self.location_dest_id.get_putaway_strategy(product) or self.location_dest_id.id) for product in all_products)
 
-        product_to_uom = dict((product.id, product.uom_id) for product in all_products)
+        product_to_uom = {p.id: False for p in all_products}
         picking_moves = self.move_lines.filtered(lambda move: move.state not in ('done', 'cancel'))
         for move in picking_moves:
+            if not product_to_uom.get(move.product_id.id):
+                product_to_uom[move.product_id.id] = move.product_uom
             # If we encounter an UoM that is smaller than the default UoM or the one already chosen, use the new one instead.
             if move.product_uom != product_to_uom[move.product_id.id] and move.product_uom.factor > product_to_uom[move.product_id.id].factor:
                 product_to_uom[move.product_id.id] = move.product_uom
+        product_to_uom.update({p.id: p.uom_id for p in all_products if not product_to_uom.get(p.id)})
+
         if len(picking_moves.mapped('location_id')) > 1:
             raise UserError(_('The source location must be the same for all the moves of the picking.'))
         if len(picking_moves.mapped('location_dest_id')) > 1:
