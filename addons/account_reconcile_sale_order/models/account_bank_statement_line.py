@@ -22,7 +22,8 @@ class AccountBankStatementLine(models.Model):
         ret = super(AccountBankStatementLine, self).get_data_for_single_reconciliation_widget(excluded_move_line_ids)
         sale_orders = self.find_matching_sale_orders()
         if sale_orders:
-            ret['sale_order_ids'] = sale_orders.ids
+            ret['sale_orders'] = [[k.id, k.name, k.amount_total] for k in sale_orders]
+            ret['rec_account_id'] = self.env['account.account'].search(['internal_type', '=', 'receivable'], limit=1).id
             #ret['reconciliation_proposition'] = sale_order.get_move_lines_for_reconciliation_widget(self.id)
         return ret
 

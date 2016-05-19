@@ -11,7 +11,7 @@ var SelectCreateDialog = form_common.SelectCreateDialog;
 
 reconciliation_widgets.bankStatementReconciliationLine.include({
     events: _.defaults({
-        "click .link_open_sale_order": "openSaleOrder",
+        "click .create_counter_part_so": "createCounterPartSO",
     }, reconciliation_widgets.bankStatementReconciliationLine.prototype.events),
 
     init: function() {
@@ -21,12 +21,27 @@ reconciliation_widgets.bankStatementReconciliationLine.include({
         // in its parent (the client action), so when the user wants to open a reconciliation's
         // matched sale order, we just reuse the action and change its res_id.
         var parent = this.getParent();
-        if (!parent.action_open_sale_order && this.init_data && this.init_data.sale_order_ids) {
+        if (!parent.action_open_sale_order && this.init_data && this.init_data.sale_orders) {
             new Model("ir.actions.act_window")
                 .call("for_xml_id", ['account_reconcile_sale_order', 'action_sale_order'])
                 .done(function(action) { parent.action_open_sale_order = action })
                 .fail(function() { self.do_warn(_t("Oops, we encountered an error. Please reload the page.")) });
         }
+    },
+
+    createCounterPartSO: function(e) {
+        var self = this;
+        // Prevent the widget from going to 'match' mode
+        e.stopPropagation();
+        vals = {
+            name: $(e.target).data('sale_order_name'),
+            credit : $(e.target).data('sale_order_amount'),
+            debit : 0,
+            account_id : this.init_data.rec_account_id,
+        }
+        new Model("account.move.line").call("create", [vals])
+        var $link_to_so = $(QWeb.render("bank_statement_reconciliation_line_link_to_so", {so_id: $(e.target).data('sale_order_id')}));
+        $(e.target).after($link_to_so);
     },
 
     openSaleOrder: function(e) {
