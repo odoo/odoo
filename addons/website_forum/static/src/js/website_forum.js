@@ -175,7 +175,7 @@ if(!$('.website_forum').length) {
     $('.comment_delete').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        ajax.jsonRpc($link.parent('form').attr('action'), 'call', {}).then(function () {
+        ajax.jsonRpc($link.closest('form').attr('action'), 'call', {}).then(function () {
             $link.parents('.comment').first().remove();
         });
     });
