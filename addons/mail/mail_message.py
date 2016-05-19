@@ -884,7 +884,8 @@ class mail_message(osv.Model):
         # the parent message -> add a read notification for the parent
         if message.parent_id:
             parent_id = message.parent_id
-            while parent_id:
+            check = set()
+            while parent_id and parent_id not in check:
                 # all notified_partner_ids of the mail.message have to be notified for the parented messages
                 partners_to_parent_notify = set(message.notified_partner_ids).difference(parent_id.notified_partner_ids)
                 for partner in partners_to_parent_notify:
@@ -893,4 +894,5 @@ class mail_message(osv.Model):
                             'partner_id': partner.id,
                             'is_read': True,
                         }, context=context)
+                check.add(parent_id)
                 parent_id = parent_id.parent_id
