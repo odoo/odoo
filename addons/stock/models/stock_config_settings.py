@@ -143,6 +143,6 @@ class StockSettings(models.TransientModel):
                 picking_types.write({'active': True})
             else:
                 # Check active internal picking types of warehouses and make them inactive
-                picking_types = warehouses.mapped('int_type_id').filtered(lambda self: self.active and self.reception_steps == 'one_step' and self.delivery_steps == 'ship_only')
+                picking_types = warehouses.filtered(lambda self: self.int_type_id.active and self.reception_steps == 'one_step' and self.delivery_steps == 'ship_only').mapped('int_type_id')
                 picking_types.write({'active': False})
         return True
