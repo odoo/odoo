@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
+
         <!-- add google drive config field in user form -->
-        <record model="ir.ui.view" id="view_google_drive_config_tree">
+        <record id="view_google_drive_config_tree" model="ir.ui.view">
             <field name="name">google_drive.config.tree</field>
             <field name="model">google.drive.config</field>
             <field name="arch" type="xml">
@@ -13,7 +13,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_google_drive_config_form">
+        <record id="view_google_drive_config_form" model="ir.ui.view">
             <field name="name">google_drive.config.form</field>
             <field name="model">google.drive.config</field>
             <field name="arch" type="xml">
@@ -52,7 +52,7 @@
             </field>
         </record>
 
-        <record model='ir.actions.act_window' id='action_google_drive_users_config'>
+        <record id='action_google_drive_users_config' model='ir.actions.act_window'>
             <field name='name'>Templates</field>
             <field name='res_model'>google.drive.config</field>
             <field name='type'>ir.actions.act_window</field>
@@ -68,7 +68,14 @@
             </field>
         </record>
 
-        <menuitem name='Google Drive' id='menu_google_drive_config' parent='base.menu_administration' />
-        <menuitem id='menu_google_drive_model_config' parent='menu_google_drive_config' action='action_google_drive_users_config' />
-    </data>
-</openerp>
+        <menuitem
+            id='menu_google_drive_config'
+            name='Google Drive'
+            parent='base.menu_administration' />
+
+        <menuitem
+            id='menu_google_drive_model_config'
+            parent='menu_google_drive_config'
+            action='action_google_drive_users_config' />
+
+</odoo>
