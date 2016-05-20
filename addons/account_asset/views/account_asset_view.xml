@@ -166,7 +166,7 @@
                         <page string="Depreciation Information">
                             <group>
                                 <field name="method" widget="radio" attrs="{'invisible': [('type','=','sale')]}"/>
-                                <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
+                                <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive'), ('method','=','accelerated')]}"/>
                                 <label for="method_time"/>
                                 <div>
                                     <field name="method_time"/>

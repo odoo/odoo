@@ -20,10 +20,11 @@ class AccountAssetCategory(models.Model):
     account_depreciation_id = fields.Many2one('account.account', string='Depreciation Account', required=True, domain=[('internal_type','=','other'), ('deprecated', '=', False)])
     journal_id = fields.Many2one('account.journal', string='Journal', required=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env['res.company']._company_default_get('account.asset.category'))
-    method = fields.Selection([('linear', 'Linear'), ('degressive', 'Degressive')], string='Computation Method', required=True, default='linear',
+    method = fields.Selection([('linear', 'Linear'), ('degressive', 'Degressive'), ('accelerated', 'Accelerated')], string='Computation Method', required=True, default='linear',
         help="Choose the method to use to compute the amount of depreciation lines.\n"
             "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
-            "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor")
+            "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor\n"
+            "  * Accelerated: Use Linear or Degressive value, whichever is higher")
     method_number = fields.Integer(string='Number of Depreciations', default=5, help="The number of depreciations needed to depreciate your asset")
     method_period = fields.Integer(string='Period Length', default=1, help="State here the time between 2 depreciations, in months", required=True)
     method_progress_factor = fields.Float('Degressive Factor', default=0.3)
@@ -68,7 +69,7 @@ class AccountAssetAsset(models.Model):
             "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status.")
     active = fields.Boolean(default=True)
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True, states={'draft': [('readonly', False)]})
-    method = fields.Selection([('linear', 'Linear'), ('degressive', 'Degressive')], string='Computation Method', required=True, readonly=True, states={'draft': [('readonly', False)]}, default='linear',
+    method = fields.Selection([('linear', 'Linear'), ('degressive', 'Degressive'), ('accelerated', 'Accelerated')], string='Computation Method', required=True, readonly=True, states={'draft': [('readonly', False)]}, default='linear',
         help="Choose the method to use to compute the amount of depreciation lines.\n  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
             "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor")
     method_number = fields.Integer(string='Number of Depreciations', readonly=True, states={'draft': [('readonly', False)]}, default=5, help="The number of depreciations needed to depreciate your asset")
@@ -140,6 +141,32 @@ class AccountAssetAsset(models.Model):
                         amount = (residual_amount * self.method_progress_factor) / total_days * days
                     elif sequence == undone_dotation_number:
                         amount = (residual_amount * self.method_progress_factor) / total_days * (total_days - days)
+            elif self.method == 'accelerated':
+                amount_lin = amount_to_depr / (undone_dotation_number - len(posted_depreciation_line_ids))
+                if self.prorata and self.category_id.type == 'purchase':
+                    amount_lin = amount_to_depr / self.method_number
+                    days = total_days - float(depreciation_date.strftime('%j'))
+                    if sequence == 1:
+                        amount_lin = (amount_to_depr / self.method_number) / total_days * days
+                    elif sequence == undone_dotation_number:
+                        amount_lin = (amount_to_depr / self.method_number) / total_days * (total_days - days)
+
+                amount_deg = residual_amount * self.method_progress_factor
+                if self.prorata:
+                    days = total_days - float(depreciation_date.strftime('%j'))
+                    if sequence == 1:
+                        amount_deg = (residual_amount * self.method_progress_factor) / total_days * days
+                    elif sequence == undone_dotation_number:
+                        amount_deg = (residual_amount * self.method_progress_factor) / total_days * (total_days - days)
+
+                if amount_deg > amount_lin:
+                    amount = amount_deg
+                else:
+                    amount = amount_lin
+
+                if amount > residual_amount:
+                    amount = residual_amount
+
         return amount
 
     def _compute_board_undone_dotation_nb(self, depreciation_date, total_days):
