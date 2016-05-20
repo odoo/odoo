@@ -24,7 +24,10 @@ class BaseConfigSettings(models.TransientModel):
     def set_google_authorization_code(self):
         self.ensure_one()
         ICP = self.env['ir.config_parameter']
-        if self.google_drive_authorization_code and self.google_drive_authorization_code != ICP.get_param('google_drive_authorization_code'):
-            refresh_token = self.env['google.service'].generate_refresh_token('drive', self.google_drive_authorization_code)
-            ICP.set_param('google_drive_authorization_code', self.google_drive_authorization_code, groups=['base.group_system'])
-            ICP.set_param('google_drive_refresh_token', refresh_token, groups=['base.group_system'])
+        authorization_code = self.google_drive_authorization_code
+        refresh_token = False
+        if authorization_code and authorization_code != ICP.get_param('google_drive_authorization_code'):
+            refresh_token = self.env['google.service'].generate_refresh_token('drive', authorization_code)
+
+        ICP.set_param('google_drive_authorization_code', authorization_code, groups=['base.group_system'])
+        ICP.set_param('google_drive_refresh_token', refresh_token, groups=['base.group_system'])
