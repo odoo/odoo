@@ -43,14 +43,12 @@
             <field name="campaign_id" ref="marketing_campaign_openerppartnerchannel"/>
             <field name="email_template_id" ref="email_template_1"/>
             <field name="condition">object.credit_limit &lt; 10000</field>
-            <field name="keep_if_condition_not_met">True</field>
             <field eval="1" name="start"/>
         </record>
         <record id="marketing_campaign_activity_1" model="marketing.campaign.activity">
             <field name="name">Silver Partner</field>
             <field name="campaign_id" ref="marketing_campaign_openerppartnerchannel"/>
             <field name="condition">object.credit_limit &gt;= 10000 and object.credit_limit &lt; 50000</field>
-            <field name="keep_if_condition_not_met">True</field>
             <field name="email_template_id" ref="email_template_2"/>
         </record>
 
@@ -58,7 +56,6 @@
             <field name="name">Gold Partner</field>
             <field name="condition">object.credit_limit &gt;= 100000</field>
             <field name="campaign_id" ref="marketing_campaign_openerppartnerchannel"/>
-            <field name="keep_if_condition_not_met">True</field>
             <field name="email_template_id" ref="email_template_3"/>
         </record>
 
