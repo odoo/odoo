@@ -125,15 +125,15 @@ class TestHtmlField(common.TransactionCase):
 
     def setUp(self):
         super(TestHtmlField, self).setUp()
-        self.partner = self.registry('res.partner')
+        self.model = self.env['test_new_api.mixed']
 
     def test_00_sanitize(self):
-        cr, uid, context = self.cr, self.uid, {}
-        old_columns = self.partner._columns
-        self.partner._columns = dict(old_columns)
-        self.partner._columns.update({
-            'comment': fields.html('Secure Html', sanitize=False),
-        })
+        self.assertEqual(self.model._fields['comment1'].sanitize, False)
+        self.assertEqual(self.model._fields['comment2'].sanitize, True)
+        self.assertEqual(self.model._fields['comment2'].strip_classes, False)
+        self.assertEqual(self.model._fields['comment3'].sanitize, True)
+        self.assertEqual(self.model._fields['comment3'].strip_classes, True)
+
         some_ugly_html = """<p>Oops this should maybe be sanitized
 % if object.some_field and not object.oriented:
 <table>
@@ -151,40 +151,22 @@ class TestHtmlField(common.TransactionCase):
         <p>Youpie</p>
 %endif"""
 
-        pid = self.partner.create(cr, uid, {
-            'name': 'Raoul Poilvache',
-            'comment': some_ugly_html,
-        }, context=context)
-        partner = self.partner.browse(cr, uid, pid, context=context)
-        self.assertEqual(partner.comment, some_ugly_html, 'Error in HTML field: content was sanitized but field has sanitize=False')
-
-        self.partner._columns.update({
-            'comment': fields.html('Unsecure Html', sanitize=True, strip_classes=False),
+        record = self.model.create({
+            'comment1': some_ugly_html,
+            'comment2': some_ugly_html,
+            'comment3': some_ugly_html,
+            'comment4': some_ugly_html,
         })
-        self.partner.write(cr, uid, [pid], {
-            'comment': some_ugly_html,
-        }, context=context)
-        partner = self.partner.browse(cr, uid, pid, context=context)
-        # classes are kept
-        self.assertIn('<tr class="', partner.comment)
 
-        self.partner._columns.update({
-            'comment': fields.html('Unsecure Html', sanitize=True, strip_classes=True),
-        })
-        self.partner.write(cr, uid, [pid], {
-            'comment': some_ugly_html,
-        }, context=context)
-        partner = self.partner.browse(cr, uid, pid, context=context)
+        self.assertEqual(record.comment1, some_ugly_html, 'Error in HTML field: content was sanitized but field has sanitize=False')
+
+        self.assertIn('<tr class="', record.comment2)
+
         # sanitize should have closed tags left open in the original html
-        self.assertIn('</table>', partner.comment, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
-        self.assertIn('</td>', partner.comment, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
-        self.assertIn('<tr style="', partner.comment, 'Style attr should not have been stripped')
+        self.assertIn('</table>', record.comment3, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
+        self.assertIn('</td>', record.comment3, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
+        self.assertIn('<tr style="', record.comment3, 'Style attr should not have been stripped')
         # sanitize does not keep classes if asked to
-        self.assertNotIn('<tr class="', partner.comment)
+        self.assertNotIn('<tr class="', record.comment3)
 
-        self.partner._columns['comment'] = fields.html('Stripped Html', sanitize=True, strip_style=True)
-        self.partner.write(cr, uid, [pid], {'comment': some_ugly_html}, context=context)
-        partner = self.partner.browse(cr, uid, pid, context=context)
-        self.assertNotIn('<tr style="', partner.comment, 'Style attr should have been stripped')
-
-        self.partner._columns = old_columns
+        self.assertNotIn('<tr style="', record.comment4, 'Style attr should have been stripped')
