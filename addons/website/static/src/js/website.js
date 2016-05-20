@@ -38,7 +38,7 @@ odoo.define('website.website', function (require) {
 
     /* ----------------------------------------------------
        Widgets
-       ---------------------------------------------------- */ 
+       ---------------------------------------------------- */
     var prompt = function (options, _qweb) {
         /**
          * A bootstrapped version of prompt() albeit asynchronous

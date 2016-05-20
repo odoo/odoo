@@ -18,7 +18,6 @@ odoo.define('web_editor.snippets.options', function (require) {
      * thanks to the data-js key of the full options web_editor template.
      */
     var SnippetOption = Class.extend({
-        // initialisation (don't overwrite)
         init: function (BuildingBlock, editor, $target, option_id) {
             this.buildingBlock = BuildingBlock;
             this.editor = editor;
