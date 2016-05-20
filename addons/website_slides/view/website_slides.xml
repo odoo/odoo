@@ -396,7 +396,7 @@
                             <t t-if="slide.datas and slide.slide_type == 'infographic'">
                                 <img t-attf-src="/web/image/slide.slide/#{slide.id}/datas" class="img-responsive" style="width:100%"/>
                             </t>
-                        <div t-if="slide.slide_type in ('presentation', 'document')" class="embed-responsive embed-responsive-16by9 embed-responsive-item mb8">
+                        <div t-if="slide.slide_type in ('presentation', 'document')" class="embed-responsive embed-responsive-4by3 embed-responsive-item mb8">
                             <t t-raw="slide.embed_code"/>
                         </div>
                         <div t-if="slide.slide_type == 'video' and slide.document_id" class="embed-responsive embed-responsive-16by9 embed-responsive-item mb8">
