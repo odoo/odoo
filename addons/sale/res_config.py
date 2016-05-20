@@ -72,7 +72,6 @@ class sale_configuration(osv.TransientModel):
         'default_invoice_policy': fields.selection([
             ('order', 'Invoice ordered quantities'),
             ('delivery', 'Invoice delivered quantities'),
-            ('cost', 'Invoice based on costs (time and material, expenses)')
             ], 'Default Invoicing', default_model='product.template'),
         'deposit_product_id_setting': fields.many2one('product.product', 'Deposit Product',\
             domain="[('type', '=', 'service')]",\

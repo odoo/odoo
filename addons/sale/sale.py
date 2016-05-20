@@ -100,6 +100,9 @@ class SaleOrder(models.Model):
         for order in self:
             order.order_line._compute_tax_id()
 
+    def _inverse_project_id(self):
+        self.project_id = self.related_project_id
+
     name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, index=True, default=lambda self: _('New'))
     origin = fields.Char(string='Source Document', help="Reference of the document that generated this sales order request.")
     client_order_ref = fields.Char(string='Customer Reference', copy=False)
@@ -124,6 +127,7 @@ class SaleOrder(models.Model):
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current sales order.")
     currency_id = fields.Many2one("res.currency", related='pricelist_id.currency_id', string="Currency", readonly=True, required=True)
     project_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="The analytic account related to a sales order.", copy=False)
+    related_project_id = fields.Many2one('account.analytic.account', inverse='_inverse_project_id', related='project_id', string='Analytic Account', help="The analytic account related to a sales order.", copy=False)
 
     order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines', states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True)
 
@@ -449,11 +453,6 @@ class SaleOrder(models.Model):
             if self.env.context.get('send_email'):
                 self.force_quotation_send()
             order.order_line._action_procurement_create()
-            if not order.project_id:
-                for line in order.order_line:
-                    if line.product_id.invoice_policy == 'cost':
-                        order._create_analytic_account()
-                        break
         if self.env['ir.values'].get_default('sale.config.settings', 'auto_done_setting'):
             self.action_done()
         return True
@@ -672,14 +671,6 @@ class SaleOrderLine(models.Model):
         return new_procs
 
     @api.model
-    def _get_analytic_invoice_policy(self):
-        return ['cost']
-
-    @api.model
-    def _get_analytic_track_service(self):
-        return []
-
-    @api.model
     def create(self, values):
         onchange_fields = ['name', 'price_unit', 'product_uom', 'tax_id']
         if values.get('order_id') and values.get('product_id') and any(f not in values for f in onchange_fields):
@@ -690,10 +681,6 @@ class SaleOrderLine(models.Model):
                     values[field] = line._fields[field].convert_to_write(line[field], line)
         line = super(SaleOrderLine, self).create(values)
         if line.state == 'sale':
-            if (not line.order_id.project_id and
-                (line.product_id.track_service in self._get_analytic_track_service() or
-                 line.product_id.invoice_policy in self._get_analytic_invoice_policy())):
-                line.order_id._create_analytic_account()
             line._action_procurement_create()
 
         return line
@@ -1032,9 +1019,7 @@ class ProductTemplate(models.Model):
     sales_count = fields.Integer(compute='_sales_count', string='# Sales')
     invoice_policy = fields.Selection(
         [('order', 'Ordered quantities'),
-         ('delivery', 'Delivered quantities'),
-         ('cost', 'Reinvoice Costs')],
+         ('delivery', 'Delivered quantities')],
         string='Invoicing Policy', help='Ordered Quantity: Invoice based on the quantity the customer ordered.\n'
-                                        'Delivered Quantity: Invoiced based on the quantity the vendor delivered.\n'
-                                        'Reinvoice Costs: Invoice with some additional charges (product transfer, labour charges,...)',
+                                        'Delivered Quantity: Invoiced based on the quantity the vendor delivered.',
                                         default='order')

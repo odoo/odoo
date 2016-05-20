@@ -33,23 +33,18 @@ class ProductTemplate(models.Model):
 
     @api.onchange('type', 'invoice_policy')
     def onchange_type_timesheet(self):
-        if self.type == 'service' and self.invoice_policy != 'cost':
+        if self.type == 'service' and self.invoice_policy:
             self.track_service = 'timesheet'
         else:
             self.track_service = 'manual'
-        return {}
 
 
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
-    def _get_sale_order_line(self, vals=None):
-        result = dict(vals or {})
+    def _process_timesheet_sale_order_line(self):
         if self.project_id:
-            if result.get('so_line'):
-                sol = self.env['sale.order.line'].browse([result['so_line']])
-            else:
-                sol = self.so_line
+            sol = self.so_line
             if not sol:
                 sol = self.env['sale.order.line'].search([
                     ('order_id.project_id', '=', self.account_id.id),
@@ -57,53 +52,43 @@ class AccountAnalyticLine(models.Model):
                     ('product_id.track_service', '=', 'timesheet'),
                     ('product_id.type', '=', 'service')],
                     limit=1)
-            if sol:
-                result.update({
-                    'so_line': sol.id,
-                    'product_id': sol.product_id.id,
-                })
-                result = self._get_timesheet_cost(result)
-
-        result = super(AccountAnalyticLine, self)._get_sale_order_line(vals=result)
-        return result
+                if sol:
+                    self.so_line = sol
+                    self.product_id = sol.product_id
+        self.so_line._compute_analytic_qty()
 
     def _get_timesheet_cost(self, vals=None):
-        result = dict(vals or {})
-        if result.get('project_id') or self.project_id:
-            if result.get('amount'):
-                return result
-            unit_amount = result.get('unit_amount', 0.0) or self.unit_amount
-            user_id = result.get('user_id') or self.user_id.id
+        if vals.get('task_id', False):
+            task = self.env['project.task'].browse(vals['task_id'])
+            vals['so_line'] = task.sale_line_id.id or vals.get('so_line', False)
+
+        if not vals.get('amount') and vals.get('project_id') or self.project_id:
+            unit_amount = vals.get('unit_amount', 0.0) or self.unit_amount
+            user_id = vals.get('user_id') or self.user_id.id
             user = self.env['res.users'].browse([user_id])
             emp = self.env['hr.employee'].search([('user_id', '=', user_id)], limit=1)
             cost = emp and emp.timesheet_cost or 0.0
             uom = (emp or user).company_id.project_time_mode_id
             # Nominal employee cost = 1 * company project UoM (project_time_mode_id)
-            result.update(
+            vals.update(
                 amount=(-unit_amount * cost),
                 product_uom_id=uom.id
             )
-        return result
-
-    @api.model
-    def _update_values(self, values):
-        if values.get('task_id', False):
-            task = self.env['project.task'].browse(values['task_id'])
-            values['so_line'] = task.sale_line_id and task.sale_line_id.id or values.get('so_line', False)
 
     @api.multi
     def write(self, values):
-        self._update_values(values)
         for line in self:
-            values = line._get_timesheet_cost(vals=values)
-            super(AccountAnalyticLine, line).write(values)
+            line._get_timesheet_cost(vals=values)
+            super(AccountAnalyticLine, self).write(values)
+            line._process_timesheet_sale_order_line()
         return True
 
     @api.model
     def create(self, values):
-        self._update_values(values)
-        values = self._get_timesheet_cost(vals=values)
-        return super(AccountAnalyticLine, self).create(values)
+        self._get_timesheet_cost(vals=values)
+        line = super(AccountAnalyticLine, self).create(values)
+        line._process_timesheet_sale_order_line()
+        return line
 
 
 class SaleOrder(models.Model):
@@ -242,12 +227,15 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     @api.multi
-    def _compute_analytic(self, domain=None):
+    def _compute_analytic_qty(self, domain=None):
         if not domain:
             # To filter on analyic lines linked to an expense
             domain = [('so_line', 'in', self.ids), '|', ('amount', '<=', 0.0), ('project_id', '!=', False)]
-        return super(SaleOrderLine, self)._compute_analytic(domain=domain)
+        return super(SaleOrderLine, self)._compute_analytic_qty(domain=domain)
 
     @api.model
-    def _get_analytic_track_service(self):
-        return super(SaleOrderLine, self)._get_analytic_track_service() + ['timesheet', 'task']
+    def create(self, values):
+        line = super(SaleOrderLine, self).create(values)
+        if line.state == 'sale' and not line.order_id.project_id and (line.product_id.track_service in ['timesheet', 'task']):
+            line.order_id._create_analytic_account()
+        return line
