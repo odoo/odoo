@@ -11,7 +11,7 @@ from odoo.exceptions import RedirectWarning, UserError
 from odoo.tools.safe_eval import safe_eval as eval
 from odoo.tools.translate import _
 
-from odoo.addons.google_account import TIMEOUT
+from odoo.addons.google_account.models.google_service import GOOGLE_TOKEN_ENDPOINT, TIMEOUT
 
 _logger = logging.getLogger(__name__)
 
@@ -71,7 +71,7 @@ class GoogleDrive(models.Model):
         })
         headers = {"Content-type": "application/x-www-form-urlencoded"}
         try:
-            req = urllib2.Request('https://accounts.google.com/o/oauth2/token', data, headers)
+            req = urllib2.Request(GOOGLE_TOKEN_ENDPOINT, data, headers)
             content = urllib2.urlopen(req, timeout=TIMEOUT).read()
         except urllib2.HTTPError:
             if user_is_admin:
