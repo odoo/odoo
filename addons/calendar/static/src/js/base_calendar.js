@@ -1,16 +1,19 @@
 odoo.define('base_calendar.base_calendar', function (require) {
 "use strict";
 
+var bus = require('bus.bus').bus
 var core = require('web.core');
 var CalendarView = require('web_calendar.CalendarView');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
+var formats = require('web.formats');
 var form_common = require('web.form_common');
 var Model = require('web.DataModel');
 var Notification = require('web.notification').Notification;
 var session = require('web.session');
 var WebClient = require('web.WebClient');
 var widgets = require('web_calendar.widgets');
+var WebWidget = require('web.Widget');
 
 var FieldMany2ManyTags = core.form_widget_registry.get('many2many_tags');
 var _t = core._t;
@@ -200,52 +203,59 @@ var CalendarNotification = Notification.extend({
 
             'click .link2showed': function() {
                 this.destroy(true);
-                this.rpc("/calendar/notify_ack");
+                this.rpc("/calendar/notify_ack", {event_id: this.eid});
             },
         });
     },
 });
 
-WebClient.include({
-    get_next_notif: function() {
+var calendarAlarmManager = WebWidget.extend({
+    init: function(parent, options) {
         var self = this;
-
-        this.rpc("/calendar/notify")
-        .done(function(result) {
-            _.each(result, function(res) {
+        this._super(parent);
+        bus.on("notification", this, this.on_notification);
+    },
+    on_notification: function(notification) {
+        var self = this;
+        var channel = notification[0];
+        var message = notification[1];
+        if (message.event_id && channel[1] === "calendar.alarm"){
+            if(self.getParent().$(".eid_" + message.event_id).length === 0) {
+                var display_message = this.prepare_message(message);
                 setTimeout(function() {
-                    // If notification not already displayed, we create and display it (FIXME is this check usefull?)
-                    if(self.$(".eid_" + res.event_id).length === 0) {
-                        self.notification_manager.display(new CalendarNotification(self.notification_manager, res.title, res.message, res.event_id));
-                    }
-                }, res.timer * 1000);
-            });
-        })
-        .fail(function(err, ev) {
-            if(err.code === -32098) {
-                // Prevent the CrashManager to display an error
-                // in case of an xhr error not due to a server error
-                ev.preventDefault();
+                    self.getParent().notification_manager.display(new CalendarNotification(self.getParent().notification_manager, message.title, display_message, message.event_id));
+                }, message.timer * 1000);
             }
-        });
+        }
     },
-    check_notifications: function() {
-        var self = this;
-        this.get_next_notif();
-        this.intervalNotif = setInterval(function() {
-            self.get_next_notif();
-        }, 5 * 60 * 1000);
-    },
+    prepare_message: function(message) {
+        /* Prepare message and display datetime values in client's timezone */
+        var display_message;
+        if (message.all_day) {
+            display_message = _.str.sprintf(_t("AllDay , %s"), formats.format_value(message.start, {type: 'datetime'}));
+        } else {
+            var start_date = formats.format_value(message.start, {type: 'date'});
+            var start_time = formats.format_value(message.start, {type: 'time'});
+            var end_time_moment = moment(message.start).add(message.duration, 'hours');
+            var end_date = formats.format_value(end_time_moment, {type: 'date'});
+            var end_time = formats.format_value(end_time_moment.format("YYYY-MM-DD HH:mm:ss"), {type: 'time'});
+            if (message.duration < 24) {
+                display_message = _.str.sprintf(_t("%s at (%s To %s)"), start_date, start_time, end_time);
+            } else {
+                display_message = _.str.sprintf(_t("%s at %s To\n %s at %s"), start_date, start_time, end_date, end_time);
+            }
+        }
+        return display_message;
+    }
+});
+
+WebClient.include({
     //Override the show_application of addons/web/static/src/js/chrome.js       
     show_application: function() {
         this._super();
-        this.check_notifications();
-    },
-    //Override addons/web/static/src/js/chrome.js       
-    on_logout: function() {
-        this._super();
-        clearInterval(this.intervalNotif);
-    },
+        new calendarAlarmManager(this);
+        bus.start_polling();
+    }
 });
 
 var Many2ManyAttendee = FieldMany2ManyTags.extend({
