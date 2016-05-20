@@ -210,7 +210,7 @@ WebClient.include({
     get_next_notif: function() {
         var self = this;
 
-        this.rpc("/calendar/notify")
+        this.rpc("/calendar/notify", {}, {shadow: true})
         .done(function(result) {
             _.each(result, function(res) {
                 setTimeout(function() {
