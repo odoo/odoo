@@ -8,22 +8,24 @@ import re
 import werkzeug.urls
 import urllib2
 
-from openerp.osv import osv
-from openerp.addons.google_account import TIMEOUT
+from odoo import api, models
+from odoo.addons.google_account import TIMEOUT
 
 _logger = logging.getLogger(__name__)
 
-class config(osv.osv):
+
+class GoogleDrive(models.Model):
     _inherit = 'google.drive.config'
 
     def get_google_scope(self):
-        scope = super(config, self).get_google_scope()
+        scope = super(GoogleDrive, self).get_google_scope()
         return '%s https://spreadsheets.google.com/feeds' % scope
 
-    def write_config_formula(self, cr, uid, attachment_id, spreadsheet_key, model, domain, groupbys, view_id, context=None):
-        access_token = self.get_access_token(cr, uid, scope='https://spreadsheets.google.com/feeds', context=context)
+    @api.model
+    def write_config_formula(self, attachment_id, spreadsheet_key, model, domain, groupbys, view_id):
+        access_token = self.get_access_token(scope='https://spreadsheets.google.com/feeds')
 
-        fields = self.pool.get(model).fields_view_get(cr, uid, view_id=view_id, view_type='tree')
+        fields = self.env[model].fields_view_get(view_id=view_id, view_type='tree')
         doc = etree.XML(fields.get('arch'))
         display_fields = []
         for node in doc.xpath("//field"):
@@ -38,9 +40,9 @@ class config(osv.osv):
             formula = '=oe_read_group("%s";"%s";"%s";"%s")' % (model, fields, groupbys, domain)
         else:
             formula = '=oe_browse("%s";"%s";"%s")' % (model, fields, domain)
-        url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        dbname = cr.dbname
-        user = self.pool['res.users'].read(cr, uid, [uid], ['login', 'password'], context=context)[0]
+        url = self.env['ir.config_parameter'].get_param('web.base.url')
+        dbname = self._cr.dbname
+        user = self.env['res.users'].browse(self.env.user.id).read(['login', 'password'])[0]
         username = user['login']
         password = user['password']
         if not password:
@@ -82,21 +84,22 @@ class config(osv.osv):
         formula: %s
         ''' % formula
         if attachment_id:
-            self.pool['ir.attachment'].write(cr, uid, attachment_id, {'description': description}, context=context)
+            self.env['ir.attachment'].browse(attachment_id).write({'description': description})
         return True
 
-    def set_spreadsheet(self, cr, uid, model, domain, groupbys, view_id, context=None):
+    @api.model
+    def set_spreadsheet(self, model, domain, groupbys, view_id):
         try:
-            config_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'google_spreadsheet', 'google_spreadsheet_template')[1]
+            config_id = self.env['ir.model.data'].get_object_reference('google_spreadsheet', 'google_spreadsheet_template')[1]
         except ValueError:
             raise
-        config = self.browse(cr, uid, config_id, context=context)
+        config = self.browse(config_id)
         title = 'Spreadsheet %s' % model
-        res = self.copy_doc(cr, uid, False, config.google_drive_resource_id, title, model, context=context)
+        res = self.copy_doc(False, config.google_drive_resource_id, title, model)
 
         mo = re.search("(key=|/d/)([A-Za-z0-9-_]+)", res['url'])
         if mo:
             key = mo.group(2)
 
-        self.write_config_formula(cr, uid, res.get('id'), key, model, domain, groupbys, view_id, context=context)
+        self.write_config_formula(res.get('id'), key, model, domain, groupbys, view_id)
         return res
