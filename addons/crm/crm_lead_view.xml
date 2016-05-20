@@ -12,7 +12,7 @@
                 <form string="Lead Tags">
                     <group>
                         <field name="name"/>
-                        <field name="color"/>
+                        <field name="color" groups="base.group_no_one"/>
                     </group>
                 </form>
             </field>
@@ -24,7 +24,6 @@
             <field name="arch" type="xml">
                 <tree string="Lead Tags">
                     <field name="name"/>
-                    <field name="color"/>
                 </tree>
             </field>
         </record>
