@@ -149,7 +149,7 @@ class TestViewSaving(common.TransactionCase):
                 h.LI(h.SPAN("+12 3456789", attrs(model='res.company', id=1, field='phone', expression="edmund", type='char'))),
             )
         ), encoding='utf-8')
-        View.save(self.cr, self.uid, res_id=self.view_id, value=replacement,
+        View.save(self.cr, self.uid, self.view_id, value=replacement,
                   xpath='/div/div[2]')
 
         company = Company.browse(self.cr, self.uid, 1)
@@ -213,7 +213,7 @@ class TestViewSaving(common.TransactionCase):
             "Acme Corporation",
             attrs(model='res.company', id=company_id, field="name", expression='bob', type='char')))
 
-        self.registry('ir.ui.view').save(self.cr, self.uid, res_id=company_id,value=node)
+        self.registry('ir.ui.view').save(self.cr, self.uid, company_id, node)
 
         company = Company.browse(self.cr, self.uid, company_id)
         self.assertEqual(company.name, "Acme Corporation")
@@ -227,7 +227,7 @@ class TestViewSaving(common.TransactionCase):
                         field='phone', expression="edmund")),
                  "whop whop"
         ), encoding="utf-8")
-        View.save(self.cr, self.uid, res_id = self.view_id, value=replacement,
+        View.save(self.cr, self.uid, self.view_id, value=replacement,
                   xpath='/div/div[2]/ul/li[3]')
 
         self.eq(
