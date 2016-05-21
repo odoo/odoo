@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-03-15 01:18+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-05-19 06:01+0000\n"
+"Last-Translator: Juliano Henriquez <juliano@consultoriahenca.com>\n"
 "Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/odoo-9/language/es_DO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,62 +22,62 @@ msgstr ""
 msgid ""
 "            Will be safe_eval with `self` being the current transaction. i.e.:\n"
 "                self.env['my.model'].payment_validated(self)"
-msgstr ""
+msgstr "Deberá usar safe_eval con 'self' durante la transacción en curso, ejemplo:\nself.env['my.model'].payment_validated(self)"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_adyen
 msgid "-It installs the module payment_adyen."
-msgstr ""
+msgstr "- Instala el módulo payment_adyen."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_authorize
 msgid "-It installs the module payment_authorize."
-msgstr ""
+msgstr "- Instala el módulo «payment_authorize»."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_buckaroo
 msgid "-It installs the module payment_buckaroo."
-msgstr ""
+msgstr "- Instala el módulo payment_buckaroo."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_ogone
 msgid "-It installs the module payment_ogone."
-msgstr ""
+msgstr "- Instala el módulo payment_ogone."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_paypal
 msgid "-It installs the module payment_paypal."
-msgstr ""
+msgstr "- Instala el módulo payment_paypal."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_transfer
 msgid "-It installs the module payment_transfer."
-msgstr ""
+msgstr "- Instala el módulo «payment_transfer»."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
 msgid "3D Secure HTML"
-msgstr ""
+msgstr "HTML 3D Seguro"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
 msgid "Acquirer"
-msgstr ""
+msgstr "Adquiridor"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method_acquirer_id
 msgid "Acquirer Account"
-msgstr ""
+msgstr "Cuenta Adquiriente"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method_acquirer_ref
 msgid "Acquirer Ref."
-msgstr ""
+msgstr "Referencia Adquiriente"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_reference
 msgid "Acquirer Reference"
-msgstr ""
+msgstr "Referencia Adquiriente"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method_active
@@ -87,7 +87,7 @@ msgstr "Activo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_active
 msgid "Add Extra Fees"
-msgstr ""
+msgstr "Añadir Comisiones Extra"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_address
@@ -98,7 +98,7 @@ msgstr "Dirección"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_adyen
 msgid "Adyen"
-msgstr ""
+msgstr "Adyen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_amount
@@ -109,27 +109,27 @@ msgstr "Importe"
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
 msgid "At payment no acquirer confirmation needed"
-msgstr ""
+msgstr "El pago no necesita confirmación del adquiriente"
 
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
 msgid "At payment with acquirer confirmation"
-msgstr ""
+msgstr "El pago necesita confirmación del adquiriente"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_buckaroo
 msgid "Buckaroo"
-msgstr ""
+msgstr "Buckaroo"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_cancel_msg
 msgid "Cancel Message"
-msgstr ""
+msgstr "Mensaje de Cancelación"
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Canceled"
-msgstr ""
+msgstr "Cancelada"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_city
@@ -150,12 +150,12 @@ msgstr "Configuración"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_acquirer_installation
 msgid "Configure payment acquiring methods"
-msgstr ""
+msgstr "Configurar los métodos de pago"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_method_count
 msgid "Count Payment Method"
-msgstr "Contar Metodo de Pago"
+msgstr "Conteo del Método de Pago"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_country_id
@@ -184,12 +184,12 @@ msgstr "Fecha creación"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Credentials"
-msgstr ""
+msgstr "Credenciales"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "Credit card(s)"
-msgstr ""
+msgstr "Tarjeta(s) de crédito"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_currency_id
@@ -199,19 +199,19 @@ msgstr "Moneda"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Customer Details"
-msgstr ""
+msgstr "Detalles del Cliente"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_sequence
 msgid "Determine the display order"
-msgstr "Determina el orden de visualización"
+msgstr "Determine el orden de visualización"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_display_name
 #: model:ir.model.fields,field_description:payment.field_payment_method_display_name
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre Público"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -221,7 +221,7 @@ msgstr "Realizado"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_done_msg
 msgid "Done Message"
-msgstr ""
+msgstr "Mensaje para Concluído"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -231,7 +231,7 @@ msgstr "Borrador"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "E-mail"
-msgstr ""
+msgstr "Correo"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_email
@@ -256,27 +256,27 @@ msgstr "Mensaje de Error"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_fees
 msgid "Fees"
-msgstr ""
+msgstr "Comisiones"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_fees
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr ""
+msgstr "Importe de las comisiones; establecido por el sistema porque depende de la entidad"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_state_message
 msgid "Field used to store error and/or validation messages for information"
-msgstr ""
+msgstr "Campo usado para almacenar mensajes de error y/o validación"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_fixed
 msgid "Fixed domestic fees"
-msgstr ""
+msgstr "Comisiones nacionales fijas"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_fixed
 msgid "Fixed international fees"
-msgstr ""
+msgstr "Comisiones internacionales fijas"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -286,12 +286,12 @@ msgstr "Formulario"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_view_template_id
 msgid "Form Button Template"
-msgstr ""
+msgstr "Plantilla del Botón del Formulario"
 
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Form with credentials storage"
-msgstr ""
+msgstr "Formulario con almacenamiento de credenciales"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_search
@@ -301,7 +301,7 @@ msgstr "Agrupar por"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pre_msg
 msgid "Help Message"
-msgstr ""
+msgstr "Mensaje de Ayuda"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_id
@@ -318,7 +318,7 @@ msgstr "Imagen"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_reference
 msgid "Internal reference of the TX"
-msgstr ""
+msgstr "Referencia Interna del TX"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_lang
@@ -330,7 +330,7 @@ msgstr "Idioma"
 #: model:ir.model.fields,field_description:payment.field_payment_method___last_update
 #: model:ir.model.fields,field_description:payment.field_payment_transaction___last_update
 msgid "Last Modified on"
-msgstr "Última modificación en"
+msgstr "Última Modificación el"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_uid
@@ -349,7 +349,7 @@ msgstr "Última actualización en"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
-msgstr ""
+msgstr "Hacer disponible este método de pago (facturas de cliente, etc)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_medium
@@ -362,7 +362,7 @@ msgid ""
 "Medium-sized image of this provider. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr ""
+msgstr "Imagen mediana de este proveedor. Es automáticamente redimensionada a una imagen de 128x128px, manteniendo la proporción. Use este campo en los formularios o algunas vistas kanban."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state_message
@@ -373,36 +373,36 @@ msgstr "Mensaje"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_post_msg
 msgid "Message displayed after having done the payment process."
-msgstr ""
+msgstr "Mensaje mostrado después de haber realizado el proceso de pago."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_pre_msg
 msgid "Message displayed to explain and help the payment process."
-msgstr ""
+msgstr "Mensaje mostrado para explicar y ayudar en el proceso de pago."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_error_msg
 msgid "Message displayed, if error is occur during the payment process."
-msgstr ""
+msgstr "Muestra mensajes, si un error ocurre durante el proceso de pago."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_cancel_msg
 msgid "Message displayed, if order is cancel during the payment process."
-msgstr ""
+msgstr "Muestra mensajes, si una orden es cancelada durante el proceso de pago."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_done_msg
 msgid ""
 "Message displayed, if order is done successfully after having done the "
 "payment process."
-msgstr ""
+msgstr "Muestra mensajes, si la orden es exitosa  después del proceso de pago."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_pending_msg
 msgid ""
 "Message displayed, if order is in pending state after having done the "
 "payment process."
-msgstr ""
+msgstr "Muestra mensajes, si la orden se encuentra en estado pendiente después de concluir el proceso de pago."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -420,22 +420,22 @@ msgstr "Nombre"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method_name
 msgid "Name of the payment method"
-msgstr ""
+msgstr "Nombre del método de pago"
 
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
 msgid "No automatic confirmation"
-msgstr ""
+msgstr "Sin confirmación automática"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_ogone
 msgid "Ogone"
-msgstr ""
+msgstr "Ogone"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_auto_confirm
 msgid "Order Confirmation"
-msgstr ""
+msgstr "Confirmación de la Orden"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
@@ -460,12 +460,12 @@ msgstr "Método de pago"
 #: model:ir.ui.menu,name:payment.payment_acquirer_menu
 #: model:ir.ui.view,arch_db:payment.acquirer_list
 msgid "Payment Acquirers"
-msgstr ""
+msgstr "Métodos de Pago"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_method_id
 msgid "Payment Method"
-msgstr "Método de pago"
+msgstr "Método de Pago"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_method_ids
@@ -478,7 +478,7 @@ msgstr "Formas de pago"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Transacción del Pago"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
@@ -490,7 +490,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.transaction_form
 #: model:ir.ui.view,arch_db:payment.transaction_list
 msgid "Payment Transactions"
-msgstr ""
+msgstr "Transacciones de Pago"
 
 #. module: payment
 #: model:ir.ui.menu,name:payment.finance_payment_menu
@@ -503,7 +503,7 @@ msgstr "Pagos"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_paypal
 msgid "Paypal"
-msgstr ""
+msgstr "Paypal"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -513,7 +513,7 @@ msgstr "Pendiente"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pending_msg
 msgid "Pending Message"
-msgstr ""
+msgstr "Mensaje Pendiente"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_phone
@@ -539,29 +539,29 @@ msgstr "Referencia"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_acquirer_reference
 msgid "Reference of the TX as stored in the acquirer database"
-msgstr ""
+msgstr "Referencia de la transferencia como se guardar en la base de datos de la entidad"
 
 #. module: payment
 #: constraint:payment.acquirer:0
 msgid "Required fields not filled"
-msgstr ""
+msgstr "Campos requeridos no rellenados"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_eval
 msgid "S2S Callback"
-msgstr ""
+msgstr "Devolución S2S "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_registration_view_template_id
 msgid "S2S Form Template"
-msgstr ""
+msgstr "Plantilla de Formulario S2S"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.payment_method_action
 #: model:ir.ui.menu,name:payment.finance_pay_method_menu
 #: model:ir.ui.menu,name:payment.payment_method_menu
 msgid "Saved Payment Data"
-msgstr ""
+msgstr "Datos de Pagos Grabados"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_sequence
@@ -571,7 +571,7 @@ msgstr "Secuencia"
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Server To Server"
-msgstr ""
+msgstr "Servidor A Servidor"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
@@ -584,7 +584,7 @@ msgid ""
 "Small-sized image of this provider. It is automatically resized as a 64x64px"
 " image, with aspect ratio preserved. Use this field anywhere a small image "
 "is required."
-msgstr ""
+msgstr "Imagen pequeña de este proveedor. Es automáticamente redimensionada a una imagen de 64x64px, manteniendo la proporción. Use este campo en cualquier parte donde se necesite una imagen pequeña."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state
@@ -594,7 +594,7 @@ msgstr "Estado"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id
 msgid "Template for method registration"
-msgstr ""
+msgstr "Plantilla para el método de registro"
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
@@ -604,25 +604,25 @@ msgstr "Prueba"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_post_msg
 msgid "Thanks Message"
-msgstr ""
+msgstr "Mensaje de Agradecimiento"
 
 #. module: payment
 #: constraint:payment.transaction:0
 msgid "The payment transaction reference must be unique!"
-msgstr ""
+msgstr "La referencia de la transacción de pago debe ser única!"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image
 msgid ""
 "This field holds the image used for this provider, limited to 1024x1024px"
-msgstr ""
+msgstr "Este campo guarda la imagen usada para este proveedor, limitada a 1024x1024px."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
 "                                            It is be rendered with qWeb with the following evaluation context:"
-msgstr ""
+msgstr "Esta plantilla muestra el botón del método de pago con todos los valores necesarios.\nDebe ser renderizada con qWeb con el siguiente contexto de evaluación:"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_type
@@ -632,27 +632,27 @@ msgstr "Tipo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_date_validate
 msgid "Validation Date"
-msgstr ""
+msgstr "Fecha de Validación"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_var
 msgid "Variable domestic fees (in percents)"
-msgstr ""
+msgstr "Comisiones nacionales variables (en porcentaje)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_var
 msgid "Variable international fees (in percents)"
-msgstr ""
+msgstr "Comisiones internacionales variables (en porcentaje)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_website_published
 msgid "Visible in Portal / Website"
-msgstr ""
+msgstr "Visible en el Portal / Sitio Web"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_transfer
 msgid "Wire Transfer"
-msgstr ""
+msgstr "Transferencia Bancaria"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
@@ -672,54 +672,54 @@ msgstr "account.config.settings"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "acquirer: payment.acquirer browse record"
-msgstr ""
+msgstr "acquirer: registro del modelo payment.acquirer"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "amount: the transaction amount, a float"
-msgstr ""
+msgstr "amount: el importe de la transacción, un float"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "context: the current context dictionary"
-msgstr ""
+msgstr "context: el diccionario de contexto actual"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
-msgstr ""
+msgstr "moneda: el registro de exploración de la moneda de la transacción"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
-msgstr ""
+msgstr "partner: el registro del cliente que compra, no necesariamente establecido"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
-msgstr ""
+msgstr "partner_values: valores específicos sobre el comprador, por ejemplo, viniendo un formulario de envío"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_method
 msgid "payment.method"
-msgstr ""
+msgstr "payment.method"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "reference: the transaction reference number"
-msgstr ""
+msgstr "reference: el número de referencia de la transacción"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_url: transaction URL to post the form"
-msgstr ""
+msgstr "tx_url: URL de la transacción para enviar el formulario"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_values: transaction values"
-msgstr ""
+msgstr "tx_values: valores de la transacción"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_authorize
@@ -729,4 +729,4 @@ msgstr "desconocido"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
-msgstr ""
+msgstr "user: registro del usuario actual"
