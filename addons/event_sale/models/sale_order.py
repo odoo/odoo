@@ -24,9 +24,6 @@ class SaleOrderLine(models.Model):
        help="Choose an event and it will automatically create a registration for this event.")
     event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket', help="Choose "
         "an event ticket and it will automatically create a registration for this event ticket.")
-    # those 2 fields are used for dynamic domains and filled by onchange
-    # TDE: really necessary ? ..
-    event_type_id = fields.Many2one(related='product_id.event_type_id', string="Event Type")
     event_ok = fields.Boolean(related='product_id.event_ok')
 
     @api.multi
@@ -39,9 +36,8 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_id')
     def _onchange_product_id_event(self):
-        values = {'event_type_id': False, 'event_ok': False}
+        values = {'event_ok': False}
         if self.product_id.event_ok:
-            values['event_type_id'] = self.product_id.event_type_id.id
             values['event_ok'] = self.product_id.event_ok
         self.update(values)
 

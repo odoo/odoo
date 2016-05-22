@@ -8,8 +8,6 @@ class ProductTemplate(models.Model):
 
     event_ok = fields.Boolean(string='Event Registration', help='Determine if a product needs '
       'to create automatically an event registration at the confirmation of a sales order line.')
-    event_type_id = fields.Many2one('event.type', string='Type of Event', help='Select event types '
-      'so when we use this product in sales order lines, it will filter events of this type only.')
 
     @api.onchange('event_ok')
     def _onchange_event_ok(self):
