@@ -71,8 +71,7 @@ class sale_configuration(osv.TransientModel):
              'Advanced pricing based on formula: You can have all the rights on pricelist'),
         'default_invoice_policy': fields.selection([
             ('order', 'Invoice ordered quantities'),
-            ('delivery', 'Invoice delivered quantities'),
-            ('cost', 'Invoice based on costs (time and material, expenses)')
+            ('delivery', 'Invoice delivered quantities')
             ], 'Default Invoicing', default_model='product.template'),
         'deposit_product_id_setting': fields.many2one('product.product', 'Deposit Product',\
             domain="[('type', '=', 'service')]",\

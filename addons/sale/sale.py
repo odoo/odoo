@@ -449,11 +449,6 @@ class SaleOrder(models.Model):
             if self.env.context.get('send_email'):
                 self.force_quotation_send()
             order.order_line._action_procurement_create()
-            if not order.project_id:
-                for line in order.order_line:
-                    if line.product_id.invoice_policy == 'cost':
-                        order._create_analytic_account()
-                        break
         if self.env['ir.values'].get_default('sale.config.settings', 'auto_done_setting'):
             self.action_done()
         return True
@@ -572,7 +567,7 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id.invoice_policy', 'order_id.state')
     def _compute_qty_delivered_updateable(self):
         for line in self:
-            line.qty_delivered_updateable = line.product_id.invoice_policy in ('order', 'delivery') and line.order_id.state == 'sale' and line.product_id.track_service == 'manual'
+            line.qty_delivered_updateable = line.order_id.state == 'sale' and line.product_id.track_service == 'manual'
 
     @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'order_id.state')
     def _get_to_invoice_qty(self):
@@ -672,10 +667,6 @@ class SaleOrderLine(models.Model):
         return new_procs
 
     @api.model
-    def _get_analytic_invoice_policy(self):
-        return ['cost']
-
-    @api.model
     def _get_analytic_track_service(self):
         return []
 
@@ -691,8 +682,7 @@ class SaleOrderLine(models.Model):
         line = super(SaleOrderLine, self).create(values)
         if line.state == 'sale':
             if (not line.order_id.project_id and
-                (line.product_id.track_service in self._get_analytic_track_service() or
-                 line.product_id.invoice_policy in self._get_analytic_invoice_policy())):
+                (line.product_id.track_service in self._get_analytic_track_service())):
                 line.order_id._create_analytic_account()
             line._action_procurement_create()
 
@@ -1004,7 +994,10 @@ class ProductTemplate(models.Model):
         default='manual')
     sale_line_warn = fields.Selection(WARNING_MESSAGE, 'Sales Order Line', help=WARNING_HELP, required=True, default="no-message")
     sale_line_warn_msg = fields.Text('Message for Sales Order Line')
-
+    expense_policy = fields.Selection(
+        [('no', 'No'), ('cost', 'At cost'), ('sales_price', 'At sale price')],
+        string='Re-Invoice Expenses',
+        default='no')
     @api.multi
     @api.depends('product_variant_ids.sales_count')
     def _sales_count(self):
@@ -1033,8 +1026,6 @@ class ProductTemplate(models.Model):
     invoice_policy = fields.Selection(
         [('order', 'Ordered quantities'),
          ('delivery', 'Delivered quantities'),
-         ('cost', 'Reinvoice Costs')],
-        string='Invoicing Policy', help='Ordered Quantity: Invoice based on the quantity the customer ordered.\n'
-                                        'Delivered Quantity: Invoiced based on the quantity the vendor delivered.\n'
-                                        'Reinvoice Costs: Invoice with some additional charges (product transfer, labour charges,...)',
+        ], string='Invoicing Policy', help='Ordered Quantity: Invoice based on the quantity the customer ordered.\n'
+                                        'Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries).',
                                         default='order')
