@@ -33,7 +33,7 @@ class ProductTemplate(models.Model):
 
     @api.onchange('type', 'invoice_policy')
     def onchange_type_timesheet(self):
-        if self.type == 'service' and self.invoice_policy != 'cost':
+        if self.type == 'service':
             self.track_service = 'timesheet'
         else:
             self.track_service = 'manual'

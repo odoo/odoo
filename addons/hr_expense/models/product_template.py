@@ -7,4 +7,5 @@ from openerp import fields, models
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    can_be_expensed = fields.Boolean(help="Specify whether the product can be selected in an HR expense.")
+    can_be_expensed = fields.Boolean(help="Specify whether the product can be selected in an HR expense.", string="Can be Expensed")
+

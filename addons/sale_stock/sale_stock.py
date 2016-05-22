@@ -285,7 +285,7 @@ class StockMove(models.Model):
         # Update delivered quantities on sale order lines
         todo = self.env['sale.order.line']
         for move in self:
-            if (move.procurement_id.sale_line_id) and (move.product_id.invoice_policy in ('order', 'delivery')):
+            if (move.procurement_id.sale_line_id) and (move.product_id.expense_policy=='no'):
                 todo |= move.procurement_id.sale_line_id
         for line in todo:
             line.qty_delivered = line._get_delivered_qty()

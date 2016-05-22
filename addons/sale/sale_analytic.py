@@ -40,6 +40,13 @@ class AccountAnalyticLine(models.Model):
     so_line = fields.Many2one('sale.order.line', string='Sale Order Line')
 
     def _get_invoice_price(self, order):
+        if self.product_id.expense_policy == 'sales_price':
+            return self.product_id.with_context(
+                partner=order.partner_id.id,
+                date_order=order.date_order,
+                pricelist=order.pricelist_id.id,
+                uom=self.product_uom_id.id
+            ).price
         if self.unit_amount == 0.0:
             return 0.0
         price_unit = abs(self.amount / self.unit_amount)
@@ -47,20 +54,12 @@ class AccountAnalyticLine(models.Model):
             price_unit = self.currency_id.compute(price_unit, order.currency_id)
         return price_unit
 
-    def _get_sale_order_line_vals(self):
-        order = self.env['sale.order'].search([('project_id', '=', self.account_id.id)], limit=1)
-        if not order:
-            return False
-        if order.state != 'sale':
-            raise UserError(_('The Sale Order %s linked to the Analytic Account must be validated before registering expenses.') % order.name)
-
+    def _get_sale_order_line_vals(self, order, price):
         last_so_line = self.env['sale.order.line'].search([('order_id', '=', order.id)], order='sequence desc', limit=1)
         last_sequence = last_so_line.sequence + 1 if last_so_line else 100
 
         fpos = order.fiscal_position_id or order.partner_id.property_account_position_id
         taxes = fpos.map_tax(self.product_id.taxes_id)
-        price = self._get_invoice_price(order)
-
         return {
             'order_id': order.id,
             'name': self.name,
@@ -77,30 +76,24 @@ class AccountAnalyticLine(models.Model):
     def _get_sale_order_line(self, vals=None):
         result = dict(vals or {})
         so_line = result.get('so_line', False) or self.so_line
-        if not so_line and self.account_id and self.product_id and self.product_id.invoice_policy in ('cost', 'order'):
+        if not so_line and self.account_id and self.product_id and (self.product_id.expense_policy!='no'):
+            order = self.env['sale.order'].search([('project_id', '=', self.account_id.id), ('state','=','sale')], limit=1)
+            if not order:
+                return result
+            price = self._get_invoice_price(order)
             so_lines = self.env['sale.order.line'].search([
-                ('order_id.project_id', '=', self.account_id.id),
-                ('state', '=', 'sale'),
+                ('order_id', '=', order.id),
+                ('price_unit', '=', price),
                 ('product_id', '=', self.product_id.id)])
-            # Use the existing SO line only if the unit prices are the same, otherwise we create
-            # a new line
-            for line in so_lines:
-                if line.product_id.invoice_policy != 'cost' or (line.product_id.invoice_policy == 'cost' and line.price_unit == self._get_invoice_price(line.order_id)):
-                    result.update({'so_line': line.id})
-                    so_line = line
-                    break
 
+            if so_lines:
+                result.update({'so_line': so_lines[0].id})
             else:
-                # This will trigger the creation of a new SO line
-                so_line = False
-
-        if not so_line and self.account_id and self.product_id and self.product_id.invoice_policy == 'cost':
-            order_line_vals = self._get_sale_order_line_vals()
-            if order_line_vals:
-                so_line = self.env['sale.order.line'].create(order_line_vals)
-                so_line._compute_tax_id()
-                result.update({'so_line': so_line.id})
-
+                order_line_vals = self._get_sale_order_line_vals(order, price)
+                if order_line_vals:
+                    so_line = self.env['sale.order.line'].create(order_line_vals)
+                    so_line._compute_tax_id()
+                    result.update({'so_line': so_line.id})
         return result
 
     @api.multi
