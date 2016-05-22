@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2016-05-12 16:00+0000\n"
+"PO-Revision-Date: 2016-05-19 06:18+0000\n"
 "Last-Translator: Paolo Valier\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-8/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -1546,7 +1546,7 @@ msgid ""
 "* Stock Value Variation (Graph)\n"
 "* Work Order Analysis\n"
 "    "
-msgstr "\nGestisce il processo di produzione in OpenERP\n============================================\n\nIl modulo produzione permette di coprire la pianificazione, gli ordini, lo stoccaggio e la produzione o l'assemblaggio di prodotti da materiali e componenti. Gestisce il consumo e la produzione di prodotti secondo una distinta di materiali e le necessarie lavorazioni su macchinari, strumenti o risorse umane in accordo alle routings.\n\nSupporta una completa integrazione e pianificazione dei prodotti stoccabili, consumabili o servizi. I servizi sono completamente integrati con il resto del software. Per esempio è possibile settare un servizio di subcontratto nella distinta dei materiali per acquistare automaticamente su ordine l'assemblaggio della produzione.\n\nCaratteristiche principali\n.......................\n* Produrre per Magazzino/Produrre su Ordine\n* Distinta base multi livello, senza limiti\n* Routing multi livello, senza limiti\n* Routing e Centri di lavoro integrati con contabilità analitica\n* Schedulazione periodica\n* Permette di sfogliare la Distinta Base in una struttura completa che comprende figli e distinte base fantasma\n\nDashboard / Report per MRP comprende:\n.........................................................\n* Acquisti in eccezione (grafico)\n* Variazione del valore del Magazzino (grafico)\n* Analisi degli ordini di lavoro\n    "
+msgstr "\nGestisce il processo di produzione in OpenERP\n============================================\n\nIl modulo produzione permette di coprire la pianificazione, gli ordini, lo stoccaggio e la produzione o l'assemblaggio di prodotti da materiali e componenti. Gestisce il consumo e la produzione di prodotti secondo una distinta di materiali e le necessarie lavorazioni su macchinari, strumenti o risorse umane in accordo alle routings.\n\nSupporta una completa integrazione e pianificazione dei prodotti stoccabili, consumabili o servizi. I servizi sono completamente integrati con il resto del software. Per esempio è possibile settare un servizio di subcontratto nella distinta dei materiali per acquistare automaticamente su ordine l'assemblaggio della produzione.\n\nCaratteristiche principali\n.......................\n* Produrre per Magazzino/Produrre su Ordine\n* Distinta base multi livello, senza limiti\n* Routing multi livello, senza limiti\n* Routing e Centri di lavoro integrati con contabilità analitica\n* Pianificazione periodica\n* Permette di sfogliare la Distinta Base in una struttura completa che comprende figli e distinte base fantasma\n\nDashboard / Report per MRP comprende:\n.........................................................\n* Acquisti in eccezione (grafico)\n* Variazione del valore del Magazzino (grafico)\n* Analisi degli ordini di lavoro\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_layout
@@ -2263,7 +2263,7 @@ msgid ""
 "* Period size (Day, Week, Month)\n"
 "* Maximal difference between timesheet and attendances\n"
 "    "
-msgstr "\nCompilare e validare facilmente il foglio presenze\n=====================================================\n\nQuesta applicazione fornisce una nuova schermata in cui gestire sia le presenze (entrata/uscita) sia l'effettivo lavoro svolto (foglio delle presenze) per uno specifico periodo di tempo. Le voci del foglio delle presenze vengono compilate quotidianamente dai dipendenti. Al termine di un determinato periodo, i dipendenti valideranno il proprio foglio presenze ed il responsabile dovrà approvare le presenze del proprio team. I periodi possono essere definiti nei moduli aziendali e possono essere processati mensilmente o settimanalmente.\n\nIl processo di validazione completo consiste in:\n---------------------------------------------\n* Bozza del foglio\n* Conferma da parte del dipendente al termine del periodo\n* Validazione da parte del responsabile di progetto\n\nLa validazione può essere configurata a livello di azienda:\n------------------------------------------------\n* Per Periodo (Giorno, Settimana, Mese)\n* Per differenza massima tra il foglio e le presenze\n    "
+msgstr "\nCompilare e validare facilmente il timesheet\n=====================================================\n\nQuesta applicazione fornisce una nuova schermata in cui gestire sia le presenze (entrata/uscita) sia l'effettivo lavoro svolto (timeshhet) per uno specifico periodo di tempo. Le voci del timesheet vengono compilate quotidianamente dai dipendenti. Al termine di un determinato periodo, i dipendenti valideranno il proprio timesheet ed il responsabile dovrà approvare le presenze del proprio team. I periodi possono essere definiti nei moduli aziendali e possono essere processati mensilmente o settimanalmente.\n\nIl processo di validazione completo consiste in:\n---------------------------------------------\n* Bozza del timesheet\n* Conferma da parte del dipendente al termine del periodo\n* Validazione da parte del responsabile di progetto\n\nLa validazione può essere configurata a livello di azienda:\n------------------------------------------------\n* Per Periodo (Giorno, Settimana, Mese)\n* Per differenza massima tra il timesheet e le presenze\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_chart
@@ -2426,7 +2426,7 @@ msgid ""
 "Management to the Timesheet line entries for particular date and particular user\n"
 "with the effect of creating, editing and deleting either ways.\n"
 "    "
-msgstr "\nSincronizzazione delle attività di progetto con le attività del foglio presenze\n====================================================================\n\nQuesto modulo consente il trasferimento delle voci relative alle attività nella gestione\nProgetti, per data o per utente, nel foglio delle presenze e viceversa.\nVengono così create, modificate o eliminate voci da entrambe le applicazioni.\n    "
+msgstr "\nSincronizzazione delle attività di progetto con le attività del timesheet\n====================================================================\n\nQuesto modulo consente il trasferimento delle voci relative alle attività nella gestione\nProgetti, per data o per utente, nel timesheet e viceversa.\nVengono così create, modificate o eliminate voci da entrambe le applicazioni.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_repair
@@ -7320,7 +7320,7 @@ msgstr "Fittizio"
 #: code:addons/base/workflow/workflow.py:42
 #, python-format
 msgid "Duplicating workflows is not possible, please create a new workflow"
-msgstr ""
+msgstr "La duplicazione dei workflow non è possibile, è necessario creare un nuovo workflow"
 
 #. module: base
 #: code:addons/base/ir/ir_qweb.py:891
@@ -10234,7 +10234,7 @@ msgstr "Produzione"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_operations
 msgid "Manufacturing Operations"
-msgstr ""
+msgstr "Operazioni Produzione"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp
@@ -12975,7 +12975,7 @@ msgstr ""
 #. module: base
 #: help:ir.actions.server,wkf_transition_id:0
 msgid "Select the workflow signal to trigger."
-msgstr ""
+msgstr "Seleziona il segnale del workflow per attivare."
 
 #. module: base
 #: help:res.partner,use_parent_address:0
@@ -14161,7 +14161,7 @@ msgstr ""
 msgid ""
 "The model that will receive the workflow signal. Note that it should have a "
 "workflow associated with it."
-msgstr ""
+msgstr "Il modello che riceverà il segnale del workflow. Attenzione che deve avere un workflow associato."
 
 #. module: base
 #: help:ir.model.fields,model_id:0
@@ -15618,12 +15618,12 @@ msgstr "Workflow"
 #. module: base
 #: view:workflow.activity:base.view_workflow_activity_search
 msgid "Workflow Activity"
-msgstr "Attività del flusso di lavoro"
+msgstr "Attività Workflow"
 
 #. module: base
 #: view:workflow:base.view_workflow_diagram
 msgid "Workflow Editor"
-msgstr "Editor del flusso di lavoro"
+msgstr "Editor del Workflow"
 
 #. module: base
 #: view:workflow.instance:base.view_workflow_instance_form
@@ -15642,7 +15642,7 @@ msgstr "Transizione Workflow"
 #: view:workflow.workitem:base.view_workflow_workitem_search
 #: view:workflow.workitem:base.view_workflow_workitem_tree
 msgid "Workflow Workitems"
-msgstr "Oggetti di Lavoro del Worlflow"
+msgstr "Oggetti di Lavoro del Workflow"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_form
@@ -16290,7 +16290,7 @@ msgstr "Sconosciuto"
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "workflow: Workflow engine"
-msgstr ""
+msgstr "workflow: motore workflow"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:145

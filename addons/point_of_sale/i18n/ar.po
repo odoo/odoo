@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-05-12 11:34+0000\n"
+"PO-Revision-Date: 2016-05-18 16:17+0000\n"
 "Last-Translator: Mohammed Ibrahim <m.ibrahim@mussder.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -144,7 +144,7 @@ msgid ""
 "                on the <i>Point of Sale</i> configuration.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nإضغط لإضافه طريقه دفع \n\n</p><p>\nتعرف على طرق الدفع عن طريق القيود المحاسبة وجود الحقل <i> طريقة دفع نقاط البيع </i> محددا. لكي تكون صالحة للاستعمال من واجهة تعمل باللمس، يجب عليك تعيين طريقة الدفع على  <i> نقطة بيع </i> التكوين.\n\n</p>"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
@@ -157,7 +157,7 @@ msgid ""
 "                the touchscreen interface.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nإضغط لإنشاء أمر جديد \n</p><p>\nاستخدم هذه القائمة لتصفح الأوامر السابقة. تسجيل أوامر جديدة، يمكنك استخدام قائمة <i> جلسة العمل الخاصة بك </i> لواجهة تعمل باللمس.\n</p>"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -173,7 +173,7 @@ msgid ""
 "                a photo on categories for small (1024x768) screens.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nإضغط لتعريف فئه جديده \n</p><p>\nتستخدم فئات لتصفح المنتجات من خلال\nواجهة تعمل باللمس. \n</p><p>\nإذا وضعت صورة على فئة، والتخطيط لل\nواجهة تعمل باللمس سيتم تلقائيا. نقترح عدم وضع\nصورة على فئات ل(1024x768) الشاشات الصغيرة.\n</p>"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -190,7 +190,7 @@ msgid ""
 "                to quickly open a new session.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nإضغط لبدء سجل جديد\n</p><p>\nالجلسة هي فترة من الزمن، عادة يوم واحد، حيث\nكنت تبيع من خلال نقاط البيع. لدى المستخدم للتحقق من\nالعملات في سجلات النقدية الخاصة بك في البداية والنهاية\nكل دورة.\n</p><p>\nلاحظ أنه يمكنك استخدام قائمة <i> جلسة العمل الخاصة بك </i> لفتح دورة جديدة بسرعة.</ P>"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
@@ -1561,7 +1561,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.config:point_of_sale.view_pos_config_form
 msgid "Hardware Proxy"
-msgstr ""
+msgstr "Hardware Proxy"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3504,7 +3504,7 @@ msgstr "يجب أن يمتلك أمر نقطه البيع خطوط عندمت ي
 msgid ""
 "The Point of Sale could not find any product, client, employee\n"
 "                    or action associated with the scanned barcode."
-msgstr ""
+msgstr "نقطة البيع لا يمكن أن تجد أي منتج، عميل، موظف\nأو عمل ترتبط مع الباركود الممسوحة ضوئيا. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -3513,7 +3513,7 @@ msgstr ""
 msgid ""
 "The Point of Sale is not supported by Microsoft Internet Explorer. Please use\n"
 "                        a modern browser like"
-msgstr ""
+msgstr "لا يتم اعتماد نقطة البيع من قبل مايكروسوفت إنترنت إكسبلورر. الرجاء استخدام\nمتصفح حديث مثل "
 
 #. module: point_of_sale
 #: constraint:pos.config:0
@@ -3643,7 +3643,7 @@ msgid ""
 "There is no cash payment method available in this point of sale to handle the change.\n"
 "\n"
 " Please pay the exact amount or add a cash payment method in the point of sale configuration"
-msgstr ""
+msgstr "ليس هناك طريقة دفع نقدي متاحة في هذه المرحلة من البيع للتعامل مع التغيير .\n\nيرجى دفع المبلغ المحدد أو إضافة طريقة دفع النقدية في نقاط البيع التكوين "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_box.py:23
@@ -3657,7 +3657,7 @@ msgstr "لا يوجد تسجيل نقدية لهذه الدورة نقاط ال�
 msgid ""
 "There is no receivable account defined to make payment for the partner: "
 "\"%s\" (id:%d)."
-msgstr ""
+msgstr "ليس هناك حساب قبض محدد لتسديد المبالغ المستحقة للشريك: \"٪ ق\" (معرف:٪ د). "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:871
@@ -3680,14 +3680,14 @@ msgid ""
 " and the theorical cash when closing a session, for non-POS managers. If "
 "this maximum is reached, the user will have an error message at the closing "
 "of his session saying that he needs to contact his manager."
-msgstr ""
+msgstr "هذا الحقل يصور الحد الأقصى للفرق المسموح به بين الرصيد النهائي والنقدية عند إغلاق الجلسة، للمديرين غير نقاط البيع. إذا تم التوصل إلى هذا الحد الأقصى، سيظهر للمستخدم رسالة خطأ في ختام جلسته قائلا إنه يحتاج إلى الاتصال بمدير الخاص به "
 
 #. module: point_of_sale
 #: help:pos.category,image:0
 msgid ""
 "This field holds the image used as image for the cateogry, limited to "
 "1024x1024px."
-msgstr ""
+msgstr "هذا الحقل يحمل صوره تستخدم صورة لفئة، وتقتصر على 1024x1024px. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -3696,7 +3696,7 @@ msgstr ""
 msgid ""
 "This operation will permanently destroy all unsent orders from the local "
 "storage. You will lose all the data. This operation cannot be undone."
-msgstr ""
+msgstr "هذه العملية تدمر بشكل دائم جميع الطلبات التي لم يتم إرسالها من التخزين المحلي. سوف تفقد جميع البيانات. هذه العملية لا يمكن التراجع عنها. "
 
 #. module: point_of_sale
 #: help:pos.config,sequence_id:0
@@ -4096,7 +4096,7 @@ msgid ""
 "Method\" from the \"Point of Sale\" tab. You can also create new payment "
 "methods directly from menu \"PoS Backend / Configuration / Payment "
 "Methods\"."
-msgstr ""
+msgstr "لديك تحديد طريقة الدفع التي يجب أن تتوفر في نقاط البيع عن طريق إعادة استخدام البنوك والنقد القائمة من خلال \"المحاسبة / تكوين / مجلات / المجلات\". اختيار يوميه وتحقق من حقل \" طريقة نقاط البيع الدفع\" من \"نقطة بيع\" علامة التبويب. يمكنك أيضا إنشاء طرق جديدة للدفع مباشرة من القائمة \"نقاط البيع الخلفية طرق / تكوين / الدفع\". "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:887
@@ -4152,7 +4152,7 @@ msgid ""
 "Your ending balance is too different from the theoretical cash closing "
 "(%.2f), the maximum allowed is: %.2f. You can contact your manager to force "
 "it."
-msgstr ""
+msgstr "الرصيد النهائي الخاص بك هو مختلف جدا عن النقد النظري إغلاق  (%.2f) ، والحد الأقصى المسموح به هو %.2f. يمكنك الاتصال مديرك لإجبارها. "
 
 #. module: point_of_sale
 #. openerp-web
