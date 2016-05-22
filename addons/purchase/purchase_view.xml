@@ -173,9 +173,8 @@
                     <button name="action_view_picking" string="Receive Products" class="oe_highlight" type="object" attrs="{'invisible': ['|', '|' , ('is_shipped', '=', True), ('state','not in', ('purchase','done')), ('picking_count', '=', 0)]}"/>
                     <button name="button_draft" states="cancel" string="Set to Draft" type="object" />
                     <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel" type="object" />
-                    <button name="button_done" type="object" string="Lock Bills" states="purchase"
-                        help="Set a purchase order as done if you don't want to receive vendor bills anymore for this purchase order."/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase,done" readonly="1" />
+                    <button name="button_done" type="object" string="Lock Bills" states="purchase"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase" readonly="1"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box" attrs="{'invisible': [('state', 'not in', ('purchase', 'done', 'cancel'))]}">
