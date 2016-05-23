@@ -13,10 +13,10 @@ pads (by default, http://etherpad.com/).
     'website': 'https://www.odoo.com/page/notes',
     'depends': ['web'],
     'data': [
-        'res_company.xml',
+        'views/res_company.xml',
         'views/pad.xml',
     ],
-    'demo': ['pad_demo.xml'],
+    'demo': ['data/pad_demo.xml'],
     'installable': True,
     'auto_install': False,
     'web': True,
