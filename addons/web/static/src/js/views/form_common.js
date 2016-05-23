@@ -166,7 +166,7 @@ var ReinitializeFieldMixin =  _.extend({}, ReinitializeWidgetMixin, {
 
 /**
     A mixin containing some useful methods to handle completion inputs.
-    
+
     The widget containing this option can have these arguments in its widget options:
     - no_quick_create: if true, it will disable the quick create
 */
@@ -190,16 +190,15 @@ var CompletionFieldMixin = {
             exclusion_domain.push(['id', 'not in', ids_blacklist]);
         }
 
-        var empty_search = !search_val.trim();
         return this.orderer.add(dataset.name_search(
-                empty_search ? ["", " ", "  ", "   "] : search_val, new data.CompoundDomain(self.build_domain(), exclusion_domain),
-                empty_search ? "not in" : 'ilike', this.limit + 1, self.build_context())).then(function (data) {
-            self.last_search = data;
+                search_val, new data.CompoundDomain(self.build_domain(), exclusion_domain),
+                'ilike', this.limit + 1, self.build_context())).then(function(_data) {
+            self.last_search = _data;
             // possible selections for the m2o
-            var values = _.map(data, function(x) {
+            var values = _.map(_data, function(x) {
                 x[1] = x[1].split("\n")[0];
                 return {
-                    label: _.str.escapeHTML(x[1]),
+                    label: _.str.escapeHTML(x[1].trim()) || data.noDisplayContent,
                     value: x[1],
                     name: x[1],
                     id: x[0],
@@ -212,15 +211,15 @@ var CompletionFieldMixin = {
                 values.push({
                     label: _t("Search More..."),
                     action: function() {
-                        dataset.name_search(search_val, self.build_domain(), 'ilike', 160).done(function(data) {
-                            self._search_create_popup("search", data);
+                        dataset.name_search(search_val, self.build_domain(), 'ilike', 160).done(function(_data) {
+                            self._search_create_popup("search", _data);
                         });
                     },
                     classname: 'o_m2o_dropdown_option'
                 });
             }
             // quick create
-            var raw_result = _(data.result).map(function(x) {return x[1];});
+            var raw_result = _(_data.result).map(function(x) {return x[1];});
             if (search_val.length > 0 && !_.include(raw_result, search_val) &&
                 ! (self.options && (self.options.no_create || self.options.no_quick_create))) {
                 self.can_create && values.push({
@@ -905,7 +904,7 @@ var FormViewDialog = ViewDialog.extend({
         var self = this;
         var _super = this._super.bind(this);
         this.init_dataset();
-        
+
         if (this.res_id) {
             this.dataset.ids = [this.res_id];
             this.dataset.index = 0;
@@ -972,7 +971,7 @@ var SelectCreateDialog = ViewDialog.extend({
         _.defaults(this.options, { initial_view: "search" });
         this.initial_ids = this.options.initial_ids;
     },
-    
+
     open: function() {
         if(this.options.initial_view !== "search") {
             return this.create_edit_record();
@@ -1101,7 +1100,7 @@ var DomainEditorDialog = SelectCreateDialog.extend({
                 get_groupby: function () { return []; },
                 get_domain: function () { return options.default_domain; },
             },
-            values: [{label: _t("Selected domain"), value: null}],            
+            values: [{label: _t("Selected domain"), value: null}],
         }});
 
         this._super(parent, options);
