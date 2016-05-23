@@ -485,10 +485,10 @@ class Partner(models.Model, FormatAddress):
         # cannot be easily performed if default images are in the way
         if not vals.get('image'):
             vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
+        tools.image_resize_images(vals)
         partner = super(Partner, self).create(vals)
         partner._fields_sync(vals)
         partner._handle_first_contact_creation()
-        tools.image_resize_images(vals)
         return partner
 
     @api.multi
