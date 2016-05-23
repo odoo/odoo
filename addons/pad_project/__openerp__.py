@@ -3,16 +3,18 @@
 
 {
     'name': 'Pad on tasks',
-    'version': '1.0',
     'category': 'Project',
     'description': """
 This module adds a PAD in all project form views.
 =================================================
     """,
     'website': 'https://www.odoo.com/page/project-management',
-    'depends': ['project', 'pad'],
-    'data': ['views/project_task.xml'],
-    'demo': [],
-    'installable': True,
+    'depends': [
+        'project',
+        'pad'
+    ],
+    'data': [
+        'views/project_task.xml'
+    ],
     'auto_install': True,
 }
