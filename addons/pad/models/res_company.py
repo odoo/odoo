@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-from openerp.osv import fields, osv
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-class company_pad(osv.osv):
+from odoo import fields, models
+
+
+class ResCompany(models.Model):
     _inherit = 'res.company'
-    _columns = {
-        'pad_server': fields.char('Pad Server', help="Etherpad lite server. Example: beta.primarypad.com"),
-        'pad_key': fields.char('Pad Api Key', help="Etherpad lite api key.", groups="base.group_system"),
-    }
+
+    pad_server = fields.Char(help="Etherpad lite server. Example: beta.primarypad.com")
+    pad_key = fields.Char('Pad Api Key', help="Etherpad lite api key.", groups="base.group_system")
