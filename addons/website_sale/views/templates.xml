@@ -573,7 +573,7 @@
             <strong t-field="variant_id.attribute_id.name"/>
 
             <t t-if="variant_id.attribute_id.type in ['select', 'hidden']">
-              <select class="form-control js_variant_change" t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)">
+              <select t-attf-class="form-control #{'js_variant_change' if variant_id.attribute_id.create_variant else ''}" t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)">
                 <t t-foreach="variant_id.value_ids" t-as="value_id">
                   <option t-att-value="value_id.id">
                       <span t-field="value_id.name"/>
@@ -595,7 +595,7 @@
                   <t t-foreach="variant_id.value_ids" t-as="value_id">
                       <li class="form-group js_attribute_value" style="margin: 0;">
                           <label class="control-label" style="margin: 0 20px;">
-                              <input type="radio" class="js_variant_change" t-att-checked="'checked' if not inc else None" t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)" t-att-value="value_id.id" style="vertical-align: top; margin-right: 10px;"/>
+                              <input type="radio" t-att-class="'js_variant_change' if variant_id.attribute_id.create_variant else None" t-att-checked="'checked' if not inc else None" t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)" t-att-value="value_id.id" style="vertical-align: top; margin-right: 10px;"/>
                               <span t-field="value_id.name"/>
                               <span class="badge" t-if="value_id.price_extra">
                                   <t t-esc="value_id.price_extra > 0 and '+' or ''"/><span t-field="value_id.price_extra" style="white-space: nowrap;" t-options='{
@@ -617,7 +617,7 @@
                   <li t-foreach="variant_id.value_ids" t-as="value_id">
                       <label t-attf-style="background-color:#{value_id.html_color or value_id.name}"
                           t-attf-class="css_attribute_color #{'active' if not inc else ''}">
-                        <input type="radio" class="js_variant_change"
+                        <input type="radio" t-att-class="'js_variant_change' if variant_id.attribute_id.create_variant else None"
                           t-att-checked="'checked' if not inc else None"
                           t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)"
                           t-att-value="value_id.id"
@@ -799,7 +799,11 @@
                                     <strong t-esc="line.product_id.with_context(display_default_code=False).display_name" />
                                 </a>
                             </div>
-                            <div class="text-muted" t-esc="'\n'.join(line.name.splitlines()[1:])" />
+                            <div class="text-muted">
+                                <t t-foreach="line.name.splitlines()[1:]" t-as="name_line">
+                                    <span><t t-esc="name_line"/></span><br/>
+                                </t>
+                            </div>
                             <a href='#' class='js_delete_product no-decoration'> <small><i class='fa fa-trash-o'></i> Remove</small></a>
                         </td>
                         <td class="text-center" id="td-qty">
@@ -1244,7 +1248,14 @@
                                             </a>
                                         </td>
                                         <td t-if="line.product_id.product_tmpl_id">
-                                            <strong t-field="line.product_id.with_context(display_default_code=False).display_name" />
+                                            <div>
+                                                <strong t-field="line.product_id.with_context(display_default_code=False).display_name" />
+                                            </div>
+                                            <div class="text-muted">
+                                                <t t-foreach="line.name.splitlines()[1:]" t-as="name_line">
+                                                    <span><t t-esc="name_line"/></span><br/>
+                                                </t>
+                                            </div>
                                         </td>
                                         <td>
                                             <div t-esc="line.product_uom_qty" />
@@ -1371,7 +1382,11 @@
                                                       <strong t-esc="line.product_id.with_context(display_default_code=False).display_name"/>
                                                   </a>
                                               </div>
-                                              <div class="text-muted" t-field="line.name"/>
+                                              <div class="text-muted">
+                                                  <t t-foreach="line.name.splitlines()[1:]" t-as="name_line">
+                                                      <span><t t-esc="name_line"/></span><br/>
+                                                  </t>
+                                              </div>
                                           </td>
                                           <td>
                                               <div id="quote_qty">

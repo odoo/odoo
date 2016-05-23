@@ -349,7 +349,7 @@ class ProductTemplate(models.Model):
         for tmpl_id in self.with_context(active_test=False):
             # list of values combination
             existing_variants = [set(variant.attribute_value_ids.ids) for variant in tmpl_id.product_variant_ids]
-            variant_matrix = itertools.product(*(line.value_ids for line in tmpl_id.attribute_line_ids))
+            variant_matrix = itertools.product(*(line.value_ids for line in tmpl_id.attribute_line_ids if line.value_ids and line.value_ids[0].attribute_id.create_variant))
             variant_matrix = map(lambda record_list: reduce(lambda x, y: x+y, record_list, self.env['product.attribute.value']), variant_matrix)
             to_create_variants = filter(lambda rec_set: set(rec_set.ids) not in existing_variants, variant_matrix)
 
