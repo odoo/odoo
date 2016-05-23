@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from openerp.tools.translate import _
-from openerp.osv import fields, osv
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-class task(osv.osv):
+from odoo import fields, models
+
+
+class ProjectTask(models.Model):
     _name = "project.task"
-    _inherit = ["project.task",'pad.common']
-    _columns = {
-        'description_pad': fields.char('Pad URL', pad_content_field='description')
-    }
+    _inherit = ["project.task", 'pad.common']
+
+    description_pad = fields.Char('Pad URL', pad_content_field='description')
