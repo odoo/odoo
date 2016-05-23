@@ -27,17 +27,26 @@ class WebsiteSaleOptions(WebsiteSale):
             if "optional-product-" in k and int(kw.get(k.replace("product", "add"))) and int(v) in option_ids:
                 optional_product_ids.append(int(v))
 
+        attributes = self._filter_attributes(**kw)
+
         value = {}
         if add_qty or set_qty:
-            value = order._cart_update(product_id=int(product_id),
-                add_qty=int(add_qty), set_qty=int(set_qty),
-                optional_product_ids=optional_product_ids)
+            value = order._cart_update(
+                product_id=int(product_id),
+                add_qty=int(add_qty),
+                set_qty=int(set_qty),
+                attributes=attributes,
+                optional_product_ids=optional_product_ids
+            )
 
         # options have all time the same quantity
         for option_id in optional_product_ids:
-            order._cart_update(product_id=option_id,
+            order._cart_update(
+                product_id=option_id,
                 set_qty=value.get('quantity'),
-                linked_line_id=value.get('line_id'))
+                attributes=attributes,
+                linked_line_id=value.get('line_id')
+            )
 
         return str(order.cart_quantity)
 
