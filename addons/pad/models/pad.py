@@ -8,7 +8,7 @@ import logging
 from openerp import models, SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.tools import html2plaintext
-from py_etherpad import EtherpadLiteClient
+from ..py_etherpad import EtherpadLiteClient
 from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
