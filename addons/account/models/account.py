@@ -639,7 +639,11 @@ class AccountTax(models.Model):
             prec += 5
         total_excluded = total_included = base = round(price_unit * quantity, prec)
 
-        for tax in self.sorted():
+        # Sorting key is mandatory in this case. When no key is provided, sorted() will perform a
+        # search. However, the search method is overridden in account.tax in order to add a domain
+        # depending on the context. This domain might filter out some taxes from self, e.g. in the
+        # case of group taxes.
+        for tax in self.sorted(key=lambda r: r.sequence):
             if tax.amount_type == 'group':
                 ret = tax.children_tax_ids.compute_all(price_unit, currency, quantity, product, partner)
                 total_excluded = ret['total_excluded']
