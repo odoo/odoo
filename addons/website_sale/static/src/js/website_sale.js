@@ -283,7 +283,7 @@ odoo.define('website_sale.website_sale', function (require) {
                 var id = +$input.val();
                 var values = [id];
 
-                $parent.find("ul:not(:has(input.js_variant_change[value='" + id + "'])) input.js_variant_change:checked, select").each(function () {
+                $parent.find("ul:not(:has(input.js_variant_change[value='" + id + "'])) input.js_variant_change:checked, select.js_variant_change").each(function () {
                     values.push(+$(this).val());
                 });
 

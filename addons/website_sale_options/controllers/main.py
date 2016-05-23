@@ -31,13 +31,13 @@ class WebsiteSaleOptions(WebsiteSale):
         if add_qty or set_qty:
             value = order._cart_update(product_id=int(product_id),
                 add_qty=int(add_qty), set_qty=int(set_qty),
-                optional_product_ids=optional_product_ids)
+                optional_product_ids=optional_product_ids, **kw)
 
         # options have all time the same quantity
         for option_id in optional_product_ids:
             order._cart_update(product_id=option_id,
                 set_qty=value.get('quantity'),
-                linked_line_id=value.get('line_id'))
+                linked_line_id=value.get('line_id'), **kw)
 
         return str(order.cart_quantity)
 

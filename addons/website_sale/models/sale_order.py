@@ -44,13 +44,19 @@ class SaleOrder(models.Model):
     @api.multi
     def _cart_find_product_line(self, product_id=None, line_id=None, **kwargs):
         self.ensure_one()
+        product = self.env['product.product'].browse(product_id)
+
+        # Don't merge lines with the same product if it has untracked attributes
+        if product and product.mapped('attribute_line_ids').filtered(lambda r: not r.attribute_id.create_variant) and not line_id:
+            return self.env['sale.order.line']
+
         domain = [('order_id', '=', self.id), ('product_id', '=', product_id)]
         if line_id:
             domain += [('id', '=', line_id)]
         return self.env['sale.order.line'].sudo().search(domain)
 
     @api.multi
-    def _website_product_id_change(self, order_id, product_id, qty=0):
+    def _website_product_id_change(self, order_id, product_id, qty=0, update=False, **kwargs):
         order = self.sudo().browse(order_id)
         product_context = dict(self.env.context)
         product_context.setdefault('lang', order.partner_id.lang)
@@ -64,14 +70,32 @@ class SaleOrder(models.Model):
 
         values = {
             'product_id': product_id,
-            'name': product.display_name,
             'product_uom_qty': qty,
             'order_id': order_id,
             'product_uom': product.uom_id.id,
             'price_unit': product.price,
         }
-        if product.description_sale:
-            values['name'] += '\n %s' % (product.description_sale)
+
+        # The untracked attributes are not available on update so we keep the name
+        if not update:
+            name = product.display_name
+
+            # add untracked attributes in the name
+            untracked_attributes = []
+            for k in kwargs:
+                if 'attribute' in k:
+                    # attribute should be like 'attribute-48-1' where 48 is the product_id, 1 is the attribute_id and v is the attribute value
+                    attribute_value = self.env['product.attribute.value'].sudo().browse(int(kwargs[k]))
+                    if attribute_value and not attribute_value.attribute_id.create_variant:
+                        untracked_attributes.append(attribute_value.name)
+            if untracked_attributes:
+                name += '\n %s' % (', '.join(untracked_attributes))
+
+            if product.description_sale:
+                name += '\n %s' % (product.description_sale)
+
+            values['name'] = name
+
         return values
 
     @api.multi
@@ -90,7 +114,7 @@ class SaleOrder(models.Model):
 
         # Create line if no line with product_id can be located
         if not order_line:
-            values = self._website_product_id_change(self.id, product_id, qty=1)
+            values = self._website_product_id_change(self.id, product_id, qty=1, **kwargs)
             order_line = SaleOrderLineSudo.create(values)
             try:
                 order_line._compute_tax_id()
@@ -111,7 +135,7 @@ class SaleOrder(models.Model):
             order_line.unlink()
         else:
             # update line
-            values = self._website_product_id_change(self.id, product_id, qty=quantity)
+            values = self._website_product_id_change(self.id, product_id, qty=quantity, update=True, **kwargs)
             order_line.write(values)
 
         return {'line_id': order_line.id, 'quantity': quantity}
