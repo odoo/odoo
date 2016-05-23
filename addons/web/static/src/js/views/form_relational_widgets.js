@@ -1277,6 +1277,8 @@ var Many2ManyListView = X2ManyListView.extend({
         this.options = _.extend(this.options, {
             ListType: X2ManyList,
         });
+        this.on('edit:after', this, this.proxy('_after_edit'));
+        this.on('save:before cancel:before', this, this.proxy('_before_unedit'));
     },
     do_add_record: function () {
         var self = this;
@@ -1323,6 +1325,20 @@ var Many2ManyListView = X2ManyListView.extend({
             });
         }
     },
+    _after_edit: function () {
+        this.editor.form.on('blurred', this, this._on_blur_many2many);
+    },
+    _before_unedit: function () {
+        this.editor.form.off('blurred', this, this._on_blur_many2many);
+    },
+    _on_blur_many2many: function() {
+        return this.save_edition().done(function () {
+            if (self._dataset_changed) {
+                self.dataset.trigger('dataset_changed');
+            }
+        });
+    },
+
 });
 
 var FieldMany2Many = FieldX2Many.extend({
