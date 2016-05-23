@@ -275,8 +275,9 @@ class account_move_line(osv.osv):
                     #we propose to continue the same move by copying the ref, the name, the partner...
                     move = move_obj.browse(cr, uid, move_id, context=context)
                     data.setdefault('name', move.line_id[-1].name)
+                    same_partner = len({l.partner_id for l in move.line_id}) == 1
                     for l in move.line_id:
-                        data['partner_id'] = data.get('partner_id') or l.partner_id.id
+                        data['partner_id'] = data.get('partner_id') or (same_partner and l.partner_id.id)
                         data['ref'] = data.get('ref') or l.ref
                         total += (l.debit or 0.0) - (l.credit or 0.0)
 
