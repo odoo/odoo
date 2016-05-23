@@ -4078,7 +4078,7 @@ class BaseModel(object):
                     if not pleft1:
                         # the current record is the first node of the parent
                         if not parent_val:
-                            pleft1 = 1
+                            pleft1 = 0          # the first node starts at 0
                         else:
                             cr.execute('SELECT parent_left FROM %s WHERE id=%%s' % self._table, (parent_val,))
                             pleft1 = cr.fetchone()[0] + 1
