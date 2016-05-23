@@ -336,8 +336,10 @@ class WebsiteForum(http.Controller):
         question = post.parent_id if post.parent_id else post
         if kwargs.get('comment') and post.forum_id.id == forum.id:
             # TDE FIXME: check that post_id is the question or one of its answers
+            body = _('<p>A new answer for <i>%s</i> has been posted. <a href="%s/forum/%s/question/%s">Click here to access the post.</a></p>') % \
+                    (question.name, base_url, slug(question.forum_id), slug(question))
             post.with_context(mail_create_nosubscribe=True).message_post(
-                body=kwargs.get('comment'),
+                body=body,
                 message_type='comment',
                 subtype='mt_comment')
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
