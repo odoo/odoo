@@ -249,5 +249,8 @@ class SaleOrderLine(models.Model):
         return super(SaleOrderLine, self)._compute_analytic(domain=domain)
 
     @api.model
-    def _get_analytic_track_service(self):
-        return super(SaleOrderLine, self)._get_analytic_track_service() + ['timesheet', 'task']
+    def create(self, values):
+        line = super(SaleOrderLine, self).create(values)
+        if line.state == 'sale' and not line.order_id.project_id and line.product_id.track_service in ['timesheet', 'task']:
+            line.order_id._create_analytic_account()
+        return line

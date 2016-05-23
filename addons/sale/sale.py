@@ -671,10 +671,6 @@ class SaleOrderLine(models.Model):
         return new_procs
 
     @api.model
-    def _get_analytic_track_service(self):
-        return []
-
-    @api.model
     def create(self, values):
         onchange_fields = ['name', 'price_unit', 'product_uom', 'tax_id']
         if values.get('order_id') and values.get('product_id') and any(f not in values for f in onchange_fields):
@@ -685,9 +681,6 @@ class SaleOrderLine(models.Model):
                     values[field] = line._fields[field].convert_to_write(line[field], line)
         line = super(SaleOrderLine, self).create(values)
         if line.state == 'sale':
-            if (not line.order_id.project_id and
-                (line.product_id.track_service in self._get_analytic_track_service())):
-                line.order_id._create_analytic_account()
             line._action_procurement_create()
 
         return line
