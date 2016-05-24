@@ -589,14 +589,15 @@ class QuantPackage(models.Model):
 
     @api.depends('quant_ids.package_id', 'quant_ids.location_id', 'quant_ids.company_id', 'quant_ids.owner_id', 'ancestor_ids')
     def _compute_package_info(self):
-        res = dict.fromkeys(self.ids, {'location_id': False, 'company_id': self.env.user.company_id.id, 'owner_id': False})
+        res = {}
         quants = self.env['stock.quant'].search([('package_id', 'in', self.ids)])  # TDE FIXME: was child_od
         for quant in quants:
-            res[quant.package_id.id].update(location_id=quant.location_id.id, owner_id=quant.owner_id.id, company_id=quant.company_id.id)
+            res[quant.package_id.id] = {'location_id': quant.location_id.id, 'owner_id': quant.owner_id.id, 'company_id': quant.company_id.id}
         for package in self:
-            package.location_id = res[package.id]['location_id']
-            package.company_id = res[package.id]['company_id']
-            package.owner_id = res[package.id]['owner_id']
+            values = res.get(package.id, {'location_id': False, 'company_id': self.env.user.company_id.id, 'owner_id': False})
+            package.location_id = values['location_id']
+            package.company_id = values['company_id']
+            package.owner_id = values['owner_id']
 
     @api.multi
     def name_get(self):
