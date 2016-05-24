@@ -23,17 +23,17 @@ This is the base module to manage the accounting chart for Dominican Republic.
     'depends': ['account', 'base_iban'],
     'data': [
         # basic accounting data
-        'data/account_chart_template.xml',
+        'data/l10n_do_chart_data.xml',
         'data/account.account.template.csv',
-        'data/set_account_on_chart_template.xml',
-        'data/account_account_tag.xml',
+        'data/account_chart_template_data.xml',
+        'data/account_account_tag_data.xml',
         'data/account.tax.template.csv',
-        'data/l10n_do_base_data.xml',
+        'data/l10n_do_state_data.xml',
         # Adds fiscal position
         'data/account.fiscal.position.template.csv',
         'data/account.fiscal.position.tax.template.csv',
         # configuration wizard, views, reports...
-        'data/account_chart_template.yml',
+        'data/account_chart_template_data.yml',
     ],
     'test': [],
     'demo': [],

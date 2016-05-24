@@ -12,7 +12,7 @@
     "description": "Kontni načrt za gospodarske družbe",
     "depends": ["account", "base_iban", "base_vat", "account_cancel"],
     "data": [
-        "data/account_chart_template.xml",
+        "data/l10n_si_chart_data.xml",
         "data/account.account.template.csv",
         "data/account.chart.template.csv",
         'data/account.account.tag.csv',
@@ -20,7 +20,7 @@
         "data/account.fiscal.position.template.csv",
         "data/account.fiscal.position.account.template.csv",
         "data/account.fiscal.position.tax.template.csv",
-        "data/account_chart_template.yml",
+        "data/account_chart_template_data.yml",
     ],
     "installable": True,
 }

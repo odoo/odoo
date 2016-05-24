@@ -29,9 +29,9 @@ After installing this module, the Configuration wizard for accounting is launche
     'depends': ['base', 'account'],
     'demo': [ ],
     'data': [
-             'l10n_sg_chart.xml',
-             'l10n_sg_chart_tax.xml',
-             'account_chart_template.yml',
+             'data/l10n_sg_chart_data.xml',
+             'data/account_tax_data.xml',
+             'data/account_chart_template_data.yml',
     ],
     'installable': True,
 }

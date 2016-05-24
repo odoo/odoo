@@ -48,11 +48,11 @@ come with any additional paid permission for online use of 'private modules'.
     'version': '1.0',
     'depends': ['account'],
     'data': [
-                'data/account_chart_template.xml',
+                'data/l10n_br_chart_data.xml',
                 'data/account.account.template.csv',
-                'data/account_tax_template.xml',
-                'account_view.xml',
-                'account_chart_template.yml',
+                'data/account_tax_template_data.xml',
+                'views/account_view.xml',
+                'data/account_chart_template_data.yml',
     ],
     'installable': True,
 }

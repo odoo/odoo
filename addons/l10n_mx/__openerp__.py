@@ -33,9 +33,9 @@ With this module you will have:
     "depends": ["account", "base_vat"],
     "demo_xml": [],
     "data": [
-        "data/account_chart.xml",
-        "data/account_tax.xml",
-        "data/account_chart_template.yml",
+        "data/l10n_mx_chart_data.xml",
+        "data/account_tax_data.xml",
+        "data/account_chart_template_data.yml",
     ],
     "installable": True,
     "certificate": False,

@@ -15,8 +15,8 @@ Thai accounting chart and localization.
     'website': 'http://almacom.co.th/',
     'depends': ['account'],
     'data': [
-        'account_data.xml',
-        'account_chart_template.yml',
+        'data/l10n_th_chart_data.xml',
+        'data/account_chart_template_data.yml',
     ],
     'installable': True,
 }
