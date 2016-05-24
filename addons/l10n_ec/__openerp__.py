@@ -20,9 +20,9 @@ Accounting chart and localization for Ecuador.
         'base_iban',
     ],
     'data': [
-        'account_chart.xml',
-        'account_tax.xml',
-        'account_chart_template.yml',
+        'data/l10n_ec_chart_data.xml',
+        'data/account_tax_data.xml',
+        'data/account_chart_template_data.yml',
     ],
     'demo': [],
     'installable': True,

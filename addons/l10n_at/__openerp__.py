@@ -16,7 +16,9 @@ This module provides the standard Accounting Chart for Austria which is based on
 Please keep in mind that you should review and adapt it with your Accountant, before using it in a live Environment.
 """,
     'demo': [],
-    'data': ['account_chart.xml', 'account_tax.xml', 'account_chart_template.yml'],
+    'data': ['data/l10n_at_chart_data.xml',
+             'data/account_tax_data.xml',
+             'data/account_chart_template_data.yml'],
     'auto_install': False,
     'installable': True
 }

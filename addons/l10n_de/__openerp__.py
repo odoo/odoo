@@ -17,9 +17,9 @@ German accounting chart and localization.
     'depends': ['account', 'base_iban', 'base_vat'],
     'demo': [],
     'data': [
-        'account_account_types.xml',
-        'account_account_tags.xml',
-        'menuitem.xml',
+        'data/account_account_types_data.xml',
+        'data/account_account_tags_data.xml',
+        'data/menuitem_data.xml',
     ],
     'installable': True,
 }

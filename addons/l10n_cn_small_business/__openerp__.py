@@ -24,8 +24,8 @@
     """,
     'depends': ['l10n_cn'],
     'data': [
-        'account_chart_template.xml',
-        'account_chart_template.yml',
+        'data/l10n_cn_small_business_chart_data.xml',
+        'data/account_chart_template_data.yml',
     ],
     'license': 'GPL-3',
     'installable': True,

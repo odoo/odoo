@@ -17,9 +17,9 @@ Plan contable chileno e impuestos de acuerdo a disposiciones vigentes
     'category': 'Localization',
     'depends': ['account'],
     'data': [
-        'l10n_cl_chart.xml',
-        'account_tax.xml',
-        'account_chart_template.yml',
+        'data/l10n_cl_chart_data.xml',
+        'data/account_tax_data.xml',
+        'data/account_chart_template_data.yml',
     ],
     'demo': [],
     'active': False,
