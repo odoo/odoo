@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
 <odoo>
     <!--Hr Department Inherit Kanban view-->
     <record id="hr_department_view_kanban" model="ir.ui.view">
@@ -93,8 +94,8 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="hr_kanban_view_employees_kanban">
-        <field name="name">HR - Employees Kanban with leave status</field>
+    <record id="hr_kanban_view_employees_kanban" model="ir.ui.view">
+        <field name="name">hr.employee.kanban.leaves.status</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
         <field name="arch" type="xml">
