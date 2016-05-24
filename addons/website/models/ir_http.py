@@ -168,27 +168,9 @@ class ir_http(orm.AbstractModel):
             # bind modified context
             request.website = request.website.with_context(request.context)
 
-        # cache for auth public
-        cache_time = getattr(func, 'routing', {}).get('cache')
-        cache_enable = cache_time and request.httprequest.method == "GET" and request.website.user_id.id == request.uid
-        cache_response = None
-        if cache_enable:
-            key = self.get_page_key()
-            try:
-                r = self.pool.cache[key]
-                if r['time'] + cache_time > time.time():
-                    cache_response = openerp.http.Response(r['content'], mimetype=r['mimetype'])
-                else:
-                    del self.pool.cache[key]
-            except KeyError:
-                pass
-
-        if cache_response:
-            request.cache_save = False
-            resp = cache_response
-        else:
-            request.cache_save = key if cache_enable else False
-            resp = super(ir_http, self)._dispatch()
+        # removed cache for auth public
+        request.cache_save = False
+        resp = super(ir_http, self)._dispatch()
 
         if request.website_enabled and cook_lang != request.lang and hasattr(resp, 'set_cookie'):
             resp.set_cookie('website_lang', request.lang)
