@@ -15,8 +15,8 @@ Allows users to create custom dashboard.
     'depends': ['base', 'web'],
     'data': [
         'security/ir.model.access.csv',
-        'board_mydashboard_view.xml',
-        'views/board.xml',
+        'views/board_views.xml',
+        'views/board_templates.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
