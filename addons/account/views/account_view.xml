@@ -1461,10 +1461,11 @@
                         </group>
                         <group string="Due Date Computation">
                             <label for="days"/>
-                            <div class="o_row">
-                                <div>
-                                    <field name="days" attrs="{'invisible': [('option', 'in', ['last_day_following_month', 'last_day_current_month'])]}"/>
-                                    <field name="option" widget="radio"/>
+                            <div>
+                                <field name="option" widget="radio"/>
+                                <div class="o_row" attrs="{'invisible': [('option', 'in', ['last_day_following_month', 'last_day_current_month'])]}">
+                                    <field name="days"/>
+                                    days
                                 </div>
                             </div>
                         </group>
