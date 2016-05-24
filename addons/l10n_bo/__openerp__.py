@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (c) 2011 Cubic ERP - Teradata SAC. (https://cubicerp.com).
@@ -21,5 +21,4 @@ Plan contable boliviano e impuestos de acuerdo a disposiciones vigentes
         "data/account_tax_data.xml",
         "data/account_chart_template_data.yml",
     ],
-    "installable": True,
 }

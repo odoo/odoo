@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <!-- To solve bug 1240265, we have to delete all fiscal position templates before each update.
          The valid ones will be re-created later during the update.
          /!\ This must be executed *before* loading the fiscal position templates!! -->
@@ -184,5 +183,4 @@
             <field name="tax_src_id" ref="tva_acq_super_reduite" />
             <field name="tax_dest_id" ref="tva_import_0" />
         </record>
-
 </odoo>

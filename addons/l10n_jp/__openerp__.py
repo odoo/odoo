@@ -37,5 +37,4 @@ need to use these at all under normal circumstances.
         'data/account_chart_template_data.yml',
         'data/account.fiscal.position.template.csv',
     ],
-    'installable': True,
 }

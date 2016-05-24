@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<data noupdate="0">
-
     <record id="tax_tag_sale_tvac_00" model="account.account.tag">
         <field name="name">TVA colectat 0%</field>
         <field name="applicability">taxes</field>
@@ -795,6 +793,4 @@
         <field name="children_tax_ids" eval="[(6, 0, [ref('tvati_intrap24d'), ref('tvati_intrap24c')])]"/>
         <field name="tag_ids" eval="[(6,0,[ref('tax_tag_tva_intracomunitara_achizitii_24')])]"/>
     </record>
-
-</data>
 </odoo>

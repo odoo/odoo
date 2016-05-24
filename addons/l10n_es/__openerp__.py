@@ -36,8 +36,4 @@ Spanish charts of accounts (PGCE 2008).
         'data/account_chart_template_data.xml',
         'data/account_chart_template_data.yml',
     ],
-    "demo" : [],
-    'auto_install': False,
-    "installable": True,
-    'images': ['images/config_chart_l10n_es.png', 'images/l10n_es_chart.png'],
 }

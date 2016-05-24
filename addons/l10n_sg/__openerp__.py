@@ -1,11 +1,10 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (C) 2014 Tech Receptives (<http://techreceptives.com>)
 
 {
     'name': 'Singapore - Accounting',
-    'version': '1.0',
     'author': 'Tech Receptives',
     'website': 'http://www.techreceptives.com',
     'category': 'Localization',
@@ -27,11 +26,9 @@ After installing this module, the Configuration wizard for accounting is launche
 
     """,
     'depends': ['base', 'account'],
-    'demo': [ ],
     'data': [
              'data/l10n_sg_chart_data.xml',
              'data/account_tax_data.xml',
              'data/account_chart_template_data.yml',
     ],
-    'installable': True,
 }

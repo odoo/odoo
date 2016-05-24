@@ -18,5 +18,4 @@ Thai accounting chart and localization.
         'data/l10n_th_chart_data.xml',
         'data/account_chart_template_data.yml',
     ],
-    'installable': True,
 }

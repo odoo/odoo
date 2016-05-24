@@ -1,11 +1,10 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright: (C) 2012 - Mentis d.o.o., Dravograd
 
 {
     "name": "Slovenian - Accounting",
-    "version": "1.0",
     "author": "Mentis d.o.o.",
     "website": "http://www.mentis.si",
     'category': 'Localization',
@@ -22,5 +21,4 @@
         "data/account.fiscal.position.tax.template.csv",
         "data/account_chart_template_data.yml",
     ],
-    "installable": True,
 }

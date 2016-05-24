@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <!-- Account Tax Tags -->
     <record id="tag_ventas_22" model="account.account.tag">
         <field name="name">IVA Ventas (22%)</field>
@@ -95,5 +94,4 @@
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('tag_compras_exento')])]"/>
     </record>
-
 </odoo>

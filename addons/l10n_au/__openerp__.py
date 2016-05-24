@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (C) 2015 Willow IT Pty Ltd (<http://www.willowit.com.au>).
@@ -30,7 +30,4 @@ Also:
              'data/account_chart_template_data.yml',
              'data/res_currency_data.xml',
              ],
-    'demo': [],
-    'installable': True,
-    'images': [],
 }

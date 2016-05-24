@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (C) 2008-2008 凯源吕鑫 lvxin@gmail.com   <basic chart data>
@@ -28,5 +28,4 @@
         'data/account_account_type_data.xml',
     ],
     'license': 'GPL-3',
-    'installable': True,
 }

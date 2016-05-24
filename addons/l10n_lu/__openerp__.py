@@ -39,8 +39,4 @@ Notes:
         'data/account.chart.template.csv',
         'data/account_chart_template_data.yml',
     ],
-    'test': [],
-    'demo': [],
-    'installable': True,
-    'auto_install': False,
 }

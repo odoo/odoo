@@ -3,7 +3,6 @@
 
 {
     'name': 'Canada - Accounting',
-    'version': '1.0',
     'author': 'Savoir-faire Linux',
     'website': 'https://www.savoirfairelinux.com',
     'category': 'Localization',
@@ -50,6 +49,5 @@ position.
         'data/account_chart_template_data.yml',
         'data/res_company_data.xml',
     ],
-    'installable': True,
     'post_init_hook': 'load_translations',
 }

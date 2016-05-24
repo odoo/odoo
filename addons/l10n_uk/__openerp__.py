@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (C) 2011 Smartmode LTD (<http://www.smartmode.co.uk>).
@@ -27,5 +27,4 @@ This is the latest UK Odoo localisation necessary to run Odoo accounting for UK 
         'data/account_chart_template_data.yml',
     ],
     'demo' : ['demo/l10n_uk_demo.xml'],
-    'installable': True,
 }
