@@ -92,16 +92,16 @@ class AssetsBundle(object):
         self.remains = remains
         for f in files:
             if f['atype'] == 'text/sass':
-                self.stylesheets.append(SassStylesheetAsset(self, url=f['url'], inline=f['content'], media=f['media']))
+                self.stylesheets.append(SassStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
             elif f['atype'] == 'text/less':
-                self.stylesheets.append(LessStylesheetAsset(self, url=f['url'], inline=f['content'], media=f['media']))
+                self.stylesheets.append(LessStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
             elif f['atype'] == 'text/css':
-                self.stylesheets.append(StylesheetAsset(self, url=f['url'], inline=f['content'], media=f['media']))
+                self.stylesheets.append(StylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
             elif f['atype'] == 'text/javascript':
-                self.javascripts.append(JavascriptAsset(self, url=f['url'], inline=f['content']))
+                self.javascripts.append(JavascriptAsset(self, url=f['url'], filename=f['filename'], inline=f['content']))
 
     def to_html(self, sep=None, css=True, js=True, debug=False, async=False, values=None):
-        url_for = values and values.get('url_for', lambda url: url) or (lambda url: url)
+        url_for = values and values.get('url_for') or (lambda url: url)
         if sep is None:
             sep = '\n            '
         response = []
@@ -390,9 +390,10 @@ class WebAsset(object):
     _ir_attach = None
     _id = None
 
-    def __init__(self, bundle, inline=None, url=None):
+    def __init__(self, bundle, inline=None, url=None, filename=None):
         self.bundle = bundle
         self.inline = inline
+        self._filename = filename
         self.url = url
         self.html_url_args = url
         if not inline and not url:

@@ -11,6 +11,7 @@ from lxml import etree
 from openerp import api, models, tools
 from openerp.tools import safe_eval
 from openerp.addons.web.http import request
+from odoo.modules.module import get_resource_path
 import json
 
 import logging
@@ -175,6 +176,7 @@ class ir_QWeb(models.AbstractModel, QWeb):
                 remains.append(el)
             elif isinstance(el, html.HtmlElement):
                 href = el.get('href', '')
+                src = el.get('src', '')
                 atype = el.get('type')
                 media = el.get('media')
 
@@ -186,10 +188,17 @@ class ir_QWeb(models.AbstractModel, QWeb):
                         atype = 'text/less'
                     if atype not in ('text/less', 'text/sass'):
                         atype = 'text/css'
-                    files.append({'atype': atype, 'url': href, 'content': el.text, 'media': media})
+                    path = filter(None, href.split('/'))
+                    filename = get_resource_path(*path)
+                    files.append({'atype': atype, 'url': href, 'filename': filename, 'content': el.text, 'media': media})
                 elif el.tag == 'script':
                     atype = 'text/javascript'
-                    files.append({'atype': atype, 'url': el.get('src', ''), 'content': el.text, 'media': media})
+                    if src:
+                        path = filter(None, src.split('/'))
+                        filename = get_resource_path(*path)
+                    else:
+                        filename = None
+                    files.append({'atype': atype, 'url': src, 'filename': filename, 'content': el.text, 'media': media})
                 else:
                     remains.append(html.tostring(el))
             else:
