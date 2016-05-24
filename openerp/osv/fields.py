@@ -1767,26 +1767,26 @@ class property(function):
         ir_property.set_multi(cr, uid, prop_name, obj._name, {id: value}, context=context)
         return True
 
-    def _property_read(self, obj, cr, uid, ids, prop_names, obj_dest, context=None):
+    def _property_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
         ir_property = obj.pool['ir.property']
 
-        res = {id: {} for id in ids}
-        for prop_name in prop_names:
-            field = obj._fields[prop_name]
-            values = ir_property.get_multi(cr, uid, prop_name, obj._name, ids, context=context)
-            if field.type == 'many2one':
-                # name_get the non-null values as SUPERUSER_ID
-                vals = sum(set(filter(None, values.itervalues())),
-                           obj.pool[field.comodel_name].browse(cr, uid, [], context=context))
-                vals_name = dict(vals.sudo().name_get()) if vals else {}
-                for id, value in values.iteritems():
-                    ng = False
-                    if value and value.id in vals_name:
-                        ng = value.id, vals_name[value.id]
-                    res[id][prop_name] = ng
-            else:
-                for id, value in values.iteritems():
-                    res[id][prop_name] = value
+        res = dict.fromkeys(ids, False)
+
+        field = obj._fields[prop_name]
+        values = ir_property.get_multi(cr, uid, prop_name, obj._name, ids, context=context)
+        if field.type == 'many2one':
+            # name_get the non-null values as SUPERUSER_ID
+            vals = sum(set(filter(None, values.itervalues())),
+                       obj.pool[field.comodel_name].browse(cr, uid, [], context=context))
+            vals_name = dict(vals.sudo().name_get()) if vals else {}
+            for id, value in values.iteritems():
+                ng = False
+                if value and value.id in vals_name:
+                    ng = value.id, vals_name[value.id]
+                res[id] = ng
+        else:
+            for id, value in values.iteritems():
+                res[id] = value
 
         return res
 
@@ -1799,7 +1799,6 @@ class property(function):
             fnct=self._property_read,
             fnct_inv=self._property_write,
             fnct_search=self._property_search,
-            multi='properties',
             **args
         )
 
