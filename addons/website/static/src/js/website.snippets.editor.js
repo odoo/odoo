@@ -147,7 +147,10 @@ options.registry.carousel = options.registry.slider.extend({
         this.$target.on('slid.bs.carousel', function () {
             if(self.editor && self.editor.styles.background) {
                 self.editor.styles.background.$target = self.$target.find(".item.active");
+                self.editor.styles.background_position.$target = self.editor.styles.background.$target;
                 self.editor.styles.background.set_active();
+                self.editor.styles.background_position.set_active();
+                self.editor.styles.background.$target.trigger("snippet-option-change", [self.editor.styles.background]);
             }
             self.$target.carousel("pause");
         });

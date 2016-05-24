@@ -311,73 +311,56 @@ odoo.define('web_editor.snippets.options', function (require) {
      * The background option is designed to change the background image of a snippet.
      */
     registry.background = SnippetOption.extend({
-        start: function ($change_target) {
-            this.$target = $change_target || this.$target;
-            this._super.apply(this, arguments);
-            var src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
-            if (this.$target.hasClass('oe_custom_bg')) {
-                this.$el.find('li[data-choose_image]').data("background", src).attr("data-background", src);
-            }
-        },
         background: function (type, value, $li) {
             if (value && value.length) {
-                this.$target.attr("style", 'background-image: url(' + value + '); ' + (this.$target.attr("style") || '').replace(/background-image:[^;]+/, '') );
+                this.$target.css("background-image", "url(" + value + ")");
                 this.$target.addClass("oe_img_bg");
             } else {
                 this.$target.css("background-image", "");
                 this.$target.removeClass("oe_img_bg oe_custom_bg");
             }
         },
-        select_class : function (type, value, $li) {
+        select_class: function (type, value, $li) {
             this.background(type, '', $li);
             this._super.apply(this, arguments);
         },
         choose_image: function (type, value, $li) {
-            if(type !== "click") return;
+            if(type !== "click") {
+                return;
+            }
 
-            var self = this;
-            var $image = $('<img class="hidden"/>');
-            $image.attr("src", value);
-            $image.appendTo(self.$target);
+            // Put fake image in the DOM, edit it and use it as background-image
+            var $image = $("<img/>", {"class": "hidden", "src": value}).appendTo(this.$target);
 
             var _editor = new widget.MediaDialog(null, {}, null, $image[0]).open();
             _editor.$('[href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
 
-            _editor.on('saved', self, function () {
+            _editor.on('saved', this, function () {
                 var value = $image.attr("src");
-                $image.remove();
-                self.$el.find('li[data-choose_image]').data("background", value).attr("data-background", value);
-                self.background(type, value,$li);
-                self.$target.addClass('oe_custom_bg');
-                self.$target.trigger("snippet-option-change", [self]);
-                self.set_active();
+                this.background(type, value, $li);
+                this.$target.addClass("oe_custom_bg");
+                this.set_active();
+                this.$target.trigger("snippet-option-change", [this]);
             });
-            _editor.on('cancel', self, function () {
+            _editor.on('closed', this, function () {
                 $image.remove();
             });
         },
         set_active: function () {
-            var src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
             this._super.apply(this, arguments);
 
+            var src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
             if (this.$target.hasClass('oe_custom_bg')) {
                 this.$el.find('li[data-choose_image]').data("background", src).attr("data-background", src);
             }
 
-            this.$el.find('li[data-background]:not([data-background=""])')
+            this.$el.find('li[data-background]')
                 .removeClass("active")
-                .each(function () {
-                    var background = $(this).data("background") || $(this).attr("data-background");
-                    if ((src.length && background.length && src.indexOf(background) !== -1) || (!src.length && !background.length)) {
-                        $(this).addClass("active");
-                    }
-                });
-
-            if (!this.$el.find('li[data-background].active').size()) {
-                this.$el.find('li[data-background=""]:not([data-choose_image])').addClass("active");
-            } else {
-                this.$el.find('li[data-background=""]:not([data-choose_image])').removeClass("active");
-            }
+                .filter(function () {
+                    var bgOption = $(this).data("background");
+                    return (bgOption === "" && src === "" || bgOption !== "" && src.indexOf(bgOption) >= 0);
+                })
+                .addClass("active");
         }
     });
 
@@ -387,12 +370,15 @@ odoo.define('web_editor.snippets.options', function (require) {
     registry.background_position = SnippetOption.extend({
         start: function () {
             this._super.apply(this, arguments);
-
+            this.on_focus();
             var self = this;
-            var $btn = this.$overlay.find('.oe_options');
-            $btn.on('show.bs.dropdown', function () {
-                $btn.find('.background_position_li').toggleClass('hidden', self.$target.css('background-image') === 'none');
+            this.$target.on("snippet-option-change", function () {
+                self.on_focus();
             });
+        },
+        on_focus: function () {
+            this._super.apply(this, arguments);
+            this.$el.toggleClass('hidden', this.$target.css('background-image') === 'none');
         },
         background_position: function (type, value, $li) {
             if (type != 'click') { return; }
