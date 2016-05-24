@@ -128,6 +128,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             history.append(partners_amount)
 
         for partner in partners:
+            at_least_one_amount = False
             values = {}
             # Query here is replaced by one query which gets the all the partners their 'after' value
             after = False
