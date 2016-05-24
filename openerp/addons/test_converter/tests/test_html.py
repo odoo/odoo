@@ -4,7 +4,6 @@ import datetime
 
 from openerp.tests import common
 from openerp.tools import html_escape as e
-from openerp.addons.base.ir.ir_qweb import QWebContext
 
 directory = os.path.dirname(__file__)
 
@@ -103,10 +102,9 @@ class TestCurrencyExport(TestExport):
         converter = self.registry('ir.qweb.field.monetary')
         options = {
             'widget': 'monetary',
-            'display_currency': dest
+            'display_currency': dest,
         }
-        return converter.record_to_html(self.cr, self.uid, obj, 'value', options,
-            QWebContext(self.env(context=dict(inherit_branding=True)), {'obj': obj}))
+        return converter.record_to_html(self.cr, self.uid, obj, 'value', options, {'obj': obj})
 
     def test_currency_post(self):
         currency = self.create(self.Currency, name="Test", symbol=u"test")

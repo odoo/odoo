@@ -6,7 +6,6 @@ from lxml import etree, html
 from lxml.builder import E
 
 from openerp.tests import common
-from openerp.addons.base.ir.ir_qweb import QWebContext
 from openerp.addons.web_editor.models.ir_qweb import html_to_text
 
 
@@ -118,9 +117,6 @@ class TestConvertBack(common.TransactionCase):
         super(TestConvertBack, self).setUp()
         self.env = self.env(context={'inherit_branding': True})
 
-    def qwebcontext(self, data):
-        return QWebContext(self.env, data)
-
     def field_rountrip_result(self, field, value, expected):
         model = 'web_editor.converter.test'
         record = self.env[model].create({field: value})
@@ -131,11 +127,11 @@ class TestConvertBack(common.TransactionCase):
         field_value = 'record.%s' % field
         e.set('t-field', field_value)
 
-        qwebcontext = self.qwebcontext({'record': record})
-        rendered = self.env['ir.qweb'].compile(t)(qwebcontext)
+        rendered = self.env['ir.qweb'].render(t, {'record': record})
 
         element = html.fromstring(rendered, parser=html.HTMLParser(encoding='utf-8'))
-        converter = self.env['ir.qweb'].get_field_for(element.get('data-oe-type'))
+        model = 'ir.qweb.field.' + element.get('data-oe-type', '')
+        converter = self.env[model] if model in self.env else self.env['ir.qweb.field']
         value_back = converter.from_html(model, record._fields[field], element)
 
         if isinstance(expected, str):
@@ -202,15 +198,15 @@ class TestConvertBack(common.TransactionCase):
         field_value = 'record.%s' % field
         e.set('t-field', field_value)
 
-        qwebcontext = self.qwebcontext({'record': record})
-        rendered = self.env['ir.qweb'].compile(t)(qwebcontext)
+        rendered = self.env['ir.qweb'].render(t, {'record': record})
         element = html.fromstring(rendered, parser=html.HTMLParser(encoding='utf-8'))
 
         # emulate edition
         element.set('data-oe-many2one-id', str(subrec2.id))
         element.text = "New content"
 
-        converter = self.env['ir.qweb'].get_field_for(element.get('data-oe-type'))
+        model = 'ir.qweb.field.' + element.get('data-oe-type')
+        converter = self.env[model] if model in self.env else self.env['ir.qweb.field']
         value_back = converter.from_html('web_editor.converter.test', record._fields[field], element)
 
         self.assertIsNone(
