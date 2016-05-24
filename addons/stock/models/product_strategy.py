@@ -36,7 +36,7 @@ class PutAwayStrategy(models.Model):
 
     def putaway_apply(self, product):
         if hasattr(self, '_putaway_apply_%s' % (self.method)):
-            return getattr(self, '_putaway_apply_%s' % (self.method))
+            return getattr(self, '_putaway_apply_%s' % (self.method))(product)
         return self.env['stock.location']
 
 
