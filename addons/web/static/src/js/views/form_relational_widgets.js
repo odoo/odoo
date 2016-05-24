@@ -177,7 +177,7 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
         this.$input.change(input_changed);
         this.$input.on('click', function() {
             if (self.$input.autocomplete("widget").is(":visible")) {
-                self.$input.autocomplete("close");                
+                self.$input.autocomplete("close");
             } else {
                 if (self.get("value") && ! self.floating) {
                     self.$input.autocomplete("search", "");
@@ -308,7 +308,7 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
     render_value: function(no_recurse) {
         var self = this;
         if (!this.get("value")) {
-            this.display_string("");
+            this.display_string(null);
             return;
         }
         var display = this.display_value["" + this.get("value")];
@@ -336,14 +336,15 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
             }
         }
     },
-    display_string: function(str) {
+    display_string: function (str) {
+        var noValue = (str === null);
         if (!this.get("effective_readonly")) {
-            this.$input.val(str.split("\n")[0]);
+            this.$input.val(noValue ? "" : (str.split("\n")[0].trim() || $(data.noDisplayContent).text()));
             this.current_display = this.$input.val();
             this.$follow_button.toggle(!this.is_false());
             this.$el.toggleClass('o_with_button', !!this.$follow_button && this.$follow_button.length > 0 && !this.is_false());
         } else {
-            this.$el.html(_.escape(str).split("\n").join("<br/>"));
+            this.$el.html(noValue ? "" : (_.escape(str.trim()).split("\n").join("<br/>") || data.noDisplayContent));
             // Define callback to perform when clicking on the field
             if (!this.options.no_open) {
                 // Remove potential previously added event handler
@@ -627,7 +628,7 @@ var AbstractManyField = common.AbstractField.extend({
             add_ids = [],
             command_list = [],
             id, index, record;
-        
+
         _.each(this.get('value'), function (id) {
             index = starting_ids.indexOf(id);
             if (index !== -1) {
@@ -697,7 +698,7 @@ var FieldX2Many = AbstractManyField.extend({
     default_view: 'tree',
     init: function(field_manager, node) {
         this._super(field_manager, node);
-        
+
         this.is_loaded = $.Deferred();
         this.initial_is_loaded = this.is_loaded;
         this.is_started = false;
@@ -1438,19 +1439,15 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
     },
     render_value: function() {
         var self = this;
-        var values = self.get("value");
-        var handle_names = function(data) {
-            if (self.isDestroyed())
-                return;
-            var indexed = {};
-            _.each(data, function(el) {
-                indexed[el['id']] = el;
+        var values = this.get("value");
+        var handle_names = function(_data) {
+            _.each(_data, function(el) {
+                el.display_name = el.display_name.trim() ? _.str.escapeHTML(el.display_name) : data.noDisplayContent;
             });
-            data = _.map(values, function(el) { return indexed[el]; });
-            self.render_tag(data);
+            self.render_tag(_data);
         };
         if (!values || values.length > 0) {
-            return self.get_render_data(values).done(handle_names);
+            return this.alive(this.get_render_data(values)).done(handle_names);
         } else {
             handle_names([]);
         }
@@ -1509,7 +1506,7 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
             var old_color = tag.data('color');
             tag.removeClass('o_tag_color_' + old_color);
             tag.data('color', color);
-            tag.addClass('o_tag_color_' + color);            
+            tag.addClass('o_tag_color_' + color);
         });
     },
 });

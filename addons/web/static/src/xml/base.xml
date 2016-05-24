@@ -750,7 +750,7 @@
 <t t-name="FieldMany2ManyTag">
     <t t-foreach="elements" t-as="el">
         <span t-attf-class="badge dropdown #{'o_tag_color_' + (el['color'] || 0)}" t-att-data-color="(el['color'] || 0)" t-att-data-index="el_index" t-att-data-id="el['id']">
-            <span class="o_badge_text"><t t-esc="el['display_name']"/></span>
+            <span class="o_badge_text"><t t-raw="el['display_name']"/></span>
             <span t-if="!readonly" class="fa fa-times o_delete"/>
         </span>
     </t>
@@ -902,7 +902,7 @@
     <t t-if="widget.get('effective_readonly')">
         <div t-foreach="widget.get('value')" t-as="id">
             <t t-set="file" t-value="widget.data[id]"/>
-            <a t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}"><t t-raw="file.name || file.filename"/></a>
+            <a target="_blank" t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}"><t t-raw="file.name || file.filename"/></a>
         </div>
     </t>
     <t t-if="!widget.get('effective_readonly')">
@@ -919,7 +919,7 @@
                     <a href="#" class="fa fa-times pull-right oe_delete" title="Delete this file" t-att-data-id="file.id"/>
                     <t t-raw="file.name || file.filename"/>
                 </div>
-                <a class="o_image" t-att-href="file.url"
+                <a class="o_image" target="_blank" t-att-href="file.url"
                    t-att-title="(file.name || file.filename) + ((file.date)? (' \n(' + file.date + ')') : '')"
                    t-att-data-mimetype="file.mimetype"
                    t-attf-data-src="/web/image/#{file.id}/100x80"/>
@@ -1120,7 +1120,7 @@
             <div class="o_export_format"/>
         </div>
     </div>
-    
+
     <div class="o_export_panel">
         <div class="o_left_panel">
             <h4>Available fields</h4>

@@ -134,15 +134,18 @@ class StockSettings(models.TransientModel):
     @api.multi
     def set_group_stock_multi_locations(self):
         """ If we are not in multiple locations, we can deactivate the internal
-        picking types of the warehouses. That way, they won't appear in the dashboard. """
+        picking types of the warehouses, so they won't appear in the dashboard.
+        Otherwise, activate them.
+        """
         for config in self:
-            warehouses = self.env['stock.warehouse'].search([])
             if config.group_stock_multi_locations:
-                # Check inactive picking types and of warehouses make them active (by warehouse)
-                picking_types = warehouses.mapped('int_type_id').filtered(lambda self: not self.active)
-                picking_types.write({'active': True})
+                active = True
+                domain = []
             else:
-                # Check active internal picking types of warehouses and make them inactive
-                picking_types = warehouses.mapped('int_type_id').filtered(lambda self: self.active and self.reception_steps == 'one_step' and self.delivery_steps == 'ship_only')
-                picking_types.write({'active': False})
+                active = False
+                domain = [('reception_steps', '=', 'one_step'), ('delivery_steps', '=', 'ship_only')]
+
+            warehouses = self.env['stock.warehouse'].search(domain)
+            warehouses.mapped('int_type_id').write({'active': active})
+
         return True

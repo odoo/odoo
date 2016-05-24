@@ -22,9 +22,11 @@ class WebsiteCrmBackend(WebsiteBackend):
         date_from = datetime.strptime(date_from, DEFAULT_SERVER_DATE_FORMAT)
         date_to = datetime.strptime(date_to, DEFAULT_SERVER_DATE_FORMAT)
 
-        lead_domain = [
-            ('team_id.website_ids', '!=', False),
-        ]
+        lead_domain = []
+
+        website_utm = request.env['ir.model.data'].xmlid_to_res_id('utm.utm_medium_website')
+        if website_utm:
+            lead_domain += [('medium_id', '=', website_utm)]
 
         lead_ids = request.env['crm.lead'].search(
             lead_domain + [
