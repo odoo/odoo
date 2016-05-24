@@ -78,8 +78,8 @@ class Field(orm.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     @api.model
-    def attributes(self, record, field_name, options, qwebcontext):
-        attrs = super(Field, self).attributes(record, field_name, options, qwebcontext)
+    def attributes(self, record, field_name, options, values):
+        attrs = super(Field, self).attributes(record, field_name, options, values)
         field = record._fields[field_name]
 
         placeholder = options.get('placeholder') or getattr(field, 'placeholder', None)
@@ -88,7 +88,7 @@ class Field(orm.AbstractModel):
 
         if options['translate'] and field.type in ('char', 'text'):
             name = "%s,%s" % (record._model._name, field_name)
-            domain = [('name', '=', name), ('res_id', '=', record.id), ('type', '=', 'model'), ('lang', '=', qwebcontext.env.context.get('lang'))]
+            domain = [('name', '=', name), ('res_id', '=', record.id), ('type', '=', 'model'), ('lang', '=', options.get('lang'))]
             translation = record.env['ir.translation'].search(domain, limit=1)
             attrs['data-oe-translation-state'] = translation and translation.state or 'to_translate'
 
@@ -116,9 +116,7 @@ class Float(orm.AbstractModel):
     @api.model
     def from_html(self, model, field, element):
         lang = self.user_lang()
-
         value = element.text_content().strip()
-
         return float(value.replace(lang.thousands_sep, '')
                           .replace(lang.decimal_point, '.'))
 
@@ -128,8 +126,8 @@ class ManyToOne(orm.AbstractModel):
     _inherit = 'ir.qweb.field.many2one'
 
     @api.model
-    def attributes(self, record, field_name, options, qwebcontext):
-        attrs = super(ManyToOne, self).attributes(record, field_name, options, qwebcontext)
+    def attributes(self, record, field_name, options, values):
+        attrs = super(ManyToOne, self).attributes(record, field_name, options, values)
         many2one = getattr(record, field_name)
         if many2one:
             attrs['data-oe-many2one-id'] = many2one.id
@@ -157,8 +155,8 @@ class Contact(orm.AbstractModel):
     _inherit = 'ir.qweb.field.contact'
 
     @api.model
-    def attributes(self, record, field_name, options, qwebcontext):
-        attrs = super(Contact, self).attributes(record, field_name, options, qwebcontext)
+    def attributes(self, record, field_name, options, values):
+        attrs = super(Contact, self).attributes(record, field_name, options, values)
         attrs['data-oe-contact-options'] = json.dumps(options)
         return attrs
 
@@ -187,8 +185,8 @@ class Date(orm.AbstractModel):
     _inherit = 'ir.qweb.field.date'
 
     @api.model
-    def attributes(self, record, field_name, options, qwebcontext):
-        attrs = super(Date, self).attributes(record, field_name, options, qwebcontext)
+    def attributes(self, record, field_name, options, values):
+        attrs = super(Date, self).attributes(record, field_name, options, values)
         attrs['data-oe-original'] = record[field_name]
         return attrs
 
@@ -207,8 +205,8 @@ class DateTime(orm.AbstractModel):
     _inherit = 'ir.qweb.field.datetime'
 
     @api.model
-    def attributes(self, record, field_name, options, qwebcontext):
-        attrs = super(DateTime, self).attributes(record, field_name, options, qwebcontext)
+    def attributes(self, record, field_name, options, values):
+        attrs = super(DateTime, self).attributes(record, field_name, options, values)
         value = record[field_name]
         if isinstance(value, basestring):
             value = datetime.datetime.strptime(
@@ -216,7 +214,7 @@ class DateTime(orm.AbstractModel):
         if value:
             # convert from UTC (server timezone) to user timezone
             value = fields.datetime.context_timestamp(
-                self._cr, self._uid, timestamp=value, context=qwebcontext.context)
+                self._cr, self._uid, timestamp=value, context=self.env.context)
             value = value.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         attrs['data-oe-original'] = value
         return attrs
@@ -301,7 +299,7 @@ class Image(orm.AbstractModel):
     _inherit = 'ir.qweb.field.image'
 
     @api.model
-    def record_to_html(self, record, field_name, options, qwebcontext=None):
+    def record_to_html(self, record, field_name, options, values=None):
         assert options['tagName'] != 'img',\
             "Oddly enough, the root tag of an image field can not be img. " \
             "That is because the image goes into the tag, or it gets the " \
@@ -428,8 +426,8 @@ class Duration(orm.AbstractModel):
     _inherit = 'ir.qweb.field.duration'
 
     @api.model
-    def attributes(self, record, field_name, options, qwebcontext):
-        attrs = super(Duration, self).attributes(record, field_name, options, qwebcontext)
+    def attributes(self, record, field_name, options, values):
+        attrs = super(Duration, self).attributes(record, field_name, options, values)
         attrs['data-oe-original'] = record[field_name]
         return attrs
 

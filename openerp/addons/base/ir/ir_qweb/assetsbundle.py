@@ -100,8 +100,8 @@ class AssetsBundle(object):
             elif f['atype'] == 'text/javascript':
                 self.javascripts.append(JavascriptAsset(self, url=f['url'], inline=f['content']))
 
-    def to_html(self, sep=None, css=True, js=True, debug=False, async=False, qwebcontext=None):
-        url_for = qwebcontext and qwebcontext.get('url_for', lambda url: url) or (lambda url: url)
+    def to_html(self, sep=None, css=True, js=True, debug=False, async=False, values=None):
+        url_for = values and values.get('url_for', lambda url: url) or (lambda url: url)
         if sep is None:
             sep = '\n            '
         response = []

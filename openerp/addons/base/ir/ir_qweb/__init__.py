@@ -5,5 +5,5 @@ from . import fields
 from . import assetsbundle
 
 from .assetsbundle import AssetsBundle
-from .utils import QWebContext, unicodifier
+from .qweb import unicodifier, QWebException
 from .ir_qweb import ir_QWeb, QWeb

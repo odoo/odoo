@@ -6,7 +6,7 @@ from PIL import Image
 from cStringIO import StringIO
 import babel
 from openerp.tools import html_escape as escape, posix_to_ldml
-from .utils import QWebContext, unicodifier
+from .qweb import unicodifier
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -47,8 +47,8 @@ class FieldConverter(models.AbstractModel):
     _name = 'ir.qweb.field'
 
     @api.model
-    def attributes(self, record, field_name, options, qwebcontext=None):
-        """ attributes(record, field_name, field, options, qwebcontext)
+    def attributes(self, record, field_name, options, values=None):
+        """ attributes(record, field_name, field, options, values)
 
         Generates the metadata attributes (prefixed by ``data-oe-``) for the
         root node of the field conversion.
@@ -91,8 +91,8 @@ class FieldConverter(models.AbstractModel):
         return html_escape(unicodifier(value) or u'', options)
 
     @api.model
-    def record_to_html(self, record, field_name, options, qwebcontext=None):
-        """ record_to_html(record, field_name, options, qwebcontext)
+    def record_to_html(self, record, field_name, options, values=None):
+        """ record_to_html(record, field_name, options, values)
 
         Converts the specified field of the browse_record ``record`` to HTML
         :rtype: unicode
@@ -235,7 +235,7 @@ class ManyToOneConverter(models.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     @api.model
-    def record_to_html(self, record, field_name, options, qwebcontext=None):
+    def record_to_html(self, record, field_name, options, values=None):
         value = record[field_name]
         if not value:
             return False
@@ -291,16 +291,14 @@ class MonetaryConverter(models.AbstractModel):
 
     .. note:: the monetary converter internally adds the qweb context to its
               options mapping, so that the context is available to callees.
-              It's set under the ``_qwebcontext`` key.
+              It's set under the ``_values`` key.
     """
     _name = 'ir.qweb.field.monetary'
     _inherit = 'ir.qweb.field'
 
     @api.model
-    def record_to_html(self, record, field_name, options, qwebcontext=None):
+    def record_to_html(self, record, field_name, options, values=None):
         field = record._fields[field_name]
-        if qwebcontext is None:
-            qwebcontext = QWebContext(self.env, qwebcontext or {})
 
         display_currency = False
         #currency should be specified by monetary field
@@ -410,7 +408,7 @@ class Contact(models.AbstractModel):
     _inherit = 'ir.qweb.field.many2one'
 
     @api.model
-    def record_to_html(self, record, field_name, options, qwebcontext=None):
+    def record_to_html(self, record, field_name, options, values=None):
         opf = options and options.get('fields') or ["name", "address", "phone", "mobile", "fax", "email"]
 
         value_rec = record[field_name]
@@ -442,7 +440,7 @@ class QwebView(models.AbstractModel):
     _inherit = 'ir.qweb.field.many2one'
 
     @api.model
-    def record_to_html(self, record, field_name, options, qwebcontext=None):
+    def record_to_html(self, record, field_name, options, values=None):
         if not getattr(record, field_name):
             return None
 
