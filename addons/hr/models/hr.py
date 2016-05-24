@@ -55,7 +55,7 @@ class Job(models.Model):
         ('name_company_uniq', 'unique(name, company_id, department_id)', 'The name of the job position must be unique per department in company!'),
     ]
 
-    @api.depends('no_of_recruitment', 'employee_ids.job_id')
+    @api.depends('no_of_recruitment', 'employee_ids.job_id', 'employee_ids.active')
     def _compute_employees(self):
         employee_data = self.env['hr.employee'].read_group([('job_id', 'in', self.ids)], ['job_id'], ['job_id'])
         result = dict((data['job_id'][0], data['job_id_count']) for data in employee_data)
