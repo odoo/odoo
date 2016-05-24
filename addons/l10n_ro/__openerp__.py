@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # @author -  Fekete Mihai <feketemihai@gmail.com>, Tatár Attila <atta@nvm.ro>
@@ -9,7 +9,6 @@
 
 {
     "name" : "Romania - Accounting",
-    "version" : "1.0",
     "author" : "Fekete Mihai (Forest and Biomass Services Romania)",
     "website": "http://www.forbiom.eu",
     'category': 'Localization',
@@ -21,7 +20,6 @@ It also adds the Registration Number for Romania in Odoo.
 
 Romanian accounting chart and localization.
     """,
-    "demo" : [],
     "data": ['views/res_partner_view.xml',
              'data/l10n_ro_chart_data.xml',
              'data/account_tax_data.xml',
@@ -30,5 +28,4 @@ Romanian accounting chart and localization.
              'data/res.country.state.csv',
              'data/res.bank.csv',
              ],
-    "installable": True,
 }

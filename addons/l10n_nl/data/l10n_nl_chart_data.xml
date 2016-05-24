@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <menuitem id="account_reports_nl_statements_menu" name="Dutch Statements" parent="account.menu_finance_reports" sequence="3" groups="account.group_account_user"/>
 
-    <data>
-    
     <record id="transfer_account_id" model="account.account.template">
        <field name="name">Overschrijvingen</field>
        <field name="code">1310</field>
@@ -3710,5 +3708,4 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_12')])]"/>
         </record>
-    </data>
-</openerp>
+</odoo>

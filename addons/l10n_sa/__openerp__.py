@@ -1,4 +1,5 @@
-# coding: utf-8
+# -*- encoding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Saudi Arabia - Accounting',
@@ -20,9 +21,5 @@ In future this module will include some payroll rules for ME .
         'data/l10n_sa_chart_data.xml',
         'data/account_chart_template_data.yml',
     ],
-    'demo': [],
-    'test': [],
-    'installable': True,
-    'auto_install': False,
     'post_init_hook': 'load_translations',
 }

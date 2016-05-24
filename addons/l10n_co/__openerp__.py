@@ -27,6 +27,4 @@
         'data/account_tax_group_data.xml',
         'data/account_chart_template_data.yml',
     ],
-    'demo': [],
-    'installable': True,
 }

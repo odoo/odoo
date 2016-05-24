@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (C) 2009 - now Grzegorz Grzelak grzegorz.grzelak@openglobe.pl
@@ -21,7 +21,6 @@ Niniejszy moduł jest przeznaczony dla odoo 8.0.
 Wewnętrzny numer wersji OpenGLOBE 1.02
     """,
     'depends' : ['account', 'base_iban', 'base_vat'],
-    'demo' : [],
     'data': [
               'data/l10n_pl_chart_data.xml',
               'data/account_tax_data.xml',
@@ -29,5 +28,4 @@ Wewnętrzny numer wersji OpenGLOBE 1.02
               'data/res_country_state_data.xml',
               'data/account_chart_template_data.yml'
     ],
-    'installable': True,
 }

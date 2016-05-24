@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -22,7 +22,4 @@ Italian accounting chart and localization.
         'data/account.chart.template.csv',
         'data/account_chart_template_data.yml',
         ],
-    'demo': [],
-    'auto_install': False,
-    'installable': True,
 }

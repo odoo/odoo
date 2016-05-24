@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <menuitem id="account_reports_gr_statements_menu" name="Greek Statements" parent="account.menu_finance_reports" sequence="3" groups="account.group_account_user"/>
 
-    <data noupdate="False">
         <record id="chartgr_38_07" model="account.account.template">
             <field name="code">38.07</field>
             <field name="name">Η μεταφορά λογαριασμού</field>
@@ -10683,6 +10682,4 @@
             <field name="note"></field>
             <field name="chart_template_id" ref="l10n_gr_chart_template"/>
         </record>
-    </data>
-</openerp>
-
+</odoo>

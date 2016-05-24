@@ -1,11 +1,10 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (c) 2010 kazacube (http://kazacube.com).
 
 {
     'name': 'Maroc - Accounting',
-    'version': '1.0',
     'author': 'kazacube',
     'category': 'Localization',
     'description': """
@@ -24,7 +23,4 @@ Seddik au cours du troisième trimestre 2010.""",
         'data/account_tax_data.xml',
         'data/account_chart_template_data.yml',
     ],
-    'demo': [],
-    'auto_install': False,
-    'installable': True,
 }

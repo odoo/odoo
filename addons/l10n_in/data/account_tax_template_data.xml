@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-
+<odoo>
     <!-- Account Tags -->
     <record id="st_tag_in_01" model="account.account.tag">
         <field name="name">Tax to Pay</field>
@@ -887,6 +885,4 @@
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_53'), ref('st_tag_in_04')])]"/>
     </record>
-
-    </data>
-</openerp>
+</odoo>

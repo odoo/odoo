@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
+from odoo import fields, models
 
 
-class res_company(osv.osv):
+class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    _columns = {
-        'siret': fields.char('SIRET', size=14),
-        'ape': fields.char('APE'),
-    }
+    siret = fields.Char(string='SIRET', size=14)
+    ape = fields.Char(string='APE')

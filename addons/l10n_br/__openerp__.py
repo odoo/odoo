@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (C) 2009  Renato Lima - Akretion
@@ -45,14 +45,12 @@ come with any additional paid permission for online use of 'private modules'.
 """,
     'author': 'Akretion, Odoo Brasil',
     'website': 'http://openerpbrasil.org',
-    'version': '1.0',
     'depends': ['account'],
     'data': [
-                'data/l10n_br_chart_data.xml',
-                'data/account.account.template.csv',
-                'data/account_tax_template_data.xml',
-                'views/account_view.xml',
-                'data/account_chart_template_data.yml',
+        'data/l10n_br_chart_data.xml',
+        'data/account.account.template.csv',
+        'data/account_tax_template_data.xml',
+        'views/account_view.xml',
+        'data/account_chart_template_data.yml',
     ],
-    'installable': True,
 }

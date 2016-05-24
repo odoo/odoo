@@ -49,9 +49,5 @@ https://github.com/OCA/l10n-switzerland
           'data/account_chart_template_data.yml',
 
           ],
- 'demo': [],
- 'test': [],
- 'auto_install': False,
- 'installable': True,
  'post_init_hook': 'load_translations',
  }

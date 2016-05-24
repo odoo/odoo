@@ -20,12 +20,9 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
     'depends': [
         'account',
     ],
-    'demo': [],
     'data': [
         'data/l10n_in_chart_data.xml',
         'data/account_tax_template_data.xml',
         'data/account_chart_template_data.yml',
     ],
-    'auto_install': False,
-    'installable': True,
 }

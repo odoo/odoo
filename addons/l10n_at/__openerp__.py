@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (C) conexus.at
@@ -15,10 +15,7 @@ This module provides the standard Accounting Chart for Austria which is based on
 ============================================================================================================= 
 Please keep in mind that you should review and adapt it with your Accountant, before using it in a live Environment.
 """,
-    'demo': [],
     'data': ['data/l10n_at_chart_data.xml',
              'data/account_tax_data.xml',
              'data/account_chart_template_data.yml'],
-    'auto_install': False,
-    'installable': True
 }

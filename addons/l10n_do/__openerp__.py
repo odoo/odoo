@@ -35,8 +35,4 @@ This is the base module to manage the accounting chart for Dominican Republic.
         # configuration wizard, views, reports...
         'data/account_chart_template_data.yml',
     ],
-    'test': [],
-    'demo': [],
-    'installable': True,
-    'auto_install': False,
 }

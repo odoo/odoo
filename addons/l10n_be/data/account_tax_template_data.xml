@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<openerp>
-  <data noupdate="0">
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
         <!-- Tax Tags, used in VAT report-->
         <record id="tax_tag_00" model="account.account.tag">
             <field name="name">Belgium VAT Form: grid 0</field>
@@ -1783,5 +1782,4 @@
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_62')])]"/>
         </record>
-    </data>
-</openerp>
+</odoo>

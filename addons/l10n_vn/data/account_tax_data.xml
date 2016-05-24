@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <!-- Tax Definitions -->
     <record id="tax_tag_purchase_10" model="account.account.tag">
         <field name="name">Thuế GTGT được khấu trừ 10%</field>
@@ -96,5 +95,4 @@
         <field name="type_tax_use">sale</field>
         <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_0')])]"/>
     </record>
-
 </odoo>

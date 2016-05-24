@@ -55,8 +55,5 @@ Izvori podataka:
         'data/account_tax_fiscal_position_data.xml',
         'data/account_chart_template_data.yml',
     ],
-    "demo": [],
-    'test': [],
     "active": False,
-    "installable": True,
 }

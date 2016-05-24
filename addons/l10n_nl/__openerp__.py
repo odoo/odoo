@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (c) 2009 Veritos - Jan Verlaan - www.veritos.nl
@@ -105,6 +105,4 @@ De extra cijfers worden dan achter het rekeningnummer aangevult met 'nullen'.
              'data/account_fiscal_position_account_template_data.xml',
              'data/account_chart_template_data.yml',
              ],
-    'demo' : [],
-    'installable': True,
 }
