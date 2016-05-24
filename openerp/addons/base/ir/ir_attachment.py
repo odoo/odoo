@@ -225,7 +225,7 @@ class IrAttachment(models.Model):
     type = fields.Selection([('url', 'URL'), ('binary', 'File')],
                             string='Type', required=True, default='binary', change_default=True,
                             help="You can either upload a file from your computer or copy/paste an internet link to your file.")
-    url = fields.Char('Url', size=1024)
+    url = fields.Char('Url', index=True, size=1024)
     public = fields.Boolean('Is public document')
 
     # the field 'datas' is computed and may use the other fields below
