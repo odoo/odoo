@@ -29,7 +29,7 @@ function serialize_sort(criterion) {
 }
 
 /**
- * Reverse of the serialize_sort function: convert an array of SQL-like sort 
+ * Reverse of the serialize_sort function: convert an array of SQL-like sort
  * descriptors into a list of fields prefixed with '-' if necessary.
  */
 function deserialize_sort(criterion) {
@@ -205,7 +205,7 @@ var Query = Class.extend({
      * Creates a new query with the provided parameter lazy replacing the current
      * query's own.
      *
-     * @param {Boolean} lazy indicates if the read_group should return only the 
+     * @param {Boolean} lazy indicates if the read_group should return only the
      * first level of groupby records, or should return the records grouped by
      * all levels at once (so, it makes only 1 db request).
      * @returns {openerp.web.Query}
@@ -276,11 +276,11 @@ var QueryGroup = Class.extend({
         var group_size = fixed_group[count_key] || fixed_group.__count || 0;
         var leaf_group = fixed_group.__context.group_by.length === 0;
 
-        var value = (grouping_fields.length === 1) 
+        var value = (grouping_fields.length === 1)
                 ? fixed_group[grouping_fields[0]]
                 : _.map(grouping_fields, function (field) { return fixed_group[field]; });
-        var grouped_on = (grouping_fields.length === 1) 
-                ? grouping_fields[0] 
+        var grouped_on = (grouping_fields.length === 1)
+                ? grouping_fields[0]
                 : grouping_fields;
         this.attributes = {
             folded: !!(fixed_group.__fold),
@@ -371,7 +371,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
     read_ids: function (ids, fields, options) {
         if (_.isEmpty(ids))
             return $.Deferred().resolve([]);
-            
+
         options = options || {};
         var method = 'read';
         var ids_arg = ids;
@@ -525,7 +525,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
         return this._model.call('name_get', [ids], {context: this.get_context()});
     },
     /**
-     * 
+     *
      * @param {String} name name to perform a search for/on
      * @param {Array} [domain=[]] filters for the objects returned, OpenERP domain
      * @param {String} [operator='ilike'] matching operator to use with the provided name value
@@ -580,7 +580,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
         return undefined;
     },
     /**
-     * Set the sort criteria on the dataset.  
+     * Set the sort criteria on the dataset.
      *
      * @param {Array} fields_list: list of fields order descriptors, as used by
      * Odoo's ORM (such as 'name desc', 'product_id', 'order_date asc')
@@ -769,7 +769,7 @@ var BufferedDataSet = DataSetStatic.extend({
         cached.values = _.extend({'id': id}, cached.from_read, cached.changes, cached.readonly_fields);
         return cached;
     },
-    create: function(data, options) {        
+    create: function(data, options) {
         var changes = _.extend({}, this.last_default_get, data);
         var cached = this._update_cache(_.uniqueId(this.virtual_id_prefix), _.extend({'changes': changes, 'to_create': true}, options));
         this.trigger("dataset_changed", data, options);
@@ -863,7 +863,7 @@ var BufferedDataSet = DataSetStatic.extend({
             // sorting an array where all items are considered equal is a worst-case that
             // will randomize the array with an unstable sort! Therefore we must avoid
             // sorting if there are no sort_fields (i.e. all items are considered equal)
-            // See also: http://ecma262-5.com/ELS5_Section_15.htm#Section_15.4.4.11 
+            // See also: http://ecma262-5.com/ELS5_Section_15.htm#Section_15.4.4.11
             //           http://code.google.com/p/v8/issues/detail?id=90
             if (sort_fields.length) {
                 records.sort(function (a, b) {
@@ -1118,7 +1118,6 @@ function compute_domain (expr, fields) {
     return _.all(stack, _.identity);
 }
 
-
 return {
     Query: Query,
     DataSet: DataSet,
@@ -1129,6 +1128,7 @@ return {
     CompoundContext: CompoundContext,
     CompoundDomain: CompoundDomain,
     compute_domain: compute_domain,
+    noDisplayContent: "<em class=\"text-warning\">" + _t("Unnamed") + "</em>",
 };
 
 });

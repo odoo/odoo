@@ -36,7 +36,7 @@ return core.Class.extend({
             }).then(function (action) {
                 self._cache.actions[key] = action.no_cache ? null : self._cache.actions[key];
                 return action;
-            });
+            }, this._invalidate.bind(this, this._cache.actions, key));
         }
  
         return this._cache.actions[key];
@@ -94,7 +94,7 @@ return core.Class.extend({
                 }
 
                 return result.fields_views;
-            });
+            }, this._invalidate.bind(this, this._cache.views, key));
         }
 
         return this._cache.views[key];
@@ -117,7 +117,7 @@ return core.Class.extend({
                 view_type: view_type,
                 toolbar: toolbar,
                 context: dataset.get_context(),
-            }).then(this._postprocess_fvg.bind(this));
+            }).then(this._postprocess_fvg.bind(this), this._invalidate.bind(this, this._cache.fields_views, key));
         }
         return this._cache.fields_views[key];
     },
@@ -132,7 +132,7 @@ return core.Class.extend({
         if (!this._cache.fields[dataset.model]) {
             this._cache.fields[dataset.model] = dataset.call('fields_get', {
                 context: dataset.get_context(),
-            });
+            }).fail(this._invalidate.bind(this, this._cache.fields, dataset.model));
         }
         return this._cache.fields[dataset.model];
     },
@@ -149,7 +149,7 @@ return core.Class.extend({
         if (!this._cache.filters[key]) {
             this._cache.filters[key] = this.Filters.call('get_filters', [dataset.model, action_id], {
                 context: dataset.get_context(),
-            });
+            }).fail(this._invalidate.bind(this, this._cache.filters, key));
         }
         return this._cache.filters[key];
     },
@@ -169,7 +169,7 @@ return core.Class.extend({
                     filter.model_id,
                     filter.action_id || false,
                 ].join(',');
-                self._cache.filters[key] = null; // invalidate cache
+                self._invalidate(self._cache.filters, key);
                 return filter_id;
             });
     },
@@ -220,6 +220,13 @@ return core.Class.extend({
             }
             return _.isObject(arg) ? JSON.stringify(arg) : arg;
         }).join(',');
+    },
+
+    /**
+     * Private function that invalidates a cache entry
+     */
+    _invalidate: function (cache, key) {
+        delete cache[key];
     },
 });
 

@@ -16,7 +16,7 @@ class website_gengo(http.Controller):
         icp = request.registry['ir.config_parameter']
         return icp.get_param(cr, SUPERUSER_ID, request.registry['base.gengo.translations'].GENGO_KEY, default="")
 
-    @http.route('/website/gengo_callback', type='http', auth='none')
+    @http.route('/website/gengo_callback', type='http', auth='none', csrf=False)
     def gengo_callback(self, **post):
         print "IN website/gengo_callback"
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
