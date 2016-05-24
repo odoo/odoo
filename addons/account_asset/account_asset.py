@@ -170,7 +170,7 @@ class AccountAssetAsset(models.Model):
                 depreciation_date = datetime.strptime(self._get_last_depreciation_date()[self.id], DF).date()
             else:
                 # depreciation_date = 1st of January of purchase year
-                asset_date = datetime.strptime(self.date, DF).date()
+                asset_date = datetime.strptime(self.date[:4] + '-01-01', DF).date()
                 # if we already have some previous validated entries, starting date isn't 1st January but last entry + method period
                 if posted_depreciation_line_ids and posted_depreciation_line_ids[0].depreciation_date:
                     last_depreciation_date = datetime.strptime(posted_depreciation_line_ids[0].depreciation_date, DF).date()
