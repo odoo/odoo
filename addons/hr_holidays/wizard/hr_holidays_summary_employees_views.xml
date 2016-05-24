@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <record id="view_hr_holidays_summary_employee" model="ir.ui.view">
             <field name="name">hr.holidays.summary.employee.form</field>
@@ -31,7 +30,7 @@
             <field name="target">new</field>
         </record>
 
-        <record model="ir.values" id="hr_holidays_summary_employee_value">
+        <record id="hr_holidays_summary_employee_value" model="ir.values">
             <field name="model_id" ref="hr.model_hr_employee" />
             <field name="name">Leaves Summary</field>
             <field name="key2">client_print_multi</field>
@@ -40,5 +39,4 @@
             <field name="model">hr.employee</field>
         </record>
 
-    </data>
-</openerp>
+</odoo>

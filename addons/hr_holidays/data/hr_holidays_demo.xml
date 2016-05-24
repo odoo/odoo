@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
 <data noupdate="1">
 
-    <record model="hr.holidays" id="hr_holidays_employee1_allocation_cl">
+    <record id="hr_holidays_employee1_allocation_cl" model="hr.holidays">
         <field name="name">Legal Leaves for Peter Parker</field>
         <field name="holiday_status_id" ref="holiday_status_cl"/>
         <field name="type">add</field>
@@ -10,7 +10,7 @@
         <field name="employee_id" ref="hr.employee_fp"/>
     </record>
 
-    <record model="hr.holidays" id="hr_holidays_employee1_int_tour">
+    <record id="hr_holidays_employee1_int_tour" model="hr.holidays">
         <field name="name">International Tour</field>
         <field name="holiday_status_id" ref="holiday_status_comp"/>
         <field eval="time.strftime('%Y-%m-26')" name="date_from"/>
@@ -20,7 +20,7 @@
         <field name="employee_id" ref="hr.employee_fp"/>
     </record>
 
-    <record model="hr.holidays" id="hr_holidays_employee1_vc">
+    <record id="hr_holidays_employee1_vc" model="hr.holidays">
         <field name="name">Summer Vacation</field>
         <field name="holiday_status_id" ref="holiday_status_unpaid"/>
         <field eval="time.strftime('%Y-%m-23')" name="date_from"/>
@@ -34,7 +34,7 @@
     <workflow action="validate" model="hr.holidays" ref="hr_holidays_employee1_allocation_cl"/>
     <workflow action="validate" model="hr.holidays" ref="hr_holidays_employee1_int_tour"/>
 
-    <record model="hr.holidays" id="hr_holidays_employee1_cl">
+    <record id="hr_holidays_employee1_cl" model="hr.holidays">
         <field name="name">Trip with Family</field>
         <field name="holiday_status_id" ref="holiday_status_comp"/>
         <field eval="time.strftime('%Y-%m-01')" name="date_from"/>
@@ -44,7 +44,7 @@
         <field name="employee_id" ref="hr.employee_fp"/>
     </record>
 
-    <record model="hr.holidays" id="hr_holidays_employee1_sl">
+    <record id="hr_holidays_employee1_sl" model="hr.holidays">
         <field name="name">Doctor Appointment</field>
         <field name="holiday_status_id" ref="holiday_status_sl"/>
         <field eval="time.strftime('%Y-%m-20')" name="date_from"/>
@@ -58,4 +58,4 @@
     <workflow action="validate" model="hr.holidays" ref="hr_holidays_employee1_sl"/>
 
 </data>
-</openerp>
+</odoo>

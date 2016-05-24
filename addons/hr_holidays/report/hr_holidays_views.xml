@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
-<openerp>
-    <data>
-
-        <record model="ir.ui.view" id="view_holiday_pivot">
+<odoo>
+        <record id="view_holiday_pivot" model="ir.ui.view">
             <field name="name">hr.holidays.report_pivot</field>
             <field name="model">hr.holidays</field>
             <field name="priority">20</field>
@@ -16,7 +14,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_holiday_graph">
+        <record id="view_holiday_graph" model="ir.ui.view">
             <field name="name">hr.holidays.report_graph</field>
             <field name="model">hr.holidays</field>
             <field name="priority">20</field>
@@ -29,7 +27,7 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_hr_available_holidays_report">
+        <record id="action_hr_available_holidays_report" model="ir.actions.act_window">
             <field name="name">Leaves Analysis</field>
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
@@ -39,13 +37,14 @@
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
 
-        <record model="ir.actions.act_window.view" id="action_window_leave_pivot">
+        <record id="action_window_leave_pivot" model="ir.actions.act_window.view">
             <field name="sequence" eval="2"/>
             <field name="view_mode">pivot</field>
             <field name="view_id" ref="view_holiday_pivot"/>
             <field name="act_window_id" ref="action_hr_available_holidays_report"/>
         </record>
-        <record model="ir.actions.act_window.view" id="action_window_leave_graph">
+
+        <record id="action_window_leave_graph" model="ir.actions.act_window.view">
             <field name="sequence" eval="2"/>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="view_holiday_graph"/>
@@ -53,12 +52,9 @@
         </record>
 
         <menuitem
-            name="Leaves" 
-            id="menu_hr_available_holidays_report_tree" 
-            action="action_hr_available_holidays_report" 
-            parent="menu_hr_holidays_report" sequence="5" />
+            name="Leaves"
+            id="menu_hr_available_holidays_report_tree"
+            action="action_hr_available_holidays_report"
+            parent="menu_hr_holidays_report" sequence="5"/>
 
-
-    </data>
-</openerp>
-
+</odoo>
