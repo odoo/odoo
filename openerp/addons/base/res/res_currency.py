@@ -78,12 +78,6 @@ class Currency(models.Model):
     def name_get(self):
         return [(currency.id, tools.ustr(currency.name)) for currency in self]
 
-    @api.multi
-    def copy(self, default=None):
-        self.ensure_one()
-        default = dict(default or {}, name=_("%s (copy)") % self.name)
-        return super(Currency, self).copy(default=default)
-
     @api.v7
     def round(self, cr, uid, currency, amount):
         return Currency.round(currency, amount)
