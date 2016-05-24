@@ -1,24 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+<template id="s_cover" name="Cover">
+    <section class="s_text_block_image_fw oe_img_bg oe_custom_bg" style="background-image: url(/web/image/website.s_cover_default_image);">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mt64 mb64 bg-white">
+                    <h2>Headline</h2>
+                    <h4 class="text-primary">With a great subtitle</h4>
+                    <p>Write one or two paragraphs describing your product, services or a specific feature. To be successful your content needs to be useful to your readers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
 <template id="s_banner" name="Banner">
-    <div id="myCarousel" class="carousel slide s_banner oe_custom_bg" data-interval="10000" style="height: 320px;">
+    <div id="myCarousel" class="carousel slide s_banner" data-interval="10000" style="height: 320px;">
         <!-- Indicators -->
         <ol class="carousel-indicators hidden">
             <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
         </ol>
         <div class="carousel-inner">
-            <div class="item oe_img_bg oe_custom_bg active" style="background-image: url('/website/static/src/img/banner/color_splash.jpg')">
+            <div class="item oe_img_bg oe_custom_bg active" style="background-image: url(/web/image/website.s_background_image_05);">
                 <div class="container">
                     <div class="row content">
                         <div class="carousel-content col-md-6 mt64">
-                                <h2>Your Banner Title</h2>
-                                <h3>Click to customize this text</h3>
-                                <p>
-                                    <a href="/page/website.contactus" class="btn btn-success btn-large">Contact us</a>
-                                </p>
+                            <h2>Your Banner Title</h2>
+                            <h3>Click to customize this text</h3>
+                            <p><a href="/page/website.contactus" class="btn btn-success btn-large">Contact us</a></p>
                         </div>
                         <div class="carousel-img col-md-6 hidden-sm hidden-xs">
-                            <img class="img-responsive" src="/website/static/src/img/banner/banner_picture.png" alt="Banner Odoo Image"/>
+                            <img class="img-responsive" src="/website/static/src/img/library/banner_picture.png" alt="Banner Odoo Image"/>
                         </div>
                     </div>
                 </div>
@@ -94,13 +106,9 @@
 <template id="s_text_block" name="Text Block">
     <section class="s_text_block">
         <div class="container">
+            <h2 class="text-center">A Great Headline</h2>
+            <h3 class="text-center text-muted">A good subtitle</h3>
             <div class="row">
-                <div class="col-md-12 text-center mt16 mb32">
-                    <h2>
-                        A Great Headline
-                    </h2>
-                    <h3 class="text-muted">A good subtitle</h3>
-                </div>
                 <div class="col-md-12 mb16 mt16">
                     <p>
                         A great way to catch your reader's attention is to tell a story.
@@ -127,12 +135,8 @@
 <template id="s_title" name="Title">
     <section class="s_title">
         <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h1 class="text-center">Your Website Title</h1>
-                    <h3 class="text-muted text-center">And a great subtitle too</h3>
-                </div>
-            </div>
+            <h1 class="text-center">Your Website Title</h1>
+            <h3 class="text-center text-muted">And a great subtitle too</h3>
         </div>
     </section>
 </template>
@@ -164,10 +168,8 @@
 <template id="s_big_picture" name="Big Picture">
     <section class="s_big_picture bg-primary">
         <div class="container">
+            <h2 class="text-center">A Punchy Headline</h2>
             <div class="row">
-                <div class="col-md-12 text-center mt32 mb32">
-                    <h2>A Punchy Headline</h2>
-                </div>
                 <div class="col-md-12">
                   <img class="img img-responsive" src="/website/static/src/img/big_picture.png" style="margin: 0 auto;"  alt="Odoo CMS - a big picture"/>
                 </div>
@@ -294,101 +296,79 @@
 <template id="s_comparisons" name="Comparisons">
     <section class="s_comparisons">
         <div class="container">
-          <div class="row">
-            <div class="col-md-12 text-center mt16 mb32">
-                <h2>Our Offers</h2>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4 col-xs-12">
-                <div class="panel panel-info">
-
-                  <div class="panel-heading text-center">
-                      <h3 style="margin: 0">Beginner</h3>
-                      <p style="margin: 0" class="text-muted">
-                          Starter package
-                      </p>
-                  </div>
-                  <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
-                    <h3 style="margin: 0"><span>$</span><b style="font-size: 60px">35</b><small>.00</small></h3>
-                    <div>user / month (billed annually)</div>
-                  </div>
-
-
-                  <ul class="list-group">
-                    <li class="list-group-item active">Basic sales &amp; marketing for up to 2 users</li>
-                    <li class="list-group-item">Account &amp; Sales management</li>
-                    <li class="list-group-item">No customization</li>
-                    <li class="list-group-item">No support</li>
-                  </ul>
-                  <div class="panel-footer text-center">
-                      <p class="text-muted">
-                          <i>Instant setup, satisfied or reimbursed.</i>
-                      </p>
-                      <a href="/page/website.contactus" class="btn btn-primary btn-lg">Order now</a>
-                  </div>
+            <h2 class="text-center">Our Offers</h2>
+            <div class="row">
+                <div class="col-md-4 col-xs-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading text-center">
+                            <h3 style="margin: 0">Beginner</h3>
+                            <p style="margin: 0" class="text-muted">
+                                Starter package
+                            </p>
+                        </div>
+                        <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
+                            <h3 style="margin: 0"><span>$</span><b style="font-size: 60px">35</b><small>.00</small></h3>
+                            <div>user / month (billed annually)</div>
+                        </div>
+                        <ul class="list-group">
+                            <li class="list-group-item active">Basic sales &amp; marketing for up to 2 users</li>
+                            <li class="list-group-item">Account &amp; Sales management</li>
+                            <li class="list-group-item">No customization</li>
+                            <li class="list-group-item">No support</li>
+                        </ul>
+                        <div class="panel-footer text-center">
+                            <p class="text-muted">
+                                <i>Instant setup, satisfied or reimbursed.</i>
+                            </p>
+                            <a href="/page/website.contactus" class="btn btn-primary btn-lg">Order now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-xs-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading text-center">
+                            <h3 style="margin: 0">Professional</h3>
+                            <p style="margin: 0">Enterprise package</p>
+                        </div>
+                        <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
+                            <h3 style="margin: 0"><span>$</span><b style="font-size: 60px">65</b><small>.00</small></h3>
+                            <div>user / month (billed annually)</div>
+                        </div>
+                        <ul class="list-group">
+                            <li class="list-group-item active">Complete CRM for any size team</li>
+                            <li class="list-group-item">Get access to all modules</li>
+                            <li class="list-group-item">Limited customization</li>
+                            <li class="list-group-item">Email support</li>
+                        </ul>
+                        <div class="panel-footer text-center">
+                            <p class="text-muted"><i>Instant setup, satisfied or reimbursed.</i></p>
+                            <a href="/page/website.contactus" class="btn btn-primary btn-lg">Order now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-xs-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading text-center">
+                            <h3 style="margin: 0">Expert</h3>
+                            <p style="margin: 0" class="text-muted">Ultimate package</p>
+                        </div>
+                        <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
+                            <h3 style="margin: 0"><span>$</span><b style="font-size: 60px">125</b><small>.00</small></h3>
+                            <div>user / month (billed annually)</div>
+                        </div>
+                        <ul class="list-group">
+                            <li class="list-group-item active">Unlimited CRM power and support</li>
+                            <li class="list-group-item">Get access to all modules and features</li>
+                            <li class="list-group-item">Unlimited customization</li>
+                            <li class="list-group-item">24x7 toll-free support</li>
+                        </ul>
+                        <div class="panel-footer text-center">
+                            <p class="text-muted"><i>Instant setup, satisfied or reimbursed.</i></p>
+                            <a href="/page/website.contactus" class="btn btn-primary btn-lg">Contact us</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4 col-xs-12">
-                <div class="panel panel-primary">
-
-                  <div class="panel-heading text-center">
-                      <h3 style="margin: 0">Professional</h3>
-                      <p style="margin: 0">
-                          Enterprise package
-                      </p>
-                  </div>
-                  <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
-                    <h3 style="margin: 0"><span>$</span><b style="font-size: 60px">65</b><small>.00</small></h3>
-                    <div>user / month (billed annually)</div>
-                  </div>
-
-
-                  <ul class="list-group">
-                    <li class="list-group-item active">Complete CRM for any size team</li>
-                    <li class="list-group-item">Get access to all modules</li>
-                    <li class="list-group-item">Limited customization</li>
-                    <li class="list-group-item">Email support</li>
-                  </ul>
-                  <div class="panel-footer text-center">
-                      <p class="text-muted">
-                          <i>Instant setup, satisfied or reimbursed.</i>
-                      </p>
-                      <a href="/page/website.contactus" class="btn btn-primary btn-lg">Order now</a>
-                  </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-xs-12">
-                <div class="panel panel-info">
-
-                  <div class="panel-heading text-center">
-                      <h3 style="margin: 0">Expert</h3>
-                      <p style="margin: 0" class="text-muted">
-                          Ultimate package
-                      </p>
-                  </div>
-                  <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
-                    <h3 style="margin: 0"><span>$</span><b style="font-size: 60px">125</b><small>.00</small></h3>
-                    <div>user / month (billed annually)</div>
-                  </div>
-
-
-                  <ul class="list-group">
-                    <li class="list-group-item active">Unlimited CRM power and support</li>
-                    <li class="list-group-item">Get access to all modules and features</li>
-                    <li class="list-group-item">Unlimited customization</li>
-                    <li class="list-group-item">24x7 toll-free support</li>
-                  </ul>
-                  <div class="panel-footer text-center">
-                      <p class="text-muted">
-                          <i>Instant setup, satisfied or reimbursed.</i>
-                      </p>
-                      <a href="/page/website.contactus" class="btn btn-primary btn-lg">Contact us</a>
-                  </div>
-                </div>
-
-            </div>
-          </div>
         </div>
     </section>
 </template>
@@ -415,7 +395,7 @@
     </section>
 </template>
 
-<template id="s_faq_collapse" name="FAQ Roller">
+<template id="s_faq_collapse" name="Accordion">
     <section class="s_faq_collapse">
         <div class="container">
             <h2 class="page-header">Point of Sale Questions <small>v7</small></h2>
@@ -480,16 +460,9 @@
 <template id="s_references" name="References">
     <section class="s_references">
         <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h1 class="text-center">
-                        Our References
-                    </h1>
-                    <h3 class="text-muted text-center">
-                        More than 500 happy customers.
-                    </h3>
-                </div>
-            </div>
+            <h1 class="text-center">Our References</h1>
+            <h3 class="text-center text-muted">More than 500 happy customers.</h3>
+
             <div class="row">
                 <div class="col-md-4 col-xs-12 col-md-offset-1 mt16 mb32">
                     <blockquote>
@@ -532,55 +505,6 @@
             </div>
         </div>
     </section>
-</template>
-
-<template id="s_quotes_slider" name="Quotes Slider">
-    <div id="myQuoteCarousel" class="carousel quotecarousel slide s_quotes_slider" data-interval="10000">
-        <!-- Indicators -->
-        <ol class="carousel-indicators mb0">
-            <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"></li>
-            <li data-target="#myQuoteCarousel" data-slide-to="1"></li>
-        </ol>
-        <div class="carousel-inner">
-
-            <div class="item text_only active">
-                <div class="container">
-                    <div class="content">
-
-                        <div class="row">
-                            <blockquote class="mt48 mb16 col-md-4 col-md-offset-4">
-                                    <p>
-                                        Write a quote here from one of your customers. Quotes are a
-                                        great way to build confidence in your products or services.
-                                    </p>
-                                    <small>Author of this quote</small>
-                            </blockquote>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <div class="item text_only">
-                <div class="container">
-                    <div class="content">
-
-                        <div class="row">
-                            <blockquote class="mt48 mb16 col-md-4 col-md-offset-4">
-                                    <p>
-                                        Odoo provides essential platform for our project management.
-                                        Things are better organized and more visible with it.
-                                    </p>
-                                    <small>John Doe, CEO</small>
-                            </blockquote>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
 </template>
 
 <template id="s_feature_grid" name="Feature Grid">
@@ -636,7 +560,7 @@
 
 <template id="s_parallax" name="Parallax">
     <section class="parallax s_parallax"
-            style="background-image: url('/website/static/src/img/banner/mountains.jpg')"
+            style="background-image: url(/web/image/website.s_background_image_11)"
             data-scroll-background-ratio="0.3">
             <div><div class="oe_structure"/></div>
     </section>
@@ -644,7 +568,7 @@
 
 <template id="s_parallax_slider" name="Parallax Slider">
     <section class="parallax s_parallax_slider"
-             style="background-image: url('/website/static/src/img/parallax/quote.png')"
+             style="background-image: url(/web/image/website.s_background_image_15);"
             data-scroll-background-ratio="0.3">
         <div><div><div class="oe_structure">
                 <div id="myQuoteCarousel" class="carousel quotecarousel slide mb0" data-interval="10000">
@@ -732,7 +656,7 @@
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_title" t-thumbnail="/website/static/src/img/blocks/block_title.png"/>
-                    <t t-snippet="website.s_banner" t-thumbnail="/website/static/src/img/blocks/block_banner.png"/>
+                    <t t-snippet="website.s_cover" t-thumbnail="/website/static/src/img/blocks/block_banner.png"/>
                     <t t-snippet="website.s_text_image" t-thumbnail="/website/static/src/img/blocks/block_text_image.png"/>
                     <t t-snippet="website.s_image_text" t-thumbnail="/website/static/src/img/blocks/block_image_text.png"/>
                     <t t-snippet="website.s_big_message" t-thumbnail="/website/static/src/img/blocks/block_jumbotron.png"/>
@@ -740,6 +664,7 @@
                     <t t-snippet="website.s_features" t-thumbnail="/website/static/src/img/blocks/block_features.png"/>
                     <t t-snippet="website.s_big_picture" t-thumbnail="/website/static/src/img/blocks/block_big_picture.png"/>
                     <t t-snippet="website.s_three_columns" t-thumbnail="/website/static/src/img/blocks/block_three_columns.png"/>
+                    <t t-snippet="website.s_banner" t-thumbnail="/website/static/src/img/blocks/block_banner.png"/>
                 </div>
             </div>
 
@@ -766,7 +691,6 @@
                     <t t-snippet="website.s_button" t-thumbnail="/website/static/src/img/blocks/block_button.png"/>
                     <t t-snippet="website.s_references" t-thumbnail="/website/static/src/img/blocks/block_references.png"/>
                     <t t-snippet="website.s_faq_collapse" t-thumbnail="/website/static/src/img/blocks/block_faq.png"/>
-                    <t t-snippet="website.s_quotes_slider" t-thumbnail="/website/static/src/img/blocks/block_quotes_slider.png"/>
                     <t t-snippet="website.s_feature_grid" t-thumbnail="/website/static/src/img/blocks/block_three_columns.png"/>
                 </div>
             </div>
@@ -809,23 +733,24 @@
             <ul class="dropdown-menu">
                 <li data-background=""><a>None</a></li>
                 <li class="divider"></li>
-                <li data-background="/website/static/src/img/parallax/parallax_bg.jpg"><a>Sunflower</a></li>
-                <li data-background="/website/static/src/img/banner/business_guy.jpg"><a>Business Guy</a></li>
-                <li data-background="/website/static/src/img/banner/flower_field.jpg"><a>Flowers Field</a></li>
-                <li data-background="/website/static/src/img/banner/landscape.jpg"><a>Landscape</a></li>
-                <li data-background="/website/static/src/img/banner/mountains.jpg"><a>Mountains</a></li>
-                <li data-background="/website/static/src/img/banner/greenfields.jpg"><a>Greenfields</a></li>
-                <li data-background="/website/static/src/img/banner/aqua.jpg"><a>Aqua</a></li>
-                <li data-background="/website/static/src/img/banner/baby_blue.jpg"><a>Baby Blue</a></li>
-                <li data-background="/website/static/src/img/banner/black.jpg"><a>Black</a></li>
-                <li data-background="/website/static/src/img/banner/color_splash.jpg"><a>Color Splash</a></li>
-                <li data-background="/website/static/src/img/banner/mango.jpg"><a>Mango</a></li>
-                <li data-background="/website/static/src/img/banner/orange_red.jpg"><a>Orange Red</a></li>
-                <li data-background="/website/static/src/img/banner/flower.jpg"><a>Purple</a></li>
-                <li data-background="/website/static/src/img/banner/velour.jpg"><a>Velour</a></li>
-                <li data-background="/website/static/src/img/banner/wood.jpg"><a>Wood</a></li>
-                <li data-background="/website/static/src/img/banner/yellow_green.jpg"><a>Yellow Green</a></li>
-                <li data-background="/website/static/src/img/parallax/quote.png"><a>Quote</a></li>
+                <li data-background="/web/image/website.s_background_image_01"><a>Aqua</a></li>
+                <li data-background="/web/image/website.s_background_image_02"><a>Baby Blue</a></li>
+                <li data-background="/web/image/website.s_background_image_03"><a>Black</a></li>
+                <li data-background="/web/image/website.s_background_image_04"><a>Business Guy</a></li>
+                <li data-background="/web/image/website.s_background_image_05"><a>Color Splash</a></li>
+                <li data-background="/web/image/website.s_background_image_06"><a>Flowers Field</a></li>
+                <li data-background="/web/image/website.s_background_image_07"><a>Purple</a></li>
+                <li data-background="/web/image/website.s_background_image_08"><a>Greenfields</a></li>
+                <li data-background="/web/image/website.s_background_image_09"><a>Landscape</a></li>
+                <li data-background="/web/image/website.s_background_image_10"><a>Mango</a></li>
+                <li data-background="/web/image/website.s_background_image_11"><a>Mountains</a></li>
+                <li data-background="/web/image/website.s_background_image_12"><a>Orange Red</a></li>
+                <li data-background="/web/image/website.s_background_image_13"><a>Sunflower</a></li>
+                <li data-background="/web/image/website.s_background_image_14"><a>Girl</a></li>
+                <li data-background="/web/image/website.s_background_image_15"><a>Quote</a></li>
+                <li data-background="/web/image/website.s_background_image_16"><a>Velour</a></li>
+                <li data-background="/web/image/website.s_background_image_17"><a>Wood</a></li>
+                <li data-background="/web/image/website.s_background_image_18"><a>Yellow Green</a></li>
                 <li class="divider"></li>
                 <li data-choose_image="choose_image"><a><b>Choose an image...</b></a></li>
             </ul>
