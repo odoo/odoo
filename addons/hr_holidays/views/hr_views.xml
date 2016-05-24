@@ -80,4 +80,67 @@
             </data>
         </field>
     </record>
+
+    <!--Hr Employee inherit search view-->
+    <record id="hr_employee_view_search" model="ir.ui.view">
+        <field name="name">hr.employee.search.view.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='department_id']" position="after">
+                <filter name="is_absent_totay" string="Absent Today" domain="[('is_absent_totay', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="hr_kanban_view_employees_kanban">
+        <field name="name">HR - Employees Kanban with leave status</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
+        <field name="arch" type="xml">
+            <xpath expr="//templates" position="before">
+                <field name="current_leave_id"/>
+                <field name="current_leave_state"/>
+                <field name="leave_date_from"/>
+                <field name="leave_date_to"/>
+            </xpath>
+            <xpath expr="//li[@id='last_login']" position="inside">
+                <span t-if="record.current_leave_id.raw_value" style="font-size: 100%%"
+                        t-att-class="record.current_leave_state.raw_value=='validate'?'oe_kanban_button oe_kanban_color_3':'oe_kanban_button oe_kanban_color_2'"
+                        t-att-title="moment(record.leave_date_from.raw_value).format('ddd Do MMM') + ' - ' + moment(record.leave_date_to.raw_value).format('ddd Do MMM')">
+                    <field name="current_leave_id"/>
+                </span>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Hr employee inherit Legal Leaves -->
+    <record id="view_employee_form_leave_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.leave.form.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='active_group']" position="after">
+                <group string="Leaves" groups="base.group_no_one">
+                    <label for="remaining_leaves"/>
+                    <div>
+                        <field name="remaining_leaves" class="oe_inline"/> days
+                    </div>
+                </group>
+            </xpath>
+            <div name="button_box" position="inside">
+                <field name="show_leaves" invisible="1"/>
+                <button name="%(act_hr_employee_holiday_request)d"
+                        type="action"
+                        class="oe_stat_button"
+                        icon="fa-calendar"
+                        attrs="{'invisible': [('show_leaves','=', False)]}"
+                        groups="base.group_user"
+                        help="Remaining leaves">
+                    <field string="Leaves Left" name="leaves_count" widget="statinfo"/>
+                </button>
+            </div>
+        </field>
+    </record>
+
 </odoo>
