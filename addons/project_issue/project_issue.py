@@ -570,9 +570,10 @@ class project_project(osv.Model):
 class res_partner(osv.osv):
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
         Issue = self.pool['project.issue']
+        partners = {id: self.search(cr, uid, [('id', 'child_of', ids)]) for id in ids}
         return {
-            partner_id: Issue.search_count(cr,uid, [('partner_id', '=', partner_id)])
-            for partner_id in ids
+            partner_id: Issue.search_count(cr, uid, [('partner_id', 'in', partners[partner_id])])
+            for partner_id in partners.keys()
         }
 
     """ Inherits partner and adds Issue information in the partner form """

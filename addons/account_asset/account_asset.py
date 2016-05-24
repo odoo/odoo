@@ -148,19 +148,15 @@ class AccountAssetAsset(models.Model):
                 amount = amount_to_depr / (undone_dotation_number - len(posted_depreciation_line_ids))
                 if self.prorata and self.category_id.type == 'purchase':
                     amount = amount_to_depr / self.method_number
-                    days = total_days - float(depreciation_date.strftime('%j'))
                     if sequence == 1:
+                        days = (self.company_id.compute_fiscalyear_dates(depreciation_date)['date_to'] - depreciation_date).days + 1
                         amount = (amount_to_depr / self.method_number) / total_days * days
-                    elif sequence == undone_dotation_number:
-                        amount = (amount_to_depr / self.method_number) / total_days * (total_days - days)
             elif self.method == 'degressive':
                 amount = residual_amount * self.method_progress_factor
                 if self.prorata:
-                    days = total_days - float(depreciation_date.strftime('%j'))
                     if sequence == 1:
+                        days = (self.company_id.compute_fiscalyear_dates(depreciation_date)['date_to'] - depreciation_date).days + 1
                         amount = (residual_amount * self.method_progress_factor) / total_days * days
-                    elif sequence == undone_dotation_number:
-                        amount = (residual_amount * self.method_progress_factor) / total_days * (total_days - days)
         return amount
 
     def _compute_board_undone_dotation_nb(self, depreciation_date, total_days):
