@@ -2,7 +2,7 @@
 from openerp import api, fields, models
 
 
-class hr_department(models.Model):
+class HrDepartment(models.Model):
     _inherit = 'hr.department'
 
     @api.multi
