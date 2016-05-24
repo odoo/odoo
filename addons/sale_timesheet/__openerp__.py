@@ -3,7 +3,6 @@
 
 {
     'name': 'Sales Timesheet',
-    'version': '1.0',
     'category': 'Hidden',
     'summary': 'Sell based on timesheets',
     'description': """
@@ -16,13 +15,16 @@ have real delivered quantities in sales orders.
 """,
     'website': 'https://www.odoo.com/page/warehouse',
     'depends': ['sale', 'hr_timesheet'],
-    'data': ['views/sale_timesheet_view.xml',
-             'data/sale_timesheet_data.xml',
-             'views/sale_service_view.xml',
+    'data': [
+        'data/sale_timesheet_data.xml',
+        'views/sale_order_views.xml',
+        'views/product_views.xml',
+        'views/hr_views.xml',
+        'views/project_task_views.xml',
+        'views/procurement_views.xml',
     ],
-    'demo': ['data/sale_timesheet_demo.xml',
-        'demo/sale_service_demo.xml',
+    'demo': [
+        'data/sale_service_demo.xml',
     ],
-    'installable': True,
     'auto_install': True,
 }
