@@ -9,9 +9,9 @@ import re
 
 from lxml import etree
 
-from odoo.addons.base.ir.ir_qweb import QWebContext
 from odoo.modules import get_module_resource
 from odoo.tests.common import TransactionCase
+from openerp.addons.base.ir.ir_qweb import QWebException
 
 
 class TestQWebTField(TransactionCase):
@@ -20,14 +20,11 @@ class TestQWebTField(TransactionCase):
         self.env_branding = self.env(context={'inherit_branding': True})
         self.engine = self.env_branding['ir.qweb']
 
-    def context(self, values):
-        return QWebContext(self.env_branding, values)
-
     def test_trivial(self):
         field = etree.Element('span', {'t-field': u'company.name'})
         company = self.env['res.company'].create({'name': "My Test Company"})
 
-        result = self.engine.render_node(field, self.context({'company': company}))
+        result = self.engine.render(field, {'company': company}).encode('utf-8')
         self.assertEqual(
             result,
             '<span data-oe-model="res.company" data-oe-id="%d" '
@@ -43,7 +40,7 @@ class TestQWebTField(TransactionCase):
         s = u"Testing «ταБЬℓσ»: 1<2 & 4+1>3, now 20% off!"
         company = self.env['res.company'].create({'name': s})
 
-        result = self.engine.render_node(field, self.context({'company': company}))
+        result = self.engine.render(field, {'company': company}).encode('utf-8')
         self.assertEqual(
             result,
             '<span data-oe-model="res.company" data-oe-id="%d" '
@@ -57,14 +54,14 @@ class TestQWebTField(TransactionCase):
     def test_reject_crummy_tags(self):
         field = etree.Element('td', {'t-field': u'company.name'})
 
-        with self.assertRaisesRegexp(AssertionError, r'^RTE widgets do not work correctly'):
-            self.engine.render_node(field, self.context({'company': None}))
+        with self.assertRaisesRegexp(QWebException, r'^RTE widgets do not work correctly'):
+            self.engine.render(field, {'company': None}).encode('utf-8')
 
     def test_reject_t_tag(self):
         field = etree.Element('t', {'t-field': u'company.name'})
 
-        with self.assertRaisesRegexp(AssertionError, r'^t-field can not be used on a t element'):
-            self.engine.render_node(field, self.context({'company': None}))
+        with self.assertRaisesRegexp(QWebException, r'^t-field can not be used on a t element'):
+            self.engine.render(field, {'company': None}).encode('utf-8')
 
 
 from copy import deepcopy
@@ -80,7 +77,7 @@ class FileSystemLoader(object):
             if name:
                 yield name
 
-    def __call__(self, name):
+    def __call__(self, name, options):
         for node in self.doc:
             if node.get('t-name') == name:
                 root = etree.Element('templates')
@@ -89,7 +86,7 @@ class FileSystemLoader(object):
                 return arch
 
 
-class TestQWeb(common.TransactionCase):
+class TestQWeb(TransactionCase):
     matcher = re.compile(r'^qweb-test-(.*)\.xml$')
 
     @classmethod
@@ -119,7 +116,6 @@ class TestQWeb(common.TransactionCase):
     def run_test_file(self, path):
         doc = etree.parse(path).getroot()
         loader = FileSystemLoader(path)
-        context = QWebContext(self.env, {}, loader=loader)
         qweb = self.env['ir.qweb']
         for template in loader:
             if not template or template.startswith('_'):
@@ -129,11 +125,9 @@ class TestQWeb(common.TransactionCase):
             # so output is predictable & repeatable
             params = {} if param is None else json.loads(param.text, object_pairs_hook=collections.OrderedDict)
 
-            ctx = context.copy()
-            ctx.update(params)
             result = doc.find('result[@id="{}"]'.format(template)).text
             self.assertEqual(
-                qweb.render(template, qwebcontext=ctx).strip().encode('utf-8'),
+                qweb.render(template, values=params, load=loader).strip().encode('utf-8'),
                 (result or u'').strip().encode('utf-8'),
                 template
             )
