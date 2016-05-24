@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2016-04-19 18:09+0000\n"
+"PO-Revision-Date: 2016-05-18 15:40+0000\n"
 "Last-Translator: mohammed albasha <m.albasha.ma@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -35,14 +35,14 @@ msgid ""
 "                * Transferred: has been processed, can't be modified or cancelled anymore\n"
 "\n"
 "                * Cancelled: has been cancelled, can't be confirmed anymore"
-msgstr ""
+msgstr "\n*مسوده : لم تتأكد بعد، لن يجدول حتى يتم التأكيد \n\n* في انتظار عملية أخرى: ننتظر خطوة أخرى إلى المضي قدما قبل أن تصبح متوفرة تلقائيا (على سبيل المثال في المكياج لأمر تدفقات)\n\n* انتظار التوفر: لا تزال تنتظر توافر المنتجات\n\n* متوفر جزئيا: بعض المنتجات المتوفرة ومحجوزه \n\n* على استعداد لنقل: المنتجات محفوظة، ببساطة منتظره التأكيد.\n\n*محوله : تم معالجتها، لا يمكن تعديلها أو إلغاؤها بعد الآن\n\n* ألغي: تم إلغاء، لا يمكن أن يتم تأكيد بعد الآن"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests-This installs the module stock_dropshipping."
-msgstr ""
+msgstr "\nسيقوم بإنشاء مسار الشحن المباشر ويضيف اختبارات أكثر تعقيداً. سيقوم هذا بتثبيت الموديول stock_dropshipping."
 
 #. module: stock
 #: code:addons/stock/stock.py:1847
@@ -681,7 +681,7 @@ msgstr "العنوان"
 msgid ""
 "Adds a Claim link to the delivery order.\n"
 "-This installs the module claim_from_delivery."
-msgstr ""
+msgstr "أضافه وصلة المطالبة لأمر التسليم.\nهذا يثبت موديول claim_from_delivery ."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -812,7 +812,7 @@ msgstr "التقدم"
 msgid ""
 "As an example, a decimal precision of 2 will allow weights like: 9.99 kg, "
 "whereas a decimal precision of 4 will allow weights like:  0.0231 kg."
-msgstr ""
+msgstr "وكمثال على ذلك، فإن الدقة العشرية من 2 تسمح الأوزان مثل: 9.99 كجم، في حين أن الدقة العشرية من 4 سيسمح الأوزان مثل: 0.0231 كجم. "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_make_procurment_wizard
@@ -970,7 +970,7 @@ msgstr ""
 msgid ""
 "By changing this quantity here, you accept the new quantity as complete: "
 "Odoo will not automatically generate a back order."
-msgstr ""
+msgstr "عن طريق تغيير هذه الكمية هنا، هل تقبل كمية جديدة وكاملة: سوف لا يقوم الأوبنيرب تولد تلقائيا الامر مرة أخرى. "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -987,7 +987,7 @@ msgid ""
 "directly create a procurement on the source location (and thus ignore its "
 "current stock) to gather products. If we want to chain moves and have this "
 "one to wait for the previous, this second option should be chosen."
-msgstr ""
+msgstr "افتراضيا، فإن النظام يتخذ من المخزون في موقع المصدر والانتظار السلبي لاتاحه. والاحتمال الاخر يسمح لك بإنشاء مباشرة على الشراء على موقع المصدر (وبالتالي تجاهل المخزون الحالي) لجمع المنتجات. إذا كنا نريد سلسلة التحركات ويكون هذا واحد لانتظار السابق، وينبغي اختيار هذا الخيار الثاني. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_active
@@ -999,7 +999,7 @@ msgstr "عند عدم التحقق من الحقل الفعال, يمكنك اخ
 #: model:ir.model.fields,help:stock.field_stock_incoterms_active
 msgid ""
 "By unchecking the active field, you may hide an INCOTERM you will not use."
-msgstr ""
+msgstr "عن طريق إلغاء الحقل النشط، قد تخفى الدخل الذى لن تستخدمه"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_calendar
@@ -1452,12 +1452,12 @@ msgstr "تأريخ الإنشاء عادةً هو وقت الأمر"
 #: code:addons/stock/stock.py:3806
 #, python-format
 msgid "Cross-Dock"
-msgstr ""
+msgstr "عبر حوض "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_crossdock_route_id
 msgid "Crossdock Route"
-msgstr ""
+msgstr "مسار حوض الطريق  "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast_cumulative_quantity
@@ -1478,7 +1478,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "الكمية الحالية من المنتجات.\nفي سياق مع موقع مخزون فردى ، وهذا يشمل البضائع المخزنة في هذا الموقع ، أو أي من أبنائها.\nفي سياق مع مستودع فردى ، وهذا يشمل البضائع المخزنة في موقع مخزون هذا المستودع، أو أي من أبنائها.\nتخزينها في موقع المخزون من مستودع هذا المحل، أو أي من أبنائها.\nخلاف ذلك، وهذا يشمل البضائع المخزنة في أي موقع مع نوع 'الداخلية'."
 
 #. module: stock
 #: code:addons/stock/stock.py:4828
@@ -1633,12 +1633,12 @@ msgstr "موقع المصدر الافتراضي"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_reception_steps
 msgid "Default incoming route to follow"
-msgstr ""
+msgstr "مسار الدخل الافتراضى لتتبع "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_delivery_steps
 msgid "Default outgoing route to follow"
-msgstr ""
+msgstr "مسار الخارج الافتراضى لتتبع "
 
 #. module: stock
 #: selection:stock.move,procure_method:0
@@ -1680,7 +1680,7 @@ msgid ""
 "where to store the products. This method can be enforced at the product "
 "category level, and a fallback is made on the parent locations if none is "
 "set here."
-msgstr ""
+msgstr "يحدد الطريقة الافتراضية المستخدمة تشير إلى المكان المحدد (الجرف) حيث تخزين المنتجات. يمكن فرض هذه الطريقة على مستوى فئة المنتج، ويتم إجراء احتياطي على المواقع الاساسيه إذا تم تعيين أيا هنا. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_removal_strategy_id
@@ -1689,7 +1689,7 @@ msgid ""
 "where to take the products from, which lot etc. for this location. This "
 "method can be enforced at the product category level, and a fallback is made"
 " on the parent locations if none is set here."
-msgstr ""
+msgstr "يحدد الطريقة الافتراضية المستخدمة ليشير إلى المكان المحدد (الجرف) لاتخاذ منتجات من بينها، التي تكون حصص الخ لهذا الموقع. يمكن فرض هذه الطريقة على مستوى فئة المنتج، ويتم إجراء احتياطي على المواقع الاساسيه إذا تم تعيين أيا هنا. "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_form
@@ -1749,7 +1749,7 @@ msgstr ""
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO/MTS,..."
-msgstr ""
+msgstr "اعتمادا على الوحدات المثبته ، هذا سوف يسمح لك بتحديد مسار المنتج: ما إذا كان سيتم شراؤها، وتصنيعها، متعهد النقل المتعدد الوسائط / MTS، ... "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1810,7 +1810,7 @@ msgstr "تحرك التخصيص"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_result_package_id
 msgid "Destination Package"
-msgstr ""
+msgstr "حزمه الوصول "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_route_ids
@@ -1828,7 +1828,7 @@ msgid ""
 "Determines the procurement method of the stock move that will be generated: "
 "whether it will need to 'take from the available stock' in its source "
 "location or needs to ignore its stock and create a procurement over there."
-msgstr ""
+msgstr "يحدد طريقة الشراء لتحرك المخزون الذى سيتم إنشاءه: ما إذا كان سوف تحتاج إلى 'الاخذ من المخزون المتاح \"في موقع مصدره أو تحتاج إلى تجاهل المخزون وإنشاء المشتريات هناك .  "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_pack_operation_details_form_save
@@ -1885,7 +1885,7 @@ msgid ""
 "product is controlled at least once a year. This also lets you find out "
 "which products have seen little move lately and may deserve special measures"
 " (discounted sale, quality control...)"
-msgstr ""
+msgstr "اعرض اخر المخزونات التي تمت على المنتجات الخاصة بك وقم بتنويعهم بسهولة بمعايير تصفية محددة. اذا قمت بالتكرار ومخزونات جزئية, ستحتاج هذا التقرير بالترتيب لتأكيد ان المخزون لكل منتج تم التحكم فيه على الاقل مرة في السنة . هذا يتيح لك معرفة المنتجات التي شهدت تحرك قليلا في الآونة الأخيرة، وقد تستحق تدابير خاصة (بيع مخفض، ومراقبة الجودة ...)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1992,7 +1992,7 @@ msgstr ""
 #: code:addons/stock/stock.py:4186
 #, python-format
 msgid "Everything inside a package should be in the same location"
-msgstr ""
+msgstr "يجب أن يكون كل شيء داخل الحزمة في نفس الموقع "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2084,7 +2084,7 @@ msgstr "فرض الاتاحة"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category_removal_strategy_id
 msgid "Force Removal Strategy"
-msgstr ""
+msgstr "استراتيجية الحذف بقوه"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_virtual_available
@@ -2098,7 +2098,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "الكميه المتوقعه  (المحسوبة =( الكمية في اليد - الصادره + الواردة)\nفي سياق مع موقع مخزون منفرد ، وهذا يشمل البضائع المخزنة في هذا الموقع، أو أي من أبنائها.\nفي سياق مع مستودع واحد، وهذا يشمل البضائع المخزنة في موقع المخزون فى هذا المستودع، أو أي من أبنائها.\nخلاف ذلك، هذا يشمل البضائع المخزنة في أي موقع مخزون من النوع \"'داخلى \". "
 
 #. module: stock
 #: code:addons/stock/product.py:299
@@ -2173,7 +2173,7 @@ msgstr ""
 msgid ""
 "Give to the more specialized category, a higher priority to have them in top"
 " of the list."
-msgstr ""
+msgstr "تعطي لهذه الفئة أكثر تخصصا، أولوية أعلى ليكون لهم في أعلى القائمة. "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_filter
@@ -2219,7 +2219,7 @@ msgstr "تجميع حسب..."
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_form_stock_inherit
 msgid "Group's Pickings"
-msgstr ""
+msgstr "مجموعات الالتقاط "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_pack_operation_exist
@@ -2329,13 +2329,13 @@ msgstr "المعرف"
 #: code:addons/stock/stock.py:3177
 #, python-format
 msgid "INV:"
-msgstr ""
+msgstr "INV: "
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:84
 #, python-format
 msgid "INV: %s"
-msgstr ""
+msgstr "INV: %s "
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_3
@@ -2357,7 +2357,7 @@ msgid ""
 "squrounds) from supermarkets and grocery stores, in smaller quantities from "
 "ice cream shops, convenience stores, and milk bars, and in individual "
 "servings from small carts or vans at public events."
-msgstr ""
+msgstr "الآيس كريم يمكن أن تنتج كتلة وبالتالي متاح على نطاق واسع في أجزاء المتقدمة في العالم. الآيس كريم يمكن شراؤها في كراتين كبيرة (أحواض ) من محلات السوبر ماركت ومحلات البقالة، وبكميات أقل من محلات الآيس كريم، والمتاجر، و حانات الحليب، وفي حصص فردية من عربات صغيرة أو شاحنات في المناسبات العامة. "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_name
@@ -2369,7 +2369,7 @@ msgstr "مُعرف"
 msgid ""
 "If a product is not at the right place, set the checked quantity to 0 and "
 "create a new line with correct location."
-msgstr ""
+msgstr "إذا كان المنتج ليس في المكان المناسب، تعيين كمية فحص ل0 وإنشاء خط جديد مع الموقع الصحيح. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_message_unread
@@ -2395,7 +2395,7 @@ msgstr ""
 msgid ""
 "If checked, when the previous move is cancelled or split, the move generated"
 " by this move will too"
-msgstr ""
+msgstr "إذا تحققت، عندما يتم إلغاء الحركة السابقة أو تقسيم، هذه الخطوة التي تم إنشاؤها بواسطة هذه الحركه سوف جدا "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_propagate
@@ -2403,7 +2403,7 @@ msgid ""
 "If checked, when the previous move of the move (which was generated by a "
 "next procurement) is cancelled or split, the move generated by this move "
 "will too"
-msgstr ""
+msgstr "إذا تحققت، عندما يتم إلغاء الحركة السابقة من هذه الحركه (التي تم إنشاؤها من قبل المشتريات التالي) أو الانقسام، هذه الحركه التي تولدها هذه الحركه سوف جدا "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_propagate
@@ -2413,26 +2413,26 @@ msgstr "اذا تم التحقق منه, عند الغاء هذا التحرك, 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_route_id
 msgid "If route_id is False, the rule is global"
-msgstr ""
+msgstr "إذا route_id هو خطأ، و القاعده تكون عالميه "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_result_package_id
 msgid "If set, the operations are packed into this package"
-msgstr ""
+msgstr "إذا تم ضبطه، وتكتظ العمليات في هذه الحزمة "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
-msgstr ""
+msgstr "إذا تم تعيين الحقل النشط إلى خطأ، سوف تسمح لك لإخفاء نقطة امر من دون إزالته. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the route "
 "without removing it."
-msgstr ""
+msgstr "إذا تم تعيين الحقل النشط إلى خطأ، سوف تسمح لك لإخفاء المسار دون إزالته. "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_filter
@@ -2444,7 +2444,7 @@ msgstr ""
 msgid ""
 "If this is a negative quant, this will be the move that caused this negative"
 " quant."
-msgstr ""
+msgstr "إذا كان هذه الكميه سالبه، ستكون هذه الحركه التي تسببت في هذه الكميه السالبه ."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_use_create_lots
@@ -2466,7 +2466,7 @@ msgstr ""
 msgid ""
 "If this shipment was split, then this field links to the shipment which "
 "contains the already processed part."
-msgstr ""
+msgstr "إذا تم تقسيم هذه الشحنة، ثم هذه الروابط ميدانية لا لشحنة التي تحتوي على جزء معالجتها بالفعل. "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2493,7 +2493,7 @@ msgid ""
 "  (e.g. Cycle Counting) you can choose 'Manual Selection of Products' and "
 "the system won't propose anything.  You can also let the system propose for "
 "a single product / lot /... "
-msgstr ""
+msgstr "إذا كنت تفعل جرد كامل، يمكنك اختيار 'جميع المنتجات'، وسوف تعبئتها بشكل مسبق للمخزون مع المخزون الحالي. إذا كنت تفعل سوى بعض المنتجات (مثل دورة العد) يمكنك اختيار \"اختيار يدوي من المنتجات 'والنظام لن تقترح أي شيء. يمكنك أيضا السماح للنظام اقتراح منتج واحد / الكثير / ... "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2544,14 +2544,14 @@ msgstr "قيد التقدم"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_in_type_id
 msgid "In Type"
-msgstr ""
+msgstr "في النوع "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_order_partner_dest_id
 msgid ""
 "In case of dropshipping, we need to know the destination address more "
 "precisely"
-msgstr ""
+msgstr "في حالة  إسقاط الشحنه نحن بحاجة إلى معرفة عنوان الوصول أكثر دقة "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2592,7 +2592,7 @@ msgstr "الشحنات الواردة"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_incoterms_code
 msgid "Incoterm Standard Code"
-msgstr ""
+msgstr "INCOTERM (القانون) الموحد "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_incoterms_tree
@@ -2609,7 +2609,7 @@ msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
 "costs and responsibilities between buyer and seller and reflect state-of-"
 "the-art transportation practices."
-msgstr ""
+msgstr "شروط التجارة الدولية هي سلسلة من حيث المبيعات. هي تستخدم لتقسيم تكاليف المعاملات والمسؤوليات بين المشتري والبائع وتعكس للدولة من بين الفن وممارسات النقل . "
 
 #. module: stock
 #: code:addons/stock/stock.py:2161
@@ -2644,12 +2644,12 @@ msgstr "موقع الادخال"
 msgid ""
 "Install the picking wave module which will help you grouping your pickings "
 "and processing them in batch"
-msgstr ""
+msgstr "تثبيت وحدة موجة التقاط والتي سوف تساعدك على تجميع الالتقاطات ومعالجتها دفعة واحدة "
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_inter_wh
 msgid "Inter Company Transit"
-msgstr ""
+msgstr "ترانزيت فيما بين الشركات "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_search
@@ -2711,12 +2711,12 @@ msgstr "الحصة المجرودة/رقم المسلسل"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_partner_id
 msgid "Inventoried Owner"
-msgstr ""
+msgstr "مالك المجرود"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_package_id
 msgid "Inventoried Pack"
-msgstr ""
+msgstr "حزمه المجرود"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_product_id
@@ -3075,7 +3075,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_operation_link
 msgid "Link between stock moves and pack operations"
-msgstr ""
+msgstr "الرابط بين تحركات المخزون و حزم العمليات "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_linked_move_operation_ids
@@ -3271,17 +3271,17 @@ msgstr "إنتاج عند الطلب"
 msgid ""
 "Make packages into a dedicated location, then bring them to the output "
 "location for shipping (Pick + Pack + Ship)"
-msgstr ""
+msgstr "جعل الحزم فى موقع مخصص، ثم تقديمهم لموقع الإخراج للشحن (ألتقاط + حزم + شحن ) "
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
 msgid "Manage Different Stock Owners"
-msgstr ""
+msgstr "إداره ملاك المخزون المختلفه "
 
 #. module: stock
 #: model:res.groups,name:stock.group_production_lot
 msgid "Manage Lots / Serial Numbers"
-msgstr ""
+msgstr "إدارة الحصص / الأرقام التسلسلية "
 
 #. module: stock
 #: model:res.groups,name:stock.group_locations
@@ -3296,7 +3296,7 @@ msgstr "إدارة التعبئة"
 #. module: stock
 #: model:res.groups,name:stock.group_adv_location
 msgid "Manage Push and Pull inventory flows"
-msgstr ""
+msgstr "إدارة شد وجذب تدفقات المخزون "
 
 #. module: stock
 #: selection:stock.config.settings,group_stock_packaging:0
@@ -3374,7 +3374,7 @@ msgstr "طريقة"
 #: model:ir.model.fields,field_description:stock.field_res_company_propagation_minimum_delta
 msgid ""
 "Minimum Delta for Propagation of a Date Change on moves linked together"
-msgstr ""
+msgstr "الحد الأدنى دلتا للدعوة لتغيير تاريخ نشر الأفلام التى ترتبط معا "
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
@@ -3401,7 +3401,7 @@ msgstr "قواعد الحد الأدنى للمخزون"
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_propagation_minimum_delta
 msgid ""
 "Minimum days to trigger a propagation of date change in pushed/pull flows."
-msgstr ""
+msgstr "الحد الأدنى للأيام ليؤدي الى انتشار تغيير التاريخ في التدفقات دفع / سحب. "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
@@ -3446,12 +3446,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_negative_move_id
 msgid "Move Negative Quant"
-msgstr ""
+msgstr "نقل كوانت السلبية "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_split_from
 msgid "Move Split From"
-msgstr ""
+msgstr "تقسيم الحركه من "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_procure_method
@@ -3468,14 +3468,14 @@ msgstr "تاريخ التحرك: تم عمل الموعد المقرر حتى ا
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_order_move_dest_id
 msgid "Move which caused (created) the procurement"
-msgstr ""
+msgstr "التحرك الذي تسبب في (إنشاء) عمليه شراء "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_quant_ids
 #: model:ir.ui.view,arch_db:stock.view_move_form
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
 msgid "Moved Quants"
-msgstr ""
+msgstr "الكميات المتحركه "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_open
@@ -3492,7 +3492,7 @@ msgstr "حركات"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_order_move_ids
 msgid "Moves created by the procurement"
-msgstr ""
+msgstr "التحركات التى تم إنشاؤها بواسطه عمليه الشراء "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_group_id
@@ -3500,19 +3500,19 @@ msgid ""
 "Moves created through this orderpoint will be put in this procurement group."
 " If none is given, the moves generated by procurement rules will be grouped "
 "into one big picking."
-msgstr ""
+msgstr "التحركات التي تم إنشاؤها من خلال هذه النقطة لكي يتم طرحه في مجموعة الشراء. في حال عدم إعطاء شيء، سيتم تجميع التحركات الناتجة عن قواعد المشتريات في إلتقاط واحدة كبيرة. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_linked_move_operation_ids
 msgid ""
 "Moves impacted by this operation for the computation of the remaining "
 "quantities"
-msgstr ""
+msgstr "التحركات المتأثره بعملية حساب الكميات المتبقية "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_history_ids
 msgid "Moves that operate(d) on this quant"
-msgstr ""
+msgstr "التحركات التي تمت على هذه الدفعه "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multiple_locations
@@ -3536,7 +3536,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_negative_dest_location_id
 msgid "Negative Destination Location"
-msgstr ""
+msgstr "موقع الوصول السلبى "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
@@ -3600,13 +3600,13 @@ msgstr ""
 msgid ""
 "No products to return (only lines in Done state and not fully returned yet "
 "can be returned)!"
-msgstr ""
+msgstr "لا يوجد منتجات للعودة (فقط الخطوط في الحاله تممت، ولم يعودوا بالكامل بعد يمكن أن تعاد ) ! "
 
 #. module: stock
 #: code:addons/stock/procurement.py:313
 #, python-format
 msgid "No source location defined!"
-msgstr ""
+msgstr "لايوجد مصدر موقع معرف "
 
 #. module: stock
 #: selection:stock.config.settings,group_product_variant:0
@@ -3644,7 +3644,7 @@ msgstr "الملاحظات"
 #: code:addons/stock/stock.py:1040
 #, python-format
 msgid "Nothing to check the availability for."
-msgstr ""
+msgstr "لاشىء لتتأكد من إتاحته "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3755,7 +3755,7 @@ msgstr ""
 #: code:addons/stock/stock.py:2879
 #, python-format
 msgid "One Lot/Serial Number"
-msgstr ""
+msgstr "قطعة واحدة / الرقم التسلسلي "
 
 #. module: stock
 #: code:addons/stock/stock.py:2876
@@ -3812,7 +3812,7 @@ msgstr ""
 msgid ""
 "Operations that impact this move for the computation of the remaining "
 "quantities"
-msgstr ""
+msgstr "العمليات التي تؤثر على هذا التحرك لحساب الكميات المتبقية "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_partner_id
@@ -3831,7 +3831,7 @@ msgstr "تفاصيل التعريب, لغرض المعلومات فقط"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_returned_move_ids
 msgid "Optional: all returned moves created from this move"
-msgstr ""
+msgstr "اختياري : كل التحركات المعاده تم  إنشاؤها من هذه الخطوة "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_move_dest_id
@@ -3841,7 +3841,7 @@ msgstr "اختياري: التحرك للمخزون التالي عند تسلس
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_move_orig_ids
 msgid "Optional: previous stock move when chaining them"
-msgstr ""
+msgstr "اختياري: حرك المخزون السابق عندما تغييرها "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -3867,17 +3867,17 @@ msgstr "المصدر"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_origin_returned_move_id
 msgid "Origin return move"
-msgstr ""
+msgstr "خطوة لعودة الاصل "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_move_orig_ids
 msgid "Original Move"
-msgstr ""
+msgstr "تحرك أصلى "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_out_type_id
 msgid "Out Type"
-msgstr ""
+msgstr "نوع الخارج "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_outgoing_qty
@@ -3888,7 +3888,7 @@ msgstr "الصادر"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_delivery_steps
 msgid "Outgoing Shippings"
-msgstr ""
+msgstr "الشحنات الصادرة "
 
 #. module: stock
 #: code:addons/stock/stock.py:3757
@@ -3900,7 +3900,7 @@ msgstr "المخرجات"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_wh_output_stock_loc_id
 msgid "Output Location"
-msgstr ""
+msgstr "موقع الخروج "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_partner_id
@@ -3926,7 +3926,7 @@ msgstr "صاحب الموقع إن لم يكن داخليا"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_owner_id
 msgid "Owner of the quants"
-msgstr ""
+msgstr "مالك الدفعات "
 
 #. module: stock
 #: code:addons/stock/product.py:311
@@ -3950,7 +3950,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_pack_type_id
 msgid "Pack Type"
-msgstr ""
+msgstr "نوع الحزم "
 
 #. module: stock
 #: code:addons/stock/stock.py:4914
@@ -3966,12 +3966,12 @@ msgstr "طرد"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_quant_package_barcode_small
 msgid "Package BarCode"
-msgstr ""
+msgstr "باركود الحزم "
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_quant_package_barcode
 msgid "Package BarCode with Contents"
-msgstr ""
+msgstr "باركود الحزمه مع المنتجات "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_complete_name
@@ -4037,7 +4037,7 @@ msgstr "موقع التعبئة"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_pack_operation
 msgid "Packing Operation"
-msgstr ""
+msgstr "عمليه الالتقاط "
 
 #. module: stock
 #: code:addons/stock/stock.py:3758
@@ -4065,7 +4065,7 @@ msgstr "المكان الرئيسي"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_parent_id
 msgid "Parent Package"
-msgstr ""
+msgstr "الالتقاط الاساسى "
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -4076,7 +4076,7 @@ msgstr "جزئي"
 #: model:ir.model.fields,field_description:stock.field_stock_move_partially_available
 #: selection:stock.pack.operation,state:0 selection:stock.picking,state:0
 msgid "Partially Available"
-msgstr ""
+msgstr "الاتاحه الجزئيه "
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner
@@ -4113,7 +4113,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Physical Inventories by Month"
-msgstr ""
+msgstr "المخزونات المادية حسب الشهر"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations
@@ -4123,30 +4123,30 @@ msgstr "الاماكن المادية"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quant_package
 msgid "Physical Packages"
-msgstr ""
+msgstr "الحزم الماديه "
 
 #. module: stock
 #: code:addons/stock/stock.py:3704
 #, python-format
 msgid "Pick"
-msgstr ""
+msgstr "التقاط "
 
 #. module: stock
 #: code:addons/stock/stock.py:3809
 #, python-format
 msgid "Pick + Pack + Ship"
-msgstr ""
+msgstr "التقاط + حزم + شحن "
 
 #. module: stock
 #: code:addons/stock/stock.py:3808
 #, python-format
 msgid "Pick + Ship"
-msgstr ""
+msgstr "التقاط + شحن "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_pick_type_id
 msgid "Pick Type"
-msgstr ""
+msgstr "نوع الالتقاط "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_pick_id
@@ -4194,12 +4194,12 @@ msgstr "إسم نوع التجهيز"
 msgid ""
 "Picking Type determines the way the picking should be shown in the view, "
 "reports, ..."
-msgstr ""
+msgstr "نوع الالتقاط يحدد طريقة  الالتقاط التي يجب أن تظهر في طريقة العرض، تقارير، "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_return_picking_type_id
 msgid "Picking Type for Returns"
-msgstr ""
+msgstr "نوع الالتقاط للعوده "
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.stock_picking_type_config
@@ -4208,12 +4208,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
 #: model:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Picking Types"
-msgstr ""
+msgstr "انواع الالتقاط "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_stock_picking_wave
 msgid "Picking Waves"
-msgstr ""
+msgstr "موجات الالتقاط "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.vpicktree
@@ -4223,22 +4223,22 @@ msgstr "الشحنات"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.procurement_group_form_view_herited
 msgid "Pickings"
-msgstr ""
+msgstr "الالتقاط"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Pickings already processed"
-msgstr ""
+msgstr "الالتقاطات تم معالجتها بالفعل "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
 msgid "Pickings for Groups"
-msgstr ""
+msgstr "الالتقاطات للمجموعات "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Pickings that are late on scheduled time"
-msgstr ""
+msgstr "الالتقاطات المتأخره فى جدول الوقت "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
@@ -4273,7 +4273,7 @@ msgstr ""
 #: code:addons/stock/stock.py:2712
 #, python-format
 msgid "Please provide a positive quantity to scrap."
-msgstr ""
+msgstr "يرجى توفير كمية إيجابية للإهلاك "
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:155
@@ -4290,19 +4290,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_make_procurement_route_ids
 #: model:ir.model.fields,field_description:stock.field_procurement_order_route_ids
 msgid "Preferred Routes"
-msgstr ""
+msgstr "المسارات المفضله "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_route_ids
 msgid "Preferred route to be followed by the procurement order"
-msgstr ""
+msgstr "المسار المفضل لتتبع أمر الشراء "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_order_route_ids
 msgid ""
 "Preferred route to be followed by the procurement order. Usually copied from"
 " the generating document (SO) but could be set up manually."
-msgstr ""
+msgstr "المسار المفضل الواجب اتباعه بأمر الشراء. نسخ عادة من وثيقة توليد (أمر البيع) ولكن يمكن تشكيلها يدويا. "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -4326,7 +4326,7 @@ msgstr "الأولوية"
 msgid ""
 "Priority for this picking. Setting manually a value here would set it as "
 "priority for all the moves"
-msgstr ""
+msgstr "الأولوية لهذا الالتقاط  . وضع يدويا قيمة هنا ضعهاكأولوية لجميع التحركات "
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_order
@@ -4347,7 +4347,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_group_id
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Procurement Group"
-msgstr ""
+msgstr "مجموعه التوريدات "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_order_location_id
@@ -4364,25 +4364,25 @@ msgstr "مكان المشتريات"
 #: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 #: model:ir.ui.view,arch_db:stock.view_make_procurment_wizard
 msgid "Procurement Request"
-msgstr ""
+msgstr "طلب التوريدات "
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_group
 msgid "Procurement Requisition"
-msgstr ""
+msgstr "طلبات الشراء "
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_rule
 #: model:ir.model.fields,field_description:stock.field_stock_move_rule_id
 msgid "Procurement Rule"
-msgstr ""
+msgstr "قاعده المشتريات "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.procrules
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_pull_ids
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Procurement Rules"
-msgstr ""
+msgstr "قواعد الشراء "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_procurement_op
@@ -4440,12 +4440,12 @@ msgstr "فئة المنتج"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_product_code
 msgid "Product Code"
-msgstr ""
+msgstr "كود المنتج "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.search_product_lot_filter
 msgid "Product Lots"
-msgstr ""
+msgstr "حصص المنتج "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -4535,7 +4535,7 @@ msgstr "المنتجات: "
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_propagate
 #: model:ir.model.fields,field_description:stock.field_stock_move_propagate
 msgid "Propagate cancel and split"
-msgstr ""
+msgstr "نشر إلغاء والانقسام "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4545,14 +4545,14 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_push_rule_id
 msgid "Push Rule"
-msgstr ""
+msgstr "قواعد الج"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stolocpath
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_push_ids
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Push Rules"
-msgstr ""
+msgstr "قواعد الدفع "
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_path
@@ -4562,18 +4562,18 @@ msgstr "دفع المسارات"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat_putaway_id
 msgid "Put Away Method"
-msgstr ""
+msgstr "وضع الطريقه بعيدا "
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_putaway
 #: model:ir.model.fields,field_description:stock.field_stock_location_putaway_strategy_id
 msgid "Put Away Strategy"
-msgstr ""
+msgstr "وضع إستراتيجيه البعد "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_putaway
 msgid "Putaway"
-msgstr ""
+msgstr "وضعه جانبا "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
@@ -4584,12 +4584,12 @@ msgstr "الكمية"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_qty_multiple
 msgid "Qty Multiple"
-msgstr ""
+msgstr "كميات متعدده "
 
 #. module: stock
 #: sql_constraint:stock.warehouse.orderpoint:0
 msgid "Qty Multiple must be greater than or equal to zero."
-msgstr ""
+msgstr "يجب أن تكون الكمية المتعددة أكبر من أو تساوي الصفر."
 
 #. module: stock
 #: code:addons/stock/stock.py:3756
@@ -4600,7 +4600,7 @@ msgstr "hgjp;l td hgohwdm"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_wh_qc_stock_loc_id
 msgid "Quality Control Location"
-msgstr ""
+msgstr "موقع مراقبه الجوده "
 
 #. module: stock
 #: code:addons/stock/stock.py:2105
@@ -4608,7 +4608,7 @@ msgstr ""
 msgid ""
 "Quantities, Units of Measure, Products and Locations cannot be modified on "
 "stock moves that have already been processed (except by the Administrator)."
-msgstr ""
+msgstr "كميات، وحدات القياس والمنتجات والمواقع لا يمكن التعديل على تحركات المخزون التي تم معالجتها (إلا من قبل المسؤول). "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_qty
@@ -4626,7 +4626,7 @@ msgstr "الكمية"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 msgid "Quantity Multiple"
-msgstr ""
+msgstr "كمية متعددة "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_qty_available
@@ -4637,23 +4637,23 @@ msgstr "الكمية في متناول اليد"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_reserved_availability
 msgid "Quantity Reserved"
-msgstr ""
+msgstr "الكمية محفوظة "
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:73
 #, python-format
 msgid "Quantity cannot be negative."
-msgstr ""
+msgstr "الكميه لايمك أن تكون سالبه "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_availability
 msgid "Quantity in stock that can still be reserved for this move"
-msgstr ""
+msgstr "الكمية في المخزون التي لا يزال من الممكن أن تكون محجوزة لهذه الحركه "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_qty
 msgid "Quantity in the default UoM of the product"
-msgstr ""
+msgstr "الكمية في وحده قياس المنتج الافتراضيه ."
 
 #. module: stock
 #: sql_constraint:stock.pack.operation.lot:0
@@ -4665,7 +4665,7 @@ msgstr ""
 msgid ""
 "Quantity of products in this quant, in the default unit of measure of the "
 "product"
-msgstr ""
+msgstr "الكمية من المنتجات في هذه الدفعه ، في وحدة القياس الافتراضية للمنتج "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_incoming_qty
@@ -4674,7 +4674,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
-msgstr ""
+msgstr "الكميه المتوقعه  (المحسوبة =( الكمية في اليد - الصادره + الواردة)\nفي سياق مع موقع مخزون منفرد ، وهذا يشمل البضائع المخزنة في هذا الموقع، أو أي من أبنائها.\nفي سياق مع مستودع واحد، وهذا يشمل البضائع المخزنة في موقع المخزون فى هذا المستودع، أو أي من أبنائها.\nخلاف ذلك، هذا يشمل البضائع المخزنة في أي موقع مخزون من النوع \"'داخلى \". "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_outgoing_qty
@@ -4683,7 +4683,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
-msgstr ""
+msgstr "كمية من المنتجات التي تعتزم مغادرة البلاد.\nفي سياق مع موقع مخزون منفرد ، وهذا يشمل البضائع التى تركت هذا الموقع، أو أي من أبنائها.\nفي سياق مع مستودع منفرد ، وهذا يشمل البضائع التى تركت موقع مخزون هذه المستودعات، أو أي من أبنائها.\nخلاف ذلك، هذا يشمل البضائع المغادره أي موقع مخزون من نوع 'داخلي'. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_operation_link_qty
@@ -4691,12 +4691,12 @@ msgid ""
 "Quantity of products to consider when talking about the contribution of this"
 " pack operation towards the remaining quantity of the move (and inverse). "
 "Given in the product main uom."
-msgstr ""
+msgstr "كمية المنتجات في اعتبار عند الحديث عن مساهمة هذه العملية فى الحزمة تجاه الكمية المتبقية من هذه الخطوة (ومعكوس). وبالنظر في وحده القياس الرئيسيه للمنتج. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_reserved_availability
 msgid "Quantity that has already been reserved for this move"
-msgstr ""
+msgstr "الكمية التي تم بالفعل حجزها لهذه الحركه "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.quantsact
@@ -4731,25 +4731,25 @@ msgstr "استلام"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_reception_route_id
 msgid "Receipt Route"
-msgstr ""
+msgstr "مسار الاستلام "
 
 #. module: stock
 #: code:addons/stock/stock.py:3803
 #, python-format
 msgid "Receipt in 1 step"
-msgstr ""
+msgstr "الاستلام فى الخطوه الاولى "
 
 #. module: stock
 #: code:addons/stock/stock.py:3804
 #, python-format
 msgid "Receipt in 2 steps"
-msgstr ""
+msgstr "الاستلام فى 2 خطوه "
 
 #. module: stock
 #: code:addons/stock/stock.py:3805
 #, python-format
 msgid "Receipt in 3 steps"
-msgstr ""
+msgstr "الاستلام فى 3 خطوه "
 
 #. module: stock
 #: code:addons/stock/stock.py:3656
@@ -4759,12 +4759,12 @@ msgstr ""
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
-msgstr ""
+msgstr "الاستلامات "
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Receive goods directly in stock (1 step)"
-msgstr ""
+msgstr "استلام البضائع مباشره فى المخزون (خطوه 1)"
 
 #. module: stock
 #: code:addons/stock/product.py:295
@@ -4775,12 +4775,12 @@ msgstr "الكمية المستلمة"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Recompute"
-msgstr ""
+msgstr "إعاده الحساب "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_recompute_pack_op
 msgid "Recompute pack operation?"
-msgstr ""
+msgstr "إعادة حساب عملية حزمة؟ "
 
 #. module: stock
 #: selection:stock.config.settings,group_stock_tracking_lot:0
@@ -4799,68 +4799,68 @@ msgstr "الإشارة"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_sequence_id
 msgid "Reference Sequence"
-msgstr ""
+msgstr "مرجع التسلسل "
 
 #. module: stock
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per company!"
-msgstr ""
+msgstr "المرجع يجب أن يكون فريد للشركه "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_origin
 msgid "Reference of the document"
-msgstr ""
+msgstr "مرجع الوثيقه "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_pack_operation_ids
 msgid "Related Packing Operations"
-msgstr ""
+msgstr "عمليات التعبئه المتصله "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_remaining_qty
 msgid "Remaining Qty"
-msgstr ""
+msgstr "الكميه المتبقيه "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_remaining_qty
 msgid "Remaining Quantity"
-msgstr ""
+msgstr "الكميه المتبقيه "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_remaining_qty
 msgid ""
 "Remaining Quantity in default UoM according to operations matched with this "
 "move"
-msgstr ""
+msgstr "الكميه المتبقيه فى فاتوره المواد الافتراضيه وفقا لعمليات التى تتماشى مع هذه الحركه "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Remaining parts of picking partially processed"
-msgstr ""
+msgstr "الاجزاء المتبقيه من الالتقاط الجزئى الذت تم معالجته "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_remaining_qty
 msgid ""
 "Remaining quantity in default UoM according to moves matched with this "
 "operation. "
-msgstr ""
+msgstr "الكميه المتبقيه فى وحده القياس الافتراضي وفقا لتحركات التى تتماشى مع هذه العملية . "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_removal
 msgid "Removal"
-msgstr ""
+msgstr "إزاله "
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_removal
 #: model:ir.model.fields,field_description:stock.field_stock_location_removal_strategy_id
 msgid "Removal Strategy"
-msgstr ""
+msgstr "استراتيجيه الحذف"
 
 #. module: stock
 #: code:addons/stock/stock.py:529
 #, python-format
 msgid "Removal strategy %s not implemented."
-msgstr ""
+msgstr "إستراتيجيه الحذف S% ليست منفذه "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_warehouse_2_stock_warehouse_orderpoint
@@ -4874,12 +4874,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rules"
-msgstr ""
+msgstr "قواعد إعاده الطلب "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rules Search"
-msgstr ""
+msgstr "بحث قواعد إعاده الطلب "
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
@@ -4914,22 +4914,22 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_operation_link_reserved_quant_id
 msgid "Reserved Quant"
-msgstr ""
+msgstr "الكميه المحجوزه "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_form
 msgid "Reserved Quants"
-msgstr ""
+msgstr "الكميه المحجوزه "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_reservation_id
 msgid "Reserved for Move"
-msgstr ""
+msgstr "محجوز للحركه "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_reserved_quant_ids
 msgid "Reserved quants"
-msgstr ""
+msgstr "الكميات المحجوزه "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -4944,17 +4944,17 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_resupply_from_wh
 msgid "Resupply From Other Warehouses"
-msgstr ""
+msgstr "إعاده التذويد من مخازن أخرى "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_resupply_route_ids
 msgid "Resupply Routes"
-msgstr ""
+msgstr "ماسات إعاده التوريد "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_resupply_wh_ids
 msgid "Resupply Warehouses"
-msgstr ""
+msgstr "مخازن إعاده التوريد "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_return_picking_form
@@ -4975,7 +4975,7 @@ msgstr "عودة الاختيار"
 #: code:addons/stock/wizard/stock_return_picking.py:178
 #, python-format
 msgid "Returned Picking"
-msgstr ""
+msgstr "إعاده الالتقاط "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -4985,7 +4985,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
 msgid "Reverse Transfer"
-msgstr ""
+msgstr "نقل عكسي"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_parent_right
@@ -5003,13 +5003,13 @@ msgstr "المسار"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_name
 msgid "Route Name"
-msgstr ""
+msgstr "أسم المسار "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_route_sequence
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_route_sequence
 msgid "Route Sequence"
-msgstr ""
+msgstr "تكرار المسار "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_routes_form
@@ -5025,7 +5025,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.stock_location_route_tree
 #: model:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Routes"
-msgstr ""
+msgstr "مسارات "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -5037,7 +5037,7 @@ msgstr ""
 msgid ""
 "Routes will be created for these resupply warehouses and you can select them"
 " on products and product categories"
-msgstr ""
+msgstr "سيتم إنشاء طرق لهذه المستودعات لإعادة الإمداد ويمكنك تحديدها على المنتجات وفئات المنتجات"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
@@ -5086,12 +5086,12 @@ msgstr "الموعد المقرر لاجراء التحرك هذا"
 msgid ""
 "Scheduled time for the first part of the shipment to be processed. Setting "
 "manually a value here would set it as expected date for all the stock moves."
-msgstr ""
+msgstr "الوقت المقرر للجزء الأول من الشحنة لتتم معالجتها. ان تعيينها يدويا كقيمة هنا لضبط التاريخ المتوقع لجميع تحركات المخزون . "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_max_date
 msgid "Scheduled time for the last part of the shipment to be processed"
-msgstr ""
+msgstr "الوقت المقرر للجزء الأخير من الشحنة التي سيتم تجهيزها "
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_sched
@@ -5150,7 +5150,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Select the places where this route can be selected"
-msgstr ""
+msgstr "تحديد الأماكن التي يمكن لهذا المسار أن يختارها "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_sequence
@@ -5189,14 +5189,14 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_warehouse_id
 msgid "Served Warehouse"
-msgstr ""
+msgstr "مخزن خدمه "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_category_removal_strategy_id
 msgid ""
 "Set a specific removal strategy that will be used regardless of the source "
 "location for this product category"
-msgstr ""
+msgstr "وضع استراتيجية إزالة المحددة التي سيتم استخدامها بغض النظر عن موقع المصدر لهذه الفئة من المنتجات "
 
 #. module: stock
 #: selection:stock.config.settings,module_stock_calendar:0
@@ -5254,12 +5254,12 @@ msgstr "الرفوف (Y)"
 #: code:addons/stock/stock.py:3807
 #, python-format
 msgid "Ship Only"
-msgstr ""
+msgstr "شحن فقط "
 
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Ship directly from stock (Ship only)"
-msgstr ""
+msgstr "الشحن مباشره من المخزن (شحن فقط)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_config_settings
@@ -5274,17 +5274,17 @@ msgstr "اسم قصير"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_code
 msgid "Short name used to identify your warehouse"
-msgstr ""
+msgstr "الاسم المختصر يستخدم لتحديد المستودع الخاص بك"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_string_availability_info
 msgid "Show various information on stock availability for this move"
-msgstr ""
+msgstr "عرض مزيد من المعلومات المختلفة على مدى توافر المخزون لهذه الحركه "
 
 #. module: stock
 #: model:stock.location,name:stock.location_refrigerator_small
 msgid "Small Refrigerator"
-msgstr ""
+msgstr "ثلاجة صغيرة "
 
 #. module: stock
 #: selection:stock.config.settings,group_uom:0
@@ -5326,12 +5326,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_package_id
 msgid "Source Package"
-msgstr ""
+msgstr "مصدر التعبئه "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_location_src_id
 msgid "Source location is action=move"
-msgstr ""
+msgstr "موقع المصدر يكون فعل = حركه "
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_pack_operation_lot
@@ -5343,22 +5343,22 @@ msgstr ""
 msgid ""
 "Specify Lot/Serial Number to focus your inventory on a particular Lot/Serial"
 " Number."
-msgstr ""
+msgstr "تحديد الحصه / الرقم التسلسلي للتركيز على المخزون الخاص بك  الحصص / الرقم التسلسلي معين. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_partner_id
 msgid "Specify Owner to focus your inventory on a particular Owner."
-msgstr ""
+msgstr "تحديد المالك للتركيز المخزون الخاص بك على مالك معين. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_package_id
 msgid "Specify Pack to focus your inventory on a particular Pack."
-msgstr ""
+msgstr "تحديد حزمة للتركيز المخزون الخاص بك على حزمة معينة. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_product_id
 msgid "Specify Product to focus your inventory on a particular Product."
-msgstr ""
+msgstr "حدد منتج لتركيز المخزون الخاص بك على المنتج معين. "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_pack_operation_details_form_save
@@ -5445,7 +5445,7 @@ msgstr "تحركات المخزون"
 #: model:ir.ui.view,arch_db:stock.view_move_graph
 #: model:ir.ui.view,arch_db:stock.view_move_pivot
 msgid "Stock Moves Analysis"
-msgstr ""
+msgstr "تحليل حركه المخزون"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.product_open_quants
@@ -5456,27 +5456,27 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_all
 msgid "Stock Operations"
-msgstr ""
+msgstr "عمليات المخزون"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_picking_id
 msgid "Stock Picking"
-msgstr ""
+msgstr "إلتقاط المخزون"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Stock moves that are Available (Ready to process)"
-msgstr ""
+msgstr "تحركات المخزون المتوفرة (جاهز للمعالجة) "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Stock moves that are Confirmed, Available or Waiting"
-msgstr ""
+msgstr "تحركات المخزون التي يتم تأكيدها، المتوفرة أو المنتظره"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Stock moves that have been processed"
-msgstr ""
+msgstr "تحركات المخزون التي تم معالجتها "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_lines_date_search
@@ -5492,7 +5492,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_supplied_wh_id
 msgid "Supplied Warehouse"
-msgstr ""
+msgstr "مخزن التوريد"
 
 #. module: stock
 #: selection:stock.picking,picking_type_code:0
@@ -5536,47 +5536,47 @@ msgid ""
 "Technical field containing the quant that created this link between an "
 "operation and a stock move. Used at the stock_move_obj.action_done() time to"
 " avoid seeking a matching quant again"
-msgstr ""
+msgstr "الحقل التقني الذي يحتوي على الكميات التي خلقت هذا الرابط بين عملية وتحرك المخزون تستخدم في الوقت stock_move_obj.action_done () لتجنب تسعى للحصول على كميات مطابقة مرة أخرى "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_warehouse_id
 msgid ""
 "Technical field depicting the warehouse to consider for the route selection "
 "on the next procurement (if any)."
-msgstr ""
+msgstr "الحقل التقني يصور المستودع لاعتباره كمسار مختار على الشراء المقبل (إن وجدت) . "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company_internal_transit_location_id
 msgid ""
 "Technical field used for resupply routes between warehouses that belong to "
 "this company"
-msgstr ""
+msgstr "المجال التقني المستخدم لطرق الإمداد بين المستودعات التي تنتمي إلى هذه الشركة "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_restrict_lot_id
 msgid ""
 "Technical field used to depict a restriction on the lot of quants to "
 "consider when marking this move as 'done'"
-msgstr ""
+msgstr "المجال التقني المستخدم لتصوير قيد على الكثير من الكميات في اعتبار حاله الحركه بأنها \"فعل\" "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_restrict_partner_id
 msgid ""
 "Technical field used to depict a restriction on the ownership of quants to "
 "consider when marking this move as 'done'"
-msgstr ""
+msgstr "المجال التقني المستخدم لتصوير قيد على الكثير من الكميات في اعتبار حاله الحركه بأنها \"فعل\" "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_return_picking_move_dest_exists
 msgid "Technical field used to hide help tooltip if not needed"
-msgstr ""
+msgstr "تستخدم الحقل التقني لإخفاء مساعدة  او التلميح إذا لم يكن هناك حاجة  "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_negative_dest_location_id
 msgid ""
 "Technical field used to record the destination location of a move that "
 "created a negative quant"
-msgstr ""
+msgstr "تستخدم الحقل التقني لتسجيل موقع الوصول من الفيلم الذي خلق ضليع في الكميه السالبه"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_price_unit
@@ -5584,14 +5584,14 @@ msgid ""
 "Technical field used to record the product cost set by the user during a "
 "picking confirmation (when costing method used is 'average price' or "
 "'real'). Value given in company currency and in product uom."
-msgstr ""
+msgstr "استخدم الحقل التقني لتسجيل تكلفة المنتج الذي حدد من المستخدم خلال تأكيد الاختيار (عند استخدام منهج تكلفة السعر المتوسط أو الحقيقى ) قيمة معينة في عملة الشركة وفي UOM المنتج."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_split_from
 msgid ""
 "Technical field used to track the origin of a split move, which can be "
 "useful in case of debug"
-msgstr ""
+msgstr "تستخدمالحقل التقني لتتبع أصل إنقسام هذه الحركه ، والتي يمكن أن تكون مفيدة في حالة التصحيح "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_tmpl_id
@@ -5619,12 +5619,12 @@ msgid ""
 "The average delay in days between the confirmation of the customer order and"
 " the delivery of the finished products. It's the time you promise to your "
 "customers."
-msgstr ""
+msgstr "متوسط التأخير في الأيام بين تأكيد امر العميل، وتسليم المنتجات النهائية. انها الوقت الذي تعد به لعملائك. "
 
 #. module: stock
 #: sql_constraint:stock.location:0
 msgid "The barcode for a location must be unique per company !"
-msgstr ""
+msgstr "يجب أن يكون الباركود للموقع فريد في شركة!"
 
 #. module: stock
 #: code:addons/stock/stock.py:4316
@@ -5632,12 +5632,12 @@ msgstr ""
 msgid ""
 "The chosen quantity for product %s is not compatible with the UoM rounding. "
 "It will be automatically converted at confirmation"
-msgstr ""
+msgstr "الكمية المختاره للمنتج٪ ليست متوافقة مع تقريب وحده القياس. سيتم تحويلها تلقائيا عند تأكيدا "
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
 msgid "The code of the warehouse must be unique per company!"
-msgstr ""
+msgstr "يجب أن يكون كود المستودع فريد من نوعه لكل شركة! "
 
 #. module: stock
 #: sql_constraint:stock.production.lot:0
@@ -5647,14 +5647,14 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_company_id
 msgid "The company to which the quants belong"
-msgstr ""
+msgstr "الشركة التي تنتمى إليها الكميات "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_date
 msgid ""
 "The date that will be used for the stock level check of the products and the"
 " validation of the stock move related to this inventory."
-msgstr ""
+msgstr "التاريخ الذي سيتم استخدامه لفحص مستوى المخزون من المنتجات والتحقق من صحة هذه الخطوة المخزون المرتبط بهذا المخزون. "
 
 #. module: stock
 #: code:addons/stock/stock.py:3940
@@ -5662,36 +5662,36 @@ msgstr ""
 msgid ""
 "The default resupply warehouse should be different than the warehouse "
 "itself!"
-msgstr ""
+msgstr "يجب أن تكون إعادة تزويد مستودع افتراضي مختلفة من مستودع نفسها !  "
 
 #. module: stock
 #: code:addons/stock/stock.py:1192
 #, python-format
 msgid ""
 "The destination location must be the same for all the moves of the picking."
-msgstr ""
+msgstr "يجب أن يكون موقع الوصول نفسه بالنسبة لجميع تحركات الالتقاط  "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_category_form_view_inherit
 msgid ""
 "The following routes will apply to the products in this category taking into"
 " account parent categories:"
-msgstr ""
+msgstr "سيتم تطبيق الطرق التالية لهذه المنتجات في هذه الفئة مع الأخذ بعين الاعتبار الفئات الأصل: "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_reservation_id
 msgid "The move the quant is reserved for"
-msgstr ""
+msgstr "تحرك الكميه محجوز لـ "
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
 msgid "The name of the warehouse must be unique per company!"
-msgstr ""
+msgstr "يجب أن يكون اسم المستودع فريد من نوعه لكل شركة !"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_propagated_from_id
 msgid "The negative quant this is coming from"
-msgstr ""
+msgstr "الكميه السالبه هذه تأتى من "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_location_dest_id
@@ -5701,17 +5701,17 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_package_parent_id
 msgid "The package containing this item"
-msgstr ""
+msgstr "الحزمه تحتوى على هذا المنتج "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_package_id
 msgid "The package containing this quant"
-msgstr ""
+msgstr "الحزمه تحتوى على الكميه "
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "The picking type determines the picking view"
-msgstr ""
+msgstr "نوع الالتقاط يحدد عرض الالتقاط "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -5727,7 +5727,7 @@ msgstr ""
 msgid ""
 "The procurement quantity will be rounded up to this multiple.  If it is 0, "
 "the exact quantity will be used.  "
-msgstr ""
+msgstr "سيتم تقريب كمية المشتريات حتى تصل إلى هذه متعددة. إذا كان 0، سيتم استخدام كمية الدقيق . "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_rule_id
@@ -5737,7 +5737,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_push_rule_id
 msgid "The push rule that created this stock move"
-msgstr ""
+msgstr "قاعده الدفع التي تم إنشاءها فى حركه المخزون "
 
 #. module: stock
 #: code:addons/stock/stock.py:4421
@@ -5756,7 +5756,7 @@ msgstr ""
 msgid ""
 "The requested operation cannot be processed because of a programming error "
 "setting the `product_qty` field instead of the `product_uom_qty`."
-msgstr ""
+msgstr "العملية المطلوبة لا يمكن معالجتها بسبب خطأ في البرمجة وضع `الحقل product_qty` بدلا من` product_uom_qty`. "
 
 #. module: stock
 #: code:addons/stock/stock.py:2641
@@ -5765,7 +5765,7 @@ msgid ""
 "The roundings of your Unit of Measures %s on the move vs. %s on the product "
 "don't allow to do these operations or you are not transferring the picking "
 "at once. "
-msgstr ""
+msgstr "التدوير فى وحده القياس الخاصه بك ٪ s على هذه الحركه ٪ s على المنتج لا تسمح للقيام بهذه العمليات أو انك لم تنقل الالتقاط دفعة واحدة. "
 
 #. module: stock
 #: code:addons/stock/stock.py:4309
@@ -5773,12 +5773,12 @@ msgstr ""
 msgid ""
 "The selected UoM for product %s is not compatible with the UoM set on the product form. \n"
 "Please choose an UoM within the same UoM category."
-msgstr ""
+msgstr "وحده القياس المختارة للمنتج ٪ غير متوافقه مع  وحده قياس التى تم تعيينها على المنتج \nيرجى اختيار وحده قياس من نفس وحده قياس الفئه "
 
 #. module: stock
 #: constraint:stock.inventory:0
 msgid "The selected inventory options are not coherent."
-msgstr ""
+msgstr "خيارات المخزون المختارة ليست مترابطه"
 
 #. module: stock
 #: code:addons/stock/stock.py:573
@@ -5790,17 +5790,17 @@ msgstr ""
 #: code:addons/stock/stock.py:1195
 #, python-format
 msgid "The source location must be the same for all the moves of the picking."
-msgstr ""
+msgstr "يجب أن يكون موقع المصدر نفسه بالنسبة لجميع تحركات الالتقاط "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_picking_id
 msgid "The stock operation where the packing has been made"
-msgstr ""
+msgstr "عملية المخزون حيث أحرز التعبئة والتغليف "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_warehouse_id
 msgid "The warehouse this rule is for"
-msgstr ""
+msgstr "المستودع هذه القاعدة ل "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_propagate_warehouse_id
@@ -5808,7 +5808,7 @@ msgid ""
 "The warehouse to propagate on the created move/procurement, which can be "
 "different of the warehouse this rule is for (e.g for resupplying rules from "
 "another warehouse)"
-msgstr ""
+msgstr "في مستودع للنشر على خلق نقل / المشتريات، والتي يمكن أن تكون مختلفة من مستودع هذه القاعدة ل(على سبيل المثال لإعادة تزويد القواعد من مستودع آخر ) "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_theoretical_qty
@@ -5821,7 +5821,7 @@ msgid ""
 "This allows to manipulate packages.  You can put something in, take "
 "something from a package, but also move entire packages and put them even in"
 " another package.  "
-msgstr ""
+msgstr "هذا يسمح للتلاعب فى الحزم. يمكنك وضع شيء في، تأخذ شيئا من حزمة، ولكن أيضا نقل حزم كاملة ووضعها حتى في حزمة أخرى.  "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_group_stock_production_lot
@@ -5829,7 +5829,7 @@ msgid ""
 "This allows you to assign a lot (or serial number) to the pickings and "
 "moves.  This can make it possible to know which production lot was sent to a"
 " certain client, ..."
-msgstr ""
+msgstr "هذا يسمح لك بتعيين الحصص (أو الرقم التسلسلي) للالتقاطات والتحركات. هذا يمكن أن يجعل من الممكن معرفة أي دفعة إنتاج تم إرسالها إلى عميل معين، ... "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_calendar
@@ -5850,7 +5850,7 @@ msgstr ""
 msgid ""
 "This field should be completed only if everything inside the package share "
 "the same product, otherwise it doesn't really makes sense."
-msgstr ""
+msgstr "ينبغي أن يكتمل هذا الحقل فقط إذا كان كل شيء داخل الحزمة مشاركة نفس المنتج، وإلا فإنها لا يكون لها معنى. "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -5894,7 +5894,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_owner_id
 msgid "This is the owner of the quant"
-msgstr ""
+msgstr "هذا هو مالك الكميه "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_picking_type_id
@@ -5910,7 +5910,7 @@ msgid ""
 "be moved. Lowering this quantity does not generate a backorder. Changing "
 "this quantity on assigned moves affects the product reservation, and should "
 "be done with care."
-msgstr ""
+msgstr "هذه هي الكمية من المنتجات من نقطة المخزون فى العرض . ليتحرك للحاله \"تم\"، وهذاهى كمية المنتجات التي تم نقلها بالفعل. لخطوات أخرى، وهذه هى كمية المنتجات التي من المقرر أن يتم نقلها. خفض هذه الكمية لا تولد المؤجل. تغيير هذه الكمية على تحركات معيينه يؤثر على حجز المنتج، وينبغي أن يتم ذلك بعناية. "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_move_form2
@@ -5925,7 +5925,7 @@ msgstr ""
 msgid ""
 "This option supplements the warehouse application by effectively "
 "implementing Push and Pull inventory flows through Routes."
-msgstr ""
+msgstr "هذا الخيار يكمل تطبيق مستودع من خلال التنفيذ الفعال دفع وسحب التدفقات المخزون من خلال المسارات ."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_return_picking_form
@@ -5940,7 +5940,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty_new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
-msgstr ""
+msgstr "يتم التعبير عن هذه الكمية في وحدة القياس الافتراضية للمنتج. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_location_from_id
@@ -5969,7 +5969,7 @@ msgstr "سيستخدم مكان المخزون هذا, بدلًا من الاف�
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by manufacturing orders."
-msgstr ""
+msgstr "سوف تستخدم هذا موقع المخزون ، بدلا من الافتراضي الواحد، كموقع المصدر لتحركات الأسهم الناتجة عن طلبيات المصانع. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_property_stock_procurement
@@ -5977,7 +5977,7 @@ msgstr ""
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by procurements."
-msgstr ""
+msgstr "سوف تستخدم هذا الموقع المخزون ، بدلا من الواحد الافتراضي ، كموقع المصدر لتحركات المخزون الناتجة عن عمليات الشراء. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_property_stock_inventory
@@ -5985,19 +5985,19 @@ msgstr ""
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
-msgstr ""
+msgstr "موقع المخزون هذا سوف يستخدم، بدلا من الافتراضي ، كموقع المصدر لتحركات المخزون التى ولدت عند القيام بجرد. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_group_stock_tracking_owner
 msgid "This way you can receive products attributed to a certain owner. "
-msgstr ""
+msgstr "وبهذه الطريقة يمكنك الحصول على منتجات نسبه إلى مالك معين. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_group_stock_multiple_locations
 msgid ""
 "This will show you the locations and allows you to define multiple picking "
 "types and warehouses."
-msgstr ""
+msgstr "هذا سوف يعرض لك المواقع ويسمح لك بتحديد أنواع الالتقاط المتعددة والمستودعات. "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_to_loc
@@ -6058,7 +6058,7 @@ msgstr "اليوم"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category_total_route_ids
 msgid "Total routes"
-msgstr ""
+msgstr "إجمالى المسارات "
 
 #. module: stock
 #: code:addons/stock/stock.py:1746
@@ -6086,7 +6086,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.config.settings,group_stock_production_lot:0
 msgid "Track lots or serial numbers"
-msgstr ""
+msgstr "تتبع الأرقام التسلسلية أو الحصص "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_tracking
@@ -6134,17 +6134,17 @@ msgstr ""
 msgid ""
 "True if reserved quants changed, which mean we might need to recompute the "
 "package operations"
-msgstr ""
+msgstr "صح إذا كانت الكميه المحجوزه تم تغييرها ، والذي يعني أننا قد نحتاج إلى إعادة حساب عمليات الحزمة "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_code
 msgid "Type of Operation"
-msgstr ""
+msgstr "نوع العمليه "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_packaging_type_id
 msgid "Type of packaging"
-msgstr ""
+msgstr "نوع الحزمه "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_ups
@@ -6222,7 +6222,7 @@ msgstr ""
 #: code:addons/stock/stock.py:4169
 #, python-format
 msgid "Unknown Pack"
-msgstr ""
+msgstr "حزم غير معروف "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6234,19 +6234,19 @@ msgstr ""
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Unload in input location then go to stock (2 steps)"
-msgstr ""
+msgstr "أرفع موقع المدخلات ثم إذهب إلى المخزون (2 خطوتين )"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid ""
 "Unload in input location, go through a quality control before being admitted"
 " in stock (3 steps)"
-msgstr ""
+msgstr "إرفع في موقع الإدخال، انتقل خلال مراقبة الجودة قبل دخوله في المخزون  (3 خطوات)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Unpack"
-msgstr ""
+msgstr "فضا "
 
 #. module: stock
 #: code:addons/stock/product.py:317
@@ -6279,7 +6279,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "UoM"
-msgstr ""
+msgstr "وحده القياس "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_change_product_quantity
@@ -6311,7 +6311,7 @@ msgid ""
 "                        product. According to the product configuration, this may\n"
 "                        trigger a draft purchase order, a manufacturing order or\n"
 "                        a new task."
-msgstr ""
+msgstr "استخدام هذا المساعد لإنشاء طلب شراء لهذا\nالمنتج. وفقا لتكوين المنتج، وهذا قد\nيطلق مسوده أمر الشراء، أمر التصنيع أو\nمهمة جديدة."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_type_list
@@ -6321,7 +6321,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_sequence
 msgid "Used to order the 'All Operations' kanban view"
-msgstr ""
+msgstr "تستخدم لأمر  \"كل العمليات\" عرض كانبان "
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_user
@@ -6389,7 +6389,7 @@ msgstr "طريقة العرض"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "View Contained Packages content"
-msgstr ""
+msgstr "عرض الصناديق المحتواه "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_view_location_id
@@ -6409,12 +6409,12 @@ msgstr "جاري الانتظار"
 #. module: stock
 #: selection:stock.move,state:0
 msgid "Waiting Another Move"
-msgstr ""
+msgstr "في انتظار تحرك آخر "
 
 #. module: stock
 #: selection:stock.pack.operation,state:0 selection:stock.picking,state:0
 msgid "Waiting Another Operation"
-msgstr ""
+msgstr "في انتظار عمليه أخرى"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -6426,7 +6426,7 @@ msgstr "منتظر التوفر"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Waiting Moves"
-msgstr ""
+msgstr "منتظر التحرك "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_waiting
@@ -6468,18 +6468,18 @@ msgstr "اسم المستودع"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_propagate_warehouse_id
 msgid "Warehouse to Propagate"
-msgstr ""
+msgstr "مخزن للنشر "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_order_warehouse_id
 msgid "Warehouse to consider for the route selection"
-msgstr ""
+msgstr "مخزن للنظر فى إختيار المسار "
 
 #. module: stock
 #: code:addons/stock/stock.py:3977
 #, python-format
 msgid "Warehouse's Routes"
-msgstr ""
+msgstr "مسارات المخازن "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
@@ -6500,7 +6500,7 @@ msgstr "تحذير!"
 #: code:addons/stock/stock.py:4308
 #, python-format
 msgid "Warning: wrong UoM!"
-msgstr ""
+msgstr "تحذير : خطأ فى وحده القياس !"
 
 #. module: stock
 #: code:addons/stock/stock.py:4315
@@ -6580,7 +6580,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_product_putaway_fixed_location_ids
 msgid ""
 "When the method is fixed, this location will be used to store the products"
-msgstr ""
+msgstr "عندما يتم إصلاح الطريقة، سيتم استخدام هذا الموقع لتخزين المنتجات ."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_product_min_qty
@@ -6588,7 +6588,7 @@ msgid ""
 "When the virtual stock goes below the Min Quantity specified for this field,"
 " Odoo generates a procurement to bring the forecasted quantity to the Max "
 "Quantity."
-msgstr ""
+msgstr "عندما يكون المخزون الوهمى أقل من كمية الحد الأدنى المحدد لهذا الحقل، أوبنيرب يولد الشراء لجلب كمية التوقعات إلى أقصى الحدود الكمية. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_product_max_qty
@@ -6596,14 +6596,14 @@ msgid ""
 "When the virtual stock goes below the Min Quantity, Odoo generates a "
 "procurement to bring the forecasted quantity to the Quantity specified as "
 "Max Quantity."
-msgstr ""
+msgstr "عندما يكون المخزون الوهمى أقل من كمية الحد الأدنى المحدد لهذا الحقل، أوبنيرب يولد الشراء لجلب كمية التوقعات إلى أقصى الحدود الكمية. "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_change_product_quantity
 msgid ""
 "When you select a serial number (lot), the quantity is corrected with respect to\n"
 "                            the quantity of that serial number (lot) and not to the total quantity of the product."
-msgstr ""
+msgstr "عند تحديد رقم التسلسلي (الحصص)، وكمية صحيحة فيما يتعلق\nبكمية من هذا الرقم التسلسلي (الحصص) وليس إلى الكمية الإجمالية للمنتج."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_wizard_id
@@ -6614,7 +6614,7 @@ msgstr "المعالج"
 #: model:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
 msgid ""
 "Wizard checks all the stock minimum rules and generate procurement order."
-msgstr ""
+msgstr "معالج الشيكات على كل قواعد الحد الأدنى للمخزون وتوليد أمر الشراء."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_group_product_variant
@@ -6646,7 +6646,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "You can delete lines to ignore some products."
-msgstr ""
+msgstr "يمكنك حذف الخطوط لتجاهل بعض المنتجات "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_type_list
@@ -6676,7 +6676,7 @@ msgid ""
 "You can not change the unit of measure of a product that has already been "
 "used in a done stock move. If you need to change the unit of measure, you "
 "may deactivate this product."
-msgstr ""
+msgstr "لا يمكنك تغيير وحدة القياس من المنتجات التي سبق استخدامها في حركه المخزون التى تمت . إذا كنت بحاجة إلى تغيير وحدة القياس، يمكنك إلغاء تنشيط هذا المنتج. "
 
 #. module: stock
 #: code:addons/stock/stock.py:4432
@@ -6688,7 +6688,7 @@ msgstr ""
 #: code:addons/stock/stock.py:384
 #, python-format
 msgid "You can not reserve a negative quantity or a negative quant."
-msgstr ""
+msgstr "لا يمكنك حجز كميه سالبه "
 
 #. module: stock
 #: code:addons/stock/stock.py:2696
@@ -6705,13 +6705,13 @@ msgstr ""
 #: code:addons/stock/stock.py:2435
 #, python-format
 msgid "You cannot cancel a stock move that has been set to 'Done'."
-msgstr ""
+msgstr "لا يمنكك حذف حركه مخزون فى الحاله \"تمت\" ! "
 
 #. module: stock
 #: code:addons/stock/stock.py:718
 #, python-format
 msgid "You cannot move to a location of type view %s."
-msgstr ""
+msgstr "لا يمكنك نقل إلى موقع من نوع عرض s%"
 
 #. module: stock
 #: code:addons/stock/stock.py:2946
@@ -6719,19 +6719,19 @@ msgstr ""
 msgid ""
 "You cannot set a negative product quantity in an inventory line:\n"
 "\t%s - qty: %s"
-msgstr ""
+msgstr "لا يمكنك وضع كمية المنتج سالبه في خطوط المخزون - الكمية:٪ ق "
 
 #. module: stock
 #: code:addons/stock/stock.py:2772
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
-msgstr ""
+msgstr "لا يمكنك تقسيم حركه \"مسوده\". فإنه يحتاج إلى تأكيد أولا. "
 
 #. module: stock
 #: code:addons/stock/stock.py:2768
 #, python-format
 msgid "You cannot split a move done"
-msgstr ""
+msgstr "لايمكنك تقسيم حرحه \" تمت \""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -6762,7 +6762,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_return_picking.py:129
 #, python-format
 msgid "You have manually created product lines, please delete them to proceed"
-msgstr ""
+msgstr "لقد قمت بإنشاء خطوط الإنتاج يدويا، يرجى حذفها على المضي قدما "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -6782,7 +6782,7 @@ msgstr ""
 msgid ""
 "You have to select a product unit of measure in the same category than the "
 "default unit of measure of the product"
-msgstr ""
+msgstr "لديك تحديد وحدة قياس المنتج في نفس الفئة من وحدة القياس الافتراضية للمنتج ."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_immediate_transfer
@@ -6795,13 +6795,13 @@ msgstr ""
 #: code:addons/stock/wizard/stock_return_picking.py:48
 #, python-format
 msgid "You may only return one picking at a time!"
-msgstr ""
+msgstr "يمكنك العودة فقط لإلتقاط واحدة في وقت واحد! "
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:58
 #, python-format
 msgid "You may only return pickings that are Done!"
-msgstr ""
+msgstr "يمكنك فقط معاوده إلتقاط التى فى الحاله \"تمت\" ! "
 
 #. module: stock
 #: code:addons/stock/stock.py:2320 code:addons/stock/stock.py:4443
@@ -6826,7 +6826,7 @@ msgstr ""
 msgid ""
 "You try to move a product using a UoM that is not compatible with the UoM of"
 " the product moved. Please use an UoM in the same UoM category."
-msgstr ""
+msgstr "محاولة نقل المنتج باستخدام غير متوافق مع وحده قياس المنتج . يرجى استخدام وحده قياس المنتج في نفس فئه وحده القياس ."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6901,7 +6901,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "e.g. PO0032"
-msgstr ""
+msgstr "مثال.PO0032"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6950,7 +6950,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_origin_returned_move_id
 msgid "move that created the return move"
-msgstr ""
+msgstr "الحركه التي خلقت عوده هذه الحركه"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_pack_operation_lot_form
