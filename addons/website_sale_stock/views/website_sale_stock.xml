@@ -9,7 +9,7 @@
         <div>
           <t t-foreach="order.picking_ids" t-as="i">
             <t t-set="report_url" t-value="'/report/pdf/stock.report_picking/%s' % i.id"/>
-            <div>
+            <div t-if="(not user_id.has_group('base.group_portal')) or (i.picking_type_id.code == 'outgoing' and user_id.has_group('base.group_portal'))">
               <a t-att-href="report_url"><span class="fa fa-download"/></a>
               <a t-att-href="report_url"><span t-field="i.name"/></a>
               <span class="text-muted" t-field="i.date" t-field-options='{"widget": "date"}'/>
