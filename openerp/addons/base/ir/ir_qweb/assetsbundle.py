@@ -385,21 +385,28 @@ class AssetsBundle(object):
 
 class WebAsset(object):
     html_url_format = '%s'
+    _content = None
+    _filename = None
+    _ir_attach = None
+    _id = None
 
     def __init__(self, bundle, inline=None, url=None):
-        self.id = str(uuid.uuid4())
         self.bundle = bundle
         self.inline = inline
         self.url = url
         self.html_url_args = url
-        self.env = bundle.env
-        self._content = None
-        self._filename = None
-        self._ir_attach = None
-        name = '<inline asset>' if inline else url
-        self.name = "%s defined in bundle '%s'" % (name, bundle.name)
         if not inline and not url:
             raise Exception("An asset should either be inlined or url linked, defined in bundle '%s'" % bundle.name)
+
+    @func.lazy_property
+    def id(self):
+        if self._id is None: self._id = str(uuid.uuid4())
+        return self._id
+
+    @func.lazy_property
+    def name(self):
+        name = '<inline asset>' if self.inline else self.url
+        return "%s defined in bundle '%s'" % (name, self.bundle.name)
 
     @property
     def html_url(self):
@@ -415,7 +422,7 @@ class WebAsset(object):
                 # Test url against ir.attachments
                 fields = ['__last_update', 'datas', 'mimetype']
                 domain = [('type', '=', 'binary'), ('url', '=', self.url)]
-                attach = self.env['ir.attachment'].sudo().search_read(domain, fields)
+                attach = self.bundle.env['ir.attachment'].sudo().search_read(domain, fields)
                 self._ir_attach = attach[0]
             except Exception:
                 raise AssetNotFound("Could not find %s" % self.name)
