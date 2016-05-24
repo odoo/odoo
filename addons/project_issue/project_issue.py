@@ -450,7 +450,7 @@ class project(osv.Model):
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
         Issue = self.pool['project.issue']
         return {
-            project_id: Issue.search_count(cr,uid, [('project_id', '=', project_id), ('stage_id.fold', '=', False)], context=context)
+            project_id: Issue.search_count(cr,uid, [('project_id', '=', project_id), '|', ('stage_id.fold', '=', False), ('stage_id', '=', False)], context=context)
             for project_id in ids
         }
 

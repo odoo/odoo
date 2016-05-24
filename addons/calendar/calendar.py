@@ -35,8 +35,8 @@ def calendar_id2real_id(calendar_id=None, with_date=False):
     @return: real event id
     """
     if calendar_id and isinstance(calendar_id, (basestring)):
-        res = calendar_id.split('-')
-        if len(res) >= 2:
+        res = filter(None, calendar_id.split('-'))
+        if len(res) == 2:
             real_id = res[0]
             if with_date:
                 real_date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT, time.strptime(res[1], "%Y%m%d%H%M%S"))
@@ -1786,9 +1786,10 @@ class ir_attachment(osv.Model):
         convert the search on real ids in the case it was asked on virtual ids, then call super()
         '''
         args = list(args)
-        for index in range(len(args)):
-            if args[index][0] == "res_id" and isinstance(args[index][2], basestring):
-                args[index] = (args[index][0], args[index][1], get_real_ids(args[index][2]))
+        if any([leaf for leaf in args if leaf[0] ==  "res_model" and leaf[2] == 'calendar.event']):
+            for index in range(len(args)):
+                if args[index][0] == "res_id" and isinstance(args[index][2], basestring):
+                    args[index] = (args[index][0], args[index][1], get_real_ids(args[index][2]))
         return super(ir_attachment, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
     def write(self, cr, uid, ids, vals, context=None):
