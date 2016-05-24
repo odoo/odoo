@@ -12,7 +12,7 @@ Attachments list and document indexation
 """,
     'depends': ['web'],
     'data': [
-        'views/document.xml',
+        'views/document_templates.xml',
     ],
     'installable': True,
     'auto_install': False,
