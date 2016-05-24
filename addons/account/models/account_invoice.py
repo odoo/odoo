@@ -331,7 +331,7 @@ class AccountInvoice(models.Model):
                 getattr(invoice, onchange_method)()
                 for field in changed_fields:
                     if field not in vals and invoice[field]:
-                        vals[field] = invoice._fields[field].convert_to_write(invoice[field])
+                        vals[field] = invoice._fields[field].convert_to_write(invoice[field], invoice)
         if not vals.get('account_id',False):
             raise UserError(_('Configuration error!\nCould not find any account to create the invoice, are you sure you have a chart of account installed?'))
 
