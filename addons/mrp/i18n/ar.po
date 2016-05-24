@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-21 09:18+0000\n"
-"PO-Revision-Date: 2016-02-12 22:09+0000\n"
+"PO-Revision-Date: 2016-05-17 12:05+0000\n"
 "Last-Translator: Khayel Fadhli <khayel.fadhli@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -46,7 +46,7 @@ msgstr "%s (نسخة)"
 #: code:addons/mrp/mrp.py:1009
 #, python-format
 msgid "%s produced"
-msgstr ""
+msgstr "تم الانتاج "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_product_produce_mode
@@ -153,7 +153,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_product_efficiency
 msgid "A factor of 0.9 means a loss of 10% during the production process."
-msgstr ""
+msgstr "عامل من 0.9 يعني فقدان 10٪ أثناء عملية الإنتاج."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_product_efficiency
@@ -186,14 +186,14 @@ msgstr "نشط"
 #: code:addons/mrp/wizard/change_production_qty.py:51
 #, python-format
 msgid "Active Id not found"
-msgstr ""
+msgstr "لم يتم العثور على رقم نشط "
 
 #. module: mrp
 #: sql_constraint:mrp.bom.line:0
 msgid ""
 "All product quantities must be greater than 0.\n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
-msgstr ""
+msgstr "يجب أن تكون جميع كميات المنتج أكبر من 0.\nيجب تثبيت وحدة MRP ثانوية إذا كنت ترغب في إدارة المنتجات اضافية على القنابل! "
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_operations:0
@@ -223,12 +223,12 @@ msgstr "تصديق"
 msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
-msgstr ""
+msgstr "متوسط التأخير في أيام لإنتاج هذا المنتج. في حالة BOM متعدد المستويات، وستضاف الأوقات تصنيع الترشيح من المكونات. "
 
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Awaiting Raw Materials"
-msgstr ""
+msgstr "في انتظار المواد الخام "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
@@ -238,7 +238,7 @@ msgstr "اسم فاتورة المواد."
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_attribute_value_ids
 msgid "BOM Product Variants needed form apply this line."
-msgstr ""
+msgstr "فاتوره مواد موديلات المنتج اللازمة لتطبيق هذا الخط. "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
@@ -254,7 +254,7 @@ msgstr "تركيب فاتورة المواد"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_child_line_ids
 msgid "BOM lines of the referred bom"
-msgstr ""
+msgstr "خطوط فاتوره المواد تشير إلى بوم "
 
 #. module: mrp
 #: code:addons/mrp/stock.py:25
@@ -263,7 +263,7 @@ msgid ""
 "Because the product %s requires it, you must assign a serial number to your "
 "raw material %s to proceed further in your production. Please use the "
 "'Produce' button to do so."
-msgstr ""
+msgstr "لأن المنتج س٪ يتطلب ذلك، يجب تعيين الرقم التسلسلي لديك المواد الخام ٪ s إلى المضي قدما في الإنتاج. يرجى الضغط على زر 'إنتاج' للقيام بذلك. "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -302,7 +302,7 @@ msgstr "فاتورة تركيب المواد"
 msgid ""
 "Bill of Materials allow you to define the list of required raw materials to "
 "make a finished product."
-msgstr ""
+msgstr "فاتوره المواد تسمح لك لتحديد قائمة من المواد الخام اللازمة لجعل المنتج النهائي. "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -326,7 +326,7 @@ msgstr "فاتورة المواد"
 #: code:addons/mrp/mrp.py:303
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
-msgstr ""
+msgstr " فاتوره المواد تحتوي على \"٪ ق\" خط فاتوره المواد مع العودية المنتج: \"٪."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_bom_line_ids
@@ -357,7 +357,7 @@ msgstr ""
 #: code:addons/mrp/stock.py:227
 #, python-format
 msgid "Can't find any generic Manufacture route."
-msgstr ""
+msgstr "لا يمكن العثور على أي طريق الصانع بشكل عام . "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
@@ -370,7 +370,7 @@ msgstr "إلغاء"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Cancel Production"
-msgstr ""
+msgstr "الغاء الانتاج "
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -381,26 +381,26 @@ msgstr "ملغي"
 #: code:addons/mrp/stock.py:149
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
-msgstr ""
+msgstr "لا يمكن أن تستهلك هذه الخطوة مع كمية سلبية أو صفر ."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:639
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
-msgstr ""
+msgstr "لا يمكن حذف أمر التصنيع في الحاله '٪ ق'."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:709
 #, python-format
 msgid "Cannot find a bill of material for this product."
-msgstr ""
+msgstr "لا يمكن العثور على فاتوره المواد لهذا المنتج. "
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:66
 #: code:addons/mrp/wizard/change_production_qty.py:71
 #, python-format
 msgid "Cannot find bill of material for this product."
-msgstr ""
+msgstr "لا يمكن العثور على فاتوره المواد لهذا المنتج. "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -527,7 +527,7 @@ msgstr "يستهلك وينتج"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "Consume Lines"
-msgstr ""
+msgstr "خطوط الاستهلاك "
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.move_consume
@@ -556,7 +556,7 @@ msgstr "منتجات المستهلك"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consumed_for
 msgid "Consumed for"
-msgstr ""
+msgstr "مستهلك لـ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
@@ -660,7 +660,7 @@ msgstr "الوصف"
 msgid ""
 "Description of the Work Center. Explain here what's a cycle according to "
 "this Work Center."
-msgstr ""
+msgstr "وصف مركز العمل. شرح هنا ما هي دورة وفقا لهذا المركز العمل. "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -720,14 +720,14 @@ msgstr "معلومات إضافية"
 msgid ""
 "Fill this only if you want automatic analytic accounting entries on "
 "production orders."
-msgstr ""
+msgstr "ملء هذا فقط إذا كنت تريد القيود المحاسبية التحليلية التلقائي على أوامر الإنتاج. "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_product_id
 msgid ""
 "Fill this product to easily track your production costs in the analytic "
 "accounting."
-msgstr ""
+msgstr "إملأ هذا المنتج بسهولة تتبع تكاليف الإنتاج في المحاسبة التحليلية."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -793,7 +793,7 @@ msgstr "ويعطي امر التسلسل عند عرض قائمة من الفو�
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_sequence
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
-msgstr ""
+msgstr "يعطي ترتيب تسلسل عند عرض القائمة من توجيه مراكز العمل. "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_sequence
@@ -803,7 +803,7 @@ msgstr "ويعطي امر التسلسل عند عرض قائمة لترتيبا
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_sequence
 msgid "Gives the sequence order when displaying."
-msgstr ""
+msgstr "يعطي ترتيب تسلسل عند عرض. "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
@@ -850,7 +850,7 @@ msgstr "المعرف"
 #: model:ir.model.fields,help:mrp.field_mrp_bom_product_id
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
-msgstr ""
+msgstr "إذا تم تعريف متغير المنتج BOM هو متاح فقط لهذا المنتج. "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_message_unread
@@ -1047,17 +1047,17 @@ msgstr "المدير"
 #: model:stock.location.route,name:mrp.route_warehouse0_manufacture
 #, python-format
 msgid "Manufacture"
-msgstr ""
+msgstr "التصنيع "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_manufacture_pull_id
 msgid "Manufacture Rule"
-msgstr ""
+msgstr "قاعده التصنيع "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_manufacture_to_resupply
 msgid "Manufacture in this Warehouse"
-msgstr ""
+msgstr "التصنيع فى هذا المخزن "
 
 #. module: mrp
 #: selection:mrp.bom,type:0
@@ -1119,7 +1119,7 @@ msgstr "أوامر تصنيع جاري تنفيذها"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are ready to start production."
-msgstr ""
+msgstr "أوامر التصنيع التى تكون جاهزه لبدء عمليه الانتاج "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1149,7 +1149,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Mark as Started"
-msgstr ""
+msgstr "إجعلها بدأت"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
@@ -1199,7 +1199,7 @@ msgstr "جديد"
 #: code:addons/mrp/procurement.py:108
 #, python-format
 msgid "No BoM exists for this product!"
-msgstr ""
+msgstr "لا يوجد فاتوره مواد موجود على هذا المنتج!"
 
 #. module: mrp
 #: selection:mrp.product.produce,tracking:0
@@ -1234,7 +1234,7 @@ msgstr "غير ضروري"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_property_composition
 msgid "Not used in computations, for information purpose only."
-msgstr ""
+msgstr "لا تستخدم في العمليات الحسابية، لغرض المعلومات فقط. "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
@@ -1281,7 +1281,7 @@ msgstr "عدد الرسائل الواجب اجراءها"
 msgid ""
 "Number of operations this Work Center can do in parallel. If this Work "
 "Center represents a team of 5 workers, the capacity per cycle is 5."
-msgstr ""
+msgstr "عدد من عمليات هذا المركز عمل يمكن القيام به بشكل متوازى. إذا يمثل هذا المركز عمل فريق من 5 عمال، والقدرة في كل دورة هي 5."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_message_unread_counter
@@ -1305,7 +1305,7 @@ msgstr "موافق"
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_client_mrp_menu
 msgid "Open MRP Menu"
-msgstr ""
+msgstr "فتح قائمة MRP "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
@@ -1320,7 +1320,7 @@ msgstr "تخطيط  الأمر"
 #. module: mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero!"
-msgstr ""
+msgstr "كمية الطلب لا يمكن أن يكون سلبيا أو الصفر! "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_bom_id
@@ -1361,7 +1361,7 @@ msgstr "التوريدات"
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "قاعده المشتريات "
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
@@ -1395,7 +1395,7 @@ msgstr "المنتج"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_prod_id
 msgid "Product Move"
-msgstr ""
+msgstr "حركه المنتج "
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
@@ -1405,7 +1405,7 @@ msgstr "إنتاج المنتج"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce_line
 msgid "Product Produce Consume lines"
-msgstr ""
+msgstr "إنتاج خطوط الاستهلاك للمنتج "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_product_qty
@@ -1475,12 +1475,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_production_id
 msgid "Production Order for Produced Products"
-msgstr ""
+msgstr "أمر الإنتاج للمنتجات المنتجة "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_raw_material_production_id
 msgid "Production Order for Raw Materials"
-msgstr ""
+msgstr "أمر الإنتاج للمواد الخام "
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
@@ -1490,7 +1490,7 @@ msgstr "يضيف الانتاج امنتج الى الجدول"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Production Started"
-msgstr ""
+msgstr "بدأت الإنتاج "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1500,7 +1500,7 @@ msgstr "مراكز عمل الانتاج"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_progress
 msgid "Production progress"
-msgstr ""
+msgstr "تقدم الإنتاج "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1522,7 +1522,7 @@ msgstr "المنتجات"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_consume_lines
 msgid "Products Consumed"
-msgstr ""
+msgstr "المنتجات المستهلكه "
 
 #. module: mrp
 #: selection:mrp.config.settings,group_product_variant:0
@@ -1568,7 +1568,7 @@ msgstr "فئات الخصائص"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_composition
 msgid "Properties composition"
-msgstr ""
+msgstr "تكوين خصائص "
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property
@@ -1600,7 +1600,7 @@ msgstr "الكمية"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_product_qty
 msgid "Quantity (in default UoM)"
-msgstr ""
+msgstr "الكمية (وحده التوريد الافتراضيه) "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_location_src_id
@@ -1742,7 +1742,7 @@ msgstr "التاريخ المجدول"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Scheduled Date by Month"
-msgstr ""
+msgstr "من المقرر التسجيل حسب الشهر "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1779,7 +1779,7 @@ msgstr "ابحث عن فاتورة المواد"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Search Bill Of Material Components"
-msgstr ""
+msgstr "بحث فاتوره مكونات المواد "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1814,7 +1814,7 @@ msgstr "المسلسل"
 msgid ""
 "Set: When processing a sales order for this product, the delivery order will"
 " contain the raw materials, instead of the finished product."
-msgstr ""
+msgstr "تعيين: عند معالجة أمر المبيعات لهذا المنتج، أوامر التسليم تحتوي على المواد الخام، بدلا من المنتج النهائي. "
 
 #. module: mrp
 #: selection:mrp.bom,type:0
@@ -1834,7 +1834,7 @@ msgstr "حدد تكلفة الدورة لمركز العمل"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_hour
 msgid "Specify Cost of Work Center per hour."
-msgstr ""
+msgstr "تحديد تكلفة مركز العمل للساعة الواحدة. "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_start
@@ -1868,7 +1868,7 @@ msgstr "تنوع القيم للمخزون"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_consumed_for
 msgid "Technical field used to make the traceability of produced products"
-msgstr ""
+msgstr "حقل تقني يستخدم لتتبع المنتجات المنتجة "
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:342 code:addons/mrp/mrp.py:441
@@ -1876,7 +1876,7 @@ msgstr ""
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr ""
+msgstr "وحدة قياس المنتج التى اخترتها تمتلك فئة مختلفة مما كانت عليه في شكل المنتج . "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_action
@@ -1919,7 +1919,7 @@ msgstr "قائمة العمليات (قائمة مراكز العمل) لانت�
 msgid ""
 "This allows to add state, date_start,date_stop in production order operation lines (in the \"Work Centers\" tab).\n"
 "-This installs the module mrp_operations."
-msgstr ""
+msgstr "هذا يسمح لإضافة حاله، DATE_START، date_stop في خطوط عملية أمر الإنتاج (في علامه تبويب  \"مراكز العمل\")\nهذا سوف يثبت mrp_operations ."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_efficiency
@@ -1965,12 +1965,12 @@ msgstr "الوقت بالساعات للإعداد."
 msgid ""
 "Time in hours for this Work Center to achieve the operation of the specified"
 " routing."
-msgstr ""
+msgstr "الوقت بالساعات لهذا المركز العمل على تحقيق عملية توجيه محدد. "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "To Consume"
-msgstr ""
+msgstr "لكى تستهلك "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_cycle_total
@@ -2005,7 +2005,7 @@ msgstr "وحدة القياس"
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
-msgstr ""
+msgstr "وحدة القياس (وحدة القياس) هي وحدة قياس لمراقبة المخزون "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_unread
@@ -2047,13 +2047,13 @@ msgstr "صالحة من"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Valid From Date by Month"
-msgstr ""
+msgstr "صالحة من التاريخ حسب الشهر "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Valid From Month"
-msgstr ""
+msgstr "صالحه من الشهر "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_date_stop
@@ -2065,13 +2065,13 @@ msgstr "صالحة حتى"
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_date_start
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_date_stop
 msgid "Validity of component. Keep empty if it's always valid."
-msgstr ""
+msgstr "صحة المكون. تبقي فارغة اذا كان دائما صحيحا . "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_date_start
 #: model:ir.model.fields,help:mrp.field_mrp_bom_date_stop
 msgid "Validity of this BoM. Keep empty if it's always valid."
-msgstr ""
+msgstr "صحة هذا فاتوره المواد. تبقي فارغة اذا كان دائما صحيحا. "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_attribute_value_ids
@@ -2126,13 +2126,13 @@ msgid ""
 "Weekly Stock Value Variation enables you to track the stock value evolution "
 "linked to manufacturing activities, receipts of products and delivery "
 "orders."
-msgstr ""
+msgstr " قيمة المخزون الاسبوعى تمكنك من تتبع تطور قيمة المخزون المرتبطة أنشطة الصناعة التحويلية، وإيصالات من المنتجات وأوامر التسليم. "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse_manufacture_to_resupply
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
-msgstr ""
+msgstr "عندما يتم تصنيع المنتجات، يمكن تصنيعها في هذا المستودع ."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_state
@@ -2252,7 +2252,7 @@ msgid ""
 "Without this module: A + B + C -> D.\n"
 "With this module: A + B + C -> D + E.\n"
 "-This installs the module mrp_byproduct."
-msgstr ""
+msgstr "يمكنك تكوين المنتجات في فاتوره المواد .\nبدون هذا الموديول : A + B + C -> د.\nمع هذا الموديول : A + B + C -> D + E.\nهذا سوف يثبت موديول mrp_byproduct."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:348
@@ -2260,7 +2260,7 @@ msgstr ""
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
-msgstr ""
+msgstr "لا يمكنك حذف فاتوره المواد مع تشغيل أوامر التصنيع.\nالرجاء إغلاق أو إلغاء لأول مرة."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
