@@ -6,3 +6,4 @@ sys.modules['openerp.addons.web.http'] = openerp.http
 http = openerp.http
 
 import controllers
+import models

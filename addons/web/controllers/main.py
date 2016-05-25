@@ -447,15 +447,19 @@ class Home(http.Controller):
             return werkzeug.utils.redirect(kw.get('redirect'), 303)
 
         request.uid = request.session.uid
-        menu_data = request.registry['ir.ui.menu'].load_menus(request.cr, request.uid, request.debug, context=request.context)
 
         version_info = openerp.service.common.exp_version()
         db_info = {
             'server_version': version_info.get('server_version'),
             'server_version_info': version_info.get('server_version_info'),
         }
+        context = {
+            'db_info': json.dumps(db_info),
+            'menu_data': request.registry['ir.ui.menu'].load_menus(request.cr, request.uid, request.debug, context=request.context),
+            'session_info': json.dumps(request.env['ir.http'].session_info()),
+        }
 
-        return request.render('web.webclient_bootstrap', qcontext={'menu_data': menu_data, 'db_info': json.dumps(db_info)})
+        return request.render('web.webclient_bootstrap', qcontext=context)
 
     @http.route('/web/dbredirect', type='http', auth="none")
     def web_db_redirect(self, redirect='/', **kw):
@@ -712,32 +716,17 @@ class Database(http.Controller):
 
 class Session(http.Controller):
 
-    def session_info(self):
-        request.session.ensure_valid()
-        user = request.env.user
-        display_switch_company_menu = user.has_group('base.group_multi_company') and len(user.company_ids) > 1
-        return {
-            "session_id": request.session_id,
-            "uid": request.session.uid,
-            "user_context": request.session.get_context() if request.session.uid else {},
-            "db": request.session.db,
-            "username": request.session.login,
-            "company_id": request.env.user.company_id.id if request.session.uid else None,
-            "partner_id": request.env.user.partner_id.id if request.session.uid and request.env.user.partner_id else None,
-            "user_companies": {'current_company': (user.company_id.id, user.company_id.name), 'allowed_companies': [(comp.id, comp.name) for comp in user.company_ids]} if display_switch_company_menu else False,
-        }
-
     @http.route('/web/session/get_session_info', type='json', auth="none")
     def get_session_info(self):
+        request.session.check_security()
         request.uid = request.session.uid
         request.disable_db = False
-        return self.session_info()
+        return request.env['ir.http'].session_info()
 
     @http.route('/web/session/authenticate', type='json', auth="none")
     def authenticate(self, db, login, password, base_location=None):
         request.session.authenticate(db, login, password)
-
-        return self.session_info()
+        return request.env['ir.http'].session_info()
 
     @http.route('/web/session/change_password', type='json', auth="user")
     def change_password(self, fields):
