@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 <template id="report_invoice_layouted" inherit_id="account.report_invoice_document" groups="sale.group_sale_layout">
     <xpath expr="//table" position="replace">
         <t t-foreach="o.order_lines_layouted()" t-as="page">
@@ -70,22 +69,21 @@
     </xpath>
 </template>
 
-    <template id="report_invoice_document_inherit_sale" inherit_id="account.report_invoice_document" groups="sale.group_delivery_invoice_address">
-        <xpath expr="//div[@name='invoice_address']" position="replace">
-            <div class="col-xs-5 col-xs-offset-7">
-                <strong t-if="o.partner_shipping_id == o.partner_id">Invoicing and shipping address:</strong>
-                <strong t-if="o.partner_shipping_id != o.partner_id">Invoicing address:</strong>
-                <div t-field="o.partner_id"
+<template id="report_invoice_document_inherit_sale" inherit_id="account.report_invoice_document" groups="sale.group_delivery_invoice_address">
+    <xpath expr="//div[@name='invoice_address']" position="replace">
+        <div class="col-xs-5 col-xs-offset-7">
+            <strong t-if="o.partner_shipping_id == o.partner_id">Invoicing and shipping address:</strong>
+            <strong t-if="o.partner_shipping_id != o.partner_id">Invoicing address:</strong>
+            <div t-field="o.partner_id"
+                t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
+            <span t-if="o.partner_id.vat">TIN: <span t-field="o.partner_id.vat"/></span>
+            <div t-if="o.partner_shipping_id != o.partner_id" class="mt8">
+                <strong>Shipping address:</strong>
+                <div t-field="o.partner_shipping_id"
                     t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
                 <span t-if="o.partner_id.vat">TIN: <span t-field="o.partner_id.vat"/></span>
-                <div t-if="o.partner_shipping_id != o.partner_id" class="mt8">
-                    <strong>Shipping address:</strong>
-                    <div t-field="o.partner_shipping_id"
-                        t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
-                    <span t-if="o.partner_id.vat">TIN: <span t-field="o.partner_id.vat"/></span>
-                </div>
             </div>
-        </xpath>
-    </template>
-</data>
-</openerp>
+        </div>
+    </xpath>
+</template>
+</odoo>
