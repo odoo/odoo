@@ -270,6 +270,7 @@ class QWeb(object):
         element, document = self.get_template(template, options)
         name = element.get('t-name', 'unknown')
 
+        _options['template'] = template
         _options['ast_calls'] = []
         _options['root'] = element.getroottree()
         _options['last_path_node'] = None
@@ -288,6 +289,8 @@ class QWeb(object):
             raise QWebException("Error when compiling AST", e, path, etree.tostring(node[0]), name)
         astmod.body.extend(_options['ast_calls'])
 
+        if 'profile' in options:
+            self._profiling(astmod, _options)
 
         ast.fix_missing_locations(astmod)
 
@@ -402,6 +405,112 @@ class QWeb(object):
         return format(value, *args, **kwargs)
 
     # compute helpers
+
+    def _profiling(self, astmod, options):
+        code_line = astor.to_source(astmod)
+
+        astmod.body.insert(0, ast.Assign(
+            targets=[ast.Name(id='code', ctx=ast.Store())],
+            value=ast.Call(
+                func=ast.Attribute(
+                    value=ast.Str(code_line),
+                    attr='split',
+                    ctx=ast.Load()
+                ),
+                args=[ast.Str("\n")], keywords=[],
+                starargs=None, kwargs=None
+            )
+        ))
+        code_line = [[l, False] for l in code_line.split('\n')]
+
+        astmod.body.insert(0, ast.Assign(
+            targets=[ast.Name(id='profiling', ctx=ast.Store())],
+            value=ast.Dict(keys=[], values=[])
+        ))
+        astmod.body.insert(0, ast.parse("from time import time").body[0])
+
+        line_id = [0]
+        def prof(code, time):
+            line_id[0] += 1
+
+            return ast.Expr(ast.Call(
+                func=ast.Attribute(
+                    value=ast.Name(id='profiling', ctx=ast.Load()),
+                    attr='setdefault',
+                    ctx=ast.Load()
+                ),
+                args=[
+                    ast.Num(line_id[0]),
+                    ast.BinOp(
+                        left=ast.Call(
+                            func=ast.Name(id='time', ctx=ast.Load()),
+                            args=[],
+                            keywords=[], starargs=None, kwargs=None
+                        ),
+                        op=ast.Sub(),
+                        right=ast.Name(id=time, ctx=ast.Load())
+                    )
+                ],
+                keywords=[], starargs=None, kwargs=None
+            ))
+
+        def profile(body):
+            profile_body = []
+            for code in body:
+                time = self._make_name('time')
+                profile_body.append(
+                    ast.Assign(
+                        targets=[ast.Name(id=time, ctx=ast.Store())],
+                        value=ast.Call(
+                            func=ast.Name(id='time', ctx=ast.Load()),
+                            args=[],
+                            keywords=[], starargs=None, kwargs=None
+                        )
+                    )
+                )
+                profile_body.append(code)
+                profline = prof(code, time)
+                # log body of if, else and loop
+                if hasattr(code, 'body'):
+                    code.body = [profline] + profile(code.body)
+                    if hasattr(code, 'orelse'):
+                        code.orelse = [profline] + profile(code.orelse)
+                profile_body.append(profline)
+
+            return profile_body
+
+        for call in options['ast_calls']:
+            call.body = profile(call.body)
+
+        options['ast_calls'][0].body = ast.parse(dedent("""
+            global profiling
+            profiling = {}
+            """)).body + options['ast_calls'][0].body
+
+        p = float(options.get('profile'))
+        options['ast_calls'][0].body.extend(ast.parse(dedent("""
+            total = 0
+            prof_total = 0
+            code_profile = []
+            line_id = 0
+            for line in code:
+                if not line:
+                    if %s <= 0: print ""
+                    continue
+                if line.startswith('def ') or line.startswith('from ') or line.startswith('import '):
+                    if %s <= 0: print "      \t", line
+                    continue
+                line_id += 1
+                total += profiling.get(line_id, 0)
+                dt = round(profiling.get(line_id, -1)*1000000)/1000
+                if %s <= dt:
+                    prof_total += profiling.get(line_id, 0)
+                    display = "%%.2f\t" %% dt
+                    print (" " * (7 - len(display))) + display, line
+                elif dt < 0 and %s <= 0:
+                    print "     ?\t", line
+            print "'%s' Total: %%d/%%d" %% (round(prof_total*1000), round(total*1000))
+            """ % (p, p, p, p, str(options['template']).replace('"', ' ')))).body)
 
     def _base_module(self):
         """ module base supporting qweb template functions (provides basic
