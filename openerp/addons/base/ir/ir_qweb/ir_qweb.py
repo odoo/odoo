@@ -13,6 +13,7 @@ from openerp.tools import safe_eval
 from openerp.addons.web.http import request
 from odoo.modules.module import get_resource_path
 import json
+from time import time
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -51,7 +52,7 @@ class ir_QWeb(models.AbstractModel, QWeb):
         """ attributes add to the values for each computed template
         """
         default = super(ir_QWeb, self).default_values()
-        default.update(request=request)
+        default.update(request=request, cache_assets=round(time()/180))
         return default
 
     # assume cache will be invalidated by third party on write to ir.ui.view
@@ -137,6 +138,10 @@ class ir_QWeb(models.AbstractModel, QWeb):
 
     # method called by computing code
 
+    @tools.conditional(
+        'xml' not in tools.config['dev_mode'],
+        tools.ormcache('xmlid', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'async', 'values.get("time_cache_assets")'),
+    )
     def _get_asset(self, xmlid, options, css=True, js=True, debug=False, async=False, values=None):
         files, remains = self._get_asset_content(xmlid, options)
         asset = AssetsBundle(xmlid, files, remains, env=self.env)
