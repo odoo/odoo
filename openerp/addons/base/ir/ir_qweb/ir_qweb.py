@@ -104,26 +104,18 @@ class ir_QWeb(models.AbstractModel, QWeb):
         if len(el):
             raise "t-call-assets cannot contain children nodes"
 
-        # self._get_asset(xmlid, options).to_html(css, js, debug, async, values)
+        # self._get_asset(xmlid, options, css, js, debug, async, values)
         return [
             self._append(ast.Call(
                 func=ast.Attribute(
-                    value=ast.Call(
-                        func=ast.Attribute(
-                            value=ast.Name(id='self', ctx=ast.Load()),
-                            attr='_get_asset',
-                            ctx=ast.Load()
-                        ),
-                        args=[
-                            ast.Str(el.get('t-call-assets')),
-                            ast.Name(id='options', ctx=ast.Load()),
-                        ],
-                        keywords=[], starargs=None, kwargs=None
-                    ),
-                    attr='to_html',
+                    value=ast.Name(id='self', ctx=ast.Load()),
+                    attr='_get_asset',
                     ctx=ast.Load()
                 ),
-                args=[],
+                args=[
+                    ast.Str(el.get('t-call-assets')),
+                    ast.Name(id='options', ctx=ast.Load()),
+                ],
                 keywords=[
                     ast.keyword('css', self._get_attr_bool(el.get('t-css', True))),
                     ast.keyword('js', self._get_attr_bool(el.get('t-js', True))),
@@ -145,9 +137,10 @@ class ir_QWeb(models.AbstractModel, QWeb):
 
     # method called by computing code
 
-    def _get_asset(self, xmlid, options):
+    def _get_asset(self, xmlid, options, css=True, js=True, debug=False, async=False, values=None):
         files, remains = self._get_asset_content(xmlid, options)
-        return AssetsBundle(xmlid, files, remains, env=self.env)
+        asset = AssetsBundle(xmlid, files, remains, env=self.env)
+        return asset.to_html(css=css, js=js, debug=debug, async=async, url_for=(values or {}).get('url_for', lambda url: url))
 
     @tools.ormcache('xmlid', 'options.get("lang", "en_US")')
     def _get_asset_content(self, xmlid, options):
