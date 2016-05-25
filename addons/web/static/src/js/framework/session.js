@@ -136,7 +136,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     },
     user_has_group: function(group) {
         if (!this.uid) {
-            return $.when().resolve(false);
+            return $.when(false);
         }
         var def = this._groups_def[group];
         if (!def) {
@@ -293,11 +293,10 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * @returns {$.Deferred} deferred indicating the session is done reloading
      */
     session_reload: function () {
-        var self = this;
-        return self.rpc("/web/session/get_session_info", {}).then(function(result) {
-            delete result.session_id;
-            _.extend(self, result);
-        });
+        var result = _.extend({}, window.odoo.session_info);
+        delete result.session_id;
+        _.extend(this, result);
+        return $.when();
     },
     check_session_id: function() {
         var self = this;

@@ -350,22 +350,20 @@ odoo.define_section('eval.edc', ['web.pyeval', 'web.session'], function (test, m
         mock.add('res.lang:load_lang', function () { return true; });
 
         mock.add('res.users:write', function (args) {
-            _.extend(user, args[1]);
+            _.extend(session.user_context, args[1]);
             return true;
         });
 
-        mock.add('/web/session/get_session_info', function () {
-            return {
-                session_id: 'foobar',
-                db: '3',
-                login: user.login,
+        _.extend(session, {
+            session_id: 'foobar',
+            db: '3',
+            login: user.login,
+            uid: user.id,
+            user_context: {
                 uid: user.id,
-                user_context: {
-                    uid: user.id,
-                    lang: user.lang,
-                    tz: user.tz
-                }
-            };
+                lang: user.lang,
+                tz: user.tz
+            }
         });
         return session.session_reload();
     }

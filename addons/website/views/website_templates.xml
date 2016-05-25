@@ -123,6 +123,12 @@
                 </t>
             </t>
 
+            <script type="text/javascript">
+                var odoo = {
+                    csrf_token: "<t t-esc="request.csrf_token(None)"/>",
+                };
+            </script>
+
             <t t-call-assets="web.assets_common" t-js="false"/>
             <t t-call-assets="web.assets_frontend" t-js="false"/>
             <t t-call-assets="web_editor.summernote" t-js="false" groups="base.group_website_designer"/>
@@ -134,14 +140,6 @@
             <t t-call-assets="web_editor.summernote" t-css="false" groups="base.group_website_designer"/>
             <t t-call-assets="web_editor.assets_editor" t-css="false" groups="base.group_website_designer"/>
             <t t-call-assets="website.assets_editor" t-css="false" groups="base.group_website_publisher"/>
-
-            <script type="text/javascript">
-                odoo.define('web.csrf', function (require) {
-                    var token = "<t t-esc="request.csrf_token(None)"/>";
-                    require('web.core').csrf_token = token;
-                    require('qweb').default_dict.csrf_token = token;
-                });
-            </script>
 
             <t t-raw="head or ''" name='layout_head'/>
             <link rel="shortcut icon" type="image/x-icon" t-attf-href="/web/image/website/{{website.id}}/favicon/"/>

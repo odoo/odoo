@@ -47,7 +47,8 @@
 
     var debug = ($.deparam($.param.querystring()).debug !== undefined);
 
-    var odoo = window.odoo = {
+    var odoo = window.odoo = window.odoo || {};
+    _.extend(odoo, {
         testing: typeof QUnit === "object",
         debug: debug,
         remaining_jobs: jobs,
@@ -253,7 +254,7 @@
 
             return services;
         }
-    };
+    });
 
     // automatically log errors detected when loading modules
     var log_when_loaded = function () {

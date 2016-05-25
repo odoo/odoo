@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 import logging
 import werkzeug.utils
 
@@ -17,4 +18,7 @@ class PosController(http.Controller):
         if not pos_sessions:
             return werkzeug.utils.redirect('/web#action=point_of_sale.action_client_pos_menu')
         pos_sessions.login()
-        return request.render('point_of_sale.index')
+        context = {
+            'session_info': json.dumps(request.env['ir.http'].session_info())
+        }
+        return request.render('point_of_sale.index', qcontext=context)

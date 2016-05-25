@@ -387,18 +387,17 @@
                 <title>Odoo</title>
 
                 <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+                <script type="text/javascript">
+                    var odoo = {
+                        session_info: <t t-raw="session_info"/>,
+                        csrf_token: "<t t-esc="request.csrf_token(None)"/>",
+                        db_info: <t t-raw="db_info"/>,
+                    };
+                </script>
 
                 <t t-call-assets="web.assets_common" t-js="false"/>
                 <t t-call-assets="web.assets_backend" t-js="false"/>
                 <t t-call-assets="web.assets_common" t-css="false"/>
-                <script type="text/javascript">
-                    odoo.define('web.csrf', function (require) {
-                        var token = "<t t-esc="request.csrf_token(None)"/>";
-                        require('web.core').csrf_token = token;
-                        require('qweb').default_dict.csrf_token = token;
-                    });
-                    odoo.db_info = <t t-raw="db_info"/>;
-                </script>
                 <t t-call-assets="web.assets_backend" t-css="false"/>
 
                 <![CDATA[
