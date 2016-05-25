@@ -5,6 +5,7 @@ from openerp import api
 from openerp.tests import HttpCase
 from openerp.tests.common import TransactionCase
 from openerp.modules.module import get_resource_path
+from openerp.addons.base.ir.ir_qweb import AssetsBundle
 
 from collections import Counter
 from os import utime
@@ -18,7 +19,9 @@ class TestJavascriptAssetsBundle(TransactionCase):
         self.cssbundle_xmlid = 'test_assetsbundle.bundle2'
 
     def _get_asset(self, xmlid, env=None):
-        return (env or self.env)['ir.qweb']._get_asset(xmlid, {})
+        env = (env or self.env)
+        files, remains = env['ir.qweb']._get_asset_content(xmlid, {})
+        return AssetsBundle(xmlid, files, remains, env=env)
 
     def _any_ira_for_bundle(self, type):
         """ Returns all ir.attachments associated to a bundle, regardless of the verion.
@@ -347,7 +350,9 @@ class TestAssetsBundleWithIRAMock(TransactionCase):
 
     def _bundle(self, should_create, should_unlink):
         self.counter.clear()
-        self.env['ir.qweb']._get_asset(self.lessbundle_xmlid, {}).to_html(debug='assets')
+        files, remains = self.env['ir.qweb']._get_asset_content(self.lessbundle_xmlid, {})
+        asset = AssetsBundle(self.lessbundle_xmlid, files, remains, env=self.env)
+        asset.to_html(debug='assets')
         self.assertEquals(self.counter['create'], int(should_create))
         self.assertEquals(self.counter['unlink'], int(should_unlink))
 
