@@ -2594,7 +2594,7 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         if (this.get('value')) {
             var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
             try{
-                var domain = pyeval.eval('domain', this.get('value'));
+                var domain = instance.web.pyeval.eval('domain', this.get('value'));
             }
             catch(e){
                 this.do_warn(_t('Error: Bad domain'), _t('The domain is wrong.'));
