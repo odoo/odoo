@@ -1,46 +1,34 @@
- #-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.addons.analytic.models import analytic
-from openerp.osv import fields,osv,orm
-from openerp.tools.translate import _
+from odoo import api, fields, models
 
-class project_issue(osv.osv):
+class project_issue(models.Model):
     _inherit = 'project.issue'
     _description = 'project issue'
 
-    def _hours_get(self, cr, uid, ids, field_names, args, context=None):
-        res = {}
-        for issue in self.browse(cr, uid, ids, context=context):
-            res[issue.id] = { 'progress' : issue.task_id.progress or 0.0 }
-        return res
+    progress = fields.Float(compute='_hours_get', string='Progress (%)', group_operator="avg", store=True, help="Computed as: Time Spent / Total Time.")
+    timesheet_ids = fields.One2many('account.analytic.line', 'issue_id', string='Timesheets')
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
 
-    def _get_issue_task(self, cr, uid, task_ids, context=None):
-        return self.pool['project.issue'].search(cr, uid, [('task_id', 'in', task_ids)], context=context)
+    @api.depends('task_id')
+    def _hours_get(self):
+        for issue in self:
+            issue.progress = issue.task_id.progress
 
-    _columns = {
-        'progress': fields.function(_hours_get, string='Progress (%)', multi='line_id', group_operator="avg", help="Computed as: Time Spent / Total Time.",
-            store = {
-                'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['task_id'], 10),
-                'project.task': (_get_issue_task, ['progress'], 10),
-            }),
-        'timesheet_ids': fields.one2many('account.analytic.line', 'issue_id', 'Timesheets'),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'), 
-    }
-    
-    def on_change_project(self, cr, uid, ids, project_id, context=None):
+    @api.multi
+    def on_change_project(self, project_id):
         if not project_id:
             return {'value': {'analytic_account_id': False}}
 
-        result = super(project_issue, self).on_change_project(cr, uid, ids, project_id, context=context)
+        result = super(project_issue, self).on_change_project(project_id)
         
-        project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
+        project = self.env['project.project'].browse(project_id)
         if 'value' not in result:
             result['value'] = {}
 
         account = project.analytic_account_id
         if account:
             result['value']['analytic_account_id'] = account.id
-
         return result
 

@@ -1,11 +1,10 @@
- #-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields,osv,orm
+from odoo import api, fields, models
 
-class account_analytic_line(osv.osv):
+class account_analytic_line(models.Model):
     _inherit = 'account.analytic.line'
     _description = 'account analytic line'
-    _columns = {
-        'issue_id' : fields.many2one('project.issue', 'Issue'),
-    }
+
+    issue_id = fields.Many2one('project.issue', string='Issue')
