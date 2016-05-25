@@ -41,23 +41,23 @@ logger = logging.getLogger(__name__)
 class QWeb(orm.AbstractModel):
     """ QWeb object for rendering editor stuff
     """
-    _name = 'ir.qweb'
     _inherit = 'ir.qweb'
 
-    re_remove_spaces = re.compile('\s+')
+    # compile directives
 
-    def _compile_directive_snippet(self, el, ast_calls):
+    def _compile_directive_snippet(self, el, options):
         el.set('t-call', el.attrib.pop('t-snippet'))
-        qwebcontext = ir_qweb.QWebContext(self.env, {})
         name = self.env['ir.ui.view'].search([('key', '=', el.attrib.get('t-call'))]).display_name
         thumbnail = el.attrib.pop('t-thumbnail', "oe-thumbnail")
         div = u'<div name="%s" data-oe-type="snippet" data-oe-thumbnail="%s">' % (escape(ir_qweb.unicodifier(name)), escape(ir_qweb.unicodifier(thumbnail)))
-        return [self._append(ast.Str(div))] + self._compile_node(el, ast_calls) + [self._append(ast.Str(u'</div>'))]
+        return [self._append(ast.Str(div))] + self._compile_node(el, options) + [self._append(ast.Str(u'</div>'))]
 
-    def _compile_directive_tag(self, el, ast_calls):
+    def _compile_directive_tag(self, el, options):
         if el.get('t-placeholder'):
             el.set('t-att-placeholder', el.attrib.pop('t-placeholder'))
-        return super(QWeb, self)._compile_directive_tag(el, ast_calls)
+        return super(QWeb, self)._compile_directive_tag(el, options)
+
+    # order and ignore
 
     def _directives_eval_order(self):
         directives = super(QWeb, self)._directives_eval_order()
@@ -66,6 +66,7 @@ class QWeb(orm.AbstractModel):
 
     def _nondirectives_ignore(self):
         return {'t-thumbnail'} | super(QWeb, self)._nondirectives_ignore()
+
 
 #------------------------------------------------------
 # QWeb fields

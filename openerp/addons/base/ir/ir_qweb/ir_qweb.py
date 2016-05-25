@@ -40,25 +40,18 @@ class ir_QWeb(models.AbstractModel, QWeb):
                 _logger.warning("Unused method '%s' is found in ir.qweb." % method)
 
         body = []
-
-        import time
-        _ = []
-        ap = _.append
-        t = time.time()
-        def append(data):
-            ap([time.time()-t, data])
-            body.append(data)
-
         context = dict(self.env.context, dev_mode='qweb' in tools.config['dev_mode'])
         context.update(options)
 
-        self.compile(id_or_xml_id, context)(self, append, values or {})
-
-        # t = _[0][0]
-        # for v in _:
-        #     print round((v[0]-t)*1000000)/1000, v[1]
-
+        self.compile(id_or_xml_id, context)(self, body.append, values or {})
         return u''.join(body)
+
+    def default_values(self):
+        """ attributes add to the values for each computed template
+        """
+        default = super(ir_QWeb, self).default_values()
+        default.update(request=request)
+        return default
 
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):
@@ -155,9 +148,10 @@ class ir_QWeb(models.AbstractModel, QWeb):
         files, remains = self._get_asset_content(xmlid, options)
         return AssetsBundle(xmlid, files, remains, env=self.env)
 
-    @tools.ormcache('xmlid', 'options["lang"]')
+    @tools.ormcache('xmlid', 'options.get("lang", "en_US")')
     def _get_asset_content(self, xmlid, options):
-        options = dict(options,
+        options = dict(self.env.context)
+        options.update(options,
             inherit_branding=False, inherit_branding_auto=False,
             edit_translations=False, translatable=False,
             rendering_bundle=True)
@@ -264,3 +258,14 @@ class ir_QWeb(models.AbstractModel, QWeb):
 
         # ast.Expression().body -> expr
         return Contextifier().visit(st).body
+
+    def _get_attr_bool(self, attr, default=False):
+        if attr:
+            if attr is True:
+                return ast.Name(id='True', ctx=ast.Load())
+            attr = attr.lower()
+            if attr in ('false', '0'):
+                return ast.Name(id='False', ctx=ast.Load())
+            elif attr in ('true', '1'):
+                return ast.Name(id='True', ctx=ast.Load())
+        return ast.Name(id=str(attr if attr is False else default), ctx=ast.Load())

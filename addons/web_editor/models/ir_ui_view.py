@@ -42,7 +42,8 @@ class view(osv.osv):
         Model = self.env[el.get('data-oe-model')]
         field = el.get('data-oe-field')
 
-        converter = self.env['ir.qweb'].get_field_for(el.get('data-oe-type'))
+        model = 'ir.qweb.field.' + el.get('data-oe-type')
+        converter = self.env[model] if model in self.env else self.env['ir.qweb.field']
         value = converter.from_html(Model, Model._fields[field], el)
 
         if value is not None:

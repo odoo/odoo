@@ -303,7 +303,6 @@ actual arch.
     def _check_groups(self):
         for view in self:
             if view.type == 'qweb' and view.groups_id:
-                print view.key, view.groups_id
                 raise ValidationError(_("Qweb view can not have 'Groups' define on the record. Use 'groups' atttributes inside the view definition"))
 
     _sql_constraints = [
@@ -1026,20 +1025,11 @@ actual arch.
             time=time,
             datetime=datetime,
             relativedelta=relativedelta,
+            xmlid=self.key,
         )
         qcontext.update(values or {})
 
-        # TODO: This helper can be used by any template that wants to embedd the backend.
-        #       It is currently necessary because the ir.ui.view bundle inheritance does not
-        #       match the module dependency graph.
-        def get_modules_order():
-            if request:
-                from odoo.addons.web.controllers.main import module_boot
-                return json.dumps(module_boot())
-            return '[]'
-        qcontext['get_modules_order'] = get_modules_order
-
-        return self.env[engine].render(self.id, qcontext, loader=self.read_template)
+        return self.env[engine].render(self.id, qcontext)
 
     #------------------------------------------------------
     # Misc
