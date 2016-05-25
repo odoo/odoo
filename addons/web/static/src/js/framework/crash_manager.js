@@ -1,15 +1,9 @@
-odoo.define('web.crash_manager', function (require) {
-    var CrashManager = require('web.CrashManager');
-    return new CrashManager();
-});
-
 odoo.define('web.CrashManager', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var session = require('web.session');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -122,7 +116,7 @@ var CrashManager = core.Class.extend({
         }
         new Dialog(this, {
             title: "Odoo " + _.str.capitalize(error.type),
-            $content: QWeb.render('CrashManager.error', {session: session, error: error})
+            $content: QWeb.render('CrashManager.error', {error: error})
         }).open();
     },
     show_message: function(exception) {
@@ -176,7 +170,7 @@ var RedirectWarningHandler = Dialog.extend(ExceptionHandler, {
                 }},
                 {text: _t("Cancel"), click: function() { self.destroy(); }, close: true}
             ],
-            $content: QWeb.render('CrashManager.warning', {error: error})
+            $content: QWeb.render('CrashManager.warning', {error: error}),
         }).open();
     }
 });

@@ -55,6 +55,7 @@
 
         <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
         <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/config.js"></script>
         <script type="text/javascript" src="/web/static/src/js/framework/class.js"></script>
         <script type="text/javascript" src="/web/static/src/js/framework/translation.js"></script>
         <script type="text/javascript" src="/web/static/src/js/framework/ajax.js"></script>
@@ -138,10 +139,11 @@
         <script type="text/javascript" src="/web/static/src/js/framework/data.js"></script>
         <script type="text/javascript" src="/web/static/src/js/compatibility.js"></script>
         <script type="text/javascript" src="/web/static/src/js/framework/misc.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/session_instance.js"></script>
         <script type="text/javascript" src="/web/static/src/js/framework/crash_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/framework/data_manager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/crash_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/data_manager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/auto_complete.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/change_password.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/debug_manager.js"></script>
@@ -180,7 +182,7 @@
         <t t-call="web.less_helpers"/>
 
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/import_bootstrap.less"/>
-        <script type="text/javascript" src="/web/static/src/js/framework/session_instance.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
     </template>
 
     <template id="web.layout" name="Web layout">&lt;!DOCTYPE html&gt;
