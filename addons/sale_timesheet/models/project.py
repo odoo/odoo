@@ -1,45 +1,34 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
-from openerp.exceptions import UserError
-from openerp.tools.translate import _
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
-class project_task(osv.osv):
-    _name = "project.task"
+class ProjectTask(models.Model):
     _inherit = "project.task"
-    _columns = {
-        'procurement_id': fields.many2one('procurement.order', 'Procurement', ondelete='set null'),
-        'sale_line_id': fields.related('procurement_id', 'sale_line_id', type='many2one', relation='sale.order.line', store=True, string='Sales Order Line'),
-    }
 
-    def unlink(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        for task in self.browse(cr, uid, ids, context=context):
-            if task.sale_line_id:
-                raise UserError(_('You cannot delete a task related to a Sale Order. You can only archive this task.'))
-        res = super(project_task, self).unlink(cr, uid, ids, context)
-        return res
+    procurement_id = fields.Many2one('procurement.order', 'Procurement', ondelete='set null')
+    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Line', related='procurement_id.sale_line_id', store=True)
 
-    def action_view_so(self, cr, uid, ids, context=None):
-        task = self.browse(cr, uid, ids, context=context)[0]
+    @api.multi
+    def unlink(self):
+        if any(task.sale_line_id for task in self):
+            raise ValidationError(_('You cannot delete a task related to a Sale Order. You can only archive this task.'))
+        return super(ProjectTask, self).unlink()
+
+    @api.multi
+    def action_view_so(self):
+        self.ensure_one()
         return {
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
             "views": [[False, "form"]],
-            "res_id": task.sale_line_id.order_id.id,
+            "res_id": self.sale_line_id.order_id.id,
             "context": {"create": False, "show_sale": True},
         }
 
-    def onchange_parent_id(self, cr, uid, ids, parent_id, context=None):
-        if not parent_id:
-            return {'value' : {'procurement_id': False, 'sale_line_id': False }}
-        parent_task = self.browse(cr, uid, parent_id, context=context)
-        return {
-            'value' : {
-                'procurement_id' : parent_task.procurement_id.id,
-                'sale_line_id' : parent_task.sale_line_id.id,
-            }
-        }
+    @api.onchange('parent_id')
+    def onchange_parent_id(self):
+        self.procurement_id = self.parent_id.procurement_id.id
+        self.sale_line_id = self.parent_id.sale_line_id.id

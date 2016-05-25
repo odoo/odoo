@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, api, fields
-from openerp.tools.translate import _
+from odoo import api, fields, models, _
 
-from openerp.exceptions import ValidationError
+from odoo.exceptions import ValidationError
 
 
 class SaleOrder(models.Model):
@@ -32,6 +31,19 @@ class SaleOrder(models.Model):
             order.timesheet_count = len(order.timesheet_ids)
 
     @api.multi
+    @api.depends('order_line.product_id.project_id')
+    def _compute_tasks_ids(self):
+        for order in self:
+            order.tasks_ids = self.env['project.task'].search([('sale_line_id', 'in', order.order_line.ids)])
+            order.tasks_count = len(order.tasks_ids)
+
+    @api.multi
+    @api.depends('project_id.project_ids')
+    def _compute_project_project_id(self):
+        for order in self:
+            order.project_project_id = self.env['project.project'].search([('analytic_account_id', '=', order.project_id.id)])
+
+    @api.multi
     @api.constrains('order_line')
     def _check_multi_timesheet(self):
         for order in self:
@@ -44,19 +56,24 @@ class SaleOrder(models.Model):
         return {}
 
     @api.multi
-    @api.depends('order_line.product_id.project_id')
-    def _compute_tasks_ids(self):
+    def action_confirm(self):
+        result = super(SaleOrder, self).action_confirm()
         for order in self:
-            order.tasks_ids = self.env['project.task'].search([('sale_line_id', 'in', order.order_line.ids)])
-            order.tasks_count = len(order.tasks_ids)
+            if not order.project_project_id:
+                for line in order.order_line:
+                    if line.product_id.track_service == 'timesheet':
+                        if not order.project_id:
+                            order._create_analytic_account(prefix=line.product_id.default_code or None)
+                        order.project_id.project_create({'name': order.project_id.name, 'use_tasks': True})
+                        break
+        return result
 
     @api.multi
     def action_view_task(self):
         self.ensure_one()
-        imd = self.env['ir.model.data']
-        action = imd.xmlid_to_object('project.action_view_task')
-        list_view_id = imd.xmlid_to_res_id('project.view_task_tree2')
-        form_view_id = imd.xmlid_to_res_id('project.view_task_form2')
+        action = self.env.ref('project.action_view_task')
+        list_view_id = self.env.ref('project.view_task_tree2').id
+        form_view_id = self.env.ref('project.view_task_form2').id
 
         result = {
             'name': action.name,
@@ -77,17 +94,10 @@ class SaleOrder(models.Model):
         return result
 
     @api.multi
-    @api.depends('project_id.project_ids')
-    def _compute_project_project_id(self):
-        for order in self:
-            order.project_project_id = self.env['project.project'].search([('analytic_account_id', '=', order.project_id.id)])
-
-    @api.multi
     def action_view_project_project(self):
         self.ensure_one()
-        imd = self.env['ir.model.data']
-        action = imd.xmlid_to_object('project.open_view_project_all')
-        form_view_id = imd.xmlid_to_res_id('project.edit_project')
+        action = self.env.ref('project.open_view_project_all')
+        form_view_id = self.env.ref('project.edit_project').id
 
         result = {
             'name': action.name,
@@ -102,25 +112,11 @@ class SaleOrder(models.Model):
         return result
 
     @api.multi
-    def action_confirm(self):
-        result = super(SaleOrder, self).action_confirm()
-        for order in self:
-            if not order.project_project_id:
-                for line in order.order_line:
-                    if line.product_id.track_service == 'timesheet':
-                        if not order.project_id:
-                            order._create_analytic_account(prefix=line.product_id.default_code or None)
-                        order.project_id.project_create({'name': order.project_id.name, 'use_tasks': True})
-                        break
-        return result
-
-    @api.multi
     def action_view_timesheet(self):
         self.ensure_one()
-        imd = self.env['ir.model.data']
-        action = imd.xmlid_to_object('hr_timesheet.act_hr_timesheet_line')
-        list_view_id = imd.xmlid_to_res_id('hr_timesheet.hr_timesheet_line_tree')
-        form_view_id = imd.xmlid_to_res_id('hr_timesheet.hr_timesheet_line_form')
+        action = self.env.ref('hr_timesheet.act_hr_timesheet_line')
+        list_view_id = self.env.ref('hr_timesheet.hr_timesheet_line_tree').id
+        form_view_id = self.env.ref('hr_timesheet.hr_timesheet_line_form').id
 
         result = {
             'name': action.name,
@@ -141,16 +137,16 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-    @api.multi
-    def _compute_analytic(self, domain=None):
-        if not domain:
-            # To filter on analyic lines linked to an expense
-            domain = [('so_line', 'in', self.ids), '|', ('amount', '<=', 0.0), ('project_id', '!=', False)]
-        return super(SaleOrderLine, self)._compute_analytic(domain=domain)
-
     @api.model
     def create(self, values):
         line = super(SaleOrderLine, self).create(values)
         if line.state == 'sale' and not line.order_id.project_id and line.product_id.track_service in ['timesheet', 'task']:
             line.order_id._create_analytic_account()
         return line
+
+    @api.multi
+    def _compute_analytic(self, domain=None):
+        if not domain:
+            # To filter on analyic lines linked to an expense
+            domain = [('so_line', 'in', self.ids), '|', ('amount', '<=', 0.0), ('project_id', '!=', False)]
+        return super(SaleOrderLine, self)._compute_analytic(domain=domain)

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <record id="view_sale_service_inherit_form2" model="ir.ui.view">
             <field name="name">sale.service.form.view.inherit</field>
             <field name="model">project.task</field>
@@ -17,10 +16,6 @@
                     <field name="procurement_id" groups="base.group_no_one"/>
                     <field name="sale_line_id" string="Order Line" groups="base.group_no_one"/>
                 </field>
-                <field name="parent_id" position="attributes">
-                    <attribute name="on_change">onchange_parent_id(parent_id)</attribute>
-                </field>
             </field>
         </record>
-    </data>
-</openerp>
+</odoo>
