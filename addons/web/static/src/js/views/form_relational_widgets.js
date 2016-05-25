@@ -1022,7 +1022,7 @@ var X2ManyList = ListView.List.extend({
                         }
                         def = self.view.save_edition();
                     }
-                    $.when(def).done(self.view.do_add_record.bind(self));
+                    $.when(def).done(setTimeout(self.view.do_add_record.bind(self), 100));
                 }));
 
         var $padding = this.$current.find('tr:not([data-id]):first');
