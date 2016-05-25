@@ -1,30 +1,28 @@
-<?xml version="1.0" ?>
-<openerp>
-<data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
 
-    <!-- FIELD LIST -->
+    <!-- FIELDS -->
 
-    <record model="ir.ui.view" id="view_ir_model_fields_anonymization_form">
+    <record id="ir_model_fields_anonymization_view_form" model="ir.ui.view">
         <field name="name">ir.model.fields.anonymization.form</field>
         <field name="model">ir.model.fields.anonymization</field>
         <field name="arch" type="xml">
             <form string="Anonymized Field">
                 <sheet>
-                <group col="4">
-                    <field name="model_id" on_change="onchange_model_id(model_id)" />
-                    <field name="model_name" on_change="onchange_model_name(model_name)" />
-                    <field name="field_id"
-                           on_change="onchange_field_id(field_id, model_name)"
-                           domain="[('model_id','=',model_id), ('ttype', 'not in', ['function', 'binary', 'many2many', 'many2one', 'one2many', 'reference'])]" />
-                    <field name="field_name" on_change="onchange_field_name(field_name, model_name)" />
-                    <field name="state" />
-                </group>
+                    <group col="4">
+                        <field name="model_id" />
+                        <field name="model_name" />
+                        <field name="field_id"
+                               domain="[('model_id','=',model_id), ('ttype', 'not in', ['function', 'binary', 'many2many', 'many2one', 'one2many', 'reference'])]" />
+                        <field name="field_name" />
+                        <field name="state" />
+                    </group>
                 </sheet>
             </form>
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_ir_model_fields_anonymization_tree">
+    <record id="ir_model_fields_anonymization_view_tree" model="ir.ui.view">
         <field name="name">ir.model.fields.anonymization.tree</field>
         <field name="model">ir.model.fields.anonymization</field>
         <field name="arch" type="xml">
@@ -38,7 +36,7 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="action_ir_model_fields_anonymization_tree">
+    <record id="ir_model_fields_anonymization_action" model="ir.actions.act_window">
         <field name="name">Anonymized Fields</field>
         <field name="res_model">ir.model.fields.anonymization</field>
         <field name="view_type">form</field>
@@ -48,14 +46,14 @@
 
     <!-- HISTORY -->
 
-    <record model="ir.actions.act_window" id="action_ir_model_fields_anonymization_history_tree">
+    <record id="ir_model_fields_anonymization_history_action" model="ir.actions.act_window">
         <field name="name">Anonymization History</field>
         <field name="res_model">ir.model.fields.anonymization.history</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
 
-    <record model="ir.ui.view" id="view_ir_model_fields_anonymization_history_form">
+    <record id="ir_model_fields_anonymization_history_view_form" model="ir.ui.view">
         <field name="name">ir.model.fields.anonymization.history.form</field>
         <field name="model">ir.model.fields.anonymization.history</field>
         <field name="arch" type="xml">
@@ -83,7 +81,7 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_ir_model_fields_anonymization_history_tree">
+    <record id="ir_model_fields_anonymization_history_view_tree" model="ir.ui.view">
         <field name="name">ir.model.fields.anonymization.history.tree</field>
         <field name="model">ir.model.fields.anonymization.history</field>
         <field name="arch" type="xml">
@@ -98,22 +96,21 @@
 
     <!-- MENUS -->
 
-    <menuitem id="menu_administration_anonymization"
+    <menuitem id="administration_anonymization_menu"
               name="Database anonymization"
               parent="base.menu_administration"
               sequence="30" />
 
     <menuitem id="menu_administration_anonymization_history"
               name="Anonymization History"
-              action="action_ir_model_fields_anonymization_history_tree"
-              parent="menu_administration_anonymization"
+              action="ir_model_fields_anonymization_history_action"
+              parent="administration_anonymization_menu"
               sequence="10" />
 
     <menuitem id="menu_administration_anonymization_fields"
               name="Anonymized Fields"
-              action="action_ir_model_fields_anonymization_tree"
-              parent="menu_administration_anonymization"
+              action="ir_model_fields_anonymization_action"
+              parent="administration_anonymization_menu"
               sequence="20" />
 
-</data>
-</openerp>
+</odoo>

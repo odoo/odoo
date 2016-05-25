@@ -1,10 +1,8 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 
 {
     'name': 'Database Anonymization',
-    'version': '1.0',
     'category': 'Extra Tools',
     'description': """
 This module allows you to anonymize a database.
@@ -26,6 +24,4 @@ anonymization process to recover your previous data.
         'views/anonymization_views.xml',
         'wizard/fields_anonymize_views.xml'
     ],
-    'installable': True,
-    'auto_install': False,
 }
