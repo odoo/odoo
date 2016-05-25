@@ -3,7 +3,7 @@
 
 from xml.etree import ElementTree
 
-from openerp.http import Controller, route, request
+from odoo.http import Controller, route, request
 
 
 class Board(Controller):
@@ -11,12 +11,12 @@ class Board(Controller):
     @route('/board/add_to_dashboard', type='json', auth='user')
     def add_to_dashboard(self, action_id, context_to_save, domain, view_mode, name=''):
         # Retrieve the 'My Dashboard' action from its xmlid
-        action = request.env['ir.model.data'].get_object('board', 'open_board_my_dash_action')
+        action = request.env.ref('board.open_board_my_dash_action')
 
         if action and action['res_model'] == 'board.board' and action['views'][0][1] == 'form':
             # Maybe should check the content instead of model board.board ?
             view_id = action['views'][0][0]
-            board = request.env[action['res_model']].fields_view_get(view_id, 'form')
+            board = request.env['board.board'].fields_view_get(view_id, 'form')
             if board and 'arch' in board:
                 xml = ElementTree.fromstring(board['arch'])
                 column = xml.find('./board/column')
