@@ -32,7 +32,7 @@ _logger = logging.getLogger(__name__)
 # used to notify web client that these translations should be loaded in the UI
 WEB_TRANSLATION_COMMENT = "openerp-web"
 
-SKIPPED_ELEMENTS = ('script', 'style')
+SKIPPED_ELEMENTS = ('script', 'style', 'title')
 
 _LOCALE2WIN32 = {
     'af_ZA': 'Afrikaans_South Africa',
@@ -231,7 +231,8 @@ class XMLTranslator(object):
             isinstance(node, SKIPPED_ELEMENT_TYPES) or
             node.tag in SKIPPED_ELEMENTS or
             node.get("t-translation", "").strip() == "off" or
-            node.tag == "attribute" and node.get("name") not in TRANSLATED_ATTRS
+            node.tag == "attribute" and node.get("name") not in TRANSLATED_ATTRS or
+            not node.getparent() and node.text and '<!DOCTYPE' in node.text
         ):
             # do not translate the contents of the node
             tail, node.tail = node.tail, None
