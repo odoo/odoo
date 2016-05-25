@@ -148,7 +148,8 @@ class gamification_goal_definition(osv.Model):
         if not model_id:
             return {'domain': {'field_id': expression.FALSE_DOMAIN, 'field_date_id': expression.FALSE_DOMAIN}}
         model = self.pool['ir.model'].browse(cr, uid, model_id, context=context)
-        model_fields_domain = ['|', ('model_id', '=', model_id), ('model_id', 'in', model.inherited_model_ids.ids)]
+        model_fields_domain = [('store', '=', True),
+                                '|', ('model_id', '=', model_id), ('model_id', 'in', model.inherited_model_ids.ids)]
         model_date_fields_domain = expression.AND([[('ttype', 'in', ('date', 'datetime'))], model_fields_domain])
         return {'domain': {'field_id': model_fields_domain, 'field_date_id': model_date_fields_domain}}
 
