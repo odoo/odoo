@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from openerp.tools import float_is_zero
+from odoo.tools import float_is_zero
 
-from openerp.addons.sale.tests.test_sale_common import TestSale
+from odoo.addons.sale.tests.test_sale_common import TestSale
 
 
 class TestSaleTimesheet(TestSale):
