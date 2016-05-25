@@ -20,13 +20,6 @@ class QWeb(orm.AbstractModel):
         'img':     'src',
     }
 
-    PRESERVE_WHITESPACE = [
-        'pre',
-        'textarea',
-        'script',
-        'style',
-    ]
-
     def _website_build_attribute(self, tagName, name, value, qwebcontext):
         context = qwebcontext.env.context or {}
         if not context.get('rendering_bundle'):
@@ -36,7 +29,10 @@ class QWeb(orm.AbstractModel):
                 return request.website.get_cdn_url(value or '')
         return value
 
-    def _wrap_build_attributes(self, el, items):
+    def _wrap_build_attributes(self, el, items, options):
+        if options.get('rendering_bundle'):
+            return items
+
         url_att = self.URL_ATTRS.get(el.tag)
         cdn_att = self.CDN_TRIGGERS.get(el.tag)
         for item in items:
@@ -52,21 +48,26 @@ class QWeb(orm.AbstractModel):
                         ast.Str(item[0]),
                         item[1],
                         ast.Name(id='qwebcontext', ctx=ast.Load()),
+                        ast.Name(id='options', ctx=ast.Load()),
                     ], keywords=[],
                     starargs=None, kwargs=None
                 ))
         return items
 
-    def _serialize_static_attributes(self, el):
-        items = super(QWeb, self)._serialize_static_attributes(el)
-        return self._wrap_build_attributes(el, items)
+    def _serialize_static_attributes(self, el, options):
+        items = super(QWeb, self)._serialize_static_attributes(el, options)
+        return self._wrap_build_attributes(el, items, options)
 
-    def _compile_dynamic_attributes(self, el):
-        items = super(QWeb, self)._compile_dynamic_attributes(el)
-        return self._wrap_build_attributes(el, items)
+    def _compile_dynamic_attributes(self, el, options):
+        items = super(QWeb, self)._compile_dynamic_attributes(el, options)
+        return self._wrap_build_attributes(el, items, options)
+
+    # method called by computing code
 
     def _compile_dynamic_att(self, tagName, atts, qwebcontext):
         atts = super(QWeb, self)._compile_dynamic_att(tagName, atts, qwebcontext)
+        if options.get('rendering_bundle'):
+            return atts
         for name, value in atts.iteritems():
             atts[name] = self.build_attribute(tagName, name, value, qwebcontext)
         return atts
