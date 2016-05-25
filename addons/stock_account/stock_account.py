@@ -420,12 +420,14 @@ class stock_move(osv.osv):
                 else:
                     tmpl_dict[product_id] = 0
                     product_avail = qty_available
+                # if the incoming move is for a purchase order with foreign currency, need to call this to get the same value that the quant will use.
+                price_unit = self.pool.get('stock.move').get_price_unit(cr, uid, move, context=context)
                 if product_avail <= 0:
-                    new_std_price = move.price_unit
+                    new_std_price = price_unit
                 else:
                     # Get the standard price
                     amount_unit = product.standard_price
-                    new_std_price = ((amount_unit * product_avail) + (move.price_unit * move.product_qty)) / (product_avail + move.product_qty)
+                    new_std_price = ((amount_unit * product_avail) + (price_unit * move.product_qty)) / (product_avail + move.product_qty)
                 tmpl_dict[product_id] += move.product_qty
                 # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
                 ctx = dict(context or {}, force_company=move.company_id.id)
