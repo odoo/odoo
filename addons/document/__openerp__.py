@@ -15,5 +15,4 @@ Attachments list and document indexation
         'views/document_templates.xml',
     ],
     'installable': True,
-    'auto_install': False,
 }
