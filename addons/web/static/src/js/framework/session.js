@@ -182,31 +182,30 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      */
     load_modules: function() {
         var self = this;
-        return this.rpc('/web/session/modules', {}).then(function(result) {
-            var all_modules = _.uniq(self.module_list.concat(result));
-            var to_load = _.difference(result, self.module_list).join(',');
-            self.module_list = all_modules;
+        var modules = odoo._modules;
+        var all_modules = _.uniq(self.module_list.concat(modules));
+        var to_load = _.difference(modules, self.module_list).join(',');
+        this.module_list = all_modules;
 
-            var loaded = $.when(self.load_translations());
-            var locale = "/web/webclient/locale/" + self.user_context.lang || 'en_US';
-            var file_list = [ locale ];
-            if(to_load.length) {
-                loaded = $.when(
-                    loaded,
-                    self.rpc('/web/webclient/csslist', {mods: to_load}).done(self.load_css.bind(self)),
-                    self.load_qweb(to_load),
-                    self.rpc('/web/webclient/jslist', {mods: to_load}).done(function(files) {
-                        file_list = file_list.concat(files);
-                    })
-                );
-            }
-            return loaded.then(function () {
-                return self.load_js(file_list);
-            }).done(function() {
-                self.on_modules_loaded();
-                self.trigger('module_loaded');
-            });
-        });
+        var loaded = $.when(self.load_translations());
+        var locale = "/web/webclient/locale/" + self.user_context.lang || 'en_US';
+        var file_list = [ locale ];
+        if(to_load.length) {
+            loaded = $.when(
+                loaded,
+                self.rpc('/web/webclient/csslist', {mods: to_load}).done(self.load_css.bind(self)),
+                self.load_qweb(to_load),
+                self.rpc('/web/webclient/jslist', {mods: to_load}).done(function(files) {
+                    file_list = file_list.concat(files);
+                })
+            );
+        }
+        return loaded.then(function () {
+            return self.load_js(file_list);
+        }).done(function() {
+            self.on_modules_loaded();
+            self.trigger('module_loaded');
+       });
     },
     load_translations: function() {
         return _t.database.load_translations(this, this.module_list, this.user_context.lang);
