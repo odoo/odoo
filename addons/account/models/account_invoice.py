@@ -508,7 +508,7 @@ class AccountInvoice(models.Model):
     @api.multi
     def get_formview_id(self):
         """ Update form view id of action to open the invoice """
-        if self.type == 'in_invoice':
+        if self.type in ('in_invoice', 'in_refund'):
             return self.env.ref('account.invoice_supplier_form').id
         else:
             return self.env.ref('account.invoice_form').id
