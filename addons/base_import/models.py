@@ -558,7 +558,7 @@ class ir_import(orm.TransientModel):
             # Check that currency exists
             currency = self.pool.get('res.currency').search(cr, uid, [('symbol', '=', split_value[currency_index].strip())])
             if len(currency):
-                return split_value[currency_index+1%2] if not negative else '-'+split_value[currency_index+1%2]
+                return split_value[(currency_index+1)%2] if not negative else '-'+split_value[(currency_index+1)%2]
             # Otherwise it is not a float with a currency symbol
             return False
 

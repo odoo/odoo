@@ -128,7 +128,7 @@ class StockSettings(models.TransientModel):
 
     @api.onchange('group_stock_adv_location')
     def onchange_adv_location(self):
-        if self.group_stock_adv_location:
+        if self.group_stock_adv_location and self.warehouse_and_location_usage_level == 0:
             self.warehouse_and_location_usage_level = 1
 
     @api.multi

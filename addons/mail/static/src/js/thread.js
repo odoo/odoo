@@ -110,22 +110,12 @@ var Thread = Widget.extend({
         }));
 
         _.each(msgs, function(msg) {
-            self.$('[data-message-id="' + msg.id + '"] .o_mail_timestamp')
-                .data('date', msg.date);
+            var $msg = self.$('.o_thread_message[data-message-id="'+ msg.id +'"]');
+            $msg.find('.o_mail_timestamp').data('date', msg.date);
+
+            self.insert_read_more($msg);
         });
 
-        this.$('[data-o-mail-quote="1"]').each(function () {
-            var $content = $(this);
-            var $read_more = $('<a class="o_mail_read_more" href="#"></a>').text(read_more);
-            var is_read_more = true;
-            $read_more.click(function(e) {
-                e.preventDefault();
-                is_read_more = !is_read_more;
-                $content.toggle(!is_read_more);
-                $read_more.text(is_read_more ? read_more : read_less);
-            });
-            $read_more.insertBefore($content);
-        });
         if (!this.update_timestamps_interval) {
             this.update_timestamps_interval = setInterval(function() {
                 self.update_timestamps();
@@ -133,6 +123,74 @@ var Thread = Widget.extend({
         }
     },
 
+    /**
+     *  Modifies $element to add the 'read more/read less' functionality
+     *  All element nodes with "data-o-mail-quote" attribute are concerned.
+     *  All text nodes after a ""#stopSpelling" element are concerned.
+     *  Those text nodes need to be wrapped in a span (toggle functionality).
+     *  All consecutive elements are joined in one 'read more/read less'.
+     */
+    insert_read_more: function ($element) {
+        var self = this;
+
+        var groups = [];
+        var read_more_nodes;
+
+        // nodeType 1: element_node
+        // nodeType 3: text_node
+        var $children = $element.contents()
+            .filter(function() {
+                return this.nodeType === 1 || this.nodeType === 3 && this.nodeValue.trim();
+            });
+
+        _.each($children, function(child) {
+            var $child = $(child);
+
+            // Hide Text nodes if "stopSpelling"
+            if (child.nodeType === 3 && $child.prevAll("[id*='stopSpelling']").length > 0) {
+                // Convert Text nodes to Element nodes
+                var $child = $('<span>', {
+                    text: child.textContent,
+                    "data-o-mail-quote": "1",
+                });
+                child.parentNode.replaceChild($child[0], child);
+            }
+
+            // Create array for each "read more" with nodes to toggle
+            if ($child.attr('data-o-mail-quote') || ($child.get(0).nodeName === 'BR' && $child.prev("[data-o-mail-quote='1']").length > 0)) {
+                if (!read_more_nodes) {
+                    read_more_nodes = [];
+                    groups.push(read_more_nodes);
+                }
+                $child.hide();
+                read_more_nodes.push($child);
+            } else {
+                read_more_nodes = undefined;
+                self.insert_read_more($child);
+            }
+        });
+
+        _.each(groups, function(group) {
+            // Insert link just before the first node
+            var $read_more = $('<a>', {
+                class: "o_mail_read_more",
+                href: "#",
+                text: read_more,
+            }).insertBefore(group[0]);
+
+            // Toggle All next nodes
+            var is_read_more = true;
+            $read_more.click(function(e) {
+                e.preventDefault();
+                is_read_more = !is_read_more;
+                _.each(group, function ($child) {
+                    $child.hide();
+                    $child.toggle(!is_read_more);
+                });
+                $read_more.text(is_read_more ? read_more : read_less);
+            });
+        });
+    },
     update_timestamps: function () {
         this.$('.o_mail_timestamp').each(function() {
             var date = $(this).data('date');

@@ -16,21 +16,13 @@ class ProcurementOrderpointConfirm(models.TransientModel):
     _description = 'Compute Minimum Stock Rules'
 
     def _procure_calculation_orderpoint(self):
-        """
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param ids: List of IDs selected
-        @param context: A standard dictionary
-        """
-        # TDE FIXME: seems to have an error here: AttributeError: environments
-        company_id = self.env.user.company_id.id
         with api.Environment.manage():
             # As this function is in a new thread, I need to open a new cursor, because the old one may be closed
             new_cr = self.pool.cursor()
-            self = self.with_env(self.env(cr=new_cr))  # TDE FIXME
-            self.env['procurement.order']._procure_orderpoint_confirm(use_new_cursor=new_cr.dbname, company_id=company_id)
-            # close the new cursor
+            self = self.with_env(self.env(cr=new_cr))
+            self.env['procurement.order']._procure_orderpoint_confirm(
+                use_new_cursor=new_cr.dbname,
+                company_id=self.env.user.company_id.id)
             new_cr.close()
             return {}
 
