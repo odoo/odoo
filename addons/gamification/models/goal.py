@@ -129,18 +129,36 @@ class gamification_goal_definition(osv.Model):
                 raise UserError(_("The domain for the definition %s seems incorrect, please check it.\n\n%s") % (definition.name, msg))
         return True
 
+    def _check_model_validity(self, cr, uid, ids, context=None):
+        """ make sure the selected field and model are usable"""
+        for definition in self.browse(cr, uid, ids, context=context):
+            try:
+                if not definition.model_id or not definition.field_id:
+                    continue
+
+                model = self.pool[definition.model_id.model]
+                field = model._fields[definition.field_id.name]
+                if not field.store:
+                    raise UserError(
+                        _("The model configuration for the definition %s seems incorrect, please check it.\n\n%s not stored") % (definition.name, definition.field_id.name))
+            except KeyError, e:
+                raise UserError(
+                    _("The model configuration for the definition %s seems incorrect, please check it.\n\n%s not found") % (definition.name, e.message))
+
     def create(self, cr, uid, vals, context=None):
         res_id = super(gamification_goal_definition, self).create(cr, uid, vals, context=context)
         if vals.get('computation_mode') in ('count', 'sum'):
             self._check_domain_validity(cr, uid, [res_id], context=context)
-
+        if vals.get('field_id'):
+            self._check_model_validity(cr, uid, [res_id], context=context)
         return res_id
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(gamification_goal_definition, self).write(cr, uid, ids, vals, context=context)
         if vals.get('computation_mode', 'count') in ('count', 'sum') and (vals.get('domain') or vals.get('model_id')):
             self._check_domain_validity(cr, uid, ids, context=context)
-
+        if vals.get('field_id') or vals.get('model_id') or vals.get('batch_mode'):
+            self._check_model_validity(cr, uid, ids, context=context)
         return res
 
     def on_change_model_id(self, cr, uid, ids, model_id, context=None):
@@ -148,7 +166,8 @@ class gamification_goal_definition(osv.Model):
         if not model_id:
             return {'domain': {'field_id': expression.FALSE_DOMAIN, 'field_date_id': expression.FALSE_DOMAIN}}
         model = self.pool['ir.model'].browse(cr, uid, model_id, context=context)
-        model_fields_domain = ['|', ('model_id', '=', model_id), ('model_id', 'in', model.inherited_model_ids.ids)]
+        model_fields_domain = [('store', '=', True),
+                                '|', ('model_id', '=', model_id), ('model_id', 'in', model.inherited_model_ids.ids)]
         model_date_fields_domain = expression.AND([[('ttype', 'in', ('date', 'datetime'))], model_fields_domain])
         return {'domain': {'field_id': model_fields_domain, 'field_date_id': model_date_fields_domain}}
 
