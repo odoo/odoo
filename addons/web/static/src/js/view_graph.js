@@ -273,7 +273,7 @@ instance.web.GraphWidget = instance.web.Widget.extend({
         var chart = nv.models.multiBarChart();
         var maxVal = _.max(values, function(v) {return v.y})
         chart.options({
-          margin: {left: 12 * String(maxVal && maxVal.y || 0).length},
+          margin: {left: 12 * String(maxVal && maxVal.y || 10000000).length},
           delay: 250,
           transitionDuration: 10,
           showLegend: true,
@@ -404,7 +404,7 @@ instance.web.GraphWidget = instance.web.Widget.extend({
         var chart = nv.models.lineChart();
         var maxVal = _.max(values, function(v) {return v.y})
         chart.options({
-          margin: {left: 12 * String(maxVal && maxVal.y || 0).length, right: 50},
+          margin: {left: 12 * String(maxVal && maxVal.y || 10000000).length, right: 50},
           useInteractiveGuideline: true,
           showLegend: true,
           showXAxis: true,
