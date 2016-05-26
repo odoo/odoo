@@ -147,7 +147,7 @@ var Thread = Widget.extend({
             var $child = $(child);
 
             // Hide Text nodes if "stopSpelling"
-            if (child.nodeType === 3 && $child.prevAll("#stopSpelling").length > 0) {
+            if (child.nodeType === 3 && $child.prevAll("[id*='stopSpelling']").length > 0) {
                 // Convert Text nodes to Element nodes
                 var $child = $('<span>', {
                     text: child.textContent,
@@ -157,7 +157,7 @@ var Thread = Widget.extend({
             }
 
             // Create array for each "read more" with nodes to toggle
-            if ($child.attr('data-o-mail-quote')) {
+            if ($child.attr('data-o-mail-quote') || ($child.get(0).nodeName === 'BR' && $child.prev("[data-o-mail-quote='1']").length > 0)) {
                 if (!read_more_nodes) {
                     read_more_nodes = [];
                     groups.push(read_more_nodes);
