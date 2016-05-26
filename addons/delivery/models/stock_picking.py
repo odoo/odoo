@@ -90,6 +90,8 @@ class StockPicking(models.Model):
     package_ids = fields.Many2many('stock.quant.package', compute='_compute_packages', string='Packages')
     weight_bulk = fields.Float('Bulk Weight', compute='_compute_bulk_weight')
     shipping_weight = fields.Float("Weight for Shipping", compute='_compute_shipping_weight')
+    service_charges = fields.Float("Value Added Service Charges")
+    shipping_charges = fields.Float("Actual Shipping Charges")
 
     @api.depends('product_id', 'move_lines')
     def _cal_weight(self):
@@ -144,6 +146,9 @@ class StockPicking(models.Model):
         res = self.carrier_id.send_shipping(self)[0]
         self.carrier_price = res['exact_price']
         self.carrier_tracking_ref = res['tracking_number']
+        if res.get('service_charges'):
+            self.shipping_charges = res['shipping_charges']
+            self.service_charges = res['service_charges']
         order_currency = self.sale_id.currency_id or self.company_id.currency_id
         msg = _("Shipment sent to carrier %s for expedition with tracking number %s<br/>Cost: %.2f %s") % (self.carrier_id.name, self.carrier_tracking_ref, self.carrier_price, order_currency.name)
         self.message_post(body=msg)
@@ -153,7 +158,10 @@ class StockPicking(models.Model):
         self.ensure_one()
         sale_order = self.sale_id
         if sale_order.invoice_shipping_on_delivery:
-            sale_order._create_delivery_line(self.carrier_id, self.carrier_price)
+            shipping_price = self.carrier_price if not self.service_charges else self.carrier_price - self.service_charges
+            sale_order._create_delivery_line(self.carrier_id, shipping_price)
+            if self.service_charges:
+                sale_order._create_service_charge_line(self.carrier_id, self.service_charges)
 
     @api.multi
     def open_website_url(self):

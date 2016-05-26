@@ -50,12 +50,17 @@ class SaleOrder(models.Model):
         for order in self:
             carrier = order.carrier_id
             if carrier:
+                service_charges = None
                 if order.state not in ('draft', 'sent'):
                     raise UserError(_('The order state have to be draft to add delivery lines.'))
 
                 if carrier.delivery_type not in ['fixed', 'base_on_rule']:
                     # Shipping providers are used when delivery_type is other than 'fixed' or 'base_on_rule'
-                    price_unit = order.carrier_id.get_shipping_price_from_so(order)[0]
+                    result = order.carrier_id.get_shipping_price_from_so(order)
+                    price_unit = result[0]
+                    if len(result) > 1:
+                        price_unit = result[1]
+                        service_charges = result[2]
                 else:
                     # Classic grid-based carriers
                     carrier = order.carrier_id.verify_carrier(order.partner_shipping_id)
@@ -68,12 +73,14 @@ class SaleOrder(models.Model):
                 final_price = price_unit * (1.0 + (float(self.carrier_id.margin) / 100.0))
                 order._create_delivery_line(carrier, final_price)
 
+                if service_charges:
+                    order._create_service_charge_line(carrier, service_charges)
             else:
                 raise UserError(_('No carrier set for this order.'))
 
         return True
 
-    def _create_delivery_line(self, carrier, price_unit):
+    def _create_delivery_line(self, carrier, price_unit, name=None):
         SaleOrderLine = self.env['sale.order.line']
 
         # Apply fiscal position
@@ -85,7 +92,7 @@ class SaleOrder(models.Model):
         # Create the sale order line
         values = {
             'order_id': self.id,
-            'name': carrier.name,
+            'name': carrier.name if not name else name,
             'product_uom_qty': 1,
             'product_uom': carrier.product_id.uom_id.id,
             'product_id': carrier.product_id.id,
@@ -98,6 +105,9 @@ class SaleOrder(models.Model):
         sol = SaleOrderLine.sudo().create(values)
         return sol
 
+    def _create_service_charge_line(self, carrier, service_charge):
+        charges_desc = getattr(carrier, '%s_get_service_charge_description' % carrier.delivery_type)()
+        return self._create_delivery_line(carrier, service_charge, name=charges_desc)
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
