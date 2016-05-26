@@ -792,7 +792,7 @@
         <span class="o_count"/>
         <button class="btn btn-link" type="button"
             t-att-accesskey="widget.node.attrs.accesskey"/>
-        <input t-if="widget.debug" type="text" class="o_form_input o_debug_input"/>
+        <input t-if="widget.debug" t-att-readonly="widget.get('effective_readonly')" type="text" class="o_form_input o_debug_input"/>
     </div>
 </t>
 <t t-name="web.datepicker">

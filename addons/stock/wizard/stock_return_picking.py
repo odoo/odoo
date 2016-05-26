@@ -45,7 +45,7 @@ class stock_return_picking(osv.osv_memory):
             context = {}
         if context and context.get('active_ids', False):
             if len(context.get('active_ids')) > 1:
-                raise osv.except_osv(_('Warning!'), _("You may only return one picking at a time!"))
+                raise UserError(_("You may only return one picking at a time!"))
         res = super(stock_return_picking, self).default_get(cr, uid, fields, context=context)
         record_id = context and context.get('active_id', False) or False
         uom_obj = self.pool.get('product.uom')
