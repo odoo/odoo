@@ -439,7 +439,7 @@ class stock_move(osv.osv):
                     tmpl_dict[product_id] = 0
                     product_avail = qty_available
                 # if the incoming move is for a purchase order with foreign currency, need to call this to get the same value that the quant will use.
-                price_unit = self.pool.get('stock.move').get_price_unit(cr, uid, move, context=context)
+                price_unit = move.get_price_unit()
                 if product_avail <= 0:
                     new_std_price = price_unit
                 else:
