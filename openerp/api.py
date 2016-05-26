@@ -293,10 +293,10 @@ def get_upgrade(method):
             return upgrade
         elif model == 'self':
             return lambda self, *args, **kwargs: self.browse(args[0])
-        else:
+        elif model:
             return lambda self, *args, **kwargs: self.env[model].browse(args[0])
-    else:
-        return lambda self, *args, **kwargs: args[0]
+
+    return lambda self, *args, **kwargs: args[0]
 
 
 def get_aggregate(method):
@@ -309,10 +309,10 @@ def get_aggregate(method):
         model, _, _ = spec
         if model == 'self':
             return lambda self, value: sum(value, self.browse())
-        else:
+        elif model:
             return lambda self, value: sum(value, self.env[model].browse())
-    else:
-        return lambda self, value: value
+
+    return lambda self, value: value
 
 
 def get_context_split(method):
