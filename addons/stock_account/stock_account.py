@@ -196,7 +196,7 @@ class stock_quant(osv.osv):
 
         :param context: context dictionary that can explicitly mention the company to consider via the 'force_company' key
         :returns: journal_id, source account, destination account, valuation account
-        :raise: osv.except_osv() is any mandatory account or journal is not defined.
+        :raise: openerp.exceptions.UserError if any mandatory account or journal is not defined.
         """
         product_obj = self.pool.get('product.template')
         accounts = product_obj.get_product_accounts(cr, uid, move.product_id.product_tmpl_id.id, context)
