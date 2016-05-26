@@ -24,14 +24,15 @@ class SaleOrderLine(models.Model):
                 field_name = 'standard_price'
             currency_id = pricelist_item.pricelist_id.currency_id
 
+        product_currency = (product.company_id and product.company_id.currency_id) or self.env.user.company_id.currency_id
         if not currency_id:
-            currency_id = product.company_id.currency_id
+            currency_id = product_currency
             cur_factor = 1.0
         else:
-            if currency_id.id == product.company_id.currency_id.id:
+            if currency_id.id == product_currency.id:
                 cur_factor = 1.0
             else:
-                cur_factor = currency_id._get_conversion_rate(product.company_id.currency_id, currency_id)
+                cur_factor = currency_id._get_conversion_rate(product_currency, currency_id)
 
         product_uom = self.env.context.get('uom') or product.uom_id.id
         if uom and uom.id != product_uom:
