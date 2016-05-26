@@ -33,6 +33,7 @@
                             <label for="account_depreciation_id" string="Income Account" attrs="{'invisible': [('type','!=','sale')]}"/>
                         </div>
                         <field name="account_depreciation_id" nolabel="1"/>
+                        <field name="account_income_recognition_id"/>
                         <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                     </group>
                     <group string="Periodicity">
