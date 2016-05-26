@@ -324,6 +324,9 @@ class SaleOrder(models.Model):
                 elif line.qty_to_invoice < 0 and final:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
 
+        if not invoices:
+            raise UserError(_('There is no invoicable line.'))
+
         for invoice in invoices.values():
             if not invoice.invoice_line_ids:
                 raise UserError(_('There is no invoicable line.'))
