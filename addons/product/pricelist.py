@@ -313,7 +313,10 @@ class product_pricelist(osv.osv):
                             continue
                         seller = seller_id
                     if not seller:
-                        continue
+                        if pricelist.type == 'purchase':
+                            continue
+                        elif product.seller_ids:
+                            seller = product.seller_ids[0]
                     if seller:
                         qty_in_seller_uom = qty
                         seller_uom = seller.product_uom.id
