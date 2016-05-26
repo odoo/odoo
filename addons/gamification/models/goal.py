@@ -155,9 +155,11 @@ class gamification_goal_definition(osv.Model):
                 model = self.pool[definition.model_id.model]
                 field = model._fields[definition.field_id.name]
                 if not field.store:
-                    raise UserError(_("The model configuration for the definition %s seems incorrect, please check it.\n\n%s not stored") % (definition.name, definition.field_id.name))
+                    raise osv.except_osv(_('Error!'),
+                        _("The model configuration for the definition %s seems incorrect, please check it.\n\n%s not stored") % (definition.name, definition.field_id.name))
             except KeyError, e:
-                raise UserError(_("The model configuration for the definition %s seems incorrect, please check it.\n\n%s not found") % (definition.name, e.message))
+                raise osv.except_osv(_('Error!'),
+                    _("The model configuration for the definition %s seems incorrect, please check it.\n\n%s not found") % (definition.name, e.message))
 
     def create(self, cr, uid, vals, context=None):
         res_id = super(gamification_goal_definition, self).create(cr, uid, vals, context=context)
