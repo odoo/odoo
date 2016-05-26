@@ -18,7 +18,7 @@ class crm_team(osv.Model):
         res = dict.fromkeys(ids, 0)
         domain = [
             ('team_id', 'in', ids),
-            ('state', '=', 'manual'),
+            ('invoice_status', '=', 'to invoice'),
         ]
         amounts = obj.read_group(cr, uid, domain, ['amount_total', 'team_id'], ['team_id'], context=context)
         for rec in amounts:
@@ -62,4 +62,4 @@ class crm_team(osv.Model):
     }
 
     def update_invoiced_target(self, cr, uid, id, value, context=None):
-        return self.write(cr, uid, [id], {'invoiced_target': round(float(value))}, context=context)
+        return self.write(cr, uid, [id], {'invoiced_target': round(float(value or 0))}, context=context)

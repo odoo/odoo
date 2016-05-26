@@ -8,6 +8,8 @@ odoo.define('point_of_sale.gui', function (require) {
 
 var core = require('web.core');
 var Model = require('web.DataModel');
+var formats = require('web.formats');
+var session = require('web.session');
 
 var _t = core._t;
 
@@ -333,17 +335,7 @@ var Gui = core.Class.extend({
         this.chrome.loading_message(_t('Closing ...'));
 
         this.pos.push_order().then(function(){
-            return new Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id'])
-            .pipe(function(res) {
-                window.location = '/web#action=' + res[0]['res_id'];
-            },function(err,event) {
-                event.preventDefault();
-                self.show_popup('error',{
-                    'title': _t('Could not close the point of sale.'),
-                    'body':  _t('Your internet connection is probably down.'),
-                });
-                self.chrome.widget.close_button.renderElement();
-            });
+            window.location = '/web' + ((session.debug)? '?debug' : '') + '#action=point_of_sale.action_client_pos_menu';
         });
     },
 
@@ -411,14 +403,16 @@ var Gui = core.Class.extend({
     numpad_input: function(buffer, input, options) { 
         var newbuf  = buffer.slice(0);
         options = options || {};
+        var newbuf_float  = formats.parse_value(newbuf, {type: "float"}, 0);
+        var decimal_point = _t.database.parameters.decimal_point;
 
-        if (input === '.') {
+        if (input === decimal_point) {
             if (options.firstinput) {
                 newbuf = "0.";
             }else if (!newbuf.length || newbuf === '-') {
                 newbuf += "0.";
-            } else if (newbuf.indexOf('.') < 0){
-                newbuf = newbuf + '.';
+            } else if (newbuf.indexOf(decimal_point) < 0){
+                newbuf = newbuf + decimal_point;
             }
         } else if (input === 'CLEAR') {
             newbuf = ""; 
@@ -435,7 +429,7 @@ var Gui = core.Class.extend({
                 newbuf = '-' + newbuf;
             }
         } else if (input[0] === '+' && !isNaN(parseFloat(input))) {
-            newbuf = '' + ((parseFloat(newbuf) || 0) + parseFloat(input));
+            newbuf = this.chrome.format_currency_no_symbol(newbuf_float + parseFloat(input));
         } else if (!isNaN(parseInt(input))) {
             if (options.firstinput) {
                 newbuf = '' + input;

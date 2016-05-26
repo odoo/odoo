@@ -3,15 +3,16 @@
 # * product
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@bas-solutions.nl>, 2015
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2015
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-10-02 09:37+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
+"PO-Revision-Date: 2016-03-24 19:22+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -168,7 +169,7 @@ msgstr "<strong>Prijslijstnaam</strong>:<br/>"
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Print date</strong>:<br/>"
-msgstr "<strong>Printdatum</strong>:<br/>"
+msgstr "<strong>Afdrukdatum</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -253,7 +254,7 @@ msgid ""
 "About the size of a credit card — and just 5.4 mm thin — iPod nano is the thinnest iPod ever made.\n"
 "                                    The 2.5-inch Multi-Touch display is nearly twice as big as the display on the previous iPod nano,\n"
 "                                    so you can see more of the music, photos, and videos you love."
-msgstr "Ongeveer de grootte van een kredietkaart - en slechts 5.4 mm dun - iPod nano is de dunste iPod ooit gemaakt.\nHet 2.5-inch multi-touch scherm is bijna tweemaal zo groot als het scherm van de vorige iPod nano,\nzodat u meer kan zien van de muziek, foto's en video's waar u zo van houdt."
+msgstr "Ongeveer de grootte van een creditcard - en slechts 5.4 mm dun - iPod nano is de dunste iPod ooit gemaakt.\nHet 2.5-inch multi-touch scherm is bijna tweemaal zo groot als het scherm van de vorige iPod nano,\nzodat u meer kan zien van de muziek, foto's en video's waar u zo van houdt."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_message_needaction
@@ -683,6 +684,12 @@ msgid "Computers"
 msgstr "Computers"
 
 #. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Consumable"
+msgstr "Verbruiksartikel"
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
@@ -703,7 +710,7 @@ msgstr "Conversie van product maateenheid %s naar de standaard maateenheid %s is
 #: model:ir.model.fields,field_description:product.field_product_template_standard_price
 #: selection:product.pricelist.item,base:0
 msgid "Cost"
-msgstr "Kosten"
+msgstr "Kostprijs"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_standard_price
@@ -1482,7 +1489,7 @@ msgstr "Internationaal artikelnummer voor product identificatie"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Inventory"
-msgstr "Voorraadtelling"
+msgstr "Voorraad"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_message_is_follower
@@ -1500,7 +1507,7 @@ msgstr "Is een product variant"
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Keep it clean."
-msgstr "Hou het proper."
+msgstr "Hou het netjes."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -1621,7 +1628,7 @@ msgstr "Lengte / Afstand"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_attribute_line_ids
 msgid "Lines"
-msgstr "Lijnen"
+msgstr "Regels"
 
 #. module: product
 #: model:product.product,name:product.product_product_50
@@ -1977,7 +1984,7 @@ msgstr "Prepaid consulting"
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Price"
-msgstr "Bedrag"
+msgstr "Prijs"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2496,6 +2503,12 @@ msgid "Server"
 msgstr "Server"
 
 #. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Service"
+msgstr "Dienst"
+
+#. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 #: model:product.category,name:product.product_category_3
 #: model:product.public.category,name:product.services
@@ -2767,7 +2780,7 @@ msgid ""
 "The minimal quantity to purchase from this vendor, expressed in the vendor "
 "Product Unit of Measure if not any, in the default unit of measure of the "
 "product otherwise."
-msgstr "De minimale bestelhoeveelheid bij deze fabrikant, uitgedrukt in de maateenheid van de fabrikant indien bekend, anders in de standaard maateenheid van het product."
+msgstr "De minimale bestelhoeveelheid bij deze Leverancier, uitgedrukt in de maateenheid van de Leverancier  indien bekend, anders in de standaard maateenheid van het product."
 
 #. module: product
 #: code:addons/product/product.py:329
@@ -2930,14 +2943,14 @@ msgstr "Deze prijslijst wordt gebruikt i.p.v. de standaard prijslijst bij verkop
 msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr "Deze fabrikant productcode wordt gebruikt bij het printen van een offerte aanvraag. Laat dit leeg om een interne productcode te gebruiken."
+msgstr "Deze leverancier productcode wordt gebruikt bij het afdrukken van een offerte aanvraag. Laat dit leeg om een interne productcode te gebruiken."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_name
 msgid ""
 "This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr "Deze fabrikant productnaam wordt gebruikt bij het printen van een offerte aanvraag. Laat dit leeg om een interne productcode te gebruiken."
+msgstr "Deze Leverancier productnaam wordt gebruikt bij het printen van een offerte aanvraag. Laat dit leeg om een interne productcode te gebruiken."
 
 #. module: product
 #: model:product.product,name:product.product_product_39
@@ -3072,7 +3085,7 @@ msgstr "Teller ongelezen berichten"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Validity"
-msgstr "Validiteit"
+msgstr "Geldig van"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_name
@@ -3124,38 +3137,38 @@ msgstr "Varianten"
 #: model:ir.model.fields,field_description:product.field_product_template_seller_ids
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Vendor"
-msgstr "Fabrikant"
+msgstr "Leverancier"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 msgid "Vendor Information"
-msgstr "Fabrikant informatie"
+msgstr "Leverancier informatie"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
 msgid "Vendor Product Code"
-msgstr "Fabrikant productcode"
+msgstr "Leverancier productcode"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_name
 msgid "Vendor Product Name"
-msgstr "Fabrikant productnaam"
+msgstr "Leverancier productnaam"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_uom
 msgid "Vendor Unit of Measure"
-msgstr "Maateenheid fabrikant"
+msgstr "Leverancier maateenheid"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_name
 msgid "Vendor of this product"
-msgstr "Fabrikant van dit product"
+msgstr "Leverancier van dit product"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Vendors"
-msgstr "Fabrikanten"
+msgstr "Leveranciers"
 
 #. module: product
 #: selection:product.category,type:0
@@ -3218,7 +3231,7 @@ msgstr "Wanneer één afspeellijst niet genoeg is."
 msgid ""
 "When this field is filled in, the vendor data will only apply to the "
 "variant."
-msgstr "Wanneer dit veld is ingevuld wordt de fabrikant data alleen toegepast op de variant."
+msgstr "Wanneer dit veld is ingevuld wordt de Leverancier gegevens alleen toegepast op de variant."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3

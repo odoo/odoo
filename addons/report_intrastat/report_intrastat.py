@@ -60,8 +60,8 @@ class report_intrastat(osv.osv):
         cr.execute("""
             create or replace view report_intrastat as (
                 select
-                    to_char(inv.create_date, 'YYYY') as name,
-                    to_char(inv.create_date, 'MM') as month,
+                    to_char(inv.date_invoice, 'YYYY') as name,
+                    to_char(inv.date_invoice, 'MM') as month,
                     min(inv_line.id) as id,
                     intrastat.id as intrastat_id,
                     upper(inv_country.code) as code,
@@ -101,5 +101,5 @@ class report_intrastat(osv.osv):
                     inv.state in ('open','paid')
                     and inv_line.product_id is not null
                     and inv_country.intrastat=true
-                group by to_char(inv.create_date, 'YYYY'), to_char(inv.create_date, 'MM'),intrastat.id,inv.type,pt.intrastat_id, inv_country.code,inv.number,  inv.currency_id, inv.company_id
+                group by to_char(inv.date_invoice, 'YYYY'), to_char(inv.date_invoice, 'MM'),intrastat.id,inv.type,pt.intrastat_id, inv_country.code,inv.number,  inv.currency_id, inv.company_id
             )""")

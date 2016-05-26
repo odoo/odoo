@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 08:19+0000\n"
+"PO-Revision-Date: 2016-03-10 13:15+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -141,17 +141,17 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "<span>New</span>"
-msgstr ""
+msgstr "<span>新增</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "<span>Reports</span>"
-msgstr ""
+msgstr "<span>報表</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "<span>View</span>"
-msgstr ""
+msgstr "<span>檢視</span>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_defaults
@@ -518,7 +518,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid ""
-"Create email and url for each distinct source. <br/>\n"
+"Create email and url for each distinct source. <br>\n"
 "                When the applicant will arrive, you will know from wich source the Job position is coming."
 msgstr ""
 
@@ -562,7 +562,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "釋出到記錄上的最後資訊的日期"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_day_close
@@ -668,7 +668,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "顯示名稱"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.config.settings,module_document:0
@@ -896,6 +896,11 @@ msgid "HR Department"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "Hired Employees"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_id
@@ -957,13 +962,6 @@ msgstr ""
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rcol_3_1_3
 msgid "Important"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
-#: model:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
-msgid "Important Messages"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1063,7 +1061,7 @@ msgstr "最後訊息日期"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source___last_update
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "最後修改:"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_last_stage_id
@@ -1798,6 +1796,9 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_unread
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
 msgid "Unread Messages"
 msgstr "未讀訊息"
 

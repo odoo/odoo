@@ -67,6 +67,15 @@ class TestAPI(common.TransactionCase):
         self.assertEqual(list(partners1), list(partners2))
 
     @mute_logger('openerp.models')
+    def test_04_query_count(self):
+        """ Test the search method with count=True. """
+        count1 = self.registry('res.partner').search(self.cr, self.uid, [], count=True)
+        count2 = self.env['res.partner'].search([], count=True)
+        self.assertIsInstance(count1, (int, long))
+        self.assertIsInstance(count2, (int, long))
+        self.assertEqual(count1, count2)
+
+    @mute_logger('openerp.models')
     def test_05_immutable(self):
         """ Check that a recordset remains the same, even after updates. """
         domain = [('name', 'ilike', 'j')]
@@ -263,7 +272,20 @@ class TestAPI(common.TransactionCase):
     @mute_logger('openerp.models')
     def test_60_cache(self):
         """ Check the record cache behavior """
-        partners = self.env['res.partner'].search([('child_ids', '!=', False)])
+        Partners = self.env['res.partner']
+        pids = []
+        data = {
+            'partner One': ['Partner One - One', 'Partner One - Two'],
+            'Partner Two': ['Partner Two - One'],
+            'Partner Three': ['Partner Three - One'],
+        }
+        for p in data:
+            pids.append(Partners.create({
+                'name': p,
+                'child_ids': [(0, 0, {'name': c}) for c in data[p]],
+            }).id)
+
+        partners = Partners.search([('id', 'in', pids)])
         partner1, partner2 = partners[0], partners[1]
         children1, children2 = partner1.child_ids, partner2.child_ids
         self.assertTrue(children1)

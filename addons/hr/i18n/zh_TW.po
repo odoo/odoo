@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 08:16+0000\n"
+"POT-Creation-Date: 2016-01-15 10:41+0000\n"
+"PO-Revision-Date: 2016-02-20 10:36+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -70,7 +70,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>Reports</span>"
-msgstr ""
+msgstr "<span>報表</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -195,6 +195,11 @@ msgid "City"
 msgstr "城市"
 
 #. module: hr
+#: model:web.tip,description:hr.hr_tip_2
+msgid "Click here to change the recruitment goal!"
+msgstr ""
+
+#. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Click to add a new employee."
@@ -316,7 +321,7 @@ msgstr "出生日期"
 #: model:ir.model.fields,help:hr.field_hr_employee_message_last_post
 #: model:ir.model.fields,help:hr.field_hr_job_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "釋出到記錄上的最後資訊的日期"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -362,7 +367,7 @@ msgstr "部門"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "顯示名稱"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -633,14 +638,6 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-#: model:ir.ui.view,arch_db:hr.view_department_filter
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_job_filter
-msgid "Important Messages"
-msgstr ""
-
-#. module: hr
 #: model:hr.job,website_description:hr.job_ceo
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
@@ -746,6 +743,11 @@ msgstr "最後訊息日期"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_job___last_update
 msgid "Last Modified on"
+msgstr "最後修改:"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users_last_website_so_id
+msgid "Last Online Sale Order"
 msgstr ""
 
 #. module: hr
@@ -852,13 +854,6 @@ msgstr "成員"
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Messages"
 msgstr "訊息"
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_ids
-#: model:ir.model.fields,help:hr.field_hr_employee_message_ids
-#: model:ir.model.fields,help:hr.field_hr_job_message_ids
-msgid "Messages and communication history"
-msgstr "訊息及聯絡紀錄"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -1189,6 +1184,11 @@ msgid "Subordinates"
 msgstr "下屬"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users_subscription_count
+msgid "Subscriptions"
+msgstr ""
+
+#. module: hr
 #: sql_constraint:hr.employee.category:0
 msgid "Tag name already exists !"
 msgstr ""
@@ -1248,6 +1248,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department_message_unread
 #: model:ir.model.fields,field_description:hr.field_hr_employee_message_unread
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_unread
+#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+#: model:ir.ui.view,arch_db:hr.view_department_filter
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
 msgstr "未讀訊息"
 

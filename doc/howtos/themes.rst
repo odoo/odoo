@@ -13,10 +13,6 @@ Ready to create your own theme? Great. Here are some things you should know befo
 
 .. image:: theme_tutorial_assets/img/Intro.jpg
 
-.. warning::
-
-  This tutorial requires having installed Odoo v8.0 and the Theme Support Engine (website_less) module. https://www.odoo.com/apps/8.0/website_less/
-
 
 An introduction for web designers
 =================================
@@ -179,8 +175,7 @@ Almost every element and option that you create has to be placed inside a ``<tem
 The previous code defines a title, but it will not be displayed
 anywhere because that *template* is not associated with any part of
 the **Odoo default structure**.  In order to do that you can use
-**xpath**, **qWeb** or a combination of both.  Keep reading the
-tutorial to learn to how properly extend it with your own code.
+**xpath**, **qWeb** or a combination of both.
 
 Keep reading the tutorial to learn to how properly extend it with your own code.
 
@@ -250,7 +245,7 @@ Open the ``__openerp__.py`` you created and copy/paste the following:
     'data': [
     ],
     'category': 'Theme/Creative',
-    'depends': ['website', 'website_less'],
+    'depends': ['website'],
   }
 
 Replace the first four property’s values with anything you like.
@@ -263,7 +258,7 @@ The ``data`` property will contain the xml files list. Right now it’s empty, b
 ``category`` defines your module category (always “Theme”) and, after a slash, the subcategory. You can use one subcategory from the Odoo Apps categories list. (https://www.odoo.com/apps/themes)
 
 
-``depends`` specifies the modules needed by our theme to work properly. For our tutorial theme, we only need website and website_less. If you need blogging or eCommerce features as well, you have to add those modules too.
+``depends`` specifies the modules needed by our theme to work properly. For our tutorial theme, we only need website. If you need blogging or eCommerce features as well, you have to add those modules too.
 
 .. code-block:: python
 
@@ -691,7 +686,7 @@ We start by adding a new file in our views folder - name it **options.xml** and 
 
 .. code-block:: xml
 
-  <template id="snippet_testimonial_opt" name="Snippet Testimonial Options" inherit_id="website_less.snippet_options">
+  <template id="snippet_testimonial_opt" name="Snippet Testimonial Options" inherit_id="website.snippet_options">
     <xpath expr="//div[@data-js='background']" position="after">
       <div data-selector=".snippet_testimonial"> <!-- Options group -->
         <li class="dropdown-submenu">
@@ -832,7 +827,7 @@ This time we have to inherit ``assets_editor`` instead of ``assets_frontend``.
 
 .. code-block:: xml
 
-  <template id="my_js" inherit_id="website_less.assets_editor" name="My Js">
+  <template id="my_js" inherit_id="website.assets_editor" name="My Js">
     <xpath expr="script[last()]" position="after">
       <script type="text/javascript" src="/theme_tutorial/static/src/js/tutorial_editor.js" />
     </xpath>

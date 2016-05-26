@@ -13,6 +13,7 @@ from openerp import api
 from openerp import SUPERUSER_ID, models
 from openerp import tools
 import openerp.exceptions
+from openerp import api
 from openerp.osv import fields, osv, expression
 from openerp.service.db import check_super
 from openerp.tools.translate import _
@@ -284,18 +285,25 @@ class res_users(osv.osv):
     }
 
     # User can write on a few of his own fields (but not his groups for example)
-    SELF_WRITEABLE_FIELDS = ['password', 'signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz']
+    SELF_WRITEABLE_FIELDS = ['signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz']
     # User can read a few of his own fields
     SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz', 'tz_offset', 'groups_id', 'partner_id', '__last_update', 'action_id']
 
-    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        def override_password(o):
-            if ('id' not in o or o['id'] != uid):
+    @api.multi
+    def _read_from_database(self, field_names, inherited_field_names=[]):
+        super(res_users, self)._read_from_database(field_names, inherited_field_names)
+        canwrite = self.check_access_rights('write', raise_exception=False)
+        if not canwrite and set(USER_PRIVATE_FIELDS).intersection(field_names):
+            for record in self:
                 for f in USER_PRIVATE_FIELDS:
-                    if f in o:
-                        o[f] = '********'
-            return o
+                    try:
+                        record._cache[f]
+                        record._cache[f] = '********'
+                    except Exception:
+                        # skip SpecialValue (e.g. for missing record or access right)
+                        pass
 
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         if fields and (ids == [uid] or ids == uid):
             for key in fields:
                 if not (key in self.SELF_READABLE_FIELDS or key.startswith('context_')):
@@ -303,16 +311,7 @@ class res_users(osv.osv):
             else:
                 # safe fields only, so we read as super-user to bypass access rights
                 uid = SUPERUSER_ID
-
-        result = super(res_users, self).read(cr, uid, ids, fields=fields, context=context, load=load)
-        canwrite = self.pool['ir.model.access'].check(cr, uid, 'res.users', 'write', False)
-        if not canwrite:
-            if isinstance(ids, (int, long)):
-                result = override_password(result)
-            else:
-                result = map(override_password, result)
-
-        return result
+        return super(res_users, self).read(cr, uid, ids, fields=fields, context=context, load=load)
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
         if uid != SUPERUSER_ID:
@@ -335,6 +334,7 @@ class res_users(osv.osv):
     def create(self, cr, uid, vals, context=None):
         user_id = super(res_users, self).create(cr, uid, vals, context=context)
         user = self.browse(cr, uid, user_id, context=context)
+        user.partner_id.active = user.active
         if user.partner_id.company_id: 
             user.partner_id.write({'company_id': user.company_id.id})
         return user_id
@@ -521,7 +521,7 @@ class res_users(osv.osv):
         """
         self.check(cr.dbname, uid, old_passwd)
         if new_passwd:
-            return self.write(cr, uid, uid, {'password': new_passwd})
+            return self.write(cr, SUPERUSER_ID, uid, {'password': new_passwd})
         raise UserError(_("Setting empty passwords is not allowed for security reasons!"))
 
     def preference_save(self, cr, uid, ids, context=None):
@@ -537,8 +537,19 @@ class res_users(osv.osv):
             'target': 'new',
         }
 
-    @tools.ormcache('uid', 'group_ext_id')
+    @api.v7
     def has_group(self, cr, uid, group_ext_id):
+        return self._has_group(cr, uid, group_ext_id)
+    @api.v8
+    def has_group(self, group_ext_id):
+        # use singleton's id if called on a non-empty recordset, otherwise
+        # context uid
+        uid = self.id or self.env.uid
+        return self._has_group(self.env.cr, uid, group_ext_id)
+
+    @api.noguess
+    @tools.ormcache('uid', 'group_ext_id')
+    def _has_group(self, cr, uid, group_ext_id):
         """Checks whether user belongs to given group.
 
         :param str group_ext_id: external ID (XML ID) of the group.
@@ -553,6 +564,8 @@ class res_users(osv.osv):
                         (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
                    (uid, module, ext_id))
         return bool(cr.fetchone())
+    # for a few places explicitly clearing the has_group cache
+    has_group.clear_cache = _has_group.clear_cache
 
     @api.multi
     def _is_admin(self):
@@ -930,7 +943,7 @@ class users_view(osv.osv):
         # add reified groups fields
         if not self.pool['res.users']._is_admin(cr, uid, [uid]):
             return res
-        for app, kind, gs in self.pool['res.groups'].get_groups_by_application(cr, uid, context):
+        for app, kind, gs in self.pool['res.groups'].get_groups_by_application(cr, SUPERUSER_ID, context):
             if kind == 'selection':
                 # selection group field
                 tips = ['%s: %s' % (g.name, g.comment) for g in gs if g.comment]
@@ -1007,7 +1020,7 @@ class change_password_user(osv.TransientModel):
     _description = 'Change Password Wizard User'
     _columns = {
         'wizard_id': fields.many2one('change.password.wizard', string='Wizard', required=True),
-        'user_id': fields.many2one('res.users', string='User', required=True),
+        'user_id': fields.many2one('res.users', string='User', required=True, ondelete='cascade'),
         'user_login': fields.char('User Login', readonly=True),
         'new_passwd': fields.char('New Password'),
     }

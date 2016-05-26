@@ -3,13 +3,15 @@
 # * auth_oauth
 # 
 # Translators:
+# Gennady Marchenko <gennadym@gmail.com>, 2016
+# Sergey Vilizhanin <sv@grimmette.ru>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 16:14+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-03-19 11:24+0000\n"
+"Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +29,7 @@ msgid ""
 "                                    - Edit settings and set both Authorized Redirect URIs and Authorized JavaScript Origins to your hostname.<br/>\n"
 "                                    <br/>\n"
 "                                    Now copy paste the client_id here:"
-msgstr ""
+msgstr "<br/>\n                                    - Создайте новый проект<br/>\n                                    - Перейдите к Api Access<br/>\n                                    - Создайте oauth client_id<br/>\n                                    - Настройте все Authorized Redirect URIs и Authorized JavaScript Origins для Вашего хоста.<br/>\n                                    <br/>\n                                    Затем скопируйте и вставьте the client_id сюда:"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:99
@@ -105,7 +107,7 @@ msgstr "Создан"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_currency_id
 msgid "Currency id"
-msgstr ""
+msgstr "id Валюты"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_payment_term_id
@@ -115,12 +117,12 @@ msgstr "Срок платежа заказчика"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_data_endpoint
 msgid "Data URL"
-msgstr ""
+msgstr "URL данных"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Отображаемое Имя"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_position_id
@@ -130,12 +132,12 @@ msgstr "Состояние бюджета"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Google APIs console"
-msgstr ""
+msgstr "Консоль Google APIs"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_has_unreconciled_entries
 msgid "Has unreconciled entries"
-msgstr ""
+msgstr "Имеет несогласованные проводки"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_id
@@ -174,12 +176,12 @@ msgid ""
 "Last time the invoices & payments matching was performed for this partner. "
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
-msgstr ""
+msgstr "Последний раз  было выполнено сопоставление  счетов-фактур и платежей для данного партнера. Он устанавливается или если нет, по крайней мере, не согласован дебет и кредит или если вы нажмете кнопку \"Готово\"."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
-msgstr ""
+msgstr "Последние Счета & Платежи, Соответствующие Дате"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_access_token
@@ -219,7 +221,7 @@ msgstr "Oauth"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_oauth_uid
 msgid "Oauth Provider user_id"
-msgstr ""
+msgstr "Oauth Провайдер user_id"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit_limit
@@ -251,14 +253,14 @@ msgstr "Запрещен вход для этой базы данных."
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_position_id
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr ""
+msgstr "Финансовое положение будет определять налоги и счета, используемые для партнера."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_has_unreconciled_entries
 msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
-msgstr ""
+msgstr "У партнера есть по крайней мере один невыверенный дебет и кредит с прошлого раза, когда согласование счет-фактур и платежей были выполнены."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_payable_id
@@ -279,7 +281,7 @@ msgstr "Этот счет будет использоваться, вместо 
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
-msgstr ""
+msgstr "Это условие оплаты будет использоваться вместо установленного по умолчанию для заказов на покупку и счетов поставщика"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_payment_term_id
@@ -294,7 +296,7 @@ msgid ""
 "To setup the signin process with Google, first you have to perform the following steps:<br/>\n"
 "                                    <br/>\n"
 "                                    - Go to the"
-msgstr ""
+msgstr "Для настройки процесса подписи Google, сперва выполните следующие шаги:<br/>\n                                    <br/>\n                                    - Перейдите к"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_total_invoiced
@@ -319,7 +321,7 @@ msgstr "Общая сумма долга покупателя перед вам�
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_debit
 msgid "Total amount you have to pay to this vendor."
-msgstr ""
+msgstr "Общая сумма к оплате этому продавцу."
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
@@ -329,7 +331,7 @@ msgstr "Пользователи"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_currency_id
 msgid "Utility field to express amount currency"
-msgstr ""
+msgstr "Служебное поле, чтобы выразить суммы в валюте"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_validation_endpoint
@@ -339,7 +341,7 @@ msgstr "URL валидации"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_supplier_payment_term_id
 msgid "Vendor Payment Term"
-msgstr ""
+msgstr "Срок Оплаты Поставщику"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:101
@@ -364,7 +366,7 @@ msgstr "base.config.settings"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "e.g. 1234-xyz.apps.googleusercontent.com"
-msgstr ""
+msgstr "например 1234-xyz.apps.googleusercontent.com"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter

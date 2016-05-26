@@ -32,7 +32,9 @@
             </t>
 
             <!-- Subtotal -->
-            <t t-call="sale_layout.subtotal_template"/>
+            <t t-call="sale_layout.subtotal_template">
+                <t t-set="doc" t-value="o"/>
+            </t>
 
             <!-- Separator -->
             <t t-call="sale_layout.separator_template"/>

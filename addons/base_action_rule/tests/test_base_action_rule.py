@@ -77,7 +77,7 @@ class base_action_rule_test(common.TransactionCase):
         self.assertEqual(lead.state, 'done')
         self.assertEqual(lead.user_id, self.user_demo)
 
-    def test_04_recomputed_field(self):
+    def test_10_recomputed_field(self):
         """
         Check that a rule is executed whenever a field is recomputed after a
         change on another model.
@@ -91,3 +91,20 @@ class base_action_rule_test(common.TransactionCase):
         partner.write({'customer': True})
         self.assertTrue(lead.customer)
         self.assertEqual(lead.user_id, self.user_demo)
+
+    def test_20_direct_line(self):
+        """
+        Check that a rule is executed after creating a line record.
+        """
+        line = self.env['base.action.rule.line.test'].create({'name': "Line"})
+        self.assertEqual(line.user_id, self.user_demo)
+
+    def test_20_indirect_line(self):
+        """
+        Check that creating a lead with a line executes rules on both records.
+        """
+        lead = self.create_lead(line_ids=[(0, 0, {'name': "Line"})])
+        self.assertEqual(lead.state, 'draft')
+        self.assertEqual(lead.user_id, self.user_demo)
+        self.assertEqual(len(lead.line_ids), 1)
+        self.assertEqual(lead.line_ids.user_id, self.user_demo)

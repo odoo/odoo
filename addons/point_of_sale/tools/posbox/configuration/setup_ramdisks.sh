@@ -15,11 +15,10 @@ create_ramdisk () {
     mount --bind "${RAMDISK}" "${ORIGINAL}"
 }
 
-# check /proc/cmdline
-
-# bind mount / so that we can get to the real /var and /etc
-mount --bind / /root_bypass_ramdisks
-
 echo "Creating ramdisks..."
 create_ramdisk "/var" "128M"
 create_ramdisk "/etc" "16M"
+create_ramdisk "/tmp" "16M"
+
+# bind mount / so that we can get to the real /var and /etc
+mount --bind / /root_bypass_ramdisks

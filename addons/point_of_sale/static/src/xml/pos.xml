@@ -194,7 +194,9 @@
         </header>
         <t t-if="widget.subcategories.length > 0">
             <div class="categories">
-                <div class="category-list">
+                <div class="category-list-scroller touch-scrollable">
+                    <div class="category-list">
+                    </div>
                 </div>
             </div>
         </t>
@@ -435,7 +437,7 @@
                 <section class="full-content">
                     <div class='window'>
                         <section class='subwindow collapsed'>
-                            <div class='subwindow-container'>
+                            <div class='subwindow-container collapsed'>
                                 <div class='subwindow-container-fix client-details-contents'>
                                 </div>
                             </div>
@@ -559,7 +561,7 @@
             <br />
             <button class="input-button numpad-char" data-action='CLEAR' >C</button>
             <button class="input-button number-char" data-action='0'>0</button>
-            <button class="input-button number-char" data-action='.'>.</button>
+            <button class="input-button number-char" t-att-data-action='widget.decimal_point'><t t-esc='widget.decimal_point'/></button>
             <button class="input-button numpad-backspace" data-action='BACKSPACE' >
                 <img src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
             </button>
@@ -650,7 +652,7 @@
                         <i class='fa fa-angle-double-right'></i>
                     </span>
                 </div>
-                <div class="centered-content">
+                <div class="centered-content touch-scrollable">
                     <div class="button print">
                         <i class='fa fa-print'></i> Print Receipt
                     </div>
@@ -701,9 +703,6 @@
                         <div>--------------------------------</div>
                         <div>Served by <t t-esc='receipt.cashier' /></div>
                     </div>
-                </t>
-                <t t-if='!receipt.customer_count'>
-                    <div>Guests: <t t-esc='receipt.customer_count' /></div>
                 </t>
             </div>
             <br /><br />
@@ -1006,7 +1005,7 @@
                     <br />
                     <button class="input-button numpad-char" data-action='CLEAR' >C</button>
                     <button class="input-button number-char" data-action='0'>0</button>
-                    <button class="input-button number-char dot" data-action='.'>.</button>
+                    <button class="input-button number-char dot" t-att-data-action='widget.decimal_separator'><t t-esc='widget.decimal_separator'/></button>
                     <button class="input-button numpad-backspace" data-action='BACKSPACE' >
                         <img style="pointer-events: none;" src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
                     </button>
@@ -1071,7 +1070,7 @@
                 </t>
                 <t t-if="product.to_weight">
                     <span class="price-tag">
-                        <t t-esc="widget.format_currency(product.price,'Product Price')+'/Kg'"/>
+                        <t t-esc="widget.format_currency(product.price,'Product Price')+'/'+widget.pos.units_by_id[product.uom_id[0]].name"/>
                     </span>
                 </t>
             </div>
@@ -1298,7 +1297,7 @@
                 <tr>
                     <td>Subtotal:</td>
                     <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.get_subtotal())"/>
+                        <t t-esc="widget.format_currency(order.get_total_without_tax())"/>
                     </td>
                 </tr>
                 <t t-foreach="order.get_tax_details()" t-as="taxdetail">

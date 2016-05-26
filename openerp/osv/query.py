@@ -132,8 +132,8 @@ class Query(object):
                 self.tables.append(alias_statement)
                 join_tuple = (alias, lhs_col, col, outer and 'LEFT JOIN' or 'JOIN')
                 self.joins.setdefault(lhs, []).append(join_tuple)
-                if extra:
-                    extra = extra.format(lhs=lhs, rhs=alias)
+                if extra or extra_params:
+                    extra = (extra or '').format(lhs=lhs, rhs=alias)
                     self.extras[(lhs, join_tuple)] = (extra, extra_params)
             return alias, alias_statement
 
@@ -152,9 +152,11 @@ class Query(object):
                     (join, alias_mapping[rhs], lhs, lhs_col, rhs, rhs_col))
                 extra = self.extras.get((lhs, (rhs, lhs_col, rhs_col, join)))
                 if extra:
-                    from_clause.append(' AND ')
-                    from_clause.append(extra[0])
-                    from_params.extend(extra[1])
+                    if extra[0]:
+                        from_clause.append(' AND ')
+                        from_clause.append(extra[0])
+                    if extra[1]:
+                        from_params.extend(extra[1])
                 from_clause.append(')')
                 add_joins_for_table(rhs)
 

@@ -23,18 +23,24 @@ class hr_timesheet_sheet(osv.osv):
         """ Compute the attendances, analytic lines timesheets and differences between them
             for all the days of a timesheet and the current day
         """
+        res = dict.fromkeys(ids, {
+            'total_attendance': 0.0,
+            'total_timesheet': 0.0,
+            'total_difference': 0.0,
+        })
 
-        res = {}
-        for sheet in self.browse(cr, uid, ids, context=context or {}):
-            res.setdefault(sheet.id, {
-                'total_attendance': 0.0,
-                'total_timesheet': 0.0,
-                'total_difference': 0.0,
-            })
-            for period in sheet.period_ids:
-                res[sheet.id]['total_attendance'] += period.total_attendance
-                res[sheet.id]['total_timesheet'] += period.total_timesheet
-                res[sheet.id]['total_difference'] += period.total_attendance - period.total_timesheet
+        cr.execute("""
+            SELECT sheet_id as id,
+                   sum(total_attendance) as total_attendance,
+                   sum(total_timesheet) as total_timesheet,
+                   sum(total_difference) as  total_difference
+            FROM hr_timesheet_sheet_sheet_day
+            WHERE sheet_id IN %s
+            GROUP BY sheet_id
+        """, (tuple(ids),))
+
+        res.update(dict((x.pop('id'), x) for x in cr.dictfetchall()))
+
         return res
 
     def check_employee_attendance_state(self, cr, uid, sheet_id, context=None):
@@ -291,6 +297,8 @@ class account_analytic_line(osv.osv):
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
         res = {}.fromkeys(ids, False)
         for ts_line in self.browse(cursor, user, ids, context=context):
+            if not ts_line.is_timesheet:
+                continue
             sheet_ids = sheet_obj.search(cursor, user,
                 [('date_to', '>=', ts_line.date), ('date_from', '<=', ts_line.date),
                  ('employee_id.user_id', '=', ts_line.user_id.id),
@@ -310,6 +318,7 @@ class account_analytic_line(osv.osv):
                     WHERE %(date_to)s >= l.date
                         AND %(date_from)s <= l.date
                         AND %(user_id)s = l.user_id
+                        AND l.is_timesheet = True
                     GROUP BY l.id""", {'date_from': ts.date_from,
                                         'date_to': ts.date_to,
                                         'user_id': ts.employee_id.user_id.id,})

@@ -3,13 +3,14 @@
 # * portal_sale
 # 
 # Translators:
+# David Hernandez <davidhernandez.ctam@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:19+0000\n"
-"PO-Revision-Date: 2015-10-10 09:45+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-01-27 15:42+0000\n"
+"Last-Translator: David Hernandez <davidhernandez.ctam@gmail.com>\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-9/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +22,7 @@ msgstr ""
 #: model:mail.template,body_html:portal_sale.email_template_edi_invoice
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "\n"
@@ -90,7 +91,7 @@ msgstr ""
 #: model:mail.template,body_html:portal_sale.email_template_edi_sale
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "    \n"
@@ -191,7 +192,7 @@ msgstr "Factura"
 msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
-msgstr ""
+msgstr "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.portal_action_invoices
@@ -202,7 +203,7 @@ msgstr "Facturas"
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_mail_mail
 msgid "Outgoing Mails"
-msgstr ""
+msgstr "Correos Enviados"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.action_quotations_portal
@@ -213,7 +214,7 @@ msgstr "Presupuestos"
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.action_orders_portal
 msgid "Sale Orders"
-msgstr ""
+msgstr "Ordénes de Venta"
 
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_sale_order
@@ -228,14 +229,14 @@ msgstr "Pedidos de ventas"
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.portal_action_invoices
 msgid "We haven't sent you any invoice."
-msgstr ""
+msgstr "No te hemos enviado una factura."
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.action_quotations_portal
 msgid "We haven't sent you any quotation."
-msgstr ""
+msgstr "No te hemos enviado ningún presupuesto"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.action_orders_portal
 msgid "We haven't sent you any sales order."
-msgstr ""
+msgstr "No te hemos enviado ninguna orden de venta."

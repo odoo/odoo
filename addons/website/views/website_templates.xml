@@ -6,7 +6,7 @@
 
 <template id="assets_common" inherit_id="web.assets_common" name="Website assets">
     <xpath expr="." position="inside">
-        <script groups="base.group_website_designer" type="text/javascript" src="/website/static/src/js/website.tour.rte.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/website.tour.rte.js"></script>
     </xpath>
 </template>
 
@@ -68,8 +68,8 @@
         </a>
     </li>
     <li t-if="submenu.child_id" t-attf-class="dropdown #{
-        (submenu.url and submenu.url != '/' and any([request.httprequest.path == child.url.replace('/page/website.', '/page/') for child in submenu.child_id]) or
-         request.httprequest.path == submenu.url.replace('/page/website.', '/page/')) and 'active'
+        (submenu.url and submenu.url != '/' and any([request.httprequest.path == child.url.replace('/page/website.', '/page/') for child in submenu.child_id if child.url]) or
+         (submenu.url and request.httprequest.path == submenu.url.replace('/page/website.', '/page/'))) and 'active'
         }">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             <span t-field="submenu.name"/> <span class="caret" t-ignore="true"></span>
@@ -84,12 +84,12 @@
 
 <template id="layout" name="Main layout">&lt;!DOCTYPE html&gt;
     <html t-att-lang="lang and lang.replace('_', '-')"
-          t-att-data-website-id="website.id if editable and website else None"
+          t-att-data-website-id="website.id if (editable or translatable) and website else None"
           t-att-data-editable="'1' if editable else None"
           t-att-data-translatable="'1' if translatable else None"
           t-att-data-edit_translations="'1' if edit_translations else None"
           t-att-data-view-xmlid="xmlid if editable or translatable else None"
-          t-att-data-main-object="repr(main_object) if editable else None"
+          t-att-data-main-object="repr(main_object) if editable or translatable else None"
           t-att-data-oe-company-name="res_company.name">
         <head>
             <meta charset="utf-8" />
@@ -645,7 +645,7 @@
         <div class="container">
             <div class="well mt32">
                 <p>This page does not exists, but you can create it as you are administrator of this site.</p>
-                <a class="btn btn-primary" t-attf-href="/website/add/#{ path }">Create Page</a>
+                <a class="btn btn-primary" t-attf-href="/website/add/#{ path }#{ from_template and '?template=%s' % from_template }">Create Page</a>
             </div>
             <div class="text-center text-muted">Edit the content below this line to adapt the default "page not found" page.</div>
         </div>

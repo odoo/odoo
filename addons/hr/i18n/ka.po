@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 08:16+0000\n"
+"POT-Creation-Date: 2016-01-15 10:41+0000\n"
+"PO-Revision-Date: 2016-02-20 10:36+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Georgian (http://www.transifex.com/odoo/odoo-9/language/ka/)\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 #: code:addons/hr/hr.py:119
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (ასლი)"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -167,7 +167,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Birth"
-msgstr ""
+msgstr "დაბადება"
 
 #. module: hr
 #: model:hr.job,name:hr.job_ceo
@@ -193,6 +193,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_city
 msgid "City"
 msgstr "ქალაქი"
+
+#. module: hr
+#: model:web.tip,description:hr.hr_tip_2
+msgid "Click here to change the recruitment goal!"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
@@ -256,7 +261,7 @@ msgstr "კომპანიები"
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Company"
-msgstr ""
+msgstr "კომპანია"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
@@ -291,7 +296,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "შემქმნელი"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_date
@@ -299,7 +304,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_date
 #: model:ir.model.fields,field_description:hr.field_hr_job_create_date
 msgid "Created on"
-msgstr ""
+msgstr "შექმნის თარიღი"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_employee
@@ -309,7 +314,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_birthday
 msgid "Date of Birth"
-msgstr ""
+msgstr "დაბადების თარიღი"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department_message_last_post
@@ -342,19 +347,19 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Department"
-msgstr ""
+msgstr "განყოფილება"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_name
 msgid "Department Name"
-msgstr ""
+msgstr "განყოფილების სახელი"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 msgid "Departments"
-msgstr ""
+msgstr "განყოფილებები"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_display_name
@@ -367,7 +372,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Divorced"
-msgstr ""
+msgstr "გაყრილი"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_time_efficiency
@@ -463,7 +468,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,gender:0
 msgid "Female"
-msgstr ""
+msgstr "მდედრობითი"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
@@ -500,7 +505,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
 msgid "Gender"
-msgstr ""
+msgstr "სქესი"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -633,14 +638,6 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-#: model:ir.ui.view,arch_db:hr.view_department_filter
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_job_filter
-msgid "Important Messages"
-msgstr ""
-
-#. module: hr
 #: model:hr.job,website_description:hr.job_ceo
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
@@ -749,6 +746,11 @@ msgid "Last Modified on"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users_last_website_so_id
+msgid "Last Online Sale Order"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_uid
@@ -796,7 +798,7 @@ msgstr "შესვლა"
 #. module: hr
 #: selection:hr.employee,gender:0
 msgid "Male"
-msgstr ""
+msgstr "მამრობითი"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_manager_id
@@ -851,14 +853,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_ids
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Messages"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_ids
-#: model:ir.model.fields,help:hr.field_hr_employee_message_ids
-#: model:ir.model.fields,help:hr.field_hr_job_message_ids
-msgid "Messages and communication history"
-msgstr ""
+msgstr "მესიჯები"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -902,7 +897,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
 msgid "Note"
-msgstr ""
+msgstr "შენიშვნა"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_notes
@@ -1003,7 +998,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_image
 msgid "Photo"
-msgstr ""
+msgstr "ფოტო"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1019,7 +1014,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Position"
-msgstr ""
+msgstr "პოზიცია"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
@@ -1031,7 +1026,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Public Information"
-msgstr ""
+msgstr "საჯარო ინფორმაცია"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -1076,7 +1071,7 @@ msgstr "ანგარიშგებები"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_requirements
 msgid "Requirements"
-msgstr ""
+msgstr "მოთხოვნები"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_id
@@ -1189,6 +1184,11 @@ msgid "Subordinates"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users_subscription_count
+msgid "Subscriptions"
+msgstr ""
+
+#. module: hr
 #: sql_constraint:hr.employee.category:0
 msgid "Tag name already exists !"
 msgstr ""
@@ -1248,6 +1248,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department_message_unread
 #: model:ir.model.fields,field_description:hr.field_hr_employee_message_unread
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_unread
+#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+#: model:ir.ui.view,arch_db:hr.view_department_filter
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
 msgstr "წაუკითხავი შეტყობინებები"
 
@@ -1367,7 +1371,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_email
 msgid "Work Email"
-msgstr ""
+msgstr "სამსახურის ელ. ფოსტა"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_location
@@ -1377,17 +1381,17 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_mobile_phone
 msgid "Work Mobile"
-msgstr ""
+msgstr "სამსახურის მობილური"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_phone
 msgid "Work Phone"
-msgstr ""
+msgstr "სამსახურის ტელეფონი"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_id
 msgid "Working Address"
-msgstr ""
+msgstr "სამსახურის მისამართი"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_calendar_id
@@ -1581,7 +1585,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
-msgstr ""
+msgstr "განყოფილება"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form

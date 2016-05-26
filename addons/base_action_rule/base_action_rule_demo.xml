@@ -43,5 +43,12 @@
             <field name="act_user_id" ref="base.user_demo"/>
             <field name="filter_domain">[('customer', '=', True)]</field>
         </record>
+
+        <record id="test_rule_on_line" model="base.action.rule">
+            <field name="name">Test rule on secondary record</field>
+            <field name="kind">on_create</field>
+            <field name="model_id" ref="base_action_rule.model_base_action_rule_line_test"/>
+            <field name="act_user_id" ref="base.user_demo"/>
+        </record>
     </data>
 </openerp>

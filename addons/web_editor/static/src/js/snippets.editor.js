@@ -248,8 +248,7 @@ var BuildingBlock = Widget.extend({
         });
 
         $styles.addClass("hidden");
-        globalSelector = {
-            closest: function ($from) {
+        globalSelector.closest = function ($from) {
                 var $temp;
                 var $target;
                 var len = selector.length;
@@ -260,8 +259,8 @@ var BuildingBlock = Widget.extend({
                     }
                 }
                 return $target;
-            },
-            all: function ($from) {
+        };
+        globalSelector.all = function ($from) {
                 var $target;
                 var len = selector.length;
                 for (var i = 0; i<len; i++) {
@@ -269,8 +268,8 @@ var BuildingBlock = Widget.extend({
                     else $target = $target.add(selector[i].all($from));
                 }
                 return $target;
-            },
-            is: function ($from) {
+        };
+        globalSelector.is = function ($from) {
                 var len = selector.length;
                 for (var i = 0; i<len; i++) {
                     if (selector[i].is($from)) {
@@ -278,7 +277,6 @@ var BuildingBlock = Widget.extend({
                     }
                 }
                 return false;
-            },
         };
 
         var number = 0;
@@ -318,11 +316,11 @@ var BuildingBlock = Widget.extend({
         $("body").toggleClass("editor_has_snippets", !!number);
 
         // select all default text to edit (if snippet default text)
-        /*self.$snippets.find('.oe_snippet_body, .oe_snippet_body *')
+        self.$snippets.find('.oe_snippet_body, .oe_snippet_body *')
             .contents()
             .filter(function() {
                 return this.nodeType === 3 && this.textContent.match(/\S/);
-            }).parent().addClass("o_default_snippet_text");*/
+            }).parent().addClass("o_default_snippet_text");
         $(document).on("mouseup", ".o_default_snippet_text", function (event) {
             $(event.target).selectContent();
         });
@@ -1149,8 +1147,9 @@ var Editor = Class.extend({
 });
 
 var data = {
-    'Class': BuildingBlock,
-    'globalSelector': globalSelector,
+    Class: BuildingBlock,
+    Editor: Editor,
+    globalSelector: globalSelector,
 };
 return data;
 

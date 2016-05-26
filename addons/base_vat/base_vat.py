@@ -108,7 +108,7 @@ class res_partner(osv.osv):
                 continue
             vat_country, vat_number = self._split_vat(partner.vat)
             if not check_func(cr, uid, vat_country, vat_number, context=context):
-                _logger.info(_("Importing VAT Number [%s] is not valid !" % vat_number))
+                _logger.info("Importing VAT Number [%s] is not valid !", vat_number)
                 return False
         return True
 

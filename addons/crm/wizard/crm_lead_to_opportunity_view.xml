@@ -11,7 +11,7 @@
                         <field name="name" widget="radio"/>
                     </group>
                     <group string="Assign these opportunities to">
-                        <field name="user_id" on_change="on_change_user(user_id, team_id, context)" widget="selection"/>
+                        <field name="user_id" on_change="on_change_user(user_id, team_id, context)"/>
                         <field name="team_id" widget="selection"/>
                     </group>
                     <group string="Opportunities" attrs="{'invisible': [('name', '!=', 'merge')]}">

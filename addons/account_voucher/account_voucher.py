@@ -4,7 +4,6 @@
 
 from openerp import fields, models, api, _
 import openerp.addons.decimal_precision as dp
-from openerp.tools import float_compare
 from openerp.exceptions import UserError
 
 
@@ -21,6 +20,10 @@ class AccountVoucher(models.Model):
         if journal.currency_id:
             return journal.currency_id.id
         return self.env.user.company_id.currency_id.id
+
+    @api.model
+    def _get_company(self):
+        return self._context.get('company_id', self.env.user.company_id.id)
 
     @api.multi
     @api.depends('name', 'number')
@@ -70,13 +73,13 @@ class AccountVoucher(models.Model):
     date = fields.Date(readonly=True, select=True, states={'draft': [('readonly', False)]},
                            help="Effective date for accounting entries", copy=False, default=fields.Date.context_today)
     journal_id = fields.Many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=_default_journal)
-    account_id = fields.Many2one('account.account', 'Account', required=True, readonly=True, states={'draft': [('readonly', False)]}, domain="[('deprecated', '=', False), ('internal_type','=', (pay_now == 'pay_now' and 'liquidity' or 'receivable'))]")
+    account_id = fields.Many2one('account.account', 'Account', required=True, readonly=True, states={'draft': [('readonly', False)]}, domain="[('deprecated', '=', False), ('internal_type','=', (pay_now == 'pay_now' and 'liquidity' or voucher_type == 'purchase' and 'payable' or 'receivable'))]")
     line_ids = fields.One2many('account.voucher.line', 'voucher_id', 'Voucher Lines',
                                    readonly=True, copy=True,
                                    states={'draft': [('readonly', False)]})
     narration = fields.Text('Notes', readonly=True, states={'draft': [('readonly', False)]})
     currency_id = fields.Many2one('res.currency', compute='_get_journal_currency', string='Currency', readonly=True, required=True, default=lambda self: self._get_currency())
-    company_id = fields.Many2one('res.company', 'Company', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env['res.company']._company_default_get('account.voucher'))
+    company_id = fields.Many2one('res.company', 'Company', required=True, readonly=True, states={'draft': [('readonly', False)]}, related='journal_id.company_id', default=lambda self: self._get_company())
     state = fields.Selection(
             [('draft', 'Draft'),
              ('cancel', 'Cancelled'),
@@ -104,7 +107,7 @@ class AccountVoucher(models.Model):
 
     @api.onchange('partner_id', 'pay_now')
     def onchange_partner_id(self):
-        if self.pay_now =='pay_now':
+        if self.pay_now == 'pay_now':
             liq_journal = self.env['account.journal'].search([('type', 'in', ('bank', 'cash'))], limit=1)
             self.account_id = liq_journal.default_debit_account_id \
                 if self.voucher_type == 'sale' else liq_journal.default_credit_account_id
@@ -319,7 +322,7 @@ class account_voucher_line(models.Model):
     account_id = fields.Many2one('account.account', string='Account',
         required=True, domain=[('deprecated', '=', False)],
         help="The income or expense account related to the selected product.")
-    price_unit = fields.Monetary(string='Unit Price', required=True, oldname='amount')
+    price_unit = fields.Float(string='Unit Price', required=True, digits=dp.get_precision('Product Price'), oldname='amount')
     price_subtotal = fields.Monetary(string='Amount',
         store=True, readonly=True, compute='_compute_subtotal')
     quantity = fields.Float(digits=dp.get_precision('Product Unit of Measure'),

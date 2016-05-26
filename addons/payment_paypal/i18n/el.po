@@ -1,0 +1,146 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_paypal
+# 
+# Translators:
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2015-12-09 09:54+0000\n"
+"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
+"Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: el\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment_paypal
+#: model:payment.acquirer,cancel_msg:payment_paypal.payment_acquirer_paypal
+msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
+msgstr "<span><i>Άκυρο,</i> Η πληρωμή σας έχει ακυρωθεί.</span>"
+
+#. module: payment_paypal
+#: model:payment.acquirer,done_msg:payment_paypal.payment_acquirer_paypal
+msgid ""
+"<span><i>Done,</i> Your online payment has been successfully processed. "
+"Thank you for your order.</span>"
+msgstr "<span><i>Ολοκληρώθηκε,</i> Η Online πληρωμή σας έχει διεκπεραιωθεί επιτυχώς. Ευχαριστούμε για την παραγγελία σας.</span>"
+
+#. module: payment_paypal
+#: model:payment.acquirer,error_msg:payment_paypal.payment_acquirer_paypal
+msgid ""
+"<span><i>Error,</i> Please be aware that an error occurred during the "
+"transaction. The order has been confirmed but won't be paid. Don't hesitate "
+"to contact us if you have any questions on the status of your order.</span>"
+msgstr "<span><i>Σφάλμα,</i> Έχετε υπ 'όψιν ότι παρουσιάστηκε κάποιο σφάλμα κατά τη διάρκεια της συναλλαγής. Η παραγγελία έχει επιβεβαιωθεί, αλλά δεν θα μπορεί να πληρωθεί. Μην διστάσετε να επικοινωνήσετε μαζί μας αν έχετε απορίες σχετικά με την κατάσταση της παραγγελίας σας.</span>"
+
+#. module: payment_paypal
+#: model:payment.acquirer,pending_msg:payment_paypal.payment_acquirer_paypal
+msgid ""
+"<span><i>Pending,</i> Your online payment has been successfully processed. "
+"But your order is not validated yet.</span>"
+msgstr "<span><i>Εν αναμονή,</i> Η Online πληρωμή σας έχει διεκπεραιωθεί επιτυχώς. Αλλά η παραγγελία σας δεν έχει επικυρωθεί ακόμη.</span>"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token
+msgid "Access Token"
+msgstr "Διακριτικό Πρόσβασης"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token_validity
+msgid "Access Token Validity"
+msgstr "Εγκυρότητα Διακριτικού Πρόσβασης"
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_res_company
+msgid "Companies"
+msgstr "Εταιρείες"
+
+#. module: payment_paypal
+#: model:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
+msgid "How to configure your paypal account?"
+msgstr "Πως να ρυθμίσετε τον paypal λογαριασμό σας;"
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Αποδέκτης Πληρωμής"
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Συναλλαγή Πληρωμής"
+
+#. module: payment_paypal
+#: model:payment.acquirer,name:payment_paypal.payment_acquirer_paypal
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_email_account
+msgid "Paypal Email ID"
+msgstr "Κωδικός Paypal Email"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_use_ipn
+msgid "Paypal Instant Payment Notification"
+msgstr "Άμεση Ειδοποίηση Πληρωμής Paypal"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_seller_account
+msgid "Paypal Merchant ID"
+msgstr "Κωδικός Εμπόρου Paypal"
+
+#. module: payment_paypal
+#: model:ir.ui.view,arch_db:payment_paypal.transaction_form_paypal
+msgid "Paypal TX Details"
+msgstr "Λεπτομέρειες Paypal TX"
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/models/paypal.py:186
+#, python-format
+msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_password
+msgid "Rest API Password"
+msgstr "Κωδικός Πρόσβασης Rest API"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_username
+msgid "Rest API Username"
+msgstr "Όνομα Χρήστη Rest API"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_seller_account
+msgid ""
+"The Merchant ID is used to ensure communications coming from Paypal are "
+"valid and secured."
+msgstr "Ο κωδικός εμπόρου χρησιμοποιείται για να εξασφαλίζει ότι η επικοινωνία που προέρχονται από το Paypal είναι έγκυρη και ασφαλής."
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction_paypal_txn_type
+msgid "Transaction type"
+msgstr "Τύπος Συναλλαγής"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_use_ipn
+msgid "Use IPN"
+msgstr "Χρήση IPN"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_enabled
+msgid "Use Rest API"
+msgstr "Χρήση Rest API"
+
+#. module: payment_paypal
+#: model:payment.acquirer,pre_msg:payment_paypal.payment_acquirer_paypal
+msgid ""
+"You will be redirected to the Paypal website after clicking on the payment "
+"button."
+msgstr ""

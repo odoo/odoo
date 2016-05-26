@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import psycopg2
 import time
 from datetime import datetime
 import uuid
@@ -10,6 +11,7 @@ import sets
 from functools import partial
 
 import openerp
+import openerp.addons.decimal_precision as dp
 from openerp import tools, models, SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools import float_is_zero
@@ -42,7 +44,7 @@ class pos_config(osv.osv):
         result = dict()
 
         for record in self.browse(cr, uid, ids, context=context):
-            session_id = record.session_ids.filtered(lambda r: r.user_id.id == uid and not r.state == 'closed')
+            session_id = record.session_ids.filtered(lambda r: r.user_id.id == uid and not r.state == 'closed' and not r.rescue)
             result[record.id] = {
                 'current_session_id': session_id,
                 'current_session_state': session_id.state,
@@ -74,7 +76,7 @@ class pos_config(osv.osv):
         result = dict()
 
         for record in self.browse(cr, uid, ids, context=context):
-            result[record.id] = record.session_ids.filtered(lambda r: r.state == 'opened').user_id.name
+            result[record.id] = record.session_ids.filtered(lambda r: r.state == 'opened' and not r.rescue).user_id.name
         return result
 
     _columns = {
@@ -97,6 +99,7 @@ class pos_config(osv.osv):
         'iface_scan_via_proxy' : fields.boolean('Scan via Proxy', help="Enable barcode scanning with a remotely connected barcode scanner"),
         'iface_invoicing': fields.boolean('Invoicing',help='Enables invoice generation from the Point of Sale'),
         'iface_big_scrollbars': fields.boolean('Large Scrollbars',help='For imprecise industrial touchscreens'),
+        # TODO master: remove the `iface_fullscreen` field. This is no longer used.
         'iface_fullscreen':     fields.boolean('Fullscreen', help='Display the Point of Sale in full screen mode'),
         'iface_print_auto': fields.boolean('Automatic Receipt Printing', help='The receipt will automatically be printed at the end of each order'),
         'iface_print_skip_screen': fields.boolean('Skip Receipt Screen', help='The receipt screen will be skipped if the receipt can be printed automatically.'),
@@ -193,7 +196,6 @@ class pos_config(osv.osv):
 
     def _get_default_company(self, cr, uid, context=None):
         company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
-        print company_id
         return company_id
 
     def _get_default_nomenclature(self, cr, uid, context=None):
@@ -222,7 +224,7 @@ class pos_config(osv.osv):
         'group_by' : True,
         'pricelist_id': _default_pricelist,
         'iface_invoicing': True,
-        'iface_print_auto': True,
+        'iface_print_auto': False,
         'iface_print_skip_screen': True,
         'stock_location_id': _get_default_location,
         'company_id': _get_default_company,
@@ -237,6 +239,9 @@ class pos_config(osv.osv):
         if p_type.default_location_src_id and p_type.default_location_src_id.usage == 'internal' and p_type.default_location_dest_id and p_type.default_location_dest_id.usage == 'customer':
             return {'value': {'stock_location_id': p_type.default_location_src_id.id}}
         return False
+
+    def onchange_iface_print_via_proxy(self, cr, uid, ids, print_via_proxy, context=None):
+        return {'value': {'iface_print_auto': print_via_proxy}}
 
     def set_active(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state' : 'active'}, context=context)
@@ -309,7 +314,7 @@ class pos_config(osv.osv):
                 'config_id': record.id,
             }
             session_id = proxy.create(cr, uid, values, context=context)
-            record.current_session_id = proxy.browse(cr, uid, session_id, context=context)
+            self.write(cr, SUPERUSER_ID, record.id, {'current_session_id': session_id}, context=context)
             if record.current_session_id.state == 'opened':
                 return self.open_ui(cr, uid, ids, context=context)
             return self._open_session(session_id)
@@ -516,28 +521,24 @@ class pos_session(osv.osv):
             journal_proxy.write(cr, SUPERUSER_ID, cashids, {'journal_user': True})
             jobj.write(cr, SUPERUSER_ID, [pos_config.id], {'journal_ids': [(6,0, cashids)]})
 
-
-        pos_config = jobj.browse(cr, uid, config_id, context=context)
-
-        statements = [(0, 0, {
-            'journal_id': journal.id,
-            'user_id': uid,
-            'company_id': pos_config.company_id.id
-        }) for journal in pos_config.journal_ids]
+        statements = []
+        create_statement = partial(self.pool['account.bank.statement'].create, cr, uid)
+        for journal in pos_config.journal_ids:
+            # set the journal_id which should be used by
+            # account.bank.statement to set the opening balance of the
+            # newly created bank statement
+            context['journal_id'] = journal.id if pos_config.cash_control and journal.type == 'cash' else False
+            st_values = {
+                'journal_id': journal.id,
+                'user_id': uid,
+            }
+            statements.append(create_statement(st_values, context=context))
 
         values.update({
             'name': self.pool['ir.sequence'].next_by_code(cr, uid, 'pos.session', context=context),
-            'statement_ids': statements,
+            'statement_ids': [(6, 0, statements)],
             'config_id': config_id
         })
-
-        # set the journal_id which should be used by
-        # account.bank.statement to set the opening balance of the
-        # newly created bank statement
-        if pos_config.cash_control:
-            for journal in pos_config.journal_ids:
-                if journal.type == 'cash':
-                    context.update({'journal_id': journal.id})
 
         return super(pos_session, self).create(cr, uid, values, context=context)
 
@@ -643,7 +644,7 @@ class pos_order(osv.osv):
     _order = "id desc"
 
     def _amount_line_tax(self, cr, uid, line, fiscal_position_id, context=None):
-        taxes = line.product_id.taxes_id.filtered(lambda t: t.company_id.id == line.order_id.company_id.id)
+        taxes = line.tax_ids.filtered(lambda t: t.company_id.id == line.order_id.company_id.id)
         if fiscal_position_id:
             taxes = fiscal_position_id.map_tax(taxes)
         price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
@@ -676,38 +677,81 @@ class pos_order(osv.osv):
             'journal':      ui_paymentline['journal_id'],
         }
 
-    def _get_rescue_session(self, cr, uid, order, context=None):
-        """ Find or generate a rescue session """
-        pos_session = self.pool['pos.session']
-        date = order.get('creation_date', time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT))
-        closed_session = pos_session.browse(cr, uid, order['pos_session_id'], context=context)
-        rescue_session_ids = pos_session.search(cr, uid, [
-            ('rescue', '=', True), ('config_id', '=', closed_session.config_id.id),
-            ('start_at', '<=', date), ('state', '=', 'opened')
-        ], limit=1, context=context)
-        if not rescue_session_ids:
-            return pos_session.copy(cr, uid, order['pos_session_id'], default={
-                'rescue': True,
+    # This deals with orders that belong to a closed session. In order
+    # to recover from this we:
+    # - assign the order to another compatible open session
+    # - if that doesn't exist, create a new one
+    def _get_valid_session(self, cr, uid, order, context=None):
+        session = self.pool.get('pos.session')
+        closed_session = session.browse(cr, uid, order['pos_session_id'], context=context)
+        open_sessions = session.search(cr, uid, [('state', '=', 'opened'),
+                                                 ('config_id', '=', closed_session.config_id.id),
+                                                 ('user_id', '=', closed_session.user_id.id)],
+                                       limit=1, order="start_at DESC", context=context)
+
+        _logger.warning('session %s (ID: %s) was closed but received order %s (total: %s) belonging to it',
+                        closed_session.name,
+                        closed_session.id,
+                        order['name'],
+                        order['amount_total'])
+
+        if open_sessions:
+            open_session = session.browse(cr, uid, open_sessions[0], context=context)
+            _logger.warning('using session %s (ID: %s) for order %s instead',
+                            open_session.name,
+                            open_session.id,
+                            order['name'])
+            return open_session.id
+        else:
+            _logger.warning('attempting to create new session for order %s', order['name'])
+            new_session_id = session.create(cr, uid, {
+                'config_id': closed_session.config_id.id,
             }, context=context)
-        return rescue_session_ids[0]
+            new_session = session.browse(cr, uid, new_session_id, context=context)
+
+            # bypass opening_control (necessary when using cash control)
+            new_session.signal_workflow('open')
+
+            return new_session_id
+
+    def _match_payment_to_invoice(self, cr, uid, order, context=None):
+        account_precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
+
+        # ignore orders with an amount_paid of 0 because those are returns through the POS
+        if not float_is_zero(order['amount_return'], account_precision) and not float_is_zero(order['amount_paid'], account_precision):
+            cur_amount_paid = 0
+            payments_to_keep = []
+            for payment in order.get('statement_ids'):
+                if cur_amount_paid + payment[2]['amount'] > order['amount_total']:
+                    payment[2]['amount'] = order['amount_total'] - cur_amount_paid
+                    payments_to_keep.append(payment)
+                    break
+                cur_amount_paid += payment[2]['amount']
+                payments_to_keep.append(payment)
+            order['statement_ids'] = payments_to_keep
+            order['amount_return'] = 0
 
     def _process_order(self, cr, uid, order, context=None):
-        session = self.pool['pos.session'].browse(cr, uid, order['pos_session_id'], context=context)
-        if session.state == 'closed':
-            rescue_session_id = self._get_rescue_session(cr, uid, order, context=context)
-            order['pos_session_id'] = rescue_session_id
-            session = self.pool['pos.session'].browse(cr, uid, rescue_session_id, context=context)
+        prec_acc = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
+        session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
+
+        if session.state == 'closing_control' or session.state == 'closed':
+            session_id = self._get_valid_session(cr, uid, order, context=context)
+            session = self.pool.get('pos.session').browse(cr, uid, session_id, context=context)
+            order['pos_session_id'] = session_id
+
         order_id = self.create(cr, uid, self._order_fields(cr, uid, order, context=context),context)
         journal_ids = set()
         for payments in order['statement_ids']:
-            self.add_payment(cr, uid, order_id, self._payment_fields(cr, uid, payments[2], context=context), context=context)
+            if not float_is_zero(payments[2]['amount'], precision_digits=prec_acc):
+                self.add_payment(cr, uid, order_id, self._payment_fields(cr, uid, payments[2], context=context), context=context)
             journal_ids.add(payments[2]['journal_id'])
 
         if session.sequence_number <= order['sequence_number']:
             session.write({'sequence_number': order['sequence_number'] + 1})
             session.refresh()
 
-        if not float_is_zero(order['amount_return'], self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')):
+        if not float_is_zero(order['amount_return'], precision_digits=prec_acc):
             cash_journal = session.cash_journal_id.id
             if not cash_journal:
                 # Select for change one of the cash journals used in this payment
@@ -745,11 +789,18 @@ class pos_order(osv.osv):
         for tmp_order in orders_to_save:
             to_invoice = tmp_order['to_invoice']
             order = tmp_order['data']
+
+            if to_invoice:
+                self._match_payment_to_invoice(cr, uid, order, context=context)
+
             order_id = self._process_order(cr, uid, order, context=context)
             order_ids.append(order_id)
 
             try:
                 self.signal_workflow(cr, uid, [order_id], 'paid')
+            except psycopg2.OperationalError:
+                # do not hide transactional errors, the order(s) won't be saved!
+                raise
             except Exception as e:
                 _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
 
@@ -1116,9 +1167,11 @@ class pos_order(osv.osv):
                 'comment': order.note or '',
                 'currency_id': order.pricelist_id.currency_id.id, # considering partner's sale pricelist's currency
                 'company_id': company_id,
+                'user_id': uid,
             }
             invoice = inv_ref.new(cr, uid, inv)
             invoice._onchange_partner_id()
+            invoice.fiscal_position_id = order.fiscal_position_id
 
             inv = invoice._convert_to_write(invoice._cache)
             if not inv.get('account_id', None):
@@ -1234,7 +1287,6 @@ class pos_order(osv.osv):
                     'journal_id' : sale_journal_id,
                     'date' : fields.date.context_today(self, cr, uid, context=context),
                     'move_id' : move_id,
-                    'company_id': current_company.id,
                 })
 
                 if data_type == 'product':
@@ -1309,7 +1361,7 @@ class pos_order(osv.osv):
 
                 # Create the tax lines
                 taxes = []
-                for t in line.product_id.taxes_id:
+                for t in line.tax_ids_after_fiscal_position:
                     if t.company_id.id == current_company.id:
                         taxes.append(t.id)
                 if not taxes:
@@ -1383,9 +1435,10 @@ class pos_order_line(osv.osv):
     def _amount_line_all(self, cr, uid, ids, field_names, arg, context=None):
         res = dict([(i, {}) for i in ids])
         account_tax_obj = self.pool.get('account.tax')
+        cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids, context=context):
             cur = line.order_id.pricelist_id.currency_id
-            taxes = [ tax for tax in line.product_id.taxes_id if tax.company_id.id == line.order_id.company_id.id ]
+            taxes = [ tax for tax in line.tax_ids if tax.company_id.id == line.order_id.company_id.id ]
             fiscal_position_id = line.order_id.fiscal_position_id
             if fiscal_position_id:
                 taxes = fiscal_position_id.map_tax(taxes)
@@ -1396,6 +1449,10 @@ class pos_order_line(osv.osv):
                 taxes = account_tax_obj.browse(cr, uid, taxes_ids, context).compute_all(price, cur, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
                 res[line.id]['price_subtotal'] = taxes['total_excluded']
                 res[line.id]['price_subtotal_incl'] = taxes['total_included']
+
+            res[line.id]['price_subtotal'] = cur_obj.round(cr, uid, cur, res[line.id]['price_subtotal'])
+            res[line.id]['price_subtotal_incl'] = cur_obj.round(cr, uid, cur, res[line.id]['price_subtotal_incl'])
+
         return res
 
     def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False, context=None):
@@ -1450,7 +1507,7 @@ class pos_order_line(osv.osv):
         'notice': fields.char('Discount Notice'),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True, change_default=True),
         'price_unit': fields.float(string='Unit Price', digits=0),
-        'qty': fields.float('Quantity', digits=0),
+        'qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
         'price_subtotal': fields.function(_amount_line_all, multi='pos_order_line_amount', digits=0, string='Subtotal w/o Tax'),
         'price_subtotal_incl': fields.function(_amount_line_all, multi='pos_order_line_amount', digits=0, string='Subtotal'),
         'discount': fields.float('Discount (%)', digits=0),
@@ -1507,30 +1564,24 @@ class pos_category(osv.osv):
     # In this case, the default image is set by the js code.
     image = openerp.fields.Binary("Image", attachment=True,
         help="This field holds the image used as image for the cateogry, limited to 1024x1024px.")
-    image_medium = openerp.fields.Binary("Medium-sized image",
-        compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
+    image_medium = openerp.fields.Binary("Medium-sized image", attachment=True,
         help="Medium-sized image of the category. It is automatically "\
              "resized as a 128x128px image, with aspect ratio preserved. "\
              "Use this field in form views or some kanban views.")
-    image_small = openerp.fields.Binary("Small-sized image",
-        compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
+    image_small = openerp.fields.Binary("Small-sized image", attachment=True,
         help="Small-sized image of the category. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
 
-    @openerp.api.depends('image')
-    def _compute_images(self):
-        for rec in self:
-            rec.image_medium = tools.image_resize_image_medium(rec.image)
-            rec.image_small = tools.image_resize_image_small(rec.image)
+    @openerp.api.model
+    def create(self, vals):
+        tools.image_resize_images(vals)
+        return super(pos_category, self).create(vals)
 
-    def _inverse_image_medium(self):
-        for rec in self:
-            rec.image = tools.image_resize_image_big(rec.image_medium)
-
-    def _inverse_image_small(self):
-        for rec in self:
-            rec.image = tools.image_resize_image_big(rec.image_small)
+    @openerp.api.multi
+    def write(self, vals):
+        tools.image_resize_images(vals)
+        return super(pos_category, self).write(vals)
 
 class product_template(osv.osv):
     _inherit = 'product.template'
@@ -1581,10 +1632,10 @@ class barcode_rule(models.Model):
     def _get_type_selection(self):
         types = sets.Set(super(barcode_rule,self)._get_type_selection())
         types.update([
-            ('weight','Weighted Product'),
-            ('price','Priced Product'),
-            ('discount','Discounted Product'),
-            ('client','Client'),
-            ('cashier','Cashier')
+            ('weight', _('Weighted Product')),
+            ('price', _('Priced Product')),
+            ('discount', _('Discounted Product')),
+            ('client', _('Client')),
+            ('cashier', _('Cashier'))
         ])
         return list(types)

@@ -3,12 +3,14 @@
 # * crm
 # 
 # Translators:
+# Elvinas Černys <elvinas@digitouch.lt>, 2015
+# S Butko <silvija.butko@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2015-10-10 09:47+0000\n"
+"PO-Revision-Date: 2016-02-20 10:37+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/lt/)\n"
 "MIME-Version: 1.0\n"
@@ -144,13 +146,13 @@ msgstr ""
 msgid ""
 "<span class=\"label label-default text-center "
 "odoo_purple\">Opportunity</span>"
-msgstr ""
+msgstr "<span class=\"label label-default text-center odoo_purple\">Galimybė</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Quotation</span>"
-msgstr ""
+msgstr "<span class=\"label label-default text-center odoo_purple\">Pasiūlymas</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -188,7 +190,7 @@ msgid ""
 "                                            <span class=\"fa fa-pencil-square-o\"/>\n"
 "                                            <strong> Create Custom Reports</strong>\n"
 "                                        </span>"
-msgstr ""
+msgstr "Kurti Nestandartines Ataskaitas"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -207,7 +209,7 @@ msgid ""
 "                                        <strong>Import a file</strong><br/>\n"
 "                                        <span class=\"small\">Recommended if &gt;100 products</span>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n<span class=\"fa\" data-icon=\"&#57408;\"/>\n<strong>Importuoti failą</strong><br/>\n<span class=\"small\">Rekomenduojama, jeigu &gt;100 produktų</span>\n</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -217,7 +219,7 @@ msgid ""
 "                                        <strong>Import</strong><br/>\n"
 "                                        <span class=\"small\">&gt; 200 contacts</span>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n<span class=\"fa\" data-icon=\"&#57408;\"/>\n<strong>Importuoti</strong><br/>\n<span class=\"small\">&gt; 200 kontaktų</span>\n</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -237,7 +239,7 @@ msgid ""
 "                                        <strong> Create manually</strong><br/>\n"
 "                                        <span class=\"small\">&lt; 200 contacts</span>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n<span class=\"fa\" data-icon=\"&#57440;\"/>\n<strong> Kurti rankiniu būdu</strong><br/>\n<span class=\"small\">&lt; 200 kontaktų</span>\n</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -247,7 +249,7 @@ msgid ""
 "                                        <strong> Create manually</strong><br/>\n"
 "                                        <span class=\"small\">Recommended if &lt;100 products</span>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n<span class=\"fa\" data-icon=\"&#57440;\"/>\n<strong> Kurti rankiniu būdu</strong><br/>\n<span class=\"small\">Rekomenduojama, jeigu &lt;100 produktų</span>\n</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -305,6 +307,22 @@ msgid ""
 msgstr ""
 
 #. module: crm
+#: model:web.tip,description:crm.crm_tip_4
+msgid ""
+"<span><b>This is a business opportunity.</b> Drag and drop it to another "
+"column while you move forward in the sales cycle. Click to zoom in the "
+"opportunity.</span>"
+msgstr ""
+
+#. module: crm
+#: model:web.tip,description:crm.crm_tip_6
+msgid ""
+"<span><strong>Click to register a new business opportunity</strong>. Once "
+"the opportunity is created, you will be able to drag and drop it in your "
+"sales pipeline.</span>"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "<span><strong>Contact us to customize your application:</strong><br/>\n"
@@ -322,7 +340,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Events</strong>"
-msgstr ""
+msgstr "<strong>Įvykiai</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -383,7 +401,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Negotiation:</strong>"
-msgstr ""
+msgstr "<strong>Derybos:</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -954,6 +972,11 @@ msgid "Click to set a new stage in your lead/opportunity pipeline."
 msgstr ""
 
 #. module: crm
+#: model:web.tip,description:crm.crm_tip_2
+msgid "Click to view the opportunities related to this customer."
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Close"
 msgstr "Užverti"
@@ -1013,11 +1036,16 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Congratulations, you're done!"
-msgstr ""
+msgstr "Sveikiname, Jums pavyko"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Consumers"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+msgid "Contact Information"
 msgstr ""
 
 #. module: crm
@@ -1102,7 +1130,7 @@ msgstr "Valstybė"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Create Customers"
-msgstr ""
+msgstr "Sukurti vartotoją"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
@@ -1112,7 +1140,7 @@ msgstr "Sukurti pardavimo galimybę"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Create Vendors"
-msgstr ""
+msgstr "Sukurti tiekėją"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
@@ -1355,7 +1383,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_display_name
 #: model:ir.model.fields,field_description:crm.field_crm_stage_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Vaizduojamas pavadinimas"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1377,7 +1405,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Don't hesitate to"
-msgstr ""
+msgstr "Nesidrovėkite"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1392,7 +1420,7 @@ msgstr "Atlikti"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Download the"
-msgstr ""
+msgstr "Atsisiųsti"
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_draft_lead
@@ -1449,7 +1477,7 @@ msgstr "Kontakto el. pašto adresas"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "End"
-msgstr ""
+msgstr "Pabaiga"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1500,7 +1528,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Excel template"
-msgstr ""
+msgstr "EXCEL šablonas"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -1854,13 +1882,6 @@ msgid "Import using the top left button in"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-msgid "Important Messages"
-msgstr ""
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Improve average revenue per salesperson"
 msgstr ""
@@ -1880,7 +1901,7 @@ msgstr ""
 #: code:addons/crm/sales_team.py:15
 #, python-format
 msgid "Incoming"
-msgstr ""
+msgstr "Atvykstančios prekės"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1966,7 +1987,7 @@ msgstr "Paskutinio pranešimo data"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding___last_update
 #: model:ir.model.fields,field_description:crm.field_crm_stage___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Paskutinį kartą keista"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_last_stage_update
@@ -2028,6 +2049,14 @@ msgstr "Iniciatyva / pirkėjas"
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead
 msgid "Lead Created"
 msgstr "Sukurta iniciatyva"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_lead_tag_action
+#: model:ir.ui.menu,name:crm.menu_crm_lead_categ
+#: model:ir.ui.view,arch_db:crm.crm_lead_tag_form
+#: model:ir.ui.view,arch_db:crm.crm_lead_tag_tree
+msgid "Lead Tags"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
@@ -2249,6 +2278,8 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_medium_id
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_medium_id
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Medium"
 msgstr "Vidutinis"
 
@@ -2433,6 +2464,11 @@ msgid "Motivation letter from the management"
 msgstr ""
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+msgid "My Leads"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -2484,7 +2520,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead_next_activity_id
 #: model:ir.ui.view,arch_db:crm.crm_lead_view_tree_activity
 msgid "Next Activity"
-msgstr ""
+msgstr "Kitas veiksmas"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_activity_1_id
@@ -2549,7 +2585,7 @@ msgstr "Pastabos"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Veiksmų skaičius"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_opportunity_report_delay_close
@@ -2581,12 +2617,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Žinučių, kurių prireiks veiksmui skaičius"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Neperskaitytų žinučių skaičius"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3050,7 +3086,7 @@ msgstr "Priminimas vartotojui"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Reporting"
-msgstr ""
+msgstr "Ataskaitos"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_requirements
@@ -3395,6 +3431,13 @@ msgid "Subscription Management"
 msgstr ""
 
 #. module: crm
+#: model:web.tip,description:crm.crm_tip_5
+msgid ""
+"Switch to the graph view to get a clear reporting on your opportunities "
+"pipeline."
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Systematic organization is what makes the difference\n"
@@ -3679,6 +3722,9 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_unread
+#: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Unread Messages"
 msgstr "Neskaityti pranešimai"
 
@@ -3866,12 +3912,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Interneto svetainės pranešimai"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Interneto svetainės komunikacijos istorija"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner

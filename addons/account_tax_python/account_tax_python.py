@@ -52,7 +52,7 @@ class AccountTaxPython(models.Model):
         partner = partner_id and self.pool.get('res.partner').browse(cr, uid, partner_id, context=context) or None
         ids = isinstance(ids, (int, long)) and [ids] or ids
         recs = self.browse(cr, uid, ids, context=context)
-        return recs.compute_all(price_unit, currency, quantity, product, partner)
+        return AccountTaxPython.compute_all(recs, price_unit, currency, quantity, product, partner)
 
 class AccountTaxTemplatePython(models.Model):
     _inherit = 'account.tax.template'

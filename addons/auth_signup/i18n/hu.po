@@ -3,13 +3,13 @@
 # * auth_signup
 # 
 # Translators:
-# Kris Krnacs, 2015
+# Kris Krnacs, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-09-19 22:00+0000\n"
+"POT-Creation-Date: 2016-01-06 07:13+0000\n"
+"PO-Revision-Date: 2016-01-06 09:32+0000\n"
 "Last-Translator: Kris Krnacs\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -84,13 +84,19 @@ msgid "Allow external users to sign up"
 msgstr "Külső felhasználók bejelentkezésének engedéjezése"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:60
+#: code:addons/auth_signup/controllers/main.py:64
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr "Egy e-mail lett kiküldve a jelszava visszaállításának biztosítására"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:108
+#: code:addons/auth_signup/controllers/main.py:40
+#, python-format
+msgid "Another user is already registered using this email address."
+msgstr "Ezzel az email címmel már regisztrált egy másik felhasználó."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:115
 #, python-format
 msgid "Authentication Failed."
 msgstr "Azonosítás nem sikerült"
@@ -123,7 +129,13 @@ msgid "Connected"
 msgstr "Kapcsolódott"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:62
+#: code:addons/auth_signup/controllers/main.py:43
+#, python-format
+msgid "Could not create a new account."
+msgstr "Nem tudta létrehozni az új fiókot."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:66
 #, python-format
 msgid "Could not reset your password"
 msgstr "Nem lehetett visszaállítani a jelszaát"
@@ -165,17 +177,12 @@ msgid "Password reset"
 msgstr "Jelszó visszaállítás"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_private
-msgid "Private Profile"
-msgstr "Privát profil"
-
-#. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Reset Password"
 msgstr "Jelszó visszaállítása"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:250
+#: code:addons/auth_signup/res_users.py:253
 #, python-format
 msgid "Reset password: invalid username or email"
 msgstr "Jelszó visszaállító: hibás felhasználónév vagy jelszó"
@@ -237,11 +244,6 @@ msgid "Template user for new users created through signup"
 msgstr "Sablon felhasználó amit a új felhasznlók létrehozásához használ"
 
 #. module: auth_signup
-#: model:ir.model.fields,help:auth_signup.field_res_users_website_url
-msgid "The full URL to access the document through the website."
-msgstr "A teljes elérési út/URL  a dokumentum weboldalon keresztüli eléréséhez."
-
-#. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_reset_password
 msgid "This allows users to trigger a password reset from the Login page."
 msgstr "Ez lehetővé teszi a felhasználó részére a jelszó megváltoztatásának elindítását a bejelentkezési oldalról."
@@ -250,41 +252,6 @@ msgstr "Ez lehetővé teszi a felhasználó részére a jelszó megváltoztatás
 #: model:ir.model,name:auth_signup.model_res_users
 msgid "Users"
 msgstr "Felhasználók"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_published
-msgid "Visible in Website"
-msgstr "Látható a weboldalon"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_description
-msgid "Website Partner Full Description"
-msgstr "Honlap partnerek részletes leírása"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_short_description
-msgid "Website Partner Short Description"
-msgstr "Honlap partnerek rövid leírása"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_url
-msgid "Website URL"
-msgstr "Honlap URL"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_description
-msgid "Website meta description"
-msgstr "Honlap meta leírás"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_keywords
-msgid "Website meta keywords"
-msgstr "Honlap meta kulcsszavai"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_title
-msgid "Website meta title"
-msgstr "Honlap meta cím"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -306,8 +273,3 @@ msgstr "base.config.settings"
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
 msgstr "pl. Gipsz Jakab"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_self
-msgid "unknown"
-msgstr "ismeretlen"

@@ -24,10 +24,10 @@
 // Generate all margins for one size, given
 // the name of the margin and intended size
 .o-margins-define(@name, @size: @name) {
-    .mt@{name} {margin-top: ~"@{size}px";}
-    .mb@{name} {margin-bottom: ~"@{size}px";}
-    .ml@{name} {margin-left: ~"@{size}px";}
-    .mr@{name} {margin-right: ~"@{size}px";}
+    .mt@{name} {margin-top: ~"@{size}px"!important;}
+    .mb@{name} {margin-bottom: ~"@{size}px"!important;}
+    .ml@{name} {margin-left: ~"@{size}px"!important;}
+    .mr@{name} {margin-right: ~"@{size}px"!important;}
 }
 
 // Generate all margins

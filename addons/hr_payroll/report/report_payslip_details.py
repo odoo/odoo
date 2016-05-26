@@ -22,7 +22,7 @@ class payslip_details_report(report_sxw.rml_parse):
             if not rule_categories:
                 return []
             if rule_categories[0].parent_id:
-                rule_categories.insert(0, rule_categories[0].parent_id)
+                rule_categories = rule_categories[0].parent_id | rule_categories
                 get_recursive_parent(rule_categories)
             return rule_categories
 

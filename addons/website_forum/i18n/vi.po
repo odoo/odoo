@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:20+0000\n"
-"PO-Revision-Date: 2015-10-10 09:52+0000\n"
+"POT-Creation-Date: 2015-11-26 14:10+0000\n"
+"PO-Revision-Date: 2015-12-29 08:18+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/vi/)\n"
 "MIME-Version: 1.0\n"
@@ -248,7 +248,7 @@ msgid "<i class=\"text-muted\">awarded users</i>"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:419
+#: code:addons/website_forum/models/forum.py:483
 #, python-format
 msgid ""
 "<p>A new answer for <i>%s</i> has been posted. <a "
@@ -256,7 +256,16 @@ msgid ""
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:425
+#: code:addons/website_forum/models/forum.py:499
+#, python-format
+msgid ""
+"<p>A new question <i>%s</i> has been asked on %s and require your "
+"validation. <a href=\"%s/forum/%s/question/%s\">Click here to access the "
+"question.</a></p>"
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:489
 #, python-format
 msgid ""
 "<p>A new question <i>%s</i> has been asked on %s. <a "
@@ -1115,7 +1124,7 @@ msgstr "Thảo luận"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_display_name
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Tên hiển thị"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_user_bio
@@ -1645,7 +1654,7 @@ msgstr "Ngày thông điệp cuối cùng"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote___last_update
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Sửa lần cuối vào"
 
 #. module: website_forum
 #: selection:forum.forum,default_order:0
@@ -1671,11 +1680,6 @@ msgstr "Cập nhật lần cuối vào"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Last activity date"
-msgstr ""
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_res_users_calendar_last_notif_ack
-msgid "Last notification marked as read from base Calendar"
 msgstr ""
 
 #. module: website_forum
@@ -2113,7 +2117,7 @@ msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header_footer_custom
-msgid "Q&amp;A"
+msgid "Q&amp;amp;A"
 msgstr ""
 
 #. module: website_forum

@@ -67,7 +67,11 @@
             </section>
             <div class="clearfix"/>
             <ul class="media-list o_website_comments">
-                <t t-foreach="object.message_ids" t-as="message">
+                <t t-set="messages" t-value="object.message_ids"/>
+                <t groups="base.group_portal,base.group_public">
+                    <t t-set="messages" t-value="object.message_ids.filtered(lambda m: m.subtype_id.internal == False)"/>
+                </t>
+                <t t-foreach="messages" t-as="message">
                     <t t-if="message.website_published or website.env.user.sudo(website.env.user.id).has_group('base.group_website_publisher')">
                         <li class="media" t-if="message.message_type == 'comment'" t-att-id="'message-%s' % message.id">
                             <div class="media-body">

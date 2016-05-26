@@ -3,16 +3,19 @@
 # * sale
 # 
 # Translators:
+# Eric Geens <eric.geens@vitabiz.be>, 2015
 # Eric Geens <ericgeens@yahoo.com>, 2015
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2015
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2015-2016
 # Volluta <volluta@tutanota.com>, 2015
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2015-10-10 09:50+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-03-11 12:44+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +27,7 @@ msgstr ""
 #: model:mail.template,body_html:sale.email_template_edi_sale
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "    \n"
@@ -86,7 +89,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Hallo ${object.partner_id.name},</p>\n    \n    <p>In bijlage vindt u de ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} van ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENTIES</strong><br />\n       &nbsp;&nbsp;Ordernummer: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Ordertotaal: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Besteldatum: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Referentie: ${object.origin}<br />\n       % endif\n       % if object.client_order_ref:\n       &nbsp;&nbsp;Uw referentie: ${object.client_order_ref}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Uw contactpersoon: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n    <p>\n        U kan uw offerte online raadplegen:\n    </p>\n    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n        href=\"/quote/${object.id}/${object.access_token}\">Bekijk ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n\n    % if object.paypal_url:\n    <br/>\n    <p>U kunt ook meteen betalen via Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n\n    <br/>\n    <p>Mocht u nog vragen hebben, aarzel dan niet om ons te contacteren.</p>\n    <p>Wij danken u voor het vertrouwen in ${object.company_id.name or 'ons'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telefoon:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Website :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_sales_count
@@ -407,6 +410,7 @@ msgid "Customer Reference"
 msgstr "Referentie klant"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_taxes_id
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_taxes_id
 msgid "Customer Taxes"
 msgstr "Verkoop belastingen"
@@ -414,7 +418,7 @@ msgstr "Verkoop belastingen"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Customer portal"
-msgstr ""
+msgstr "Klantenportaal"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_date
@@ -557,33 +561,33 @@ msgstr "Voltooid"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:70
 #, python-format
 msgid "Down Payment"
-msgstr ""
+msgstr "Aanbetaling"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_amount
 msgid "Down Payment Amount"
-msgstr ""
+msgstr "Bedrag aanbetaling"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_product_id
 msgid "Down Payment Product"
-msgstr ""
+msgstr "Product aanbetaling"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (fixed amount)"
-msgstr ""
+msgstr "Aanbetaling (vast bedrag)"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (percentage)"
-msgstr ""
+msgstr "Aanbetaling (percentage)"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:67
 #, python-format
 msgid "Down payment of %s%%"
-msgstr ""
+msgstr "Aanbetaling van %s%%"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -598,7 +602,12 @@ msgstr "E-mail samenstellen wizard"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
 msgid "Enable customer portal to track orders, delivery and invoices"
-msgstr ""
+msgstr "Sta het klantenportaal toe om orders, leveringen en facturen op te volgen"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_property_account_expense_id
+msgid "Expense Account"
+msgstr "Kostenrekening"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_validity_date
@@ -621,7 +630,7 @@ msgid ""
 "Fix Price: all price manage from products sale price.\n"
 "Different prices per Customer: you can assign price on buying of minimum quantity in products sale tab.\n"
 "Advanced pricing based on formula: You can have all the rights on pricelist"
-msgstr "Vaste prijs: alle prijzen worden beheerd vanuit de verkoopprijs van het product.\nVerschillende prijzen per klant: prijzen bepaald door de aankoop van minimale hoeveelheden per  product.\nGeavanceerde prijszetting via formules: u hebt alle rechten bij het bepalen van de prijszetting."
+msgstr "Vaste prijs: alle prijzen worden beheerd vanuit de verkoopprijs van het product.\nVerschillende prijzen per klant: prijzen bepaald door de inkoop van minimale hoeveelheden per  product.\nGeavanceerde prijszetting via formules: u hebt alle rechten bij het bepalen van de prijszetting."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_follower_ids
@@ -686,11 +695,7 @@ msgid "If checked, new messages require your attention."
 msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-msgid "Important Messages"
-msgstr "Belangrijke berichten"
-
-#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_property_account_income_id
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Income Account"
 msgstr "Omzetrekening"
@@ -765,7 +770,7 @@ msgstr "Factuuradres van actuele verkooporder."
 #. module: sale
 #: selection:sale.config.settings,default_invoice_policy:0
 msgid "Invoice based on costs (time and material, expenses)"
-msgstr "Factuur gebaseerd op kost (tijd en materiaal, declaraties)"
+msgstr "Factuur gebaseerd op kosten (tijd en materiaal, declaraties)"
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
@@ -793,12 +798,12 @@ msgstr "Factuuromzet voor deze maand. Dit is het bedrag dat het verkoopteam deze
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines"
-msgstr "Te factureren lijnen"
+msgstr "Te factureren regels"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines (deduct down payments)"
-msgstr ""
+msgstr "Factureerbare regels (trek aanbetalingen af)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_invoiced
@@ -843,6 +848,7 @@ msgstr "Facturen worden aangemaakt als concept, zodat u ze nog kan\nbijwerken vo
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
+#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
 msgstr "Facturatie"
@@ -910,12 +916,12 @@ msgstr "Laatst bijgewerkt op"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_contract
 msgid "Manage subscriptions and recurring invoicing"
-msgstr ""
+msgstr "Beheer abonnementen en herhalende facturen"
 
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Manually set quantities on order"
-msgstr "Bepaal handmatig de hoeveelheden voor het order"
+msgstr "Bepaal handmatig de hoeveelheden voor de order"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_margin
@@ -948,6 +954,12 @@ msgid "Never allow to modify a confirmed sale order"
 msgstr "Sta nooit het wijzigen van een bevestigde verkooporder toe"
 
 #. module: sale
+#: code:addons/sale/sale.py:96
+#, python-format
+msgid "New"
+msgstr "Nieuw"
+
+#. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
 msgid "New Quotation"
 msgstr "Nieuwe offerte"
@@ -955,7 +967,7 @@ msgstr "Nieuwe offerte"
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
 msgid "No discount on sales order lines, global discount only"
-msgstr "Geen korting op verkooporderlijnen, enkel algemene korting "
+msgstr "Geen korting op verkooporderregels, enkel algemene korting "
 
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
@@ -1096,7 +1108,7 @@ msgstr "Bestelde hoeveelheden"
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
-msgstr "Meerverkoop orders"
+msgstr "Upsell orders"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1220,7 +1232,7 @@ msgstr "Producten"
 msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
-msgstr "Producten kunnen meerdere attributen hebben die als varianten worden gedefinieerd (Voorbeelden zijn: maat, kleur,...)"
+msgstr "Producten kunnen meerdere kenmerken hebben die als varianten worden gedefinieerd (Voorbeelden zijn: maat, kleur,...)"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
@@ -1514,7 +1526,7 @@ msgstr "Verkooporder zoeken"
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_sale_digital
 msgid ""
 "Sell digital products - provide downloadable content on your customer portal"
-msgstr ""
+msgstr "Verkoop digitale producten - bied downloadbare inhoud aan op uw klantenportaal"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1541,12 +1553,12 @@ msgstr "Bepaal een facturatiedoel:"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Done"
-msgstr "Zet naar voltooid"
+msgstr "Zet op voltooid"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Quotation"
-msgstr "Zet naar offerte"
+msgstr "Zet op offerte"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1572,7 +1584,7 @@ msgstr "Toon prijslijsten aan klanten"
 #: selection:sale.config.settings,group_uom:0
 msgid ""
 "Some products may be sold/purchased in different unit of measures (advanced)"
-msgstr "Sommige producten kunnen verkocht/aangekocht worden met verschillende maateenheden (geavanceerd)"
+msgstr "Sommige producten kunnen verkocht/ingekocht worden met verschillende maateenheden (geavanceerd)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -1589,7 +1601,7 @@ msgstr "Status"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Subscriptions"
-msgstr ""
+msgstr "Abonnementen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_subtotal
@@ -1652,7 +1664,7 @@ msgstr "Het afgedrukte rapport toont de leveringscondities voor de verkooporders
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
-msgstr ""
+msgstr "Het product dat gebruikt wordt om een aanbetaling op te doen moet van het type 'Dienst' zijn. Gelieve een ander product te gebruiken of dit product te wijzigen."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:122
@@ -1661,13 +1673,13 @@ msgid ""
 "The product used to invoice a down payment should have an invoice policy set"
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
-msgstr ""
+msgstr "Het product dat gebruikt wordt voor een aanbetaling moet een facturatiebeleid hebben dat ingesteld is op \"bestelde hoeveelheden\".  Gelieve uw voorschotproduct bij te werken zodat u een voorschotfactuur kunt opmaken."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:64
 #, python-format
 msgid "The value of the down payment amount must be positive."
-msgstr ""
+msgstr "De waarde van de aanbetaling moet positief zijn."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:60
@@ -1678,9 +1690,36 @@ msgid ""
 msgstr "Er bestaat geen inkomstenrekening voor het product \"%s\". U moet eerst een grootboek aanmaken in de boekhoudinstellingen."
 
 #. module: sale
+#: code:addons/sale/sale.py:316
+#, python-format
+msgid "There is no invoicable line."
+msgstr "Er is geen factureerbare lijn."
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "This Year"
 msgstr "Dit jaar"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_product_product_property_account_expense_id
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product."
+msgstr "Deze rekening wordt gebruikt voor facturen in plaats van de standaard rekening voor uitgaven van het huidige product."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_product_product_property_account_income_id
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product."
+msgstr "Deze rekening zal gebruikt worden voor de facturen in plaats van de standaardrekening om de opbrengst van dit product te waarderen."
+
+#. module: sale
+#: model:web.tip,description:sale.sale_tip_1
+msgid ""
+"This progress bar shows the stages your quotation will go through.\n"
+"                Use buttons on the left to move forward to the next stages."
+msgstr "Deze voortgangsbalk toont de fases waar uw offerte doorheen zal gaan.\nGebruik de linkse knoppen om naar de volgende fases te gaan."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -1770,6 +1809,7 @@ msgstr "Maateenheden"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_unread
+#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Unread Messages"
 msgstr "Ongelezen berichten"
 
@@ -1784,6 +1824,11 @@ msgid "Untaxed Amount"
 msgstr "Netto bedrag"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_report_price_subtotal
+msgid "Untaxed Total Price"
+msgstr "Onbelaste totaalprijs"
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Upselling"
 msgstr "Meer verkopen"
@@ -1792,7 +1837,14 @@ msgstr "Meer verkopen"
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Upselling Opportunity"
-msgstr "Opportuniteit voor meerverkoop"
+msgstr "Upselling prospect"
+
+#. module: sale
+#: model:web.tip,description:sale.sale_tip_2
+msgid ""
+"Use pivot and graph views to analyze your sales pipeline.\n"
+"                Select measures, filter and group dimensions to get the perfect report according to your needs."
+msgstr "Gebruik pivot en grafiek weergaven om uw verkoop pijplijn te analyseren.\nSelecteer afmetingen, filter en groepeer dimensies om het perfecte rapport voor uw eisen te krijgen."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_pricelist

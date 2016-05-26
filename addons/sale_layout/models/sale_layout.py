@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from openerp import api
 from openerp.osv import osv, fields
 from itertools import groupby
 
@@ -66,10 +67,6 @@ class AccountInvoiceLine(osv.Model):
     sale_layout_cat_id = openerp.fields.Many2one('sale_layout.category', string='Section')
     categ_sequence = openerp.fields.Integer(related='sale_layout_cat_id.sequence',
                                             string='Layout Sequence', store=True)
-    _defaults = {
-        'categ_sequence': 0
-    }
-
 
 class SaleOrder(osv.Model):
     _inherit = 'sale.order'
@@ -99,10 +96,6 @@ class SaleOrderLine(osv.Model):
         #  Store is intentionally set in order to keep the "historic" order.
     }
 
-    _defaults = {
-        'categ_sequence': 0
-    }
-
     _order = 'order_id, categ_sequence, sale_layout_cat_id, sequence, id'
 
     def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
@@ -113,3 +106,15 @@ class SaleOrderLine(osv.Model):
         if line.categ_sequence:
             invoice_vals['categ_sequence'] = line.categ_sequence
         return invoice_vals
+
+    @api.multi
+    def _prepare_invoice_line(self, qty):
+        """
+        Prepare the dict of values to create the new invoice line for a sales order line.
+
+        :param qty: float quantity to invoice
+        """
+        res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
+        if self.sale_layout_cat_id:
+            res['sale_layout_cat_id'] = self.sale_layout_cat_id.id
+        return res

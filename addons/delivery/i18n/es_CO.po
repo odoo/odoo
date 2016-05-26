@@ -3,13 +3,16 @@
 # * delivery
 # 
 # Translators:
+# ANDRES FELIPE NEGRETE GOMEZ <psi@nubark.com>, 2016
+# Esteban Echeverry <tebanep@nubark.com>, 2016
+# Mateo Tibaquirá <nestormateo@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-09-30 09:23+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-02-18 13:58+0000\n"
+"Last-Translator: Felipe Palomino <omega@nubark.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,37 +23,37 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_rules_count
 msgid "# Analytic Rules"
-msgstr ""
+msgstr "# Reglas Analíticas"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_bom_count
 msgid "# Bill of Material"
-msgstr ""
+msgstr "# Lista de Material"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_num_invoiced
 msgid "# Invoiced in Purchase"
-msgstr ""
+msgstr "# Facturado en Compras"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_num_invoiced
 msgid "# Invoiced in Sale"
-msgstr ""
+msgstr "Nº Facturado en Venta"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_mo_count
 msgid "# Manufacturing Orders"
-msgstr ""
+msgstr "# Órdenes de Manufactura"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_count
 msgid "# Purchases"
-msgstr ""
+msgstr "# Compras"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sales_count
 msgid "# Sales"
-msgstr ""
+msgstr "# Ventas"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_count
@@ -61,13 +64,13 @@ msgstr "Variantes de productos"
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Carrier</strong>"
-msgstr ""
+msgstr "<strong>Transportista</strong>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Weight</strong>"
-msgstr ""
+msgstr "<strong>Peso</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_product_type
@@ -75,7 +78,7 @@ msgstr ""
 msgid ""
 "A consumable is a product for which you don't manage stock, a service is a "
 "non-material product provided by a company or an individual."
-msgstr ""
+msgstr "Un consumible es un producto del que no se le realizan valores de invetario, un servicio es un producto inmaterial proporcionado por una empresa o un individuo."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_sale
@@ -83,7 +86,7 @@ msgid ""
 "A description of the Product that you want to communicate to your customers."
 " This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
-msgstr "Una descripción del producto que quieras comunicar a tus clientes. Esta descripción se copiará a cada Pedido, Orden de Despacho y Factura/Reintegro de Cliente."
+msgstr "Una descripción del Producto que quiere comunicar a sus clientes. Esta descripción se copiará a cada Orden de Venta, Orden de Entrega y Factura/Reintegro del Cliente."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_purchase
@@ -91,7 +94,7 @@ msgid ""
 "A description of the Product that you want to communicate to your vendors. "
 "This description will be copied to every Purchase Order, Receipt and Vendor "
 "Bill/Refund."
-msgstr ""
+msgstr "Una descripción del producto que desea comunicar a sus proveedores. Esta descripción se copiará en cada Orden de Compra, Recibo y Factura de Proveedor / de Reembolso."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description
@@ -103,7 +106,7 @@ msgstr "Una descripción precisa del Producto, usada sólo para propósitos de i
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Acción Requerida"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
@@ -120,12 +123,12 @@ msgstr "Cantidad"
 msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
-msgstr ""
+msgstr "Monto de la orden para beneficiarla con un envío gratuito, expresado en la moneda de la compañía"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_asset_category_id
 msgid "Asset Type"
-msgstr ""
+msgstr "Tipo de Activo"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_attribute_value_ids
@@ -135,47 +138,47 @@ msgstr "Atributos"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_available
 msgid "Available"
-msgstr ""
+msgstr "Disponible"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_produce_delay
 msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
-msgstr ""
+msgstr "Retraso medio en días para producir este producto. En caso de LDM multi-nivel, los tiempos de fabricación de los componentes serán añadidos."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_avg_price
 msgid "Avg. Price in Customer Invoices."
-msgstr ""
+msgstr "Precio Medio en las Facturas de Cliente"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_avg_price
 msgid "Avg. Price in Vendor Bills "
-msgstr ""
+msgstr "Avg . Precio en Facturas de Proveedores"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_avg_price
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_avg_price
 msgid "Avg. Unit Price"
-msgstr ""
+msgstr "Precio Unitario Prom."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_barcode
 msgid "Barcode"
-msgstr ""
+msgstr "Código de Barras"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_list_price
 msgid ""
 "Base price to compute the customer price. Sometimes called the catalog "
 "price."
-msgstr ""
+msgstr "Precio base para calcular el precio al cliente. A veces llamado el precio de catálogo."
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
 msgid "Based on Rules"
-msgstr ""
+msgstr "Basada en Reglas"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image
@@ -185,17 +188,17 @@ msgstr "Imagen de gran tamaño"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_bom_ids
 msgid "Bill of Materials"
-msgstr ""
+msgstr "Lista de Materiales"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_weight_bulk
 msgid "Bulk Weight"
-msgstr ""
+msgstr "Peso al Granel"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_ok
 msgid "Can be Purchased"
-msgstr ""
+msgstr "Puede ser Comprado"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_rental
@@ -211,7 +214,7 @@ msgstr "Puede ser Vendido"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_can_be_expensed
 msgid "Can be expensed"
-msgstr ""
+msgstr "Puede ser gastado"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -226,39 +229,39 @@ msgstr "Cancelar"
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
-msgstr ""
+msgstr "Transportista"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Carrier Information"
-msgstr ""
+msgstr "Información del Transportista"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
 msgid "Carrier Tracking Ref"
-msgstr ""
+msgstr "Ref. Seguimiento Transportista"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_from_categ_ids
 msgid "Category Routes"
-msgstr ""
+msgstr "Categoría Rutas"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership
 msgid "Check if the product is eligible for membership."
-msgstr ""
+msgstr "Compruebe si el producto es elegible para la asociación."
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Click to define a new delivery method."
-msgstr ""
+msgstr "Haga click para definir u nuevo método de entrega."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_uos_coeff
 msgid ""
 "Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * "
 "coeff"
-msgstr ""
+msgstr "Coeficiente para convertir la unidad de medida predeterminada (UdM) en la unidad de venta UdV = UdM * coeff "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_color
@@ -273,17 +276,17 @@ msgstr "Compañía"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Condition"
-msgstr ""
+msgstr "Condición"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_method
 msgid "Control Purchase Bills"
-msgstr ""
+msgstr "Control de Facturas de Compra"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_standard_price
 msgid "Cost"
-msgstr ""
+msgstr "Costo"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_standard_price
@@ -296,17 +299,17 @@ msgid ""
 "Cost of the product template used for standard stock valuation in accounting"
 " and used as a base price on purchase orders. Expressed in the default unit "
 "of measure of the product."
-msgstr ""
+msgstr "El costo de la plantilla del producto será utilizado para la valoración de inventario en la contabilidad y se utiliza como precio base en órdenes de compra. Será expresado en la unidad de medida predeterminada del producto."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_cost_method
 msgid "Costing Method"
-msgstr ""
+msgstr "Método de Costo"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_country_ids
 msgid "Countries"
-msgstr ""
+msgstr "Países"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_uid
@@ -333,27 +336,27 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Cantidad actual de los productos.\nEn un contexto de una sola ubicación de existencias, esto incluye los bienes almacenados en esta ubicación, o cualquiera de sus hijas.\nEn un contexto de un solo almacén, esto incluye los bienes almacenados en la ubicación de existencias de ese almacén, o cualquiera de sus hijas.\nEn cualquier otro caso, esto incluye los bienes almacenados en cualquier ubicación de existencias de tipo 'Interna'."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_delay
 msgid "Customer Lead Time"
-msgstr ""
+msgstr "Plazo de Entrega del Cliente"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_taxes_id
 msgid "Customer Taxes"
-msgstr ""
+msgstr "Impuestos del Cliente"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_ref
 msgid "Customer ref"
-msgstr ""
+msgstr "Ref. cliente"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership_date_from
 msgid "Date from which membership becomes active."
-msgstr ""
+msgstr "Fecha desde la que la membresía se activa."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_last_post
@@ -363,7 +366,7 @@ msgstr "Fecha del último mensaje publicado en el registro."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership_date_to
 msgid "Date until which membership remains active."
-msgstr ""
+msgstr "Fecha hasta la que la membresía permanece activa."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_uom_id
@@ -375,49 +378,49 @@ msgstr "Unidad de Medida por defecto usada para todas las operaciones de existen
 msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
-msgstr ""
+msgstr "Unidad de medida por defecto utilizada para los pedidos de compra. Debe estar en la misma categoría que la unidad de medida por defecto."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_deferred_revenue_category_id
 msgid "Deferred Revenue Type"
-msgstr ""
+msgstr "Tipo de Ingreso Diferido"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_count
 #: model:ir.ui.menu,name:delivery.menu_delivery
 #: model:ir.ui.menu,name:delivery.sale_menu_delivery
 msgid "Delivery"
-msgstr ""
+msgstr "Entrega"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_sale_order_carrier_id
 msgid "Delivery Method"
-msgstr ""
+msgstr "Método de Entrega"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Formas de Envío"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
 msgid "Delivery Price Rules"
-msgstr ""
+msgstr "Reglas de Precio de Envío"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_id
 msgid "Delivery Product"
-msgstr ""
+msgstr "Producto de Envío"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_route_ids
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO/MTS,..."
-msgstr ""
+msgstr "Dependiendo de los módulos instalados, este permite definir la ruta del producto: si será comprado, facturado, bajo pedido o desde existencias..."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description
@@ -427,30 +430,30 @@ msgstr "Descripción"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_picking
 msgid "Description on Picking"
-msgstr ""
+msgstr "Descripción de Picking"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Destination"
-msgstr ""
+msgstr "Destino"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_event_ok
 msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
-msgstr ""
+msgstr "Determina si un producto necesita crear automáticamente una inscripción a un evento en la confirmación de una línea de orden de venta."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sequence
 msgid "Determine the display order"
-msgstr ""
+msgstr "Determine el orden de visualización"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nombre Público"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -458,73 +461,73 @@ msgid ""
 "Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
-msgstr ""
+msgstr "Cada despachador (por ejemplo UPS) puede tener varios métodos de entrega \n(por ejemplo, UPS Express, UPS Standard) con un conjunto de reglas de precios \nincluida para cada método."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_price
 msgid "Estimated Delivery Price"
-msgstr ""
+msgstr "Precio de Entrega Estimado"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ok
 msgid "Event Subscription"
-msgstr ""
+msgstr "Suscripción al Evento"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ticket_ids
 msgid "Event Tickets"
-msgstr ""
+msgstr "Entradas del Evento"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expected_margin
 msgid "Expected Margin"
-msgstr ""
+msgstr "Margen Previsto"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expected_margin_rate
 msgid "Expected Margin (%)"
-msgstr ""
+msgstr "Margen Previsto (%)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_expected
 msgid "Expected Sale"
-msgstr ""
+msgstr "Venta Prevista"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_expected_margin
 msgid "Expected Sale - Normal Cost"
-msgstr ""
+msgstr "Venta Prevista - Coste Normal"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sales_gap
 msgid "Expected Sale - Turn Over"
-msgstr ""
+msgstr "Venta Prevista - Volumen de Negocio"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_expected_margin_rate
 msgid "Expected margin * 100 / Expected Sale"
-msgstr ""
+msgstr "Margen previsto * 100 / Venta Prevista"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_expense_id
 msgid "Expense Account"
-msgstr ""
+msgstr "Cuenta de gastos"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expense_policy
 msgid "Expense Invoice Policy"
-msgstr ""
+msgstr "Política de Facturación de Gastos"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order_carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
-msgstr ""
+msgstr "Rellene este campo si va a facturar el envío basado en los productos despachados."
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_fixed_price
 msgid "Fixed Price"
-msgstr ""
+msgstr "Precio FIjo"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_follower_ids
@@ -534,17 +537,17 @@ msgstr "Seguidores"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Seguidores (Canales)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Seguidores (Asociados)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_virtual_available
 msgid "Forecast Quantity"
-msgstr ""
+msgstr "Proyectar Cantidad"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_virtual_available
@@ -553,35 +556,35 @@ msgid ""
 "In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Cantidad prevista (calculada como cantidad a mano - saliente + entrante)\nEn un contexto de una sola ubicación de existencias, esto incluye los bienes almacenados en esta ubicación, o cualquiera de sus hijas.\nEn un contexto de un solo almacén, esto incluye los bienes almacenados en la ubicación de existencias de ese almacén, o cualquiera de sus hijas.\nEn cualquier otro caso, esto incluye los bienes almacenados en cualquier ubicación de existencias de tipo 'Interna'."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.free_delivery_carrier_product_product
 msgid "Free delivery charges"
-msgstr ""
+msgstr "Entrega gratuita"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_free_if_more_than
 msgid "Free if Order total is more than"
-msgstr ""
+msgstr "Gratis si el total del pedido es mayor que"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_packaging_ids
 msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
-msgstr ""
+msgstr "Indica las diferentes formas de empaquetar el mismo producto. Esto no tiene ningún impacto en la preparación de movimientos de inventario y se utiliza principalmente si utiliza el módulo EDI."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_price_rule_sequence
 msgid "Gives the sequence order when calculating delivery carrier."
-msgstr ""
+msgstr "Obtiene la secuencia correcta cuando ejecuta el cálculo del despachador."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "Peso bruto"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_id
@@ -597,7 +600,7 @@ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Si está marcado, los nuevos mensajes requerirán su atención."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_valuation
@@ -608,20 +611,20 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
+msgstr "Si la valoración perpetua se activa para un producto, el sistema creará automáticamente asientos contables correspondientes a movimientos de stock, con el precio de producto indicado según el \"método de costo\". La cuenta de valoración de inventario establecida en la categoría de producto representará la cuenta de inventario actual, y las cuentas de entrada y salida de mercancía contendrán las contrapartidas de movimiento para los productos entrantes y salientes."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_free_if_more_than
 msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
-msgstr ""
+msgstr "Si el pedido es superior a cierto importe, el cliente puede ser beneficiado con envío gratuito."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_active
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
-msgstr ""
+msgstr "Si no está marcado, el producto podrá ocultarse sin ser eliminado."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_expense_policy
@@ -629,7 +632,7 @@ msgid ""
 "If you invoice at cost, the expense will be invoiced on the sale order at "
 "the cost of the analytic line;if you invoice at sales price, the price of "
 "the product will be used instead."
-msgstr ""
+msgstr "Si factura al costo, los gastos serán facturados en la orden de venta al costo de la línea analítica; si factura a precio de venta, el precio del producto será usado."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image
@@ -637,31 +640,31 @@ msgid ""
 "Image of the product variant (Big-sized image of product template if false)."
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
-msgstr ""
+msgstr "Imagen de la variante del producto (Imagen grande de la plantilla del producto en caso de que esté vacía). Es redimensionada automáticamente a una imagen de 1024x1024px, manteniendo la proporción."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image_medium
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
-msgstr ""
+msgstr "Imagen de la variante del producto (Imagen mediana de la plantilla del producto en caso de que esté vacía)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image_small
 msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
-msgstr ""
+msgstr "Imagen de la variante del producto (Imagen pequeña de la plantilla del producto en caso de que esté vacía)."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_income_id
 msgid "Income Account"
-msgstr ""
+msgstr "Cuenta de Ingresos"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_incoming_qty
 msgid "Incoming"
-msgstr ""
+msgstr "Ingresos"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_categ_id
@@ -677,53 +680,53 @@ msgstr "Referencia Interna"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_barcode
 msgid "International Article Number used for product identification."
-msgstr ""
+msgstr "Número de Artículo Internacional usado para identificar el producto."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_inventory
 msgid "Inventory Location"
-msgstr ""
+msgstr "Ubicación de Inventario"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_valuation
 msgid "Inventory Valuation"
-msgstr ""
+msgstr "Valuación del Inventario"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
 msgid "Invoice Shipping on Delivery"
-msgstr ""
+msgstr "Gastos de Envío en Facturas"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_state
 msgid "Invoice State"
-msgstr ""
+msgstr "Estado Factura"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_policy
 msgid "Invoicing Policy"
-msgstr ""
+msgstr "Política de Facturación"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Es Seguidor"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line_is_delivery
 msgid "Is a Delivery"
-msgstr ""
+msgstr "￼Es un Envío"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_is_product_variant
 msgid "Is a product variant"
-msgstr ""
+msgstr "¿Es una variante de un producto?"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_fixed_price
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
-msgstr ""
+msgstr "Dejar vacío si el precio depende de un precio anticipado por destino."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_last_post
@@ -734,7 +737,7 @@ msgstr "Fecha del Último Mensaje"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier___last_update
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Última Modificación el"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_write_uid
@@ -756,47 +759,47 @@ msgstr "Ubicación"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_packaging_ids
 msgid "Logistical Units"
-msgstr ""
+msgstr "Unidades Logísticas"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_produce_delay
 msgid "Manufacturing Lead Time"
-msgstr ""
+msgstr "Plazo de Entrega de Fabricación"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_from
 msgid "Margin Date From"
-msgstr ""
+msgstr "Fecha Desde del Margen"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_to
 msgid "Margin Date To"
-msgstr ""
+msgstr "Fecha Hasta del Margen"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_max_value
 msgid "Maximum Value"
-msgstr ""
+msgstr "Valor Máximo"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_medium
 msgid "Medium-sized image"
-msgstr ""
+msgstr "Imagen mediana"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership
 msgid "Membership"
-msgstr ""
+msgstr "Membresía"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership_date_to
 msgid "Membership End Date"
-msgstr ""
+msgstr "Fecha Final de la Membresía"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership_date_from
 msgid "Membership Start Date"
-msgstr ""
+msgstr "Fecha de Inicio de la Membresía"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_ids
@@ -806,12 +809,12 @@ msgstr "Mensajes"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_ids
 msgid "Messages and communication history"
-msgstr "Mensajes e historial de comunicación"
+msgstr "Historial de mensajes y de comunicación"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_orderpoint_ids
 msgid "Minimum Stock Rules"
-msgstr ""
+msgstr "Reglas de Existencias Mínimas"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name
@@ -824,74 +827,74 @@ msgstr "Nombre"
 #: code:addons/delivery/models/sale_order.py:62
 #, python-format
 msgid "No carrier matching."
-msgstr ""
+msgstr "Sin despachadores que coincidan."
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:70
 #, python-format
 msgid "No carrier set for this order."
-msgstr ""
+msgstr "No se ha configurado despachador para esta orden."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_normal_cost
 msgid "Normal Cost"
-msgstr ""
+msgstr "Coste Normal"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_gap
 msgid "Normal Cost - Total Cost"
-msgstr ""
+msgstr "Coste Normal - Coste Total"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
 #: model:product.product,name:delivery.normal_delivery_carrier_product_product
 msgid "Normal Delivery Charges"
-msgstr ""
+msgstr "Cargos Por Envío Normal"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Número de Acciones"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_number_of_packages
 msgid "Number of Packages"
-msgstr ""
+msgstr "Número de Paquetes"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Número de mensajes que requieren una acción"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Número de mensajes no leidos"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_operator
 msgid "Operator"
-msgstr ""
+msgstr "Operador"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_outgoing_qty
 msgid "Outgoing"
-msgstr ""
+msgstr "Saliente"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
 msgid "Packages"
-msgstr ""
+msgstr "Paquetes"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
 msgid "Partner"
-msgstr "Empresa/Cliente"
+msgstr "Asociado"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
 msgid "Physical Packages"
-msgstr ""
+msgstr "Paquetes Físicos"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -904,18 +907,18 @@ msgstr "Precio"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_delivery_type
 msgid "Price Computation"
-msgstr ""
+msgstr "Cálculo del precio"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_creditor_price_difference
 msgid "Price Difference Account"
-msgstr ""
+msgstr "Precio de la Cuenta Diferencia"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
 msgid "Price Rules"
-msgstr ""
+msgstr "Regla de Precio"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pricelist_id
@@ -925,74 +928,74 @@ msgstr "Lista de Precios"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_item_ids
 msgid "Pricelist Items"
-msgstr ""
+msgstr "Líneas de la lista de precios"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Pricing"
-msgstr ""
+msgstr "Precios"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_rule_ids
 msgid "Pricing Rules"
-msgstr ""
+msgstr "Reglas de Precios"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_procurement
 msgid "Procurement Location"
-msgstr ""
+msgstr "Ubicación de Abastecimiento"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_alert_time
 msgid "Product Alert Time"
-msgstr ""
+msgstr "Tiempo de Alerta Producto"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_attribute_line_ids
 msgid "Product Attributes"
-msgstr ""
+msgstr "Atributos del Producto"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_email_template_id
 msgid "Product Email Template"
-msgstr ""
+msgstr "Plantilla de Correo Electrónico del Producto"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_life_time
 msgid "Product Life Time"
-msgstr ""
+msgstr "Tiempo de Vida Producto"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_manager
 msgid "Product Manager"
-msgstr ""
+msgstr "Gerente de Producto"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_removal_time
 msgid "Product Removal Time"
-msgstr ""
+msgstr "Tiempo Eliminación Producto"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_template
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_tmpl_id
 msgid "Product Template"
-msgstr ""
+msgstr "Plantilla del Producto"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_type
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_type
 msgid "Product Type"
-msgstr ""
+msgstr "Tipo de producto"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_use_time
 msgid "Product Use Time"
-msgstr ""
+msgstr "Duración del Producto"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_production
 msgid "Production Location"
-msgstr ""
+msgstr "Ubicación de Producción"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_ids
@@ -1002,17 +1005,17 @@ msgstr "Productos"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_purchase
 msgid "Purchase Description"
-msgstr ""
+msgstr "Descripción de Compra"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_gap
 msgid "Purchase Gap"
-msgstr ""
+msgstr "Diferencia de Compra"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_po_id
 msgid "Purchase Unit of Measure"
-msgstr ""
+msgstr "Unidad de Medida de Compra"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1023,7 +1026,7 @@ msgstr "Cantidad"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_qty_available
 msgid "Quantity On Hand"
-msgstr ""
+msgstr "Cantidad a Mano"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_incoming_qty
@@ -1032,7 +1035,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Cantidad de los productos que está planificado que llegue.\nEn un contexto de una sola ubicación de existencias, esto incluye los bienes almacenados en esta ubicación, o cualquiera de sus hijas.\nEn un contexto de un solo almacén, esto incluye los bienes almacenados en la ubicación de existencias de ese almacén, o cualquiera de sus hijas.\nEn cualquier otro caso, esto incluye los bienes almacenados en cualquier ubicación de existencias de tipo 'Interna'."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_outgoing_qty
@@ -1041,32 +1044,32 @@ msgid ""
 "In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Cantidad de los productos que está planificado que salga.\nEn un contexto de una sola ubicación de existencias, esto incluye los bienes almacenados en esta ubicación, o cualquiera de sus hijas.\nEn un contexto de un solo almacén, esto incluye los bienes almacenados en la ubicación de existencias de ese almacén, o cualquiera de sus hijas.\nEn cualquier otro caso, esto incluye los bienes almacenados en cualquier ubicación de existencias de tipo 'Interna'."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reception_count
 msgid "Receipt"
-msgstr ""
+msgstr "Recibo"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_nbr_reordering_rules
 msgid "Reordering Rules"
-msgstr ""
+msgstr "Reglas de Reabastecimiento"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_ids
 msgid "Routes"
-msgstr ""
+msgstr "Rutas"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_list_base_price
 msgid "Sale Base Price"
-msgstr ""
+msgstr "Precio de Venta Base"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_sale
 msgid "Sale Description"
-msgstr ""
+msgstr "Descripción de venta"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_list_price
@@ -1080,7 +1083,7 @@ msgstr "Precio"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sales_gap
 msgid "Sales Gap"
-msgstr ""
+msgstr "Diferencia Ventas"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
@@ -1095,14 +1098,14 @@ msgstr "Línea de Pedido de Venta"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_categ_id
 msgid "Select category for the current product"
-msgstr ""
+msgstr "Seleccione la categoría para el producto actual."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_event_type_id
 msgid ""
 "Select event types so when we use this product in sales order lines, it will"
 " filter events of this type only."
-msgstr ""
+msgstr "Seleccione los tipos de evento para que cuando se utilice este producto en las líneas de las órdenes de venta, se filtren los eventos de este tipo únicamente."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:250
@@ -1110,12 +1113,12 @@ msgstr ""
 msgid ""
 "Selected product in the delivery method doesn't fulfill any of the delivery "
 "carrier(s) criteria."
-msgstr ""
+msgstr "El producto seleccionado en el método de entrega no cumple ninguno de los criterios del despachador (es) de carga."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Send to Shipper"
-msgstr ""
+msgstr "Enviar a Remitente"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sequence
@@ -1126,46 +1129,54 @@ msgstr "Secuencia"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "Set price"
-msgstr ""
+msgstr "Configurar precio"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:88
 #, python-format
 msgid "Shipment sent to carrier %s for expedition with tracking number %s"
-msgstr ""
+msgstr "Porte enviado al tranposrte %s para expedición con número de seguimiento %s"
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:106
+#, python-format
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
+msgstr "El método de entrega no tiene ninguna redirección en el sitio del proveedor de mensajería para realizar un seguimiento de este orden."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
 msgid "Shipping Cost"
-msgstr ""
+msgstr "Costo de Envío"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_shipping_enabled
 msgid "Shipping enabled"
-msgstr ""
+msgstr "Envío activado"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_small
 msgid "Small-sized image"
-msgstr ""
+msgstr "Imagen pequeña"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_uos_id
 msgid ""
 "Specify a unit of measure here if invoicing is made in another unit of "
 "measure than inventory. Keep empty to use the default unit of measure."
-msgstr ""
+msgstr "Especifique aquí una unidad de medida si la factura se realizará en otra unidad distinta a la del inventario. Déjelo vacío para usar la de por defecto."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_product_sale_ok
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_ok
 msgid "Specify if the product can be selected in a sales order line."
-msgstr ""
+msgstr "Especifique si el producto se puede seleccionar en una línea de órdenes de venta."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_can_be_expensed
 msgid "Specify whether the product can be selected in an HR expense."
-msgstr ""
+msgstr "Especifica si el producto puede ser seleccionado en un gasto RRHH."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_cost_method
@@ -1173,7 +1184,7 @@ msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
 "                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
-msgstr ""
+msgstr "Precio estándar: El precio de costo se actualiza manualmente al final de un período determinado (por lo general una vez al año).\nPrecio medio: El precio de costo se recalcula en cada movimiento de inventario entrante y se utiliza para la valoración del producto.\nPrecio Real: El precio de costo es el precio del último producto de salida (se puede utilizar en caso de pérdida de inventario, por ejemplo)."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
@@ -1183,55 +1194,55 @@ msgstr "Estado"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_account_input
 msgid "Stock Input Account"
-msgstr ""
+msgstr "Cuenta de Entrada de Existencias"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Movimiento de Existencias"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_account_output
 msgid "Stock Output Account"
-msgstr ""
+msgstr "Cuenta de Salida de Existencias"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_normal_cost
 msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
-msgstr ""
+msgstr "Suma de la Multiplicación del precio de Costo y la cantidad de las Facturas de Proveedor"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_turnover
 msgid ""
 "Sum of Multiplication of Invoice price and quantity of Customer Invoices"
-msgstr ""
+msgstr "Suma de la Multiplicación del precio de Factura y la cantidad de las Facturas de Cliente"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_total_cost
 msgid "Sum of Multiplication of Invoice price and quantity of Vendor Bills "
-msgstr ""
+msgstr "Suma de la Multiplicación del precio de Factura y la cantidad de las Facturas de Proveedor"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_expected
 msgid ""
 "Sum of Multiplication of Sale Catalog price and quantity of Customer "
 "Invoices"
-msgstr ""
+msgstr "Suma de la Multiplicación del precio del Catálogo de Venta y la cantidad de las Facturas de Cliente"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_num_invoiced
 msgid "Sum of Quantity in Customer Invoices"
-msgstr ""
+msgstr "Suma de Cantidad en Facturas de Cliente"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_num_invoiced
 msgid "Sum of Quantity in Vendor Bills"
-msgstr ""
+msgstr "Suma de Cantidad de Facturas de Proveedores"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name_template
@@ -1242,7 +1253,7 @@ msgstr "Plantilla"
 #: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.product,name:delivery.delivery_carrier_product_product
 msgid "The Poste"
-msgstr ""
+msgstr "The Poste"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_delay
@@ -1250,18 +1261,18 @@ msgid ""
 "The average delay in days between the confirmation of the customer order and"
 " the delivery of the finished products. It's the time you promise to your "
 "customers."
-msgstr ""
+msgstr "El retraso medio en días entre la confirmación del pedido de cliente y la entrega de los productos finales. Es el tiempo que promete a sus clientes."
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:53
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
-msgstr ""
+msgstr "La orden debe estar en estado borrador para añadir líneas de envío."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_partner_id
 msgid "The partner that is doing the delivery service."
-msgstr ""
+msgstr "Empresa que realiza el servicio de entrega."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_volume
@@ -1271,7 +1282,7 @@ msgstr "El volumen en m3"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
-msgstr ""
+msgstr "El peso de los contenidos en Kg, sin incluir cualquier envase, etc."
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -1279,129 +1290,129 @@ msgid ""
 "These methods allow to automatically compute the delivery price\n"
 "                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders)."
-msgstr ""
+msgstr "Estos métodos permiten calcular automáticamente el precio de envío \nsegún su configuración; en la orden de venta (basado en la proforma) \no la factura (en base a las órdenes de entrega)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_expense_id
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
-msgstr ""
+msgstr "Esta cuenta se utilizará en facturas, en lugar de la cuenta por defecto, para valorar gastos de este producto."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_income_id
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
-msgstr ""
+msgstr "Esta cuenta se utilizará en facturas, en lugar de la cuenta por defecto, para valorar las ventas de este producto."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_creditor_price_difference
 msgid ""
 "This account will be used to value price difference between purchase price "
 "and cost price."
-msgstr ""
+msgstr "Esta cuenta se utilizará para valorar la diferencia de precios entre el precio de compra y precio de coste."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner_property_delivery_carrier_id
 msgid "This delivery method will be used when invoicing from picking."
-msgstr ""
+msgstr "Este método de entrega será utilizado cuando se facture a partir del Movimiento de Inventario."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image_variant
 msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
-msgstr ""
+msgstr "Este campo guarda la imagen de la variante del producto, limitada a 1024x1024px."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_price_extra
 msgid "This is the sum of the extra price of all attributes"
-msgstr ""
+msgstr "Esta es la suma de los precios adicionales de todos los atributos"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_production
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by manufacturing orders."
-msgstr ""
+msgstr "Se usará esta ubicación de existencias, en lugar de la de por defecto, como la ubicación origen para los movimientos de existencias generados por las órdenes de fabricación."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_procurement
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by procurements."
-msgstr ""
+msgstr "Se usará esta ubicación de existencias, en lugar de la de por defecto, como la ubicación origen para los movimientos de existencias generados por los abastecimientos."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_inventory
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
-msgstr ""
+msgstr "Se usará esta ubicación de existencias, en lugar de la de por defecto, como la ubicación origen para los movimientos de existencias generados cuando se realizan inventarios."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_cost
 msgid "Total Cost"
-msgstr ""
+msgstr "Costo Total"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_margin
 msgid "Total Margin"
-msgstr ""
+msgstr "Margen Total"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_margin_rate
 msgid "Total Margin Rate(%)"
-msgstr ""
+msgstr "Tasa de Margen Total (%)"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_total_margin_rate
 msgid "Total margin * 100 / Turnover"
-msgstr ""
+msgstr "Margen total * 100 / Volumen de negocio"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_track_service
 msgid "Track Service"
-msgstr ""
+msgstr "Servicio de Seguimiento"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_tracking
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Tracking"
-msgstr ""
+msgstr "Rastreo"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Transferir"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_id
 msgid "Transporter Company"
-msgstr ""
+msgstr "Compañía de Transporte"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_turnover
 msgid "Turnover"
-msgstr ""
+msgstr "Volumen de negocio"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_total_margin
 msgid "Turnover - Standard price"
-msgstr ""
+msgstr "Volumen de negocio - Precio estándar"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_type_id
 msgid "Type of Event"
-msgstr ""
+msgstr "Tipo de Evento"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_shipping_enabled
 msgid ""
 "Uncheck this box to disable package shipping while validating Delivery "
 "Orders"
-msgstr ""
+msgstr "Desmarque esta casilla para desactivar el envío del paquete al validar Órdenes de Entrega"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_id
@@ -1414,12 +1425,12 @@ msgstr "Unidad de Medida"
 #: model:ir.model.fields,help:delivery.field_stock_move_weight_uom_id
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
-msgstr ""
+msgstr "La Unidad de Medida (Unidad de Medida) es la unidad de medición del Peso"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uos_coeff
 msgid "Unit of Measure -> UOS Coeff"
-msgstr ""
+msgstr "Unidad de Medida -> Coeficiente UdV"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uos_id
@@ -1429,7 +1440,7 @@ msgstr "Unidad de Venta"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking_weight_uom_id
 msgid "Unit of measurement for Weight"
-msgstr ""
+msgstr "Unidad de medida para el Peso"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_unread
@@ -1439,7 +1450,7 @@ msgstr "Mensajes sin Leer"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Contador de Mensajes no Leídos"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable
@@ -1449,27 +1460,27 @@ msgstr "Variable"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable_factor
 msgid "Variable Factor"
-msgstr ""
+msgstr "Factor Variable"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_extra
 msgid "Variant Extra Price"
-msgstr ""
+msgstr "Extra precio en variantes"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_variant
 msgid "Variant Image"
-msgstr ""
+msgstr "Imagen de la Variante"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
 msgid "Vendor"
-msgstr ""
+msgstr "Proveedor"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id
 msgid "Vendor Taxes"
-msgstr ""
+msgstr "Impuestos de Proveedor"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1477,17 +1488,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_volume
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_volume
 msgid "Volume"
-msgstr ""
+msgstr "Volumen"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_warehouse_id
 msgid "Warehouse"
-msgstr ""
+msgstr "Almacén"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_warranty
 msgid "Warranty"
-msgstr ""
+msgstr "Garantía"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1497,41 +1508,41 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_weight
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Weight"
-msgstr ""
+msgstr "Peso"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
 #: selection:delivery.price.rule,variable_factor:0
 msgid "Weight * Volume"
-msgstr ""
+msgstr "Peso * Volumen"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_alert_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
-msgstr ""
+msgstr "Cuando un nuevo nº de serie se asigna, éste es el número de días antes de que se notifique una alerta."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_life_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
-msgstr ""
+msgstr "Cuando un nuevo nº de serie se asigna, éste es el número de días antes de que los bienes se conviertan en peligrosos y no deban ser consumidos."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_removal_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
-msgstr ""
+msgstr "Cuando un nuevo nº de serie se asigna, éste es el número de días antes de que los bienes deban eliminarse del stock."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_use_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
-msgstr ""
+msgstr "Cuando un nuevo nº de serie se asigna, éste es el número de días antes de que los bienes se empiecen a deteriorar, sin ser peligroso aún."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_input
@@ -1540,7 +1551,7 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr ""
+msgstr "Cuando se realiza una valoración de inventario en tiempo real, la contrapartida para todos los movimientos de entrada serán imputados en esta cuenta, a menos que se haya establecido una cuenta de valoración específica en la ubicación fuente. Cuando no se establece en el producto, se usa la establecida en la categoría."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_output
@@ -1549,7 +1560,7 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr ""
+msgstr "Cuando se realiza una valoración de inventario en tiempo real, la contrapartida para todos los movimientos de salida serán imputados en esta cuenta, a menos que se haya establecido una cuenta de valoración específica en la ubicación destino. Cuando no se establece en el producto, se usa la establecida en la categoría."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_email_template_id
@@ -1557,22 +1568,22 @@ msgid ""
 "When validating an invoice, an email will be sent to the customer based on "
 "this template. The customer will receive an email for each product linked to"
 " an email template."
-msgstr ""
+msgstr "Al validar una factura, un correo electrónico será enviado al cliente basado en esta plantilla. El cliente recibirá un correo electrónico para cada producto vinculado a una plantilla de correo electrónico."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_from
 msgid "Zip From"
-msgstr ""
+msgstr "Desde Zip"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_to
 msgid "Zip To"
-msgstr ""
+msgstr "Hacia Zip"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "e.g. UPS Express"
-msgstr ""
+msgstr "ej. Servientrega"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_cost_method

@@ -10,8 +10,12 @@
 
             .o_modal_header {
                 .o-webclient-padding(@top: 10px, @bottom: 10px);
+                .clearfix();
 
-                .o_popup_list_pager { // FIXME : should check where it is used (o_modal_header ~= control panel)
+                .o_search_options {
+                    display: inline-block;
+                }
+                .o_pager {
                     float: right;
                 }
             }

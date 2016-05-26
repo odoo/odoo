@@ -99,6 +99,7 @@ var GraphView = View.extend({
                 groupbys: this.initial_groupbys,
                 context: context,
                 fields: this.fields,
+                stacked: this.fields_view.arch.attrs.stacked !== "False" 
             });
             // append widget
             this.widget.appendTo(this.$el);

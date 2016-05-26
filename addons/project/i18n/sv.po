@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2015-10-10 09:51+0000\n"
+"PO-Revision-Date: 2016-05-03 00:48+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgstr "# dagar"
 #: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_nbr_tasks
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
 msgid "# of Tasks"
-msgstr ""
+msgstr "# av aktiviteter"
 
 #. module: project
 #: code:addons/project/project.py:248 code:addons/project/project.py:267
@@ -646,7 +646,7 @@ msgid ""
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this task\n"
 " * Ready for next stage indicates the task is ready to be pulled to the next stage"
-msgstr ""
+msgstr "En aktivitets kanban-etapp indikerar specialfall:\n* Normalt är standard\n* Blockerad indikerar att något hinder föreligger i aktiviteten\n* Redo för nästa steg anger att aktiviteten är klar för nästa etapp i processen."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -662,7 +662,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_message_needaction
 #: model:ir.model.fields,field_description:project.field_project_task_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Åtgärd krävs"
 
 #. module: project
 #. openerp-web
@@ -692,7 +692,7 @@ msgstr "Aktiv"
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
-msgstr ""
+msgstr "Lägg på beskrivning..."
 
 #. module: project
 #. openerp-web
@@ -714,12 +714,12 @@ msgstr "Alias"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "Alias kontaktsäkerhet"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_model
 msgid "Alias Model"
-msgstr ""
+msgstr "Alias modell"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_name
@@ -750,7 +750,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_group_time_work_estimation_tasks
 msgid "Allows you to compute Time Estimation on tasks."
-msgstr ""
+msgstr "Tillåter dig att göra tidsuppskattningar på aktiviteter."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -803,7 +803,7 @@ msgstr "Verkställ"
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Archived"
-msgstr ""
+msgstr "Arkiverad"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
@@ -813,7 +813,7 @@ msgstr "Tilldelningsdatum"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Assignation Month"
-msgstr ""
+msgstr "Tilldelningsmånad"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -896,7 +896,7 @@ msgstr "Saldo"
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_1
 msgid "Basic"
-msgstr ""
+msgstr "Basal"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -940,7 +940,7 @@ msgstr ""
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
-msgstr ""
+msgstr "Av ansvarig"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
@@ -1057,7 +1057,7 @@ msgstr "Konfiguration"
 #. module: project
 #: model:ir.actions.act_window,name:project.action_config_settings
 msgid "Configure Project"
-msgstr ""
+msgstr "Konfigurera projekt"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1086,7 +1086,7 @@ msgstr "Kontakt"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_analytic_account_id
 msgid "Contract/Analytic"
-msgstr ""
+msgstr "Kontrakt/Analytisk"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1258,7 +1258,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.menu,name:project.menu_projects
 msgid "Dashboard"
-msgstr ""
+msgstr "Instrumentpanel"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_date
@@ -1357,6 +1357,13 @@ msgid "Development Process"
 msgstr ""
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project.js:50
+#, python-format
+msgid "Discard"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_display_name
 #: model:ir.model.fields,field_description:project.field_project_project_display_name
 #: model:ir.model.fields,field_description:project.field_project_tags_display_name
@@ -1366,7 +1373,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type_display_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Visa namn"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
@@ -1436,7 +1443,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Don't hesitate to"
-msgstr ""
+msgstr "Tveka inte att"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1486,7 +1493,7 @@ msgstr "E-post"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "End"
-msgstr ""
+msgstr "Slut"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_end_date
@@ -1513,7 +1520,7 @@ msgstr "Fel ! Du kan inte skapa rekursiva aktiviteter."
 #. module: project
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower than project end-date."
-msgstr ""
+msgstr "Fel! projektets startdatum måste föregå projekets slutdatum."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_planned_hours
@@ -1534,6 +1541,13 @@ msgstr ""
 msgid ""
 "Every business is different.<br/>\n"
 "                    Odoo allows you to customize every application and it's usually a good idea to customize screens to fit your project needs."
+msgstr ""
+
+#. module: project
+#: model:web.tip,description:project.project_tip_3
+msgid ""
+"Every event on a task is logged in this section. Send a new message to "
+"notify followers or log an internal note."
 msgstr ""
 
 #. module: project
@@ -1563,7 +1577,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "Utökade filter"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
@@ -1604,7 +1618,7 @@ msgstr ""
 msgid ""
 "Follow this project to automatically track the events associated to tasks "
 "and issues of this project."
-msgstr ""
+msgstr "Följ det här projektet för att automatiskt spåra händelser i samband med uppgifter och frågor som berör detta projekt."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1621,7 +1635,7 @@ msgstr "Följare"
 #: model:ir.model.fields,field_description:project.field_project_project_message_channel_ids
 #: model:ir.model.fields,field_description:project.field_project_task_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Följare (Kanaler)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_message_partner_ids
@@ -1678,7 +1692,7 @@ msgstr ""
 #. module: project
 #: selection:project.config.settings,module_sale_service:0
 msgid "Generate tasks from sale orders"
-msgstr ""
+msgstr "Skapa uppgifter från kundorder"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1737,7 +1751,7 @@ msgstr "Gruppera efter"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Helpdesk & Support"
-msgstr ""
+msgstr "Kundtjänst och support"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1876,13 +1890,6 @@ msgid "Implement"
 msgstr ""
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_project_project_filter
-#: model:ir.ui.view,arch_db:project.view_task_kanban
-#: model:ir.ui.view,arch_db:project.view_task_search_form
-msgid "Important Messages"
-msgstr ""
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Improve"
 msgstr ""
@@ -1923,7 +1930,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_planned_hours
 msgid "Initially Planned Hours"
-msgstr ""
+msgstr "Initialt planerade timmar"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_id
@@ -2089,7 +2096,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type___last_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Senast redigerad"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_last_stage_update
@@ -2149,7 +2156,7 @@ msgstr "Låg"
 #. module: project
 #: selection:project.config.settings,group_time_work_estimation_tasks:0
 msgid "Manage time estimation on tasks"
-msgstr ""
+msgstr "Administrera tidsuppskattningar på aktiviteter"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2295,7 +2302,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_message_needaction_counter
 #: model:ir.model.fields,field_description:project.field_project_task_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Antalet åtgärder"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_opening_days
@@ -2310,19 +2317,19 @@ msgstr "Dagar för att genomföra aktiviteten"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_doc_count
 msgid "Number of documents attached"
-msgstr ""
+msgstr "Antal bifogade dokument "
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_message_needaction_counter
 #: model:ir.model.fields,help:project.field_project_task_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Antal meddelanden som kräver en åtgärd"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_message_unread_counter
 #: model:ir.model.fields,help:project.field_project_task_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Antalet olästa meddelanden"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2361,7 +2368,7 @@ msgstr "Öppna"
 #. module: project
 #: model:ir.actions.client,name:project.action_client_project_menu
 msgid "Open Project Menu"
-msgstr ""
+msgstr "Öppna projektmeny"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_force_thread_id
@@ -2580,7 +2587,7 @@ msgstr "Projektnamn"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Project Settings"
-msgstr ""
+msgstr "Projektinställningar"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2596,6 +2603,12 @@ msgid "Project Tasks"
 msgstr "Projektaktiviteter"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
+#: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
+msgid "Project Time Unit"
+msgstr ""
+
+#. module: project
 #: model:res.request.link,name:project.req_link_task
 msgid "Project task"
 msgstr "Projektaktivitet"
@@ -2609,14 +2622,22 @@ msgstr "Projektets aktiviteter"
 #: code:addons/project/project.py:282
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.actions.act_window,name:project.open_view_project_all_config
+#: model:ir.model.fields,field_description:project.field_account_analytic_account_project_ids
+#: model:ir.model.fields,field_description:project.field_project_project_project_ids
 #: model:ir.model.fields,field_description:project.field_project_task_type_project_ids
 #: model:ir.ui.menu,name:project.menu_projects_config
 #: model:ir.ui.menu,name:project.portal_services_projects
+#: model:ir.ui.view,arch_db:project.analytic_account_inherited_form
 #: model:ir.ui.view,arch_db:project.task_company
 #: model:ir.ui.view,arch_db:project.view_project
 #, python-format
 msgid "Projects"
 msgstr "Projekt"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.task_type_edit
+msgid "Projects using this stage"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_module_project_issue_sheet
@@ -2692,7 +2713,7 @@ msgstr "Record Thread ID"
 #. module: project
 #: selection:project.config.settings,module_project_timesheet:0
 msgid "Record timesheet lines per tasks"
-msgstr ""
+msgstr "Tidrapporteringsrader på aktivitetsnivå"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2721,6 +2742,13 @@ msgstr "Återstående timmar"
 #: model:ir.model.fields,field_description:project.field_project_task_history_remaining_hours
 msgid "Remaining Time"
 msgstr "Återstående tid"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project.js:48
+#, python-format
+msgid "Remove Cover Image"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2795,6 +2823,13 @@ msgid "Search Project"
 msgstr "Sök projekt"
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project.js:46
+#, python-format
+msgid "Select"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Send an alert when a task is stuck in red for more than a few days"
 msgstr ""
@@ -2863,7 +2898,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:15
 #, python-format
 msgid "Specification"
-msgstr ""
+msgstr "Specifikation"
 
 #. module: project
 #. openerp-web
@@ -2938,11 +2973,21 @@ msgid "Starting Date"
 msgstr "Startdatum"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_account_type
+msgid "State"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_state
 #: model:ir.ui.view,arch_db:project.view_task_history_search
 msgid "Status"
 msgstr "Status"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_subscription_ids
+msgid "Subscriptions"
+msgstr ""
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -2983,7 +3028,7 @@ msgstr ""
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
 #: model:mail.message.subtype,name:project.mt_task_blocked
 msgid "Task Blocked"
-msgstr ""
+msgstr "Blockerade uppgifter"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_new
@@ -3012,7 +3057,7 @@ msgstr "Aktivitetsetapper"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
 msgid "Task Stage Changed"
-msgstr ""
+msgstr "Aktivitetsetapp ändrad"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_name
@@ -3028,7 +3073,7 @@ msgstr ""
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_blocked
 msgid "Task blocked"
-msgstr ""
+msgstr "Aktivitet blockerad"
 
 #. module: project
 #: selection:project.config.settings,module_pad:0
@@ -3081,6 +3126,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_use_tasks
 #: model:ir.model.fields,field_description:project.field_project_project_task_count
+#: model:ir.model.fields,field_description:project.field_project_project_task_needaction_count
 #: model:ir.model.fields,field_description:project.field_project_project_use_tasks
 #: model:ir.model.fields,field_description:project.field_res_partner_task_ids
 #: model:ir.ui.menu,name:project.menu_action_view_task
@@ -3271,6 +3317,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
+#: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects (project_timesheet module), don't forget to setup the right unit of measure in your employees."
@@ -3279,7 +3326,7 @@ msgstr "Detta ställer in den måttenhet som används i projekt och aktiviteter.
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
 msgid "Time Estimation on Tasks"
-msgstr ""
+msgstr "Tidsestimering för aktiviteter"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -3305,7 +3352,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_use_timesheets
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Timesheets"
-msgstr ""
+msgstr "Tidrapporter"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_issue_sheet
@@ -3381,7 +3428,7 @@ msgstr "Typ av konto"
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unassigned"
-msgstr ""
+msgstr "Ej tilldelade"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -3391,6 +3438,9 @@ msgstr "Ej tilldelade aktiviteter"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_message_unread
 #: model:ir.model.fields,field_description:project.field_project_task_message_unread
+#: model:ir.ui.view,arch_db:project.view_project_project_filter
+#: model:ir.ui.view,arch_db:project.view_task_kanban
+#: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unread Messages"
 msgstr "Olästa meddelanden"
 
@@ -3403,7 +3453,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Use Tasks"
-msgstr ""
+msgstr "Använd aktiviteter"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_label_tasks
@@ -3629,7 +3679,7 @@ msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
 "project's tasks and then delete the project or simply deactivate the "
 "project."
-msgstr ""
+msgstr "Du kan inte ta bort ett projekt som innehåller uppgifter. Du kan antingen ta bort alla projektets uppgifter och sedan ta bort projektet eller helt enkelt avaktivera projektet."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3690,7 +3740,7 @@ msgstr ""
 #: code:addons/project/project.py:569
 #, python-format
 msgid "tasks"
-msgstr ""
+msgstr "Aktiviteter"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3698,6 +3748,9 @@ msgid "to describe<br/> your experience or to suggest improvements !"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_account_analytic_account_project_count
+#: model:ir.model.fields,field_description:project.field_project_project_project_count
+#: model:ir.model.fields,field_description:project.field_project_project_subscription_count
 #: model:ir.model.fields,field_description:project.field_project_project_task_ids
 msgid "unknown"
 msgstr "okänd"

@@ -24,6 +24,7 @@ class lead_test(osv.Model):
         'active': fields.boolean('Active', required=False),
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null'),
         'date_action_last': fields.datetime('Last Action', readonly=1),
+        'line_ids': fields.one2many('base.action.rule.line.test', 'lead_id'),
     }
 
     _defaults = {
@@ -39,3 +40,12 @@ class lead_test(osv.Model):
 
     def message_subscribe(self, cr, uid, ids, partner_ids=None, channel_ids=None, subtype_ids=None, force=True, context=None):
         pass
+
+
+class line_test(osv.Model):
+    _name = "base.action.rule.line.test"
+    _description = "Action Rule Line Test"
+
+    name = openerp.fields.Char()
+    lead_id = openerp.fields.Many2one('base.action.rule.lead.test', ondelete='cascade')
+    user_id = openerp.fields.Many2one('res.users')

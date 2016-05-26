@@ -231,14 +231,14 @@
                     </div>
                     <div class="oe_title">
                         <label for="employee_id" class="oe_edit_only"/>
-                        <h1><field name="employee_id" placeholder="Employee" on_change="onchange_employee_id(date_from, date_to, employee_id, contract_id)"/></h1>
+                        <h1><field name="employee_id" placeholder="Employee"/></h1>
                     </div>
                     <group col="4">
                         <label for="date_from" string="Period"/>
                         <div>
-                            <field name="date_from" on_change="onchange_employee_id(date_from, date_to, employee_id, contract_id)" class="oe_inline"/> - <field name="date_to" class="oe_inline"/>
+                            <field name="date_from" class="oe_inline"/> - <field name="date_to" class="oe_inline"/>
                         </div>
-                        <field name="contract_id" domain="[('employee_id','=',employee_id),('date_start','&lt;=',date_to),'|',('date_end','&gt;=',date_from),('date_end','=',False)]" on_change="onchange_contract_id(date_from, date_to, employee_id, contract_id)" context="{'default_employee_id': employee_id}"/>
+                        <field name="contract_id" domain="[('employee_id','=',employee_id),('date_start','&lt;=',date_to),'|',('date_end','&gt;=',date_from),('date_end','=',False)]" context="{'default_employee_id': employee_id}"/>
                         <field name="number"/>
                         <field name="struct_id" attrs="{'required':[('contract_id','&lt;&gt;',False)]}"/>
                         <field name="name"/>
@@ -260,7 +260,6 @@
                                     <group col="4">
                                         <field name="name"/>
                                         <field name="code"/>
-                                        <field name="payslip_id"/>
                                         <field name="sequence"/>
                                         <field name="number_of_days"/>
                                         <field name="number_of_hours"/>
@@ -281,7 +280,6 @@
                                     <group col="4">
                                         <field name="name"/>
                                         <field name="code"/>
-                                        <field name="payslip_id"/>
                                         <field name="sequence"/>
                                         <field name="amount"/>
                                         <field name="contract_id"/>

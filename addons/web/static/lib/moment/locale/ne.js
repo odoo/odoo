@@ -59,6 +59,11 @@
                 return symbolMap[match];
             });
         },
+        meridiemParse: /राती|बिहान|दिउँसो|बेलुका|साँझ|राती/,
+        isPM : function (input) {
+            // TODO: This is wrong.
+            return /^(दिउँसो|बेलुका|साँझ|राती)$/.test(input);
+        },
         meridiem : function (hour, minute, isLower) {
             if (hour < 3) {
                 return "राती";

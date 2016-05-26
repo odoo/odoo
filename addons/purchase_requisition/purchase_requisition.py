@@ -41,7 +41,7 @@ class purchase_requisition(osv.osv):
                                   'Status', track_visibility='onchange', required=True,
                                   copy=False),
         'multiple_rfq_per_supplier': fields.boolean('Multiple RFQ per vendor'),
-        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account'),
+        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('account_type', '=', 'normal')]),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True),
     }
 
@@ -143,7 +143,7 @@ class purchase_requisition(osv.osv):
         qty = product_uom._compute_qty(cr, uid, requisition_line.product_uom_id.id, requisition_line.product_qty, default_uom_po_id)
 
         taxes = product.supplier_taxes_id
-        fpos = supplier.property_account_position_id.id
+        fpos = supplier.property_account_position_id
         taxes_id = fpos.map_tax(taxes).ids if fpos else []
 
         po = po_obj.browse(cr, uid, [purchase_id], context=context)
@@ -314,7 +314,7 @@ class purchase_requisition_line(osv.osv):
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
         'requisition_id': fields.many2one('purchase.requisition', 'Call for Tenders', ondelete='cascade'),
         'company_id': fields.related('requisition_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
-        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account',),
+        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('account_type', '=', 'normal')]),
         'schedule_date': fields.date('Scheduled Date'),
     }
 
@@ -431,6 +431,7 @@ class procurement_order(osv.osv):
                 self.message_post(cr, uid, [procurement.id], body=_("Purchase Requisition created"), context=context)
                 procurement.write({'requisition_id': requisition_id})
                 req_ids += [procurement.id]
+                res += [procurement.id]
         set_others = set(ids) - set(req_ids)
         if set_others:
             res += super(procurement_order, self).make_po(cr, uid, list(set_others), context=context)

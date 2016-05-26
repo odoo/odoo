@@ -3,12 +3,13 @@
 # * crm
 # 
 # Translators:
+# Adrian Munteanu <adrian.munteanu@itconstruction.ro>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2015-10-10 09:47+0000\n"
+"PO-Revision-Date: 2016-02-20 10:37+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +28,7 @@ msgstr "# Intalniri"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_nbr_activities
 msgid "# of Activities"
-msgstr ""
+msgstr "# de activităţi"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -179,7 +180,7 @@ msgid ""
 "                                            <span class=\"fa fa-laptop\"/>\n"
 "                                            <strong> Screen Customization</strong>\n"
 "                                        </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n<span class=\"fa fa-laptop\"/>\n<strong> Personalizare ecran</strong>\n</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -302,6 +303,22 @@ msgstr ""
 msgid ""
 "<span class=\"panel-title\"><span data-icon=\"&#57463;\"/><strong> Exercise 2</strong></span>\n"
 "                                    <span>(Sales Manager)</span>"
+msgstr ""
+
+#. module: crm
+#: model:web.tip,description:crm.crm_tip_4
+msgid ""
+"<span><b>This is a business opportunity.</b> Drag and drop it to another "
+"column while you move forward in the sales cycle. Click to zoom in the "
+"opportunity.</span>"
+msgstr ""
+
+#. module: crm
+#: model:web.tip,description:crm.crm_tip_6
+msgid ""
+"<span><strong>Click to register a new business opportunity</strong>. Once "
+"the opportunity is created, you will be able to drag and drop it in your "
+"sales pipeline.</span>"
 msgstr ""
 
 #. module: crm
@@ -954,6 +971,11 @@ msgid "Click to set a new stage in your lead/opportunity pipeline."
 msgstr ""
 
 #. module: crm
+#: model:web.tip,description:crm.crm_tip_2
+msgid "Click to view the opportunities related to this customer."
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Close"
 msgstr "Închide"
@@ -1018,6 +1040,11 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Consumers"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+msgid "Contact Information"
 msgstr ""
 
 #. module: crm
@@ -1355,7 +1382,7 @@ msgstr "Destinatie contact"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_display_name
 #: model:ir.model.fields,field_description:crm.field_crm_stage_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Afiseaza nume"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1819,7 +1846,7 @@ msgstr "În cazul în care opt-out este verificat, acest contact a refuzat să p
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass_force_assignation
 msgid "If unchecked, this will leave the salesman of duplicated opportunities"
-msgstr ""
+msgstr "Dacă este debifat, va lasă vânzătorul să duplice oportunităţi"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1854,13 +1881,6 @@ msgid "Import using the top left button in"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-msgid "Important Messages"
-msgstr ""
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Improve average revenue per salesperson"
 msgstr ""
@@ -1880,7 +1900,7 @@ msgstr ""
 #: code:addons/crm/sales_team.py:15
 #, python-format
 msgid "Incoming"
-msgstr ""
+msgstr "Primire"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1966,7 +1986,7 @@ msgstr "Data ultimului mesaj"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding___last_update
 #: model:ir.model.fields,field_description:crm.field_crm_stage___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Ultima modificare la"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_last_stage_update
@@ -2028,6 +2048,14 @@ msgstr "Pistă / Client"
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead
 msgid "Lead Created"
 msgstr "Pista Creata"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_lead_tag_action
+#: model:ir.ui.menu,name:crm.menu_crm_lead_categ
+#: model:ir.ui.view,arch_db:crm.crm_lead_tag_form
+#: model:ir.ui.view,arch_db:crm.crm_lead_tag_tree
+msgid "Lead Tags"
+msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
@@ -2249,6 +2277,8 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_medium_id
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_medium_id
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Medium"
 msgstr "Mediu"
 
@@ -2430,6 +2460,11 @@ msgstr "Luna"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Motivation letter from the management"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+msgid "My Leads"
 msgstr ""
 
 #. module: crm
@@ -3395,6 +3430,13 @@ msgid "Subscription Management"
 msgstr ""
 
 #. module: crm
+#: model:web.tip,description:crm.crm_tip_5
+msgid ""
+"Switch to the graph view to get a clear reporting on your opportunities "
+"pipeline."
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Systematic organization is what makes the difference\n"
@@ -3679,6 +3721,9 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_unread
+#: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Unread Messages"
 msgstr "Mesaje necitite"
 
@@ -3866,12 +3911,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Mesaje Website"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Istoric comunicare website"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3881,7 +3926,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Welcome"
-msgstr ""
+msgstr "Bine ati venit"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3974,7 +4019,7 @@ msgstr ""
 #: code:addons/crm/base_partner_merge.py:447
 #, python-format
 msgid "You have to specify a filter for your selection"
-msgstr ""
+msgstr "Trebuie să specificaţi un filtru pentru selecţie"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner

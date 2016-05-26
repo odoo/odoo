@@ -19,7 +19,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         if self._count() == 1:
             sale_obj = self.env['sale.order']
             order = sale_obj.browse(self._context.get('active_ids'))[0]
-            if all([line.product_id.invoice_policy == 'order' for line in order.order_line]):
+            if all([line.product_id.invoice_policy == 'order' for line in order.order_line]) or order.invoice_count:
                 return 'all'
         return 'delivered'
 
@@ -110,7 +110,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             if not self.product_id:
                 vals = self._prepare_deposit_product()
                 self.product_id = self.env['product.product'].create(vals)
-                self.env['ir.values'].set_default('sale.config.settings', 'deposit_product_id_setting', self.product_id.id)
+                self.env['ir.values'].sudo().set_default('sale.config.settings', 'deposit_product_id_setting', self.product_id.id)
 
             sale_line_obj = self.env['sale.order.line']
             for order in sale_orders:

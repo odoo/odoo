@@ -3,12 +3,13 @@
 # * website_quote
 # 
 # Translators:
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 09:19+0000\n"
-"PO-Revision-Date: 2015-10-02 19:17+0000\n"
+"POT-Creation-Date: 2016-04-18 12:33+0000\n"
+"PO-Revision-Date: 2016-04-19 09:47+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +22,7 @@ msgstr ""
 #: model:mail.template,body_html:website_quote.email_template_edi_sale
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "\n"
@@ -42,17 +43,13 @@ msgid ""
 "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
-"\n"
-"    <% set signup_url = object.get_signup_url() %>\n"
-"    % if signup_url and object.amount_total > 0 :\n"
 "    <p>\n"
-"    You can access this document and pay online via our Customer Portal:\n"
+"        You can view your quotation online:\n"
 "    </p>\n"
-"        <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
-"           href=\"${signup_url}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
-"    % endif\n"
+"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
+"        href=\"/quote/${object.id}/${object.access_token}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
 "\n"
-"    % if object.paypal_url and object.amount_total > 0 :\n"
+"    % if object.paypal_url and object.amount_total:\n"
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
@@ -71,18 +68,7 @@ msgid ""
 "    </div>\n"
 "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
-"        % endif\n"
+"            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
 "            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
@@ -101,16 +87,21 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "! You can"
+msgstr ""
+
+#. module: website_quote
 #: model:mail.template,report_name:website_quote.email_template_edi_sale
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: website_quote
 #: model:mail.template,subject:website_quote.email_template_edi_sale
 msgid ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
 
@@ -119,18 +110,18 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
 msgid "% discount"
-msgstr ""
+msgstr "% ลด"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp;times;"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
@@ -204,7 +195,7 @@ msgstr ""
 msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-clock-o\"/> "
 "Expired</span>"
-msgstr ""
+msgstr "<span class=\"label label-default\"><i class=\"fa fa-fw fa-clock-o\"/> หมดอายุ</span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.quotations
@@ -513,7 +504,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_create_uid
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_create_uid
 msgid "Created by"
-msgstr "จัดทำโดย"
+msgstr "สร้างโดย"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_create_date
@@ -531,30 +522,30 @@ msgstr ""
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Customers/Vendors"
-msgstr ""
+msgstr "ลูกค้า/ผู้ขาย"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Database management"
-msgstr ""
+msgstr "การจัดการฐานข้อมูล"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Day 1"
-msgstr ""
+msgstr "วันที่ 1"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Day 2"
-msgstr ""
+msgstr "วันที่ 2"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Day 3"
-msgstr ""
+msgstr "วันที่ 3"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -594,7 +585,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "Discount"
-msgstr ""
+msgstr "ส่วนลด"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_discount
@@ -609,7 +600,7 @@ msgstr "ส่วนลด(%)"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_display_name
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ชื่อที่ใช้แสดง"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
@@ -629,7 +620,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Edit Template"
-msgstr ""
+msgstr "แก้ไขต้นแบบ"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -781,7 +772,7 @@ msgstr ""
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Installation and Configuration"
-msgstr ""
+msgstr "การติดตั้งและการตั้งค่า"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
@@ -828,7 +819,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option___last_update
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_write_uid
@@ -902,7 +893,7 @@ msgstr ""
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Module Installation"
-msgstr ""
+msgstr "การติดตั้งโมดูล"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
@@ -917,7 +908,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "My Account"
-msgstr ""
+msgstr "บัญชีของฉัน"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1106,6 +1097,13 @@ msgid "Payment Transaction"
 msgstr ""
 
 #. module: website_quote
+#: model:web.tip,description:website_quote.quotation_tip_1
+msgid ""
+"Preview the online quotation. You'll be able to edit the quotation content "
+"before send it to the customer."
+msgstr ""
+
+#. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
 #: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
@@ -1134,7 +1132,7 @@ msgstr "พิมพ์"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_product_id
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
 msgid "Product"
-msgstr "ผลิตภัณฑ์"
+msgstr "สินค้า"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1249,7 +1247,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Reject"
-msgstr ""
+msgstr "ปฏิเสธ"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1337,7 +1335,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 msgid "Send by Email"
-msgstr "ส่งทางอีเมล์"
+msgstr "ส่งทางอีเมล"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_sequence
@@ -1352,7 +1350,7 @@ msgstr "บริการ"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Ship To:"
-msgstr ""
+msgstr "ส่งไปยัง:"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1434,6 +1432,11 @@ msgid ""
 " recorded webinars and live sessions by our senior instructors. At the end "
 "of the training, you can pass the Odoo Certification exam in one of the "
 "5000+ Pearson VUE test centers worldwide."
+msgstr ""
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "This order"
 msgstr ""
 
 #. module: website_quote
@@ -1557,7 +1560,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Website Description"
-msgstr ""
+msgstr "คำอธิบายเว็บไซต์"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
@@ -1584,7 +1587,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Your Name:"
-msgstr ""
+msgstr "ชื่อของคุณ:"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -1662,6 +1665,21 @@ msgstr ""
 msgid ""
 "for\n"
 "                          any question."
+msgstr ""
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "has already been cancelled"
+msgstr ""
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "has already been validated"
+msgstr ""
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "has not yet been sent"
 msgstr ""
 
 #. module: website_quote

@@ -3,13 +3,18 @@
 # * hr_expense
 # 
 # Translators:
+# Ermin Trevisan <trevi@twanda.com>, 2016
+# Fabian Liesch <fabian.liesch@gmail.com>, 2015
+# Laurent Meuwly <laurent.meuwly@camptocamp.com>, 2016
+# Ralf Hilgenstock <rh@dialoge.info>, 2016
+# Wolfgang Taferner, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-21 09:18+0000\n"
-"PO-Revision-Date: 2015-09-24 19:45+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-02-22 09:07+0000\n"
+"Last-Translator: Laurent Meuwly <laurent.meuwly@camptocamp.com>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,43 +25,44 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<strong>Date:</strong>"
-msgstr ""
+msgstr "<strong>Datum:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<strong>Description:</strong>"
-msgstr ""
+msgstr "<strong>Beschreibung:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<strong>Employee:</strong>"
-msgstr ""
+msgstr "<strong>Mitarbeiter:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>Total</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "<strong>Validated By:</strong>"
-msgstr ""
+msgstr "<strong>Bestätigt von:</strong>"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Aktion notwendig"
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
 #: model:product.template,name:hr_expense.air_ticket_product_template
 msgid "Air Flight"
-msgstr ""
+msgstr "Flug"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_analytic_account_id
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analysekonto"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -72,12 +78,12 @@ msgstr "Genehmigt"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_bank_journal_id
 msgid "Bank Journal"
-msgstr ""
+msgstr "Bankjournal"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_product_template_can_be_expensed
 msgid "Can be expensed"
-msgstr ""
+msgstr "Als Ausgabe verwendbar"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -93,30 +99,35 @@ msgstr "KFZ Reise Ausgaben"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Certified honest and conform,<br/>(Date and signature).<br/><br/>"
-msgstr ""
+msgstr "Bescheinigt am Ehre,<br/>\n(Datum und Unterschrift)<br/><br/>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_my_tree
 #: model:ir.ui.view,arch_db:hr_expense.view_expenses_tree
 msgid "Click here to approve"
-msgstr ""
+msgstr "Klicken Sie hier, um zu genehmigen"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_request_approve_expense
 #: model:ir.actions.act_window,help:hr_expense.expense_all
 msgid "Click here to create new expenses."
-msgstr ""
+msgstr "Klicken Sie hier, um neue Spesen zu erstellen."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_my_tree
 #: model:ir.ui.view,arch_db:hr_expense.view_expenses_tree
 msgid "Click here to refuse"
+msgstr "Klicken Sie hier, um abzulehnen"
+
+#. module: hr_expense
+#: model:web.tip,description:hr_expense.expense_tip_2
+msgid "Click on Action to submit multiple expenses to your manager."
 msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Click to create a new expense category."
-msgstr ""
+msgstr "Hier klicken, um eine neue Spesenkategorie zu schaffen."
 
 #. module: hr_expense
 #: selection:hr.expense,payment_mode:0
@@ -154,6 +165,7 @@ msgstr "Währung"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_date
+#: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Date"
 msgstr "Datum"
 
@@ -176,8 +188,9 @@ msgstr "Beschreibung"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_display_name
+#: model:ir.model.fields,field_description:hr_expense.field_report_hr_expense_report_expense_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Angezeigter Name"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -193,13 +206,13 @@ msgstr "Mitarbeiter"
 #. module: hr_expense
 #: selection:hr.expense,payment_mode:0
 msgid "Employee (to reimburse)"
-msgstr ""
+msgstr "Mitarbeiter (zu vergüten)"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_approved_expense
 #: model:ir.ui.menu,name:hr_expense.menu_expense_approved
 msgid "Employee Expenses"
-msgstr ""
+msgstr "Mitarbeiter Spesen"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense
@@ -210,18 +223,18 @@ msgstr "Personalspesen"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_name
 msgid "Expense Description"
-msgstr ""
+msgstr "Spesen Beschreibung"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_journal_id
 msgid "Expense Journal"
-msgstr ""
+msgstr "Spesensjournal"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
 #: model:ir.ui.menu,name:hr_expense.menu_hr_product
 msgid "Expense Products"
-msgstr ""
+msgstr "Spesen Produkte"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
@@ -236,7 +249,7 @@ msgstr "Spesen wurden eingegeben, in Erwartung genehmigt zu werden"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Expense refuse reason"
-msgstr ""
+msgstr "Spesen Begründungsablehnung"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
@@ -270,7 +283,7 @@ msgstr "Monat der Spesenauslage"
 #. module: hr_expense
 #: model:mail.message.subtype,name:hr_expense.mt_department_expense_confirmed
 msgid "Expenses To Approve"
-msgstr ""
+msgstr "Spesen zu genehmigen"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -281,7 +294,7 @@ msgstr "Spesen nach Monat"
 #: code:addons/hr_expense/models/hr_expense.py:206
 #, python-format
 msgid "Expenses must belong to the same Employee."
-msgstr ""
+msgstr "Spesen müssen auf den gleichen Mitarbeiter gehören."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:209
@@ -289,7 +302,7 @@ msgstr ""
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
 "entries."
-msgstr ""
+msgstr "Die Spesen müssen einen Aufwand Zeitschrift haben, um die Verbuchung zu generieren."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -301,7 +314,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_action_from_department
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department_expense_to_approve_count
 msgid "Expenses to Approve"
-msgstr ""
+msgstr "Spesen zu genehmigen"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -316,12 +329,12 @@ msgstr "Followers"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Beobachter (Kanäle)"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Follower (Partner)"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -348,7 +361,7 @@ msgstr "Gruppiere nach"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
 msgid "HR Department"
-msgstr ""
+msgstr "Personalabteilung"
 
 #. module: hr_expense
 #: model:ir.actions.report.xml,name:hr_expense.action_report_hr_expense
@@ -374,23 +387,24 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_id
+#: model:ir.model.fields,field_description:hr_expense.field_report_hr_expense_report_expense_id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_message_unread
 msgid "If checked new messages require your attention."
-msgstr "Als zu erledigen markieren"
+msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Ist Beobachter"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_move_id
@@ -410,6 +424,7 @@ msgstr "Letzte Benachrichtigung"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense___last_update
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard___last_update
+#: model:ir.model.fields,field_description:hr_expense.field_report_hr_expense_report_expense___last_update
 msgid "Last Modified on"
 msgstr "Zuletzt geändert am"
 
@@ -445,7 +460,7 @@ msgstr "Meine Personalspesen"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "My Team Expenses"
-msgstr ""
+msgstr "Meine Teamspesen"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -479,7 +494,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:231
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
-msgstr ""
+msgstr "Keine Privatanschrift für den Beschäftigten %s gefunden. Bitte legen Sie eine an."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:227
@@ -490,12 +505,12 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
 msgid "Notes..."
-msgstr ""
+msgstr "Notizen..."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Anzahl der Aktionen"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_attachment_number
@@ -505,12 +520,12 @@ msgstr "Anzahl der Anhänge"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Anzahl ungelesene Nachrichten"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_request_approve_expense
@@ -518,12 +533,12 @@ msgstr ""
 msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
-msgstr ""
+msgstr "Sobald Sie Ihre Spesen erstellt haben, schicken Sie diese an Ihren Manager, der sie bestätigen wird."
 
 #. module: hr_expense
 #: model:ir.actions.client,name:hr_expense.action_client_expense_menu
 msgid "Open Expense Menu"
-msgstr ""
+msgstr "Öffnen Spesen Menü"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
@@ -533,7 +548,7 @@ msgstr "Bezahlt"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_payment_mode
 msgid "Payment By"
-msgstr ""
+msgstr "Zahlung von"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:264
@@ -582,7 +597,7 @@ msgstr "Begründung"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Reason to refuse expense."
-msgstr ""
+msgstr "Begründung, Spesen abzulehnen."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -593,7 +608,7 @@ msgstr "Zurücksetzen"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_refuse_wizard_action
 msgid "Refuse Expense"
-msgstr ""
+msgstr "Spesen ablehnen"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
@@ -605,6 +620,11 @@ msgstr "Verworfen"
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense
 msgid "Reporting"
 msgstr "Berichtswesen"
+
+#. module: hr_expense
+#: model:web.tip,description:hr_expense.expense_tip_1
+msgid "Select the lines you want to submit to be reimbursed."
+msgstr ""
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:73
@@ -632,7 +652,7 @@ msgstr "Status"
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_submit_action_server
 msgid "Submit Expenses"
-msgstr ""
+msgstr "Spesen vorlegen"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -644,7 +664,7 @@ msgstr "Dem Manager vorlegen"
 #. module: hr_expense
 #: selection:hr.expense,state:0
 msgid "Submitted"
-msgstr ""
+msgstr "Vorgelegt"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_untaxed_amount
@@ -654,7 +674,7 @@ msgstr "Zwischensumme"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Taxe(s)"
-msgstr ""
+msgstr "Steuer(n)"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_tax_ids
@@ -669,7 +689,7 @@ msgstr "Das Buchungsjournal der Spesenausgabe."
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_bank_journal_id
 msgid "The payment method used when the expense is paid by the company."
-msgstr ""
+msgstr "Die Zahlungsmethode verwendet, wenn die Spesen von dem Unternehmen bezahlt sind."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -696,7 +716,7 @@ msgstr "Zu bestätigen"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_total_amount
 msgid "Total"
-msgstr "Bruttobetrag"
+msgstr "Gesamtbetrag"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_my_tree
@@ -723,11 +743,18 @@ msgstr "Ungelesene Mitteilungen"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Zähler der ungelelesen Nachrichten"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "UoM"
+msgstr "ME"
+
+#. module: hr_expense
+#: model:web.tip,description:hr_expense.expense_tip_3
+msgid ""
+"Use the messaging tool to log a note and attach a document to the expense. "
+"(e.g. scan of the bill)"
 msgstr ""
 
 #. module: hr_expense
@@ -758,19 +785,19 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:107
 #, python-format
 msgid "You can only delete draft or refused expenses!"
-msgstr ""
+msgstr "Sie können nur Spesen im Entwurf oder abgelehnt löschen!"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:203
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
-msgstr ""
+msgstr "Sie können die Verbuchung nur für genehmigte Spesen erzeugen."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:113
 #, python-format
 msgid "You can only submit draft expenses!"
-msgstr ""
+msgstr "Sie können nur Entwurf Spesen vorlegen!"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:124
@@ -779,12 +806,12 @@ msgid ""
 "Your Expense %s has been refused.<br/><ul "
 "class=o_timeline_tracking_value_list><li>Reason<span> : </span><span "
 "class=o_timeline_tracking_value>%s</span></li></ul>"
-msgstr ""
+msgstr "Ihre %s Spesen sind abgelehnt worden.<br/><ul class=o_timeline_tracking_value_list><li>Begründung<span> : </span><span class=o_timeline_tracking_value>%s</span></li></ul>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
 msgid "e.g. Business lunch with X"
-msgstr ""
+msgstr "z.B. Geschäftsessen mit X"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form

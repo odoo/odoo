@@ -53,16 +53,9 @@ can take the following attributes:
 ``attachment``
     python expression that defines the name of the report; the record is
     acessible as the variable ``object``
-
-.. warning::
-
-   The paper format cannot currently be declared via the ``<report>``
-   shortcut, it must be added afterwards using a ``<record>`` extension on the
-   report action itself::
-
-       <record id="<report_id>" model="ir.actions.report.xml">
-           <field name="paperformat_id" ref="<paperformat>"/>
-       </record>
+``paperformat``
+    external id of the paperformat you wish to use (defaults to the company's
+    paperformat if not specified)
 
 Example::
 
@@ -216,19 +209,20 @@ Useful Remarks
 * Twitter Bootstrap and FontAwesome classes can be used in your report
   template
 * Local CSS can be put directly in the template
-
 * Global CSS can be inserted in the main report layout by inheriting its
   template and inserting your CSS::
 
-    <template id="report_saleorder_style" inherit_id="report.layout">
-      <xpath expr="//style" position="after">
-        <style type="text/css">
+    <template id="report_saleorder_style" inherit_id="report.style">
+      <xpath expr=".">
+        <t>
           .example-css-class {
             background-color: red;
           }
-        </style>
+        </t>
       </xpath>
     </template>
+* If it appears that your PDF report is missing the styles, please check
+  :ref:`these instructions <reference/backend/reporting/printed-reports/pdf-without-styles>`.
 
 .. _reference/reports/paper_formats:
 

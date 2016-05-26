@@ -1,0 +1,43 @@
+.o_kanban_view.o_theme_kanban {
+    &.o_kanban_ungrouped {
+        .o-justify-content(center);
+
+        .o_kanban_record {
+            .o-flex(0, 0, auto);
+            width: 100%;
+            @media (min-width: @screen-sm-min) {
+                width: 45%;
+            }
+        }
+    }
+
+    .o_kanban_record {
+        padding: 0;
+
+        position: relative;
+        overflow: hidden;
+        .o_button_area {
+            .o-position-absolute(@bottom: -100px, @right: 0);
+            .o-transition(bottom, 400ms, ease);
+            width: 100%;
+            padding: @odoo-horizontal-padding/2;
+            background-color: fade(@odoo-brand-secondary, 70%);
+            text-align: right;
+        }
+        &:hover .o_button_area {
+            bottom: 0;
+        }
+
+        > div {
+            width: 100%;
+            padding-bottom: 50%;
+            background-repeat: no-repeat;
+            background-position: center center;
+            .o-background-size(auto 90%);
+            
+            &.o_screenshot {
+                .o-background-size(cover);
+            }
+        }
+    }
+}

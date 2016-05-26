@@ -4,6 +4,8 @@
 # > PYTHONPATH=. python2 openerp/tests/test_misc.py
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import cgi
+import lxml
 import unittest
 
 from openerp.tools import html_sanitize, html_email_clean, append_content_to_html, plaintext2html, email_split
@@ -93,16 +95,30 @@ class TestSanitizer(unittest.TestCase):
         for attr in ['javascript']:
             self.assertNotIn(attr, sanitized_html, 'html_sanitize did not remove enough unwanted attributes')
 
-        emails = [("Charles <charles.bidule@truc.fr>", "Charles &lt;charles.bidule@truc.fr&gt;"),
-                ("Dupuis <'tr/-: ${dupuis#$'@truc.baz.fr>", "Dupuis &lt;'tr/-: ${dupuis#$'@truc.baz.fr&gt;"),
-                ("Technical <service/technical+2@open.com>", "Technical &lt;service/technical+2@open.com&gt;"),
-                ("Div nico <div-nico@open.com>", "Div nico &lt;div-nico@open.com&gt;")]
+    def test_sanitize_escape_emails(self):
+        emails = [
+            "Charles <charles.bidule@truc.fr>",
+            "Dupuis <'tr/-: ${dupuis#$'@truc.baz.fr>",
+            "Technical <service/technical+2@open.com>",
+            "Div nico <div-nico@open.com>"
+        ]
         for email in emails:
-            self.assertIn(email[1], html_sanitize(email[0]), 'html_sanitize stripped emails of original html')
+            self.assertIn(cgi.escape(email), html_sanitize(email), 'html_sanitize stripped emails of original html')
+
+    def test_sanitize_escape_emails_cite(self):
+        not_emails = [
+            '<blockquote cite="mid:CAEJSRZvWvud8c6Qp=wfNG6O1+wK3i_jb33qVrF7XyrgPNjnyUA@mail.gmail.com" type="cite">cat</blockquote>']
+        for email in not_emails:
+            sanitized = html_sanitize(email)
+            self.assertNotIn(cgi.escape(email), sanitized, 'html_sanitize stripped emails of original html')
+            self.assertIn(
+                '<blockquote cite="mid:CAEJSRZvWvud8c6Qp=wfNG6O1+wK3i_jb33qVrF7XyrgPNjnyUA@mail.gmail.com"',
+                sanitized,
+                'html_sanitize escaped valid address-like')
 
     def test_edi_source(self):
         html = html_sanitize(test_mail_examples.EDI_LIKE_HTML_SOURCE)
-        self.assertIn('div style="font-family: \'Lucica Grande\', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF;', html,
+        self.assertIn('div style="font-family: \'Lucida Grande\', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF;', html,
             'html_sanitize removed valid style attribute')
         self.assertIn('<span style="color: #222; margin-bottom: 5px; display: block; ">', html,
             'html_sanitize removed valid style attribute')
@@ -329,6 +345,13 @@ class TestCleaner(unittest.TestCase):
             self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed valid content')
         for ext in test_mail_examples.BUG_3_OUT:
             self.assertNotIn(ext, new_html, 'html_email_cleaner did not removed invalid content')
+
+    def test_80_remove_classes(self):
+        new_html = html_email_clean(test_mail_examples.REMOVE_CLASS, remove=True)
+        for ext in test_mail_examples.REMOVE_CLASS_IN:
+            self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed classes')
+        for ext in test_mail_examples.REMOVE_CLASS_OUT:
+            self.assertNotIn(ext, new_html, 'html_email_cleaner did not removed correctly unwanted classes')
 
     def test_90_misc(self):
         # False boolean for text must return empty string

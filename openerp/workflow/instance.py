@@ -52,7 +52,12 @@ class WorkflowInstance(object):
         cr = self.session.cr
         cr.execute("select * from wkf_workitem where inst_id=%s", (self.instance['id'],))
         stack = []
-        for work_item_values in cr.dictfetchall():
+        for i, work_item_values in enumerate(cr.dictfetchall()):
+            if i > 0:
+                # test if previous workitem has already processed this one
+                cr.execute("select id from wkf_workitem where id=%s", (work_item_values['id'],))
+                if not cr.fetchone():
+                    continue
             wi = WorkflowItem(self.session, self.record, work_item_values)
             wi.process(signal=signal, force_running=force_running, stack=stack)
             # An action is returned

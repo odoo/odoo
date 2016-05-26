@@ -261,7 +261,7 @@ class produce_price_history(osv.osv):
 class product_attribute(osv.osv):
     _name = "product.attribute"
     _description = "Product Attribute"
-    _order = 'sequence,id'
+    _order = 'sequence, name'
     _columns = {
         'name': fields.char('Name', translate=True, required=True),
         'value_ids': fields.one2many('product.attribute.value', 'attribute_id', 'Values', copy=True),
@@ -349,6 +349,16 @@ class product_attribute_line(osv.osv):
         'value_ids': fields.many2many('product.attribute.value', id1='line_id', id2='val_id', string='Attribute Values'),
     }
 
+    def _check_valid_attribute(self, cr, uid, ids, context=None):
+        for obj_pal in self.browse(cr, uid, ids, context=context):
+            if not (obj_pal.value_ids <= obj_pal.attribute_id.value_ids):
+                return False
+        return True
+
+    _constraints = [
+        (_check_valid_attribute, 'Error ! You cannot use this attribute with the following value.', ['attribute_id'])
+    ]
+
     def name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=100):
         # TDE FIXME: currently overriding the domain; however as it includes a
         # search on a m2o and one on a m2m, probably this will quickly become
@@ -413,6 +423,18 @@ class product_template(osv.osv):
 
         return product.write({'list_price': value})
 
+    def _product_currency(self, cr, uid, ids, name, arg, context=None):
+        uid = SUPERUSER_ID
+        try:
+            main_company = self.pool['ir.model.data'].get_object(cr, uid, 'base', 'main_company')
+        except ValueError:
+            company_ids = self.pool['res.company'].search(cr, uid, [], limit=1, order="id", context=context)
+            main_company = self.pool['res.company'].browse(cr, uid, company_ids[0], context=context)
+        res = {}
+        for product in self.browse(cr, uid, ids, context=context):
+            res[product.id] = product.company_id.currency_id.id or main_company.currency_id.id
+        return res
+
     def _get_product_variant_count(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for product in self.browse(cr, uid, ids, context=context):
@@ -449,7 +471,7 @@ class product_template(osv.osv):
         return [x['product_tmpl_id'][0] for x in r]
 
     def _get_product_template_type(self, cr, uid, context=None):
-        return [('consu', 'Consumable'), ('service', 'Service')]
+        return [('consu', _('Consumable')), ('service', _('Service'))]
     _get_product_template_type_wrapper = lambda self, *args, **kwargs: self._get_product_template_type(*args, **kwargs)
 
     _columns = {
@@ -469,11 +491,7 @@ class product_template(osv.osv):
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Internal Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
         'price': fields.function(_product_template_price, fnct_inv=_set_product_template_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
-        'currency_id': fields.related(
-            'company_id', 'currency_id',
-            type='many2one',
-            relation='res.currency',
-            string='Currency'),
+        'currency_id': fields.function(_product_currency, type='many2one', relation='res.currency', string='Currency'),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
         'lst_price' : fields.related('list_price', type="float", string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'standard_price': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, fnct_search=_search_by_standard_price, multi='_compute_product_template_field', type='float', string='Cost', digits_compute=dp.get_precision('Product Price'),
@@ -519,37 +537,19 @@ class product_template(osv.osv):
     # image: all image fields are base64 encoded and PIL-supported
     image = openerp.fields.Binary("Image", attachment=True,
         help="This field holds the image used as image for the product, limited to 1024x1024px.")
-    image_medium = openerp.fields.Binary("Medium-sized image",
-        compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
+    image_medium = openerp.fields.Binary("Medium-sized image", attachment=True,
         help="Medium-sized image of the product. It is automatically "\
              "resized as a 128x128px image, with aspect ratio preserved, "\
              "only when the image exceeds one of those sizes. Use this field in form views or some kanban views.")
-    image_small = openerp.fields.Binary("Small-sized image",
-        compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
+    image_small = openerp.fields.Binary("Small-sized image", attachment=True,
         help="Small-sized image of the product. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
-
-    @api.depends('image')
-    def _compute_images(self):
-        for rec in self:
-            rec.image_medium = tools.image_resize_image_medium(rec.image, avoid_if_small=True)
-            rec.image_small = tools.image_resize_image_small(rec.image)
-
-    def _inverse_image_medium(self):
-        for rec in self:
-            rec.image = tools.image_resize_image_big(rec.image_medium)
-
-    def _inverse_image_small(self):
-        for rec in self:
-            rec.image = tools.image_resize_image_big(rec.image_small)
 
     def _price_get(self, cr, uid, products, ptype='list_price', context=None):
         if context is None:
             context = {}
 
-        if 'currency_id' in context:
-            currency_id = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id.id
         res = {}
         product_uom_obj = self.pool.get('product.uom')
         for product in products:
@@ -559,7 +559,7 @@ class product_template(osv.osv):
             if ptype != 'standard_price':
                 res[product.id] = product[ptype] or 0.0
             else:
-                company_id = product.env.user.company_id.id
+                company_id = context.get('force_company') or product.env.user.company_id.id
                 product = product.with_context(force_company=company_id)
                 res[product.id] = res[product.id] = product.sudo()[ptype]
             if ptype == 'list_price':
@@ -572,7 +572,7 @@ class product_template(osv.osv):
             if 'currency_id' in context:
                 # Take current user company currency.
                 # This is right cause a field cannot be in more than one currency
-                res[product.id] = self.pool.get('res.currency').compute(cr, uid, currency_id,
+                res[product.id] = self.pool.get('res.currency').compute(cr, uid, product.currency_id.id,
                     context['currency_id'], res[product.id], context=context)
         return res
 
@@ -629,7 +629,7 @@ class product_template(osv.osv):
             for variant_id in variant_alone:
                 product_ids = []
                 for product_id in tmpl_id.product_variant_ids:
-                    if variant_id.id not in map(int, product_id.attribute_value_ids):
+                    if not variant_id.attribute_id <= product_id.mapped('attribute_value_ids').mapped('attribute_id'):
                         product_ids.append(product_id.id)
                 product_obj.write(cr, uid, product_ids, {'attribute_value_ids': [(4, variant_id.id)]}, context=ctx)
 
@@ -671,6 +671,7 @@ class product_template(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
+        tools.image_resize_images(vals)
         product_template_id = super(product_template, self).create(cr, uid, vals, context=context)
         if not context or "create_product_product" not in context:
             self.create_variant_ids(cr, uid, [product_template_id], context=context)
@@ -694,6 +695,7 @@ class product_template(osv.osv):
         return product_template_id
 
     def write(self, cr, uid, ids, vals, context=None):
+        tools.image_resize_images(vals)
         res = super(product_template, self).write(cr, uid, ids, vals, context=context)
         if 'attribute_line_ids' in vals or vals.get('active'):
             self.create_variant_ids(cr, uid, ids, context=context)
@@ -702,7 +704,7 @@ class product_template(osv.osv):
             ctx.update(active_test=False)
             product_ids = []
             for product in self.browse(cr, uid, ids, context=ctx):
-                product_ids = map(int,product.product_variant_ids)
+                product_ids += map(int, product.product_variant_ids)
             self.pool.get("product.product").write(cr, uid, product_ids, {'active': vals.get('active')}, context=ctx)
         return res
 
@@ -757,6 +759,7 @@ class product_template(osv.osv):
             template_ids.add(p.product_tmpl_id.id)
         while (results and len(template_ids) < limit):
             domain = [('product_tmpl_id', 'not in', list(template_ids))]
+            args = args if args is not None else []
             results = product_product.name_search(
                 cr, user, name, args+domain, operator=operator, context=context, limit=limit)
             product_ids = [p[0] for p in results]
@@ -885,7 +888,12 @@ class product_product(osv.osv):
     def _get_image_variant(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = obj.image_variant or getattr(obj.product_tmpl_id, name)
+            if context.get('bin_size'):
+                result[obj.id] = obj.image_variant
+            else:
+                result[obj.id] = tools.image_get_resized_images(obj.image_variant, return_big=True, avoid_resize_medium=True)[name]
+            if not result[obj.id]:
+                result[obj.id] = getattr(obj.product_tmpl_id, name)
         return result
 
     def _set_image_variant(self, cr, uid, id, name, value, args, context=None):
@@ -924,7 +932,7 @@ class product_product(osv.osv):
                 continue
             if partner_id and seller.name not in [partner_id, partner_id.parent_id]:
                 continue
-            if quantity_uom_seller and quantity_uom_seller < seller.qty:
+            if quantity_uom_seller < seller.qty:
                 continue
             if seller.product_id and seller.product_id != product_id:
                 continue
@@ -975,6 +983,20 @@ class product_product(osv.osv):
         'active': 1,
         'color': 0,
     }
+
+    def _check_attribute_value_ids(self, cr, uid, ids, context=None):
+        for product in self.browse(cr, uid, ids, context=context):
+            attributes = set()
+            for value in product.attribute_value_ids:
+                if value.attribute_id in attributes:
+                    return False
+                else:
+                    attributes.add(value.attribute_id)
+        return True
+
+    _constraints = [
+        (_check_attribute_value_ids, 'Error! It is not allowed to choose more than one value for a given attribute.', ['attribute_value_ids'])
+    ]
 
     _sql_constraints = [
         ('barcode_uniq', 'unique(barcode)', _("A barcode can only be assigned to one product !")),
@@ -1060,7 +1082,9 @@ class product_product(osv.osv):
                               'name': seller_variant or name,
                               'default_code': s.product_code or product.default_code,
                               }
-                    result.append(_name_get(mydict))
+                    temp = _name_get(mydict)
+                    if temp not in result:
+                        result.append(temp)
             else:
                 mydict = {
                           'id': product.id,
@@ -1194,6 +1218,10 @@ class product_product(osv.osv):
             return price_history_obj.read(cr, uid, history_ids[0], ['cost'], context=context)['cost']
         return 0.0
 
+    def _need_procurement(self, cr, uid, ids, context=None):
+        # When sale/product is installed alone, there is no need to create procurements. Only
+        # sale_stock and sale_service need procurements
+        return False
 
 class product_packaging(osv.osv):
     _name = "product.packaging"

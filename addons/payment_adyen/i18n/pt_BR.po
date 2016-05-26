@@ -3,13 +3,15 @@
 # * payment_adyen
 # 
 # Translators:
+# Grazziano Duarte <g.negocios@outlook.com.br>, 2015
+# Mateus Cerqueira Lopes <mateus1@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 08:17+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-12-08 19:47+0000\n"
+"Last-Translator: Grazziano Duarte <g.negocios@outlook.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,25 +23,25 @@ msgstr ""
 #: code:addons/payment_adyen/models/adyen.py:123
 #, python-format
 msgid "; multiple order found"
-msgstr ""
+msgstr "; múltiplas ordens encontradas"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/adyen.py:121
 #, python-format
 msgid "; no order found"
-msgstr ""
+msgstr "; nenhuma ordem encontrada"
 
 #. module: payment_adyen
 #: model:payment.acquirer,cancel_msg:payment_adyen.payment_acquirer_adyen
 msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr ""
+msgstr "<span><i>Cancelar,</i> Seu pagamento foi cancelado.</span>"
 
 #. module: payment_adyen
 #: model:payment.acquirer,done_msg:payment_adyen.payment_acquirer_adyen
 msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
-msgstr ""
+msgstr "<span><i>Pronto,</i> Seu pagamento online foi processado com sucesso. Obrigado por sua compra.</span>"
 
 #. module: payment_adyen
 #: model:payment.acquirer,error_msg:payment_adyen.payment_acquirer_adyen
@@ -47,37 +49,37 @@ msgid ""
 "<span><i>Error,</i> Please be aware that an error occurred during the "
 "transaction. The order has been confirmed but won't be paid. Don't hesitate "
 "to contact us if you have any questions on the status of your order.</span>"
-msgstr ""
+msgstr "<span><i>Erro,</i> Por favor, esteja ciente de que ocorreu um erro durante a transação. O pedido foi confirmado, mas não vai ser pago. Não hesite em contactar-nos se você tiver quaisquer perguntas sobre o status do seu pedido.</span>"
 
 #. module: payment_adyen
 #: model:payment.acquirer,pending_msg:payment_adyen.payment_acquirer_adyen
 msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
-msgstr ""
+msgstr "<span><i>Pendente,</i> Seu pagamento online foi processado com sucesso. Mas sua compra ainda não foi validada.</span>"
 
 #. module: payment_adyen
 #: model:payment.acquirer,name:payment_adyen.payment_acquirer_adyen
 msgid "Adyen"
-msgstr ""
+msgstr "Adyen"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/adyen.py:169
 #, python-format
 msgid "Adyen: feedback error"
-msgstr ""
+msgstr "Adyen: erro de retorno"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/adyen.py:131
 #, python-format
 msgid "Adyen: invalid merchantSig, received %s, computed %s"
-msgstr ""
+msgstr "Adyen: merchantSig inv;alido, recebido %s, processado %s"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/adyen.py:119
 #, python-format
 msgid "Adyen: received data for reference %s"
-msgstr ""
+msgstr "Adyen: dados recebidos para referência %s"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/adyen.py:112
@@ -85,12 +87,12 @@ msgstr ""
 msgid ""
 "Adyen: received data with missing reference (%s) or missing pspReference "
 "(%s)"
-msgstr ""
+msgstr "Adyen: dados recebidos com referência (%s) faltando ou falta pspReference (%s)"
 
 #. module: payment_adyen
 #: model:ir.ui.view,arch_db:payment_adyen.acquirer_form_adyen
 msgid "How to configure your Adyen account?"
-msgstr ""
+msgstr "Como configurar sua conta Adyen?"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_merchant_account
@@ -122,4 +124,4 @@ msgstr "HMAC chave de tema"
 msgid ""
 "You will be redirected to the Adyen website after clicking on the payment "
 "button."
-msgstr ""
+msgstr "<p>Você será redirecionado para o site Adyen após clicar no botão de pagamento.</p>"

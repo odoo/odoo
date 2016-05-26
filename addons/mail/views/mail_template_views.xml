@@ -67,8 +67,7 @@
                                     <field name="mail_server_id"/>
                                     <field name="auto_delete"/>
                                     <field name="report_template" domain="[('model','=',model)]"/>
-                                    <field name="report_name" class="oe_inline"
-                                           attrs="{'invisible':[('report_template','=',False)]}"/>
+                                    <field name="report_name" attrs="{'invisible':[('report_template','=',False)]}"/>
                                 </group>
                             </page>
                             <page string="Dynamic Placeholder Generator">

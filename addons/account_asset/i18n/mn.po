@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-09-19 08:17+0000\n"
+"POT-Creation-Date: 2016-01-15 09:26+0000\n"
+"PO-Revision-Date: 2016-05-12 09:34+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -51,7 +51,7 @@ msgstr "Дансны бичилт"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Үйлдэл Шаардлагатай"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
@@ -132,6 +132,7 @@ msgstr ""
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_name
 #: model:ir.model.fields,field_description:account_asset.field_product_template_asset_category_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Asset Type"
 msgstr ""
 
@@ -393,6 +394,7 @@ msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_product_template_deferred_revenue_category_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Deferred Revenue Type"
 msgstr ""
 
@@ -441,6 +443,16 @@ msgid "Depreciation Entry"
 msgstr "Элэгдлийн Бичилт"
 
 #. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
+msgid "Depreciation Asset Account"
+msgstr ""
+
+#. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
+msgid "Depreciation Expense Account"
+msgstr ""
+
+#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Depreciation Information"
 msgstr ""
@@ -486,7 +498,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_display_name
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Дэлгэцийн Нэр"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:274
@@ -548,12 +560,12 @@ msgstr "Дагагчид"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Дагагчид (Сувагууд)"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Дагагчид (Харилцагчид)"
 
 #. module: account_asset
 #: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
@@ -616,7 +628,7 @@ msgstr "Хэрэв тэмдэглэгдсэн бол таныг шинэ зур�
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад анхаарал хандуулахыг шаардана."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
@@ -653,7 +665,7 @@ msgstr "Нэхэмжлэлийн мөр"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Дагагч эсэх"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_salvage_value
@@ -690,7 +702,7 @@ msgstr "Сүүлийн зурвасын огноо"
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard___last_update
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_write_uid
@@ -720,11 +732,6 @@ msgstr "Шугаман"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_ids
 msgid "Messages"
 msgstr "Зурвасууд"
-
-#. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_ids
-msgid "Messages and communication history"
-msgstr "Зурвас болон харилцсан түүх"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -766,7 +773,7 @@ msgstr "Тэмдэглэл"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Үйлдлийн тоо"
 
 #. module: account_asset
 #: selection:account.asset.asset,method_time:0
@@ -790,12 +797,12 @@ msgstr "Мөчлөг дахь сарын тоо"
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Үйлдэл шаардлагатай зурвасын тоо"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Уншаагүй зурвасын тоо"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:488
@@ -1019,23 +1026,13 @@ msgstr "Уншаагүй Зурвасууд"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Уншаагүй зурвасын тоолуур"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_purchase_tree
 msgid "Vendor"
-msgstr ""
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_website_message_ids
-msgid "Website Messages"
-msgstr "Вебсайтын зурвасууд"
-
-#. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_website_message_ids
-msgid "Website communication history"
-msgstr "Вебсайтын харилцааны түүх"
+msgstr "Нийлүүлэгч"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_state
@@ -1050,6 +1047,14 @@ msgstr "Хөрөнгийг үүсгэсэн даруйд \"Ноорог\" төл
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_name
 msgid "Year"
 msgstr "Жил"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset_invoice.py:53
+#, python-format
+msgid ""
+"You already have assets with the reference %s.\n"
+"Please delete these assets before creating new ones for this invoice."
+msgstr "Танд ийм кодтой хөрөнгө байна.\nЭнэ нэхэмжлэлд шинэ хөрөнгө үүсгэхээс өмнө эдгээр хөрөнгүүдийг устгана уу."
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:100

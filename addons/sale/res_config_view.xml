@@ -15,7 +15,6 @@
                     </group>
                     <group string="Quotations &amp; Sales" id="sale">
                         <field name="group_sale_delivery_address" widget="radio"/>
-                        <field name="group_display_incoterm" widget="radio"/>
                         <field name="group_discount_per_so_line" widget="radio"/>
                         <field name="module_website_quote" widget="radio"/>
                         <field name="module_sale_margin" widget="radio"/>
@@ -35,11 +34,11 @@
                         <label for="id" string="Customer portal"/>
                         <div>
                             <div>
-                                <field name="module_website_portal" class="oe_inline" widget="upgrade_boolean"/>
+                                <field name="module_website_portal" class="oe_inline" />
                                 <label for="module_website_portal"/>
                             </div>
                             <div>
-                                <field name="module_website_sale_digital" class="oe_inline" widget="upgrade_boolean"/>
+                                <field name="module_website_sale_digital" class="oe_inline" />
                                 <label for="module_website_sale_digital"/>
                             </div>
                         </div>

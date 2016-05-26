@@ -117,6 +117,9 @@ class AccountBankStatementImport(models.TransientModel):
         if no_st_line:
             raise UserError(_('This file doesn\'t contain any transaction.'))
 
+    def _check_journal_bank_account(self, journal, account_number):
+        return journal.bank_account_id.sanitized_acc_number == account_number
+
     def _find_additional_data(self, currency_code, account_number):
         """ Look for a res.currency and account.journal using values extracted from the
             statement and make sure it's consistent.
@@ -129,7 +132,7 @@ class AccountBankStatementImport(models.TransientModel):
         if currency_code:
             currency = self.env['res.currency'].search([('name', '=ilike', currency_code)], limit=1)
             if not currency:
-                raise osv.except_osv(_("No currency found matching '%s'.") % currency_code)
+                raise UserError(_("No currency found matching '%s'.") % currency_code)
             if currency == company_currency:
                 currency = False
 
@@ -138,20 +141,21 @@ class AccountBankStatementImport(models.TransientModel):
             # No bank account on the journal : create one from the account number of the statement
             if journal and not journal.bank_account_id:
                 journal.set_bank_account(account_number)
-            # Already a bank account on the journal : check it's the same as on the statement
-            elif journal and journal.bank_account_id.sanitized_acc_number != sanitized_account_number:
-                raise UserError(_('The account of this statement (%s) is not the same as the journal (%s).') % (account_number, journal.bank_account_id.acc_number))
             # No journal passed to the wizard : try to find one using the account number of the statement
             elif not journal:
                 journal = journal_obj.search([('bank_account_id.sanitized_acc_number', '=', sanitized_account_number)])
+            # Already a bank account on the journal : check it's the same as on the statement
+            else:
+                if not self._check_journal_bank_account(journal, sanitized_account_number):
+                    raise UserError(_('The account of this statement (%s) is not the same as the journal (%s).') % (account_number, journal.bank_account_id.acc_number))
 
         # If importing into an existing journal, its currency must be the same as the bank statement
         if journal:
             journal_currency = journal.currency_id
-            if currency == None:
+            if currency is None:
                 currency = journal_currency
             if currency and currency != journal_currency:
-                statement_cur_code = currency == False and company_currency.name or currency.name
+                statement_cur_code = not currency and company_currency.name or currency.name
                 journal_cur_code = not journal_currency and company_currency.name or journal_currency.name
                 raise UserError(_('The currency of the bank statement (%s) is not the same as the currency of the journal (%s) !') % (statement_cur_code, journal_cur_code))
 
@@ -169,7 +173,7 @@ class AccountBankStatementImport(models.TransientModel):
                 unique_import_id = line_vals.get('unique_import_id')
                 if unique_import_id:
                     sanitized_account_number = sanitize_account_number(account_number)
-                    line_vals['unique_import_id'] = (sanitized_account_number and sanitized_account_number + '-' or '') + unique_import_id
+                    line_vals['unique_import_id'] = (sanitized_account_number and sanitized_account_number + '-' or '') + str(journal.id) + '-' + unique_import_id
 
                 if not line_vals.get('bank_account_id'):
                     # Find the partner and his bank account or create the bank account. The partner selected during the

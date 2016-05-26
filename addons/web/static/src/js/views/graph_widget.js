@@ -1,12 +1,17 @@
 odoo.define('web.GraphWidget', function (require) {
 "use strict";
 
+var config = require('web.config');
 var core = require('web.core');
 var Model = require('web.DataModel');
+var formats = require('web.formats');
 var Widget = require('web.Widget');
 
 var _t = core._t;
 var QWeb = core.qweb;
+
+// hide top legend when too many item for device size
+var MAX_LEGEND_LENGTH = 25 * (1 + config.device.size_class);
 
 return Widget.extend({
     init: function (parent, model, options) {
@@ -20,6 +25,7 @@ return Widget.extend({
         this.groupbys = options.groupbys || [];
         this.mode = options.mode || "bar";
         this.measure = options.measure || "__count__";
+        this.stacked = options.stacked;
     },
     start: function () {
         return this.load_data().then(this.proxy('display_graph'));
@@ -156,19 +162,21 @@ return Widget.extend({
         svg.transition().duration(0);
 
         var chart = nv.models.multiBarChart();
+        var maxVal = _.max(values, function(v) {return v.y})
         chart.options({
+          margin: {left: 12 * String(maxVal && maxVal.y || 0).length},
           delay: 250,
-          transitionDuration: 10,
-          showLegend: true,
+          transition: 10,
+          showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
           showXAxis: true,
           showYAxis: true,
           rightAlignYAxis: false,
-          stacked: true,
+          stacked: this.stacked,
           reduceXTicks: false,
           // rotateLabels: 40,
           showControls: (this.groupbys.length > 1)
         });
-        chart.yAxis.tickFormat(function(d) { return openerp.web.format_value(d, { type : 'float' });});
+        chart.yAxis.tickFormat(function(d) { return formats.format_value(d, { type : 'float' });});
 
         chart(svg);
         this.to_remove = chart.update;
@@ -209,10 +217,14 @@ return Widget.extend({
 
         svg.transition().duration(100);
 
+        var legend_right = config.device.size_class > config.device.SIZES.XS;
+
         var chart = nv.models.pieChart();
         chart.options({
           delay: 250,
-          transitionDuration: 100,
+          showLegend: legend_right || _.size(data) <= MAX_LEGEND_LENGTH,
+          legendPosition: legend_right ? 'right' : 'top',
+          transition: 100,
           color: d3.scale.category10().range(),
         });
 
@@ -282,15 +294,17 @@ return Widget.extend({
         svg.transition().duration(0);
 
         var chart = nv.models.lineChart();
+        var maxVal = _.max(values, function(v) {return v.y})
         chart.options({
-          margin: {left: 50, right: 50},
+          margin: {left: 12 * String(maxVal && maxVal.y || 0).length, right: 50},
           useInteractiveGuideline: true,
-          showLegend: true,
+          showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
           showXAxis: true,
           showYAxis: true,
         });
         chart.xAxis.tickValues(tickValues)
             .tickFormat(tickFormat);
+        chart.yAxis.tickFormat(function(d) { return openerp.web.format_value(d, { type : 'float' });});
 
         chart(svg);
         this.to_remove = chart.update;

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        <!-- The Following currency rates are considered as on 1st Jan,2010 against EUR. -->
         <!-- Currencies -->
         <record id="USD" model="res.currency">
             <field name="name">USD</field>
@@ -36,6 +35,7 @@
             <field name="symbol">R$</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
+            <field name="position">before</field>
         </record>
 
         <record id="CNY" model="res.currency">
@@ -229,6 +229,7 @@
             <field name="symbol">$</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
+            <field name="position">before</field>
         </record>
 
         <record id="MYR" model="res.currency">
