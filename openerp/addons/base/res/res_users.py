@@ -517,7 +517,7 @@ class res_users(osv.osv):
 
         :return: True
         :raise: openerp.exceptions.AccessDenied when old password is wrong
-        :raise: except_osv when new password is not set or empty
+        :raise: openerp.exceptions.UserError when new password is not set or empty
         """
         self.check(cr.dbname, uid, old_passwd)
         if new_passwd:
