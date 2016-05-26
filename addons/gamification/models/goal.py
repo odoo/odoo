@@ -152,6 +152,9 @@ class gamification_goal_definition(osv.Model):
         """ make sure the selected field and model are usable"""
         for definition in self.browse(cr, uid, ids, context=context):
             try:
+                if not definition.model_id or not definition.field_id:
+                    continue
+
                 model = self.pool[definition.model_id.model]
                 field = model._fields[definition.field_id.name]
                 if not field.store:
