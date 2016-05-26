@@ -3,19 +3,23 @@
 # * account
 # 
 # Translators:
+# amrnegm <amrnegm.01@gmail.com>, 2016
+# amrnegm <amrnegm.01@gmail.com>, 2016
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # hoxhe aits <hoxhe0@gmail.com>, 2015
 # Khaled Menof <kifcaliph@hotmail.com>, 2015
+# Khaled Menof <kifcaliph@hotmail.com>, 2015
 # Mahmoud M. Soliman <mahmoud_soliman4@alex-comm.edu.eg>, 2015
 # Mazen Abu Ghali <mabughali@yahoo.com>, 2015
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
 # Mustafa Rawi <mustafa@cubexco.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2016-03-17 09:55+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-05-15 20:50+0000\n"
+"Last-Translator: amrnegm <amrnegm.01@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -522,7 +526,7 @@ msgid ""
 "            accounts will be created automatically based on these data.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Click to setup a new bank account. \n          </p><p>\n            Configure your company's bank account and select those that must\n            appear on the report footer.\n          </p><p>\n            If you use the accounting application of Odoo, journals and\n            accounts will be created automatically based on these data.\n          </p>\n        "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_manual_reconcile
@@ -550,7 +554,7 @@ msgid ""
 "                related account.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n                Click to add a new analytic account.\n              </p><p>\n                The normal chart of accounts has a structure defined by the\n                legal requirement of the country. The analytic chart of\n                accounts structure should reflect your own business needs in\n                term of costs/revenues reporting.\n              </p><p>\n                They are usually structured by contracts, projects, products or\n                departements. Most of the Odoo operations (invoices,\n                timesheets, expenses, etc) generate analytic entries on the\n                related account.\n              </p>\n            "
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -1191,7 +1195,7 @@ msgid ""
 "Odoo then calculates a table of credit balance by period. So if you request "
 "an interval of 30 days Odoo generates an analysis of creditors for the past "
 "month, past two months, and so on."
-msgstr ""
+msgstr "رصيد الشريك المسنن هو تقرير أكثر تفصيلا للمستحقات عن طريق الفترات. عند فتح هذا التقرير، أوبنيرب يسأل عن اسم الشركة، للفترة المالية وحجم الفاصل الزمني ليتم تحليلها (بالأيام). ثم يحسب  أوبنيرب الرصيد الدائن الذى يخص الفتره . لذلك إذا قمت بطلب فاصل زمني من 30 يوما أوبنيرب يولد تحليل الدائنين للشهر الماضي، خلال الشهرين الماضيين، وهكذا."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_aged_receivable_graph
@@ -1612,7 +1616,7 @@ msgstr "تطبيق"
 #. module: account
 #: help:account.fiscal.position,auto_apply:0
 msgid "Apply automatically this fiscal position if the conditions match."
-msgstr ""
+msgstr "طبيق تلقائيا هذا الوضع المالي إذا تطابق الشروط. "
 
 #. module: account
 #: help:account.fiscal.position,vat_required:0
@@ -1624,14 +1628,14 @@ msgstr "تطبق فقط  في حال كان الشريك حاصل على رقم 
 msgid ""
 "Apply when the shipping or invoicing country is in this country group, and "
 "no position matches the country directly."
-msgstr ""
+msgstr "Apply when the shipping or invoicing country is in this country group, and no position matches the country directly."
 
 #. module: account
 #: help:account.fiscal.position,country_id:0
 msgid ""
 "Apply when the shipping or invoicing country matches. Takes precedence over "
 "positions matching on a country group."
-msgstr ""
+msgstr "Apply when the shipping or invoicing country matches. Takes precedence over positions matching on a country group."
 
 #. module: account
 #: view:validate.account.move:account.validate_account_move_view
@@ -1834,7 +1838,7 @@ msgstr "الميزانية العامة (حسابات الخصوم)"
 #. module: account
 #: help:account.bank.statement,balance_end:0
 msgid "Balance as calculated based on Opening Balance and transaction lines"
-msgstr ""
+msgstr "يتم احتساب الرصيد على أساس الرصيد الافتتاحى و السطور التى تمت معاملتها "
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_receivable_graph
@@ -1895,7 +1899,7 @@ msgstr "تسزية البنك مسبقة الحركات"
 #. module: account
 #: view:account.statement.operation.template:account.view_account_statement_operation_template_search
 msgid "Bank Reconciliation Move preset"
-msgstr ""
+msgstr "تسويه البنك المنقول مسبقا "
 
 #. module: account
 #: view:account.bank.statement:account.view_account_bank_statement_filter
@@ -2589,7 +2593,7 @@ msgstr "اختار السنة المالية"
 #: code:addons/account/static/src/js/account_widgets.js:1297
 #, python-format
 msgid "Choose counterpart"
-msgstr ""
+msgstr " اختيار نظيره"
 
 #. module: account
 #: view:account.automatic.reconcile:account.account_automatic_reconcile_view1
@@ -2999,7 +3003,7 @@ msgstr "نظير"
 #. module: account
 #: field:account.fiscal.position,country_id:0
 msgid "Country"
-msgstr ""
+msgstr "دولة"
 
 #. module: account
 #: field:account.fiscal.position,country_group_id:0
@@ -3057,7 +3061,7 @@ msgstr "إنشاء مرتجع"
 #: code:addons/account/static/src/js/account_widgets.js:1294
 #, python-format
 msgid "Create Write-off"
-msgstr ""
+msgstr " إنشاء الشطب"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -4622,7 +4626,7 @@ msgstr "لكي يتم اعتبار الفاتورة مدفوعة ، قيد ال�
 msgid ""
 "For cash or bank journal, this option should be unchecked when the starting "
 "balance should always set to 0 for new documents."
-msgstr ""
+msgstr "ليومية النقدية او البنك ، يجب  أن لا يتم تحديد هذا الخيار  عندما يبدأ الرصيد لابد أن يكون بــ 0 للوثائق الجديدة"
 
 #. module: account
 #: help:account.payment.term.line,value_amount:0
@@ -4826,7 +4830,7 @@ msgid ""
 "Gives the type of the analytic journal. When it needs for a document (eg: an"
 " invoice) to create analytic entries, Odoo will look for a matching journal "
 "of the same type."
-msgstr ""
+msgstr "يعطي نوع من تحليل اليومية. عندما يحتاج لوثيقة (على سبيل المثال: فاتورة) لإنشاء تحليل القيود ، سوف يقوم النظام  بالبحث عن اليوميه المطابقة من نفس النوع."
 
 #. module: account
 #: code:addons/account/account_invoice.py:726
@@ -5010,7 +5014,7 @@ msgstr "أيقونة"
 #: code:addons/account/account_bank_statement.py:428
 #, python-format
 msgid "If \"Amount Currency\" is specified, then \"Amount\" must be as well."
-msgstr ""
+msgstr "إذا تم تحديد \"العملة المبلغ\"، ثم \"المبلغ\" يجب أن يكون كذلك."
 
 #. module: account
 #: help:account.bank.statement,message_unread:0
@@ -5023,7 +5027,7 @@ msgstr "عند التفعيل، يجب الانتباه الى الرسائل ا
 msgid ""
 "If checked, the entry won't be created if the entry date is not included "
 "into the selected period"
-msgstr ""
+msgstr "إذا قمت بالتحديد ، لن يتم إنشاء تاريخ قيد إذا لم يتم تضمين الفترة المختارة"
 
 #. module: account
 #: help:account.account.template,nocreate:0
@@ -5205,7 +5209,7 @@ msgstr "متنازع عليه"
 #, python-format
 msgid ""
 "In order to close a fiscalyear, you must first post related journal entries."
-msgstr ""
+msgstr "من أجل إغلاق السنة المالية، يجب عليك أولا إضافة قيود اليومية ذات الصلة."
 
 #. module: account
 #: code:addons/account/wizard/account_period_close.py:52
@@ -5220,7 +5224,7 @@ msgstr "لكي تغلق الفتره  يجب ان تعمل قيود يوميه �
 msgid ""
 "In order to delete a bank statement line, you must first cancel it to delete"
 " related journal items."
-msgstr ""
+msgstr "لكي يتم حذف خط بيان البنك، يجب أولا إلغاء حذف عناصر اليوميه ذات الصلة."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:392
@@ -5496,7 +5500,7 @@ msgstr "الفاتورة قد تم تسويتها مسبقا"
 #: code:addons/account/account_invoice.py:576
 #, python-format
 msgid "Invoice line account's company and invoice's company does not match."
-msgstr ""
+msgstr "حسابات خط الفاتورة  للشركه لا يتطابق مع فواتير الشركة. "
 
 #. module: account
 #: view:account.invoice:account.invoice_supplier_form
@@ -5642,12 +5646,12 @@ msgstr "نص مائل (أصغر)"
 #. module: account
 #: view:website:account.report_analyticcostledger
 msgid "J.C. /Move"
-msgstr ""
+msgstr "J.C. /Move"
 
 #. module: account
 #: view:website:account.report_analyticcostledgerquantity
 msgid "J.C./Move"
-msgstr ""
+msgstr "J.C./Move"
 
 #. module: account
 #: view:website:account.report_generalledger
@@ -5964,7 +5968,7 @@ msgstr "الإبقاء فارغ لاستخدام فترة تاريخ المصا�
 #: code:addons/account/static/src/js/account_widgets.js:1299
 #, python-format
 msgid "Keep open"
-msgstr ""
+msgstr "إحفظها مفتوحة"
 
 #. module: account
 #. openerp-web
@@ -8161,7 +8165,7 @@ msgstr "الرمز الرئيسي للرد"
 #: field:account.tax,ref_base_sign:0
 #: field:account.tax.template,ref_base_sign:0
 msgid "Refund Base Code Sign"
-msgstr ""
+msgstr "رد تسجيل رمز الضريبة "
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -8199,7 +8203,7 @@ msgstr "اعادة كود الضرائب"
 #. module: account
 #: field:account.tax,ref_tax_sign:0 field:account.tax.template,ref_tax_sign:0
 msgid "Refund Tax Code Sign"
-msgstr ""
+msgstr "رد تسجيل رمز الضريبة "
 
 #. module: account
 #: help:account.invoice.refund,filter_refund:0
@@ -8368,7 +8372,7 @@ msgstr "دورة لكل سطر"
 #: code:addons/account/account_bank_statement.py:899
 #, python-format
 msgid "Rounding error from currency conversion"
-msgstr ""
+msgstr "Rounding error from currency conversion"
 
 #. module: account
 #: view:account.subscription:account.view_subscription_search
@@ -8684,7 +8688,7 @@ msgstr "اختر الفترة للتحليل"
 #, python-format
 msgid ""
 "Selected Entry Lines does not have any account move entries in draft state."
-msgstr ""
+msgstr "Selected Entry Lines does not have any account move entries in draft state."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:64
@@ -8900,7 +8904,7 @@ msgstr "حسابات رياضية خاصة"
 msgid ""
 "Specified journals do not have any account move entries in draft state for "
 "the specified periods."
-msgstr ""
+msgstr "Specified journals do not have any account move entries in draft state for the specified periods."
 
 #. module: account
 #: code:addons/account/wizard/account_move_bank_reconcile.py:53
@@ -9190,7 +9194,7 @@ msgstr "المورّدون"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "TIN:"
-msgstr ""
+msgstr "TIN:"
 
 #. module: account
 #: view:cash.box.out:account.cash_box_out_form
@@ -9611,14 +9615,14 @@ msgstr "أُعربت الكمية في عملة الحساب المتعلق اذ
 msgid ""
 "The amount expressed in the secondary currency must be positive when account"
 " is debited and negative when account is credited."
-msgstr ""
+msgstr "The amount expressed in the secondary currency must be positive when account is debited and negative when account is credited."
 
 #. module: account
 #: help:account.statement.operation.template,amount:0
 msgid ""
 "The amount will count as a debit if it is negative, as a credit if it is "
 "positive (except if amount type is 'Percentage of open balance')."
-msgstr ""
+msgstr "The amount will count as a debit if it is negative, as a credit if it is positive (except if amount type is 'Percentage of open balance')."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:728
@@ -9666,14 +9670,14 @@ msgstr "الكيان التجاري الذي سيتم استخدامه على ق
 msgid ""
 "The company of the gain exchange rate account must be the same than the "
 "company selected."
-msgstr ""
+msgstr "The company of the gain exchange rate account must be the same than the company selected."
 
 #. module: account
 #: constraint:account.config.settings:0
 msgid ""
 "The company of the loss exchange rate account must be the same than the "
 "company selected."
-msgstr ""
+msgstr "The company of the loss exchange rate account must be the same than the company selected."
 
 #. module: account
 #: help:account.tax,type:0
@@ -9707,7 +9711,7 @@ msgstr "الوضع المالي سيحدد الضرائب والحسابات ا�
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 msgid "The fiscal year is created when installing a Chart of Account."
-msgstr ""
+msgstr "يتم إنشاء السنة المالية عند تثبيت شجره الحسابات. !"
 
 #. module: account
 #: constraint:account.aged.trial.balance:0 constraint:account.balance.report:0
@@ -10025,24 +10029,24 @@ msgstr "هذا العام"
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
-msgstr ""
+msgstr "This account will be used for invoices instead of the default one to value expenses for the current product."
 
 #. module: account
 #: help:product.template,property_account_income:0
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
-msgstr ""
+msgstr "سيتم استخدام شرط السداد بدلا من الشرط الافتراضى لأوامر البيع و فواتير العملاء"
 
 #. module: account
 #: help:product.category,property_account_expense_categ:0
 msgid "This account will be used for invoices to value expenses."
-msgstr ""
+msgstr "سيتم استخدام هذا الحساب لفواتير قيمه المبيعات ."
 
 #. module: account
 #: help:product.category,property_account_income_categ:0
 msgid "This account will be used for invoices to value sales."
-msgstr ""
+msgstr "سيتم استخدام هذا الحساب لفواتير قيمه المبيعات ."
 
 #. module: account
 #: help:res.partner,property_account_payable:0
@@ -10063,14 +10067,14 @@ msgstr "وسيتم استخدام هذا الحساب بدلا من الحساب
 msgid ""
 "This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account.\n"
 "-This installs the module account_budget."
-msgstr ""
+msgstr "This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account.\n-This installs the module account_budget."
 
 #. module: account
 #: help:account.config.settings,module_account_followup:0
 msgid ""
 "This allows to automate letters for unpaid invoices, with multi-level recalls.\n"
 "-This installs the module account_followup."
-msgstr ""
+msgstr "This allows to automate letters for unpaid invoices, with multi-level recalls.\n-This installs the module account_followup."
 
 #. module: account
 #: help:account.config.settings,module_account_check_writing:0
@@ -10086,7 +10090,7 @@ msgid ""
 "* serve as base for an easy plug-in of various automated payment mechanisms, and \n"
 "* provide a more efficient way to manage invoice payments.\n"
 "-This installs the module account_payment."
-msgstr ""
+msgstr "This allows you to create and manage your payment orders, with purposes to \n* serve as base for an easy plug-in of various automated payment mechanisms, and \n* provide a more efficient way to manage invoice payments.\n-This installs the module account_payment."
 
 #. module: account
 #: help:account.config.settings,module_account_asset:0
@@ -10094,7 +10098,7 @@ msgid ""
 "This allows you to manage the assets owned by a company or a person.\n"
 "It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr ""
+msgstr "This allows you to manage the assets owned by a company or a person.\nIt keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
 
 #. module: account
 #: help:account.chart.template,complete_tax_set:0
@@ -10172,7 +10176,7 @@ msgid ""
 "This field is used to record the third party name when importing bank "
 "statement in electronic format, when the partner doesn't exist yet in the "
 "database (or cannot be found)."
-msgstr ""
+msgstr "This field is used to record the third party name when importing bank statement in electronic format, when the partner doesn't exist yet in the database (or cannot be found)."
 
 #. module: account
 #: help:account.partner.reconcile.process,next_partner_id:0
@@ -10195,7 +10199,7 @@ msgstr "يصور هذا الرقم العدد الإجمالي للشركاء ا
 msgid ""
 "This includes all the basic requirements of voucher entries for bank, cash, sales, purchase, expense, contra, etc.\n"
 "-This installs the module account_voucher."
-msgstr ""
+msgstr "This includes all the basic requirements of voucher entries for bank, cash, sales, purchase, expense, contra, etc.\n-This installs the module account_voucher."
 
 #. module: account
 #: help:account.move,balance:0
@@ -10255,7 +10259,7 @@ msgid ""
 "in some countries). This data is updated in real time. That’s very useful "
 "because it enables you to preview at any time the tax that you owe at the "
 "start and end of the month or quarter."
-msgstr ""
+msgstr "This menu prints a tax declaration based on invoices or payments. Select one or several periods of the fiscal year. The information required for a tax declaration is automatically generated by Odoo from invoices (or payments, in some countries). This data is updated in real time. That’s very useful because it enables you to preview at any time the tax that you owe at the start and end of the month or quarter."
 
 #. module: account
 #: help:account.tax,name:0
@@ -10287,7 +10291,7 @@ msgstr "هذا الحقل الاختاري يسمح لك بربط نوذج ال�
 msgid ""
 "This page displays all the bank transactions that are to be reconciled and "
 "provides with a neat interface to do so."
-msgstr ""
+msgstr "This page displays all the bank transactions that are to be reconciled and provides with a neat interface to do so."
 
 #. module: account
 #: help:res.partner,property_supplier_payment_term:0
@@ -10319,7 +10323,7 @@ msgid ""
 "This technical field can be used at the statement line creation/import time "
 "in order to avoid the reconciliation process on it later on. The statement "
 "line will simply create a counterpart on this account"
-msgstr ""
+msgstr "This technical field can be used at the statement line creation/import time in order to avoid the reconciliation process on it later on. The statement line will simply create a counterpart on this account"
 
 #. module: account
 #: help:account.account.template,type:0 help:account.entries.report,type:0
@@ -10329,7 +10333,7 @@ msgid ""
 "accounts for multi-company consolidations, payable/receivable are for "
 "partners accounts (for debit/credit computations), closed for depreciated "
 "accounts."
-msgstr ""
+msgstr "This type is used to differentiate types with special effects in Odoo: view can not have entries, consolidation are accounts that can have children accounts for multi-company consolidations, payable/receivable are for partners accounts (for debit/credit computations), closed for depreciated accounts."
 
 #. module: account
 #: help:account.account,currency_mode:0
@@ -10373,7 +10377,7 @@ msgstr "سيثبت المعالج كل المدخلات اليومية لليو�
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:36
 #, python-format
 msgid "Tip : Hit ctrl-enter to reconcile all balanced items."
-msgstr ""
+msgstr "Tip : Hit ctrl-enter to reconcile all balanced items."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -10548,7 +10552,7 @@ msgstr "إجمالي بنود إقفال التحكم النقدي."
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
 msgid "Total of opening cash control lines"
-msgstr ""
+msgstr "Total of opening cash control lines"
 
 #. module: account
 #: view:website:account.report_analyticcostledger
@@ -11046,7 +11050,7 @@ msgstr "بالضريبة"
 msgid ""
 "With this module, link your products to a template to send complete information and tools to your customer.\n"
 "For instance when invoicing a training, the training agenda and materials will automatically be send to your customers."
-msgstr ""
+msgstr "With this module, link your products to a template to send complete information and tools to your customer.\nFor instance when invoicing a training, the training agenda and materials will automatically be send to your customers."
 
 #. module: account
 #: view:account.move.line.reconcile:account.view_account_move_line_reconcile_full
@@ -11124,14 +11128,14 @@ msgid ""
 "You are selecting transactions from both a payable and a receivable account.\n"
 "\n"
 "In order to proceed, you first need to deselect the %s transactions."
-msgstr ""
+msgstr "You are selecting transactions from both a payable and a receivable account.\n\nIn order to proceed, you first need to deselect the %s transactions."
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/account_widgets.js:1050
 #, python-format
 msgid "last"
-msgstr ""
+msgstr "آخر "
 
 #. module: account
 #: help:account.move.line,blocked:0
@@ -11152,7 +11156,7 @@ msgstr "لا يمكنك اضافة/تعديل قيود لفترة قد تم اغ
 msgid ""
 "You can not cancel closing entries if the 'End of Year Entries Journal' "
 "period is closed."
-msgstr ""
+msgstr "لا يمكنك إلغاء القيود المغلقه \" إذا كانت نهاية سنة قيود اليوميه \" فترة مغلق. "
 
 #. module: account
 #: code:addons/account/account.py:1057
@@ -11211,7 +11215,7 @@ msgid ""
 "%(date)s: Current Date\n"
 "\n"
 "e.g. My model on %(date)s"
-msgstr ""
+msgstr "You can specify year, month and date in the name of the model using the following labels:\n\n%(year)s: To Specify Year \n%(month)s: To Specify Month \n%(date)s: Current Date\n\ne.g. My model on %(date)s"
 
 #. module: account
 #: code:addons/account/account_invoice.py:996
@@ -11276,7 +11280,7 @@ msgstr "لا يمكن إضافة قيود الى الحساب المغلق%s %s.
 #: constraint:account.move.line:0
 msgid ""
 "You cannot create journal items on an account of type view or consolidation."
-msgstr ""
+msgstr "You cannot create journal items on an account of type view or consolidation."
 
 #. module: account
 #: constraint:account.move.line:0
@@ -11421,13 +11425,13 @@ msgstr "لا يمكنك المُصادقة على مدخلات اليومية ه
 #: code:addons/account/account_cash_statement.py:271
 #, python-format
 msgid "You do not have rights to open this %s journal!"
-msgstr ""
+msgstr "لم يكن لديك حق فتح هذه اليوميه  %s"
 
 #. module: account
 #: code:addons/account/account.py:2304
 #, python-format
 msgid "You have a wrong expression \"%(...)s\" in your model!"
-msgstr ""
+msgstr "You have a wrong expression \"%(...)s\" in your model!"
 
 #. module: account
 #: code:addons/account/account_move_line.py:95
@@ -11560,7 +11564,7 @@ msgstr "يجب تكوين \"حساب خسارة سعر الصرف\" في إعد�
 msgid ""
 "You should have defined an 'Internal Transfer Account' in your cash "
 "register's journal!"
-msgstr ""
+msgstr "You should have defined an 'Internal Transfer Account' in your cash register's journal!"
 
 #. module: account
 #. openerp-web
@@ -11684,7 +11688,7 @@ msgstr "غلق الفترة"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:45
 #, python-format
 msgid "reconciliations with the ctrl-enter shortcut."
-msgstr ""
+msgstr "reconciliations with the ctrl-enter shortcut."
 
 #. module: account
 #. openerp-web
@@ -11759,4 +11763,4 @@ msgid ""
 "\n"
 "Thank you in advance for your cooperation.\n"
 "Best Regards,"
-msgstr ""
+msgstr "Dear Sir/Madam,\n\nOur records indicate that some payments on your account are still due. Please find details below.\nIf the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\nIf you have any queries regarding your account, Please contact us.\n\nThank you in advance for your cooperation.\nBest Regards,"
