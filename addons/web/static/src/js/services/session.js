@@ -4,6 +4,9 @@ odoo.define('web.session', function (require) {
 var Session = require('web.Session');
 var modules = odoo._modules;
 
-return new Session(undefined, undefined, {modules: modules, use_cors: false});
+var session = new Session(undefined, undefined, {modules: modules, use_cors: false});
+session.is_bound = session.session_bind();
+
+return session;
 
 });

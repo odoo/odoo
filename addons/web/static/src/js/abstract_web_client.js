@@ -49,7 +49,7 @@ var WebClient = Widget.extend({
         this.on("change:title_part", this, this._title_changed);
         this._title_changed();
 
-        return session.session_bind(this.origin)
+        return session.is_bound
             .then(function () {
                 self.bind_events();
                 return $.when(
