@@ -460,11 +460,11 @@ class crm_lead(FormatAddress, osv.osv):
                 value = dict(key).get(lead[field_name], lead[field_name])
             elif field.type == 'many2one':
                 if lead[field_name]:
-                    value = lead[field_name].name_get()[0][1]
+                    value = lead[field_name].sudo().name_get()[0][1]
             elif field.type == 'many2many':
                 if lead[field_name]:
                     for val in lead[field_name]:
-                        field_value = val.name_get()[0][1]
+                        field_value = val.sudo().name_get()[0][1]
                         value += field_value + ","
             else:
                 value = lead[field_name]
