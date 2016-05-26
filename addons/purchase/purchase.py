@@ -435,7 +435,7 @@ class purchase_order(osv.osv):
 
         company_id = context.get('company_id') or self.pool.get('res.users')._get_company(cr, uid, context=context)
         if not company_id:
-            raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
+            raise UserError(_('There is no default company for the current user!'))
         fp = self.pool['account.fiscal.position'].get_fiscal_position(cr, uid, company_id, partner_id, context=context)
         supplier_address = partner.address_get(cr, uid, [partner_id], ['default'], context=context)
         supplier = partner.browse(cr, uid, partner_id, context=context)
@@ -578,8 +578,7 @@ class purchase_order(osv.osv):
             if not any(line.state != 'cancel' for line in po.order_line):
                 raise UserError(_('You cannot confirm a purchase order without any purchase order line.'))
             if po.invoice_method == 'picking' and not any([l.product_id and l.product_id.type in ('product', 'consu') and l.state != 'cancel' for l in po.order_line]):
-                raise osv.except_osv(
-                    _('Error!'),
+                raise UserError(
                     _("You cannot confirm a purchase order with Invoice Control Method 'Based on incoming shipments' that doesn't contain any stockable item."))
             for line in po.order_line:
                 if line.state=='draft':
