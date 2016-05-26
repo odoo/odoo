@@ -1737,17 +1737,16 @@ ListView.Groups = Class.extend( /** @lends instance.web.ListView.Groups# */{
 /**
  * Serializes concurrent calls to this asynchronous method. The method must
  * return a deferred or promise.
- *
- * Current-implementation is class-serialized (the mutex is common to all
- * instances of the list view). Can be switched to instance-serialized if
- * having concurrent list views becomes possible and common.
  */
 function synchronized(fn) {
-    var fn_mutex = new utils.Mutex();
     return function () {
         var obj = this;
         var args = _.toArray(arguments);
-        return fn_mutex.exec(function () {
+        if(!this._view_list_synchronized_mutex)
+        {
+            this._view_list_synchronized_mutex = new $.Mutex();
+        }
+        return this._view_list_synchronized_mutex.exec(function () {
             if (obj.isDestroyed()) { return $.when(); }
             return fn.apply(obj, args);
         });
