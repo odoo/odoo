@@ -148,6 +148,10 @@ class DeliveryCarrier(models.Model):
 
         :param orders: A recordset of sale orders
         :return list: A list of floats, containing the estimated price for the shipping of the sale order
+                      eg. [total_shipping_price] in case of extra services not applied.
+                          [total_shipping_price, actual_shipping_charge, service_charge] in case of extra services applied.
+                          --actual_shipping_charge is excluding service_charge for applied extra services.
+                          --service_charge is and additional charge for applied extra services.
         '''
         self.ensure_one()
         if hasattr(self, '%s_get_shipping_price_from_so' % self.delivery_type):
@@ -158,8 +162,14 @@ class DeliveryCarrier(models.Model):
 
         :param pickings: A recordset of pickings
         :return list: A list of dictionaries (one per picking) containing of the form::
+                      in case of extra services not applied
                          { 'exact_price': price,
                            'tracking_number': number }
+                      in case of extra services applied
+                         { 'exact_price': price,
+                           'tracking_number': number,
+                           'shipping_charges': exact_price - service_charges,
+                           'service_charges': additional charge for applied extra services}
         '''
         self.ensure_one()
         if hasattr(self, '%s_send_shipping' % self.delivery_type):
