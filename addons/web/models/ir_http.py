@@ -18,4 +18,10 @@ class Http(models.Model):
             "company_id": request.env.user.company_id.id if request.session.uid else None,
             "partner_id": request.env.user.partner_id.id if request.session.uid and request.env.user.partner_id else None,
             "user_companies": {'current_company': (user.company_id.id, user.company_id.name), 'allowed_companies': [(comp.id, comp.name) for comp in user.company_ids]} if display_switch_company_menu else False,
+            "currencies": self.get_currencies(),
         }
+
+    def get_currencies(self):
+        Currency = request.env['res.currency']
+        currencies = Currency.search([]).read(['symbol', 'position', 'decimal_places'])
+        return { c['id']: {'symbol': c['symbol'], 'position': c['position'], 'digits': [69,c['decimal_places']]} for c in currencies} 
