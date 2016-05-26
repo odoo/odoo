@@ -27,23 +27,18 @@ var UserMenu = Widget.extend({
         });
     },
     do_update: function () {
-        var self = this;
-        var $avatar = self.$('.oe_topbar_avatar');
-        $avatar.attr('src', $avatar.data('default-src'));
+        var $avatar = this.$('.oe_topbar_avatar');
         if (!session.uid) {
+            $avatar.attr('src', $avatar.data('default-src'));
             return $.when();
         }
-        var func = new Model("res.users").get_func("read");
-        return self.alive(func(session.uid, ["name"])).then(function(res) {
-            var topbar_name = res.name;
-            if(session.debug) {
-                topbar_name = _.str.sprintf("%s (%s)", topbar_name, session.db);
-            }
-            self.$('.oe_topbar_name').text(topbar_name);
-
-            var avatar_src = session.url('/web/image', {model:'res.users', field: 'image_small', id: session.uid});
-            $avatar.attr('src', avatar_src);
-        });
+        var topbar_name = session.name;
+        if(session.debug) {
+            topbar_name = _.str.sprintf("%s (%s)", topbar_name, session.db);
+        }
+        this.$('.oe_topbar_name').text(topbar_name);
+        var avatar_src = session.url('/web/image', {model:'res.users', field: 'image_small', id: session.uid});
+        $avatar.attr('src', avatar_src);
     },
     on_menu_documentation: function () {
         window.open('https://www.odoo.com/documentation/user', '_blank');
