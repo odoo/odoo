@@ -52,6 +52,20 @@
     }
 }
 
+// Translations
+.oe_translate_examples li {
+    margin: 10px;
+    padding: 4px;
+}
+html[lang] > body.editor_enable{
+    [data-oe-translation-state] {
+        background: rgba(255, 255, 90, 0.5) !important;
+    }
+    [data-oe-translation-state="translated"] {
+        background: rgba(120, 215, 110, 0.5) !important;
+    }
+}
+
 // SNIPPET PANEL
 #oe_snippets {
     .o-flex-display();

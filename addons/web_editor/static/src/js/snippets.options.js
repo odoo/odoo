@@ -344,8 +344,11 @@ odoo.define('web_editor.snippets.options', function (require) {
                     self.$target.removeClass(self.classes).addClass('bg-' + $(this).data("color"));
                 })
                 .mouseleave(function () {
-                    self.$target.removeClass(self.classes)
-                        .addClass('bg-' + $colors.filter(".selected").data("color"));
+                    self.$target.removeClass(self.classes);
+                    var $selected = $colors.filter(".selected");
+                    if ($selected.length) {
+                        self.$target.addClass('bg-' + $selected.data("color"));
+                    }
                 })
                 .click(function () {
                     $colors.removeClass("selected");
@@ -355,6 +358,7 @@ odoo.define('web_editor.snippets.options', function (require) {
 
             this.$el.find('.note-color-reset').on('click', function () {
                 self.$target.removeClass(self.classes);
+                $colors.removeClass("selected");
             });
         }
     });

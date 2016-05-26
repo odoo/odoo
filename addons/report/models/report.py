@@ -50,7 +50,7 @@ except (OSError, IOError):
 else:
     _logger.info('Will use the Wkhtmltopdf binary at %s' % _get_wkhtmltopdf_bin())
     out, err = process.communicate()
-    version = re.search('([0-9.]+)', out).group(0)
+    version = re.search('([0-9.]+)', out or "0").group(0)
     if LooseVersion(version) < LooseVersion('0.12.0'):
         _logger.info('Upgrade Wkhtmltopdf to (at least) 0.12.0')
         wkhtmltopdf_state = 'upgrade'
