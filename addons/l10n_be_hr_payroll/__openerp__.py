@@ -21,11 +21,11 @@ Belgian Payroll Rules.
     """,
 
     'auto_install': False,
-    'demo': ['l10n_be_hr_payroll_demo.xml'],
+    'demo': ['data/l10n_be_hr_payroll_demo.xml'],
     'website': 'https://www.odoo.com/page/accounting',
     'data':[
-        'l10n_be_hr_payroll_view.xml',
-        'l10n_be_hr_payroll_data.xml',
+        'views/l10n_be_hr_payroll_view.xml',
+        'data/l10n_be_hr_payroll_data.xml',
         'data/hr.salary.rule.csv',
     ],
     'installable': True
