@@ -904,7 +904,7 @@ class sale_order_line(osv.osv):
     def _get_price_reduce(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0.0)
         for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = line.price_subtotal / line.product_uom_qty
+            res[line.id] = line.price_subtotal / line.product_uom_qty if line.product_uom_qty else 0.0
         return res
 
     _name = 'sale.order.line'
