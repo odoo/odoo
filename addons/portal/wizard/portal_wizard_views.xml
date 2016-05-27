@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <!-- wizard action on res.partner -->
         <act_window id="partner_wizard_action"
             name="Portal Access Management"
@@ -17,7 +16,7 @@
             <field name="arch" type="xml">
                 <form string="Portal Access Management">
                     <group>
-                        <field name="portal_id" widget="selection" on_change="onchange_portal_id(portal_id, context)"/>
+                        <field name="portal_id" widget="selection"/>
                     </group>
                     <div>
                         Select which contacts should belong to the portal in the list below.
@@ -40,5 +39,4 @@
                 </form>
             </field>
         </record>
-    </data>
-</openerp>
+</odoo>
