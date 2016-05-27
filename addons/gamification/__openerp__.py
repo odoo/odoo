@@ -21,7 +21,6 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
 """,
 
     'data': [
-        'wizard/update_goal.xml',
         'wizard/grant_badge.xml',
         'views/badge.xml',
         'views/challenge.xml',

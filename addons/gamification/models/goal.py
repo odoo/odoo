@@ -104,14 +104,6 @@ class gamification_goal_definition(osv.Model):
         'display_mode': 'progress',
     }
 
-    def number_following(self, cr, uid, model_name="mail.thread", context=None):
-        """Return the number of 'model_name' objects the user is following
-
-        The model specified in 'model_name' must inherit from mail.thread
-        """
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        return self.pool.get('mail.followers').search(cr, uid, [('res_model', '=', model_name), ('partner_id', '=', user.partner_id.id)], count=True, context=context)
-
     def _check_domain_validity(self, cr, uid, ids, context=None):
         # take admin as should always be present
         superuser = self.pool['res.users'].browse(cr, uid, SUPERUSER_ID, context=context)
@@ -468,38 +460,3 @@ class gamification_goal(osv.Model):
                 if goal.challenge_id and goal.challenge_id.report_message_frequency == 'onchange':
                     self.pool.get('gamification.challenge').report_progress(cr, SUPERUSER_ID, goal.challenge_id, users=[goal.user_id], context=context)
         return result
-
-    def get_action(self, cr, uid, goal_id, context=None):
-        """Get the ir.action related to update the goal
-
-        In case of a manual goal, should return a wizard to update the value
-        :return: action description in a dictionnary
-        """
-        goal = self.browse(cr, uid, goal_id, context=context)
-
-        if goal.definition_id.action_id:
-            # open a the action linked to the goal
-            action = goal.definition_id.action_id.read()[0]
-
-            if goal.definition_id.res_id_field:
-                current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-                action['res_id'] = safe_eval(goal.definition_id.res_id_field, {'user': current_user})
-
-                # if one element to display, should see it in form mode if possible
-                action['views'] = [(view_id, mode) for (view_id, mode) in action['views'] if mode == 'form'] or action['views']
-            return action
-
-        if goal.computation_mode == 'manually':
-            # open a wizard window to update the value manually
-            action = {
-                'name': _("Update %s") % goal.definition_id.name,
-                'id': goal_id,
-                'type': 'ir.actions.act_window',
-                'views': [[False, 'form']],
-                'target': 'new',
-                'context': {'default_goal_id': goal_id, 'default_current': goal.current},
-                'res_model': 'gamification.goal.wizard'
-            }
-            return action
-
-        return False
