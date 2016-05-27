@@ -8,7 +8,6 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 FIELD_STATES = [('clear', 'Clear'), ('anonymized', 'Anonymized'), ('not_existing', 'Not Existing'), ('new', 'New')]
-ANONYMIZATION_STATES = FIELD_STATES + [('unstable', 'Unstable')]
 ANONYMIZATION_HISTORY_STATE = [('started', 'Started'), ('done', 'Done'), ('in_exception', 'Exception occured')]
 ANONYMIZATION_DIRECTION = [('clear -> anonymized', 'clear -> anonymized'), ('anonymized -> clear', 'anonymized -> clear')]
 
