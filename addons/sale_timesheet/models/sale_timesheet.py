@@ -28,8 +28,9 @@ class HrEmployee(models.Model):
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
     track_service = fields.Selection(selection_add=[('timesheet', 'Timesheets on project'), ('task', 'Create a task and track hours')])
-    project_id = fields.Many2one('project.project', string='Project', help='Create a task under this project on sale order validation. This setting must be set for each company',
-                             ondelete='set null', company_dependent=True)
+    project_id = fields.Many2one('project.project', string='Project',
+                                 help='Create a task under this project on sale order validation. This setting must be set for each company.',
+                                 company_dependent=True)
 
     @api.onchange('type', 'invoice_policy')
     def onchange_type_timesheet(self):
