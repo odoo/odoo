@@ -4991,18 +4991,27 @@ class BaseModel(object):
             raise ValueError('invalid field_name: %r' % (field_name,))
 
         cr = self._cr
-        query = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s AND "%s" IS NOT NULL' % \
-                    (field.column2, field.relation, field.column1, field.column2)
-        ids = set(self.ids)
-        current_ids = set(ids)
-        while current_ids:
-            parent_ids = set()
-            for sub_ids in cr.split_for_in_conditions(current_ids):
-                cr.execute(query, [sub_ids])
-                parent_ids.update([row[0] for row in cr.fetchall()])
-            if any(parent_id in ids for parent_id in parent_ids):
-                return False
-            current_ids = parent_ids
+        query = 'SELECT "%s", "%s" FROM "%s" WHERE "%s" IN %%s AND "%s" IS NOT NULL' % \
+                    (field.column1, field.column2, field.relation, field.column1, field.column2)
+
+        succs = defaultdict(set)        # transitive closure of successors
+        preds = defaultdict(set)        # transitive closure of predecessors
+        todo, done = set(self.ids), set()
+        while todo:
+            # retrieve the respective successors of the nodes in 'todo'
+            cr.execute(query, [tuple(todo)])
+            done.update(todo)
+            todo.clear()
+            for id1, id2 in cr.fetchall():
+                # connect id1 and its predecessors to id2 and its successors
+                for x, y in itertools.product([id1] + list(preds[id1]),
+                                              [id2] + list(succs[id2])):
+                    if x == y:
+                        return False    # we found a cycle here!
+                    succs[x].add(y)
+                    preds[y].add(x)
+                if id2 not in done:
+                    todo.add(id2)
         return True
 
     @api.multi
