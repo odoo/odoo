@@ -1,11 +1,11 @@
 odoo.define('survey.result', function (require) {
 'use strict';
 
-var website = require('website.website');
-
-if(!$('.js_surveyresult').length) {
+$(document).ready(function(){
+    if(!$('.js_surveyresult').length) {
     return $.Deferred().reject("DOM doesn't contain '.js_surveyresult'");
-}
+    }
+
 
     console.debug("[survey] Survey Result JS is loading...");
 
@@ -165,5 +165,5 @@ if(!$('.js_surveyresult').length) {
     });
 
     console.debug("[survey] Survey Result JS loaded!");
-
+    });
 });

@@ -1,18 +1,11 @@
 odoo.define('survey.survey', function (require) {
 'use strict';
 
-var website = require('website.website');
-
-/*
- * This file is intended to add interactivity to survey forms rendered by
- * the website engine.
- */
-
-var the_form = $('.js_surveyform');
-
-if(!the_form.length) {
-    return $.Deferred().reject("DOM doesn't contain '.js_surveyform'");
-}
+$(document).ready(function(){
+    var the_form = $('.js_surveyform');
+    if(!the_form.length) {
+        return $.Deferred().reject("DOM doesn't contain '.js_surveyform'");
+    }
 
     console.debug("[survey] Custom JS for survey is loading...");
 
@@ -168,5 +161,5 @@ if(!the_form.length) {
     }
 
     console.debug("[survey] Custom JS for survey loaded!");
-
+    });
 });

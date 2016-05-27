@@ -7,10 +7,10 @@ import openerp.tests
 class TestUi(openerp.tests.HttpCase):
 
     def test_01_admin_survey_tour(self):
-        self.phantom_js("/", "odoo.__DEBUG__.services['web.Tour'].run('test_survey', 'test')", "odoo.__DEBUG__.services['web.Tour'].tours.test_survey", login="admin")
+        self.phantom_js("/survey/start/1/phantom", "odoo.__DEBUG__.services['web.Tour'].run('test_survey', 'test')", "odoo.__DEBUG__.services['web.Tour'].tours.test_survey", login="admin")
 
     def test_02_demo_survey_tour(self):
-        self.phantom_js("/", "odoo.__DEBUG__.services['web.Tour'].run('test_survey', 'test')", "odoo.__DEBUG__.services['web.Tour'].tours.test_survey", login="demo")
+        self.phantom_js("/survey/start/1/phantom", "odoo.__DEBUG__.services['web.Tour'].run('test_survey', 'test')", "odoo.__DEBUG__.services['web.Tour'].tours.test_survey", login="demo")
 
     def test_03_public_survey_tour(self):
-        self.phantom_js("/", "odoo.__DEBUG__.services['web.Tour'].run('test_survey', 'test')", "odoo.__DEBUG__.services['web.Tour'].tours.test_survey")
+        self.phantom_js("/survey/start/1/phantom", "odoo.__DEBUG__.services['web.Tour'].run('test_survey', 'test')", "odoo.__DEBUG__.services['web.Tour'].tours.test_survey")
