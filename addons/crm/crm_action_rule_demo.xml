@@ -22,7 +22,7 @@
             <field name="sequence">1</field>
             <field name="kind">on_time</field>
             <field name="filter_id" ref="filter_draft_lead"/>
-            <field name="trg_date_id" ref="field_crm_lead_create_date"/>
+            <field name="trg_date_id" search="[('model','=','crm.lead'),('name','=','create_date')]"/>
             <field name="trg_date_range">5</field>
             <field name="trg_date_range_type">day</field>
             <field name="server_action_ids" eval="[(6,0,[ref('action_email_reminder_lead')])]"/>
