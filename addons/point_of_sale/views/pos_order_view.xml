@@ -27,7 +27,8 @@
                     <field name="date_order"/>
                     <field name="session_id" />
                     <field name="partner_id" domain="[('customer', '=', True)]" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
-                    <field name="fiscal_position_id" options="{'no_create': True}"/>
+                    <field name="fiscal_position_id" domain="[('id', 'in', fiscal_position_ids and fiscal_position_ids[0] and fiscal_position_ids[0][2] or False)]" options="{'no_create': True}"/>
+                    <field name="fiscal_position_ids" invisible="True"/>
                 </group>
                 <notebook colspan="4">
                     <page string="Products">
