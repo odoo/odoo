@@ -348,3 +348,61 @@ class TestReconciliation(AccountingTestCase):
                 counterpart_exchange_loss_line = line
         #  We should be able to find a move line of 0.01 EUR on the Foreign Exchange Loss account
         self.assertTrue(counterpart_exchange_loss_line, 'There should be one move line of 0.01 EUR on account "Foreign Exchange Loss"')
+
+    def test_manual_reconcile_wizard_opw678153(self):
+
+        def create_move(name, amount, amount_currency, currency_id):
+            debit_line_vals = {
+                'name': name,
+                'debit': amount > 0 and amount or 0.0,
+                'credit': amount < 0 and -amount or 0.0,
+                'account_id': self.account_rcv.id,
+                'amount_currency': amount_currency,
+                'currency_id': currency_id,
+            }
+            credit_line_vals = debit_line_vals.copy()
+            credit_line_vals['debit'] = debit_line_vals['credit']
+            credit_line_vals['credit'] = debit_line_vals['debit']
+            credit_line_vals['account_id'] = self.account_rsa.id
+            credit_line_vals['amount_currency'] = -debit_line_vals['amount_currency']
+            vals = {
+                'journal_id': self.bank_journal_euro.id,
+                'line_ids': [(0,0, debit_line_vals), (0, 0, credit_line_vals)]
+            }
+            return self.env['account.move'].create(vals).id
+        move_list_vals = [
+            ('1', -1.83, 0, self.currency_swiss_id),
+            ('2', 728.35, 795.05, self.currency_swiss_id),
+            ('3', -4.46, 0, self.currency_swiss_id),
+            ('4', 0.32, 0, self.currency_swiss_id),
+            ('5', 14.72, 16.20, self.currency_swiss_id),
+            ('6', -737.10, -811.25, self.currency_swiss_id),
+        ]
+        move_ids = []
+        for name, amount, amount_currency, currency_id in move_list_vals:
+            move_ids.append(create_move(name, amount, amount_currency, currency_id))
+        aml_recs = self.env['account.move.line'].search([('move_id', 'in', move_ids), ('account_id', '=', self.account_rcv.id)])
+        wizard = self.env['account.move.line.reconcile'].with_context(active_ids=[x.id for x in aml_recs]).create({})
+        wizard.trans_rec_reconcile_full()
+        for aml in aml_recs:
+            self.assertTrue(aml.reconciled, 'The journal item should be totally reconciled')
+            self.assertEquals(aml.amount_residual, 0, 'The journal item should be totally reconciled')
+            self.assertEquals(aml.amount_residual_currency, 0, 'The journal item should be totally reconciled')
+
+        move_list_vals = [
+            ('2', 728.35, 795.05, self.currency_swiss_id),
+            ('3', -4.46, 0, False),
+            ('4', 0.32, 0, False),
+            ('5', 14.72, 16.20, self.currency_swiss_id),
+            ('6', -737.10, -811.25, self.currency_swiss_id),
+        ]
+        move_ids = []
+        for name, amount, amount_currency, currency_id in move_list_vals:
+            move_ids.append(create_move(name, amount, amount_currency, currency_id))
+        aml_recs = self.env['account.move.line'].search([('move_id', 'in', move_ids), ('account_id', '=', self.account_rcv.id)])
+        wizard = self.env['account.move.line.reconcile.writeoff'].with_context(active_ids=[x.id for x in aml_recs]).create({'journal_id': self.bank_journal_usd.id, 'writeoff_acc_id': self.account_rsa.id})
+        wizard.trans_rec_reconcile()
+        for aml in aml_recs:
+            self.assertTrue(aml.reconciled, 'The journal item should be totally reconciled')
+            self.assertEquals(aml.amount_residual, 0, 'The journal item should be totally reconciled')
+            self.assertEquals(aml.amount_residual_currency, 0, 'The journal item should be totally reconciled')
