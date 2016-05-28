@@ -41,7 +41,6 @@ class restaurant_table(osv.osv):
         'seats':        fields.integer('Seats', help="The default number of customer served at this table."),
         'color':        fields.char('Color',    help="The table's color, expressed as a valid 'background' CSS property value"),
         'active':       fields.boolean('Active',help='If false, the table is deactivated and will not be available in the point of sale'),
-        'pos_order_ids':fields.one2many('pos.order','table_id','Pos Orders', help='The orders served at this table'),
     }
 
     _defaults = {
