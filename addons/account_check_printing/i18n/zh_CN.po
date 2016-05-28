@@ -5,14 +5,15 @@
 # Translators:
 # fausthuang, 2015
 # fausthuang, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
 # zhining wu <wzn63@21cn.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2016-03-12 01:56+0000\n"
-"Last-Translator: Joroy <13637815@qq.com>\n"
+"PO-Revision-Date: 2016-05-28 17:56+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,13 +38,13 @@ msgstr " 和 %s/100"
 #: code:addons/account_check_printing/account_payment.py:81
 #, python-format
 msgid "A check memo cannot exceed 60 characters."
-msgstr "支票的备忘不能超过60个字符。"
+msgstr "支票备注不能超过60个字符。"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment_check_amount_in_words
 #: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments_check_amount_in_words
 msgid "Amount in Words"
-msgstr "字符统计"
+msgstr "金额大写"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -54,7 +55,7 @@ msgstr "取消"
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment_check_number
 #: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments_check_number
 msgid "Check Number"
-msgstr "支票编号"
+msgstr "支票号码"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
@@ -69,14 +70,14 @@ msgstr "支票序列"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal_check_printing_payment_method_selected
 msgid "Check printing payment method selected"
-msgstr "支票打印付款方式选择"
+msgstr "支票打印付款方式已选择"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal_check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment_check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_register_payments_check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
-msgstr "检查此项如果你的预打印支票不是已编号的。"
+msgstr "勾选此选项如果你的预先印制支票是没有编号的。"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -112,7 +113,7 @@ msgstr "创建者"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_create_date
 msgid "Created on"
-msgstr "创建于"
+msgstr "创建时间"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_display_name
@@ -145,12 +146,12 @@ msgstr "最后修改日"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_write_uid
 msgid "Last Updated by"
-msgstr "最后更新"
+msgstr "最近更新者"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_write_date
 msgid "Last Updated on"
-msgstr "最后更新"
+msgstr "最近更新时间"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal_check_manual_sequencing
@@ -163,7 +164,7 @@ msgstr "手动编号"
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal_check_next_number
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_next_check_number
 msgid "Next Check Number"
-msgstr "下一个支票号"
+msgstr "下一个支票号码"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_register_payments_check_number
@@ -171,7 +172,7 @@ msgid ""
 "Number of the check corresponding to this payment. If your pre-printed check"
 " are not already numbered, you can manage the numbering in the journal "
 "configuration page."
-msgstr "对应于该付款的支票编号。如果你的预打印支票还没有被编号，你可以在帐户配置页面进行管理。"
+msgstr "对应于该付款的支票编号。如果你的预先印制支票还没有被编号，你可以在帐户配置页面进行管理。"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
@@ -191,7 +192,7 @@ msgstr "以支票方式付款要必须选择'支票'并且未被核销"
 msgid ""
 "Please enter the number of the first pre-printed check that you are about to"
 " print on."
-msgstr "请输入您将首次预打印的支票编号。"
+msgstr "请输入您将首次预先印制的支票的号码。"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -214,7 +215,7 @@ msgstr "打印支票"
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
 msgid "Print Pre-numbered Checks"
-msgstr "打印预编号支票"
+msgstr "打印预先印制支票"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_register_payments
@@ -247,7 +248,7 @@ msgid ""
 "The selected journal is configured to print check numbers. If your pre-"
 "printed check paper already has numbers or if the current numbering is "
 "wrong, you can change it in the journal configuration page."
-msgstr "被选的分类账被配置成打印支票号码。如果你已经预先打印了有号码的支票或者当前的号码是错误的你可以在分类账配置页面改正"
+msgstr "被选的分类账被配置成打印支票号码。如果预先印制支票纸已经有号码或者当前的号码是错误的你可以在分类账配置页面改正"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/account_payment.py:135
@@ -266,7 +267,7 @@ msgstr "这能够让你节约相应的付款支票数量"
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Unmark Sent"
-msgstr "未标注发送"
+msgstr "无标记送出"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view

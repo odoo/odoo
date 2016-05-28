@@ -7,15 +7,17 @@
 # Frederik Kramer <frederik.kramer@ovgu.de>, 2016
 # Martin Trigaux, 2015
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
-# Renko Spiekermann <renkosp@gmail.com>, 2015
+# darenkster <renkosp@gmail.com>, 2015
+# Rudolf Schnapka <rs@techno-flex.de>, 2016
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # Wolfgang Taferner, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-05-02 23:49+0000\n"
-"Last-Translator: Frederik Kramer <frederik.kramer@ovgu.de>\n"
+"PO-Revision-Date: 2016-05-28 11:04+0000\n"
+"Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +60,7 @@ msgstr "&times;"
 msgid ""
 "(Un)archiving a project automatically (un)archives its tasks and issues. Do "
 "you want to proceed?"
-msgstr "(De)archivieren eines Projektes (de)archiviert ebenfalls dessen Aufgaben und Belange"
+msgstr "(De)archivieren eines Projektes (de)archiviert ebenfalls dessen Aufgaben und Fälle. Möchten Sie fortfahren?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -90,12 +92,12 @@ msgid ""
 "                        Send messages or log internal notes with attachments to link\n"
 "                        documents to your project.\n"
 "                    </p>"
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                        Dokumente werden an Aufgaben und Fälle Ihres Projekts angehängt</p><p>\n                        Senden Sie Meldungen oder erfassen Sie interne Vermerke und Dateianhänge\n                        zu Ihrem Projekt.\n                    </p>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "<span attrs=\"{'invisible':[('use_tasks', '=', False)]}\">as </span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible':[('use_tasks', '=', False)]}\">als </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -122,19 +124,19 @@ msgstr "<span class=\"fa fa-envelope-o\"/> Mailen Sie unserem Projekt Experten"
 msgid ""
 "<span class=\"fa fa-thumbs-o-down\"/> The <strong> Wrong Way</strong> to use"
 " projects:"
-msgstr ""
+msgstr "<span class=\"fa fa-thumbs-o-down\"/> Der <strong> Falsche Weg</strong> Projekte zu verwenden:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<span class=\"fa fa-thumbs-o-up\"/> The <strong>Right Way</strong> to use "
 "projects:"
-msgstr ""
+msgstr "<span class=\"fa fa-thumbs-o-up\"/> Der <strong>Richtige Weg</strong> Projekte zu verwenden:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"o_label\">Documents</span>"
-msgstr ""
+msgstr "<span class=\"o_label\">Dokumente</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -152,7 +154,7 @@ msgid ""
 "                                            <span class=\"fa fa-mobile\"/>\n"
 "                                            <strong> From your Mobile phone</strong>\n"
 "                                        </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n                                            <span class=\"fa fa-mobile\"/>\n                                            <strong> Von Ihrem Mobiltelefon</strong>\n                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -170,7 +172,7 @@ msgid ""
 "                                            <span class=\"fa fa-puzzle-piece\"/>\n"
 "                                            <strong> Via Chrome extension</strong>\n"
 "                                        </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n                                            <span class=\"fa fa-puzzle-piece\"/>\n                                            <strong> Via Chrome-Erweiterung</strong>\n                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -188,7 +190,7 @@ msgid ""
 "                                            <span class=\"fa fa-tasks\"/>\n"
 "                                            <strong> Directly in Odoo</strong>\n"
 "                                        </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n                                            <span class=\"fa fa-tasks\"/>\n                                            <strong> Direkt in Odoo</strong>\n                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -198,7 +200,7 @@ msgid ""
 "                                            <strong> Exercise 1</strong><br/>\n"
 "                                            <span class=\"small\">Check Workload</span>\n"
 "                                        </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n                                            <span class=\"fa fa-thumb-tack\"/>\n                                            <strong> Übung 1</strong><br/>\n                                            <span class=\"small\">Prüfe Auslastung</span>\n                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -208,7 +210,7 @@ msgid ""
 "                                            <strong> Exercise 2</strong><br/>\n"
 "                                            <span class=\"small\">Delay to close an Issue</span>\n"
 "                                        </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n                                            <span class=\"fa fa-thumb-tack\"/>\n                                            <strong> Übung 2</strong><br/>\n                                            <span class=\"small\">Verzug zur Erledigung eines Falls</span>\n                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -217,7 +219,7 @@ msgid ""
 "                                        <span class=\"fa fa-check-square-o\"/>\n"
 "                                        <strong> Tasks</strong>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n                                        <span class=\"fa fa-check-square-o\"/>\n                                        <strong> Aufgaben</strong>\n                                    </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -226,7 +228,7 @@ msgid ""
 "                                        <span class=\"fa fa-clock-o\"/>\n"
 "                                        <strong> Timesheets</strong>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n                                        <span class=\"fa fa-clock-o\"/>\n                                        <strong> Zeitnachweise</strong>\n                                    </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -235,7 +237,7 @@ msgid ""
 "                                        <span class=\"fa fa-exclamation-circle\"/>\n"
 "                                        <strong> Issues</strong>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n                                        <span class=\"fa fa-exclamation-circle\"/>\n                                        <strong>Fälle</strong>\n                                    </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -243,28 +245,28 @@ msgid ""
 "<span><strong>Contact us to customize your application:</strong><br/>\n"
 "                                    We have special options for unlimited number of customizations !\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span><strong>Kontaktieren Sie uns, um Ihre Anwendung anzupassen:</strong><br/>\n                                    Wir bieten besondere Konditionen für eine Vielzahl an Anpassungen!\n                                    </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<span><strong>We are here to help you:</strong> if you don't succeed in achieving your favorite KPIs, contact us and we can help you create your custom reports.\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span><strong>Wir sind da, um Ihnen zu helfen:</strong> Wenn Sie nicht erfolgreich sind, Ihre bevorzugten KPI's zu ermitteln, kontaktieren Sie uns und wir können Ihnen helfen Ihre individuellen Berichte zu erstellen..\n                                    </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong> Adjourn (5 min)</strong>\n"
 "                                Conclude the meeting with upbeat statements and positive input on project accomplishments. Always reinforce teamwork and encourage all member to watch out for each other to ensure the project is successful."
-msgstr ""
+msgstr "<strong> Vertagung (5 Min)</strong>\n                                Beenden Sie die Sitzung mit einem optimistischen Ausblick und positiven Vermeldungen zur geleisteten Projektarbeit. Teamwork muss dabei immer wieder betont werden, ebenso müssen Projektmitarbeiter motiviert werden, sich gegenseitig zu unterstützen, um ein erfolgreiches Projekt aller Beteiligten sicherzustellen."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong> Critical items (10 min)</strong>\n"
 "                                Upon completing the project status review session, summarize the critical items."
-msgstr ""
+msgstr "<strong> Kritische Elemente (10 Min)</strong>\n                                Mit Abschluß der Sitzung zum Projektstatus, fassen Sie die kritischen Elemente zusammen."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1341,7 +1343,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:19
 #, python-format
 msgid "Deployment"
-msgstr ""
+msgstr "Implementierung"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_description
@@ -1578,7 +1580,7 @@ msgstr "Ablaufdatum"
 msgid ""
 "Explanation text to help users using the star and priority mechanism on "
 "stages or issues that are in this stage."
-msgstr ""
+msgstr "Erklärungstext, um Benutzern bei der Festlegung von Prioritäten in Stufen oder Fällen in dieser Phase zu helfen."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -2035,13 +2037,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_legend_blocked
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr ""
+msgstr "Erläuterung zu gesperrtem Kanban "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_normal
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr ""
+msgstr "Erläuterung zu Kanban in Bearbeitung"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2064,7 +2066,7 @@ msgstr "Kanban-Status"
 #: model:ir.model.fields,field_description:project.field_project_task_legend_done
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_done
 msgid "Kanban Valid Explanation"
-msgstr ""
+msgstr "Erläuterung zu gültigem Kanban "
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2472,7 +2474,7 @@ msgid ""
 "Parent model holding the alias. The model holding the alias reference is not"
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
-msgstr ""
+msgstr "Das übergeordnete Datenmodell für den Alias. Dieses Modell, welches die EMail Alias Referenz enthält ist nicht zwangsläufig das Modell von alias_model_id (Beispiel: project (parent_model) und task (model))"
 
 #. module: project
 #: model:ir.model,name:project.model_res_partner
@@ -2532,7 +2534,7 @@ msgstr "Priorität"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
 msgid "Priority Management Explanation"
-msgstr ""
+msgstr "Erläuterung zum Prioritätenmanagement"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_privacy_visibility
@@ -3543,7 +3545,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "We can automate steps in your workflow, for example:"
-msgstr ""
+msgstr "Wir können automatische Schritte in Ihren Workflow integrieren, z.B.:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
