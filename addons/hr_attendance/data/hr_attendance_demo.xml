@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data noupdate="True">
+<odoo>
+    <data noupdate="1">
 
         <record id="attendance1" model="hr.attendance">
             <field eval="time.strftime('%Y-%m-01 08:21')" name="name"/>
@@ -121,6 +121,6 @@
             <field name="action">sign_out</field>
             <field name="employee_id" ref="hr.employee_fp"/>
         </record>
-        
+
     </data>
-</openerp>
+</odoo>
