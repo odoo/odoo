@@ -145,6 +145,9 @@ class Discussion(models.Model):
     message_changes = fields.Integer(string='Message changes')
     important_messages = fields.One2many('test_new_api.message', 'discussion',
                                          domain=[('important', '=', True)])
+    emails = fields.One2many('test_new_api.emailmessage', 'discussion')
+    important_emails = fields.One2many('test_new_api.emailmessage', 'discussion',
+                                       domain=[('important', '=', True)])
 
     @api.onchange('moderator')
     def _onchange_moderator(self):
@@ -224,6 +227,14 @@ class Message(models.Model):
     def _search_author_partner(self, operator, value):
         return [('author.partner_id', operator, value)]
 
+
+class EmailMessage(models.Model):
+    _name = 'test_new_api.emailmessage'
+    _inherits = {'test_new_api.message': 'message'}
+
+    message = fields.Many2one('test_new_api.message', 'Message',
+                              required=True, ondelete='cascade')
+    email_to = fields.Char('To')
 
 class Multi(models.Model):
     """ Model for testing multiple onchange methods in cascade that modify a
