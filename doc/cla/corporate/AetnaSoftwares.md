@@ -6,8 +6,8 @@ I declare that I am authorized and able to make this agreement and sign this dec
 
 Signed,
 
-Olivier Oriol olivier.oriol@aetna-softwares.com https://github.com/aetna-softwares
+Olivier Oriol aetna.softwares@gmail.com https://github.com/aetna-softwares
 
 List of contributors:
 
-Olivier Oriol olivier.oriol@aetna-softwares.com https://github.com/aetna-softwares
+Olivier Oriol aetna.softwares@gmail.com https://github.com/aetna-softwares
