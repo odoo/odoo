@@ -28,7 +28,7 @@ class mrp_product_produce(osv.osv_memory):
                                   help="'Consume only' mode will only consume the products with the quantity selected.\n"
                                         "'Consume & Produce' mode will consume as well as produce the products with the quantity selected "
                                         "and it will finish the production order when total ordered quantities are produced."),
-        'lot_id': fields.many2one('stock.production.lot', 'Lot'), #Should only be visible when it is consume and produce mode
+        'lot_id': fields.many2one('stock.production.lot', 'Lot'), # Should only be visible when it is consume and produce mode
         'consume_lines': fields.one2many('mrp.product.produce.line', 'produce_id', 'Products Consumed'),
         'tracking': fields.related('product_id', 'tracking', type='selection',
                                    selection=[('serial', 'By Unique Serial Number'), ('lot', 'By Lots'), ('none', 'No Tracking')]),
