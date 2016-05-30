@@ -365,7 +365,7 @@ class purchase_order(osv.osv):
 
     def copy(self, cr, uid, id, default=None, context=None):
         # FORWARDPORT UP TO SAAS-6
-        new_id = super(purchase_order, self).copy(cr, uid, id, context=context)
+        new_id = super(purchase_order, self).copy(cr, uid, id, default=default, context=context)
         for po in self.browse(cr, uid, [new_id], context=context):
             for line in po.order_line:
                 vals = self.pool.get('purchase.order.line').onchange_product_id(
