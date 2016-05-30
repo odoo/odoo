@@ -305,7 +305,7 @@ return Widget.extend({
         });
         chart.xAxis.tickValues(tickValues)
             .tickFormat(tickFormat);
-        chart.yAxis.tickFormat(function(d) { return openerp.web.format_value(d, { type : 'float' });});
+        chart.yAxis.tickFormat(function(d) { return formats.format_value(d, { type : 'float' });});
 
         chart(svg);
         this.to_remove = chart.update;
