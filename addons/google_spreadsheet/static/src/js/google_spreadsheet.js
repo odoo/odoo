@@ -5,26 +5,10 @@ var ActionManager = require('web.ActionManager');
 var core = require('web.core');
 var data = require('web.data');
 var FavoriteMenu = require('web.FavoriteMenu');
-var FormView = require('web.FormView');
 var pyeval = require('web.pyeval');
 var ViewManager = require('web.ViewManager');
 
 var QWeb = core.qweb;
-
-FormView.include({
-    on_processed_onchange: function(result, processed) {
-        var self = this;
-        var fields = self.fields;
-        _(result.selection).each(function (selection, fieldname) {
-            var field = fields[fieldname];
-            if (!field) { return; }
-            field.field.selection = selection;
-            field.values = selection;
-            field.renderElement(); 
-        });
-        return this._super(result, processed);
-    },
-});
 
 FavoriteMenu.include({
     start: function () {
