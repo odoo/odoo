@@ -1,9 +1,8 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Belgian Intrastat Declaration',
-    'version': '1.0',
     'category': 'Localization',
     'description': """
 Generates Intrastat XML report for declaration
@@ -20,5 +19,4 @@ Based on invoices.
         'views/l10n_be_intrastat_view.xml',
         'wizard/l10n_be_intrastat_declaration_view.xml',
     ],
-    'installable': True,
 }
