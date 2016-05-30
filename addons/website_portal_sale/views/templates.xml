@@ -6,8 +6,15 @@
       </xpath>
     </template>
 
-    <template id="account" name="Account" inherit_id="website_portal.account">
-        <xpath expr="//div[contains(@class,'o_my_documents')]" position="inside">
+    <template id="account_placeholder" inherit_id="website_portal.account">
+        <xpath expr="//div[contains(@class,'o_my_documents')]"
+               position="inside">
+            <div id="sale"/>
+        </xpath>
+    </template>
+
+    <template id="account" name="Account" inherit_id="account_placeholder">
+        <xpath expr="//div[@id='sale']" position="inside">
             <t t-call="website_portal_sale.quotations" />
             <t t-call="website_portal_sale.sale_orders" />
             <t t-call="website_portal_sale.invoices" />

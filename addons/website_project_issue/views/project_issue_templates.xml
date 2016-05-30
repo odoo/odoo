@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="portal_project_issue" name="Portal Project Issues" inherit_id="website_portal.account">
-        <xpath expr="//div[contains(@class,'o_my_documents')]/*[last()]" position="after">
+    <template id="account_placeholder" inherit_id="website_portal.account">
+        <xpath expr="//div[contains(@class,'o_my_documents')]"
+               position="inside">
+            <div id="project_issue"/>
+        </xpath>
+    </template>
+
+    <template id="portal_project_issue"
+              name="Portal Project Issues"
+              inherit_id="account_placeholder">
+        <xpath expr="//div[@id='project_issue']" position="inside">
             <h3 class="page-header">Your Issues</h3>
             <t t-if="not issues">
                 <p>There are currently no issues for your account.</p>
