@@ -495,6 +495,7 @@ class AccountTaxGroup(models.Model):
 
     name = fields.Char(required=True, translate=True)
     sequence = fields.Integer(default=10)
+    partner_id = fields.Many2one('res.partner', string='Collecting Partner', help='Usually this would be your tax authority.')
 
 class AccountTax(models.Model):
     _name = 'account.tax'

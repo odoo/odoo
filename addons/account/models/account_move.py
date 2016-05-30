@@ -1026,6 +1026,13 @@ class AccountMoveLine(models.Model):
         if not ok:
             raise UserError(_('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
 
+        if ('tax_line_id' in vals):
+            tax = self.env['account.tax'].browse(vals['tax_line_id'])
+            group_id = tax.tax_group_id
+            group_partner = group_id.partner_id or False
+            if group_partner:
+                vals['partner_id'] = group_partner.id
+
         # Create tax lines
         tax_lines_vals = []
         if apply_taxes and not context.get('dont_create_taxes') and vals.get('tax_ids'):
@@ -1048,13 +1055,15 @@ class AccountMoveLine(models.Model):
                 if tax_vals['amount']:
                     account_id = (amount > 0 and tax_vals['account_id'] or tax_vals['refund_account_id'])
                     if not account_id: account_id = vals['account_id']
+                    group_id = self.env['account.tax'].browse([tax_vals['id']]).tax_group_id
+                    group_partner = group_id.partner_id or False
                     tax_lines_vals.append({
                         'account_id': account_id,
                         'name': vals['name'] + ' ' + tax_vals['name'],
                         'tax_line_id': tax_vals['id'],
                         'move_id': vals['move_id'],
                         'date': vals['date'],
-                        'partner_id': vals.get('partner_id'),
+                        'partner_id': group_partner and group_partner.id or vals.get('partner_id'),
                         'ref': vals.get('ref'),
                         'statement_id': vals.get('statement_id'),
                         'debit': tax_vals['amount'] > 0 and tax_vals['amount'] or 0.0,
