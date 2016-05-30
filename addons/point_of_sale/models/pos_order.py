@@ -364,7 +364,8 @@ class PosOrder(models.Model):
     nb_print = fields.Integer(string='Number of Print', readonly=True, copy=False, default=0)
     pos_reference = fields.Char(string='Receipt Ref', readonly=True, copy=False)
     sale_journal = fields.Many2one('account.journal', related='session_id.config_id.journal_id', string='Sale Journal', store=True, readonly=True)
-    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', default=lambda self: self._default_session().config_id.default_fiscal_position_id)
+    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', readonly=True, states={'draft': [('readonly', False)]},
+                                         default=lambda self: self._default_session().config_id.default_fiscal_position_id)
     fiscal_position_ids = fields.Many2many("account.fiscal.position", related="session_id.config_id.fiscal_position_ids", string="Fiscal Positions")
 
     @api.depends('statement_ids', 'lines.price_subtotal_incl', 'lines.discount')
@@ -708,7 +709,7 @@ class PosOrderLine(models.Model):
     discount = fields.Float(string='Discount (%)', digits=0, default=0.0)
     order_id = fields.Many2one('pos.order', string='Order Ref', ondelete='cascade')
     create_date = fields.Datetime(string='Creation Date', readonly=True)
-    tax_ids = fields.Many2many('account.tax', string='Taxes')
+    tax_ids = fields.Many2many('account.tax', string='Taxes', domain=[('type_tax_use', '=', 'sale')])
 
     @api.depends('price_unit', 'tax_ids', 'qty', 'discount', 'product_id')
     def _compute_amount_line_all(self):
