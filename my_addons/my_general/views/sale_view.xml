@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+       <record model="ir.ui.view" id="trinh_product_template_form_view_invoice_policy">
+            <field name="name">trinh.product.template.invoice.policy</field>
+            <field name="model">product.template</field>
+            <field name="priority">110</field>
+            <field name="inherit_id" ref="sale.product_template_form_view_invoice_policy"/>
+            <field name="arch" type="xml">
+                <field name="invoice_policy" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </field>
+                <field name="to_weight" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="trinh_product_template_form_view_inventory">
+            <field name="name">trinh.product.template.inventory</field>
+            <field name="model">product.template</field>
+            <field name="priority">101</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[@name='inventory']" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </xpath>
+                <xpath expr="//notebook/page[@name='notes']" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
