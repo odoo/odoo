@@ -3,14 +3,16 @@
 # * account_tax_cash_basis
 # 
 # Translators:
+# Rudolf Schnapka <rs@techno-flex.de>, 2016
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # Wolfgang Taferner, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:39+0000\n"
-"PO-Revision-Date: 2016-03-06 18:47+0000\n"
-"Last-Translator: Wolfgang Taferner\n"
+"PO-Revision-Date: 2016-05-28 10:51+0000\n"
+"Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +28,7 @@ msgstr "Buchungssatz"
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,help:account_tax_cash_basis.field_account_tax_cash_basis_account
 msgid "Account use when         creating entry for tax cash basis"
-msgstr ""
+msgstr "Bei Einnahme-Überschuss-Rechnung verwendetes Konto"
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_res_company
@@ -43,7 +45,7 @@ msgstr "Teilausgleich Offene Posten"
 msgid ""
 "Select this if the tax should use cash basis, which will         create an "
 "entry for this tax on a given account during reconciliation"
-msgstr ""
+msgstr "Wählen Sie dies, wenn die Steuer gemäß EÜR ermittelt wird, was zur Folge hat, dass erst bei Zahlungsausgleich eine Steuerbuchung auf gegebenes Konto vorgenommen wird."
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_account_tax
@@ -53,7 +55,7 @@ msgstr "Steuer"
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_move_tax_cash_basis_rec_id
 msgid "Tax Cash Basis Entry of"
-msgstr ""
+msgstr "EÜR-Steuerbuchung zu"
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_config_settings_tax_cash_basis_journal_id
@@ -64,7 +66,7 @@ msgstr "Journal für Istbesteuerung"
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_tax_cash_basis_account
 msgid "Tax Received Account"
-msgstr ""
+msgstr "Konto für Vorsteuer"
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,help:account_tax_cash_basis.field_account_move_tax_cash_basis_rec_id
@@ -72,7 +74,7 @@ msgid ""
 "Technical field used to keep track of the tax cash basis reconciliation. "
 "This is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
-msgstr ""
+msgstr "Technisches Feld, um den Steuerausgleich bei EÜR nachzuhalten. Dies wird benötigt, wenn das Ursprungsdokument storniert wird. Dann wird eine entsprechende Stornobuchung auch im Journal erstellt."
 
 #. module: account_tax_cash_basis
 #: code:addons/account_tax_cash_basis/tax_cash_basis.py:82
@@ -80,7 +82,7 @@ msgstr ""
 msgid ""
 "There is no tax cash basis journal defined for this company: \"%s\" \n"
 "Configure it in Accounting/Configuration/Settings"
-msgstr ""
+msgstr "Es ist für das Unternehmen \"%s\" kein EÜR-Journal bestimmt worden.\nLegen Sie dieses bitte in Abrechnung/Konfiguration/Einstellungen fest."
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_tax_use_cash_basis
