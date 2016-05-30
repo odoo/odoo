@@ -86,8 +86,6 @@ class _column(object):
         'translate',
         'select',
         'manual',
-        'write',
-        'read',
         'selectable',
         'group_operator',
         'groups',               # CSV list of ext IDs of groups
@@ -120,8 +118,6 @@ class _column(object):
         args['translate'] = translate
         args['select'] = select
         args['manual'] = manual
-        args['write'] = args.get('write', False)
-        args['read'] = args.get('read', False)
         args['selectable'] = args.get('selectable', True)
         args['group_operator'] = args.get('group_operator', None)
         args['groups'] = args.get('groups', None)
