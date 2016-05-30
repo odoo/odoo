@@ -1,10 +1,8 @@
 <?xml version="1.0"?>
-<openerp>
-    <data>
-
+<odoo>
         <!--     RESTAURANTS FLOORS  -->
 
-        <record model="ir.ui.view" id="view_restaurant_floor_form">
+        <record id="view_restaurant_floor_form" model="ir.ui.view">
             <field name="name">Restaurant Floors</field>
             <field name="model">restaurant.floor</field>
             <field name="arch" type="xml">
@@ -27,7 +25,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_restaurant_floor_tree">
+        <record id="view_restaurant_floor_tree" model="ir.ui.view">
             <field name="name">Restaurant Floors</field>
             <field name="model">restaurant.floor</field>
             <field name="arch" type="xml">
@@ -39,7 +37,7 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_restaurant_floor_form">
+        <record id="action_restaurant_floor_form" model="ir.actions.act_window">
             <field name="name">Floor Plans</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">restaurant.floor</field>
@@ -55,7 +53,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_restaurant_table_form">
+        <record id="view_restaurant_table_form" model="ir.ui.view">
             <field name="name">Restaurant Table</field>
             <field name="model">restaurant.table</field>
             <field name="arch" type="xml">
@@ -86,7 +84,7 @@
 
         <!--     RESTAURANT PRINTERS     -->
 
-        <record model="ir.ui.view" id="view_restaurant_printer_form">
+        <record id="view_restaurant_printer_form" model="ir.ui.view">
             <field name="name">Order Printer</field>
             <field name="model">restaurant.printer</field>
             <field name="arch" type="xml">
@@ -100,7 +98,7 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_restaurant_printer_form">
+        <record id="action_restaurant_printer_form" model="ir.actions.act_window">
             <field name="name">Order Printers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">restaurant.printer</field>
@@ -121,7 +119,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_restaurant_printer">
+        <record id="view_restaurant_printer" model="ir.ui.view">
             <field name="name">Order Printers</field>
             <field name="model">restaurant.printer</field>
             <field name="arch" type="xml">
@@ -140,5 +138,4 @@
             sequence="30"
             groups="point_of_sale.group_pos_manager"/>
 
-    </data>
-</openerp>
+</odoo>
