@@ -20,7 +20,7 @@
             <field name="computation_mode">count</field>
             <field name="suffix">leads</field>
             <field name="model_id" eval="ref('crm.model_crm_lead')" />
-            <field name="field_date_id" eval="ref('crm.field_crm_lead_create_date')" />
+            <field name="field_date_id" search="[('model','=','crm.lead'),('name','=','create_date')]" />
             <!-- lead AND opportunity as don't want to be penalised for lead converted to opportunity -->
             <field name="domain">[('user_id','=',user.id), '|', ('type', '=', 'lead'), ('type', '=', 'opportunity')]</field>
         </record>
