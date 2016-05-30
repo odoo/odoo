@@ -56,7 +56,7 @@ class restaurant_table(osv.osv):
     def create_from_ui(self, cr, uid, table, context=None):
         """ create or modify a table from the point of sale UI.
             table contains the table's fields. If it contains an
-            id, it will modify the existing table. It then 
+            id, it will modify the existing table. It then
             returns the id of the table.  """
 
         if table.get('floor_id',False):
@@ -84,30 +84,3 @@ class restaurant_printer(osv.osv):
     _defaults = {
         'name' : 'Printer',
     }
-
-class pos_config(osv.osv):
-    _inherit = 'pos.config'
-    _columns = {
-        'iface_splitbill': fields.boolean('Bill Splitting', help='Enables Bill Splitting in the Point of Sale'),
-        'iface_printbill': fields.boolean('Bill Printing', help='Allows to print the Bill before payment'),
-        'iface_orderline_notes': fields.boolean('Orderline Notes', help='Allow custom notes on Orderlines'),
-        'floor_ids':       fields.one2many('restaurant.floor','pos_config_id','Restaurant Floors', help='The restaurant floors served by this point of sale'),
-        'printer_ids':     fields.many2many('restaurant.printer','pos_config_printer_rel', 'config_id','printer_id',string='Order Printers'),
-    }
-    _defaults = {
-        'iface_splitbill': False,
-        'iface_printbill': False,
-    }
-            
-class pos_order(osv.osv):
-    _inherit = 'pos.order'
-    _columns = {
-        'table_id': fields.many2one('restaurant.table','Table', help='The table where this order was served'),
-        'customer_count' : fields.integer('Guests', help='The amount of customers that have been served by this order.'),
-    }
-
-    def _order_fields(self, cr, uid, ui_order, context=None):
-        fields = super(pos_order,self)._order_fields(cr,uid,ui_order,context)
-        fields['table_id']       = ui_order.get('table_id',0)
-        fields['customer_count'] = ui_order.get('customer_count',0)
-        return fields

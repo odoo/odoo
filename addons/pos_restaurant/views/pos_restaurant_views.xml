@@ -2,21 +2,6 @@
 <openerp>
     <data>
 
-
-        <!--     POS ORDERS     -->
-
-        <record model="ir.ui.view" id="view_pos_pos_form">
-            <field name="name">pos.order.form.view.inherit</field>
-            <field name="model">pos.order</field>
-            <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"></field>
-            <field name="arch" type="xml">
-                <xpath expr="//group[@name='order_fields']" position="inside">
-                    <field name="table_id"/>
-                    <field name="customer_count"/>
-                </xpath>
-            </field>
-        </record>
-
         <!--     RESTAURANTS FLOORS  -->
 
         <record model="ir.ui.view" id="view_restaurant_floor_form">
@@ -154,23 +139,6 @@
             id="menu_restaurant_printer_all"
             sequence="30"
             groups="point_of_sale.group_pos_manager"/>
-        
-        <record model="ir.ui.view" id="view_pos_config_form">
-            <field name="name">pos.config.form.view.inherit</field>
-            <field name="model">pos.config</field>
-            <field name="inherit_id" ref="point_of_sale.view_pos_config_form"></field>
-            <field name="arch" type="xml">
-                <sheet position='inside'>
-                    <group string="Bar &amp; Restaurant" >
-                        <field name="iface_splitbill" />
-                        <field name="iface_printbill" />
-                        <field name="iface_orderline_notes" />
-                        <field name="floor_ids" />
-                        <field name="printer_ids" />
-                    </group>
-                </sheet>
-            </field>
-        </record>
 
     </data>
 </openerp>
