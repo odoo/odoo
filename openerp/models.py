@@ -3969,22 +3969,6 @@ class BaseModel(object):
                 for wtuple in vals[field]:
                     if isinstance(wtuple, (tuple, list)) and wtuple[0] == 2:
                         deleted_related[fobj._obj].append(wtuple[1])
-            groups = fobj.write
-
-            if groups:
-                edit = False
-                for group in groups:
-                    module = group.split(".")[0]
-                    grp = group.split(".")[1]
-                    cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name=%s and module=%s and model=%s) and uid=%s", \
-                               (grp, module, 'res.groups', user))
-                    readonly = cr.fetchall()
-                    if readonly[0][0] >= 1:
-                        edit = True
-                        break
-
-                if not edit:
-                    vals.pop(field)
 
         result = self._store_get_values(cr, user, ids, vals.keys(), context) or []
 
@@ -4330,25 +4314,6 @@ class BaseModel(object):
                 fobj = self._inherit_fields[field][2]
             if not fobj:
                 continue
-            groups = fobj.write
-            if groups:
-                edit = False
-                for group in groups:
-                    module = group.split(".")[0]
-                    grp = group.split(".")[1]
-                    cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name='%s' and module='%s' and model='%s') and uid=%s" % \
-                               (grp, module, 'res.groups', user))
-                    readonly = cr.fetchall()
-                    if readonly[0][0] >= 1:
-                        edit = True
-                        break
-                    elif readonly[0][0] == 0:
-                        edit = False
-                    else:
-                        edit = False
-
-                if not edit:
-                    vals.pop(field)
         for field in vals:
             column = self._columns[field]
             if column._classic_write:
