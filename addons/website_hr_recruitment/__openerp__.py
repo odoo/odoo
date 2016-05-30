@@ -14,8 +14,8 @@ Odoo Contact Form
         'security/website_hr_recruitment_security.xml',
         'data/config_data.xml',
         'views/hr_job_views.xml',
-        'views/templates.xml',
-        'views/hr_recruitment_view.xml',
+        'views/website_hr_recruitment_templates.xml',
+        'views/hr_recruitment_views.xml',
     ],
     'demo': [
         'data/hr_job_demo.xml',

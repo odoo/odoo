@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from openerp.osv import osv
+from odoo import models
 
-class hr_applicant(osv.Model):
+class Applicant(models.Model):
+
     _inherit = 'hr.applicant'
 
     def website_form_input_filter(self, request, values):
