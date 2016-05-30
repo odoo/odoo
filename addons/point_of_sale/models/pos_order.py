@@ -273,7 +273,7 @@ class PosOrder(models.Model):
                     'analytic_account_id': self._prepare_analytic_account(line),
                     'credit': ((amount > 0) and amount) or 0.0,
                     'debit': ((amount < 0) and -amount) or 0.0,
-                    'tax_ids': [(6, 0, line.tax_ids_after_fiscal_position.ids)],
+                    'tax_ids': [(6, 0, line.tax_ids.ids)],
                     'partner_id': partner_id
                 })
 
@@ -373,7 +373,8 @@ class PosOrder(models.Model):
     nb_print = fields.Integer(string='Number of Print', readonly=True, copy=False, default=0)
     pos_reference = fields.Char(string='Receipt Ref', readonly=True, copy=False)
     sale_journal = fields.Many2one('account.journal', related='session_id.config_id.journal_id', string='Sales Journal', store=True, readonly=True)
-    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', default=lambda self: self._default_session().config_id.default_fiscal_position_id)
+    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', readonly=True, states={'draft': [('readonly', False)]},
+                                         default=lambda self: self._default_session().config_id.default_fiscal_position_id)
     fiscal_position_ids = fields.Many2many("account.fiscal.position", related="session_id.config_id.fiscal_position_ids", string="Fiscal Positions")
 
     @api.depends('statement_ids', 'lines.price_subtotal_incl', 'lines.discount')
@@ -777,7 +778,7 @@ class PosOrderLine(models.Model):
     order_id = fields.Many2one('pos.order', string='Order Ref', ondelete='cascade')
     create_date = fields.Datetime(string='Creation Date', readonly=True)
     pack_lot_ids = fields.One2many('pos.pack.operation.lot', 'pos_order_line_id', string='Lot/serial Number')
-    tax_ids = fields.Many2many('account.tax', string='Taxes')
+    tax_ids = fields.Many2many('account.tax', string='Taxes', domain=[('type_tax_use', '=', 'sale')])
 
     @api.depends('price_unit', 'tax_ids', 'qty', 'discount', 'product_id')
     def _compute_amount_line_all(self):
@@ -892,8 +893,8 @@ class ReportSaleDetails(models.AbstractModel):
                 products_sold.setdefault(key, 0.0)
                 products_sold[key] += line.qty
 
-                if line.tax_ids_after_fiscal_position:
-                    line_taxes = line.tax_ids_after_fiscal_position.compute_all(line.price_unit * (1-(line.discount or 0.0)/100.0), currency, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
+                if line.tax_ids:
+                    line_taxes = line.tax_ids.compute_all(line.price_unit * (1-(line.discount or 0.0)/100.0), currency, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
                     for tax in line_taxes['taxes']:
                         taxes.setdefault(tax['id'], {'name': tax['name'], 'tax_amount':0.0, 'base_amount':0.0})
                         taxes[tax['id']]['tax_amount'] += tax['amount']
