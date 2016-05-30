@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
-from openerp import http
-from openerp.http import request
-from dateutil.relativedelta import relativedelta
-from datetime import datetime, date, timedelta
-from math import floor
-import time
-import operator
-import babel
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.addons.website.controllers.backend import WebsiteBackend
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
+import babel
+from datetime import datetime, timedelta
+
+from odoo import http
+from odoo.http import request
+
+from odoo.addons.website.controllers.backend import WebsiteBackend
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 
 
 class WebsiteCrmBackend(WebsiteBackend):
