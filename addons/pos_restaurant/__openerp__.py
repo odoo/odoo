@@ -25,7 +25,7 @@ This module adds several restaurant features to the Point of Sale:
         'views/pos_config_views.xml',
         'views/pos_order_views.xml',
         'views/pos_restaurant_views.xml',
-        'views/pos_restauraunt_templates.xml',
+        'views/pos_restaurant_templates.xml',
     ],
     'qweb': [
         'static/src/xml/multiprint.xml',
@@ -35,7 +35,7 @@ This module adds several restaurant features to the Point of Sale:
         'static/src/xml/floors.xml',
     ],
     'demo': [
-        'data/restaurant_demo.xml',
+        'data/pos_restaurant_demo.xml',
     ],
     'installable': True,
     'auto_install': False,
