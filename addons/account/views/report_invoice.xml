@@ -6,7 +6,7 @@
         <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
         <div class="page">
             <div class="row">
-                <div class="col-xs-5 col-xs-offset-7">
+                <div name="invoice_address" class="col-xs-5 col-xs-offset-7">
                     <address t-field="o.partner_id"
                         t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
                     <span t-if="o.partner_id.vat">TIN: <span t-field="o.partner_id.vat"/></span>
