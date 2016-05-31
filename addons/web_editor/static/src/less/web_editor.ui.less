@@ -615,6 +615,31 @@ html[lang] > body.editor_enable{
             content: "" !important;
         }
     }
+
+    .o_editor_many2many {
+        .o_selected {
+            color: #999999;
+            .fa {
+                margin-top: 0.2em;
+            }
+            .fa-close:hover {
+                color: #ff0000;
+            }
+            .fa-edit {
+                margin-right: 0.6em;
+            }
+            .fa-edit:hover {
+                color: #0000ff;
+            }
+        }
+        .o_create span {
+            font-weight: bold;
+            font-style: italic;
+        }
+        .o_create:hover span {
+            color: #0000ff;
+        }
+    }
 }
 
 .s-resize-important * {
@@ -920,6 +945,14 @@ body.editor_enable {
 
         #oe_snippets {
             left: 0;
+        }
+    }
+
+    [data-oe-type='many2many'] div:empty {
+        min-height: 1em;
+        &:before {
+            content: '...';
+            opacity: 0.5;
         }
     }
 }

@@ -1009,4 +1009,15 @@
          data-drop-in='.panel-group:has(> .panel > .panel-collapse)'>
     </div>
 </template>
+
+<!-- t-field -->
+<template id="many2many_tags" inherit_id="web_editor.many2many_tags" name="Tags">
+    <xpath expr="//span" position="attributes">
+        <attribute name="t-if">not href</attribute>
+    </xpath>
+    <xpath expr="//span" position="after">
+        <t t-if="href"><a t-att-data-id="o_tag.id" t-attf-class="label label-#{ o_tag.classname or 'default' }" t-att-style="tag and tag.id==o_tag.id and 'text-decoration: underline'" t-attf-href="#{ href % ('tag/%s/' % slug(o_tag)) }"><t t-esc="o_tag.display_name"/></a></t>
+    </xpath>
+</template>
+
 </odoo>

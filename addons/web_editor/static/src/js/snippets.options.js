@@ -611,11 +611,12 @@ odoo.define('web_editor.snippets.options', function (require) {
         start: function () {
             var self = this;
 
-            this.Model = this.$target.data('oe-many2one-model');
+            this.type = this.type || 'many2one';
+            this.Model = this.Model || this.$target.data('oe-many2one-model');
             this.ID = +this.$target.data('oe-many2one-id');
 
             // create search button and bind search bar
-            this.$btn = $(qweb.render("web_editor.many2one.button"))
+            this.$btn = $(qweb.render("web_editor." + this.type + ".button"))
                 .insertAfter(this.$overlay.find('.oe_options'));
 
             this.$ul = this.$btn.find("ul");
@@ -642,12 +643,13 @@ odoo.define('web_editor.snippets.options', function (require) {
             this.$search.find('input')
                 .focus()
                 .on('keyup', function (e) {
-                    self.find_existing($(this).val());
+                    var value = $.trim($(this).val());
+                    self.find_existing(value);
                 });
 
             // bind result
             this.$ul.on('click', "li:not(:first) a", function (e) {
-                self.select_record(this);
+                self.select_record($(this), e);
             });
         },
 
@@ -666,8 +668,7 @@ odoo.define('web_editor.snippets.options', function (require) {
             },0);
         },
 
-        find_existing: function (name) {
-            var self = this;
+        get_domain: function (name) {
             var domain = [];
             if (!name || !name.length) {
                 self.$search.siblings().remove();
@@ -682,11 +683,19 @@ odoo.define('web_editor.snippets.options', function (require) {
             } else {
                 domain.push(['id', '=', name]);
             }
+            return domain;
+        },
 
-            ajax.jsonRpc('/web/dataset/call_kw', 'call', {
+        get_fields: function (name) {
+            return this.Model === "res.partner" ? ['display_name', 'city', 'country_id'] : ['display_name'];
+        },
+
+        find_existing: function (name) {
+            var self = this;
+            return ajax.jsonRpc('/web/dataset/call_kw', 'call', {
                 model: this.Model,
                 method: 'search_read',
-                args: [domain, this.Model === "res.partner" ? ['name', 'display_name', 'city', 'country_id'] : ['name', 'display_name']],
+                args: [this.get_domain(name), this.get_fields()],
                 kwargs: {
                     order: 'name DESC',
                     limit: 5,
@@ -694,7 +703,7 @@ odoo.define('web_editor.snippets.options', function (require) {
                 }
             }).then(function (result) {
                 self.$search.siblings().remove();
-                self.$search.after(qweb.render("web_editor.many2one.search",{contacts:result}));
+                self.$search.after(qweb.render("web_editor." + self.type + ".search", {contacts:result, search:name, widget:self}));
             });
         },
 
@@ -710,23 +719,23 @@ odoo.define('web_editor.snippets.options', function (require) {
             });
         },
 
-        select_record: function (li) {
+        select_record: function ($a, e) {
             var self = this;
 
-            this.ID = +$(li).data("id");
+            this.ID = +$a.data("id");
             this.$target.attr('data-oe-many2one-id', this.ID).data('oe-many2one-id', this.ID);
 
             this.buildingBlock.parent.rte.historyRecordUndo(this.$target);
             this.$target.trigger('content_changed');
 
-            if (self.$target.data('oe-type') === "contact") {
+            if (this.$target.data('oe-type') === "contact") {
                 $('[data-oe-contact-options]')
-                    .filter('[data-oe-model="'+self.$target.data('oe-model')+'"]')
-                    .filter('[data-oe-id="'+self.$target.data('oe-id')+'"]')
-                    .filter('[data-oe-field="'+self.$target.data('oe-field')+'"]')
-                    .filter('[data-oe-contact-options!="'+self.$target.data('oe-contact-options')+'"]')
-                    .add(self.$target)
-                    .attr('data-oe-many2one-id', self.ID).data('oe-many2one-id', self.ID)
+                    .filter('[data-oe-model="'+this.$target.data('oe-model')+'"]')
+                    .filter('[data-oe-id="'+this.$target.data('oe-id')+'"]')
+                    .filter('[data-oe-field="'+this.$target.data('oe-field')+'"]')
+                    .filter('[data-oe-contact-options!="'+this.$target.data('oe-contact-options')+'"]')
+                    .add(this.$target)
+                    .attr('data-oe-many2one-id', this.ID).data('oe-many2one-id', this.ID)
                     .each(function () {
                         var $node = $(this);
                         self.get_contact_rendering($node.data('oe-contact-options'))
@@ -735,12 +744,78 @@ odoo.define('web_editor.snippets.options', function (require) {
                             });
                     });
             } else {
-                self.$target.html($(li).data("name"));
+                this.$target.html($a.data("name"));
             }
 
             setTimeout(function () {
                 self.buildingBlock.make_active(false);
             },0);
+        }
+    });
+
+    registry.many2many = registry.many2one.extend({
+        start: function () {
+            this.type = "many2many";
+            this.Model = this.$target.data('oe-many2many-model');
+            this.IDs = this.$target.data('oe-many2many-ids') || [];
+            this._super();
+        },
+
+        on_focus: function () {
+            this._super();
+            this.find_existing('');
+        },
+
+        get_domain: function (name) {
+            if (name === "") {
+                return [['id', 'in', this.IDs]];
+            }
+            return this._super(name);
+        },
+
+        render: function () {
+            var self = this;
+            return ajax.jsonRpc('/web_editor/many2many_tags', 'call', {
+                model: this.Model,
+                ids: this.IDs,
+                context: base.get_context()
+            }).then(function (html) {
+                var $div = self.$target.find('div');
+                var $html = $(html).attr("class", $div.attr("class"));
+                $div.html($html);
+            });
+        },
+
+        select_record: function ($a, e) {
+            var self = this;
+            var id = $a.data('id');
+            var $target = $(e.target);
+            var name = $a.data('display_name');
+            var def = $.when();
+
+            if ($target.is('.fa-close')) {
+                this.IDs = _.without(this.IDs, id);
+            } else if ($target.is('.fa-edit')) {
+                window.open("/web#id="+id+"&view_type=form&model="+this.Model, '_blank');
+            } else if ($a.is('.o_create')) {
+                $a = $a.clone().removeClass('o_create');
+                this.$search.find('input').val("");
+                return ajax.jsonRpc('/web/dataset/call', 'call', {
+                    model: this.Model,
+                    method: 'create',
+                    args: [{name: $a.find('span').html()}, base.get_context()],
+                }).then(function (id) {
+                    self.select_record($a.data('id', id), e);
+                });
+
+            } else if ($a.is(':not(.o_selected)')) {
+                this.IDs.push(id);
+                this.$search.find('input').val("");
+            }
+            this.render();
+            this.$target.addClass('o_dirty');
+            this.$target.attr('data-oe-many2many-ids', JSON.stringify(this.IDs));
+            this.find_existing("");
         }
     });
 

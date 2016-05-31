@@ -25,11 +25,19 @@
     </div>
 </template>
 
+<!-- t-field -->
+<template id="many2many_tags" name="Tags">
+    <div t-attf-class="o_not_editable #{ classname }"><t t-foreach="tag_ids" t-as="o_tag"><span t-attf-class="label label-#{ 'classname' in o_tag._fields and o_tag.classname or 'default' }"><t t-esc="o_tag.display_name"/></span></t></div>
+</template>
+
 <!-- options (data-selector, data-drop-in, data-drop-near, data-js to link js object ) -->
 <template id="snippet_options">
     <!-- t-field -->
     <div data-js='many2one'
          data-selector="[data-oe-many2one-model]:not([data-oe-readonly])"
+         data-no-check="true"/>
+    <div data-js='many2many'
+         data-selector="[data-oe-type='many2many']:not([data-oe-readonly])"
          data-no-check="true"/>
 </template>
 </odoo>

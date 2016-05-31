@@ -28,7 +28,6 @@ from openerp.osv import orm, fields
 from openerp.tools import ustr, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools import html_escape as escape
 from openerp.addons.base.ir import ir_qweb
-from openerp.tools.translate import translate
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
 
@@ -74,11 +73,12 @@ class Field(orm.AbstractModel):
         field = record._model._fields[field_name]
         attrs = []
 
-        placeholder = options.get('placeholder') \
-                   or source_element.get('placeholder') \
-                   or getattr(field, 'placeholder', None)
-        if placeholder:
-            attrs.append(('placeholder', placeholder))
+        if context and context.get('inherit_branding'):
+            placeholder = options.get('placeholder') \
+                       or source_element.get('placeholder') \
+                       or getattr(field, 'placeholder', None)
+            if placeholder:
+                attrs.append(('placeholder', placeholder))
 
         if context and context.get('edit_translations') and context.get('translatable') and field.type in ('char', 'text') and field.translate:
             name = "%s,%s" % (record._model._name, field_name)
@@ -130,13 +130,12 @@ class ManyToOne(orm.AbstractModel):
         attrs = super(ManyToOne, self).attributes(
             cr, uid, field_name, record, options, source_element, g_att, t_att,
             qweb_context, context=context)
-        many2one = getattr(record, field_name)
-        if many2one:
-            data = [('data-oe-many2one-id', many2one.id),
-                    ('data-oe-many2one-model', many2one._name)]
-            return itertools.chain(attrs, data)
-        else:
-            return attrs
+        if context and context.get('inherit_branding'):
+            many2one = getattr(record, field_name)
+            data = [('data-oe-many2one-model', many2one._name)]
+            if many2one:
+                data += [('data-oe-many2one-id', many2one.id)]
+        return itertools.chain(attrs, data)
 
     def from_html(self, cr, uid, model, field, element, context=None):
         Model = self.pool[element.get('data-oe-model')]
@@ -178,15 +177,44 @@ class Contact(orm.AbstractModel):
         return node and node.__html__()
 
 
-def parse_fuzzy(in_format, value):
-    day_first = in_format.find('%d') < in_format.find('%m')
+class ManyToMany(orm.AbstractModel):
+    _name = 'ir.qweb.field.many2many'
+    _inherit = 'ir.qweb.field'
 
-    if '%y' in in_format:
-        year_first = in_format.find('%y') < in_format.find('%d')
-    else:
-        year_first = in_format.find('%Y') < in_format.find('%d')
+    def attributes(self, cr, uid, field_name, record, options,
+                   source_element, g_att, t_att, qweb_context,
+                   context=None):
+        attrs = super(ManyToMany, self).attributes(
+            cr, uid, field_name, record, options, source_element, g_att, t_att,
+            qweb_context, context=context)
+        if context and context.get('inherit_branding'):
+            many2many = getattr(record, field_name)
+            data = [('data-oe-many2many-model', many2many._name)]
+            if many2many:
+                data += [('data-oe-many2many-ids', map(int, many2many))]
+        else:
+            data = []
+        return itertools.chain(attrs, data)
 
-    return parser.parse(value, dayfirst=day_first, yearfirst=year_first)
+    def record_to_html(self, cr, uid, field_name, record, options=None, context=None):
+        if options is None:
+            options = {}
+        options.update(tag_ids=record[field_name] or [])
+        html = self.pool["ir.ui.view"].render(cr, uid, "web_editor.many2many_tags", options, engine='ir.qweb', context=context)
+        return ir_qweb.HTMLSafe(html.decode('utf8'))
+
+    def from_html(self, cr, uid, model, field, element, context=None):
+        Model = self.pool[element.get('data-oe-model')]
+        field_name = element.get('data-oe-field')
+        id = int(element.get('data-oe-id'))
+        many2many_ids = json.loads(element.get('data-oe-many2many-ids'))
+
+        # save the new ids of the many2one
+        Model.write(cr, uid, [id], {
+            field_name: [[6, 0, many2many_ids]]
+        }, context=context)
+
+        return None
 
 
 class Date(orm.AbstractModel):

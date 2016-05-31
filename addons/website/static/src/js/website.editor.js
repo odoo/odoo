@@ -24,7 +24,7 @@ website.TopBar.include({
     start: function () {
         var self = this;
         $("#wrapwrap").find("[data-oe-model] .oe_structure.oe_empty, [data-oe-model].oe_structure.oe_empty, [data-oe-type=html]:empty")
-            .filter(".oe_not_editable")
+            .filter(".o_not_editable")
             .filter(".oe_no_empty")
             .addClass("oe_empty");
 

@@ -508,7 +508,7 @@ var RTE = Widget.extend({
         var $target = $(event.target);
         var $editable = $target.closest('.o_editable');
 
-        if (!$editable.size()) {
+        if (!$editable.size() || $target.closest('.o_not_editable').size()) {
             return;
         }
 

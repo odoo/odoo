@@ -139,7 +139,10 @@
                 </div>
                 <t t-call="website_partner.partner_detail">
                     <t t-set="left_column">
-                        <div id="left_column"><t t-call="website_customer.implemented_by_block"/></div>
+                        <div id="left_column">
+                            <t t-call="website_customer.implemented_by_block"/>
+                            <div t-field="partner.website_tag_ids" t-field-options='{"classname": "mt16 mb32 text-center", "href": "/customers/#{&#39;%s&#39;}"}'/>
+                        </div>
                     </t>
                     <t t-set="right_column">
                         <div id="right_column"><t t-call="website_customer.references_block"/></div>
@@ -166,23 +169,23 @@
                     <h4>Implemented By</h4>
                 </div>
                 <div class="panel-body text-center">
-        <h4>
-            <a t-attf-href="/partners/#{slug(partner.assigned_partner_id)}">
-              <span t-field="partner.assigned_partner_id"/>
-              <span class="small"> (<t t-esc="len([p for p in partner.assigned_partner_id.implemented_partner_ids if p.website_published])"/> reference(s))</span>
-            </a>
-        </h4>
-        <div><a t-attf-href="/partners/#{slug(partner.assigned_partner_id)}"
-                t-field="partner.assigned_partner_id.image_medium"
-                t-field-options='{"widget": "image", "class": "center-block"}'
-             />
-        </div>
-        <address class="well text-left">
-             <div t-field="partner.assigned_partner_id" t-field-options='{
-                 "widget": "contact",
-                 "fields": ["address", "website", "phone", "fax", "email"]
-             }'/>
-        </address>
+                    <h4>
+                        <a t-attf-href="/partners/#{slug(partner.assigned_partner_id)}">
+                          <span t-field="partner.assigned_partner_id"/>
+                          <span class="small"> (<t t-esc="len([p for p in partner.assigned_partner_id.implemented_partner_ids if p.website_published])"/> reference(s))</span>
+                        </a>
+                    </h4>
+                    <div><a t-attf-href="/partners/#{slug(partner.assigned_partner_id)}"
+                            t-field="partner.assigned_partner_id.image_medium"
+                            t-field-options='{"widget": "image", "class": "center-block"}'
+                         />
+                    </div>
+                    <address class="well text-left">
+                         <div t-field="partner.assigned_partner_id" t-field-options='{
+                             "widget": "contact",
+                             "fields": ["address", "website", "phone", "fax", "email"]
+                         }'/>
+                    </address>
                 </div>
             </div>
         </t>

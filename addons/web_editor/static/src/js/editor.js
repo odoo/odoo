@@ -97,7 +97,7 @@ editor.Class = Widget.extend({
     },
     display_placeholder: function () {
         var $area = $("#wrapwrap").find("[data-oe-model] .oe_structure.oe_empty, [data-oe-model].oe_structure.oe_empty, [data-oe-type=html]")
-            .filter(".oe_not_editable")
+            .filter(".o_not_editable")
             .filter(".oe_no_empty");
 
         this.on('rte:start', this, function () {

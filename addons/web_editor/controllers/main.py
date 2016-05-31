@@ -221,3 +221,12 @@ class Web_Editor(http.Controller):
         if attachments_to_remove:
             Attachment.unlink(cr, uid, attachments_to_remove, context=context)
         return removal_blocked_by
+
+    #------------------------------------------------------
+    # many2many tags edition rendering
+    #------------------------------------------------------
+    @http.route('/web_editor/many2many_tags', type='json', auth='user')
+    def many2many_tags(self, model, ids, **kwargs):
+        cr, uid, context = request.cr, request.uid, request.context
+        kwargs.update(tag_ids=request.registry[model].browse(cr, uid, ids, context), editable=True)
+        return request.registry["ir.ui.view"].render(cr, uid, "web_editor.many2many_tags", kwargs, context=context)

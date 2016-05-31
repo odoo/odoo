@@ -60,9 +60,9 @@
 
     <!-- t-field options -->
     <t t-name="web_editor.many2one.button">
-        <div class="dropdown">
+        <div class="dropdown o_editor_many2one">
             <a href="#" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" title="Search Contact"><i class="fa fa-search"></i></a>
-            <ul class="dropdown-menu contact_menu" role="menu">
+            <ul class="dropdown-menu" role="menu">
                 <li><a><input href="#" type="email" placeholder="Search"/></a></li>
             </ul>
         </div>
@@ -72,5 +72,23 @@
         <t t-foreach="contacts" t-as="item">
             <li><a href="#" t-att-data-id="item.id" t-att-data-name="item.display_name"><t t-esc="item.display_name"/> <t t-if="item.city or item.country_id"><small class="text-muted">(<t t-esc="item.city"/> <t t-esc="item.country_id and item.country_id[1]"/>)</small></t></a></li>
         </t>
+    </t>
+
+    <t t-name="web_editor.many2many.button">
+        <div class="dropdown o_editor_many2many">
+            <a href="#" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" title="Search Contact"><i class="fa fa-search"></i></a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a><input href="#" placeholder="Search"/></a></li>
+            </ul>
+        </div>
+    </t>
+
+    <t t-name="web_editor.many2many.search">
+        <t t-foreach="contacts" t-as="item">
+            <li>
+                <a href="#" t-att-data-id="item.id" t-att-data-name="item.display_name" t-att-data-classname="item.classname" t-att-class="widget.IDs.indexOf(item.id)!==-1 ? 'o_selected' : ''"><t t-esc="item.display_name"/><t t-if="widget.IDs.indexOf(item.id)!==-1"><span class="fa fa-close pull-right"/><span class="fa fa-edit pull-left"/></t></a>
+            </li>
+        </t>
+        <li t-if="search !== ''"><a href="#" class="o_create">Create "<span><t t-esc="search"/></span>"</a></li>
     </t>
 </templates>
