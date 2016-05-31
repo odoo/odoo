@@ -70,6 +70,22 @@ class AccountInvoiceLine(models.Model):
                 asset.validate()
         return True
 
+    @api.onchange('asset_category_id')
+    def onchange_asset_category_id(self):
+        if not self.asset_category_id:
+            self.account_id = self.get_invoice_line_account(self.invoice_id.type, self.product_id, self.invoice_id.fiscal_position_id, self.invoice_id.company_id)
+        if self.invoice_id.type == 'out_invoice' and self.asset_category_id:
+            self.account_id = self.asset_category_id.account_asset_id.id
+        elif self.invoice_id.type == 'in_invoice' and self.asset_category_id:
+            self.account_id = self.asset_category_id.account_depreciation_id.id
+
+    @api.onchange('uom_id')
+    def _onchange_uom_id(self):
+        result = super(AccountInvoiceLine, self)._onchange_uom_id()
+        self.onchange_asset_category_id()
+        return result
+
+
     @api.onchange('product_id')
     def onchange_product_id(self):
         if self.product_id:
@@ -101,3 +117,12 @@ class ProductTemplate(models.Model):
     def onchange_asset(self):
         if self.asset_category_id:
             self.property_account_expense_id = self.asset_category_id.account_asset_id
+
+    @api.multi
+    def _get_asset_accounts(self):
+        res = super(ProductTemplate, self)._get_asset_accounts()
+        if self.asset_category_id:
+            res['stock_input'] = self.property_account_expense_id
+        if self.deferred_revenue_category_id:
+            res['stock_output'] = self.property_account_income_id
+        return res
