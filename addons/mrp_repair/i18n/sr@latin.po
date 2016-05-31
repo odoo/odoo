@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-11-11 08:23+0000\n"
+"PO-Revision-Date: 2016-05-23 20:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-7/language/sr@latin/)\n"
 "MIME-Version: 1.0\n"
@@ -114,7 +114,7 @@ msgstr "Adresa računa:"
 #. module: mrp_repair
 #: help:mrp.repair,partner_id:0
 msgid "Choose partner for whom the order will be invoiced and delivered."
-msgstr ""
+msgstr "Izaberite partnera kome će nalog biti fakturisan i isporučen."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -189,7 +189,7 @@ msgid ""
 "* The 'Confirmed' status is set automatically as confirm when repair order in confirm status.                         \n"
 "* The 'Done' status is set automatically when repair order is completed.                        \n"
 "* The 'Cancelled' status is set automatically when user cancel repair order."
-msgstr ""
+msgstr "* 'Nacrt' status se dodeljuje automatski kada automatically as draft when repair order in draft status.                         \n* 'Potvrđen' se dodeljuje automatski kada korisnik potvrdi nalog za popravku.                         \n* 'Završen' status se dodeljuje automatski kada je nalog za popravku završen.                        \n* 'Otkazan' se dodeljuje automatski kada korisnik otkaže nalog za popravku."
 
 #. module: mrp_repair
 #: field:mrp.repair,move_id:0
@@ -236,7 +236,7 @@ msgstr "Upozorenje !"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "(update)"
-msgstr ""
+msgstr "(ažuriraj)"
 
 #. module: mrp_repair
 #: view:mrp.repair:0 field:mrp.repair,partner_id:0
@@ -264,7 +264,7 @@ msgid ""
 "* The 'To be Invoiced' status is used to generate the invoice before or after repairing done.             \n"
 "* The 'Done' status is set when repairing is completed.            \n"
 "* The 'Cancelled' status is used when user cancel repair order."
-msgstr ""
+msgstr "* 'Nacrt' je status koji se dodeljuje kada korisnik kreira novi i neopotvrđeni nalog za popravku.             \n* 'Potvrđen' je status koji se koristi kada korisnik potvrdi nalog za popravku.             \n* 'Spremno za popravku' je status koji se koristi za početak popravke pošto korisnik može početi sa popravkom samo kada je nalog potvrđen.             \n* 'Za naplatu' je status koji se koristi za fakturisanje pre ili nakon obavljanja popravke.             \n* 'Završen' je status koji se dodeljuje nalogu kada je popravka završena.            \n* 'Otkazan' je status koji se koristi kada korisnik otkaže nalog za popravku."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -275,7 +275,7 @@ msgstr "Nalozi Popravke"
 #: code:addons/mrp_repair/mrp_repair.py:341
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
-msgstr ""
+msgstr "Serijski broj je neophodan za liniju operacije kod proizvoda '%s'"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -378,7 +378,7 @@ msgstr "Popravljeno"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Add internal notes..."
-msgstr ""
+msgstr "Dodaj interne beleške..."
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,invoice_line_id:0
@@ -468,17 +468,17 @@ msgid ""
 "Selecting 'Before Repair' or 'After Repair' will allow you to generate "
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
-msgstr ""
+msgstr "Odabirom 'Pre popravke' ili 'Posle popravke' će vam omogućiti kreiranje fakture pre odnosno posle popravke. 'Bez fakture' označava da se za ovaj nalog ne pravi faktura."
 
 #. module: mrp_repair
 #: field:mrp.repair,guarantee_limit:0
 msgid "Warranty Expiration"
-msgstr ""
+msgstr "Datum isteka garancije"
 
 #. module: mrp_repair
 #: help:mrp.repair,pricelist_id:0
 msgid "Pricelist of the selected partner."
-msgstr ""
+msgstr "Cenovnik označenog partnera"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -504,7 +504,7 @@ msgstr "Nakon Popravke"
 #: code:addons/mrp_repair/wizard/cancel_repair.py:41
 #, python-format
 msgid "Active ID not Found"
-msgstr ""
+msgstr "Aktivni ID nije pronađen"
 
 #. module: mrp_repair
 #: field:mrp.repair,message_is_follower:0
@@ -573,7 +573,7 @@ msgstr "Količina"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Product Information"
-msgstr ""
+msgstr "Proizvod"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
@@ -589,7 +589,7 @@ msgstr "Start Popravke"
 #: code:addons/mrp_repair/mrp_repair.py:377
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form!"
-msgstr ""
+msgstr "Morate odabrati adresu za slanje fakture partneru na obrascu za popravke!"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,price_unit:0 field:mrp.repair.line,price_unit:0
@@ -620,7 +620,7 @@ msgstr "Otkaži"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Add quotation notes..."
-msgstr ""
+msgstr "Dodaj beleške ponude"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,location_dest_id:0
@@ -663,7 +663,7 @@ msgstr "Kreiraj Fakturu"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Reair Orders"
-msgstr ""
+msgstr "Nalozi za popravku"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,name:0 field:mrp.repair.line,name:0
@@ -716,7 +716,7 @@ msgstr "Zelis li da stvarno kreiras ovu fakturu(e)"
 #: code:addons/mrp_repair/mrp_repair.py:354
 #, python-format
 msgid "Repair order is already invoiced."
-msgstr ""
+msgstr "Nalog za popravku je već fakturisan."
 
 #. module: mrp_repair
 #: field:mrp.repair,picking_id:0

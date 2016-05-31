@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2016-02-29 10:06+0000\n"
+"PO-Revision-Date: 2016-05-18 16:14+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-7/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -42,7 +42,7 @@ msgid ""
 "                a photo on categories for small (1024x768) screens.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nإضغط لتعريف فئه جديده \n</p><p>\nتستخدم فئات لتصفح المنتجات من خلال\nواجهة تعمل باللمس. \n</p><p>\nإذا وضعت صورة على فئة، والتخطيط لل\nواجهة تعمل باللمس سيتم تلقائيا. نقترح عدم وضع\nصورة على فئات ل(1024x768) الشاشات الصغيرة.\n</p>"
 
 #. module: point_of_sale
 #: view:pos.receipt:0
@@ -72,7 +72,7 @@ msgstr "مياه"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.poire_conference_product_template
 msgid "Conference pears"
-msgstr ""
+msgstr "كمثرى المؤتمر"
 
 #. module: point_of_sale
 #. openerp-web
@@ -100,7 +100,7 @@ msgstr "تفاصيل المبيعات"
 #. module: point_of_sale
 #: constraint:pos.config:0
 msgid "You cannot have two cash controls in one Point Of Sale !"
-msgstr ""
+msgstr "لا يمكن أن يكون اثنين من الضوابط النقدية في نقطة واحدة من بيع ! "
 
 #. module: point_of_sale
 #: field:pos.payment.report.user,user_id:0 field:pos.sale.user,user_id:0
@@ -123,7 +123,7 @@ msgstr "اسم المنتج"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pamplemousse_rouge_pamplemousse_product_template
 msgid "Red grapefruit"
-msgstr ""
+msgstr "الجريب فروت الأحمر "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1392
@@ -136,7 +136,7 @@ msgstr ""
 msgid ""
 "You may have to control your cash amount in your cash register, before\n"
 "                          being able to start selling through the touchscreen interface."
-msgstr ""
+msgstr "قد يكون لديك تحكم على مبلغ النقدية فى سجل النقدية الخاصة بك، قبل\nأن تكون قادر على البدء في بيع من خلال واجهة تعمل باللمس .  "
 
 #. module: point_of_sale
 #: report:account.statement:0 field:pos.box.entries,amount:0
@@ -190,19 +190,19 @@ msgstr "تاريخ البدء"
 #. module: point_of_sale
 #: constraint:pos.session:0
 msgid "You cannot create two active sessions with the same responsible!"
-msgstr ""
+msgstr "لا يمكنك إنشاء دورتين نشطة مع نفس المسؤليه ! "
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:473
 #, python-format
 msgid "Weighting"
-msgstr ""
+msgstr "الترجيح "
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fenouil_fenouil_product_template
 msgid "Fennel"
-msgstr ""
+msgstr "الشمرة "
 
 #. module: point_of_sale
 #. openerp-web
@@ -372,7 +372,7 @@ msgstr "مسئولو المبيعات"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:482
 #, python-format
 msgid "Open Cashbox"
-msgstr ""
+msgstr "فتح صندوق نقديه  "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:551
@@ -380,7 +380,7 @@ msgstr ""
 msgid ""
 "You cannot change the partner of a POS order for which an invoice has "
 "already been issued."
-msgstr ""
+msgstr "لا يمكنك تغيير الشريك من أمر نقاط البيع التي تمت بالفعل صدرت فاتورة. "
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
@@ -515,7 +515,7 @@ msgid ""
 "Medium-sized image of the category. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr ""
+msgstr "صورة متوسطة الحجم من الفئة. يتم تغيير الحجم تلقائيا كصورة 128x128px، مع الحفاظ على نسبه الارتفاع. استخدم هذا الحقل في واجهات الشكل أو بعض واجهات كانبان . "
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
@@ -622,7 +622,7 @@ msgstr "فاتورة العميل"
 msgid ""
 "You can continue sales from the touchscreen interface by clicking on \"Start"
 " Selling\" or close the cash register session."
-msgstr ""
+msgstr "يمكنك متابعة المبيعات من الواجهة التى تعمل باللمس عن طريق الضغط على \"بدء البيع\" أو إغلاق دورة تسجيل النقدية. "
 
 #. module: point_of_sale
 #: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
@@ -702,7 +702,7 @@ msgstr "حالة الدفع"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_confirm
 msgid "Post POS Journal Entries"
-msgstr ""
+msgstr "آخر وظيفة إدخالات دفتر اليومية "
 
 #. module: point_of_sale
 #. openerp-web
@@ -721,7 +721,7 @@ msgstr ""
 msgid ""
 "Check if, this is a product you can use to take cash from a statement for "
 "the point of sale backend, example: money lost, transfer to bank, etc."
-msgstr ""
+msgstr "تحقق مما إذا، هذا هو منتج يمكنك استخدامها لاتخاذ النقدية من بيان لنقاط البيع الخلفية، على سبيل المثال: فقدان المال، ونقل إلى البنك، الخ "
 
 #. module: point_of_sale
 #: view:report.pos.order:0 field:report.pos.order,total_discount:0
@@ -735,7 +735,7 @@ msgstr "مجموع الخصم"
 msgid ""
 "The Point of Sale is not supported by Microsoft Internet Explorer. Please use\n"
 "                        a modern browser like"
-msgstr ""
+msgstr "لا يتم اعتماد نقطة البيع من قبل مايكروسوفت إنترنت إكسبلورر. الرجاء استخدام\nمتصفح حديث مثل "
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
@@ -788,7 +788,7 @@ msgstr "مبلغ الفاتورة"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.coke
 msgid "Coke"
-msgstr ""
+msgstr "فحم الكوك"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -838,7 +838,7 @@ msgstr ""
 msgid ""
 "This field holds the image used as image for the cateogry, limited to "
 "1024x1024px."
-msgstr ""
+msgstr "هذا الحقل يحمل صوره تستخدم صورة لفئة، وتقتصر على 1024x1024px. "
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_50cl_product_template
@@ -860,12 +860,12 @@ msgid ""
 "Method\" from the \"Point of Sale\" tab. You can also create new payment "
 "methods directly from menu \"PoS Backend / Configuration / Payment "
 "Methods\"."
-msgstr ""
+msgstr "لديك تحديد طريقة الدفع التي يجب أن تتوفر في نقاط البيع عن طريق إعادة استخدام البنوك والنقد القائمة من خلال \"المحاسبة / تكوين / مجلات / المجلات\". اختيار يوميه وتحقق من حقل \" طريقة نقاط البيع الدفع\" من \"نقطة بيع\" علامة التبويب. يمكنك أيضا إنشاء طرق جديدة للدفع مباشرة من القائمة \"نقاط البيع الخلفية طرق / تكوين / الدفع\". "
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.rouges_noyau_fruits
 msgid "Berries"
-msgstr ""
+msgstr "التوت "
 
 #. module: point_of_sale
 #: view:pos.ean_wizard:0
@@ -885,7 +885,7 @@ msgstr "خطأ: كود إين غير صالح"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.legumes_racine
 msgid "Root vegetables"
-msgstr ""
+msgstr "الخضروات الجذرية "
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_open_statement
@@ -927,7 +927,7 @@ msgstr "إجمالي المبيعات (الأرباح)"
 msgid ""
 "Check this if you want to group the Journal Items by Product while closing a"
 " Session"
-msgstr ""
+msgstr "حدد هذا الخيار إذا كنت تريد أن مجموعه يوميه الوحدات من المنتج في حين إغلاق جلسة ."
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0
@@ -948,7 +948,7 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:80
 #, python-format
 msgid "List of Cash Registers"
-msgstr ""
+msgstr "قائمه تسجيلات النقديه "
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.maes_50cl_product_template
@@ -985,7 +985,7 @@ msgstr "منتج المستخدم"
 #: code:addons/point_of_sale/point_of_sale.py:1023
 #, python-format
 msgid "The POS order must have lines when calling this method"
-msgstr ""
+msgstr "يجب أن يمتلك أمر نقطه البيع خطوط عندمت يتم إستدعاء هذه الطريقه "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1192
@@ -993,7 +993,7 @@ msgstr ""
 msgid ""
 "You have to select a pricelist in the sale form !\n"
 "Please set one before choosing a product."
-msgstr ""
+msgstr "يجب إختيار قائمه أسعار فى نموذج المبيعات !!\nبرجاء تعيين واحده قبل إختيار المنتج ."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_2l_product_template
@@ -1091,12 +1091,12 @@ msgstr ""
 msgid ""
 "You cannot use the session of another users. This session is owned by %s. "
 "Please first close this one to use this point of sale."
-msgstr ""
+msgstr "لا يمكنك استخدام دورة أخرى للمستخدمين . تعود ملكية هذه الدورة بواسطة ٪ s. أولا الرجاء إغلاق هذا  لاستخدام نقطة بيع هذه ."
 
 #. module: point_of_sale
 #: sql_constraint:pos.session:0
 msgid "The name of this POS Session must be unique !"
-msgstr ""
+msgstr "يجب أن يكون الاسم من هذه الدورة POS فريدة من نوعها ! "
 
 #. module: point_of_sale
 #: view:pos.session:0
@@ -1218,7 +1218,7 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:49
 #, python-format
 msgid "No Cash Register Defined!"
-msgstr ""
+msgstr "لا يوجد سجلات نقديه معرفه "
 
 #. module: point_of_sale
 #: view:report.transaction.pos:0
@@ -1235,7 +1235,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:485
 #, python-format
 msgid "Read Weighting Scale"
-msgstr ""
+msgstr "قراءة مقياس وزن "
 
 #. module: point_of_sale
 #. openerp-web
@@ -1295,7 +1295,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.limon_product_template
 msgid "Stringers"
-msgstr ""
+msgstr "المراسلين "
 
 #. module: point_of_sale
 #: field:pos.order,pricelist_id:0
@@ -1449,7 +1449,7 @@ msgstr "فئات المنتج"
 #. module: point_of_sale
 #: help:pos.config,journal_id:0
 msgid "Accounting journal used to post sales entries."
-msgstr ""
+msgstr "يوميه المحاسبه المستخدمة لإضافة قيود المبيعات . "
 
 #. module: point_of_sale
 #: field:report.transaction.pos,disc:0
@@ -1507,7 +1507,7 @@ msgstr "غير معروف"
 #. module: point_of_sale
 #: field:product.product,income_pdt:0
 msgid "Point of Sale Cash In"
-msgstr ""
+msgstr "نقطة بيع النقدية في "
 
 #. module: point_of_sale
 #. openerp-web
@@ -1545,7 +1545,7 @@ msgstr "مستخدم"
 #, python-format
 msgid ""
 "The type of the journal for your payment method should be bank or cash "
-msgstr ""
+msgstr "يجب أن يكون نوع يوميه الدفع الخاصه بك  بنك أو نقدية"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1606,12 +1606,12 @@ msgstr "pos.config"
 msgid ""
 "Enter a reference, it will be converted\n"
 "                        automatically to a valid EAN number."
-msgstr ""
+msgstr "إدخال إشارة، سيتم تحويلها\nتلقائيا إلى عدد EAN صالح. "
 
 #. module: point_of_sale
 #: field:product.product,expense_pdt:0
 msgid "Point of Sale Cash Out"
-msgstr ""
+msgstr "نقطة بيع النقد خارج "
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
@@ -1651,7 +1651,7 @@ msgstr "رقم المعاملة"
 msgid ""
 "There is no receivable account defined to make payment for the partner: "
 "\"%s\" (id:%d)."
-msgstr ""
+msgstr "ليس هناك حساب قبض محدد لتسديد المبالغ المستحقة للشريك: \"٪ ق\" (معرف:٪ د). "
 
 #. module: point_of_sale
 #: view:pos.config:0 selection:pos.config,state:0
@@ -1683,7 +1683,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.nectarine_product_template
 msgid "Peach"
-msgstr ""
+msgstr "خوخ "
 
 #. module: point_of_sale
 #. openerp-web
@@ -1731,7 +1731,7 @@ msgstr "تسميات المستخدم"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
 msgid "Lines of Point of Sale"
-msgstr ""
+msgstr "روابط نقطه البيع "
 
 #. module: point_of_sale
 #: view:pos.order:0 view:report.transaction.pos:0
@@ -1842,7 +1842,7 @@ msgstr ""
 msgid ""
 "Generate all sale journal entries for non invoiced orders linked to a closed"
 " cash register or statement."
-msgstr ""
+msgstr "تولد كل قيود يوميه البيع لأوامر غير الفواتير المرتبطه بتسجيل نقدية مغلقة أو بيان . "
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.unreferenced_product_product_template
@@ -1868,7 +1868,7 @@ msgstr ""
 msgid ""
 "Check if, this is a product you can use to put cash into a statement for the"
 " point of sale backend."
-msgstr ""
+msgstr "تحقق مما إذا، هذا هو منتج يمكنك استخدامها لوضع النقدية في بيان نقاط البيع الخلفية."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_moka_2,5l_product_template
@@ -1899,7 +1899,7 @@ msgstr "المستخدم:"
 msgid ""
 "Unable to open the session. You have to assign a sale journal to your point "
 "of sale."
-msgstr ""
+msgstr "غير قادر على فتح الدورة. لديك تعيين يوميه بيع لنقطة البيع . "
 
 #. module: point_of_sale
 #: view:report.pos.order:0
@@ -1963,7 +1963,7 @@ msgstr "لاتوجد لائحة أسعار!"
 #: code:addons/point_of_sale/wizard/pos_box_out.py:91
 #, python-format
 msgid "You have to open at least one cashbox."
-msgstr ""
+msgstr "يجب فتح على الاقل مربع نقديه واحد ."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.poivron_rouges_product_template
@@ -2018,7 +2018,7 @@ msgstr ""
 #, python-format
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
-msgstr ""
+msgstr "لايوجد بيان نقديه لهذه الدورة. غير قادر على تسجيل مردودات النقدية. "
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.oignons_ail_echalotes
@@ -2262,7 +2262,7 @@ msgid ""
 "Your ending balance is too different from the theoretical cash closing "
 "(%.2f), the maximum allowed is: %.2f. You can contact your manager to force "
 "it."
-msgstr ""
+msgstr "الرصيد النهائي الخاص بك هو مختلف جدا عن النقد النظري إغلاق (٪ .2f)، والحد الأقصى المسموح به هو:٪ .2f. يمكنك الاتصال مديرك لإجبارها. "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:100
@@ -2274,7 +2274,7 @@ msgstr "تحكم الإقفال"
 #. module: point_of_sale
 #: field:report.pos.order,delay_validation:0
 msgid "Delay Validation"
-msgstr ""
+msgstr "تأخير التحقق من صحة "
 
 #. module: point_of_sale
 #: field:pos.order,nb_print:0
@@ -2284,7 +2284,7 @@ msgstr "رقم الطبعة"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Payment"
-msgstr ""
+msgstr "دفع نقطه البيع "
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_50cl_product_template
@@ -2355,7 +2355,7 @@ msgstr "صورة متوسطة الحجم"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.papillon_orange_product_template
 msgid "Orange Butterfly"
-msgstr ""
+msgstr "البرتقال الفراشة "
 
 #. module: point_of_sale
 #: view:report.pos.order:0
@@ -2401,12 +2401,12 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.open.statement:0
 msgid "Open Registers"
-msgstr ""
+msgstr "سجلات مفتوحة "
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.poire
 msgid "Pears"
-msgstr ""
+msgstr "كمثرى "
 
 #. module: point_of_sale
 #: field:report.transaction.pos,journal_id:0
@@ -2436,7 +2436,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.tomates
 msgid "Tomatos"
-msgstr ""
+msgstr "طماطم "
 
 #. module: point_of_sale
 #: view:report.pos.order:0
@@ -2481,7 +2481,7 @@ msgstr "معرف الجلسة"
 #. module: point_of_sale
 #: view:pos.make.payment:0
 msgid "Pay Order"
-msgstr ""
+msgstr "دفع الامر "
 
 #. module: point_of_sale
 #: view:pos.session:0
@@ -2571,7 +2571,7 @@ msgid ""
 "The system will open all cash registers, so that you can start recording "
 "payments. We suggest you to control the opening balance of each register, "
 "using their CashBox tab."
-msgstr ""
+msgstr "سيقوم النظام بفتح جميع السجلات النقدية، بحيث يمكنك بدء تسجيل المدفوعات. نقترح عليك للسيطرة على الرصيد الافتتاحي لكل التسجيلات و ذلك باستخدام علامة التبويب مربع النقدية الخاصة بهم. "
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -2621,7 +2621,7 @@ msgstr "مع "
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.courgette_product_template
 msgid "Zucchini"
-msgstr ""
+msgstr "كوسة "
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.timmermans_geuze_37,5cl_product_template
@@ -2723,7 +2723,7 @@ msgstr ""
 #: constraint:pos.session:0
 msgid ""
 "You cannot create two active sessions related to the same point of sale!"
-msgstr ""
+msgstr "لا يمكنك إنشاء دورتين نشطة مرتبطة بنفس نقطة بيع ! "
 
 #. module: point_of_sale
 #: field:pos.category,image_small:0
@@ -2884,7 +2884,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_open_statement
 msgid "Open Cash Register"
-msgstr ""
+msgstr "فتح سجل نقديه "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:564
@@ -2912,7 +2912,7 @@ msgstr ""
 #. module: point_of_sale
 #: help:pos.session,config_id:0
 msgid "The physical point of sale you will use."
-msgstr ""
+msgstr "نقطه البيع الماديه التى سوف تستخدمها ."
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -2939,7 +2939,7 @@ msgstr ""
 msgid ""
 "Person who uses the the cash register. It can be a reliever, a student or an"
 " interim employee."
-msgstr ""
+msgstr "الشخص الذي يستخدم سجل النقدية. يمكن أن يكون المخلص، وهو طالب أو موظف مؤقت. "
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_decaf_33cl_product_template
@@ -2964,7 +2964,7 @@ msgstr ""
 msgid ""
 "To return product(s), you need to open a session that will be used to "
 "register the refund."
-msgstr ""
+msgstr "رد المنتج (ق)، وتحتاج إلى فتح الدورة التي سيتم استخدامها لتسجيل الاسترداد. "
 
 #. module: point_of_sale
 #: view:pos.confirm:0
@@ -3015,7 +3015,7 @@ msgstr "طرق السداد"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.chips
 msgid "Chips"
-msgstr ""
+msgstr "رقائق"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_spinaci_product_template
@@ -3057,7 +3057,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.boni_orange_product_template
 msgid "Boni Oranges"
-msgstr ""
+msgstr "بوني البرتقال "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:301
@@ -3168,13 +3168,13 @@ msgstr ""
 #: code:addons/point_of_sale/point_of_sale.py:1115
 #, python-format
 msgid "Trade Receivables"
-msgstr ""
+msgstr "الذمم التجارية "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:564
 #, python-format
 msgid "In order to delete a sale, it must be new or cancelled."
-msgstr ""
+msgstr "لكي احذف بيع، يجب أن تكون جديدة أو إلغاء "
 
 #. module: point_of_sale
 #. openerp-web
@@ -3183,7 +3183,7 @@ msgstr ""
 msgid ""
 "There are pending operations that could not be saved into the database, are "
 "you sure you want to exit?"
-msgstr ""
+msgstr "يوجد عمليات معلقة التي لا يمكن حفظها في قاعدة البيانات، هل أنت متأكد أنك تريد الخروج؟"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_regular_50cl_product_template
@@ -3209,7 +3209,7 @@ msgstr "قيد يومية"
 #: code:addons/point_of_sale/point_of_sale.py:769
 #, python-format
 msgid "There is no receivable account defined to make payment."
-msgstr ""
+msgstr "ليس هناك حساب قبض محدد لتسديد المبالغ المستحقة . "
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.citron_product_template
@@ -3242,7 +3242,7 @@ msgstr "فاتورة المورد"
 msgid ""
 "You cannot confirm all orders of this session, because they have not the "
 "'paid' status"
-msgstr ""
+msgstr "لا يمكنك لا يمكنك تأكيد جميع أوامر هذه الدورة، لأن لا يوجد منها أوامر حالتها \"مدفوعه\""
 
 #. module: point_of_sale
 #: view:pos.order:0 selection:pos.order,state:0
@@ -3273,7 +3273,7 @@ msgstr ""
 #. module: point_of_sale
 #: help:product.product,available_in_pos:0
 msgid "Check if you want this product to appear in the Point of Sale"
-msgstr ""
+msgstr "تحقق مما إذا كنت تريد أن يظهر هذا المنتج في نقاط البيع"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
@@ -3318,7 +3318,7 @@ msgstr ""
 #: code:addons/point_of_sale/point_of_sale.py:745
 #, python-format
 msgid "Unable to cancel the picking."
-msgstr ""
+msgstr "غير قادر على إلغاء الانتقاء. "
 
 #. module: point_of_sale
 #: view:pos.config:0
@@ -3376,7 +3376,7 @@ msgstr "طباعة الفاتورة"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.peche_product_template
 msgid "Peaches"
-msgstr ""
+msgstr "خوخ"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_details
@@ -3457,7 +3457,7 @@ msgstr "نقطة البيع الافتراضية"
 #: code:addons/point_of_sale/wizard/pos_box.py:23
 #, python-format
 msgid "There is no cash register for this PoS Session"
-msgstr ""
+msgstr "لا يوجد تسجيل نقدية لهذه الدورة نقاط البيع ."
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.special_beers
@@ -3500,17 +3500,17 @@ msgstr "شكلي"
 #: code:addons/point_of_sale/point_of_sale.py:860
 #, python-format
 msgid "Please provide a partner for the sale."
-msgstr ""
+msgstr "يرجى تقديم شريكا للبيع . "
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.fruity_beers
 msgid "Fruity Beers"
-msgstr ""
+msgstr "فاكهي بيرز"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "You can define another list of available currencies on the"
-msgstr ""
+msgstr "يمكنك تحديد قائمة أخرى من العملات المتاحة على "
 
 #. module: point_of_sale
 #. openerp-web
@@ -3715,7 +3715,7 @@ msgstr "الجلسة:"
 #. module: point_of_sale
 #: field:pos.config,iface_print_via_proxy:0
 msgid "Print via Proxy"
-msgstr ""
+msgstr "طباعة عبر وكيل "
 
 #. module: point_of_sale
 #: report:pos.sales.user.today:0
@@ -3744,7 +3744,7 @@ msgid ""
 " and the theorical cash when closing a session, for non-POS managers. If "
 "this maximum is reached, the user will have an error message at the closing "
 "of his session saying that he needs to contact his manager."
-msgstr ""
+msgstr "هذا الحقل يصور الحد الأقصى للفرق المسموح به بين الرصيد النهائي والنقدية عند إغلاق الجلسة، للمديرين غير نقاط البيع. إذا تم التوصل إلى هذا الحد الأقصى، سيظهر للمستخدم رسالة خطأ في ختام جلسته قائلا إنه يحتاج إلى الاتصال بمدير الخاص به "
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_config_sessions
@@ -3778,7 +3778,7 @@ msgid ""
 "Small-sized image of the category. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr ""
+msgstr "صورة صغيرة الحجم من فئة. يتم تغيير حجم تلقائيا كصورة 64x64px، مع الحفاظ على نسبة الارتفاع. استخدم هذا الحقل في أي مكان مطلوب صورة صغيرة. "
 
 #. module: point_of_sale
 #: field:pos.session.opening,pos_state:0
@@ -3802,7 +3802,7 @@ msgid ""
 "                on the <i>Point of Sale</i> configuration.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nإضغط لإضافه طريقه دفع \n\n</p><p>\nتعرف على طرق الدفع عن طريق القيود المحاسبة وجود الحقل <i> طريقة دفع نقاط البيع </i> محددا. لكي تكون صالحة للاستعمال من واجهة تعمل باللمس، يجب عليك تعيين طريقة الدفع على  <i> نقطة بيع </i> التكوين.\n\n</p>"
 
 #. module: point_of_sale
 #: view:pos.order:0 field:pos.order,partner_id:0 view:report.pos.order:0
@@ -3876,7 +3876,7 @@ msgstr ""
 msgid ""
 "Check this box if this journal define a payment method that can be used in "
 "point of sales."
-msgstr ""
+msgstr "حدد هذا المربع إذا كانت هذه اليوميه تحدد طريقة الدفع التي يمكن استخدامها في نقاط البيع. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -3888,7 +3888,7 @@ msgstr "موزيلا فايرفوكس"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.raisins_noir_product_template
 msgid "Black Grapes"
-msgstr ""
+msgstr "العنب الأسود"
 
 #. module: point_of_sale
 #: field:pos.category,sequence:0

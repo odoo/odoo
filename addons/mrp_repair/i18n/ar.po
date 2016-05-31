@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2016-04-07 16:29+0000\n"
+"PO-Revision-Date: 2016-05-16 14:45+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-7/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -114,7 +114,7 @@ msgstr "عنوان الفاتورة:"
 #. module: mrp_repair
 #: help:mrp.repair,partner_id:0
 msgid "Choose partner for whom the order will be invoiced and delivered."
-msgstr ""
+msgstr "اختيار الشريك الذى سيقوم بإصدار فاتورة النظام و التسليم. "
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -180,7 +180,7 @@ msgid ""
 "                customer or not.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p أضغط لإنشاء أمر تعويض \n</p><p>\nفي أمر إصلاح، يمكنك حذف تفاصيل المكونات ،\nإضافة أو استبدال وتسجيل الوقت الذي قضيته على مختلف\nالعمليات.\n</p><p>يستخدم أمر الإصلاح تاريخ الضمان على الرقم التسلسلي \nلمعرفة ما إذا كان ينبغي فواتير إصلاح ل\nالعميل أم لا.\n</p>"
 
 #. module: mrp_repair
 #: help:mrp.repair.line,state:0
@@ -189,7 +189,7 @@ msgid ""
 "* The 'Confirmed' status is set automatically as confirm when repair order in confirm status.                         \n"
 "* The 'Done' status is set automatically when repair order is completed.                        \n"
 "* The 'Cancelled' status is set automatically when user cancel repair order."
-msgstr ""
+msgstr "* تم تعيين الحاله \"مسوده\" تلقائيا عندما يكون أمر الإصلاح في الحاله \"مسوده\"\n* تم تعيين الحالة \"مؤكدة\" تلقائيا عندما يتم تأكيد أمر الإصلاح في حالة \"تأكيد.\"\n* يتم تعيين الحاله \"تم\" تلقائيا عند اكتمال أمر الإصلاح.\n* يتم تعيين الحاله \"ألغاء\" تلقائيا عند المستخدم إلغاء أمر الإصلاح. "
 
 #. module: mrp_repair
 #: field:mrp.repair,move_id:0
@@ -264,7 +264,7 @@ msgid ""
 "* The 'To be Invoiced' status is used to generate the invoice before or after repairing done.             \n"
 "* The 'Done' status is set when repairing is completed.            \n"
 "* The 'Cancelled' status is used when user cancel repair order."
-msgstr ""
+msgstr "* تستخدم الحاله \"مسوده\" عندما يقوم المستخدم بترميز أمر الإصلاح الجديد و غير المؤكد.\n* يستخدم الحاله \"أكد\" عندما يقوم المستخدم بتأكيد أمر الإصلاح.\n* يستخدم الحاله \"جاهز للإصلاح\" للبدء في إصلاح، يمكن للمستخدم بدء إصلاح فقط بعد تأكيد امر الإصلاح.\n* يستخدم الحاله 'إلى أن المفوترة \"لإنشاء الفاتورة قبل أو بعد إصلاح ذلك.\n* يتم تعيين الحاله \"تم\" عند اكتمال أمر الإصلاح.\n* يستخدم الحاله \"ألغاء\" عندما يقوم المستخدم بإلغاء أمر الإصلاح."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -275,7 +275,7 @@ msgstr "امر التصليحات"
 #: code:addons/mrp_repair/mrp_repair.py:341
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
-msgstr ""
+msgstr "مطلوب رقم تسلسلي لخط العملية مع المنتج "
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -378,7 +378,7 @@ msgstr "تم اصلاحه"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Add internal notes..."
-msgstr ""
+msgstr "اضافه ملاحظات داخليه "
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,invoice_line_id:0
@@ -468,17 +468,17 @@ msgid ""
 "Selecting 'Before Repair' or 'After Repair' will allow you to generate "
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
-msgstr ""
+msgstr "اختيار 'قبل إصلاح \"أو\" بعد إصلاح \"سوف تسمح لك لتوليد فاتورة قبل أو بعد الانتهاء من إصلاح على التوالي. 'لا يوجد فاتورة' يعني أنك لا تريد أن تولد الفواتير لهذا أمر ال اصلاح . "
 
 #. module: mrp_repair
 #: field:mrp.repair,guarantee_limit:0
 msgid "Warranty Expiration"
-msgstr ""
+msgstr "انتهاء الضمان "
 
 #. module: mrp_repair
 #: help:mrp.repair,pricelist_id:0
 msgid "Pricelist of the selected partner."
-msgstr ""
+msgstr "لائحة الأسعار للشريك المحدد. "
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -504,7 +504,7 @@ msgstr "بعد التصليح"
 #: code:addons/mrp_repair/wizard/cancel_repair.py:41
 #, python-format
 msgid "Active ID not Found"
-msgstr ""
+msgstr " لم يتم العثور على معرف نشط "
 
 #. module: mrp_repair
 #: field:mrp.repair,message_is_follower:0
@@ -520,7 +520,7 @@ msgstr "تاريخ"
 #: code:addons/mrp_repair/mrp_repair.py:377
 #, python-format
 msgid "No partner!"
-msgstr ""
+msgstr "لا يوجد شريك "
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_fee
@@ -589,7 +589,7 @@ msgstr "ابدأ التصليح"
 #: code:addons/mrp_repair/mrp_repair.py:377
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form!"
-msgstr ""
+msgstr "لديك اختيار الشريك عنوان الفاتورة في شكل إصلاح ! "
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,price_unit:0 field:mrp.repair.line,price_unit:0
@@ -620,7 +620,7 @@ msgstr "إلغاء"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Add quotation notes..."
-msgstr ""
+msgstr "اضافه ملاحظات عروض الاسعار "
 
 #. module: mrp_repair
 #: field:mrp.repair.line,location_dest_id:0
@@ -652,7 +652,7 @@ msgid ""
 "defined on selected product. If the current date is below the warranty "
 "expiration limit, each operation and fee you will add will be set as 'not to"
 " invoiced' by default. Note that you can change manually afterwards."
-msgstr ""
+msgstr "يتم احتساب حد الضمان الذى تم الانتهاء منه على النحو التالي : آخر موعد التحرك + معرف الضمان على المنتج المحدد. إذا كان التاريخ الحالي هو أقل من الحد انتهاء صلاحية الضمان ، سيتم تعيين كل عملية والرسم الذي سيضيف باسم 'ليس لفواتير \"افتراضيا. لاحظ أنه يمكنك تغيير يدويا بعد ذلك . "
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
@@ -663,7 +663,7 @@ msgstr "إنشاء فاتورة"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Reair Orders"
-msgstr ""
+msgstr "أوامر الاصلاح "
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,name:0 field:mrp.repair.line,name:0
@@ -716,7 +716,7 @@ msgstr "هل تريد فعلاً  إنشاء الفاتورة/الفواتبر؟
 #: code:addons/mrp_repair/mrp_repair.py:354
 #, python-format
 msgid "Repair order is already invoiced."
-msgstr ""
+msgstr "فواتير بالفعل من أمر الإصلاح. "
 
 #. module: mrp_repair
 #: field:mrp.repair,picking_id:0

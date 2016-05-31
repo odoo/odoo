@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-06-24 12:56+0000\n"
+"PO-Revision-Date: 2016-05-16 16:11+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-7/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -106,7 +106,7 @@ msgstr "عمليات التصنيع"
 #: code:addons/mrp_operations/mrp_operations.py:134
 #, python-format
 msgid "Manufacturing order cannot be started in state \"%s\"!"
-msgstr ""
+msgstr "لا يمكن بدء أمر التصنيع في الحاله \"٪ S\"!"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0 field:mrp.workorder,day:0
@@ -183,7 +183,7 @@ msgstr "لا توجد عملية لإلغاءها"
 #, python-format
 msgid ""
 "In order to Finish the operation, it must be in the Start or Resume state!"
-msgstr ""
+msgstr "لكى يتم إنهاء العمليه ، يجب أن يكون في البداية أو سير الحاله !"
 
 #. module: mrp_operations
 #: field:mrp.workorder,nbr:0
@@ -211,7 +211,7 @@ msgid ""
 "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n"
 "* When the user cancels the work order it will be set in 'Canceled' status.\n"
 "* When order is completely processed that time it is set in 'Finished' status."
-msgstr ""
+msgstr "* عندما يتم إنشاء أمر التشغيل يتم تعيين الحاله \"مسوده\"\n* عندما يحدد المستخدم من أمر التشغيل  فى حاله البدايه ذلك الوقت سيتم تعيين الحاله  \" في التقدم \" \n* عندما يكون أمر التشغيل في وسط التشغيل، وخلال ذلك الوقت إذا كان المستخدم يريد أن يتوقف أو لإجراء تغييرات في الامر ثم يمكن أن يحدد الحاله \"معلق\"\n* عندما يلغي المستخدم أمر التشغيل سيتم تعيين الحاله \"ملغاة\"\n* عندما تتم معالجة الامر  تماما ذلك الوقت يتم تعيين الحاله \"انتهى...."
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -251,7 +251,7 @@ msgstr "تحليل امر العمل"
 #. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
 msgid "Work Orders By Resource"
-msgstr ""
+msgstr "أوامر العمل من خلال الموارد "
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -315,12 +315,12 @@ msgid ""
 "            products are produced.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nإضغط لبدايه أمر تشغيل جديد .\n</p><p>\nأوامر العمل لائحة العمليات التي يتعين القيام بها لكل\nمن أمر التصنيع. بمجرد البدء في ترتب أول عمل \nمن أمر التصنيع،  تلقائيا\nوضع علامة على أنها بدأت. بمجرد الانتهاء من آخر عملية \nمن أمر التصنيع، وتلقائيا يتم الاستجابة لأمر التصنيع  ذات الصلة\nويتم الإنتاج.\n</p>"
 
 #. module: mrp_operations
 #: help:mrp.production.workcenter.line,delay:0
 msgid "The elapsed time between operation start and stop in this Work Center"
-msgstr ""
+msgstr "في الوقت الذي انقضى بين بداية تشغيل وتوقف في هذا المركز العمل "
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_canceloperation0
@@ -330,7 +330,7 @@ msgstr "تم الغاء العملية"
 #. module: mrp_operations
 #: view:mrp.production:0
 msgid "Pause Work Order"
-msgstr ""
+msgstr "إيقاف مؤقت لإمر التشغيل "
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -376,7 +376,7 @@ msgstr "انتظار السلع"
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,production_state:0
 msgid "Production Status"
-msgstr ""
+msgstr "الحاله الانتاجيه "
 
 #. module: mrp_operations
 #: selection:mrp.workorder,state:0
@@ -396,13 +396,13 @@ msgstr "قيد التقدم"
 #, python-format
 msgid ""
 "In order to Pause the operation, it must be in the Start or Resume state!"
-msgstr ""
+msgstr "من أجل إيقاف مؤقت للعملية، يجب أن يكون في البداية أو سير الحاله !"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:469
 #, python-format
 msgid "In order to Resume the operation, it must be in the Pause state!"
-msgstr ""
+msgstr "من أجل سير العملية، يجب أن تكون الحاله إيقاف مؤقت !"
 
 #. module: mrp_operations
 #: view:mrp.production:0 view:mrp.production.workcenter.line:0
@@ -444,7 +444,7 @@ msgstr "كود عملية الانتاج"
 msgid ""
 "Operation has already started! You can either Pause/Finish/Cancel the "
 "operation."
-msgstr ""
+msgstr "بدأت العملية بالفعل! يمكنك إما إيقاف مؤقت / النهاية / الغاء العملية. "
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -519,7 +519,7 @@ msgstr "يناير"
 #. module: mrp_operations
 #: view:mrp.production:0
 msgid "Resume Work Order"
-msgstr ""
+msgstr "استئناف ترتيب العمل "
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_doneoperation0
@@ -591,7 +591,7 @@ msgstr "إلغاء"
 #: code:addons/mrp_operations/mrp_operations.py:454
 #, python-format
 msgid "Operation is not started yet!"
-msgstr ""
+msgstr "لم يتم بدء تشغيل بعد ! "
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
@@ -616,7 +616,7 @@ msgid ""
 "            manufacturing and planning depending on the available workload.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nاضغط لبدء عمل النظام الجديد. .\n</p><p>\nلتصنيع أو تجميع المنتجات، واستخدام المواد الخام و\nالمنتجات النهائية يجب أيضا التعامل مع عمليات التصنيع.\nغالبا ما تسمى عمليات التصنيع أوامر التشغيل. المختلفه\nوعمليات لها تأثيرات مختلف على تكاليف\nالتصنيع والتخطيط تبعا لحجم العمل المتاحة .\n</p>"
 
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
@@ -701,7 +701,7 @@ msgstr "ساعات العمل"
 #. module: mrp_operations
 #: view:mrp.workorder:0
 msgid "Planned Month"
-msgstr ""
+msgstr "شهر مخطط "
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
