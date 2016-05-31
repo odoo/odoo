@@ -8,14 +8,10 @@ var Sidebar = require('web.Sidebar');
 Sidebar.include({
     init: function () {
         var self = this;
-        var ids;
         this._super.apply(this, arguments);
         var view = self.getParent();
-        var result;
         if (view.fields_view && view.fields_view.type === "form") {
-            ids = [];
             view.on("load_record", self, function (r) {
-                ids = [r.id];
                 self.add_gdoc_items(view, r.id);
             });
         }
@@ -41,7 +37,7 @@ Sidebar.include({
                             }
                             if (!already_there){
                                 self.add_items('other', [{
-                                        label: res.name+ '<img style="position:absolute;right:5px;height:20px;width:20px;" title="Google Drive" src="google_drive/static/src/img/drive_icon.png"/>',
+                                        label: res.name+ '<img style="position:absolute;right:5px;height:20px;width:20px;" title="Google Drive" src="/google_drive/static/src/img/drive_icon.png"/>',
                                         config_id: res.id,
                                         res_id: res_id,
                                         res_model: view.dataset.model,
@@ -63,7 +59,6 @@ Sidebar.include({
 
     on_google_doc: function (doc_item) {
         var self = this;
-        this.config = doc_item;
         var loaded = this.fetch('google.drive.config', ['google_drive_resource_id', 'google_drive_client_id'], [['id', '=', doc_item.config_id]])
             .then(function (configs) {
             var ds = new data.DataSet(self, 'google.drive.config');
