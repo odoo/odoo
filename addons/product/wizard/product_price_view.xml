@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
-
+<odoo>
     <!--   Product Price List -->
 
         <record id="view_product_price_list" model="ir.ui.view">
@@ -27,11 +25,9 @@
 
         <act_window id="action_product_price_list"
             key2="client_print_multi"
-            name="Price List"
+            name="Pricelist"
             res_model="product.price_list"
             src_model="product.product"
             groups="product.group_sale_pricelist"
             view_mode="form" target="new" view_type="form" />
-
-</data>
-</openerp>
+</odoo>

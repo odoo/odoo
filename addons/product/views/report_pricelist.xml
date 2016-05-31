@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 <template id="report_pricelist">
     <t t-call="report.html_container">
         <t t-call="report.internal_layout">
             <div class="page">
-                <h2>Price List</h2>
+                <h2><span t-esc="pricelist"/></h2>
 
-                <div class="row mt32 mb32">
+                <div class="row">
                     <div class="col-xs-3">
-                        <strong>Price List Name</strong>:<br/>
-                        <span t-esc="get_pricelist(data['form']['price_list'])"/>
+                        <strong>Currency</strong>:
+                        <div t-esc="currency"/>
                     </div>
                     <div class="col-xs-3">
-                        <strong>Currency</strong>:<br/>
-                        <span t-esc="get_currency(data['form']['price_list'])"/>
-                    </div>
-                    <div class="col-xs-3">
-                        <strong>Print date</strong>:<br/>
-                        <t t-esc="formatLang(time.strftime('%Y-%m-%d'), date=True)"/>
+                        <strong>Print date</strong>:
+                        <div t-esc="time.strftime('%Y-%m-%d')"/>
                     </div>
                 </div>
+                <br/>
 
                 <table class="table table-condensed">
                     <thead>
@@ -28,17 +24,15 @@
                             <th>
                                 <strong>Description</strong>
                             </th>
-                            <t t-foreach="get_titles(data['form'])" t-as="k">
-                                <th t-if="k.has_key('qty1')"><strong t-esc="k['qty1']"/></th>
-                                <th t-if="k.has_key('qty2')"><strong t-esc="k['qty2']"/></th>
-                                <th t-if="k.has_key('qty3')"><strong t-esc="k['qty3']"/></th>
-                                <th t-if="k.has_key('qty4')"><strong t-esc="k['qty4']"/></th>
-                                <th t-if="k.has_key('qty5')"><strong t-esc="k['qty5']"/></th>
+                            <t t-if="titles">
+                                <t t-foreach="titles" t-as="title">
+                                    <th><strong t-esc="title"/></th>
+                                </t>
                             </t>
                         </tr>
                     </thead>
                     <tbody>
-                        <t t-foreach="get_categories(objects,data['form'])" t-as="c">
+                        <t t-foreach="categories" t-as="c">
                             <tr>
                                 <td colspan="100">
                                     <strong t-esc="c['name']"/>
@@ -50,6 +44,9 @@
                                         [<span t-esc="p['code']"/>]
                                     </t> 
                                     <span t-esc="p['name']"/>
+                                    <t t-if="p.get('attribute')">
+                                        (<t t-esc="p['attribute']"/>)
+                                    </t>
                                 </td>
                                 <td t-if="p.has_key('qty1') and p['qty1']"><strong t-esc="p['qty1']"/></td>
                                 <td t-if="p.has_key('qty2') and p['qty2']"><strong t-esc="p['qty2']"/></td>
@@ -64,5 +61,4 @@
         </t>
     </t>
 </template>
-</data>
-</openerp>
+</odoo>
