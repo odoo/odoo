@@ -77,7 +77,7 @@
                             </page>
                             <page string="Configuration">
                                 <group name="acquirer_config">
-                                    <field name="auto_confirm"/>
+                                    <field name="auto_confirm" widget="radio"/>
                                     <field name="journal_id" attrs="{'required': [('auto_confirm', '=', 'generate_and_pay_invoice')]}"/>
                                     <field name="fees_active"/>
                                     <field name="fees_dom_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
