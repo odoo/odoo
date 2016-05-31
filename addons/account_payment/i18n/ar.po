@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2015-06-24 12:47+0000\n"
+"PO-Revision-Date: 2016-05-15 20:50+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-7/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgid ""
 "                supplier invoice or a customer refund.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإنشاء أمر دفع.\n</p><p>\nأمر الدفع هو مستند تصدره مؤسستك لسداد\nفاتورة مورد أو مرتجع لعميل.\n</p>"
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -108,7 +108,7 @@ msgstr "بيان تعبئة الدفع"
 msgid ""
 "You cannot cancel an invoice which has already been imported in a payment "
 "order. Remove it from the following payment order : %s."
-msgstr ""
+msgstr "لا يمكنك إلغاء فاتورة تم استيرادها بالفعل في أمر دفع. قم بإزالتها أولاً من أمر الدفع التالي: %s."
 
 #. module: account_payment
 #: code:addons/account_payment/account_invoice.py:43
@@ -176,7 +176,7 @@ msgid ""
 "When an order is placed the status is 'Draft'.\n"
 " Once the bank is confirmed the status is set to 'Confirmed'.\n"
 " Then the order is paid the status is 'Done'."
-msgstr ""
+msgstr "عند إنشاء الأمر سيتم وضعه في حالة \"مسودة\".\nما أن يتم تأكيده في البنك، تصبح حالته \"مؤكد\".\nعند إتمام عملية السداد، تصبح حالته \"منتهي\"."
 
 #. module: account_payment
 #: view:payment.order:0 selection:payment.order,state:0
@@ -201,7 +201,7 @@ msgstr "منظم"
 #. module: account_payment
 #: view:account.bank.statement:0
 msgid "Import Payment Lines"
-msgstr ""
+msgstr "استيراد خطوط الدفع"
 
 #. module: account_payment
 #: view:payment.line:0 view:payment.order:0
@@ -341,7 +341,7 @@ msgstr "بيان نشر دفع الحساب"
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "There is no partner defined on the entry line."
-msgstr ""
+msgstr "لا يوجد شريك معرف على خط الإدخال."
 
 #. module: account_payment
 #: help:payment.mode,name:0
@@ -433,7 +433,7 @@ msgstr "الإجمالي:"
 #. module: account_payment
 #: field:payment.order,date_done:0
 msgid "Execution Date"
-msgstr ""
+msgstr "تاريخ التنفيذ"
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
@@ -624,7 +624,7 @@ msgstr "أمر"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Cancel Payments"
-msgstr ""
+msgstr "إلغاء المدفوعات"
 
 #. module: account_payment
 #: field:payment.order,total:0
@@ -651,7 +651,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,date_prefered:0
 msgid "Preferred Date"
-msgstr ""
+msgstr "تاريخ التفضيل"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0

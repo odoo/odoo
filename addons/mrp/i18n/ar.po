@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2016-04-07 16:31+0000\n"
+"PO-Revision-Date: 2016-05-17 12:05+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-7/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -242,7 +242,7 @@ msgid ""
 "                materials that will define the required raw materials.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nأضغط لإنشاء مسار جديد\n</p><p>\nمسارات تسمح لك لإنشاء وإدارة تصنيع\nالعمليات التي ينبغي اتباعها في مراكز العمل الخاصة بك في\nأمر إنتاج منتج. وترد لهم فواتير\nالمواد التي ستحدد المواد الخام المطلوبة .\n</p>"
 
 #. module: mrp
 #: view:mrp.production:0 field:mrp.production,move_created_ids2:0
@@ -269,14 +269,14 @@ msgstr "إنتاج أصناف مختلفة من أمر تصنيع واحد"
 msgid ""
 "The selection of the right Bill of Material to use will depend on the "
 "properties specified on the sales order and the Bill of Material."
-msgstr ""
+msgstr "الاختيار الايمن لفاتوره المواد  لاستخدامها سوف تعتمد على الخصائص المحددة بناء على أمر المبيعات وشرعة المواد. "
 
 #. module: mrp
 #: view:mrp.bom:0
 msgid ""
 "When processing a sales order for this product, the delivery order\n"
 "                                will contain the raw materials, instead of the finished product."
-msgstr ""
+msgstr "عند معالجة أمر المبيعات لهذه المنتجات، وترتيب التسليم\nسوف تحتوي على المواد الخام، بدلا من المنتج النهائي. "
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -367,7 +367,7 @@ msgstr "الكمية"
 msgid ""
 "Fill this product to easily track your production costs in the analytic "
 "accounting."
-msgstr ""
+msgstr "إملأ هذا المنتج بسهولة تتبع تكاليف الإنتاج في المحاسبة التحليلية."
 
 #. module: mrp
 #: field:mrp.workcenter,product_id:0
@@ -420,7 +420,7 @@ msgid ""
 "                If the stock is available then the status is set to 'Ready to Produce'.\n"
 "                When the production gets started then the status is set to 'In Production'.\n"
 "                When the production is over, the status is set to 'Done'."
-msgstr ""
+msgstr "عند إنشاء أمر الإنتاج يتم تعيين الحالة إلى \"مسوده\".\nإذا تم تأكيد الامر يتم تعيين الحالة إلى \"انتظار السلع.\nإذا كان هناك أي استثناءات، يتم تعيين الحالة إلى \" استثناء الالتقاط \".\nإذا كان المخزون متاح يتم تعيين الحالة إلى \"جاهزة للإنتاج.\nعندما يبدأ الإنتاج يتم تعيين الحالة إلى \"في الإنتاج\".\nعندما يتم الانتهاء من عمليه الإنتاج ، يتم تعيين الحالة إلى \"تم\"."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
@@ -558,7 +558,7 @@ msgstr "ابحث عن منتج"
 #: help:mrp.routing.workcenter,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
-msgstr ""
+msgstr "يعطي ترتيب تسلسل عند عرض القائمة من توجيه مراكز العمل. "
 
 #. module: mrp
 #: field:mrp.bom,child_complete_ids:0
@@ -672,7 +672,7 @@ msgid ""
 "                search in which BoM a specific component is used.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr " <p class=\"oe_view_nocontent_create\">\nأضغط لإضافة عنصر إلى فاتوره المواد.\n</p><p>\nفواتير من مكونات المواد هي المكونات والمنتجات الثانوية\nاستخدامه لإنشاء فواتير سيد المواد. استخدم هذه القائمة ل\nالبحث الذي يستخدم BOM عنصرا محددا.\n</p>"
 
 #. module: mrp
 #: constraint:mrp.bom:0
@@ -722,7 +722,7 @@ msgid ""
 "                and planning forecast.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nاضغط لإضافه مركز عمل \n</p><p>\nمراكز العمل تسمح لك لإنشاء وإدارة التصنيع\nوحدة. وهي تتألف من العمال و / أو الآلات، والتي هي\nتعتبر وحدات لإسناد مهمة فضلا عن القدرة\nعلى تخطيط التوقعات.\n</p>"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_minimumstockrule0
@@ -739,7 +739,7 @@ msgstr "لكل شهر"
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
-msgstr ""
+msgstr "وحدة القياس (وحدة القياس) هي وحدة قياس لمراقبة المخزون "
 
 #. module: mrp
 #: report:bom.structure:0
@@ -779,12 +779,12 @@ msgstr "قاعدة المشتريات /التحصيل"
 msgid ""
 "Fill this only if you want automatic analytic accounting entries on "
 "production orders."
-msgstr ""
+msgstr "ملء هذا فقط إذا كنت تريد القيود المحاسبية التحليلية التلقائي على أوامر الإنتاج. "
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Mark as Started"
-msgstr ""
+msgstr "إجعلها بدأت"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -820,7 +820,7 @@ msgstr "تصنيع الطلبيات التي تنتظر المواد الخام.
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr ""
+msgstr "وحدة قياس المنتج التى اخترتها تمتلك فئة مختلفة مما كانت عليه في شكل المنتج . "
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production view:mrp.config.settings:0
@@ -839,7 +839,7 @@ msgstr "المشترى من المواد الخام"
 msgid ""
 "All product quantities must be greater than 0.\n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
-msgstr ""
+msgstr "يجب أن تكون جميع كميات المنتج أكبر من 0.\nيجب تثبيت وحدة MRP ثانوية إذا كنت ترغب في إدارة المنتجات اضافية على القنابل! "
 
 #. module: mrp
 #: view:mrp.production:0 field:mrp.production,cycle_total:0
@@ -956,7 +956,7 @@ msgstr "مجموعة الملكية"
 #. module: mrp
 #: field:mrp.config.settings,group_mrp_routings:0
 msgid "Manage routings and work orders "
-msgstr ""
+msgstr "إدارة مسارات وأوامر العمل "
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_production0
@@ -1008,7 +1008,7 @@ msgstr "اوامر التصنيع"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Awaiting Raw Materials"
-msgstr ""
+msgstr "في انتظار المواد الخام "
 
 #. module: mrp
 #: field:mrp.bom,position:0
@@ -1018,7 +1018,7 @@ msgstr "مرجع داخلي"
 #. module: mrp
 #: field:mrp.production,product_uos_qty:0
 msgid "Product UoS Quantity"
-msgstr ""
+msgstr "كمية وحدة التوريد للمنتج "
 
 #. module: mrp
 #: field:mrp.bom,name:0 report:mrp.production.order:0
@@ -1060,14 +1060,14 @@ msgstr ""
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
 msgid "Specify Cost of Work Center per hour."
-msgstr ""
+msgstr "تحديد تكلفة مركز العمل للساعة الواحدة. "
 
 #. module: mrp
 #: help:mrp.workcenter,capacity_per_cycle:0
 msgid ""
 "Number of operations this Work Center can do in parallel. If this Work "
 "Center represents a team of 5 workers, the capacity per cycle is 5."
-msgstr ""
+msgstr "عدد من عمليات هذا المركز عمل يمكن القيام به بشكل متوازى. إذا يمثل هذا المركز عمل فريق من 5 عمال، والقدرة في كل دورة هي 5."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
@@ -1077,7 +1077,7 @@ msgstr "اوامر التصنيع في التقدم"
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_client_mrp_menu
 msgid "Open MRP Menu"
-msgstr ""
+msgstr "فتح قائمة MRP "
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action4
@@ -1101,7 +1101,7 @@ msgstr "تكلفة الدورات"
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
 msgid "Cannot find bill of material for this product."
-msgstr ""
+msgstr "لا يمكن العثور على فاتوره المواد لهذا المنتج. "
 
 #. module: mrp
 #: selection:mrp.workcenter.load,measure_unit:0
@@ -1128,7 +1128,7 @@ msgstr ""
 msgid ""
 "Time in hours for this Work Center to achieve the operation of the specified"
 " routing."
-msgstr ""
+msgstr "الوقت بالساعات لهذا المركز العمل على تحقيق عملية توجيه محدد. "
 
 #. module: mrp
 #: field:mrp.workcenter,costs_journal_id:0
@@ -1139,7 +1139,7 @@ msgstr "يومية تحليلية"
 #: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Supplier Price per Unit of Measure"
-msgstr ""
+msgstr "مزود سعر الوحدة القياس "
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
@@ -1172,7 +1172,7 @@ msgstr "ملاحظات"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Manufacturing Orders which are ready to start production."
-msgstr ""
+msgstr "أوامر التصنيع التى تكون جاهزه لبدء عمليه الانتاج "
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom view:mrp.bom:0
@@ -1209,7 +1209,7 @@ msgid ""
 "Routing indicates all the Work Centers used, for how long and/or cycles.If "
 "Routing is indicated then,the third tab of a production order (Work Centers)"
 " will be automatically pre-completed."
-msgstr ""
+msgstr "يشير المسار إلى جميع مراكز العمل المستخدمة، إلى متى و / أو يشار مسار الدوره ثم، علامة التبويب الثالث من أجل إنتاج (مراكز العمل) وسوف تكون قبل الانتهاء تلقائيا."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:519
@@ -1229,7 +1229,7 @@ msgstr "الحد الادنى لقاعدة المخزون هي قاعدة الم
 #: code:addons/mrp/report/price.py:189
 #, python-format
 msgid "Components Cost of %s %s"
-msgstr ""
+msgstr "عناصر التكلفة من ٪ ق٪ "
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
@@ -1252,7 +1252,7 @@ msgstr "قائمة الالتقاط"
 msgid ""
 "Bill of Materials allow you to define the list of required raw materials to "
 "make a finished product."
-msgstr ""
+msgstr "فاتوره المواد تسمح لك لتحديد قائمة من المواد الخام اللازمة لجعل المنتج النهائي. "
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:379
@@ -1269,7 +1269,7 @@ msgstr "يضيف الانتاج امنتج الى الجدول"
 #: code:addons/mrp/report/price.py:206
 #, python-format
 msgid "Work Cost of %s %s"
-msgstr ""
+msgstr "تكلفة عمل٪ ق٪ "
 
 #. module: mrp
 #: help:res.company,manufacturing_lead:0
@@ -1286,7 +1286,7 @@ msgstr "اضفه الى المخزون"
 #. module: mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero!"
-msgstr ""
+msgstr "كمية الطلب لا يمكن أن يكون سلبيا أو الصفر! "
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockrfq0
@@ -1303,7 +1303,7 @@ msgstr "المشتريات"
 #. module: mrp
 #: field:mrp.config.settings,module_product_manufacturer:0
 msgid "Define manufacturers on products "
-msgstr ""
+msgstr "تحديد الشركات المصنعة للمنتجات "
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_view_mrp_product_price_wizard
@@ -1418,7 +1418,7 @@ msgstr "ويقود اوامر المشتريات للمادة الخام."
 #. module: mrp
 #: field:mrp.production.product.line,product_uos_qty:0
 msgid "Product UOS Quantity"
-msgstr ""
+msgstr "كمية وحدة التوريد للمنتج "
 
 #. module: mrp
 #: field:mrp.workcenter,costs_general_account_id:0
@@ -1434,7 +1434,7 @@ msgstr "رقم امر البيع"
 #: code:addons/mrp/mrp.py:519
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
-msgstr ""
+msgstr "لا يمكن حذف أمر التصنيع في الحاله '٪ ق'."
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -1549,7 +1549,7 @@ msgstr "اجعله امر"
 msgid ""
 "Description of the Work Center. Explain here what's a cycle according to "
 "this Work Center."
-msgstr ""
+msgstr "وصف مركز العمل. شرح هنا ما هي دورة وفقا لهذا المركز العمل. "
 
 #. module: mrp
 #: field:mrp.production,date_finished:0
@@ -1696,7 +1696,7 @@ msgstr "الوقت للدورة 1 (الساعه)"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Cancel Production"
-msgstr ""
+msgstr "الغاء الانتاج "
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.report_mrp_production_report
@@ -1781,7 +1781,7 @@ msgstr "كمية جدول الامر الغير مستلم للمنتج"
 #. module: mrp
 #: field:mrp.production,move_prod_id:0
 msgid "Product Move"
-msgstr ""
+msgstr "حركه المنتج "
 
 #. module: mrp
 #: view:mrp.routing:0
@@ -1925,7 +1925,7 @@ msgstr "الوقت بالساعات للإعداد."
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_repair:0
 msgid "Manage repairs of products "
-msgstr ""
+msgstr "إدارة إصلاح المنتجات "
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_byproduct:0
@@ -1956,7 +1956,7 @@ msgstr "تخصيص من المخزون."
 #: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Cost Price per Unit of Measure"
-msgstr ""
+msgstr "سعر التكلفة لكل وحدة القياس"
 
 #. module: mrp
 #: field:report.mrp.inout,date:0 view:report.workcenter.load:0
@@ -2022,7 +2022,7 @@ msgstr "علامة المنتج هي قابل للتخزين او استهلاك
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Production Started"
-msgstr ""
+msgstr "بدأت الإنتاج "
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_procureproducts0
@@ -2046,7 +2046,7 @@ msgstr "فاتورة المواد"
 #: code:addons/mrp/mrp.py:630
 #, python-format
 msgid "Cannot find a bill of material for this product."
-msgstr ""
+msgstr "لا يمكن العثور على فاتوره المواد لهذا المنتج. "
 
 #. module: mrp
 #: view:product.product:0
@@ -2129,7 +2129,7 @@ msgstr "التصنيع"
 #: code:addons/mrp/wizard/change_production_qty.py:68
 #, python-format
 msgid "Active Id not found"
-msgstr ""
+msgstr "لم يتم العثور على رقم نشط "
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_procureproducts0
