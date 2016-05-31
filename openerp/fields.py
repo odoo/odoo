@@ -1901,6 +1901,8 @@ class One2many(_RelationalMulti):
         if fnames:
             # do not serialize self's inverse field
             fnames = [name for name in fnames if name != self.inverse_name]
+        elif self.type == 'one2many':
+            fnames = [name for name in value._fields if name != self.inverse_name]
         return super(One2many, self).convert_to_onchange(value, fnames)
 
 
