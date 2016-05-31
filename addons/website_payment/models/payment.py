@@ -18,6 +18,8 @@ class PaymentTransaction(models.Model):
     sale_order_id = fields.Many2one('sale.order', string='Sale Order')
 
     def _generate_and_pay_invoice(self, tx, acquirer_name):
+        tx.sale_order_id._force_lines_to_invoice_policy_order()
+
         created_invoice = tx.sale_order_id.action_invoice_create()
         created_invoice = self.env['account.invoice'].browse(created_invoice)
 
