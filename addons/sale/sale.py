@@ -286,6 +286,7 @@ class SaleOrder(models.Model):
             'type': 'out_invoice',
             'account_id': self.partner_invoice_id.property_account_receivable_id.id,
             'partner_id': self.partner_invoice_id.id,
+            'partner_shipping_id': self.partner_shipping_id.id,
             'journal_id': journal_id,
             'currency_id': self.pricelist_id.currency_id.id,
             'comment': self.note,
@@ -912,6 +913,26 @@ class AccountInvoice(models.Model):
 
     team_id = fields.Many2one('crm.team', string='Sales Team', default=_get_default_team, oldname='section_id')
     comment = fields.Text(default=_default_comment)
+    partner_shipping_id = fields.Many2one(
+        'res.partner',
+        string='Delivery Address',
+        readonly=True,
+        states={'draft': [('readonly', False)]},
+        help="Delivery address for current invoice.")
+
+    @api.onchange('partner_shipping_id')
+    def _onchange_partner_shipping_id(self):
+        """
+        Trigger the change of fiscal position when the shipping address is modified.
+        """
+        fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id, self.partner_shipping_id.id)
+        if fiscal_position:
+            self.fiscal_position_id = fiscal_position
+
+    @api.onchange('partner_id', 'company_id')
+    def _onchange_delivery_address(self):
+        addr = self.partner_id.address_get(['delivery'])
+        self.partner_shipping_id = addr and addr.get('delivery')
 
     @api.multi
     def confirm_paid(self):
