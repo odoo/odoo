@@ -1,72 +1,61 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.tests import common
+from odoo.tests import common
 
 
 class test_challenge(common.TransactionCase):
 
     def setUp(self):
         super(test_challenge, self).setUp()
-        cr, uid = self.cr, self.uid
-        self.data_obj = self.registry('ir.model.data')
-        self.user_obj = self.registry('res.users')
 
-        self.challenge_obj = self.registry('gamification.challenge')
-        self.line_obj = self.registry('gamification.challenge.line')
-        self.goal_obj = self.registry('gamification.goal')
-        self.badge_obj = self.registry('gamification.badge')
-        self.badge_user_obj = self.registry('gamification.badge.user')
+        self.User = self.env['res.users']
+        self.ChallengeLine = self.env['gamification.challenge.line']
+        self.Goal = self.env['gamification.goal']
+        self.BadgeUser = self.env['gamification.badge.user']
 
-        self.demo_user_id = self.data_obj.get_object_reference(cr, uid, 'base', 'user_demo')[1]
-        self.group_user_id = self.data_obj.get_object_reference(cr, uid, 'base', 'group_user')[1]
-        self.challenge_base_id = self.data_obj.get_object_reference(cr, uid, 'gamification', 'challenge_base_discover')[1]
-        self.definition_timezone_id = self.data_obj.get_object_reference(cr, uid, 'gamification', 'definition_base_timezone')[1]
-        self.badge_id = self.data_obj.get_object_reference(cr, uid, 'gamification', 'badge_good_job')[1]
+        self.demo_user = self.env.ref('base.user_demo')
+        self.challenge_base = self.env.ref('gamification.challenge_base_discover')
+
+        self.group_user_id = self.ref('base.group_user')
+        self.definition_timezone_id = self.ref('gamification.definition_base_timezone')
+        self.badge_id = self.ref('gamification.badge_good_job')
 
     def test_00_join_challenge(self):
-        cr, uid, context = self.cr, self.uid, {}
+        users_count = self.User.search_count([('groups_id', '=', self.group_user_id)])
 
-        user_ids = self.user_obj.search(cr, uid, [('groups_id', '=', self.group_user_id)])
-        challenge = self.challenge_obj.browse(cr, uid, self.challenge_base_id, context=context)
+        self.assertGreaterEqual(len(self.challenge_base.user_ids), users_count, "Not enough users in base challenge")
 
-        self.assertGreaterEqual(len(challenge.user_ids), len(user_ids), "Not enough users in base challenge")
-
-        self.user_obj.create(cr, uid, {
+        self.User.with_context(no_reset_password=True).create({
             'name': 'R2D2',
-            'login': 'r2d2@openerp.com',
-            'email': 'r2d2@openerp.com',
+            'login': 'r2d2@odoo.com',
+            'email': 'r2d2@odoo.com',
             'groups_id': [(6, 0, [self.group_user_id])]
-        }, {'no_reset_password': True})
+        })
 
-        self.challenge_obj._update_all(cr, uid, [self.challenge_base_id], context=context)
-        challenge = self.challenge_obj.browse(cr, uid, self.challenge_base_id, context=context)
-        self.assertGreaterEqual(len(challenge.user_ids), len(user_ids)+1, "These are not droids you are looking for")
+        self.challenge_base._update_all()
+        self.assertGreaterEqual(len(self.challenge_base.user_ids), users_count + 1, "These are not droids you are looking for")
 
     def test_10_reach_challenge(self):
-        cr, uid, context = self.cr, self.uid, {}
-        
-        self.challenge_obj.write(cr, uid, [self.challenge_base_id], {'state': 'inprogress'}, context=context)
-        challenge = self.challenge_obj.browse(cr, uid, self.challenge_base_id, context=context)
-        challenge_user_ids = [user.id for user in challenge.user_ids]
+        self.challenge_base.write({'state': 'inprogress'})
 
-        self.assertEqual(challenge.state, 'inprogress', "Challenge failed the change of state")
+        self.assertEqual(self.challenge_base.state, 'inprogress', "Challenge failed the change of state")
 
-        line_ids = self.line_obj.search(cr, uid, [('challenge_id', '=', self.challenge_base_id)], context=context)
-        goal_ids = self.goal_obj.search(cr, uid, [('challenge_id', '=', self.challenge_base_id), ('state', '!=', 'draft')], context=context)
-        self.assertEqual(len(goal_ids), len(line_ids)*len(challenge_user_ids), "Incorrect number of goals generated, should be 1 goal per user, per challenge line")
+        challenge_lines_count = self.ChallengeLine.search_count([('challenge_id', '=', self.challenge_base.id)])
+        goals_count = self.Goal.search_count([('challenge_id', '=', self.challenge_base.id), ('state', '!=', 'draft')])
+        self.assertEqual(goals_count, challenge_lines_count * len(self.challenge_base.user_ids.ids), "Incorrect number of goals generated, should be 1 goal per user, per challenge line")
 
         # demo user will set a timezone
-        self.user_obj.write(cr, uid, self.demo_user_id, {'tz': "Europe/Brussels"}, context=context)
-        goal_ids = self.goal_obj.search(cr, uid, [('user_id', '=', self.demo_user_id), ('definition_id', '=', self.definition_timezone_id)], context=context)
+        self.demo_user.write({'tz': "Europe/Brussels"})
+        goals = self.Goal.search([('user_id', '=', self.demo_user.id), ('definition_id', '=', self.definition_timezone_id)])
 
-        self.goal_obj.update_goal(cr, uid, goal_ids, context=context)
-        reached_goal_ids = self.goal_obj.search(cr, uid, [('id', 'in', goal_ids), ('state', '=', 'reached')], context=context)
-        self.assertEqual(set(goal_ids), set(reached_goal_ids), "Not every goal was reached after changing timezone")
+        goals.update_goal()
+        reached_goals = self.Goal.search([('id', 'in', goals.ids), ('state', '=', 'reached')])
+        self.assertEqual(set(goals), set(reached_goals), "Not every goal was reached after changing timezone")
 
         # reward for two firsts as admin may have timezone
-        self.challenge_obj.write(cr, uid, self.challenge_base_id, {'reward_first_id': self.badge_id, 'reward_second_id': self.badge_id}, context=context)
-        self.challenge_obj.write(cr, uid, self.challenge_base_id,  {'state': 'done'}, context=context)
+        self.challenge_base.write({'reward_first_id': self.badge_id, 'reward_second_id': self.badge_id})
+        self.challenge_base.write({'state': 'done'})
 
-        badge_ids = self.badge_user_obj.search(cr, uid, [('badge_id', '=', self.badge_id), ('user_id', '=', self.demo_user_id)])
-        self.assertGreater(len(badge_ids), 0, "Demo user has not received the badge")
+        badges_count = self.BadgeUser.search_count([('badge_id', '=', self.badge_id), ('user_id', '=', self.demo_user.id)])
+        self.assertGreater(badges_count, 0, "Demo user has not received the badge")
