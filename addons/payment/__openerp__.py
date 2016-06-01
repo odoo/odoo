@@ -9,6 +9,7 @@
     'depends': ['account'],
     'data': [
         'data/payment_acquirer.xml',
+        'data/account.xml',
         'views/payment_acquirer.xml',
         'views/assets.xml',
         'views/res_config_view.xml',
