@@ -28,6 +28,7 @@ class website_account(website_account):
         ])
         invoice_count = Invoice.search_count([
             ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
+            ('type', 'in', ('out_invoice', 'out_refund')),
             ('state', 'in', ['open', 'paid', 'cancelled'])
         ])
 
