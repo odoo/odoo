@@ -33,8 +33,8 @@ generated if no algorithm is specified on the Partner record.
     'depends': ['account'],
     'demo': [],
     'data' : [
-        'partner_view.xml',
-        'account_invoice_view.xml',        
+        'views/res_partner_view.xml',
+        'views/account_invoice_view.xml',        
     ],
     'auto_install': False,
     'installable': True,
