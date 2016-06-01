@@ -1,8 +1,5 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
-
-
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
     <!-- Calendar Events Types Form View -->
 
     <record id="view_calendar_event_type_tree" model="ir.ui.view">
@@ -13,7 +10,7 @@
                 <field name="name"/>
             </tree>
         </field>
-    </record>    
+    </record>
 
     <record id="action_calendar_event_type" model="ir.actions.act_window">
         <field name="name">Meeting Types</field>
@@ -61,7 +58,7 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="view_calendar_alarm_tree"/>
     </record>
-    
+
     <!-- Calendar Events Form View -->
 
     <record model="ir.ui.view" id="view_calendar_event_form">
@@ -175,12 +172,12 @@
                                 <group>
                                     <field name="class"/>
                                     <field name="show_as"/>
-                                    <field name="rrule" invisible="1" readonly="0" />                                    
+                                    <field name="rrule" invisible="1" readonly="0" />
                                     <field name="recurrent_id" invisible="1" />
                                 </group>
                             </group>
                         </page>
-                        
+
                         <page string="Invitations" groups="base.group_no_one">
                             <button name="do_sendmail" type="object" string="Send mail" icon="terp-mail-message-new" class="oe_link"/>
                             <field name="attendee_ids" widget="one2many" >
@@ -210,7 +207,7 @@
             </form>
         </field>
     </record>
-    
+
     <record model="ir.ui.view" id="view_calendar_event_form_popup">
         <field name="name">Meetings Dialog</field>
         <field name="model">calendar.event</field>
@@ -353,7 +350,4 @@
         <field name="view_mode">form,calendar,tree</field>
         <field name="view_id" ref="view_calendar_event_form"/>
     </record>
-       
-    
-    </data>
-</openerp>
+</odoo>

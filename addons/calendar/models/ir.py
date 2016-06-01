@@ -3,42 +3,42 @@
 
 from werkzeug.exceptions import BadRequest
 
-import openerp
-from openerp.http import request
-from openerp.osv import osv
+from odoo import api, models, registry, SUPERUSER_ID
+from odoo.http import request
 
-from openerp.addons.calendar.models.calendar import get_real_ids
+from odoo.addons.calendar.models.calendar import calendar_id2real_id, get_real_ids
 
 
-class ir_values(osv.Model):
+class IrValues(models.Model):
     _inherit = 'ir.values'
 
-    def set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=False, preserve_user=False, company=False):
+    @api.model
+    def set(self, key, key2, name, models, value, replace=True, isobject=False, meta=False, preserve_user=False, company=False):
         new_model = []
         for data in models:
             if type(data) in (list, tuple):
                 new_model.append((data[0], calendar_id2real_id(data[1])))
             else:
                 new_model.append(data)
-        return super(ir_values, self).set(cr, uid, key, key2, name, new_model,
+        return super(IrValues, self).set(key, key2, name, new_model,
                                           value, replace, isobject, meta, preserve_user, company)
 
-    def get(self, cr, uid, key, key2, models, meta=False, context=None, res_id_req=False, without_user=True, key2_req=True):
-        if context is None:
-            context = {}
+    @api.model
+    def get(self, key, key2, models, meta=False, res_id_req=False, without_user=True, key2_req=True):
         new_model = []
         for data in models:
             if type(data) in (list, tuple):
                 new_model.append((data[0], calendar_id2real_id(data[1])))
             else:
                 new_model.append(data)
-        return super(ir_values, self).get(cr, uid, key, key2, new_model,
-                                          meta, context, res_id_req, without_user, key2_req)
+        return super(IrValues, self).get(key, key2, new_model,
+                                          meta, res_id_req, without_user, key2_req)
 
-class ir_attachment(osv.Model):
+class IrAttachment(models.Model):
     _inherit = "ir.attachment"
 
-    def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
+    @api.model
+    def search(self, args, offset=0, limit=0, order=None, count=False):
         '''
         convert the search on real ids in the case it was asked on virtual ids, then call super()
         '''
@@ -47,36 +47,35 @@ class ir_attachment(osv.Model):
             for index in range(len(args)):
                 if args[index][0] == "res_id" and isinstance(args[index][2], basestring):
                     args[index] = (args[index][0], args[index][1], get_real_ids(args[index][2]))
-        return super(ir_attachment, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
+        return super(IrAttachment, self).search(args, offset=offset, limit=limit, order=order, count=count)
 
-    def write(self, cr, uid, ids, vals, context=None):
+    @api.multi
+    def write(self, vals):
         '''
         when posting an attachment (new or not), convert the virtual ids in real ids.
         '''
         if isinstance(vals.get('res_id'), basestring):
             vals['res_id'] = get_real_ids(vals.get('res_id'))
-        return super(ir_attachment, self).write(cr, uid, ids, vals, context=context)
+        return super(IrAttachment, self).write(vals)
 
 
-class ir_http(osv.AbstractModel):
+class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
     def _auth_method_calendar(self):
         token = request.params['token']
         db = request.params['db']
 
-        registry = openerp.modules.registry.RegistryManager.get(db)
-        attendee_pool = registry.get('calendar.attendee')
         error_message = False
-        with registry.cursor() as cr:
-            attendee_id = attendee_pool.search(cr, openerp.SUPERUSER_ID, [('access_token', '=', token)])
-            if not attendee_id:
+        with registry(db).cursor() as cr:
+            env = api.Environment(cr, SUPERUSER_ID, context={})
+            attendee = env['calendar.attendee'].search([('access_token', '=', token)], limit=1)
+            if not attendee:
                 error_message = """Invalid Invitation Token."""
             elif request.session.uid and request.session.login != 'anonymous':
                  # if valid session but user is not match
-                attendee = attendee_pool.browse(cr, openerp.SUPERUSER_ID, attendee_id[0])
-                user = registry.get('res.users').browse(cr, openerp.SUPERUSER_ID, request.session.uid)
-                if attendee.partner_id.id != user.partner_id.id:
+                user = env['res.users'].browse(request.session.uid)
+                if attendee.partner_id != user.partner_id:
                     error_message = """Invitation cannot be forwarded via email. This event/meeting belongs to %s and you are logged in as %s. Please ask organizer to add you.""" % (attendee.email, user.email)
 
         if error_message:

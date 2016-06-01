@@ -3,7 +3,6 @@
 
 {
     'name': 'Calendar',
-    'version': '1.0',
     'sequence': 130,
     'depends': ['base', 'mail', 'base_action_rule', 'web_calendar'],
     'summary': 'Personal & Shared Calendar',
@@ -22,9 +21,9 @@ If you need to manage your meetings, you should install the CRM module.
     'website': 'https://www.odoo.com/page/crm',
     'demo': ['data/calendar_demo.xml'],
     'data': [
-        'data/calendar_cron_data.xml',
         'security/ir.model.access.csv',
         'security/calendar_security.xml',
+        'data/calendar_cron_data.xml',
         'views/calendar_views.xml',
         'data/calendar_data.xml',
         'views/calendar_templates.xml',
@@ -34,7 +33,5 @@ If you need to manage your meetings, you should install the CRM module.
         'test/calendar_test.yml',
         'test/test_calendar_recurrent_event_case2.yml'
     ],
-    'installable': True,
     'application': True,
-    'auto_install': False,
 }
