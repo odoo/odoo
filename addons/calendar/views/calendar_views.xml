@@ -27,8 +27,8 @@
             <tree string="Calendar Alarm" editable="bottom">
                 <field name="name"/>
                 <field name="type"/>
-                <field name="duration" on_change="onchange_duration_interval(duration, interval)"/>
-                <field name="interval" on_change="onchange_duration_interval(duration, interval)"/>
+                <field name="duration"/>
+                <field name="interval"/>
             </tree>
         </field>
     </record>
@@ -44,8 +44,8 @@
                         <field name="type" groups="base.group_no_one"/>
                     </group>
                     <group>
-                        <field name="interval" on_change="onchange_duration_interval(duration, interval)"/>
-                        <field name="duration" on_change="onchange_duration_interval(duration, interval)"/>
+                        <field name="interval"/>
+                        <field name="duration"/>
                     </group>
                 </group>
             </form>
@@ -83,7 +83,6 @@
                             <field name="partner_ids" widget="many2manyattendee"
                                 placeholder="Select attendees..."
                                 context="{'force_email':True}"
-                                on_change="onchange_partner_ids(partner_ids)"
                                 class="oe_inline"/>
                         </h2>
                     </div>
@@ -100,17 +99,17 @@
                                     <field name="stop" attrs="{'invisible': True}"/>
                                     <field name="id" attrs="{'invisible': True}"/>
 
-                                    <field name="start_date" string="Starting at" on_change="onchange_dates('start', start_date, stop_date, allday, True)" attrs="{'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
-                                    <field name="stop_date" string="Ending at" on_change="onchange_dates('stop', start_date, stop_date, allday, True)" attrs="{'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="start_date" string="Starting at" attrs="{'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="stop_date" string="Ending at" attrs="{'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
 
-                                    <field name="start_datetime" string="Starting at" on_change="onchange_duration(start_datetime, duration)" attrs="{'invisible': [('allday','=',True)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="start_datetime" string="Starting at" attrs="{'invisible': [('allday','=',True)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
                                     <field name="stop_datetime" invisible="1"/>
                                     <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
                                     <div attrs="{'invisible': [('allday','=',True)]}">
-                                        <field name="duration" widget="float_time" string="Duration" on_change="onchange_duration(start_datetime, duration)" class="oe_inline" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                        <field name="duration" widget="float_time" string="Duration" class="oe_inline" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
                                         <span> hours</span>
                                     </div>
-                                    <field name="allday"  on_change="onchange_allday(start, stop, start_date, stop_date, start_datetime, stop_datetime, allday)" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="allday" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
                                 </group>
                                 <group>
                                     <field name="categ_ids" widget="many2many_tags" options="
@@ -170,7 +169,7 @@
                                     </div>
                                 </div>
                                 <group>
-                                    <field name="class"/>
+                                    <field name="privacy"/>
                                     <field name="show_as"/>
                                     <field name="rrule" invisible="1" readonly="0" />
                                     <field name="recurrent_id" invisible="1" />
@@ -287,7 +286,7 @@
                 <field name="categ_ids"/>
                 <field name="user_id"/>
                 <field name="show_as"/>
-                <field name="class" string="Privacy"/>
+                <field name="privacy" string="Privacy"/>
                 <filter string="My Events" domain="[('user_id','=',uid)]" help="My Events"/>
                 <filter string="My Meetings" help="My Meetings" name="mymeetings" context='{"mymeetings": 1}'/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
@@ -295,7 +294,7 @@
                 <group expand="0" string="Group By">
                     <filter string="Responsible" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Availability" domain="[]" context="{'group_by':'show_as'}"/>
-                    <filter string="Privacy" domain="[]" context="{'group_by':'class'}"/>
+                    <filter string="Privacy" domain="[]" context="{'group_by':'privacy'}"/>
                 </group>
             </search>
         </field>
