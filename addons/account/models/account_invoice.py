@@ -201,6 +201,7 @@ class AccountInvoice(models.Model):
         default=lambda self: self._context.get('type', 'out_invoice'),
         track_visibility='always')
 
+    refund_invoice_id = fields.Many2one('account.invoice', string="Invoice for which this invoice is the refund")
     number = fields.Char(related='move_id.name', store=True, readonly=True, copy=False)
     move_name = fields.Char(string='Journal Entry', readonly=True,
         default=False, copy=False,
@@ -946,6 +947,7 @@ class AccountInvoice(models.Model):
         values['state'] = 'draft'
         values['number'] = False
         values['origin'] = invoice.number
+        values['refund_invoice_id'] = invoice.id
 
         if date:
             values['date'] = date
@@ -961,7 +963,12 @@ class AccountInvoice(models.Model):
             # create the new invoice
             values = self._prepare_refund(invoice, date_invoice=date_invoice, date=date,
                                     description=description, journal_id=journal_id)
-            new_invoices += self.create(values)
+            refund_invoice = self.create(values)
+            invoice_type = {'out_invoice': ('customer invoices refund'),
+                'in_invoice': ('vendor bill refund')}
+            message = _("This %s has been created from: <a href=# data-oe-model=account.invoice data-oe-id=%d>%s</a>") % (invoice_type[invoice.type], invoice.id, invoice.number)
+            refund_invoice.message_post(body=message)
+            new_invoices += refund_invoice
         return new_invoices
 
     @api.v8

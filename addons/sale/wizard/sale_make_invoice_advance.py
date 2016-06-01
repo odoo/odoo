@@ -95,6 +95,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'team_id': order.team_id.id,
         })
         invoice.compute_taxes()
+        invoice.message_post_with_view('mail.message_origin_link',
+                    values={'self': invoice, 'origin': order},
+                    subtype_id=self.env.ref('mail.mt_note').id)
         return invoice
 
     @api.multi

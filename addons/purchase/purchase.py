@@ -387,6 +387,9 @@ class PurchaseOrder(models.Model):
                 moves = order.order_line.filtered(lambda r: r.product_id.type in ['product', 'consu'])._create_stock_moves(picking)
                 moves.action_confirm()
                 moves.force_assign()
+                picking.message_post_with_view('mail.message_origin_link',
+                    values={'self': picking, 'origin': order},
+                    subtype_id=self.env.ref('mail.mt_note').id)
         return True
 
     @api.multi
@@ -971,6 +974,9 @@ class ProcurementOrder(models.Model):
             if not po:
                 vals = procurement._prepare_purchase_order(partner)
                 po = self.env['purchase.order'].create(vals)
+                name = (procurement.group_id and (procurement.group_id.name + ":") or "") + (procurement.name != "/" and procurement.name or procurement.move_dest_id.raw_material_production_id and procurement.move_dest_id.raw_material_production_id.name or "")
+                message = _("This purchase order has been created from: <a href=# data-oe-model=procurement.order data-oe-id=%d>%s</a>") % (procurement.id, name)
+                po.message_post(body=message)
                 cache[domain] = po
             elif not po.origin or procurement.origin not in po.origin.split(', '):
                 # Keep track of all procurements
@@ -981,6 +987,9 @@ class ProcurementOrder(models.Model):
                         po.write({'origin': po.origin})
                 else:
                     po.write({'origin': procurement.origin})
+                name = (self.group_id and (self.group_id.name + ":") or "") + (self.name != "/" and self.name or self.move_dest_id.raw_material_production_id and self.move_dest_id.raw_material_production_id.name or "")
+                message = _("This purchase order has been modified from: <a href=# data-oe-model=procurement.order data-oe-id=%d>%s</a>") % (procurement.id, name)
+                po.message_post(body=message)
             if po:
                 res += [procurement.id]
 
@@ -1078,7 +1087,8 @@ class MailComposeMessage(models.Model):
 
     @api.multi
     def send_mail(self, auto_commit=False):
-        if self._context.get('default_model') == 'purchase.order' and self._context.get('default_res_id'):
+        compose_internal = self.filtered('subtype_id.internal')
+        if self._context.get('default_model') == 'purchase.order' and self._context.get('default_res_id') and not compose_internal:
             order = self.env['purchase.order'].browse([self._context['default_res_id']])
             if order.state == 'draft':
                 order.state = 'sent'

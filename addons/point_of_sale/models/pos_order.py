@@ -456,6 +456,8 @@ class PosOrder(models.Model):
 
             inv = invoice._convert_to_write({name: invoice[name] for name in invoice._cache})
             new_invoice = Invoice.with_context(local_context).sudo().create(inv)
+            message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
+            new_invoice.message_post(body=message)            
             order.write({'invoice_id': new_invoice.id, 'state': 'invoiced'})
             Invoice += new_invoice
 
@@ -568,6 +570,8 @@ class PosOrder(models.Model):
                     'location_id': location_id if pos_qty else destination_id,
                     'location_dest_id': destination_id if pos_qty else location_id,
                 })
+                message = _("This transfer has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
+                picking_id.message_post(body=message)                
                 order.write({'picking_id': picking_id.id})
 
             for line in order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu']):

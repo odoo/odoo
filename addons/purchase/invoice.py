@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, fields, models
+from openerp import api, fields, models, _
 from openerp.tools.float_utils import float_compare
 
 
@@ -159,6 +159,26 @@ class AccountInvoice(models.Model):
             return diff_res
         return []
 
+    @api.model
+    def create(self, vals):
+        invoice = super(AccountInvoice, self).create(vals)
+        purchase = invoice.invoice_line_ids.mapped('purchase_line_id.order_id')
+        if purchase and not invoice.refund_invoice_id:
+            message = _("This vendor bill has been created from: %s") % (",".join(["<a href=# data-oe-model=purchase.order data-oe-id="+str(order.id)+">"+order.name+"</a>" for order in purchase]))
+            invoice.message_post(body=message)
+        return invoice
+
+    @api.multi
+    def write(self, vals):
+        purchase_old = self.invoice_line_ids.mapped('purchase_line_id.order_id')
+        invoice = super(AccountInvoice, self).write(vals)
+        purchase_new = self.invoice_line_ids.mapped('purchase_line_id.order_id')
+        #To get all po reference when updating invoice line or adding purchase order reference from vendor bill.
+        purchase = (purchase_old | purchase_new) - (purchase_old & purchase_new)
+        if purchase:
+            message = _("This vendor bill has been modified from: %s") % (",".join(["<a href=# data-oe-model=purchase.order data-oe-id="+str(order.id)+">"+order.name+"</a>" for order in purchase]))
+            self.message_post(body=message)
+        return invoice
 
 class AccountInvoiceLine(models.Model):
     """ Override AccountInvoice_line to add the link to the purchase order line it is related to"""

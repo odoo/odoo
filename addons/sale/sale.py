@@ -340,7 +340,7 @@ class SaleOrder(models.Model):
         inv_obj = self.env['account.invoice']
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         invoices = {}
-
+        references = {}
         for order in self:
             group_key = order.id if grouped else (order.partner_invoice_id.id, order.currency_id.id)
             for line in order.order_line.sorted(key=lambda l: l.qty_to_invoice < 0):
@@ -349,6 +349,7 @@ class SaleOrder(models.Model):
                 if group_key not in invoices:
                     inv_data = order._prepare_invoice()
                     invoice = inv_obj.create(inv_data)
+                    references[invoice] = order
                     invoices[group_key] = invoice
                 elif group_key in invoices:
                     vals = {}
@@ -361,6 +362,10 @@ class SaleOrder(models.Model):
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
                 elif line.qty_to_invoice < 0 and final:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
+
+            if references.get(invoices.get(group_key)):
+                if order not in references[invoices[group_key]]:
+                    references[invoice] = references[invoice] | order
 
         for invoice in invoices.values():
             if not invoice.invoice_line_ids:
@@ -376,7 +381,9 @@ class SaleOrder(models.Model):
             # Necessary to force computation of taxes. In account_invoice, they are triggered
             # by onchanges, which are not triggered when doing a create.
             invoice.compute_taxes()
-
+            invoice.message_post_with_view('mail.message_origin_link',
+                values={'self': invoice, 'origin': references[invoice]},
+                subtype_id=self.env.ref('mail.mt_note').id)
         return [inv.id for inv in invoices.values()]
 
     @api.multi
@@ -658,6 +665,9 @@ class SaleOrderLine(models.Model):
             vals = line._prepare_order_line_procurement(group_id=line.order_id.procurement_group_id.id)
             vals['product_qty'] = line.product_uom_qty - qty
             new_proc = self.env["procurement.order"].create(vals)
+            new_proc.message_post_with_view('mail.message_origin_link',
+                values={'self': new_proc, 'origin': line.order_id},
+                subtype_id=self.env.ref('mail.mt_note').id)
             new_procs += new_proc
         new_procs.run()
         return new_procs

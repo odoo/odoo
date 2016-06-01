@@ -141,11 +141,9 @@ class EventRegistration(models.Model):
     def create(self, vals):
         res = super(EventRegistration, self).create(vals)
         if res.origin or res.sale_order_id:
-            message = _("The registration has been created for event %(event_name)s%(ticket)s from sale order %(order)s") % ({
-                'event_name': '<i>%s</i>' % res.event_id.name,
-                'ticket': res.event_ticket_id and _(' with ticket %s') % (('<i>%s</i>') % res.event_ticket_id.name) or '',
-                'order': res.origin or res.sale_order_id.name})
-            res.message_post(body=message)
+            res.message_post_with_view('mail.message_origin_link',
+                values={'self': res, 'origin': res.sale_order_id},
+                subtype_id=self.env.ref('mail.mt_note').id)
         return res
 
     @api.model
