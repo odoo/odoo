@@ -322,6 +322,16 @@ var KanbanView = View.extend({
         if (this.options.action_buttons !== false && this.is_action_enabled('create')) {
             this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
             this.$buttons.on('click', 'button.o-kanban-button-new', this.add_record.bind(this));
+
+            // Set 'Create' button as btn-default if there is no column
+            if (this.grouped && this.widgets.length === 0) {
+                var $button_new = this.$buttons.find('.o-kanban-button-new');
+                $button_new.removeClass('btn-primary').addClass('btn-default');
+                this.once('new_column_added', this, function () {
+                    $button_new.removeClass('btn-default').addClass('btn-primary');
+                });
+            }
+
             this.$buttons.appendTo($node);
         }
     },
@@ -730,6 +740,7 @@ var KanbanView = View.extend({
             var column = new KanbanColumn(self, group_data, options, record_options);
             column.insertBefore(self.$('.o_column_quick_create'));
             self.widgets.push(column);
+            self.trigger('new_column_added', column);
             self.trigger_up('scrollTo', {selector: '.o_column_quick_create'});
         });
     },
