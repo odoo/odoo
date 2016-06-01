@@ -1,0 +1,92 @@
+@o-tip-background-color: #875a7b;
+
+.o_tooltip {
+    .o_breathing {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        z-index: @zindex-modal+1;
+        background-color: @o-tip-background-color;
+        .animation-duration(0.5s);
+        .animation-timing-function(ease-in);
+        .animation-iteration-count(infinite);
+        .animation-direction(alternate);
+        &.right, &.left {
+            .animation-name(move-left-right);
+        }
+        &.top, &.bottom {
+            .animation-name(move-bottom-top);
+        }
+
+        &::after {
+            content: '';
+            width: 0;
+            height: 0;
+        }
+        &.right::after {
+           .o-position-absolute(@left: -4px, @top: 5px);
+            border-right: 10px solid @o-tip-background-color;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+        }
+        &.top::after {
+            .o-position-absolute(@bottom: -4px, @left: 5px);
+            border-top: 10px solid @o-tip-background-color;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+        }
+        &.left::after {
+            .o-position-absolute(@right: -4px, @bottom: 5px);
+            border-left: 10px solid @o-tip-background-color;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+        }
+        &.bottom::after {
+           .o-position-absolute(@top: -4px, @right: 5px);
+            border-bottom: 10px solid @o-tip-background-color;
+            border-right: 10px solid transparent;
+            border-left: 10px solid transparent;
+        }
+
+        &::before {
+            .o-position-absolute(@top: 10px, @left: 10px);
+            content: '?';
+            width: 10px;
+            height: 10px;
+            font-size: 18px;
+            font-weight: 800;
+            line-height: 0.6;
+            color: lightgray;
+            border-radius: 50%;
+        }
+    }
+
+    .popover {
+        border: 2px solid @odoo-brand-primary;
+        &.right > .arrow {
+            border-right-color: @odoo-brand-primary;
+            left: -13px;
+            &::after {
+                border-left-width: 2px;
+            }
+        }
+        &.bottom > .arrow {
+            border-bottom-color: @odoo-brand-primary;
+            top: -13px;
+            &::after {
+                border-top-width: 2px;
+            }
+        }
+        .popover-content {
+            color: black;
+            text-align: justify;
+            .o_skip_tour {
+                display: inline-block;
+                margin-top: 5px;
+                cursor: pointer;
+                color: gray;
+            }
+       }
+    }
+}
