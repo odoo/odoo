@@ -33,7 +33,7 @@ odoo.define('web_editor.snippets.options', function (require) {
 
         // helper for this.$target.find
         $: function (selector) {
-            return this.$target(selector);
+            return this.$target.find(selector);
         },
 
         _bind_li_menu: function () {
@@ -90,7 +90,11 @@ odoo.define('web_editor.snippets.options', function (require) {
         start: function () {
             this.set_active();
             this.$target.on('snippet-option-reset', _.bind(this.set_active, this));
+            this.$target.on('applySnap', _.bind(this.on_undo, this));
             this._bind_li_menu();
+        },
+
+        on_undo: function () {
         },
 
         on_focus : function () {
@@ -610,6 +614,7 @@ odoo.define('web_editor.snippets.options', function (require) {
     registry.many2one = SnippetOption.extend({
         start: function () {
             var self = this;
+            this._super();
 
             this.type = this.type || 'many2one';
             this.Model = this.Model || this.$target.data('oe-many2one-model');
@@ -653,14 +658,23 @@ odoo.define('web_editor.snippets.options', function (require) {
             this.$ul.on('click', "li:not(:first) a", function (e) {
                 self.select_record($(this), e);
             });
+
+            if (!isNaN(this.ID)) {
+                this.$target.append($('<i class="oe-many2one-value"/>').hide().attr('data-id', this.ID).attr('data-name', this.$target.text()));
+            }
         },
 
         position: function () {
             this.$ul.css('top', 0).css('top', Math.max(-this.$ul.height(), 36-this.$ul.offset().top) + 'px');
         },
 
+        on_undo: function () {
+            this.select_record($('<a/>').data(this.$('i.oe-many2one-value').data()));
+        },
+
         on_focus: function () {
             this.$target.attr('contentEditable', 'false');
+            this.$target.trigger("activate");
             this.clear();
             this._super();
         },
@@ -680,14 +694,13 @@ odoo.define('web_editor.snippets.options', function (require) {
                 self.$search.siblings().remove();
                 return;
             }
-            if (isNaN(+name)) {
-                if (this.Model !== "res.partner") {
-                    domain.push(['name', 'ilike', name]);
-                } else {
-                    domain.push('|', ['name', 'ilike', name], ['email', 'ilike', name]);
-                }
+            if (this.Model !== "res.partner") {
+                domain.push(['name', 'ilike', name]);
             } else {
-                domain.push(['id', '=', name]);
+                domain.push('|', ['name', 'ilike', name], ['email', 'ilike', name]);
+            }
+            if (!isNaN(+name)) {
+                domain.unshift('|', ['id', '=', +name]);
             }
             return domain;
         },
@@ -726,7 +739,7 @@ odoo.define('web_editor.snippets.options', function (require) {
             });
         },
 
-        select_record: function ($a, e) {
+        select_record: function ($a) {
             var self = this;
 
             this.ID = +$a.data("id");
@@ -748,16 +761,18 @@ odoo.define('web_editor.snippets.options', function (require) {
                         self.get_contact_rendering($node.data('oe-contact-options'))
                             .then(function (html) {
                                 $node.html(html);
+                                $node.append($('<span class="oe-many2one-value"/>').hide().attr('data-id', self.ID));
                             });
                     });
             } else {
                 this.$target.html($a.data("name"));
+                this.$target.append($('<span class="oe-many2one-value"/>').hide().attr('data-id', this.ID).attr('data-name', $a.data("name")));
             }
 
             setTimeout(function () {
                 self.buildingBlock.make_active(false);
             },0);
-        }
+        },
     });
 
     registry.many2many = registry.many2one.extend({
@@ -766,6 +781,12 @@ odoo.define('web_editor.snippets.options', function (require) {
             this.Model = this.$target.data('oe-many2many-model');
             this.IDs = this.$target.data('oe-many2many-ids') || [];
             this._super();
+        },
+
+        on_undo: function () {
+            this.IDs = this.$('i.oe-many2many-value').data('ids');
+            this.$target.attr('data-oe-many2many-ids', JSON.stringify(this.IDs));
+            this.render();
         },
 
         on_focus: function () {
@@ -790,6 +811,7 @@ odoo.define('web_editor.snippets.options', function (require) {
                 var $div = self.$target.find('div');
                 var $html = $(html).attr("class", $div.attr("class"));
                 $div.html($html);
+                $div.append($('<i class="oe-many2many-value"/>').hide().attr('data-ids', JSON.stringify(self.IDs)));
             });
         },
 
@@ -799,6 +821,9 @@ odoo.define('web_editor.snippets.options', function (require) {
             var $target = $(e.target);
             var name = $a.data('display_name');
             var def = $.when();
+
+            this.buildingBlock.parent.rte.historyRecordUndo(this.$target);
+            this.$target.trigger('content_changed');
 
             if ($target.is('.fa-close')) {
                 this.IDs = _.without(this.IDs, id);

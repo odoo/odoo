@@ -141,8 +141,9 @@ var Tour = {
             }
         }
         this.time = new Date().getTime();
-        if (tour.path && !window.location.href.match(new RegExp("("+Tour.getLang()+")?"+tour.path+"#?$", "i"))) {
-            var href = Tour.getLang()+tour.path;
+        var path = tour.path ? (tour.path instanceof Function ? tour.path() : tour.path) : false;
+        if (path && !window.location.href.match(new RegExp("("+Tour.getLang()+")?"+path+"#?$", "i"))) {
+            var href = Tour.getLang()+path;
             Tour.saveState(tour.id, mode || tour.mode, -1, 0, 0, log || null);
             $(document).one("ajaxStop", Tour.running);
             window.location.href = href;

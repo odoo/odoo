@@ -14,17 +14,17 @@ class view(osv.osv):
     def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
         if isinstance(id_or_xml_id, list):
             id_or_xml_id = id_or_xml_id[0]
+
+        if not isinstance(id_or_xml_id, (int, long)):
+            if '.' not in id_or_xml_id:
+                raise ValueError('Invalid template id: %r' % (id_or_xml_id,))
+            id_or_xml_id = self.get_view_id(cr, uid, id_or_xml_id, context=context)
+
         if not values:
             values = {}
         if values.get('editable'):
             try:
-                if not isinstance(id_or_xml_id, (int, long)):
-                    if '.' not in id_or_xml_id:
-                        raise ValueError('Invalid template id: %r' % (id_or_xml_id,))
-                    id_or_xml_id = self.get_view_id(cr, uid, id_or_xml_id, context=context)
-
                 self.check_access_rule(cr, uid, [id_or_xml_id], 'write', context=context)
-
             except AccessError:
                 values['editable'] = False
 

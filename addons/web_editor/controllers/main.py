@@ -224,3 +224,50 @@ class Web_Editor(http.Controller):
     def many2many_tags(self, model, ids, **kwargs):
         kwargs.update(tag_ids=request.env[model].browse(ids), editable=True)
         return request.registry["ir.ui.view"].render(request.cr, request.uid, "web_editor.many2many_tags", kwargs, context=request.context)
+
+    #------------------------------------------------------
+    # Test web_editor and qweb fields
+    #------------------------------------------------------
+    @http.route('/web_editor/field/test', type='http', auth="user")
+    def FieldTest(self, model=None, res_id=None, field=None, callback=None, **kwargs):
+        for k in kwargs:
+            if isinstance(kwargs[k], basestring) and kwargs[k].isdigit():
+                kwargs[k] = int(kwargs[k])
+
+        if not model:
+            model = 'web_editor.converter.test'
+        if not res_id:
+            res_id = request.env[model].create({})
+
+        trans = dict(
+            lang=kwargs.get('lang', request.context.get('lang')),
+            translatable=kwargs.get('translatable'),
+            edit_translations=kwargs.get('edit_translations'),
+            editable=kwargs.get('enable_editor'),
+            inherit_branding=kwargs.get('enable_editor'),
+            snippets='/web_editor/snippets')
+
+        kwargs.update(trans)
+        kwargs['record'] = request.env[model].browse(int(res_id))
+        kwargs['request'] = request
+
+        name = 'web_editor.virtual_template_%s' % str(time.time()).replace('.', '_')
+        template = """
+            <?xml version="1.0" encoding="utf-8"?>
+            <template>
+                <t t-name="%s">
+                    <t t-call="web_editor.layout">
+                        <div id="wrap" style="width: 600px; margin: 40px auto;">
+                            <div t-field="record.%s">Default char content</div>
+                        </div>
+                    </t>
+                </t>
+            </template>
+            """.strip() % (name, isinstance(field, unicode) and field.encode('utf-8') or str(field),)
+
+        def loader(xmlid):
+            if xmlid == name:
+                return template
+            return request.env['ir.ui.view'].read_template(xmlid)
+
+        return request.env['ir.qweb'].with_context(trans).render(name, kwargs, loader=loader)

@@ -14,6 +14,7 @@ class test_converter(orm.Model):
         'float': fields.float(),
         'numeric': fields.float(digits=(16, 2)),
         'many2one': fields.many2one('web_editor.converter.test.sub'),
+        'many2many': fields.many2many('web_editor.converter.test.sub'),
         'binary': fields.binary(),
         'date': fields.date(),
         'datetime': fields.datetime(),
