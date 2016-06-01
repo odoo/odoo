@@ -630,7 +630,9 @@ odoo.define('web_editor.snippets.options', function (require) {
                 if (self.$overlay.find('.oe_options').hasClass('hidden')) {
                     self.$btn.css('height', '0').find('> a').addClass('hidden');
                     self.$ul.show().css({
-                        'top': '-24px', 'margin': '0', 'padding': '2px 0', 'position': 'relative'
+                        'margin': '0',
+                        'padding': '2px 0',
+                        'position': 'absolute'
                     });
                 } else {
                     self.$btn.find('a').on('click', function (e) {
@@ -651,6 +653,10 @@ odoo.define('web_editor.snippets.options', function (require) {
             this.$ul.on('click', "li:not(:first) a", function (e) {
                 self.select_record($(this), e);
             });
+        },
+
+        position: function () {
+            this.$ul.css('top', 0).css('top', Math.max(-this.$ul.height(), 36-this.$ul.offset().top) + 'px');
         },
 
         on_focus: function () {
@@ -704,6 +710,7 @@ odoo.define('web_editor.snippets.options', function (require) {
             }).then(function (result) {
                 self.$search.siblings().remove();
                 self.$search.after(qweb.render("web_editor." + self.type + ".search", {contacts:result, search:name, widget:self}));
+                self.position();
             });
         },
 
