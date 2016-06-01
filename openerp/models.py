@@ -4526,7 +4526,7 @@ class BaseModel(object):
                 domain = [('active', '=', 1)] + domain
 
         if domain:
-            e = expression.expression(self._cr, self._uid, domain, self._model, self._context)
+            e = expression.expression(domain, self)
             tables = e.get_tables()
             where_clause, where_params = e.to_sql()
             where_clause = [where_clause] if where_clause else []
