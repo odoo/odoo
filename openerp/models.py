@@ -3910,7 +3910,8 @@ class BaseModel(object):
                             # Inserting value to DB
                             context_wo_lang = dict(context, lang=None)
                             self.write(cr, user, ids, {f: vals[f]}, context=context_wo_lang)
-                        self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
+                        translation_value = self._columns[f]._symbol_set[1](vals[f])
+                        self.pool['ir.translation']._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, translation_value, src_trans)
 
         # invalidate and mark new-style fields to recompute; do this before
         # setting other fields, because it can require the value of computed
@@ -5756,6 +5757,7 @@ class BaseModel(object):
                         name: rec[name] for name in names
                     })
                     with rec.env.norecompute():
+                        map(rec._recompute_done, field.computed_fields)
                         rec._write(values)
                 except MissingError:
                     pass
@@ -5943,6 +5945,21 @@ class BaseModel(object):
 
         result = {'value': {}}
 
+        # special case for merging commands from *2many fields
+        # TODO: do not forward-port this in 9.0
+        def merge_commands(commands1, commands2):
+            # retrieve updates from commands1
+            updates = {cmd[1]: cmd[2] for cmd in commands1 if cmd[0] == 1}
+            # enrich commands2 with updates from commands1
+            commands = []
+            for cmd in commands2:
+                if cmd[0] == 1 and cmd[1] in updates:
+                    cmd = (1, cmd[1], dict(updates[cmd[1]], **cmd[2]))
+                elif cmd[0] == 4 and cmd[1] in updates:
+                    cmd = (1, cmd[1], updates[cmd[1]])
+                commands.append(cmd)
+            return commands
+
         # process names in order (or the keys of values if no name given)
         while todo:
             name = todo.pop(0)
@@ -5965,9 +5982,10 @@ class BaseModel(object):
                     newval = record[name]
                     if field.type in ('one2many', 'many2many'):
                         if newval != oldval or newval._is_dirty():
-                            # put new value in result
-                            result['value'][name] = field.convert_to_write(
-                                newval, record._origin, subfields.get(name),
+                            # merge new value into result
+                            result['value'][name] = merge_commands(
+                                result['value'].get(name, []),
+                                field.convert_to_write(newval, record._origin, subfields.get(name)),
                             )
                             todo.append(name)
                         else:

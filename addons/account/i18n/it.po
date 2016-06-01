@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2016-03-27 15:51+0000\n"
+"PO-Revision-Date: 2016-05-19 06:24+0000\n"
 "Last-Translator: Paolo Valier\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-8/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -91,7 +91,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Salve ${object.partner_id.name},</p>\n\n    <p>Una nuova fattura è disponibile: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>RIFERIMENTI</strong><br />\n       &nbsp;&nbsp;Numero fattura: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Totale fattura: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Data fattura: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Ordine di riferimento: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Vostro contatto: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>E' anche possibile pagare direttamente con Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Se avete domande, non esitate a contattarci in qualunque momento.</p>\n    <p>Grazie per aver scelto ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telefono:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Salve ${object.partner_id.name},</p>\n\n    <p>Una nuova fattura è disponibile: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>RIFERIMENTI</strong><br />\n       &nbsp;&nbsp;Numero fattura: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Totale fattura: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Data fattura: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Ordine di riferimento: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Vostro contatto: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>È anche possibile pagare direttamente con Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Se avete domande, non esitate a contattarci in qualunque momento.</p>\n    <p>Grazie per aver scelto ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telefono:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: help:account.invoice,state:0
@@ -378,7 +378,7 @@ msgid ""
 "                goes out of the cash box.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Fai click per creare un nuovo log di cassa.\n              </p><p>\n                Un Registro di cassa permette di gestire le entrate di cassa nel sezionale\n                di cassa. Questa funzione fornisce un facile mezzo per seguire i pagamenti\n                di cassa su una base giornaliera. E' possibile sia indicare il contante che c'è\n                in cassa, e quindi registrare quando i contanti entrano od escono dalla\n                cassa.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Fai click per creare un nuovo log di cassa.\n              </p><p>\n                Un Registro di cassa permette di gestire le entrate di cassa nel sezionale\n                di cassa. Questa funzione fornisce un facile mezzo per seguire i pagamenti\n                di cassa su una base giornaliera. È possibile sia indicare il contante che c'è\n                in cassa, e quindi registrare quando i contanti entrano od escono dalla\n                cassa.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_statement_operation_template
@@ -419,7 +419,7 @@ msgid ""
 "                entries to automate the postings in the system.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Fai click per definire una nuova voce ricorrente.\n              </p><p>\n                Una voce ricorrente avviene su base ricorrente ad una specifica\n                data, cioè corrispondente alla firma di un contratto o un accordo\n                con un cliente o un fornitore. E' possibile creare questi movimenti\n                per automatizzare le registrazioni nel sistema.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Fai click per definire una nuova voce ricorrente.\n              </p><p>\n                Una voce ricorrente avviene su base ricorrente ad una specifica\n                data, cioè corrispondente alla firma di un contratto o un accordo\n                con un cliente o un fornitore. È possibile creare questi movimenti\n                per automatizzare le registrazioni nel sistema.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_tax_code_list
@@ -857,7 +857,7 @@ msgstr "Sottoscrizione Conto"
 #. module: account
 #: model:ir.model,name:account.model_account_subscription_line
 msgid "Account Subscription Line"
-msgstr "Linea di Sottoscrizione Conti"
+msgstr "Riga di Sottoscrizione Conti"
 
 #. module: account
 #: view:account.tax:account.view_tax_form
@@ -1005,7 +1005,7 @@ msgstr "Periodo contabile"
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_vat
 msgid "Account tax"
-msgstr "Tassa del conto"
+msgstr "Imposta del conto"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_chart
@@ -1497,7 +1497,7 @@ msgstr "Statistiche scritture analitiche"
 #: model:ir.model,name:account.model_project_account_analytic_line
 #, python-format
 msgid "Analytic Entries by line"
-msgstr "Voci analitiche per linea"
+msgstr "Voci analitiche per riga"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_form
@@ -1558,7 +1558,7 @@ msgstr "Voce conto analitico"
 #: view:account.move.line:account.view_move_line_form
 #: view:account.move.line:account.view_move_line_form2
 msgid "Analytic Lines"
-msgstr "Linee analitiche"
+msgstr "Righe analitiche"
 
 #. module: account
 #: view:account.analytic.account:account.view_account_analytic_account_tree
@@ -1584,7 +1584,7 @@ msgstr "Applicabilità"
 #. module: account
 #: view:account.tax:account.view_tax_form
 msgid "Applicability Options"
-msgstr "Opzioni di applicabilita'"
+msgstr "Opzioni di applicabilità"
 
 #. module: account
 #: field:account.tax,python_applicable:0
@@ -1923,7 +1923,7 @@ msgstr "Conti bancari come stampati nel piede di ogni documento stampato"
 #. module: account
 #: field:account.config.settings,company_footer:0
 msgid "Bank accounts footer preview"
-msgstr "Anteprima pie' di pagina conti bancari"
+msgstr "Anteprima pié di pagina conti bancari"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_bank_and_cash
@@ -2170,7 +2170,7 @@ msgstr "Non è possibile %s una fattura bozza/proforma/annullata."
 msgid ""
 "Cannot %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only refund this invoice."
-msgstr "Non è possibile %s fattura che è già riconciliata, la fattura dovrebbe essere prima riconciliata. E' possibile solo emettere nota di credito per questa fattura."
+msgstr "Non è possibile %s fattura che è già riconciliata, la fattura dovrebbe essere prima riconciliata. È possibile solo emettere nota di credito per questa fattura."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1299
@@ -3657,7 +3657,7 @@ msgstr "Valuta di default aziendale"
 #: field:account.config.settings,default_purchase_tax:0
 #: field:account.config.settings,purchase_tax:0
 msgid "Default purchase tax"
-msgstr "Tassa di default sugli acquisti"
+msgstr "Imposta di default sugli acquisti"
 
 #. module: account
 #: field:account.config.settings,default_sale_tax:0
@@ -4058,7 +4058,7 @@ msgstr "Analisi registrazioni"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_project_account_analytic_line_form
 msgid "Entries By Line"
-msgstr "Registrazioni per Linea"
+msgstr "Registrazioni per Riga"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -4806,7 +4806,7 @@ msgstr "Calcolato con codice Python"
 #. module: account
 #: help:account.invoice.line,sequence:0
 msgid "Gives the sequence of this line when displaying the invoice."
-msgstr "Assegna la sequenza di questa linea quando visualizza la fattura."
+msgstr "Assegna la sequenza di questa riga quando visualizza la fattura."
 
 #. module: account
 #: help:account.bank.statement.line,sequence:0
@@ -4915,7 +4915,7 @@ msgstr "Ha un'azienda di default"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "Gestisce il sommario (numero di messaggi, ...) di Chatter. Questo sommario è direttamente in html così da poter essere inserito nelle viste kanban."
+msgstr "Contiene il riepilogo Chatter (numero di messaggi, ...). Questa sintesi è direttamente in formato HTML, al fine di essere inserita nelle viste kanban."
 
 #. module: account
 #: field:account.account,id:0 field:account.account.template,id:0
@@ -5036,7 +5036,7 @@ msgstr "Se spuntato, il nuovo piano dei conti non conterrà questo di default."
 msgid ""
 "If not applicable (computed through a Python code), the tax won't appear on "
 "the invoice."
-msgstr "Se non applicabile (calcolato attraverso una procedura Python), la tassa non appare sulla fattura"
+msgstr "Se non applicabile (calcolato attraverso una procedura Python), l'imposta non appare sulla fattura."
 
 #. module: account
 #: help:account.move.line,tax_amount:0
@@ -5072,14 +5072,14 @@ msgstr "Se impostato come \"falso\", permette di nascondere il periodo fiscale d
 msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "term without removing it."
-msgstr "Se il campo e' impostato su 'No', permette di nascondere i termini di pagamento senza eliminarli."
+msgstr "Se il campo è impostato su 'No', permette di nascondere i termini di pagamento senza eliminarli."
 
 #. module: account
 #: help:account.tax,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the tax "
 "without removing it."
-msgstr "Se il campo viene impostato a 'falso' permette di nascondere la tassa senza eliminarla."
+msgstr "Se il campo viene impostato a 'falso' permette di nascondere l'imposta senza eliminarla."
 
 #. module: account
 #: help:account.journal,group_invoice_lines:0
@@ -5113,7 +5113,7 @@ msgid ""
 "this total tax amount will be rounded. If you sell with tax included, you "
 "should choose 'Round per line' because you certainly want the sum of your "
 "tax-included line subtotals to be equal to the total amount with taxes."
-msgstr "Se è selezionato 'Arrotondamento per Riga' : per ogni imposta, l'ammontare dell'imposta sarà prima calcolato e arrotondato per ogni riga di Ordine d'aquisto/Ordine di vendita/fattura e poi questi ammontari arrotondati saranno sommati, formando quindi l'ammontare totale per quella tassa. Se è selezionato 'Arrotondamento sul Totale': per ogni imposta, il totale dell'imposta sarà calcolato per ogni riga di Ordine d'aquisto/Ordine di vendita/fattura, poi questi ammontari saranno sommati e infine questo somma totale sarà arrotondata. Se le vendite vengono effettuate con l'imposta compresa, sarebbe meglio selezionare 'Arrotondamento per riga' perchè l'ammontare totale dei sub-totali delle righe compreso l'imposta sarà uguale al totale imposte comprese."
+msgstr "Se è selezionato 'Arrotondamento per Riga' : per ogni imposta, l'ammontare dell'imposta sarà prima calcolato e arrotondato per ogni riga di Ordine d'acquisto/Ordine di vendita/fattura e poi questi importi arrotondati saranno sommati, formando quindi l'ammontare totale per quella imposta. Se è selezionato 'Arrotondamento sul Totale': per ogni imposta, il totale dell'imposta sarà calcolato per ogni riga di Ordine d'acquisto/Ordine di vendita/fattura, poi questi importi saranno sommati e infine questo somma totale sarà arrotondata. Se le vendite vengono effettuate con l'imposta compresa, sarebbe meglio selezionare 'Arrotondamento per riga' perché l'ammontare totale dei sub-totali delle righe compreso l'imposta sarà uguale al totale imposte comprese."
 
 #. module: account
 #: help:account.config.settings,tax_calculation_rounding_method:0
@@ -5126,7 +5126,7 @@ msgid ""
 "this total tax amount will be rounded. If you sell with tax included, you "
 "should choose 'Round per line' because you certainly want the sum of your "
 "tax-included line subtotals to be equal to the total amount with taxes."
-msgstr "Se è selezionato 'Arrotondamento per Riga' : per ogni imposta, l'ammontare dell'imposta sarà prima calcolato e arrotondato per ogni riga di Ordine d'aquisto/Ordine di vendita/fattura e poi questi ammontari arrotondati saranno sommati, formando quindi l'ammontare totale per quella tassa. Se è selezionato 'Arrotondamento sul Totale': per ogni imposta, il totale dell'imposta sarà calcolato per ogni riga di Ordine d'aquisto/Ordine di vendita/fattura, poi questi ammontari saranno sommati e infine questo somma totale sarà arrotondata. Se le vendite vengono effettuate con l'imposta compresa, sarebbe meglio selezionare 'Arrotondamento per riga' perchè l'ammontare totale dei sub-totali delle righe compreso l'imposta sarà uguale al totale imposte comprese."
+msgstr "Se è selezionato 'Arrotondamento per Riga' : per ogni imposta, l'ammontare dell'imposta sarà prima calcolato e arrotondato per ogni riga di Ordine d'acquisto/Ordine di vendita/fattura e poi questi importi arrotondati saranno sommati, formando quindi l'ammontare totale per quella imposta. Se è selezionato 'Arrotondamento sul Totale': per ogni imposta, il totale dell'imposta sarà calcolato per ogni riga di Ordine d'acquisto/Ordine di vendita/fattura, poi questi importi saranno sommati e infine questo somma totale sarà arrotondata. Se le vendite vengono effettuate con l'imposta compresa, sarebbe meglio selezionare 'Arrotondamento per riga' perché l'ammontare totale dei sub-totali delle righe compreso l'imposta sarà uguale al totale imposte comprese."
 
 #. module: account
 #: help:account.partner.ledger,initial_balance:0
@@ -5278,7 +5278,7 @@ msgstr "Vista Ricavi"
 msgid ""
 "Indicates if the amount of tax must be included in the base amount for the "
 "computation of the next taxes"
-msgstr "Indica se l'ammontare dell'imposta deve essere incluso nell'imponibile per il calcolo delle tasse successive."
+msgstr "Indica se l'ammontare dell'imposta deve essere incluso nell'imponibile per il calcolo delle imposte successive."
 
 #. module: account
 #: view:account.move:account.view_move_form
@@ -5467,7 +5467,7 @@ msgstr "Stato Fattura"
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
 msgid "Invoice Tasks by Month"
-msgstr ""
+msgstr "Fattura le Attività per Mese"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_tax
@@ -5589,7 +5589,7 @@ msgstr "Fatture e Pagamenti"
 #: field:account.bank.statement,message_is_follower:0
 #: field:account.invoice,message_is_follower:0
 msgid "Is a Follower"
-msgstr "E' un Follower"
+msgstr "È un Follower"
 
 #. module: account
 #: help:account.move.reconcile,opening_reconciliation:0
@@ -6229,7 +6229,7 @@ msgstr "Liquidità"
 #. module: account
 #: help:account.chart.template,tax_template_ids:0
 msgid "List of all the taxes that have to be installed by the wizard"
-msgstr "Elenco di tutte le imposte che devono essere installate dal wizard"
+msgstr "Elenco di tutte le imposte che devono essere installate dalla procedura guidata"
 
 #. module: account
 #: code:addons/account/account_cash_statement.py:306
@@ -6835,7 +6835,7 @@ msgstr "Solo Un Piano dei Conti Disponibile"
 #: code:addons/account/account.py:3392 code:addons/account/res_config.py:305
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr "Solo un amministratore puo' cambiare le impostazioni"
+msgstr "Solo un amministratore può cambiare le impostazioni"
 
 #. module: account
 #. openerp-web
@@ -7530,7 +7530,7 @@ msgstr "Creare voci della fattura"
 #: code:addons/account/account.py:1321
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr "E' necessario definire una sequenza per il sezionale."
+msgstr "È necessario definire una sequenza per il sezionale."
 
 #. module: account
 #: code:addons/account/account_invoice.py:797
@@ -7720,7 +7720,7 @@ msgstr "Unità di Misura Prodotto"
 #. module: account
 #: field:account.entries.report,quantity:0
 msgid "Products Quantity"
-msgstr "Quantita' dei prodotti"
+msgstr "Quantità dei prodotti"
 
 #. module: account
 #: code:addons/account/account_cash_statement.py:306
@@ -7788,7 +7788,7 @@ msgstr "Avanzamento"
 #. module: account
 #: view:account.analytic.line:account.account_analytic_line_extended_form
 msgid "Project line"
-msgstr "LInea di Progetto"
+msgstr "Riga di Progetto"
 
 #. module: account
 #: view:account.chart.template:account.view_account_chart_template_form
@@ -8237,7 +8237,7 @@ msgstr "Elimina righe"
 #: field:account.fiscal.position.tax,tax_dest_id:0
 #: field:account.fiscal.position.tax.template,tax_dest_id:0
 msgid "Replacement Tax"
-msgstr "Tassa corrispondente"
+msgstr "Imposta sostitutiva"
 
 #. module: account
 #: view:account.financial.report:account.view_account_financial_report_form
@@ -8768,7 +8768,7 @@ msgstr "Selezionare se l'importo dell'imposta debba essere incluso nell'importo 
 msgid ""
 "Set if the tax computation is based on the computation of child taxes rather"
 " than on the total amount."
-msgstr "Indica se il calcolo della tassa è basato sul conteggio delle tasse \"figlio\" invece che sul totale importo."
+msgstr "Indica se il calcolo dell'imposta è basato sul conteggio delle imposte \"figlio\" invece che sul totale importo."
 
 #. module: account
 #: help:account.tax,account_collected_id:0
@@ -8807,7 +8807,7 @@ msgid ""
 " wizard that generate Chart of Accounts from templates, this is useful when "
 "you want to generate accounts of this template only when loading its child "
 "template."
-msgstr "Impostare a Falso se si desidera che questo template non venga utilizzato nel wizard che genera il piano dei conti dai templates, ciò è utile quando si desidera creare conti di questo template solamente quando viene caricato il suo template figlio."
+msgstr "Impostare a Falso se si desidera che questo template non venga utilizzato nella procedura guidata che genera il piano dei conti dai templates, ciò è utile quando si desidera creare conti di questo template solamente quando viene caricato il suo template figlio."
 
 #. module: account
 #: view:account.invoice:account.invoice_supplier_form
@@ -9090,7 +9090,7 @@ msgstr "Computazione del canone"
 #: view:account.subscription:account.view_subscription_form
 #: field:account.subscription,lines_id:0
 msgid "Subscription Lines"
-msgstr "Linee sottoscritte"
+msgstr "Righe sottoscritte"
 
 #. module: account
 #: view:account.subscription.line:account.view_subscription_line_form
@@ -9308,12 +9308,12 @@ msgstr "Importo codice imposta"
 #. module: account
 #: field:account.tax,tax_sign:0 field:account.tax.template,tax_sign:0
 msgid "Tax Code Sign"
-msgstr "Segno Tassa"
+msgstr "Segno Imposta"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_code_template
 msgid "Tax Code Template"
-msgstr "Template di codici tassa"
+msgstr "Template di codici imposta"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_code_template_form
@@ -9352,7 +9352,7 @@ msgstr "Descrizione imposta"
 #: field:account.tax,price_include:0
 #: field:account.tax.template,price_include:0
 msgid "Tax Included in Price"
-msgstr "Tassa compresa nel prezzo"
+msgstr "Imposta compresa nel prezzo"
 
 #. module: account
 #: field:account.invoice,tax_line:0
@@ -9413,7 +9413,7 @@ msgstr "Tipo imposta"
 #. module: account
 #: field:account.tax.template,type_tax_use:0
 msgid "Tax Use In"
-msgstr "Tassa usata per"
+msgstr "Imposta usata per"
 
 #. module: account
 #: code:addons/account/account_invoice.py:729
@@ -9533,7 +9533,7 @@ msgstr "Template per la contabilità"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr "Modelli per tasse"
+msgstr "Modelli per Imposte"
 
 #. module: account
 #: field:account.payment.term,line_ids:0
@@ -9565,7 +9565,7 @@ msgstr "Il conto può essere relativo sia ad un codice imposte per imponibile ch
 #. module: account
 #: help:account.invoice.tax,base_code_id:0
 msgid "The account basis of the tax declaration."
-msgstr "Il conto si basa sulla denuncia della tassa"
+msgstr "Il conto si basa sulla dichiarazione dell'imposta."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:333
@@ -9782,7 +9782,7 @@ msgstr "La valuta secondaria facoltativa se si tratta di una registrazione multi
 msgid ""
 "The optional quantity expressed by this line, eg: number of product sold. "
 "The quantity is not a legal requirement but is very useful for some reports."
-msgstr "La quantita' (opzionale) relativa alla registrazione, non serve ai fini legali, ma e' utile nei report."
+msgstr "La quantità (opzionale) relativa alla registrazione, non serve ai fini legali, ma è utile nei report."
 
 #. module: account
 #: help:account.model.line,quantity:0
@@ -9819,7 +9819,7 @@ msgstr "Il numero della fattura come assegnato dal fornitore."
 #. module: account
 #: help:account.analytic.line,currency_id:0
 msgid "The related account currency if not equal to the company one."
-msgstr "La valuta del conto non e' eguale a quella dell'azienda."
+msgstr "La valuta del conto non è eguale a quella dell'azienda."
 
 #. module: account
 #: help:account.move.line,amount_residual_currency:0
@@ -9864,7 +9864,7 @@ msgid ""
 "The sequence field is used to order the tax lines from the lowest sequences "
 "to the higher ones. The order is important if you have a tax with several "
 "tax children. In this case, the evaluation order is important."
-msgstr "Il campo delle sequenze è usato per ordinare le linee delle imposte dalla più bassa alla più alta. L'ordine è importante se si ha un'imposta con differenti sotto-imposte figlie. in questo caso, l'ordine di valutazione è importante."
+msgstr "Il campo delle sequenze è usato per ordinare le righe delle imposte dalla più bassa alla più alta. L'ordine è importante se si ha un'imposta con differenti sotto-imposte figlie. in questo caso, l'ordine di valutazione è importante."
 
 #. module: account
 #: help:account.tax.template,sequence:0
@@ -9872,7 +9872,7 @@ msgid ""
 "The sequence field is used to order the taxes lines from lower sequences to "
 "higher ones. The order is important if you have a tax that has several tax "
 "children. In this case, the evaluation order is important."
-msgstr "Il campo sequenza è usato per ordinare le linee delle imposte dalla più piccola alla più grande. Questo ordinamento è importante se hai delle imposte che hanno imposte \"figlio\". In questo caso, l'ordine con cui vendono valutate è importante."
+msgstr "Il campo sequenza è usato per ordinare le righe delle imposte dalla più piccola alla più grande. Questo ordinamento è importante se hai delle imposte che hanno imposte \"figlio\". In questo caso, l'ordine con cui vendono valutate è importante."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:309
@@ -9885,7 +9885,7 @@ msgstr "Il saldo dell'estratto conto non è corretto!\nIl saldo previsto (%.2f) 
 #. module: account
 #: help:account.invoice.tax,tax_code_id:0
 msgid "The tax basis of the tax declaration."
-msgstr "L'imponibile della tassa"
+msgstr "L'imposta si basa sulla dichiarazione dellimposta."
 
 #. module: account
 #: help:account.journal,user_id:0
@@ -9898,7 +9898,7 @@ msgid ""
 "The validation of journal entries process is also called 'ledger posting' "
 "and is the process of transferring debit and credit amounts from a journal "
 "of original entry to a ledger book."
-msgstr "Il processo di convalida delle voci nel sezionale è anche chiamato 'registrazione contabile' ed è il processo di trasferimento dei debiti e crediti dal sezionale dei movimenti  d'origine al libro mastro."
+msgstr "Il processo di convalida delle voci nel sezionale è anche chiamato 'registrazione contabile' ed è il processo di trasferimento dei debiti e crediti dal sezionale dei movimenti d'origine al libro mastro."
 
 #. module: account
 #: code:addons/account/installer.py:114
@@ -10156,7 +10156,7 @@ msgstr "Questo campo viene utilizzato solamente se si sta sviluppando un proprio
 msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
-msgstr "Questo campo viene utilizzato per le voci di sezionale debitorie e creditorie. È possibile inserire la data limite per il pagamento di questa linea."
+msgstr "Questo campo viene utilizzato per le voci di sezionale debitorie e creditorie. È possibile inserire la data limite per il pagamento di questa riga."
 
 #. module: account
 #: help:account.account.type,report_type:0
@@ -10343,7 +10343,7 @@ msgstr "Questo permetterà di selezionare come viene calcolato l'attuale tasso d
 #. module: account
 #: view:account.change.currency:account.view_account_change_currency
 msgid "This wizard will change the currency of the invoice"
-msgstr "Il Wizard cambierà la valuta della fattura"
+msgstr "La Procedura guidata cambierà la valuta della fattura"
 
 #. module: account
 #: view:account.fiscalyear.close:account.view_account_fiscalyear_close
@@ -10351,21 +10351,21 @@ msgid ""
 "This wizard will generate the end of year journal entries of selected fiscal"
 " year. Note that you can run this wizard many times for the same fiscal "
 "year: it will simply replace the old opening entries with the new ones."
-msgstr "Questo wizard genera le scritture nel sezionale di chiusura dell'anno fiscale selezionato. Nota che si puo'  far correre il wizard piu' volte per lo stesso anno fiscale, semplicemente le vecchie registrazioni vengono sostituite dalle nuove."
+msgstr "Questa procedura guidata genera le scritture nel sezionale di chiusura dell'anno fiscale selezionato. Nota che si può eseguire la procedura guidata più volte per lo stesso anno fiscale, semplicemente le vecchie registrazioni vengono sostituite dalle nuove."
 
 #. module: account
 #: view:account.open.closed.fiscalyear:account.view_account_open_closed_fiscalyear
 msgid ""
 "This wizard will remove the end of year journal entries of selected fiscal "
 "year. Note that you can run this wizard many times for the same fiscal year."
-msgstr "Questo wizard rimuoverà le registrazioni di fine anno dall'anno fiscale selezionato. Notare che è possibile avviare questo wizard diverse volte per lo stesso anno fiscale."
+msgstr "Questa procedura guidata rimuoverà le registrazioni di fine anno dall'anno fiscale selezionato. Notare che è possibile eseguire questa procedura guidata diverse volte per lo stesso anno fiscale."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_validate_account_move_line
 msgid ""
 "This wizard will validate all journal entries of a particular journal and "
 "period. Once journal entries are validated, you can not update them anymore."
-msgstr "Questo wizard rende valide tutte le registrazoni di un particolare sezionale o periodo. Una volta che questo è stato fatto non si possono più fare modifiche."
+msgstr "Questa procedura guidata rende valide tutte le registrazioni di un particolare sezionale o periodo. Una volta che questo è stato fatto non si possono più fare modifiche."
 
 #. module: account
 #. openerp-web
@@ -10791,7 +10791,7 @@ msgstr "Imponibile"
 #: view:account.invoice:account.invoice_tree
 #: view:report.invoice.created:account.board_view_created_invoice
 msgid "Untaxed Amount"
-msgstr "Importo non tassato"
+msgstr "Imponibile"
 
 #. module: account
 #: view:account.use.model:account.view_account_use_model_create_entry
@@ -10926,7 +10926,7 @@ msgstr "Vista"
 #. module: account
 #: view:project.account.analytic.line:account.view_project_account_analytic_line_form
 msgid "View Account Analytic Lines"
-msgstr "Visualizza linee contabili analitiche"
+msgstr "Visualizza righe contabili analitiche"
 
 #. module: account
 #. openerp-web
@@ -11038,7 +11038,7 @@ msgstr "Con i movimenti"
 #. module: account
 #: view:account.statement.operation.template:account.view_account_statement_operation_template_search
 msgid "With tax"
-msgstr "Con tassa"
+msgstr "Con imposta"
 
 #. module: account
 #: help:account.config.settings,module_product_email_template:0
@@ -11137,7 +11137,7 @@ msgstr ""
 msgid ""
 "You can check this box to mark this journal item as a litigation with the "
 "associated partner"
-msgstr "Spuntare la casella se la registrazione e' in contestazione con il partner"
+msgstr "Spuntare la casella se la registrazione è in contestazione con il partner"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1246
@@ -11168,12 +11168,12 @@ msgstr ""
 #: code:addons/account/wizard/account_change_currency.py:38
 #, python-format
 msgid "You can only change currency for Draft Invoice."
-msgstr "E' possibile cambiare solo la vauta per le Fatture in stato Bozza"
+msgstr "È possibile cambiare solo la vauta per le Fatture in stato Bozza"
 
 #. module: account
 #: constraint:account.move.reconcile:0
 msgid "You can only reconcile journal items with the same partner."
-msgstr "E' possibile solo riconciliare registrazioni contabili con lo stesso partnere."
+msgstr "È possibile solo riconciliare registrazioni contabili con lo stesso partnere."
 
 #. module: account
 #: help:account.invoice.refund,journal_id:0
@@ -11181,7 +11181,7 @@ msgid ""
 "You can select here the journal to use for the credit note that will be "
 "created. If you leave that field empty, it will use the same journal as the "
 "current invoice."
-msgstr "E' possibile selezionare qui il sezionale da utilizzare per le note di credito che saranno create. Se questa casella viene lasciata vuota, verrà utilizzato lo stesso sezionale della fattura corrente."
+msgstr "È possibile selezionare qui il sezionale da utilizzare per le note di credito che saranno create. Se questa casella viene lasciata vuota, verrà utilizzato lo stesso sezionale della fattura corrente."
 
 #. module: account
 #: help:account.financial.report,style_overwrite:0
@@ -11197,7 +11197,7 @@ msgid ""
 "You can specify here the coefficient that will be used when consolidating "
 "the amount of this case into its parent. For example, set 1/-1 if you want "
 "to add/substract it."
-msgstr "Quì è possibile specificare il coefficiente che verrà usato per il consolidamento dell'importonel mastro. Per esempio, impostare 1/-1 se si vuole aggiungere/sottrarre l'importo."
+msgstr "Qui è possibile specificare il coefficiente che verrà usato per il consolidamento dell'importo di questo nel genitore. Per esempio, impostare 1/-1 se si vuole aggiungere/sottrarre l'importo."
 
 #. module: account
 #: code:addons/account/account.py:2293
@@ -11210,7 +11210,7 @@ msgid ""
 "%(date)s: Current Date\n"
 "\n"
 "e.g. My model on %(date)s"
-msgstr "Si puo' specificare anno,mese e data nel nome del modello, usando :\n%(year)s: per specificare l'anno\n%(month)s: per il mese \n%(date)s: indica la data corrente\n\nEsempio: Il mio modello del %(date)s"
+msgstr "È possibile specificare anno, mese e data nel nome del modello, usando :\n\n%(year)s: per specificare l'anno\n%(month)s: per il mese \n%(date)s: per la data corrente\n\nEsempio: Il mio modello del %(date)s"
 
 #. module: account
 #: code:addons/account/account_invoice.py:996
@@ -11218,7 +11218,7 @@ msgstr "Si puo' specificare anno,mese e data nel nome del modello, usando :\n%(y
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
-msgstr "Non è possibile eliminare una fattura che è parzialmente pagata. E' necessario prima annullare la riconciliazione dei relativi pagamenti."
+msgstr "Non è possibile eliminare una fattura che è parzialmente pagata. È necessario prima annullare la riconciliazione dei relativi pagamenti."
 
 #. module: account
 #: code:addons/account/account.py:691
@@ -11330,7 +11330,7 @@ msgstr "Non è possibile cancellare una fattura che non sia bozza o annullata. D
 msgid ""
 "You cannot do this modification on a confirmed entry. You can just change some non legal fields or you must unconfirm the journal entry first.\n"
 "%s."
-msgstr "Non è possibile applicare questa modifica su una registrazione confermata. E' possibile solamente modificare alcuni dati non legali altrimenti è necessario annullare le registrazioni sezionali prima.\n%s."
+msgstr "Non è possibile applicare questa modifica su una registrazione confermata. È possibile solamente modificare alcuni dati non legali altrimenti è necessario annullare le registrazioni sezionali prima.\n%s."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1236
@@ -11338,7 +11338,7 @@ msgstr "Non è possibile applicare questa modifica su una registrazione conferma
 msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
-msgstr "Non è possibile fare questa modifica su una registrazione riconciliata. E' possibile cambiare solo alcuni campi non fiscali, altrimenti è necessario prima annullare la riconciliazione.\n%s."
+msgstr "Non è possibile fare questa modifica su una registrazione riconciliata. È possibile cambiare solo alcuni campi non fiscali, altrimenti è necessario prima annullare la riconciliazione.\n%s."
 
 #. module: account
 #: code:addons/account/account.py:1352
@@ -11457,7 +11457,7 @@ msgstr "Bisogna definire il conto bancario\nnella definizione del sezionale per 
 #, python-format
 msgid ""
 "You have to provide an account for the write off/exchange difference entry."
-msgstr "E' necessario fornire un conto per le registrazioni di storni/differenze di cambio."
+msgstr "È necessario fornire un conto per le registrazioni di storni/differenze di cambio."
 
 #. module: account
 #: code:addons/account/account.py:3531
@@ -11465,7 +11465,7 @@ msgstr "E' necessario fornire un conto per le registrazioni di storni/differenze
 msgid ""
 "You have to set a code for the bank account defined on the selected chart of"
 " accounts."
-msgstr "E' necessario selezionare un codice per il conto bancario definito sul piano dei conti selezionato."
+msgstr "È necessario selezionare un codice per il conto bancario definito sul piano dei conti selezionato."
 
 #. module: account
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:39
@@ -11474,7 +11474,7 @@ msgid ""
 "You have to set the 'End  of Year Entries Journal' for this Fiscal Year "
 "which is set after generating opening entries from 'Generate Opening "
 "Entries'."
-msgstr "E' necessario impostare il 'Giornale di chiusura' per questo Anno Fiscale che è creato dopo aver generato le scritture di apertura con 'Crea le scritture di apertura\"."
+msgstr "È necessario impostare il 'Giornale di chiusura' per questo Anno Fiscale che è creato dopo aver generato le scritture di apertura con 'Crea le scritture di apertura\"."
 
 #. module: account
 #. openerp-web
@@ -11488,7 +11488,7 @@ msgstr "È necessario bilanciare la riconciliazione"
 #: code:addons/account/static/src/js/account_widgets.js:1807
 #, python-format
 msgid "You must choose at least one record."
-msgstr "E' necessario selezionare almeno un record."
+msgstr "È necessario selezionare almeno un record."
 
 #. module: account
 #: code:addons/account/account_invoice.py:95
@@ -11506,19 +11506,19 @@ msgstr "Devi prima selezionare un partner!"
 #: code:addons/account/wizard/account_automatic_reconcile.py:154
 #, python-format
 msgid "You must select accounts to reconcile."
-msgstr "E' necessario selezionare i conti da riconciliare."
+msgstr "È necessario selezionare i conti da riconciliare."
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:57
 #, python-format
 msgid "You must set a period length greater than 0."
-msgstr "E' necessario impostare una durata del periodo maggiore di 0."
+msgstr "È necessario impostare una durata del periodo maggiore di 0."
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:59
 #, python-format
 msgid "You must set a start date."
-msgstr "E' necessario impostare una data iniziale."
+msgstr "È necessario impostare una data iniziale."
 
 #. module: account
 #: code:addons/account/account.py:422
@@ -11526,7 +11526,7 @@ msgstr "E' necessario impostare una data iniziale."
 msgid ""
 "You need an Opening journal with centralisation checked to set the initial "
 "balance."
-msgstr "E' necessario un Sezionale di apertura configurato con la centralizzazione per configurare il saldo iniziale."
+msgstr "È necessario un Sezionale di apertura configurato con la centralizzazione per configurare il saldo iniziale."
 
 #. module: account
 #: code:addons/account/account.py:1080

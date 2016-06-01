@@ -7,7 +7,7 @@
 # Jan-Erik Finlander, 2015
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2015-2016
 # Jussi Lehto <jussi@gulfeo.com>, 2015
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2015-2016
 # Kari Lindgren <karisatu@gmail.com>, 2015
 # Mika Karvinen <karvinenm@gmail.com>, 2015
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2015
@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2016-04-08 05:27+0000\n"
+"PO-Revision-Date: 2016-05-12 06:33+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -494,7 +494,7 @@ msgid ""
 "                would be referred to as FY 2011.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikkaa aloittaaksesi uuden tilikauden.\n</p><p>\nMääritä yrityksen tilikausi tarpeen mukaan. Tilikausi on jakso, jonka lopussa tehdään yrityksen tilinpäätös (yleensä 12 kuukautta). Tilikauteen viitataan yleensä sen päättymispäivällä. Jos yrityksen tilikausi päättyy esimerkiksi 30. marraskuuta 2011, kaikki välillä 1. Joulukuta 2010 ja 30. marraskuuta 2011 kuuluisi tilikauteen 2011.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_moves_all_a
@@ -2254,7 +2254,7 @@ msgstr "Käteinen"
 #: view:account.bank.statement:account.view_bank_statement_form2
 #: field:account.journal,cash_control:0
 msgid "Cash Control"
-msgstr ""
+msgstr "Käteiskontrolli"
 
 #. module: account
 #: view:account.journal:account.view_account_journal_form
@@ -2546,7 +2546,7 @@ msgstr "Valitse määrittääksesi, että yksikään kirjaus tähän päiväkirj
 msgid ""
 "Check this if the price you use on the product and invoices includes this "
 "tax."
-msgstr "Tarkista sisältääkö tuotteen hinta veron"
+msgstr "Valitse tämä jos tuotteessa käytetty hinta sisältää tämän veron."
 
 #. module: account
 #: help:account.account.template,reconcile:0
@@ -3610,7 +3610,7 @@ msgstr "Debettien keskitys"
 #. module: account
 #: field:account.move.line.reconcile,debit:0
 msgid "Debit amount"
-msgstr "Debet ,äärä"
+msgstr "Debet määrä"
 
 #. module: account
 #: selection:report.account.sales,month:0
@@ -3766,7 +3766,7 @@ msgstr "Näytä Debet/Kredit-sarakkeet"
 #. module: account
 #: field:account.vat.declaration,display_detail:0
 msgid "Display Detail"
-msgstr "Näytä tiedot"
+msgstr "Näytä tilikohtaiset tiedot"
 
 #. module: account
 #: help:account.partner.ledger,page_split:0
@@ -4733,7 +4733,7 @@ msgstr "Yleinen"
 #: view:analytic.entries.report:account.view_analytic_entries_report_search
 #: field:analytic.entries.report,general_account_id:0
 msgid "General Account"
-msgstr "Yleinen tili"
+msgstr "Yleistili"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_form
@@ -6455,7 +6455,7 @@ msgstr "Siirto"
 #. module: account
 #: field:account.analytic.line,move_id:0
 msgid "Move Line"
-msgstr "Siirtymärivi"
+msgstr "Kirjausrivi"
 
 #. module: account
 #: view:website:account.report_analyticjournal
@@ -8778,14 +8778,14 @@ msgstr "Määritä perustuuko verojen laskenta alemmille veroille vai loppusumma
 msgid ""
 "Set the account that will be set by default on invoice tax lines for "
 "invoices. Leave empty to use the expense account."
-msgstr ""
+msgstr "Aseta tili jota käytetään oletuksena laskuriveillä. Jätä tyhjäksi käyttääksi oletuskulutiliä."
 
 #. module: account
 #: help:account.tax,account_paid_id:0
 msgid ""
 "Set the account that will be set by default on invoice tax lines for "
 "refunds. Leave empty to use the expense account."
-msgstr ""
+msgstr "Aseta tili jota käytetään oletuksena hyvityslaskuriveillä. Jätä tyhjäksi käyttääksi oletuskulutiliä."
 
 #. module: account
 #: help:account.tax,account_analytic_collected_id:0
@@ -8801,7 +8801,7 @@ msgid ""
 "Set the analytic account that will be used by default on the invoice tax "
 "lines for refunds. Leave empty if you don't want to use an analytic account "
 "on the invoice tax lines by default."
-msgstr ""
+msgstr "Asettaa analyyttisen tilin, jota käytetään oletuksena hvityslaskujen veroriveillä. Jätä tyhjäksi, jos et halua käyttää analyyttistä tiliä oletuksena laskujen veroriveille."
 
 #. module: account
 #: help:account.chart.template,visible:0
@@ -9110,7 +9110,7 @@ msgstr "Välisumma"
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
 msgid "Sum of opening balance and transactions."
-msgstr ""
+msgstr "Avaussaldon ja tapahtumien summa"
 
 #. module: account
 #: field:account.bank.statement,message_summary:0
@@ -9389,7 +9389,7 @@ msgstr "Verolähde"
 #. module: account
 #: view:website:account.report_vat
 msgid "Tax Statement"
-msgstr ""
+msgstr "Veroraportti"
 
 #. module: account
 #: view:account.tax.code.template:account.view_tax_code_template_search
@@ -9680,7 +9680,7 @@ msgstr ""
 #. module: account
 #: help:account.tax,type:0
 msgid "The computation method for the tax amount."
-msgstr "Laskentatavat veromäärälle"
+msgstr "Laskentatapa veron määrälle."
 
 #. module: account
 #: help:account.journal,currency:0
@@ -10131,7 +10131,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,expects_chart_of_accounts:0
 msgid "This company has its own chart of accounts"
-msgstr ""
+msgstr "Tällä yrityksellä on oma tilikartta"
 
 #. module: account
 #: help:account.invoice.refund,date:0
@@ -10874,7 +10874,7 @@ msgstr "Alv-velvollisuus"
 #. module: account
 #: field:account.fiscal.position,vat_required:0
 msgid "VAT required"
-msgstr "ALV on vaadittu"
+msgstr "ALV vaaditaan"
 
 #. module: account
 #: selection:account.entries.report,move_line_state:0

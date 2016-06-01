@@ -3,14 +3,15 @@
 # * account_followup
 # 
 # Translators:
+# Aleksander, 2016
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 06:44+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-05-04 11:24+0000\n"
+"Last-Translator: Aleksander\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-8/language/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -142,7 +143,7 @@ msgid ""
 "\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n    \n    <p>Kjære ${object.name},</p>\n   <p>\n    Vi kan ikke se å ha mottatt betaling for utestående fordringer. Vi har tidligere purret på dette, da innbetalingene er alvorlig forsinket.\nDet er viktig at betaling skjer snarest, ellers vil vi vurdere å stenge deres konto hos oss.\nDette medfører at vi ikke lenger kan levere varer/tjenster til deres selskap.\nDe bes vennligst om å utføre betalingen i løpet av de neste 8 dager.\nDersom det er noen problemer med fakturaen som vi ikke er klar over, vennligst ta kontakt med vår fakturaavdeling slik at vi kan løse dette snarest.\nDetaljer om forfalte faktturaer står nedenfor.\n </p>\n<br/>\nMed vennlig hilsen,\n    \n<br/>\n<br/>\n${user.name}\n    \n<br/>\n<br/>\n\n${object.get_followup_table_html() | safe}\n\n    <br/>\n\n</div>\n            "
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line3
@@ -209,7 +210,7 @@ msgid ""
 "Details of due payments is printed below.\n"
 "\n"
 "Best Regards,\n"
-msgstr ""
+msgstr "\nKjære %(partner_name)s,\n\nVi kan ikke se å ha mottatt betaling for utestående fordringer. Vi har tidligere purret på dette, da innbetalingene er alvorlig forsinket.\n\nDet er viktig at betaling skjer snarest, ellers vil vi vurdere å stenge deres konto hos oss. Dette medfører at vi ikke lenger kan levere varer/tjenester til deres selskap.\nDe bes vennligst om å utføre betalingen i løpet av de neste 8 dager.\n\nDersom det er noen problem med fakturaen som vi ikke er klar over, vennligst ta kontakt med vår fakturaavdeling slik at vi kan løse dette snarest.\n\nDetaljer om forfalte fakturaer står nedenfor.\n\nMed vennlig hilsen,\n"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:174
@@ -253,7 +254,7 @@ msgstr " Vil bli sendt."
 #: model:email.template,subject:account_followup.email_template_account_followup_level1
 #: model:email.template,subject:account_followup.email_template_account_followup_level2
 msgid "${user.company_id.name} Payment Reminder"
-msgstr ""
+msgstr "${user.company_id.name} Betalingspåminnelse"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form

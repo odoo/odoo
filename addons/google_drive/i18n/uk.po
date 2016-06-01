@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-11-27 14:17+0000\n"
-"Last-Translator: Bogdan\n"
+"PO-Revision-Date: 2016-05-06 17:30+0000\n"
+"Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-8/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,7 +75,7 @@ msgstr "Активовано"
 #: code:addons/google_drive/google_drive.py:49
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern"
-msgstr ""
+msgstr "Принаймні один ключ не вдалося знайти у ваших назвах на Google Диску"
 
 #. module: google_drive
 #: field:base.config.settings,google_drive_authorization_code:0
@@ -87,7 +87,7 @@ msgstr "Код авторизації"
 msgid ""
 "Choose how the new google drive will be named, on google side. Eg. "
 "gdoc_%(field_name)s"
-msgstr ""
+msgstr "Виберіть назву для нового Google Диска, зі сторони Google. Напр. gdoc_%(назва_поля)ів"
 
 #. module: google_drive
 #: view:base.config.settings:google_drive.inherited_google_view_general_configuration
@@ -108,7 +108,7 @@ msgstr "Створено"
 #: code:addons/google_drive/google_drive.py:157
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
-msgstr ""
+msgstr "Кожен може створити Google Диск тільки раз."
 
 #. module: google_drive
 #: model:ir.filters,name:google_drive.filter_partner
@@ -209,13 +209,13 @@ msgstr "Модель"
 #: constraint:google.drive.config:0
 msgid ""
 "Model of selected filter is not matching with model of current template."
-msgstr ""
+msgstr "Модель вибраного фільтра не співпадає з моделлю поточного шаблона."
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:189
 #, python-format
 msgid "Please enter a valid Google Document URL."
-msgstr ""
+msgstr "Введіть дійсну URL-адресу Google документа."
 
 #. module: google_drive
 #: field:google.drive.config,google_drive_resource_id:0
@@ -264,7 +264,7 @@ msgid ""
 "                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
 "                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
 "                                'Agrolait_SO0001_Sales'."
-msgstr ""
+msgstr "Назва прикріпленого документа може містити фіксовані і змінні дані. щоб розрізняти документи на \nGoogle Диску, використовуйте фіксовані слова та поля. приміром, у прикладі зверху, якщо Ви написали \nAgrolait_%(name)s_Sales в назві поля Google Диска, документ на Вашому Google Диску і \nприкріпленні Odoo буде називатися 'Agrolait_SO0001_Sales'."
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:133
@@ -272,7 +272,7 @@ msgstr ""
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
 "the document"
-msgstr ""
+msgstr "Дозвіл \"читання\" для \"всі, в кого є лінк\" не було вказано в документі"
 
 #. module: google_drive
 #: view:google.drive.config:google_drive.view_google_drive_config_form

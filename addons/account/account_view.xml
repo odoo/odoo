@@ -2377,13 +2377,14 @@
                     <notebook>
                         <page string="Cash Transactions" attrs="{'invisible': [('state','=','draft')]}">
                             <field name="line_ids" context="{'date':date}">
-                                <tree editable="bottom" string="Statement lines">
+                                <tree editable="bottom" string="Statement lines" colors="grey:journal_entry_id!=False">
                                     <field name="sequence" invisible="1"/>
-                                    <field name="date"/>
-                                    <field name="name"/>
-                                    <field name="ref"/>
-                                    <field name="partner_id"/>
-                                    <field name="amount"/>
+                                    <field name="journal_entry_id" invisible="1"/>
+                                    <field name="date" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
+                                    <field name="name" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
+                                    <field name="ref" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
+                                    <field name="partner_id" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
+                                    <field name="amount" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
                                 </tree>
                                 <form string="Statement lines">
                                     <group col="4">

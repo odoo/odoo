@@ -3,14 +3,15 @@
 # * account_asset
 # 
 # Translators:
+# Bole <bole@dajmi5.com>, 2016
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-02-23 07:16+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-05-16 07:29+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-8/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -278,12 +279,12 @@ msgstr "Izračunj imovinu"
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 msgid "Confirm Asset"
-msgstr ""
+msgstr "Potvrdi imovinu"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 msgid "Create Move"
-msgstr ""
+msgstr "Napravi temeljnicu"
 
 #. module: account_asset
 #: code:addons/account_asset/wizard/wizard_asset_compute.py:49
@@ -398,7 +399,7 @@ msgstr "Metoda amortizacije"
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Depreciation Month"
-msgstr ""
+msgstr "Mjesec amortizacije"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,name:0
@@ -784,6 +785,14 @@ msgstr ""
 #: field:asset.asset.report,name:0
 msgid "Year"
 msgstr "Godina"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset_invoice.py:53
+#, python-format
+msgid ""
+"You already have assets with the reference %s.\n"
+"Please delete these assets before creating new ones for this invoice."
+msgstr ""
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:81

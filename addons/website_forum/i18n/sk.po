@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-04-07 05:46+0000\n"
+"PO-Revision-Date: 2016-05-02 20:07+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -42,12 +42,12 @@ msgid ""
 "${object.company_id.email or ''}\n"
 "${object.company_id.phone or ''}\n"
 "</pre>"
-msgstr ""
+msgstr "\n<p>\nDobrý deň ${object.name},\n</p>\n<p>\nBoli ste pozvaní na overenie emailu za účelom získania prístupu do \"${object.company_id.name}\" fóra Otázky/Odpovde.\n</p>\n<p>\nPre overenie Vášho emailu, kliknite prosím na nasledovný odkaz:\n</p>\n<ul>\n<li><a href=\"${ctx.get('token_url')}\">Overiť môj účet pre \"${object.company_id.name}\" fóra Otázky/Odpovde</a></li>\n</ul>\n<p>\nVďaka,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
 
 #. module: website_forum
 #: model:email.template,subject:website_forum.validation_email
 msgid "${object.company_id.name} Forums validation"
-msgstr ""
+msgstr "${object.company_id.name} Overenie fór"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -80,7 +80,7 @@ msgstr ""
 msgid ""
 "<p>A new answer for <i>%s</i> has been posted. <a "
 "href=\"%s/forum/%s/question/%s\">Click here to access the post.</a></p>"
-msgstr ""
+msgstr "<p>Nová odpoveď pre <i>%s</i> bola zverejnená. <a href=\"%s/forum/%s/question/%s\">Kliknite sem pre prístup k príspevku.</a></p>"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:380
@@ -88,7 +88,7 @@ msgstr ""
 msgid ""
 "<p>A new question <i>%s</i> has been asked on %s. <a "
 "href=\"%s/forum/%s/question/%s\">Click here to access the question.</a></p>"
-msgstr ""
+msgstr "na<p>Nová otázka <i>%s</i> bola opýtaná %s. <a href=\"%s/forum/%s/question/%s\">Kliknite sem pre prístup k otázke.</a></p>"
 
 #. module: website_forum
 #: model:forum.forum,description:website_forum.forum_help
@@ -103,7 +103,7 @@ msgid ""
 "A tag is a label that categorizes your question with other,\n"
 "            similar questions. Using the right tags makes it easier for\n"
 "            others to find and answer your question."
-msgstr ""
+msgstr "Menovka je štítok, ktorý kategorizuje vašu otázku s inými,\npodobnými otázkami. Použitie správnych značiek uľahčuje\niným nájsť a zodpovedať vašu otázku."
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -118,12 +118,12 @@ msgstr ""
 #. module: website_forum
 #: field:forum.forum,karma_answer_accept_all:0
 msgid "Accept an answer to all questions"
-msgstr ""
+msgstr "Prijať odpoveď na všetky otázky"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_accept:0
 msgid "Accepting an answer"
-msgstr ""
+msgstr "Prijímanie odpovede"
 
 #. module: website_forum
 #: field:forum.post,active:0 selection:forum.post,state:0
@@ -151,7 +151,7 @@ msgstr "Odpoveď"
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
 msgid "Answer Edited"
-msgstr ""
+msgstr "Odpoveď upravená"
 
 #. module: website_forum
 #: field:forum.forum,karma_answer:0
@@ -161,22 +161,22 @@ msgstr ""
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_accepted:0
 msgid "Answer accepted"
-msgstr ""
+msgstr "Odpoveď prijatá"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_downvote:0
 msgid "Answer downvoted"
-msgstr ""
+msgstr "Odpoveď zmietnutá hlasovaním"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_flagged:0
 msgid "Answer flagged"
-msgstr ""
+msgstr "Odpoveď označená"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_upvote:0
 msgid "Answer upvoted"
-msgstr ""
+msgstr "Odpoveď zvolená hlasovaním"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
@@ -193,7 +193,7 @@ msgstr "Odpovede"
 #. module: website_forum
 #: view:website:website_forum.header field:forum.forum,karma_ask:0
 msgid "Ask a Question"
-msgstr ""
+msgstr "Opýtať sa otázku"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
@@ -204,17 +204,17 @@ msgstr ""
 #: field:forum.post,create_date:0
 #: view:website:website_forum.post_description_full
 msgid "Asked on"
-msgstr ""
+msgstr "Opýtané"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Asked:"
-msgstr ""
+msgstr "Opýtané:"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_question_new:0
 msgid "Asking a question"
-msgstr ""
+msgstr "Opýtanie sa otázky"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
@@ -224,17 +224,17 @@ msgstr "Autor"
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_1
 msgid "Autobiographer"
-msgstr ""
+msgstr "Autobiografik"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Back to"
-msgstr ""
+msgstr "Späť na"
 
 #. module: website_forum
 #: view:website:website_forum.badge_user
 msgid "Badge \""
-msgstr ""
+msgstr "Odznak \""
 
 #. module: website_forum
 #: field:res.users,badge_ids:0 view:website:website_forum.badge
@@ -249,78 +249,78 @@ msgid ""
 "Besides gaining reputation with your questions and answers,\n"
 "            you receive badges for being especially helpful. Badges\n"
 "            appear on your profile page, and your posts."
-msgstr ""
+msgstr "Okrem získania reputácie so svojimi otázkami a odpoveďami,\nobdržíte odznaky za to, že ste obzvlášť užitočný. Odznaky\nsa zobrazia na vašej stránke profilu, a vašich príspevkoch."
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Biography"
-msgstr ""
+msgstr "Biografia"
 
 #. module: website_forum
 #: field:forum.post,can_accept:0
 msgid "Can Accept"
-msgstr ""
+msgstr "Môže prijať"
 
 #. module: website_forum
 #: field:forum.post,can_answer:0
 msgid "Can Answer"
-msgstr ""
+msgstr "Môže odpovedať"
 
 #. module: website_forum
 #: field:forum.post,can_ask:0
 msgid "Can Ask"
-msgstr ""
+msgstr "Môže sa pýtať"
 
 #. module: website_forum
 #: field:forum.post,can_close:0
 msgid "Can Close"
-msgstr ""
+msgstr "Môže zavrieť"
 
 #. module: website_forum
 #: field:forum.post,can_comment:0
 msgid "Can Comment"
-msgstr ""
+msgstr "Môže komentovať"
 
 #. module: website_forum
 #: field:forum.post,can_comment_convert:0
 msgid "Can Convert to Comment"
-msgstr ""
+msgstr "Môže konvertovať na komentár"
 
 #. module: website_forum
 #: field:forum.post,can_downvote:0
 msgid "Can Downvote"
-msgstr ""
+msgstr "Môže hlasovať zamietavo"
 
 #. module: website_forum
 #: field:forum.post,can_edit:0
 msgid "Can Edit"
-msgstr ""
+msgstr "Môže upravovať"
 
 #. module: website_forum
 #: field:forum.post,can_unlink:0
 msgid "Can Unlink"
-msgstr ""
+msgstr "Môže rozpojiť"
 
 #. module: website_forum
 #: field:forum.post,can_upvote:0
 msgid "Can Upvote"
-msgstr ""
+msgstr "Môže hlasovať súhlasne"
 
 #. module: website_forum
 #: field:forum.forum,karma_retag:0
 msgid "Change question tags"
-msgstr ""
+msgstr "Zmeniť menovky otázky"
 
 #. module: website_forum
 #: view:website:website_forum.user_badges
 msgid "Check available badges"
-msgstr ""
+msgstr "Skontolovať dostupné odznaky"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_4
 #: model:gamification.challenge,name:website_forum.challenge_chief_commentator
 msgid "Chief Commentator"
-msgstr ""
+msgstr "Hlavný komentátor"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -332,7 +332,7 @@ msgstr "Mesto"
 msgid ""
 "Click here to send a verification email allowing you to participate to the "
 "forum."
-msgstr ""
+msgstr "Kliknite sem pre zaslanie ovrovacieho emailu umožnujúceho vám participovať vo fóre."
 
 #. module: website_forum
 #: field:forum.forum,karma_editor_clickable_link:0
@@ -347,7 +347,7 @@ msgstr "Zatvoriť"
 #. module: website_forum
 #: field:forum.forum,karma_close_all:0
 msgid "Close all posts"
-msgstr ""
+msgstr "Zavrieť všetky príspevky"
 
 #. module: website_forum
 #: field:forum.forum,karma_close_own:0
@@ -362,12 +362,12 @@ msgstr ""
 #. module: website_forum
 #: field:forum.post,closed_uid:0
 msgid "Closed by"
-msgstr ""
+msgstr "Zavrel"
 
 #. module: website_forum
 #: field:forum.post,closed_date:0
 msgid "Closed on"
-msgstr ""
+msgstr "Zavreté"
 
 #. module: website_forum
 #: view:website:website_forum.display_post_answer
@@ -378,7 +378,7 @@ msgstr "Komentár"
 #. module: website_forum
 #: field:forum.forum,karma_comment_all:0
 msgid "Comment all posts"
-msgstr ""
+msgstr "Komentovať všetky príspevky"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_own:0
@@ -388,14 +388,14 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.post_comment
 msgid "Comment this post..."
-msgstr ""
+msgstr "Komentovať tento príspevok..."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_2
 #: model:gamification.challenge,name:website_forum.challenge_commentator
 #: model:gamification.goal.definition,name:website_forum.definition_commentator
 msgid "Commentator"
-msgstr ""
+msgstr "Komentátor"
 
 #. module: website_forum
 #: view:website:website_forum.display_post_answer
@@ -405,24 +405,24 @@ msgstr "Komentáre"
 #. module: website_forum
 #: help:forum.post,website_message_ids:0
 msgid "Comments on forum post"
-msgstr ""
+msgstr "Komentáre na príspevkoch fóra"
 
 #. module: website_forum
 #: model:gamification.challenge,name:website_forum.challenge_configure_profile
 msgid "Complete own biography"
-msgstr ""
+msgstr "Dokončiť vlastnú biografiu"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_configure_profile
 msgid "Completed own biography"
-msgstr ""
+msgstr "Dokončená vlastná biografia"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid ""
 "Congratulations! Your email has just been validated. You may now participate"
 " to our forums."
-msgstr ""
+msgstr "Gratulujeme! Váš email bol práve schválený. Teraz sa môžete podielať na našich fórach."
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
@@ -433,7 +433,7 @@ msgstr "Obsah"
 #. module: website_forum
 #: field:forum.forum,karma_comment_convert_all:0
 msgid "Convert all answers to comments and vice versa"
-msgstr ""
+msgstr "Konvertovať všetky odpovede na otázky a naopak"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_convert_own:0
@@ -477,14 +477,14 @@ msgstr "Vytvorené"
 #: model:gamification.badge,name:website_forum.badge_q_4
 #: model:gamification.challenge,name:website_forum.challenge_favorite_question_1
 msgid "Credible Question"
-msgstr ""
+msgstr "Dôveryhodná otázka"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_5
 #: model:gamification.challenge,name:website_forum.challenge_critic
 #: model:gamification.goal.definition,name:website_forum.definition_critic
 msgid "Critic"
-msgstr ""
+msgstr "Kritik"
 
 #. module: website_forum
 #: help:forum.forum,message_last_post:0 help:forum.post,message_last_post:0
@@ -494,7 +494,7 @@ msgstr "Dátum poslednej správy zaslanej záznamu."
 #. module: website_forum
 #: field:forum.forum,karma_unlink_all:0
 msgid "Delete all posts"
-msgstr ""
+msgstr "Zmazať všetky príspevky"
 
 #. module: website_forum
 #: field:forum.forum,karma_unlink_own:0
@@ -511,32 +511,32 @@ msgstr "Popis"
 #: model:gamification.challenge,name:website_forum.challenge_disciplined
 #: model:gamification.goal.definition,name:website_forum.definition_disciplined
 msgid "Disciplined"
-msgstr ""
+msgstr "Disciplinované"
 
 #. module: website_forum
 #: field:forum.forum,karma_downvote:0
 msgid "Downvote"
-msgstr ""
+msgstr "Zamietavý hlas"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Edit Profile"
-msgstr ""
+msgstr "Upraviť profil"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "Edit Your Bio"
-msgstr ""
+msgstr "Upravit vašu biografiu"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "Edit Your Previous Answer"
-msgstr ""
+msgstr "Upraviť vašu predošlú odpoveď"
 
 #. module: website_forum
 #: field:forum.forum,karma_edit_all:0
 msgid "Edit all posts"
-msgstr ""
+msgstr "Upraviť všetky príspevky"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
@@ -575,7 +575,7 @@ msgstr "Email"
 #: model:gamification.challenge,name:website_forum.challenge_enlightened
 #: model:gamification.goal.definition,name:website_forum.definition_enlightened
 msgid "Enlightened"
-msgstr ""
+msgstr "Osvietené"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
@@ -586,63 +586,63 @@ msgstr ""
 #: model:gamification.badge,name:website_forum.badge_q_3
 #: model:gamification.challenge,name:website_forum.challenge_famous_question
 msgid "Famous Question"
-msgstr ""
+msgstr "Slávna otázka"
 
 #. module: website_forum
 #: field:forum.post,favourite_count:0
 msgid "Favorite Count"
-msgstr ""
+msgstr "Obľúbený počet"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_5
 #: model:gamification.challenge,name:website_forum.challenge_favorite_question_5
 msgid "Favorite Question"
-msgstr ""
+msgstr "Obľúbená otázka"
 
 #. module: website_forum
 #: field:forum.post,favourite_ids:0
 msgid "Favourite"
-msgstr ""
+msgstr "Obľubené"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_favorite_question_1
 msgid "Favourite Question (1)"
-msgstr ""
+msgstr "Obľúbená otázka (1)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_stellar_question_25
 msgid "Favourite Question (25)"
-msgstr ""
+msgstr "Obľúbená otázka (25)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_favorite_question_5
 msgid "Favourite Question (5)"
-msgstr ""
+msgstr "Obľúbená otázka (5)"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "Favourite Questions"
-msgstr ""
+msgstr "Obľúbené otázky"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Filter on"
-msgstr ""
+msgstr "Filter na"
 
 #. module: website_forum
 #: field:forum.forum,karma_flag:0
 msgid "Flag a post as offensive"
-msgstr ""
+msgstr "Označiť prípevok ako ofenzívny"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Followed"
-msgstr ""
+msgstr "Odberaný"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "Followed Questions"
-msgstr ""
+msgstr "Odberané otázky"
 
 #. module: website_forum
 #: field:forum.forum,message_follower_ids:0
@@ -664,24 +664,24 @@ msgstr "Fórum"
 #. module: website_forum
 #: field:gamification.badge,level:0
 msgid "Forum Badge Level"
-msgstr ""
+msgstr "Úroveň odznaku fóra"
 
 #. module: website_forum
 #: view:res.users:website_forum.view_users_form_forum
 msgid "Forum Karma"
-msgstr ""
+msgstr "Karma fóra"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_form
 #: model:ir.model,name:website_forum.model_forum_post
 msgid "Forum Post"
-msgstr ""
+msgstr "Príspevok fóra"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_list
 #: model:ir.actions.act_window,name:website_forum.action_forum_post
 msgid "Forum Posts"
-msgstr ""
+msgstr "Príspevky fóra"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_list
@@ -689,7 +689,7 @@ msgstr ""
 #: model:ir.model,name:website_forum.model_forum_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum view:website:website.layout
 msgid "Forums"
-msgstr ""
+msgstr "Fóra"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge
@@ -705,35 +705,35 @@ msgstr "Gamifikačná výzva"
 #: model:gamification.badge,name:website_forum.badge_a_3
 #: model:gamification.challenge,name:website_forum.challenge_good_answer
 msgid "Good Answer"
-msgstr ""
+msgstr "Dobrá odpoveď"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_good_answer
 msgid "Good Answer (6)"
-msgstr ""
+msgstr "Dobrá odpoveď (6)"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_9
 #: model:gamification.challenge,name:website_forum.challenge_good_question
 msgid "Good Question"
-msgstr ""
+msgstr "Dobrá otázka"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_4
 #: model:gamification.challenge,name:website_forum.challenge_great_answer
 msgid "Great Answer"
-msgstr ""
+msgstr "Skvelá odpoveď"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_great_answer
 msgid "Great Answer (15)"
-msgstr ""
+msgstr "Skvelá odpoveď (15)"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_10
 #: model:gamification.challenge,name:website_forum.challenge_great_question
 msgid "Great Question"
-msgstr ""
+msgstr "Skvelá otázka"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
@@ -743,23 +743,23 @@ msgstr "Zoskupiť podľa"
 #. module: website_forum
 #: field:forum.forum,faq:0
 msgid "Guidelines"
-msgstr ""
+msgstr "Pokyny"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_6
 #: model:gamification.challenge,name:website_forum.challenge_guru
 msgid "Guru"
-msgstr ""
+msgstr "Guru"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_guru
 msgid "Guru (15)"
-msgstr ""
+msgstr "Guru (15)"
 
 #. module: website_forum
 #: field:forum.post,uid_has_answered:0
 msgid "Has Answered"
-msgstr ""
+msgstr "Opovedal"
 
 #. module: website_forum
 #: field:forum.post,has_validated_answer:0
@@ -811,17 +811,17 @@ msgstr "Je sledujúci"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "It appears your email has not been verified."
-msgstr ""
+msgstr "Zdá sa, že váš email nebol overený."
 
 #. module: website_forum
 #: field:res.users,karma:0 view:website:website_forum.user_detail_full
 msgid "Karma"
-msgstr ""
+msgstr "Karma"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
 msgid "Karma Gains"
-msgstr ""
+msgstr "Karma zisky"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
@@ -846,12 +846,12 @@ msgstr ""
 #. module: website_forum
 #: field:forum.post,karma_close:0
 msgid "Karma to close"
-msgstr ""
+msgstr "Karma na zavretie"
 
 #. module: website_forum
 #: field:forum.post,karma_comment:0
 msgid "Karma to comment"
-msgstr ""
+msgstr "Karma na komentovanie"
 
 #. module: website_forum
 #: field:forum.post,karma_downvote:0
@@ -861,12 +861,12 @@ msgstr ""
 #. module: website_forum
 #: field:forum.post,karma_edit:0
 msgid "Karma to edit"
-msgstr ""
+msgstr "Karma na editovanie"
 
 #. module: website_forum
 #: field:forum.post,karma_unlink:0
 msgid "Karma to unlink"
-msgstr ""
+msgstr "Karma na odpojenie odkazu"
 
 #. module: website_forum
 #: field:forum.post,karma_upvote:0
@@ -876,7 +876,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Keep Informed"
-msgstr ""
+msgstr "Zostať informovaný"
 
 #. module: website_forum
 #: field:forum.forum,message_last_post:0 field:forum.post,message_last_post:0
@@ -898,12 +898,12 @@ msgstr "Naposledy upravované"
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Last activity date"
-msgstr ""
+msgstr "Dátum poslednej aktivity"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Last updated:"
-msgstr ""
+msgstr "Naposledy aktualizované:"
 
 #. module: website_forum
 #: field:forum.forum,karma_editor_link_files:0
@@ -923,12 +923,12 @@ msgstr "Správa a história komunikácie"
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Most answered"
-msgstr ""
+msgstr "Najviac zodpovedané"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Most voted"
-msgstr ""
+msgstr "Najviac hlasované"
 
 #. module: website_forum
 #: field:forum.post,user_favourite:0
@@ -943,7 +943,7 @@ msgstr ""
 #. module: website_forum
 #: field:forum.post,user_vote:0
 msgid "My Vote"
-msgstr ""
+msgstr "Môj hlas"
 
 #. module: website_forum
 #: field:forum.forum,name:0 view:forum.post:website_forum.view_forum_post_form
@@ -956,7 +956,7 @@ msgstr "Meno"
 #: model:mail.message.subtype,name:website_forum.mt_answer_new
 #: model:mail.message.subtype,name:website_forum.mt_forum_answer_new
 msgid "New Answer"
-msgstr ""
+msgstr "Nová odpoveď"
 
 #. module: website_forum
 #. openerp-web
@@ -964,30 +964,30 @@ msgstr ""
 #: view:website:website.layout
 #, python-format
 msgid "New Forum"
-msgstr ""
+msgstr "Nové fórum"
 
 #. module: website_forum
 #: model:mail.message.subtype,description:website_forum.mt_question_new
 #: model:mail.message.subtype,name:website_forum.mt_forum_question_new
 #: model:mail.message.subtype,name:website_forum.mt_question_new
 msgid "New Question"
-msgstr ""
+msgstr "Nová otázka"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Newest"
-msgstr ""
+msgstr "Najnovšie"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_2
 #: model:gamification.challenge,name:website_forum.challenge_nice_answer
 msgid "Nice Answer"
-msgstr ""
+msgstr "Milá odpoveď"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_nice_answer
 msgid "Nice Answer (4)"
-msgstr ""
+msgstr "Milá odpoveď (4)"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_8
@@ -997,7 +997,7 @@ msgstr ""
 #. module: website_forum
 #: model:gamification.challenge,name:website_forum.challenge_nice_question
 msgid "Nice Question"
-msgstr ""
+msgstr "Milá otázka"
 
 #. module: website_forum
 #: view:website:website_forum.user_badges
@@ -1013,17 +1013,17 @@ msgstr ""
 #: model:gamification.badge,name:website_forum.badge_q_2
 #: model:gamification.challenge,name:website_forum.challenge_notable_question
 msgid "Notable Question"
-msgstr ""
+msgstr "Pozoruhodná otázka"
 
 #. module: website_forum
 #: field:forum.tag,posts_count:0
 msgid "Number of Posts"
-msgstr ""
+msgstr "Počet príspevkov"
 
 #. module: website_forum
 #: field:forum.post,views:0
 msgid "Number of Views"
-msgstr ""
+msgstr "Počet zobrazení"
 
 #. module: website_forum
 #: field:res.users,bronze_badge:0
@@ -1043,29 +1043,29 @@ msgstr ""
 #. module: website_forum
 #: selection:forum.post,state:0
 msgid "Offensive"
-msgstr ""
+msgstr "Ofenzívne"
 
 #. module: website_forum
 #: view:website:website_forum.forum_all
 msgid "Our forums"
-msgstr ""
+msgstr "Naše fóra"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_23
 #: model:gamification.challenge,name:website_forum.challenge_peer_pressure
 #: model:gamification.goal.definition,name:website_forum.definition_peer_pressure
 msgid "Peer Pressure"
-msgstr ""
+msgstr "Peer tlak"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "People"
-msgstr ""
+msgstr "Ľudia"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
 msgid "Please enter a descriptive question (should finish by a '?')"
-msgstr ""
+msgstr "Prosím zadajte popisnú otázku (mala by končiť s '?')"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
@@ -1077,7 +1077,7 @@ msgstr ""
 msgid ""
 "Please enter a valid email address in order to receive notifications from "
 "answers or comments."
-msgstr ""
+msgstr "Prosím zadajte platnú emailovú adresu aby ste dostávali notifikácie z odpovedí alebo komentárov."
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
@@ -1093,22 +1093,22 @@ msgstr ""
 #: model:gamification.badge,name:website_forum.badge_q_1
 #: model:gamification.challenge,name:website_forum.challenge_popular_question
 msgid "Popular Question"
-msgstr ""
+msgstr "Populárna otázok"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_popular_question
 msgid "Popular Question (150)"
-msgstr ""
+msgstr "descriptive question (150)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_notable_question
 msgid "Popular Question (250)"
-msgstr ""
+msgstr "Populárna otázka (250)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_famous_question
 msgid "Popular Question (500)"
-msgstr ""
+msgstr "Populárna otázka (500)"
 
 #. module: website_forum
 #: field:forum.post.vote,post_id:0 view:website:website_forum.post_comment
@@ -1118,12 +1118,12 @@ msgstr "Zverejniť"
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_reason
 msgid "Post Closing Reason"
-msgstr ""
+msgstr "Zverejniť dôvod zatvorenia"
 
 #. module: website_forum
 #: field:forum.post,website_message_ids:0
 msgid "Post Messages"
-msgstr ""
+msgstr "Zverejniť správy"
 
 #. module: website_forum
 #: field:forum.post.reason,name:0
@@ -1138,25 +1138,25 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "Post Your Question"
-msgstr ""
+msgstr "Zverejnite svoju otázku"
 
 #. module: website_forum
 #: field:forum.tag,post_ids:0
 #: model:ir.ui.menu,name:website_forum.menu_forum_posts
 msgid "Posts"
-msgstr ""
+msgstr "Príspevky"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Public profile"
-msgstr ""
+msgstr "Verejný profil"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_25
 #: model:gamification.challenge,name:website_forum.challenge_pundit
 #: model:gamification.goal.definition,name:website_forum.definition_pundit
 msgid "Pundit"
-msgstr ""
+msgstr "Vedátor"
 
 #. module: website_forum
 #: view:website:website.layout
@@ -1174,32 +1174,32 @@ msgstr "Otázka"
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
 msgid "Question Edited"
-msgstr ""
+msgstr "Otázka editovaná"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_question_downvote:0
 msgid "Question downvoted"
-msgstr ""
+msgstr "Otázka zamietnutá hlasovaním"
 
 #. module: website_forum
 #: view:website:website_forum.404
 msgid "Question not found!"
-msgstr ""
+msgstr "Otázka nenájdená!"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Question tools"
-msgstr ""
+msgstr "Nástroje otázky"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_question_upvote:0
 msgid "Question upvoted"
-msgstr ""
+msgstr "Otázka zvolená hlasovaním"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "Question:"
-msgstr ""
+msgstr "Otázka:"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index view:website:website_forum.header
@@ -1211,17 +1211,17 @@ msgstr "Otázky"
 #: code:addons/website_forum/models/forum.py:376
 #, python-format
 msgid "Re: %s"
-msgstr ""
+msgstr "Re: %s"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Read Guidelines"
-msgstr ""
+msgstr "Prečítať pokyny"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Real name"
-msgstr ""
+msgstr "Skutočné meno"
 
 #. module: website_forum
 #: field:forum.post,closed_reason_id:0
@@ -1231,12 +1231,12 @@ msgstr "Dôvod "
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "Reason:"
-msgstr ""
+msgstr "Dôvod:"
 
 #. module: website_forum
 #: view:website:website_forum.404 view:website:website_forum.private_profile
 msgid "Return to the question list."
-msgstr ""
+msgstr "Návrat na zoznam otázok."
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
@@ -1248,7 +1248,7 @@ msgstr "Uložiť"
 #: model:gamification.challenge,name:website_forum.challenge_scholar
 #: model:gamification.goal.definition,name:website_forum.definition_scholar
 msgid "Scholar"
-msgstr ""
+msgstr "Učenec"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -1263,30 +1263,30 @@ msgstr ""
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
 msgid "Search in Post"
-msgstr ""
+msgstr "Hľadať v príspevku"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Seen:"
-msgstr ""
+msgstr "Videné:"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_8
 #: model:gamification.challenge,name:website_forum.challenge_self_learner
 #: model:gamification.goal.definition,name:website_forum.definition_self_learner
 msgid "Self-Learner"
-msgstr ""
+msgstr "Samouk"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
 #: view:forum.post:website_forum.view_forum_post_form
 msgid "Send a message to the group"
-msgstr ""
+msgstr "Poslať správu skupine"
 
 #. module: website_forum
 #: view:website:website_forum.404
 msgid "Sorry, this question is not available anymore."
-msgstr ""
+msgstr "Táto otázka už nie je k dispozícii."
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -1296,7 +1296,7 @@ msgstr "Triediť podľa"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Stats"
-msgstr ""
+msgstr "štatistiky"
 
 #. module: website_forum
 #: field:forum.post,state:0
@@ -1307,13 +1307,13 @@ msgstr "Stav"
 #: model:gamification.badge,name:website_forum.badge_q_6
 #: model:gamification.challenge,name:website_forum.challenge_stellar_question_25
 msgid "Stellar Question"
-msgstr ""
+msgstr "Hviezdna otázka"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_7
 #: model:gamification.challenge,name:website_forum.challenge_student
 msgid "Student"
-msgstr ""
+msgstr "Študent"
 
 #. module: website_forum
 #: field:forum.forum,message_summary:0 field:forum.post,message_summary:0
@@ -1325,7 +1325,7 @@ msgstr "Zhrnutie"
 #: model:gamification.challenge,name:website_forum.challenge_supporter
 #: model:gamification.goal.definition,name:website_forum.definition_supporter
 msgid "Supporter"
-msgstr ""
+msgstr "Podporovateľ"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_tag
@@ -1344,14 +1344,14 @@ msgstr "Popisky"
 #: model:gamification.challenge,name:website_forum.challenge_taxonomist
 #: model:gamification.goal.definition,name:website_forum.definition_taxonomist
 msgid "Taxonomist"
-msgstr ""
+msgstr "Klasifikátor"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_1
 #: model:gamification.challenge,name:website_forum.challenge_teacher
 #: model:gamification.goal.definition,name:website_forum.definition_teacher
 msgid "Teacher"
-msgstr ""
+msgstr "Učiteľ"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
@@ -1366,7 +1366,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.private_profile
 msgid "This profile is private!"
-msgstr ""
+msgstr "Tento profil je súkromný!"
 
 #. module: website_forum
 #: field:forum.post,name:0
@@ -1386,12 +1386,12 @@ msgstr "Prepnúť navigáciu"
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Unanswered"
-msgstr ""
+msgstr "Nezodpovedané"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_unlink_all:0
 msgid "Unlink all comments"
-msgstr ""
+msgstr "Odpojiť odkazy všetkých komentárov"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_unlink_own:0
@@ -1411,37 +1411,37 @@ msgstr "Aktualizovať"
 #. module: website_forum
 #: field:forum.post,write_date:0
 msgid "Update on"
-msgstr ""
+msgstr "Aktualizovať"
 
 #. module: website_forum
 #: field:forum.post,write_uid:0
 msgid "Updated by"
-msgstr ""
+msgstr "Aktualizoval"
 
 #. module: website_forum
 #: field:forum.forum,karma_upvote:0
 msgid "Upvote"
-msgstr ""
+msgstr "Hlasovať súhlasne"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_student
 msgid "Upvoted question (1)"
-msgstr ""
+msgstr "Súhlasne odhlasované otázky (1)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_great_question
 msgid "Upvoted question (15)"
-msgstr ""
+msgstr "Súhlasne odhlasované otázky (15)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_nice_question
 msgid "Upvoted question (4)"
-msgstr ""
+msgstr "Súhlasne odhlasované otázky (4)"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_good_question
 msgid "Upvoted question (6)"
-msgstr ""
+msgstr "Súhlasne odhlasované otázky (6)"
 
 #. module: website_forum
 #: field:forum.post.vote,user_id:0
@@ -1461,7 +1461,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "View Your Badges"
-msgstr ""
+msgstr "Zobraziť vaše odznaky"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
@@ -1478,7 +1478,7 @@ msgstr "Hlasovať"
 #: field:forum.post,vote_count:0 field:forum.post,vote_ids:0
 #: view:website:website_forum.user_detail_full
 msgid "Votes"
-msgstr ""
+msgstr "Hlasy"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -1535,7 +1535,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.display_post
 msgid "and"
-msgstr ""
+msgstr "a"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
@@ -1571,7 +1571,7 @@ msgstr ""
 #. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "bronze"
-msgstr ""
+msgstr "bronzové"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
@@ -1582,7 +1582,7 @@ msgstr " "
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "by activity date"
-msgstr ""
+msgstr "podľa dátumu aktivity"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -1592,17 +1592,17 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "by most answered"
-msgstr ""
+msgstr "podľa najviac zodpovedaných"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "by most voted"
-msgstr ""
+msgstr "podľa najviac hlasovaných"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_7
 msgid "contains offensive or malicious remarks"
-msgstr ""
+msgstr "obsahuje urážlivé alebo nevraživé poznámky"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
@@ -1622,22 +1622,22 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "follower(s)"
-msgstr ""
+msgstr "oberateľ (odberatelia)"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "for reason:"
-msgstr ""
+msgstr "z dôvodu:"
 
 #. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "gold"
-msgstr ""
+msgstr "zlato"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "karma"
-msgstr ""
+msgstr "karma"
 
 #. module: website_forum
 #: field:forum.post,karma_comment_convert:0
@@ -1647,17 +1647,17 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "last connection"
-msgstr ""
+msgstr "posledné pripojenie"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "location"
-msgstr ""
+msgstr "lokácia"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "member since"
-msgstr ""
+msgstr "členom od"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_4
@@ -1667,12 +1667,12 @@ msgstr ""
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_6
 msgid "not relevant or out dated"
-msgstr ""
+msgstr "nerelevantné alebo zastarané"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_2
 msgid "off-topic or not relevant"
-msgstr ""
+msgstr "mimo tému alebo nerelevantné"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
@@ -1704,7 +1704,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.badge_user
 msgid "received this badge:"
-msgstr ""
+msgstr "obdržal tento odznak:"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
@@ -1714,12 +1714,12 @@ msgstr ""
 #. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "silver"
-msgstr ""
+msgstr "striebro"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_8
 msgid "spam or advertising"
-msgstr ""
+msgstr "spam alebo reklama"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
@@ -1729,22 +1729,22 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "time"
-msgstr ""
+msgstr "čas"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "times"
-msgstr ""
+msgstr "časy"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_9
 msgid "too localized"
-msgstr ""
+msgstr "príliš lokalizované"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_3
 msgid "too subjective and argumentative"
-msgstr ""
+msgstr "príliš subjektívne a sporné"
 
 #. module: website_forum
 #: field:forum.post,self_reply:0
@@ -1759,17 +1759,17 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.badge_user
 msgid "user"
-msgstr ""
+msgstr "používateľ"
 
 #. module: website_forum
 #: view:website:website_forum.badge_user
 msgid "users"
-msgstr ""
+msgstr "používatelia"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
 msgid "views"
-msgstr ""
+msgstr "zobrazenia"
 
 #. module: website_forum
 #: view:website:website_forum.display_post view:website:website_forum.vote
@@ -1780,7 +1780,7 @@ msgstr ""
 #: view:website:website_forum.display_post
 #: view:website:website_forum.user_detail_full view:website:website_forum.vote
 msgid "votes"
-msgstr ""
+msgstr "hlasy"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full

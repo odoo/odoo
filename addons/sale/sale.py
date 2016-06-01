@@ -539,7 +539,7 @@ class sale_order(osv.osv):
                     continue
                 elif (line.state in states):
                     lines.append(line.id)
-            created_lines = obj_sale_order_line.invoice_line_create(cr, uid, lines)
+            created_lines = obj_sale_order_line.invoice_line_create(cr, uid, lines, context=context)
             if created_lines:
                 invoices.setdefault(o.partner_invoice_id.id or o.partner_id.id, []).append((o, created_lines))
         if not invoices:
@@ -904,7 +904,7 @@ class sale_order_line(osv.osv):
     def _get_price_reduce(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0.0)
         for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = line.price_subtotal / line.product_uom_qty
+            res[line.id] = line.price_subtotal / line.product_uom_qty if line.product_uom_qty else 0.0
         return res
 
     _name = 'sale.order.line'
@@ -923,7 +923,7 @@ class sale_order_line(osv.osv):
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price'), readonly=True, states={'draft': [('readonly', False)]}),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Account')),
         'price_reduce': fields.function(_get_price_reduce, type='float', string='Price Reduce', digits_compute=dp.get_precision('Product Price')),
-        'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, states={'draft': [('readonly', False)]}),
+        'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, states={'draft': [('readonly', False)]}, domain=['|', ('active', '=', False), ('active', '=', True)]),
         'address_allotment_id': fields.many2one('res.partner', 'Allotment Partner',help="A partner to whom the particular product needs to be allotted."),
         'product_uom_qty': fields.float('Quantity', digits_compute= dp.get_precision('Product UoS'), required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure ', required=True, readonly=True, states={'draft': [('readonly', False)]}),

@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-04-01 15:14+0000\n"
+"PO-Revision-Date: 2016-05-13 13:23+0000\n"
 "Last-Translator: Paolo Valier\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-8/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -65,7 +65,7 @@ msgid ""
 "                search in which BoM a specific component is used.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Click to add a component to a bill of material.\n                Cliccare per aggiungere un componente alla distinta base.\n              </p><p>\n                I componenti delle distinte base sono usati per creare le distinte base\n                principali. Usa questo menù per cercare in quale BoM uno specifico\n                componente viene usato.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nCliccare per aggiungere un componente alla distinta base.\n</p><p>\nI componenti delle distinte base sono componenti e sottoprodotti\nutilizzati per creare le distinte base principali. Usa questo menu per \ncercare in quale distinta base uno specifico componente viene utilizzato.\n</p>"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -296,7 +296,7 @@ msgstr "Struttura Distinta Base"
 #. module: mrp
 #: field:mrp.bom.line,child_line_ids:0
 msgid "BOM lines of the referred bom"
-msgstr ""
+msgstr "Righe della Distinta base di riferimento"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:44
@@ -403,7 +403,7 @@ msgstr "Annulla"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Cancel Production"
-msgstr "Cancella la produzione"
+msgstr "Annulla Produzione"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -804,7 +804,7 @@ msgstr "Raggruppa per..."
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "Gestisce il sommario (numero di messaggi, ...) di Chatter. Questo sommario è direttamente in html così da poter essere inserito nelle viste kanban."
+msgstr "Contiene il riepilogo Chatter (numero di messaggi, ...). Questa sintesi è direttamente in formato HTML, al fine di essere inserita nelle viste kanban."
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour_account_id:0
@@ -885,7 +885,7 @@ msgstr "Azione non valida!"
 #: field:mrp.production,message_is_follower:0
 #: field:mrp.production.workcenter.line,message_is_follower:0
 msgid "Is a Follower"
-msgstr "E' un Follower"
+msgstr "È un Follower"
 
 #. module: mrp
 #: help:mrp.routing,location_id:0
@@ -999,7 +999,7 @@ msgstr "Produci in questo Magazzino"
 #: view:product.product:mrp.product_product_form_view_bom_button
 #: view:product.template:mrp.product_template_form_view_bom_button
 msgid "Manufacturing"
-msgstr "Gestione della Produzione"
+msgstr "Produzione"
 
 #. module: mrp
 #: field:mrp.bom,product_efficiency:0 field:mrp.bom.line,product_efficiency:0
@@ -1052,7 +1052,7 @@ msgstr "Ordini di produzione in attesa di materiale"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
 msgid "Manufacturing Orders in Progress"
-msgstr "Ordini di produzione in progresso"
+msgstr "Ordini di produzione in corso"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1770,7 +1770,7 @@ msgstr "Sequenza"
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Set"
-msgstr ""
+msgstr "Imposta"
 
 #. module: mrp
 #: help:mrp.bom,type:0
@@ -2132,7 +2132,7 @@ msgstr ""
 msgid ""
 "When processing a sales order for this product, the delivery order\n"
 "                                will contain the raw materials, instead of the finished product."
-msgstr "Quando si processa un ordine di vendita per questo prodotto, l'ordine di consegna\n                                Conterrà le righe dei materiali, invece del prodotto finito."
+msgstr "Quando si processa un ordine di vendita per questo prodotto, l'ordine di consegna\nconterrà le righe dei materiali, invece del prodotto finito."
 
 #. module: mrp
 #: help:stock.warehouse,manufacture_to_resupply:0
@@ -2149,7 +2149,7 @@ msgid ""
 "                If the stock is available then the status is set to 'Ready to Produce'.\n"
 "                When the production gets started then the status is set to 'In Production'.\n"
 "                When the production is over, the status is set to 'Done'."
-msgstr "Quando l'ordine di produzione viene creato lo stato è impostato a 'Bozza'.\nSe l'ordine viene convermato lo stato passa a 'Attesa Materiale'.\nIn caso di eccezioni, lo stato passa a 'Eccezione Prelievo'.\nSe il materiale è disponibile, lo stato passa a 'Pronto per la produzione'.\nQuando la produzione parte lo stato passa a 'In Produzione'.\nQuando la produzione termina, lo stato passa a 'Completato'."
+msgstr "Quando l'ordine di produzione viene creato lo stato è impostato a 'Bozza'.\nSe l'ordine viene confermato lo stato passa a 'Attesa Materiale'.\nIn caso di eccezioni, lo stato passa a 'Eccezione Prelievo'.\nSe il materiale è disponibile, lo stato passa a 'Pronto per la produzione'.\nQuando la produzione parte lo stato passa a 'In Produzione'.\nQuando la produzione termina, lo stato passa a 'Completato'."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -2253,7 +2253,7 @@ msgid ""
 "Without this module: A + B + C -> D.\n"
 "With this module: A + B + C -> D + E.\n"
 "-This installs the module mrp_byproduct."
-msgstr ""
+msgstr "È possibile configurare i sottoprodotti nella distinta base.\nSenza questo modulo: A + B + C -> D.\nCon questo modulo: A + B + C -> D + E.\n- Installa il modulo mrp_byproduct."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:339

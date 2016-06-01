@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-16 13:15+0000\n"
-"PO-Revision-Date: 2016-03-11 13:40+0000\n"
+"PO-Revision-Date: 2016-05-03 19:55+0000\n"
 "Last-Translator: Paolo Valier\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-8/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -47,7 +47,7 @@ msgid ""
 "                    </pre>\n"
 "                \n"
 "            "
-msgstr "\n                \n                    <p>\n${object.name},\n</p>\n<p>\nSiete stato invitato a collegarvi a \"${object.company_id.name}\" per avere accesso ai vostri documenti in ODOO.\n</p>\n<p>\nPer accettare l'invito cliccare sul link qui di seguito:\n</p>\n<ul>\n<li><a href=\"${object.signup_url}\">Accetta l'invito a \"${object.company_id.name}\"</a></li>\n</ul>\n<p>\nGrazie,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>\n                \n            "
+msgstr "\n                \n                    <p>\n${object.name},\n</p>\n<p>\nSiete stato invitato a collegarvi a \"${object.company_id.name}\" per avere accesso ai vostri documenti in Odoo.\n</p>\n<p>\nPer accettare l'invito cliccare sul link qui di seguito:\n</p>\n<ul>\n<li><a href=\"${object.signup_url}\">Accetta l'invito a \"${object.company_id.name}\"</a></li>\n</ul>\n<p>\nGrazie,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>\n                \n            "
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.reset_password_email
@@ -58,12 +58,12 @@ msgid ""
 "<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr "\n<p>E' stato richiesto di resettare la password per l'account ODOO collegato a questa mail.</p>\n\n<p>Potrete cambiare la vostra password seguendo <a href=\"${object.signup_url}\">questo link</a>.</p>\n\n<p>Nota: Se non non avete fatto richiesta potete, in tutta sicurezza, ignorare questa mail.</p>"
+msgstr "\n<p>È stato richiesto di resettare la password per l'account Odoo collegato a questa mail.</p>\n\n<p>Potrete cambiare la vostra password seguendo <a href=\"${object.signup_url}\">questo link</a>.</p>\n\n<p>Nota: Se non non avete fatto richiesta potete, in tutta sicurezza, ignorare questa mail.</p>"
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr "${object.company_id.name} invito a connettersi a ODOO"
+msgstr "${object.company_id.name} invito a connettersi a Odoo"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
@@ -93,7 +93,7 @@ msgstr "Una email è stata inviata con le credenziali per resettare la tua passw
 msgid ""
 "An invitation email containing the following subscription link has been "
 "sent:"
-msgstr "E' stata inviata una email di invito contenente link per le seguenti sottoscrizioni:"
+msgstr "È stata inviata una email di invito contenente link per le seguenti sottoscrizioni:"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:58
@@ -143,7 +143,7 @@ msgstr "Abilita il reset della password dalla pagina di login"
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_uninvited:0
 msgid "If unchecked, only invited users may sign up."
-msgstr "Se spuntato, solo gli utenti invitati possono autenticarsi"
+msgstr "Se non spuntato solo gli utenti invitati potranno autenticarsi."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:109

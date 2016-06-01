@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-03-25 13:43+0000\n"
-"PO-Revision-Date: 2016-03-27 15:49+0000\n"
+"PO-Revision-Date: 2016-04-29 15:04+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-8/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -106,14 +106,14 @@ msgstr ""
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: website_quote
 #: model:email.template,subject:website_quote.email_template_edi_sale
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Пропозиція' or 'Замовлення'} (Посилання ${object.name or 'немає' })"
 
 #. module: website_quote
 #: view:website:website_quote.optional_products
@@ -636,7 +636,7 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Bill To:"
-msgstr ""
+msgstr "Платник:"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -693,7 +693,7 @@ msgstr "Опис"
 #. module: website_quote
 #: field:product.template,quote_description:0
 msgid "Description for the quote"
-msgstr ""
+msgstr "Опис пропозиції"
 
 #. module: website_quote
 #: field:product.template,website_description:0
@@ -729,7 +729,7 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.quotation_toolbar
 msgid "Feedback"
-msgstr ""
+msgstr "Зворотній зв'язок"
 
 #. module: website_quote
 #: model:product.template,name:website_quote.product_product_quote_1_product_template
@@ -1022,7 +1022,7 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.pricing
 msgid "Subtotal:"
-msgstr ""
+msgstr "Підсумок:"
 
 #. module: website_quote
 #: view:sale.order:website_quote.sale_order_form_quote
@@ -1114,7 +1114,7 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.pricing
 msgid "Total:"
-msgstr ""
+msgstr "Разом:"
 
 #. module: website_quote
 #: field:sale.order.option,price_unit:0 field:sale.quote.line,price_unit:0
@@ -1157,7 +1157,7 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your Contact:"
-msgstr ""
+msgstr "Контактна особа:"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation

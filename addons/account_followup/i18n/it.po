@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Paolo Valier, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 06:44+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-04-30 10:07+0000\n"
+"Last-Translator: Paolo Valier\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-8/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -191,7 +192,7 @@ msgid ""
 "Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to contact our accounting department.  \n"
 "\n"
 "Best Regards,\n"
-msgstr "\nGentile %(partner_name)s,\n\nSe non abbiamo commesso un errore, sembra che il seguente importo non sia ancora stato pagato. Prego prendete le appropriate misure nell'ordine di portare aveti qesto pagamento nei prossimi 8 giorni.\n\nNel caso il pagamento sia già stato predisposto prima dell'invio della presente, prego ignorate il messaggio. Non esitate a contattare il nostro personale contabile in merito.\n\nCordiali saluti,\n"
+msgstr "\nGentile %(partner_name)s,\n\nSe non abbiamo commesso un errore, sembra che il seguente importo non sia ancora stato saldato. Vi preghiamo di intraprendere le misure appropriate entro i prossimi 8 giorni.\n\nNel caso il pagamento sia già stato predisposto prima dell'invio della presente, prego ignorate il messaggio. Non esitate a contattare il nostro personale contabile in merito.\n\nCordiali saluti,\n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -319,7 +320,7 @@ msgid ""
 "                the customer.\n"
 "              </p>\n"
 "          "
-msgstr "<p class=\"oe_view_nocontent_create\">\nCliccare per definire i livelli follow-up e le loro azioni correlate.\n</p><p>\nPer ogni step, specificare le azioni che dovranno essere intraprese e i giorni di ritardo.\nE' possibile usare i messaggi modello, di stampa e invio mail, per inviare specifici \nmessaggi al cliente. </p>\n          "
+msgstr "<p class=\"oe_view_nocontent_create\">\nCliccare per definire i livelli follow-up e le loro azioni correlate.\n</p><p>\nPer ogni step, specificare le azioni che dovranno essere intraprese e i giorni di ritardo.\nÈ possibile usare i messaggi modello, di stampa e invio mail, per inviare specifici \nmessaggi al cliente. </p>\n          "
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
@@ -329,7 +330,7 @@ msgstr "Conto Solleciti"
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Account Move line"
-msgstr "Linea movimento conto"
+msgstr "Riga Movimento Conto"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
@@ -696,7 +697,7 @@ msgstr "Raggruppa per"
 msgid ""
 "He said the problem was temporary and promised to pay 50% before 15th of "
 "May, balance before 1st of July."
-msgstr "E' stato riferito che il problema è stato temporaneo con la promessa di pagare il 50% prima del 15 di maggio, il rimanente prima del primo di luglio."
+msgstr "È stato riferito che il problema è stato temporaneo con la promessa di pagare il 50% prima del 15 di maggio, il rimanente prima del primo di luglio."
 
 #. module: account_followup
 #: field:account_followup.followup,id:0
@@ -881,14 +882,14 @@ msgstr "Non Contenzioso"
 #. module: account_followup
 #: sql_constraint:account_followup.followup:0
 msgid "Only one follow-up per company is allowed"
-msgstr "E' permessa solo un sollecito di pagamento per azienda"
+msgstr "È permessa solo un sollecito di pagamento per azienda"
 
 #. module: account_followup
 #: help:res.partner,payment_responsible_id:0
 msgid ""
 "Optionally you can assign a user to this field, which will make him "
 "responsible for the action."
-msgstr "E' possibile assegnare facoltativamente un utente a questo campo, che lo renderà responsabile per l'azione."
+msgstr "È possibile assegnare facoltativamente un utente a questo campo, che lo renderà responsabile per l'azione."
 
 #. module: account_followup
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
@@ -1026,7 +1027,7 @@ msgstr "Invio Lettere e Email"
 #: code:addons/account_followup/wizard/account_followup_print.py:241
 #, python-format
 msgid "Send Letters and Emails: Actions Summary"
-msgstr "Invio Lettere e Email: Resoconto Azioni"
+msgstr "Invio Lettere ed Email: Riepilogo Azioni"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
@@ -1068,7 +1069,7 @@ msgstr "Riepilogo"
 #. module: account_followup
 #: view:account_followup.sending.results:account_followup.view_account_followup_sending_results
 msgid "Summary of actions"
-msgstr "Resoconto delle azioni"
+msgstr "Riepilogo delle azioni"
 
 #. module: account_followup
 #: field:account_followup.print,test_print:0
@@ -1166,7 +1167,7 @@ msgid ""
 "                        number of days. If there are other overdue invoices for the \n"
 "                        same customer, the actions of the most \n"
 "                        overdue invoice will be executed."
-msgstr "Per ricordare ai clinti di pagare le loro fatture, potrete\ndefinire differenti azioni dipendenti dalla gravità in cui \nil cliente è insolvente. Queste azioni sono raccolte\nin un livello di follow up che scatterà quando la data\ndi scadenza di una fattura è passata per un certo\nnumero di giorni. Se ci saranno altre fatture scadute per\nlo stesso cliente, l'azione per il mancato pagamento\nverrà esequita."
+msgstr "Per ricordare ai clienti il pagamento delle fatture, è possibile\ndefinire azioni differenti in base alla gravità dell'insolvenza.\nQueste azioni sono raccolte in livelli di follow-up che sono \nattivati quando la data di scadenza di una fattura è passata\nda un certo numero di giorni. Nel caso di più fatture scadute \nper lo stesso cliente, saranno eseguite le azioni riferite alla \nfattura scaduta per prima."
 
 #. module: account_followup
 #: view:account.move.line:account_followup.account_move_line_partner_tree
@@ -1213,7 +1214,7 @@ msgid ""
 "                            use the following keywords in the text. Don't\n"
 "                            forget to translate in all languages you installed\n"
 "                            using to top right icon."
-msgstr "Scrivete qui l'introduzione nella lettera,\nin accordo col livello di follow-up. E' \npossibile usare le sequenti keywords nel testo. Non \ndimenticare di tradurre in tutte le lingue installate\nutilizzando l'icona in alto a destra"
+msgstr "Scrivete qui l'introduzione nella lettera,\nin accordo col livello di follow-up. È \npossibile usare le sequenti keywords nel testo. Non \ndimenticare di tradurre in tutte le lingue installate\nutilizzando l'icona in alto a destra"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:291

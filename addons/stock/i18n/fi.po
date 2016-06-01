@@ -6,7 +6,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2015-2016
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2015-2016
 # Marko Happonen <marko.happonen@sprintit.fi>, 2015
 # Miku Laitinen <miku.laitinen@gmail.com>, 2015
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2015
@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-14 12:26+0000\n"
-"PO-Revision-Date: 2016-02-24 22:30+0000\n"
+"PO-Revision-Date: 2016-05-03 13:18+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -2344,7 +2344,7 @@ msgstr "Erä"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_lot_barcode
 msgid "Lot BarCode"
-msgstr ""
+msgstr "Erän viivakoodi"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_tree
@@ -2354,13 +2354,13 @@ msgstr "Erän tavaraluettelo"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr ""
+msgstr "Erä/sarja"
 
 #. module: stock
 #: field:stock.pack.operation,lot_id:0
 #: field:stock.transfer_details_items,lot_id:0
 msgid "Lot/Serial Number"
-msgstr ""
+msgstr "Erä/sarjanumero"
 
 #. module: stock
 #: view:product.template:stock.view_template_property_form
@@ -2371,7 +2371,7 @@ msgstr "Erät"
 #. module: stock
 #: field:stock.warehouse,mto_pull_id:0
 msgid "MTO rule"
-msgstr ""
+msgstr "MTO sääntö"
 
 #. module: stock
 #: model:ir.model,name:stock.model_make_procurement
@@ -2410,7 +2410,7 @@ msgstr "Hallitse useita paikkoja ja varastoja"
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_lot
 msgid "Manage Packages"
-msgstr ""
+msgstr "Hallitse pakkauksia"
 
 #. module: stock
 #: model:res.groups,name:stock.group_adv_location
@@ -2519,7 +2519,7 @@ msgstr "Minimi määrä"
 #. module: stock
 #: field:procurement.order,orderpoint_id:0
 msgid "Minimum Stock Rule"
-msgstr ""
+msgstr "Minimivarastosääntö"
 
 #. module: stock
 #: field:product.product,orderpoint_ids:0
@@ -2547,12 +2547,12 @@ msgstr "Siirrä"
 #: code:addons/stock/procurement.py:43
 #, python-format
 msgid "Move From Another Location"
-msgstr ""
+msgstr "Siirrä toisesta paikasta"
 
 #. module: stock
 #: field:stock.quant,negative_move_id:0
 msgid "Move Negative Quant"
-msgstr ""
+msgstr "Siirrä negatiivinen määrä"
 
 #. module: stock
 #: field:stock.move,split_from:0
@@ -2667,7 +2667,7 @@ msgstr "Ei"
 #. module: stock
 #: view:report.stock.lines.date:stock.report_stock_lines_date_search
 msgid "No Inventory yet"
-msgstr ""
+msgstr "Ei varastoa"
 
 #. module: stock
 #. openerp-web
@@ -2679,7 +2679,7 @@ msgstr ""
 #. module: stock
 #: view:report.stock.lines.date:stock.report_stock_lines_date_search
 msgid "No Stock Move yet"
-msgstr ""
+msgstr "Ei varastonsiirtoa"
 
 #. module: stock
 #. openerp-web
@@ -2862,7 +2862,7 @@ msgstr ""
 #. module: stock
 #: view:website:stock.report_picking
 msgid "Order (Origin)"
-msgstr ""
+msgstr "Tilaus (Lähde)"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
@@ -3121,18 +3121,18 @@ msgstr ""
 #: code:addons/stock/stock.py:3395
 #, python-format
 msgid "Pick + Pack + Ship"
-msgstr ""
+msgstr "Kerää - Pakkaa - Toimita"
 
 #. module: stock
 #: code:addons/stock/stock.py:3394
 #, python-format
 msgid "Pick + Ship"
-msgstr ""
+msgstr "Kerää + Toimita"
 
 #. module: stock
 #: field:stock.warehouse,pick_type_id:0
 msgid "Pick Type"
-msgstr ""
+msgstr "Keräilytyyppi"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_picking
@@ -3150,7 +3150,7 @@ msgstr "Keräilylista"
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Picking Lists"
-msgstr ""
+msgstr "Keräilylistat"
 
 #. module: stock
 #: field:procurement.rule,picking_type_id:0 field:stock.move,picking_type_id:0
@@ -3187,7 +3187,7 @@ msgstr ""
 #: view:stock.picking.type:stock.view_picking_type_tree
 #: view:stock.warehouse:stock.view_warehouse
 msgid "Picking Types"
-msgstr ""
+msgstr "Keräilytyypit"
 
 #. module: stock
 #: view:stock.picking:stock.vpicktree
@@ -3197,7 +3197,7 @@ msgstr "Keräilylista"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_transfer_details
 msgid "Picking wizard"
-msgstr ""
+msgstr "Keräilyavustaja"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_transfer_details_items
@@ -3285,7 +3285,7 @@ msgstr "Tulostus"
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Print Picking List"
-msgstr ""
+msgstr "Tulosta keräilylista"
 
 #. module: stock
 #. openerp-web
@@ -3360,7 +3360,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_rule field:stock.move,rule_id:0
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Hankintasääntö"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_procurement_rules
@@ -3515,7 +3515,7 @@ msgstr "Tuotteet: "
 #: code:addons/stock/stock.py:1699
 #, python-format
 msgid "Programming Error!"
-msgstr ""
+msgstr "Ohjelmointivirhe!"
 
 #. module: stock
 #: field:procurement.rule,propagate:0 field:stock.location.path,propagate:0
@@ -3600,7 +3600,7 @@ msgstr "Laatutarkastus"
 #. module: stock
 #: field:stock.warehouse,wh_qc_stock_loc_id:0
 msgid "Quality Control Location"
-msgstr ""
+msgstr "Laadunvarmistuksen sijainti"
 
 #. module: stock
 #: view:stock.quant:stock.view_stock_quant_form
@@ -3735,7 +3735,7 @@ msgstr "Määrät"
 #: code:addons/stock/static/src/xml/picking.xml:218
 #, python-format
 msgid "Quit"
-msgstr ""
+msgstr "Lopeta"
 
 #. module: stock
 #: field:product.template,loc_rack:0
@@ -3891,7 +3891,7 @@ msgstr ""
 #. module: stock
 #: view:product.removal:stock.view_removal
 msgid "Removal"
-msgstr ""
+msgstr "Poisto"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_removal
@@ -4017,7 +4017,7 @@ msgstr "Oikea ylempi"
 #: field:procurement.rule,route_id:0 field:stock.location.path,route_id:0
 #: view:stock.location.route:stock.stock_location_route_form_view
 msgid "Route"
-msgstr ""
+msgstr "Reitti"
 
 #. module: stock
 #: field:stock.location.route,name:0
@@ -5616,7 +5616,7 @@ msgstr "tuntematon"
 #. module: stock
 #: view:product.template:stock.view_template_property_form
 msgid "⇒ Request Procurement"
-msgstr ""
+msgstr "⇒ Pyydä hankinta"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
@@ -5626,4 +5626,4 @@ msgstr "⇒ Nolla määrät 0"
 #. module: stock
 #: view:product.template:stock.view_template_property_form
 msgid "⇒ Update"
-msgstr ""
+msgstr "⇒ Päivitä"

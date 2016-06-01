@@ -5,13 +5,14 @@
 # Translators:
 # Davide Corio <enlightx@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Paolo Valier, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-11-07 14:40+0000\n"
-"Last-Translator: Davide Corio <enlightx@gmail.com>\n"
+"PO-Revision-Date: 2016-04-30 10:12+0000\n"
+"Last-Translator: Paolo Valier\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-8/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -509,7 +510,7 @@ msgstr "Riga fattura"
 #. module: account_asset
 #: help:account.asset.asset,salvage_value:0
 msgid "It is the amount you plan to have that you cannot depreciate."
-msgstr "E' l'ammontare che si prevede di non poter ammortizzare."
+msgstr "È l'ammontare che si prevede di non poter ammortizzare."
 
 #. module: account_asset
 #: field:account.asset.category,journal_id:0
@@ -779,7 +780,7 @@ msgid ""
 "When an asset is created, the status is 'Draft'.\n"
 "If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
 "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
-msgstr "Quando un'immobilizzazione è creata, lo stato è 'Bozza'.\nSe l'immobilizzazione è confermata, lo stato diventa 'Attivo' e le righe di ammortamento possono essere pubblicate in contabilità.\nE' possibile chiudere manualmente un'immobilizzazione quando l'ammortamento è completato. Se l'ultima riga di ammortamento è pubblicata, l'immobilizzazione automaticamente va in quello stato."
+msgstr "Quando un'immobilizzazione è creata, lo stato è 'Bozza'.\nSe l'immobilizzazione è confermata, lo stato diventa 'Attivo' e le righe di ammortamento possono essere pubblicate in contabilità.\nÈ possibile chiudere manualmente un'immobilizzazione quando l'ammortamento è completato. Se l'ultima riga di ammortamento è pubblicata, l'immobilizzazione automaticamente va in quello stato."
 
 #. module: account_asset
 #: field:asset.asset.report,name:0
@@ -787,10 +788,18 @@ msgid "Year"
 msgstr "Anno"
 
 #. module: account_asset
+#: code:addons/account_asset/account_asset_invoice.py:53
+#, python-format
+msgid ""
+"You already have assets with the reference %s.\n"
+"Please delete these assets before creating new ones for this invoice."
+msgstr ""
+
+#. module: account_asset
 #: code:addons/account_asset/account_asset.py:81
 #, python-format
 msgid "You cannot delete an asset that contains posted depreciation lines."
-msgstr "Non puoi eliminare un'immobilizzazione che contiene linee di deprezzamento confermate."
+msgstr "Non puoi eliminare un'immobilizzazione che contiene righe di deprezzamento confermate."
 
 #. module: account_asset
 #: view:asset.modify:account_asset.asset_modify_form

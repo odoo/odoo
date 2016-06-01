@@ -9,6 +9,7 @@
 # Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2015
 # mrshelly <mrshelly@hotmail.com>, 2015
 # Talway <9010446@qq.com>, 2015
 # THL <wt39181819@gmail.com>, 2015
@@ -21,7 +22,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2016-04-07 11:23+0000\n"
+"PO-Revision-Date: 2016-05-13 13:54+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -1741,7 +1742,7 @@ msgid ""
 "description provided by the CODA configuration tables is based upon the CODA\n"
 "V2.2 specifications.\n"
 "If required, you can manually adjust the descriptions via the CODA configuration menu.\n"
-msgstr "\n导入CODA银行报表模块.\n======================================\n\n支持来自比利时的银行账户在CODA平面文件V2格式.\n----------------------------------------------------------------------\n    *支持CODA v1格式.\n    * 支持CODA v2.2格式.\n    * 支持外国货币.\n    * 支持所有数据记录类型 (0, 1, 2, 3, 4, 8, 9).\n    * 分析和记录所有的交易代码和结构化的格式\n      通信 .\n    * 通过CODA配置参数自动分配财务报告作业.\n    * 支持每个银行账户的多个会计分类账.\n    * 支持在单一的Coda文件从不同的银行帐户计算出不同的结算单\n    * 支持“仅分析”CODA的银行帐户（在CODA银行帐户配置表中定义 type= 'info’）.\n    * 多语言CODA的解析，为英语地区，荷兰，法国 配置数据解析.\n\n机器可读的CODA 文件被解析和存储为人类可读的CODA银行报表。同时银行报表生成含有Coda信息的一个子集（只包含那些财务会计记录创建时要求的交易记录）。CODA银行的报表是“只读”对象，因此剩余可靠表达的原始Coda文件而非银行的声明将被修改为所需的会计业务流程.\n\nCODA银行帐户配置为类型“Info”只会产生CODA银行报表.\n\n在CODA处理的结果中移除一个对象将导致相关对象的移除。 一个包含多个银行报表的CODA文件的移除，也将删除与此文件相关的报表.\n\n取而代之的是产生银行对帐单手动调节，也可以重新导入CODA与信息更新的OpenERP数据库后失踪允许自动调节.\n\n下面的逻辑已经在CODA处理实现：\n~~~~~~~~~~~~~~~~~~~~~~~~~~\n 在某些情况下，在CODA V2中交易代码，交易类别或结构化通信代码已经被赋予了新的或更清楚地说明。这一说明由基于的CODA V2.2规格的CODA配置表提供.\n 如果需要，您可以通过CODA配置菜单的描述手动调整.\n"
+msgstr "\n导入CODA银行报表的模块.\n======================================\n\n支持来自比利时的银行账户在CODA平面文件V2格式.\n----------------------------------------------------------------------\n    *支持CODA v1格式.\n    * 支持CODA v2.2格式.\n    * 支持外国货币.\n    * 支持所有数据记录类型 (0, 1, 2, 3, 4, 8, 9).\n    * 分析和记录所有的交易代码和结构化的格式\n      通信 .\n    * 通过CODA配置参数自动分配财务报告作业.\n    * 支持每个银行账户的多个会计分类账.\n    * 支持在单一的Coda文件从不同的银行帐户计算出不同的结算单\n    * 支持“仅分析”CODA的银行帐户（在CODA银行帐户配置表中定义 type= 'info’）.\n    * 多语言CODA的解析，为英语地区，荷兰，法国 配置数据解析.\n\n机器可读的CODA 文件被解析和存储为人类可读的CODA银行报表。同时银行报表生成含有Coda信息的一个子集（只包含那些财务会计记录创建时要求的交易记录）。CODA银行的报表是“只读”对象，因此剩余可靠表达的原始Coda文件而非银行的声明将被修改为所需的会计业务流程.\n\nCODA银行帐户配置为类型“Info”只会产生CODA银行报表.\n\n在CODA处理的结果中移除一个对象将导致相关对象的移除。 一个包含多个银行报表的CODA文件的移除，也将删除与此文件相关的报表.\n\n取而代之的是产生银行对帐单手动调节，也可以重新导入CODA与信息更新的OpenERP数据库后失踪允许自动调节.\n\n下面的逻辑已经在CODA处理实现：\n~~~~~~~~~~~~~~~~~~~~~~~~~~\n 在某些情况下，在CODA V2中交易代码，交易类别或结构化通信代码已经被赋予了新的或更清楚地说明。这一说明由基于的CODA V2.2规格的CODA配置表提供.\n 如果需要，您可以通过CODA配置菜单的描述手动调整.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_payment
@@ -3320,7 +3321,7 @@ msgid ""
 "\n"
 "    **Note:** this module is not compatible with the module segmentation, since it's the same which has been renamed.\n"
 "    "
-msgstr "\n在此模块允许对业务伙伴进行细分。\n=================================================================\n\n它对早期细分模块的分析标准进行了改进。\n受益于对问卷调查的新定义，你可以重新组合调查问题成为一个新问卷，\n并用于业务伙伴。\n\n它们对早期的CRM和SRM分割的工具进行了合并，\n因为它们的功能是重叠的。\n\n    **注:** 这个模块与细分模块不兼容, 细分模块已被重新命名。\n    "
+msgstr "\n此模块允许用户对业务伙伴进行细分。\n=================================================================\n\n它对早期细分模块的分析标准进行了改进。\n受益于对问卷调查的新定义，你可以重新组合调查问题成为一个新问卷，\n并用于业务伙伴。\n\n它们对早期的CRM和SRM分割的工具进行了合并，\n因为它们的功能是重叠的。\n\n    **注:** 这个模块与细分模块不兼容, 细分模块已被重新命名。\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_anonymization
@@ -3861,7 +3862,7 @@ msgid ""
 "------------------------------------------------------\n"
 "* Stock Inventory Value at given date (support dates in the past)\n"
 "    "
-msgstr "\n管理会计模块\n====================== \n这个模块是“库存”和“会计”模块之间的连接，允许你创建会计分录来对库存移动进行估值\n\n关键特征\n------------ \n*库存估值（定期或自动）\n*分拣产生的发票\n\n仓库管理仪表板/报告包括：\n------------------------------------------------------ \n*在给定的日期（在过去的日期）的库存估值"
+msgstr "\nWMS会计模块\n====================== \n这个模块是“库存”和“会计”模块之间的连接，允许你创建会计分录来对库存运动进行计价\n\n关键特征\n------------ \n*库存计价（定期或自动）\n*从分拣开票\n\n仓库管理仪表板/报告包括：\n------------------------------------------------------ \n*对给定的日期（在过去的日期）的库存计价"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_gengo
@@ -4313,7 +4314,7 @@ msgstr "一个模块生成异常。"
 #. module: base
 #: model:ir.module.module,description:base.module_test_workflow
 msgid "A module to play with workflows."
-msgstr "模块工作流程"
+msgstr "使用工作流程的模块"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_impex
@@ -4467,7 +4468,7 @@ msgstr "会计"
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_and_finance
 msgid "Accounting & Finance"
-msgstr "会计 & 财务"
+msgstr "会计及财务"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_test
@@ -5120,7 +5121,7 @@ msgstr "作者"
 #: model:ir.module.module,description:base.module_payment_authorize
 #: model:ir.module.module,shortdesc:base.module_payment_authorize
 msgid "Authorize.Net Payment Acquirer"
-msgstr "Authorize.Net 付款方式"
+msgstr "Authorize.Net 付款托收方"
 
 #. module: base
 #: field:ir.actions.act_window,auto_search:0
@@ -6286,7 +6287,7 @@ msgstr "约束"
 #: code:addons/model.py:129
 #, python-format
 msgid "Constraint Error"
-msgstr "约束性错误"
+msgstr "约束错误"
 
 #. module: base
 #: field:ir.model.constraint,type:0
@@ -6414,7 +6415,7 @@ msgstr "不能加载基础模块"
 #: code:addons/base/res/res_partner.py:642
 #, python-format
 msgid "Couldn't create contact without email address!"
-msgstr "没有邮件地址，不能建立联系人"
+msgstr "不能建立没有电子邮件地址的联系人！"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country
@@ -6548,7 +6549,7 @@ msgstr "为系统创建和管理用户。在一段时间内用该系统的用户
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
 msgid "Create surveys, collect answers and print statistics"
-msgstr "生成调查问卷、 搜集问卷答案、 打印问卷统计"
+msgstr "创建调查问卷、 搜集问卷答案、 打印问卷统计"
 
 #. module: base
 #: field:ir.actions.server,crud_model_name:0
@@ -6725,7 +6726,7 @@ msgstr "货币"
 #: view:res.currency:base.view_currency_search field:res.currency,name:0
 #: field:res.currency.rate,currency_id:0
 msgid "Currency"
-msgstr "币别"
+msgstr "货币"
 
 #. module: base
 #: help:res.currency,name:0
@@ -6812,7 +6813,7 @@ msgstr "客户业务伙伴"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_profiling
 msgid "Customer Profiling"
-msgstr "客户分析"
+msgstr "客户剖析"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_customer
@@ -6839,7 +6840,7 @@ msgstr "客户"
 #: view:ir.ui.view.custom:base.view_view_custom_search
 #: view:ir.ui.view.custom:base.view_view_custom_tree
 msgid "Customized Views"
-msgstr "自定义视图"
+msgstr "自定义的视图"
 
 #. module: base
 #: model:res.country,name:base.cy
@@ -7469,7 +7470,7 @@ msgstr "英语(AU)"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "English (UK)"
-msgstr "英语（英国）"
+msgstr "英语(英国)"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -7486,7 +7487,7 @@ msgstr "在这里键入Python代码。关于Python表达式的帮助在这个文
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sequence
 msgid "Entries Sequence Numbering"
-msgstr "分录 序列 编号"
+msgstr "分录序列编码"
 
 #. module: base
 #: model:res.country,name:base.gq
@@ -7829,7 +7830,7 @@ msgstr "字段 `%(field_name)s`不存在！"
 #: code:addons/models.py:1268
 #, python-format
 msgid "Field(s) `%s` failed against a constraint: %s"
-msgstr "Field(s) `%s` 违反约束: %s"
+msgstr "字段 `%s` 违反约束: %s"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
@@ -7937,7 +7938,7 @@ msgstr "财务和分析会计"
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "Find the ID of a record in the database"
-msgstr "在数据库中查找记录的id"
+msgstr "查找记录在数据库中的id"
 
 #. module: base
 #: model:res.country,name:base.fi
@@ -8645,7 +8646,7 @@ msgstr "梵蒂冈"
 #. module: base
 #: field:res.users,action_id:0
 msgid "Home Action"
-msgstr "主页动作"
+msgstr "家动作"
 
 #. module: base
 #: model:res.country,name:base.hn
@@ -8775,7 +8776,7 @@ msgstr "数据库中目标记录的id"
 #. module: base
 #: help:ir.ui.view,xml_id:0
 msgid "ID of the view defined in xml file"
-msgstr "定义在 XML 文件里的视图的ID"
+msgstr "定义在 XML 文件里的视图ID"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bus
@@ -9015,7 +9016,7 @@ msgstr "在模块中"
 #: view:workflow.activity:base.view_workflow_activity_form
 #: field:workflow.activity,in_transitions:0
 msgid "Incoming Transitions"
-msgstr "进来的转移"
+msgstr "进来的转换"
 
 #. module: base
 #: constraint:ir.actions.server:0
@@ -9128,7 +9129,7 @@ msgstr "行内编辑"
 #. module: base
 #: selection:ir.actions.act_window,target:0
 msgid "Inline View"
-msgstr "内嵌的视图"
+msgstr "内联视图"
 
 #. module: base
 #: code:addons/base/module/module.py:436
@@ -9386,7 +9387,7 @@ msgstr "开票"
 #. module: base
 #: model:ir.module.category,name:base.module_category_account_voucher
 msgid "Invoicing & Payments"
-msgstr "开票&付款"
+msgstr "开票及付款"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_journal
@@ -9837,7 +9838,7 @@ msgstr "线索转换为问题"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_lead
 msgid "Leads & Opportunities"
-msgstr "线索&商机"
+msgstr "线索及商机"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm
@@ -10399,7 +10400,7 @@ msgstr "消息"
 #. module: base
 #: view:res.users:base.view_users_form
 msgid "Messaging and Social"
-msgstr "通信与社交"
+msgstr "消息与社交"
 
 #. module: base
 #: field:ir.cron,function:0
@@ -10525,7 +10526,7 @@ msgstr "模型数据"
 #: view:ir.model:base.view_model_form view:ir.model:base.view_model_search
 #: view:ir.model:base.view_model_tree field:ir.model,name:0
 msgid "Model Description"
-msgstr "模型 说明"
+msgstr "模型说明"
 
 #. module: base
 #: field:ir.actions.server,model_name:0 field:ir.model.data,model:0
@@ -10997,7 +10998,7 @@ msgstr "找不到汇率\n货币: %s \n日期: %s"
 #. module: base
 #: field:ir.model.data,noupdate:0
 msgid "Non Updatable"
-msgstr "非 可更新"
+msgstr "不可更新"
 
 #. module: base
 #: selection:ir.mail_server,smtp_encryption:0
@@ -11162,7 +11163,7 @@ msgstr "办公用品"
 #. module: base
 #: model:res.groups,name:base.group_hr_user
 msgid "Officer"
-msgstr "经理"
+msgstr "主管"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_ogone
@@ -11415,7 +11416,7 @@ msgstr "其它私有协议"
 #. module: base
 #: view:ir.mail_server:base.view_ir_mail_server_search
 msgid "Outgoing Mail Server"
-msgstr "出去的 邮件 服务器"
+msgstr "出去的邮件服务器"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ir_mail_server_list
@@ -11424,13 +11425,13 @@ msgstr "出去的 邮件 服务器"
 #: view:ir.mail_server:base.view_ir_mail_server_search
 #: model:ir.ui.menu,name:base.menu_mail_servers
 msgid "Outgoing Mail Servers"
-msgstr "出去的 邮件 服务器"
+msgstr "出去的邮件服务器"
 
 #. module: base
 #: view:workflow.activity:base.view_workflow_activity_form
 #: field:workflow.activity,out_transitions:0
 msgid "Outgoing Transitions"
-msgstr "出去的 转移"
+msgstr "出去的转换"
 
 #. module: base
 #: field:base.language.import,overwrite:0
@@ -11715,7 +11716,7 @@ msgstr "Paypal付款托收"
 #: model:ir.module.category,name:base.module_category_localization_payroll
 #: model:ir.module.module,shortdesc:base.module_hr_payroll
 msgid "Payroll"
-msgstr "薪水册"
+msgstr "工资表"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account
@@ -12029,7 +12030,7 @@ msgstr "产品"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product
 msgid "Products & Pricelists"
-msgstr "产品&价格表"
+msgstr "产品及价格表"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_expiry
@@ -12302,7 +12303,7 @@ msgstr "记录 "
 #: code:addons/models.py:4769
 #, python-format
 msgid "Record #%d of %s not found, cannot copy!"
-msgstr "记录 #%d %s 无法找到，不能复制！"
+msgstr "记录 #%d  %s 之 无法找到，不能复制！"
 
 #. module: base
 #: field:ir.actions.act_window,res_id:0 field:ir.actions.server,id_value:0
@@ -12656,12 +12657,12 @@ msgstr "规则"
 #. module: base
 #: constraint:ir.rule:0
 msgid "Rules can not be applied on Transient models."
-msgstr "规则不能应用在Transient 模型"
+msgstr "规则不能应用在瞬态模型"
 
 #. module: base
 #: constraint:ir.rule:0
 msgid "Rules can not be applied on the Record Rules model."
-msgstr "规则不能应用在Record Rules模型"
+msgstr "规则不能应用在记录规则模型"
 
 #. module: base
 #: code:addons/base/ir/ir_actions.py:809
@@ -12744,7 +12745,7 @@ msgstr "圣赫勒拿"
 #. module: base
 #: model:res.country,name:base.kn
 msgid "Saint Kitts & Nevis Anguilla"
-msgstr "圣基茨和尼维斯"
+msgstr "圣基茨及尼维斯"
 
 #. module: base
 #: model:res.country,name:base.lc
@@ -12769,7 +12770,7 @@ msgstr "圣多美和普林西比"
 #. module: base
 #: model:res.country,name:base.vc
 msgid "Saint Vincent & Grenadines"
-msgstr "圣文森特和格林纳丁斯"
+msgstr "圣文森特及格林纳丁斯"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sale
@@ -12798,7 +12799,7 @@ msgstr "销售"
 #. module: base
 #: view:res.partner:base.view_partner_form
 msgid "Sales & Purchases"
-msgstr "销售&采购"
+msgstr "销售及采购"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_analytic_plans
@@ -12906,7 +12907,7 @@ msgstr "搜索视图"
 #. module: base
 #: field:ir.actions.act_window,search_view_id:0
 msgid "Search View Ref."
-msgstr "搜索视图 参考."
+msgstr "搜索视图参照."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_applicant_document
@@ -12982,7 +12983,7 @@ msgstr "选择执行的客户端动作"
 #. module: base
 #: help:ir.actions.server,wkf_transition_id:0
 msgid "Select the workflow signal to trigger."
-msgstr "选择触发工作流信号"
+msgstr "选择要触发的工作流信号"
 
 #. module: base
 #: help:res.partner,use_parent_address:0
@@ -13216,7 +13217,7 @@ msgstr "信号（subflow.*）"
 #. module: base
 #: field:ir.actions.server,wkf_transition_id:0
 msgid "Signal to Trigger"
-msgstr "信号触发"
+msgstr "触发信号"
 
 #. module: base
 #: field:res.users,signature:0
@@ -13363,7 +13364,7 @@ msgstr "对不起，您未被允许修改此单据。"
 #: code:addons/models.py:4618
 #, python-format
 msgid "Sorting field %s not found on model %s"
-msgstr "模块 %s 中未找到Sorting field %s "
+msgstr "模块 %s 中未找到排序字段 %s "
 
 #. module: base
 #: field:ir.translation,source:0
@@ -14142,7 +14143,7 @@ msgstr "国家全名"
 msgid ""
 "The group that a user must have to be authorized to validate this "
 "transition."
-msgstr "用户组中的用户需要授权才能确认此迁移。"
+msgstr "用户组中的用户需要授权才能确认此转换。"
 
 #. module: base
 #: help:res.partner,user_id:0
@@ -14568,21 +14569,21 @@ msgstr "转账付款托收"
 #. module: base
 #: field:ir.model,osv_memory:0
 msgid "Transient Model"
-msgstr "Transient 模型"
+msgstr "瞬态模型"
 
 #. module: base
 #: view:workflow.transition:base.view_workflow_transition_form
 #: view:workflow.transition:base.view_workflow_transition_search
 #: view:workflow.transition:base.view_workflow_transition_tree
 msgid "Transition"
-msgstr "迁移"
+msgstr "转换"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_transition_form
 #: model:ir.ui.menu,name:base.menu_workflow_transition
 #: view:workflow.activity:base.view_workflow_activity_form
 msgid "Transitions"
-msgstr "迁移"
+msgstr "转换"
 
 #. module: base
 #: field:res.groups,trans_implied_ids:0
@@ -15229,7 +15230,7 @@ msgstr "视图"
 #. module: base
 #: report:ir.module.reference:0
 msgid "View :"
-msgstr "视图:"
+msgstr "视图："
 
 #. module: base
 #: field:ir.ui.view,arch:0 view:ir.ui.view.custom:base.view_view_custom_form
@@ -15339,7 +15340,7 @@ msgstr "仓库管理"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_picking_wave
 msgid "Warehouse Management: Waves"
-msgstr "仓库管理：波动"
+msgstr "仓库管理：波次"
 
 #. module: base
 #: code:addons/base/ir/ir_actions.py:827
@@ -15557,7 +15558,7 @@ msgid ""
 "When the operation of transition comes from a button pressed in the client "
 "form, signal tests the name of the pressed button. If signal is NULL, no "
 "button is necessary to validate this transition."
-msgstr "如果转换的操作来源于界面上的一个按钮，信号字段存储按钮的名称。如果该值为NULL，界面上不需要按钮"
+msgstr "当转换操作来源于客户端表单上的一个按钮，信号测试被按下去的按钮的名称。如果信号为NULL，不需要按钮验证该转换。"
 
 #. module: base
 #: help:ir.model.fields,translate:0
@@ -15630,7 +15631,7 @@ msgstr "工作流活动"
 #. module: base
 #: view:workflow:base.view_workflow_diagram
 msgid "Workflow Editor"
-msgstr "工作流 编辑器"
+msgstr "工作流编辑器"
 
 #. module: base
 #: view:workflow.instance:base.view_workflow_instance_form
@@ -15642,7 +15643,7 @@ msgstr "工作流实例"
 #. module: base
 #: view:workflow.transition:base.view_workflow_transition_search
 msgid "Workflow Transition"
-msgstr "工作流 迁移"
+msgstr "工作流转换"
 
 #. module: base
 #: view:workflow.workitem:base.view_workflow_workitem_form
@@ -15702,12 +15703,12 @@ msgstr "Write a python expression, beginning with object, that gives the record 
 #. module: base
 #: field:ir.actions.report.xml,report_xml:0
 msgid "XML Path"
-msgstr "XML 路径"
+msgstr "XML路径"
 
 #. module: base
 #: view:ir.actions.report.xml:base.act_report_xml_view
 msgid "XML Report"
-msgstr "XML 报告"
+msgstr "XML报告"
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -15910,7 +15911,7 @@ msgstr "bank_bic"
 #. module: base
 #: selection:base.language.export,state:0
 msgid "choose"
-msgstr "选择"
+msgstr "选取"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
@@ -16111,7 +16112,7 @@ msgstr "语言: '%s' 的翻译函数没有找到"
 #: view:ir.actions.server:base.view_server_action_form
 msgid ""
 "object or obj: browse_record of the record on which the action is triggered"
-msgstr "object或obj: 触发动作的记录的browse_record"
+msgstr "object或obj：触发动作的记录的browse_record"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
@@ -16154,7 +16155,7 @@ msgstr "partner_name = obj.name + '_code'\n                                     
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "pool: ORM model pool (i.e. self.pool)"
-msgstr "pool: ORM 模型池 (例如：self.pool)"
+msgstr "pool：ORM 模型池 (例如：self.pool)"
 
 #. module: base
 #: code:addons/mail.py:285
@@ -16170,7 +16171,7 @@ msgstr "res_config_contents"
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "self: ORM model of the record on which the action is triggered"
-msgstr "self: 触发动作的记录的ORM模型"
+msgstr "self：触发动作的记录的ORM模型"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_access_rights

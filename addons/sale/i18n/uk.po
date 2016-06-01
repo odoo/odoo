@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-03-27 15:49+0000\n"
-"Last-Translator: Bogdan\n"
+"PO-Revision-Date: 2016-04-29 16:13+0000\n"
+"Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-8/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,7 +100,7 @@ msgstr ""
 #. module: sale
 #: field:product.product,sales_count:0 field:product.template,sales_count:0
 msgid "# Sales"
-msgstr ""
+msgstr "К-сть продаж"
 
 #. module: sale
 #: field:sale.report,nbr:0
@@ -110,26 +110,26 @@ msgstr "К-сть рядків"
 #. module: sale
 #: field:sale.report,product_uom_qty:0
 msgid "# of Qty"
-msgstr ""
+msgstr "Кількість"
 
 #. module: sale
 #: field:res.partner,sale_order_count:0
 msgid "# of Sales Order"
-msgstr ""
+msgstr "К-сть замовлень"
 
 #. module: sale
 #: model:email.template,report_name:sale.email_template_edi_sale
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Пропозиція' or 'Замовлення'} (Посилання ${object.name or 'немає' })"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -227,7 +227,7 @@ msgstr ""
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr ""
+msgstr "Адреси у замовленні на продаж"
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -387,12 +387,12 @@ msgstr "Аналітичний рахунок"
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
 msgid "Analytic Accounting for Sales"
-msgstr ""
+msgstr "Аналітичний облік для продажу"
 
 #. module: sale
 #: field:account.config.settings,group_analytic_account_for_sales:0
 msgid "Analytic accounting for sales"
-msgstr ""
+msgstr "Аналітичний облік для продажу"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -410,17 +410,17 @@ msgstr ""
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
 msgid "By Product"
-msgstr ""
+msgstr "По товарах"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salespersons
 msgid "By Salespersons"
-msgstr ""
+msgstr "По продавцю"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salesteam
 msgid "By Salesteam"
-msgstr ""
+msgstr "По продавцю"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -484,7 +484,7 @@ msgstr ""
 #. module: sale
 #: help:crm.case.section,use_quotations:0
 msgid "Check this box to manage quotations in this sales team."
-msgstr ""
+msgstr "Відмітьте для керування пропозиціями у цій команді пролажу."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -529,7 +529,7 @@ msgstr "Помилка налаштування!"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Confirm Sale"
-msgstr ""
+msgstr "Підтвердити продаж"
 
 #. module: sale
 #: field:sale.order,date_confirm:0
@@ -578,7 +578,7 @@ msgstr "Створити інвойс"
 #: view:sale.make.invoice:sale.view_sale_order_make_invoice
 #: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
 msgid "Create Invoices"
-msgstr ""
+msgstr "Створити рахунки"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -642,12 +642,12 @@ msgstr ""
 #. module: sale
 #: field:sale.report,date:0
 msgid "Date Order"
-msgstr ""
+msgstr "Дата замовлення"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Date Ordered:"
-msgstr ""
+msgstr "Дата замовлення:"
 
 #. module: sale
 #: help:sale.order,message_last_post:0
@@ -662,7 +662,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,create_date:0
 msgid "Date on which sales order is created."
-msgstr ""
+msgstr "Дата створення замовлення на продаж."
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
@@ -694,7 +694,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Delivery Address"
-msgstr ""
+msgstr "Адреса доставки"
 
 #. module: sale
 #: field:sale.order.line,delay:0
@@ -704,7 +704,7 @@ msgstr "Термін виконання доставки"
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Delivery address for current sales order."
-msgstr ""
+msgstr "Адреса доставки для поточного замовлення."
 
 #. module: sale
 #: field:sale.order.line,name:0 view:website:sale.report_saleorder_document
@@ -724,7 +724,7 @@ msgstr "Знижка (%)"
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr ""
+msgstr "Знижка у рядках"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_margin:0
@@ -976,22 +976,22 @@ msgstr "Рядки інвойса"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Invoice Order"
-msgstr ""
+msgstr "Рахунок по замовленню"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
 msgid "Invoice Sales Order"
-msgstr ""
+msgstr "Рахунок по замовленню"
 
 #. module: sale
 #: field:crm.case.section,invoiced_target:0
 msgid "Invoice Target"
-msgstr ""
+msgstr "Ціль рахунку"
 
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
 msgid "Invoice address for current sales order."
-msgstr ""
+msgstr "Адреса для рахунку цього замовлення."
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1121,13 +1121,13 @@ msgstr "Повідомлення та історія бесіди"
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "My Sales"
-msgstr ""
+msgstr "Мої продажі"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_line_filter
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "My Sales Order Lines"
-msgstr ""
+msgstr "Мої рядки замовлення"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1162,7 +1162,7 @@ msgstr ""
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
-msgstr ""
+msgstr "Кількість днів з моменту підтвердження замовлення та відправки товарів клієнту."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
@@ -1195,7 +1195,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.client,name:sale.action_client_sale_menu
 msgid "Open Sale Menu"
-msgstr ""
+msgstr "Відкрити меню продажу"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_line_filter
@@ -1222,7 +1222,7 @@ msgstr "Місяць замовлення"
 #. module: sale
 #: view:sale.order:sale.view_order_tree
 msgid "Order Number"
-msgstr ""
+msgstr "Номер замовлення"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1252,7 +1252,7 @@ msgstr ""
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
 msgid "Ordered date of the sales order"
-msgstr ""
+msgstr "Очікувана дата замовлення"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1330,7 +1330,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,pricelist_id:0
 msgid "Pricelist for current sales order."
-msgstr ""
+msgstr "Прайс-лист дял поточного замовлення"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -1384,7 +1384,7 @@ msgstr "Проект"
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
 msgid "Properties on lines"
-msgstr ""
+msgstr "Властивості у рядках"
 
 #. module: sale
 #: view:sale.order.line:sale.view_order_line_tree
@@ -1412,17 +1412,17 @@ msgstr "Комерційна пропозиція"
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
 msgid "Quotation / Order"
-msgstr ""
+msgstr "Пропозиція / Замовлення"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr ""
+msgstr "Дата замовлення:"
 
 #. module: sale
 #: view:sale.order:sale.view_quotation_tree
 msgid "Quotation Number"
-msgstr ""
+msgstr "Номер замовлення"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1432,17 +1432,17 @@ msgstr ""
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation Send"
-msgstr ""
+msgstr "Замовлення відправлено"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Quotation Sent"
-msgstr ""
+msgstr "Замовлення відправлено"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr ""
+msgstr "Замовлення підтверджено"
 
 #. module: sale
 #: code:addons/sale/sale.py:362
@@ -1454,7 +1454,7 @@ msgstr ""
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 msgid "Quotation sent"
-msgstr ""
+msgstr "Замовлення відправлено"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1469,12 +1469,12 @@ msgstr "Комерційні пропозиції"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
-msgstr ""
+msgstr "Аналіз пропозицій"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Quotations and Sales"
-msgstr ""
+msgstr "Пропозиції та продаж"
 
 #. module: sale
 #: field:crm.case.section,monthly_quoted:0
@@ -1499,12 +1499,12 @@ msgstr "Перестворити інвойс"
 #. module: sale
 #: help:sale.order,origin:0
 msgid "Reference of the document that generated this sales order request."
-msgstr ""
+msgstr "Посилання на документ на основі якого згенеровано запит комерційної пропозиції."
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Reference/Description"
-msgstr ""
+msgstr "Посилання/Опис"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1550,7 +1550,7 @@ msgstr "Продажі"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr ""
+msgstr "Рахунок на попередню оплату замовлення"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_all
@@ -1559,12 +1559,12 @@ msgstr ""
 #: view:sale.report:sale.view_order_product_graph
 #: view:sale.report:sale.view_order_product_search
 msgid "Sales Analysis"
-msgstr ""
+msgstr "Аналіз продажу"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
 msgid "Sales Funnel"
-msgstr ""
+msgstr "Конвеєр продажу"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -1585,7 +1585,7 @@ msgstr "Sales Order"
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr ""
+msgstr "Замовлення підтверджено"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -1603,7 +1603,7 @@ msgstr "Рядки заявки на продаж"
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_line_filter
 msgid "Sales Order Lines ready to be invoiced"
-msgstr ""
+msgstr "Рядки замовлення готові до включення у рахунок"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_line_filter
@@ -1656,7 +1656,7 @@ msgstr "Замовлення на Продаж"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr ""
+msgstr "Статистика замовлень на продаж"
 
 #. module: sale
 #: view:account.invoice:sale.account_invoice_groupby_inherit
@@ -1673,7 +1673,7 @@ msgstr "Відділ продажу"
 #. module: sale
 #: model:ir.model,name:sale.model_crm_case_section
 msgid "Sales Teams"
-msgstr ""
+msgstr "Команди продажу"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_exception
@@ -1702,7 +1702,7 @@ msgstr ""
 #: view:sale.order:sale.view_sales_order_filter
 #: view:sale.order.line:sale.view_sales_order_line_filter
 msgid "Search Sales Order"
-msgstr ""
+msgstr "Пошук замовлення на пролаж"
 
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
@@ -1814,12 +1814,12 @@ msgstr ""
 #. module: sale
 #: help:sale.order,amount_untaxed:0
 msgid "The amount without tax."
-msgstr ""
+msgstr "Сума без податків"
 
 #. module: sale
 #: help:sale.order,project_id:0
 msgid "The analytic account related to a sales order."
-msgstr ""
+msgstr "Аналітичний рахунок пов’язаний з замовленням на продаж"
 
 #. module: sale
 #: field:sale.config.settings,time_unit:0
@@ -1938,7 +1938,7 @@ msgstr "До опрацювання"
 #: view:sale.order:sale.view_sales_order_filter
 #: view:sale.order.line:sale.view_sales_order_line_filter
 msgid "To Invoice"
-msgstr ""
+msgstr "До включення у рахунок"
 
 #. module: sale
 #: help:sale.config.settings,group_invoice_so_lines:0
@@ -1963,7 +1963,7 @@ msgstr "Сума"
 #: view:sale.order:sale.view_order_tree
 #: view:sale.order:sale.view_quotation_tree
 msgid "Total Tax Included"
-msgstr ""
+msgstr "Всього з податками"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -2047,7 +2047,7 @@ msgstr ""
 #. module: sale
 #: field:sale.config.settings,group_sale_pricelist:0
 msgid "Use pricelists to adapt your price per customers"
-msgstr ""
+msgstr "Використовувати прайс-листи для адаптації цін під клієнта"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document

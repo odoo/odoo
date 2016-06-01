@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-11-02 16:19+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-05-14 17:01+0000\n"
+"Last-Translator: Jaroslav Helemik Nemec <nemec@helemik.cz>\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-8/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgstr ""
 #. module: mrp
 #: field:product.product,mo_count:0 field:product.template,mo_count:0
 msgid "# Manufacturing Orders"
-msgstr ""
+msgstr "# Výrobní příkazy"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:323
@@ -94,7 +95,7 @@ msgid ""
 "                orders according to procurement needs.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klikněte pro vytvoření kusovníku. \n              </p><p>\n                Kusovník vám umožňuje definovat seznam surových materiálů pro vytvoření\n                konečného výrobku prostřednictvím objednávek výroby nebo sestavy\n                výrobků.\n              </p><p>\n                Tyto kusovníky jsou systémem Odoo automaticky využívány pro doporučení\n                objednávek výroby na základě zásobovacích požadavků.\n              </p>\n            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_group_action
@@ -113,7 +114,7 @@ msgid ""
 "                schedule a production using the matching bill of materials.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klikněte pro vytvoření skupiny vlastností.\n              </p><p>\n                Nadefinujte skupiny vlastností, které mohou být přiřazeny\n                ke kusovníku a potvrzení objednávky.\n                Vlastnosti umožňují Odoo automaticky zvolit správný\n                kusovník v závislosti na vlastnostech zvolených obchodníkem\n                v potvrzení objednávky.\n              </p><p>\n                Například ve skupině vlastností \"Záruka\" máte dvě vlastnosti:\n                jednoletou záruku a tříletou záruku. V závislosti na vlastnostech\n                zvolených v potvrzení objednávky naplánuje Odoo výrobu\n                za použití shodujících se kusovníků.\n              </p>\n            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
@@ -129,7 +130,7 @@ msgid ""
 "                stock rule.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klikněte pro vytvoření výrobního příkazu. \n              </p><p>\n                Výrobní příkaz založený na kusovníku spotřebuje surový\n                materiál a vytvoří finální výrobek.\n              </p><p>\n                Výrobní příkazy jsou obvykle vytvářeny automaticky v závislosti\n                na požadavcích zákazníků nebo automatických pravidlech jako\n                je pravidlo minimálních zásob.\n              </p>\n            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_action
@@ -146,7 +147,7 @@ msgid ""
 "                the needs.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klikněte pro vytvoření nové vlastnosti.\n              </p><p>\n                Vlastnosti v Odoo jsou používány ke zvolení správného\n                kusovníku pro vytvoření výrobku, když existuje několik cest\n                k vytvoření stejného výrobku. Ke každému kusovníku můžete\n                přiřadit několik vlastností. Když obchodník vytvoří\n                potvrzení objednávky, může jej spojit s různými vlastnostmi\n                a Odoo automaticky zvolí kusovník podle těchto vlastností.\n              </p>\n            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -176,12 +177,12 @@ msgid ""
 "                stock rule.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klikněte pro vytvoření výrobního příkazu. \n              </p><p>\n                Výrobní příkaz, založený na kusovníku, využije surový materiál\n                a vytvoří hotové výrobky.\n              </p><p>\n                Výrobní příkazy jsou obvykle navrhovány automaticky na základě \n                požadavků zákazníka nebo automatických pravidel jako je pravidlo\n                minimálních skladových zásob.\n              </p>\n            "
 
 #. module: mrp
 #: help:mrp.bom,product_efficiency:0
 msgid "A factor of 0.9 means a loss of 10% during the production process."
-msgstr ""
+msgstr "Činitel 0.9 znamená ztrátu 10% v průběhu výrobního procesu."
 
 #. module: mrp
 #: help:mrp.bom.line,product_efficiency:0
@@ -227,7 +228,7 @@ msgid ""
 "* Repair quotation report\n"
 "* Notes for the technician and for the final customer.\n"
 "-This installs the module mrp_repair."
-msgstr ""
+msgstr "Umožňuje správu všech oprav výrobků.\n                    * Přidání/odebrání výrobků v opravě\n                    * Dopad na zásoby\n                    * Fakturace (výrobky a/nebo služby)\n                    * Koncept záruky\n                    * Zprávu o nabídce opravy\n                    * Poznámky pro technika a konečného zákazníka.\n                Bude nainstalován modul mrp_repair."
 
 #. module: mrp
 #: selection:mrp.workcenter.load,measure_unit:0
@@ -371,7 +372,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom.line,type:0
 msgid "BoM Line Type"
-msgstr ""
+msgstr "Druh řádky kusovníku"
 
 #. module: mrp
 #: field:mrp.bom,bom_line_ids:0
@@ -990,7 +991,7 @@ msgstr ""
 #. module: mrp
 #: field:stock.warehouse,manufacture_to_resupply:0
 msgid "Manufacture in this Warehouse"
-msgstr ""
+msgstr "Vyrobit v tomto skladu"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
@@ -1894,7 +1895,7 @@ msgstr "Výběr vhodného kusovníku závisí na vlastnostech určených v  potv
 msgid ""
 "This allows to add state, date_start,date_stop in production order operation lines (in the \"Work Centers\" tab).\n"
 "-This installs the module mrp_operations."
-msgstr ""
+msgstr "Tímto povolíte pole state, date_start,date_stop v řádcích výrobních příkazů (na záložce \"Výrobní střediska\").\n               Bude nainstalován modul mrp_operations."
 
 #. module: mrp
 #: help:mrp.config.settings,module_product_manufacturer:0
@@ -1905,7 +1906,7 @@ msgid ""
 "* Manufacturer Product Code\n"
 "* Product Attributes.\n"
 "-This installs the module product_manufacturer."
-msgstr ""
+msgstr "Toto vám umožní definovat následující pole výrobku:\n                    * Výrobce\n                    * Název výrobku od výrobce\n                    * Kód výrobku od výrobce\n                    * Atributy výrobku.\n                Bude nainstalován modul product_manufacturer."
 
 #. module: mrp
 #: field:mrp.workcenter,time_stop:0
@@ -1947,7 +1948,7 @@ msgstr "Počet pracovních hodin výrobního střediska pro provedení úkonu v�
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "To Consume"
-msgstr ""
+msgstr "Ke spotřebě"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:162 code:addons/mrp/report/price.py:213
@@ -2036,13 +2037,13 @@ msgstr "Platné od"
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Valid From Date by Month"
-msgstr ""
+msgstr "Platné ode dne v měsíci"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Valid From Month"
-msgstr ""
+msgstr "Platné od měsíce"
 
 #. module: mrp
 #: field:mrp.bom,date_stop:0 field:mrp.bom.line,date_stop:0
@@ -2052,17 +2053,17 @@ msgstr "Platné do"
 #. module: mrp
 #: help:mrp.bom.line,date_start:0 help:mrp.bom.line,date_stop:0
 msgid "Validity of component. Keep empty if it's always valid."
-msgstr ""
+msgstr "Platnost této komponenty. Nechte prázdné pokud je vždy platná."
 
 #. module: mrp
 #: help:mrp.bom,date_start:0 help:mrp.bom,date_stop:0
 msgid "Validity of this BoM. Keep empty if it's always valid."
-msgstr ""
+msgstr "Platnost tohoto kusovníku. Nechte prázdné pokud je vždy platný."
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 msgid "Variant"
-msgstr ""
+msgstr "Varianta"
 
 #. module: mrp
 #: field:mrp.bom.line,attribute_value_ids:0
@@ -2097,14 +2098,14 @@ msgstr "Varování!"
 #: field:mrp.production,website_message_ids:0
 #: field:mrp.production.workcenter.line,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Zprávy Webové stránky"
 
 #. module: mrp
 #: help:mrp.bom,website_message_ids:0
 #: help:mrp.production,website_message_ids:0
 #: help:mrp.production.workcenter.line,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Historie komunikace Webové stránky"
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
@@ -2124,7 +2125,7 @@ msgid ""
 "Weekly Stock Value Variation enables you to track the stock value evolution "
 "linked to manufacturing activities, receipts of products and delivery "
 "orders."
-msgstr ""
+msgstr "Týdenní změna hodnoty zásob vám umožňuje sledovat změnu hodnoty zásob v návaznosti na aktivitu výroby, příjem výrobku a dodání objednávek."
 
 #. module: mrp
 #: view:mrp.bom:mrp.mrp_bom_form_view
@@ -2252,7 +2253,7 @@ msgid ""
 "Without this module: A + B + C -> D.\n"
 "With this module: A + B + C -> D + E.\n"
 "-This installs the module mrp_byproduct."
-msgstr ""
+msgstr "Polotovary můžete nastavit v kusovníku.\n                Bez tohoto modulu: A + B + C -> D.\n                S tímto modulem: A + B + C -> D + E.\n                Bude nainstalován modul module mrp_byproduct."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:339
@@ -2260,13 +2261,13 @@ msgstr ""
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
-msgstr ""
+msgstr "Nemůžete smazat kusovník, se kterým běží výroba. Nejdřív ji prosím ukončete nebo zrušte."
 
 #. module: mrp
 #: code:addons/mrp/stock.py:42
 #, python-format
 msgid "You must assign a serial number for the product %s"
-msgstr ""
+msgstr "Výrobku %s musíte přiřadit sériové číslo"
 
 #. module: mrp
 #: view:product.template:mrp.view_mrp_product_template_form_inherited

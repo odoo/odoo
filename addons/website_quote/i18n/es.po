@@ -3,14 +3,17 @@
 # * website_quote
 # 
 # Translators:
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Jairo Llopis <yajo.sk8@gmail.com>, 2016
+# Sandra Figueroa <sandrafigvar@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-03-25 13:43+0000\n"
-"PO-Revision-Date: 2016-03-26 08:57+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-05-02 08:02+0000\n"
+"Last-Translator: Jairo Llopis <yajo.sk8@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-8/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,12 +98,12 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n\n    <p>Hola ${object.partner_id.name},</p>\n\n    <p>Aquí está su ${object.state in ('draft', 'sent') and 'presupuesto' or 'confirmación de pedido'} de ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCIAS</strong><br />\n       &nbsp;&nbsp;Nº de pedido: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Total del pedido: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Fecha del pedido: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Referencia del pedido: ${object.origin}<br />\n       % endif\n       % if object.client_order_ref:\n       &nbsp;&nbsp;Su referencia: ${object.client_order_ref}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Su contacto: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n    <p>\n        Puede acceder a su presupuesto en línea:\n    </p>\n    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n        href=\"/quote/${object.id}/${object.access_token}\">Ver ${object.state in ('draft', 'sent') and 'presupuesto' or 'pedido'}</a>\n\n    % if object.paypal_url:\n    <br/>\n    <p>También es posible pagarlo mediante Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n\n    <br/>\n    <p>Si tiene alguna pregunta, no dude en contactarnos.</p>\n    <p>Gracias por elegir ${object.company_id.name}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Teléfono:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web:&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        % endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "! You can"
-msgstr ""
+msgstr "! Tu puedes"
 
 #. module: website_quote
 #: model:email.template,report_name:website_quote.email_template_edi_sale
@@ -482,7 +485,7 @@ msgid ""
 "                    </div>\n"
 "                </section>\n"
 "            "
-msgstr ""
+msgstr "<section data-snippet-id=\"title\">\n                    <h1>Formación en línea + certificado</h1>\n                </section>\n                <section data-snippet-id=\"text-image\">\n                    <div class=\"row\">\n                        <div class=\"col-md-12 mb32\">\n                            <p>Estos cursos tienen el mismo contenido de alta calidad que se ha podido encontrar tradicionalmente en nuestros cursos presenciales, complementado con sesiones modulares y laboratorios basados en la nube. Muchos de nuestros cursos formativos también incluyen docenas de webinarios grabados y sesiones en directo por parte de nuestros mejores profesores. Al final del curso, puede aprobar el examen de Certificado Odoo en uno de los más de 5000 centros de exámenes Pearson VUE del mundo.</p>\n                        </div>\n                        <div class=\"col-md-offset-1\">\n                            <h3>Sus ventajas</h3>\n                            <ul>\n                                <li>Sistema modular aplicado al método de aprendizaje</li>\n                                <li>Nueva experiencia de aprendizaje interactiva</li>\n                                <li>Coste formativo inferior para una formación de la misma calidad</li>\n                                <li>Mayor comodidad para facilitarle su proceso de aprendizaje</li>\n                            </ul>\n                        </div>\n                        <div class=\"col-md-12\">\n                            <h2>Estructura del curso</h2>\n                        </div>\n                        <div class=\"col-md-5 col-md-offset-1 mt16 mb16\">\n                            <img class=\"img img-responsive\" src=\"/website_quote/static/src/img/online_training.png\">\n                        </div>\n                        <div class=\"col-md-6 mt32\">\n                            <h4><strong>El curso tiene tres componentes</strong></h4>\n                            <ul>\n                                <li>Vídeos y demos detallados</li>\n                                <li>Ejercicios prácticos con sus soluciones</li>\n                                <li>Sesiones de preguntas y respuestas en directo con un profesor</li>\n                            </ul>\n                        </div>\n                    </div>\n                </section>\n            "
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
@@ -1088,7 +1091,7 @@ msgstr "Esta oferta expira en"
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "This order has already been"
-msgstr ""
+msgstr "Este pedido ya ha sido"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1153,7 +1156,7 @@ msgstr "Descripción del sitio web"
 #: code:addons/website_quote/controllers/main.py:148
 #, python-format
 msgid "You cannot add options to a confirmed order."
-msgstr ""
+msgstr "No puede añadir opciones a una orden confirmada."
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1203,7 +1206,7 @@ msgstr "y"
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "cancelled"
-msgstr ""
+msgstr "cancelado"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1259,7 +1262,7 @@ msgstr "desconocido"
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "validated"
-msgstr ""
+msgstr "validado"
 
 #. module: website_quote
 #: view:website:website_quote.so_template

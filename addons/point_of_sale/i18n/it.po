@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-04-01 14:56+0000\n"
+"PO-Revision-Date: 2016-05-03 19:55+0000\n"
 "Last-Translator: Paolo Valier\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-8/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -53,7 +53,7 @@ msgstr ") è \""
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "+ Transactions"
-msgstr ""
+msgstr "+ Transazioni"
 
 #. module: point_of_sale
 #. openerp-web
@@ -154,7 +154,7 @@ msgid ""
 "                the touchscreen interface.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nCliccare per creare un nuovo ordine.\n</p><p>\nUsare questo menu per navigare tra gli ordini precedenti.\nPer registrare nuovi ordini è possibile accedere all'interfaccia \ntouchscreen con il menu <i>La tua Sessione</i>.\n</p>"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -204,12 +204,12 @@ msgstr "Il Nome Cliente è obbligatorio"
 #. module: point_of_sale
 #: view:pos.config:point_of_sale.view_pos_config_form
 msgid "A custom receipt footer message"
-msgstr ""
+msgstr "Il cliente ha ricevuto un messaggio a piè di pagina"
 
 #. module: point_of_sale
 #: view:pos.config:point_of_sale.view_pos_config_form
 msgid "A custom receipt header message"
-msgstr ""
+msgstr "Il cliente ha ricevuto un messaggio di intestazione"
 
 #. module: point_of_sale
 #: help:pos.session,login_number:0
@@ -231,12 +231,12 @@ msgstr "Un numero di sequenza univoco per l'ordine, relativo alla sessione"
 #. module: point_of_sale
 #: help:pos.config,receipt_footer:0
 msgid "A short text that will be inserted as a footer in the printed receipt"
-msgstr ""
+msgstr "Una breve testo che sarà inserito come piè di pagina nella ricevuta"
 
 #. module: point_of_sale
 #: help:pos.config,receipt_header:0
 msgid "A short text that will be inserted as a header in the printed receipt"
-msgstr ""
+msgstr "Una breve testo che sarà inserito come Intestazione nella ricevuta"
 
 #. module: point_of_sale
 #. openerp-web
@@ -978,7 +978,7 @@ msgstr "Cliente"
 #. module: point_of_sale
 #: field:pos.config,barcode_customer:0
 msgid "Customer Barcodes"
-msgstr "Codici a Barre per il cliente"
+msgstr "Codici a Barre Cliente"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1002
@@ -1134,7 +1134,7 @@ msgstr "Sconto (%)"
 #. module: point_of_sale
 #: field:pos.config,barcode_discount:0
 msgid "Discount Barcodes"
-msgstr "Codici a Barre di Sconto"
+msgstr "Codici a Barre Sconto"
 
 #. module: point_of_sale
 #: field:pos.order.line,notice:0
@@ -1836,7 +1836,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.order.line,name:0
 msgid "Line No"
-msgstr "Linea n."
+msgstr "Riga n."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
@@ -1899,7 +1899,7 @@ msgid ""
 "Medium-sized image of the category. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr "Immagine della categoria a dimensione media. E' automaticamente ridimensionata a 128x128px con rapporto d'aspetto conservato. Usa questo campo nelle viste form o alcune viste kanban."
+msgstr "Immagine della categoria a dimensione media. È automaticamente ridimensionata a 128x128px con rapporto d'aspetto conservato. Usa questo campo nelle viste form o alcune viste kanban."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:799
@@ -2494,12 +2494,12 @@ msgstr "Telefono:"
 #. module: point_of_sale
 #: field:pos.order,picking_id:0
 msgid "Picking"
-msgstr "Presa"
+msgstr "Picking"
 
 #. module: point_of_sale
 #: field:pos.config,picking_type_id:0 field:pos.order,picking_type_id:0
 msgid "Picking Type"
-msgstr "Tipo Prelievo"
+msgstr "Tipo Picking"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pils
@@ -2655,7 +2655,7 @@ msgstr "Invia tutti gli ordini"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_confirm
 msgid "Post POS Journal Entries"
-msgstr ""
+msgstr "Genera Registrazioni Sezionale POS"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2689,7 +2689,7 @@ msgstr "Prezzo"
 #. module: point_of_sale
 #: field:pos.config,barcode_price:0
 msgid "Price Barcodes"
-msgstr "Codici a Barre Prezzi"
+msgstr "Codici a Barre Prezzo"
 
 #. module: point_of_sale
 #: field:pos.config,pricelist_id:0 field:pos.order,pricelist_id:0
@@ -2818,7 +2818,7 @@ msgstr "Immettere denaro"
 #: view:website:point_of_sale.report_usersproduct
 #, python-format
 msgid "Qty"
-msgstr "Qta'"
+msgstr "Qtà"
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_detailsofsales
@@ -3041,7 +3041,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.config,iface_scan_via_proxy:0
 msgid "Scan via Proxy"
-msgstr ""
+msgstr "Scansione via Proxy"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3141,12 +3141,12 @@ msgstr "Stato Sessione"
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.action_report_pos_session_summary
 msgid "Session Summary"
-msgstr "Sommario Sessione"
+msgstr "Riepilogo Sessione"
 
 #. module: point_of_sale
 #: view:website:point_of_sale.report_sessionsummary
 msgid "Session Summary:"
-msgstr "Sommario Sessione:"
+msgstr "Riepilogo Sessione:"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
@@ -3338,7 +3338,7 @@ msgstr "Nome della dichiarazione"
 #. module: point_of_sale
 #: view:website:point_of_sale.report_sessionsummary
 msgid "Statement Summary"
-msgstr "Sommario Dichiarazione"
+msgstr "Riepilogo Dichiarazione"
 
 #. module: point_of_sale
 #: view:pos.order:point_of_sale.view_pos_pos_form
@@ -3399,7 +3399,7 @@ msgstr "Subtotale"
 #. module: point_of_sale
 #: field:pos.order.line,price_subtotal:0
 msgid "Subtotal w/o Tax"
-msgstr "Subtotale senza tasse"
+msgstr "Subtotale senza Imposte"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3426,7 +3426,7 @@ msgstr "Riepilogo"
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "Summary by Payment Methods"
-msgstr "Sommario per Metodi di Pagamento"
+msgstr "Riepilogo per Metodi di Pagamento"
 
 #. module: point_of_sale
 #: selection:report.pos.order,state:0
@@ -3552,22 +3552,22 @@ msgstr "L'ordine non può essere inviato"
 #. module: point_of_sale
 #: help:pos.config,barcode_discount:0
 msgid "The pattern that identifies a product with a barcode encoded discount"
-msgstr ""
+msgstr "Il modello che identifica un prodotto con un codice a barre con sconto codificato"
 
 #. module: point_of_sale
 #: help:pos.config,barcode_price:0
 msgid "The pattern that identifies a product with a barcode encoded price"
-msgstr ""
+msgstr "Il modello che identifica un prodotto con un codice a barre con prezzo codificato"
 
 #. module: point_of_sale
 #: help:pos.config,barcode_weight:0
 msgid "The pattern that identifies a product with a barcode encoded weight"
-msgstr ""
+msgstr "Il modello che identifica un prodotto con un codice a barre con peso codificato"
 
 #. module: point_of_sale
 #: help:pos.config,barcode_cashier:0
 msgid "The pattern that identifies cashier login barcodes"
-msgstr ""
+msgstr "Il modello che identifica il codice a barre con il login del cassiere"
 
 #. module: point_of_sale
 #: help:pos.config,barcode_customer:0
@@ -3577,7 +3577,7 @@ msgstr ""
 #. module: point_of_sale
 #: help:pos.config,barcode_product:0
 msgid "The pattern that identifies product barcodes"
-msgstr ""
+msgstr "Il modello che identifica i codici a barre del prodotto"
 
 #. module: point_of_sale
 #: help:pos.session,config_id:0
@@ -3668,7 +3668,7 @@ msgstr "Non è stato definito un conto ricevibile per effettuare un pagamento"
 #, python-format
 msgid ""
 "There must be at least one product in your order before it can be validated"
-msgstr "E' necessario almeno un prodotto all'interno di un ordine, prima che possa essere validato"
+msgstr "È necessario almeno un prodotto all'interno di un ordine, prima che possa essere validato"
 
 #. module: point_of_sale
 #: help:account.journal,amount_authorized_diff:0
@@ -3862,7 +3862,7 @@ msgstr "Impossibile Cancellare!"
 #: code:addons/point_of_sale/point_of_sale.py:841
 #, python-format
 msgid "Unable to cancel the picking."
-msgstr "Impossibile annullare il prelievo."
+msgstr "Impossibile annullare il picking."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:399
@@ -3972,7 +3972,7 @@ msgstr "Valida e Apri Sessione"
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "Validate Closing & Post Entries"
-msgstr "Convalida Chiusura e Invia Registrazioni"
+msgstr "Convalida Chiusura e Genera Registrazioni"
 
 #. module: point_of_sale
 #: field:pos.config,iface_vkeyboard:0
@@ -3987,7 +3987,7 @@ msgstr "Acqua"
 #. module: point_of_sale
 #: field:pos.config,barcode_weight:0
 msgid "Weight Barcodes"
-msgstr ""
+msgstr "Codici a Barre Peso"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4019,7 +4019,7 @@ msgstr "Peperoni Gialli"
 msgid ""
 "You can continue sales from the touchscreen interface by clicking on \"Start"
 " Selling\" or close the cash register session."
-msgstr "E' possibile continuare la sessione di vendita cliccando su \"Inizio Vendita\" oppure chiudere la sessione di vendita."
+msgstr "È possibile continuare la sessione di vendita cliccando su \"Inizio Vendita\" oppure chiudere la sessione di vendita."
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form

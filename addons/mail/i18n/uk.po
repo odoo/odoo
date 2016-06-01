@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-03-27 16:56+0000\n"
-"Last-Translator: Bogdan\n"
+"PO-Revision-Date: 2016-04-23 11:37+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-8/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +47,7 @@ msgstr "(немає email-адреси)"
 #: code:addons/mail/wizard/invite.py:44
 #, python-format
 msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow %s document: %s.<p></div>"
+"<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
 msgstr ""
 
 #. module: mail
@@ -55,7 +55,7 @@ msgstr ""
 #, python-format
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
-msgstr ""
+msgstr "<div><p>Вітаємо,</p><p>%s запросив вас до стеження за новим документом.</p></div>"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:134
@@ -137,7 +137,7 @@ msgstr ""
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr ""
+msgstr "Словник Python який буде використано для вказання типових значень при створенні нових записів для цього псевдоніму."
 
 #. module: mail
 #: code:addons/mail/mail_message.py:763
@@ -153,7 +153,7 @@ msgstr "Правила доступу"
 #. module: mail
 #: help:mail.message.subtype,default:0
 msgid "Activated by default when subscribing."
-msgstr ""
+msgstr "Активується автоматично під час підписування."
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_search
@@ -163,12 +163,12 @@ msgstr "Активовано"
 #. module: mail
 #: field:mail.compose.message,active_domain:0
 msgid "Active domain"
-msgstr ""
+msgstr "Активний домен"
 
 #. module: mail
 #: view:mail.wizard.invite:mail.mail_wizard_invite_form
 msgid "Add Followers"
-msgstr ""
+msgstr "Додати підписників"
 
 #. module: mail
 #. openerp-web
@@ -181,7 +181,7 @@ msgstr ""
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 #: view:mail.wizard.invite:mail.mail_wizard_invite_form
 msgid "Add contacts to notify..."
-msgstr ""
+msgstr "Додати контактних осіб для сповіщення..."
 
 #. module: mail
 #. openerp-web
@@ -193,7 +193,7 @@ msgstr ""
 #. module: mail
 #: field:mail.compose.message,partner_ids:0
 msgid "Additional Contacts"
-msgstr ""
+msgstr "Додаткові контактні особи"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_form
@@ -205,48 +205,48 @@ msgstr "Розширений"
 #: view:mail.alias:mail.view_mail_alias_tree field:mail.group,alias_id:0
 #: field:res.users,alias_id:0
 msgid "Alias"
-msgstr ""
+msgstr "Псевдонім"
 
 #. module: mail
 #: view:res.users:mail.view_users_form_mail
 msgid "Alias Accepts Emails From"
-msgstr ""
+msgstr "Псевдонім отримує листи від"
 
 #. module: mail
 #: field:mail.alias,alias_contact:0
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "Безпека псевдоніма контакту"
 
 #. module: mail
 #: field:base.config.settings,alias_domain:0
 msgid "Alias Domain"
-msgstr ""
+msgstr "Домен псевдоніма"
 
 #. module: mail
 #: field:mail.alias,alias_name:0
 msgid "Alias Name"
-msgstr ""
+msgstr "Нпзва псевдоніма"
 
 #. module: mail
 #: field:mail.alias,alias_domain:0
 msgid "Alias domain"
-msgstr ""
+msgstr "Домен псевдоніма"
 
 #. module: mail
 #: field:mail.alias,alias_model_id:0
 msgid "Aliased Model"
-msgstr ""
+msgstr "Модель псевдоніма"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_alias
 #: model:ir.ui.menu,name:mail.mail_alias_menu
 msgid "Aliases"
-msgstr ""
+msgstr "Псевдоніми"
 
 #. module: mail
 #: selection:res.partner,notify_email:0
 msgid "All Messages"
-msgstr ""
+msgstr "Всі повідомлення"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
@@ -293,7 +293,7 @@ msgstr ""
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Attach a file"
-msgstr ""
+msgstr "Прикріпити файл"
 
 #. module: mail
 #: field:mail.compose.message,attachment_ids:0
@@ -304,7 +304,7 @@ msgstr "Долучення"
 #. module: mail
 #: selection:mail.alias,alias_contact:0
 msgid "Authenticated Partners"
-msgstr ""
+msgstr "Аутентифіковані партнери"
 
 #. module: mail
 #: field:mail.compose.message,author_id:0 view:mail.mail:mail.view_mail_search
@@ -328,22 +328,22 @@ msgstr ""
 #. module: mail
 #: field:mail.group,group_public_id:0
 msgid "Authorized Group"
-msgstr ""
+msgstr "Авторизована група"
 
 #. module: mail
 #: field:mail.mail,auto_delete:0
 msgid "Auto Delete"
-msgstr ""
+msgstr "Автовидалення"
 
 #. module: mail
 #: field:mail.group,group_ids:0
 msgid "Auto Subscription"
-msgstr ""
+msgstr "Авто-підписка"
 
 #. module: mail
 #: view:mail.message.subtype:mail.view_mail_message_subtype_form
 msgid "Auto subscription"
-msgstr ""
+msgstr "Авто-підписка"
 
 #. module: mail
 #: help:mail.compose.message,body:0 help:mail.message,body:0
@@ -378,7 +378,7 @@ msgstr "Скасувати"
 #. module: mail
 #: view:mail.mail:mail.view_mail_tree
 msgid "Cancel Email"
-msgstr ""
+msgstr "Скасувати листа"
 
 #. module: mail
 #: selection:mail.mail,state:0
@@ -388,17 +388,17 @@ msgstr "Скасований"
 #. module: mail
 #: help:mail.mail,email_cc:0
 msgid "Carbon copy message recipients"
-msgstr ""
+msgstr "Отримувачі копії повідомлення"
 
 #. module: mail
 #: field:mail.mail,email_cc:0
 msgid "Cc"
-msgstr ""
+msgstr "Cc"
 
 #. module: mail
 #: field:mail.compose.message,child_ids:0 field:mail.message,child_ids:0
 msgid "Child Messages"
-msgstr ""
+msgstr "Дочірні повідомлення"
 
 #. module: mail
 #: selection:mail.compose.message,type:0 view:mail.mail:mail.view_mail_search
@@ -418,7 +418,7 @@ msgstr "Створити лист"
 #. module: mail
 #: field:mail.compose.message,composition_mode:0
 msgid "Composition mode"
-msgstr ""
+msgstr "Режим створення"
 
 #. module: mail
 #: field:mail.notification,partner_id:0
@@ -438,7 +438,7 @@ msgstr ""
 #. module: mail
 #: field:mail.compose.message,body:0 field:mail.message,body:0
 msgid "Contents"
-msgstr ""
+msgstr "Містить"
 
 #. module: mail
 #: field:mail.alias,create_uid:0 field:mail.compose.message,create_uid:0
@@ -464,7 +464,7 @@ msgstr "Створити меню"
 #. module: mail
 #: help:mail.compose.message,starred:0 help:mail.message,starred:0
 msgid "Current user has a starred notification linked to this message"
-msgstr ""
+msgstr "Поточний користувач має сповіщення позначене зірочкою, що пов'язане до цього повідомлення"
 
 #. module: mail
 #: help:mail.compose.message,to_read:0 help:mail.message,to_read:0
@@ -496,7 +496,7 @@ msgstr "Типовий"
 #. module: mail
 #: field:mail.alias,alias_defaults:0
 msgid "Default Values"
-msgstr ""
+msgstr "Типові значення"
 
 #. module: mail
 #. openerp-web
@@ -509,7 +509,7 @@ msgstr "Видалити це прикріплення"
 #. module: mail
 #: selection:mail.mail,state:0
 msgid "Delivery Failed"
-msgstr ""
+msgstr "Невдачна доставка"
 
 #. module: mail
 #: field:mail.group,description:0
@@ -538,7 +538,7 @@ msgstr ""
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_comment
 msgid "Discussions"
-msgstr ""
+msgstr "Обговорення"
 
 #. module: mail
 #: field:res.users,display_groups_suggestions:0
@@ -555,7 +555,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
 msgid "Document Followers"
-msgstr ""
+msgstr "Підписники документу"
 
 #. module: mail
 #. openerp-web
@@ -569,14 +569,14 @@ msgstr "Виконано"
 #: code:addons/mail/static/src/js/mail_followers.js:100
 #, python-format
 msgid "Edit Subscription of "
-msgstr ""
+msgstr "Редагувати підписку"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail_followers.xml:40
 #, python-format
 msgid "Edit subscription"
-msgstr ""
+msgstr "Редагувати підписку"
 
 #. module: mail
 #: selection:mail.compose.message,type:0 view:mail.mail:mail.view_mail_search
@@ -587,17 +587,17 @@ msgstr "Ел.пошта"
 #. module: mail
 #: view:mail.group:mail.view_group_form
 msgid "Email Alias"
-msgstr ""
+msgstr "Псевдонім ел. пошти"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias
 msgid "Email Aliases"
-msgstr ""
+msgstr "Псевдоніми ел. пошти"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
 msgid "Email Search"
-msgstr ""
+msgstr "Пошук ел. листа"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
@@ -609,7 +609,7 @@ msgstr "Ланцюжки повідомлень"
 msgid ""
 "Email address internally associated with this user. Incoming emails will "
 "appear in the user's notifications."
-msgstr ""
+msgstr "Електронна адреса пов'язана з користувачем. Вхідні повідомлення будуть відображатися у сповіщеннях користувача."
 
 #. module: mail
 #: help:mail.compose.message,email_from:0 help:mail.message,email_from:0
@@ -621,7 +621,7 @@ msgstr ""
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Email address to redirect replies..."
-msgstr ""
+msgstr "Електронна адреса для отримання відповідей..."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
@@ -637,7 +637,7 @@ msgstr ""
 #: view:mail.mail:mail.view_mail_form
 #: view:mail.message.subtype:mail.view_mail_message_subtype_form
 msgid "Email message"
-msgstr ""
+msgstr "Електронний лист"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_mail
@@ -676,7 +676,7 @@ msgstr "Extended Filters..."
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
 msgid "Failed"
-msgstr ""
+msgstr "Невдача"
 
 #. module: mail
 #: help:mail.message.subtype,relation_field:0
@@ -696,7 +696,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail_followers.xml:12
 #, python-format
 msgid "Follow"
-msgstr ""
+msgstr "Стежити"
 
 #. module: mail
 #. openerp-web
@@ -714,7 +714,7 @@ msgstr "Хто слідкує"
 #. module: mail
 #: view:mail.followers:mail.view_mail_subscription_form
 msgid "Followers Form"
-msgstr ""
+msgstr "Форма підписників"
 
 #. module: mail
 #. openerp-web
@@ -738,14 +738,14 @@ msgstr ""
 #. module: mail
 #: selection:mail.alias,alias_contact:0
 msgid "Followers only"
-msgstr ""
+msgstr "Тільки підписники"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail_followers.xml:14
 #, python-format
 msgid "Following"
-msgstr ""
+msgstr "Відстежується"
 
 #. module: mail
 #: field:mail.compose.message,email_from:0 field:mail.message,email_from:0
@@ -793,12 +793,12 @@ msgstr ""
 #. module: mail
 #: view:mail.message:mail.view_message_search
 msgid "Has attachments"
-msgstr ""
+msgstr "Має долучення"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_form field:mail.mail,headers:0
 msgid "Headers"
-msgstr ""
+msgstr "Заголовки"
 
 #. module: mail
 #: field:mail.message.subtype,hidden:0
@@ -870,18 +870,18 @@ msgstr ""
 #: code:addons/mail/mail_alias.py:144
 #, python-format
 msgid "Inactive Alias"
-msgstr ""
+msgstr "Неактивний псевдонім"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_mail_inbox_feeds
 #: model:ir.ui.menu,name:mail.mail_inboxfeeds
 msgid "Inbox"
-msgstr ""
+msgstr "Вхідні"
 
 #. module: mail
 #: help:mail.compose.message,parent_id:0 help:mail.message,parent_id:0
 msgid "Initial thread message."
-msgstr ""
+msgstr "Початковий ланцюжок повідомлення."
 
 #. module: mail
 #: code:addons/mail/mail_message.py:177
@@ -900,7 +900,7 @@ msgstr ""
 #: code:addons/mail/wizard/invite.py:97
 #, python-format
 msgid "Invitation to follow %s: %s"
-msgstr ""
+msgstr "Запрошення відслідковувати %s: %s"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -910,7 +910,7 @@ msgstr "Майстер запрошень"
 #. module: mail
 #: field:mail.mail,notification:0
 msgid "Is Notification"
-msgstr ""
+msgstr "Є сповіщенням"
 
 #. module: mail
 #: field:mail.group,message_is_follower:0
@@ -925,13 +925,13 @@ msgstr "Стежить"
 #: view:mail.group:mail.view_group_kanban
 #, python-format
 msgid "Join Group"
-msgstr ""
+msgstr "Приєднатися до групи"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_groups
 #: model:ir.ui.menu,name:mail.mail_allgroups
 msgid "Join a group"
-msgstr ""
+msgstr "Приєднатися до групи"
 
 #. module: mail
 #: field:mail.group,message_last_post:0 field:mail.thread,message_last_post:0
@@ -979,13 +979,13 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail.xml:57
 #, python-format
 msgid "Log an internal note"
-msgstr ""
+msgstr "Зробити внутрішню примітку"
 
 #. module: mail
 #: code:addons/mail/mail_mail.py:340
 #, python-format
 msgid "Mail Delivery Failed"
-msgstr ""
+msgstr "Лист не дійшов до адресата"
 
 #. module: mail
 #: field:ir.ui.menu,mail_group_id:0
@@ -1012,7 +1012,7 @@ msgstr "Позначити для виконання"
 #. module: mail
 #: field:mail.group,image_medium:0
 msgid "Medium-sized photo"
-msgstr ""
+msgstr "Середнє фото"
 
 #. module: mail
 #: help:mail.group,image_medium:0
@@ -1027,7 +1027,7 @@ msgstr ""
 msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
-msgstr ""
+msgstr "Члени цих груп будуть автоматично додані як підписники. Зауважте, що учасники зможуть керувати своєю підпискою за потреби."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message
@@ -1039,7 +1039,7 @@ msgstr "Повідомлення"
 #. module: mail
 #: field:mail.compose.message,record_name:0 field:mail.message,record_name:0
 msgid "Message Record Name"
-msgstr ""
+msgstr "Назва запису повідомлення"
 
 #. module: mail
 #: field:mail.message.subtype,name:0
@@ -1049,7 +1049,7 @@ msgstr "Тип Повідомлення"
 #. module: mail
 #: help:mail.mail,email_to:0
 msgid "Message recipients (emails)"
-msgstr ""
+msgstr "Отримувачі повідомлення (ел. пошта)"
 
 #. module: mail
 #: help:mail.mail,references:0
@@ -1069,7 +1069,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_subtype
 msgid "Message subtypes"
-msgstr ""
+msgstr "Підтипи повідомлення"
 
 #. module: mail
 #: help:mail.followers,subtype_ids:0
@@ -1088,12 +1088,12 @@ msgstr ""
 #. module: mail
 #: help:mail.compose.message,message_id:0 help:mail.message,message_id:0
 msgid "Message unique identifier"
-msgstr ""
+msgstr "Унікальний ідентифікатор повідомлення"
 
 #. module: mail
 #: field:mail.compose.message,message_id:0 field:mail.message,message_id:0
 msgid "Message-Id"
-msgstr ""
+msgstr "ІД-повідомлення"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
@@ -1106,7 +1106,7 @@ msgstr "Повідомлення"
 #. module: mail
 #: view:mail.message:mail.view_message_search
 msgid "Messages Search"
-msgstr ""
+msgstr "Пошук повідомлень"
 
 #. module: mail
 #: help:mail.group,message_ids:0 help:mail.thread,message_ids:0
@@ -1123,7 +1123,7 @@ msgstr ""
 #. module: mail
 #: view:res.users:mail.view_users_form_mail
 msgid "Messaging Alias"
-msgstr ""
+msgstr "Псевдонім для повідомлень"
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_search
@@ -1205,7 +1205,7 @@ msgstr ""
 #: field:mail.compose.message,no_auto_thread:0
 #: field:mail.message,no_auto_thread:0
 msgid "No threading for answers"
-msgstr ""
+msgstr "Немає ланцюжків для відповіді"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
@@ -1220,7 +1220,7 @@ msgstr "Повідомлення"
 #: field:mail.message,notification_ids:0
 #: view:mail.notification:mail.view_notification_tree
 msgid "Notifications"
-msgstr ""
+msgstr "Сповіщення"
 
 #. module: mail
 #: field:mail.compose.message,notified_partner_ids:0
@@ -1231,19 +1231,19 @@ msgstr ""
 #. module: mail
 #: field:mail.compose.message,notify:0
 msgid "Notify followers"
-msgstr ""
+msgstr "Сповістити підписників"
 
 #. module: mail
 #: help:mail.compose.message,notify:0
 msgid "Notify followers of the document (mass post only)"
-msgstr ""
+msgstr "сповістити підписників документа (тільки масові повідомлення)"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/mail_followers.js:207
 #, python-format
 msgid "One follower"
-msgstr ""
+msgstr "Один підписник"
 
 #. module: mail
 #: view:mail.group:mail.view_group_form
@@ -1255,7 +1255,7 @@ msgstr ""
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_form
 msgid "Open Document"
-msgstr ""
+msgstr "Відкрити документ"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_client_messaging_menu
@@ -1265,7 +1265,7 @@ msgstr ""
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_form
 msgid "Open Parent Document"
-msgstr ""
+msgstr "Відкрити батьківський документ"
 
 #. module: mail
 #. openerp-web
@@ -1301,7 +1301,7 @@ msgstr "Вихідна пошта"
 #: field:mail.compose.message,mail_server_id:0
 #: field:mail.message,mail_server_id:0
 msgid "Outgoing mail server"
-msgstr ""
+msgstr "Вихідний поштовий сервер"
 
 #. module: mail
 #: field:mail.alias,alias_user_id:0
@@ -1316,12 +1316,12 @@ msgstr "Батьківський"
 #. module: mail
 #: field:mail.compose.message,parent_id:0 field:mail.message,parent_id:0
 msgid "Parent Message"
-msgstr ""
+msgstr "Батьківське повідомленя"
 
 #. module: mail
 #: field:mail.alias,alias_parent_model_id:0
 msgid "Parent Model"
-msgstr ""
+msgstr "Батьківська модель"
 
 #. module: mail
 #: field:mail.alias,alias_parent_thread_id:0
@@ -1350,7 +1350,7 @@ msgstr "Партнер"
 #: code:addons/mail/res_partner.py:51
 #, python-format
 msgid "Partner Profile"
-msgstr ""
+msgstr "Профіль партнера"
 
 #. module: mail
 #: help:mail.compose.message,notified_partner_ids:0
@@ -1367,28 +1367,28 @@ msgstr ""
 #. module: mail
 #: field:mail.group,image:0
 msgid "Photo"
-msgstr ""
+msgstr "Фото"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/mail.js:621
 #, python-format
 msgid "Please complete partner's informations"
-msgstr ""
+msgstr "будь ласка, заповніть інформацію про партнера"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/many2many_tags_email.js:63
 #, python-format
 msgid "Please complete partner's informations and Email"
-msgstr ""
+msgstr "Будь ласка, заповніть інформацію про партнера та ел. пошту"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:224
 #, python-format
 msgid "Please, wait while the file is uploading."
-msgstr ""
+msgstr "Будь ласка, зачекайте поки файл завантажується."
 
 #. module: mail
 #: help:mail.alias,alias_contact:0
@@ -1431,7 +1431,7 @@ msgstr ""
 #: code:addons/mail/wizard/mail_compose_message.py:191
 #, python-format
 msgid "Re:"
-msgstr ""
+msgstr "Re:"
 
 #. module: mail
 #: field:mail.notification,is_read:0
@@ -1452,7 +1452,7 @@ msgstr "Отримано"
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 #: field:mail.message,partner_ids:0 field:mail.wizard.invite,partner_ids:0
 msgid "Recipients"
-msgstr ""
+msgstr "Отримувачі"
 
 #. module: mail
 #: field:mail.alias,alias_force_thread_id:0
@@ -1474,7 +1474,7 @@ msgstr ""
 #: field:mail.compose.message,model:0 field:mail.followers,res_model:0
 #: field:mail.message,model:0 field:mail.wizard.invite,res_model:0
 msgid "Related Document Model"
-msgstr ""
+msgstr "Пов'язана модель документа"
 
 #. module: mail
 #: field:mail.group,menu_id:0
@@ -1489,14 +1489,14 @@ msgstr "Інші партнери"
 #. module: mail
 #: field:mail.message.subtype,relation_field:0
 msgid "Relation field"
-msgstr ""
+msgstr "Поле зв'язку"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail_followers.xml:41
 #, python-format
 msgid "Remove this follower"
-msgstr ""
+msgstr "Вилучити цього підписника"
 
 #. module: mail
 #. openerp-web
@@ -1504,14 +1504,14 @@ msgstr ""
 #: view:mail.mail:mail.view_mail_form
 #, python-format
 msgid "Reply"
-msgstr ""
+msgstr "Відповісти"
 
 #. module: mail
 #: help:mail.compose.message,reply_to:0 help:mail.message,reply_to:0
 msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
-msgstr ""
+msgstr "Адреса для відповіді. Встановлення цієї адреси скасовує автоматичне створення ланцюжка."
 
 #. module: mail
 #: field:mail.compose.message,reply_to:0 field:mail.message,reply_to:0
@@ -1521,27 +1521,27 @@ msgstr "Відповісти"
 #. module: mail
 #: view:mail.mail:mail.view_mail_form view:mail.mail:mail.view_mail_tree
 msgid "Retry"
-msgstr ""
+msgstr "Повторити"
 
 #. module: mail
 #: field:mail.mail,body_html:0
 msgid "Rich-text Contents"
-msgstr ""
+msgstr "Вміст з форматованим текстом"
 
 #. module: mail
 #: help:mail.mail,body_html:0
 msgid "Rich-text/HTML message"
-msgstr ""
+msgstr "Повідомлення з вмістом форматованого тексту/HTML"
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_search
 msgid "Search Alias"
-msgstr ""
+msgstr "Пошук псевдоніму"
 
 #. module: mail
 #: view:mail.group:mail.view_group_search
 msgid "Search Groups"
-msgstr ""
+msgstr "Пошук груп"
 
 #. module: mail
 #: selection:mail.group,public:0
@@ -1559,19 +1559,19 @@ msgstr "Надіслати"
 #. module: mail
 #: field:mail.wizard.invite,send_mail:0
 msgid "Send Email"
-msgstr ""
+msgstr "Надіслати ел. листа"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_form view:mail.mail:mail.view_mail_tree
 msgid "Send Now"
-msgstr ""
+msgstr "Надіслати зараз"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:54
 #, python-format
 msgid "Send a message"
-msgstr ""
+msgstr "Надіслати повідомлення"
 
 #. module: mail
 #. openerp-web
@@ -1623,7 +1623,7 @@ msgstr ""
 #. module: mail
 #: field:mail.group,image_small:0
 msgid "Small-sized photo"
-msgstr ""
+msgstr "Мале фото"
 
 #. module: mail
 #: help:mail.group,image_small:0
@@ -1637,7 +1637,7 @@ msgstr ""
 #: field:mail.compose.message,starred:0 field:mail.message,starred:0
 #: field:mail.notification,starred:0
 msgid "Starred"
-msgstr ""
+msgstr "З зірочкою"
 
 #. module: mail
 #: help:mail.notification,starred:0
@@ -1658,20 +1658,20 @@ msgstr "Тема"
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Subject..."
-msgstr ""
+msgstr "Тема..."
 
 #. module: mail
 #: field:mail.compose.message,subtype_id:0 field:mail.followers,subtype_ids:0
 #: field:mail.message,subtype_id:0
 #: view:mail.message.subtype:mail.view_message_subtype_tree
 msgid "Subtype"
-msgstr ""
+msgstr "Підтип"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_message_subtype
 #: model:ir.ui.menu,name:mail.menu_message_subtype
 msgid "Subtypes"
-msgstr ""
+msgstr "Підтипи"
 
 #. module: mail
 #. openerp-web
@@ -1694,7 +1694,7 @@ msgstr "Підтримка"
 #. module: mail
 #: selection:mail.compose.message,type:0 selection:mail.message,type:0
 msgid "System notification"
-msgstr ""
+msgstr "Сповіщення системи"
 
 #. module: mail
 #: help:mail.compose.message,notification_ids:0
@@ -1769,7 +1769,7 @@ msgstr ""
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
 msgid "Thread"
-msgstr ""
+msgstr "Ланцюжок"
 
 #. module: mail
 #: field:mail.mail,email_to:0
@@ -1779,7 +1779,7 @@ msgstr "по"
 #. module: mail
 #: field:mail.mail,recipient_ids:0
 msgid "To (Partners)"
-msgstr ""
+msgstr "Кому (партнери)"
 
 #. module: mail
 #: view:mail.message:mail.view_message_search
@@ -1802,7 +1802,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail.xml:123
 #, python-format
 msgid "To:"
-msgstr ""
+msgstr "Кому:"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_mail_to_me_feeds
@@ -1813,7 +1813,7 @@ msgstr ""
 #. module: mail
 #: view:mail.group:mail.view_group_form
 msgid "Topics discussed in this group..."
-msgstr ""
+msgstr "Теми, що обговорюються в цій групі..."
 
 #. module: mail
 #: field:mail.compose.message,type:0
@@ -1834,7 +1834,7 @@ msgstr ""
 #: view:mail.group:mail.view_group_kanban
 #, python-format
 msgid "Unfollow"
-msgstr ""
+msgstr "Відписатися"
 
 #. module: mail
 #: sql_constraint:mail.alias:0
@@ -1853,12 +1853,12 @@ msgstr "Непрочитані повідомлення"
 #: code:addons/mail/static/src/xml/mail.xml:223
 #, python-format
 msgid "Uploading error"
-msgstr ""
+msgstr "Помилка завантаження"
 
 #. module: mail
 #: field:mail.compose.message,use_active_domain:0
 msgid "Use active domain"
-msgstr ""
+msgstr "Використовувати активний домкен"
 
 #. module: mail
 #: help:mail.message.subtype,sequence:0
@@ -1995,14 +1995,14 @@ msgstr "від"
 #: code:addons/mail/mail_thread.py:115
 #, python-format
 msgid "document"
-msgstr ""
+msgstr "документ"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/mail_followers.js:209
 #, python-format
 msgid "followers"
-msgstr ""
+msgstr "підписники"
 
 #. module: mail
 #. openerp-web
@@ -2023,7 +2023,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail.xml:310
 #, python-format
 msgid "more"
-msgstr ""
+msgstr "більше"
 
 #. module: mail
 #. openerp-web

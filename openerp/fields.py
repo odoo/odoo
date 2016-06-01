@@ -971,7 +971,7 @@ class Field(object):
         # invalidate the fields that depend on self, and prepare recomputation
         spec = [(self, records._ids)]
         for field, path in self._triggers:
-            if path and field.store:
+            if path and field.compute and field.store:
                 # don't move this line to function top, see log
                 env = records.env(user=SUPERUSER_ID, context={'active_test': False})
                 target = env[field.model_name].search([(path, 'in', records.ids)])
@@ -1713,12 +1713,24 @@ class _RelationalMulti(_Relational):
 
     def _compute_related(self, records):
         """ Compute the related field ``self`` on ``records``. """
-        for record in records:
-            value = record
-            # traverse the intermediate fields, and keep at most one record
-            for name in self.related[:-1]:
-                value = value[name][:1]
-            record[self.name] = value[self.related[-1]]
+        super(_RelationalMulti, self)._compute_related(records)
+        if self.related_sudo:
+            # determine which records in the relation are actually accessible
+            target = records.mapped(self.name)
+            target_ids = set(target.search([('id', 'in', target.ids)]).ids)
+            accessible = lambda target: target.id in target_ids
+            # filter values to keep the accessible records only
+            for record in records:
+                record[self.name] = record[self.name].filtered(accessible)
+
+    def setup_triggers(self, env):
+        super(_RelationalMulti, self).setup_triggers(env)
+        # also invalidate self when fields appearing in the domain are modified
+        if isinstance(self.domain, list):
+            comodel = env[self.comodel_name]
+            for arg in self.domain:
+                if isinstance(arg, (tuple, list)) and isinstance(arg[0], basestring):
+                    self._setup_dependency([self.name], comodel, arg[0].split('.'))
 
 
 class One2many(_RelationalMulti):
