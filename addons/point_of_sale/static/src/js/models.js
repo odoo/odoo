@@ -1422,8 +1422,6 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                 client: client ? client.name : null ,
                 invoice_id: null,   //TODO
                 cashier: cashier ? cashier.name : null,
-                header: this.pos.config.receipt_header || '',
-                footer: this.pos.config.receipt_footer || '',
                 precision: {
                     price: 2,
                     money: 2,
@@ -1456,11 +1454,17 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             };
             
             if (is_xml(this.pos.config.receipt_header)){
+                receipt.header = '';
                 receipt.header_xml = render_xml(this.pos.config.receipt_header);
+            } else {
+                receipt.header = this.pos.config.receipt_header || '';
             }
 
             if (is_xml(this.pos.config.receipt_footer)){
+                receipt.footer = '';
                 receipt.footer_xml = render_xml(this.pos.config.receipt_footer);
+            } else {
+                receipt.footer = this.pos.config.receipt_footer || '';
             }
 
             return receipt;
