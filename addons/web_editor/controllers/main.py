@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from openerp.http import request, STATIC_CACHE
+from openerp.http import request
 from openerp.addons.web import http
 import json
 import io
@@ -25,8 +25,6 @@ class Web_Editor(http.Controller):
     #------------------------------------------------------
     @http.route('/web_editor/field/html', type='http', auth="user")
     def FieldTextHtml(self, model=None, res_id=None, field=None, callback=None, **kwargs):
-        cr, uid, context = request.cr, request.uid, request.context
-
         kwargs.update(
             model=model,
             res_id=res_id,
@@ -39,17 +37,16 @@ class Web_Editor(http.Controller):
                 kwargs[k] = int(kwargs[k])
 
         trans = dict(
-            lang=kwargs.get('lang', context.get('lang')),
+            lang=kwargs.get('lang', request.context.get('lang')),
             translatable=kwargs.get('translatable'),
             edit_translations=kwargs.get('edit_translations'),
             editable=kwargs.get('enable_editor'))
 
-        context.update(trans)
         kwargs.update(trans)
 
         record = None
         if model and kwargs.get('res_id'):
-            record = request.registry[model].browse(cr, uid, kwargs.get('res_id'), context)
+            record = request.env[model].with_context(trans).browse(kwargs.get('res_id'))
 
         kwargs.update(content=record and getattr(record, field) or "")
 
@@ -141,20 +138,20 @@ class Web_Editor(http.Controller):
         # the upload argument doesn't allow us to access the files if more than
         # one file is uploaded, as upload references the first file
         # therefore we have to recover the files from the request object
-        Attachments = request.registry['ir.attachment']  # registry for the attachment table
+        Attachments = request.env['ir.attachment']  # env for the attachment table
 
         uploads = []
         message = None
         if not upload: # no image provided, storing the link and the image name
             name = url.split("/").pop()                       # recover filename
-            attachment_id = Attachments.create(request.cr, request.uid, {
+            attachment_id = Attachments.create({
                 'name': name,
                 'type': 'url',
                 'url': url,
                 'public': True,
                 'res_model': 'ir.ui.view',
-            }, request.context)
-            uploads += Attachments.read(request.cr, request.uid, [attachment_id], ['name', 'mimetype', 'checksum', 'url'], request.context)
+            })
+            uploads += Attachments.read([attachment_id], ['name', 'mimetype', 'checksum', 'url'])
         else:                                                  # images provided
             try:
                 attachment_ids = []
@@ -172,15 +169,15 @@ class Web_Editor(http.Controller):
                     except IOError, e:
                         pass
 
-                    attachment_id = Attachments.create(request.cr, request.uid, {
+                    attachment_id = Attachments.create({
                         'name': c_file.filename,
                         'datas': data.encode('base64'),
                         'datas_fname': c_file.filename,
                         'public': True,
                         'res_model': 'ir.ui.view',
-                    }, request.context)
+                    })
                     attachment_ids.append(attachment_id)
-                uploads += Attachments.read(request.cr, request.uid, attachment_ids, ['name', 'mimetype', 'checksum', 'url'], request.context)
+                uploads += Attachments.read(attachment_ids, ['name', 'mimetype', 'checksum', 'url'])
             except Exception, e:
                 logger.exception("Failed to upload image to attachment")
                 message = unicode(e)
@@ -199,27 +196,25 @@ class Web_Editor(http.Controller):
         Returns a dict mapping attachments which would not be removed (if any)
         mapped to the views preventing their removal
         """
-        cr, uid, context = request.cr, request.uid, request.context
-        Attachment = request.registry['ir.attachment']
-        Views = request.registry['ir.ui.view']
+        Attachment = request.env['ir.attachment']
+        Views = request.env['ir.ui.view']
 
         attachments_to_remove = []
         # views blocking removal of the attachment
         removal_blocked_by = {}
 
-        for attachment in Attachment.browse(cr, uid, ids, context=context):
+        for attachment in Attachment.browse(ids):
             # in-document URLs are html-escaped, a straight search will not
             # find them
             url = tools.html_escape(attachment.local_url)
-            ids = Views.search(cr, uid, ["|", ('arch_db', 'like', '"%s"' % url), ('arch_db', 'like', "'%s'" % url)], context=context)
+            ids = Views.search(["|", ('arch_db', 'like', '"%s"' % url), ('arch_db', 'like', "'%s'" % url)])
 
             if ids:
-                removal_blocked_by[attachment.id] = Views.read(
-                    cr, uid, ids, ['name'], context=context)
+                removal_blocked_by[attachment.id] = Views.read(ids, ['name'])
             else:
                 attachments_to_remove.append(attachment.id)
         if attachments_to_remove:
-            Attachment.unlink(cr, uid, attachments_to_remove, context=context)
+            Attachment.unlink(attachments_to_remove)
         return removal_blocked_by
 
     #------------------------------------------------------
@@ -227,6 +222,5 @@ class Web_Editor(http.Controller):
     #------------------------------------------------------
     @http.route('/web_editor/many2many_tags', type='json', auth='user')
     def many2many_tags(self, model, ids, **kwargs):
-        cr, uid, context = request.cr, request.uid, request.context
-        kwargs.update(tag_ids=request.registry[model].browse(cr, uid, ids, context), editable=True)
-        return request.registry["ir.ui.view"].render(cr, uid, "web_editor.many2many_tags", kwargs, context=context)
+        kwargs.update(tag_ids=request.env[model].browse(ids), editable=True)
+        return request.registry["ir.ui.view"].render(request.cr, request.uid, "web_editor.many2many_tags", kwargs, context=request.context)
