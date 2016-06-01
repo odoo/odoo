@@ -19,6 +19,7 @@ from opcode import HAVE_ARGUMENT, opmap, opname
 from psycopg2 import OperationalError
 from types import CodeType
 import logging
+import werkzeug
 
 from .misc import ustr
 
@@ -306,6 +307,10 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
         raise
     except openerp.exceptions.AccessError:
         raise
+    except werkzeug.exceptions.HTTPException:
+        raise
+    except openerp.http.AuthenticationError:
+        raise
     except OperationalError:
         # Do not hide PostgreSQL low-level exceptions, to let the auto-replay
         # of serialized transactions work its magic
@@ -315,4 +320,4 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     except Exception, e:
         import sys
         exc_info = sys.exc_info()
-        raise ValueError, '"%s" while evaluating\n%r' % (ustr(e), expr), exc_info[2]
+        raise ValueError, '%s: "%s" while evaluating\n%r' % (ustr(type(e)), ustr(e), expr), exc_info[2]
