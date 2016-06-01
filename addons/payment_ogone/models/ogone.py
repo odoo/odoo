@@ -206,7 +206,7 @@ class PaymentAcquirerOgone(osv.Model):
             'acquirer_id': int(data.get('acquirer_id')),
             'partner_id': int(data.get('partner_id'))
         }
-        pm_id = self.pool['payment.method'].create(cr, SUPERUSER_ID, values, context=context)
+        pm_id = self.pool['payment.token'].create(cr, SUPERUSER_ID, values, context=context)
         return pm_id
 
 
@@ -224,7 +224,7 @@ class PaymentTxOgone(osv.Model):
 
     def _ogone_form_get_tx_from_data(self, cr, uid, data, context=None):
         """ Given a data dict coming from ogone, verify it and find the related
-        transaction record. Create a payment method if an alias is returned."""
+        transaction record. Create a payment token if an alias is returned."""
         reference, pay_id, shasign, alias = data.get('orderID'), data.get('PAYID'), data.get('SHASIGN'), data.get('ALIAS')
         if not reference or not pay_id or not shasign:
             error_msg = _('Ogone: received data with missing reference (%s) or pay_id (%s) or shasign (%s)') % (reference, pay_id, shasign)
@@ -255,7 +255,7 @@ class PaymentTxOgone(osv.Model):
 
         # alias was created on ogone server, store it
         if alias:
-            method_obj = self.pool['payment.method']
+            method_obj = self.pool['payment.token']
             domain = [('acquirer_ref', '=', alias)]
             cardholder = data.get('CN')
             if not method_obj.search_count(cr, uid, domain, context=context):
@@ -265,7 +265,7 @@ class PaymentTxOgone(osv.Model):
                                                   'acquirer_id': tx.acquirer_id.id,
                                                   'acquirer_ref': alias
                                                   })
-                tx.write({'payment_method_id': ref})
+                tx.write({'payment_token_id': ref})
 
         return tx
 
@@ -295,14 +295,14 @@ class PaymentTxOgone(osv.Model):
                 'date_validate': datetime.datetime.strptime(data['TRXDATE'], '%m/%d/%y').strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'acquirer_reference': data['PAYID'],
             }
-            if data.get('ALIAS') and tx.partner_id and tx.type == 'form_save' and not tx.payment_method_id:
-                pm_id = self.pool['payment.method'].create(cr, uid, {
+            if data.get('ALIAS') and tx.partner_id and tx.type == 'form_save' and not tx.payment_token_id:
+                pm_id = self.pool['payment.token'].create(cr, uid, {
                     'partner_id': tx.partner_id.id,
                     'acquirer_id': tx.acquirer_id.id,
                     'acquirer_ref': data.get('ALIAS'),
                     'name': '%s - %s' % (data.get('CARDNO'), data.get('CN'))
                 }, context=context)
-                vals.update(payment_method_id=pm_id)
+                vals.update(payment_token_id=pm_id)
             tx.write(vals)
             if tx.callback_eval:
                 safe_eval(tx.callback_eval, {'self': tx})
@@ -349,7 +349,7 @@ class PaymentTxOgone(osv.Model):
             'CURRENCY': tx.currency_id.name,
             'OPERATION': 'SAL',
             'ECI': 2,   # Recurring (from MOTO)
-            'ALIAS': tx.payment_method_id.acquirer_ref,
+            'ALIAS': tx.payment_token_id.acquirer_ref,
             'RTIMEOUT': 30,
         }
 
@@ -400,14 +400,14 @@ class PaymentTxOgone(osv.Model):
                 'date_validate': datetime.date.today().strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'acquirer_reference': tree.get('PAYID'),
             })
-            if tree.get('ALIAS') and tx.partner_id and tx.type == 'form_save' and not tx.payment_method_id:
-                pm = tx.env['payment.method'].create({
+            if tree.get('ALIAS') and tx.partner_id and tx.type == 'form_save' and not tx.payment_token_id:
+                pm = tx.env['payment.token'].create({
                     'partner_id': tx.partner_id.id,
                     'acquirer_id': tx.acquirer_id.id,
                     'acquirer_ref': tree.get('ALIAS'),
                     'name': tree.get('CARDNO'),
                 })
-                tx.write({'payment_method_id': pm.id})
+                tx.write({'payment_token_id': pm.id})
             if tx.callback_eval:
                 safe_eval(tx.callback_eval, {'self': tx})
             return True
@@ -469,8 +469,8 @@ class PaymentTxOgone(osv.Model):
         return tree
 
 
-class PaymentMethod(osv.Model):
-    _inherit = 'payment.method'
+class PaymentToken(osv.Model):
+    _inherit = 'payment.token'
 
     def ogone_create(self, cr, uid, values, context=None):
         if values.get('cc_number'):

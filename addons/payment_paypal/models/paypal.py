@@ -196,8 +196,8 @@ class TxPaypal(osv.Model):
         if 'handling_amount' in data and float_compare(float(data.get('handling_amount')), tx.fees, 2) != 0:
             invalid_parameters.append(('handling_amount', data.get('handling_amount'), tx.fees))
         # check buyer
-        if tx.payment_method_id and data.get('payer_id') != tx.payment_method_id.acquirer_ref:
-            invalid_parameters.append(('payer_id', data.get('payer_id'), tx.payment_method_id.acquirer_ref))
+        if tx.payment_token_id and data.get('payer_id') != tx.payment_token_id.acquirer_ref:
+            invalid_parameters.append(('payer_id', data.get('payer_id'), tx.payment_token_id.acquirer_ref))
         # check seller
         if data.get('receiver_id') and tx.acquirer_id.paypal_seller_account and data['receiver_id'] != tx.acquirer_id.paypal_seller_account:
             invalid_parameters.append(('receiver_id', data.get('receiver_id'), tx.acquirer_id.paypal_seller_account))

@@ -46,7 +46,7 @@ class PaymentAcquirerStripe(models.Model):
 
     @api.model
     def stripe_s2s_form_process(self, data):
-        payment_method = self.env['payment.method'].sudo().create({
+        payment_token = self.env['payment.token'].sudo().create({
             'cc_number': data['cc_number'],
             'cc_holder_name': data['cc_holder_name'],
             'cc_expiry': data['cc_expiry'],
@@ -55,7 +55,7 @@ class PaymentAcquirerStripe(models.Model):
             'acquirer_id': int(data['acquirer_id']),
             'partner_id': int(data['partner_id'])
         })
-        return payment_method.id
+        return payment_token.id
 
     @api.multi
     def stripe_s2s_form_validate(self, data):

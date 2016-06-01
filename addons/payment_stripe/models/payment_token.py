@@ -7,8 +7,8 @@ from odoo.exceptions import UserError
 from . import payment_acquirer as pa
 
 
-class PaymentMethodStripe(models.Model):
-    _inherit = 'payment.method'
+class PaymentTokenStripe(models.Model):
+    _inherit = 'payment.token'
 
     @api.model
     def stripe_create(self, values):
