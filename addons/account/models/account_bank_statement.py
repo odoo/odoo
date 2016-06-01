@@ -711,7 +711,7 @@ class AccountBankStatementLine(models.Model):
             elif st_line_currency == company_currency:
                 total_amount = self.amount_currency
             else:
-                total_amount = statement_currency.with_context({'date': self.date}).compute(self.amount, company_currency)
+                total_amount = -sum([x.currency_id.with_context({'date': x.date}).compute(x.amount_currency, x.journal_id.company_id.currency_id) for x in move.line_ids])
             ratio = total_amount / amount
             # Then use it to adjust the statement.line field that correspond to the move.line amount_currency
             if statement_currency != company_currency:
