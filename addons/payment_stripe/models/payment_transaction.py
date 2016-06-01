@@ -37,7 +37,7 @@ class PaymentTransactionStripe(models.Model):
     @api.multi
     def stripe_s2s_do_transaction(self, **kwargs):
         self.ensure_one()
-        result = self._create_stripe_charge(acquirer_ref=self.payment_method_id.acquirer_ref)
+        result = self._create_stripe_charge(acquirer_ref=self.payment_token_id.acquirer_ref)
         return self._stripe_s2s_validate_tree(result)
 
     @api.model

@@ -32,7 +32,7 @@ class StripeTest(StripeCommon):
         })
 
         # Create payment meethod for Stripe
-        payment_method = self.env['payment.method'].create({
+        payment_token = self.env['payment.token'].create({
             'acquirer_id': self.stripe_id,
             'partner_id': self.buyer_id,
             'cc_number': '4242424242424242',
@@ -48,7 +48,7 @@ class StripeTest(StripeCommon):
             'currency_id': self.currency_euro.id,
             'acquirer_id': self.stripe_id,
             'partner_id': self.buyer_id,
-            'payment_method_id': payment_method.id,
+            'payment_token_id': payment_token.id,
             'type': 'server2server',
             'amount': 115.0
         })

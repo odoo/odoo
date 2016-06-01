@@ -30,9 +30,9 @@
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
 
-    <record id="payment_method_salesman_rule" model="ir.rule">
-        <field name="name">Access every payment method</field>
-        <field name="model_id" ref="payment.model_payment_method"/>
+    <record id="payment_token_salesman_rule" model="ir.rule">
+        <field name="name">Access every payment token</field>
+        <field name="model_id" ref="payment.model_payment_token"/>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
 

@@ -233,7 +233,7 @@
                             </group>
                             <group>
                                 <field name="acquirer_id"/>
-                                <field name="payment_method_id"/>
+                                <field name="payment_token_id"/>
                                 <field name="acquirer_reference"/>
                                 <field name="create_date"/>
                                 <field name="date_validate"/>
@@ -292,12 +292,12 @@
             parent='root_payment_menu'
             sequence='20' />
 
-        <!-- Payment Methods -->
-        <record model='ir.ui.view' id='payment_method_tree_view'>
-            <field name='name'>payment.method.tree</field>
-            <field name='model'>payment.method</field>
+        <!-- Payment Tokens -->
+        <record model='ir.ui.view' id='payment_token_tree_view'>
+            <field name='name'>payment.token.tree</field>
+            <field name='model'>payment.token</field>
             <field name='arch' type='xml'>
-                <tree string='Payment Methods'>
+                <tree string='Payment Tokens'>
                     <field name="name"/>
                     <field name="active"/>
                     <field name='partner_id' />
@@ -307,11 +307,11 @@
             </field>
         </record>
 
-        <record id='payment_method_view_search' model='ir.ui.view'>
-            <field name='name'>payment.method.search</field>
-            <field name='model'>payment.method</field>
+        <record id='payment_token_view_search' model='ir.ui.view'>
+            <field name='name'>payment.token.search</field>
+            <field name='model'>payment.token</field>
             <field name='arch' type='xml'>
-                <search string='Payment Methods'>
+                <search string='Payment Tokens'>
                     <field name='partner_id'/>
                 </search>
             </field>
@@ -322,15 +322,15 @@
             <field name="res_model">payment.transaction</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('payment_method_id','=', active_id)]</field>
+            <field name="domain">[('payment_token_id','=', active_id)]</field>
             <field name="context">{'create': False}</field>
         </record>
 
-        <record model='ir.ui.view' id='payment_method_form_view'>
-            <field name='name'>payment.method.form</field>
-            <field name='model'>payment.method</field>
+        <record model='ir.ui.view' id='payment_token_form_view'>
+            <field name='name'>payment.token.form</field>
+            <field name='model'>payment.token</field>
             <field name='arch' type='xml'>
-                <form string='Payment Methods' create='false' editable='bottom'>
+                <form string='Payment Tokens' create='false' editable='bottom'>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" name="%(action_payment_tx_ids)d"
@@ -351,16 +351,16 @@
             </field>
         </record>
 
-        <record model='ir.actions.act_window' id='payment_method_action'>
+        <record model='ir.actions.act_window' id='payment_token_action'>
             <field name='name'>Saved Payment Data</field>
-            <field name='res_model'>payment.method</field>
+            <field name='res_model'>payment.token</field>
             <field name='view_type'>form</field>
             <field name='view_mode'>tree,form</field>
         </record>
 
         <menuitem
-            action='payment_method_action'
-            id='payment_method_menu'
+            action='payment_token_action'
+            id='payment_token_menu'
             parent='root_payment_menu'/>
 
     </data>

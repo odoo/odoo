@@ -402,7 +402,7 @@ class PaymentTransaction(osv.Model):
         'callback_eval': fields.char('S2S Callback', help="""\
             Will be safe_eval with `self` being the current transaction. i.e.:
                 self.env['my.model'].payment_validated(self)""", oldname="s2s_cb_eval"),
-        'payment_method_id': fields.many2one('payment.method', 'Payment Method', domain="[('acquirer_id', '=', acquirer_id)]"),
+        'payment_token_id': fields.many2one('payment.token', 'Payment Token', domain="[('acquirer_id', '=', acquirer_id)]"),
     }
 
     def _check_reference(self, cr, uid, ids, context=None):
@@ -576,17 +576,17 @@ class PaymentTransaction(osv.Model):
         return True
 
 
-class PaymentMethod(osv.Model):
-    _name = 'payment.method'
+class PaymentToken(osv.Model):
+    _name = 'payment.token'
     _order = 'partner_id'
 
     _columns = {
-        'name': fields.char('Name', help='Name of the payment method'),
+        'name': fields.char('Name', help='Name of the payment token'),
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
         'acquirer_id': fields.many2one('payment.acquirer', 'Acquirer Account', required=True),
         'acquirer_ref': fields.char('Acquirer Ref.', required=True),
         'active': fields.boolean('Active'),
-        'payment_ids': fields.one2many('payment.transaction', 'payment_method_id', 'Payment Transactions'),
+        'payment_ids': fields.one2many('payment.transaction', 'payment_token_id', 'Payment Transactions'),
     }
 
     _defaults = {
@@ -603,4 +603,4 @@ class PaymentMethod(osv.Model):
             if hasattr(self, custom_method_name):
                 values.update(getattr(self, custom_method_name)(cr, uid, values, context=context))
 
-        return super(PaymentMethod, self).create(cr, uid, values, context=context)
+        return super(PaymentToken, self).create(cr, uid, values, context=context)

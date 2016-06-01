@@ -11,12 +11,12 @@ class AccountPayment(models.Model):
     def onchange_partner_id(self):
         res = {}
         if self.partner_id:
-            res['domain'] = {'electronic_payment_method_id': [('partner_id', '=', self.partner_id.id)]}
+            res['domain'] = {'payment_token_id': [('partner_id', '=', self.partner_id.id)]}
 
         return res
 
     payment_transaction_id = fields.Many2one('payment.transaction', string="Payment Transaction")
-    electronic_payment_method_id = fields.Many2one('payment.method', string="Saved payment method")
+    payment_token_id = fields.Many2one('payment.token', string="Saved payment token")
 
     def _do_payment(self):
         tx_obj = self.env['payment.transaction']
@@ -24,11 +24,11 @@ class AccountPayment(models.Model):
 
         tx_values = {
             'amount': self.amount,
-            'acquirer_id': self.electronic_payment_method_id.acquirer_id.id,
+            'acquirer_id': self.payment_token_id.acquirer_id.id,
             'type': 'server2server',
             'currency_id': self.currency_id.id,
             'reference': reference,
-            'payment_method_id': self.electronic_payment_method_id.id,
+            'payment_token_id': self.payment_token_id.id,
             'partner_id': self.partner_id.id,
             'partner_country_id': self.partner_id.country_id.id,
         }
@@ -46,7 +46,7 @@ class AccountPayment(models.Model):
     def create(self, vals):
         res = super(AccountPayment, self).create(vals)
 
-        if res.electronic_payment_method_id:
+        if res.payment_token_id:
             res._do_payment()
 
         return res
