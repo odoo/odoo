@@ -365,7 +365,7 @@ class purchase_order(osv.osv):
 
     def copy(self, cr, uid, id, default=None, context=None):
         # FORWARDPORT UP TO SAAS-6
-        new_id = super(purchase_order, self).copy(cr, uid, id, context=context)
+        new_id = super(purchase_order, self).copy(cr, uid, id, default=default, context=context)
         for po in self.browse(cr, uid, [new_id], context=context):
             for line in po.order_line:
                 vals = self.pool.get('purchase.order.line').onchange_product_id(
@@ -1098,7 +1098,7 @@ class purchase_order_line(osv.osv):
         'name': fields.text('Description', required=True),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'date_planned': fields.date('Scheduled Date', required=True, select=True),
-        'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),
+        'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes', domain=['|', ('active', '=', False), ('active', '=', True)]),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True),
         'move_ids': fields.one2many('stock.move', 'purchase_line_id', 'Reservation', readonly=True, ondelete='set null'),
