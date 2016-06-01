@@ -101,6 +101,9 @@ class ReturnPicking(models.TransientModel):
             'origin': picking.name,
             'location_id': picking.location_dest_id.id,
             'location_dest_id': self.location_id.id})
+        new_picking.message_post_with_view('mail.message_origin_link',
+            values={'self': new_picking, 'origin': picking},
+            subtype_id=self.env.ref('mail.mt_note').id)
 
         returned_lines = 0
         for return_line in self.product_return_moves:

@@ -332,6 +332,9 @@ class ProcurementOrder(models.Model):
                                     new_procurement = ProcurementAutorundefer.create(
                                         orderpoint._prepare_procurement_values(qty_rounded, **group['procurement_values']))
                                     procurement_list.append(new_procurement)
+                                    new_procurement.message_post_with_view('mail.message_origin_link',
+                                        values={'self': new_procurement, 'origin': orderpoint},
+                                        subtype_id=self.env.ref('mail.mt_note').id)
                                     self._procurement_from_orderpoint_post_process([orderpoint.id])
                                 if use_new_cursor:
                                     cr.commit()

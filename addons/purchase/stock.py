@@ -21,6 +21,16 @@ class stock_picking(osv.osv):
                 break
         return res
 
+    @api.model
+    def _create_backorder(self, backorder_moves=[]):
+        res = super(stock_picking, self)._create_backorder(backorder_moves)
+        for picking in self:
+            if picking.picking_type_id.code == 'incoming':
+                backorder = self.search([('backorder_id', '=', picking.id)])
+                backorder.message_post_with_view('mail.message_origin_link',
+                    values={'self': backorder, 'origin': backorder.purchase_id},
+                    subtype_id=self.env.ref('mail.mt_note').id)
+        return res
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'

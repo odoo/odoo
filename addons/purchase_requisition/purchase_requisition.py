@@ -271,6 +271,24 @@ class purchase_order(osv.osv):
                 po.requisition_id.action_done(context=context)
         return res
 
+    def create(self, cr, uid, vals, context=None):
+        result = super(purchase_order, self).create(cr, uid, vals, context=context)
+        purchase = self.browse(cr, uid, result, context=context)
+        if purchase.requisition_id:
+            purchase.message_post_with_view('mail.message_origin_link',
+                    values={'self': purchase, 'origin': purchase.requisition_id},
+                    subtype_id=self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mail.mt_note'))
+        return result
+
+    def write(self, cr, uid, ids, vals, context=None):
+        result = super(purchase_order, self).write(cr, uid, ids, vals, context=context)
+        if vals.get('requisition_id'):
+            purchase = self.browse(cr, uid, ids, context=context)
+            purchase.message_post_with_view('mail.message_origin_link',
+                    values={'self': purchase, 'origin': purchase.requisition_id, 'edit': True},
+                    subtype_id=self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mail.mt_note'))
+        return result
+
 
 class product_template(osv.osv):
     _inherit = 'product.template'
@@ -313,6 +331,10 @@ class procurement_order(osv.osv):
                     })],
                 })
                 self.message_post(cr, uid, [procurement.id], body=_("Purchase Requisition created"), context=context)
+                purchase_requisition = requisition_obj.browse(cr, uid, requisition_id, context=context)
+                purchase_requisition.message_post_with_view('mail.message_origin_link',
+                    values={'self': purchase_requisition, 'origin': procurement},
+                    subtype_id=self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mail.mt_note'))
                 procurement.write({'requisition_id': requisition_id})
                 req_ids += [procurement.id]
                 res += [procurement.id]
