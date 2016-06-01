@@ -15,7 +15,7 @@ condition/math builtins.
 #  - safe_eval in lp:~xrg/openobject-server/optimize-5.0
 #  - safe_eval in tryton http://hg.tryton.org/hgwebdir.cgi/trytond/rev/bbb5f73319ad
 
-from opcode import HAVE_ARGUMENT, opmap, opname
+from opcode import HAVE_ARGUMENT, opmap
 from psycopg2 import OperationalError
 from types import CodeType
 import logging
@@ -50,7 +50,7 @@ _EXPR_OPCODES = _CONST_OPCODES.union(set(opmap[x] for x in [
     'INPLACE_DIVIDE', 'INPLACE_REMAINDER', 'INPLACE_POWER',
     'INPLACE_LEFTSHIFT', 'INPLACE_RIGHTSHIFT', 'INPLACE_AND',
     'INPLACE_XOR','INPLACE_OR'
-    ] if x in opmap))
+] if x in opmap))
 
 _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'LOAD_NAME', 'CALL_FUNCTION', 'COMPARE_OP', 'LOAD_ATTR',
@@ -63,7 +63,7 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'POP_JUMP_IF_TRUE', 'SETUP_EXCEPT', 'END_FINALLY',
     'LOAD_FAST', 'STORE_FAST', 'DELETE_FAST', 'UNPACK_SEQUENCE',
     'LOAD_GLOBAL', # Only allows access to restricted globals
-    ] if x in opmap))
+] if x in opmap))
 
 _logger = logging.getLogger(__name__)
 
@@ -277,7 +277,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     if not nocopy:
         # isinstance() does not work below, we want *exactly* the dict class
         if (globals_dict is not None and type(globals_dict) is not dict) \
-            or (locals_dict is not None and type(locals_dict) is not dict):
+                or (locals_dict is not None and type(locals_dict) is not dict):
             _logger.warning(
                 "Looks like you are trying to pass a dynamic environment, "
                 "you should probably pass nocopy=True to safe_eval().")
