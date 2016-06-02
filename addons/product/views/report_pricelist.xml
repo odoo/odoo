@@ -21,7 +21,7 @@
                 <table class="table table-condensed">
                     <thead>
                         <tr>
-                            <th>
+                            <th colspan="3">
                                 <strong>Description</strong>
                             </th>
                             <t t-if="titles">
@@ -32,33 +32,47 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <t t-foreach="categories" t-as="c">
-                            <tr>
-                                <td colspan="100">
-                                    <strong t-esc="c['name']"/>
-                                </td>
-                            </tr>
-                            <tr t-foreach="c['products']" t-as="p">
-                                <td>
-                                    <t t-if="p.get('code')">
-                                        [<span t-esc="p['code']"/>]
-                                    </t> 
-                                    <span t-esc="p['name']"/>
-                                    <t t-if="p.get('attribute')">
-                                        (<t t-esc="p['attribute']"/>)
+                        <t t-if="categories">
+                            <t t-foreach="categories" t-as="cat">
+                                <tr>
+                                    <td t-att-colspan="len(titles) + 3">
+                                        <strong t-esc="cat['name']"/>
+                                    </td>
+                                </tr>
+                                <tr t-foreach="cat['products']" t-as="product">
+                                    <t t-if="product.get('variants')">
+                                        <tr t-foreach="product['variants']" t-as="p">
+                                            <t t-call="product.pricelist_line"></t>
+                                        </tr>
                                     </t>
-                                </td>
-                                <td t-if="p.has_key('qty1') and p['qty1']"><strong t-esc="p['qty1']"/></td>
-                                <td t-if="p.has_key('qty2') and p['qty2']"><strong t-esc="p['qty2']"/></td>
-                                <td t-if="p.has_key('qty3') and p['qty3']"><strong t-esc="p['qty3']"/></td>
-                                <td t-if="p.has_key('qty4') and p['qty4']"><strong t-esc="p['qty4']"/></td>
-                                <td t-if="p.has_key('qty5') and p['qty5']"><strong t-esc="p['qty5']"/></td>
-                            </tr>
+                                    <t t-if="not product.get('variants', False)">
+                                        <tr t-foreach="[product]" t-as="p">
+                                            <t t-call="product.pricelist_line"></t>
+                                        </tr>
+                                    </t>
+                                </tr>
+                            </t>
                         </t>
                     </tbody>
                 </table>
             </div>
         </t>
     </t>
+</template>
+<template id="pricelist_line">
+    <td colspan="3">
+        <t t-if="p.get('code')">
+            [<span t-esc="p['code']"/>]
+        </t>
+        <span t-esc="p['name']"/>
+        <t t-if="p.get('attribute')">
+            (<t t-esc="p['attribute']"/>)
+        </t>
+    </td>
+    <td t-if="p.has_key('qty1')"><strong t-esc="p['qty1']"/></td>
+    <td t-if="p.has_key('qty2')"><strong t-esc="p['qty2']"/></td>
+    <td t-if="p.has_key('qty3')"><strong t-esc="p['qty3']"/></td>
+    <td t-if="p.has_key('qty4')"><strong t-esc="p['qty4']"/></td>
+    <td t-if="p.has_key('qty5')"><strong t-esc="p['qty5']"/></td>
 </template>
 </odoo>

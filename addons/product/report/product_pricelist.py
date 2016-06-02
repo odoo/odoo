@@ -31,7 +31,10 @@ class ReportPricelist(models.AbstractModel):
         product_category = set(map((lambda p: (p.categ_id.id, p.categ_id.display_name)), products))
         for category_id, category_name in product_category:
             product = products.filtered(lambda p: p.categ_id.id == category_id)
-            product_list = self._get_variants(product)
+            if self.model == 'product.template':
+                product_list = (map((lambda p: dict(name=p.name, variants=self._get_variants(p.product_variant_ids))), product))
+            else:
+                product_list = self._get_variants(product)
             res.append({'name': category_name, 'products': product_list})
         return res
 
