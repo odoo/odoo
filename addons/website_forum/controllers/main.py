@@ -340,6 +340,7 @@ class WebsiteForum(http.Controller):
                 body=kwargs.get('comment'),
                 message_type='comment',
                 subtype='mt_comment')
+            post.post_comment()
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/toggle_correct', type='json', auth="public", website=True)

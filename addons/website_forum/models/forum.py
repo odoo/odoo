@@ -500,6 +500,15 @@ class Post(models.Model):
         return res
 
     @api.multi
+    def post_comment(self):
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        for post in self:
+            p = post.parent_id or post
+            body = _('<p>A new comment for <i>%s</i> has been posted. <a href="%s/forum/%s/question/%s">Click here to access the post.</a></p>') % \
+                    (p.name, base_url, slug(p.forum_id), slug(p))
+            post.parent_id.message_post(subject=_('Re: %s') % p.name, body=body, subtype='mt_comment')
+
+    @api.multi
     def post_notification(self):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         for post in self:
