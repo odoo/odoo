@@ -56,7 +56,7 @@ References
     'data': [
         'security/ir.model.access.csv',
         'wizard/wizard.xml',
-        'wizard/l10n_eu_service.service_tax_rate.csv'
+        'data/l10n_eu_service.service_tax_rate.csv'
     ],
     'test': [],
     'demo': [],
