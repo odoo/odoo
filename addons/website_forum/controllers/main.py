@@ -347,9 +347,10 @@ class WebsiteForum(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         if kwargs.get('comment') and post.forum_id.id == forum.id:
             # TDE FIXME: check that post_id is the question or one of its answers
+            body = tools.mail.plaintext2html(kwargs['comment'])
             request.registry['forum.post'].message_post(
                 cr, uid, post.id,
-                body=kwargs.get('comment'),
+                body=body,
                 type='comment',
                 subtype='mt_comment',
                 context=dict(context, mail_create_nosubscribe=True))
