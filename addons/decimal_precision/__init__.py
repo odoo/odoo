@@ -2,4 +2,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 #import decimal_precision
+import models
 from decimal_precision import get_precision

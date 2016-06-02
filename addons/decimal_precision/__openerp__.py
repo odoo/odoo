@@ -13,7 +13,7 @@ The decimal precision is configured per company.
     'depends': ['base'],
     'category' : 'Hidden/Dependency',
     'data': [
-        'decimal_precision_view.xml',
+        'views/decimal_precision_view.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [],
