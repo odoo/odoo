@@ -111,22 +111,26 @@ class AccountInvoiceReport(models.Model):
                     ai.type, ai.state, pt.categ_id, ai.date_due, ai.account_id, ail.account_id AS account_line_id,
                     ai.partner_bank_id,
                     SUM(CASE
-                         WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
+                        WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
                             THEN (- ail.quantity) / u.factor * u2.factor
                             ELSE ail.quantity / u.factor * u2.factor
                         END) AS product_qty,
-                    SUM(ail.price_subtotal_signed) AS price_total,
-                    SUM(ail.price_subtotal_signed) / CASE
-                           WHEN SUM(ail.quantity / u.factor * u2.factor) <> 0::numeric
-                               THEN CASE
-                                     WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
-                                        THEN SUM((- ail.quantity) / u.factor * u2.factor)
-                                        ELSE SUM(ail.quantity / u.factor * u2.factor)
-                                    END
-                               ELSE 1::numeric
-                          END AS price_average,
-                    ai.residual_company_signed / (SELECT count(*) FROM account_invoice_line l where invoice_id = ai.id) *
-                    count(*) AS residual,
+                    SUM(ABS(ail.price_subtotal_signed) * CASE
+                        WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
+                            THEN -1
+                            ELSE 1
+                        END
+                    ) AS price_total,
+                    SUM(ABS(ail.price_subtotal_signed)) / CASE
+                        WHEN SUM(ail.quantity / u.factor * u2.factor) <> 0::numeric
+                            THEN SUM(ail.quantity / u.factor * u2.factor)
+                            ELSE 1::numeric
+                        END AS price_average,
+                    ai.residual_company_signed / (SELECT count(*) FROM account_invoice_line l where invoice_id = ai.id) * count(*) * CASE
+                        WHEN ai.type::text = ANY (ARRAY['in_refund'::character varying::text, 'in_invoice'::character varying::text])
+                            THEN -1
+                            ELSE 1
+                        END AS residual,
                     ai.commercial_partner_id as commercial_partner_id,
                     partner.country_id
         """
