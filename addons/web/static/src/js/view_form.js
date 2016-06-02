@@ -428,7 +428,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             var page = 0;
             var limit = 0;
             try {
-                controller = this.ViewManager.views['list'] && this.ViewManager.views['list'].controller;
+                var controller = this.ViewManager.views['list'] && this.ViewManager.views['list'].controller;
                 page = controller && controller.page || 0;
                 limit = controller && controller.limit() || 0;
             }
