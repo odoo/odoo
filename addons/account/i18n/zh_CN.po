@@ -35,7 +35,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-05-13 12:34+0000\n"
+"PO-Revision-Date: 2016-05-28 17:59+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -300,7 +300,7 @@ msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <strong>Invoice payment by Check</strong>\n"
 "                                    </span>"
-msgstr "<span class=\"panel-title\">\n                                        <strong>发票付款通过支票</strong>\n                                    </span>"
+msgstr "<span class=\"panel-title\">\n                                        <strong>发票支票付款</strong>\n                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -448,7 +448,7 @@ msgstr "<strong>现金交易</strong><br/> (对于那些没有发票的), 应直
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Check the Taxes configuration:</strong>"
-msgstr "<strong>检查税的配置:</strong>"
+msgstr "<strong>检查税配置:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -484,7 +484,7 @@ msgstr "<strong>创建一张销售发票</strong>"
 msgid ""
 "<strong>Create a Deposit Ticket</strong><br/>\n"
 "                                        This allows you to record the different payments that constitute your bank deposit. (You may need to"
-msgstr "<strong>创建一张订金支票</strong><br/>可以使你记录不同的\n                                        多笔收款构成订金. (你可能需要"
+msgstr "<strong>创建存款单</strong><br/>允许你记录多笔不同的\n                                        付款构成的存款。 (你可能需要"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -515,7 +515,7 @@ msgstr "<strong>日期到 :</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Deposit Tickets</strong>"
-msgstr "<strong>订金支票</strong>"
+msgstr "<strong>存款单</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -1430,7 +1430,7 @@ msgstr "允许现金收付制税金"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_l10n_us_check_printing
 msgid "Allow check printing and deposits"
-msgstr "允许检查打印和保证金"
+msgstr "允许支票打印和存款"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_group_multi_currency
@@ -2071,7 +2071,7 @@ msgstr "取消发票"
 #: model:ir.actions.act_window,name:account.action_account_invoice_cancel
 #: model:ir.ui.view,arch_db:account.account_invoice_cancel_view
 msgid "Cancel Selected Invoices"
-msgstr "取消选择的发票"
+msgstr "取消选定的发票"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
@@ -7440,7 +7440,7 @@ msgstr "报告上的符号"
 msgid ""
 "Simplify your cash, checks, or credit cards deposits with an integrated "
 "batch payment function."
-msgstr "用付款的统一功能去简单设置现金，支票或是信用卡。"
+msgstr "使用集成的批量付款功能，简化现金，支票，或是信用卡存款。"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -7909,7 +7909,7 @@ msgstr "顾问有所有财务设置的权限,再加上其他的权限，例如�
 msgid ""
 "The Deposit Ticket module can also be used to settle credit card batch made "
 "of multiple transactions."
-msgstr "银行存款单模块也可以处理信用卡的多重批量交易。"
+msgstr "存款单模块也可以用来解决多笔的交易信用卡批次。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:780
@@ -8274,7 +8274,7 @@ msgstr "能够给未付发票多层次的重新自动发邮件需要安装模块
 msgid ""
 "This allows you to group received checks before you deposit them to the bank.\n"
 "-This installs the module account_batch_deposit."
-msgstr "能够让你对收到的支票分组在把他们存入银行前需要安装模块：module account_batch_deposit"
+msgstr "允许你对收到的支票在把他们存入银行前进行分组。\n- 这安装模块 module account_batch_deposit"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_complete_tax_set
@@ -8806,7 +8806,7 @@ msgstr "使用anglo-saxon会计"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_batch_deposit
 msgid "Use batch deposit"
-msgstr "使用批量缴存"
+msgstr "用批量存款"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9428,7 +9428,7 @@ msgstr "公司的法定名称，税号，地址，和logo"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Your outstanding invoices, payments, and undeposited funds."
-msgstr "你的未完成发票，付款，和未存入的资金"
+msgstr "未完成发票，付款，以及未存入的资金"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form

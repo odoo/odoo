@@ -913,7 +913,8 @@ class stock_picking(models.Model):
                 location_dest_id = picking_type.default_location_dest_id.id
 
             res['value'] = {'location_id': location_id,
-                            'location_dest_id': location_dest_id,}
+                            'location_dest_id': location_dest_id,
+                            'picking_type_code': picking_type.code,}
         return res
 
     def _default_location_destination(self):
