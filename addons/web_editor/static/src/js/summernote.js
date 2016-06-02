@@ -2302,6 +2302,15 @@ eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
     }
 };
 
+options.onPaste = function (e) {
+    e.preventDefault(); // FIXME this does not work with our custom out-dated summernote.
+    document.execCommand("undo"); // FIXME ... so use this hack until we decide to do something about it.
+
+    var pastedText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+    var formattedText = pastedText.replace(/([^.!?:;])\r?\n/g, "$1").trim(); // Remove linebreaks which are not at the end of a sentence
+    document.execCommand("insertText", false, formattedText);
+};
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var fn_attach = eventHandler.attach;
