@@ -90,18 +90,14 @@ var History = function History ($editable) {
         if (_toSnap) {
             this.saveSnap();
         }
-        if (!aUndo[pos] && (!aUndo[pos] || aUndo[pos].event !== 'undo')) {
+        if (!aUndo[pos]) {
             var temp = this.makeSnap('undo');
             if (temp && (!pos || temp.contents !== aUndo[pos-1].contents)) {
                 aUndo[pos] = temp;
-            } else {
-               pos--;
             }
-        } else if (_toSnap) {
-            pos--;
         }
         this.applySnap(aUndo[Math.max(--pos,0)]);
-        while (pos && (aUndo[pos].event === "blur" || (aUndo[pos+1].editable ===  aUndo[pos].editable && aUndo[pos+1].contents ===  aUndo[pos].contents))) {
+        while (pos && (aUndo[pos].event === "blur" || (aUndo[pos+1] && aUndo[pos+1].editable ===  aUndo[pos].editable && aUndo[pos+1].contents ===  aUndo[pos].contents))) {
             this.applySnap(aUndo[--pos]);
         }
     };
@@ -139,8 +135,8 @@ var History = function History ($editable) {
     var toSnap, split;
     this.recordUndo = function ($editable, event, internal_history) {
         var self = this;
+        var rng = range.create();
         if (!$editable) {
-            var rng = range.create();
             if(!rng) return;
             $editable = $(rng.sc).closest(".o_editable");
         }
@@ -163,7 +159,9 @@ var History = function History ($editable) {
         }
 
         // => make a snap when the user change editable zone (because: don't make snap for each keydown)
-        if (toSnap && (toSnap.split || !event || toSnap.event !== event || toSnap.editable !== $editable[0])) {
+        if (toSnap &&
+            (toSnap.editable != $editable[0] || toSnap.contents != $editable[0].innerHTML || !_.isEqual(toSnap.bookmark, (rng && rng.bookmark($editable[0])))) &&
+            (toSnap.split || !event || toSnap.event !== event || toSnap.editable !== $editable[0])) {
             this.saveSnap();
         }
 
@@ -173,7 +171,7 @@ var History = function History ($editable) {
             aUndo.push(snap);
         }
 
-        if (range.create()) {
+        if (rng) {
             toSnap = self.makeSnap(event);
         } else {
             toSnap = false;

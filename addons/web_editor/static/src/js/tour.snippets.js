@@ -9,7 +9,7 @@ Tour.register({
     name: "Test editor snippets",
     mode: 'test',
     path: function () {
-        return '/web_editor/field/test?callback=FieldTextHtml_0&enable_editor=1&field=many2many';
+        return '/web_editor/field/test?debug=assets&callback=FieldTextHtml_0&enable_editor=1&field=many2many';
     },
     steps: [
         {
@@ -21,7 +21,7 @@ Tour.register({
             waitFor:   'div[data-oe-type="many2many"]',
             onload: function () {
                 if (!window.location.href.match('res_id')) {
-                    window.location.href = '/web_editor/field/test?callback=FieldTextHtml_0&enable_editor=1&field=many2many&res_id='+$('div[data-oe-type="many2many"]').data('oe-id');
+                    window.location.href = '/web_editor/field/test?debug=assets&callback=FieldTextHtml_0&enable_editor=1&field=many2many&res_id='+$('div[data-oe-type="many2many"]').data('oe-id');
                 }
             }
         },
@@ -56,7 +56,7 @@ Tour.register({
             sampleText: new Date().getTime(),
         },
         {
-            title:     "create or select 'aaa' tag",
+            title:     "select create tag",
             element:   ".o_editor_many2many a.o_create",
         },
         {
