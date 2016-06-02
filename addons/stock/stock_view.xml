@@ -856,10 +856,10 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                     </div>
-                    <h1>
+                    <h1 class="hidden-xs">
                         <field name="name" attrs="{'invisible': [('name','=','/')]}" readonly="1"/>
                     </h1>
-                    <group>
+                    <group class="hidden-xs">
                         <group>
                             <field name="partner_id" attrs="{'invisible': [('picking_type_code', '=', 'internal')]}" on_change="onchange_picking_type(picking_type_id,partner_id)"/>
                             <field name="location_id" groups="stock.group_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
