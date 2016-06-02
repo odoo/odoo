@@ -21,6 +21,7 @@ var KanbanColumn = Widget.extend({
             e.preventDefault();
             e.stopPropagation();
             this.folded = true;
+            this.view.load_group_records();
             this.update_column();
         },
         'click .o_column_edit': 'edit_column',
@@ -39,7 +40,8 @@ var KanbanColumn = Widget.extend({
 
     init: function(parent, group_data, options, record_options) {
         this._super(parent);
-        this.data_records = group_data.records;
+        this.view = parent;
+        this.data_records = group_data.records || [];
         this.dataset = group_data.dataset;
         this.records = [];
         this.title = group_data.title;
@@ -124,6 +126,7 @@ var KanbanColumn = Widget.extend({
                 }
             });
         }
+
         this.update_column();
         this.$el.click(function (event) {
             if (self.$el.hasClass('o_column_folded')) {
@@ -179,10 +182,11 @@ var KanbanColumn = Widget.extend({
         }
         tooltip = '<p>' + tooltip + '</p>' + this.tooltip_info;
         this.$header.tooltip({html: true}).attr('data-original-title', tooltip);
+
         if (!this.remaining) {
-            this.$('.o_kanban_load_more').remove();
+            this.$('.o_kanban_load_more').addClass('hidden');
         } else {
-            this.$('.o_kanban_load_more').html(QWeb.render('KanbanView.LoadMore', {widget:this}))
+            this.$('.o_kanban_load_more').removeClass('hidden').html(QWeb.render('KanbanView.LoadMore', {widget:this}))
         }
     },
 

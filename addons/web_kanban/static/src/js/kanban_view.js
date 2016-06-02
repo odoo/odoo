@@ -114,8 +114,15 @@ var KanbanView = View.extend({
         return this._super();
     },
 
-    start: function() {
+    start: function () {
+        var self = this;
+        this.$o_content = this.ViewManager.getParent().$el;
+        this.$o_content.add(window).on('scroll resize', this.load_group_records = _.debounce(_.bind(this.load_group_records, this), 100));
         this.$el.addClass(this.fields_view.arch.attrs.class);
+        return this._super();
+    },
+    destroy: function () {
+        this.$o_content.add(window).off('scroll resize', this.load_group_records);
         return this._super();
     },
 
@@ -266,34 +273,55 @@ var KanbanView = View.extend({
             return groups;
         })
         .then(function (groups) {
-            // load records for each group
-            var is_empty = true;
-            return $.when.apply(null, _.map(groups, function (group) {
-                var def = $.when([]);
-                var dataset = new data.DataSetSearch(self, self.model,
+            var preload = self.$o_content.width();
+            var defs = [];
+            _.each(groups, function (group) {
+                group.dataset = new data.DataSetSearch(self, self.model,
                     new data.CompoundContext(self.dataset.get_context(), group.model.context()), group.model.domain());
                 if (self.dataset._sort) {
-                    dataset.set_sort(self.dataset._sort);
+                    group.dataset.set_sort(self.dataset._sort);
                 }
-                if (group.attributes.length >= 1) {
-                    def = dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit });
+                if (preload > 0) {
+                    preload -= group.folded ? 40 : 200;
+                    defs.push(self.load_records(0, group.dataset).then(function (data) {
+                        group.records = data.records;
+                        group.records_loaded = true;
+                    }));
                 }
-                return def.then(function (records) {
-                    self.dataset.ids.push.apply(self.dataset.ids, _.difference(dataset.ids, self.dataset.ids));
-                    group.records = records;
-                    group.dataset = dataset;
-                    is_empty = is_empty && !records.length;
-                    return group;
-                });
-            })).then(function () {
+            });
+
+            var is_empty = false;
+            var domain = [[group_by_field, 'in', _.pluck(_.pluck(groups, 'values'), 'id')]].concat(options.search_domain);
+            defs.push(self.dataset.call('search_count', [domain], {context:self.dataset.get_context()}).then(function (number) {
+                is_empty = !number;
+            }));
+
+            return $.when.apply($, defs).then(function () {
                 return {
-                    groups: Array.prototype.slice.call(arguments, 0),
+                    groups: groups,
                     is_empty: is_empty,
                     grouped: true,
                 };
             });
         });
         return $.when(load_groups_def, fields_def);
+    },
+
+    load_group_records: function () {
+        var self = this;
+        var scrollLeft = this.$o_content.prop('scrollLeft');
+        var Width = this.$o_content.width();
+        return $.when.apply($, _.map(_.reject(this.data.groups, 'records_loaded'), function (group) {
+            var $el = group.column.$el;
+            var left = $el.position().left;
+            var width = $el.width();
+
+            if (scrollLeft - 200 < left + width && scrollLeft + Width + 200 > left) {
+                group.records_loaded = true;
+                group.column.offset -= self.limit;
+                return self.load_more(group.column);
+            }
+        }));
     },
 
     is_action_enabled: function(action) {
@@ -481,9 +509,9 @@ var KanbanView = View.extend({
         var column_options = this.get_column_options();
 
         _.each(this.data.groups, function (group) {
-            var column = new KanbanColumn(self, group, column_options, record_options);
-            column.appendTo(fragment);
-            self.widgets.push(column);
+            group.column = new KanbanColumn(self, group, column_options, record_options);
+            group.column.appendTo(fragment);
+            self.widgets.push(group.column);
         });
         this.$el.sortable({
             axis: 'x',
@@ -576,7 +604,7 @@ var KanbanView = View.extend({
         records.forEach(function(record) {
             self.many2manys.forEach(function(name) {
                 var field = record.record[name];
-                var $el = record.$('.oe_form_field.o_form_field_many2manytags[name=' + name + ']');
+                var $el = record.$('.oe_form_field.o_form_field_many2manytags[name=' + name + ']:empty');
                 // fields declared in the kanban view may not be used directly
                 // in the template declaration, for example fields for which the
                 // raw value is used -> $el[0] is undefined, leading to errors
@@ -763,7 +791,7 @@ var KanbanView = View.extend({
 
     load_more: function (event) {
         var self = this;
-        var column = event.target;
+        var column = event.target || event;
         var offset = column.offset + this.limit;
         return this.load_records(offset, column.dataset).then(function (result) {
             _.each(result.records, function (r) {
@@ -771,7 +799,7 @@ var KanbanView = View.extend({
                 self.dataset.add_ids([r.id]);
             });
             column.offset += self.limit;
-            column.remaining = Math.max(column.remaining - self.limit, 0);
+            column.remaining = Math.max(column.dataset.size() - column.records.length, 0);
             column.update_column();
             self.postprocess_m2m_tags(column.records.slice(column.offset));
         });

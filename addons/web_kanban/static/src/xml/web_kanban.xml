@@ -31,7 +31,7 @@
                 <span class="o_kanban_quick_add"><i class="fa fa-plus"/></span>
             </t>
         </div>
-        <div t-if="widget.remaining > 0" class="o_kanban_load_more">
+        <div t-attf-class="o_kanban_load_more #{!widget.remaining and 'hidden' or ''}">
             <t t-call="KanbanView.LoadMore"/>
         </div>
     </div>
