@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# krnkris, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-03-11 09:18+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-05-25 12:58+0000\n"
+"PO-Revision-Date: 2016-05-27 06:03+0000\n"
+"Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-8/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -160,7 +161,7 @@ msgid ""
 "                    Some badges are harder than others to get with specific conditions.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Click to create a badge. \n                </p>\n                <p>\n                    A jelvény egy szimbolikus emléktárgy a felhasználónak létrehozva, jutalmazás kifejezésére.\n                    Automatikusan is hozzá lehet jutni, ha egy pár kritériumnak megfelel, vagy kézzel is adható.\n                     Egyes jelvények megszerzése nehezebb a különleges feltételek miatt.\n                </p>\n            "
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.challenge_list_action
@@ -187,7 +188,7 @@ msgid ""
 "                    The dates, values to reach or users are defined in goal instance.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Kattintson egy cél meghatározásához.\n                </p>\n                <p>\n                    Egy cél meghatározás az egy technikai modell meghatározása az elérni kívánt célhoz.\n                    Elérni kívánt dátumok, értékek vagy a célhoz meghatározott felhasználók.\n                </p>\n            "
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goal_list_action
@@ -200,7 +201,7 @@ msgid ""
 "                    Goals can be created automatically by using challenges.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Kattintson egy cél létrehozásához.\n                </p>\n                <p>\n                    A célt meghatározza egy felhasználó és a cél egy típusa.\n                     A kihívások használatával lehet célokat létrehozni.\n                </p>\n            "
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goals_from_challenge_act
@@ -210,7 +211,7 @@ msgid ""
 "                Make sure that your challenge is active and assigned to at least one user.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n                Nincsenek a keresésének megfelelő, ehhez a felméréshez kapcsolódó célok. \n                Győződjön meg róla, hogy a felmérései aktívak és legalább egy felhasználóhoz hozzárendeltek.\n              </p>\n            "
 
 #. module: gamification
 #: selection:gamification.challenge.line,condition:0
@@ -590,6 +591,18 @@ msgstr "Leírás"
 #: field:gamification.goal,definition_display:0
 msgid "Display Mode"
 msgstr "Megjelenítés módja"
+
+#. module: gamification
+#: field:gamification.badge,display_name:0
+#: field:gamification.badge.user,display_name:0
+#: field:gamification.badge.user.wizard,display_name:0
+#: field:gamification.challenge,display_name:0
+#: field:gamification.challenge.line,display_name:0
+#: field:gamification.goal,display_name:0
+#: field:gamification.goal.definition,display_name:0
+#: field:gamification.goal.wizard,display_name:0
+msgid "Display Name"
+msgstr "Név megjelenítése"
 
 #. module: gamification
 #: field:gamification.goal.definition,display_mode:0
@@ -990,7 +1003,7 @@ msgstr "Meghívott"
 #: code:addons/gamification/static/src/xml/gamification.xml:105
 #, python-format
 msgid "Invited Challenges"
-msgstr ""
+msgstr "Kihívásokhoz meghívott"
 
 #. module: gamification
 #: field:gamification.badge,message_is_follower:0
@@ -1003,6 +1016,18 @@ msgstr "Ez egy követő"
 #: field:gamification.challenge,message_last_post:0
 msgid "Last Message Date"
 msgstr "Utolsó üzenet időpontja"
+
+#. module: gamification
+#: field:gamification.badge,__last_update:0
+#: field:gamification.badge.user,__last_update:0
+#: field:gamification.badge.user.wizard,__last_update:0
+#: field:gamification.challenge,__last_update:0
+#: field:gamification.challenge.line,__last_update:0
+#: field:gamification.goal,__last_update:0
+#: field:gamification.goal.definition,__last_update:0
+#: field:gamification.goal.wizard,__last_update:0
+msgid "Last Modified on"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: gamification
 #: field:gamification.challenge,last_report_date:0
@@ -1305,7 +1330,7 @@ msgstr "Elutasít"
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
 msgid "Related"
-msgstr ""
+msgstr "Kapcsolódó"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.goals_from_challenge_act
@@ -1539,7 +1564,7 @@ msgstr "Elérni kívánt cél érték"
 #: code:addons/gamification/static/src/xml/gamification.xml:54
 #, python-format
 msgid "Target:"
-msgstr ""
+msgstr "Cél:"
 
 #. module: gamification
 #. openerp-web
@@ -1547,7 +1572,7 @@ msgstr ""
 #: code:addons/gamification/static/src/xml/gamification.xml:57
 #, python-format
 msgid "Target: <="
-msgstr ""
+msgstr "Cél: <="
 
 #. module: gamification
 #: view:gamification.goal:gamification.goal_kanban_view
@@ -1635,6 +1660,24 @@ msgstr "Minél alacsonyabb annál jobb"
 msgid ""
 "The maximum number of time this badge can be sent per month per person."
 msgstr "Maximum, ahányszor ezt a kitűzőt havonta, személyenként ki lehet adni."
+
+#. module: gamification
+#: code:addons/gamification/models/goal.py:160
+#, python-format
+msgid ""
+"The model configuration for the definition %s seems incorrect, please check it.\n"
+"\n"
+"%s not found"
+msgstr "A %s definícióhoz beállított modell nem megfelelő, kérem ellenőrizze.\n\n%s nem található"
+
+#. module: gamification
+#: code:addons/gamification/models/goal.py:158
+#, python-format
+msgid ""
+"The model configuration for the definition %s seems incorrect, please check it.\n"
+"\n"
+"%s not stored"
+msgstr "A %s definícióhoz beállított modell nem megfelelő, kérem ellenőrizze.\n\n%s nem található"
 
 #. module: gamification
 #: help:gamification.goal.definition,model_id:0
@@ -1891,7 +1934,7 @@ msgid ""
 "e.g. result = pool.get('mail.followers').search(cr, uid, [('res_model', '=',"
 " 'mail.group'), ('partner_id', '=', object.user_id.partner_id.id)], "
 "count=True, context=context)"
-msgstr ""
+msgstr "pl.: result = pool.get('mail.followers').search(cr, uid, [('res_model', '=', 'mail.group'), ('partner_id', '=', object.user_id.partner_id.id)], count=True, context=context)"
 
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_form_view
@@ -1908,7 +1951,7 @@ msgstr "adományozott,"
 #: code:addons/gamification/static/src/xml/gamification.xml:108
 #, python-format
 msgid "more details..."
-msgstr ""
+msgstr "további részletek..."
 
 #. module: gamification
 #: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
