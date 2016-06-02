@@ -281,6 +281,9 @@ class configmanager(object):
             group.add_option("--limit-request", dest="limit_request", my_default=8192,
                              help="Maximum number of request to be processed per worker (default 8192).",
                              type="int")
+            group.add_option("--limit-socket-timeout", dest="limit_socket_timeout", my_default=-1.0,
+                             help="Maximum time in second to spend in blocking socket operations (default: disabled).",
+                             type="float")
             parser.add_option_group(group)
 
         # Copy all optparse options (i.e. MyOption) into self.options.
@@ -400,7 +403,7 @@ class configmanager(object):
         posix_keys = [
             'workers',
             'limit_memory_hard', 'limit_memory_soft',
-            'limit_time_cpu', 'limit_time_real', 'limit_request', 'limit_time_real_cron'
+            'limit_time_cpu', 'limit_time_real', 'limit_request', 'limit_time_real_cron', 'limit_socket_timeout'
         ]
 
         if os.name == 'posix':
