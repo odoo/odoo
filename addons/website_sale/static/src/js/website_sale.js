@@ -56,7 +56,7 @@ $('.oe_website_sale').each(function () {
         }
         var value = parseInt($input.val(), 10);
         var $dom = $(this).closest('tr');
-        var default_price = parseFloat($dom.find('.text-danger > span.oe_currency_value').text());
+        var default_price = $dom.find('.text-danger > span.oe_currency_value').text();
         var $dom_optional = $dom.nextUntil(':not(.optional_product.info)');
         var line_id = parseInt($input.data('line-id'),10);
         var product_id = parseInt($input.data('product-id'),10);
@@ -73,14 +73,14 @@ $('.oe_website_sale').each(function () {
             'line_id': line_id})
         .then(function (res) {
             //basic case
-            $dom.find('span.oe_currency_value').last().text(res[product_id].toFixed(2));
-            $dom.find('.text-danger').toggle(res[product_id]<default_price && (default_price-res[product_id] > default_price/100));
+            $dom.find('span.oe_currency_value').last().text(res[product_id]);
+            $dom.find('.text-danger').toggle(parseFloat(res[product_id])<parseFloat(default_price));
             //optional case
             $dom_optional.each(function(){
                 var id = $(this).find('span[data-product-id]').data('product-id');
-                var price = parseFloat($(this).find(".text-danger > span.oe_currency_value").text());
-                $(this).find("span.oe_currency_value").last().text(res[id].toFixed(2));
-                $(this).find('.text-danger').toggle(res[id]<price && (price-res[id]>price/100));
+                var price = $(this).find(".text-danger > span.oe_currency_value").text();
+                $(this).find("span.oe_currency_value").last().text(res[id]);
+                $(this).find('.text-danger').toggle(parseFloat(res[id])<parseFloat(price));
             });
             openerp.jsonRpc("/shop/cart/update_json", 'call', {
             'line_id': line_id,
@@ -145,16 +145,10 @@ $('.oe_website_sale').each(function () {
         $('.css_attribute_color:has(input:checked)').addClass("active");
     });
 
-    function price_to_str(price) {
-        price = Math.round(price * 100) / 100;
-        var dec = Math.round((price % 1) * 100);
-        return price + (dec ? '' : '.0') + (dec%10 ? '' : '0');
-    }
-
     $(oe_website_sale).on('change', 'input.js_product_change', function (ev) {
         var $parent = $(this).closest('.js_product');
-        $parent.find(".oe_default_price:first .oe_currency_value").html( price_to_str(+$(this).data('lst_price')) );
-        $parent.find(".oe_price:first .oe_currency_value").html(price_to_str(+$(this).data('price')) );
+        $parent.find(".oe_default_price:first .oe_currency_value").html($(this).data('lst_price'));
+        $parent.find(".oe_price:first .oe_currency_value").html($(this).data('price'));
         update_product_image(this, +$(this).val());
     });
 
@@ -176,9 +170,9 @@ $('.oe_website_sale').each(function () {
         var product_id = false;
         for (var k in variant_ids) {
             if (_.isEmpty(_.difference(variant_ids[k][1], values))) {
-                $price.html(price_to_str(variant_ids[k][2]));
-                $default_price.html(price_to_str(variant_ids[k][3]));
-                if (variant_ids[k][3]-variant_ids[k][2]>0.2) {
+                $price.html(variant_ids[k][2]);
+                $default_price.html(variant_ids[k][3]);
+                if (parseFloat(variant_ids[k][3])-parseFloat(variant_ids[k][2])>0.2) {
                     $default_price.closest('.oe_website_sale').addClass("discount");
                     $optional_price.closest('.oe_optional').show().css('text-decoration', 'line-through');
                 } else {

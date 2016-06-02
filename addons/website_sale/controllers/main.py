@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import logging
 import werkzeug
+import math
+import simplejson
 
 from openerp import SUPERUSER_ID
 from openerp import http
@@ -130,17 +132,24 @@ class website_sale(http.Controller):
         visible_attrs = set(l.attribute_id.id
                                 for l in product.attribute_line_ids
                                     if len(l.value_ids) > 1)
+        pricelist_id = context['pricelist']
         if request.website.pricelist_id.id != context['pricelist']:
             website_currency_id = request.website.currency_id.id
             currency_id = self.get_pricelist().currency_id.id
             for p in product.product_variant_ids:
                 price = currency_obj.compute(cr, uid, website_currency_id, currency_id, p.lst_price)
                 attribute_value_ids.append([p.id, [v.id for v in p.attribute_value_ids if v.attribute_id.id in visible_attrs], p.price, price])
+            format = self.format_price(website_currency_id)
         else:
+            format = self.format_price(pricelist_id)
             attribute_value_ids = [[p.id, [v.id for v in p.attribute_value_ids if v.attribute_id.id in visible_attrs], p.price, p.lst_price]
                 for p in product.product_variant_ids]
 
-        return attribute_value_ids
+        for att in attribute_value_ids:
+            att[2] = format(att[2])
+            att[3] = format(att[3])
+
+        return simplejson.dumps(attribute_value_ids)
 
     def _get_search_order(self, post):
         # OrderBy will be parsed in orm and so no direct sql injection
@@ -986,6 +995,22 @@ class website_sale(http.Controller):
         else:
             pricelist_id = partner.property_product_pricelist.id
         prices = pool['product.pricelist'].price_rule_get_multi(cr, uid, [pricelist_id], [(product, add_qty, partner) for product in products], context=context)
-        return {product_id: prices[product_id][pricelist_id][0] for product_id in product_ids}
+
+        format = self.format_price(pricelist_id)
+        return {product_id: format(prices[product_id][pricelist_id][0]) for product_id in product_ids}
+
+    def format_price(self, pricelist_id):
+        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+
+        display_currency = pool['product.pricelist'].browse(cr, uid, pricelist_id, context=context).currency_id
+        precision = int(math.floor(math.log10(display_currency.rounding)))
+        fmt = "%.{0}f".format(-precision if precision < 0 else 0)
+        lang_obj = pool['res.lang']
+        lang = context.get('lang', 'en_US')
+
+        def format(from_amount):
+            value = pool['res.currency'].round(cr, uid, display_currency, from_amount)
+            return lang_obj.format(cr, uid, [lang], fmt, value, grouping=True, monetary=True)
+        return format
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
