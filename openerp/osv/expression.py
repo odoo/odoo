@@ -874,13 +874,13 @@ class expression(object):
                 raise NotImplementedError('_auto_join attribute not supported on many2many column %s' % left)
 
             elif len(path) > 1 and column and column._type == 'many2one':
-                right_ids = comodel.with_context(active_test=False).search([(path[1], operator, right)]).ids
+                right_ids = comodel.with_context(active_test=False).search([('.'.join(path[1:]), operator, right)]).ids
                 leaf.leaf = (path[0], 'in', right_ids)
                 push(leaf)
 
             # Making search easier when there is a left operand as column.o2m or column.m2m
             elif len(path) > 1 and column and column._type in ['many2many', 'one2many']:
-                right_ids = comodel.search([(path[1], operator, right)]).ids
+                right_ids = comodel.search([('.'.join(path[1:]), operator, right)]).ids
                 table_ids = model.with_context(active_test=False).search([(path[0], 'in', right_ids)]).ids
                 leaf.leaf = ('id', 'in', table_ids)
                 push(leaf)
@@ -897,7 +897,7 @@ class expression(object):
                 else:
                     # Let the field generate a domain.
                     if len(path) > 1:
-                        right = comodel.search([(path[1], operator, right)]).ids
+                        right = comodel.search([('.'.join(path[1:]), operator, right)]).ids
                         operator = 'in'
                     domain = field.determine_domain(model, operator, right)
 
