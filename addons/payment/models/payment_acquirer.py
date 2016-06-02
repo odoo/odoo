@@ -56,6 +56,16 @@ class PaymentAcquirer(osv.Model):
     def _get_providers(self, cr, uid, context=None):
         return [('manual', 'Manual Configuration')]
 
+    def _compute_fees_implemented(self, cr, uid, ids, field_names, arg, context=None):
+        acquirer_model = self.pool['payment.acquirer']
+        res = {}
+
+        for acquirer in acquirer_model.browse(cr, uid, ids, context=context):
+            custom_method_name = '%s_compute_fees' % acquirer.provider
+            res[acquirer.id] = hasattr(acquirer_model, custom_method_name)
+
+        return res
+
     # indirection to ease inheritance
     _provider_selection = lambda self, *args, **kwargs: self._get_providers(*args, **kwargs)
 
@@ -87,6 +97,7 @@ class PaymentAcquirer(osv.Model):
         'cancel_msg': fields.html('Cancel Message', translate=True, help='Message displayed, if order is cancel during the payment process.'),
         'error_msg': fields.html('Error Message', translate=True, help='Message displayed, if error is occur during the payment process.'),
         # Fees
+        'fees_implemented': fields.function(_compute_fees_implemented, type="boolean"),
         'fees_active': fields.boolean('Add Extra Fees'),
         'fees_dom_fixed': fields.float('Fixed domestic fees'),
         'fees_dom_var': fields.float('Variable domestic fees (in percents)'),
