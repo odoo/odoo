@@ -190,7 +190,7 @@ class aged_trial_report(report_sxw.rml_parse, common_report_header):
                         partial = date and date[0][0] <= form[str(i)]['stop']
                     if partial:
                         # partial reconcilation
-                        limit_date = 'COALESCE(l.date_maturity,l.date) %s %%s' % '<=' if self.direction_selection == 'past' else '>='
+                        limit_date = 'COALESCE(l.date_maturity,l.date) %s %%s' % ('<=' if self.direction_selection == 'past' else '>=',)
                         self.cr.execute('''SELECT SUM(l.debit-l.credit)
                                            FROM account_move_line AS l, account_move AS am
                                            WHERE l.move_id = am.id AND am.state in %s

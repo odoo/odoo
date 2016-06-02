@@ -128,6 +128,7 @@ class PaymentAcquirerOgone(osv.Model):
                     'NCERRORED',
                     'ORDERID',
                     'PAYID',
+                    'PAYIDSUB',
                     'PM',
                     'SCO_CATEGORY',
                     'SCORING',
