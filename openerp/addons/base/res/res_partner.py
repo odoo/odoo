@@ -563,12 +563,11 @@ class res_partner(osv.Model, format_address):
         if isinstance(ids, (int, long)):
             ids = [ids]
         res = []
-        types_dict = dict(self.fields_get(cr, uid, context=context)['type']['selection'])
         for record in self.browse(cr, uid, ids, context=context):
             name = record.name or ''
             if record.parent_id and not record.is_company:
                 if not name and record.type in ['invoice', 'delivery', 'other']:
-                    name = types_dict[record.type]
+                    name = dict(self.fields_get(cr, uid, ['type'], context=context)['type']['selection'])[record.type]
                 name = "%s, %s" % (record.parent_name, name)
             if context.get('show_address_only'):
                 name = self._display_address(cr, uid, record, without_company=True, context=context)
