@@ -5,6 +5,7 @@ from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 from odoo.tools import float_utils
+from odoo.tools.safe_eval import safe_eval as eval
 
 
 class Inventory(models.Model):
@@ -72,6 +73,7 @@ class Inventory(models.Model):
              "(e.g. Cycle Counting) you can choose 'Manual Selection of Products' and the system won't propose anything.  You can also let the "
              "system propose for a single product / lot /... ")
     total_qty = fields.Float('Total Quantity', compute='_compute_total_qty')
+    product_domain = fields.Char('Product Domain', readonly=True, states={'draft': [('readonly', False)]}, help="Domain should be like this format [(field_name, operator, operand)].")
 
     @api.one
     def _compute_total_qty(self):
@@ -106,6 +108,8 @@ class Inventory(models.Model):
             self.partner_id = False
         if self.filter != 'pack':
             self.package_id = False
+        if self.filter != 'partial':
+            self.product_domain = False
 
     @api.one
     @api.constrains('filter', 'product_id', 'lot_id', 'partner_id', 'package_id')
@@ -165,7 +169,7 @@ class Inventory(models.Model):
 
     @api.multi
     def action_start(self):
-        for inventory in self.filtered(lambda inventory: not inventory.line_ids and inventory.filter != 'partial'):
+        for inventory in self.filtered(lambda inventory: not inventory.line_ids):
             self.write({
                 'line_ids': [(0, 0, line_values) for line_values in inventory._get_inventory_lines_values()],
                 'state': 'confirm', 'date': fields.Datetime.now()
@@ -176,6 +180,7 @@ class Inventory(models.Model):
     @api.multi
     def _get_inventory_lines_values(self):
         # TDE CLEANME: is sql really necessary ? I don't think so
+        Product = self.env['product.product']
         locations = self.env['stock.location'].search([('id', 'child_of', [self.location_id.id])])
         domain = ' location_id in %s'
         args = (tuple(locations.ids),)
@@ -191,9 +196,23 @@ class Inventory(models.Model):
         if self.package_id:
             domain += ' AND package_id = %s'
             args += (self.package_id.id,)
-
-        Product = self.env['product.product']
         vals = []
+        if self.filter == 'partial':
+            if self.product_domain:
+                try:
+                    prod_domain = eval(self.product_domain)
+                    products = Product.search(prod_domain)
+                except:
+                    raise UserError(_("Domain should be in proper format."))
+
+                if products:
+                    domain += ' AND product_id in %s'
+                    args += (tuple(products.ids),)
+                else:
+                    return vals
+            else:
+                return vals
+
         self.env.cr.execute("""SELECT product_id, sum(qty) as product_qty, location_id, lot_id as prod_lot_id, package_id, owner_id as partner_id
             FROM stock_quant
             WHERE %s
