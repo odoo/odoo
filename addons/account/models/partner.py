@@ -252,40 +252,35 @@ class ResPartner(models.Model):
                 partner.debit = -val
 
     @api.multi
-    def _asset_difference_search(self, type, args):
-        if not args:
+    def _asset_difference_search(self, account_type, operator, operand):
+        if operator not in ('<', '=', '>', '>=', '<='):
             return []
-        having_values = tuple(map(itemgetter(2), args))
-        where = ' AND '.join(
-            map(lambda x: '(SUM(bal2) %(operator)s %%s)' % {
-                                'operator':x[1]},args))
-        query = self.env['account.move.line']._query_get()
-        self._cr.execute(('SELECT pid AS partner_id, SUM(bal2) FROM ' \
-                    '(SELECT CASE WHEN bal IS NOT NULL THEN bal ' \
-                    'ELSE 0.0 END AS bal2, p.id as pid FROM ' \
-                    '(SELECT (debit-credit) AS bal, partner_id ' \
-                    'FROM account_move_line l ' \
-                    'WHERE account_id IN ' \
-                            '(SELECT id FROM account_account '\
-                            'WHERE type=%s AND active) ' \
-                    'AND reconciled IS FALSE ' \
-                    'AND '+query+') AS l ' \
-                    'RIGHT JOIN res_partner p ' \
-                    'ON p.id = partner_id ) AS pl ' \
-                    'GROUP BY pid HAVING ' + where),
-                    (type,) + having_values)
+        if type(operand) not in (float, int):
+            return []
+        sign = 1
+        if account_type == 'payable':
+            sign = -1
+        res = self._cr.execute('''
+            SELECT partner.id
+            FROM res_partner partner
+            LEFT JOIN account_move_line aml ON aml.partner_id = partner.id
+            RIGHT JOIN account_account acc ON aml.account_id = acc.id
+            WHERE acc.internal_type = %s
+              AND NOT acc.deprecated
+            GROUP BY partner.id
+            HAVING %s * COALESCE(SUM(aml.amount_residual), 0) ''' + operator + ''' %s''', (account_type, sign, operand))
         res = self._cr.fetchall()
         if not res:
             return [('id', '=', '0')]
         return [('id', 'in', map(itemgetter(0), res))]
 
-    @api.multi
-    def _credit_search(self, args):
-        return self._asset_difference_search('receivable', args)
+    @api.model
+    def _credit_search(self, operator, operand):
+        return self._asset_difference_search('receivable', operator, operand)
 
-    @api.multi
-    def _debit_search(self, args):
-        return self._asset_difference_search('payable', args)
+    @api.model
+    def _debit_search(self, operator, operand):
+        return self._asset_difference_search('payable', operator, operand)
 
     @api.multi
     def _invoice_total(self):
