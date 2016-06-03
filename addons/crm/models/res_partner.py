@@ -34,7 +34,7 @@ class ResPartner(models.Model):
     def schedule_meeting(self):
         partner_ids = self.ids
         partner_ids.append(self.env.user.partner_id.id)
-        result = self.env['ir.actions.act_window'].for_xml_id('calendar', 'action_calendar_event')
+        result = self.env.ref('calendar.action_calendar_event').read()[0]
         result['context'] = {
             'search_default_partner_ids': self.env.context.get('partner_name'),
             'default_partner_ids': partner_ids,

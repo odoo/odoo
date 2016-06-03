@@ -3,7 +3,6 @@
 
 from datetime import datetime, timedelta, date
 from dateutil.relativedelta import relativedelta
-from operator import itemgetter
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, AccessError
@@ -294,17 +293,11 @@ class CrmLead(FormatAddress, models.Model):
 
     @api.model
     def create(self, vals):
-        ctx = dict(self.env.context)
-        if vals.get('type') and not ctx.get('default_type'):
-            ctx['default_type'] = vals['type']
-        if vals.get('team_id') and not ctx.get('default_team_id'):
-            ctx['default_team_id'] = vals['team_id']
         if vals.get('user_id') and 'date_open' not in vals:
             vals['date_open'] = fields.Datetime.now()
 
         # context: no_log, because subtype already handle this
-        ctx['mail_create_nolog'] = True
-        return super(CrmLead, self.with_context(ctx)).create(vals)
+        return super(CrmLead, self.with_context(mail_create_nolog=True)).create(vals)
 
     @api.multi
     def write(self, vals):
@@ -628,11 +621,6 @@ class CrmLead(FormatAddress, models.Model):
 
         return highest.id
 
-    @api.v7
-    def _convert_opportunity_data(self, cr, uid, lead, customer, team_id=False, context=None):
-        return CrmLead._convert_opportunity_data(lead, customer, team_id=team_id)
-
-    @api.v8
     def _convert_opportunity_data(self, customer, team_id=False):
         self.ensure_one()
         if not team_id:
@@ -667,11 +655,6 @@ class CrmLead(FormatAddress, models.Model):
 
         return True
 
-    @api.v7
-    def _lead_create_contact(self, cr, uid, lead, name, is_company, parent_id=False, context=None):
-        return CrmLead._lead_create_contact(lead, name, is_company, parent=parent_id)
-
-    @api.v8
     def _lead_create_contact(self, name, is_company, parent_id=False):
         self.ensure_one()
         vals = {'name': name,
@@ -696,11 +679,6 @@ class CrmLead(FormatAddress, models.Model):
         }
         return self.env['res.partner'].create(vals).id
 
-    @api.v7
-    def _create_lead_partner(self, cr, uid, lead, context=None):
-        return CrmLead._create_lead_partner(lead)
-
-    @api.v8
     def _create_lead_partner(self):
         self.ensure_one()
         contact_name = self.contact_name or self.email_from and self.env['res.partner']._parse_partner_name(self.email_from)[0]
@@ -767,8 +745,6 @@ class CrmLead(FormatAddress, models.Model):
     @api.multi
     def redirect_opportunity_view(self):
 
-        # Get opportunity views
-        self.ensure_one()
         form_view = self.env.ref('crm.crm_case_form_view_oppor', False)
         tree_view = self.env.ref('crm.crm_case_tree_view_oppor', False)
         return {
@@ -789,8 +765,6 @@ class CrmLead(FormatAddress, models.Model):
     @api.multi
     def redirect_lead_view(self):
 
-        # Get lead views
-        self.ensure_one()
         form_view = self.env.ref('crm.crm_case_form_view_leads', False)
         tree_view = self.env.ref('crm.crm_case_tree_view_leads', False)
         return {
@@ -813,11 +787,10 @@ class CrmLead(FormatAddress, models.Model):
         Open meeting's calendar view to schedule meeting on current opportunity.
         :return dict: dictionary value for created Meeting view
         """
-        self.ensure_one()
-        res = self.env['ir.actions.act_window'].for_xml_id('calendar', 'action_calendar_event')
         partner_ids = self.env.user.partner_id.ids
         if self.partner_id:
             partner_ids.append(self.partner_id.id)
+        res = self.env.ref('calendar.action_calendar_event').read()[0]
         res['context'] = {
             'search_default_opportunity_id': self.type == 'opportunity' and self.id or False,
             'default_opportunity_id': self.type == 'opportunity' and self.id or False,
@@ -830,10 +803,6 @@ class CrmLead(FormatAddress, models.Model):
 
     @api.model
     def get_empty_list_help(self, help):
-        ctx = dict(self.env.context)
-        ctx['empty_list_help_model'] = 'crm.team'
-        ctx['empty_list_help_id'] = ctx.get('default_team_id', None)
-        ctx['empty_list_help_document_name'] = _("opportunities")
         if help:
             alias = self.env.ref("crm.mail_alias_lead_info", False)
             if alias and alias.alias_domain and alias.alias_name:
@@ -845,7 +814,11 @@ Update your business card, phone book, social media,... Send an email right now 
                     _('Click to add a new opportunity'),
                     help,
                     dynamic_help)
-        return super(CrmLead, self.with_context(ctx)).get_empty_list_help(help)
+        return super(CrmLead, self.with_context(
+            empty_list_help_model='crm.team',
+            empty_list_help_id=self.env.context.get('default_team_id'),
+            empty_list_help_document_name=_("opportunities"),
+        )).get_empty_list_help(help)
 
     # ----------------------------------------
     # Mail Gateway
