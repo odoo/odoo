@@ -807,11 +807,18 @@ class WebsiteSale(http.Controller):
                 'partner_country_id': order.partner_id.country_id.id,
                 'reference': Transaction.get_next_reference(order.name),
                 'sale_order_id': order.id,
+<<<<<<< HEAD
             }
             if token and request.env['payment.token'].sudo().browse(int(token)).partner_id == order.partner_id:
                 tx_values['payment_token_id'] = token
 
             tx = Transaction.create(tx_values)
+=======
+            })
+            #transaction state should be in 'pending' state in case of prosessing COD(Collect on delivery) 
+            if tx.acquirer_id.is_cod:
+                tx.state = 'pending'
+>>>>>>> 34c5941... [IMP]website_sale: handled the payment transaction flow for COD type payment.
             request.session['sale_transaction_id'] = tx.id
 
         # update quotation
@@ -887,7 +894,7 @@ class WebsiteSale(http.Controller):
             return request.redirect('/shop')
 
         if (not order.amount_total and not tx) or tx.state in ['pending', 'done', 'authorized']:
-            if (not order.amount_total and not tx):
+            if (not order.amount_total and not tx) or tx.acquirer_id.is_cod:
                 # Orders are confirmed by payment transactions, but there is none for free orders,
                 # (e.g. free events), so confirm immediately
                 order.with_context(send_email=True).action_confirm()
