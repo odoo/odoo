@@ -1271,15 +1271,10 @@ class pos_order(osv.osv):
             def insert_data(data_type, values):
                 # if have_to_group_by:
 
-                sale_journal_id = order.sale_journal.id
-
                 # 'quantity': line.qty,
                 # 'product_id': line.product_id.id,
                 values.update({
-                    'ref': order.name,
                     'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False,
-                    'journal_id' : sale_journal_id,
-                    'date' : fields.date.context_today(self, cr, uid, context=context),
                     'move_id' : move_id,
                 })
 
