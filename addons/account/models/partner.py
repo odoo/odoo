@@ -72,6 +72,7 @@ class AccountFiscalPosition(models.Model):
                     tax_count += 1
                     if t.tax_dest_id:
                         result |= t.tax_dest_id
+                    break
             if not tax_count:
                 result |= tax
         return result
