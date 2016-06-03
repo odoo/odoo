@@ -3,7 +3,7 @@
 
 from datetime import datetime, timedelta
 
-from openerp import api, fields, models, tools, _
+from odoo import api, fields, models, tools, _
 
 
 class ActivityLog(models.TransientModel):
