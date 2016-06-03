@@ -262,7 +262,7 @@ class res_currency(osv.osv):
                 (SELECT name FROM res_currency_rate r2
                  WHERE r2.name > r.name AND
                        r2.currency_id = r.currency_id AND
-                       (r2.company_id is null  or r2.company_id = r.company_id)
+                       (r2.company_id is null or r2.company_id = c.id)
                  ORDER BY r2.name ASC
                  LIMIT 1) AS date_end
             FROM res_currency_rate r
