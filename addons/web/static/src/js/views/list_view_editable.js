@@ -379,7 +379,7 @@ ListView.include(/** @lends instance.web.ListView# */{
                         });
                     }
                     if (fields[focus_field]) {
-                        fields[focus_field].$el.find('input, textarea').andSelf().filter('input, textarea').select();
+                        fields[focus_field].$el.find('input, textarea').andSelf().filter('input, textarea').focus();
                     }
                     return record.attributes;
                 });
