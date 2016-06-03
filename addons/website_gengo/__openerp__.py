@@ -4,7 +4,6 @@
 {
     'name': 'Website Gengo Translator',
     'category': 'Website',
-    'version': '1.0',
     'description': """
 Website Gengo Translator
 ========================
@@ -17,7 +16,5 @@ Translate you website in one click
     ],
     'data': [
         'views/website_gengo_templates.xml',
-    ],
-    'qweb': [],
-    'installable': True,
+    ]
 }
