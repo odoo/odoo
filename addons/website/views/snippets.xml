@@ -718,10 +718,10 @@
     <div data-js='blog-style'
         data-selector="section:not(.carousel):not(.parallax):not(.o_gallery)">
         <li class="dropdown-submenu">
-            <a tabindex="-1" href="#">Style</a>
+            <a tabindex="-1" href="#"><i class="fa fa-book"/>Style</a>
             <ul class="dropdown-menu">
-                <li data-toggle_class="para_large"><a>Bigger Text</a></li>
-                <li data-toggle_class="readable"><a>Narrow</a></li>
+                <li data-toggle_class="para_large"><a href="#">Bigger Text</a></li>
+                <li data-toggle_class="readable"><a href="#">Narrow</a></li>
             </ul>
         </li>
     </div>
@@ -729,30 +729,30 @@
     <div data-js='background'
         data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax">
         <li class="dropdown-submenu">
-            <a tabindex="-1" href="#">Background Image</a>
+            <a tabindex="-1" href="#"><i class="fa fa-picture-o"/>Background Image</a>
             <ul class="dropdown-menu">
-                <li data-background=""><a>None</a></li>
+                <li data-background=""><a href="#">None</a></li>
                 <li class="divider"></li>
-                <li data-background="/web/image/website.s_background_image_01"><a>Aqua</a></li>
-                <li data-background="/web/image/website.s_background_image_02"><a>Baby Blue</a></li>
-                <li data-background="/web/image/website.s_background_image_03"><a>Black</a></li>
-                <li data-background="/web/image/website.s_background_image_04"><a>Business Guy</a></li>
-                <li data-background="/web/image/website.s_background_image_05"><a>Color Splash</a></li>
-                <li data-background="/web/image/website.s_background_image_06"><a>Flowers Field</a></li>
-                <li data-background="/web/image/website.s_background_image_07"><a>Purple</a></li>
-                <li data-background="/web/image/website.s_background_image_08"><a>Greenfields</a></li>
-                <li data-background="/web/image/website.s_background_image_09"><a>Landscape</a></li>
-                <li data-background="/web/image/website.s_background_image_10"><a>Mango</a></li>
-                <li data-background="/web/image/website.s_background_image_11"><a>Mountains</a></li>
-                <li data-background="/web/image/website.s_background_image_12"><a>Orange Red</a></li>
-                <li data-background="/web/image/website.s_background_image_13"><a>Sunflower</a></li>
-                <li data-background="/web/image/website.s_background_image_14"><a>Girl</a></li>
-                <li data-background="/web/image/website.s_background_image_15"><a>Quote</a></li>
-                <li data-background="/web/image/website.s_background_image_16"><a>Velour</a></li>
-                <li data-background="/web/image/website.s_background_image_17"><a>Wood</a></li>
-                <li data-background="/web/image/website.s_background_image_18"><a>Yellow Green</a></li>
+                <li data-choose_image="choose_image"><a href="#"><b>Set Custom Image...</b></a></li>
                 <li class="divider"></li>
-                <li data-choose_image="choose_image"><a><b>Choose an image...</b></a></li>
+                <li data-background="/web/image/website.s_background_image_01"><a href="#">Aqua</a></li>
+                <li data-background="/web/image/website.s_background_image_02"><a href="#">Baby Blue</a></li>
+                <li data-background="/web/image/website.s_background_image_03"><a href="#">Black</a></li>
+                <li data-background="/web/image/website.s_background_image_04"><a href="#">Business Guy</a></li>
+                <li data-background="/web/image/website.s_background_image_05"><a href="#">Color Splash</a></li>
+                <li data-background="/web/image/website.s_background_image_06"><a href="#">Flowers Field</a></li>
+                <li data-background="/web/image/website.s_background_image_07"><a href="#">Purple</a></li>
+                <li data-background="/web/image/website.s_background_image_08"><a href="#">Greenfields</a></li>
+                <li data-background="/web/image/website.s_background_image_09"><a href="#">Landscape</a></li>
+                <li data-background="/web/image/website.s_background_image_10"><a href="#">Mango</a></li>
+                <li data-background="/web/image/website.s_background_image_11"><a href="#">Mountains</a></li>
+                <li data-background="/web/image/website.s_background_image_12"><a href="#">Orange Red</a></li>
+                <li data-background="/web/image/website.s_background_image_13"><a href="#">Sunflower</a></li>
+                <li data-background="/web/image/website.s_background_image_14"><a href="#">Girl</a></li>
+                <li data-background="/web/image/website.s_background_image_15"><a href="#">Quote</a></li>
+                <li data-background="/web/image/website.s_background_image_16"><a href="#">Velour</a></li>
+                <li data-background="/web/image/website.s_background_image_17"><a href="#">Wood</a></li>
+                <li data-background="/web/image/website.s_background_image_18"><a href="#">Yellow Green</a></li>
             </ul>
         </li>
     </div>
@@ -760,14 +760,14 @@
     <div data-js='background_position'
         data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax">
         <li class="background_position_li" data-background_position="background_position">
-            <a tabindex="-1" href="#">Background Image Options</a>
+            <a tabindex="-1" href="#"><i class="fa fa-cog"/>Background Image Options</a>
         </li>
     </div>
 
     <div data-js='colorpicker'
         data-selector="section:not(.jumbotron), :not(.o_gallery > .container) > .carousel, .parallax">
         <li class="dropdown-submenu">
-            <a tabindex="-1" href="#">Background Color</a>
+            <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Background Color</a>
             <ul class="dropdown-menu">
                 <li></li>
             </ul>
@@ -778,69 +778,69 @@
         <li class="dropdown-submenu">
             <a tabindex="-2" href="#">Mode</a>
             <ul class="dropdown-menu">
-                <li data-mode="nomode"   > <a>Float</a></li>
-                <li data-mode="masonry"  > <a>Masonry</a> </li>
-                <li data-mode="grid"     > <a>Grid</a> </li>
-                <li data-mode="slideshow"> <a>Slideshow</a> </li>
+                <li data-mode="nomode"><a href="#">Float</a></li>
+                <li data-mode="masonry"><a href="#">Masonry</a></li>
+                <li data-mode="grid"><a href="#">Grid</a></li>
+                <li data-mode="slideshow"><a href="#">Slideshow</a></li>
             </ul>
         </li>
         <li class="dropdown-submenu">
             <a tabindex="-2" href="#">Slideshow speed</a>
             <ul class="dropdown-menu">
-                 <li data-interval="1000"> <a>1s</a> </li>
-                 <li data-interval="2000"> <a>2s</a> </li>
-                 <li data-interval="3000"> <a>3s</a> </li>
-                 <li data-interval="5000"> <a>5s</a> </li>
-                 <li data-interval="10000"> <a>10s</a></li>
-                 <li data-interval="0"   > <a>Disable autoplay</a> </li>
+                 <li data-interval="1000"><a href="#">1s</a></li>
+                 <li data-interval="2000"><a href="#">2s</a></li>
+                 <li data-interval="3000"><a href="#">3s</a></li>
+                 <li data-interval="5000"><a href="#">5s</a></li>
+                 <li data-interval="10000"><a href="#">10s</a></li>
+                 <li data-interval="0"><a href="#">Disable autoplay</a></li>
             </ul>
         </li>
         <li class="dropdown-submenu">
             <a tabindex="-2" href="#">Columns</a>
             <ul class="dropdown-menu">
-                <li data-columns="1"  > <a>1</a> </li>
-                <li data-columns="2"  > <a>2</a> </li>
-                <li data-columns="3"  > <a>3</a> </li>
-                <li data-columns="4"  > <a>4</a> </li>
-                <li data-columns="6"  > <a>6</a> </li>
-                <li data-columns="12" > <a>12</a> </li>
+                <li data-columns="1"><a href="#">1</a></li>
+                <li data-columns="2"><a href="#">2</a></li>
+                <li data-columns="3"><a href="#">3</a></li>
+                <li data-columns="4"><a href="#">4</a></li>
+                <li data-columns="6"><a href="#">6</a></li>
+                <li data-columns="12"><a href="#">12</a></li>
             </ul>
         </li>
         <li class="dropdown-submenu">
             <a tabindex="-2" href="#">Images spacing</a>
 
             <ul class="dropdown-menu">
-                <li data-select_class="o_spc-none"  > <a>None</a>   </li>
-                <li data-select_class="o_spc-small" > <a>Small</a>  </li>
-                <li data-select_class="o_spc-medium"> <a>Medium</a> </li>
-                <li data-select_class="o_spc-big"   > <a>Big</a>    </li>
+                <li data-select_class="o_spc-none"><a href="#">None</a></li>
+                <li data-select_class="o_spc-small"><a href="#">Small</a></li>
+                <li data-select_class="o_spc-medium"><a href="#">Medium</a></li>
+                <li data-select_class="o_spc-big"><a href="#">Big</a></li>
             </ul>
         </li>
         <li class="dropdown-submenu">
            <a tabindex="-2" href="#">Styling</a>
            <ul class="dropdown-menu">
-               <li data-styling=""              ><a>Square</a></li>
-               <li data-styling="img-rounded"   ><a>Rounded corners</a></li>
-               <li data-styling="img-thumbnail" ><a>Thumbnails</a></li>
-               <li data-styling="img-circle"    ><a>Circle</a></li>
-               <li data-styling="shadow"        ><a>Shadows</a></li>
+               <li data-styling=""><a href="#">Square</a></li>
+               <li data-styling="img-rounded"><a href="#">Rounded corners</a></li>
+               <li data-styling="img-thumbnail"><a href="#">Thumbnails</a></li>
+               <li data-styling="img-circle"><a href="#">Circle</a></li>
+               <li data-styling="shadow"><a href="#">Shadows</a></li>
            </ul>
         </li>
-       <li data-images_add="true"> <a>Add images</a></li>
-       <li data-images_rm="true"><a>Remove all images</a></li>
+       <li data-images_add="true"><a href="#">Add images</a></li>
+       <li data-images_rm="true"><a href="#">Remove all images</a></li>
     </div>
 
     <div data-js='gallery_img' data-selector=".o_gallery img">
         <li class="dropdown-submenu">
             <a tabindex="-2" href="#">Re-order</a>
             <ul class="dropdown-menu">
-                <li data-position="first"><a>Move to first</a></li>
-                <li data-position="prev"><a>Move to previous</a></li>
-                <li data-position="next"><a>Move to next</a></li>
-                <li data-position="last"><a>Move to last</a></li>
+                <li data-position="first"><a href="#">Move to first</a></li>
+                <li data-position="prev"><a href="#">Move to previous</a></li>
+                <li data-position="next"><a href="#">Move to next</a></li>
+                <li data-position="last"><a href="#">Move to last</a></li>
             </ul>
         </li>
-        <li data-remove="remove"><a>Remove from gallery</a></li>
+        <li data-remove="remove"><a href="#">Remove from gallery</a></li>
     </div>
 
     <div data-js='carousel'
@@ -848,17 +848,17 @@
         <li class="dropdown-submenu">
             <a tabindex="-2" href="#">Slideshow speed</a>
             <ul class="dropdown-menu">
-                 <li data-interval="1000"> <a>1s</a> </li>
-                 <li data-interval="2000"> <a>2s</a> </li>
-                 <li data-interval="3000"> <a>3s</a> </li>
-                 <li data-interval="5000"> <a>5s</a> </li>
-                 <li data-interval="10000"> <a>10s</a></li>
-                 <li data-interval="0"   > <a>Disable autoplay</a> </li>
+                 <li data-interval="1000"><a href="#">1s</a></li>
+                 <li data-interval="2000"><a href="#">2s</a></li>
+                 <li data-interval="3000"><a href="#">3s</a></li>
+                 <li data-interval="5000"><a href="#">5s</a></li>
+                 <li data-interval="10000"><a href="#">10s</a></li>
+                 <li data-interval="0"><a href="#">Disable autoplay</a></li>
             </ul>
         </li>
         <li class="divider"></li>
-        <li data-add_slide="true"> <a href="#">Add Slide</a> </li>
-        <li data-remove_slide="true"> <a href="#" >Remove Slide</a></li>
+        <li data-add_slide="true"><a href="#"><i class="fa fa-plus-circle"/>Add Slide</a></li>
+        <li data-remove_slide="true"><a href="#" ><i class="fa fa-trash-o"/>Remove Slide</a></li>
     </div>
 
     <div data-js='margin-y'
@@ -890,11 +890,11 @@
         <li class="dropdown-submenu">
             <a tabindex="-2" href="#">Margin</a>
             <ul class="dropdown-menu">
-                <li data-select_class="o_margin_xl"> <a>Extra-Large</a> </li>
-                <li data-select_class="o_margin_l"> <a>Large</a> </li>
-                <li data-select_class="o_margin_m"  > <a>Medium</a> </li>
-                <li data-select_class="o_margin_s"  > <a>Small</a></li>
-                <li data-select_class=""  > <a>None</a></li>
+                <li data-select_class="o_margin_xl"><a href="#">Extra-Large</a></li>
+                <li data-select_class="o_margin_l"><a href="#">Large</a></li>
+                <li data-select_class="o_margin_m"><a href="#">Medium</a></li>
+                <li data-select_class="o_margin_s"><a href="#">Small</a></li>
+                <li data-select_class=""><a href="#">None</a></li>
             </ul>
         </li>
     </div>
@@ -903,8 +903,8 @@
         <li class="dropdown-submenu">
             <a tabindex="-2" href="#">Float</a>
             <ul class="dropdown-menu">
-                <li data-select_class="pull-left" data-only="click"><a>Left</a></li>
-                <li data-select_class="pull-right" data-only="click"><a>Right</a></li>
+                <li data-select_class="pull-left" data-only="click"><a href="#">Left</a></li>
+                <li data-select_class="pull-right" data-only="click"><a href="#">Right</a></li>
             </ul>
         </li>
     </div>
@@ -914,19 +914,19 @@
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#">Scroll Speed</a>
             <ul class="dropdown-menu" name="parallax-scroll">
-                <li data-scroll="0"><a>Static</a></li>
-                <li data-scroll="0.3"><a>Very Slow</a></li>
-                <li data-scroll="0.6"><a>Slow</a></li>
-                <li data-scroll="1"><a>Fixed</a></li>
-                <li data-scroll="1.4"><a>Fast</a></li>
-                <li data-scroll="1.7"><a>Very Fast</a></li>
+                <li data-scroll="0"><a href="#">Static</a></li>
+                <li data-scroll="0.3"><a href="#">Very Slow</a></li>
+                <li data-scroll="0.6"><a href="#">Slow</a></li>
+                <li data-scroll="1"><a href="#">Fixed</a></li>
+                <li data-scroll="1.4"><a href="#">Fast</a></li>
+                <li data-scroll="1.7"><a href="#">Very Fast</a></li>
             </ul>
         </li>
     </div>
 
     <div data-js='ul'
          data-selector=":not(li) > ul:has(ul,ol), :not(li) > ol:has(ul,ol)">
-        <li data-toggle_class="o_ul_folded"> <a href="#">Folded list</a> </li>
+        <li data-toggle_class="o_ul_folded"><a href="#">Folded list</a></li>
     </div>
 
     <div data-js='collapse'
