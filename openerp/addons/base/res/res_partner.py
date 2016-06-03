@@ -190,7 +190,6 @@ class Partner(models.Model, FormatAddress):
     phone = fields.Char()
     fax = fields.Char()
     mobile = fields.Char()
-    birthdate = fields.Char()
     is_company = fields.Boolean(string='Is a Company', default=False,
         help="Check if the contact is a company, otherwise it is a person")
     # company_type is only an interface field, do not use it in business logic
