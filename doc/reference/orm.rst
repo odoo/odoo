@@ -309,9 +309,9 @@ Default values are defined as parameters on fields, either a value::
 or a function called to compute the default value, which should return that
 value::
 
-    a_field = fields.Char(default=compute_default_value)
     def compute_default_value(self):
         return self.get_value()
+    a_field = fields.Char(default=compute_default_value)
 
 Computed fields
 ---------------
