@@ -566,6 +566,15 @@ def mod10r(number):
             report = codec[ (int(digit) + report) % 10 ]
     return result + str((10 - report) % 10)
 
+def str2bool(s, default=None):
+    s = ustr(s).lower()
+    y = 'y yes 1 true t on'.split()
+    n = 'n no 0 false f off'.split()
+    if s not in (y + n):
+        if default is None:
+            raise ValueError('Use 0/1/yes/no/true/false/on/off')
+        return bool(default)
+    return s in y
 
 def human_size(sz):
     """
