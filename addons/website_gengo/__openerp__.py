@@ -16,7 +16,7 @@ Translate you website in one click
         'base_gengo'
     ],
     'data': [
-        'views/website_gengo.xml',
+        'views/website_gengo_templates.xml',
     ],
     'qweb': [],
     'installable': True,
