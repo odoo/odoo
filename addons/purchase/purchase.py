@@ -188,7 +188,7 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def copy(self, default=None):
-        new_po = super(PurchaseOrder, self).copy()
+        new_po = super(PurchaseOrder, self).copy(default=default)
         for line in new_po.order_line:
             seller = line.product_id._select_seller(
                 line.product_id, partner_id=line.partner_id, quantity=line.product_qty,
