@@ -983,7 +983,7 @@ class mrp_production(osv.osv):
                 if produce_product.product_id.id == production.product_id.id:
                     main_production_move = produce_product.id
 
-        total_consume_moves = []
+        total_consume_moves = set()
         if production_mode in ['consume', 'consume_produce']:
             if wiz:
                 consume_lines = []
@@ -1003,7 +1003,7 @@ class mrp_production(osv.osv):
                     consumed_qty = min(remaining_qty, raw_material_line.product_qty)
                     stock_mov_obj.action_consume(cr, uid, [raw_material_line.id], consumed_qty, raw_material_line.location_id.id,
                                                  restrict_lot_id=consume['lot_id'], consumed_for=main_production_move, context=context)
-                    total_consume_moves.append(raw_material_line.id)
+                    total_consume_moves.add(raw_material_line.id)
                     remaining_qty -= consumed_qty
                 if not float_is_zero(remaining_qty, precision_digits=precision):
                     #consumed more in wizard than previously planned
@@ -1012,19 +1012,19 @@ class mrp_production(osv.osv):
                     stock_mov_obj.write(cr, uid, [extra_move_id], {'restrict_lot_id': consume['lot_id'],
                                                                     'consumed_for': main_production_move}, context=context)
                     stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
-                    total_consume_moves.append(extra_move_id)
+                    total_consume_moves.add(extra_move_id)
 
         if production_mode == 'consume_produce':
             # add production lines that have already been consumed since the last 'consume & produce'
             last_production_date = production.move_created_ids2 and max(production.move_created_ids2.mapped('date')) or False
             already_consumed_lines = production.move_lines2.filtered(lambda l: l.date > last_production_date)
-            total_consume_moves += already_consumed_lines.ids
+            total_consume_moves = total_consume_moves.union(already_consumed_lines.ids)
 
             price_unit = 0
             for produce_product in production.move_created_ids:
                 is_main_product = (produce_product.product_id.id == production.product_id.id) and production.product_id.cost_method=='real'
                 if is_main_product:
-                    total_cost = self._calculate_total_cost(cr, uid, total_consume_moves, context=context)
+                    total_cost = self._calculate_total_cost(cr, uid, list(total_consume_moves), context=context)
                     production_cost = self._calculate_workcenter_cost(cr, uid, production_id, context=context)
                     price_unit = (total_cost + production_cost) / production_qty_uom
 
