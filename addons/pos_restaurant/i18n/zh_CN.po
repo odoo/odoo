@@ -3,15 +3,16 @@
 # * pos_restaurant
 # 
 # Translators:
-# Joroy <13637815@qq.com>, 2016
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Joray <13637815@qq.com>, 2016
 # Rona Lin <ssauapw@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:39+0000\n"
-"PO-Revision-Date: 2016-03-12 01:56+0000\n"
-"Last-Translator: Joroy <13637815@qq.com>\n"
+"PO-Revision-Date: 2016-06-02 13:38+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgstr ""
 msgid ""
 "A background image used to display a floor layout in the point of sale "
 "interface"
-msgstr "在销售点（门店）用来显示楼层规划的背景图"
+msgstr "背景图像，用于在销售点界面显示楼层规划"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -43,7 +44,7 @@ msgstr "有效"
 #: code:addons/pos_restaurant/static/src/js/notes.js:54
 #, python-format
 msgid "Add Note"
-msgstr "增加批注"
+msgstr "增加说明"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_orderline_notes
@@ -178,7 +179,7 @@ msgstr "创建者"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer_create_date
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_create_date
 msgid "Created on"
-msgstr "创建于"
+msgstr "创建时间"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -213,7 +214,7 @@ msgstr "每一台订单打印机有一个IP地址，它定义了可以找到此�
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_splitbill
 msgid "Enables Bill Splitting in the Point of Sale"
-msgstr "允许销售点拆分账单"
+msgstr "允许POS拆分账单"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_floor_id
@@ -268,7 +269,7 @@ msgstr "ID"
 msgid ""
 "If false, the table is deactivated and will not be available in the point of"
 " sale"
-msgstr "如果失败，表单将会在销售点失效"
+msgstr "如果失败，表单将会在POS失效"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor___last_update
@@ -311,7 +312,7 @@ msgstr "批注"
 #: code:addons/pos_restaurant/static/src/xml/notes.xml:16
 #, python-format
 msgid "Note"
-msgstr "笔记"
+msgstr "备注"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -369,7 +370,7 @@ msgstr "付款"
 #: model:ir.model,name:pos_restaurant.model_pos_order
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_pos_config_id
 msgid "Point of Sale"
-msgstr "零售"
+msgstr "POS"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_pos_order_ids
@@ -403,7 +404,7 @@ msgstr "代理 IP 地址"
 #: code:addons/pos_restaurant/static/src/js/floors.js:536
 #, python-format
 msgid "Removing a table cannot be undone"
-msgstr "移动表单不能够恢复"
+msgstr "移除桌台不能够恢复"
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
@@ -482,25 +483,25 @@ msgstr "总计"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_table_id
 msgid "Table"
-msgstr "表格(Table)"
+msgstr "桌台"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_name
 msgid "Table Name"
-msgstr "座位名称"
+msgstr "桌台名称"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/js/floors.js:456
 #, python-format
 msgid "Table Name ?"
-msgstr "座位名称？"
+msgstr "桌台名称？"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_table_ids
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
 msgid "Tables"
-msgstr "表单"
+msgstr "桌台"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -544,7 +545,7 @@ msgstr "本桌所有订单"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_floor_ids
 msgid "The restaurant floors served by this point of sale"
-msgstr "销售点的所有餐厅楼层"
+msgstr "POS服务的餐厅楼层"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order_table_id
@@ -653,14 +654,14 @@ msgstr "pos.config"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_floor
 msgid "restaurant.floor"
-msgstr "餐厅.楼层"
+msgstr "restaurant.floor"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_printer
 msgid "restaurant.printer"
-msgstr "餐厅.打印机"
+msgstr "restaurant.printer"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_table
 msgid "restaurant.table"
-msgstr "餐厅.桌号"
+msgstr "restaurant.table"
