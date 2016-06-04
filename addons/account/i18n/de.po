@@ -37,7 +37,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-05-28 09:42+0000\n"
+"PO-Revision-Date: 2016-06-02 13:25+0000\n"
 "Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -1669,12 +1669,12 @@ msgid ""
 "Asset management: This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr "Anlagenverwaltung: Diese ermöglich Ihnen die Verwaltung der Anlagen, die ein Unternehmen oder eine Person besitzt. Sie liefert die Abschreibungswerte dieser Anlagen und erstellt die dazu gehörenden Finanzbuchungen.\n\n- Es wird das Modul account_asset installiert. Wenn Sie diese Box nicht anwählen, können Sie Rechnungen & Zahlungen abwickeln, jedoch keine Buchhaltung (Journalposten, Kontenpläne, ...) durchführen."
+msgstr "Anlagenverwaltung: Diese ermöglich Ihnen die Verwaltung der Anlagen, die ein Unternehmen oder eine Person besitzt. Sie liefert die Abschreibungswerte dieser Anlagen und erstellt die dazu gehörenden Finanzbuchungen.\n\n- Es wird das Modul account_asset installiert. Wenn Sie diese Box nicht anwählen, können Sie Rechnungen & Zahlungen abwickeln, jedoch keine Buchhaltung (Buchungszeilen, Kontenpläne, ...) durchführen."
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
 msgid "Assets"
-msgstr "Anlagegüter"
+msgstr "Anlagevermögen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_asset
@@ -2264,7 +2264,7 @@ msgstr "Kontenplan"
 #: model:ir.ui.view,arch_db:account.account_planner
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Chart of Accounts"
-msgstr "Kontenplan Finanzen"
+msgstr "Kontenplan"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_form
@@ -3152,12 +3152,12 @@ msgstr "Dezember"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence
 msgid "Dedicated Refund Sequence"
-msgstr "Eindeutiger Nummernkreis für Gutschriften"
+msgstr "Eigener Nummernkreis für Gutschriften"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_default_credit_account_id
 msgid "Default Credit Account"
-msgstr "Standard-Haben-Konto"
+msgstr "Standard-Habenkonto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_default_debit_account_id
@@ -3905,7 +3905,7 @@ msgstr "Bestimmter Tag des Folgemonats"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_follower_ids
 #: model:ir.model.fields,field_description:account.field_account_invoice_message_follower_ids
 msgid "Followers"
-msgstr "Followers"
+msgstr "Beobachter"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_channel_ids
@@ -3917,7 +3917,7 @@ msgstr "Beobachter (Kanäle)"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_partner_ids
 #: model:ir.model.fields,field_description:account.field_account_invoice_message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Follower (Partner)"
+msgstr "Beobachter (Partner)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_report_sign
@@ -4256,7 +4256,7 @@ msgstr "Bei Aktivierung, ist dieses nicht im neuen Kontenplan enthalten."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_reversal_journal_id
 msgid "If empty, uses the journal of the journal entry to be reversed."
-msgstr "Wenn leer, wird das Journal des rückzubuchenden Journalpostens verwendet."
+msgstr "Wenn leer, wird das Journal des rückzubuchenden Buchungssatz verwendet."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_include_base_amount
@@ -4878,14 +4878,14 @@ msgstr "Buchungsmonat"
 #: model:ir.model.fields,field_description:account.field_account_move_line_move_id
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Journal Entry"
-msgstr "Journalbuchung"
+msgstr "Buchungssatz"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 #: model:ir.ui.view,arch_db:account.view_move_line_form2
 msgid "Journal Item"
-msgstr "Journalbuchung"
+msgstr "Buchungszeile"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_operation_template_label
@@ -4919,7 +4919,7 @@ msgstr "Buchungstext"
 #: model:ir.ui.view,arch_db:account.view_move_line_tree
 #, python-format
 msgid "Journal Items"
-msgstr "Journal Einträge"
+msgstr "Buchungszeilen"
 
 #. module: account
 #. openerp-web
@@ -4980,7 +4980,7 @@ msgstr "Kanban grafische Ansicht"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Keep empty for no control"
-msgstr "Leer halten für keine Kontrolle"
+msgstr "Kein Eintrag für Kontrollverzicht"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_date_invoice
@@ -6358,7 +6358,7 @@ msgstr "Zahlungen"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Payments Matching"
-msgstr "Passende Zahlungen"
+msgstr "Abstimmen"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_payments
@@ -6556,7 +6556,7 @@ msgstr "Buchungssätze"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Posted Journal Items"
-msgstr "Buchungssätze"
+msgstr "Buchungszeilen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_bank_account_code_prefix
@@ -7423,7 +7423,7 @@ msgstr "Fußzeilen in Rechnung anzeigen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_show_on_dashboard
 msgid "Show journal on dashboard"
-msgstr "Zeige Journal in der Übersicht"
+msgstr "Journal im Dashboard anzeigen"
 
 #. module: account
 #. openerp-web
@@ -7820,7 +7820,7 @@ msgid ""
 "in case of fluctuation of the currency exchange rate. This is needed when "
 "cancelling the source: it will post the inverse journal entry to cancel that"
 " part too."
-msgstr "Technisches Feld, welches verwendet wird, um die ursprüngliche Journalbuchung zu merken, für den Fall dass der Währungsumrechnungskurs schwankt. Dies wird benötigt, wenn das Herkunftsdokument storniert wird: Dann wird eine Rückbuchung vorgenommen, so dass auch dieser Teil storniert wird."
+msgstr "Technisches Feld, welches verwendet wird, um den ursprünglichen Buchungssatz zu merken, für den Fall dass der Währungsumrechnungskurs schwankt. Dies wird benötigt, wenn das Herkunftsdokument storniert wird: Dann wird eine Rückbuchung vorgenommen, so dass auch dieser Teil storniert wird."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_chart_template_id
@@ -8721,7 +8721,7 @@ msgstr "Buchungssatz-Vorschläge"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted Journal Items"
-msgstr "Nicht verbuchte Journaleinträge"
+msgstr "Nicht verbuchte Buchungszeilen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_unread
@@ -8841,7 +8841,7 @@ msgid ""
 "beginning of time instead of from the fiscal year only. Account types that "
 "should be reset to zero at each new fiscal year (like expenses, revenue..) "
 "should not have this option set."
-msgstr "Wird in Berichten verwendet, um festzulegen, ob alle Journalposten der Vergangenheit oder nur die dieses Geschäftsjahres berücksichtigt werden. Bei Kontoarten, die zum Geschäftsjahresbeginn genullt werden (wie Aufwendungen, Umsätze, ...) sollte diese Option nicht gesetzt werden."
+msgstr "Wird in Berichten verwendet, um festzulegen, ob alle Buchungssätze der Vergangenheit oder nur die dieses Geschäftsjahres berücksichtigt werden. Bei Kontoarten, die zum Geschäftsjahresbeginn genullt werden (wie Aufwendungen, Umsätze, ...) sollte diese Option nicht gesetzt werden."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence
@@ -9134,7 +9134,7 @@ msgstr "Sie können die Checkbox aktivieren, um diese Rechnung als strittig zu m
 msgid ""
 "You can control the invoice from your vendor according to\n"
 "                what you purchased or received."
-msgstr "Sie können die Erstellung von Lieferantenrechnungen steuern, indem diese entweder bestellte oder gelieferte Positionen enthält."
+msgstr "Sie können die Erstellung von Eingangsrechnungen durch die Positionen in einer Bestellung oder einer Lieferung genau spezifizieren."
 
 #. module: account
 #: code:addons/account/models/res_config.py:229
@@ -9231,7 +9231,7 @@ msgstr "Sie können keine Rechnung löschen, die im Entwurfsstatus ist oder abge
 #: code:addons/account/models/account.py:168
 #, python-format
 msgid "You cannot do that on an account that contains journal items."
-msgstr "Sie können diese Aktion nicht mit einem Konto mit bereits vorhandenen Buchungssätzen durchführen."
+msgstr "Sie können diese Aktion nicht mit einem Konto mit bereits vorhandenen Buchungszeilen durchführen."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1028
