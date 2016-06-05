@@ -158,7 +158,7 @@ msgstr ""
 "                Các Phương thức thanh toán được định nghĩa bởi các sổ nhật ký kế toán có\n"
 "                trường <i>Phương thức thanh toán PoS</i> được đánh dấu chọn. Để có thể sử dụng\n"
 "                được ở giao diện màn hình cảm ứng PoS, bạn phải thiết lập phương thức thanh toán\n"
-"                ở phần cấu hình <i>Point of Sale</i> (Điểm bán hàng).\n"
+"                ở phần cấu hình <i>Point of Sale</i> (Điểm bán lẻ).\n"
 "              </p>\n"
 "            "
 
@@ -372,7 +372,7 @@ msgstr "Tổng tiền"
 #: code:addons/point_of_sale/static/src/js/screens.js:1310
 #, python-format
 msgid "An anonymous order cannot be invoiced"
-msgstr "Một đơn hàng nặc danh thì không thể xuất hóa đơn"
+msgstr "Một đơn hàng nặc danh thì không thể xuất hoá đơn"
 
 #. module: point_of_sale
 #: help:pos.config,name:0
@@ -1034,7 +1034,7 @@ msgstr "Mã vạch Khách hàng"
 #: code:addons/point_of_sale/point_of_sale.py:1002
 #, python-format
 msgid "Customer Invoice"
-msgstr "Hóa đơn khách hàng"
+msgstr "Hoá đơn khách hàng"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale
@@ -1721,12 +1721,12 @@ msgstr "Ean không hợp lệ"
 #: model:ir.actions.report.xml,name:point_of_sale.pos_invoice_report
 #: view:pos.order:point_of_sale.view_pos_pos_form field:pos.order,invoice_id:0
 msgid "Invoice"
-msgstr "Hóa đơn"
+msgstr "Hoá đơn"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,invoice_am:0
 msgid "Invoice Amount"
-msgstr "Giá trị hóa đơn"
+msgstr "Giá trị hoá đơn"
 
 #. module: point_of_sale
 #: view:pos.order:point_of_sale.view_pos_order_filter
@@ -1735,17 +1735,17 @@ msgstr "Giá trị hóa đơn"
 #: selection:report.pos.order,state:0
 #: view:website:point_of_sale.report_detailsofsales
 msgid "Invoiced"
-msgstr "Đã xuất hóa đơn"
+msgstr "Đã xuất hoá đơn"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_invoice
 msgid "Invoices"
-msgstr "Các hóa đơn"
+msgstr "Các hoá đơn"
 
 #. module: point_of_sale
 #: field:pos.config,iface_invoicing:0
 msgid "Invoicing"
-msgstr "Xuất Hóa đơn"
+msgstr "Xuất Hoá đơn"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pomme_jonagold_product_template
@@ -2081,7 +2081,7 @@ msgstr "Không có"
 #. module: point_of_sale
 #: view:report.pos.order:point_of_sale.view_report_pos_order_search
 msgid "Not Invoiced"
-msgstr "Chưa xuất hóa đơn"
+msgstr "Chưa xuất hoá đơn"
 
 #. module: point_of_sale
 #: view:pos.order:point_of_sale.view_pos_pos_form
@@ -2622,13 +2622,13 @@ msgstr "Phiên PoS Đang Mở"
 #: view:res.users:point_of_sale.res_users_form_view
 #: view:website:point_of_sale.report_sessionsummary
 msgid "Point of Sale"
-msgstr "Điểm bán hàng"
+msgstr "Điểm bán lẻ"
 
 #. module: point_of_sale
 #: view:report.pos.order:point_of_sale.view_report_pos_order_graph
 #: view:report.pos.order:point_of_sale.view_report_pos_order_search
 msgid "Point of Sale Analysis"
-msgstr "Phân tích Điểm bán Hàng"
+msgstr "Phân tích điểm bán lẻ"
 
 #. module: point_of_sale
 #: field:product.template,income_pdt:0
@@ -2688,7 +2688,7 @@ msgstr ""
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_config_pos
 #: view:pos.session:point_of_sale.view_pos_session_search
 msgid "Point of Sales"
-msgstr "Điểm bán hàng (PoS)"
+msgstr "Điểm bán lẻ (PoS)"
 
 #. module: point_of_sale
 #: view:pos.category:point_of_sale.product_pos_category_form_view
@@ -3139,7 +3139,7 @@ msgstr "Chọn Khách hàng"
 #. module: point_of_sale
 #: view:pos.session.opening:point_of_sale.pos_session_opening_form_view
 msgid "Select your Point of Sale"
-msgstr "Chọn điểm bán hàng của bạn"
+msgstr "Chọn điểm bán lẻ của bạn"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1033
@@ -3564,7 +3564,7 @@ msgstr ""
 msgid ""
 "The Point of Sale is not supported by Microsoft Internet Explorer. Please use\n"
 "                        a modern browser like"
-msgstr "Điểm bán hàng không hỗ trợ chạy trên trình duyệt Microsoft Internet Explorer. Vui lòng sử dụng một trình duyệt khác như"
+msgstr "Điểm bán lẻ không hỗ trợ chạy trên trình duyệt Microsoft Internet Explorer. Vui lòng sử dụng một trình duyệt khác như"
 
 #. module: point_of_sale
 #: constraint:pos.config:0
@@ -3862,7 +3862,7 @@ msgstr "Tổng chiết khấu"
 #. module: point_of_sale
 #: view:website:point_of_sale.report_detailsofsales
 msgid "Total invoiced"
-msgstr "Tổng đã xuất hóa đơn"
+msgstr "Tổng đã xuất hoá đơn"
 
 #. module: point_of_sale
 #: help:pos.session,cash_register_total_entry_encoding:0
@@ -4178,7 +4178,7 @@ msgstr ""
 #: code:addons/point_of_sale/point_of_sale.py:384
 #, python-format
 msgid "You should assign a Point of Sale to your session."
-msgstr "Bạn nên chỉ định một điểm bán hàng cho phiên làm việc của bạn"
+msgstr "Bạn nên chỉ định một điểm bán lẻ cho phiên làm việc của bạn"
 
 #. module: point_of_sale
 #. openerp-web

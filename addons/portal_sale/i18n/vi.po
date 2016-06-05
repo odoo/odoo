@@ -101,13 +101,13 @@ msgstr ""
 "\n"
 "    <p>Xin chào ${object.partner_id.name},</p>\n"
 "\n"
-"    <p>Có một hóa đơn gửi cho bạn: </p>\n"
+"    <p>Có một hoá đơn gửi cho bạn: </p>\n"
 "    \n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
 "       &nbsp;&nbsp;<strong>THAM KHẢO</strong><br />\n"
-"       &nbsp;&nbsp;Hóa đơn Số: <strong>${object.number}</strong><br />\n"
+"       &nbsp;&nbsp;Hoá đơn Số: <strong>${object.number}</strong><br />\n"
 "       &nbsp;&nbsp;Tổng giá trị: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Ngày hóa đơn: ${object.date_invoice}<br />\n"
+"       &nbsp;&nbsp;Ngày hoá đơn: ${object.date_invoice}<br />\n"
 "       % if object.origin:\n"
 "       &nbsp;&nbsp;Nguồn gốc: ${object.origin}<br />\n"
 "       % endif\n"
@@ -119,10 +119,10 @@ msgstr ""
 "    <% set signup_url = object.get_signup_url() %>\n"
 "    % if signup_url:\n"
 "    <p>\n"
-"    Bạn có thể truy cập hóa đơn này và thanh toán trực tuyến qua Cổng giao dịch Khách hàng của chúng tôi:\n"
+"    Bạn có thể truy cập hoá đơn này và thanh toán trực tuyến qua Cổng giao dịch Khách hàng của chúng tôi:\n"
 "    </p>\n"
 "        <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
-"           href=\"${signup_url}\">Xem Hóa đơn</a>\n"
+"           href=\"${signup_url}\">Xem Hoá đơn</a>\n"
 "    % endif\n"
 "    \n"
 "    % if object.paypal_url:\n"
@@ -361,7 +361,7 @@ msgstr ""
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_account_invoice
 msgid "Invoice"
-msgstr "Hóa đơn"
+msgstr "Hoá đơn"
 
 #. module: portal_sale
 #: model:email.template,report_name:portal_sale.email_template_edi_invoice
@@ -374,7 +374,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:portal_sale.portal_action_invoices
 #: model:ir.ui.menu,name:portal_sale.portal_invoices
 msgid "Invoices"
-msgstr "Hóa đơn"
+msgstr "Hoá đơn"
 
 #. module: portal_sale
 #: model:res.groups,comment:portal_sale.group_payment_options
@@ -436,7 +436,7 @@ msgstr "Xem các tùy chọn thanh toán trực tuyến"
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.portal_action_invoices
 msgid "We haven't sent you any invoice."
-msgstr "Chúng tôi chưa gửi hóa đơn cho bạn,"
+msgstr "Chúng tôi chưa gửi hoá đơn cho bạn,"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.action_quotations_portal

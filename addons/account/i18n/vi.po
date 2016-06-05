@@ -90,11 +90,11 @@ msgstr "\n"
 "\n"
 "    <p>Xin chào ${object.partner_id.name},</p>\n"
 "\n"
-"    <p>Một hóa đơn mới đã được xuất cho bạn: </p>\n"
+"    <p>Một hoá đơn mới đã được xuất cho bạn: </p>\n"
 "    \n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
 "       &nbsp;&nbsp;<strong>THAM CHIẾU</strong><br />\n"
-"       &nbsp;&nbsp;Số hóa đơn: <strong>${object.number}</strong><br />\n"
+"       &nbsp;&nbsp;Số hoá đơn: <strong>${object.number}</strong><br />\n"
 "       &nbsp;&nbsp;Tổng tiền: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n"
 "       &nbsp;&nbsp;Ngày: ${object.date_invoice}<br />\n"
 "       % if object.origin:\n"
@@ -159,7 +159,7 @@ msgid " * The 'Draft' status is used when a user is encoding a new and unconfirm
 " * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr " * Trạng thái 'Dự thảo' được sử dụng khi một người dùng tạo một hóa đơn chưa được xác nhận.             \n* Hóa đơn 'Tạm' (Pro-forma) là một trạng thái tạm thời mà chưa có số hóa đơn.             \n* Trạng thái 'Mở' được sử dụng khi người dùng tạo hóa đơn, một số hóa đơn được sinh ra. Nó đang trong tình trạng mở cho đến lúc người dùng không thanh toán hóa đơn này.             \n* Trạng thái 'Đã thanh toán' được thiết lập tự động khi hóa đơn được thanh toán hết. Nó liên quan đến bút toán đã đối soát hoặc chưa đối soát.             \n* Trạng thái 'Hủy bỏ' được sử dụng khi người dùng hủy hóa đơn."
+msgstr " * Trạng thái 'Dự thảo' được sử dụng khi một người dùng tạo một hoá đơn chưa được xác nhận.             \n* Hoá đơn 'Tạm' (Pro-forma) là một trạng thái tạm thời mà chưa có số hoá đơn.             \n* Trạng thái 'Mở' được sử dụng khi người dùng tạo hoá đơn, một số hoá đơn được sinh ra. Nó đang trong tình trạng mở cho đến lúc người dùng không thanh toán hoá đơn này.             \n* Trạng thái 'Đã thanh toán' được thiết lập tự động khi hoá đơn được thanh toán hết. Nó liên quan đến bút toán đã đối soát hoặc chưa đối soát.             \n* Trạng thái 'Hủy bỏ' được sử dụng khi người dùng hủy hoá đơn."
 
 #. module: account
 #: code:addons/account/account.py:1477
@@ -214,7 +214,7 @@ msgstr "Số lượng giao dịch"
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
-msgstr "${object.company_id.name|safe} Hóa đơn (Ref ${object.number or 'n/a'})"
+msgstr "${object.company_id.name|safe} Hoá đơn (Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: code:addons/account/account.py:1861
@@ -250,7 +250,7 @@ msgstr "(Nếu bạn không chọn một chu kỳ cụ thể, tất cả các ch
 #. module: account
 #: view:account.state.open:account.view_account_state_open
 msgid "(Invoice should be unreconciled if you want to open it)"
-msgstr "(Hóa đơn không nên được đối soát nếu bạn muốn để nó ở tình trạng mở)"
+msgstr "(Hoá đơn không nên được đối soát nếu bạn muốn để nó ở tình trạng mở)"
 
 #. module: account
 #: view:account.analytic.chart:account.account_analytic_chart_view
@@ -443,7 +443,7 @@ msgstr ""
 "                Một bút toán bao gồm vài phát sinh, mỗi phát sinh có thể là phát sinh nợ hoặc phát sinh có\n"
 "              </p><p>\n"
 "                Với Odoo, các bút toán thường được tạo tự động cho hầu hết các nghiệp vụ:\n"
-"                hóa đơn, hoàn tiền, thanh toán, Sao kê ngân hàng, xuất nhập kho, v.v. nếu bạn cấu hình đúng.\n"
+"                hoá đơn, hoàn tiền, thanh toán, Sao kê ngân hàng, xuất nhập kho, v.v. nếu bạn cấu hình đúng.\n"
 "                Do đó, bạn chỉ nên ghi nhận bút toán thủ công (làm kiểu các phần mềm kế toán thông thường) cho các nghiệp vụ linh tinh khác\n"
 "              </p>\n"
 "            "
@@ -591,8 +591,8 @@ msgid ""
 msgstr "<p class=\"oe_view_nocontent_create\">\n"
 "                Bấm để đăng ký một hoàn tiền mà bạn nhận được từ Nhà cung cấp.\n"
 "              </p><p>\n"
-"                Thay vì tạo thủ công một hóa đơn hoàn tiền từ Nhà cung cấp, bạn có thể tạo ra\n"
-"                hóa đơn hoàn tiền và đối soát chúng trực tiếp từ hóa đơn Nhà cung cấp tương ứng.\n"
+"                Thay vì tạo thủ công một hoá đơn hoàn tiền từ Nhà cung cấp, bạn có thể tạo ra\n"
+"                hoá đơn hoàn tiền và đối soát chúng trực tiếp từ hoá đơn Nhà cung cấp tương ứng.\n"
 "              </p>\n"
 "            "
 
@@ -679,7 +679,7 @@ msgstr "<p>\n"
 "                Cấu trúc hệ thống tài khoản quản trị được tạo theo nhu cầu của các nhà quản trị trên quan điểm phân tích chi phí / doanh thu\n"
 "              </p><p>\n"
 "                Chúng thường được sử dụng bởi hợp đồng, dự án, sản phẩm hoặc\n"
-"                các phòng ban trong doanh nghiệp. Hầu hết các hoạt động trong hệ thống Odoo (ví dụ hóa đơn,\n"
+"                các phòng ban trong doanh nghiệp. Hầu hết các hoạt động trong hệ thống Odoo (ví dụ hoá đơn,\n"
 "                chấm công, chi phí nhân sự, v.v.) sẽ tự tạo các bút toán quản trị ở tài khoản liên quan.\n"
 "              </p>\n"
 "            "
@@ -1406,7 +1406,7 @@ msgstr "Tất cả các đối soát"
 #. module: account
 #: help:account.move,state:0
 msgid "All manually created new journal entries are usually in the status 'Unposted', but you can set the option to skip that status on the related journal. In that case, they will behave as journal entries automatically created by the system on document validation (invoices, bank statements...) and will be created in 'Posted' status."
-msgstr "Tất cả số nhật ký được tạo mới một cách thủ công thường trong tình trạng chưa vào sổ, nhưng bạn có thể thiết lập tùy chọn để bỏ qua tình trạng này trên sổ nhật ký tương ứng. Trong trường hợp đó, chúng sẽ hành xử như là một sổ nhật ký được tạo tự động bởi hệ thống trên việc xác nhận tài liệu (hóa đơn, Sao kê ngân hàng,...) và sẽ được tạo với tình trạng đã vào sổ."
+msgstr "Tất cả số nhật ký được tạo mới một cách thủ công thường trong tình trạng chưa vào sổ, nhưng bạn có thể thiết lập tùy chọn để bỏ qua tình trạng này trên sổ nhật ký tương ứng. Trong trường hợp đó, chúng sẽ hành xử như là một sổ nhật ký được tạo tự động bởi hệ thống trên việc xác nhận tài liệu (hoá đơn, Sao kê ngân hàng,...) và sẽ được tạo với tình trạng đã vào sổ."
 
 #. module: account
 #: view:validate.account.move.lines:account.validate_account_move_line_view
@@ -1438,7 +1438,7 @@ msgstr "Cho phép đa tiền tệ"
 #. module: account
 #: field:account.config.settings,group_proforma_invoices:0
 msgid "Allow pro-forma invoices"
-msgstr "Cho phép xuất hóa đơn tạm (Pro-Forma)"
+msgstr "Cho phép xuất hoá đơn tạm (Pro-Forma)"
 
 #. module: account
 #: field:account.automatic.reconcile,allow_write_off:0
@@ -1453,7 +1453,7 @@ msgstr "Cho phép môi trường đa tiền tệ"
 #. module: account
 #: help:account.config.settings,group_proforma_invoices:0
 msgid "Allows you to put invoices in pro-forma state."
-msgstr "Cho phép bạn đặt hóa đơn trong tình trạn tạm"
+msgstr "Cho phép bạn đặt hoá đơn trong tình trạn tạm"
 
 #. module: account
 #: help:account.config.settings,group_analytic_accounting:0
@@ -1768,7 +1768,7 @@ msgstr "Bạn chắc chắn muốn tạo bút toán sổ nhật ký?"
 #. module: account
 #: view:account.state.open:account.view_account_state_open
 msgid "Are you sure you want to open this invoice ?"
-msgstr "Bạn chắc chắn muốn mở hóa đơn này?"
+msgstr "Bạn chắc chắn muốn mở hoá đơn này?"
 
 #. module: account
 #: view:account.period.close:account.view_account_period_close
@@ -1983,7 +1983,7 @@ msgstr "Tài khoản ngân hàng"
 #. module: account
 #: help:account.invoice,partner_bank_id:0
 msgid "Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Supplier Refund, otherwise a Partner bank account number."
-msgstr "Số tài khoản ngân hàng để thanh toán cho hóa đơn. Nếu đây là một hóa đơn Khách hàng nó sẽ là tài khoản ngân hàng của công ty, còn nếu là một cá nhân nó sẽ là tài khoản ngân hàng của Đối tác"
+msgstr "Số tài khoản ngân hàng để thanh toán cho hoá đơn. Nếu đây là một hoá đơn Khách hàng nó sẽ là tài khoản ngân hàng của công ty, còn nếu là một cá nhân nó sẽ là tài khoản ngân hàng của Đối tác"
 
 #. module: account
 #: model:ir.model,name:account.model_res_partner_bank
@@ -2108,7 +2108,7 @@ msgstr "Báo cáo của Bỉ"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing_billing
 msgid "Billing"
-msgstr "Lập hóa đơn"
+msgstr "Lập hoá đơn"
 
 #. module: account
 #: field:account.config.settings,module_account_budget:0
@@ -2227,18 +2227,18 @@ msgstr "Hủy bỏ bút toán đóng năm tài chính"
 #: view:account.invoice:account.invoice_form
 #: view:account.invoice:account.invoice_supplier_form
 msgid "Cancel Invoice"
-msgstr "Hủy hóa đơn"
+msgstr "Hủy hoá đơn"
 
 #. module: account
 #: view:account.invoice.cancel:account.account_invoice_cancel_view
 msgid "Cancel Invoices"
-msgstr "Hủy hóa đơn"
+msgstr "Hủy hoá đơn"
 
 #. module: account
 #: view:account.invoice.cancel:account.account_invoice_cancel_view
 #: model:ir.actions.act_window,name:account.action_account_invoice_cancel
 msgid "Cancel Selected Invoices"
-msgstr "Hủy hóa đơn được chọn"
+msgstr "Hủy hoá đơn được chọn"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form
@@ -2248,7 +2248,7 @@ msgstr "Hủy bỏ Statement"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_cancel
 msgid "Cancel the Selected Invoices"
-msgstr "Hủy hóa đơn được chọn"
+msgstr "Hủy hoá đơn được chọn"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -2265,19 +2265,19 @@ msgstr "Đã hủy bỏ"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Cancelled Invoice"
-msgstr "Hóa đơn đã hủy"
+msgstr "Hoá đơn đã hủy"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:117
 #, python-format
 msgid "Cannot %s draft/proforma/cancel invoice."
-msgstr "Không thể %s hóa đơn ở trạng thái dự thảo/proforma/hủy."
+msgstr "Không thể %s hoá đơn ở trạng thái dự thảo/proforma/hủy."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:119
 #, python-format
 msgid "Cannot %s invoice which is already reconciled, invoice should be unreconciled first. You can only refund this invoice."
-msgstr "Không thể %s hoá đơn mà đã được đối soát. Hóa đơn cần phải thôi đối soát trước. Bạn chỉ có thể hoàn tiền hóa đơn này."
+msgstr "Không thể %s hoá đơn mà đã được đối soát. Hoá đơn cần phải thôi đối soát trước. Bạn chỉ có thể hoàn tiền hoá đơn này."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1331
@@ -2303,8 +2303,8 @@ msgstr ""
 #, python-format
 msgid "Cannot create the invoice.\n"
 "The related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. In order to avoid rounding issues, the latest line of your payment term must be of type 'balance'."
-msgstr "Không thể tạo hóa đơn.\n"
-"Điều khoản thanh toán liên quan có thể được cấu hình sai như là chỉ ra một tổng tiền tính toán lơn hơn tổng tiền hóa đơn."
+msgstr "Không thể tạo hoá đơn.\n"
+"Điều khoản thanh toán liên quan có thể được cấu hình sai như là chỉ ra một tổng tiền tính toán lơn hơn tổng tiền hoá đơn."
 
 #. module: account
 #: code:addons/account/account_invoice.py:453
@@ -2561,7 +2561,7 @@ msgstr "Kiểm tra Ngày trong Chu kỳ"
 #. module: account
 #: model:res.groups,name:account.group_supplier_inv_check_total
 msgid "Check Total on supplier invoices"
-msgstr "Kiểm tra tổng tiền trên hóa đơn Nhà cung cấp"
+msgstr "Kiểm tra tổng tiền trên hoá đơn Nhà cung cấp"
 
 #. module: account
 #: help:account.analytic.balance,empty_acc:0
@@ -2571,7 +2571,7 @@ msgstr "Đánh dấu nếu bạn muốn hiển thị Tài khoản với cân đ�
 #. module: account
 #: field:account.config.settings,group_check_supplier_invoice_total:0
 msgid "Check the total of supplier invoices"
-msgstr "Kiểm tra tổng tiền trên hóa đơn Nhà cung cấp"
+msgstr "Kiểm tra tổng tiền trên hoá đơn Nhà cung cấp"
 
 #. module: account
 #: field:account.period.close,sure:0
@@ -2601,22 +2601,22 @@ msgstr "Đánh dấu nếu bạn không chắc chắn bút toán sổ nhật ký
 #. module: account
 #: help:account.tax.code.template,notprintable:0
 msgid "Check this box if you don't want any tax related to this tax Code to appear on invoices."
-msgstr "Đánh dấu nếu bạn không muốn bất kỳ thuế nào liên quan đến mã số thuế này xuất hiện trên hóa đơn"
+msgstr "Đánh dấu nếu bạn không muốn bất kỳ thuế nào liên quan đến mã số thuế này xuất hiện trên hoá đơn"
 
 #. module: account
 #: help:account.tax.code,notprintable:0
 msgid "Check this box if you don't want any tax related to this tax code to appear on invoices"
-msgstr "Đánh dấu nếu bạn không muốn bất kỳ thuế liên quan đến mã thuế này xuất hiện trên hóa đơn"
+msgstr "Đánh dấu nếu bạn không muốn bất kỳ thuế liên quan đến mã thuế này xuất hiện trên hoá đơn"
 
 #. module: account
 #: help:account.journal,update_posted:0
 msgid "Check this box if you want to allow the cancellation the entries related to this journal or of the invoice related to this journal"
-msgstr "Đánh dấu nếu bạn muốn cho phép hủy bỏ bút toán liên quan đến sổ nhật ký này hoặc hóa đơn cho sổ nhật ký này"
+msgstr "Đánh dấu nếu bạn muốn cho phép hủy bỏ bút toán liên quan đến sổ nhật ký này hoặc hoá đơn cho sổ nhật ký này"
 
 #. module: account
 #: help:account.journal,entry_posted:0
 msgid "Check this box to automatically post entries of this journal. Note that legally, some entries may be automatically posted when the source document is validated (Invoices), whatever the status of this field."
-msgstr "Đánh dấu ô này để tự động vào sổ bút toán. Lưu ý, một vài bút toán có thể được tự động vào sổ khi tài liệu nguồn được xác nhận (vd: hóa đơn)."
+msgstr "Đánh dấu ô này để tự động vào sổ bút toán. Lưu ý, một vài bút toán có thể được tự động vào sổ khi tài liệu nguồn được xác nhận (vd: hoá đơn)."
 
 #. module: account
 #: help:account.journal,centralisation:0
@@ -2627,7 +2627,7 @@ msgstr "Đánh dấu để xác định rằng mỗi bút toán sẽ không tạ
 #: help:account.tax,price_include:0
 #: help:account.tax.template,price_include:0
 msgid "Check this if the price you use on the product and invoices includes this tax."
-msgstr "Đánh dấu nếu giá tiền mà bạn sử dụng trên sản phẩm và hóa đơn có bao gồ thuế này."
+msgstr "Đánh dấu nếu giá tiền mà bạn sử dụng trên sản phẩm và hoá đơn có bao gồ thuế này."
 
 #. module: account
 #: help:account.account.template,reconcile:0
@@ -3013,17 +3013,17 @@ msgstr "Cấu hình tài khoản ngân hàng của công ty"
 #: view:account.invoice.confirm:account.account_invoice_confirm_view
 #: model:ir.actions.act_window,name:account.action_account_invoice_confirm
 msgid "Confirm Draft Invoices"
-msgstr "Xác nhận hóa đơn dự thảo"
+msgstr "Xác nhận hoá đơn dự thảo"
 
 #. module: account
 #: view:account.invoice.confirm:account.account_invoice_confirm_view
 msgid "Confirm Invoices"
-msgstr "Xác nhận hóa đơn"
+msgstr "Xác nhận hoá đơn"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_confirm
 msgid "Confirm the selected invoices"
-msgstr "Xác nhận hóa đơn được chọn"
+msgstr "Xác nhận hoá đơn được chọn"
 
 #. module: account
 #: view:account.bank.statement:account.view_account_bank_statement_filter
@@ -3515,13 +3515,13 @@ msgstr "Mã Khách hàng:"
 #: selection:account.invoice.report,type:0
 #: selection:report.invoice.created,type:0
 msgid "Customer Invoice"
-msgstr "Hóa đơn khách hàng"
+msgstr "Hoá đơn khách hàng"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree1
 msgid "Customer Invoices"
-msgstr "Hóa đơn khách hàng"
+msgstr "Hoá đơn khách hàng"
 
 #. module: account
 #: field:res.partner,property_payment_term:0
@@ -3949,13 +3949,13 @@ msgstr "Bút toán dự thảo"
 #: view:account.invoice:account.invoice_supplier_form
 #: view:website:account.report_invoice_document
 msgid "Draft Invoice"
-msgstr "Hóa đơn dự thảo"
+msgstr "Hoá đơn dự thảo"
 
 #. module: account
 #: view:account.invoice:account.view_account_invoice_filter
 #: view:account.invoice.report:account.view_account_invoice_report_search
 msgid "Draft Invoices"
-msgstr "Hóa đơn dự thảo"
+msgstr "Hoá đơn dự thảo"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -4211,7 +4211,7 @@ msgstr "Bút toán không cùng tài khoản hoặc đã được đối soát"
 #. module: account
 #: model:ir.model,name:account.model_account_statement_from_invoice_lines
 msgid "Entries by Statement from Invoices"
-msgstr "Bút toán theo sao kê từ hóa đơn"
+msgstr "Bút toán theo sao kê từ hoá đơn"
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:148
@@ -4796,7 +4796,7 @@ msgstr "Từ"
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all
 msgid "From this report, you can have an overview of the amount invoiced to your customer. The tool search can also be used to personalise your Invoices reports and so, match this analysis to your needs."
-msgstr "Từ báo cáo này, bạn có thể có một cái nhìn tổng quát về tổng tiền đã xuất hóa đơn cho khách hàng. Công cụ tìm kiếm cũng có thể được sử dụng để cá nhân hóa báo cáo hóa đơn,... phù hợp với mục đích quản trị của bạn."
+msgstr "Từ báo cáo này, bạn có thể có một cái nhìn tổng quát về tổng tiền đã xuất hoá đơn cho khách hàng. Công cụ tìm kiếm cũng có thể được sử dụng để cá nhân hóa báo cáo hoá đơn,... phù hợp với mục đích quản trị của bạn."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_analytic_entries_report
@@ -5000,7 +5000,7 @@ msgstr "Group By"
 #. module: account
 #: field:account.journal,group_invoice_lines:0
 msgid "Group Invoice Lines"
-msgstr "Nhóm theo hạng mục trên hóa đơn"
+msgstr "Nhóm theo hạng mục trên hoá đơn"
 
 #. module: account
 #: field:account.journal,groups_id:0
@@ -5178,7 +5178,7 @@ msgstr "Đánh dấu nếu bạn không muốn một hệ thống kế toán m�
 #: help:account.tax,applicable_type:0
 #: help:account.tax.template,applicable_type:0
 msgid "If not applicable (computed through a Python code), the tax won't appear on the invoice."
-msgstr "Nếu không áp dụng (được tính toán thông qua mã python), thuế này sẽ không xuất hiện trên hóa đơn."
+msgstr "Nếu không áp dụng (được tính toán thông qua mã python), thuế này sẽ không xuất hiện trên hoá đơn."
 
 #. module: account
 #: help:account.move.line,tax_amount:0
@@ -5213,12 +5213,12 @@ msgstr "nếu thiết lập này bị sai. bạn sẽ ẩn nó thay vì xóa nó
 #. module: account
 #: help:account.journal,group_invoice_lines:0
 msgid "If this box is checked, the system will try to group the accounting lines when generating them from invoices."
-msgstr "Nếu đánh dấu vào ô này, hệ thống sẽ thử nhóm các định khoản khi nó được tạo ra từ hóa đơn."
+msgstr "Nếu đánh dấu vào ô này, hệ thống sẽ thử nhóm các định khoản khi nó được tạo ra từ hoá đơn."
 
 #. module: account
 #: help:account.config.settings,module_account_accountant:0
 msgid "If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of  Accounts, ...)"
-msgstr "Nếu không đánh dấu vào ô này, bạn sẽ có thể thao tác nghiệp vụ thanh toán & hóa đơn mà không cần các nghiệp vụ khác của kế toán (Phát sinh, hệ thống tài khoản,...)"
+msgstr "Nếu không đánh dấu vào ô này, bạn sẽ có thể thao tác nghiệp vụ thanh toán & hoá đơn mà không cần các nghiệp vụ khác của kế toán (Phát sinh, hệ thống tài khoản,...)"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -5228,12 +5228,12 @@ msgstr "Nếu bạn điền \"%(year)s\" vào tiền tố, nó sẽ được tha
 #. module: account
 #: help:res.company,tax_calculation_rounding_method:0
 msgid "If you select 'Round per Line' : for each tax, the tax amount will first be computed and rounded for each PO/SO/invoice line and then these rounded amounts will be summed, leading to the total amount for that tax. If you select 'Round Globally': for each tax, the tax amount will be computed for each PO/SO/invoice line, then these amounts will be summed and eventually this total tax amount will be rounded. If you sell with tax included, you should choose 'Round per line' because you certainly want the sum of your tax-included line subtotals to be equal to the total amount with taxes."
-msgstr "Nếu bạn chọn 'Làm tròn trên từng hạng mục' : cho từng loại thuế, thì trước tiên tổng tiền thuế sẽ được tính toán và làm tròn cho từng hạng mục trên hóa đơn Mua/Bán hàng và sau đó tổng tiền đã được làm tròn sẽ được cộng lại, đó chính là tổng tiền thuế mà bạn cần. Nếu bạn chọn 'Làm tròn toàn cục': cho từng loại thuế, tổng tiền thuế sẽ được tính toán trên từng hạng mục của hóa đơn Bán/Mua, Sau đó tổng tiền sẽ được cộng và cho ra tổng tiền thuế cuối cùng. Nếu bạn bán hàng bao gồm cả thuế, bạn nên chọn 'Làm tròn trên từng hạng mục' bởi vì chắc chắn bạn muốn tổng phụ đã bao gồm thuế bằng với tổng toàn bộ các loại thuế."
+msgstr "Nếu bạn chọn 'Làm tròn trên từng hạng mục' : cho từng loại thuế, thì trước tiên tổng tiền thuế sẽ được tính toán và làm tròn cho từng hạng mục trên hoá đơn Mua/Bán hàng và sau đó tổng tiền đã được làm tròn sẽ được cộng lại, đó chính là tổng tiền thuế mà bạn cần. Nếu bạn chọn 'Làm tròn toàn cục': cho từng loại thuế, tổng tiền thuế sẽ được tính toán trên từng hạng mục của hoá đơn Bán/Mua, Sau đó tổng tiền sẽ được cộng và cho ra tổng tiền thuế cuối cùng. Nếu bạn bán hàng bao gồm cả thuế, bạn nên chọn 'Làm tròn trên từng hạng mục' bởi vì chắc chắn bạn muốn tổng phụ đã bao gồm thuế bằng với tổng toàn bộ các loại thuế."
 
 #. module: account
 #: help:account.config.settings,tax_calculation_rounding_method:0
 msgid "If you select 'Round per line' : for each tax, the tax amount will first be computed and rounded for each PO/SO/invoice line and then these rounded amounts will be summed, leading to the total amount for that tax. If you select 'Round globally': for each tax, the tax amount will be computed for each PO/SO/invoice line, then these amounts will be summed and eventually this total tax amount will be rounded. If you sell with tax included, you should choose 'Round per line' because you certainly want the sum of your tax-included line subtotals to be equal to the total amount with taxes."
-msgstr "Nếu bạn chọn 'Làm tròn trên từng hạng mục' : cho từng loại thuế, thì trước tiên tổng tiền thuế sẽ được tính toán và làm tròn cho từng hạng mục trên hóa đơn Mua/Bán hàng và sau đó tổng tiền đã được làm tròn sẽ được cộng lại, đó chính là tổng tiền thuế mà bạn cần. Nếu bạn chọn 'Làm tròn toàn cục': cho từng loại thuế, tổng tiền thuế sẽ được tính toán trên từng hạng mục của hóa đơn Bán/Mua, Sau đó tổng tiền sẽ được cộng và cho ra tổng tiền thuế cuối cùng. Nếu bạn bán hàng bao gồm cả thuế, bạn nên chọn 'Làm tròn trên từng hạng mục' bởi vì chắc chắn bạn muốn tổng phụ đã bao gồm thuế bằng với tổng toàn bộ các loại thuế."
+msgstr "Nếu bạn chọn 'Làm tròn trên từng hạng mục' : cho từng loại thuế, thì trước tiên tổng tiền thuế sẽ được tính toán và làm tròn cho từng hạng mục trên hoá đơn Mua/Bán hàng và sau đó tổng tiền đã được làm tròn sẽ được cộng lại, đó chính là tổng tiền thuế mà bạn cần. Nếu bạn chọn 'Làm tròn toàn cục': cho từng loại thuế, tổng tiền thuế sẽ được tính toán trên từng hạng mục của hoá đơn Bán/Mua, Sau đó tổng tiền sẽ được cộng và cho ra tổng tiền thuế cuối cùng. Nếu bạn bán hàng bao gồm cả thuế, bạn nên chọn 'Làm tròn trên từng hạng mục' bởi vì chắc chắn bạn muốn tổng phụ đã bao gồm thuế bằng với tổng toàn bộ các loại thuế."
 
 #. module: account
 #: help:account.partner.ledger,initial_balance:0
@@ -5259,7 +5259,7 @@ msgstr "Nếu bạn sử dụng điều khoản thanh toán, ngày đến hạn 
 #. module: account
 #: help:account.invoice,date_due:0
 msgid "If you use payment terms, the due date will be computed automatically at the generation of accounting entries. The payment term may compute several due dates, for example 50% now and 50% in one month, but if you want to force a due date, make sure that the payment term is not set on the invoice. If you keep the payment term and the due date empty, it means direct payment."
-msgstr "Nếu bạn chọn điều khoản thanh toán, ngày đến hạn sẽ được thanh toán tự động tại thời điểm tạo ra các bút toán. Điều khoản thanh toán này có thể tính toán một vai ngày đến hạn, ví dụ thời điểm này 50% và một tháng sau là 50% nhưng nếu bạn vẫn muốn thực hiện một ngày đến hạn, hãy chắc chắn rằng điều khoản thanh toán không được thiết lập trên hóa đơn. Nếu bạn sử dụng điều khoản thanh toán và để trống ngày đến hạn thì có nghĩa là bạn thanh toán trực tiếp."
+msgstr "Nếu bạn chọn điều khoản thanh toán, ngày đến hạn sẽ được thanh toán tự động tại thời điểm tạo ra các bút toán. Điều khoản thanh toán này có thể tính toán một vai ngày đến hạn, ví dụ thời điểm này 50% và một tháng sau là 50% nhưng nếu bạn vẫn muốn thực hiện một ngày đến hạn, hãy chắc chắn rằng điều khoản thanh toán không được thiết lập trên hoá đơn. Nếu bạn sử dụng điều khoản thanh toán và để trống ngày đến hạn thì có nghĩa là bạn thanh toán trực tiếp."
 
 #. module: account
 #: help:account.journal,cash_control:0
@@ -5281,7 +5281,7 @@ msgstr "Nhập khẩu bút toán"
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form
 msgid "Import Invoice"
-msgstr "Nhập khẩu hóa đơn"
+msgstr "Nhập khẩu hoá đơn"
 
 #. module: account
 #: view:website:account.report_partnerbalance
@@ -5487,23 +5487,23 @@ msgstr "Inverted Analytic Balance -"
 #: view:website:account.report_invoice_document
 #, python-format
 msgid "Invoice"
-msgstr "Hóa đơn"
+msgstr "Hoá đơn"
 
 #. module: account
 #: view:account.change.currency:account.view_account_change_currency
 msgid "Invoice Currency"
-msgstr "Tiền tệ trên hóa đơn"
+msgstr "Tiền tệ trên hoá đơn"
 
 #. module: account
 #: field:account.invoice,date_invoice:0
 #: field:report.invoice.created,date_invoice:0
 msgid "Invoice Date"
-msgstr "Ngày Hóa đơn"
+msgstr "Ngày Hoá đơn"
 
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Invoice Date:"
-msgstr "Ngày hóa đơn:"
+msgstr "Ngày hoá đơn:"
 
 #. module: account
 #: view:account.invoice.line:account.view_invoice_line_form
@@ -5511,30 +5511,30 @@ msgstr "Ngày hóa đơn:"
 #: field:account.invoice.tax,invoice_id:0
 #: model:ir.model,name:account.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "Chi tiết hóa đơn"
+msgstr "Chi tiết hoá đơn"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
 #: field:account.invoice,invoice_line:0
 msgid "Invoice Lines"
-msgstr "Chi tiết hóa đơn"
+msgstr "Chi tiết hoá đơn"
 
 #. module: account
 #: field:account.invoice,internal_number:0
 #: field:report.invoice.created,number:0
 msgid "Invoice Number"
-msgstr "Số hóa đơn"
+msgstr "Số hoá đơn"
 
 #. module: account
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr "Số hóa đơn phải là duy nhất trên một công ty!"
+msgstr "Số hoá đơn phải là duy nhất trên một công ty!"
 
 #. module: account
 #: field:account.invoice,reference:0
 #: field:account.invoice.line,invoice_id:0
 msgid "Invoice Reference"
-msgstr "Tham chiếu Hóa đơn"
+msgstr "Tham chiếu Hoá đơn"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_refund
@@ -5544,7 +5544,7 @@ msgstr "Hoàn tiền"
 #. module: account
 #: field:account.invoice.report,state:0
 msgid "Invoice Status"
-msgstr "Tình trạng hóa đơn"
+msgstr "Tình trạng hoá đơn"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
@@ -5554,7 +5554,7 @@ msgstr "Invoice Tasks by Month"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_tax
 msgid "Invoice Tax"
-msgstr "Thuế Hóa đơn"
+msgstr "Thuế Hoá đơn"
 
 #. module: account
 #: field:account.tax,account_collected_id:0
@@ -5571,45 +5571,45 @@ msgstr "Tài khoản quản trị thuế"
 #: code:addons/account/wizard/account_state_open.py:38
 #, python-format
 msgid "Invoice is already reconciled."
-msgstr "Hóa đơn đã được đối soát."
+msgstr "Hoá đơn đã được đối soát."
 
 #. module: account
 #: code:addons/account/account_invoice.py:576
 #, python-format
 msgid "Invoice line account's company and invoice's company does not match."
-msgstr "Công ty của tài khoản và công ty của hóa đơn trên một dòng hóa đơn không hợp lệ."
+msgstr "Công ty của tài khoản và công ty của hoá đơn trên một dòng hoá đơn không hợp lệ."
 
 #. module: account
 #: view:account.invoice:account.invoice_supplier_form
 msgid "Invoice lines"
-msgstr "Chi tiết hóa đơn"
+msgstr "Chi tiết hoá đơn"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
 msgid "Invoice paid"
-msgstr "Hóa đơn đã thanh toán hết"
+msgstr "Hoá đơn đã thanh toán hết"
 
 #. module: account
 #: code:addons/account/account_invoice.py:1200
 #, python-format
 msgid "Invoice partially paid: %s%s of %s%s (%s%s remaining)."
-msgstr "Hóa đơn đã thanh toán một phần: %s%s of %s%s (còn lại %s%s)."
+msgstr "Hoá đơn đã thanh toán một phần: %s%s of %s%s (còn lại %s%s)."
 
 #. module: account
 #: code:addons/account/account_invoice.py:1652
 #, python-format
 msgid "Invoice sent"
-msgstr "Hóa đơn đã được gửi"
+msgstr "Hoá đơn đã được gửi"
 
 #. module: account
 #: field:account.config.settings,sale_sequence_prefix:0
 msgid "Invoice sequence"
-msgstr "Trình tự hóa đơn"
+msgstr "Trình tự hoá đơn"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
 msgid "Invoice validated"
-msgstr "Hóa đơn đã xác nhận"
+msgstr "Hoá đơn đã xác nhận"
 
 #. module: account
 #: model:email.template,report_name:account.email_template_edi_invoice
@@ -5620,7 +5620,7 @@ msgstr "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'dra
 #: view:account.invoice.report:account.view_account_invoice_report_search
 #: view:res.partner:account.partner_view_buttons
 msgid "Invoiced"
-msgstr "Đã xuất hóa đơn"
+msgstr "Đã xuất hoá đơn"
 
 #. module: account
 #: view:account.invoice:account.view_account_invoice_filter
@@ -5636,7 +5636,7 @@ msgstr "Đã xuất hóa đơn"
 #: view:report.invoice.created:account.board_view_created_invoice
 #: field:res.partner,invoice_ids:0
 msgid "Invoices"
-msgstr "Hóa đơn"
+msgstr "Hoá đơn"
 
 #. module: account
 #: view:account.invoice.report:account.view_account_invoice_report_graph
@@ -5644,7 +5644,7 @@ msgstr "Hóa đơn"
 #: model:ir.actions.act_window,name:account.action_account_invoice_report_all
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
 msgid "Invoices Analysis"
-msgstr "Phân tích hóa đơn"
+msgstr "Phân tích hoá đơn"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
@@ -5654,17 +5654,17 @@ msgstr "Hoá đơn được tạo trong 15 ngày qua"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr "Thống kê hóa đơn"
+msgstr "Thống kê hoá đơn"
 
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
 msgid "Invoicing"
-msgstr "Hóa đơn"
+msgstr "Hoá đơn"
 
 #. module: account
 #: model:res.groups,name:account.group_account_invoice
 msgid "Invoicing & Payments"
-msgstr "Hóa đơn & Thanh toán"
+msgstr "Hoá đơn & Thanh toán"
 
 #. module: account
 #: field:account.bank.statement,message_is_follower:0
@@ -5696,12 +5696,12 @@ msgstr "Nó thêm cột tiền tệ vào báo cáo nếu tiền tệ này khác 
 #. module: account
 #: help:account.invoice,reconciled:0
 msgid "It indicates that the invoice has been paid and the journal entry of the invoice has been reconciled with one or several journal entries of payment."
-msgstr "Nó chỉ ra rằng hóa đơn này đã được thanh toán hết và bút toán của hóa đơn này đã được đối soát với một hoặc một vài bút toán thanh toán."
+msgstr "Nó chỉ ra rằng hoá đơn này đã được thanh toán hết và bút toán của hoá đơn này đã được đối soát với một hoặc một vài bút toán thanh toán."
 
 #. module: account
 #: help:account.invoice,sent:0
 msgid "It indicates that the invoice has been sent."
-msgstr "Nó chỉ ra rằng hóa đơn này đã được gửi."
+msgstr "Nó chỉ ra rằng hoá đơn này đã được gửi."
 
 #. module: account
 #. openerp-web
@@ -6033,7 +6033,7 @@ msgstr "Để trống để sử dụng tài khoản doanh thu"
 #. module: account
 #: help:account.invoice,period_id:0
 msgid "Keep empty to use the period of the validation(invoice) date."
-msgstr "Để trống để sử dụng kỳ kế toán theo ngày xác nhận hóa đơn."
+msgstr "Để trống để sử dụng kỳ kế toán theo ngày xác nhận hoá đơn."
 
 #. module: account
 #. openerp-web
@@ -6515,7 +6515,7 @@ msgstr "Models"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create refund, reconcile and create a new draft invoice"
-msgstr "Chỉnh sửa: tạo hoàn tiền, đối soát và tạo hóa đơn dự thảo"
+msgstr "Chỉnh sửa: tạo hoàn tiền, đối soát và tạo hoá đơn dự thảo"
 
 #. module: account
 #: view:account.treasury.report:account.view_account_treasury_report_search
@@ -6597,7 +6597,7 @@ msgstr "Bút toán của tôi"
 #. module: account
 #: view:account.invoice:account.view_account_invoice_filter
 msgid "My Invoices"
-msgstr "Hóa đơn của tôi"
+msgstr "Hoá đơn của tôi"
 
 #. module: account
 #: field:account.account,name:0
@@ -6669,7 +6669,7 @@ msgstr "Số báo cáo tiếp theo"
 #. module: account
 #: field:account.config.settings,sale_sequence_next:0
 msgid "Next invoice number"
-msgstr "Số hóa đơn tiếp theo"
+msgstr "Số hoá đơn tiếp theo"
 
 #. module: account
 #: field:account.config.settings,purchase_refund_sequence_next:0
@@ -6679,7 +6679,7 @@ msgstr "Số báo có nhà cung cấp tiếp theo"
 #. module: account
 #: field:account.config.settings,purchase_sequence_next:0
 msgid "Next supplier invoice number"
-msgstr "Số hóa đơn nhà cung cấp tiếp theo"
+msgstr "Số hoá đơn nhà cung cấp tiếp theo"
 
 #. module: account
 #: code:addons/account/account.py:2336
@@ -6723,7 +6723,7 @@ msgstr "Không theo dõi"
 #: code:addons/account/account_invoice.py:800
 #, python-format
 msgid "No Invoice Lines!"
-msgstr "Không có hạng mục trên hóa đơn!"
+msgstr "Không có hạng mục trên hoá đơn!"
 
 #. module: account
 #: code:addons/account/account_invoice.py:1316
@@ -6752,7 +6752,7 @@ msgstr "No detail"
 #: code:addons/account/wizard/account_invoice_refund.py:155
 #, python-format
 msgid "No period found on the invoice."
-msgstr "Không có kỳ kế toán được tìm thấy trên hóa đơn này."
+msgstr "Không có kỳ kế toán được tìm thấy trên hoá đơn này."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1302
@@ -6924,8 +6924,8 @@ msgid "Once draft invoices are confirmed, you will not be able\n"
 "                        to modify them. The invoices will receive a unique\n"
 "                        number and journal items will be created in your chart\n"
 "                        of accounts."
-msgstr "Một hóa đơn dự thảo được xác nhận, bạn sẽ không thể\n"
-"                        chỉnh sửa chúng. Hóa đơn này sẽ nhận được một số duy nhất\n"
+msgstr "Một hoá đơn dự thảo được xác nhận, bạn sẽ không thể\n"
+"                        chỉnh sửa chúng. Hoá đơn này sẽ nhận được một số duy nhất\n"
 "                        và các phát sinh sẽ được tạo trong hệ thống tài khoản."
 
 #. module: account
@@ -6986,7 +6986,7 @@ msgstr "Mở bút toán"
 #. module: account
 #: view:account.state.open:account.view_account_state_open
 msgid "Open Invoice"
-msgstr "Mở hóa đơn"
+msgstr "Mở hoá đơn"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_journal_button
@@ -7473,7 +7473,7 @@ msgstr "Pending Accounts"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree_pending_invoice
 msgid "Pending Invoice"
-msgstr "Hóa đơn đang treo"
+msgstr "Hoá đơn đang treo"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -7631,7 +7631,7 @@ msgstr "Vui lòng kiểm tra trường 'Sổ nhật ký' được thiết lập 
 #: code:addons/account/account_invoice.py:800
 #, python-format
 msgid "Please create some invoice lines."
-msgstr "Vui lòng tạo một vài hạng mục trên hóa đơn."
+msgstr "Vui lòng tạo một vài hạng mục trên hoá đơn."
 
 #. module: account
 #: code:addons/account/account.py:1333
@@ -7643,7 +7643,7 @@ msgstr "Vui lòng định nghĩa trình tự trên sổ nhật ký này."
 #: code:addons/account/account_invoice.py:798
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
-msgstr "Vui lòng định nghĩa trình tự trên sổ nhật ký liên quan tới hóa đơn này."
+msgstr "Vui lòng định nghĩa trình tự trên sổ nhật ký liên quan tới hoá đơn này."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:331
@@ -7656,7 +7656,7 @@ msgstr "Vui lòng xác nhận rằng một tài khoản được định nghĩa 
 #, python-format
 msgid "Please verify the price of the invoice!\n"
 "The encoded total does not match the computed total."
-msgstr "Vui lòng xác nhận giá của hóa đơn này!\n"
+msgstr "Vui lòng xác nhận giá của hoá đơn này!\n"
 "Tổng tiền được mã hóa không khớp với tổng tiền được tính toán."
 
 #. module: account
@@ -7732,7 +7732,7 @@ msgstr "In cân đối tài khoản đối tác"
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "Print Invoice"
-msgstr "In hóa đơn"
+msgstr "In hoá đơn"
 
 #. module: account
 #: help:account.central.journal,amount_currency:0
@@ -7779,7 +7779,7 @@ msgstr "Pro-forma"
 #. module: account
 #: model:res.groups,name:account.group_proforma_invoices
 msgid "Pro-forma Invoices"
-msgstr "Hóa đơn Pro-forma"
+msgstr "Hoá đơn Pro-forma"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
@@ -7876,12 +7876,12 @@ msgstr "Proforma"
 #. module: account
 #: view:account.invoice:account.view_account_invoice_filter
 msgid "Proforma Invoices"
-msgstr "Hóa đơn tạm"
+msgstr "Hoá đơn tạm"
 
 #. module: account
 #: view:account.invoice:account.view_account_invoice_filter
 msgid "Proforma/Open/Paid Invoices"
-msgstr "Hóa đơn Pro-forma/Mở/Đã thanh toán"
+msgstr "Hoá đơn Pro-forma/Mở/Đã thanh toán"
 
 #. module: account
 #: field:account.partner.reconcile.process,progress:0
@@ -8235,13 +8235,13 @@ msgstr "Tham chiếu đơn vị tính"
 #. module: account
 #: help:report.invoice.created,origin:0
 msgid "Reference of the document that generated this invoice report."
-msgstr "Tham chiếu của tài liệu tạo ra báo cáo hóa đơn này"
+msgstr "Tham chiếu của tài liệu tạo ra báo cáo hoá đơn này"
 
 #. module: account
 #: help:account.invoice,origin:0
 #: help:account.invoice.line,origin:0
 msgid "Reference of the document that produced this invoice."
-msgstr "Tham chiếu của tài liệu tạo ra hóa đơn này."
+msgstr "Tham chiếu của tài liệu tạo ra hoá đơn này."
 
 #. module: account
 #: field:account.invoice,name:0
@@ -8279,7 +8279,7 @@ msgstr "Dấu Mã Giá trị hoàn tiền tính thuế"
 #: view:account.invoice:account.invoice_form
 #: model:ir.actions.act_window,name:account.action_account_invoice_refund
 msgid "Refund Invoice"
-msgstr "Hóa đơn hoàn tiền"
+msgstr "Hoá đơn hoàn tiền"
 
 #. module: account
 #: field:account.invoice.refund,journal_id:0
@@ -8317,7 +8317,7 @@ msgstr "Dấu Mã Giá trị thuế Hoàn tiền"
 #. module: account
 #: help:account.invoice.refund,filter_refund:0
 msgid "Refund base on this type. You can not Modify and Cancel if the invoice is already reconciled"
-msgstr "Hoàn tiền dựa trên loại này. Bạn không thể Chỉnh sửa và Hủy bỏ nếu hóa đơn này đã được đối soát"
+msgstr "Hoàn tiền dựa trên loại này. Bạn không thể Chỉnh sửa và Hủy bỏ nếu hoá đơn này đã được đối soát"
 
 #. module: account
 #: view:account.tax:account.view_tax_form
@@ -8382,7 +8382,7 @@ msgstr "Giá trị báo cáo"
 #. module: account
 #: model:ir.model,name:account.model_report_invoice_created
 msgid "Report of Invoices Created within Last 15 days"
-msgstr "Báo cáo của hóa đơn đã được tạo trong 15 ngày qua"
+msgstr "Báo cáo của hoá đơn đã được tạo trong 15 ngày qua"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_sales
@@ -8640,7 +8640,7 @@ msgstr "Tìm năm tài chính"
 #. module: account
 #: view:account.invoice:account.view_account_invoice_filter
 msgid "Search Invoice"
-msgstr "Tìm kiếm hóa đơn"
+msgstr "Tìm kiếm hoá đơn"
 
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
@@ -8682,7 +8682,7 @@ msgstr "Tiền tệ thứ hai"
 #. module: account
 #: help:account.journal,type:0
 msgid "Select 'Sale' for customer invoices journals. Select 'Purchase' for supplier invoices journals. Select 'Cash' or 'Bank' for journals that are used in customer or supplier payments. Select 'General' for miscellaneous operations journals. Select 'Opening/Closing Situation' for entries generated for new fiscal years."
-msgstr "Chọn 'Bán hàng' cho sổ nhật ký hóa đơn khách hàng, Chọn 'Mua hàng' cho sổ nhật ký hóa đơn nhà cung cấp. Chọn 'Tiền mặt' hoặc 'Ngân hàng' cho sổ nhật ký được sử dụng để ghi nhận các khoản thanh toán của khách hàng hoặc nhà cung cấp. Chọn 'Tổng quát' cho các hoạt động khác. Chọn 'Tình trạng Đầu kỳ/Cuối kỳ' cho các bút toán được tạo ra cho năm tài chính mới."
+msgstr "Chọn 'Bán hàng' cho sổ nhật ký hoá đơn khách hàng, Chọn 'Mua hàng' cho sổ nhật ký hoá đơn nhà cung cấp. Chọn 'Tiền mặt' hoặc 'Ngân hàng' cho sổ nhật ký được sử dụng để ghi nhận các khoản thanh toán của khách hàng hoặc nhà cung cấp. Chọn 'Tổng quát' cho các hoạt động khác. Chọn 'Tình trạng Đầu kỳ/Cuối kỳ' cho các bút toán được tạo ra cho năm tài chính mới."
 
 #. module: account
 #: help:account.aged.trial.balance,chart_account_id:0
@@ -8747,7 +8747,7 @@ msgstr "Chọn gói cấu hình để thiết lập hệ thống tài khoản v�
 #. module: account
 #: help:account.change.currency,currency_id:0
 msgid "Select a currency to apply on the invoice"
-msgstr "Chọn một loại tiền để áp dụng cho hóa đơn"
+msgstr "Chọn một loại tiền để áp dụng cho hoá đơn"
 
 #. module: account
 #: help:account.fiscalyear.close.state,fy_id:0
@@ -8791,13 +8791,13 @@ msgstr "Phát sinh được chọn không có bất kỳ tài khoản nào trong
 #: code:addons/account/wizard/account_invoice_state.py:64
 #, python-format
 msgid "Selected invoice(s) cannot be cancelled as they are already in 'Cancelled' or 'Done' state."
-msgstr "Hóa đơn được chọn không thể hủy bỏ bởi vì chúng đang trong trạng thái 'Hủy bỏ' hoặc 'Hoàn thành'."
+msgstr "Hoá đơn được chọn không thể hủy bỏ bởi vì chúng đang trong trạng thái 'Hủy bỏ' hoặc 'Hoàn thành'."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:41
 #, python-format
 msgid "Selected invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-Forma' state."
-msgstr "Hóa đơn được chọn không thể được xác nhận bởi vì chúng không trong trạng thái 'Dự thảo' hoặc 'Tạm'."
+msgstr "Hoá đơn được chọn không thể được xác nhận bởi vì chúng không trong trạng thái 'Dự thảo' hoặc 'Tạm'."
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -8807,7 +8807,7 @@ msgstr "Gửi Email"
 #. module: account
 #: field:account.config.settings,module_product_email_template:0
 msgid "Send products tools and information at the invoice confirmation"
-msgstr "Gửi thông tin và tính năng sản phẩm tại thời điểm xác nhận hóa đơn"
+msgstr "Gửi thông tin và tính năng sản phẩm tại thời điểm xác nhận hoá đơn"
 
 #. module: account
 #: field:account.invoice,sent:0
@@ -8874,22 +8874,22 @@ msgstr "Thiết lập nếu việc tính thuế dựa trên tính toán của c�
 #. module: account
 #: help:account.tax,account_collected_id:0
 msgid "Set the account that will be set by default on invoice tax lines for invoices. Leave empty to use the expense account."
-msgstr "Thiết lập tài khoản thuế mặc định trên từng hạng mục của hóa đơn. Để trống để sử dụng tài khoản chi phí."
+msgstr "Thiết lập tài khoản thuế mặc định trên từng hạng mục của hoá đơn. Để trống để sử dụng tài khoản chi phí."
 
 #. module: account
 #: help:account.tax,account_paid_id:0
 msgid "Set the account that will be set by default on invoice tax lines for refunds. Leave empty to use the expense account."
-msgstr "Thiết lập tài khoản thuế mặc định trên từng hạng mục của hóa đơn hoàn tiền. Để trống để sử dụng tài khoản chi phí."
+msgstr "Thiết lập tài khoản thuế mặc định trên từng hạng mục của hoá đơn hoàn tiền. Để trống để sử dụng tài khoản chi phí."
 
 #. module: account
 #: help:account.tax,account_analytic_collected_id:0
 msgid "Set the analytic account that will be used by default on the invoice tax lines for invoices. Leave empty if you don't want to use an analytic account on the invoice tax lines by default."
-msgstr "Thiết lập tài khoản thuế quản trị mặc định trên từng hạng mục của hóa đơn. Để trống nếu bạn không muốn sử dụng một tài khoản thuế quản trị mặc định."
+msgstr "Thiết lập tài khoản thuế quản trị mặc định trên từng hạng mục của hoá đơn. Để trống nếu bạn không muốn sử dụng một tài khoản thuế quản trị mặc định."
 
 #. module: account
 #: help:account.tax,account_analytic_paid_id:0
 msgid "Set the analytic account that will be used by default on the invoice tax lines for refunds. Leave empty if you don't want to use an analytic account on the invoice tax lines by default."
-msgstr "Thiết lập tài khoản thuế quản trị mặc định trên từng hạng mục của hóa đơn hoàn tiền. Để trống nếu bạn không muốn sử dụng một tài khoản thuế quản trị mặc định."
+msgstr "Thiết lập tài khoản thuế quản trị mặc định trên từng hạng mục của hoá đơn hoàn tiền. Để trống nếu bạn không muốn sử dụng một tài khoản thuế quản trị mặc định."
 
 #. module: account
 #: help:account.chart.template,visible:0
@@ -9225,18 +9225,18 @@ msgstr "Nhà cung cấp"
 #: view:website:account.report_invoice_document
 #, python-format
 msgid "Supplier Invoice"
-msgstr "Hóa đơn nhà cung cấp"
+msgstr "Hoá đơn nhà cung cấp"
 
 #. module: account
 #: field:account.invoice,supplier_invoice_number:0
 msgid "Supplier Invoice Number"
-msgstr "Số hóa đơn nhà cung cấp"
+msgstr "Số hoá đơn nhà cung cấp"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree2
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree2
 msgid "Supplier Invoices"
-msgstr "Hóa đơn nhà cung cấp"
+msgstr "Hoá đơn nhà cung cấp"
 
 #. module: account
 #: field:res.partner,property_supplier_payment_term:0
@@ -9741,7 +9741,7 @@ msgstr "Mã này sẽ được hiển thị trên báo cáo."
 #. module: account
 #: help:account.invoice,commercial_partner_id:0
 msgid "The commercial entity that will be used on Journal Entries for this invoice"
-msgstr "Bút toán thương mại này sẽ được sử dụng trên bút toán sổ nhật ký cho hóa đơn này"
+msgstr "Bút toán thương mại này sẽ được sử dụng trên bút toán sổ nhật ký cho hoá đơn này"
 
 #. module: account
 #: constraint:account.config.settings:0
@@ -9863,12 +9863,12 @@ msgstr "Tùy chọn số lượng trên các bút toán."
 #. module: account
 #: help:account.invoice,account_id:0
 msgid "The partner account used for this invoice."
-msgstr "Tài khoản đối tác được sử dụng cho hóa đơn này."
+msgstr "Tài khoản đối tác được sử dụng cho hoá đơn này."
 
 #. module: account
 #: help:account.invoice,reference:0
 msgid "The partner reference of this invoice."
-msgstr "Tham chiếu đối tác của hóa đơn này"
+msgstr "Tham chiếu đối tác của hoá đơn này"
 
 #. module: account
 #: code:addons/account/account_invoice.py:513
@@ -9885,7 +9885,7 @@ msgstr "Kỳ kế toán để tạo bút toán đầu kỳ không được tìm 
 #. module: account
 #: help:account.invoice,supplier_invoice_number:0
 msgid "The reference of this invoice as provided by the supplier."
-msgstr "Tham chiếu hóa đơn được cung cấp bởi nhà cung cấp."
+msgstr "Tham chiếu hoá đơn được cung cấp bởi nhà cung cấp."
 
 #. module: account
 #: help:account.analytic.line,currency_id:0
@@ -10036,7 +10036,7 @@ msgstr "There is nothing due with this customer."
 #, python-format
 msgid "There is nothing to reconcile. All invoices and payments\n"
 "                    have been reconciled, your partner balance is clean."
-msgstr "Không có gì để đối soát. Tất cả hóa đơn và thanh toán\n"
+msgstr "Không có gì để đối soát. Tất cả hoá đơn và thanh toán\n"
 "                    đã được đối soát, số dư đối tác đã được cân đối."
 
 #. module: account
@@ -10067,22 +10067,22 @@ msgstr "This Year"
 #. module: account
 #: help:product.template,property_account_expense:0
 msgid "This account will be used for invoices instead of the default one to value expenses for the current product."
-msgstr "Tài khoản sẽ được sử dụng cho hóa đơn mua hàng.\nCụ thể: khi xác nhận hóa đơn mua hàng, tự động ghi giá trị hóa đơn vào bên NỢ của tài khoản được thiết lập ở đây."
+msgstr "Tài khoản sẽ được sử dụng cho hoá đơn mua hàng.\nCụ thể: khi xác nhận hoá đơn mua hàng, tự động ghi giá trị hoá đơn vào bên NỢ của tài khoản được thiết lập ở đây."
 
 #. module: account
 #: help:product.template,property_account_income:0
 msgid "This account will be used for invoices instead of the default one to value sales for the current product."
-msgstr "Tài khoản sẽ được sử dụng cho hóa đơn bán hàng.\nCụ thể: khi xác nhận hóa đơn bán hàng, tự động ghi giá trị hóa đơn vào bên CÓ của tài khoản được thiết lập ở đây."
+msgstr "Tài khoản sẽ được sử dụng cho hoá đơn bán hàng.\nCụ thể: khi xác nhận hoá đơn bán hàng, tự động ghi giá trị hoá đơn vào bên CÓ của tài khoản được thiết lập ở đây."
 
 #. module: account
 #: help:product.category,property_account_expense_categ:0
 msgid "This account will be used for invoices to value expenses."
-msgstr "Tài khoản sẽ được sử dụng cho hóa đơn mua hàng.\nCụ thể: khi xác nhận hóa đơn mua hàng, tự động ghi giá trị hóa đơn vào bên NỢ của tài khoản được thiết lập ở đây."
+msgstr "Tài khoản sẽ được sử dụng cho hoá đơn mua hàng.\nCụ thể: khi xác nhận hoá đơn mua hàng, tự động ghi giá trị hoá đơn vào bên NỢ của tài khoản được thiết lập ở đây."
 
 #. module: account
 #: help:product.category,property_account_income_categ:0
 msgid "This account will be used for invoices to value sales."
-msgstr "Tài khoản sẽ được sử dụng cho hóa đơn bán hàng.\nCụ thể: khi xác nhận hóa đơn bán hàng, tự động ghi giá trị hóa đơn vào bên CÓ của tài khoản được thiết lập ở đây."
+msgstr "Tài khoản sẽ được sử dụng cho hoá đơn bán hàng.\nCụ thể: khi xác nhận hoá đơn bán hàng, tự động ghi giá trị hoá đơn vào bên CÓ của tài khoản được thiết lập ở đây."
 
 #. module: account
 #: help:res.partner,property_account_payable:0
@@ -10123,7 +10123,7 @@ msgid "This allows you to create and manage your payment orders, with purposes t
 "-This installs the module account_payment."
 msgstr "Cho phép bạn tạo và quản lý đơn thanh toán, với mục đích \n"
 "* thanh toán tự động và \n"
-"* cung cấp một cách hiệu quả hơn để quản lý thanh toán trên hóa đơn.\n"
+"* cung cấp một cách hiệu quả hơn để quản lý thanh toán trên hoá đơn.\n"
 "-Nó sẽ cài đặt phân hệ account_payment."
 
 #. module: account
@@ -10133,7 +10133,7 @@ msgid "This allows you to manage the assets owned by a company or a person.\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
 msgstr "Cho phép quản lý tài sản được sử hữu bởi công ty hoặc cá nhân.\n"
 "Theo dõi khấu hao và tao bút toán cho từng lần khấu hao.\n"
-"-Nó sẽ cài đặt phân hệ account_asset. Nếu bỏ đánh dấu, bạn sẽ vẫn có thể thực hiện các nghiệp vụ hóa đơn & thanh toán mà không cần các nghiệp vụ kế toán khác (Phát sinh, hệ thống tài khoản,...)"
+"-Nó sẽ cài đặt phân hệ account_asset. Nếu bỏ đánh dấu, bạn sẽ vẫn có thể thực hiện các nghiệp vụ hoá đơn & thanh toán mà không cần các nghiệp vụ kế toán khác (Phát sinh, hệ thống tài khoản,...)"
 
 #. module: account
 #: help:account.chart.template,complete_tax_set:0
@@ -10150,7 +10150,7 @@ msgstr "This boolean helps you to choose if you want to propose to the user to e
 #: view:account.invoice:account.invoice_form
 #: view:account.invoice:account.invoice_supplier_form
 msgid "This button only appears when the state of the invoice is 'paid' (showing that it has been fully reconciled) and auto-computed boolean 'reconciled' is False (depicting that it's not the case anymore). In other words, the invoice has been dereconciled and it does not fit anymore the 'paid' state. You should press this button to re-open it and let it continue its normal process after having resolved the eventual exceptions it may have created."
-msgstr "Nút này chỉ xuất hiện khi trạng thái cúa hóa đơn là 'đã thanh toán hết' (hiển thị những hóa đơn đã được đối soát) và tự động bỏ đánh dấu 'đã đối soát'. "
+msgstr "Nút này chỉ xuất hiện khi trạng thái cúa hoá đơn là 'đã thanh toán hết' (hiển thị những hoá đơn đã được đối soát) và tự động bỏ đánh dấu 'đã đối soát'. "
 
 #. module: account
 #: field:account.config.settings,expects_chart_of_accounts:0
@@ -10160,7 +10160,7 @@ msgstr "Công ty này đã có hệ thống tài khoản"
 #. module: account
 #: help:account.invoice.refund,date:0
 msgid "This date will be used as the invoice date for credit note and period will be chosen accordingly!"
-msgstr "Ngày này sẽ được sử dụng như là ngày hóa đơn cho báo có và kỳ kế toán sẽ được chọn tương ứng!"
+msgstr "Ngày này sẽ được sử dụng như là ngày hoá đơn cho báo có và kỳ kế toán sẽ được chọn tương ứng!"
 
 #. module: account
 #: help:account.journal,sequence_id:0
@@ -10272,12 +10272,12 @@ msgstr "Trang này hiển thị tất cả giao dịch ngân hàng mà được 
 #. module: account
 #: help:res.partner,property_supplier_payment_term:0
 msgid "This payment term will be used instead of the default one for purchase orders and supplier invoices"
-msgstr "Điều khoản thanh toán này sẽ được sử dụng thay cho điều khoản mặc định trên hợp đồng mua hàng và hóa đơn nhà cung cấp"
+msgstr "Điều khoản thanh toán này sẽ được sử dụng thay cho điều khoản mặc định trên hợp đồng mua hàng và hoá đơn nhà cung cấp"
 
 #. module: account
 #: help:res.partner,property_payment_term:0
 msgid "This payment term will be used instead of the default one for sale orders and customer invoices"
-msgstr "Điều khoản thanh toán này sẽ được sử dụng thay cho điều khoản mặc định trên hợp đồng bán hàng và hóa đơn khách hàng"
+msgstr "Điều khoản thanh toán này sẽ được sử dụng thay cho điều khoản mặc định trên hợp đồng bán hàng và hoá đơn khách hàng"
 
 #. module: account
 #: help:account.config.settings,default_purchase_tax:0
@@ -10308,7 +10308,7 @@ msgstr "This will select how the current currency rate for outgoing transactions
 #. module: account
 #: view:account.change.currency:account.view_account_change_currency
 msgid "This wizard will change the currency of the invoice"
-msgstr "Cài đặt này sẽ thay đổi tiền tệ của hóa đơn"
+msgstr "Cài đặt này sẽ thay đổi tiền tệ của hoá đơn"
 
 #. module: account
 #: view:account.fiscalyear.close:account.view_account_fiscalyear_close
@@ -10414,7 +10414,7 @@ msgstr "Tổng nợ"
 #. module: account
 #: field:res.partner,total_invoiced:0
 msgid "Total Invoiced"
-msgstr "Tổng tiền hóa đơn đã xuất"
+msgstr "Tổng tiền hoá đơn đã xuất"
 
 #. module: account
 #: field:res.partner,debit:0
@@ -10603,7 +10603,7 @@ msgstr "Phát sinh không cân đối"
 #. module: account
 #: help:account.invoice,internal_number:0
 msgid "Unique number of the invoice, computed automatically when the invoice is created."
-msgstr "Số duy nhất của hóa đơn, được tính toán tự động khi hóa đơn được tạo."
+msgstr "Số duy nhất của hoá đơn, được tính toán tự động khi hoá đơn được tạo."
 
 #. module: account
 #: field:analytic.entries.report,unit_amount:0
@@ -10648,7 +10648,7 @@ msgstr "Chưa được thanh toán toán"
 #: view:account.invoice:account.view_account_invoice_filter
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_invoice_opened
 msgid "Unpaid Invoices"
-msgstr "Hóa đơn chưa thanh toán hết"
+msgstr "Hoá đơn chưa thanh toán hết"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -10777,17 +10777,17 @@ msgid "Use this option if you want to cancel an invoice and create a new\n"
 "                                    one. The credit note will be created, validated and reconciled\n"
 "                                    with the current invoice. A new, draft, invoice will be created \n"
 "                                    so that you can edit it."
-msgstr "Sử dụng tùy chọn này nếu bạn muốn hủy một hóa đơn và tạo một hóa đơn mới.\n"
-"                                    Báo có sẽ được tạo, xác nhận và đối soát với hóa đơn hiện tại.\n"
-"                                    Một hóa đơn dự thảo sẽ được tạo để bạn có thể sửa lại nó"
+msgstr "Sử dụng tùy chọn này nếu bạn muốn hủy một hoá đơn và tạo một hoá đơn mới.\n"
+"                                    Báo có sẽ được tạo, xác nhận và đối soát với hoá đơn hiện tại.\n"
+"                                    Một hoá đơn dự thảo sẽ được tạo để bạn có thể sửa lại nó"
 
 #. module: account
 #: view:account.invoice.refund:account.view_account_invoice_refund
 msgid "Use this option if you want to cancel an invoice you should not\n"
 "                                    have issued. The credit note will be created, validated and reconciled\n"
 "                                    with the invoice. You will not be able to modify the credit note."
-msgstr "Sử dụng tùy chọn này nếu bạn muốn hủy một hóa đơn mà bạn không muốn xuất.\n"
-"                                    Báo có sẽ được tạo, thẩm định và đối soát với hóa đơn này.\n"
+msgstr "Sử dụng tùy chọn này nếu bạn muốn hủy một hoá đơn mà bạn không muốn xuất.\n"
+"                                    Báo có sẽ được tạo, thẩm định và đối soát với hoá đơn này.\n"
 "                                    Bạn sẽ không thể chỉnh sửa báo có này."
 
 #. module: account
@@ -11007,7 +11007,7 @@ msgstr "Có thuế"
 msgid "With this module, link your products to a template to send complete information and tools to your customer.\n"
 "For instance when invoicing a training, the training agenda and materials will automatically be send to your customers."
 msgstr "Với phân hệ này, bạn có thể liên kết sản phẩm tới một mẫu để gửi thông tin và tính năng đầy đủ cho khác hàng.\n"
-"Ví dụ, khi bạn xuất hóa đơn cho một khóa đào taọ thì chương trình đào tạo, thiết bị sẽ được tự động gửi cho khách hàng."
+"Ví dụ, khi bạn xuất hoá đơn cho một khóa đào taọ thì chương trình đào tạo, thiết bị sẽ được tự động gửi cho khách hàng."
 
 #. module: account
 #: view:account.move.line.reconcile:account.view_account_move_line_reconcile_full
@@ -11120,7 +11120,7 @@ msgstr "You can not select a country and a group of countries"
 #: code:addons/account/wizard/account_change_currency.py:38
 #, python-format
 msgid "You can only change currency for Draft Invoice."
-msgstr "Bạn chỉ có thể thay đổi tiền tệ cho hóa đơn dự thảo"
+msgstr "Bạn chỉ có thể thay đổi tiền tệ cho hoá đơn dự thảo"
 
 #. module: account
 #: constraint:account.move.reconcile:0
@@ -11130,7 +11130,7 @@ msgstr "Bạn chỉ có thể đối soát phát sinh với cùng một đối t
 #. module: account
 #: help:account.invoice.refund,journal_id:0
 msgid "You can select here the journal to use for the credit note that will be created. If you leave that field empty, it will use the same journal as the current invoice."
-msgstr "Bạn có thể lựa chọn sổ nhật ký tại đây để sử dụng cho báo cáo sẽ được tạo. Nếu bạn để trống trường này, nó sẽ sử dụng cùng sổ nhật ký với hóa đơn hiện tại."
+msgstr "Bạn có thể lựa chọn sổ nhật ký tại đây để sử dụng cho báo cáo sẽ được tạo. Nếu bạn để trống trường này, nó sẽ sử dụng cùng sổ nhật ký với hoá đơn hiện tại."
 
 #. module: account
 #: help:account.financial.report,style_overwrite:0
@@ -11164,7 +11164,7 @@ msgstr "You can specify year, month and date in the name of the model using the 
 #: code:addons/account/account_invoice.py:1000
 #, python-format
 msgid "You cannot cancel an invoice which is partially paid. You need to unreconcile related payment entries first."
-msgstr "Bạn không thể hủy một hóa đơn đã được thanh toán một phần. Trước tiên bạn cần hủy đối soát các bút toán thanh toán liên quan."
+msgstr "Bạn không thể hủy một hoá đơn đã được thanh toán một phần. Trước tiên bạn cần hủy đối soát các bút toán thanh toán liên quan."
 
 #. module: account
 #: code:addons/account/account.py:701
@@ -11244,13 +11244,13 @@ msgstr "Bạn không thể xóa một bút toán đã vào sổ \"%s\"."
 #: code:addons/account/account_invoice.py:423
 #, python-format
 msgid "You cannot delete an invoice after it has been validated (and received a number).  You can set it back to \"Draft\" state and modify its content, then re-confirm it."
-msgstr "Bạn không thể xóa một hóa đơn sau khi nó đã được xác nhận (và đã có số hóa đơn).  Bạn có thể thiết lập nó thành \"Dự thảo\" và chỉnh sửa nội dung của nó, sao đó xác nhận lại."
+msgstr "Bạn không thể xóa một hoá đơn sau khi nó đã được xác nhận (và đã có số hoá đơn).  Bạn có thể thiết lập nó thành \"Dự thảo\" và chỉnh sửa nội dung của nó, sao đó xác nhận lại."
 
 #. module: account
 #: code:addons/account/account_invoice.py:421
 #, python-format
 msgid "You cannot delete an invoice which is not draft or cancelled. You should refund it instead."
-msgstr "Bạn không thể xóa một hóa đơn mà không thuộc trạng thái dự thảo hoặc hủy bỏ. Thay vì thế, bạn nên hoàn tiền cho nó."
+msgstr "Bạn không thể xóa một hoá đơn mà không thuộc trạng thái dự thảo hoặc hủy bỏ. Thay vì thế, bạn nên hoàn tiền cho nó."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1266
@@ -11316,7 +11316,7 @@ msgstr "Bạn không thể hủy đối soát phát sinh nếu chung được t�
 #: code:addons/account/account_move_line.py:1289
 #, python-format
 msgid "You cannot use an inactive account."
-msgstr "Bạn không thể sử dụng một tài khoản hóa đơn."
+msgstr "Bạn không thể sử dụng một tài khoản hoá đơn."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1356
@@ -11524,7 +11524,7 @@ msgstr "vd: sales@ma.tvtmarine.com"
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 msgid "eInvoicing & Payments"
-msgstr "Hóa đơn điện tử & Thanh toán"
+msgstr "Hoá đơn điện tử & Thanh toán"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
