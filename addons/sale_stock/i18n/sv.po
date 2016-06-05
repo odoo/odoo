@@ -3,14 +3,15 @@
 # * sale_stock
 # 
 # Translators:
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2016
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-17 08:02+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-06-01 13:14+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-8/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +57,7 @@ msgstr "Avbryt order"
 #: code:addons/sale_stock/sale_stock.py:160
 #, python-format
 msgid "Cannot cancel sales order!"
-msgstr ""
+msgstr "Kan inte avbryta kundorder! "
 
 #. module: sale_stock
 #: field:sale.config.settings,group_route_so_lines:0
@@ -88,7 +89,7 @@ msgstr "Standardalternativ"
 #. module: sale_stock
 #: field:sale.config.settings,default_picking_policy:0
 msgid "Deliver all at once when all products are available."
-msgstr ""
+msgstr "Leverera allt först när alla produkter är tillgängliga"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
@@ -114,12 +115,12 @@ msgstr "Leveranser att fakturera"
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_invoice_deli_orders
 msgid "Enable Invoicing Delivery orders"
-msgstr ""
+msgstr "Aktivera fakturering på leveransorder"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
-msgstr ""
+msgstr "Aktivera rutter på orderrader"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
@@ -146,7 +147,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr ""
+msgstr "Lagerrutter"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
@@ -156,7 +157,7 @@ msgstr "Fakturera utgående från leveranser"
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on sales orders"
-msgstr ""
+msgstr "Fakturera baserat på kundorderrader"
 
 #. module: sale_stock
 #: help:sale.config.settings,task_work:0
@@ -215,12 +216,12 @@ msgstr "Plocklista"
 #. module: sale_stock
 #: field:sale.order,picking_ids:0
 msgid "Picking associated to this sale"
-msgstr ""
+msgstr "Plock knutna till denna kundorder"
 
 #. module: sale_stock
 #: field:sale.config.settings,task_work:0
 msgid "Prepare invoices based on task's activities"
-msgstr ""
+msgstr "Skapa fakturor baserat på tidrapporter"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_product
@@ -235,7 +236,7 @@ msgstr "Produktmall"
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
 msgid "Product properties on order lines"
-msgstr ""
+msgstr "Produktegenskaper på orderrader"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_project_timesheet:0
@@ -245,12 +246,12 @@ msgstr "Projekt tidrapport"
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "Recreate Delivery Order"
-msgstr ""
+msgstr "Återskapa leveransorder"
 
 #. module: sale_stock
 #: field:sale.order.line,route_id:0
 msgid "Route"
-msgstr ""
+msgstr "Rutt"
 
 #. module: sale_stock
 #: field:stock.picking,sale_id:0
@@ -260,12 +261,12 @@ msgstr "Kundorder"
 #. module: sale_stock
 #: view:stock.location.route:sale_stock.stock_location_route_form_view_inherit
 msgid "Sale Order Lines"
-msgstr ""
+msgstr "Orderrader"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_sale_service:0
 msgid "Sale Service"
-msgstr ""
+msgstr "Säljservice"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
@@ -298,7 +299,7 @@ msgstr "Säkerhetsdagar"
 #. module: sale_stock
 #: field:stock.location.route,sale_selectable:0
 msgid "Selectable on Sales Order Line"
-msgstr ""
+msgstr "Valbar på orderrader"
 
 #. module: sale_stock
 #: field:sale.report,shipped:0 field:sale.report,shipped_qty_1:0
@@ -318,7 +319,7 @@ msgstr "Lagertransaktion"
 #. module: sale_stock
 #: field:sale.config.settings,default_order_policy:0
 msgid "The default invoicing method is"
-msgstr ""
+msgstr "Standard fakturametod är"
 
 #. module: sale_stock
 #: view:stock.picking:sale_stock.view_picking_internal_search_inherit
@@ -335,7 +336,7 @@ msgstr ""
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "View Delivery Order"
-msgstr ""
+msgstr "Visa leveransorder"
 
 #. module: sale_stock
 #: field:sale.order,warehouse_id:0 field:sale.report,warehouse_id:0
