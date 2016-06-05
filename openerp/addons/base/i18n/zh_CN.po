@@ -9,7 +9,7 @@
 # Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2015
-# liAnGjiA <liangjia@qq.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2015-2016
 # mrshelly <mrshelly@hotmail.com>, 2015
 # Talway <9010446@qq.com>, 2015
 # THL <wt39181819@gmail.com>, 2015
@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2016-05-13 13:54+0000\n"
+"PO-Revision-Date: 2016-06-04 07:26+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -139,7 +139,7 @@ msgid ""
 "\n"
 "\n"
 "[object with reference: %s - %s]"
-msgstr "\n\n[object with reference: %s - %s]"
+msgstr "\n\n[参考引用关联对象: %s - %s]"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_invoice_bba
@@ -3182,7 +3182,7 @@ msgid ""
 "Keeps account of the attendances of the employees on the basis of the\n"
 "actions(Sign in/Sign out) performed by them.\n"
 "       "
-msgstr "\n此模块用于管理员工的考勤.\n==================================================\n\n以员工的登入/退出时间为准，记录员工考勤.\n       "
+msgstr "\n此模块用于管理员工的考勤。\n==================================================\n\n本模块将统计员工的上下班考勤(以点击右上角的签入/签出数据为基准) 。\n       "
 
 #. module: base
 #: model:ir.module.module,description:base.module_procurement_jit
@@ -5971,7 +5971,7 @@ msgstr "索赔管理"
 #. module: base
 #: view:base.module.update:base.view_base_module_update
 msgid "Click on Update below to start the process..."
-msgstr "点击下面的更新 以便 开始 处理..."
+msgstr "点击【更新】按钮让odoo认识您新增加进来的模块。中文详解：当你新增了odoo模块到服务器的addons目录下（注意模块文件夹目录层级）之后需要到odoo的设置菜单下，做更新模块列表这个动作才能让odoo认识出新增加了模块。"
 
 #. module: base
 #: view:res.company:base.view_company_form
@@ -7203,7 +7203,7 @@ msgstr "显示一个选择或相当文档去运行这个服务服动"
 msgid ""
 "Display and manage the list of all countries group. You can create or delete"
 " country group to make sure the ones you are working on will be maintained."
-msgstr "显示和管理所有国家组的列表。您可以创建或删除国家组，以确保您正在使用的国家组被维护。"
+msgstr "显示和管理所有国家群组的列表。您可以创建或删除国家群组，以确保您正在使用的国家群组被维护。"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country
@@ -8372,7 +8372,7 @@ msgstr "格林纳达"
 #: view:ir.model.access:base.ir_access_view_search
 #: field:ir.model.access,group_id:0 view:res.groups:base.view_groups_search
 msgid "Group"
-msgstr "组"
+msgstr "群组"
 
 #. module: base
 #: view:ir.actions.act_window:base.view_window_action_search
@@ -8396,12 +8396,12 @@ msgstr "分组"
 #. module: base
 #: field:res.groups,full_name:0
 msgid "Group Name"
-msgstr "组名称"
+msgstr "群组名称"
 
 #. module: base
 #: field:workflow.transition,group_id:0
 msgid "Group Required"
-msgstr "必须的组 "
+msgstr "必填群组 "
 
 #. module: base
 #: field:ir.actions.act_window,groups_id:0
@@ -8417,12 +8417,12 @@ msgstr "必须的组 "
 #: view:res.groups:base.view_groups_form
 #: view:res.groups:base.view_groups_search field:res.users,groups_id:0
 msgid "Groups"
-msgstr "组"
+msgstr "群组"
 
 #. module: base
 #: view:ir.rule:base.view_rule_form
 msgid "Groups (no group = global)"
-msgstr "组 (无组 = 全局)"
+msgstr "群组 (无群组 = 全局，意思是如果没有用户群组则表示作用于全局)"
 
 #. module: base
 #: model:res.country,name:base.gp
@@ -8835,7 +8835,7 @@ msgstr "打开此项时, 在DEBUG日志模式下, SMTP的详细日志会记录�
 #. module: base
 #: help:ir.rule,global:0
 msgid "If no group is specified the rule is global and applied to everyone"
-msgstr "如果不指定组，规则是全局的并应用于每个用户."
+msgstr "如果不指定群组，规则是全局的并应用于每个用户."
 
 #. module: base
 #: help:ir.property,res_id:0
@@ -8901,7 +8901,7 @@ msgstr "联系人默认语言分两种情况，一是事先在设置菜单中已
 msgid ""
 "If this field is empty, the view applies to all users. Otherwise, the view "
 "applies to the users of those groups only."
-msgstr "如果这字段是空，视图应用到所有用户。\r\n否则这些视图只能用于这些组内的用户。"
+msgstr "如果这字段是空，视图应用到所有用户。\n否则这些视图只能用于这些群组内的用户。"
 
 #. module: base
 #: help:ir.ui.view,active:0
@@ -8947,7 +8947,7 @@ msgid ""
 "If you have groups, the visibility of this menu will be based on these "
 "groups. If this field is empty, Odoo will compute visibility based on the "
 "related object's read access."
-msgstr "如果您归属于用户组，则此菜单的可见性将有这些用户组决定。如果该字段为空，系统将基于关联对象的读取权限计算可见性。"
+msgstr "如果您归属于用户群组，则此菜单的可见性将有这些用户群组决定。如果该字段为空，系统将基于关联对象的读取权限计算可见性。"
 
 #. module: base
 #: help:ir.model.access,active:0
@@ -10183,7 +10183,7 @@ msgid ""
 " line and then delete it through the button that appeared. Items can be "
 "assigned to specific groups in order to make them accessible to some users "
 "within the system."
-msgstr "管理和自定义用户的菜单项。你可以用勾选一些菜单项，然后删除。菜单项可以分配给某些特定的用户组，以便他们使用系统的某些特定的功能"
+msgstr "管理和自定义用户的菜单项。你可以用勾选一些菜单项，然后删除。菜单项可以分配给某些特定的用户群组，以便他们使用系统的某些特定的功能"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_customer_relationship_management
@@ -10212,7 +10212,7 @@ msgstr "管理您系统中可用的业务伙伴称谓。业务伙伴称谓是公
 #: model:res.groups,name:base.group_sale_manager
 #: model:res.groups,name:base.group_tool_manager
 msgid "Manager"
-msgstr "经理"
+msgstr "管理者"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_managing_vehicles_and_contracts
@@ -13727,7 +13727,7 @@ msgstr "调查"
 #. module: base
 #: model:res.groups,name:base.group_survey_manager
 msgid "Survey / Manager"
-msgstr "调查 / 经理"
+msgstr "调查 / 管理者"
 
 #. module: base
 #: model:res.groups,name:base.group_survey_user
@@ -14143,7 +14143,7 @@ msgstr "国家全名"
 msgid ""
 "The group that a user must have to be authorized to validate this "
 "transition."
-msgstr "用户组中的用户需要授权才能确认此转换。"
+msgstr "用户群组中的用户需要授权才能确认此转换。"
 
 #. module: base
 #: help:res.partner,user_id:0
@@ -14185,12 +14185,12 @@ msgstr "国家名必须唯一"
 #: code:addons/base/res/res_users.py:131
 #, python-format
 msgid "The name of the group can not start with \"-\""
-msgstr "用户组的名称不能以“-”开始"
+msgstr "用户群组的名称不能以“-”开始"
 
 #. module: base
 #: sql_constraint:res.groups:0
 msgid "The name of the group must be unique within an application!"
-msgstr "在一个应用中用户组的名称必须唯一！"
+msgstr "在一个应用中用户群组的名称必须唯一！"
 
 #. module: base
 #: sql_constraint:res.lang:0
@@ -14220,7 +14220,7 @@ msgid ""
 "The operation cannot be completed, probably due to the following:\n"
 "- deletion: you may be trying to delete a record while other records still reference it\n"
 "- creation/update: a mandatory field is not correctly set"
-msgstr "该操作无法完成，可能是由于以下原因：\\n - 删除：您可能会试图删除一个记录，但是仍有其它记录引用到它 \\n - 创建/更新：一个必须要输入的字段不正确"
+msgstr "操作无法完成。失败的原因也许是以下（敬请参考）:\n- 删除操作: 您试图删除的记录中还有其他东西引用关联着它，请自行追查断开引用关联才能删除它。\n- 新建或更新操作: 必填字段必须填写或必须正确的值才能新建或更新操作。"
 
 #. module: base
 #: help:ir.model.fields,domain:0
@@ -14959,7 +14959,7 @@ msgstr "更新模块列表"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_view_base_module_update
 msgid "Update Modules List"
-msgstr "更新模块列表"
+msgstr "更新本地模块列表"
 
 #. module: base
 #: field:ir.actions.server,use_write:0
@@ -15137,12 +15137,12 @@ msgstr "用户"
 #: view:res.groups:base.view_groups_form
 msgid ""
 "Users added to this group are automatically added in the following groups."
-msgstr "加入本群组的用户也将自动加入以下群组."
+msgstr "加入本群组的用户也将自动加入以下群组。"
 
 #. module: base
 #: help:res.groups,implied_ids:0
 msgid "Users of this group automatically inherit those groups"
-msgstr "这个组的用户自动继承那些组"
+msgstr "这个群组的用户自动继承那些群组"
 
 #. module: base
 #: model:res.country,name:base.uz
