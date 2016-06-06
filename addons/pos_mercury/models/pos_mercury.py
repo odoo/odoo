@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import sets
 
 from openerp import models, fields, api, _
 
@@ -11,12 +10,9 @@ _logger = logging.getLogger(__name__)
 class barcode_rule(models.Model):
     _inherit = 'barcode.rule'
 
-    def _get_type_selection(self):
-        types = sets.Set(super(barcode_rule, self)._get_type_selection())
-        types.update([
+    type = fields.Selection(selection_add=[
             ('credit', _('Credit Card'))
         ])
-        return list(types)
 
 
 class pos_mercury_payment_data(models.Model):
