@@ -207,13 +207,6 @@ _FORMAT_REGEX = re.compile(
     ')')
 
 
-class QWebField(object):
-    def attributes(self, record, field_name, options, values=None):
-        return {}
-    def record_to_html(self, record, field_name, options, values=None):
-        return getattr(record, field_name, None)
-
-
 class frozendict(dict):
     """ An implementation of an immutable dictionary. """
     def __delitem__(self, key):
@@ -1043,21 +1036,49 @@ class QWeb(object):
         expression = el.attrib.pop('t-field')
         field_options = el.attrib.pop('t-field-options', None)
         record, field_name = expression.rsplit('.', 1)
-        default_content = self._make_name('default_content')
 
         content = [
-            # record
+            # t_attrs, content, force_display = self._get_field(record, field_name, expression, tagName, field options, template options, values)
             ast.Assign(
-                targets=[ast.Name(id='record', ctx=ast.Store())],
-                value=self._compile_expr(record)
+                targets=[ast.Tuple(elts=[
+                    ast.Name(id='t_attrs', ctx=ast.Store()),
+                    ast.Name(id='content', ctx=ast.Store()),
+                    ast.Name(id='force_display', ctx=ast.Store())
+                ], ctx=ast.Store())],
+                value=ast.Call(
+                    func=ast.Attribute(
+                        value=ast.Name(id='self', ctx=ast.Load()),
+                        attr='_get_field',
+                        ctx=ast.Load()
+                    ),
+                    args=[
+                        self._compile_expr(record),
+                        ast.Str(field_name),
+                        ast.Str(expression),
+                        ast.Str(node_name),
+                        field_options and self._compile_expr(field_options) or ast.Dict(keys=[], values=[]),
+                        ast.Name(id='options', ctx=ast.Load()),
+                        ast.Name(id='values', ctx=ast.Load()),
+                    ],
+                    keywords=[], starargs=None, kwargs=None
+                )
             )
         ]
 
+        # if force_display:
+        #    display the tag without content
+        orelse = [ast.If(
+            test=ast.Name(id='force_display', ctx=ast.Load()),
+            body=self._compile_tag(el, [], options, True),
+            orelse=[],
+        )]
+
+        # default content
+
+        default_content = self._make_name('default_content')
         body = self._compile_directive_content(el, options)
         if body:
-            def_name = self._create_def(options, body, prefix='body_call_content', lineno=el.sourceline)
-
-            content.extend([
+            orelse = [
                 # default_content = []
                 ast.Assign(
                     targets=[ast.Name(id=default_content, ctx=ast.Store())],
@@ -1065,7 +1086,7 @@ class QWeb(object):
                 ),
                 # body_call_content(self, default_content.append, values, options)
                 ast.Expr(self._call_def(
-                    def_name,
+                    self._create_def(options, body, prefix='body_call_content', lineno=el.sourceline),
                     append=ast.Attribute(
                         value=ast.Name(id=default_content, ctx=ast.Load()),
                         attr='append',
@@ -1087,44 +1108,28 @@ class QWeb(object):
                         keywords=[], starargs=None, kwargs=None
                     )
                 ),
-            ])
-        else:
-            # default_content = u''
-            content.append(ast.Assign(
-                targets=[ast.Name(id=default_content, ctx=ast.Store())],
-                value=ast.Str(u'')
-            ))
+                # if default_content:
+                #    display the tag with default content
+                # elif force_display:
+                #    display the tag without content
+                ast.If(
+                    test=ast.Name(id=default_content, ctx=ast.Load()),
+                    body=self._compile_tag(el, [self._append(ast.Name(id=default_content, ctx=ast.Load()))], options, True),
+                    orelse=orelse,
+                )
+            ]
 
-        content.extend([
-            # t_attrs, content = self._get_field(record, field_name, expression, field options, template options, values)
-            ast.Assign(
-                targets=[ast.Tuple(elts=[ast.Name(id='t_attrs', ctx=ast.Store()), ast.Name(id='content', ctx=ast.Store())], ctx=ast.Store())],
-                value=ast.Call(
-                    func=ast.Attribute(
-                        value=ast.Name(id='self', ctx=ast.Load()),
-                        attr='_get_field',
-                        ctx=ast.Load()
-                    ),
-                    args=[
-                        ast.Name(id='record', ctx=ast.Load()),
-                        ast.Str(field_name),
-                        ast.Str(expression),
-                        ast.Name(id=default_content, ctx=ast.Load()),
-                        ast.Str(node_name),
-                        field_options and self._compile_expr(field_options) or ast.Dict(keys=[], values=[]),
-                        ast.Name(id='options', ctx=ast.Load()),
-                        ast.Name(id='values', ctx=ast.Load()),
-                    ],
-                    keywords=[], starargs=None, kwargs=None
-                ),
-            ),
-
-            # if content is not None: display the tag
-            self._if_content_is_not_Falsy(
-                body=self._compile_tag(el, [self._append(ast.Name(id='content', ctx=ast.Load()))], options, True),
-                orelse=[]
-            )
-        ])
+        # if content is not None:
+        #    display the tag
+        # else
+        #    if default_content:
+        #       display the tag with default content
+        #    elif force_display:
+        #       display the tag without content
+        content.append(self._if_content_is_not_Falsy(
+            body=self._compile_tag(el, [self._append(ast.Name(id='content', ctx=ast.Load()))], options, True),
+            orelse=orelse,
+        ))
         return content
 
     def _compile_directive_call(self, el, options):
@@ -1268,8 +1273,14 @@ class QWeb(object):
             atts = OrderedDict(atts)
         return atts
 
-    def _get_field(self, record, field_name, expression, default_content, tagName, field_options, options, values):
-        return (attributes, escape(unicodifier(getattr(record, field_name, default_content))))
+    def _get_field(self, record, field_name, expression, tagName, field_options, options, values):
+        """
+        :returns: tuple:
+            * OrderedDict: attributes
+            * string or None: content
+            * boolean: force_display display the tag if the content and default_content are None
+        """
+        return (OrderedDict(), escape(unicodifier(getattr(record, field_name, None))), False)
 
     # compile expression
 
