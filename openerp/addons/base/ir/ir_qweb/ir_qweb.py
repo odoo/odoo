@@ -19,7 +19,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class ir_QWeb(models.AbstractModel, QWeb):
+class IrQWeb(models.AbstractModel, QWeb):
     """ Base QWeb rendering engine
     * to customize ``t-field`` rendering, subclass ``ir.qweb.field`` and
       create new models called :samp:`ir.qweb.field.{widget}`
@@ -41,17 +41,15 @@ class ir_QWeb(models.AbstractModel, QWeb):
             if method.startswith('render_'):
                 _logger.warning("Unused method '%s' is found in ir.qweb." % method)
 
-        body = []
         context = dict(self.env.context, dev_mode='qweb' in tools.config['dev_mode'])
         context.update(options)
 
-        self.compile(id_or_xml_id, context)(self, body.append, values or {})
-        return u''.join(body)
+        return super(IrQWeb, self).render(id_or_xml_id, values=values, **context)
 
     def default_values(self):
         """ attributes add to the values for each computed template
         """
-        default = super(ir_QWeb, self).default_values()
+        default = super(IrQWeb, self).default_values()
         default.update(request=request, cache_assets=round(time()/180))
         return default
 
@@ -66,7 +64,7 @@ class ir_QWeb(models.AbstractModel, QWeb):
         tools.ormcache('id_or_xml_id', 'tuple(map(options.get, self._get_template_cache_keys()))'),
     )
     def compile(self, id_or_xml_id, options):
-        return super(ir_QWeb, self).compile(id_or_xml_id, options=options)
+        return super(IrQWeb, self).compile(id_or_xml_id, options=options)
 
     def load(self, name, options):
         lang = options.get('lang', 'en_US')
@@ -89,7 +87,7 @@ class ir_QWeb(models.AbstractModel, QWeb):
     # order
 
     def _directives_eval_order(self):
-        directives = super(ir_QWeb, self)._directives_eval_order()
+        directives = super(IrQWeb, self)._directives_eval_order()
         directives.insert(directives.index('call'), 'lang')
         directives.insert(directives.index('field'), 'call-assets')
         return directives
@@ -97,7 +95,11 @@ class ir_QWeb(models.AbstractModel, QWeb):
     # compile directives
 
     def _compile_directive_lang(self, el, options):
-        el.set('t-call-options', '{"lang": %s}' % el.attrib.pop('t-lang', 'en_US'))
+        lang = el.attrib.pop('t-lang', 'en_US')
+        if el.get('t-call-options'):
+            el.set('t-call-options', el.get('t-call-options')[0:-1] + u', "lang": %s}' % lang)
+        else:
+            el.set('t-call-options', u'{"lang": %s}' % lang)
         return self._compile_node(el, options)
 
     def _compile_directive_call_assets(self, el, options):

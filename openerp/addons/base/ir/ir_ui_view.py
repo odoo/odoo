@@ -303,7 +303,7 @@ actual arch.
     def _check_groups(self):
         for view in self:
             if view.type == 'qweb' and view.groups_id:
-                raise ValidationError(_("Qweb view can not have 'Groups' define on the record. Use 'groups' atttributes inside the view definition"))
+                raise ValidationError(_("Qweb view cannot have 'Groups' define on the record. Use 'groups' atttributes inside the view definition"))
 
     _sql_constraints = [
         ('inheritance_mode',

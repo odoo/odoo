@@ -245,7 +245,7 @@ class QWeb(object):
         'values' is used to evaluate template values
         """
         body = []
-        self.compile(template, options)(self, body.append, values)
+        self.compile(template, options)(self, body.append, values or {})
         return u''.join(body)
 
     def compile(self, template, options):
@@ -395,7 +395,7 @@ class QWeb(object):
     def format(self, value, formating, *args, **kwargs):
         format = getattr(self, '_format_func_%s' % formating, None)
         if not format:
-            raise "Unknown formating '%s'" % (formating,)
+            raise "Unknown format '%s'" % (formating,)
         return format(value, *args, **kwargs)
 
     # compute helpers
@@ -570,7 +570,7 @@ class QWeb(object):
         )
 
     def _append(self, item):
-        assert isinstance(item, ast.expr) or isinstance(item, ast.Expr)
+        assert isinstance(item, ast.expr)
         return ast.Expr(ast.Call(
             func=ast.Name(id='append', ctx=ast.Load()),
             args=[item], keywords=[],

@@ -11,7 +11,7 @@ from lxml import etree
 
 from odoo.modules import get_module_resource
 from odoo.tests.common import TransactionCase
-from openerp.addons.base.ir.ir_qweb import QWebException
+from odoo.addons.base.ir.ir_qweb import QWebException
 
 
 class TestQWebTField(TransactionCase):
