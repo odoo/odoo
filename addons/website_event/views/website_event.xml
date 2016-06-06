@@ -271,7 +271,6 @@
             <h4 class="text-center text-muted">
                 <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-field-options='{"hide_seconds":"True"}'/> to
                 <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-field-options='{"hide_seconds":"True"}'/>
-                <span itemprop="endDate"><t t-esc="event.date_end_located[:-3]"/></span>
                 <t t-if="event.date_tz">(<span t-field="event.date_tz"/>)</t>
             </h4>
             <h4 class="text-center text-muted"
