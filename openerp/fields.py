@@ -1754,7 +1754,6 @@ class _RelationalMulti(_Relational):
                         ids.add(comodel.new(command[2]).id)
                     elif command[0] == 1:
                         comodel.browse(command[1]).update(command[2])
-                        ids.add(command[1])
                     elif command[0] == 2:
                         # note: the record will be deleted by write()
                         ids.discard(command[1])
@@ -1790,6 +1789,7 @@ class _RelationalMulti(_Relational):
             elif record._is_dirty():
                 values = {k: record._cache[k] for k in record._get_dirty()}
                 values = record._convert_to_write(values)
+                result.append((4, record.id))
                 result.append((1, record.id, values))
             else:
                 result.append((4, record.id))
@@ -1806,6 +1806,7 @@ class _RelationalMulti(_Relational):
             if not record.id:
                 result.append((0, 0, vals))
             elif vals:
+                result.append((4, record.id))
                 result.append((1, record.id, vals))
             else:
                 result.append((4, record.id))
