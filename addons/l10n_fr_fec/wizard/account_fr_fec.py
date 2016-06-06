@@ -1,13 +1,14 @@
-# -*- encoding: utf-8 -*-
+#-*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (C) 2013-2015 Akretion (http://www.akretion.com)
 
-from openerp import models, fields, api, _
-from openerp.exceptions import Warning
 import base64
-import StringIO
 import csv
+import StringIO
+
+from odoo import api, fields, models, _
+from odoo.exceptions import Warning
 
 
 class AccountFrFec(models.TransientModel):
