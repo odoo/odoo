@@ -1636,9 +1636,6 @@ class PreprocessedCSS(StylesheetAsset):
         self.html_url_format = '%%s/%s/%%s.css' % self.bundle.xmlid
         self.html_url_args = tuple(self.url.rsplit('/', 1))
 
-    def minify(self):
-        return self.with_header()
-
     def get_source(self):
         content = self.inline or self._fetch_content()
         return "/*! %s */\n%s" % (self.id, content)
@@ -1688,7 +1685,7 @@ class LessStylesheetAsset(PreprocessedCSS):
         except IOError:
             lessc = 'lessc'
         lesspath = get_resource_path('web', 'static', 'lib', 'bootstrap', 'less')
-        return [lessc, '-', '--clean-css', '--no-js', '--no-color', '--include-path=%s' % lesspath]
+        return [lessc, '-', '--no-js', '--no-color', '--include-path=%s' % lesspath]
 
 def rjsmin(script):
     """ Minify js with a clever regex.

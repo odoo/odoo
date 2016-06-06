@@ -462,25 +462,25 @@ Source installation requires manually installing dependencies:
             $ apt-get install -y npm
             $ sudo ln -s /usr/bin/nodejs /usr/bin/node
 
-    Once npm is installed, use it to install less and less-plugin-clean-css:
+    Once npm is installed, use it to install less:
 
     .. code-block:: console
 
-        $ sudo npm install -g less less-plugin-clean-css
+        $ sudo npm install -g less
 
   - on OS X, install nodejs via your preferred package manager (homebrew_,
-    macports_) then install less and less-plugin-clean-css:
+    macports_) then install less:
 
     .. code-block:: console
 
-        $ sudo npm install -g less less-plugin-clean-css
+        $ sudo npm install -g less
 
   - on Windows, `install nodejs <http://nodejs.org/download/>`_, reboot (to
-    update the :envvar:`PATH`) and install less and less-plugin-clean-css:
+    update the :envvar:`PATH`) and install less:
 
     .. code-block:: ps1
 
-        C:\> npm install -g less less-plugin-clean-css
+        C:\> npm install -g less
 
 Running Odoo
 ------------
