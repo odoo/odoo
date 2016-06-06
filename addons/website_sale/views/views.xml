@@ -116,7 +116,7 @@
           </p>
         </field>
     </record>
-    <menuitem action="product_public_category_action" id="menu_product_public_category" parent="sale.prod_config_main" sequence="2" />
+    <menuitem action="product_public_category_action" id="menu_product_public_category" parent="product.prod_config_main" sequence="2" />
     <menuitem action="product_public_category_action" id="menu_product_public_category_product_catalog" parent="product.product_parameters_menu" sequence="2"/>
 
     <record id="website_sale_pricelists_by_website" model="ir.actions.act_window">
@@ -127,7 +127,7 @@
         <field name="view_mode">tree,form</field>
         <field name="view_id" eval="False"/>
     </record>
-    <menuitem action="website_sale_pricelists_by_website" id="menu_website_sale_pricelists" parent="sale.menu_product_pricelist_main" sequence="1" />
+    <menuitem action="website_sale_pricelists_by_website" id="menu_website_sale_pricelists" parent="product.menu_product_pricelist_main" sequence="1" />
 
      <!-- Product Public Categories -->
     <record id="website_pricelist_form_view" model="ir.ui.view">

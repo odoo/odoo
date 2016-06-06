@@ -2,10 +2,6 @@
 <openerp>
     <data noupdate="1">
 
-        <record id="base.user_demo" model="res.users">
-            <field eval="[(4, ref('sales_team.group_sale_salesman'))]" name="groups_id"/>
-        </record>
-
         <record model="crm.team" id="sales_team.team_sales_department">
             <field name="invoiced_target">250000</field>
         </record>
@@ -316,7 +312,7 @@ Thanks!</field>
         </record>
 
         <record id="base.user_demo" model="res.users">
-            <field eval="[(4, ref('sales_team.group_sale_salesman'))]" name="groups_id"/>
+            <field eval="[(4, ref('base.group_sale_salesman'))]" name="groups_id"/>
         </record>
 
     </data>

@@ -103,10 +103,10 @@
         <field name="act_window_id" ref="crm_lead_opportunities"/>
     </record>
 
-    <menuitem id="sales_team.menu_sales" name="Sales" parent="sales_team.menu_base_partner" sequence="5"/>
-    <menuitem name="Leads" id="menu_crm_leads" parent="sales_team.menu_sales" sequence="1"
+    <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="5"/>
+    <menuitem name="Leads" id="menu_crm_leads" parent="base.menu_sales" sequence="1"
             action="crm_lead_all_leads" groups="crm.group_use_lead"/>
-    <menuitem id="menu_crm_opportunities" action="action_your_pipeline" parent="sales_team.menu_sales" sequence="4"/>
+    <menuitem id="menu_crm_opportunities" action="action_your_pipeline" parent="base.menu_sales" sequence="4"/>
 
     <record id="crm_lead_action_activities" model="ir.actions.act_window">
         <field name="name">Next Activities</field>
@@ -134,7 +134,7 @@
     </record>
 
     <menuitem id="crm_lead_menu_activities" name="Next Activities" sequence="5"
-        parent="sales_team.menu_sales" action="crm_lead_action_activities" />
+        parent="base.menu_sales" action="crm_lead_action_activities" />
 
 </data>
 </openerp>

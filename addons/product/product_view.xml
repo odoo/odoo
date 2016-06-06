@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <menuitem id="base.menu_product" name="Product Variants" parent="base.menu_base_partner" sequence="9" groups="product.group_product_variant"/>
 
         <!-- Variants -->
         <record id="product_attribute_value_view_tree" model="ir.ui.view">
@@ -420,7 +421,14 @@
             </field>
         </record>
 
+        <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="5"/>
+        <menuitem action="product_template_action"
+            id="menu_product_template_action"
+            parent="base.menu_sales" sequence="13" />
+
         <!-- product product -->
+
+        <menuitem id="prod_config_main" name="Products" parent="base.menu_sale_config" sequence="2"/>
 
         <record id="product_product_tree_view" model="ir.ui.view">
             <field name="name">product.product.tree</field>
@@ -535,6 +543,10 @@
             <field name="view_type">form</field>
         </record>
 
+        <menuitem action="attribute_action"
+            id="menu_attribute_action"
+            parent="product.prod_config_main" sequence="4" groups="product.group_product_variant"/>
+
         <record id="variants_tree_view" model="ir.ui.view">
             <field name="name">product.attribute.value.tree</field>
             <field name="model">product.attribute.value</field>
@@ -554,6 +566,10 @@
             <field name="view_mode">tree</field>
             <field name="view_type">form</field>
         </record>
+
+        <menuitem action="variants_action"
+            id="menu_variants_action"
+            parent="product.prod_config_main" sequence="5" groups="product.group_product_variant"/>
 
         <!--  -->
 
@@ -580,6 +596,8 @@
               </p>
             </field>
         </record>
+
+        <menuitem id="product.menu_products" action="product.product_normal_action_sell" parent="base.menu_sales" groups="product.group_product_variant" sequence="99"/>
 
         <record id="product_category_search_view" model="ir.ui.view">
             <field name="name">product.category.search</field>
@@ -639,6 +657,10 @@
             <field name="search_view_id" ref="product_category_search_view"/>
             <field name="view_id" ref="product_category_list_view"/>
         </record>
+        <menuitem action="product_category_action_form"
+            groups="base.group_no_one"
+            id="menu_product_category_action_form"
+            parent="prod_config_main" sequence="2"/>
 
         <!-- Unit of Measure -->
 
@@ -702,6 +724,8 @@
               </p>
             </field>
         </record>
+        <menuitem id="next_id_16" name="Units of Measure" parent="prod_config_main" sequence="30" groups="product.group_uom"/>
+        <menuitem action="product_uom_form_action" id="menu_product_uom_form_action" parent="product.prod_config_main" sequence="6" groups="product.group_uom"/>
 
         <record id="product_uom_categ_form_view" model="ir.ui.view">
             <field name="name">product.uom.categ.form</field>
@@ -731,6 +755,7 @@
               </p>
             </field>
         </record>
+        <menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="product.prod_config_main" sequence="7" groups="base.group_no_one"/>
 
         <record model="ir.actions.act_window" id="action_packaging_view">
             <field name="name">Packagings</field>

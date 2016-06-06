@@ -8,31 +8,16 @@
             the base module in order to set new groups.
         -->
         <menuitem name="Sales"
-            id="sales_team.menu_base_partner"
-            web_icon="sale,static/description/icon.png"/>
+            id="base.menu_base_partner"
+            web_icon="sale,static/description/icon.png"
+            groups="base.group_sale_salesman,base.group_sale_manager" sequence="6"/>
 
         <menuitem
-            id= "sales_team.menu_sales_config"
-            parent= "sales_team.menu_sale_config"
+            id= "base.menu_sales_config"
+            parent= "base.menu_sale_config"
             sequence= "1"
             name= "Sales"
-            groups= "sales_team.group_sale_manager,sales_team.group_sale_salesman,account.group_account_manager,account.group_account_user"/>
-
-        <menuitem id="sales_team.menu_product" name="Product Variants" parent="sales_team.menu_base_partner" sequence="9" groups="product.group_product_variant"/>
-        <menuitem id="sales_team.menu_sales" name="Sales" parent="sales_team.menu_base_partner" sequence="5"/>
-        <menuitem action="product.product_template_action" id="sales_team.menu_product_template_action" parent="sales_team.menu_sales" sequence="13" />
-        <menuitem id="sale.prod_config_main" name="Products" parent="sales_team.menu_sale_config" sequence="2"/>
-        <menuitem action="product.attribute_action" id="menu_attribute_action" parent="sale.prod_config_main" sequence="4" groups="product.group_product_variant"/>
-        <menuitem action="product.variants_action" id="menu_variants_action" parent="sale.prod_config_main" sequence="5" groups="product.group_product_variant"/>
-        <menuitem id="product.menu_products" action="product.product_normal_action_sell" parent="sales_team.menu_sales" groups="product.group_product_variant" sequence="99"/>
-        <menuitem action="product.product_category_action_form" groups="base.group_no_one" id="menu_product_category_action_form" parent="sale.prod_config_main" sequence="2"/>
-        <menuitem id="next_id_16" name="Units of Measure" parent="sale.prod_config_main" sequence="30" groups="product.group_uom"/>
-        <menuitem action="product.product_uom_form_action" id="menu_product_uom_form_action" parent="sale.prod_config_main" sequence="6" groups="product.group_uom"/>
-        <menuitem action="product.product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="sale.prod_config_main" sequence="7" groups="base.group_no_one"/>
-        <menuitem id="sales_team.menu_sale_config_sales" name="Configuration" parent="sales_team.menu_base_partner" sequence="100"/>
-        <menuitem id="menu_product_pricelist_main" name="Pricelists" parent="sales_team.menu_sale_config" groups="product.group_sale_pricelist" sequence="3"/>
-        <menuitem action="product.product_pricelist_action2" id="menu_product_pricelist_action2" parent="menu_product_pricelist_main" sequence="1" groups="product.group_sale_pricelist"/>
-
+            groups= "base.group_sale_manager,base.group_sale_salesman,account.group_account_manager,account.group_account_user"/>
 
         <record id="view_sale_order_calendar" model="ir.ui.view">
             <field name="name">sale.order.calendar</field>
@@ -450,8 +435,8 @@
         </record>
 
         <menuitem action="action_orders"
-            id="menu_sale_order" parent="sales_team.menu_sales"
-            sequence="12" groups="sales_team.group_sale_salesman,sales_team.group_sale_manager"/>
+            id="menu_sale_order" parent="base.menu_sales"
+            sequence="12" groups="base.group_sale_salesman,base.group_sale_manager"/>
 
         <record id="action_orders_to_invoice" model="ir.actions.act_window">
             <field name="name">Sales to Invoice</field>
@@ -472,7 +457,7 @@
             </field>
         </record>
         <menuitem name="Invoicing"
-            id="menu_sale_invoicing" parent="sales_team.menu_base_partner"
+            id="menu_sale_invoicing" parent="base.menu_base_partner"
             sequence="5"/>
         <menuitem action="action_orders_to_invoice"
             id="menu_sale_order_invoice" parent="sale.menu_sale_invoicing"
@@ -527,7 +512,7 @@
         </record>
 
         <menuitem id="menu_sale_quotations"
-                action="action_quotations" parent="sales_team.menu_sales"
+                action="action_quotations" parent="base.menu_sales"
                 sequence="11"/>
 
         <record id="view_order_line_tree" model="ir.ui.view">
@@ -582,7 +567,7 @@
             <field name="name">product.product.sale.order</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+            <field name="groups_id" eval="[(4, ref('base.group_sale_salesman'))]"/>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="%(action_product_sale_list)d"
@@ -597,7 +582,7 @@
             <field name="name">product.template.sale.order.button</field>
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
-            <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+            <field name="groups_id" eval="[(4, ref('base.group_sale_salesman'))]"/>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="action_view_sales"
