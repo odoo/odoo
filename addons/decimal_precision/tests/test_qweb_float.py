@@ -1,19 +1,16 @@
 # -*- coding: utf-8 -*-
 from openerp.tests import common
 
+
 class TestFloatExport(common.TransactionCase):
-    def setUp(self):
-        super(TestFloatExport, self).setUp()
-        self.Model = self.registry('decimal.precision.test')
 
     def get_converter(self, name):
-        float_obj = self.registry('ir.qweb.field.float')
-        _, precision = self.Model._fields[name].digits or (None, None)
+        FloatField = self.env['ir.qweb.field.float']
+        _, precision = self.env['decimal.precision.test']._fields[name].digits or (None, None)
 
         def converter(value, options=None):
-            record = self.Model.new(self.cr, self.uid, {name: value}, context=None)
-            return float_obj.record_to_html(
-                self.cr, self.uid, record, name, options or {}, context=None)
+            record = self.env['decimal.precision.test'].new({name: value})
+            return FloatField.record_to_html(record, name, options or {})
         return converter
 
     def test_basic_float(self):
@@ -42,12 +39,11 @@ class TestFloatExport(common.TransactionCase):
             '42.1235')
 
     def test_precision_domain(self):
-        DP = self.registry('decimal.precision')
-        DP.create(self.cr, self.uid, {
+        self.env['decimal.precision'].create({
             'name': 'A',
             'digits': 2,
         })
-        DP.create(self.cr, self.uid, {
+        self.env['decimal.precision'].create({
             'name': 'B',
             'digits': 6,
         })
