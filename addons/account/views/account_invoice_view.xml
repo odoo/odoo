@@ -507,11 +507,11 @@
                     <field name="journal_id" />
                     <filter name="draft" string="Draft" domain="[('state','in',('draft', 'proforma'))]"/>
                     <filter name="proforma" string="Proforma" domain="[('state','=','proforma2')]" groups="account.group_proforma_invoices"/>
-                    <filter name="invoices" string="Invoices" domain="[('state','in',['open','paid']),('type','in',('out_invoice','in_invoice'))]"/>
-                    <filter name="refunds" string="Refunds" domain="[('state','in',['open','paid']),('type','in',('out_refund','in_refund'))]"/>
+                    <filter name="invoices" string="Invoices" domain="['&amp;', ('state','in',['open','paid']),('type','in',('out_invoice','in_invoice'))]"/>
+                    <filter name="refunds" string="Refunds" domain="['&amp;', ('state','in',['open','paid']),('type','in',('out_refund','in_refund'))]"/>
                     <separator/>
                     <filter name="unpaid" string="Not Paid" domain="[('state','=','open')]"/>
-                    <filter name="late" string="Overdue" domain="[('date_due', '&lt;', time.strftime('%%Y-%%m-%%d')), ('state', '=', 'open')]" help="Overdue invoices, maturity date passed"/>
+                    <filter name="late" string="Overdue" domain="['&amp;', ('date_due', '&lt;', time.strftime('%%Y-%%m-%%d')), ('state', '=', 'open')]" help="Overdue invoices, maturity date passed"/>
                     <separator/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="user_id" string="Salesperson"/>
