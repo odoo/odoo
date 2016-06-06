@@ -183,9 +183,9 @@ class TestReconciliation(TransactionCase):
         # will lead to an exchange loss, that should be handled correctly within the journal items.
         cr, uid = self.cr, self.uid
         # We update the currency rate of the currency USD in order to force the gain/loss exchanges in next steps
-        self.res_currency_rate_model.create(cr, uid, {
+        rateUSDbis_id = self.registry("ir.model.data").get_object_reference(self.cr, self.uid, "base", "rateUSDbis")[1]
+        self.res_currency_rate_model.write(cr, uid, rateUSDbis_id, {
             'name': time.strftime('%Y-%m-%d') + ' 00:00:00',
-            'currency_id': self.currency_usd_id,
             'rate': 0.033,
         })
         # We create a customer invoice of 2.00 USD
