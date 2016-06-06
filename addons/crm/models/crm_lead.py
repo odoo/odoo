@@ -161,23 +161,19 @@ class Lead(FormatAddress, models.Model):
         # - ('id', 'in', 'ids'): add columns that should be present
         # - OR ('fold', '=', False): add default columns that are not folded
         # - OR ('team_ids', '=', team_id), ('fold', '=', False) if team_id: add team columns that are not folded
-        team_id = self._context.get('default_team_id', False)
+        team_id = self._context.get('default_team_id')
         if team_id:
             search_domain = ['|', ('id', 'in', self.ids), '|', ('team_id', '=', False), ('team_id', '=', team_id)]
         else:
             search_domain = ['|', ('id', 'in', self.ids), ('team_id', '=', False)]
-        # perform search
-        stage_ids = Stage._search(search_domain, order=order, access_rights_uid=access_rights_uid)
-        stages = Stage.browse(stage_ids)
-        result = stages.name_get()
-        # restore order of the search
-        order_mapping = {item[0]: stage_ids.index(item[0]) for item in result}  # match stage_id with its index
-        result.sort(key=lambda item: order_mapping.get(item[0]))
 
-        fold = {}
-        for stage in stages:
-            fold[stage.id] = stage.fold or False
-        return result, fold
+        # perform search
+        stages = Stage.browse(Stage._search(search_domain, order=order, access_rights_uid=access_rights_uid))
+        fold = {
+            stage.id: stage.fold or False
+            for stage in stages
+        }
+        return stages.name_get(), fold
 
     _group_by_full = {
         'stage_id': _read_group_stage_ids
