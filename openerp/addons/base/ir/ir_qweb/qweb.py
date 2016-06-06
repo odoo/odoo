@@ -622,9 +622,6 @@ class QWeb(object):
         return "%s_%s" % (prefix, next(self._name_gen))
 
     def _compile_node(self, el, options):
-        """
-        :return ast list
-        """
         path = options['root'].getpath(el)
         if options['last_path_node'] != path:
             options['last_path_node'] = path
@@ -639,40 +636,41 @@ class QWeb(object):
         else:
             body = []
 
-        ignored = self._nondirectives_ignore()
+        options['iter_directives'] = iter(self._directives_eval_order() + [None])
 
         if el.get("groups"):
             el.set("t-groups", el.attrib.pop("groups"))
 
-        directives = {
-            att[2:]
-            for att in el.attrib
-            if att.startswith('t-')
-            if not att.startswith('t-att')
-            if att not in ignored
-        }
+        el.set('t-tag', el.tag)
+        if not (set(['t-esc', 't-raw', 't-field']) & set(el.attrib)):
+            el.set('t-content', 'True')
 
-        for name in self._directives_eval_order():
-            # skip directives not present on the element
-            if name not in directives:
-                continue
+        return body + self._switch_directives(el, options)
 
-            directives.remove(name)
-            mname = name.replace('-', '_')
-            compile_handler = getattr(self, '_compile_directive_%s' % mname, None)
-            interpret_handler = 'render_tag_%s' % mname
-            if hasattr(self, interpret_handler):
-                _logger.warning(
-                    "Directive '%s' must be AOT-compiled. Dynamic interpreter %s will ignored",
-                    name, interpret_handler
-                )
-            if not compile_handler:
-                continue
-            return body + compile_handler(el, options)
-        if directives:
-            raise "Unknown directive '%s' on %s" % ("', '".join(directives), etree.tostring(el))
+    def _switch_directives(self, el, options):
+        """
+        :return ast list
+        """
+        # skip directives not present on the element
+        for directive in options['iter_directives']:
+            if ('t-' + directive) in el.attrib:
+                break
+        else:
+            if any(att.startswith('t-') for att in el.attrib):
+                raise "Unknown directive on %s" % ("', '".join(directives), etree.tostring(el))
+            return []
 
-        return body + self._compile_directive_content(el, options)
+        mname = directive.replace('-', '_')
+        compile_handler = getattr(self, '_compile_directive_%s' % mname, None)
+
+        interpret_handler = 'render_tag_%s' % mname
+        if hasattr(self, interpret_handler):
+            _logger.warning(
+                "Directive '%s' must be AST-compiled. Dynamic interpreter %s will ignored",
+                name, interpret_handler
+            )
+
+        return compile_handler(el, options)
 
     def _values_var(self, varname, ctx):
         return ast.Subscript(
@@ -706,18 +704,6 @@ class QWeb(object):
             'set',
             'esc', 'raw', 'content',
         ]
-
-    def _nondirectives_ignore(self):
-        """
-        t-* attributes existing as support for actual directives, should just
-        be ignored
-        :returns: set
-        """
-        return {
-            't-name', 't-field-options', 't-call-options'
-            't-as''t-value', 't-valuef', 't-ignore',
-            't-js', 't-css', 't-async', 't-placeholder',
-        }
 
     # compile directives
 
@@ -858,7 +844,7 @@ class QWeb(object):
 
     def _compile_directive_debug(self, el, options):
         debugger = el.attrib.pop('t-debug')
-        body = self._compile_node(el, options)
+        body = self._switch_directives(el, options)
         if options['dev_mode']:
             body = ast.parse("__import__('%s').set_trace()" % re.sub('[^a-zA-Z]', '', debugger)).body + body  # pdb, ipdb, pudb, ...
         else:
@@ -867,7 +853,7 @@ class QWeb(object):
 
     def _compile_directive_tag(self, el, options):
         el.attrib.pop('t-tag', None)
-        content = self._compile_node(el, options)
+        content = self._switch_directives(el, options)
         if el.tag == 't':
             return content
         return self._compile_tag(el, content, options, False)
@@ -971,9 +957,6 @@ class QWeb(object):
                 # ignore comments & processing instructions
                 if isinstance(item, etree._Comment):
                     continue
-                item.set('t-tag', item.tag)
-                if not (set(['t-esc', 't-raw', 't-field']) & set(item.attrib)):
-                    item.set('t-content', 'True')
                 body.extend(self._compile_node(item, options))
                 body.extend(self._compile_tail(item))
         return body
@@ -982,7 +965,7 @@ class QWeb(object):
         if not options.pop('t_if', None):
             raise "t-else directive must be call by t-if directive"
         el.attrib.pop('t-else')
-        return self._compile_node(el, options)
+        return self._switch_directives(el, options)
 
     def _compile_directive_if(self, el, options):
         orelse = []
@@ -995,7 +978,7 @@ class QWeb(object):
         return [
             ast.If(
                 test=self._compile_expr(el.attrib.pop('t-if')),
-                body=self._compile_node(el, options),
+                body=self._switch_directives(el, options),
                 orelse=orelse
             )
         ]
@@ -1012,7 +995,7 @@ class QWeb(object):
                     args=[ast.Str(el.attrib.pop('t-groups'))], keywords=[],
                     starargs=None, kwargs=None
                 ),
-                body=self._compile_node(el, options),
+                body=self._switch_directives(el, options),
                 orelse=[]
             )
         ]
@@ -1023,7 +1006,7 @@ class QWeb(object):
         values = self._make_name('values')
 
         # create function $foreach
-        call = self._call_body(options, self._compile_node(el, options), values=values, prefix='foreach', lineno=el.sourceline)
+        call = self._call_body(options, self._switch_directives(el, options), values=values, prefix='foreach', lineno=el.sourceline)
 
         # for x in foreach_iterator(values, $expr, $varname):
         #     $foreach(self, append, values, options)

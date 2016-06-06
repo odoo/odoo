@@ -64,9 +64,6 @@ class QWeb(orm.AbstractModel):
         directives.insert(directives.index('call'), 'snippet')
         return directives
 
-    def _nondirectives_ignore(self):
-        return {'t-thumbnail'} | super(QWeb, self)._nondirectives_ignore()
-
 
 #------------------------------------------------------
 # QWeb fields
