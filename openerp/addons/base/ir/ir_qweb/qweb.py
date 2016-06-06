@@ -634,10 +634,15 @@ class QWeb(object):
         else:
             body = []
 
-        options['iter_directives'] = iter(self._directives_eval_order() + [None])
-
         if el.get("groups"):
             el.set("t-groups", el.attrib.pop("groups"))
+
+        # if tag don't have qweb attributes don't use directives
+        if self._is_static_node(el):
+            return self._compile_static_node(el, options)
+
+        # create directive iterator
+        options['iter_directives'] = iter(self._directives_eval_order() + [None])
 
         el.set('t-tag', el.tag)
         if not (set(['t-esc', 't-raw', 't-field']) & set(el.attrib)):
@@ -677,7 +682,7 @@ class QWeb(object):
             ctx=ctx
         )
 
-    # order and ignore
+    # order
 
     def _directives_eval_order(self):
         """ Should list all supported directives in the order in which they
@@ -703,7 +708,20 @@ class QWeb(object):
             'esc', 'raw', 'content',
         ]
 
-    # compile directives
+    def _is_static_node(self, el):
+        return not any(att.startswith('t-') for att in el.attrib)
+
+    # compile
+
+    def _compile_static_node(self, el, options):
+        content = self._compile_directive_content(el, options)
+        if el.tag == 't':
+            return content
+        tag = u'<%s%s' % (el.tag, u''.join([u' %s="%s"' % (name, qweb_escape(value)) for name, value in el.attrib.iteritems()]))
+        if el.tag in self._void_elements:
+            return [self._append(ast.Str(tag + '/>'))] + content
+        else:
+            return [self._append(ast.Str(tag + '>'))] + content + [self._append(ast.Str('</%s>' % el.tag))]
 
     def _serialize_static_attributes(self, el, options):
         nodes = []
@@ -839,6 +857,8 @@ class QWeb(object):
             body.extend(content)
             body.append(self._append(ast.Str(u'</%s>' % el.tag)))
         return body
+
+    # compile directives
 
     def _compile_directive_debug(self, el, options):
         debugger = el.attrib.pop('t-debug')
