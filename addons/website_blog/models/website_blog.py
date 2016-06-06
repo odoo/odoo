@@ -146,7 +146,7 @@ class BlogPost(osv.Model):
             'res.users', 'Last Contributor',
             select=True, readonly=True,
         ),
-        'published_date': fields.datetime('Published Date', readonly=True),
+        'published_date': fields.datetime('Published Date'),
         'author_avatar': fields.related(
             'author_id', 'image_small',
             string="Avatar", type="binary"),
