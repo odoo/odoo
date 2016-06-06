@@ -784,9 +784,9 @@ class Lead(FormatAddress, models.Model):
         """
         partner_ids = {}
         for lead in self:
-            # If the action is set to 'create' and no partner_id is set, create a new one
             if lead.partner_id:
                 partner_ids[lead.id] = lead.partner_id.id
+                continue
             if action == 'create':
                 partner = lead._create_lead_partner()
                 partner_id = partner.id
