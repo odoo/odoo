@@ -55,10 +55,3 @@ class BaseConfigSettings(models.TransientModel):
         partner_rule = self.env.ref('base.res_partner_rule')
         for config in self:
             partner_rule.write({'active': not config.company_share_partner})
-
-
-# Empty class but required since it's overrided by sale & crm
-class SaleConfigSettings(models.TransientModel):
-
-    _name = 'sale.config.settings'
-    _inherit = 'res.config.settings'

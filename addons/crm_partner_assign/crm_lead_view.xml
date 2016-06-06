@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook/page[@name='lead']" position="after">
-                    <page string="Assigned Partner" groups="base.group_sale_salesman">
+                    <page string="Assigned Partner" groups="sales_team.group_sale_salesman">
                         <group col="3">
                             <label for="partner_latitude" string="Geolocation"/>
                             <div class="o_row">
@@ -68,7 +68,7 @@
             <field name="inherit_id" ref="crm.crm_case_form_view_leads"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook/page[@name='extra']" position="after">
-                    <page string="Assigned Partner" groups="base.group_sale_salesman">
+                    <page string="Assigned Partner" groups="sales_team.group_sale_salesman">
                         <group col="3">
                             <label for="partner_latitude" string="Geolocation"/>
                             <div class="o_row">

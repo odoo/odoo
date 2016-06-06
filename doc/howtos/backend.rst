@@ -1397,7 +1397,7 @@ the same convention as the method :meth:`~openerp.models.Model.write` of the ORM
     <record id="delete_cancelled_only" model="ir.rule">
         <field name="name">Only cancelled leads may be deleted</field>
         <field name="model_id" ref="crm.model_crm_lead"/>
-        <field name="groups" eval="[(4, ref('base.group_sale_manager'))]"/>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
         <field name="perm_read" eval="0"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_create" eval="0"/>

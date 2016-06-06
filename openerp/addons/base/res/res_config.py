@@ -589,7 +589,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         Fetch the path to a specified configuration view and the action id to access it.
 
         :param string menu_xml_id: the xml id of the menuitem where the view is located,
-            structured as follows: module_name.menuitem_xml_id (e.g.: "base.menu_sale_config")
+            structured as follows: module_name.menuitem_xml_id (e.g.: "sales_team.menu_sale_config")
         :return tuple:
             - t[0]: string: full path to the menuitem (e.g.: "Settings/Configuration/Sales")
             - t[1]: int or long: id of the menuitem's action
@@ -630,7 +630,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         Example of use:
         ---------------
         from openerp.addons.base.res.res_config import get_warning_config
-        raise get_warning_config(cr, _("Error: this action is prohibited. You should check the field %(field:sale.config.settings.fetchmail_lead)s in %(menu:base.menu_sale_config)s."), context=context)
+        raise get_warning_config(cr, _("Error: this action is prohibited. You should check the field %(field:sale.config.settings.fetchmail_lead)s in %(menu:sales_team.menu_sale_config)s."), context=context)
 
         This will return an exception containing the following message:
             Error: this action is prohibited. You should check the field Create leads from incoming mails in Settings/Configuration/Sales.

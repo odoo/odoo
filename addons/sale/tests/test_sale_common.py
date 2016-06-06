@@ -7,8 +7,8 @@ class TestSale(AccountingTestCase):
     def setUp(self):
         super(TestSale, self).setUp()
         # some users
-        group_manager = self.env.ref('base.group_sale_manager')
-        group_user = self.env.ref('base.group_sale_salesman')
+        group_manager = self.env.ref('sales_team.group_sale_manager')
+        group_user = self.env.ref('sales_team.group_sale_salesman')
         self.manager = self.env['res.users'].create({
             'name': 'Andrew Manager',
             'login': 'manager',

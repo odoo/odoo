@@ -6,4 +6,12 @@
             <field name="member_ids" eval="[(4, ref('base.user_root'))]"/>
         </record>
     </data>
+
+    <record model="res.groups" id="sales_team.group_sale_salesman">
+        <field name="category_id" ref="base.module_category_sales_management"/>
+    </record>
+
+    <record model="res.groups" id="sales_team.group_sale_manager">
+        <field name="category_id" ref="base.module_category_sales_management"/>
+    </record>
 </odoo>

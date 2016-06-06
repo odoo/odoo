@@ -889,7 +889,7 @@ Update your business card, phone book, social media,... Send an email right now 
     def _notification_group_recipients(self, cr, uid, ids, message, recipients, done_ids, group_data, context=None):
         """ Override the mail.thread method to handle salesman recipients.
         Indeed those will have specific action in their notification emails. """
-        group_sale_salesman = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'base.group_sale_salesman')
+        group_sale_salesman = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'sales_team.group_sale_salesman')
         for recipient in recipients:
             if recipient.id in done_ids:
                 continue
