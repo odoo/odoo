@@ -10,7 +10,7 @@
 This module adds project issues inside your account's page on website if project_issue and website_portal are installed.
 ==================================================================================================
     """,
-    'depends': ['project_issue', 'website_portal'],
+    'depends': ['project_issue', 'website_project'],
     'data': [
         'security/portal_security.xml',
         'security/ir.model.access.csv',

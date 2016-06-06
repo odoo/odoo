@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from openerp import http
+
+from collections import OrderedDict
+
+from openerp import http, _
 from openerp.addons.website_portal.controllers.main import website_account
 from openerp.http import request
 
@@ -22,14 +25,36 @@ class WebsiteAccount(website_account):
         return response
 
     @http.route(['/my/issues', '/my/issues/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_issues(self, page=1, date_begin=None, date_end=None, **kw):
+    def portal_my_issues(self, page=1, date_begin=None, date_end=None, project=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
         ProjectIssue = request.env['project.issue']
         domain = []
+
+        sortings = {
+            'date': {'label': _('Newest'), 'order': 'create_date desc'},
+            'name': {'label': _('Name'), 'order': 'name'},
+            'stage': {'label': _('Stage'), 'order': 'stage_id'},
+            'update': {'label': _('Last Stage Update'), 'order': 'date_last_stage_update desc'},
+        }
+
+        projects = request.env['project.project'].search([])
+
+        project_filters = {
+            'all': {'label': _('All'), 'domain': []},
+        }
+
+        for proj in projects:
+            project_filters.update({
+                str(proj.id): {'label': proj.name, 'domain': [('project_id', '=', proj.id)]}
+            })
+
+        domain += project_filters.get(project, project_filters['all'])['domain']
+        order = sortings.get(sortby, sortings['date'])['order']
+
         # archive groups - Default Group By 'create_date'
         archive_groups = self._get_archive_groups('project.issue', domain)
         if date_begin and date_end:
-            domain += [('create_date', '>=', date_begin), ('create_date', '<', date_end)]
+            domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
         # pager
         issue_count = ProjectIssue.search_count(domain)
         pager = request.website.pager(
@@ -40,10 +65,16 @@ class WebsiteAccount(website_account):
             step=self._items_per_page
         )
         # content according to pager and archive selected
-        project_issues = ProjectIssue.search(domain, order="stage_id", limit=self._items_per_page, offset=pager['offset'])
+        project_issues = ProjectIssue.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
 
         values.update({
             'date': date_begin,
+            'date_end': date_end,
+            'project_filters': OrderedDict(sorted(project_filters.items())),
+            'projects': projects,
+            'project': project,
+            'sortings': sortings,
+            'sortby': sortby,
             'issues': project_issues,
             'page_name': 'issue',
             'archive_groups': archive_groups,
