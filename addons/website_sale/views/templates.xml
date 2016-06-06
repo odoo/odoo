@@ -82,7 +82,7 @@
       </a>
   </div>
   <t t-if="show_publish">
-    <div id="website_published_button" class="" groups="base.group_sale_manager">
+    <div id="website_published_button" class="" groups="sales_team.group_sale_manager">
         <t t-call="website.publish_management">
           <t t-set="object" t-value="product"/>
           <t t-set="publish_edit" t-value="True"/>
@@ -197,7 +197,7 @@
                 <div class="text-center text-muted">
                   <h3 class="css_editable_display">No product defined.</h3>
                   <t groups="base.group_website_publisher">
-                    <p groups="base.group_sale_manager">Use the <i>'Content'</i> top menu to create a new product.</p>
+                    <p groups="sales_team.group_sale_manager">Use the <i>'Content'</i> top menu to create a new product.</p>
                   </t>
                 </div>
               </t>
@@ -353,7 +353,7 @@
               <t t-call="website_sale.search"/>
             </div>
             <div id="website_published_button" class="col-sm-3">
-                <t t-call="website.publish_management" groups="base.group_sale_manager">
+                <t t-call="website.publish_management" groups="sales_team.group_sale_manager">
                   <t t-set="object" t-value="product"/>
                   <t t-set="publish_edit" t-value="True"/>
                   <t t-set="action" t-value="'product.product_template_action'"/>
@@ -1488,7 +1488,7 @@
 
 
 <!-- User Navbar -->
-<template id="content_new_product" inherit_id="website.user_navbar" groups="base.group_sale_manager">
+<template id="content_new_product" inherit_id="website.user_navbar" groups="sales_team.group_sale_manager">
     <xpath expr="//div[@id='o_website_add_page_modal']//ul" position="inside">
         <li><a id="create-new-product" href="#" data-action="new_product"><i class="fa fa-shopping-cart"/><p>New Product</p></a></li>
     </xpath>

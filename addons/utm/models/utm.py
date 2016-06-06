@@ -61,7 +61,7 @@ class UtmMixin(models.AbstractModel):
         values = super(UtmMixin, self).default_get(fields)
 
         # We ignore UTM for salemen, except some requests that could be done as superuser_id to bypass access rights.
-        if self.env.uid != SUPERUSER_ID and self.env.user.has_group('base.group_sale_salesman'):
+        if self.env.uid != SUPERUSER_ID and self.env.user.has_group('sales_team.group_sale_salesman'):
             return values
 
         for url_param, field_name, cookie_name in self.env['utm.mixin'].tracking_fields():

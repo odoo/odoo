@@ -13,6 +13,7 @@ Lead to Issues
 Link module to map leads to issues
         """,
     'data': [
+        'security/ir.model.access.csv',
         'wizard/crm_lead2projectissue_wizard_view.xml',
         'views/crm_lead_views.xml'
     ],

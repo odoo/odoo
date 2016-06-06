@@ -10,7 +10,7 @@ class TestCrm(TestMail):
         super(TestCrm, cls).setUpClass()
 
         user_group_employee = cls.env.ref('base.group_user')
-        user_group_salesman_all = cls.env.ref('base.group_sale_salesman_all_leads')
+        user_group_salesman_all = cls.env.ref('sales_team.group_sale_salesman_all_leads')
 
         # Test users to use through the various tests
         Users = cls.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True})
