@@ -6,4 +6,4 @@ from . import assetsbundle
 
 from .assetsbundle import AssetsBundle
 from .qweb import unicodifier, QWebException
-from .ir_qweb import ir_QWeb, QWeb
+from .ir_qweb import IrQWeb, QWeb
