@@ -9,7 +9,7 @@ from traceback import format_exception
 from sys import exc_info
 from openerp.tools.safe_eval import safe_eval as eval
 import re
-from openerp.addons.decimal_precision import decimal_precision as dp
+import openerp.addons.decimal_precision as dp
 
 from openerp import api, SUPERUSER_ID
 from openerp.osv import fields, osv
