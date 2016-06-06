@@ -149,17 +149,12 @@ class WebsiteBlog(http.Controller):
             elif state == "unpublished":
                 domain += [("website_published", "=", False)]
 
-        blog_url = QueryURL('', ['blog', 'tag'], blog=blog, tag=tag, state=state, date_begin=date_begin, date_end=date_end)
+        blog_url = QueryURL('', ['blog', 'tag'], blog=blog, tag=tag, date_begin=date_begin, date_end=date_end)
 
         blog_post_ids = blog_post_obj.search(cr, uid, domain, order="published_date desc, create_date desc", context=context)
         blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context)
-        url = "/blog/%s" % (slug(blog))
-        if tag:
-            tags = request.registry['blog.tag'].browse(cr, uid, active_tag_ids, context=context)
-            url += "/tag/%s" % (','.join(map(slug, tags)))
         pager = request.website.pager(
-            url=url,
-            url_args=opt,
+            url=blog_url(),
             total=len(blog_posts),
             page=page,
             step=self._blog_post_per_page,
