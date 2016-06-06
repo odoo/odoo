@@ -1666,11 +1666,11 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
         // Stuff that require the template to be rendered
         self.$(".match").slideUp(0);
         self.$(".create").slideUp(0);
-        if (self.st_line.no_match) self.$el.addClass("no_match");
+        if (self.st_line && self.st_line.no_match) self.$el.addClass("no_match");
         self.bindPopoverTo(self.$(".line_info_button"));
         self.createFormWidgets();
         // Special case hack : no identified partner
-        if (self.st_line.has_no_partner) {
+        if (self.st_line && self.st_line.has_no_partner) {
             self.updateBalance();
             self.$(".change_partner_container").show(0);
             self.$el.addClass("no_partner");
