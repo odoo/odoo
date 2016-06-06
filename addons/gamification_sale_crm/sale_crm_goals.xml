@@ -120,7 +120,7 @@
             <field name="name">Monthly Sales Targets</field>
             <field name="period">monthly</field>
             <field name="visibility_mode">ranking</field>
-            <field name="user_domain" eval="[('groups_id', 'in', ref('base.group_sale_salesman'))]" />
+            <field name="user_domain" eval="[('groups_id', 'in', ref('sales_team.group_sale_salesman'))]" />
             <field name="report_message_frequency">weekly</field>
         </record>
 
@@ -128,7 +128,7 @@
             <field name="name">Lead Acquisition</field>
             <field name="period">monthly</field>
             <field name="visibility_mode">ranking</field>
-            <field name="user_domain" eval="[('groups_id', 'in', ref('base.group_sale_salesman'))]" />
+            <field name="user_domain" eval="[('groups_id', 'in', ref('sales_team.group_sale_salesman'))]" />
             <field name="report_message_frequency">weekly</field>
         </record>
 

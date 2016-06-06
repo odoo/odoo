@@ -2,25 +2,25 @@
 <openerp>
 <data noupdate="0">
 
-    <record id="base.group_sale_salesman" model="res.groups">
+    <record id="sales_team.group_sale_salesman" model="res.groups">
         <field name="name">See Own Documents</field>
         <field name="category_id" ref="base.module_category_sales_management"/>
         <field name="comment">the user will have access to his own data in the sales application.</field>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
-    <record id="base.group_sale_salesman_all_leads" model="res.groups">
+    <record id="sales_team.group_sale_salesman_all_leads" model="res.groups">
         <field name="name">See All Documents</field>
         <field name="category_id" ref="base.module_category_sales_management"/>
-        <field name="implied_ids" eval="[(4, ref('base.group_sale_salesman'))]"/>
+        <field name="implied_ids" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
         <field name="comment">the user will have access to all records of everyone in the sales application.</field>
     </record>
 
-    <record id="base.group_sale_manager" model="res.groups">
+    <record id="sales_team.group_sale_manager" model="res.groups">
         <field name="name">Manager</field>
         <field name="comment">the user will have an access to the sales configuration as well as statistic reports.</field>
         <field name="category_id" ref="base.module_category_sales_management"/>
-        <field name="implied_ids" eval="[(4, ref('base.group_sale_salesman_all_leads'))]"/>
+        <field name="implied_ids" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
         <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
 
@@ -64,11 +64,11 @@
     <record model="res.users" id="base.user_root">
         <field eval="[(4,ref('base.group_partner_manager'))]" name="groups_id"/>
     </record>
-    <record model="ir.ui.menu" id="base.menu_base_partner">
-        <field eval="[(4, ref('base.group_sale_salesman'))]" name="groups_id"/>
+    <record model="ir.ui.menu" id="sales_team.menu_base_partner">
+        <field eval="[(4, ref('sales_team.group_sale_salesman'))]" name="groups_id"/>
     </record>
-    <record model="ir.ui.menu" id="base.menu_sale_config">
-        <field eval="[(4, ref('base.group_sale_manager'))]" name="groups_id"/>
+    <record model="ir.ui.menu" id="sales_team.menu_sale_config">
+        <field eval="[(4, ref('sales_team.group_sale_manager'))]" name="groups_id"/>
     </record>
 
 </data>
@@ -102,41 +102,41 @@
         <field name="name">Personal Orders</field>
         <field ref="model_sale_order" name="model_id"/>
         <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
-        <field name="groups" eval="[(4, ref('base.group_sale_salesman'))]"/>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
     <record id="sale_order_see_all" model="ir.rule">
         <field name="name">All Orders</field>
         <field ref="model_sale_order" name="model_id"/>
         <field name="domain_force">[(1,'=',1)]</field>
-        <field name="groups" eval="[(4, ref('base.group_sale_salesman_all_leads'))]"/>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
     </record>
 
     <record id="sale_order_report_personal_rule" model="ir.rule">
         <field name="name">Personal Orders Analysis</field>
         <field ref="model_sale_report" name="model_id"/>
         <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
-        <field name="groups" eval="[(4, ref('base.group_sale_salesman'))]"/>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
 
     <record id="sale_order_report_see_all" model="ir.rule">
         <field name="name">All Orders Analysis</field>
         <field ref="model_sale_report" name="model_id"/>
         <field name="domain_force">[(1,'=',1)]</field>
-        <field name="groups" eval="[(4, ref('base.group_sale_salesman_all_leads'))]"/>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
     </record>
 
     <record id="sale_order_line_personal_rule" model="ir.rule">
         <field name="name">Personal Order Lines</field>
         <field ref="model_sale_order_line" name="model_id"/>
         <field name="domain_force">['|',('order_id.user_id','=',user.id),('order_id.user_id','=',False)]</field>
-        <field name="groups" eval="[(4, ref('base.group_sale_salesman'))]"/>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
 
     <record id="sale_order_line_see_all" model="ir.rule">
         <field name="name">All Orders Lines</field>
         <field ref="model_sale_order_line" name="model_id"/>
         <field name="domain_force">[(1,'=',1)]</field>
-        <field name="groups" eval="[(4, ref('base.group_sale_salesman_all_leads'))]"/>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
     </record>
 
 </data>

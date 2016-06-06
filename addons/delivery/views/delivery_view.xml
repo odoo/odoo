@@ -2,7 +2,7 @@
 <odoo>
         <!-- Delivery Carriers -->
         <menuitem id="menu_delivery" name="Delivery" parent="stock.menu_stock_config_settings" groups="stock.group_stock_manager" sequence="50"/>
-        <menuitem id="sale_menu_delivery" name="Delivery" parent="base.menu_sale_config" groups="base.group_sale_manager" sequence="12"/>
+        <menuitem id="sale_menu_delivery" name="Delivery" parent="sales_team.menu_sale_config" groups="sales_team.group_sale_manager" sequence="12"/>
 
         <record id="view_delivery_carrier_search" model="ir.ui.view">
             <field name="name">delivery.carrier.search</field>

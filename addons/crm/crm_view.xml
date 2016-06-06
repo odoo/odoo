@@ -8,19 +8,17 @@
             the base module in order to set new groups.
         -->
         <menuitem name="CRM"
-            id="base.menu_base_partner"
-            groups="base.group_sale_manager,base.group_sale_salesman"
-            web_icon="crm,static/description/icon.png"
-            sequence="6"/>
+            id="sales_team.menu_base_partner"
+            web_icon="crm,static/description/icon.png"/>
 
         <menuitem id="base.menu_crm_config_lead" name="Leads &amp; Opportunities"
-            parent="base.menu_sale_config" sequence="5" groups="base.group_sale_manager"/>
+            parent="sales_team.menu_sale_config" sequence="5" groups="sales_team.group_sale_manager"/>
 
         <menuitem id="base.menu_crm_config_opportunity" name="Opportunities"
-            parent="base.menu_sale_config" sequence="1" groups="base.group_sale_manager"/>
+            parent="sales_team.menu_sale_config" sequence="1" groups="sales_team.group_sale_manager"/>
 
-        <menuitem id="base.menu_sale_config_sales" name="Sales"
-            parent="base.menu_sale_config" sequence="0" groups="base.group_sale_manager"/>
+        <menuitem id="sales_team.menu_sale_config_sales" name="Sales"
+            parent="sales_team.menu_sale_config" sequence="0" groups="sales_team.group_sale_manager"/>
 
         <!-- CRM.LOST.REASON VIEWS -->
         <record id="crm_lost_reason_view_search" model="ir.ui.view">
