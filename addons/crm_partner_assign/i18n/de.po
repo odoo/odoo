@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-08 15:14+0000\n"
-"PO-Revision-Date: 2016-04-25 13:55+0000\n"
+"PO-Revision-Date: 2016-05-30 17:15+0000\n"
 "Last-Translator: Ralf Hilgenstock <rh@dialoge.info>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-8/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -356,7 +356,7 @@ msgstr "Weiter zu Partner"
 #. module: crm_partner_assign
 #: model:email.template,subject:crm_partner_assign.email_template_lead_forward_mail
 msgid "Fwd: Lead: ${ctx['partner_id'].name}"
-msgstr ""
+msgstr "WL: Lead: ${ctx['partner_id'].name}"
 
 #. module: crm_partner_assign
 #: field:crm.lead,partner_latitude:0
@@ -382,7 +382,7 @@ msgstr "Geo-Längengrad"
 #: view:crm.lead:crm_partner_assign.view_crm_lead_geo_assign_form
 #: view:crm.lead:crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid "Geolocation"
-msgstr ""
+msgstr "Geo-Standort"
 
 #. module: crm_partner_assign
 #: help:res.partner,partner_weight:0 help:res.partner.grade,partner_weight:0
@@ -441,7 +441,7 @@ msgstr "ID"
 #. module: crm_partner_assign
 #: field:res.partner,implemented_partner_ids:0
 msgid "Implementation References"
-msgstr ""
+msgstr "Implementierungsreferenzen"
 
 #. module: crm_partner_assign
 #: field:res.partner,assigned_partner_id:0
@@ -451,7 +451,7 @@ msgstr "Implementiert durch"
 #. module: crm_partner_assign
 #: field:crm.lead.channel.interested,interested:0
 msgid "Interested by this lead"
-msgstr ""
+msgstr "Interessiert an diesem Link"
 
 #. module: crm_partner_assign
 #: field:crm.partner.report.assign,period_id:0
@@ -496,7 +496,7 @@ msgstr "Interessent"
 #. module: crm_partner_assign
 #: field:crm.lead.assignation,lead_link:0
 msgid "Lead  Single Links"
-msgstr ""
+msgstr "Lead einfache Links"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_graph
@@ -506,7 +506,7 @@ msgstr "Interessent zuweisen"
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.crm_lead_channel_interested_act
 msgid "Lead Feedback"
-msgstr ""
+msgstr "Lead Rückmeldung"
 
 #. module: crm_partner_assign
 #: field:crm.lead.assignation,lead_location:0
@@ -582,7 +582,7 @@ msgstr "Zahl Tage bis Eröffn."
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Once the lead is processed, it will be in your \"Opportunities\" menu."
-msgstr ""
+msgstr "Ist der Lead erst bearbeitet, erscheint er in Ihrem 'Chancen'-Menü."
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,opening_date:0
@@ -765,19 +765,19 @@ msgstr "Betreff"
 #: code:addons/crm_partner_assign/crm_lead.py:34
 #, python-format
 msgid "The CRM Channel Interested Action is missing"
-msgstr ""
+msgstr "Der CRM-Kanal Interessierte an Aktion fehlt"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:88
 #, python-format
 msgid "The Forward Email Template is not in the database"
-msgstr ""
+msgstr "Die Weiterleitungs-Email-Vorlage ist nicht in der Datenbank"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:93
 #, python-format
 msgid "The Portal group cannot be found"
-msgstr ""
+msgstr "Die Portal-Gruppe wurde nicht gefunden "
 
 #. module: crm_partner_assign
 #: help:crm.lead.channel.interested,contacted:0
@@ -823,7 +823,7 @@ msgstr "Sehr gering"
 #. module: crm_partner_assign
 #: help:crm.lead.channel.interested,comment:0
 msgid "What are the elements that have led to this decision?"
-msgstr ""
+msgstr "Was sind die Gründe, die zu dieser Entscheidung geführt haben?"
 
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
@@ -844,7 +844,7 @@ msgstr "Sie müssen den Interessent kontaktieren bevor Sie auswählen, dass Sie 
 #. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,forward_type:0
 msgid "a single partner: manual selection of partner"
-msgstr ""
+msgstr "ein einzelner Partner: Manuelle Auswahl des Partners"
 
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
@@ -857,4 +857,4 @@ msgstr "oder"
 msgid ""
 "several partners: automatic assignation, using GPS coordinates and partner's"
 " grades"
-msgstr ""
+msgstr "mehrere Partner: Automatische Zuweisung, über GPS-Koordinaten und Partner-Einstufung"
