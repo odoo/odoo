@@ -12,7 +12,7 @@
     'website': 'http://www.akretion.com',
     'depends': ['l10n_fr', 'account_accountant'],
     'data': [
-        'wizard/fec_view.xml',
+        'wizard/account_fr_fec_view.xml',
     ],
     'installable': True,
     'auto_install': True,
