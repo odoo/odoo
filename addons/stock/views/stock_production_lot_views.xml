@@ -4,7 +4,7 @@
         <field name="name">stock.production.lot.form</field>
         <field name="model">stock.production.lot</field>
         <field name="arch" type="xml">
-            <form string="Serial Number / Lots">
+            <form string="Lots/Serial Numbers">
                 <sheet>
                 <div class="oe_button_box" name="button_box">
                     <button name="action_traceability" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="object" attrs="{'invisible': [('quant_ids','=',[])]}"/>
@@ -39,7 +39,7 @@
         <field name="name">stock.production.lot.tree</field>
         <field name="model">stock.production.lot</field>
         <field name="arch" type="xml">
-            <tree string="Serial Number / Lots">
+            <tree string="Lots/Serial Numbers">
                 <field name="name"/>
                 <field name="ref"/>
                 <field name="product_id"/>
@@ -62,7 +62,7 @@
     </record>
 
     <record id="action_production_lot_form" model="ir.actions.act_window">
-        <field name="name">Serial Numbers / Lots</field>
+        <field name="name">Lots/Serial Numbers</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">stock.production.lot</field>
         <field name="view_type">form</field>
@@ -71,7 +71,7 @@
         <field name="context">{}</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
-            Click to add a serial number.
+            Click to add a lot/serial number.
           </p><p>
             This is the list of all the production lots you recorded. When
             you select a lot, you can get the traceability of the products contained in lot.

@@ -35,11 +35,11 @@ class PickingType(models.Model):
         default=lambda self: self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1))
     active = fields.Boolean('Active', default=True)
     use_create_lots = fields.Boolean(
-        'Create New Lots', default=True,
-        help="If this is checked only, it will suppose you want to create new Serial Numbers / Lots, so you can provide them in a text field. ")
+        'Create New Lots/Serial Numbers', default=True,
+        help="If this is checked only, it will suppose you want to create new Lots/Serial Numbers, so you can provide them in a text field. ")
     use_existing_lots = fields.Boolean(
-        'Use Existing Lots', default=True,
-        help="If this is checked, you will be able to choose the Serial Number / Lots. You can also decide to not put lots in this picking type.  This means it will create stock with no lot or not put a restriction on the lot taken. ")
+        'Use Existing Lots/Serial Numbers', default=True,
+        help="If this is checked, you will be able to choose the Lots/Serial Numbers. You can also decide to not put lots in this picking type.  This means it will create stock with no lot or not put a restriction on the lot taken. ")
 
     # Statistics for the kanban view
     last_done_picking = fields.Char('Last 10 Done Pickings', compute='_compute_last_done_picking')
@@ -667,7 +667,7 @@ class Picking(models.Model):
                 prod2move_ids[move.product_id.id].append({'move': move, 'remaining_qty': move.product_qty})
 
         need_rereserve = False
-        # sort the operations in order to give higher priority to those with a package, then a serial number
+        # sort the operations in order to give higher priority to those with a package, then a lot/serial number
         operations = self.pack_operation_ids
         operations = sorted(operations, key=lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.pack_lot_ids and -1 or 0))
         # delete existing operations to start again from scratch

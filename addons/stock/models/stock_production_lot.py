@@ -10,9 +10,9 @@ class ProductionLot(models.Model):
     _description = 'Lot/Serial'
 
     name = fields.Char(
-        'Serial Number', default=lambda self: self.env['ir.sequence'].next_by_code('stock.lot.serial'),
-        required=True, help="Unique Serial Number")
-    ref = fields.Char('Internal Reference', help="Internal reference number in case it differs from the manufacturer's serial number")
+        'Lot/Serial Number', default=lambda self: self.env['ir.sequence'].next_by_code('stock.lot.serial'),
+        required=True, help="Unique Lot/Serial Number")
+    ref = fields.Char('Internal Reference', help="Internal reference number in case it differs from the manufacturer's lot/serial number")
     product_id = fields.Many2one(
         'product.product', 'Product',
         domain=[('type', 'in', ['product', 'consu'])], required=True)

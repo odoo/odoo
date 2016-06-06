@@ -241,7 +241,7 @@ class InventoryLine(models.Model):
     package_id = fields.Many2one(
         'stock.quant.package', 'Pack', index=True)
     prod_lot_id = fields.Many2one(
-        'stock.production.lot', 'Serial Number',
+        'stock.production.lot', 'Lot/Serial Number',
         domain="[('product_id','=',product_id)]")
     # TDE FIXME: necessary ? -> replace by location_id
     prodlot_name = fields.Char(
