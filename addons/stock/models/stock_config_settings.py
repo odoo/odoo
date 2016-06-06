@@ -31,12 +31,6 @@ class StockSettings(models.TransientModel):
         help="""Allows you to automatically reserve the available
         products when confirming a sale order.
             This installs the module procurement_jit.""")
-    module_claim_from_delivery = fields.Selection([
-        (0, 'Do not manage claims'),
-        (1, 'Allow claims on deliveries')
-        ], "Claims",
-        help='Adds a Claim link to the delivery order.\n'
-             '-This installs the module claim_from_delivery.')
     module_product_expiry = fields.Selection([
         (0, 'Do not use Expiration Date on serial numbers'),
         (1, 'Define Expiration Date on serial numbers')
