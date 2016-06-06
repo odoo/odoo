@@ -4,7 +4,7 @@
         <record id="view_sale_config_settings" model="ir.ui.view">
             <field name="name">crm settings</field>
             <field name="model">sale.config.settings</field>
-            <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
+            <field name="inherit_id" ref="sales_team.view_sale_config_settings"/>
             <field name="arch" type="xml">
                 <div id="main" position="inside">
                     <group string="CRM" name="config_alias">
@@ -47,9 +47,9 @@
             </field>
         </record>
 
-        <menuitem id="base.menu_sale_config" name="Configuration" parent="base.menu_base_partner"
+        <menuitem id="sales_team.menu_sale_config" name="Configuration" parent="sales_team.menu_base_partner"
             sequence="100"/>
-        <menuitem id="base.menu_sale_general_settings" name="Settings" parent="base.menu_sale_config"
-            sequence="0" action="base_setup.action_sale_config" groups="base.group_system"/>
+        <menuitem id="sales_team.menu_sale_general_settings" name="Settings" parent="sales_team.menu_sale_config"
+            sequence="0" action="sales_team.action_sale_config" groups="base.group_system"/>
     </data>
 </openerp>

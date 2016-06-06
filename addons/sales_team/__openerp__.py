@@ -16,6 +16,7 @@ Using this application you can manage Sales Team  with CRM and/or Sales
              'data/sales_team_data.xml',
              'views/crm_team_views.xml',
              'views/sales_team_dashboard.xml',
+             'views/res_config_view.xml',
              ],
     'qweb': [
         "static/src/xml/sales_team_dashboard.xml",
@@ -23,5 +24,5 @@ Using this application you can manage Sales Team  with CRM and/or Sales
     'demo': ['data/sales_team_demo.xml'],
     'css': ['static/src/css/sales_team.css'],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
 }

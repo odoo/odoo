@@ -2,16 +2,6 @@
 <openerp>
     <data>
 
-        <!-- Top menu item -->
-        <menuitem name="Sales"
-            id="menu_base_partner"
-            groups="base.group_sale_salesman"
-            sequence="6"/>
-
-            <menuitem id="base.menu_sale_config" name="Configuration" parent="base.menu_base_partner"
-            sequence="100" groups="base.group_sale_manager"/>
-            <menuitem id="menu_config_address_book" parent="base.menu_sale_config" name="Contacts" sequence="4" groups="group_system"/>
-
         <!-- Partner Titles -->
         <record id="view_partner_title_tree" model="ir.ui.view">
             <field name="name">res.partner.title.tree</field>
@@ -45,8 +35,6 @@
             <field name="context">{}</field>
             <field name="help">Manage the contact titles you want to have available in your system and the way you want to print them in letters and other documents. Some example: Mr., Mrs. </field>
         </record>
-
-        <menuitem action="action_partner_title_contact" id="menu_partner_title_contact" name="Contact Titles" parent="menu_config_address_book" sequence="3" groups="base.group_no_one"/>
 
         <!-- Partner -->
         <record id="view_partner_tree" model="ir.ui.view">
@@ -460,8 +448,6 @@
             <field name="view_id" ref="view_partner_tree"/>
             <field name="act_window_id" ref="action_partner_form"/>
         </record>
-        <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="5"/>
-        <menuitem id="menu_partner_form" parent="base.menu_sales" action="action_partner_form" sequence="3"/>
 
         <record id="action_partner_customer_form" model="ir.actions.act_window">
             <field name="name">Customers</field>
@@ -562,7 +548,6 @@
             </field>
         </record>
 
-        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Contact Tags" sequence="1" parent="menu_config_address_book" groups="base.group_no_one"/>
 
     </data>
 </openerp>
