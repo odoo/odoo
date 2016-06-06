@@ -112,4 +112,4 @@ class ReportJournal(models.AbstractModel):
             'sum_debit': self._sum_debit,
             'get_taxes': self._get_taxes,
         }
-        return self.env['report'].render('account_extra_reports.report_journal', docargs)
+        return self.env['report'].render('account.report_journal', docargs)
