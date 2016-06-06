@@ -38,7 +38,7 @@ class Quant(models.Model):
         index=True, readonly=True,
         help="The move the quant is reserved for")
     lot_id = fields.Many2one(
-        'stock.production.lot', 'Lot',
+        'stock.production.lot', 'Lot/Serial Number',
         index=True, ondelete="restrict", readonly=True)
     cost = fields.Float('Unit Cost')
     owner_id = fields.Many2one(

@@ -37,7 +37,7 @@ class PackOperation(models.Model):
     # TDE FIXME: what what what what ??
     is_done = fields.Boolean(compute='_compute_is_done', inverse='_set_is_done', string='Done', oldname='processed_boolean')
     package_id = fields.Many2one('stock.quant.package', 'Source Package')
-    pack_lot_ids = fields.One2many('stock.pack.operation.lot', 'operation_id', 'Lots Used')
+    pack_lot_ids = fields.One2many('stock.pack.operation.lot', 'operation_id', 'Lots/Serial Numbers Used')
     result_package_id = fields.Many2one(
         'stock.quant.package', 'Destination Package',
         ondelete='cascade', required=False,
@@ -193,7 +193,7 @@ class PackOperation(models.Model):
             'show_reserved': any([lot for lot in self.pack_lot_ids if lot.qty_todo > 0.0])})
         view_id = self.env.ref('stock.view_pack_operation_lot_form').id
         return {
-            'name': _('Lot Details'),
+            'name': _('Lot/Serial Number Details'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
@@ -239,12 +239,12 @@ class PackOperation(models.Model):
 
 class PackOperationLot(models.Model):
     _name = "stock.pack.operation.lot"
-    _description = "Lot / Serial number for pack ops"
+    _description = "Lot/Serial number for pack ops"
 
     operation_id = fields.Many2one('stock.pack.operation')
     qty = fields.Float('Done', default=1.0)
     lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')
-    lot_name = fields.Char('Lot Name')
+    lot_name = fields.Char('Lot/Serial Number')
     qty_todo = fields.Float('To Do', default=0.0)
     plus_visible = fields.Boolean(compute='_compute_plus_visible', default=True)
 
@@ -263,7 +263,7 @@ class PackOperationLot(models.Model):
     @api.constrains('lot_id', 'lot_name')
     def _check_lot(self):
         if any(not lot.lot_name and not lot.lot_id for lot in self):
-            raise ValidationError(_('Lot required'))
+            raise ValidationError(_('Lot/Serial Number required'))
         return True
 
     def action_add_quantity(self, quantity):

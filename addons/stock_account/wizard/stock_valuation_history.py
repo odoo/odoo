@@ -112,7 +112,7 @@ class stock_history(osv.osv):
         'inventory_value': fields.function(_get_inventory_value, string="Inventory Value", type='float', readonly=True),
         'source': fields.char('Source'),
         'product_template_id': fields.many2one('product.template', 'Product Template', required=True),
-        'serial_number': fields.char('Serial Number', required=True),
+        'serial_number': fields.char('Lot/Serial Number', required=True),
     }
 
     def init(self, cr):

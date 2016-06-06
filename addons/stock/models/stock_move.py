@@ -136,7 +136,7 @@ class StockMove(models.Model):
         help='If checked, when this move is cancelled, cancel the linked move too')
     picking_type_id = fields.Many2one('stock.picking.type', 'Picking Type')
     inventory_id = fields.Many2one('stock.inventory', 'Inventory')
-    lot_ids = fields.Many2many('stock.production.lot', string='Lots', compute='_compute_lot_ids')
+    lot_ids = fields.Many2many('stock.production.lot', string='Lots/Serial Numbers', compute='_compute_lot_ids')
     origin_returned_move_id = fields.Many2one('stock.move', 'Origin return move', copy=False, help='Move that created the return move')
     returned_move_ids = fields.One2many('stock.move', 'origin_returned_move_id', 'All returned moves', help='Optional: all returned moves created from this move')
     reserved_availability = fields.Float(
@@ -148,7 +148,7 @@ class StockMove(models.Model):
     string_availability_info = fields.Text(
         'Availability', compute='_compute_string_qty_information',
         readonly=True, help='Show various information on stock availability for this move')
-    restrict_lot_id = fields.Many2one('stock.production.lot', 'Lot', help="Technical field used to depict a restriction on the lot of quants to consider when marking this move as 'done'")
+    restrict_lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number', help="Technical field used to depict a restriction on the lot/serial number of quants to consider when marking this move as 'done'")
     restrict_partner_id = fields.Many2one('res.partner', 'Owner ', help="Technical field used to depict a restriction on the ownership of quants to consider when marking this move as 'done'")
     route_ids = fields.Many2many('stock.location.route', 'stock_location_route_move', 'move_id', 'route_id', 'Destination route', help="Preferred route to be followed by the procurement order")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="Technical field depicting the warehouse to consider for the route selection on the next procurement (if any).")
