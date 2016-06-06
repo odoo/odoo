@@ -105,6 +105,8 @@
             <field name="context">{'active_test': False}</field>
         </record>
 
+        <menuitem action="action_currency_form" id="menu_action_currency_form" parent="menu_localisation" sequence="3" groups="base.group_multi_currency"/>
+
         <record id="action_currency_form_company" model="ir.actions.act_window">
             <field name="name">Currencies</field>
             <field name="res_model">res.currency</field>
