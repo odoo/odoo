@@ -279,8 +279,8 @@ class QWeb(object):
 
         astmod = self._base_module()
         try:
-            self._call_body(_options, ['empty'], prefix='template_%s' % name.replace('.', '_'))
-            _options['ast_calls'][0].body = self._compile_node(element, _options)
+            body = self._compile_node(element, _options)
+            def_name = self._create_def(_options, body, prefix='template_%s' % name.replace('.', '_'))
         except QWebException, e:
             raise e
         except Exception, e:
@@ -300,6 +300,7 @@ class QWeb(object):
             # noinspection PyBroadException
             ns = {}
             eval(compile(astmod, '<template>', 'exec'), ns)
+            compiled = ns[def_name]
         except QWebException, e:
             raise e
         except Exception, e:
@@ -313,7 +314,7 @@ class QWeb(object):
             log = {'last_path_node': None}
             values.update(self.default_values())
             try:
-                return ns[_options['ast_calls'][0].name](self, append, values, options, log)
+                return compiled(self, append, values, options, log)
             except QWebException, e:
                 raise e
             except Exception, e:
@@ -530,7 +531,7 @@ class QWeb(object):
             from openerp.addons.base.ir.ir_qweb.qweb import qweb_escape, unicodifier, foreach_iterator
             """))
 
-    def _call_body(self, options, body, append='append', values='values', prefix='fn', lineno=None):
+    def _create_def(self, options, body, prefix='fn', lineno=None):
         """
         If ``body`` is non-empty, generates (and globally store) the
         corresponding function definition and returns the relevant ast.Call
@@ -558,6 +559,10 @@ class QWeb(object):
             fn.lineno = lineno
 
         options['ast_calls'].append(fn)
+
+        return name
+
+    def _call_def(self, name, append='append', values='values'):
 
         return ast.Call(
             func=ast.Name(id=name, ctx=ast.Load()),
@@ -871,6 +876,7 @@ class QWeb(object):
             # set the content as value
             body = self._compile_directive_content(el, options)
             if body:
+                def_name = self._create_def(options, body, prefix='set', lineno=el.sourceline)
                 return [
                     # $varset = []
                     ast.Assign(
@@ -879,16 +885,15 @@ class QWeb(object):
                         ],
                         value=ast.List(elts=[], ctx=ast.Load())
                     ),
-                    # set(self, $varset.append, $varset, options)
-                    ast.Expr(self._call_body(options, body,
+                    # set(self, $varset.append)
+                    ast.Expr(self._call_def(
+                        def_name,
                         append=ast.Attribute(
                             value=self._values_var(ast.Str(varname), ctx=ast.Load()),
                             attr='append',
                             ctx=ast.Load()
-                        ),
-                        prefix='set',
-                        lineno=el.sourceline)
-                    ),
+                        )
+                    )),
                     # $varset = u''.join($varset)
                     ast.Assign(
                         targets=[self._values_var(ast.Str(varname), ctx=ast.Store())],
@@ -1006,7 +1011,7 @@ class QWeb(object):
         values = self._make_name('values')
 
         # create function $foreach
-        call = self._call_body(options, self._switch_directives(el, options), values=values, prefix='foreach', lineno=el.sourceline)
+        def_name = self._create_def(options, self._switch_directives(el, options), prefix='foreach', lineno=el.sourceline)
 
         # for x in foreach_iterator(values, $expr, $varname):
         #     $foreach(self, append, values, options)
@@ -1017,7 +1022,7 @@ class QWeb(object):
                 args=[ast.Name(id='values', ctx=ast.Load()), expr, ast.Str(varname)],
                 keywords=[], starargs=None, kwargs=None
             ),
-            body=[ast.Expr(call)],
+            body=[ast.Expr(self._call_def(def_name, values=values))],
             orelse=[]
         )]
 
@@ -1050,6 +1055,8 @@ class QWeb(object):
 
         body = self._compile_directive_content(el, options)
         if body:
+            def_name = self._create_def(options, body, prefix='body_call_content', lineno=el.sourceline)
+
             content.extend([
                 # default_content = []
                 ast.Assign(
@@ -1057,15 +1064,13 @@ class QWeb(object):
                     value=ast.List(elts=[], ctx=ast.Load())
                 ),
                 # body_call_content(self, default_content.append, values, options)
-                ast.Expr(self._call_body(options,
-                    body=body,
+                ast.Expr(self._call_def(
+                    def_name,
                     append=ast.Attribute(
                         value=ast.Name(id=default_content, ctx=ast.Load()),
                         attr='append',
                         ctx=ast.Load()
-                    ),
-                    prefix='body_call_content',
-                    lineno=el.sourceline
+                    )
                 )),
                 # default_content = u''.join(default_content)
                 ast.Assign(
@@ -1153,6 +1158,7 @@ class QWeb(object):
 
         body = self._compile_directive_content(el, options)
         if body:
+            def_name = self._create_def(options, body, prefix='body_call_content', lineno=el.sourceline)
 
             # call_content = []
             content.append(
@@ -1163,16 +1169,14 @@ class QWeb(object):
             )
             # body_call_content(self, call_content.append, values, options)
             content.append(
-                ast.Expr(self._call_body(options,
-                    body=body,
+                ast.Expr(self._call_def(
+                    def_name,
                     append=ast.Attribute(
                         value=ast.Name(id='call_content', ctx=ast.Load()),
                         attr='append',
                         ctx=ast.Load()
                     ),
-                    values=_values,
-                    prefix='body_call_content',
-                    lineno=el.sourceline
+                    values=_values
                 ))
             )
             # values_copy[0] = call_content
