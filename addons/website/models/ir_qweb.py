@@ -70,3 +70,8 @@ class QWeb(orm.AbstractModel):
         for name, value in atts.iteritems():
             atts[name] = self._website_build_attribute(tagName, name, value, options, values)
         return atts
+
+    def _is_static_node(self, el):
+        url_att = self.URL_ATTRS.get(el.tag)
+        cdn_att = self.CDN_TRIGGERS.get(el.tag)
+        return super(QWeb, self)._is_static_node(el) and (not url_att or not el.get(url_att)) and (not cdn_att or not el.get(cdn_att))
