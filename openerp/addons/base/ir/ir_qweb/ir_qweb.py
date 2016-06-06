@@ -208,12 +208,11 @@ class ir_QWeb(models.AbstractModel, QWeb):
 
         return (files, remains)
 
-    def _get_field(self, record, field_name, expression, default_content, tagName, field_options, options, values):
+    def _get_field(self, record, field_name, expression, tagName, field_options, options, values):
         field = record._fields[field_name]
 
         field_options['tagName'] = tagName
         field_options['expression'] = expression
-        field_options['default_content'] = default_content
         field_options['type'] = field_options.get('widget', field.type)
         inherit_branding = options.get('inherit_branding', options.get('inherit_branding_auto') and record.check_access_rights('write', False))
         field_options['inherit_branding'] = inherit_branding
@@ -228,7 +227,7 @@ class ir_QWeb(models.AbstractModel, QWeb):
         content = converter.record_to_html(record, field_name, field_options, values)
         attributes = converter.attributes(record, field_name, field_options, values)
 
-        return (attributes, content or default_content or (u"" if inherit_branding or translate else None))
+        return (attributes, content, inherit_branding or translate)
 
     # formating methods
 
