@@ -162,7 +162,7 @@ class SaleOrder(models.Model):
                 for line in order.order_line:
                     if line.product_id.track_service == 'timesheet':
                         if not order.project_id:
-                            order._create_analytic_account(prefix=order.product_id.default_code or None)
+                            order._create_analytic_account(prefix=line.product_id.default_code or None)
                         order.project_id.project_create({'name': order.project_id.name, 'use_tasks': True})
                         break
         return result

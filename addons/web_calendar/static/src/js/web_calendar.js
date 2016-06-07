@@ -42,7 +42,7 @@ function get_fc_defaultOptions() {
         weekNumbers: true,
         titleFormat: {
             month: 'MMMM yyyy',
-            week: "W",
+            week: "w",
             day: dateFormat,
         },
         columnFormat: {
