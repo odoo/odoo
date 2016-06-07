@@ -15,6 +15,9 @@ from odoo.tools.translate import _
 _logger = logging.getLogger(__name__)
 
 
+HOURS_PER_DAY = 8
+
+
 class HolidaysType(models.Model):
 
     _name = "hr.holidays.status"
@@ -299,7 +302,7 @@ class Holidays(models.Model):
 
         # No date_to set so far: automatically compute one 8 hours later
         if date_from and not date_to:
-            date_to_with_delta = fields.Datetime.from_string(date_from) + timedelta(hours=8)
+            date_to_with_delta = fields.Datetime.from_string(date_from) + timedelta(hours=HOURS_PER_DAY)
             self.date_to = str(date_to_with_delta)
 
         # Compute and update the number of days
@@ -425,7 +428,7 @@ class Holidays(models.Model):
                 meeting_values = {
                     'name': holiday.display_name,
                     'categ_ids': [(6, 0, [holiday.holiday_status_id.categ_id.id])] if holiday.holiday_status_id.categ_id else [],
-                    'duration': holiday.number_of_days_temp * 8,
+                    'duration': holiday.number_of_days_temp * HOURS_PER_DAY,
                     'description': holiday.notes,
                     'user_id': holiday.user_id.id,
                     'start': holiday.date_from,
