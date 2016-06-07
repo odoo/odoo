@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
-from openerp.osv import osv
-from openerp.addons.website.models.website import slug
+from odoo import api, models, fields
+from odoo.addons.website.models.website import slug
 
 
-class res_partner_grade(osv.osv):
+class ResPartnerGrade(models.Model):
     _name = 'res.partner.grade'
     _inherit = ['res.partner.grade', 'website.published.mixin']
 
-    _defaults = {
-        'website_published': True,
-    }
+    website_published = fields.Boolean(default=True)
 
-    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
-        res = super(res_partner_grade, self)._website_url(cr, uid, ids, field_name, arg, context=context)
-        for grade in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def _website_url(self, field_name, arg):
+        res = super(ResPartnerGrade, self)._website_url(field_name, arg)
+        for grade in self:
             res[grade.id] = "/partners/grade/%s" % (slug(grade))
         return res
