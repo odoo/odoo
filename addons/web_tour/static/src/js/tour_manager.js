@@ -19,6 +19,7 @@ function getRunningKey() {
 
 return core.Class.extend({
     init: function(consumed_tours) {
+        this.$body = $('body');
         this.active_tooltips = {};
         this.tours = {};
         this.consumed_tours = consumed_tours;
@@ -47,11 +48,17 @@ return core.Class.extend({
         var tour = {
             name: name,
             current_step: parseInt(local_storage.getItem(getStepKey(name))) || 0,
-            skip_enabled: options.skip_enabled,
             steps: steps,
             url: options.url,
             test: options.test,
         };
+        if (options.skip_enabled) {
+            tour.skip_link = '<p><span class="o_skip_tour">' + _t('Skip tour') + '</span></p>';
+            tour.skip_handler = function (tip) {
+                this._deactivate_tip(tip);
+                this._consume_tour(name);
+            };
+        }
         this.tours[name] = tour;
         if (name === this.running_tour || (!tour.test && !_.contains(this.consumed_tours, name))) {
             this.active_tooltips[name] = steps[tour.current_step];
@@ -84,6 +91,7 @@ return core.Class.extend({
      * active tours otherwise). Should be called each time the DOM changes.
      */
     update: function() {
+        this.in_modal = this.$body.hasClass('modal-open');
         if (this.running_tour) {
             this._check_for_tooltip(this.active_tooltips[this.running_tour], this.running_tour);
         } else {
@@ -91,7 +99,7 @@ return core.Class.extend({
         }
     },
     _check_for_tooltip: function (tip, tour_name) {
-        var $trigger = $(tip.trigger).filter(':visible').first();
+        var $trigger = $((this.in_modal ? '.modal ' : '') + tip.trigger).filter(':visible').first();
         var extra_trigger = tip.extra_trigger ? $(tip.extra_trigger).filter(':visible').length : true;
         var triggered = $trigger.length && extra_trigger;
         if (triggered) {
@@ -105,22 +113,22 @@ return core.Class.extend({
         }
     },
     _activate_tip: function(tip, tour_name, $anchor) {
-        var skip_enabled = this.tours[tour_name].skip_enabled;
-        if (skip_enabled && !tip.extra_content) {
-            // FIXME: not pretty but a cleaner solution will be easy when we'll stop using jquery's popover
-            tip.extra_content = '<br/><span class="o_skip_tour">' + _t('Skip tour') + '</span>';
-        }
-        tip.widget = new Tip(this, $anchor, tip);
-        tip.widget.appendTo(document.body);
-        tip.widget.on('tip_consumed', this, this._consume_tip.bind(this, tip, tour_name));
-        if (skip_enabled) {
-            tip.widget.on('popover_clicked', this, function (event) {
-                if (event.target.className === 'o_skip_tour') {
-                    this._deactivate_tip(tip);
-                    this._consume_tour(tour_name);
-                }
+        var tour = this.tours[tour_name];
+        var tip_info = tip;
+        if (tour.skip_link) {
+            tip_info = _.extend(_.omit(tip_info, 'content'), {
+                content: tip.content + tour.skip_link,
+                event_handlers: [{
+                    event: 'click',
+                    selector: '.o_skip_tour',
+                    handler: tour.skip_handler.bind(this, tip),
+                }],
             });
         }
+        tip.widget = new Tip(this, $anchor, tip_info);
+        tip.widget.appendTo(document.body);
+        tip.widget.on('tip_consumed', this, this._consume_tip.bind(this, tip, tour_name));
+
         if (this.running_tour === tour_name) {
             clearTimeout(this.running_tour_timeout);
             if (tip.run) {
