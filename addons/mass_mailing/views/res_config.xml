@@ -18,7 +18,8 @@
                             <label for="module_mass_mailing_themes" invisible="1"/>
                             <a href="https://www.odoo.com/page/email-marketing" target="_blank"> More Info </a>
                         </div>
-                        <field name="group_website_popup_on_exit" widget="radio"/>
+                        <field name="group_website_popup_on_exit" widget="radio" on_change="on_change_group_website_popup_on_exit(group_website_popup_on_exit)"/>
+                        <field name="module_website_mass_mailing" widget="radio" invisible="1"/>
                     </group>
                 </form>
             </field>
