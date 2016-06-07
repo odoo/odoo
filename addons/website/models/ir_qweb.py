@@ -22,6 +22,7 @@ class QWeb(orm.AbstractModel):
     }
 
     def _website_build_attribute(self, tagName, name, value, options, values):
+        """ Compute the value of an attribute while rendering the template. """
         if name == self.URL_ATTRS.get(tagName) and values.get('url_for'):
             return values.get('url_for')(value or '')
         elif request and getattr(request, 'website', None) and request.website.cdn_activated and (name == self.URL_ATTRS.get(tagName) or name == self.CDN_TRIGGERS.get(tagName)):
@@ -29,6 +30,7 @@ class QWeb(orm.AbstractModel):
         return value
 
     def _wrap_build_attributes(self, el, items, options):
+        """ Map items corresponding to URL and CDN attributes to an ast expression. """
         if options.get('rendering_bundle'):
             return items
 
