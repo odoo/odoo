@@ -312,7 +312,8 @@ class product_pricelist(osv.osv):
                         if (not partner) or (seller_id.name.id != partner):
                             continue
                         seller = seller_id
-                    if not seller and product.seller_ids:
+                    # DO NOT FORWARDPORT
+                    if not seller and product.seller_ids and rule.price_version_id.pricelist_id.type == 'sale':
                         seller = product.seller_ids[0]
                     if seller:
                         qty_in_seller_uom = qty
@@ -359,7 +360,7 @@ class product_pricelist(osv.osv):
                         price = min(price, price_limit + price_max_margin)
 
                     rule_id = rule.id
-                break
+                    break
 
             # Final price conversion to target UoM
             price = product_uom_obj._compute_price(cr, uid, price_uom_id, price, qty_uom_id)
