@@ -486,6 +486,15 @@ class TestNewFields(common.TransactionCase):
         message.important = True
         self.assertIn(message, discussion.important_messages)
 
+    def test_70_compute_effect(self):
+        """ test the behavior of a compute method with side effects """
+        effect = self.env['test_new_api.effect'].create({})
+        self.assertEqual(effect.size, 0)
+
+        # create a line; this computes the size and assign it on lines
+        self.env['test_new_api.effect.line'].create({'effect': effect.id})
+        self.assertEqual(effect.size, 1)
+
 
 class TestMagicFields(common.TransactionCase):
 

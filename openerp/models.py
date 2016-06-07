@@ -5847,13 +5847,13 @@ class BaseModel(object):
             # determine the fields to recompute
             fs = self.env[field.model_name]._field_computed[field]
             ns = [f.name for f in fs if f.store]
-            # evaluate fields, and group record ids by update
-            updates = defaultdict(set)
-            for rec in recs.exists():
-                vals = rec._convert_to_write({n: rec[n] for n in ns})
-                updates[frozendict(vals)].add(rec.id)
-            # update records in batch when possible
             with recs.env.norecompute():
+                # evaluate fields, and group record ids by update
+                updates = defaultdict(set)
+                for rec in recs.exists():
+                    vals = rec._convert_to_write({n: rec[n] for n in ns})
+                    updates[frozendict(vals)].add(rec.id)
+                # update records in batch when possible
                 for vals, ids in updates.iteritems():
                     recs.browse(ids)._write(dict(vals))
             # mark computed fields as done

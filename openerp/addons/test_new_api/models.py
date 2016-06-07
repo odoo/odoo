@@ -273,3 +273,23 @@ class BoolModel(models.Model):
     bool_true = fields.Boolean('b1', default=True)
     bool_false = fields.Boolean('b2', default=False)
     bool_undefined = fields.Boolean('b3')
+
+
+class Effect(models.Model):
+    _name = 'test_new_api.effect'
+
+    lines = fields.One2many('test_new_api.effect.line', 'effect')
+    size = fields.Integer(compute='_compute_size', store=True)
+
+    @api.depends('lines')
+    def _compute_size(self):
+        for effect in self:
+            effect.size = len(effect.lines)
+            effect.lines.write({'size': effect.size})
+
+
+class EffectLine(models.Model):
+    _name = 'test_new_api.effect.line'
+
+    effect = fields.Many2one('test_new_api.effect')
+    size = fields.Integer()
