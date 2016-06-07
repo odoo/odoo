@@ -18,7 +18,9 @@ su - postgres -c "createuser -d -R -S $ODOO_USER" 2> /dev/null || true
 # Configuration file
 mkdir -p $ODOO_CONFIGURATION_DIR
 # can't copy debian config-file as addons_path is not the same
-echo "[options]
+if [ ! -f $ODOO_CONFIGURATION_FILE ]
+then
+    echo "[options]
 ; This is the password that allows database operations:
 ; admin_passwd = admin
 db_host = False
@@ -27,8 +29,9 @@ db_user = $ODOO_USER
 db_password = False
 addons_path = /usr/lib/python2.7/site-packages/openerp/addons
 " > $ODOO_CONFIGURATION_FILE
-chown $ODOO_USER:$ODOO_GROUP $ODOO_CONFIGURATION_FILE
-chmod 0640 $ODOO_CONFIGURATION_FILE
+    chown $ODOO_USER:$ODOO_GROUP $ODOO_CONFIGURATION_FILE
+    chmod 0640 $ODOO_CONFIGURATION_FILE
+fi
 # Log
 mkdir -p $ODOO_LOG_DIR
 chown $ODOO_USER:$ODOO_GROUP $ODOO_LOG_DIR
