@@ -158,8 +158,13 @@ class crm_lead(FormatAddress, osv.osv):
             for opp_id in ids
         }
 
+    def _get_company_currency(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        return self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id.id
+
     _columns = {
-        'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null', track_visibility='onchange',
+        'partner_id': fields.many2one('res.partner', 'Customer', ondelete='set null', track_visibility='onchange',
             select=True, help="Linked partner (optional). Usually created when converting the lead."),
 
         'id': fields.integer('ID', readonly=True),
@@ -241,6 +246,7 @@ class crm_lead(FormatAddress, osv.osv):
     _defaults = {
         'active': 1,
         'type': lambda s, cr, uid, c: 'lead' if s.pool['res.users'].has_group(cr, uid, 'crm.group_use_lead') else 'opportunity',
+        'company_currency': _get_company_currency,
         'user_id': lambda s, cr, uid, c: uid,
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, SUPERUSER_ID, context=c, user_id=uid),
@@ -1161,6 +1167,8 @@ Update your business card, phone book, social media,... Send an email right now 
         else:
             raise UserError(_('This target does not exist.'))
 
+    def close_dialog(self, cr, uid, ids, context=None):
+        return {'type': 'ir.actions.act_window_close'}
 
 class crm_lead_tag(osv.Model):
     _name = "crm.lead.tag"
