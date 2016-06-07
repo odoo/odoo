@@ -677,7 +677,7 @@ class account_analytic_account(osv.osv):
         if not partner:
             raise osv.except_osv(_('No Customer Defined!'),_("You must first select a Customer for Contract %s!") % contract.name )
 
-        fpos_id = fpos_obj.get_fiscal_position(cr, uid, partner.company_id.id, partner.id, context=context)
+        fpos_id = fpos_obj.get_fiscal_position(cr, uid, context.get('force_company') or partner.company_id.id, partner.id, context=context)
         journal_ids = journal_obj.search(cr, uid, [('type', '=','sale'),('company_id', '=', contract.company_id.id or False)], limit=1)
         if not journal_ids:
             raise osv.except_osv(_('Error!'),
@@ -764,9 +764,10 @@ class account_analytic_account(osv.osv):
         if contract_ids:
             cr.execute('SELECT company_id, array_agg(id) as ids FROM account_analytic_account WHERE id IN %s GROUP BY company_id', (tuple(contract_ids),))
             for company_id, ids in cr.fetchall():
-                for contract in self.browse(cr, uid, ids, context=dict(context, company_id=company_id, force_company=company_id)):
+                context_contract = dict(context, company_id=company_id, force_company=company_id)
+                for contract in self.browse(cr, uid, ids, context=context_contract):
                     try:
-                        invoice_values = self._prepare_invoice(cr, uid, contract, context=context)
+                        invoice_values = self._prepare_invoice(cr, uid, contract, context=context_contract)
                         invoice_ids.append(self.pool['account.invoice'].create(cr, uid, invoice_values, context=context))
                         next_date = datetime.datetime.strptime(contract.recurring_next_date or current_date, "%Y-%m-%d")
                         interval = contract.recurring_interval
