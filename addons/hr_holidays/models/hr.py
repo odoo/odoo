@@ -117,7 +117,7 @@ class Employee(models.Model):
                 raise UserError(_("The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one "
                     "leave type with the option 'Allow to Override Limit' unchecked. (%s Found). "
                     "Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. "
-                    "\n You may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in 'Human Resources > Leaves' "
+                    "\n You may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in Leaves Application "
                     "to manage the leave days of the employees if the configuration does not allow to use this field.") % (len(status_list)))
             status = status_list[0] if status_list else None
             if not status:
