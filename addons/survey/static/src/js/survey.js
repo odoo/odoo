@@ -2,6 +2,7 @@ odoo.define('survey.survey', function (require) {
 'use strict';
 
 var website = require('website.website');
+var time = require('web.time');
 
 /*
  * This file is intended to add interactivity to survey forms rendered by
@@ -21,6 +22,13 @@ if(!the_form.length) {
     var scores_controller = the_form.attr("data-scores");
     var print_mode = false;
     var quiz_correction_mode = false;
+    var localeFormat = moment.localeData().longDateFormat('L');
+
+    var DateNames = []
+    $.each($('.js_surveyform').find(".date > input"), function(){
+        var dateName = $(this).attr('name');
+        DateNames.push(dateName);
+    });
 
     // Printing mode: will disable all the controls in the form
     if (_.isUndefined(submit_controller)) {
@@ -36,13 +44,14 @@ if(!the_form.length) {
 
     $("div.input-group span.fa-calendar").on('click', function(e) {
         $(e.currentTarget).closest("div.date").datetimepicker({
-            useSeconds: true,
+            pickTime: false,
             icons : {
                 time: 'fa fa-clock-o',
                 date: 'fa fa-calendar',
                 up: 'fa fa-chevron-up',
                 down: 'fa fa-chevron-down'
             },
+            format : localeFormat,
         });
     });
 
@@ -88,6 +97,9 @@ if(!the_form.length) {
 
                         // prefill of text/number/date boxes
                         var input = the_form.find(".form-control[name=" + key + "]");
+                        if (DateNames.indexOf(key) != -1){
+                            value = moment(value, "YYYY-MM-DD").format(localeFormat);
+                        }
                         input.val(value);
 
                         // special case for comments under multiple suggestions questions
@@ -130,7 +142,12 @@ if(!the_form.length) {
         url: submit_controller,
         type: 'POST',                       // submission type
         dataType: 'json',                   // answer expected type
-        beforeSubmit: function(){           // hide previous errmsg before resubmitting
+        beforeSubmit: function(formData, $form, options){           // hide previous errmsg before resubmitting
+            _.each(formData, function(arg, i){
+                if (DateNames.indexOf(arg.name) != -1){
+                    formData[i].value = time.date_to_str(moment(arg.value, localeFormat).toDate()); //convert the date into SERVER dateformat
+                }
+            });
             $('.js_errzone').html("").hide();
         },
         success: function(response, status, xhr, wfe){ // submission attempt
