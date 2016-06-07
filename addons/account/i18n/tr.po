@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Ahmet Altınışık <aaltinisik@altinkaya.com.tr>, 2016
+# Haluk Buguner <haluk@buguner.name.tr>, 2016
 # ilyas kurt <ilyaskrt19@gmail.com>, 2016
 # Martin Trigaux, 2016
 # Nurettin Emre Ozbakir <emre.ozbakir@gamareklam.com>, 2016
@@ -16,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-05-21 16:53+0000\n"
-"Last-Translator: Ömer Kaan Gürbüz <omerkaan0101omerkaangrbz@gmail.com>\n"
+"PO-Revision-Date: 2016-05-29 10:58+0000\n"
+"Last-Translator: Haluk Buguner <haluk@buguner.name.tr>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,7 +82,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Merhaba ${object.partner_id.name},</p>\n\n    <p>Size yeni bir fatura kesildi: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERANSLAR</strong><br />\n       &nbsp;&nbsp;Fatura no: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Fatura tutarı: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Fatura tarihi: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Sipariş no: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Fatura muhatabınız: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>Bu faturayı doğrudan Paypal ile ödeyebilirsiniz:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Bir sorunuz olursa muhatabanıza iletmekten çekinmeyin.</p>\n    <p>${object.company_id.name or 'us'} ile çalıştığınız için teşekkürler.</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Tel:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web:&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_state
@@ -91,7 +92,7 @@ msgid ""
 " * The 'Open' status is used when user create invoice, an invoice number is generated. Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr "* 'Taslak' durumu, bir kullanıcı yeni yada onaylanmamış bir fatura hazırlıyorsa kullanılır.\n * 'Proforma' faturanın Proforma durumunda olması ve bu durumda fatura numaralandırılmaz.\n * 'Açık' durumu, kullanıcı bir fatura oluştururken kullanılır, fatura numarası oluşturulur. Kullanıcı fatutaryı ödemeyinceye kadar açık durumdadır.\n * 'Ödendi' durumu, fatura ödenince otomatik olarak ayarlanır. Yevmiye girişlerinin uzlaştırılımış yada uzlaştırılmamış olamsıyla ilgilidir.\n 'İptal edildi' durumu kullanıcı bir faturayı iptal ettiğinde kullanılır. "
+msgstr "* 'Taslak' durumu, henüz oluşturulmuş fakat onaylanmamış fatura için kullanılır.\n* 'Proforma' durumu, henüz numarası üretilmemiş fatura için kullanılır.\n* 'Açık' durumu, oluşturulmuş, numarası üretilmiş, ancak henüz ödenmemiş fatura için kullanılır.\n* 'Ödendi' durumu, fatura ödenince otomatik olarak ayarlanır. İlgili yevmiye girişleri uzlaştırılmış veya uzlaştırılmamış olabilir.\n* 'İptal edildi' durumu kullanıcı tarafından iptal edilmiş fatura için kullanılır."
 
 #. module: account
 #. openerp-web
@@ -211,7 +212,7 @@ msgid ""
 "                                        <strong>Import a file</strong><br/>\n"
 "                                        <span class=\"small\">Recommended if &gt;100 products</span>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n\n<span class=\"fa\" data-icon=\"&#57408;\"/>\n\n<strong>Import a file</strong><br/>\n\n<span class=\"small\">Ürün sayısı &gt; 100 ise tavsiye edilen</span>\n\n</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -221,7 +222,7 @@ msgid ""
 "                                        <strong>Import</strong><br/>\n"
 "                                        <span class=\"small\">&gt; 200 contacts</span>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n<span class=\"fa\" data-icon=\"&#57408;\"/>\n<strong>Import</strong><br/>\n<span class=\"small\">Kişi sayısı &gt; 200</span>\n</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -231,7 +232,7 @@ msgid ""
 "                                        <strong> Create manually</strong><br/>\n"
 "                                        <span class=\"small\">&lt; 200 contacts</span>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n\n<span class=\"fa\" data-icon=\"&#57440;\"/>\n\n<strong> Create manually</strong><br/>\n\n<span class=\"small\">Kişi sayısı &lt; 200</span>\n\n</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -241,7 +242,7 @@ msgid ""
 "                                        <strong> Create manually</strong><br/>\n"
 "                                        <span class=\"small\">Recommended if &lt;100 products</span>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n\n<span class=\"fa\" data-icon=\"&#57440;\"/>\n\n<strong> Create manually</strong><br/>\n\n<span class=\"small\">Ürün sayısı &lt;100 ise tavsiye edilen</span>\n\n</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -273,7 +274,7 @@ msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <strong>Customer follow-up</strong>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n\n<strong>Müşteri yoklaması</strong>\n\n</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -289,7 +290,7 @@ msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <strong>Invoice payment by Wire Transfer</strong>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n\n<strong>Hesaba transfer ile Fatura ödemesi</strong>\n\n</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -305,7 +306,7 @@ msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <strong>Reconcile Bank Statements</strong>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n\n<strong>Hesap Ekstreleri Uzlaştırma</strong>\n\n</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -358,7 +359,7 @@ msgstr "<span>Yeni</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<span>Not due</span>"
-msgstr ""
+msgstr "<span>Vadesi gelmemiş</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -388,12 +389,12 @@ msgstr "<strong>-Odoo Ekibi</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>1. Register Outstanding Invoices</strong>"
-msgstr ""
+msgstr "<strong>1. Ödenmemiş Fatura Kayıt Girişi</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>2. Register Unmatched Payments</strong>"
-msgstr ""
+msgstr "<strong>2. Eşleştirilmemiş Ödeme Kayıt Girişi</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -405,7 +406,7 @@ msgstr "<strong>Varlık Yönetimi</strong>"
 msgid ""
 "<strong>Automated documents sending:</strong> automatically send your "
 "invoices by email or snail mail."
-msgstr ""
+msgstr "<strong>Otomatik belge gönderimi:</strong> fatura kesildiğinde e-posta veya normal posta ile otomatik olarak gönderilmesini sağlayın."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -417,14 +418,14 @@ msgstr "<strong>Bakiye :</strong>"
 msgid ""
 "<strong>Banking interface:</strong> with live bank feed synchronization and "
 "bank statement importation."
-msgstr ""
+msgstr "<strong>Bankacılık elektronik bağlantısı:</strong> banka anlık veri senkronizasyonu ve banka ekstre yüklemesi ile."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Cash transactions</strong><br/> (for which there is no invoice or "
 "bill), should be entered directly into your Cash Registers bank account."
-msgstr ""
+msgstr "<strong>Nakit işlemler</strong><br/> (fatura veya borç bildirimi olmadan), doğrudan Nakit Kasası banka hesabına girilmelidir."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -436,14 +437,14 @@ msgstr "<strong>Vergi ayarlarını kontrol edin:</strong>"
 msgid ""
 "<strong>Check unpaid invoices</strong><br/>\n"
 "                                         Run an <i>Aged Receivable report</i> and check which customers still owe you money."
-msgstr ""
+msgstr "<strong>Ödenmemiş fatura kontrolü</strong><br/>\n\n<i>Eski Dönem Alacakları Listesini</i> çalıştırın ve hala borçlu durumdaki müşterileri belirleyin."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Clean customer invoices:</strong> easy to create, beautiful and full"
 " featured invoices."
-msgstr ""
+msgstr "<strong>Temiz görünümlü müşteri faturaları:</strong> kolayca oluşturulan, göze hitap eden ve tüm özellikleri içeren faturalar."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -465,14 +466,14 @@ msgstr "<strong>Müşteri Faturası Oluştur</strong>"
 msgid ""
 "<strong>Create a Deposit Ticket</strong><br/>\n"
 "                                        This allows you to record the different payments that constitute your bank deposit. (You may need to"
-msgstr ""
+msgstr "<strong>Para Yatırma Çağrı Kaydı Oluşturun</strong><br/>\n\nBanka para yatırma işleminin ilgili olduğu ödemeleri kaydetmeyi sağlar (Gerekli görüldüğünde"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Create the bill in Odoo</strong><br/> with a proper due date, and "
 "create the vendor if it doesnt' exist yet."
-msgstr ""
+msgstr "<strong>Borç bildirimini Odoo ile oluşturun</strong><br/> vadeyi belirleyin ve henüz tanımlanmadıysa yeni satıcı kaydını oluşturun."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -496,7 +497,7 @@ msgstr "<strong>Bu tarihe kadar:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Deposit Tickets</strong>"
-msgstr ""
+msgstr "<strong>Para Yatırma Çağrı Kayıtları</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -506,12 +507,12 @@ msgstr "<strong>Açıklama:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "<strong>Display Account:</strong>"
-msgstr ""
+msgstr "<strong>Hesabı Görüntüle:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
 msgid "<strong>Display Account</strong>"
-msgstr ""
+msgstr "<strong>Hesabı Görüntüle</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -543,7 +544,7 @@ msgstr "<strong>Yevmiyeler:</strong>"
 msgid ""
 "<strong>Mark the bills to pay</strong><br/>\n"
 "                                        Group or filter your bills to see those due in the next week, then open each bill individually, click on <strong>'Pay'</strong> and select the payment method you prefer."
-msgstr ""
+msgstr "<strong>Ödenecek borç bildirimlerini işaretleyin</strong><br/>\n\nBir sonraki hafta vadesi gelen borç bildirimlerini gruplayın veya filtreleyin, seçilen borç bildirimlerini açarak <strong>'Öde'</strong>ye tıklayıp tercih ettiğiniz ödeme yöntemini seçin."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -555,14 +556,14 @@ msgstr "<strong>Sonraki eylem:</strong><br/>"
 msgid ""
 "<strong>On-the-fly payment reconciliation:</strong> automatic suggestions of"
 " outstanding payments when creating invoices."
-msgstr ""
+msgstr "<strong>Tasarsız ödeme uzlaştırma:</strong> fatura oluştururken otomatik öneri olarak getirilen bekleyen ödemeleri görün."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Or generate payment orders</strong><br/>\n"
 "                                        Create a Payment Order and select the bills you'd like to pay as Entry lines (only the validated bills will appear)."
-msgstr ""
+msgstr "<strong>Veya ödeme emirleri üretin</strong><br/>\n\nÖdeme Emri oluşturun ve ilgili borç bildirimlerini alt satırlar olarak seçin (sadece onaylanmış borç bildirimleri gözükecektir)."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -579,7 +580,7 @@ msgstr "<strong>Dönem Uzunluğu (gün)</strong>"
 msgid ""
 "<strong>Print checks</strong><br/>\n"
 "                                        From the Vendor Payments list, select those you want to pay and click on Print Check (you may first need to activate the check feature in the"
-msgstr ""
+msgstr "<strong>Çek yazdırın</strong><br/>\n\nSatıcı Ödemeleri listesinden kimlere ödeme yapılacağını seçin ve Çek Yazdır'a tıklayın (önce Çekler özelliğini etkinleştirmeniz gerekebilir"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -589,7 +590,7 @@ msgstr "<strong>Satınalımlar</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Reconcile Bank Statement</strong>"
-msgstr ""
+msgstr "<strong>Banka Ekstresi Uzlaştır</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

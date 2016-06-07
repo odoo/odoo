@@ -12,7 +12,7 @@
             <div class="form-group field-login">
                 <label for="login" class="control-label">Your Email</label>
                 <input type="text" name="login" t-att-value="login" id="login" class="form-control" autofocus="autofocus"
-                    required="required" t-att-readonly="'readonly' if only_passwords else None"/>
+                    autocapitalize="off" required="required" t-att-readonly="'readonly' if only_passwords else None"/>
             </div>
 
             <div class="form-group field-name">
@@ -79,7 +79,7 @@
                         <div class="form-group field-login">
                             <label for="login" class="control-label">Your Email</label>
                             <input type="text" name="login" t-att-value="login" id="login" class="form-control"
-                                autofocus="autofocus" required="required"/>
+                                autofocus="autofocus" required="required" autocapitalize="off"/>
                         </div>
                     </t>
 

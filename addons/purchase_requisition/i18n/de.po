@@ -5,14 +5,15 @@
 # Translators:
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
 # Rudolf Schnapka <rs@techno-flex.de>, 2016
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # Wolfgang Taferner, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2016-04-25 13:55+0000\n"
-"Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
+"PO-Revision-Date: 2016-06-02 11:00+0000\n"
+"Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,17 +59,17 @@ msgstr "<strong>Geplantes Datum</strong>"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Scheduled Ordering Date:</strong><br/>"
-msgstr ""
+msgstr "<strong>Disponiertes Bestelldatum:</strong><br/>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Selection Type:</strong><br/>"
-msgstr ""
+msgstr "<strong>Auswahltyp:</strong><br/>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Source:</strong><br/>"
-msgstr ""
+msgstr "<strong>Herkunft:</strong><br/>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -83,7 +84,7 @@ msgid ""
 "            products you need to buy and generate the creation of RfQs to\n"
 "            vendors. Once the tenders have been registered, you can review and\n"
 "            compare them and you can validate some and cancel others."
-msgstr ""
+msgstr "Eine Ausschreibung ist eine Prozedur zum Erhalt verschiedener \nWettbewerbsangebote. In der Ausschreibung können Sie die zu \nbeschaffenden Produkte eingeben, für die Sie bei verschiedenen \nWettbewerbern Angebote anfragen. Sobald die Ausschreibung \nfertig ist, können Sie die Angebote prüfen und miteinander \nvergleichen, bevor Sie einige bestellen und andere verwerfen. "
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction
@@ -120,22 +121,22 @@ msgstr "Gebotsauswahl"
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_tree
 msgid "Call for Tenders"
-msgstr ""
+msgstr "Ausschreibungen"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_name
 msgid "Call for Tenders Reference"
-msgstr ""
+msgstr "Ausschreibungsreferenz"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Call for Tenders in negotiation"
-msgstr ""
+msgstr "Ausschreibung in Verhandlung "
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Call for Tenders where tenders are closed"
-msgstr ""
+msgstr "Ausschreibung mit erledigten Posten"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_bid_line_qty
@@ -146,7 +147,7 @@ msgstr "Abbrechen"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Cancel Call"
-msgstr "Anruf abbrechen"
+msgstr "Ausschreibung abbrechen"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_tree_tender
@@ -168,7 +169,7 @@ msgstr "Abgebrochen"
 #, python-format
 msgid ""
 "Cancelled by the call for tenders associated to this request for quotation."
-msgstr ""
+msgstr "Abgebrochen durch Ausschreibung für diese Angebotsanfrage"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:67
@@ -192,7 +193,7 @@ msgstr "Ändere Anzahl"
 msgid ""
 "Check this box to generate Call for Tenders instead of generating requests "
 "for quotation from procurement."
-msgstr ""
+msgstr "Diese Box ankreuzen, um Ausschreibungen anstatt Angebotsanfragen zu generieren."
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
@@ -208,17 +209,17 @@ msgstr "Produkte auswählen"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "Click to start a new Call for Tenders process."
-msgstr ""
+msgstr "Klicken Sie zur Erstellung einer neuen Ausschreibung"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Close Call for Tenders"
-msgstr ""
+msgstr "Ausschreibung abschließen"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Closed Tenders"
-msgstr ""
+msgstr "Ausschreibung abschließen"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_company_id
@@ -255,7 +256,7 @@ msgstr "Erstelle Angebotsanfrage"
 #. module: purchase_requisition
 #: selection:product.template,purchase_requisition:0
 msgid "Create a draft purchase order"
-msgstr ""
+msgstr "Erstelle eine Bestellung im Entwurf"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_bid_line_qty_create_uid
@@ -282,7 +283,7 @@ msgstr "Datum der letzten Nachricht."
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:22
 #, python-format
 msgid "Define product(s) you want to include in the call for tenders."
-msgstr ""
+msgstr "Definieren Sie Produkt(e), die in der Ausschreibung enthalten sein sollen."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_description
@@ -315,7 +316,7 @@ msgstr "Monatsende"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_follower_ids
 msgid "Followers"
-msgstr "Followers"
+msgstr "Beobachter"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_channel_ids
@@ -325,14 +326,14 @@ msgstr "Beobachter (Kanäle)"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Follower (Partner)"
+msgstr "Beobachter (Partner)"
 
 #. module: purchase_requisition
 #. openerp-web
 #: code:addons/purchase_requisition/static/src/xml/purchase_requisition.xml:5
 #, python-format
 msgid "Generate PO"
-msgstr ""
+msgstr "Erstelle PO"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -360,7 +361,7 @@ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_is_follower
 msgid "Is Follower"
-msgstr "Ist ein Follower"
+msgstr "Ist ein Beobachter"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_last_post
@@ -409,7 +410,7 @@ msgstr "Nachrichten und Kommunikations-Historie"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_multiple_rfq_per_supplier
 msgid "Multiple RFQ per vendor"
-msgstr ""
+msgstr "Multiple Anfragen je Anbieter"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -424,7 +425,7 @@ msgstr "Neu"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "New Call for Tenders"
-msgstr ""
+msgstr "Neue Ausschreibung"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_needaction_counter
@@ -476,7 +477,7 @@ msgstr "Produkt"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Product Lines"
-msgstr ""
+msgstr "Produktpositionen"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_template
@@ -507,7 +508,7 @@ msgstr "Zu bestellende Produkte"
 #. module: purchase_requisition
 #: selection:product.template,purchase_requisition:0
 msgid "Propose a call for tenders"
-msgstr ""
+msgstr "Eine Ausschreibung vorschlagen"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
@@ -565,7 +566,7 @@ msgstr "Bedarfsanfragen (exklusive)"
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
 msgid "Purchase Tenders"
-msgstr ""
+msgstr "Ausschreibungen"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
@@ -582,7 +583,7 @@ msgstr "Anzahl"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_line_quantity_tendered
 msgid "Quantity Tendered"
-msgstr ""
+msgstr "Ausgeschriebene Menge"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:201
@@ -593,7 +594,7 @@ msgstr "Anfrage wurde erstellt"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "RFQs/Bids"
-msgstr ""
+msgstr "Anfragen/Angebote"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -603,7 +604,7 @@ msgstr "Referenz"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Request a Quotation"
-msgstr "Anfrage eines Angebots"
+msgstr "Angebotsanfrage"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -645,7 +646,7 @@ msgstr "Geplanter Bestelltermin"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Search Call for Tenders"
-msgstr ""
+msgstr "Suche Ausschreibung"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,exclusive:0
@@ -690,22 +691,22 @@ msgstr "Status"
 msgid ""
 "Technical field for not loosing the initial information about the quantity "
 "proposed in the tender"
-msgstr ""
+msgstr "Technisches Feld, um Verlust initialer Informationen zur vorgeschlagenen Menge in der Ausschreibung zu sichern."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_date_end
 msgid "Tender Closing Deadline"
-msgstr ""
+msgstr "Ausschreibungsfrist"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.purchase_line_tree
 msgid "Tender Lines"
-msgstr ""
+msgstr "Ausschreibungspositionen"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_exclusive
 msgid "Tender Selection Type"
-msgstr ""
+msgstr "Ausschreibungsauswahltyp"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -716,7 +717,7 @@ msgstr "Bedingungen und Konditionen"
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_schedule_date
 msgid ""
 "The expected and scheduled delivery date where all the products are received"
-msgstr ""
+msgstr "Das erwartete und disponierte Lieferdatum, an dem alle Produkte geliefert sind"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -726,7 +727,7 @@ msgstr "Nicht zugewiesen"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Unassigned  Requisition"
-msgstr "nicht zugeteilte Bestellmeldungen"
+msgstr "nicht zugeteilte Ausschreibungen"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_message_unread
@@ -767,7 +768,7 @@ msgstr "Website Kommunikationshistorie"
 #: code:addons/purchase_requisition/purchase_requisition.py:72
 #, python-format
 msgid "You can not confirm call because there is no product line."
-msgstr ""
+msgstr "Sie können die Ausschreibung nicht bestätigen, da es keine Produktposition gibt."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:249
@@ -787,7 +788,7 @@ msgstr "SIe haben bereits eine %s Bestellung für diesen Partner erstellt, diese
 #: code:addons/purchase_requisition/purchase_requisition.py:258
 #, python-format
 msgid "You have no line selected for buying."
-msgstr ""
+msgstr "Sie haben keine Kaufposition ausgewählt."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
