@@ -188,7 +188,7 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def copy(self, default=None):
-        new_po = super(PurchaseOrder, self).copy()
+        new_po = super(PurchaseOrder, self).copy(default=default)
         for line in new_po.order_line:
             seller = line.product_id._select_seller(
                 line.product_id, partner_id=line.partner_id, quantity=line.product_qty,
@@ -455,7 +455,8 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             qty = 0.0
             for inv_line in line.invoice_lines:
-                qty += inv_line.uom_id._compute_qty_obj(inv_line.uom_id, inv_line.quantity, line.product_uom)
+                if inv_line.invoice_id.state not in ['cancel']:
+                    qty += inv_line.uom_id._compute_qty_obj(inv_line.uom_id, inv_line.quantity, line.product_uom)
             line.qty_invoiced = qty
 
     @api.depends('order_id.state', 'move_ids.state')
