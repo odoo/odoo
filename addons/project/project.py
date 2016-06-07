@@ -182,8 +182,8 @@ class project(osv.osv):
             help="Whether this project should be displayed on the dashboard or not"),
         'label_tasks': fields.char('Use Tasks as', help="Gives label to tasks on project's kanban view."),
         'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),
-        'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)]} ),
-        'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
+        'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages'),
         'task_count': fields.function(_task_count, type='integer', string="Tasks",),
         'task_needaction_count': fields.function(_task_needaction_count, type='integer', string="Tasks",),
         'task_ids': fields.one2many('project.task', 'project_id', string='Tasks',
@@ -203,12 +203,6 @@ class project(osv.osv):
                     "- Employees Only: employees see all tasks or issues\n"
                     "- Followers Only: employees see only the followed tasks or issues; if portal\n"
                     "   is activated, portal users see the followed tasks or issues."),
-        'state': fields.selection([('draft','New'),
-                                   ('open','In Progress'),
-                                   ('cancelled', 'Cancelled'),
-                                   ('pending','Pending'),
-                                   ('close','Closed')],
-                                  'Status', required=True, copy=False),
         'doc_count': fields.function(
             _get_attached_docs, string="Number of documents attached", type='integer'
         ),
@@ -222,7 +216,6 @@ class project(osv.osv):
         'favorite_user_ids': _get_default_favorite_user_ids,
         'type': 'contract',
         'label_tasks': 'Tasks',
-        'state': 'open',
         'sequence': 10,
         'user_id': lambda self,cr,uid,ctx: uid,
         'alias_model': 'project.task',
@@ -292,7 +285,6 @@ class project(osv.osv):
             context.update({'copy':True})
             new_id = self.copy(cr, uid, proj.id, default = {
                                     'name':_("%s (copy)") % (proj.name),
-                                    'state':'open',
                                     'date_start':new_date_start,
                                     'date':new_date_end}, context=context)
             result.append(new_id)
@@ -702,40 +694,6 @@ class task(osv.osv):
 
     def _get_total_hours(self):
         return self.remaining_hours
-
-    def _generate_task(self, cr, uid, tasks, ident=4, context=None):
-        context = context or {}
-        result = ""
-        ident = ' '*ident
-        company = self.pool["res.users"].browse(cr, uid, uid, context=context).company_id
-        duration_uom = {
-            'day(s)': 'd', 'days': 'd', 'day': 'd', 'd': 'd',
-            'month(s)': 'm', 'months': 'm', 'month': 'month', 'm': 'm',
-            'week(s)': 'w', 'weeks': 'w', 'week': 'w', 'w': 'w',
-            'hour(s)': 'H', 'hours': 'H', 'hour': 'H', 'h': 'H',
-        }.get(company.project_time_mode_id.name.lower(), "hour(s)")
-        for task in tasks:
-            if task.stage_id and task.stage_id.fold:
-                continue
-            result += '''
-%sdef Task_%s():
-%s  todo = \"%.2f%s\"
-%s  effort = \"%.2f%s\"''' % (ident, task.id, ident, task.remaining_hours, duration_uom, ident, task._get_total_hours(), duration_uom)
-            start = []
-            for t2 in task.parent_ids:
-                start.append("up.Task_%s.end" % (t2.id,))
-            if start:
-                result += '''
-%s  start = max(%s)
-''' % (ident,','.join(start))
-
-            if task.user_id:
-                result += '''
-%s  resource = %s
-''' % (ident, 'User_'+str(task.user_id.id))
-
-        result += "\n"
-        return result
 
     # ---------------------------------------------------
     # Mail gateway

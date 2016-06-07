@@ -73,9 +73,6 @@
             <field name="model">project.project</field>
             <field name="arch" type="xml">
                 <form string="Project">
-                <header>
-                    <field name="state" widget="statusbar" clickable="True"/>
-                </header>
                 <sheet string="Project">
                     <field name="analytic_account_id" invisible="1" required="0"/>
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
@@ -113,7 +110,7 @@
                                 <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer"
                                         attrs="{'invisible':[('privacy_visibility','in',['employees', 'followers'])]}"/>
                                 <field name="user_id" string="Project Manager"
-                                        attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"
+                                        attrs="{'readonly':[('active','=',False)]}"
                                         groups="base.group_no_one"/>
                             </group>
                             <group name="misc">
@@ -154,8 +151,6 @@
                 <search string="Search Project">
                     <field name="name" string="Project Name"/>
                     <filter string="My Projects" name="my_projects" domain="[('favorite_user_ids', 'in', uid)]"/>
-                    <filter string="Open" name="Current" domain="[('state', '=','open')]"/>
-                    <filter string="Pending" name="Pending" domain="[('state', '=','pending')]"/>
                     <separator/>
                     <filter string="Manager" domain="[('user_id','=',uid)]"/>
                     <filter string="Followed by Me" domain="[('message_is_follower','=',True)]"/>
@@ -177,13 +172,12 @@
             <field name="model">project.project</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree decoration-bf="message_needaction==True" decoration-info="state in ('draft','pending')" decoration-muted="state in ('close','cancelled')" string="Projects">
+                <tree decoration-bf="message_needaction==True" decoration-muted="active == False" string="Projects">
                     <field name="sequence" widget="handle"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Project Name"/>
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Contact"/>
-                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -221,14 +215,6 @@
             </field>
         </record>
 
-        <record id="open_view_template_project" model="ir.actions.act_window">
-            <field name="name">Templates of Projects</field>
-            <field name="res_model">project.project</field>
-            <field name="view_type">form</field>
-            <field name="domain">[('state','=','template')]</field>
-            <field name="view_id" ref="view_project"/>
-        </record>
-
         <!-- Task -->
         <record id="view_task_form2" model="ir.ui.view">
             <field name="name">project.task.form</field>
@@ -257,7 +243,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="project_id" domain="[('state','not in', ('close', 'cancelled'))]" on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
+                            <field name="project_id" domain="[('active','=',False)]" on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
                             <field name="user_id"
                                 on_change="onchange_user_id(user_id, context)"
                                 options='{"no_open": True}'/>
