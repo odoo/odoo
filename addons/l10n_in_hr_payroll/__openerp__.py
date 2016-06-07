@@ -23,26 +23,26 @@ Indian Payroll Salary Rules.
     """,
     'active': False,
     'data': [
-         'l10n_in_hr_payroll_view.xml',
+         'views/l10n_in_hr_payroll_view.xml',
          'data/l10n_in_hr_payroll_data.xml',
          'data/hr.salary.rule.csv',
          'security/ir.model.access.csv',
-         'l10n_in_hr_payroll_report.xml',
-         'l10n_in_hr_payroll_sequence.xml',
-         'views/report_payslipdetails.xml',
-         'views/report_hrsalarybymonth.xml',
+         'views/l10n_in_hr_payroll_report.xml',
+         'data/l10n_in_hr_payroll_sequence_data.xml',
+         'views/report_payslip_details_template.xml',
+         'views/report_hr_salary_employee_bymonth_template.xml',
          'wizard/hr_salary_employee_bymonth_view.xml',
          'wizard/hr_yearly_salary_detail_view.xml',
          'report/payment_advice_report_view.xml',
          'report/payslip_report_view.xml',
-         'views/report_hryearlysalary.xml',
-         'views/report_payrolladvice.xml',
+         'views/report_hr_yearly_salary_detail_template.xml',
+         'views/report_payroll_advice_template.xml',
      ],
     'test': [
         'test/payment_advice.yml',
         'test/payment_advice_batch.yml'
     ],
 
-    'demo': ['l10n_in_hr_payroll_demo.xml'],
+    'demo': ['demo/l10n_in_hr_payroll_demo.xml'],
     'installable': True
 }
