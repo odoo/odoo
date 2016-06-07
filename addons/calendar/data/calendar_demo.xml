@@ -1,20 +1,17 @@
-<?xml version="1.0"?>
-<openerp>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
     <data noupdate="1">
-    <!--
-        ((((((((((( Demo Cases )))))))))))
-    -->
 
     <!--For Meetings -->
          <record id="cal_contact_1" model="calendar.contacts">
             <field eval="1" name="active"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="partner_id" ref="base.res_partner_1"/>            
+            <field name="partner_id" ref="base.res_partner_1"/>
         </record>
         <record id="cal_contact_2" model="calendar.contacts">
             <field eval="1" name="active"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="partner_id" ref="base.partner_demo"/>            
+            <field name="partner_id" ref="base.partner_demo"/>
         </record>
 
         <record id="calendar_event_1" model="calendar.event">
@@ -32,7 +29,7 @@
         </record>
 
         <record id="calendar_event_2" model="calendar.event">
-            <field eval="1" name="active"/>            
+            <field eval="1" name="active"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="partner_ids" eval="[(6,0,[ref('base.partner_root'),ref('base.res_partner_4'),ref('base.res_partner_3')])]"/>
             <field name="name">Initial discussion</field>
@@ -84,7 +81,7 @@
 
         <record id="calendar_event_6" model="calendar.event">
             <field eval="1" name="active"/>
-            <field name="user_id" ref="base.user_demo"/>            
+            <field name="user_id" ref="base.user_demo"/>
             <field name="partner_ids" eval="[(6,0,[ref('base.partner_root'),ref('base.res_partner_4'),ref('base.res_partner_1'),ref('base.res_partner_12')])]"/>
             <field name="name">Presentation for new Services</field>
             <field name="categ_ids" eval="[(6,0,[ref('categ_meet1'), ref('categ_meet2')])]"/>
@@ -97,7 +94,7 @@
 
         <record id="calendar_event_7" model="calendar.event">
             <field eval="1" name="active"/>
-            <field name="user_id" ref="base.user_demo"/>            
+            <field name="user_id" ref="base.user_demo"/>
             <field name="partner_ids" eval="[(6,0,[ref('base.res_partner_4')])]"/>
             <field name="name">Presentation of the new Calendar</field>
             <field name="categ_ids" eval="[(6,0,[ref('categ_meet1'), ref('categ_meet2')])]"/>
@@ -110,4 +107,4 @@
 
 
     </data>
-</openerp>
+</odoo>
