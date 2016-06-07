@@ -243,8 +243,11 @@ class XMLTranslator(object):
 
         # process children nodes locally in child_trans
         child_trans = XMLTranslator(self.callback, self.method, parser=self.parser)
-        if node.text and not avoid_pattern.match(node.text):
-            child_trans.todo(escape(node.text))
+        if node.text:
+            if avoid_pattern.match(node.text):
+                child_trans.done(escape(node.text)) # do not translate <!DOCTYPE...
+            else:
+                child_trans.todo(escape(node.text))
         for child in node:
             child_trans.process(child)
 
