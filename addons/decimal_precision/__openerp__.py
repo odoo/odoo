@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -11,11 +11,9 @@ The decimal precision is configured per company.
 """,
     'version': '0.1',
     'depends': ['base'],
-    'category' : 'Hidden/Dependency',
+    'category': 'Hidden/Dependency',
     'data': [
-        'views/decimal_precision_view.xml',
         'security/ir.model.access.csv',
+        'views/decimal_precision_view.xml',
     ],
-    'demo': [],
-    'installable': True,
 }

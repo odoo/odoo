@@ -1,13 +1,14 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import openerp
-from openerp import SUPERUSER_ID
+from odoo import api
+from odoo import SUPERUSER_ID
 
 
 def get_precision(application):
     def change_digit(cr):
-        decimal_precision = openerp.registry(cr.dbname)['decimal.precision']
-        res = decimal_precision.precision_get(cr, SUPERUSER_ID, application)
+        env = api.Environment(cr, SUPERUSER_ID, {})
+        DecimalPrecision = env['decimal.precision']
+        res = DecimalPrecision.precision_get(application)
         return (16, res)
     return change_digit
