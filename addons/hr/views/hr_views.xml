@@ -336,19 +336,19 @@
                 <form string="Job">
                     <header>
                         <button name="set_recruit" string="Launch Recruitment" states="open" type="object" class="oe_highlight" groups="base.group_user"/>
-                        <button name="set_open" string="Stop Recruitment" states="recruit" type="object" class="oe_highlight" groups="base.group_user"/>
+                        <button name="set_open" string="Stop Recruitment" states="recruit" type="object" groups="base.group_user"/>
                         <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name" placeholder="Job Position Name"/></h1>
+                            <h1><field name="name" placeholder="e.g. Sales Manager"/></h1>
                         </div>
                         <group name="employee_data">
                             <group>
-                                <field name="department_id" class="oe_inline"/>
-                                <field name="no_of_recruitment" class="oe_inline"/>
+                                <field name="department_id"/>
+                                <field name="no_of_recruitment"/>
                             </group>
                         </group>
                         <div attrs="{'invisible': [('state', '!=', 'recruit')]}">
@@ -358,7 +358,6 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
             </field>
