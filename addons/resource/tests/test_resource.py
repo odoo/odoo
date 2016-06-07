@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
+
+import babel.dates
 from dateutil.relativedelta import relativedelta
 
 from openerp.addons.resource.tests.common import TestResourceCommon
+
+from openerp.tests import TransactionCase
 
 
 class TestResource(TestResourceCommon):
@@ -460,6 +464,155 @@ class TestResource(TestResourceCommon):
         # Without calendar, should only count days -> 12 -> 16, 5 days with default intervals
         res = self.resource_calendar.schedule_days_get_date(cr, uid, None, 5, day_date=self.date1, default_interval=(8, 16), context={'tz': 'UTC'})
         self.assertEqual(res, datetime.strptime('2013-02-16 16:00:00', _format), 'resource_calendar: wrong days scheduling')
+
+WAR_START = date(1932, 11, 2)
+WAR_END = date(1932, 12, 10)
+class TestWorkDays(TransactionCase):
+    def _make_attendance(self, weekday, **kw):
+        data = {
+            'name': babel.dates.get_day_names()[weekday],
+            'dayofweek': str(weekday),
+            'hour_from': 9,
+            'hour_to': 17,
+        }
+        data.update(kw)
+        return data
+    def setUp(self):
+        super(TestWorkDays, self).setUp()
+        # trivial 5/7 9-17 resource calendar
+        self._calendar = self.env['resource.calendar'].create({
+            'name': "Trivial Calendar",
+            'attendance_ids': [
+                (0, 0, self._make_attendance(i))
+                for i in range(5)
+            ]
+        })
+
+        self._days = [
+            date.fromordinal(o)
+            for o in xrange(
+                WAR_START.toordinal(),
+                WAR_END.toordinal() + 1
+            )
+        ]
+
+    def test_no_calendar(self):
+        """
+        If a resource has no resource calendar, they don't work
+        """
+        r = self.env['resource.resource'].create({
+            'name': "NoCalendar"
+        })
+
+        self.assertEqual(
+            [],
+            list(r._iter_work_days(WAR_START, WAR_END)),
+        )
+
+    def test_trivial_calendar_no_leaves(self):
+        """ If leaves are not involved, only calendar attendances (basic
+        company configuration) are taken in account
+        """
+        r = self.env['resource.resource'].create({
+            'name': "Trivial Calendar",
+            'calendar_id': self._calendar.id
+        })
+
+        # with the trivial calendar, all days are work days except for
+        # saturday and sunday
+        self.assertEqual(
+            [d for d in self._days if d.weekday() not in (5, 6)],
+            list(r._iter_work_days(WAR_START, WAR_END))
+        )
+
+    def test_global_leaves(self):
+        self.env['resource.calendar.leaves'].create({
+            'calendar_id': self._calendar.id,
+            'date_from': '1932-11-09 00:00:00',
+            'date_to': '1932-11-12 23:59:59',
+        })
+
+        r1 = self.env['resource.resource'].create({
+            'name': "Resource 1",
+            'calendar_id': self._calendar.id
+        })
+        r2 = self.env['resource.resource'].create({
+            'name': "Resource 2",
+            'calendar_id': self._calendar.id
+        })
+
+        days = [
+            d for d in self._days
+            if d.weekday() not in (5, 6)
+            if d < date(1932, 11, 9) or d > date(1932, 11, 12)
+        ]
+        self.assertEqual(days, list(r1._iter_work_days(WAR_START, WAR_END)))
+        self.assertEqual(days, list(r2._iter_work_days(WAR_START, WAR_END)))
+
+    def test_personal_leaves(self):
+        """ Leaves with a resource_id apply only to that resource
+        """
+        r1 = self.env['resource.resource'].create({
+            'name': "Resource 1",
+            'calendar_id': self._calendar.id
+        })
+        r2 = self.env['resource.resource'].create({
+            'name': "Resource 2",
+            'calendar_id': self._calendar.id
+        })
+        self.env['resource.calendar.leaves'].create({
+            'calendar_id': self._calendar.id,
+            'date_from': '1932-11-09 00:00:00',
+            'date_to': '1932-11-12 23:59:59',
+            'resource_id': r2.id
+        })
+
+        weekdays = [d for d in self._days if d.weekday() not in (5, 6)]
+        self.assertEqual(weekdays, list(r1._iter_work_days(WAR_START, WAR_END)))
+        self.assertEqual(
+            [d for d in weekdays
+             if d < date(1932, 11, 9) or d > date(1932, 11, 12)
+            ],
+            list(r2._iter_work_days(WAR_START, WAR_END))
+        )
+
+    def test_mixed_leaves(self):
+        r = self.env['resource.resource'].create({
+            'name': "Resource 1",
+            'calendar_id': self._calendar.id
+        })
+        self.env['resource.calendar.leaves'].create({
+            'calendar_id': self._calendar.id,
+            'date_from': '1932-11-09 00:00:00',
+            'date_to': '1932-11-12 23:59:59',
+        })
+        self.env['resource.calendar.leaves'].create({
+            'calendar_id': self._calendar.id,
+            'date_from': '1932-12-02 00:00:00',
+            'date_to': '1932-12-31 23:59:59',
+            'resource_id': r.id
+        })
+
+        self.assertEqual(
+            [d for d in self._days
+             if d.weekday() not in (5, 6)
+             if d < date(1932, 11, 9) or d > date(1932, 11, 12)
+             if d < date(1932, 12, 2)
+            ],
+            list(r._iter_work_days(WAR_START, WAR_END))
+        )
+
+        # _is_work_day is built on _iter_work_days, but it's probably a good
+        # idea to ensure it does do what it should
+        self.assertTrue(r._is_work_day(date(1932, 11, 8)))
+        self.assertTrue(r._is_work_day(date(1932, 11, 14)))
+        self.assertTrue(r._is_work_day(date(1932, 12, 1)))
+
+        self.assertFalse(r._is_work_day(date(1932, 11, 11))) # global leave
+        self.assertFalse(r._is_work_day(date(1932, 11, 13))) # sun
+        self.assertFalse(r._is_work_day(date(1932, 11, 19))) # sat
+        self.assertFalse(r._is_work_day(date(1932, 11, 20))) # sun
+        self.assertFalse(r._is_work_day(date(1932, 12, 6))) # personal leave
 
 def seconds(td):
     assert isinstance(td, timedelta)
