@@ -240,19 +240,28 @@ class QWeb(object):
     _name_gen = count()
 
     def render(self, template, values=None, **options):
-        """
-        'options' can be used by QWeb methods
-        'values' is used to evaluate template values
+        """ render(template, values, **options)
+
+        Render the template specified by the given name.
+
+        :param template: template identifier
+        :param dict values: template values to be used for rendering
+        :param options: used to compile the template (the dict available for the rendering is frozen)
+            * ``load`` (function) overrides the load method
+            * ``profile`` (float) profile the rendering (use astor lib) (filter
+              profile line with time ms >= profile)
         """
         body = []
         self.compile(template, options)(self, body.append, values or {})
         return u''.join(body)
 
     def compile(self, template, options):
-        """
-        Return a "qweb function"
-        * parameters: ``append`` ``values``
-        * use append method to add content
+        """ Compile the given template into a rendering function::
+
+            render(qweb, append, values)
+
+        where ``qweb`` is a QWeb instance, ``append`` is a unary function to
+        collect strings into a result, and ``values`` are the values to render.
         """
         if options is None:
             options = {}
@@ -319,8 +328,7 @@ class QWeb(object):
         return _compiled_fn
 
     def default_values(self):
-        """ attributes add to the values for each computed template
-        """
+        """ Return attributes added to the values for each computed template. """
         return {
             'True': True,
             'False': False,
@@ -360,6 +368,10 @@ class QWeb(object):
         }
 
     def get_template(self, template, options):
+        """ Retrieve the given template, and return it as a pair ``(element,
+        document)``, where ``element`` is an etree, and ``document`` is the
+        string document that contains ``element``.
+        """
         if isinstance(template, etree._Element):
             document = template
             template = etree.tostring(template)
@@ -387,6 +399,7 @@ class QWeb(object):
         raise QWebException("Template not found", name=template)
 
     def load(self, template, options):
+        """ Load a given template. """
         return template
 
     # public method for template dynamic values
@@ -400,8 +413,10 @@ class QWeb(object):
     # compute helpers
 
     def _profiling(self, astmod, options):
+        """ Add profiling code into the givne module AST. """
         code_line = astor.to_source(astmod)
 
+        # code = $code_lines.split(u"\n")
         astmod.body.insert(0, ast.Assign(
             targets=[ast.Name(id='code', ctx=ast.Store())],
             value=ast.Call(
@@ -416,6 +431,7 @@ class QWeb(object):
         ))
         code_line = [[l, False] for l in code_line.split('\n')]
 
+        # profiling = {}
         astmod.body.insert(0, ast.Assign(
             targets=[ast.Name(id='profiling', ctx=ast.Store())],
             value=ast.Dict(keys=[], values=[])
@@ -426,6 +442,7 @@ class QWeb(object):
         def prof(code, time):
             line_id[0] += 1
 
+            # profiling.setdefault($line_id, time() - $time)
             return ast.Expr(ast.Call(
                 func=ast.Attribute(
                     value=ast.Name(id='profiling', ctx=ast.Load()),
@@ -451,6 +468,8 @@ class QWeb(object):
             profile_body = []
             for code in body:
                 time = self._make_name('time')
+
+                # $time = time()
                 profile_body.append(
                     ast.Assign(
                         targets=[ast.Name(id=time, ctx=ast.Store())],
@@ -506,8 +525,8 @@ class QWeb(object):
             """ % (p, p, p, p, str(options['template']).replace('"', ' ')))).body)
 
     def _base_module(self):
-        """ module base supporting qweb template functions (provides basic
-        imports and utilities)
+        """ Base module supporting qweb template functions (provides basic
+        imports and utilities), returned as a Python AST.
         Currently provides:
         * collections
         * itertools
@@ -515,7 +534,6 @@ class QWeb(object):
         * qweb_escape
         * unicodifier (empty string for a None or False, otherwise unicode string)
         """
-
         return ast.parse(dedent("""
             from collections import OrderedDict
             import itertools
@@ -524,18 +542,16 @@ class QWeb(object):
             """))
 
     def _create_def(self, options, body, prefix='fn', lineno=None):
+        """ Generate (and globally store) a rendering function definition AST
+        and return its name. The function takes parameters ``self``, ``append``,
+        ``values``, ``options``, and ``log``. If ``body`` is empty, the function
+        simply returns ``None``.
         """
-        If ``body`` is non-empty, generates (and globally store) the
-        corresponding function definition and returns the relevant ast.Call
-        node.
-        If ``body`` is empty, doesn't do anything and returns ``None``.
-        Generates a "qweb function" definition:
-        * takes ``append`` method and ``values`` parameter
-        """
-        assert body, "To create a compiled function 'body' ast list can't be empty"
+        #assert body, "To create a compiled function 'body' ast list can't be empty"
 
         name = self._make_name(prefix)
 
+        # def $name(self, append, values, options, log)
         fn = ast.FunctionDef(
             name=name,
             args=ast.arguments(args=[
@@ -555,7 +571,7 @@ class QWeb(object):
         return name
 
     def _call_def(self, name, append='append', values='values'):
-
+        # $name(self, append, values, options, log)
         return ast.Call(
             func=ast.Name(id=name, ctx=ast.Load()),
             args=[
@@ -570,6 +586,7 @@ class QWeb(object):
 
     def _append(self, item):
         assert isinstance(item, ast.expr)
+        # append(ast item)
         return ast.Expr(ast.Call(
             func=ast.Name(id='append', ctx=ast.Load()),
             args=[item], keywords=[],
@@ -619,6 +636,10 @@ class QWeb(object):
         return "%s_%s" % (prefix, next(self._name_gen))
 
     def _compile_node(self, el, options):
+        """ Compile the given element.
+
+        :return: list of AST nodes
+        """
         path = options['root'].getpath(el)
         if options['last_path_node'] != path:
             options['last_path_node'] = path
@@ -650,8 +671,10 @@ class QWeb(object):
         return body + self._compile_directives(el, options)
 
     def _compile_directives(self, el, options):
-        """
-        :return ast list
+        """ Compile the given element, following the directives given in the
+        iterator ``options['iter_directives']``.
+
+        :return: list of AST nodes
         """
         # compile the first directive present on the element
         for directive in options['iter_directives']:
@@ -674,6 +697,7 @@ class QWeb(object):
         return []
 
     def _values_var(self, varname, ctx):
+        # # values[$varname]
         return ast.Subscript(
             value=ast.Name(id='values', ctx=ast.Load()),
             slice=ast.Index(varname),
@@ -683,10 +707,9 @@ class QWeb(object):
     # order
 
     def _directives_eval_order(self):
-        """ Should list all supported directives in the order in which they
-        should evaluate when set on the same element. E.g. if a node bearing
-        both ``foreach`` and ``if`` should see ``foreach`` executed before
-        ``if`` aka
+        """ List all supported directives in the order in which they should be
+        evaluated on a given element. For instance, a node bearing both
+        ``foreach`` and ``if`` should see ``foreach`` executed before ``if`` aka
         .. code-block:: xml
             <el t-foreach="foo" t-as="bar" t-if="bar">
         should be equivalent to
@@ -694,7 +717,7 @@ class QWeb(object):
             <t t-foreach="foo" t-as="bar">
                 <t t-if="bar">
                     <el>
-        then this method should return ``['foreach', 'if']``
+        then this method should return ``['foreach', 'if']``.
         """
         return [
             'debug',
@@ -707,11 +730,15 @@ class QWeb(object):
         ]
 
     def _is_static_node(self, el):
+        """ Test whether the given element is purely static, i.e., does not
+        require dynamic rendering for its attributes.
+        """
         return not any(att.startswith('t-') for att in el.attrib)
 
     # compile
 
     def _compile_static_node(self, el, options):
+        """ Compile a purely static element into a list of AST nodes. """
         content = self._compile_directive_content(el, options)
         if el.tag == 't':
             return content
@@ -722,6 +749,8 @@ class QWeb(object):
             return [self._append(ast.Str(tag + '>'))] + content + [self._append(ast.Str('</%s>' % el.tag))]
 
     def _compile_static_attributes(self, el, options):
+        """ Compile the static attributes of the given element into a list of
+        pairs (name, expression AST). """
         nodes = []
         for key, value in el.attrib.iteritems():
             if not key.startswith('t-'):
@@ -729,6 +758,8 @@ class QWeb(object):
         return nodes
 
     def _compile_dynamic_attributes(self, el, options):
+        """ Compile the dynamic attributes of the given element into a list of
+        pairs (name, expression AST). """
         nodes = []
         for name, value in el.attrib.iteritems():
             if name.startswith('t-attf-'):
@@ -736,6 +767,7 @@ class QWeb(object):
             elif name.startswith('t-att-'):
                 nodes.append((name[6:], self._compile_expr(value)))
             elif name == 't-att':
+                # self._get_dynamic_att($tag, $value, options, values)
                 nodes.append(ast.Call(
                     func=ast.Attribute(
                         value=ast.Name(id='self', ctx=ast.Load()),
@@ -753,11 +785,13 @@ class QWeb(object):
         return nodes
 
     def _compile_all_attributes(self, el, options, attr_already_created=False):
+        """ Compile the attributes of the given elements into a list of AST nodes. """
         body = []
         if any(name.startswith('t-att') or not name.startswith('t-') for name, value in el.attrib.iteritems()):
             if not attr_already_created:
                 attr_already_created = True
                 body.append(
+                    # t_attrs = OrderedDict()
                     ast.Assign(
                         targets=[ast.Name(id='t_attrs', ctx=ast.Store())],
                         value=ast.Call(
@@ -771,6 +805,7 @@ class QWeb(object):
             items = self._compile_static_attributes(el, options) + self._compile_dynamic_attributes(el, options)
             for item in items:
                 if isinstance(item, tuple):
+                    # t_attrs[$name] = $value
                     body.append(ast.Assign(
                         targets=[ast.Subscript(
                             value=ast.Name(id='t_attrs', ctx=ast.Load()),
@@ -780,6 +815,7 @@ class QWeb(object):
                         value=item[1]
                     ))
                 elif item:
+                    # t_attrs.update($item)
                     body.append(ast.Expr(ast.Call(
                         func=ast.Attribute(
                             value=ast.Name(id='t_attrs', ctx=ast.Load()),
@@ -845,6 +881,7 @@ class QWeb(object):
         return body
 
     def _compile_tag(self, el, content, options, attr_already_created=False):
+        """ Compile the tag of the given element into a list of AST nodes. """
         body = [self._append(ast.Str(u'<%s' % el.tag))]
         body.extend(self._compile_all_attributes(el, options, attr_already_created))
         if el.tag in self._void_elements:
@@ -992,6 +1029,10 @@ class QWeb(object):
                 orelse = self._compile_node(next, dict(options, t_if=True))
                 next.getparent().remove(next)
         return [
+            # if $t-if:
+            #    next tag directive
+            # else:
+            #    $t-else
             ast.If(
                 test=self._compile_expr(el.attrib.pop('t-if')),
                 body=self._compile_directives(el, options),
@@ -1001,6 +1042,8 @@ class QWeb(object):
 
     def _compile_directive_groups(self, el, options):
         return [
+            # if self.user_has_groups($groups):
+            #    next tag directive
             ast.If(
                 test=ast.Call(
                     func=ast.Attribute(
@@ -1041,7 +1084,7 @@ class QWeb(object):
         return el.tail is not None and [self._append(ast.Str(unicodifier(el.tail)))] or []
 
     def _compile_directive_field(self, el, options):
-        """ eg: <span t-record="browse_record(res.partner, 1)" t-field="phone">+1 555 555 8069</span>"""
+        """ Compile something like ``<span t-field="record.phone">+1 555 555 8069</span>`` """
         node_name = el.tag
         assert node_name not in ("table", "tbody", "thead", "tfoot", "tr", "td",
                                  "li", "ul", "ol", "dl", "dt", "dd"),\
@@ -1150,12 +1193,6 @@ class QWeb(object):
         return content
 
     def _compile_directive_call(self, el, options):
-        """
-        :param etree._Element el:
-        :param list ast call:
-        :return: new body
-        :rtype: list(ast.AST)
-        """
         tmpl = el.attrib.pop('t-call')
         _values = self._make_name('values_copy')
         call_options = el.attrib.pop('t-call-options', None)
@@ -1341,7 +1378,7 @@ class QWeb(object):
 
     def _compile_format(self, f):
         """ Parses the provided format string and compiles it to a single
-        expression ast, uses string concatenation via "+"
+        expression ast, uses string concatenation via "+".
         """
         elts = []
         base_idx = 0
@@ -1365,10 +1402,9 @@ class QWeb(object):
         ), elts)
 
     def _compile_expr(self, expr):
-        """ Compiles a purported Python expression to ast, and alter its variable
-        references to access values data instead
-        Can be overwrited to use a safe eval method
-        It's unsafe, overwrited this method to use a safe code check
+        """ Compiles a purported Python expression to ast, and alter its
+        variable references to access values data instead. Can be overridden to
+        use a safe eval method.
         """
         # string must be stripped otherwise whitespace before the start for
         # formatting purpose are going to break parse/compile
