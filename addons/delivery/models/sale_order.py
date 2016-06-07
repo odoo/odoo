@@ -70,6 +70,8 @@ class SaleOrder(models.Model):
             else:
                 raise UserError(_('No carrier set for this order.'))
 
+        return True
+
     def _create_delivery_line(self, carrier, price_unit):
         SaleOrderLine = self.env['sale.order.line']
 
