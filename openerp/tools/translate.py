@@ -234,7 +234,7 @@ class XMLTranslator(object):
             node.tag in SKIPPED_ELEMENTS or
             node.get("t-translation", "").strip() == "off" or
             node.tag == "attribute" and node.get("name") not in TRANSLATED_ATTRS or
-            not node.getparent() and node.text and '<!DOCTYPE' in node.text
+            node.getparent() is None and node.text and '<!DOCTYPE' in node.text
         ):
             # do not translate the contents of the node
             tail, node.tail = node.tail, None
