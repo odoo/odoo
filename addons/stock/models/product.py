@@ -270,7 +270,7 @@ class Product(models.Model):
             [('product_id', 'in', self.ids)],
             ['product_id', 'product_min_qty', 'product_max_qty'],
             ['product_id'])
-        res = dict.fromkeys(self.ids, dict())
+        res = {i: {} for i in self.ids}
         for data in read_group_res:
             res[data['product_id'][0]]['nbr_reordering_rules'] = int(data['product_id_count'])
             res[data['product_id'][0]]['reordering_min_qty'] = data['product_min_qty']

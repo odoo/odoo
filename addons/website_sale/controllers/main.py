@@ -122,6 +122,10 @@ class WebsiteSale(http.Controller):
             attribute_value_ids.append([variant.id, visible_attribute_ids, variant.price, price])
         return attribute_value_ids
 
+    def _get_search_order(self, post):
+        # OrderBy will be parsed in orm and so no direct sql injection
+        return 'website_published desc,%s' % post.get('order', 'website_sequence desc')
+
     @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True)
     def pricelist_change(self, pl_id, **post):
         if request.website.is_pricelist_available(pl_id.id):
@@ -211,7 +215,7 @@ class WebsiteSale(http.Controller):
 
         product_count = Product.search_count(domain)
         pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
-        products = Product.with_context(pricelist_context).search(domain, limit=ppg, offset=pager['offset'], order='website_published desc, website_sequence desc')
+        products = Product.with_context(pricelist_context).search(domain, limit=ppg, offset=pager['offset'], order=self._get_search_order(post))
 
         ProductAttribute = request.env['product.attribute']
         if products:

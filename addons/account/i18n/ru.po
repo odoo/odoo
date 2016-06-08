@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-05-06 13:24+0000\n"
+"PO-Revision-Date: 2016-05-27 09:02+0000\n"
 "Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -1778,7 +1778,7 @@ msgid ""
 "Bank Account Number to which the invoice will be paid. A Company bank "
 "account if this is a Customer Invoice or Vendor Refund, otherwise a Partner "
 "bank account number."
-msgstr "Номер Банковского Счета, на который счет-фактура будет оплачена. Счета юридического лица в банке, если это Счета-фактуры Клиенту или возврат Поставщику, в противном случае банковский номер счета Партнера."
+msgstr "Банковский счёт, на который должна приходить оплата. Это счёт компании, если мы говорим о счетах клиентам или возвратах от поставщиков, или счёт партнёра в противном случае."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_bank_journal_form
@@ -3944,7 +3944,7 @@ msgid ""
 "From this report, you can have an overview of the amount invoiced from your "
 "vendors. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
-msgstr "Из этого отчета вы можете получить обзор суммы, выставленной в счет-фактуре вашим поставщиком. Можно также использовать инструмент поиска, чтобы персонализировать ваши отчеты по  счет-фактурам, таким образом сопоставить этот анализ согласно вашим потребностям."
+msgstr "По этому отчёту можно оценить общую сумму выставленных вам счетов. Можно также использовать инструмент поиска, чтобы персонализировать ваши отчеты по счетам, приспособив их под ваши требования."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -5801,7 +5801,7 @@ msgid ""
 "                document: invoice, refund, vendor payment, bank statements,\n"
 "                etc. So, you should record journal entries manually only/mainly\n"
 "                for miscellaneous operations."
-msgstr "Odoo автоматически создает одну запись в журнале учета \nдокументов: счета-фактуры, возврата, оплаты поставщикам, \nвыписки банка и др. Итак, вы должны записывать в журнале \nвручную только/главным образом, прочие операции."
+msgstr "Odoo автоматически создает запись в журнале на каждый отчётный документ: счёт, возврат, оплату поставщику, \nбанковскую выписку и др. Таким образом, вам требуется вручную добавлять записи в журнал только для нетипичных операций."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8906,7 +8906,7 @@ msgstr "Производитель"
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Vendor Bill"
-msgstr "Счет Поставщика"
+msgstr "Счет от поставщика"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:156
@@ -8920,13 +8920,13 @@ msgstr "Счета от поставщиков"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Vendor Flow"
-msgstr "Поток Поставщика"
+msgstr "Поток поставщика"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:450
 #, python-format
 msgid "Vendor Payment"
-msgstr "Платеж Поставщику"
+msgstr "Платеж поставщику"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_supplier_payment_term_id
@@ -8946,12 +8946,12 @@ msgstr "Обозначение производителя"
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Vendor Refund"
-msgstr "Возврат Поставщику"
+msgstr "Возврат поставщику"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_template_supplier_taxes_id
 msgid "Vendor Taxes"
-msgstr "Налоги Поставщика"
+msgstr "Налоги поставщика"
 
 #. module: account
 #. openerp-web

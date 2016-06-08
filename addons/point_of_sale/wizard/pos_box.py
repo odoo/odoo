@@ -27,8 +27,8 @@ class PosBox(CashBox):
 class PosBoxIn(PosBox):
     _inherit = 'cash.box.in'
 
-    def _compute_values_for_statement_line(self, box, record):
-        values = super(PosBoxIn, self)._compute_values_for_statement_line(box=box, record=record)
+    def _calculate_values_for_statement_line(self, record):
+        values = super(PosBoxIn, self)._calculate_values_for_statement_line(record=record)
         active_model = self.env.context.get('active_model', False)
         active_ids = self.env.context.get('active_ids', [])
         if active_model == 'pos.session' and active_ids:
@@ -39,8 +39,8 @@ class PosBoxIn(PosBox):
 class PosBoxOut(PosBox):
     _inherit = 'cash.box.out'
 
-    def _compute_values_for_statement_line(self, box, record):
-        values = super(PosBoxOut, self)._compute_values_for_statement_line(box=box, record=record)
+    def _calculate_values_for_statement_line(self, record):
+        values = super(PosBoxOut, self)._calculate_values_for_statement_line(record)
         active_model = self.env.context.get('active_model', False)
         active_ids = self.env.context.get('active_ids', [])
         if active_model == 'pos.session' and active_ids:
