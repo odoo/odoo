@@ -36,18 +36,9 @@ class CrmActivity(models.Model):
         'crm.activity', 'crm_activity_rel', 'recommended_id', 'activity_id',
         string='Preceding Activities')
 
-    @api.model
-    def create(self, values):
-        ''' Override to set the res_model of inherited subtype to crm.lead.
-        This cannot be achieved using a default on res_model field because
-        of the inherits. Indeed a new field would be created. However the
-        field on the subtype would still exist. Being void, the subtype
-        will be present for every model in Odoo. That's quite an issue. '''
-        if not values.get('res_model') and 'default_res_model' not in self._context:
-            values['res_model'] = 'crm.lead'
-        if 'internal' not in values and 'default_internal' not in self._context:
-            values['internal'] = True
-        return super(CrmActivity, self).create(values)
+    # setting a default value on inherited fields is a bit involved
+    res_model = fields.Char('Model', related='subtype_id.res_model', inherited=True, default='crm.lead')
+    internal = fields.Boolean('Internal Only', related='subtype_id.internal', inherited=True, default=True)
 
     @api.multi
     def unlink(self):
