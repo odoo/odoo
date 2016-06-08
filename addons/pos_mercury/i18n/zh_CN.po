@@ -5,16 +5,17 @@
 # Translators:
 # fausthuang, 2015
 # fausthuang, 2015
-# Joroy <13637815@qq.com>, 2016
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Joray <13637815@qq.com>, 2016
 # mrshelly <mrshelly@hotmail.com>, 2016
-# 珠海-老天 <liangjia@qq.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:39+0000\n"
-"PO-Revision-Date: 2016-03-12 01:56+0000\n"
-"Last-Translator: Joroy <13637815@qq.com>\n"
+"PO-Revision-Date: 2016-06-02 13:40+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +45,7 @@ msgid ""
 "                                configuration will enable you to allow payments with various credit cards\n"
 "                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
 "                                configuration you should associate it with a Point Of Sale payment method."
-msgstr "<i>Mercury配置</i>定义在销售点用信用卡进行交易的Mercury账号\n设置Mercury配置能够让你用不同的付款方式支付（例如Visa， 万事达卡，Discovery，美国快线等等）\n\n配置好之后你应该把他和销售点的付款方式联系起来"
+msgstr "<i>Mercury配置</i>定义在销售点用信用卡进行交易的Mercury账号\n设置Mercury配置能够让你用不同的付款方式支付（例如Visa， 万事达卡，Discovery，美国快线等等）。配置好之后你应该把他和销售点的付款方式联系起来"
 
 #. module: pos_mercury
 #. openerp-web
@@ -88,7 +89,7 @@ msgstr "持卡人会付款给发卡人"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_card_brand
 msgid "Card Brand"
-msgstr "卡的品牌"
+msgstr "卡品牌"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_card_number
@@ -99,7 +100,7 @@ msgstr "卡号"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_card_owner_name
 msgid "Card Owner Name"
-msgstr "卡的所有者名称"
+msgstr "卡所有者名称"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -112,7 +113,7 @@ msgstr "读卡器"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:195
 #, python-format
 msgid "Clear Text Request Not Supported"
-msgstr "不支持清除文本"
+msgstr "不支持纯文本请求"
 
 #. module: pos_mercury
 #: model:ir.actions.act_window,help:pos_mercury.action_configuration_form
@@ -124,7 +125,7 @@ msgstr "点击配置你的读卡器"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:163
 #, python-format
 msgid "Connect Canceled"
-msgstr "取消连接"
+msgstr "连接已取消"
 
 #. module: pos_mercury
 #. openerp-web
@@ -138,14 +139,14 @@ msgstr "连接丢失"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:184
 #, python-format
 msgid "Control failed to find branded serial (password lookup failed)"
-msgstr "寻找品牌序列的控制失败（密码匹配失败）"
+msgstr "控制寻找品牌序列号失败（密码匹配失败）"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:201
 #, python-format
 msgid "Could Not Encrypt Response- Call Provider"
-msgstr "无法加密响应-调用提供程序"
+msgstr "无法加密响应- 致电服务商"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_create_uid
@@ -157,7 +158,7 @@ msgstr "创建者"
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_create_date
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_create_date
 msgid "Created on"
-msgstr "创建于"
+msgstr "创建时间"
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury.py:17
@@ -170,7 +171,7 @@ msgstr "信用卡"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:177
 #, python-format
 msgid "Disconnecting Socket"
-msgstr "断开Socket"
+msgstr "断开套接字"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_display_name
@@ -211,7 +212,7 @@ msgstr "解密请求时发生错误"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:187
 #, python-format
 msgid "Failed to start Event Thread."
-msgstr "开启时间线程失败"
+msgstr "开启事件线程失败"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -254,7 +255,7 @@ msgstr "全局字符串错误"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:261
 #, python-format
 msgid "Go to payment screen to use cards"
-msgstr "到支付屏幕用卡支付"
+msgstr "到支付屏幕使用卡"
 
 #. module: pos_mercury
 #. openerp-web
@@ -300,28 +301,28 @@ msgstr "初始化失败"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:171
 #, python-format
 msgid "Insufficient Fields"
-msgstr "功能不健全的字段/领域？"
+msgstr "不充分的字段！"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:182
 #, python-format
 msgid "Internal Server Error – Call Provider"
-msgstr "内部服务器错误-呼叫供应商"
+msgstr "内部服务器错误- 致电服务商"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:205
 #, python-format
 msgid "Invalid Account Number"
-msgstr "无效账号"
+msgstr "无效的账户号码"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:209
 #, python-format
 msgid "Invalid Authorization Amount"
-msgstr "无效授权账户"
+msgstr "无效的授权金额"
 
 #. module: pos_mercury
 #. openerp-web
@@ -329,7 +330,7 @@ msgstr "无效授权账户"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:208
 #, python-format
 msgid "Invalid Authorization Code"
-msgstr "无效授权编码"
+msgstr "无效的授权代码"
 
 #. module: pos_mercury
 #. openerp-web
@@ -343,7 +344,7 @@ msgstr "无效的批项计数"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:223
 #, python-format
 msgid "Invalid Batch Number"
-msgstr "无效批号"
+msgstr "无效的批次号码"
 
 #. module: pos_mercury
 #. openerp-web
@@ -357,7 +358,7 @@ msgstr "无效的卡类型"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:210
 #, python-format
 msgid "Invalid Cash Back Amount"
-msgstr "无效的现金返还额度"
+msgstr "无效的现金返还金额"
 
 #. module: pos_mercury
 #. openerp-web
@@ -399,14 +400,14 @@ msgstr "无效的派生密钥数据"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:226
 #, python-format
 msgid "Invalid Driver’s License"
-msgstr "无效驾驶证"
+msgstr "无效的驱动授权"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:206
 #, python-format
 msgid "Invalid Expiration Date"
-msgstr "无效到期日"
+msgstr "无效的过期日期"
 
 #. module: pos_mercury
 #. openerp-web
@@ -427,21 +428,21 @@ msgstr "无效的MICR输入类型"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:213
 #, python-format
 msgid "Invalid Magnetic Stripe Data"
-msgstr "无效的磁性条带数据"
+msgstr "无效的磁条数据"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:204
 #, python-format
 msgid "Invalid Memo"
-msgstr "无效备忘录"
+msgstr "无效的备忘录"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:221
 #, python-format
 msgid "Invalid Merchant ID"
-msgstr "无效的商人身份证"
+msgstr "无效的商家ID"
 
 #. module: pos_mercury
 #. openerp-web
@@ -455,21 +456,21 @@ msgstr "无效的操作符"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:214
 #, python-format
 msgid "Invalid PIN Block Data"
-msgstr "无效的密码块数据"
+msgstr "无效的PIN块数据"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:228
 #, python-format
 msgid "Invalid Pass Data"
-msgstr "无效传递数据"
+msgstr "无效的传递数据"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:212
 #, python-format
 msgid "Invalid Purchase Amount"
-msgstr "无效申购金额"
+msgstr "无效的采购金额"
 
 #. module: pos_mercury
 #. openerp-web
@@ -483,21 +484,21 @@ msgstr "无效的路由号码"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:227
 #, python-format
 msgid "Invalid Sequence Number"
-msgstr "无效序列号"
+msgstr "无效的序列号"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:216
 #, python-format
 msgid "Invalid State Code"
-msgstr "无效状态码"
+msgstr "无效的状态码"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:222
 #, python-format
 msgid "Invalid TStream Type"
-msgstr "无效TmemoryStream类型"
+msgstr "无效的TStream类型"
 
 #. module: pos_mercury
 #. openerp-web
@@ -516,7 +517,7 @@ msgstr "无效的事务类型"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_invoice_no
 msgid "Invoice number from Mercury Pay"
-msgstr "由Mercury支付的发票编号"
+msgstr "Mercury支付的发票号码"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_account_journal
@@ -533,13 +534,13 @@ msgstr "最后修改日"
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_write_uid
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_write_uid
 msgid "Last Updated by"
-msgstr "最后更新"
+msgstr "最后更新者"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_write_date
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_write_date
 msgid "Last Updated on"
-msgstr "最后更新"
+msgstr "最后更新日期"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.mercury_transaction
@@ -556,12 +557,12 @@ msgstr "商家ID"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:199
 #, python-format
 msgid "Merchant ID Missing"
-msgstr "商人ID缺失"
+msgstr "商家ID缺失"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_merchant_pwd
 msgid "Merchant Password"
-msgstr "商人密码"
+msgstr "商家密码"
 
 #. module: pos_mercury
 #: model:ir.actions.act_window,name:pos_mercury.action_configuration_form
@@ -631,14 +632,14 @@ msgstr "已经有一个信用卡在刷了"
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.mercury_common
 msgid "OneTime"
-msgstr "一次"
+msgstr "一次性"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:459
 #, python-format
 msgid "Partially approved"
-msgstr "部分通过"
+msgstr "部分批准"
 
 #. module: pos_mercury
 #. openerp-web
@@ -659,7 +660,7 @@ msgstr "密码失败-断开"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:173
 #, python-format
 msgid "Password Verified"
-msgstr "密码验证"
+msgstr "密码已验证"
 
 #. module: pos_mercury
 #. openerp-web
@@ -694,7 +695,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
 msgid "Point of Sale"
-msgstr "零售"
+msgstr "POS"
 
 #. module: pos_mercury
 #. openerp-web
@@ -713,7 +714,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:178
 #, python-format
 msgid "Refused ‘Max Connections’"
-msgstr "拒绝‘最大链接’"
+msgstr "拒绝‘最大连接’"
 
 #. module: pos_mercury
 #. openerp-web
@@ -781,7 +782,7 @@ msgstr "刷卡"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:176
 #, python-format
 msgid "System Going Offline"
-msgstr "离线系统"
+msgstr "系统进入离线"
 
 #. module: pos_mercury
 #. openerp-web

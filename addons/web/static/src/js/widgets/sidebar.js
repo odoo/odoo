@@ -103,13 +103,13 @@ var Sidebar = Widget.extend({
         _.each(['print','action','relate'], function(type) {
             var items = toolbar[type];
             if (items) {
-                for (var i = 0; i < items.length; i++) {
-                    items[i] = {
-                        label: items[i]['name'],
-                        action: items[i],
+                var actions = _.map(items, function (item) {
+                    return {
+                        label: item.name,
+                        action: item,
                     };
-                }
-                self.add_items(type=='print' ? 'print' : 'other', items);
+                });
+                self.add_items(type === 'print' ? 'print' : 'other', actions);
             }
         });
     },
@@ -218,4 +218,3 @@ var Sidebar = Widget.extend({
 return Sidebar;
 
 });
-

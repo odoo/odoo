@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2016-05-13 12:34+0000\n"
+"PO-Revision-Date: 2016-06-04 07:24+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -35,7 +35,7 @@ msgstr "产品类别"
 #: model:ir.model.fields,field_description:product.field_product_product_product_variant_count
 #: model:ir.model.fields,field_description:product.field_product_template_product_variant_count
 msgid "# of Product Variants"
-msgstr "个产品变型"
+msgstr "#产品变型"
 
 #. module: product
 #: code:addons/product/pricelist.py:288
@@ -160,7 +160,7 @@ msgstr "<span>kg</span>"
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Currency</strong>:<br/>"
-msgstr "<strong>货币</strong>:<br/>"
+msgstr "<strong>币种</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
@@ -538,14 +538,14 @@ msgstr "基于价格表版本计算产品单位价格"
 #: model:ir.model.fields,field_description:product.field_product_product_rental
 #: model:ir.model.fields,field_description:product.field_product_template_rental
 msgid "Can be Rent"
-msgstr "可出租"
+msgstr "出租"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_sale_ok
 #: model:ir.model.fields,field_description:product.field_product_template_sale_ok
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Can be Sold"
-msgstr "可销售"
+msgstr "销售"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_product_price_list
@@ -597,17 +597,17 @@ msgstr "子类别"
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_categ_form_action
 msgid "Click to add a new unit of measure category."
-msgstr "单击添加一个新的计量单位类别。"
+msgstr "单击添加计量单位类别。"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
 msgid "Click to add a new unit of measure."
-msgstr "点击添加一个新的计量单位"
+msgstr "点击添加计量单位"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid "Click to create a pricelist."
-msgstr "点击创建一个价格表"
+msgstr "点击创建价格表"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -616,7 +616,7 @@ msgstr "点击创建一个价格表"
 #: model:ir.actions.act_window,help:product.product_template_action_product
 #: model:ir.actions.act_window,help:product.product_variant_action
 msgid "Click to define a new product."
-msgstr "单击去定义一个新产品."
+msgstr "单击去定义新产品."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -787,7 +787,7 @@ msgstr "创造这样一个惊人的超薄设计了技术创新的一些同样令
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_currency_id
 #: model:ir.model.fields,field_description:product.field_product_template_currency_id
 msgid "Currency"
-msgstr "货币"
+msgstr "币种"
 
 #. module: product
 #: model:product.product,name:product.product_product_5
@@ -1495,7 +1495,7 @@ msgstr "国际物品编码用于产品标识"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Inventory"
-msgstr "存货"
+msgstr "库存"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_message_is_follower
@@ -2794,7 +2794,7 @@ msgstr "从供应商采购的最小数量的计量单位在产品的供应商信
 msgid ""
 "The operation cannot be completed:\n"
 "You are trying to delete an attribute value with a reference on a product variant."
-msgstr "该动作不能完成：要删除已经被参照为某个产品型号对应的属性"
+msgstr "该操作无法完成：\n你正试图删除一个产品变型引用的属性值"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_price
@@ -2930,12 +2930,12 @@ msgstr "这是所有属性额外价格的总和"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note will be displayed on requests for quotation."
-msgstr "该说明将显示在报价请求。"
+msgstr "此说明将显示在询价单。"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note will be displayed on the quotations."
-msgstr "该说明将显示在报价请求。"
+msgstr "该说明将显示在报价单。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
@@ -2949,14 +2949,14 @@ msgstr "这价格表将会被使用,取代默认值,用之出售给当前伙伴.
 msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr "印刷的报价请求时，该供应商的产品代码将被使用。保持为空来使用内部的。"
+msgstr "打印询价单时，该供应商产品代码会被使用。保持空白就使用内部的那个。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_name
 msgid ""
 "This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr "印刷的报价请求时，该供应商的产品代码将被使用。保持为空来使用内部的。"
+msgstr "打印询价单时，此供应商产品名称会被使用。保持空白就使用内部的那个。"
 
 #. module: product
 #: model:product.product,name:product.product_product_39

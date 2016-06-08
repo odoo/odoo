@@ -5,16 +5,18 @@
 # Translators:
 # fausthuang, 2015
 # fausthuang, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
 # lttlsnk <lttlsnk@gmail.com>, 2016
 # Martin Trigaux, 2016
+# 卓忆科技 <zhanghao@jointd.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-04-18 12:33+0000\n"
-"PO-Revision-Date: 2016-05-13 13:23+0000\n"
-"Last-Translator: lttlsnk <lttlsnk@gmail.com>\n"
+"PO-Revision-Date: 2016-06-04 07:36+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,7 +95,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "! You can"
-msgstr ""
+msgstr "! 您可以"
 
 #. module: website_quote
 #: model:mail.template,report_name:website_quote.email_template_edi_sale
@@ -107,7 +109,7 @@ msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and '�
 msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} ${object.state in ('draft', 'sent') and '报价单' or '订单'} (单号 ${object.name or 'n/a' })"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
@@ -148,7 +150,7 @@ msgstr ":\n                                此内容只出现在当前报价\n  
 msgid ""
 "<b> To write a quotation description, edit your product, go the sales tab "
 "and add a text in \"Description for quotations\"</b>"
-msgstr "<b> 要编写一个报价的描述，编辑你的产品，去销售标签，并在添加文本“描述的语录”\"</b>"
+msgstr "<b> 要编写一个报价单的描述，编辑你的产品，去销售标签，并在添加文本“描述的语录”\"</b>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -917,7 +919,7 @@ msgstr "我的账户"
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Negotiation and Quotation Revisions"
-msgstr "谈判和报价修订"
+msgstr "谈判和报价单修订"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
@@ -933,7 +935,7 @@ msgstr "不强制对网报价验证"
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template_number_of_days
 msgid "Number of days for the validity date computation of the quotation"
-msgstr "天数为报价的有效期计算"
+msgstr "天数用于报价单的有效期计算"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -975,12 +977,12 @@ msgstr "在线培训+认证"
 #. module: website_quote
 #: model:ir.actions.client,name:website_quote.open_quotation_menu
 msgid "Open Quotations"
-msgstr "打开报价"
+msgstr "打开报价单"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Opening Stock and Physical Inventory"
-msgstr "打开仓库和库存盘点"
+msgstr "开张库存以及库存盘点"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1195,53 +1197,53 @@ msgstr "数量"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Quotation"
-msgstr "报价"
+msgstr "报价单"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_number_of_days
 msgid "Quotation Duration"
-msgstr "报价时间"
+msgstr "报价单时长"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_option
 msgid "Quotation Option"
-msgstr "报价选项"
+msgstr "报价单选项"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_template_id
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_name
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Quotation Template"
-msgstr "报价模板"
+msgstr "报价单模板"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_line
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_quote_line
 msgid "Quotation Template Lines"
-msgstr "报价模板行"
+msgstr "报价单模板行"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_quote_id
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_template_id
 msgid "Quotation Template Reference"
-msgstr "报价模板参考"
+msgstr "报价单模板参考"
 
 #. module: website_quote
 #: model:ir.actions.act_window,name:website_quote.action_sale_quotation_template
 #: model:ir.ui.menu,name:website_quote.menu_sale_quote_template
 msgid "Quotation Templates"
-msgstr "报价模板"
+msgstr "报价单模板"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_quote_viewed
 msgid "Quotation Viewed"
-msgstr "报价浏览过"
+msgstr "查看过的报价单"
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:32
 #, python-format
 msgid "Quotation viewed by customer"
-msgstr "客户报价单"
+msgstr "客户查看过的报价单"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -1297,7 +1299,7 @@ msgstr "销售订单参考"
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_tree
 msgid "Sale Quotation Template"
-msgstr "销售报价模板"
+msgstr "销售报价单模板"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order
@@ -1402,7 +1404,7 @@ msgstr "技术培训"
 msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
-msgstr "请告诉我们你为什么拒绝这个报价，这将帮助我们改进我们的服务。"
+msgstr "请告诉我们你为什么拒绝这个报价单，这将帮助我们改进我们的服务。"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -1425,7 +1427,7 @@ msgstr "测试自动发展"
 msgid ""
 "The description of products/services from your quotation will be displayed "
 "below"
-msgstr "产品说明/从你的报价服务，将在下面显示"
+msgstr "来自你的报价单的产品/服务说明将显示在下面"
 
 #. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
@@ -1453,7 +1455,7 @@ msgstr "此订单已被确认。感谢您的信任不要犹豫"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "This quotation has been rejected."
-msgstr "此报价已被拒绝。"
+msgstr "此报价单已被拒绝。"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
@@ -1531,7 +1533,7 @@ msgstr "视频详细的演示"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 msgid "View Online Quotation"
-msgstr "查看网上报价"
+msgstr "查看在线报价单"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1559,7 +1561,7 @@ msgstr "我们会为您指定专门的客户经理，有经验的销售人员，
 #. module: website_quote
 #: model:ir.actions.report.xml,name:website_quote.report_web_quote
 msgid "Web Quotation"
-msgstr "网站报价"
+msgstr "网站报价单"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -1601,7 +1603,7 @@ msgstr "您的订单"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Your Quotation"
-msgstr "您的报价"
+msgstr "你的报价单"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
