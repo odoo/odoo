@@ -28,6 +28,17 @@ from pyPdf import PdfFileWriter, PdfFileReader
 from reportlab.graphics.barcode import createBarcodeDrawing
 
 
+# A lock occurs when the user wants to print a report having multiple barcode while the server is
+# started in threaded-mode. The reason is that reportlab has to build a cache of the T1 fonts
+# before rendering a barcode (done in a C extension) and this part is not thread safe. We attempt
+# here to init the T1 fonts cache at the start-up of Odoo so that rendering of barcode in multiple
+# thread does not lock the server.
+try:
+    createBarcodeDrawing('Code128', value='foo', format='png', width=100, height=100, humanReadable=1).asString('png')
+except Exception:
+    pass
+
+
 #--------------------------------------------------------------------------
 # Helpers
 #--------------------------------------------------------------------------
