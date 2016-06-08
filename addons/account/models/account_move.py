@@ -102,6 +102,10 @@ class AccountMove(models.Model):
         return move
 
     @api.multi
+    def copy(self, default=None):
+        return super(AccountMove, self.with_context(dont_create_taxes=True)).copy(default)
+
+    @api.multi
     def write(self, vals):
         if 'line_ids' in vals:
             res = super(AccountMove, self.with_context(check_move_validity=False)).write(vals)
