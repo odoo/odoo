@@ -279,7 +279,7 @@ class sale_order(osv.osv):
             else:
                 raise osv.except_osv(_('Invalid Action!'), _('In order to delete a confirmed sales order, you must cancel it before!'))
 
-        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
+        return super(sale_order, self).unlink(cr, uid, unlink_ids, context=context)
 
     def copy_quotation(self, cr, uid, ids, context=None):
         id = self.copy(cr, uid, ids[0], context=context)
