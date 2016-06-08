@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.crm.models import crm_stage
 from odoo import fields, models, tools
 
+from ..models import crm_stage
 
 class OpportunityReport(models.Model):
     """ CRM Opportunity Analysis """
@@ -30,7 +30,6 @@ class OpportunityReport(models.Model):
     nbr_activities = fields.Integer('# of Activities', readonly=True)
     city = fields.Char('City')
     country_id = fields.Many2one('res.country', string='Country', readonly=True)
-    company_id = fields.Many2one('res.company', string='Company', readonly=True)
     probability = fields.Float(string='Probability', digits=(16, 2), readonly=True, group_operator="avg")
     total_revenue = fields.Float(string='Total Revenue', digits=(16, 2), readonly=True)
     expected_revenue = fields.Float(string='Probable Turnover', digits=(16, 2), readonly=True)
@@ -50,7 +49,6 @@ class OpportunityReport(models.Model):
     medium_id = fields.Many2one('utm.medium', string='Medium', readonly=True)
 
     def init(self):
-        tools.drop_view_if_exists(self._cr, 'crm_opportunity_report')
         self._cr.execute("""
             CREATE OR REPLACE VIEW crm_opportunity_report AS (
                 SELECT

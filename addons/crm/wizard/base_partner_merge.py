@@ -285,15 +285,13 @@ class MergePartnerAutomatic(models.TransientModel):
             except ValidationError:
                 _logger.info('Skip recursive partner hierarchies for parent_id %s of partner: %s', parent_id, dst_partner.id)
 
-    @api.model
-    @mute_logger('openerp.osv.expression', 'openerp.models')
     def _merge(self, partner_ids, dst_partner=None):
         """ private implementation of merge partner
             :param partner_ids : ids of partner to merge
             :param dst_partner : record of destination res.partner
         """
         Partner = self.env['res.partner']
-        partner_ids = Partner.browse(partner_ids).exists().ids
+        partner_ids = Partner.browse(partner_ids).exists()
         if len(partner_ids) < 2:
             return
 
@@ -301,10 +299,10 @@ class MergePartnerAutomatic(models.TransientModel):
             raise UserError(_("For safety reasons, you cannot merge more than 3 contacts together. You can re-open the wizard several times if needed."))
 
         # check if the list of partners to merge contains child/parent relation
-        child_ids = set()
+        child_ids = self.env['res.partner']
         for partner_id in partner_ids:
-            child_ids = child_ids.union(set(Partner.search([('id', 'child_of', [partner_id])]).ids) - set([partner_id]))
-        if set(partner_ids).intersection(child_ids):
+            child_ids |= Partner.search([('id', 'child_of', [partner_id.id])]) - partner_id
+        if partner_ids & child_ids:
             raise UserError(_("You cannot merge a contact with one of his parent."))
 
         # check only admin can merge partners with different emails
@@ -312,23 +310,22 @@ class MergePartnerAutomatic(models.TransientModel):
             raise UserError(_("All contacts must have the same email. Only the Administrator can merge contacts with different emails."))
 
         # remove dst_partner from partners to merge
-        if dst_partner and dst_partner.id in partner_ids:
-            src_partners = Partner.browse([pid for pid in partner_ids if pid != dst_partner.id])
+        if dst_partner and dst_partner in partner_ids:
+            src_partners = partner_ids - dst_partner
         else:
-            ordered_partners = self._get_ordered_partner(partner_ids)
+            ordered_partners = self._get_ordered_partner(partner_ids.ids)
             dst_partner = ordered_partners[-1]
             src_partners = ordered_partners[:-1]
         _logger.info("dst_partner: %s", dst_partner.id)
 
-        # FIXME : is it still required to make and exception for account.move.line since accounting v9.0 ?
+        # FIXME: is it still required to make and exception for account.move.line since accounting v9.0 ?
         if SUPERUSER_ID != self.env.uid and 'account.move.line' in self.env and self.env['account.move.line'].sudo().search([('partner_id', 'in', [partner.id for partner in src_partners])]):
             raise UserError(_("Only the destination contact may be linked to existing Journal Items. Please ask the Administrator if you need to merge several contacts linked to existing Journal Items."))
 
         # call sub methods to do the merge
-        call_it = lambda function: function(src_partners, dst_partner)
-        call_it(self._update_foreign_keys)
-        call_it(self._update_reference_fields)
-        call_it(self._update_values)
+        self._update_foreign_keys(src_partners, dst_partner)
+        self._update_reference_fields(src_partners, dst_partner)
+        self._update_values(src_partners, dst_partner)
 
         _logger.info('(uid = %s) merged the partners %r with %s', self._uid, src_partners.ids, dst_partner.id)
         dst_partner.message_post(body='%s %s' % (_("Merged with the following partners:"), ", ".join('%s <%s> (ID %s)' % (p.name, p.email or 'n/a', p.id) for p in src_partners)))
@@ -380,9 +377,7 @@ class MergePartnerAutomatic(models.TransientModel):
         ])
 
         if maximum_group:
-            text.extend([
-                "LIMIT %s" % maximum_group,
-            ])
+            text.append("LIMIT %s" % maximum_group,)
 
         return ' '.join(text)
 
@@ -410,25 +405,24 @@ class MergePartnerAutomatic(models.TransientModel):
             :param aggr_ids : stringified list of partner ids separated with a comma (sql array_agg)
             :param models : dict mapping a model name with its foreign key with res_partner table
         """
-        for model, field in models.iteritems():
-            proxy = self.env[model]
-            if proxy.search_count([(field, 'in', aggr_ids)]):
-                return True
-        return False
+        return any(
+            self.env[model].search_count([(field, 'in', aggr_ids)], limit=1)
+            for model, field in models.iteritems()
+        )
 
     @api.model
     def _get_ordered_partner(self, partner_ids):
         """ Helper : returns a `res.partner` recordset ordered by create_date/active fields
             :param partner_ids : list of partner ids to sort
         """
-        partners = self.env['res.partner'].browse(partner_ids)
-        ordered_partners = sorted(sorted(partners, key=operator.attrgetter('create_date'), reverse=True), key=operator.attrgetter('active'), reverse=True)
-        return self.env['res.partner'].browse([partner.id for partner in ordered_partners])
+        return self.env['res.partner'].browse(partner_ids).sorted(
+            key=lambda p: (p.active, p.create_date),
+            reverse=True,
+        )
 
     @api.multi
     def _compute_models(self):
         """ Compute the different models needed by the system if you want to exclude some partners. """
-        self.ensure_one()
         model_mapping = {}
         if self.exclude_contact:
             model_mapping['res.users'] = 'partner_id'
@@ -448,7 +442,6 @@ class MergePartnerAutomatic(models.TransientModel):
     @api.multi
     def action_skip(self):
         """ Skip this wizard line. Don't compute any thing, and simply redirect to the new step."""
-        self.ensure_one()
         if self.current_line_id:
             self.current_line_id.unlink()
         return self._action_next_screen()
@@ -459,8 +452,7 @@ class MergePartnerAutomatic(models.TransientModel):
             next wizard line. Each line is a subset of partner that can be merged together.
             If no line left, the end screen will be displayed (but an action is still returned).
         """
-        self.ensure_one()
-        self.refresh()  # TODO JEM : it is deprecated, so still usefull ?
+        self.invalidate_cache() # FIXME: is this still necessary?
         values = {}
         if self.line_ids:
             # in this case, we try to find the next record.
@@ -541,7 +533,7 @@ class MergePartnerAutomatic(models.TransientModel):
         """
         self.ensure_one()
         self.action_start_manual_process()  # here we don't redirect to the next screen, since it is automatic process
-        self.refresh()   # TODO JEM : deprecated, what to do ?
+        self.invalidate_cache() # FIXME: is this still necessary?
 
         for line in self.line_ids:
             partner_ids = literal_eval(line.aggr_ids)
@@ -643,8 +635,6 @@ class MergePartnerAutomatic(models.TransientModel):
         """ Merge Contact button. Merge the selected partners, and redirect to
             the end screen (since there is no other wizard line to process.
         """
-        self.ensure_one()
-
         if not self.partner_ids:
             self.write({'state': 'finished'})
             return {

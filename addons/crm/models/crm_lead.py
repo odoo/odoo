@@ -11,7 +11,8 @@ from odoo.tools import email_re, email_split
 from odoo.exceptions import UserError, AccessError
 
 from odoo.addons.base.res.res_partner import FormatAddress
-from odoo.addons.crm.models import crm_stage
+
+from . import crm_stage
 
 _logger = logging.getLogger(__name__)
 
@@ -65,7 +66,7 @@ class Lead(FormatAddress, models.Model):
 
     def _default_stage_id(self):
         team = self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid)
-        return self.stage_find(team_id=team.id, domain=[('fold', '=', False)])
+        return self._stage_find(team_id=team.id, domain=[('fold', '=', False)]).id
 
     name = fields.Char('Opportunity', required=True, index=True)
     partner_id = fields.Many2one('res.partner', string='Customer', track_visibility='onchange', index=True,
@@ -91,7 +92,7 @@ class Lead(FormatAddress, models.Model):
     type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity')], index=True, required=True,
         default=lambda self: 'lead' if self.env['res.users'].has_group('crm.group_use_lead') else 'opportunity',
         help="Type is used to separate Leads and Opportunities")
-    priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, string='Rating', index=True, default=lambda *a: crm_stage.AVAILABLE_PRIORITIES[0][0])
+    priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, string='Rating', index=True, default=crm_stage.AVAILABLE_PRIORITIES[0][0])
     date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
 
     stage_id = fields.Many2one('crm.stage', string='Stage', track_visibility='onchange', index=True,
@@ -170,7 +171,7 @@ class Lead(FormatAddress, models.Model):
         stages = Stage.browse(stage_ids)
         result = stages.name_get()
         # restore order of the search
-        order_mapping = dict((item[0], stage_ids.index(item[0])) for item in result)  # match stage_id with its index
+        order_mapping = {item[0]: stage_ids.index(item[0]) for item in result}  # match stage_id with its index
         result.sort(key=lambda item: order_mapping.get(item[0]))
 
         fold = {}
@@ -191,7 +192,7 @@ class Lead(FormatAddress, models.Model):
                 lead_date = fields.Date.from_string(lead.date_action)
                 if lead_date >= today:
                     kanban_state = 'green'
-                elif lead_date < today:
+                else:
                     kanban_state = 'grey'
             lead.kanban_state = kanban_state
 
@@ -214,7 +215,7 @@ class Lead(FormatAddress, models.Model):
     @api.multi
     def _compute_meeting_count(self):
         meeting_data = self.env['calendar.event'].read_group([('opportunity_id', 'in', self.ids)], ['opportunity_id'], ['opportunity_id'])
-        mapped_data = dict([(m['opportunity_id'][0], m['opportunity_id_count']) for m in meeting_data])
+        mapped_data = {m['opportunity_id'][0]: m['opportunity_id_count'] for m in meeting_data}
         for lead in self:
             lead.meeting_count = mapped_data.get(lead.id, 0)
 
@@ -230,12 +231,11 @@ class Lead(FormatAddress, models.Model):
 
     @api.onchange('stage_id')
     def _onchange_stage_id(self):
-        values = self._onchange_stage_id_values(self.stage_id.id if self.stage_id else False)
+        values = self._onchange_stage_id_values(self.stage_id.id)
         self.update(values)
 
     def _onchange_partner_id_values(self, partner_id):
         """ returns the new values when partner_id has changed """
-        values = {}
         if partner_id:
             partner = self.env['res.partner'].browse(partner_id)
 
@@ -243,7 +243,7 @@ class Lead(FormatAddress, models.Model):
             if not partner_name and partner.is_company:
                 partner_name = partner.name
 
-            values = {
+            return {
                 'partner_name': partner_name,
                 'contact_name': partner.name if not partner.is_company else False,
                 'title': partner.title.id,
@@ -259,7 +259,7 @@ class Lead(FormatAddress, models.Model):
                 'zip': partner.zip,
                 'function': partner.function,
             }
-        return values
+        return {}
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -305,11 +305,14 @@ class Lead(FormatAddress, models.Model):
 
     @api.model
     def create(self, vals):
+        # set up context used to find the lead's sales team which is needed
+        # to correctly set the default stage_id
         context = dict(self._context or {})
         if vals.get('type') and not self._context.get('default_type'):
             context['default_type'] = vals.get('type')
         if vals.get('team_id') and not self._context.get('default_team_id'):
             context['default_team_id'] = vals.get('team_id')
+
         if vals.get('user_id') and 'date_open' not in vals:
             vals['date_open'] = fields.Datetime.now()
         # context: no_log, because subtype already handle this
@@ -376,8 +379,8 @@ class Lead(FormatAddress, models.Model):
     def action_set_won(self):
         """ Won semantic: probability = 100 (active untouched) """
         for lead in self:
-            stage_id = lead.stage_find(domain=[('probability', '=', 100.0), ('on_change', '=', True)])
-            lead.write({'stage_id': stage_id, 'probability': 100})
+            stage_id = lead._stage_find(domain=[('probability', '=', 100.0), ('on_change', '=', True)])
+            lead.write({'stage_id': stage_id.id, 'probability': 100})
         return True
 
     @api.multi
@@ -386,7 +389,7 @@ class Lead(FormatAddress, models.Model):
             :return dict: dictionary value for created Meeting view
         """
         self.ensure_one()
-        action = self.env['ir.actions.act_window'].for_xml_id('calendar', 'action_calendar_event')
+        action = self.env.ref('calendar.action_calendar_event').read()[0]
         partner_ids = self.env.user.partner_id.ids
         if self.partner_id:
             partner_ids.append(self.partner_id.id)
@@ -408,12 +411,11 @@ class Lead(FormatAddress, models.Model):
     # Business Methods
     # ----------------------------------------
 
-    @api.multi
-    def stage_find(self, team_id=False, domain=None, order='sequence'):
+    def _stage_find(self, team_id=False, domain=None, order='sequence'):
         """ Determine the stage of the current lead with its teams, the given domain and the given team_id
             :param team_id
             :param domain : base search domain for stage
-            :returns crm.stage record identifier
+            :returns crm.stage recordset
         """
         # collect all team_ids by adding given one, and the ones related to the current leads
         team_ids = set()
@@ -431,10 +433,7 @@ class Lead(FormatAddress, models.Model):
         if domain:
             search_domain += list(domain)
         # perform search, return the first found
-        stage = self.env['crm.stage'].search(search_domain, order=order, limit=1)
-        if stage:
-            return stage.id
-        return False
+        return self.env['crm.stage'].search(search_domain, order=order, limit=1)
 
     @api.multi
     def _merge_get_result_type(self):
@@ -448,9 +447,8 @@ class Lead(FormatAddress, models.Model):
             :param list opps: list of browse records containing the leads/opps to process
             :return string type: the type of the final element
         """
-        for record in self:
-            if record.type == 'opportunity':
-                return 'opportunity'
+        if any(record.type == 'opportunity' for record in self):
+            return 'opportunity'
         return 'lead'
 
     @api.multi
@@ -616,20 +614,16 @@ class Lead(FormatAddress, models.Model):
         # Sorting the leads/opps according to the confidence level of its stage, which relates to the probability of winning it
         # The confidence level increases with the stage sequence, except when the stage probability is 0.0 (Lost cases)
         # An Opportunity always has higher confidence level than a lead, unless its stage probability is 0.0
-        sequenced_opps = []
-        for opportunity in self:
+        def opps_key(opportunity):
             sequence = -1
-            if opportunity.stage_id and opportunity.stage_id.on_change:
+            if opportunity.stage_id.on_change:
                 sequence = opportunity.stage_id.sequence
-            sequenced_opps.append(((int(sequence != -1 and opportunity.type == 'opportunity'), sequence, -opportunity.id), opportunity))
-        sequenced_opps.sort(reverse=True)
-
-        sorted_opportunities = [item[1] for item in sequenced_opps]  # get sorted list of crm.lead record
+            return (sequence != -1 and opportunity.type == 'opportunity'), sequence, -opportunity.id
+        opportunities = self.sorted(key=opps_key, reverse=True)
 
         # get SORTED recordset of head and tail, and complete list
-        opportunities = self.browse([opportunity.id for opportunity in sorted_opportunities])
-        opportunities_head = sorted_opportunities[0]
-        opportunities_tail = self.browse([opportunity.id for opportunity in sorted_opportunities[1:]])
+        opportunities_head = opportunities[0]
+        opportunities_tail = opportunities[1:]
 
         # merge all the sorted opportunity. This means the value of
         # the first (head opp) will be a priority.
@@ -704,10 +698,10 @@ class Lead(FormatAddress, models.Model):
             'date_conversion': fields.Datetime.now(),
         }
         if not self.stage_id:
-            stage_id = self.stage_find(team_id=team_id)
-            value['stage_id'] = stage_id
-            if stage_id:
-                value['probability'] = self.env['crm.stage'].browse(stage_id).probability
+            stage = self._stage_find(team_id=team_id)
+            value['stage_id'] = stage.id
+            if stage:
+                value['probability'] = stage.probability
         return value
 
     @api.multi
@@ -800,9 +794,9 @@ class Lead(FormatAddress, models.Model):
             if action == 'create':
                 partner = lead._create_lead_partner()
                 partner_id = partner.id
-                partner.write({'team_id': lead.team_id.id if lead.team_id else False})
+                partner.team_id = lead.team_id
             if partner_id:
-                lead.write({'partner_id': partner_id})
+                lead.partner_id = partner_id
             partner_ids[lead.id] = partner_id
         return partner_ids
 
@@ -847,8 +841,8 @@ class Lead(FormatAddress, models.Model):
             'res_id': self.id,
             'view_id': False,
             'views': [
-                (form_view.id if form_view else False, 'form'),
-                (tree_view.id if tree_view else False, 'tree'),
+                (form_view.id, 'form'),
+                (tree_view.id, 'tree'),
                 (False, 'kanban'),
                 (False, 'calendar'),
                 (False, 'graph')
@@ -872,8 +866,8 @@ class Lead(FormatAddress, models.Model):
             'res_id': self.id,
             'view_id': False,
             'views': [
-                (form_view.id if form_view else False, 'form'),
-                (tree_view.id if form_view else False, 'tree'),
+                (form_view.id, 'form'),
+                (tree_view.id, 'tree'),
                 (False, 'calendar'),
                 (False, 'graph')
             ],
@@ -882,11 +876,6 @@ class Lead(FormatAddress, models.Model):
 
     @api.model
     def get_empty_list_help(self, help):
-        additionnal_context = {
-            'empty_list_help_model': 'crm.team',
-            'empty_list_help_id': self._context.get('default_team_id', False),
-            'empty_list_help_document_name': _("opportunities")
-        }
         if help:
             alias_record = self.env.ref("crm.mail_alias_lead_info", raise_if_not_found=False)
             if alias_record and alias_record.alias_domain and alias_record.alias_name:
@@ -896,7 +885,11 @@ class Lead(FormatAddress, models.Model):
                     create new opportunity. Update your business card, phone book, social media,...
                     Send an email right now and see it here.""") % (email_link,)
                 return '<p class="oe_view_nocontent_create">%s</p>%s<p>%s</p>' % (_('Click to add a new opportunity'), help, dynamic_help)
-        return super(Lead, self.with_context(**additionnal_context)).get_empty_list_help(help)
+        return super(Lead, self.with_context(
+            empty_list_help_model='crm.team',
+            empty_list_help_id=self._context.get('default_team_id', False),
+            empty_list_help_document_name=_("opportunities"),
+        )).get_empty_list_help(help)
 
     @api.multi
     def log_meeting(self, meeting_subject, meeting_date, duration):
@@ -943,36 +936,36 @@ class Lead(FormatAddress, models.Model):
             'nb_opportunities': 0,
         }
 
-        opportunities = self.search_read([('type', '=', 'opportunity'), ('user_id', '=', self._uid)], ['date_deadline', 'next_activity_id', 'date_action', 'date_closed', 'planned_revenue'])
+        opportunities = self.search([('type', '=', 'opportunity'), ('user_id', '=', self._uid)])
 
         for opp in opportunities:
             # Expected closing
-            if opp['date_deadline']:
-                date_deadline = fields.Date.from_string(opp['date_deadline'])
+            if opp.date_deadline:
+                date_deadline = fields.Date.from_string(opp.date_deadline)
                 if date_deadline == date.today():
                     result['closing']['today'] += 1
-                if date_deadline >= date.today() and date_deadline <= date.today() + timedelta(days=7):
+                if date.today() <= date_deadline <= date.today() + timedelta(days=7):
                     result['closing']['next_7_days'] += 1
                 if date_deadline < date.today():
                     result['closing']['overdue'] += 1
             # Next activities
-            if opp['next_activity_id'] and opp['date_action']:
-                date_action = fields.Date.from_string(opp['date_action'])
+            if opp.next_activity_id and opp.date_action:
+                date_action = fields.Date.from_string(opp.date_action)
                 if date_action == date.today():
                     result['activity']['today'] += 1
-                if date_action >= date.today() and date_action <= date.today() + timedelta(days=7):
+                if date.today() <= date_action <= date.today() + timedelta(days=7):
                     result['activity']['next_7_days'] += 1
                 if date_action < date.today():
                     result['activity']['overdue'] += 1
             # Won in Opportunities
-            if opp['date_closed']:
-                date_closed = fields.Date.from_string(opp['date_closed'])
-                if date_closed <= date.today() and date_closed >= date.today().replace(day=1):
-                    if opp['planned_revenue']:
-                        result['won']['this_month'] += opp['planned_revenue']
-                elif date_closed < date.today().replace(day=1) and date_closed >= date.today().replace(day=1) - relativedelta(months=+1):
-                    if opp['planned_revenue']:
-                        result['won']['last_month'] += opp['planned_revenue']
+            if opp.date_closed:
+                date_closed = fields.Date.from_string(opp.date_closed)
+                if date.today().replace(day=1) <= date_closed <= date.today():
+                    if opp.planned_revenue:
+                        result['won']['this_month'] += opp.planned_revenue
+                elif  date.today() + relativedelta(months=-1, day=1) <= date_closed < date.today().replace(day=1):
+                    if opp.planned_revenue:
+                        result['won']['last_month'] += opp.planned_revenue
 
         result['nb_opportunities'] = len(opportunities)
 
@@ -995,9 +988,9 @@ class Lead(FormatAddress, models.Model):
         for activity in activites_done:
             if activity['date']:
                 date_act = fields.Date.from_string(activity['date'])
-                if date_act <= date.today() and date_act >= date.today().replace(day=1):
+                if date.today().replace(day=1) <= date_act <= date.today():
                     result['done']['this_month'] += 1
-                elif date_act < date.today().replace(day=1) and date_act >= date.today().replace(day=1) - relativedelta(months=+1):
+                elif date.today() + relativedelta(months=-1, day=1) <= date_act < date.today().replace(day=1):
                     result['done']['last_month'] += 1
 
         # Meetings
@@ -1014,7 +1007,7 @@ class Lead(FormatAddress, models.Model):
                 start = datetime.strptime(meeting['start'], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
                 if start == date.today():
                     result['meeting']['today'] += 1
-                if start >= date.today() and start <= date.today() + timedelta(days=7):
+                if date.today() <= start <= date.today() + timedelta(days=7):
                     result['meeting']['next_7_days'] += 1
 
         result['done']['target'] = self.env.user.target_sales_done
@@ -1093,11 +1086,10 @@ class Lead(FormatAddress, models.Model):
     def message_get_reply_to(self, res_ids, default=None):
         leads = self.sudo().browse(res_ids)
         aliases = self.env['crm.team'].message_get_reply_to(leads.mapped('team_id').ids, default=default)
-        return dict((lead.id, aliases.get(lead.team_id and lead.team_id.id or 0, False)) for lead in leads)
+        return {lead.id: aliases.get(lead.team_id.id or 0, False) for lead in leads}
 
     @api.multi
     def get_formview_id(self):
-        self.ensure_one()
         if self.type == 'opportunity':
             view_id = self.env.ref('crm.crm_case_form_view_oppor').id
         else:

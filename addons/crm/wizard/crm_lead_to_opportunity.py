@@ -20,29 +20,28 @@ class Lead2OpportunityPartner(models.TransientModel):
         """
         result = super(Lead2OpportunityPartner, self).default_get(fields)
         if self._context.get('active_id'):
-            tomerge = [int(self._context['active_id'])]
+            tomerge = {int(self._context['active_id'])}
 
             partner_id = result.get('partner_id')
             lead = self.env['crm.lead'].browse(self._context['active_id'])
             email = lead.partner_id.email if lead.partner_id else lead.email_from
 
-            tomerge.extend(self._get_duplicated_leads(partner_id, email, include_lost=True).ids)
-            tomerge = list(set(tomerge))
+            tomerge.update(self._get_duplicated_leads(partner_id, email, include_lost=True).ids)
 
             if 'action' in fields and not result.get('action'):
-                result.update({'action': 'exist' if partner_id else 'create'})
+                result['action'] = 'exist' if partner_id else 'create'
             if 'partner_id' in fields:
-                result.update({'partner_id': partner_id})
+                result['partner_id'] = partner_id
             if 'name' in fields:
-                result.update({'name': 'merge' if len(tomerge) >= 2 else 'convert'})
+                result['name'] = 'merge' if len(tomerge) >= 2 else 'convert'
             if 'opportunity_ids' in fields and len(tomerge) >= 2:
-                result.update({'opportunity_ids': tomerge})
+                result['opportunity_ids'] = list(tomerge)
             if lead.user_id:
-                result.update({'user_id': lead.user_id.id})
+                result['user_id'] = lead.user_id.id
             if lead.team_id:
-                result.update({'team_id': lead.team_id.id})
+                result['team_id'] = lead.team_id.id
             if not partner_id and not lead.contact_name:
-                result.update({'action': 'nothing'})
+                result['action'] = 'nothing'
         return result
 
     name = fields.Selection([
@@ -93,22 +92,20 @@ class Lead2OpportunityPartner(models.TransientModel):
         self.ensure_one()
 
         res = False
-        lead_ids = vals.get('lead_ids', [])
-        team_id = vals.get('team_id', False)
-        partner_id = vals.get('partner_id')
 
-        for lead in self.env['crm.lead'].browse(lead_ids):
-            partner_id = self._create_partner(lead.id, self.action, partner_id or lead.partner_id.id)
+        leads = self.env['crm.lead'].browse(vals.get('lead_ids'))
+        for lead in leads:
+            partner_id = self._create_partner(lead.id, self.action, vals.get('partner_id') or lead.partner_id.id)
             res = lead.convert_opportunity(partner_id, [], False)
-        user_ids = vals.get('user_ids', False)
+        user_ids = vals.get('user_ids')
 
+        leads_to_allocate = leads
         if self._context.get('no_force_assignation'):
-            leads_to_allocate = self.env['crm.lead'].browse(lead_ids).filtered(lambda lead: not lead.user_id).ids
-        else:
-            leads_to_allocate = lead_ids
+            leads_to_allocate = leads_to_allocate.filtered(lambda lead: not lead.user_id)
 
         if user_ids:
-            self.env['crm.lead'].browse(leads_to_allocate).allocate_salesman(user_ids, team_id=team_id)
+            leads_to_allocate.allocate_salesman(user_ids, team_id=(vals.get('team_id')))
+
         return res
 
     @api.multi
@@ -117,8 +114,6 @@ class Lead2OpportunityPartner(models.TransientModel):
             the freshly created opportunity view.
         """
         self.ensure_one()
-        Lead = self.env['crm.lead']
-        opp_ids = self.opportunity_ids.ids
         values = {
             'team_id': self.team_id.id,
         }
@@ -127,26 +122,23 @@ class Lead2OpportunityPartner(models.TransientModel):
             values['partner_id'] = self.partner_id.id
 
         if self.name == 'merge':
-            lead = self.env['crm.lead'].browse(opp_ids).merge_opportunity()
-            lead_ids = [lead.id]
-            lead_data = lead.read(['type', 'user_id'])[0]
-            if lead_data['type'] == "lead":
-                values.update({'lead_ids': lead_ids, 'user_ids': [self.user_id.id]})
-                self.with_context(active_ids=lead_ids)._convert_opportunity(values)
-            elif not self._context.get('no_force_assignation') or not lead_data['user_id']:
-                values.update({'user_id': self.user_id.id})
-                lead.write(values)
+            leads = self.opportunity_ids.merge_opportunity()
+            if leads.type == "lead":
+                values.update({'lead_ids': leads.ids, 'user_ids': [self.user_id.id]})
+                self.with_context(active_ids=leads.ids)._convert_opportunity(values)
+            elif not self._context.get('no_force_assignation') or not leads.user_id:
+                values['user_id'] = self.user_id.id
+                leads.write(values)
         else:
-            lead_ids = self._context.get('active_ids', [])
-            values.update({'lead_ids': lead_ids, 'user_ids': [self.user_id.id]})
+            leads = self.env['crm.lead'].browse(self._context.get('active_ids', []))
+            values.update({'lead_ids': leads.ids, 'user_ids': [self.user_id.id]})
             self._convert_opportunity(values)
-            for lead in self.env['crm.lead'].browse(lead_ids):
+            for lead in leads:
                 if lead.partner_id and lead.partner_id.user_id != lead.user_id:
                     self.env['res.partner'].browse(lead.partner_id.id).write({'user_id': lead.user_id.id})
 
-        return self.env['crm.lead'].browse(list(lead_ids)[0]).redirect_opportunity_view()
+        return leads[0].redirect_opportunity_view()
 
-    @api.model
     def _create_partner(self, lead_id, action, partner_id):
         """ Create partner based on action.
             :return dict: dictionary organized as followed: {lead_id: partner_assigned_id}
@@ -229,10 +221,9 @@ class Lead2OpportunityMassConvert(models.TransientModel):
     @api.multi
     def mass_convert(self):
         self.ensure_one()
-        active_ids = []
         if self.name == 'convert' and self.deduplicate:
-            merged_lead_ids = []
-            remaining_lead_ids = []
+            merged_lead_ids = set()
+            remaining_lead_ids = set()
             lead_selected = self._context.get('active_ids', [])
             for lead_id in lead_selected:
                 if lead_id not in merged_lead_ids:
@@ -240,11 +231,11 @@ class Lead2OpportunityMassConvert(models.TransientModel):
                     duplicated_leads = self._get_duplicated_leads(lead.partner_id.id, lead.partner_id.email if lead.partner_id else lead.email_from)
                     if len(duplicated_leads) > 1:
                         lead = duplicated_leads.merge_opportunity()
-                        merged_lead_ids.extend(duplicated_leads.ids)
-                        remaining_lead_ids.append(lead.id)
-            active_ids = set(self._context.get('active_ids', []))
-            active_ids = active_ids.difference(merged_lead_ids)
-            active_ids = active_ids.union(remaining_lead_ids)
+                        merged_lead_ids.update(duplicated_leads.ids)
+                        remaining_lead_ids.add(lead.id)
+            active_ids = set(self._context.get('active_ids', {}))
+            active_ids = (active_ids - merged_lead_ids) | remaining_lead_ids
+
             self = self.with_context(active_ids=list(active_ids))  # only update active_ids when there are set
         no_force_assignation = self._context.get('no_force_assignation', not self.force_assignation)
         return self.with_context(no_force_assignation=no_force_assignation).action_apply()
