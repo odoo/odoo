@@ -210,8 +210,8 @@ class MergePartnerAutomatic(osv.TransientModel):
                 except psycopg2.Error:
                     # updating fails, most likely due to a violated unique constraint
                     # keeping record with nonexistent partner_id is useless, better delete it
-                    query = 'DELETE FROM %(table)s WHERE %(column)s = %%s' % query_dic
-                    cr.execute(query, (partner_id,))
+                    query = 'DELETE FROM %(table)s WHERE %(column)s IN %%s' % query_dic
+                    cr.execute(query, (partner_ids,))
 
     def _update_reference_fields(self, cr, uid, src_partners, dst_partner, context=None):
         _logger.debug('_update_reference_fields for dst_partner: %s for src_partners: %r', dst_partner.id, list(map(operator.attrgetter('id'), src_partners)))
@@ -332,7 +332,7 @@ class MergePartnerAutomatic(osv.TransientModel):
 
         _logger.info('(uid = %s) merged the partners %r with %s', uid, list(map(operator.attrgetter('id'), src_partners)), dst_partner.id)
         dst_partner.message_post(body='%s %s'%(_("Merged with the following partners:"), ", ".join('%s<%s>(ID %s)' % (p.name, p.email or 'n/a', p.id) for p in src_partners)))
-        
+
         for partner in src_partners:
             partner.unlink()
 
@@ -754,8 +754,8 @@ class MergePartnerAutomatic(osv.TransientModel):
         # select partner who have one least invoice
         partner_treated = ['@gmail.com']
         cr.execute("""  SELECT p.id, p.email
-                        FROM res_partner as p 
-                        LEFT JOIN account_invoice as a 
+                        FROM res_partner as p
+                        LEFT JOIN account_invoice as a
                         ON p.id = a.partner_id AND a.state in ('open','paid')
                         WHERE p.grade_id is NOT NULL
                         GROUP BY p.id
