@@ -53,6 +53,7 @@
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
             <field name="context">{
+                'group_by': 'stage_id',
                 'search_default_project_id': [active_id],
                 'default_project_id': active_id,
             }</field>
@@ -182,6 +183,14 @@
             </field>
         </record>
 
+        <record id="activate_sample_project" model="ir.actions.server">
+            <field name="name">Activate Sample Project</field>
+            <field name="model_id" ref="project.model_project_project"/>
+            <field name="code">
+                action = self.activate_sample_project(cr, uid, context=context)
+            </field>
+        </record>
+
         <record id="open_view_project_all" model="ir.actions.act_window">
             <field name="name">Projects</field>
             <field name="res_model">project.project</field>
@@ -189,11 +198,11 @@
             <field name="domain">[]</field>
             <field name="view_mode">kanban,form</field>
             <field name="search_view_id" ref="view_project_project_filter"/>
+            <field name="target">main</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Create a new project.
-                </p><p>
-                    Organize your activities (plan tasks, track issues, invoice timesheets) for internal, personal or customer projects.
+                    Click to create a new project.<br/>
+                    <i>Or <a type="action" name="%(project.activate_sample_project)d">activate a sample project</a> to play with.</i>
                 </p>
             </field>
         </record>
@@ -221,7 +230,7 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Project">
+                <form string="Task" class="o_form_project_tasks">
                     <header>
                         <field name="stage_id" widget="statusbar" clickable="True"
                             options="{'fold_field': 'fold'}"/>
@@ -290,7 +299,7 @@
             <field name="name">project.task.kanban</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="stage_id" class="o_kanban_small_column" on_create="quick_create">
+                <kanban class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create">
                     <field name="color"/>
                     <field name="priority"/>
                     <field name="stage_id" options='{"group_by_tooltip": {"description": "Stage Description", "legend_priority": "Use of stars"}}'/>

@@ -129,9 +129,11 @@ class project(osv.osv):
 
     def _get_visibility_selection(self, cr, uid, context=None):
         """ Overriden in portal_project to offer more options """
-        return [('portal', _('Customer project')),
-                ('employees', _('All employees')),
-                ('followers', _('Private: followers only'))]
+        return [
+            ('employees', _('Visible by all employees')),
+            ('followers', _('On invitation only')),
+            ('portal', _('Shared with a customer'))
+        ]
 
     def attachment_tree_view(self, cr, uid, ids, context):
         task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
@@ -156,6 +158,27 @@ class project(osv.osv):
             'limit': 80,
             'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
         }
+
+    def activate_sample_project(self, cr, uid, context=None):
+        """ Unarchives the sample project 'project.project_project_data' and
+            reloads the project dashboard """
+        # Unarchive sample project
+        data_obj = self.pool.get('ir.model.data')
+        proj_id = data_obj.xmlid_to_res_id(cr, uid, 'project.project_project_data')
+        if proj_id:
+            self.browse(cr, uid, proj_id, context=context).write({'active': True})
+
+        # Change the help message on the action (no more activate project)
+        act_id = data_obj.xmlid_to_res_id(cr, uid, 'project.open_view_project_all')
+        action = None
+        if act_id:
+            act_window_obj =  self.pool.get('ir.actions.act_window')
+            act_window_obj.write(cr, SUPERUSER_ID, [act_id], {
+                "help": _('''<p class="oe_view_nocontent_create">Click to create a new project.</p>''')
+            }, context=context)
+            action = act_window_obj.read(cr, uid, [act_id])[0]
+        # Reload the dashboard
+        return action
 
     def _get_favorite(self, cr, uid, ids, name, args, context=None):
         return dict((project.id, uid in project.favorite_user_ids.ids) for project in self.browse(cr, uid, ids, context=context))
@@ -195,7 +218,7 @@ class project(osv.osv):
                                          "with Tasks (or optionally Issues if the Issue Tracker module is installed)."),
         'alias_model': fields.selection(_alias_models, "Alias Model", select=True, required=True,
                                         help="The kind of document created when an email is received on this project's email alias"),
-        'privacy_visibility': fields.selection(_visibility_selection, 'Privacy / Visibility', required=True,
+        'privacy_visibility': fields.selection(_visibility_selection, 'Privacy', required=True,
             help="Holds visibility of the tasks or issues that belong to the current project:\n"
                     "- Portal : employees see everything;\n"
                     "   if portal is activated, portal users see the tasks or issues followed by\n"
@@ -350,6 +373,9 @@ class project(osv.osv):
         self.write(cr, SUPERUSER_ID, not_fav_project_ids, {'favorite_user_ids': [(4, uid)]}, context=context)
         self.write(cr, SUPERUSER_ID, favorite_project_ids, {'favorite_user_ids': [(3, uid)]}, context=context)
 
+    @api.multi
+    def close_dialog(self):
+        return {'type': 'ir.actions.act_window_close'}
 
 class task(osv.osv):
     _name = "project.task"
