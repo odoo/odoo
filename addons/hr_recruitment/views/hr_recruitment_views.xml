@@ -407,6 +407,9 @@
                     </div>
                     <field name="address_id" context="{'show_address': 1}" domain= "[('is_company', '=', True )]" options="{'always_reload': True}"/>
                 </group>
+                <group colspan="2">
+                    <field name="stage_ids" widget="many2many_tags" options="{'no_create': True}" />
+                </group>
             </group>
             <xpath expr="//field[@name='department_id']" position="after">
                 <label for="alias_name" string="Specific Email Address" attrs="{'invisible': [('alias_domain', '=', False)]}" help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
@@ -559,6 +562,7 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_id" ref="mail.view_document_file_kanban"/>
         <field name="domain">[('res_model','=','hr.applicant')]</field>
+        <field name="context">{'create': False}</field>
         <field name="help" type="html">
             <p>
                 Search through resumes and motivation letters.

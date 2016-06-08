@@ -502,7 +502,7 @@
                         </group>
                         <group string="Details">
                             <field name="auto"/>
-                            <field name="picking_type_id" attrs="{'invisible': [('auto', '=', 'transparent')]}"/>
+                            <field name="picking_type_id"/>
                             <field name="company_id" groups="base.group_multi_company" />
                             <label for="delay" string="Delay"/>
                             <div>
@@ -856,10 +856,10 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                     </div>
-                    <h1>
+                    <h1 class="hidden-xs">
                         <field name="name" attrs="{'invisible': [('name','=','/')]}" readonly="1"/>
                     </h1>
-                    <group>
+                    <group class="hidden-xs">
                         <group>
                             <field name="partner_id" attrs="{'invisible': [('picking_type_code', '=', 'internal')]}" on_change="onchange_picking_type(picking_type_id,partner_id)"/>
                             <field name="location_id" groups="stock.group_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
@@ -1366,6 +1366,7 @@
                     <field name="location_id" invisible="1"/>
                     <field name="create_date" invisible="1" />
                     <field name="date_expected" invisible="1" />
+                    <field name="picking_type_id" invisible="1"/>
                     <button name="%(stock.move_scrap)d"
                        string="Scrap Products" type="action"
                        icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"

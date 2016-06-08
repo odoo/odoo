@@ -525,7 +525,7 @@ class ProductChangeMixin(object):
                             "You have to change either the product, the quantity or the pricelist.")
                      }
                 else:
-                    result.update({'price_unit': price, 'price_subtotal': price * product_uom_qty})
+                    result.update({'price_unit': price, 'price_subtotal': 0.0})
 
         return {'value': result, 'warning': warning}
 
@@ -562,7 +562,8 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         'invoiced': fields.boolean('Invoiced', readonly=True, copy=False),
         'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price')),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits=0),
-        'tax_id': fields.many2many('account.tax', 'repair_operation_line_tax', 'repair_operation_line_id', 'tax_id', 'Taxes'),
+        'tax_id': fields.many2many('account.tax', 'repair_operation_line_tax', 'repair_operation_line_id', 'tax_id', 'Taxes',
+            domain=['|', ('active', '=', False), ('active', '=', True)]),
         'product_uom_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'invoice_line_id': fields.many2one('account.invoice.line', 'Invoice Line', readonly=True, copy=False),
@@ -643,7 +644,7 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
             if line.to_invoice:
                 cur = line.repair_id.pricelist_id.currency_id
                 taxes = tax_obj.compute_all(cr, uid, line.tax_id.ids, line.price_unit, cur.id, line.product_uom_qty, line.product_id.id, line.repair_id.partner_id.id)
-                res[line.id] = taxes['total_included']
+                res[line.id] = taxes['total_excluded']
             else:
                 res[line.id] = 0
         return res
@@ -656,7 +657,8 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
         'price_unit': fields.float('Unit Price', required=True),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits=0),
-        'tax_id': fields.many2many('account.tax', 'repair_fee_line_tax', 'repair_fee_line_id', 'tax_id', 'Taxes'),
+        'tax_id': fields.many2many('account.tax', 'repair_fee_line_tax', 'repair_fee_line_id', 'tax_id', 'Taxes',
+            domain=['|', ('active', '=', False), ('active', '=', True)]),
         'invoice_line_id': fields.many2one('account.invoice.line', 'Invoice Line', readonly=True, copy=False),
         'to_invoice': fields.boolean('To Invoice'),
         'invoiced': fields.boolean('Invoiced', readonly=True, copy=False),

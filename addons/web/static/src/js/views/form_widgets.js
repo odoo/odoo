@@ -455,7 +455,13 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
 
         if (this.get('value')) {
             var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
-            var domain = pyeval.eval('domain', this.get('value'));
+            try{
+                var domain = pyeval.eval('domain', this.get('value'));
+            }
+            catch(e){
+                this.do_warn(_t('Error: Bad domain'), _t('The domain is wrong.'));
+                return;
+            }
             var ds = new data.DataSetStatic(self, model, self.build_context());
             ds.call('search_count', [domain]).then(function (results) {
                 self.$('.o_count').text(results + _t(' selected records'));
@@ -1530,13 +1536,20 @@ var FieldStatus = common.AbstractField.extend({
             val = $li.data("id");
         }
         if (val != self.get('value')) {
-            this.view.recursive_save().done(function() {
-                var change = {};
-                change[self.name] = val;
-                self.view.dataset.write(self.view.datarecord.id, change).done(function() {
-                    self.view.reload();
+            if (!this.view.datarecord.id ||
+                    this.view.datarecord.id.toString().match(data.BufferedDataSet.virtual_id_regex)) {
+                // don't save, only set value for not-yet-saved many2ones
+                self.set_value(val);
+            }
+            else {
+                this.view.recursive_save().done(function() {
+                    var change = {};
+                    change[self.name] = val;
+                    self.view.dataset.write(self.view.datarecord.id, change).done(function() {
+                        self.view.reload();
+                    });
                 });
-            });
+            }
         }
     },
 });

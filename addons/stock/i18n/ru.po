@@ -7,13 +7,14 @@
 # Ostap <Ostap.Yakovenko@gmail.com>, 2015
 # Sergey Vilizhanin <sv@grimmette.ru>, 2016
 # Sergey Vilizhanin <sv@grimmette.ru>, 2015-2016
+# Viktor Pogrebniak <vp@aifil.ru>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2016-02-27 16:58+0000\n"
-"Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>\n"
+"PO-Revision-Date: 2016-04-30 20:14+0000\n"
+"Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -415,7 +416,7 @@ msgstr "<strong>Дата обязательства</strong>"
 msgid ""
 "<strong>Consumable products</strong> are always assumed to be in sufficient "
 "quantity in your stock, therefore their available quantities are not tracked"
-msgstr "<strong>Потребляемые продукты</strong> всегда считается, что в наличии в достаточном количестве, поэтому их свободное количество не отслеживается"
+msgstr "Предполагается, что <strong>потребляемые продукты</strong> всегда имеются на складе в достаточном количестве, поэтому учёт их остатков не ведётся"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
@@ -577,7 +578,7 @@ msgstr "<strong>Статус</strong>"
 msgid ""
 "<strong>Stockable products</strong> are subject to the full inventory "
 "management system: minimum stock rules, automatic procurement, etc."
-msgstr "<strong>Складируемые продукты</strong> субъект полной системы управления запасами : правила минимальных запасов, автоматические закупки и др."
+msgstr "Для <strong>складируемых продуктов</strong> используется полный механизм системы управления запасами: правила минимальных запасов, автоматические закупки и др."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
@@ -1270,7 +1271,7 @@ msgstr "Поздравляем!"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_lines_date_search
 msgid "Consumable"
-msgstr "Потребляемое"
+msgstr "Потребляемый"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_children_ids
@@ -1606,7 +1607,7 @@ msgid ""
 "\n"
 "Thank you in advance for your cooperation.\n"
 "Best Regards,"
-msgstr "Уважаемые господа,\n\nНаши записи зафиксировали что некоторые платежи остаются неоплаченными. Пожалуйста ознакомьтесь с подробностями ниже.\nЕсли сумма уже была оплачена, пожалуйста проигнорируйте это оповещение. В ином случае, пожалуйста перечислите нам всю сумму отображенную ниже.\nЕсли у вас есть какие-либо замечания, пожалуйста свяжитесь с нами.\n\nЗаранее благодарим за сотрудничество.\nС наилучшими пожеланиями,"
+msgstr "Здравствуйте!\n\nСогласно нашим данным, у вас есть неоплаченные счета от нашей компании. Подробности указаны в данном письме.\nЕсли сумма уже оплачена, просто проигнорируйте это оповещение. В противном случае, пожалуйста, произведите указанные платежи.\nЕсли у вас есть какие-либо замечания, пожалуйста, свяжитесь с нами.\n\nБлагодарим за сотрудничество.\nС наилучшими пожеланиями,"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_decimal_precision
@@ -3427,7 +3428,7 @@ msgid ""
 "Most operations are prepared automatically by Odoo according\n"
 "                to your preconfigured logistics rules, but you can also record\n"
 "                manual stock movements."
-msgstr ""
+msgstr "Большинство операций подготовленны автоматически Odoo\nв соотвествии с вашими предварительно сконфигурированными\nправилами логистики, но вы также можете записать вручную складские перемещения."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_operation_link_move_id
@@ -3720,7 +3721,7 @@ msgstr "Управление запасами Odoo полностью интег
 msgid ""
 "Odoo is able to run advanced traceability by using Product Lots and Serial\n"
 "                        Numbers, usually identified by bar codes stuck on the products."
-msgstr ""
+msgstr "Odoo способен запускать расширенную прослеживаемость с \nпомощью Партий продукта и Серийных Номеров, как правило, \nидентифицируются с помощью штрих-кодов, приклееных на \nпродуктах."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4270,7 +4271,7 @@ msgstr ""
 #: code:addons/stock/stock.py:1706
 #, python-format
 msgid "Please process some quantities to put in the pack first!"
-msgstr ""
+msgstr "Пожалуйста, сначала некоторые количества положите в упаковку!"
 
 #. module: stock
 #: code:addons/stock/stock.py:2712
@@ -5484,13 +5485,13 @@ msgstr "Складские перемещения, которые были об�
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_lines_date_search
 msgid "Stockable"
-msgstr "Хранимое"
+msgstr "Складируемый"
 
 #. module: stock
 #: code:addons/stock/product.py:400
 #, python-format
 msgid "Stockable Product"
-msgstr "Складируемый Продукт"
+msgstr "Складируемый продукт"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_supplied_wh_id
@@ -6867,7 +6868,7 @@ msgstr "_Отмена"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "a stockable Product"
-msgstr "складируемый Продукт"
+msgstr "складируемый продукт"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner

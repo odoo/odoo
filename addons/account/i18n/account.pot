@@ -97,7 +97,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
-msgid "# of Invoices"
+msgid "# of Lines"
 msgstr ""
 
 #. module: account
@@ -2572,6 +2572,12 @@ msgid "Control-Access"
 msgstr ""
 
 #. module: account
+#: model:account.account.type,name:account.data_account_type_direct_costs
+#: model:ir.ui.view,arch_db:account.view_account_form
+msgid "Cost of Revenue"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_counterpart
 msgid "Counterpart"
 msgstr ""
@@ -5014,6 +5020,11 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Less Cost of Sales"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_form
+msgid "Less Cost of Revenue"
 msgstr ""
 
 #. module: account
@@ -8735,6 +8746,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_report_style_overwrite
 msgid "You can set up here the format you want this record to be displayed. If you leave the automatic formatting, it will be computed based on the financial reports hierarchy (auto-computed field 'level')."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:177
+#, python-format
+msgid "You cannot add/modify entries prior to and inclusive of the lock date %s."
 msgstr ""
 
 #. module: account

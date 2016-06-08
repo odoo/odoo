@@ -151,12 +151,14 @@ class product_pricelist(osv.osv):
         cr.execute(
             'SELECT i.id '
             'FROM product_pricelist_item AS i '
+            'LEFT JOIN product_category AS c '
+            'ON i.categ_id = c.id '
             'WHERE (product_tmpl_id IS NULL OR product_tmpl_id = any(%s))'
             'AND (product_id IS NULL OR product_id = any(%s))'
             'AND (categ_id IS NULL OR categ_id = any(%s)) '
             'AND (pricelist_id = %s) '
             'AND ((i.date_start IS NULL OR i.date_start<=%s) AND (i.date_end IS NULL OR i.date_end>=%s))'
-            'ORDER BY applied_on, min_quantity desc',
+            'ORDER BY applied_on, min_quantity desc, c.parent_left desc',
             (prod_tmpl_ids, prod_ids, categ_ids, pricelist.id, date, date))
 
         item_ids = [x[0] for x in cr.fetchall()]
@@ -266,7 +268,7 @@ class product_pricelist(osv.osv):
 class product_pricelist_item(osv.osv):
     _name = "product.pricelist.item"
     _description = "Pricelist item"
-    _order = "applied_on, min_quantity desc"
+    _order = "applied_on, min_quantity desc, categ_id desc"
 
     def _check_recursion(self, cr, uid, ids, context=None):
         for obj_list in self.browse(cr, uid, ids, context=context):

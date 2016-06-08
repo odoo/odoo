@@ -36,8 +36,7 @@
                                            <div class="oe_account_help">
                                                 <p class="oe_account_font_help text-center">Profit &amp; Loss</p>
                                                 <p class="oe_account_font_help oe_account_font_title">Income</p>
-                                                <p class="oe_account_font_help oe_account_font_title">Less Cost of Sales</p>
-                                                <p class="oe_account_font_help oe_account_font_content">Direct Costs</p>
+                                                <p class="oe_account_font_help oe_account_font_title">Less Cost of Revenue</p>
                                                 <p class="oe_account_font_help" style="color: grey;border-top: 2px solid;border-bottom: 2px solid;">GROSS PROFIT</p>
                                                 <p class="oe_account_font_help oe_account_font_title">Plus Other Income</p>
                                                 <p class="oe_account_font_help oe_account_font_title">Less Expenses</p>
@@ -252,7 +251,7 @@
                                     <group>
                                         <field name="code" attrs="{'readonly': ['|',('type', 'in', ['bank','cash']),('sequence_id','!=',False)], 'required': [('type', 'not in', ['bank', 'cash'])]}"/>
                                         <field name="refund_sequence" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
-                                        <field name="sequence_id" required="0" groups="base.group_no_one"/>
+                                        <field name="sequence_id" required="0" attrs="{'readonly': 1}" groups="base.group_no_one"/>
                                         <field name="refund_sequence_id" attrs="{'invisible': ['|',('type', 'not in', ['sale', 'purchase']), ('refund_sequence', '!=', True)]}" required="0" groups="base.group_no_one"/>
                                     </group>
                                     <group>
@@ -553,8 +552,8 @@
                                     <field name="name" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="amount" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="journal_currency_id" invisible="1"/>
-                                    <field name="amount_currency" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
-                                    <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                    <field name="amount_currency" invisible="1" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                    <field name="currency_id" options="{'no_create': True}" invisible="1" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="bank_account_id" invisible="1" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"
                                         domain="['|', ('partner_id', '=', partner_id), ('partner_id', '=', False)]"/>
                                 </tree>
@@ -1099,9 +1098,9 @@
                     <field name="reconciled"/>
                     <field name="debit" sum="Total Debit"/>
                     <field name="credit" sum="Total Credit"/>
-                    <field name="date_maturity" invisible="context.get('journal_type', False) not in ['sale','sale_refund','purchase','purchase_refund']"/>
-                    <field name="amount_currency" readonly="True" invisible="not context.get('currency',False)"/>
-                    <field name="currency_id" readonly="True" invisible="not context.get('currency',False)" />
+                    <field name="amount_currency" readonly="True" groups="base.group_multi_currency"/>
+                    <field name="currency_id" readonly="True" invisible="1" />
+                    <field name="date_maturity"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                 </tree>
@@ -1262,6 +1261,7 @@
                             <field name="line_ids" widget="one2many_list"
                               context="{'line_ids': line_ids, 'journal_id': journal_id }">
                                 <tree editable="bottom" string="Journal Items">
+                                    <field name="partner_id" domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
                                     <field name="account_id" domain="[('company_id', '=', parent.company_id), ('deprecated', '=', False)]"/>
                                     <field name="name"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('account_type', '=', 'normal')]"/>

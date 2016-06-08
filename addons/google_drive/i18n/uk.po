@@ -3,15 +3,16 @@
 # * google_drive
 # 
 # Translators:
-# Bogdan, 2015-2016
+# Bohdan Lisnenko, 2015-2016
 # Zoriana Zaiats, 2015
+# ТАрас <tratatuta@i.ua>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-02-13 15:19+0000\n"
-"Last-Translator: Bogdan\n"
+"PO-Revision-Date: 2016-05-06 17:30+0000\n"
+"Last-Translator: ТАрас <tratatuta@i.ua>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgid ""
 "                                - If you select \"Share with all users\", link of google document in \"More\" options will appear for all users in opportunities of Sales Department.<br/>\n"
 "                                - If you don't select \"Share with all users\", link of google document in \"More\" options will not appear for other users in opportunities of Sales Department.<br/>\n"
 "                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
-msgstr ""
+msgstr "<b>Щоб створити новий фільтр:</b><br/>\n- Перейдіть в документ Odoo, для якого Вам потрібен фільтр. Наприклад,  перейдіть в Нагоди та шукайте Відділ продажів.<br/>\n- В цьому \"Пошуці\", виберіть опцію \"Зберегти поточний фільтр\", введіть назву (напр. відділ продажів)<br/>\n- Якщо виберете \"Поділитися з усіма\", прив'язка Google документа в меню \"Ще\" - буде відкрита для всіх користувачів у нагодах відділу продажів.<br/>\n- Якщо не виберете \"Поділитися з усіма\", прив'язка Google документа в меню \"Ще\" - буде закритою для інших користувачів у нагодах відділу продажів.<br/>\n- Якщо фільтр не визначено, прив'язка Google документа в меню \"Ще\" - буде відкрита для всіх користувачів в усіх нагодах."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_active
@@ -39,7 +40,7 @@ msgstr "Активно"
 #: code:addons/google_drive/google_drive.py:34
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern"
-msgstr ""
+msgstr "Принаймні один ключ не вдалося знайти у ваших назвах на Google Диску"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_base_config_settings_google_drive_authorization_code
@@ -51,7 +52,7 @@ msgstr "Код авторизації"
 msgid ""
 "Choose how the new google drive will be named, on google side. Eg. "
 "gdoc_%(field_name)s"
-msgstr ""
+msgstr "Виберіть назву для нового Google Диска, зі сторони Google. Напр. gdoc_%(назва_поля/-ів)"
 
 #. module: google_drive
 #: model:ir.actions.act_window,help:google_drive.action_google_drive_users_config
@@ -77,7 +78,7 @@ msgstr "Дата створення"
 #: code:addons/google_drive/google_drive.py:141
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
-msgstr ""
+msgstr "Кожен може створити Google Диск тільки раз."
 
 #. module: google_drive
 #: model:ir.filters,name:google_drive.filter_partner
@@ -87,7 +88,7 @@ msgstr "Клієнт"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_display_name
 msgid "Display Name"
-msgstr "Показати ім'я"
+msgstr "Назва для відображення"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_filter_id
@@ -162,7 +163,7 @@ msgid ""
 "spreadsheet to control the quality of your product or review the delivery "
 "checklist for each order in a foreign country, ... Its very easy to manage "
 "them, link them to Odoo and use them to collaborate with your employees."
-msgstr ""
+msgstr "Прив'яжіть свої шаблони Google Диска до будь-якого запису в Odoo. Якщо Ви хочете, щоб Ваш співробітник заповнив якісь дуже особливі документи, напр. використав таблицю для контролю якості товарів, чи переглянув контрольний перелік доставок з кожного замовлення в інші країни, ... Ними дуже легко керувати, прив'яжіть їх до Odoo і використовуйте їх в роботі зі співробітниками."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model
@@ -174,13 +175,13 @@ msgstr "Модель"
 #: constraint:google.drive.config:0
 msgid ""
 "Model of selected filter is not matching with model of current template."
-msgstr ""
+msgstr "Модель вибраного фільтра не співпадає з моделлю поточного шаблона."
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:173
 #, python-format
 msgid "Please enter a valid Google Document URL."
-msgstr ""
+msgstr "Введіть дійсну URL-адресу Google документа."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_resource_id
@@ -229,7 +230,7 @@ msgid ""
 "                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
 "                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
 "                                'Agrolait_SO0001_Sales'."
-msgstr ""
+msgstr "Назва прикріпленого документа може містити фіксовані і змінні дані. щоб розрізняти документи на \nGoogle Диску, використовуйте фіксовані слова та поля. приміром, у прикладі зверху, якщо Ви написали \nAgrolait_%(name)s_Sales в назві поля Google Диска, документ на Вашому Google Диску і \nприкріпленні Odoo буде називатися 'Agrolait_SO0001_Sales'."
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:117
@@ -237,7 +238,7 @@ msgstr ""
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
 "the document"
-msgstr ""
+msgstr "Дозвіл \"читання\" для \"всі, в кого є лінк\" не було вказано в документі"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_base_config_settings_google_drive_uri
@@ -260,7 +261,7 @@ msgstr "вставте його сюди"
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_base_config_settings
 msgid "base.config.settings"
-msgstr ""
+msgstr "base.config.settings"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form

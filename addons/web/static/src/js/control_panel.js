@@ -67,6 +67,11 @@ var ControlPanel = Widget.extend({
             $switch_buttons: this.$('.oe-cp-switch-buttons'),
         };
 
+        // Prevent the search dropdowns to close when clicking inside them
+        this.$el.on('click.bs.dropdown', '.oe-search-options .dropdown-menu', function (e) {
+            e.stopPropagation();
+        });
+
         // By default, hide the ControlPanel and remove its contents from the DOM
         this._toggle_visibility(false);
 

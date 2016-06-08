@@ -4,6 +4,7 @@ import base64
 import csv
 import functools
 import glob
+import imghdr
 import itertools
 import jinja2
 import logging
@@ -486,7 +487,7 @@ class Home(http.Controller):
                     redirect = '/web'
                 return http.redirect_with_hash(redirect)
             request.uid = old_uid
-            values['error'] = "Wrong login/password"
+            values['error'] = _("Wrong login/password")
         return request.render('web.login', values)
 
 class WebClient(http.Controller):
@@ -636,6 +637,7 @@ class Database(http.Controller):
         d['insecure'] = openerp.tools.config['admin_passwd'] == 'admin'
         d['list_db'] = openerp.tools.config['list_db']
         d['langs'] = openerp.service.db.exp_list_lang()
+        d['countries'] = openerp.service.db.exp_list_countries()
         # databases list
         d['databases'] = []
         try:
@@ -657,7 +659,9 @@ class Database(http.Controller):
     @http.route('/web/database/create', type='http', auth="none", methods=['POST'], csrf=False)
     def create(self, master_pwd, name, lang, password, **post):
         try:
-            request.session.proxy("db").create_database(master_pwd, name, bool(post.get('demo')), lang,  password)
+            # country code could be = "False" which is actually True in python
+            country_code = post.get('country_code') or False
+            request.session.proxy("db").create_database(master_pwd, name, bool(post.get('demo')), lang, password, post.get('login'), country_code)
             request.session.authenticate(name, 'admin', password)
             return http.local_redirect('/web/')
         except Exception, e:
@@ -1074,7 +1078,8 @@ class Binary(http.Controller):
         '/logo.png',
     ], type='http', auth="none", cors="*")
     def company_logo(self, dbname=None, **kw):
-        imgname = 'logo.png'
+        imgname = 'logo'
+        imgext = '.png'
         placeholder = functools.partial(get_resource_path, 'web', 'static', 'src', 'img')
         uid = None
         if request.session.db:
@@ -1087,7 +1092,7 @@ class Binary(http.Controller):
             uid = openerp.SUPERUSER_ID
 
         if not dbname:
-            response = http.send_file(placeholder(imgname))
+            response = http.send_file(placeholder(imgname + imgext))
         else:
             try:
                 # create an empty registry
@@ -1101,12 +1106,14 @@ class Binary(http.Controller):
                                """, (uid,))
                     row = cr.fetchone()
                     if row and row[0]:
-                        image_data = StringIO(str(row[0]).decode('base64'))
-                        response = http.send_file(image_data, filename=imgname, mtime=row[1])
+                        image_base64 = str(row[0]).decode('base64')
+                        image_data = StringIO(image_base64)
+                        imgext = '.' + (imghdr.what(None, h=image_base64) or 'png')
+                        response = http.send_file(image_data, filename=imgname + imgext, mtime=row[1])
                     else:
                         response = http.send_file(placeholder('nologo.png'))
             except Exception:
-                response = http.send_file(placeholder(imgname))
+                response = http.send_file(placeholder(imgname + imgext))
 
         return response
 

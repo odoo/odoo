@@ -898,7 +898,7 @@ var Chatter = form_common.AbstractField.extend({
             internal_subtypes: this.options.internal_subtypes,
             is_log: options && options.is_log,
             record_name: this.record_name,
-            default_body: old_composer && old_composer.$input.val(),
+            default_body: old_composer && old_composer.$input && old_composer.$input.val(),
             default_mention_selections: old_composer && old_composer.mention_get_listener_selections(),
         });
         this.composer.on('input_focused', this, function () {
@@ -919,7 +919,7 @@ var Chatter = form_common.AbstractField.extend({
         this.mute_new_message_button(true);
     },
     close_composer: function (force) {
-        if (this.composer.is_empty() || force) {
+        if (this.composer && (this.composer.is_empty() || force)) {
             this.composer.do_hide();
             this.composer.$input.val('');
             this.mute_new_message_button(false);

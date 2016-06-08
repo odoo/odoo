@@ -85,8 +85,10 @@ class AccountAnalyticLine(models.Model):
 
     @api.multi
     def write(self, values):
-        values = self._get_timesheet_cost(vals=values)
-        return super(AccountAnalyticLine, self).write(values)
+        for line in self:
+            values = line._get_timesheet_cost(vals=values)
+            super(AccountAnalyticLine, line).write(values)
+        return True
 
     @api.model
     def create(self, values):
@@ -125,7 +127,7 @@ class SaleOrder(models.Model):
             if not order.project_id:
                 for line in order.order_line:
                     if line.product_id.track_service == 'timesheet':
-                        order._create_analytic_account(prefix=order.product_id.default_code or None)
+                        order._create_analytic_account(prefix=line.product_id.default_code or None)
                         break
         return result
 

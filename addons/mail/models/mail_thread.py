@@ -798,15 +798,20 @@ class MailThread(models.AbstractModel):
         record_set = None
 
         def _create_bounce_email():
-            self.env['mail.mail'].create({
+            bounce_to = decode_header(message, 'Return-Path') or email_from
+            bounce_mail_values = {
                 'body_html': '<div><p>Hello,</p>'
                              '<p>The following email sent to %s cannot be accepted because this is '
                              'a private email address. Only allowed people can contact us at this address.</p></div>'
                              '<blockquote>%s</blockquote>' % (message.get('to'), message_dict.get('body')),
                 'subject': 'Re: %s' % message.get('subject'),
-                'email_to': message.get('from'),
+                'email_to': bounce_to,
                 'auto_delete': True,
-            }).send()
+            }
+            bounce_from = self.env['ir.mail_server']._get_default_bounce_address()
+            if bounce_from:
+                bounce_mail_values['email_from'] = 'MAILER-DAEMON <%s>' % bounce_from
+            self.env['mail.mail'].create(bounce_mail_values).send()
 
         def _warn(message):
             _logger.info('Routing mail with Message-Id %s: route %s: %s',
@@ -1686,7 +1691,7 @@ class MailThread(models.AbstractModel):
             partner_to_subscribe = partner_ids
             if self._context.get('mail_post_autofollow_partner_ids'):
                 partner_to_subscribe = filter(lambda item: item in self._context.get('mail_post_autofollow_partner_ids'), partner_ids)
-            self.message_subscribe(list(partner_to_subscribe))
+            self.message_subscribe(list(partner_to_subscribe), force=False)
 
         # _mail_flat_thread: automatically set free messages to the first posted message
         MailMessage = self.env['mail.message']
@@ -1738,7 +1743,7 @@ class MailThread(models.AbstractModel):
                 # done with SUPERUSER_ID, because on some models users can post only with read access, not necessarily write access
                 self.sudo().write({'message_last_post': fields.Datetime.now()})
         if new_message.author_id and model and self.ids and message_type != 'notification' and not self._context.get('mail_create_nosubscribe'):
-            self.message_subscribe([new_message.author_id.id])
+            self.message_subscribe([new_message.author_id.id], force=False)
         return new_message
 
     @api.multi

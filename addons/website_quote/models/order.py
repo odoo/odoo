@@ -328,6 +328,29 @@ class sale_quote_option(osv.osv):
         'quantity': 1,
     }
 
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if not self.product_id:
+            return
+        product = self.product_id
+        self.price_unit = product.list_price
+        self.website_description = product.product_tmpl_id.quote_description
+        self.name = product.name
+        self.uom_id = product.uom_id
+        domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
+        return {'domain': domain}
+
+    @api.onchange('uom_id')
+    def _onchange_product_uom(self):
+        if not self.product_id:
+            return
+        if not self.uom_id:
+            self.price_unit = 0.0
+            return
+        if self.uom_id.id != self.product_id.uom_id.id:
+            new_price = self.product_id.uom_id._compute_price(self.product_id.uom_id.id, self.price_unit, self.uom_id.id)
+            self.price_unit = new_price
+
     def on_change_product_id(self, cr, uid, ids, product, uom_id=None, context=None):
         vals, domain = {}, []
         product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)

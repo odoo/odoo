@@ -8,7 +8,7 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Martin Trigaux, 2015
 # Nils van Odoo <nvo@odoo.com>, 2015
-# Symons Xavier <xsy@openerp.com>, 2015
+# Xavier Symons <xsy@openerp.com>, 2015
 # Volluta <volluta@tutanota.com>, 2015
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015-2016
 msgid ""
@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2016-03-11 12:44+0000\n"
+"PO-Revision-Date: 2016-05-20 06:17+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -136,7 +136,7 @@ msgid ""
 "* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to me manufactured...\n"
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
-msgstr "* Nieuw: Wanneer de voorraadmutatie is aangemaakt, maar nog niet is bevestigd.\n* Wachten op een andere mutatie: Deze status kan worden gezien wanneer de mutatie wacht op een andere mutatie, bijvoorbeeld bij een gekoppeld proces.\n* Wacht op beschikbaarheid: Deze staat wordt bereikt wanneer de verwerving niet gelijk gedaan kan worden. Het kan zijn dat de planner moet worden gestart.\n* Beschikbaar: Wanneer de producten zijn gereserveerd, krijgt de mutatie de status 'Beschikbaar'\n* Gereed: Wanneer de levering is verwerkt, krijgt de mutatie de status 'Gereed'"
+msgstr "* Nieuw: Wanneer de voorraadmutatie is aangemaakt, maar nog niet is bevestigd.\n* Wachten op een andere mutatie: Deze status kan worden gezien wanneer de mutatie wacht op een andere mutatie, bijvoorbeeld bij een gekoppeld proces.\n* Wacht op beschikbaarheid: Deze status wordt bereikt wanneer de verwerving niet gelijk gedaan kan worden. Het kan zijn dat de planner moet worden gestart.\n* Beschikbaar: Wanneer de producten zijn gereserveerd, krijgt de mutatie de status 'Beschikbaar'\n* Gereed: Wanneer de levering is verwerkt, krijgt de mutatie de status 'Gereed'"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -569,7 +569,7 @@ msgstr "<strong>Bron</strong>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>State</strong>"
-msgstr "<strong>Staat</strong>"
+msgstr "<strong>Status</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
@@ -719,7 +719,7 @@ msgstr "Alle bewerkingen"
 #: model:ir.actions.act_window,name:stock.stock_picking_action_picking_type
 #: model:ir.ui.menu,name:stock.all_picking
 msgid "All Transfers"
-msgstr "Alle overboekingen"
+msgstr "Alle verplaatsingen"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -3102,7 +3102,7 @@ msgstr "Gekoppeld aantal"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form
 msgid "Localization"
-msgstr "Lokalisatie"
+msgstr "Positie in magazijn"
 
 #. module: stock
 #: code:addons/stock/stock.py:4912
@@ -4179,7 +4179,7 @@ msgstr "Verzamellijst"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_picking
 msgid "Picking Operations"
-msgstr "Leveringbewerkingen"
+msgstr "Verzamellijst"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_picking_type_id
@@ -6124,7 +6124,7 @@ msgstr "Verplaatsingsreferentie"
 #: model:ir.actions.act_window,name:stock.action_picking_tree
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Transfers"
-msgstr "Transfers"
+msgstr "Verplaatsingen"
 
 #. module: stock
 #: selection:stock.location,usage:0
@@ -6371,7 +6371,7 @@ msgstr "Leverancier"
 #: model:ir.model.fields,field_description:stock.field_res_partner_property_stock_supplier
 #: selection:stock.location,usage:0
 msgid "Vendor Location"
-msgstr "Plaats leverancier"
+msgstr "Leverancier locatie"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_search

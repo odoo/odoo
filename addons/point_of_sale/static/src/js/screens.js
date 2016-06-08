@@ -131,6 +131,8 @@ var ScreenWidget = PosBaseWidget.extend({
         this.pos.barcode_reader.set_action_callback({
             'cashier': _.bind(self.barcode_cashier_action, self),
             'product': _.bind(self.barcode_product_action, self),
+            'weight': _.bind(self.barcode_product_action, self),
+            'price': _.bind(self.barcode_product_action, self),
             'client' : _.bind(self.barcode_client_action, self),
             'discount': _.bind(self.barcode_discount_action, self),
             'error'   : _.bind(self.barcode_error_action, self),
@@ -1023,7 +1025,9 @@ var ClientListScreenWidget = ScreenWidget.extend({
         if (this.editing_client) {
             this.$('.detail.barcode').val(code.code);
         } else if (this.pos.db.get_partner_by_barcode(code.code)) {
-            this.display_client_details('show',this.pos.db.get_partner_by_barcode(code.code));
+            var partner = this.pos.db.get_partner_by_barcode(code.code);
+            this.new_client = partner;
+            this.display_client_details('show', partner);
         }
     },
     perform_search: function(query, associate_result){
@@ -1817,11 +1821,6 @@ var PaymentScreenWidget = ScreenWidget.extend({
             return;
         }
 
-        // get rid of payment lines with an amount of 0, because
-        // since accounting v9 we cannot have bank statement lines
-        // with an amount of 0
-        order.clean_empty_paymentlines();
-
         var plines = order.get_paymentlines();
         for (var i = 0; i < plines.length; i++) {
             if (plines[i].get_type() === 'bank' && plines[i].get_amount() < 0) {
@@ -1876,6 +1875,8 @@ var PaymentScreenWidget = ScreenWidget.extend({
 
                 this.pos.proxy.open_cashbox();
         }
+
+        order.initialize_validation_date();
 
         if (order.is_to_invoice()) {
             var invoiced = this.pos.push_and_invoice_order(order);

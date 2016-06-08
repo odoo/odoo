@@ -261,7 +261,7 @@ class ir_translation(osv.osv):
         'Language code of translation item must be among known languages' ), ]
 
     def _auto_init(self, cr, context=None):
-        super(ir_translation, self)._auto_init(cr, context)
+        res = super(ir_translation, self)._auto_init(cr, context)
 
         cr.execute("SELECT indexname FROM pg_indexes WHERE indexname LIKE 'ir_translation_%'")
         indexes = [row[0] for row in cr.fetchall()]
@@ -284,6 +284,8 @@ class ir_translation(osv.osv):
         if 'ir_translation_ltn' not in indexes:
             cr.execute('CREATE INDEX ir_translation_ltn ON ir_translation (name, lang, type)')
             cr.commit()
+
+        return res
 
     def _check_selection_field_value(self, cr, uid, field, value, context=None):
         if field == 'lang':
@@ -585,7 +587,7 @@ class ir_translation(osv.osv):
                         FROM res_lang l
                         WHERE NOT EXISTS (
                             SELECT 1 FROM ir_translation
-                            WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s AND module=%(module)s
+                            WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s
                         );
                     """
             for record in records:
@@ -608,7 +610,7 @@ class ir_translation(osv.osv):
                             WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s
                         );
                         UPDATE ir_translation SET src=%(src)s
-                        WHERE type='model' AND name=%(name)s AND res_id=%(res_id)s AND module=%(module)s;
+                        WHERE type='model' AND name=%(name)s AND res_id=%(res_id)s;
                     """
             for record in records:
                 module = external_ids[record.id].split('.')[0]

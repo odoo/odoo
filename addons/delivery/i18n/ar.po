@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2016-02-12 22:09+0000\n"
+"PO-Revision-Date: 2016-05-18 15:13+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -142,7 +142,7 @@ msgstr "متوفر"
 msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
-msgstr ""
+msgstr "متوسط التأخير في أيام لإنتاج هذا المنتج. في حالة BOM متعدد المستويات، وستضاف الأوقات تصنيع الترشيح من المكونات. "
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_avg_price
@@ -333,7 +333,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "الكمية الحالية من المنتجات.\nفي سياق مع موقع مخزون فردى ، وهذا يشمل البضائع المخزنة في هذا الموقع ، أو أي من أبنائها.\nفي سياق مع مستودع فردى ، وهذا يشمل البضائع المخزنة في موقع مخزون هذا المستودع، أو أي من أبنائها.\nتخزينها في موقع المخزون من مستودع هذا المحل، أو أي من أبنائها.\nخلاف ذلك، وهذا يشمل البضائع المخزنة في أي موقع مع نوع 'الداخلية'."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_delay
@@ -353,7 +353,7 @@ msgstr "مرجع الزبون"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership_date_from
 msgid "Date from which membership becomes active."
-msgstr ""
+msgstr "تاريخ العضوية من نشيطه"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_last_post
@@ -417,7 +417,7 @@ msgstr "منتج الشحن"
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO/MTS,..."
-msgstr ""
+msgstr "اعتمادا على الوحدات المثبته ، هذا سوف يسمح لك بتحديد مسار المنتج: ما إذا كان سيتم شراؤها، وتصنيعها، متعهد النقل المتعدد الوسائط / MTS، ... "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description
@@ -553,7 +553,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "الكميه المتوقعه  (المحسوبة =( الكمية في اليد - الصادره + الواردة)\nفي سياق مع موقع مخزون منفرد ، وهذا يشمل البضائع المخزنة في هذا الموقع، أو أي من أبنائها.\nفي سياق مع مستودع واحد، وهذا يشمل البضائع المخزنة في موقع المخزون فى هذا المستودع، أو أي من أبنائها.\nخلاف ذلك، هذا يشمل البضائع المخزنة في أي موقع مخزون من النوع \"'داخلى \". "
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -891,7 +891,7 @@ msgstr "الشريك"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
 msgid "Physical Packages"
-msgstr ""
+msgstr "الحزم الماديه "
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1032,7 +1032,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
-msgstr ""
+msgstr "الكميه المتوقعه  (المحسوبة =( الكمية في اليد - الصادره + الواردة)\nفي سياق مع موقع مخزون منفرد ، وهذا يشمل البضائع المخزنة في هذا الموقع، أو أي من أبنائها.\nفي سياق مع مستودع واحد، وهذا يشمل البضائع المخزنة في موقع المخزون فى هذا المستودع، أو أي من أبنائها.\nخلاف ذلك، هذا يشمل البضائع المخزنة في أي موقع مخزون من النوع \"'داخلى \". "
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_outgoing_qty
@@ -1041,7 +1041,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
-msgstr ""
+msgstr "كمية من المنتجات التي تعتزم مغادرة البلاد.\nفي سياق مع موقع مخزون منفرد ، وهذا يشمل البضائع التى تركت هذا الموقع، أو أي من أبنائها.\nفي سياق مع مستودع منفرد ، وهذا يشمل البضائع التى تركت موقع مخزون هذه المستودعات، أو أي من أبنائها.\nخلاف ذلك، هذا يشمل البضائع المغادره أي موقع مخزون من نوع 'داخلي'. "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reception_count
@@ -1051,12 +1051,12 @@ msgstr "استلام"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_nbr_reordering_rules
 msgid "Reordering Rules"
-msgstr ""
+msgstr "قواعد إعاده الطلب "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_ids
 msgid "Routes"
-msgstr ""
+msgstr "مسارات "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_list_base_price
@@ -1191,7 +1191,7 @@ msgstr "المحافظات"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state
 msgid "Status"
-msgstr ""
+msgstr "الحاله "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_account_input
@@ -1258,7 +1258,7 @@ msgid ""
 "The average delay in days between the confirmation of the customer order and"
 " the delivery of the finished products. It's the time you promise to your "
 "customers."
-msgstr ""
+msgstr "متوسط التأخير في الأيام بين تأكيد امر العميل، وتسليم المنتجات النهائية. انها الوقت الذي تعد به لعملائك. "
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:53
@@ -1294,14 +1294,14 @@ msgstr ""
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
-msgstr ""
+msgstr "This account will be used for invoices instead of the default one to value expenses for the current product."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_income_id
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
-msgstr ""
+msgstr "سيتم استخدام شرط السداد بدلا من الشرط الافتراضى لأوامر البيع و فواتير العملاء"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_creditor_price_difference
@@ -1332,21 +1332,21 @@ msgstr "هذا هو مجموع الأسعار المضافة لكافة السم
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by manufacturing orders."
-msgstr ""
+msgstr "سوف تستخدم هذا موقع المخزون ، بدلا من الافتراضي الواحد، كموقع المصدر لتحركات الأسهم الناتجة عن طلبيات المصانع. "
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_procurement
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by procurements."
-msgstr ""
+msgstr "سوف تستخدم هذا الموقع المخزون ، بدلا من الواحد الافتراضي ، كموقع المصدر لتحركات المخزون الناتجة عن عمليات الشراء. "
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_inventory
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
-msgstr ""
+msgstr "موقع المخزون هذا سوف يستخدم، بدلا من الافتراضي ، كموقع المصدر لتحركات المخزون التى ولدت عند القيام بجرد. "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_cost
@@ -1548,7 +1548,7 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr ""
+msgstr "عند القيام في الوقت الحقيقي بتقييم المخزون، سوف يتم نشر عناصر اليوميه المناظره لجميع تحركات المخزون الواردة في هذا الحساب، ما لم يكن هناك حساب تقييم معين على موقع المصدر. عندما لم يتم التعيين على المنتج، يتم استخدام واحدة من فئة المنتج."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_output
@@ -1557,7 +1557,7 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr ""
+msgstr "عند القيام في الوقت الحقيقي بتقييم المخزون، سوف يتم نشر عناصر اليوميه المناظره لجميع تحركات المخزون الصادرة في هذا الحساب، ما لم يكن هناك حساب تقييم معين على موقع الوصول. عندما يتم تعيين على المنتج، يتم استخدام واحدة من فئة المنتج."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_email_template_id

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2016-03-26 15:48+0000\n"
+"PO-Revision-Date: 2016-04-11 12:04+0000\n"
 "Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
 "MIME-Version: 1.0\n"
@@ -61,7 +61,7 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-clock-o\"/>\n"
 "                                        <b>To</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\"/>\n                                        <b>ถึง</b>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -214,7 +214,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event_message_needaction
 #: model:ir.model.fields,field_description:event.field_event_registration_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "ต้องดำเนินการ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_active
@@ -266,7 +266,7 @@ msgstr "นำไปใช้"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Archived"
-msgstr ""
+msgstr "เก็บแล้ว"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -416,7 +416,7 @@ msgstr "ถูกยกเลิก"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_type_id
 msgid "Category"
-msgstr "หมวดหมู่"
+msgstr "หมวด"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -461,7 +461,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
 msgid "Configuration"
-msgstr "ตั้งค่า"
+msgstr "การตั้งค่า"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_configuration
@@ -593,21 +593,21 @@ msgstr "วันที่ข้อความล่าสุดโพสต์
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Day 1"
-msgstr ""
+msgstr "วันที่ 1"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Day 2"
-msgstr ""
+msgstr "วันที่ 2"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Day 3"
-msgstr ""
+msgstr "วันที่ 3"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -1005,13 +1005,13 @@ msgstr "รหัส"
 #: model:ir.model.fields,help:event.field_event_event_message_unread
 #: model:ir.model.fields,help:event.field_event_registration_message_unread
 msgid "If checked new messages require your attention."
-msgstr "ถ้าการตรวจสอบข้อความใหม่ให้ระบุความสนใจของคุณ"
+msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_message_needaction
 #: model:ir.model.fields,help:event.field_event_registration_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_state
@@ -1025,7 +1025,7 @@ msgstr ""
 #. module: event
 #: selection:event.mail,interval_unit:0
 msgid "Immediately"
-msgstr ""
+msgstr "ทันที"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1037,17 +1037,17 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_event_sale
 msgid "Install the event_sale module"
-msgstr ""
+msgstr "ติดตั้งโมดูล event_sale"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_website_event_track
 msgid "Install the module website_event_track"
-msgstr ""
+msgstr "- จะติดตั้งโมดูล website_event_track"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_website_event_questions
 msgid "Install the website_event_questions module"
-msgstr ""
+msgstr "- จะติดตั้งโมดูล website_event_questions"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1091,7 +1091,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event_message_is_follower
 #: model:ir.model.fields,field_description:event.field_event_registration_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "เป็นผู้ติดตาม"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_default_registration_max
@@ -1408,7 +1408,7 @@ msgstr "คู่ค้า"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_phone
 msgid "Phone"
-msgstr "โทร"
+msgstr "โทรศัพท์"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1507,12 +1507,12 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration mail"
-msgstr ""
+msgstr "อีเมลสมัครสมาชิก"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Registrations"
-msgstr ""
+msgstr "การสมัครสมาชิก"
 
 #. module: event
 #: model:mail.template,subject:event.event_reminder
@@ -1522,7 +1522,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_default_reply_to
 msgid "Reply To"
-msgstr ""
+msgstr "ตอบไปยัง"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_reply_to
@@ -1572,7 +1572,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_scheduled_date
 msgid "Scheduled Sent Mail"
-msgstr ""
+msgstr "ตั้งเวลาส่งอีเมล"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_scheduled_date
@@ -1582,7 +1582,7 @@ msgstr ""
 #. module: event
 #: model:event.type,name:event.event_type_0
 msgid "Seminar"
-msgstr ""
+msgstr "สัมมนา"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
@@ -1632,7 +1632,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Start Month"
-msgstr ""
+msgstr "เดือนเริ่มต้น"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_state
@@ -1827,7 +1827,7 @@ msgstr ""
 #. module: event
 #: selection:event.mail,interval_unit:0
 msgid "Week(s)"
-msgstr ""
+msgstr "สัปดาห์"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1901,7 +1901,7 @@ msgstr ""
 #. module: event
 #: model:ir.model,name:event.model_event_config_settings
 msgid "event.config.settings"
-msgstr ""
+msgstr "event.config.settings"
 
 #. module: event
 #: model:ir.model,name:event.model_event_confirm
@@ -1911,7 +1911,7 @@ msgstr ""
 #. module: event
 #: model:ir.model,name:event.model_event_mail
 msgid "event.mail"
-msgstr ""
+msgstr "event.mail"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1921,7 +1921,7 @@ msgstr ""
 #. module: event
 #: model:ir.model,name:event.model_report_event_registration
 msgid "report.event.registration"
-msgstr ""
+msgstr "report.event.registration"
 
 #. module: event
 #: model:event.event,description:event.event_3

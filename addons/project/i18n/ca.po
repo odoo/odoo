@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-03-08 10:10+0000\n"
+"PO-Revision-Date: 2016-05-25 07:58+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -622,7 +622,7 @@ msgstr ""
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr ""
+msgstr "Diccionari Python a avaluar per proporcionar valors per defecte quan es creïn nous registres per aquest pseudònim."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -714,7 +714,7 @@ msgstr "Àlies"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "Pseudònim del contacte de seguretat"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_model
@@ -724,17 +724,17 @@ msgstr "Model àlies"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_name
 msgid "Alias Name"
-msgstr ""
+msgstr "Pseudònim"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_domain
 msgid "Alias domain"
-msgstr ""
+msgstr "Pseudònim del domini"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_model_id
 msgid "Aliased Model"
-msgstr ""
+msgstr "Model amb pseudònim"
 
 #. module: project
 #: code:addons/project/project.py:121
@@ -1296,7 +1296,7 @@ msgstr "Deure"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_defaults
 msgid "Default Values"
-msgstr ""
+msgstr "Valors per defecte"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
@@ -1493,7 +1493,7 @@ msgstr "Correus electrònics"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "End"
-msgstr ""
+msgstr "Fi"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_end_date
@@ -1810,7 +1810,7 @@ msgstr "ID"
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
-msgstr ""
+msgstr "Id del registre pare que te el pseudònim.(exemple: el projecte que conté el pseudònim per la creació de tasques)"
 
 #. module: project
 #. openerp-web
@@ -2376,7 +2376,7 @@ msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr ""
+msgstr "Id opcional d'un fil(registre) al que tots els missatges entrants s'adjuntaran, inclús si no van ser respostes del mateix. Si s'estableix, se desactivarà completament la creació de nous registres."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2453,7 +2453,7 @@ msgstr "Model pare"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "Id del registre pare"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_parent_ids
@@ -2510,7 +2510,7 @@ msgid ""
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document\n"
-msgstr ""
+msgstr "Política per enviar un missatge en el document utilitzant la passarel·la del correu.\n-Tots: Tothom pot enviar.\n-Empreses: Només les empreses autenticades.\n-Seguidors: Només els seguidors del document relacionat.\n"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2708,7 +2708,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "Id. del registre fill"
 
 #. module: project
 #: selection:project.config.settings,module_project_timesheet:0
@@ -2987,7 +2987,7 @@ msgstr "Estat"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_subscription_ids
 msgid "Subscriptions"
-msgstr ""
+msgstr "Subscripcions"
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -3226,14 +3226,14 @@ msgid ""
 "The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
-msgstr ""
+msgstr "El model (Tipus de document d'Odoo) al que correspon aquest pseudònim. Qualsevol correu electrònic entrant que no sigui resposta a un registre existent, causarà la creació d'un nou registre d'aquest model (per exemple, una tasca de projecte)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_name
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr ""
+msgstr "El nom d'aquest pseudònim de correu electrònic. Per exemple, \"feines\", si el que vol és obtenir els correus per <fenies@example.odoo.com>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_user_id
@@ -3242,7 +3242,7 @@ msgid ""
 "field is not set the system will attempt to find the right owner based on "
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
-msgstr ""
+msgstr "El propietari dels registres creats al rebre correus electrònics amb aquest pseudònim. Si aquest camp no esta definit, el sistema intentarà de trobar el propietari correcte basat amb l'adreça de l'emissor (De), o utilitzarà la compta d'administrador si no es troba un usuari per aquesta adreça."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3729,7 +3729,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_project_config_settings
 msgid "project.config.settings"
-msgstr ""
+msgstr "project.config.settings"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import fields, osv
+from openerp.tools import float_compare, float_round
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID, api, models
 from openerp.exceptions import UserError
@@ -234,9 +235,33 @@ class stock_quant(osv.osv):
                 self._create_account_move_line(cr, uid, quants, move, acc_valuation, acc_dest, journal_id, context=ctx)
 
     def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False, context=None):
+        quant_obj = self.pool.get('stock.quant')
         quant = super(stock_quant, self)._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to, context=context)
         if move.product_id.valuation == 'real_time':
             self._account_entry_move(cr, uid, [quant], move, context)
+
+            # If the precision required for the variable quant cost is larger than the accounting
+            # precision, inconsistencies between the stock valuation and the accounting entries
+            # may arise.
+            # For example, a box of 13 units is bought 15.00. If the products leave the
+            # stock one unit at a time, the amount related to the cost will correspond to
+            # round(15/13, 2)*13 = 14.95. To avoid this case, we split the quant in 12 + 1, then
+            # record the difference on the new quant.
+            # We need to make sure to able to extract at least one unit of the product. There is
+            # an arbitrary minimum quantity set to 2.0 from which we consider we can extract a
+            # unit and adapt the cost.
+            curr_rounding = move.company_id.currency_id.rounding
+            cost_rounded = float_round(quant.cost, precision_rounding=curr_rounding)
+            cost_correct = cost_rounded
+            if float_compare(quant.product_id.uom_id.rounding, 1.0, precision_digits=1) == 0\
+                    and float_compare(quant.qty * quant.cost, quant.qty * cost_rounded, precision_rounding=curr_rounding) != 0\
+                    and float_compare(quant.qty, 2.0, precision_rounding=quant.product_id.uom_id.rounding) >= 0:
+                qty = quant.qty
+                cost = quant.cost
+                quant_correct = quant_obj._quant_split(cr, uid, quant, quant.qty - 1.0, context=context)
+                cost_correct += (qty * cost) - (qty * cost_rounded)
+                quant_obj.write(cr, SUPERUSER_ID, [quant.id], {'cost': cost_rounded}, context=context)
+                quant_obj.write(cr, SUPERUSER_ID, [quant_correct.id], {'cost': cost_correct}, context=context)
         return quant
 
     def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False, context=None):
@@ -252,7 +277,7 @@ class stock_quant(osv.osv):
 
         :param context: context dictionary that can explicitly mention the company to consider via the 'force_company' key
         :returns: journal_id, source account, destination account, valuation account
-        :raise: osv.except_osv() is any mandatory account or journal is not defined.
+        :raise: openerp.exceptions.UserError if any mandatory account or journal is not defined.
         """
         product_obj = self.pool.get('product.template')
         accounts = product_obj.browse(cr, uid, move.product_id.product_tmpl_id.id, context).get_product_accounts()
@@ -395,12 +420,14 @@ class stock_move(osv.osv):
                 else:
                     tmpl_dict[product_id] = 0
                     product_avail = qty_available
+                # if the incoming move is for a purchase order with foreign currency, need to call this to get the same value that the quant will use.
+                price_unit = self.pool.get('stock.move').get_price_unit(cr, uid, move, context=context)
                 if product_avail <= 0:
-                    new_std_price = move.price_unit
+                    new_std_price = price_unit
                 else:
                     # Get the standard price
                     amount_unit = product.standard_price
-                    new_std_price = ((amount_unit * product_avail) + (move.price_unit * move.product_qty)) / (product_avail + move.product_qty)
+                    new_std_price = ((amount_unit * product_avail) + (price_unit * move.product_qty)) / (product_avail + move.product_qty)
                 tmpl_dict[product_id] += move.product_qty
                 # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
                 ctx = dict(context or {}, force_company=move.company_id.id)

@@ -619,27 +619,28 @@ class Field(object):
     # See method ``modified`` below for details.
     #
 
+    def _add_trigger(self, env, path_str, field=None):
+        path = path_str.split('.')
+        # traverse path and add triggers on fields along the way
+        for i, name in enumerate(path):
+            model = env[field.comodel_name if field else self.model_name]
+            field = model._fields[name]
+            # env[self.model_name] --- path[:i] --> model with field
+
+            if field is self:
+                self.recursive = True
+                continue
+
+            # add trigger on field and its inverses to recompute self
+            model._field_triggers.add(field, (self, '.'.join(path[:i] or ['id'])))
+            for invf in model._field_inverses[field]:
+                invm = env[invf.model_name]
+                invm._field_triggers.add(invf, (self, '.'.join(path[:i+1])))
+
     def setup_triggers(self, env):
         """ Add the necessary triggers to invalidate/recompute ``self``. """
         for path_str in self.depends:
-            path = path_str.split('.')
-
-            # traverse path and add triggers on fields along the way
-            field = None
-            for i, name in enumerate(path):
-                model = env[field.comodel_name if field else self.model_name]
-                field = model._fields[name]
-                # env[self.model_name] --- path[:i] --> model with field
-
-                if field is self:
-                    self.recursive = True
-                    continue
-
-                # add trigger on field and its inverses to recompute self
-                model._field_triggers.add(field, (self, '.'.join(path[:i] or ['id'])))
-                for invf in model._field_inverses[field]:
-                    invm = env[invf.model_name]
-                    invm._field_triggers.add(invf, (self, '.'.join(path[:i+1])))
+            self._add_trigger(env, path_str)
 
     ############################################################################
     #
@@ -979,9 +980,9 @@ class Field(object):
 
         for model_name, bypath in bymodel.iteritems():
             for path, fields in bypath.iteritems():
-                if path and any(field.store for field in fields):
+                if path and any(field.compute and field.store for field in fields):
                     # process stored fields
-                    stored = set(field for field in fields if field.store)
+                    stored = set(field for field in fields if field.compute and field.store)
                     fields = set(fields) - stored
                     if path == 'id':
                         target = records
@@ -1015,11 +1016,11 @@ class Field(object):
         for field, path in records._field_triggers[self]:
             target = env[field.model_name]
             computed = target.browse(env.computed[field])
-            if path == 'id':
+            if path == 'id' and field.model_name == records._name:
                 target = records - computed
             elif path and env.in_onchange:
                 target = (target.browse(env.cache[field]) - computed).filtered(
-                    lambda rec: rec._mapped_cache(path) & records
+                    lambda rec: rec if path == 'id' else rec._mapped_cache(path) & records
                 )
             else:
                 target = target.browse(env.cache[field]) - computed
@@ -1818,9 +1819,23 @@ class _RelationalMulti(_Relational):
 
     def _compute_related(self, records):
         """ Compute the related field ``self`` on ``records``. """
-        for record in records:
-            other, field = self.traverse_related(record)
-            record[self.name] = other[field.name]
+        super(_RelationalMulti, self)._compute_related(records)
+        if self.related_sudo:
+            # determine which records in the relation are actually accessible
+            target = records.mapped(self.name)
+            target_ids = set(target.search([('id', 'in', target.ids)]).ids)
+            accessible = lambda target: target.id in target_ids
+            # filter values to keep the accessible records only
+            for record in records:
+                record[self.name] = record[self.name].filtered(accessible)
+
+    def setup_triggers(self, env):
+        super(_RelationalMulti, self).setup_triggers(env)
+        # also invalidate self when fields appearing in the domain are modified
+        if isinstance(self.domain, list):
+            for arg in self.domain:
+                if isinstance(arg, (tuple, list)) and isinstance(arg[0], basestring):
+                    self._add_trigger(env, arg[0], self)
 
 
 class One2many(_RelationalMulti):
