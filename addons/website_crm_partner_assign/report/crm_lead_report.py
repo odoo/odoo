@@ -3,7 +3,7 @@
 
 from openerp.osv import fields, osv
 from openerp import tools
-from openerp.addons.crm import crm_stage
+from openerp.addons.crm.models import crm_stage
 
 
 class crm_lead_report_assign(osv.osv):

@@ -10,7 +10,7 @@ from werkzeug import url_encode
 from openerp import SUPERUSER_ID
 from openerp import tools, api
 from openerp.addons.base.res.res_partner import FormatAddress
-from openerp.addons.crm import crm_stage
+from openerp.addons.crm.models import crm_stage
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools import email_re, email_split
@@ -618,7 +618,7 @@ class crm_lead(FormatAddress, osv.osv):
                 merged_data['stage_id'] = team_stage_ids and team_stage_ids[0] or False
         # Write merged data into first opportunity
         self.write(cr, uid, [highest.id], merged_data, context=context)
-        # Delete tail opportunities 
+        # Delete tail opportunities
         # We use the SUPERUSER to avoid access rights issues because as the user had the rights to see the records it should be safe to do so
         self.unlink(cr, SUPERUSER_ID, [x.id for x in tail_opportunities], context=context)
 
