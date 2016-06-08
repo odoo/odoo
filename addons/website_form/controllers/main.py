@@ -15,8 +15,10 @@ from openerp.addons.base.ir.ir_qweb import nl2br
 class WebsiteForm(http.Controller):
 
     # Check and insert values from the form on the model <model>
-    @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
-    def website_form(self, model_name, **kwargs):
+    @http.route(['/website_form/<string:model_name>',
+                 '/website_form/<string:model_name>/<int:_id>'],
+                type='http', auth="public", methods=['POST'], website=True)
+    def website_form(self, model_name, _id=None, **kwargs):
         model_record = request.env['ir.model'].search([('model', '=', model_name), ('website_form_access', '=', True)])
         if not model_record:
             return json.dumps(False)
@@ -29,7 +31,9 @@ class WebsiteForm(http.Controller):
             return json.dumps({'error_fields' : e.args[0]})
 
         try:
-            id_record = self.insert_record(request, model_record, data['record'], data['custom'], data.get('meta'))
+            id_record = self.insert_record(
+                request, model_record, _id,
+                data['record'], data['custom'], data.get('meta'))
             if id_record:
                 self.insert_attachment(model_record, id_record, data['attachments'])
 
@@ -164,8 +168,12 @@ class WebsiteForm(http.Controller):
 
         return data
 
-    def insert_record(self, request, model, values, custom, meta=None):
-        record = request.env[model.model].sudo().create(values)
+    def insert_record(self, request, model, res_id, values, custom, meta=None):
+        record = request.env[model.model].sudo()
+        if res_id:
+            record = record.browse(res_id).write(values)
+        else:
+            record = record.create(values)
 
         if custom or meta:
             default_field = model.website_form_default_field_id
