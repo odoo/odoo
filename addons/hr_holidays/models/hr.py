@@ -184,7 +184,7 @@ class Employee(models.Model):
 
     @api.multi
     def _compute_absent_employee(self):
-        today_date = datetime.utcnow().date()
+        today_date = datetime.datetime.utcnow().date()
         today_start = fields.Datetime.to_string(today_date)  # get the midnight of the current utc day
         today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
         data = self.env['hr.holidays'].read_group([
@@ -203,7 +203,7 @@ class Employee(models.Model):
 
     @api.multi
     def _search_absent_employee(self, operator, value):
-        today_date = datetime.utcnow().date()
+        today_date = datetime.datetime.utcnow().date()
         today_start = fields.Datetime.to_string(today_date)  # get the midnight of the current utc day
         today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
         holiday_values = self.env['hr.holidays'].search_read([

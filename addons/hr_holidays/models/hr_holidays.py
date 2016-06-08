@@ -94,7 +94,7 @@ class HolidaysType(models.Model):
 
     @api.multi
     def _compute_leaves(self):
-        employee_id = False
+        data_days = {}
         if 'employee_id' in self._context:
             employee_id = self._context['employee_id']
         else:
