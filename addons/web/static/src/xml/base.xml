@@ -750,7 +750,7 @@
 <t t-name="FieldMany2ManyTag">
     <t t-foreach="elements" t-as="el">
         <span t-attf-class="badge dropdown #{'o_tag_color_' + (el['color'] || 0)}" t-att-data-color="(el['color'] || 0)" t-att-data-index="el_index" t-att-data-id="el['id']">
-            <span class="o_badge_text"><t t-raw="el['display_name']"/></span>
+            <span class="o_badge_text" t-attf-title="#{el['display_name']}"><t t-raw="el['display_name']"/></span>
             <span t-if="!readonly" class="fa fa-times o_delete"/>
         </span>
     </t>

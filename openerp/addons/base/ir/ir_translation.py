@@ -591,7 +591,7 @@ class IrTranslation(models.Model):
                         FROM res_lang l
                         WHERE l.active AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
-                            WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s AND module=%(module)s
+                            WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s
                         );
                     """
             for record in records:
@@ -614,7 +614,7 @@ class IrTranslation(models.Model):
                             WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s
                         );
                         UPDATE ir_translation SET src=%(src)s
-                        WHERE type='model' AND name=%(name)s AND res_id=%(res_id)s AND module=%(module)s;
+                        WHERE type='model' AND name=%(name)s AND res_id=%(res_id)s;
                     """
             for record in records:
                 module = external_ids[record.id].split('.')[0]

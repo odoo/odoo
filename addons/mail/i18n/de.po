@@ -5,15 +5,16 @@
 # Translators:
 # Anja Funk <anja.funk@afimage.de>, 2016
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
-# Renko Spiekermann <renkosp@gmail.com>, 2016
+# darenkster <renkosp@gmail.com>, 2016
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # Wolfgang Taferner, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 14:27+0000\n"
-"PO-Revision-Date: 2016-04-07 08:30+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-06-02 16:17+0000\n"
+"Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -239,7 +240,7 @@ msgid ""
 "                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">the current search filter</span>.\n"
 "                            </span>\n"
 "                            <span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
-msgstr "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n                                <strong>Massen-E-Mail </strong> on\n                                <span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">für ausgewählte Datensätze</span>\n                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">für gefilterte Datensätze</span>.\n                            </span>\n                            <span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Follower des Dokuments und</span>"
+msgstr "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n                                <strong>Massen-E-Mail </strong> on\n                                <span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">für ausgewählte Datensätze</span>\n                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">für gefilterte Datensätze</span>.\n                            </span>\n                            <span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Beobachter des Dokuments und</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -361,7 +362,7 @@ msgstr "Gruppen hinzufügen"
 #: model:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 #, python-format
 msgid "Add Followers"
-msgstr "Follower hinzufügen"
+msgstr "Beobachter hinzufügen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_user_signature
@@ -1210,7 +1211,7 @@ msgstr "Fehler, ein Partner kann nicht zweimal dem gleichen Objekt folgen"
 #: sql_constraint:mail.followers:0
 msgid ""
 "Error: A follower must be either a partner or a channel (but not both)."
-msgstr "Fehler: Ein Follower muss entweder ein Partner oder ein Channels sein (jedoch nicht beides)."
+msgstr "Fehler: Ein Beobachter muss entweder ein Partner oder ein Channels sein (jedoch nicht beides)."
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0 selection:mail.channel,public:0
@@ -1301,7 +1302,7 @@ msgstr "Zusammen gefaltet"
 #: code:addons/mail/static/src/xml/chatter.xml:99
 #, python-format
 msgid "Follow"
-msgstr "Folgen"
+msgstr "Beobachten"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_followers
@@ -1312,7 +1313,7 @@ msgstr "Folgen"
 #: model:ir.ui.menu,name:mail.menu_email_followers
 #: model:ir.ui.view,arch_db:mail.view_followers_tree
 msgid "Followers"
-msgstr "Followers"
+msgstr "Beobachter"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_channel_ids
@@ -1328,12 +1329,12 @@ msgstr "Beobachter (Kanäle)"
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_res_users_message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Followers (Partner)"
+msgstr "Beobachter (Partner)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_subscription_form
 msgid "Followers Form"
-msgstr "Follower-Formular"
+msgstr "Beobachter-Formular"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -1345,7 +1346,7 @@ msgstr "Nur Verfolger"
 #: code:addons/mail/static/src/xml/chatter.xml:103
 #, python-format
 msgid "Following"
-msgstr "Folgen"
+msgstr "Beobachten"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_email_from
@@ -1403,7 +1404,7 @@ msgstr "Versteckt"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_hidden
 msgid "Hide the subtype in the follower options"
-msgstr "Verberge den Untertyp in den Follower Optionen"
+msgstr "Verberge den Untertyp in den Beobachter Optionen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_id
@@ -1550,7 +1551,7 @@ msgstr "Einladung"
 #: code:addons/mail/wizard/invite.py:53
 #, python-format
 msgid "Invitation to follow %s: %s"
-msgstr "Folgen Sie  %s: %s"
+msgstr "Beobachten Sie  %s: %s"
 
 #. module: mail
 #. openerp-web
@@ -1565,7 +1566,7 @@ msgstr "Einladen"
 #: code:addons/mail/static/src/js/chatter.js:144
 #, python-format
 msgid "Invite Follower"
-msgstr "Follower einladen"
+msgstr "Beobachter einladen"
 
 #. module: mail
 #. openerp-web
@@ -1742,7 +1743,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/chatter.xml:75
 #, python-format
 msgid "Log a note. Followers will not be notified."
-msgstr "Eine Notiz erfassen. Follower werden benachrichtigt."
+msgstr "Eine Notiz erfassen. Beobachter werden benachrichtigt."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_is_log
@@ -1843,7 +1844,7 @@ msgstr "Mitglieder"
 msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
-msgstr "Mitglieder dieser Gruppe werden automatisch als Follower hinzugefügt. Beachten Sie, dass diese Ihre Nachrichteneinstellungen auch selbständig bearbeiten können."
+msgstr "Mitglieder dieser Gruppe werden automatisch als Beobachter hinzugefügt. Beachten Sie, dass diese Ihre Nachrichteneinstellungen auch selbständig bearbeiten können."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message
@@ -1956,7 +1957,7 @@ msgstr "Nachrichtensuche"
 msgid ""
 "Messages with internal subtypes will be visible only by employees, aka "
 "members of base_user group"
-msgstr ""
+msgstr "Interne Nachrichtensubtypen sind nur für Mitarbeiter sichtbar, d.h. Mitglieder der base_user Gruppe"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_users_form_mail
@@ -2093,7 +2094,7 @@ msgstr "Neue Personen"
 #: code:addons/mail/static/src/js/chatter.js:216
 #, python-format
 msgid "No follower"
-msgstr "Keine Follower"
+msgstr "Keine Beobachter"
 
 #. module: mail
 #. openerp-web
@@ -2150,7 +2151,7 @@ msgstr "Benachrichtigungen"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_notify
 msgid "Notify followers"
-msgstr "Follower benachrichtigen"
+msgstr "Beobachter benachrichtigen"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_notify
@@ -2238,7 +2239,7 @@ msgstr "Alter textueller Wert"
 #: code:addons/mail/static/src/js/chatter.js:218
 #, python-format
 msgid "One follower"
-msgstr "Ein Follower"
+msgstr "Ein Beobachter"
 
 #. module: mail
 #. openerp-web
@@ -2391,7 +2392,7 @@ msgid ""
 "Parent model holding the alias. The model holding the alias reference is not"
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
-msgstr ""
+msgstr "Das übergeordnete Datenmodell für den Alias. Dieses Modell, welches die EMail Alias Referenz enthält ist nicht zwangsläufig das Modell von alias_model_id (Beispiel: project (parent_model) und task (model))"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_parent_id
@@ -2399,7 +2400,7 @@ msgid ""
 "Parent subtype, used for automatic subscription. This field is not correctly"
 " named. For example on a project, the parent_id of project subtypes refers "
 "to task-related subtypes."
-msgstr ""
+msgstr "Übergeordneter Subtyp, der für automatische Abonnements genutzt wird. Das Feld ist nicht korrekt bezeichnet. Z.B. referenziert bei einem Projekt die übergeordnete Projekt Subtyp-ID auf Aufgabenbezogene Subtypen. "
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
@@ -2605,7 +2606,7 @@ msgstr "Entfernen Sie die Aktion, um diese Vorlage für bestimmte Dokumente zu v
 #: code:addons/mail/static/src/xml/chatter.xml:131
 #, python-format
 msgid "Remove this follower"
-msgstr "Follower löschen"
+msgstr "Beobachter löschen"
 
 #. module: mail
 #. openerp-web
@@ -3083,7 +3084,7 @@ msgstr "An"
 #: code:addons/mail/static/src/xml/chatter.xml:30
 #, python-format
 msgid "To: Followers of"
-msgstr "An: Follower von"
+msgstr "An: Beobachter von"
 
 #. module: mail
 #. openerp-web
@@ -3170,7 +3171,7 @@ msgstr "Rückgängig"
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 #, python-format
 msgid "Unfollow"
-msgstr "Nicht mehr folgen"
+msgstr "Nicht mehr beobachten"
 
 #. module: mail
 #: sql_constraint:mail.alias:0
@@ -3316,7 +3317,7 @@ msgstr "Wenn die Nachricht eine interne Notiz ist (Kommentar Modus)"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Who can follow the group's activities?"
-msgstr "Wer kann Ihren Gruppen-Aktivitäten folgen?"
+msgstr "Wer kann Ihre Gruppen-Aktivitäten beobachten?"
 
 #. module: mail
 #. openerp-web
@@ -3439,7 +3440,7 @@ msgstr "Bildschirmbenachrichtigungen aktivieren"
 #: code:addons/mail/static/src/js/chatter.js:220
 #, python-format
 msgid "followers"
-msgstr "Follower"
+msgstr "Beobachter"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_all_employees

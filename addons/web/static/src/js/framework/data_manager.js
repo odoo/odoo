@@ -39,7 +39,9 @@ return core.Class.extend({
             }, this._invalidate.bind(this, this._cache.actions, key));
         }
  
-        return this._cache.actions[key];
+        return this._cache.actions[key].then(function (action) {
+            return $.extend(true, {}, action);
+        });
     },
 
     /**

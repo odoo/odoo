@@ -69,8 +69,8 @@
                                                 </group>
                                                 <group>
                                                     <field name="translate"
-                                                        attrs="{'readonly': [('ttype','not in',['char','text'])],
-                                                                'invisible': [('ttype','not in',['char','text'])]}"/>
+                                                        attrs="{'readonly': [('ttype','not in',['char','text','html'])],
+                                                                'invisible': [('ttype','not in',['char','text','html'])]}"/>
                                                     <field name="selection"
                                                         attrs="{'required': [('ttype','in',['selection','reference'])],
                                                                 'readonly': [('ttype','not in',['selection','reference'])],
@@ -235,8 +235,8 @@
                                     </group>
                                     <group>
                                         <field name="translate"
-                                            attrs="{'readonly': [('ttype','not in',['char','text'])],
-                                                    'invisible': [('ttype','not in',['char','text'])]}"/>
+                                            attrs="{'readonly': [('ttype','not in',['char','text','html'])],
+                                                    'invisible': [('ttype','not in',['char','text','html'])]}"/>
                                         <field name="selection"
                                             attrs="{'required': [('ttype','in',['selection','reference'])],
                                                     'readonly': [('ttype','not in',['selection','reference'])],

@@ -217,10 +217,10 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                     </div>
-                    <h1>
+                    <h1 class="hidden-xs">
                         <field name="name" attrs="{'invisible': [('name','=','/')]}" readonly="1"/>
                     </h1>
-                    <group>
+                    <group class="hidden-xs">
                         <group>
                             <field name="partner_id" attrs="{'invisible': [('picking_type_code', '=', 'internal')]}"/>
                             <field name="location_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
