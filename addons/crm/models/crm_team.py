@@ -3,7 +3,6 @@
 
 from odoo import api, fields, models
 from odoo.tools.safe_eval import safe_eval as eval
-from odoo.tools.translate import _
 
 
 class Team(models.Model):
@@ -21,7 +20,7 @@ class Team(models.Model):
         return 'crm.lead'
 
     def get_alias_values(self):
-        has_group_use_lead = self.env['res.users'].has_group('crm.group_use_lead')
+        has_group_use_lead = self.env.user.has_group('crm.group_use_lead')
         values = super(Team, self).get_alias_values()
         values['alias_defaults'] = defaults = eval(self.alias_defaults or "{}")
         defaults['type'] = 'lead' if has_group_use_lead and self.use_leads else 'opportunity'
@@ -64,22 +63,18 @@ class Team(models.Model):
 
         action_context = eval(action['context'], {'uid': self.env.uid})
         if user_team_id:
-            action_context.update({
-                'default_team_id': user_team_id,
-            })
+            action_context['default_team_id'] = user_team_id
 
         tree_view_id = self.env.ref('crm.crm_case_tree_view_oppor').id
         form_view_id = self.env.ref('crm.crm_case_form_view_oppor').id
         kanb_view_id = self.env.ref('crm.crm_case_kanban_view_leads').id
-        action.update({
-            'views': [
+        action['views'] = [
                 [kanb_view_id, 'kanban'],
                 [tree_view_id, 'tree'],
                 [form_view_id, 'form'],
                 [False, 'graph'],
                 [False, 'calendar'],
                 [False, 'pivot']
-            ],
-            'context': action_context,
-        })
+            ]
+        action['context'] = action_context
         return action

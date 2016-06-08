@@ -54,8 +54,9 @@ class CRMSettings(models.TransientModel):
     def set_default_alias_prefix(self):
         for record in self:
             alias = self._find_default_lead_alias_id()
-            if not alias:
-                alias = self.env['mail.alias'].with_context(alias_model_name='crm.lead', alias_parent_model_name='crm.team').create({'alias_name': record.alias_prefix})
-            else:
+            if alias:
                 alias.write({'alias_name': record.alias_prefix})
+            else:
+                self.env['mail.alias'].with_context(alias_model_name='crm.lead', alias_parent_model_name='crm.team').create({'alias_name': record.alias_prefix})
+
         return True

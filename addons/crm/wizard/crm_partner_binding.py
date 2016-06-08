@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.tools.translate import _
 
 
 class PartnerBinding(models.TransientModel):
@@ -24,7 +23,7 @@ class PartnerBinding(models.TransientModel):
         partner_id = self._find_matching_partner()
 
         if 'action' in fields and not res.get('action'):
-            res['action'] = partner_id and 'exist' or 'create'
+            res['action'] = 'exist' if partner_id else 'create'
         if 'partner_id' in fields:
             res['partner_id'] = partner_id
         return res
@@ -43,23 +42,26 @@ class PartnerBinding(models.TransientModel):
             :return int partner_id if any, False otherwise
         """
         # active model has to be a lead
-        lead = None
-        if self._context.get('active_model') == 'crm.lead' and self._context.get('active_id'):
-            lead = self.env['crm.lead'].browse(self._context.get('active_id'))
+        if self._context.get('active_model') != 'crm.lead' or not self._context.get('active_id'):
+            return False
+
+        lead = self.env['crm.lead'].browse(self._context.get('active_id'))
 
         # find the best matching partner for the active model
-        partner_id = False
-        if lead:
-            Partner = self.env['res.partner']
-            if lead.partner_id:  # a partner is set already
-                partner_id = lead.partner_id.id
-            elif lead.email_from:  # search through the existing partners based on the lead's email
-                partner = Partner.search([('email', '=', lead.email_from)], limit=1)
-                partner_id = partner.id if partner else False
-            elif lead.partner_name:  # search through the existing partners based on the lead's partner or contact name
-                partner = Partner.search([('name', 'ilike', '%' + lead.partner_name + '%')], limit=1)
-                partner_id = partner.id if partner else False
-            elif lead.contact_name:
-                partner = Partner.search([('name', 'ilike', '%' + lead.contact_name+'%')], limit=1)
-                partner_id = partner.id if partner else False
-        return partner_id
+        Partner = self.env['res.partner']
+        if lead.partner_id:  # a partner is set already
+            return lead.partner_id.id
+
+        if lead.email_from:  # search through the existing partners based on the lead's email
+            partner = Partner.search([('email', '=', lead.email_from)], limit=1)
+            return partner.id
+
+        if lead.partner_name:  # search through the existing partners based on the lead's partner or contact name
+            partner = Partner.search([('name', 'ilike', '%' + lead.partner_name + '%')], limit=1)
+            return partner.id
+
+        if lead.contact_name:
+            partner = Partner.search([('name', 'ilike', '%' + lead.contact_name+'%')], limit=1)
+            return partner.id
+
+        return False

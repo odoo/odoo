@@ -11,8 +11,5 @@ class CrmLeadLost(models.TransientModel):
 
     @api.multi
     def action_lost_reason_apply(self):
-        res = False
-        for wizard in self:
-            self.lead_id.lost_reason = self.lost_reason_id
-            res = self.lead_id.action_set_lost()
-        return res
+        self.lead_id.lost_reason = self.lost_reason_id
+        return self.lead_id.action_set_lost()

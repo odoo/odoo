@@ -22,13 +22,13 @@ class MergeOpportunity(models.TransientModel):
         """ Use active_ids from the context to fetch the leads/opps to merge.
             In order to get merged, these leads/opps can't be in 'Dead' or 'Closed'
         """
-        record_ids = self._context.get('active_ids', False)
+        record_ids = self._context.get('active_ids')
         result = super(MergeOpportunity, self).default_get(fields)
 
         if record_ids:
             if 'opportunity_ids' in fields:
                 opp_ids = self.env['crm.lead'].browse(record_ids).filtered(lambda opp: opp.probability < 100).ids
-                result.update({'opportunity_ids': opp_ids})
+                result['opportunity_ids'] = opp_ids
 
         return result
 

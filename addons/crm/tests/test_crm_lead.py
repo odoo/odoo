@@ -40,7 +40,7 @@ class TestCRMLead(TestCrmCases):
         # Now I change the stage of opportunity to won.
         lead.action_set_won()
         # I check stage of opp should won, after change stage.
-        stage_id = lead.stage_find(domain=[('probability', '=', 100.0)])
+        stage_id = lead._stage_find(domain=[('probability', '=', 100.0)])
         self.assertEqual(stage_id, lead.stage_id, "Stage of opportunity is incorrect!")
 
     def test_crm_lead_message(self):
