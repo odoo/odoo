@@ -14,6 +14,8 @@ class TestHolidaysFlow(TestHrHolidaysBase):
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
     def test_00_leave_request_flow(self):
         """ Testing leave request flow """
+        Holidays = self.env['hr.holidays']
+        HolidaysStatus = self.env['hr.holidays.status']
 
         def _check_holidays_status(holiday_status, ml, lt, rl, vrl):
             self.assertEqual(holiday_status.max_leaves, ml,
@@ -27,13 +29,13 @@ class TestHolidaysFlow(TestHrHolidaysBase):
 
         # HrUser creates some holiday statuses -> crash because only HrManagers should do this
         with self.assertRaises(AccessError):
-            self.HolidaysStatus.sudo(self.user_hruser_id).create({
+            HolidaysStatus.sudo(self.user_hruser_id).create({
                 'name': 'UserCheats',
                 'limit': True,
             })
 
         # HrManager creates some holiday statuses
-        HolidayStatusManagerGroup = self.HolidaysStatus.sudo(self.user_hrmanager_id)
+        HolidayStatusManagerGroup = HolidaysStatus.sudo(self.user_hrmanager_id)
         HolidayStatusManagerGroup.create({
             'name': 'WithMeetingType',
             'limit': True,
@@ -54,7 +56,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         # --------------------------------------------------
 
         # Employee creates a leave request for another employee -> should crash
-        HolidaysEmployeeGroup = self.Holidays.sudo(self.user_employee_id)
+        HolidaysEmployeeGroup = Holidays.sudo(self.user_employee_id)
         with self.assertRaises(ValidationError):
             HolidaysEmployeeGroup.create({
                 'name': 'Hol10',
@@ -64,7 +66,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
                 'date_to': datetime.today(),
                 'number_of_days_temp': 1,
             })
-        self.Holidays.search([('name', '=', 'Hol10')]).unlink()
+        Holidays.search([('name', '=', 'Hol10')]).unlink()
 
         # Employee creates a leave request in a no-limit category
         hol1_employee_group = HolidaysEmployeeGroup.create({
@@ -113,10 +115,10 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             })
 
         # Clean transaction
-        self.Holidays.search([('name', 'in', ['Hol21', 'Hol22'])]).unlink()
+        Holidays.search([('name', 'in', ['Hol21', 'Hol22'])]).unlink()
 
         # HrUser allocates some leaves to the employee
-        aloc1_user_group = self.Holidays.sudo(self.user_hruser_id).create({
+        aloc1_user_group = Holidays.sudo(self.user_hruser_id).create({
             'name': 'Days for limited category',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.holidays_status_2.id,
@@ -185,7 +187,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         # cl can be of maximum 20 days for employee_fp
         hol3_status = self.env.ref('hr_holidays.holiday_status_cl')
         # I assign the dates in the holiday request for 1 day
-        hol3 = self.Holidays.create({
+        hol3 = Holidays.create({
             'name': 'Sick Leave',
             'holiday_status_id': hol3_status.id,
             'date_from': datetime.today().strftime('%Y-%m-10 10:00:00'),
