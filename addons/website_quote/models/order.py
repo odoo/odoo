@@ -185,6 +185,7 @@ class sale_order(osv.osv):
                 'product_uom': line.product_uom_id.id,
                 'website_description': line.website_description,
                 'state': 'draft',
+                'delay': line.product_id.sale_delay
             })
             lines.append((0, 0, data))
         options = []

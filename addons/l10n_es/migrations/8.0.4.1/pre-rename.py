@@ -2,6 +2,8 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
+#    Copyright (c) 2014 Domatix (http://www.domatix.com)
+#                       Angel Moya <angel.moya@domatix.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published
@@ -17,3 +19,20 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+__name__ = ("Cambia columnas name y description")
+
+
+def migrate_tax_template(cr, version):
+
+    cr.execute("""ALTER TABLE account_tax
+                  RENAME COLUMN name to name_to_description_temp""")
+    cr.execute("""ALTER TABLE account_tax
+                  RENAME COLUMN description to name""")
+    cr.execute("""ALTER TABLE account_tax
+                  RENAME COLUMN name_to_description_temp to description""")
+
+
+def migrate(cr, version):
+    if not version:
+        return
+    migrate_tax_template(cr, version)
