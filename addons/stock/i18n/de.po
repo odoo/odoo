@@ -7,14 +7,15 @@
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
 # darenkster <renkosp@gmail.com>, 2015
 # Silvan Wyden <silvan.wyden@braintec-group.com>, 2016
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # Wolfgang Taferner, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2016-05-10 14:58+0000\n"
-"Last-Translator: Nicolas Frei\n"
+"PO-Revision-Date: 2016-06-02 16:24+0000\n"
+"Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -154,7 +155,7 @@ msgid ""
 "                       \n"
 "* Transit Location: Counterpart location that should be used in inter-companies or inter-warehouses operations\n"
 "                      "
-msgstr ""
+msgstr "* Lieferantenlager: Virtuelles Lager als Quelle für Lieferungen Ihrer Lieferanten.\n                       \n* Ansicht: Virtuelles Lager zur Abbildung von mehrdimensionalen Lagerstrukturen.\n                       \n* Intern: tatsächliches physikalisches Lager Ihres Unternehmens\n                       \n* Kundenlager: Virtuelles Lager als Ziel für Lieferungen an Kunden.\n                       \n* Inventurdifferenz: Virtuelles Lager, welches bei Inventuren als temporäre Gegenposition gebucht wird.\n                       \n* Beschaffung: Virtuelles Lager, welches als temporäre Gegenposition gebucht wird, wenn die Quelle noch nicht exakt bekannt ist (Lieferant oder Fertigung).\n                       \n* Fertigung: Virtuelles Lager, welches als Gegenposition bei Arbeitsaufträgen in der Fertigung genutzt wird. Hier wird der Verbrauch von Material gebucht, sowie auch die Fertigware zugebucht.\n                       \n* Transit: Virtuelles Lager, welches bei Inter-Company, aber auch bei internen Lagerbewegungen genutzt wird.\n                      "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -267,7 +268,7 @@ msgid ""
 "                                        <strong>Import</strong><br/>\n"
 "                                        <span class=\"small\">&gt; 50 vendors</span>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n<span class=\"fa\" data-icon=\"&#57408;\"/>\n<strong>Importieren</strong><br/>\n<span class=\"small\">&gt; 50 Lieferanten</span>\n</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -277,7 +278,7 @@ msgid ""
 "                                        <strong> Create manually</strong><br/>\n"
 "                                        <span class=\"small\">&lt; 50 vendors</span>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n                                        <span class=\"fa\" data-icon=\"&#57440;\"/>\n                                        <strong> Per Hand anlegen</strong><br/>\n                                        <span class=\"small\">&lt; 50 Lieferanten</span>\n                                    </span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -332,7 +333,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Vendor Address:</strong></span>"
-msgstr ""
+msgstr "<span><strong>Lieferanten Anschrift:</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -354,7 +355,7 @@ msgstr "<span>Ansicht</span>"
 msgid ""
 "<span>You need to install the Accounting or Purchases app to manage "
 "vendors.</span>"
-msgstr ""
+msgstr "<span>Zur Verwaltung Ihrer Lieferanten sollten Sie die Buchhaltung oder die Einkauf Anwendung installieren.</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -404,7 +405,7 @@ msgstr ""
 msgid ""
 "<strong>Buy:</strong> the product is bought from a vendor through a Purchase"
 " Order"
-msgstr ""
+msgstr "<strong>Einkaufen:</strong> das Produkt wird vom Lieferanten durch eine Bestellung eingekauft"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -923,12 +924,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_barcode_nomenclature_id
 msgid "Barcode Nomenclature"
-msgstr "Barcode Nomenclature"
+msgstr "Barcode Nomenklatur"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_wms_barcode_nomenclature_all
 msgid "Barcode Nomenclatures"
-msgstr "Barcode Nomenclatures"
+msgstr "Barcode Nomenkaltur"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_stock_barcode
@@ -1058,7 +1059,7 @@ msgstr "Frachtführer"
 #: model:ir.model.fields,field_description:stock.field_product_product_route_from_categ_ids
 #: model:ir.model.fields,field_description:stock.field_product_template_route_from_categ_ids
 msgid "Category Routes"
-msgstr ""
+msgstr "Kategorie Routen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_move_dest_exists
@@ -1632,7 +1633,7 @@ msgstr "Standard Lager für Wiederauffüllung"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_default_location_src_id
 msgid "Default Source Location"
-msgstr "Standard Quelle"
+msgstr "Standard Quellort"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_reception_steps
@@ -1745,7 +1746,7 @@ msgstr "Auslieferungsroute"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_delivery
 msgid "Delivery Slip"
-msgstr "Liefernachweis"
+msgstr "Lieferschein"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -1758,7 +1759,7 @@ msgstr "Abhängig von den installierten Anwendungen, kann hier bereits die Besch
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Deployment"
-msgstr ""
+msgstr "Implementierung"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_name
@@ -1779,7 +1780,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_product_description_picking
 #: model:ir.model.fields,field_description:stock.field_product_template_description_picking
 msgid "Description on Picking"
-msgstr ""
+msgstr "Beschreibung der Kommisionierung"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_form
@@ -2059,7 +2060,7 @@ msgstr "Feste Lagerorte nach Produktkategorien"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_message_follower_ids
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_message_follower_ids
 msgid "Followers"
-msgstr "Followers"
+msgstr "Beobachter"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_message_channel_ids
@@ -2071,7 +2072,7 @@ msgstr "Beobachter (Kanäle)"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_message_partner_ids
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Followers (Partner)"
+msgstr "Beobachter (Partner)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2170,7 +2171,7 @@ msgstr "Tor B"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_5
 msgid "Generic IT Vendors"
-msgstr ""
+msgstr "IT Lieferanten"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_fixed_putaway_strat_sequence
@@ -2504,7 +2505,7 @@ msgstr ""
 msgid ""
 "If you have less than 50 vendors, we recommend you\n"
 "                                        to create them manually."
-msgstr ""
+msgstr "Wenn Sie weniger als 50 Lieferanten haben, sollten Sie diese per Hand anlegen."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2530,7 +2531,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Import using the top left button in"
-msgstr ""
+msgstr "Importieren Sie durch Klick auf den Button oben rechts"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2751,14 +2752,14 @@ msgstr "Lager"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Inventory Adjustment"
-msgstr "Bestandsabgleich"
+msgstr "Inventur"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Inventory Adjustments"
-msgstr "Bestandsabgleich"
+msgstr "Inventur"
 
 #. module: stock
 #: model:web.planner,tooltip_planner:stock.planner_inventory
@@ -4031,7 +4032,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
 msgid "Packagings"
-msgstr ""
+msgstr "Verpackungen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_wh_pack_stock_loc_id
@@ -6233,7 +6234,7 @@ msgstr "Unbekannte Packung"
 msgid ""
 "Unless you are starting a new business, you probably have a list of vendors "
 "you would like to import."
-msgstr ""
+msgstr "Wenn Sie nicht gerade ein Unternehmen begründen, werden Sie wahrscheinlich Kunden und Lieferanten haben, die Sie gerne importieren würden."
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
@@ -6878,7 +6879,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_barcode_rule
 msgid "barcode.rule"
-msgstr ""
+msgstr "barcode.rule"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7006,12 +7007,12 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "the list of products"
-msgstr ""
+msgstr "die Produktliste"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "the list of vendors"
-msgstr ""
+msgstr "die Lieferantenliste"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner

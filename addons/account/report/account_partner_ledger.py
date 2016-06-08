@@ -107,4 +107,4 @@ class ReportPartnerLedger(models.AbstractModel):
             'lines': self._lines,
             'sum_partner': self._sum_partner,
         }
-        return self.env['report'].render('account_extra_reports.report_partnerledger', docargs)
+        return self.env['report'].render('account.report_partnerledger', docargs)

@@ -527,12 +527,11 @@ class Partner(models.Model, FormatAddress):
     @api.multi
     def name_get(self):
         res = []
-        types_dict = dict(self.fields_get()['type']['selection'])
         for partner in self:
             name = partner.name or ''
             if partner.parent_id and not partner.is_company:
                 if not name and partner.type in ['invoice', 'delivery', 'other']:
-                    name = types_dict[partner.type]
+                    name = dict(self.fields_get(['type'])['type']['selection'])[partner.type]
                 name = "%s, %s" % (partner.parent_name, name)
             if self._context.get('show_address_only'):
                 name = partner._display_address(without_company=True)
