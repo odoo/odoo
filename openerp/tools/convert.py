@@ -17,18 +17,12 @@ from lxml import etree, builder
 
 import openerp
 import openerp.release
-import openerp.workflow
-
-import assertion_report
-import misc
-
-from config import config
-# List of etree._Element subclasses that we choose to ignore when parsing XML.
-from misc import SKIPPED_ELEMENT_TYPES
-from misc import pickle, unquote
+from . import assertion_report
+from .config import config
+from .misc import file_open, unquote, ustr, SKIPPED_ELEMENT_TYPES
+from .translate import _
+from .yaml_import import convert_yaml_import
 from openerp import SUPERUSER_ID
-from translate import _
-from yaml_import import convert_yaml_import
 
 _logger = logging.getLogger(__name__)
 
@@ -36,7 +30,7 @@ _logger = logging.getLogger(__name__)
 # almost everywhere, which is ok because it supposedly comes
 # from trusted data, but at least we make it obvious now.
 unsafe_eval = eval
-from safe_eval import safe_eval as eval
+from .safe_eval import safe_eval as eval
 
 class ParseError(Exception):
     def __init__(self, msg, text, filename, lineno):
@@ -49,14 +43,19 @@ class ParseError(Exception):
         return '"%s" while parsing %s:%s, near\n%s' \
             % (self.msg, self.filename, self.lineno, self.text)
 
-def _ref(self, cr):
-    return lambda x: self.id_get(cr, x)
+class RecordDictWrapper(dict):
+    """
+    Used to pass a record as locals in eval:
+    records do not strictly behave like dict, so we force them to.
+    """
+    def __init__(self, record):
+        self.record = record
+    def __getitem__(self, key):
+        if key in self.record:
+            return self.record[key]
+        return dict.__getitem__(self, key)
 
-def _obj(pool, cr, uid, model_str, context=None):
-    model = pool[model_str]
-    return lambda x: model.browse(cr, uid, x, context=context)
-
-def _get_idref(self, cr, uid, model_str, context, idref):
+def _get_idref(self, env, model_str, idref):
     idref2 = dict(idref,
                   time=time,
                   DateTime=datetime,
@@ -64,10 +63,10 @@ def _get_idref(self, cr, uid, model_str, context, idref):
                   timedelta=timedelta,
                   relativedelta=relativedelta,
                   version=openerp.release.major_version,
-                  ref=_ref(self, cr),
+                  ref=self.id_get,
                   pytz=pytz)
-    if len(model_str):
-        idref2['obj'] = _obj(self.pool, cr, uid, model_str, context=context)
+    if model_str:
+        idref2['obj'] = env[model_str].browse
     return idref2
 
 def _fix_multiple_roots(node):
@@ -88,9 +87,7 @@ def _fix_multiple_roots(node):
             data_node.append(child)
         node.append(data_node)
 
-def _eval_xml(self, node, pool, cr, uid, idref, context=None):
-    if context is None:
-        context = {}
+def _eval_xml(self, node, env):
     if node.tag in ('field','value'):
         t = node.get('type','char')
         f_model = node.get('model', '').encode('utf-8')
@@ -100,12 +97,12 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
             f_name = node.get("name",'').encode('utf-8')
             idref2 = {}
             if f_search:
-                idref2 = _get_idref(self, cr, uid, f_model, context, idref)
+                idref2 = _get_idref(self, env, f_model, self.idref)
             q = unsafe_eval(f_search, idref2)
-            ids = pool[f_model].search(cr, uid, q)
+            ids = env[f_model].search(q).ids
             if f_use != 'id':
-                ids = map(lambda x: x[f_use], pool[f_model].read(cr, uid, ids, [f_use]))
-            _cols = pool[f_model]._columns
+                ids = map(lambda x: x[f_use], env[f_model].browse(ids).read([f_use]))
+            _cols = env[f_model]._columns
             if (f_name in _cols) and _cols[f_name]._type=='many2many':
                 return ids
             f_val = False
@@ -116,15 +113,15 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
             return f_val
         a_eval = node.get('eval','')
         if a_eval:
-            idref2 = _get_idref(self, cr, uid, f_model, context, idref)
+            idref2 = _get_idref(self, env, f_model, self.idref)
             try:
                 return unsafe_eval(a_eval, idref2)
             except Exception:
                 logging.getLogger('openerp.tools.convert.init').error(
-                    'Could not eval(%s) for %s in %s', a_eval, node.get('name'), context)
+                    'Could not eval(%s) for %s in %s', a_eval, node.get('name'), env.context)
                 raise
-        def _process(s, idref):
-            matches = re.finditer('[^%]%\((.*?)\)[ds]', s)
+        def _process(s):
+            matches = re.finditer(r'[^%]%\((.*?)\)[ds]', s)
             done = []
             for m in matches:
                 found = m.group()[1:]
@@ -132,26 +129,22 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
                     continue
                 done.append(found)
                 id = m.groups()[0]
-                if not id in idref:
-                    idref[id] = self.id_get(cr, id)
-                s = s.replace(found, str(idref[id]))
-
+                if not id in self.idref:
+                    self.idref[id] = self.id_get(id)
+                s = s.replace(found, str(self.idref[id]))
             s = s.replace('%%', '%') # Quite wierd but it's for (somewhat) backward compatibility sake
-
             return s
 
         if t == 'xml':
             _fix_multiple_roots(node)
             return '<?xml version="1.0"?>\n'\
-                +_process("".join([etree.tostring(n, encoding='utf-8')
-                                   for n in node]), idref)
+                +_process("".join([etree.tostring(n, encoding='utf-8') for n in node]))
         if t == 'html':
-            return _process("".join([etree.tostring(n, encoding='utf-8')
-                                   for n in node]), idref)
+            return _process("".join([etree.tostring(n, encoding='utf-8') for n in node]))
 
         data = node.text
         if node.get('file'):
-            with openerp.tools.file_open(node.get('file'), 'rb') as f:
+            with file_open(node.get('file'), 'rb') as f:
                 data = f.read()
 
         if t == 'file':
@@ -180,7 +173,7 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
         if t in ('list','tuple'):
             res=[]
             for n in node.iterchildren(tag='value'):
-                res.append(_eval_xml(self,n,pool,cr,uid,idref))
+                res.append(_eval_xml(self, n, env))
             if t=='tuple':
                 return tuple(res)
             return res
@@ -189,15 +182,16 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
         a_eval = node.get('eval','')
         # FIXME: should probably be exclusive
         if a_eval:
-            idref['ref'] = lambda x: self.id_get(cr, x)
-            args = unsafe_eval(a_eval, idref)
+            self.idref['ref'] = self.id_get
+            args = unsafe_eval(a_eval, self.idref)
         for n in node:
-            return_val = _eval_xml(self,n, pool, cr, uid, idref, context)
+            return_val = _eval_xml(self, n, env)
             if return_val is not None:
                 args.append(return_val)
-        model = pool[node.get('model', '')]
+        model = env[node.get('model', '')]._model
         method = node.get('name')
-        res = getattr(model, method)(cr, uid, *args)
+        # this one still depends on the old API
+        res = getattr(model, method)(env.cr, env.uid, *args)
         return res
     elif node.tag == "test":
         return node.text
@@ -238,11 +232,11 @@ class xml_import(object):
                                                     ctx, node.get('id','n/a'), exc_info=True)
         return context
 
-    def get_uid(self, cr, uid, data_node, node):
+    def get_uid(self, data_node, node):
         node_uid = node.get('uid','') or (len(data_node) and data_node.get('uid',''))
         if node_uid:
-            return self.id_get(cr, node_uid)
-        return uid
+            return self.id_get(node_uid)
+        return self.uid
 
     def _test_xml_id(self, xml_id):
         id = xml_id
@@ -252,44 +246,43 @@ class xml_import(object):
 maximum one dot. They are used to refer to other modules ID, in the
 form: module.record_id""" % (xml_id,)
             if module != self.module:
-                modcnt = self.pool['ir.module.module'].search_count(self.cr, self.uid, ['&', ('name', '=', module), ('state', 'in', ['installed'])])
+                modcnt = self.env['ir.module.module'].search_count([('name', '=', module), ('state', '=', 'installed')])
                 assert modcnt == 1, """The ID "%s" refers to an uninstalled module""" % (xml_id,)
 
         if len(id) > 64:
             _logger.error('id: %s is to long (max: 64)', id)
 
-    def _tag_delete(self, cr, rec, data_node=None, mode=None):
+    def _tag_delete(self, rec, data_node=None, mode=None):
         d_model = rec.get("model")
         d_search = rec.get("search",'').encode('utf-8')
         d_id = rec.get("id")
-        ids = []
+        records = self.env[d_model]
 
         if d_search:
-            idref = _get_idref(self, cr, self.uid, d_model, context={}, idref={})
+            idref = _get_idref(self, self.env, d_model, {})
             try:
-                ids = self.pool[d_model].search(cr, self.uid, unsafe_eval(d_search, idref))
+                records = records.search(unsafe_eval(d_search, idref))
             except ValueError:
                 _logger.warning('Skipping deletion for failed search `%r`', d_search, exc_info=True)
                 pass
         if d_id:
             try:
-                ids.append(self.id_get(cr, d_id))
+                records += records.browse(self.id_get(d_id))
             except ValueError:
                 # d_id cannot be found. doesn't matter in this case
                 _logger.warning('Skipping deletion for missing XML ID `%r`', d_id, exc_info=True)
                 pass
-        if ids:
-            self.pool[d_model].unlink(cr, self.uid, ids)
+        if records:
+            records.unlink()
 
-    def _remove_ir_values(self, cr, name, value, model):
-        ir_values_obj = self.pool['ir.values']
-        ir_value_ids = ir_values_obj.search(cr, self.uid, [('name','=',name),('value','=',value),('model','=',model)])
-        if ir_value_ids:
-            ir_values_obj.unlink(cr, self.uid, ir_value_ids)
-
+    def _remove_ir_values(self, name, value, model):
+        domain = [('name', '=', name), ('value', '=', value), ('model', '=', model)]
+        ir_values = self.env['ir.values'].search(domain)
+        if ir_values:
+            ir_values.unlink()
         return True
 
-    def _tag_report(self, cr, rec, data_node=None, mode=None):
+    def _tag_report(self, rec, data_node=None, mode=None):
         res = {}
         for dest,f in (('name','string'),('model','model'),('report_name','name')):
             res[dest] = rec.get(f,'').encode('utf8')
@@ -302,7 +295,7 @@ form: module.record_id""" % (xml_id,)
         if rec.get('auto'):
             res['auto'] = eval(rec.get('auto','False'))
         if rec.get('sxw'):
-            sxw_content = misc.file_open(rec.get('sxw')).read()
+            sxw_content = file_open(rec.get('sxw')).read()
             res['report_sxw_content'] = sxw_content
         if rec.get('header'):
             res['header'] = eval(rec.get('header','False'))
@@ -317,48 +310,49 @@ form: module.record_id""" % (xml_id,)
             groups_value = []
             for group in g_names:
                 if group.startswith('-'):
-                    group_id = self.id_get(cr, group[1:])
+                    group_id = self.id_get(group[1:])
                     groups_value.append((3, group_id))
                 else:
-                    group_id = self.id_get(cr, group)
+                    group_id = self.id_get(group)
                     groups_value.append((4, group_id))
             res['groups_id'] = groups_value
         if rec.get('paperformat'):
             pf_name = rec.get('paperformat')
-            pf_id = self.id_get(cr,pf_name)
+            pf_id = self.id_get(pf_name)
             res['paperformat_id'] = pf_id
 
-        id = self.pool['ir.model.data']._update(cr, self.uid, "ir.actions.report.xml", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
+        id = self.env['ir.model.data']._update("ir.actions.report.xml", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
 
         if not rec.get('menu') or eval(rec.get('menu','False')):
             keyword = str(rec.get('keyword', 'client_print_multi'))
             value = 'ir.actions.report.xml,'+str(id)
-            ir_values_id = self.pool['ir.values'].set_action(cr, self.uid, res['name'], keyword, res['model'], value)
-            self.pool['ir.actions.report.xml'].write(cr, self.uid, id, {'ir_values_id': ir_values_id})
+            action = self.env['ir.values'].set_action(res['name'], keyword, res['model'], value)
+            self.env['ir.actions.report.xml'].browse(id).write({'ir_values_id': action.id})
         elif self.mode=='update' and eval(rec.get('menu','False'))==False:
             # Special check for report having attribute menu=False on update
             value = 'ir.actions.report.xml,'+str(id)
-            self._remove_ir_values(cr, res['name'], value, res['model'])
-            self.pool['ir.actions.report.xml'].write(cr, self.uid, id, {'ir_values_id': False})
+            self._remove_ir_values(res['name'], value, res['model'])
+            self.env['ir.actions.report.xml'].browse(id).write({'ir_values_id': False})
         return id
 
-    def _tag_function(self, cr, rec, data_node=None, mode=None):
+    def _tag_function(self, rec, data_node=None, mode=None):
         if self.isnoupdate(data_node) and self.mode != 'init':
             return
-        context = self.get_context(data_node, rec, {'ref': _ref(self, cr)})
-        uid = self.get_uid(cr, self.uid, data_node, rec)
-        _eval_xml(self,rec, self.pool, cr, uid, self.idref, context=context)
+        context = self.get_context(data_node, rec, {'ref': self.id_get})
+        uid = self.get_uid(data_node, rec)
+        env = self.env(user=uid, context=context)
+        _eval_xml(self, rec, env)
         return
 
-    def _tag_act_window(self, cr, rec, data_node=None, mode=None):
+    def _tag_act_window(self, rec, data_node=None, mode=None):
         name = rec.get('name','').encode('utf-8')
         xml_id = rec.get('id','').encode('utf8')
         self._test_xml_id(xml_id)
         type = rec.get('type','').encode('utf-8') or 'ir.actions.act_window'
         view_id = False
         if rec.get('view_id'):
-            view_id = self.id_get(cr, rec.get('view_id','').encode('utf-8'))
+            view_id = self.id_get(rec.get('view_id','').encode('utf-8'))
         domain = rec.get('domain','').encode('utf-8') or '[]'
         res_model = rec.get('res_model','').encode('utf-8')
         src_model = rec.get('src_model','').encode('utf-8')
@@ -383,9 +377,6 @@ form: module.record_id""" % (xml_id,)
         active_ids = unquote("active_ids")
         active_model = unquote("active_model")
 
-        def ref(str_id):
-            return self.id_get(cr, str_id)
-
         # Include all locals() in eval_context, for backwards compatibility
         eval_context = {
             'name': name,
@@ -404,7 +395,7 @@ form: module.record_id""" % (xml_id,)
             'active_id': active_id,
             'active_ids': active_ids,
             'active_model': active_model,
-            'ref' : ref,
+            'ref': self.id_get,
         }
         context = self.get_context(data_node, rec, eval_context)
 
@@ -437,10 +428,10 @@ form: module.record_id""" % (xml_id,)
             groups_value = []
             for group in g_names:
                 if group.startswith('-'):
-                    group_id = self.id_get(cr, group[1:])
+                    group_id = self.id_get(group[1:])
                     groups_value.append((3, group_id))
                 else:
-                    group_id = self.id_get(cr, group)
+                    group_id = self.id_get(group)
                     groups_value.append((4, group_id))
             res['groups_id'] = groups_value
 
@@ -448,7 +439,7 @@ form: module.record_id""" % (xml_id,)
             res['target'] = rec.get('target','')
         if rec.get('multi'):
             res['multi'] = eval(rec.get('multi', 'False'))
-        id = self.pool['ir.model.data']._update(cr, self.uid, 'ir.actions.act_window', self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
+        id = self.env['ir.model.data']._update('ir.actions.act_window', self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
 
         if src_model:
@@ -456,10 +447,10 @@ form: module.record_id""" % (xml_id,)
             keyword = rec.get('key2','').encode('utf-8') or 'client_action_relate'
             value = 'ir.actions.act_window,'+str(id)
             replace = rec.get('replace','') or True
-            self.pool['ir.model.data'].ir_set(cr, self.uid, 'action', keyword, xml_id, [src_model], value, replace=replace, isobject=True, xml_id=xml_id)
+            self.env['ir.model.data'].ir_set('action', keyword, xml_id, [src_model], value, replace=replace, isobject=True, xml_id=xml_id)
         # TODO add remove ir.model.data
 
-    def _tag_ir_set(self, cr, rec, data_node=None, mode=None):
+    def _tag_ir_set(self, rec, data_node=None, mode=None):
         """
             .. deprecated:: 9.0
 
@@ -470,37 +461,37 @@ form: module.record_id""" % (xml_id,)
         res = {}
         for field in rec.findall('./field'):
             f_name = field.get("name",'').encode('utf-8')
-            f_val = _eval_xml(self,field,self.pool, cr, self.uid, self.idref)
+            f_val = _eval_xml(self, field, self.env)
             res[f_name] = f_val
-        self.pool['ir.model.data'].ir_set(cr, self.uid, res['key'], res['key2'], res['name'], res['models'], res['value'], replace=res.get('replace',True), isobject=res.get('isobject', False), meta=res.get('meta',None))
+        self.env['ir.model.data'].ir_set(res['key'], res['key2'], res['name'], res['models'], res['value'], replace=res.get('replace',True), isobject=res.get('isobject', False), meta=res.get('meta',None))
 
-    def _tag_workflow(self, cr, rec, data_node=None, mode=None):
+    def _tag_workflow(self, rec, data_node=None, mode=None):
         if self.isnoupdate(data_node) and self.mode != 'init':
             return
         model = rec.get('model').encode('ascii')
         w_ref = rec.get('ref')
         if w_ref:
-            id = self.id_get(cr, w_ref)
+            id = self.id_get(w_ref)
         else:
             number_children = len(rec)
             assert number_children > 0,\
                 'You must define a child node if you dont give a ref'
             assert number_children == 1,\
                 'Only one child node is accepted (%d given)' % number_children
-            id = _eval_xml(self, rec[0], self.pool, cr, self.uid, self.idref)
+            id = _eval_xml(self, rec[0], self.env)
 
-        uid = self.get_uid(cr, self.uid, data_node, rec)
-        openerp.workflow.trg_validate(
-            uid, model, id, rec.get('action').encode('ascii'), cr)
+        uid = self.get_uid(data_node, rec)
+        record = self.env(user=uid)[model].browse(id)
+        record.signal_workflow(rec.get('action').encode('ascii'))
 
-    def _tag_menuitem(self, cr, rec, data_node=None, mode=None):
+    def _tag_menuitem(self, rec, data_node=None, mode=None):
         rec_id = rec.get("id",'').encode('ascii')
         self._test_xml_id(rec_id)
 
         # The parent attribute was specified, if non-empty determine its ID, otherwise
         # explicitly make a top-level menu
         if rec.get('parent'):
-            menu_parent_id = self.id_get(cr, rec.get('parent',''))
+            menu_parent_id = self.id_get(rec.get('parent',''))
         else:
             # we get here with <menuitem parent="">, explicit clear of parent, or
             # if no parent attribute at all but menu name is not a menu path
@@ -509,7 +500,7 @@ form: module.record_id""" % (xml_id,)
         if rec.get('name'):
             values['name'] = rec.get('name')
         try:
-            res = [ self.id_get(cr, rec.get('id','')) ]
+            res = [ self.id_get(rec.get('id','')) ]
         except:
             res = None
 
@@ -517,14 +508,14 @@ form: module.record_id""" % (xml_id,)
             a_action = rec.get('action','').encode('utf8')
 
             # determine the type of action
-            action_type, action_id = self.model_id_get(cr, a_action)
+            action_type, action_id = self.model_id_get(a_action)
             action_type = action_type.split('.')[-1] # keep only type part
             values['action'] = "ir.actions.%s,%d" % (action_type, action_id)
 
             if not values.get('name') and action_type in ('act_window', 'wizard', 'url', 'client', 'server'):
                 a_table = 'ir_act_%s' % action_type.replace('act_', '')
-                cr.execute('select name from "%s" where id=%%s' % a_table, (int(action_id),))
-                resw = cr.fetchone()
+                self.cr.execute('select name from "%s" where id=%%s' % a_table, (int(action_id),))
+                resw = self.cr.fetchone()
                 if resw:
                     values['name'] = resw[0]
 
@@ -542,10 +533,10 @@ form: module.record_id""" % (xml_id,)
             groups_value = []
             for group in g_names:
                 if group.startswith('-'):
-                    group_id = self.id_get(cr, group[1:])
+                    group_id = self.id_get(group[1:])
                     groups_value.append((3, group_id))
                 else:
-                    group_id = self.id_get(cr, group)
+                    group_id = self.id_get(group)
                     groups_value.append((4, group_id))
             values['groups_id'] = groups_value
 
@@ -553,7 +544,7 @@ form: module.record_id""" % (xml_id,)
             if rec.get('web_icon'):
                 values['web_icon'] = rec.get('web_icon')
 
-        pid = self.pool['ir.model.data']._update(cr, self.uid, 'ir.ui.menu', self.module, values, rec_id, noupdate=self.isnoupdate(data_node), mode=self.mode, res_id=res and res[0] or False)
+        pid = self.env['ir.model.data']._update('ir.ui.menu', self.module, values, rec_id, noupdate=self.isnoupdate(data_node), mode=self.mode, res_id=res and res[0] or False)
 
         if rec_id and pid:
             self.idref[rec_id] = int(pid)
@@ -563,12 +554,11 @@ form: module.record_id""" % (xml_id,)
     def _assert_equals(self, f1, f2, prec=4):
         return not round(f1 - f2, prec)
 
-    def _tag_assert(self, cr, rec, data_node=None, mode=None):
+    def _tag_assert(self, rec, data_node=None, mode=None):
         if self.isnoupdate(data_node) and self.mode != 'init':
             return
 
         rec_model = rec.get("model",'').encode('ascii')
-        model = self.pool[rec_model]
         rec_id = rec.get("id",'').encode('ascii')
         self._test_xml_id(rec_id)
         rec_src = rec.get("search",'').encode('utf8')
@@ -576,44 +566,40 @@ form: module.record_id""" % (xml_id,)
 
         rec_string = rec.get("string",'').encode('utf8') or 'unknown'
 
-        ids = None
-        eval_dict = {'ref': _ref(self, cr)}
+        records = None
+        eval_dict = {'ref': self.id_get}
         context = self.get_context(data_node, rec, eval_dict)
-        uid = self.get_uid(cr, self.uid, data_node, rec)
+        uid = self.get_uid(data_node, rec)
+        env = self.env(user=uid, context=context)
         if rec_id:
-            ids = [self.id_get(cr, rec_id)]
+            records = env[rec_model].browse(self.id_get(rec_id))
         elif rec_src:
             q = unsafe_eval(rec_src, eval_dict)
-            ids = self.pool[rec_model].search(cr, uid, q, context=context)
+            records = env[rec_model].search(q)
             if rec_src_count:
                 count = int(rec_src_count)
-                if len(ids) != count:
+                if len(records) != count:
                     self.assertion_report.record_failure()
                     msg = 'assertion "%s" failed!\n'    \
                           ' Incorrect search count:\n'  \
                           ' expected count: %d\n'       \
                           ' obtained count: %d\n'       \
-                          % (rec_string, count, len(ids))
+                          % (rec_string, count, len(records))
                     _logger.error(msg)
                     return
 
-        assert ids is not None,\
+        assert records is not None,\
             'You must give either an id or a search criteria'
-        ref = _ref(self, cr)
-        for id in ids:
-            brrec =  model.browse(cr, uid, id, context)
-            class d(dict):
-                def __getitem__(self2, key):
-                    if key in brrec:
-                        return brrec[key]
-                    return dict.__getitem__(self2, key)
-            globals_dict = d()
+        ref = self.id_get
+        for record in records:
+            globals_dict = RecordDictWrapper(record)
             globals_dict['floatEqual'] = self._assert_equals
             globals_dict['ref'] = ref
             globals_dict['_ref'] = ref
             for test in rec.findall('./test'):
                 f_expr = test.get("expr",'').encode('utf-8')
-                expected_value = _eval_xml(self, test, self.pool, cr, uid, self.idref, context=context) or True
+                env = self.env(user=uid, context=context)
+                expected_value = _eval_xml(self, test, env) or True
                 expression_value = unsafe_eval(f_expr, globals_dict)
                 if expression_value != expected_value: # assertion failed
                     self.assertion_report.record_failure()
@@ -627,9 +613,9 @@ form: module.record_id""" % (xml_id,)
         else: # all tests were successful for this assertion tag (no break)
             self.assertion_report.record_success()
 
-    def _tag_record(self, cr, rec, data_node=None, mode=None):
+    def _tag_record(self, rec, data_node=None, mode=None):
         rec_model = rec.get("model").encode('ascii')
-        model = self.pool[rec_model]
+        model = self.env[rec_model]
         rec_id = rec.get("id",'').encode('ascii')
         rec_context = rec.get("context", {})
         if rec_context:
@@ -657,7 +643,7 @@ form: module.record_id""" % (xml_id,)
             else:
                 module = self.module
                 rec_id2 = rec_id
-            id = self.pool['ir.model.data']._update_dummy(cr, self.uid, rec_model, module, rec_id2)
+            id = self.env['ir.model.data']._update_dummy(rec_model, module, rec_id2)
             if id:
                 # if the resource already exists, don't update it but store
                 # its database id (can be useful)
@@ -683,11 +669,10 @@ form: module.record_id""" % (xml_id,)
             if f_search:
                 q = unsafe_eval(f_search, self.idref)
                 assert f_model, 'Define an attribute model="..." in your .XML file !'
-                f_obj = self.pool[f_model]
                 # browse the objects searched
-                s = f_obj.browse(cr, self.uid, f_obj.search(cr, self.uid, q))
+                s = self.env[f_model].search(q)
                 # column definitions of the "local" object
-                _fields = self.pool[rec_model]._fields
+                _fields = self.env[rec_model]._fields
                 # if the current field is many2many
                 if (f_name in _fields) and _fields[f_name].type == 'many2many':
                     f_val = [(6, 0, map(lambda x: x[f_use], s))]
@@ -697,12 +682,12 @@ form: module.record_id""" % (xml_id,)
                     f_val = s[0][f_use]
             elif f_ref:
                 if f_name in model._fields and model._fields[f_name].type == 'reference':
-                    val = self.model_id_get(cr, f_ref)
+                    val = self.model_id_get(f_ref)
                     f_val = val[0] + ',' + str(val[1])
                 else:
-                    f_val = self.id_get(cr, f_ref)
+                    f_val = self.id_get(f_ref)
             else:
-                f_val = _eval_xml(self,field, self.pool, cr, self.uid, self.idref)
+                f_val = _eval_xml(self, field, self.env)
                 if f_name in model._fields:
                     if model._fields[f_name].type == 'integer':
                         f_val = int(f_val)
@@ -710,14 +695,14 @@ form: module.record_id""" % (xml_id,)
                         f_val = float(f_val)
             res[f_name] = f_val
 
-        id = self.pool['ir.model.data']._update(cr, self.uid, rec_model, self.module, res, rec_id or False, not self.isnoupdate(data_node), noupdate=self.isnoupdate(data_node), mode=self.mode, context=rec_context )
+        id = self.env(context=rec_context)['ir.model.data']._update(rec_model, self.module, res, rec_id or False, not self.isnoupdate(data_node), noupdate=self.isnoupdate(data_node), mode=self.mode)
         if rec_id:
             self.idref[rec_id] = int(id)
         if config.get('import_partial'):
-            cr.commit()
+            self.cr.commit()
         return rec_model, id
 
-    def _tag_template(self, cr, el, data_node=None, mode=None):
+    def _tag_template(self, el, data_node=None, mode=None):
         # This helper transforms a <template> element into a <record> and forwards it
         tpl_id = el.get('id', el.get('t-name', '')).encode('ascii')
         full_tpl_id = tpl_id
@@ -754,7 +739,7 @@ form: module.record_id""" % (xml_id,)
         if 'key' in el.attrib:
             record.append(Field(el.get('key'), name='key'))
         if el.get('active') in ("True", "False"):
-            view_id = self.id_get(cr, tpl_id, raise_if_not_found=False)
+            view_id = self.id_get(tpl_id, raise_if_not_found=False)
             if mode != "update" or not view_id:
                 record.append(Field(name='active', eval=el.get('active')))
         if el.get('customize_show') in ("True", "False"):
@@ -779,23 +764,18 @@ form: module.record_id""" % (xml_id,)
         # the ``arch`` field
         record.append(Field(el, name="arch", type="xml"))
 
-        return self._tag_record(cr, record, data_node)
+        return self._tag_record(record, data_node)
 
-    def id_get(self, cr, id_str, raise_if_not_found=True):
+    def id_get(self, id_str, raise_if_not_found=True):
         if id_str in self.idref:
             return self.idref[id_str]
-        res = self.model_id_get(cr, id_str, raise_if_not_found)
-        if res and len(res)>1: res = res[1]
-        return res
+        res = self.model_id_get(id_str, raise_if_not_found)
+        return res and res[1]
 
-    def model_id_get(self, cr, id_str, raise_if_not_found=True):
-        model_data_obj = self.pool['ir.model.data']
-        mod = self.module
+    def model_id_get(self, id_str, raise_if_not_found=True):
         if '.' not in id_str:
-            id_str = '%s.%s' % (mod, id_str)
-        return model_data_obj.xmlid_to_res_model_res_id(
-            cr, self.uid, id_str,
-            raise_if_not_found=raise_if_not_found)
+            id_str = '%s.%s' % (self.module, id_str)
+        return self.env['ir.model.data'].xmlid_to_res_model_res_id(id_str, raise_if_not_found=raise_if_not_found)
 
     def parse(self, de, mode=None):
         roots = ['openerp','data','odoo']
@@ -806,21 +786,20 @@ form: module.record_id""" % (xml_id,)
                 self.parse(rec, mode)
             elif rec.tag in self._tags:
                 try:
-                    self._tags[rec.tag](self.cr, rec, de, mode=mode)
+                    self._tags[rec.tag](rec, de, mode=mode)
                 except Exception, e:
                     self.cr.rollback()
                     exc_info = sys.exc_info()
-                    raise ParseError, (misc.ustr(e), etree.tostring(rec).rstrip(), rec.getroottree().docinfo.URL, rec.sourceline), exc_info[2]
+                    raise ParseError, (ustr(e), etree.tostring(rec).rstrip(), rec.getroottree().docinfo.URL, rec.sourceline), exc_info[2]
         return True
 
     def __init__(self, cr, module, idref, mode, report=None, noupdate=False, xml_filename=None):
-
         self.mode = mode
         self.module = module
+        self.env = openerp.api.Environment(cr, SUPERUSER_ID, {})
         self.cr = cr
+        self.uid = SUPERUSER_ID
         self.idref = idref
-        self.pool = openerp.registry(cr.dbname)
-        self.uid = 1
         if report is None:
             report = assertion_report.assertion_report()
         self.assertion_report = report
@@ -842,7 +821,7 @@ form: module.record_id""" % (xml_id,)
 def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kind=None, report=None, pathname=None):
     if pathname is None:
         pathname = os.path.join(module, filename)
-    fp = misc.file_open(pathname)
+    fp = file_open(pathname)
     ext = os.path.splitext(filename)[1].lower()
 
     try:
@@ -888,23 +867,22 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         _logger.error("Import specification does not contain 'id' and we are in init mode, Cannot continue.")
         return
 
-    uid = 1
     datas = []
     for line in reader:
         if not (line and any(line)):
             continue
         try:
-            datas.append(map(misc.ustr, line))
-        except:
+            datas.append(map(ustr, line))
+        except Exception:
             _logger.error("Cannot import the line: %s", line)
 
-    registry = openerp.registry(cr.dbname)
     context = {
         'mode': mode,
         'module': module,
         'noupdate': noupdate,
     }
-    result = registry[model].load(cr, uid, fields, datas, context=context)
+    env = openerp.api.Environment(cr, SUPERUSER_ID, context)
+    result = env[model].load(fields, datas)
     if any(msg['type'] == 'error' for msg in result['messages']):
         # Report failed import and abort module install
         warning_msg = "\n".join(msg['message'] for msg in result['messages'])
@@ -918,7 +896,7 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
         relaxng.assert_(doc)
     except Exception:
         _logger.info('The XML file does not fit the required schema !', exc_info=True)
-        _logger.info(misc.ustr(relaxng.error_log.last_error))
+        _logger.info(ustr(relaxng.error_log.last_error))
         raise
 
     if idref is None:
