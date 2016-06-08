@@ -145,7 +145,7 @@
             <field name="name">sale.order.form</field>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
-                <form string="Sales Order">
+                <form string="Sales Order" class="o_sale_order">
                 <header>
                     <button name="%(action_view_sale_advance_payment_inv)d" string="Create Invoice"
                         type="action" class="btn-primary"
@@ -155,7 +155,7 @@
                         attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
                     <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary"/>
                     <button name="print_quotation" string="Print" type="object" states="draft" class="btn-primary"/>
-                    <button name="action_confirm" states="sent" string="Confirm Sale" class="btn-primary" type="object" context="{'show_sale': True}"/>
+                    <button name="action_confirm" states="sent" string="Confirm Sale" class="btn-primary o_sale_confirm" type="object" context="{'show_sale': True}"/>
                     <button name="action_confirm" states="draft" string="Confirm Sale" type="object" context="{'show_sale': True}"/>
                     <button name="print_quotation" string="Print" type="object" states="sent,sale"/>
                     <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale"/>
@@ -406,8 +406,9 @@
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
                     <separator/>
-                    <filter string="Quotations" name="draft" domain="[('state','=','draft')]" help="Sales Order that haven't yet been confirmed"/>
-                    <filter string="Quotations Sent" name="sent" domain="[('state','=','sent')]" help="Sales Order that haven't yet been confirmed"/>
+                    <filter string="Quotations" name="draft" domain="[('state','=','draft')]"/>
+                    <filter string="Quotations Sent" name="sent" domain="[('state','=','sent')]"/>
+                    <filter string="Sales" name="sales" domain="[('state','in',('sale','done'))]"/>
                 </xpath>
             </field>
         </record>
@@ -511,7 +512,6 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_quotation_tree"/>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
-            <field name="domain">[('state','in',('draft','sent','cancel'))]</field>
             <field name="search_view_id" ref="sale_order_view_search_inherit_quotation"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
