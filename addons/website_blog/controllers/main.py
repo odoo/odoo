@@ -112,7 +112,7 @@ class WebsiteBlog(http.Controller):
          - 'active_tag_ids' :  list of active tag ids,
          - 'tags_list' : function to built the comma-separated tag list ids (for the url),
          - 'tags': all tags, for navigation
-         - 'state_info': state of published/not published filter
+         - 'state_info': state of published/unpublished filter
          - 'nav_list': a dict [year][month] for archives navigation
          - 'date': date_begin optional parameter, used in archives navigation
          - 'blog_url': help object to create URLs

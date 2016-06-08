@@ -126,7 +126,7 @@
                 <div class="col-sm-10">
                     <h3 class="mt0 mb0">
                         <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }"><span t-field="track.name"> </span></a>
-                        <small t-if="not track.website_published" class="label label-danger">not published</small>
+                        <small t-if="not track.website_published" class="label label-danger">unpublished</small>
                     </h3>
                     <ul class="list-inline mb0">
                         <li t-if="track.speaker_ids" class="text-muted fa fa-user">
