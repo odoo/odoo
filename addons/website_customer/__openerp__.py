@@ -17,13 +17,14 @@ Odoo Customer References
         'website_google_map',
     ],
     'demo': [
-        'website_customer_demo.xml',
+        'data/res_partner_demo.xml',
     ],
     'data': [
-        'views/website_customer.xml',
-        'views/website_customer_view.xml',
         'security/ir.model.access.csv',
-        'security/ir_rule.xml',
+        'security/res_partner_tag_security.xml',
+        'views/website_customer_templates.xml',
+        'views/res_partner_views.xml',
+
     ],
     'qweb': [],
     'installable': True,
