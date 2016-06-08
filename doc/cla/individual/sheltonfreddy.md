@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Shelton sheltonfreddy141@gmail.com https://github.com/sheltonfreddy141
+Shelton Freddy sheltonfreddy141@gmail.com https://github.com/sheltonfreddy141
