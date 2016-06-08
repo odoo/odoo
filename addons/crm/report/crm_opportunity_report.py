@@ -34,7 +34,7 @@ class crm_opportunity_report(osv.Model):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
         'total_revenue': fields.float('Total Revenue',digits=(16,2),readonly=True),
-        'expected_revenue': fields.float('Expected Revenue', digits=(16,2),readonly=True),
+        'expected_revenue': fields.float('Probable Turnover', digits=(16,2),readonly=True),
         'stage_id': fields.many2one ('crm.stage', 'Stage', readonly=True, domain="['|', ('team_id', '=', False), ('team_id', '=', team_id)]"),
         'stage_name': fields.char('Stage Name', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
