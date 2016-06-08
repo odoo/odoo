@@ -5,7 +5,7 @@ import logging
 import types
 
 _logger = logging.getLogger(__name__)
-SUPPORTED_DEBUGGER = {'pdb', 'ipdb', 'pudb'}
+SUPPORTED_DEBUGGER = {'pdb', 'ipdb', 'wdb', 'pudb'}
 
 
 def post_mortem(config, info):
