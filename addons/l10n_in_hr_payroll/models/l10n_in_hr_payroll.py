@@ -1,246 +1,195 @@
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-from calendar import isleap
+from odoo import api, fields, models, _
+from odoo.addons import decimal_precision as dp
+from odoo.exceptions import UserError
 
-from openerp.tools.translate import _
-from openerp.osv import fields, osv
-import openerp.addons.decimal_precision as dp
-from openerp.exceptions import UserError
 
-DATETIME_FORMAT = "%Y-%m-%d"
-
-class hr_contract(osv.osv):
+class HrContract(models.Model):
     """
     Employee contract allows to add different values in fields.
     Fields are used in salary rule computation.
     """
-
     _inherit = 'hr.contract'
-    _description = 'HR Contract'
 
-    _columns = {
-        'tds': fields.float('TDS', digits_compute=dp.get_precision('Payroll'), help="Amount for Tax Deduction at Source"),
-        'driver_salay': fields.boolean('Driver Salary', help="Check this box if you provide allowance for driver"),
-        'medical_insurance': fields.float('Medical Insurance', digits_compute=dp.get_precision('Payroll'), help="Deduction towards company provided medical insurance"),
-        'voluntary_provident_fund': fields.float('Voluntary Provident Fund (%)', digits_compute=dp.get_precision('Payroll'), help="VPF is a safe option wherein you can contribute more than the PF ceiling of 12% that has been mandated by the government and VPF computed as percentage(%)"),
-        'house_rent_allowance_metro_nonmetro': fields.float('House Rent Allowance (%)', digits_compute=dp.get_precision('Payroll'), help="HRA is an allowance given by the employer to the employee for taking care of his rental or accommodation expenses for metro city it is 50% and for non metro 40%. \nHRA computed as percentage(%)"),
-        'supplementary_allowance': fields.float('Supplementary Allowance', digits_compute=dp.get_precision('Payroll')),
-    }
+    tds = fields.Float(string='TDS', digits_compute=dp.get_precision('Payroll'),
+        help='Amount for Tax Deduction at Source')
+    driver_salay = fields.Boolean(string='Driver Salary', help='Check this box if you provide allowance for driver')
+    medical_insurance = fields.Float(string='Medical Insurance', digits_compute=dp.get_precision('Payroll'),
+        help='Deduction towards company provided medical insurance')
+    voluntary_provident_fund = fields.Float(string='Voluntary Provident Fund (%)', digits_compute=dp.get_precision('Payroll'),
+        help='VPF is a safe option wherein you can contribute more than the PF ceiling of 12% that has been mandated by the government and VPF computed as percentage(%)')
+    house_rent_allowance_metro_nonmetro = fields.Float(string='House Rent Allowance (%)', digits_compute=dp.get_precision('Payroll'),
+        help='HRA is an allowance given by the employer to the employee for taking care of his rental or accommodation expenses for metro city it is 50% and for non metro 40%. \nHRA computed as percentage(%)')
+    supplementary_allowance = fields.Float(string='Supplementary Allowance', digits_compute=dp.get_precision('Payroll'))
 
 
-class payroll_advice(osv.osv):
+class HrPayrollAdvice(models.Model):
     '''
     Bank Advice
     '''
     _name = 'hr.payroll.advice'
-    _description = 'Bank Advice'
-    _columns = {
-        'name':fields.char('Name', readonly=True, required=True, states={'draft': [('readonly', False)]},),
-        'note': fields.text('Description'),
-        'date': fields.date('Date', readonly=True, required=True, states={'draft': [('readonly', False)]}, help="Advice Date is used to search Payslips"),
-        'state':fields.selection([
-            ('draft', 'Draft'),
-            ('confirm', 'Confirmed'),
-            ('cancel', 'Cancelled'),
-        ], 'Status', select=True, readonly=True),
-        'number': fields.char('Reference', readonly=True),
-        'line_ids': fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary', states={'draft': [('readonly', False)]}, readonly=True, copy=True),
-        'chaque_nos': fields.char('Cheque Numbers'),
-        'neft': fields.boolean('NEFT Transaction', help="Check this box if your company use online transfer for salary"),
-        'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'bank_id':fields.many2one('res.bank', 'Bank', readonly=True, states={'draft': [('readonly', False)]}, help="Select the Bank from which the salary is going to be paid"),
-        'batch_id': fields.many2one('hr.payslip.run', 'Batch', readonly=True)
-    }
 
-    _defaults = {
-        'date': lambda * a: time.strftime('%Y-%m-%d'),
-        'state': lambda * a: 'draft',
-        'company_id': lambda self, cr, uid, context: \
-                self.pool.get('res.users').browse(cr, uid, uid,
-                    context=context).company_id.id,
-        'note': "Please make the payroll transfer from above account number to the below mentioned account numbers towards employee salaries:"
-    }
+    def _get_default_date(self):
+        return fields.Date.from_string(fields.Date.today())
 
-    def compute_advice(self, cr, uid, ids, context=None):
+    name = fields.Char(readonly=True, required=True, states={'draft': [('readonly', False)]})
+    note = fields.Text(string='Description', default='Please make the payroll transfer from above account number to the below mentioned account numbers towards employee salaries:')
+    date = fields.Date(readonly=True, required=True, states={'draft': [('readonly', False)]}, default=_get_default_date,
+        help='Advice Date is used to search Payslips')
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('confirm', 'Confirmed'),
+        ('cancel', 'Cancelled'),
+    ], string='Status', default='draft', index=True, readonly=True)
+    number = fields.Char(string='Reference', readonly=True)
+    line_ids = fields.One2many('hr.payroll.advice.line', 'advice_id', string='Employee Salary',
+        states={'draft': [('readonly', False)]}, readonly=True, copy=True)
+    chaque_nos = fields.Char(string='Cheque Numbers')
+    neft = fields.Boolean(string='NEFT Transaction', help='Check this box if your company use online transfer for salary')
+    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True,
+        states={'draft': [('readonly', False)]}, default=lambda self: self.env.user.company_id)
+    bank_id = fields.Many2one('res.bank', string='Bank', readonly=True, states={'draft': [('readonly', False)]},
+        help='Select the Bank from which the salary is going to be paid')
+    batch_id = fields.Many2one('hr.payslip.run', string='Batch', readonly=True)
+
+    @api.multi
+    def compute_advice(self):
         """
         Advice - Create Advice lines in Payment Advice and
         compute Advice lines.
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Advice’s IDs
-        @return: Advice lines
-        @param context: A standard dictionary for contextual values
         """
-        payslip_pool = self.pool.get('hr.payslip')
-        advice_line_pool = self.pool.get('hr.payroll.advice.line')
-        payslip_line_pool = self.pool.get('hr.payslip.line')
-
-        for advice in self.browse(cr, uid, ids, context=context):
-            old_line_ids = advice_line_pool.search(cr, uid, [('advice_id', '=', advice.id)], context=context)
-            if old_line_ids:
-                advice_line_pool.unlink(cr, uid, old_line_ids, context=context)
-            slip_ids = payslip_pool.search(cr, uid, [('date_from', '<=', advice.date), ('date_to', '>=', advice.date), ('state', '=', 'done')], context=context)
-            for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
+        for advice in self:
+            old_lines = self.env['hr.payroll.advice.line'].search([('advice_id', '=', advice.id)])
+            if old_lines:
+                old_lines.unlink()
+            payslips = self.env['hr.payslip'].search([('date_from', '<=', advice.date), ('date_to', '>=', advice.date), ('state', '=', 'done')])
+            for slip in payslips:
                 if not slip.employee_id.bank_account_id and not slip.employee_id.bank_account_id.acc_number:
                     raise UserError(_('Please define bank account for the %s employee') % (slip.employee_id.name,))
-                line_ids = payslip_line_pool.search(cr, uid, [ ('slip_id', '=', slip.id), ('code', '=', 'NET')], context=context)
-                if line_ids:
-                    line = payslip_line_pool.browse(cr, uid, line_ids, context=context)[0]
-                    advice_line = {
-                            'advice_id': advice.id,
-                            'name': slip.employee_id.bank_account_id.acc_number,
-                            'employee_id': slip.employee_id.id,
-                            'bysal': line.total
-                            }
-                    advice_line_pool.create(cr, uid, advice_line, context=context)
-                payslip_pool.write(cr, uid, slip_ids, {'advice_id': advice.id}, context=context)
-        return True
+                payslip_line = self.env['hr.payslip.line'].search([('slip_id', '=', slip.id), ('code', '=', 'NET')], limit=1)
+                if payslip_line:
+                    self.env['hr.payroll.advice.line'].create({
+                        'advice_id': advice.id,
+                        'name': slip.employee_id.bank_account_id.acc_number,
+                        'employee_id': slip.employee_id.id,
+                        'bysal': payslip_line.total
+                    })
+                slip.advice_id = advice.id
 
-    def confirm_sheet(self, cr, uid, ids, context=None):
+    @api.multi
+    def confirm_sheet(self):
         """
         confirm Advice - confirmed Advice after computing Advice Lines..
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of confirm Advice’s IDs
-        @return: confirmed Advice lines and set sequence of Advice.
-        @param context: A standard dictionary for contextual values
         """
-        seq_obj = self.pool.get('ir.sequence')
-        for advice in self.browse(cr, uid, ids, context=context):
+        for advice in self:
             if not advice.line_ids:
                 raise UserError(_('You can not confirm Payment advice without advice lines.'))
-            advice_date = datetime.strptime(advice.date, DATETIME_FORMAT)
-            advice_year = advice_date.strftime('%m') + '-' + advice_date.strftime('%Y')
-            number = seq_obj.next_by_code(cr, uid, 'payment.advice')
-            sequence_num = 'PAY' + '/' + advice_year + '/' + number
-            self.write(cr, uid, [advice.id], {'number': sequence_num, 'state': 'confirm'}, context=context)
-        return True
+            date = fields.Date.from_string(fields.Date.today())
+            advice_year = date.strftime('%m') + '-' + date.strftime('%Y')
+            number = self.env['ir.sequence'].next_by_code('payment.advice')
+            advice.write({
+                'number': 'PAY' + '/' + advice_year + '/' + number,
+                'state': 'confirm',
+            })
 
-    def set_to_draft(self, cr, uid, ids, context=None):
+    @api.multi
+    def set_to_draft(self):
         """Resets Advice as draft.
         """
-        return self.write(cr, uid, ids, {'state':'draft'}, context=context)
+        self.write({'state': 'draft'})
 
-    def cancel_sheet(self, cr, uid, ids, context=None):
+    @api.multi
+    def cancel_sheet(self):
         """Marks Advice as cancelled.
         """
-        return self.write(cr, uid, ids, {'state':'cancel'}, context=context)
+        self.write({'state': 'cancel'})
 
-    def onchange_company_id(self, cr, uid, ids, company_id=False, context=None):
-        res = {}
-        if company_id:
-            company = self.pool.get('res.company').browse(cr, uid, [company_id], context=context)[0]
-            if company.partner_id.bank_ids:
-                res.update({'bank_id': company.partner_id.bank_ids[0].bank_id.id})
-        return {
-            'value':res
-        }
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        self.bank_id = self.company_id.partner_id.bank_ids and self.company_id.partner_id.bank_ids[0].bank_id.id or False
 
-class hr_payslip_run(osv.osv):
 
+class HrPayslipRun(models.Model):
     _inherit = 'hr.payslip.run'
     _description = 'Payslip Batches'
-    _columns = {
-        'available_advice': fields.boolean('Made Payment Advice?',
-                                           help="If this box is checked which means that Payment Advice exists for current batch",
-                                           readonly=False, copy=False),
-    }
 
-    def draft_payslip_run(self, cr, uid, ids, context=None):
-        res = super(hr_payslip_run, self).draft_payslip_run(cr, uid, ids, context=context)
-        self.write(cr, uid, ids, {'available_advice': False}, context=context)
-        return res
-    
-    def create_advice(self, cr, uid, ids, context=None):
-        payslip_pool = self.pool.get('hr.payslip')
-        payslip_line_pool = self.pool.get('hr.payslip.line')
-        advice_pool = self.pool.get('hr.payroll.advice')
-        advice_line_pool = self.pool.get('hr.payroll.advice.line')
-        users = self.pool.get('res.users').browse(cr, uid, [uid], context=context)
-        for run in self.browse(cr, uid, ids, context=context):
+    available_advice = fields.Boolean(string='Made Payment Advice?',
+                                       help='If this box is checked which means that Payment Advice exists for current batch',
+                                       readonly=False, copy=False)
+
+    @api.multi
+    def draft_payslip_run(self):
+        super(HrPayslipRun, self).draft_payslip_run()
+        self.write({'available_advice': False})
+
+    @api.multi
+    def create_advice(self):
+        for run in self:
             if run.available_advice:
                 raise UserError(_("Payment advice already exists for %s, 'Set to Draft' to create a new advice.") % (run.name,))
-            advice_data = {
+            company = self.env.user.company_id
+            advice = self.env['hr.payroll.advice'].create({
                         'batch_id': run.id,
-                        'company_id': users[0].company_id.id,
+                        'company_id': company.id,
                         'name': run.name,
                         'date': run.date_end,
-                        'bank_id': users[0].company_id.partner_id.bank_ids and users[0].company_id.partner_id.bank_ids[0].id or False
-                    }
-            advice_id = advice_pool.create(cr, uid, advice_data, context=context)
-            slip_ids = []
-            for slip_id in run.slip_ids:
+                        'bank_id': company.partner_id.bank_ids and company.partner_id.bank_ids[0].id or False
+                    })
+            for slip in run.slip_ids:
                 # TODO is it necessary to interleave the calls ?
-                payslip_pool.signal_workflow(cr, uid, [slip_id.id], 'hr_verify_sheet')
-                payslip_pool.signal_workflow(cr, uid, [slip_id.id], 'process_sheet')
-                slip_ids.append(slip_id.id)
-
-            for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
+                slip.signal_workflow('hr_verify_sheet')
+                slip.signal_workflow('process_sheet')
                 if not slip.employee_id.bank_account_id or not slip.employee_id.bank_account_id.acc_number:
                     raise UserError(_('Please define bank account for the %s employee') % (slip.employee_id.name))
-                line_ids = payslip_line_pool.search(cr, uid, [('slip_id', '=', slip.id), ('code', '=', 'NET')], context=context)
-                if line_ids:
-                    line = payslip_line_pool.browse(cr, uid, line_ids, context=context)[0]
-                    advice_line = {
-                            'advice_id': advice_id,
-                            'name': slip.employee_id.bank_account_id.acc_number,
-                            'employee_id': slip.employee_id.id,
-                            'bysal': line.total
-                    }
-                    advice_line_pool.create(cr, uid, advice_line, context=context)
-        return self.write(cr, uid, ids, {'available_advice' : True})
+                payslip_line = self.env['hr.payslip.line'].search([('slip_id', '=', slip.id), ('code', '=', 'NET')], limit=1)
+                if payslip_line:
+                    self.env['hr.payroll.advice.line'].create({
+                        'advice_id': advice.id,
+                        'name': slip.employee_id.bank_account_id.acc_number,
+                        'employee_id': slip.employee_id.id,
+                        'bysal': payslip_line.total
+                    })
+            run.available_advice = True
 
 
-class payroll_advice_line(osv.osv):
+class HrPayrollAdviceLine(models.Model):
     '''
     Bank Advice Lines
     '''
-    def onchange_employee_id(self, cr, uid, ids, employee_id=False, context=None):
-        res = {}
-        hr_obj = self.pool.get('hr.employee')
-        if not employee_id:
-            return {'value': res}
-        employee = hr_obj.browse(cr, uid, [employee_id], context=context)[0]
-        res.update({'name': employee.bank_account_id.acc_number , 'ifsc_code': employee.bank_account_id.bank_bic or ''})
-        return {'value': res}
-
     _name = 'hr.payroll.advice.line'
     _description = 'Bank Advice Lines'
-    _columns = {
-        'advice_id': fields.many2one('hr.payroll.advice', 'Bank Advice'),
-        'name': fields.char('Bank Account No.', size=25, required=True),
-        'ifsc_code': fields.char('IFSC Code', size=16),
-        'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
-        'bysal': fields.float('By Salary', digits_compute=dp.get_precision('Payroll')),
-        'debit_credit': fields.char('C/D', size=3, required=False),
-        'company_id': fields.related('advice_id', 'company_id', type='many2one', required=False, relation='res.company', string='Company', store=True),
-        'ifsc': fields.related('advice_id', 'neft', type='boolean', string='IFSC'),
-    }
-    _defaults = {
-        'debit_credit': 'C',
-    }
+
+    advice_id = fields.Many2one('hr.payroll.advice', string='Bank Advice')
+    name = fields.Char('Bank Account No.', required=True)
+    ifsc_code = fields.Char(string='IFSC Code')
+    employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
+    bysal = fields.Float(string='By Salary', digits_compute=dp.get_precision('Payroll'))
+    debit_credit = fields.Char(string='C/D', default='C')
+    company_id = fields.Many2one('res.company', related='advice_id.company_id', string='Company', store=True)
+    ifsc = fields.Boolean(related='advice_id.neft', string='IFSC')
+
+    @api.onchange('employee_id')
+    def onchange_employee_id(self):
+        self.write({
+            'name': self.employee_id.bank_account_id.acc_number,
+            'ifsc_code': self.employee_id.bank_account_id.bank_bic or ''
+        })
 
 
-class hr_payslip(osv.osv):
+class HrPayslip(models.Model):
     '''
     Employee Pay Slip
     '''
     _inherit = 'hr.payslip'
     _description = 'Pay Slips'
-    _columns = {
-        'advice_id': fields.many2one('hr.payroll.advice', 'Bank Advice', copy=False)
-    }
 
-class res_company(osv.osv):
+    advice_id = fields.Many2one('hr.payroll.advice', string='Bank Advice', copy=False)
 
+
+class ResCompany(models.Model):
     _inherit = 'res.company'
-    _columns = {
-        'dearness_allowance': fields.boolean('Dearness Allowance', help="Check this box if your company provide Dearness Allowance to employee")
-    }
-    _defaults = {
-        'dearness_allowance': True,
-    }
+
+    dearness_allowance = fields.Boolean(string='Dearness Allowance', default=True,
+        help='Check this box if your company provide Dearness Allowance to employee')

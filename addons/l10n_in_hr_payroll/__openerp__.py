@@ -1,10 +1,10 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'Indian Payroll',
     'category': 'Localization',
     'depends': ['hr_payroll'],
-    'version': '1.0',
     'description': """
 Indian Payroll Salary Rules.
 ============================
@@ -21,7 +21,6 @@ Indian Payroll Salary Rules.
     - Payroll Advice and Report
     - Yearly Salary by Head and Yearly Salary by Employee Report
     """,
-    'active': False,
     'data': [
          'views/l10n_in_hr_payroll_view.xml',
          'data/l10n_in_hr_payroll_data.xml',
@@ -42,7 +41,5 @@ Indian Payroll Salary Rules.
         'test/payment_advice.yml',
         'test/payment_advice_batch.yml'
     ],
-
     'demo': ['demo/l10n_in_hr_payroll_demo.xml'],
-    'installable': True
 }
