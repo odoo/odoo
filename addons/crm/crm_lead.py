@@ -974,11 +974,12 @@ Update your business card, phone book, social media,... Send an email right now 
     def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
         res = super(crm_lead, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
 
+        lead = self.browse(cr, uid, ids[0], context=context)
+
         won_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='case_mark_won')
         lost_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='case_mark_lost')
-        convert_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='convert_opportunity')
+        convert_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='convert_opportunity', partner_id=lead.partner_id.id)
 
-        lead = self.browse(cr, uid, ids[0], context=context)
         if lead.type == 'lead':
             res['group_sale_salesman'] = {
                 'actions': [{'url': convert_action, 'title': 'Convert to opportunity'}]
