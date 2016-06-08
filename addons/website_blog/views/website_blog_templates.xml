@@ -61,7 +61,7 @@
                         <h4>
                             <a t-attf-href="#{blog_url('', ['blog', 'post'], blog=post.blog_id, post=post)}" t-field="post.name"></a>
                             <span t-if="not post.website_published" class="text-warning">
-                                <span class="fa fa-exclamation-triangle ml8" title="Not published"/>
+                                <span class="fa fa-exclamation-triangle ml8" title="Unpublished"/>
                             </span>
                         </h4>
                         <div class="text-muted">
@@ -161,7 +161,7 @@
                                 <t t-if="blog_post.visits > 1">views</t>
                             </span>
 
-                            <span t-if="not blog_post.website_published" class="label label-danger">not published</span>
+                            <span t-if="not blog_post.website_published" class="label label-danger">unpublished</span>
                         </div>
                     </div>
                 </div>
@@ -450,7 +450,7 @@
                 <a t-attf-href="#{state == 'published' and blog_url(state='') or blog_url(state='published')}">Published <span class="pull-right badge" t-esc="state_info['published']" /></a>
             </li>
             <li t-attf-class="#{state == 'unpublished' and 'active' or ''}">
-                <a t-attf-href="#{state == 'unpublished' and blog_url(state='') or blog_url(state='unpublished')}">Not Published <span class="pull-right badge" t-esc="state_info['unpublished']" /></a>
+                <a t-attf-href="#{state == 'unpublished' and blog_url(state='') or blog_url(state='unpublished')}">Unpublished <span class="pull-right badge" t-esc="state_info['unpublished']" /></a>
             </li>
         </ul>
         </section>

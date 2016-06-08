@@ -634,7 +634,7 @@ var FieldBooleanButton = common.AbstractField.extend({
                 this.hover_false = _t("Activate");
                 break;
             case "archive":
-                this.string_true = _t("Not Archived");
+                this.string_true = _t("Active");
                 this.hover_true = _t("Archive");
                 this.string_false = _t("Archived");
                 this.hover_false = _t("Unarchive");
