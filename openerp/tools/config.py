@@ -235,7 +235,7 @@ class configmanager(object):
         group = optparse.OptionGroup(parser, "Advanced options")
         group.add_option('--dev', dest='dev_mode', type="string",
                          help="Enable developer mode. Param: List of options separated by comma. "
-                              "Options : all, [pudb|ipdb|pdb], reload, qweb, werkzeug, xml")
+                              "Options : all, [pudb|wdb|ipdb|pdb], reload, qweb, werkzeug, xml")
         group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False,
                           help="stop the server after its initialization")
         group.add_option("--osv-memory-count-limit", dest="osv_memory_count_limit", my_default=False,
