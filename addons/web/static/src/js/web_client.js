@@ -24,37 +24,32 @@ return AbstractWebClient.extend({
     },
     show_application: function() {
         var self = this;
-        self.toggle_bars(true);
-
-        self.update_logo();
+        this.toggle_bars(true);
+        this.set_title();
+        this.update_logo();
 
         // Menu is rendered server-side thus we don't want the widget to create any dom
-        self.menu = new Menu(self);
-        self.menu.setElement(this.$el.parents().find('.oe_application_menu_placeholder'));
-        self.menu.on('menu_click', this, this.on_menu_action);
+        this.menu = new Menu(this);
+        this.menu.setElement(this.$el.parents().find('.oe_application_menu_placeholder'));
+        this.menu.on('menu_click', this, this.on_menu_action);
 
         // Create the user menu (rendered client-side)
-        self.user_menu = new UserMenu(self);
+        this.user_menu = new UserMenu(this);
         var $user_menu_placeholder = $('body').find('.oe_user_menu_placeholder').show();
-        var user_menu_loaded = self.user_menu.appendTo($user_menu_placeholder);
+        var user_menu_loaded = this.user_menu.appendTo($user_menu_placeholder);
 
         // Create the systray menu (rendered server-side)
-        self.systray_menu = new SystrayMenu(self);
-        self.systray_menu.setElement(this.$el.parents().find('.oe_systray'));
-        var systray_menu_loaded = self.systray_menu.start();
+        this.systray_menu = new SystrayMenu(this);
+        this.systray_menu.setElement(this.$el.parents().find('.oe_systray'));
+        var systray_menu_loaded = this.systray_menu.start();
 
         // Start the menu once both systray and user menus are rendered
         // to prevent overflows while loading
-        $.when(systray_menu_loaded, user_menu_loaded).done(function() {
+        return $.when(systray_menu_loaded, user_menu_loaded).then(function() {
             self.menu.start();
+            self.bind_hashchange();
         });
 
-        self.bind_hashchange();
-        self.set_title();
-        if (self.client_options.action_post_login) {
-            self.action_manager.do_action(self.client_options.action_post_login);
-            delete(self.client_options.action_post_login);
-        }
     },
     toggle_bars: function(value) {
         this.$('tr:has(td.navbar),.oe_leftbar').toggle(value);

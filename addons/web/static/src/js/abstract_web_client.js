@@ -31,13 +31,10 @@ var WebClient = Widget.extend({
             this.toggle_fullscreen(event.data.fullscreen);
         },
     },
-    init: function(parent, client_options) {
+    init: function(parent) {
         this.client_options = {};
         this._super(parent);
         this.origin = undefined;
-        if (client_options) {
-            _.extend(this.client_options, client_options);
-        }
         this._current_state = null;
         this.menu_dm = new utils.DropMisordered();
         this.action_mutex = new utils.Mutex();
@@ -65,13 +62,7 @@ var WebClient = Widget.extend({
                     // though it has no valid session
                     return $.when();
                 }
-            }).then(function () {
-                if (self.client_options.action) {
-                    self.do_action(self.client_options.action);
-                    delete(self.client_options.action);
-                }
-                core.bus.trigger('web_client_ready');
-            });
+            }).then(core.bus.trigger.bind(core.bus, 'web_client_ready'));
     },
     bind_events: function() {
         var self = this;
