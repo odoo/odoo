@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.tools.sql import drop_view_if_exists
 
 
@@ -12,11 +12,11 @@ class PaymentAdviceReport(models.Model):
 
     name = fields.Char(readonly=True)
     date = fields.Date(readonly=True)
-    year = fields.Char(size=4, readonly=True)
+    year = fields.Char(readonly=True)
     month = fields.Selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'),
         ('05', 'May'), ('06', 'June'), ('07', 'July'), ('08', 'August'), ('09', 'September'),
         ('10', 'October'), ('11', 'November'), ('12', 'December')], readonly=True)
-    day = fields.Char(size=128, readonly=True)
+    day = fields.Char(readonly=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirm', 'Confirmed'),
@@ -30,9 +30,10 @@ class PaymentAdviceReport(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     cheque_nos = fields.Char(string='Cheque Numbers', readonly=True)
     neft = fields.Boolean(string='NEFT Transaction', readonly=True)
-    ifsc_code = fields.Char(string='IFSC Code', size=32, readonly=True)
+    ifsc_code = fields.Char(string='IFSC Code', readonly=True)
     employee_bank_no = fields.Char(string='Employee Bank Account', required=True)
 
+    @api.model_cr
     def init(self):
         drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute("""
@@ -58,7 +59,7 @@ class PaymentAdviceReport(models.Model):
                 from
                     hr_payroll_advice as p
                     left join hr_payroll_advice_line as l on (p.id=l.advice_id)
-                where 
+                where
                     l.employee_id IS NOT NULL
                 group by
                     p.number,p.name,p.date,p.state,p.company_id,p.bank_id,p.chaque_nos,p.neft,

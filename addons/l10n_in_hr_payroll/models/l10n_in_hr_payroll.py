@@ -151,7 +151,7 @@ class HrPayslipRun(models.Model):
                         'employee_id': slip.employee_id.id,
                         'bysal': payslip_line.total
                     })
-            run.available_advice = True
+        self.write({'available_advice': True})
 
 
 class HrPayrollAdviceLine(models.Model):
@@ -172,10 +172,8 @@ class HrPayrollAdviceLine(models.Model):
 
     @api.onchange('employee_id')
     def onchange_employee_id(self):
-        self.write({
-            'name': self.employee_id.bank_account_id.acc_number,
-            'ifsc_code': self.employee_id.bank_account_id.bank_bic or ''
-        })
+        self.name = self.employee_id.bank_account_id.acc_number
+        self.ifsc_code = self.employee_id.bank_account_id.bank_bic or ''
 
 
 class HrPayslip(models.Model):

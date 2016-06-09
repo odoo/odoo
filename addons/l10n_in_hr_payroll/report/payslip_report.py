@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.tools.sql import drop_view_if_exists
 
 
@@ -32,6 +32,7 @@ class PayslipReport(models.Model):
     total = fields.Float(readonly=True)
     category_id = fields.Many2one('hr.salary.rule.category', string='Category', readonly=True)
 
+    @api.model_cr
     def init(self):
         drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute("""
@@ -59,7 +60,7 @@ class PayslipReport(models.Model):
                 from
                     hr_payslip as p
                     left join hr_payslip_line as l on (p.id=l.slip_id)
-                where 
+                where
                     l.employee_id IS NOT NULL
                 group by
                     p.number,l.name,p.date_from,p.date_to,p.state,p.company_id,p.paid,
