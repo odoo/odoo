@@ -929,6 +929,15 @@ class stock_picking(models.Model):
         picking_type = self.env['stock.picking.type'].browse(picking_type_id)
         return picking_type.default_location_src_id
 
+    @api.model
+    def default_get(self, fields):
+        res = super(stock_picking, self).default_get(fields)
+        if self._context.get('default_picking_type_id') and 'picking_type_id' in fields:
+            picking_type = self.env['stock.picking.type'].browse(res['picking_type_id'])
+            res['picking_type_code'] = picking_type.code
+        return res
+
+
     _columns = {
         'name': fields.char('Reference', select=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=False),
         'origin': fields.char('Source Document', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, help="Reference of the document", select=True),
