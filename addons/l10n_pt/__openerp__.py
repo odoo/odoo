@@ -16,12 +16,12 @@
                 'account',
                 ],
     'data': [
-                   'account_chart.xml',
-                   'account_chart_template.xml',
-                   'fiscal_position_templates.xml',
-                   'account_taxes.xml',
-                   'account_chart_template.yml',
-                   ],
+           'data/l10n_pt_chart_data.xml',
+           'data/account_chart_template_data.xml',
+           'data/account_fiscal_position_template_data.xml',
+           'data/account_tax_data.xml',
+           'data/account_chart_template_data.yml',
+           ],
     'demo': [],
     'installable': True,
 }
