@@ -255,6 +255,7 @@ class project(osv.osv):
         proj = self.browse(cr, uid, id, context=context)
         if not default.get('name'):
             default.update(name=_("%s (copy)") % (proj.name))
+        default['message_follower_ids'] = [(6, 0, proj.message_follower_ids.ids)]
         res = super(project, self).copy(cr, uid, id, default, context)
         self.map_tasks(cr, uid, id, res, context=context)
         return res
