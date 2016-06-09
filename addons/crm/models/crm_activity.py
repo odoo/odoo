@@ -39,6 +39,7 @@ class CrmActivity(models.Model):
     # setting a default value on inherited fields is a bit involved
     res_model = fields.Char('Model', related='subtype_id.res_model', inherited=True, default='crm.lead')
     internal = fields.Boolean('Internal Only', related='subtype_id.internal', inherited=True, default=True)
+    default = fields.Boolean('Default', related='subtype_id.default', inherited=True, default=False)
 
     @api.multi
     def unlink(self):
