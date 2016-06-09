@@ -1,26 +1,22 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import tools
-from openerp.osv import fields, osv
+from odoo import fields, models, tools
 
 
-class project_task_history_cumulative(osv.osv):
+class ProjectTaskHistoryCumulative(models.Model):
     _name = 'project.task.history.cumulative'
-    _table = 'project_task_history_cumulative'
     _inherit = 'project.task.history'
     _auto = False
 
-    _columns = {
-        'end_date': fields.date('End Date'),
-        'nbr_tasks': fields.integer('# of Tasks', readonly=True),
-        'project_id': fields.many2one('project.project', 'Project'),
-    }
+    end_date = fields.Date(string='End Date')
+    nbr_tasks = fields.Integer(string='# of Tasks', readonly=True)
+    project_id = fields.Many2one('project.project', string='Project')
 
-    def init(self, cr):
-        tools.drop_view_if_exists(cr, 'project_task_history_cumulative')
+    def init(self):
+        tools.drop_view_if_exists(self._cr, self._table)
 
-        cr.execute(""" CREATE VIEW project_task_history_cumulative AS (
+        self._cr.execute(""" CREATE VIEW %s AS (
             SELECT
                 history.date::varchar||'-'||history.history_id::varchar AS id,
                 history.date AS end_date,
@@ -43,4 +39,4 @@ class project_task_history_cumulative(osv.osv):
 
             ) AS history
         )
-        """)
+        """ % (self._table,))
