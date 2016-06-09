@@ -46,7 +46,7 @@ class ReportOverdue(models.AbstractModel):
                     lines_to_display[partner_id][currency] = []
                     totals[partner_id][currency] = dict((fn, 0.0) for fn in ['due', 'paid', 'mat', 'total'])
                 if line['debit'] and line['currency_id']:
-                    line['debit'] = line['amount_currency']
+                    line['debit'] = (-1) * line['amount_currency']
                 if line['credit'] and line['currency_id']:
                     line['credit'] = line['amount_currency']
                 if line['mat'] and line['currency_id']:
