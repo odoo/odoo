@@ -320,8 +320,8 @@ var Tip = Class.extend({
 
 WebClient.include({
     show_application: function() {
-        this._super();
         this.tips_handler = new Tips();
+        return this._super.apply(this, arguments);
     }
 });
 
