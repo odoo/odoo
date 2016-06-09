@@ -296,19 +296,20 @@ class Report(osv.Model):
         save_in_attachment['loaded_documents'] = {}
 
         if report.attachment:
+            records = self.pool[report.model].browse(cr, uid, ids)
+            filenames = self._attachment_filename(cr, uid, records, report)
+            attachments = None
+            if report.attachment_use:
+                attachments = self._attachment_stored(cr, uid, records, report, filenames=filenames)
             for record_id in ids:
-                obj = self.pool[report.model].browse(cr, uid, record_id)
-                filename = eval(report.attachment, {'object': obj, 'time': time})
+                filename = filenames[record_id]
 
                 # If the user has checked 'Reload from Attachment'
-                if report.attachment_use:
-                    alreadyindb = [('datas_fname', '=', filename),
-                                   ('res_model', '=', report.model),
-                                   ('res_id', '=', record_id)]
-                    attach_ids = self.pool['ir.attachment'].search(cr, uid, alreadyindb)
-                    if attach_ids:
+                if attachments:
+                    attachment = attachments[record_id]
+                    if attachment:
                         # Add the loaded pdf in the loaded_documents list
-                        pdf = self.pool['ir.attachment'].browse(cr, uid, attach_ids[0]).datas
+                        pdf = attachment.datas
                         pdf = base64.decodestring(pdf)
                         save_in_attachment['loaded_documents'][record_id] = pdf
                         _logger.info('The PDF document %s was loaded from the database' % filename)
@@ -329,6 +330,20 @@ class Report(osv.Model):
     def _check_attachment_use(self, records, report):
         return Report._check_attachment_use(
             self._model, self._cr, self._uid, records.ids, report, context=self._context)
+
+    @api.model
+    def _attachment_filename(self, records, report):
+        return dict((record.id, eval(report.attachment, {'object': record, 'time': time})) for record in records)
+
+    @api.model
+    def _attachment_stored(self, records, report, filenames=None):
+        if not filenames:
+            filenames = self._attachment_filename(records, report)
+        return dict((record.id, self.env['ir.attachment'].search([
+            ('datas_fname', '=', filenames[record.id]),
+            ('res_model', '=', report.model),
+            ('res_id', '=', record.id)
+        ], limit=1)) for record in records)
 
     def _check_wkhtmltopdf(self):
         return wkhtmltopdf_state
