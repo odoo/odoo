@@ -100,7 +100,7 @@
                             <page string="Payment Lines">
                                 <field name="line_ids" colspan="4" nolabel="1">
                                     <tree string="Payment Lines" editable="bottom">
-                                        <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
+                                        <field name="employee_id"/>
                                         <field name="name"/>
                                         <field name="ifsc" invisible="1"/>
                                         <field name="ifsc_code" attrs="{'invisible':[('ifsc','=', False)]}" />
@@ -111,7 +111,8 @@
                             </page>
                             <page string="Other Information">
                                 <group colspan="4" col="6">
-                                <field name="company_id" on_change="onchange_company_id(company_id)" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                <field name="company_id"
+                                groups="base.group_multi_company" options="{'no_create': True}"/>
                                 <field name="chaque_nos"/>
                                 <newline/>
                                 <field name="neft"/>
@@ -177,7 +178,7 @@
                     <label for="advice_id" class="oe_edit_only"/>
                     <h1><field name="advice_id"/></h1>
                         <group>
-                            <field name="employee_id" on_change="onchange_employee_id(employee_id)" />
+                            <field name="employee_id" />
                             <field name="name" />
                             <field name="ifsc" invisible="1"/>
                             <field name="ifsc_code" attrs="{'invisible':[('ifsc','=', False)]}" />
