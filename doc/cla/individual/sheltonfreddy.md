@@ -1,4 +1,4 @@
-India, 08/06/2016
+India, 2016/06/08
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
