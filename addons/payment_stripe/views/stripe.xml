@@ -4,6 +4,8 @@
         <template id="stripe_acquirer_button">
             <form t-if="acquirer" method="post" target="_self">
                 <script src="https://checkout.stripe.com/checkout.js"></script>
+                <input type='hidden' name='stripe_image' t-att-value="acquirer.stripe_image_url"/>
+                <input type='hidden' name='merchant' t-att-value='acquirer.company_id.name'/>
                 <input type='hidden' name='amount' t-att-value="amount"/>
                 <input type="hidden" name='return_url' t-att-value='returndata'/>
                 <!--Order Information -->
