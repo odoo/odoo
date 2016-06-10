@@ -707,7 +707,9 @@ class Database(http.Controller):
     @http.route('/web/database/restore', type='http', auth="none", methods=['POST'], csrf=False)
     def restore(self, master_pwd, backup_file, name, copy=False):
         try:
-            data = base64.b64encode(backup_file.read())
+            data = ''
+            for chunk in iter(lambda: backup_file.read(8190), b''):
+                data += base64.b64encode(chunk)
             request.session.proxy("db").restore(master_pwd, name, data, copy)
             return http.local_redirect('/web/database/manager')
         except Exception, e:
