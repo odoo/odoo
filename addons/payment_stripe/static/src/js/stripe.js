@@ -3,6 +3,7 @@ odoo.define('payment_stripe.stripe', function(require) {
     var ajax = require('web.ajax');
     var handler = StripeCheckout.configure({
         key: $("input[name='stripe_key']").val(),
+        image: $("input[name='stripe_image']").val(),
         locale: 'auto',
         closed: function() {
           if (!handler.isTokenGenerate) {
@@ -39,7 +40,12 @@ odoo.define('payment_stripe.stripe', function(require) {
         if(!$(this).find('i').length)
             $(this).append('<i class="fa fa-spinner fa-spin"/>');
             $(this).attr('disabled','disabled');
-        handler.open();
+        handler.open({
+            name: $("input[name='merchant']").val(),
+            description: $("input[name='invoice_num']").val(),
+            currency: $("input[name='currency']").val(),
+            amount: $("input[name='amount']").val()*100
+        });
         e.preventDefault();
     });
 });
