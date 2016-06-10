@@ -28,10 +28,10 @@ TODO:
 
     'active': False,
     'data': [
-        'l10n_fr_hr_payroll_view.xml',
-        'l10n_fr_hr_payroll_data.xml',
-        'views/report_l10nfrfichepaye.xml',
-        'l10n_fr_hr_payroll_reports.xml',
+        'data/l10n_fr_hr_payroll_data.xml',
+        'views/l10n_fr_hr_payroll_view.xml',
+        'report/report_l10n_fr_fiche_paye.xml',
+        'report/l10n_fr_hr_payroll_report.xml',
     ],
     'installable': True
 }
