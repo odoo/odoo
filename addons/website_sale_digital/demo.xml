@@ -3,7 +3,7 @@
         <field name="name">Alice's Adventures in Wonderland - Lewis Caroll</field>
         <field name="standard_price">2</field>
         <field name="list_price">4.50</field>
-        <field name="type">digital</field>
+        <field name="type">service</field>
         <field name="website_published" eval="True"/>
         <field name="image" type="base64" file="website_sale_digital/static/digital_product_1.jpg"/>
         <field name="description">Novel by Lewis Caroll.</field>
@@ -16,5 +16,6 @@
         <field name="datas" type="base64" file="website_sale_digital/static/alice.pdf"/>
         <field name="res_id" ref="website_sale_digital.product_1"/>
         <field name="res_model">product.template</field>
+        <field name="product_downloadable">True</field>
     </record>
 </odoo>
