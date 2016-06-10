@@ -585,6 +585,9 @@ var ActionManager = Widget.extend({
 
         core.bus.trigger('action', action);
 
+        // Force clear breadcrumbs if action's target is main
+        options.clear_breadcrumbs = (action.target === 'main') || options.clear_breadcrumbs;
+
         // Ensure context & domain are evaluated and can be manipulated/used
         var ncontext = new data.CompoundContext(options.additional_context, action.context || {});
         action.context = pyeval.eval('context', ncontext);

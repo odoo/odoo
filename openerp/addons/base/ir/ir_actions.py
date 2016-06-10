@@ -289,7 +289,7 @@ class IrActionsActWindow(models.Model):
                             help="Model name of the object to open in the view window")
     src_model = fields.Char(string='Source Model',
                             help="Optional model name of the objects on which this action should be visible")
-    target = fields.Selection([('current', 'Current Window'), ('new', 'New Window'), ('inline', 'Inline Edit'), ('fullscreen', 'Full Screen')], default="current", string='Target Window')
+    target = fields.Selection([('current', 'Current Window'), ('new', 'New Window'), ('inline', 'Inline Edit'), ('fullscreen', 'Full Screen'), ('main', 'Main action of Current Window')], default="current", string='Target Window')
     view_mode = fields.Char(required=True, default='tree,form',
                             help="Comma-separated list of allowed view modes, such as 'form', 'tree', 'calendar', etc. (Default: tree,form)")
     view_type = fields.Selection([('tree', 'Tree'), ('form', 'Form')], default="form", string='View Type', required=True,
