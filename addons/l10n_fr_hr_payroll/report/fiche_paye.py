@@ -56,7 +56,7 @@ class fiche_paye_parser(report_sxw.rml_parse):
 
         category_total = 0
         if cate_ids:
-            line_ids = payslip_line.search(self.cr, self.uid, [('slip_id', '=', obj.id),('category_id.id', '=', cate_ids[0] )])
+            line_ids = payslip_line.search(self.cr, self.uid, [('slip_id', '=', obj.id), ('category_id', 'child_of', cate_ids)])
             for line in payslip_line.browse(self.cr, self.uid, line_ids):
                  category_total += line.total
 
