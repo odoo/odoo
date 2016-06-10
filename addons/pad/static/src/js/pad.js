@@ -21,6 +21,7 @@ openerp.pad = function(instance) {
                 self.$el.toggleClass('oe_pad_fullscreen');
                 self.$el.find('.oe_pad_switch').toggleClass('fa-expand fa-compress');
                 self.view.$el.find('.oe_chatter').toggle();
+                $('#oe_main_menu_navbar').toggle();
             });
             this._configured_deferred.always(function() {
                 var configured = self.get('configured');

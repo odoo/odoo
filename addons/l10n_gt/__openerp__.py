@@ -54,6 +54,5 @@ taxes and the Quetzal currency.""",
     ],
     'demo': [],
     'installable': True,
-    'images': ['images/config_chart_l10n_gt.jpeg','images/l10n_gt_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

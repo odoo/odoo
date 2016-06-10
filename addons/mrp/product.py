@@ -92,7 +92,7 @@ class product_product(osv.osv):
                     ('product_id', '=', False),
                     ('product_tmpl_id', 'in', list(products)),
         ]
-        result['context'] = "{}"
+        result['context'] = "{'default_product_id': active_id, 'search_default_product_id': active_id, 'default_product_tmpl_id': %s}" % (len(products) and products.pop() or 'False')
         result['domain'] = str(domain)
         return result
 

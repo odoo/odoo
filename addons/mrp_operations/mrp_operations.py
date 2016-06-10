@@ -123,7 +123,6 @@ class mrp_production_workcenter_line(osv.osv):
         else:
             open_count = self.search_count(cr,uid,[('production_id','=',prod_obj.id), ('state', '!=', 'done')])
             flag = not bool(open_count)
-
             if flag:
                 for production in prod_obj_pool.browse(cr, uid, [prod_obj.id], context= None):
                     if production.move_lines or production.move_created_ids:
@@ -208,19 +207,19 @@ class mrp_production(osv.osv):
                 result[prod.id] = max(line.date_planned_end, result[prod.id])
         return result
 
-    def action_production_end(self, cr, uid, ids):
+    def action_production_end(self, cr, uid, ids, context=None):
         """ Finishes work order if production order is done.
         @return: Super method
         """
-        obj = self.browse(cr, uid, ids)[0]
+        obj = self.browse(cr, uid, ids, context=context)[0]
         workcenter_pool = self.pool.get('mrp.production.workcenter.line')
         for workcenter_line in obj.workcenter_lines:
             if workcenter_line.state == 'draft':
                 workcenter_line.signal_workflow('button_start_working')
             workcenter_line.signal_workflow('button_done')
-        return super(mrp_production,self).action_production_end(cr, uid, ids)
+        return super(mrp_production,self).action_production_end(cr, uid, ids, context=context)
 
-    def action_in_production(self, cr, uid, ids):
+    def action_in_production(self, cr, uid, ids, context=None):
         """ Changes state to In Production and writes starting date.
         @return: True
         """
@@ -228,7 +227,7 @@ class mrp_production(osv.osv):
         for prod in self.browse(cr, uid, ids):
             if prod.workcenter_lines:
                 workcenter_pool.signal_workflow(cr, uid, [prod.workcenter_lines[0].id], 'button_start_working')
-        return super(mrp_production,self).action_in_production(cr, uid, ids)
+        return super(mrp_production,self).action_in_production(cr, uid, ids, context=context)
     
     def action_cancel(self, cr, uid, ids, context=None):
         """ Cancels work order if production order is canceled.
@@ -296,7 +295,8 @@ class mrp_production(osv.osv):
                 if l.state in ('done','cancel','draft'):
                     continue
                 todo += l.move_dest_id_lines
-                if l.production_id and (l.production_id.date_finished > dt):
+                date_end = l.production_id.date_finished
+                if date_end and datetime.strptime(date_end, '%Y-%m-%d %H:%M:%S') > dt:
                     if l.production_id.state not in ('done','cancel'):
                         for wc in l.production_id.workcenter_lines:
                             i = self.pool.get('resource.calendar').interval_min_get(
@@ -337,7 +337,7 @@ class mrp_production(osv.osv):
             for po in self.browse(cr, uid, ids, context=context):
                 direction[po.id] = cmp(po.date_start, vals.get('date_start', False))
         result = super(mrp_production, self).write(cr, uid, ids, vals, context=context)
-        if (vals.get('workcenter_lines', False) or vals.get('date_start', False)) and update:
+        if (vals.get('workcenter_lines', False) or vals.get('date_start', False) or vals.get('date_planned', False)) and update:
             self._compute_planned_workcenter(cr, uid, ids, context=context, mini=mini)
         for d in direction:
             if direction[d] == 1:

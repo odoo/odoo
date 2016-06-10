@@ -1,0 +1,178 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * auth_ldap
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-11-02 22:55+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-8/language/sr@latin/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sr@latin\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: auth_ldap
+#: help:res.company.ldap,create_user:0
+msgid ""
+"Automatically create local user accounts for new users authenticating via "
+"LDAP"
+msgstr "Automatski kreiraj lokalne korisničke naloge za nove korisnike koji se autentifikuju preko LDAP"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_company
+msgid "Companies"
+msgstr "Kompanije"
+
+#. module: auth_ldap
+#: field:res.company.ldap,company:0
+msgid "Company"
+msgstr "Preduzeće"
+
+#. module: auth_ldap
+#: field:res.company.ldap,create_user:0
+msgid "Create user"
+msgstr "Kreiraj korisnika"
+
+#. module: auth_ldap
+#: field:res.company.ldap,create_uid:0
+msgid "Created by"
+msgstr "Kreirao"
+
+#. module: auth_ldap
+#: field:res.company.ldap,create_date:0
+msgid "Created on"
+msgstr "Kreiran"
+
+#. module: auth_ldap
+#: field:res.company.ldap,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_ldap
+#: view:res.company:auth_ldap.company_form_view
+#: view:res.company.ldap:auth_ldap.view_ldap_installer_form
+msgid "LDAP Configuration"
+msgstr "LDAP konfiguracija"
+
+#. module: auth_ldap
+#: view:res.company:auth_ldap.company_form_view field:res.company,ldaps:0
+msgid "LDAP Parameters"
+msgstr "LDAP parametri"
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_server:0
+msgid "LDAP Server address"
+msgstr "Adresa LDAP servera"
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_server_port:0
+msgid "LDAP Server port"
+msgstr "Port LDAP servera"
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_base:0
+msgid "LDAP base"
+msgstr "LDAP baza"
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_binddn:0
+msgid "LDAP binddn"
+msgstr "LDAP binddn"
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_filter:0
+msgid "LDAP filter"
+msgstr "LDAP filter"
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_password:0
+msgid "LDAP password"
+msgstr "LDAP lozinka"
+
+#. module: auth_ldap
+#: field:res.company.ldap,write_uid:0
+msgid "Last Updated by"
+msgstr "Zadnja izmjena"
+
+#. module: auth_ldap
+#: field:res.company.ldap,write_date:0
+msgid "Last Updated on"
+msgstr "Zadnja izmjena"
+
+#. module: auth_ldap
+#: view:res.company.ldap:auth_ldap.view_ldap_installer_form
+msgid "Login Information"
+msgstr "Informacije o Prijavi"
+
+#. module: auth_ldap
+#: view:res.company.ldap:auth_ldap.view_ldap_installer_form
+msgid "Process Parameter"
+msgstr "Parametri procesa"
+
+#. module: auth_ldap
+#: help:res.company.ldap,ldap_tls:0
+msgid ""
+"Request secure TLS/SSL encryption when connecting to the LDAP server. This "
+"option requires a server with STARTTLS enabled, otherwise all authentication"
+" attempts will fail."
+msgstr "Zatraži sigurno TLS/SSL šifrovanje pri konektovanju na LDAP server. Ova opcija zahtjeva server sa omogućenim STARTTLS, jer će u suprotnom svi pokušaji autentifikacije propasti."
+
+#. module: auth_ldap
+#: field:res.company.ldap,sequence:0
+msgid "Sequence"
+msgstr "Sekvenca"
+
+#. module: auth_ldap
+#: view:res.company.ldap:auth_ldap.view_ldap_installer_form
+msgid "Server Information"
+msgstr "Podaci o Serveru"
+
+#. module: auth_ldap
+#: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
+msgid "Setup your LDAP Server"
+msgstr "Podesi svoj LDAP server"
+
+#. module: auth_ldap
+#: field:res.company.ldap,user:0
+msgid "Template User"
+msgstr "Templejt korisnik"
+
+#. module: auth_ldap
+#: help:res.company.ldap,ldap_password:0
+msgid ""
+"The password of the user account on the LDAP server that is used to query "
+"the directory."
+msgstr "Lozinka korisničkog naloga na LDAP serveri koji će se koristiti za upite po direktorijumu."
+
+#. module: auth_ldap
+#: help:res.company.ldap,ldap_binddn:0
+msgid ""
+"The user account on the LDAP server that is used to query the directory. "
+"Leave empty to connect anonymously."
+msgstr "Korisnički nalog na LDAP serveru koji će se koristiti za upite po direktorijumu. Ostavi prazno za anonimne konekcije."
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_tls:0
+msgid "Use TLS"
+msgstr "Koristi TLS"
+
+#. module: auth_ldap
+#: view:res.company.ldap:auth_ldap.view_ldap_installer_form
+msgid "User Information"
+msgstr "Informacije o korisniku"
+
+#. module: auth_ldap
+#: help:res.company.ldap,user:0
+msgid "User to copy when creating new users"
+msgstr "Korisnicki nalog koji će se kopirati kod kreiranja novih korisnika"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_users
+msgid "Users"
+msgstr "Korisnici"

@@ -1,18 +1,20 @@
 #!/bin/bash
 ### BEGIN INIT INFO
-# Provides:          openerp-server
+# Provides:          odoo.py
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Start openerp daemon at boot time
+# Short-Description: Start odoo daemon at boot time
 # Description:       Enable service provided by daemon.
 # X-Interactive:     true
 ### END INIT INFO
 ## more info: http://wiki.debian.org/LSBInitScripts
 
+. /lib/lsb/init-functions
+
 PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin
-DAEMON=/usr/bin/openerp-server
+DAEMON=/usr/bin/odoo.py
 NAME=odoo
 DESC=odoo
 CONFIG=/etc/odoo/openerp-server.conf

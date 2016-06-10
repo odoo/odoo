@@ -48,13 +48,11 @@ class sale_order(osv.Model):
                     })
 
             # select linked product
-            option_ids = [l.id for l in so.order_line if l.linked_line_id.id == line.id]
+            option_ids = [l for l in so.order_line if l.linked_line_id.id == line.id]
 
-            if option_ids:
-                # update line
-                sol.write(cr, SUPERUSER_ID, option_ids, {
-                        'product_uom_qty': value.get('quantity')
-                    }, context=context)
+            # update line
+            for l in option_ids:
+                super(sale_order, self)._cart_update(cr, uid, ids, l.product_id.id, l.id, add_qty, set_qty, context=context, **kwargs)
 
-        value['option_ids'] = option_ids
+        value['option_ids'] = [l.id for l in option_ids]
         return value

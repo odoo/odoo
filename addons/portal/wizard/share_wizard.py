@@ -19,12 +19,13 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import logging
 _logger = logging.getLogger(__name__)
 
-UID_ROOT = 1
+UID_ROOT = SUPERUSER_ID
 SHARED_DOCS_MENU = "Documents"
 SHARED_DOCS_CHILD_MENU = "Shared Documents"
 
@@ -56,9 +57,18 @@ class share_wizard_portal(osv.TransientModel):
         return super(share_wizard_portal, self)._check_preconditions(cr, uid, wizard_data, context=context)
 
     def _create_or_get_submenu_named(self, cr, uid, parent_menu_id, menu_name, context=None):
-        if not parent_menu_id:
-            return
+        if context is None:
+            context = {}
         Menus = self.pool.get('ir.ui.menu')
+        if not parent_menu_id and context.get('group_id'):
+            cxt = dict(context)
+            cxt['ir.ui.menu.full_list'] = True
+            parent_menu_ids = Menus.search(cr, SUPERUSER_ID,
+                [('groups_id', 'in', [context.get('group_id')]), ('parent_id', '=', False)], limit=1, context=cxt)
+            parent_menu_id = parent_menu_ids and parent_menu_ids[0] or False
+        if not parent_menu_id:
+            return False
+
         parent_menu = Menus.browse(cr, uid, parent_menu_id) # No context
         menu_id = None
         max_seq = 10
@@ -79,9 +89,12 @@ class share_wizard_portal(osv.TransientModel):
     def _sharing_root_menu_id(self, cr, uid, portal, context=None):
         """Create or retrieve root ID of sharing menu in portal menu
 
-           :param portal: browse_record of portal, constructed with a context WITHOUT language
+           :param portal: browse_record of shared group, constructed with a context WITHOUT language
         """
-        parent_menu_id = self._create_or_get_submenu_named(cr, uid, portal.parent_menu_id.id, SHARED_DOCS_MENU, context=context)
+        if context is None:
+            context = {}
+        ctx = dict(context, group_id=portal.id)
+        parent_menu_id = self._create_or_get_submenu_named(cr, uid, False, SHARED_DOCS_MENU, context=ctx)
         if parent_menu_id:
             child_menu_id = self._create_or_get_submenu_named(cr, uid, parent_menu_id, SHARED_DOCS_CHILD_MENU, context=context)
             return child_menu_id
@@ -90,7 +103,7 @@ class share_wizard_portal(osv.TransientModel):
         """Create sharing menus in portal menu according to share wizard options.
 
            :param wizard_data: browse_record of share.wizard
-           :param portal: browse_record of portal, constructed with a context WITHOUT language
+           :param portal: browse_record of shared group, constructed with a context WITHOUT language
         """
         root_menu_id = self._sharing_root_menu_id(cr, uid, portal, context=context)
         if not root_menu_id:
@@ -126,12 +139,15 @@ class share_wizard_portal(osv.TransientModel):
             # setup the menu for portal groups
             for group in wizard_data.group_ids:
                 if group.id in all_portal_group_ids:
-                    self._create_shared_data_menu(cr, uid, wizard_data, group.id, context=context)
+                    self._create_shared_data_menu(cr, uid, wizard_data, group, context=context)
 
                 for user in group.users:
                     new_line = {'user_id': user.id,
                                 'newly_created': False}
                     wizard_data.write({'result_line_ids': [(0,0,new_line)]})
+
+            selected_group_ids = [x.id for x in wizard_data.group_ids]
+            res_groups.write(cr, SUPERUSER_ID, selected_group_ids, {'implied_ids': [(4, super_result[0])]})
 
         elif wizard_data.user_ids:
             # must take care of existing users, by adding them to the new group, which is super_result[0],

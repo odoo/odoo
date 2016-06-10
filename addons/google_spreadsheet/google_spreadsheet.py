@@ -27,7 +27,7 @@ import werkzeug.urls
 import urllib2
 
 from openerp.osv import osv
-from openerp import SUPERUSER_ID
+from openerp.addons.google_account import TIMEOUT
 
 _logger = logging.getLogger(__name__)
 
@@ -92,7 +92,7 @@ class config(osv.osv):
                 'https://spreadsheets.google.com/feeds/cells/%s/od6/private/full/batch?%s' % (spreadsheet_key, werkzeug.url_encode({'v': 3, 'access_token': access_token})),
                 data=request,
                 headers={'content-type': 'application/atom+xml', 'If-Match': '*'})
-            urllib2.urlopen(req)
+            urllib2.urlopen(req, timeout=TIMEOUT)
         except (urllib2.HTTPError, urllib2.URLError):
             _logger.warning("An error occured while writting the formula on the Google Spreadsheet.")
 

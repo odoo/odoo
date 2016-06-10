@@ -30,6 +30,7 @@ GNU Public Licence.
 """
 
 import atexit
+import csv
 import logging
 import os
 import signal
@@ -79,9 +80,9 @@ def report_configuration():
                         ('database user', config['db_user'])]:
         _logger.info("%s: %s", name, value)
 
-def rm_pid_file():
+def rm_pid_file(main_pid):
     config = openerp.tools.config
-    if not openerp.evented and config['pidfile']:
+    if config['pidfile'] and main_pid == os.getpid():
         try:
             os.unlink(config['pidfile'])
         except OSError:
@@ -94,10 +95,10 @@ def setup_pid_file():
     """
     config = openerp.tools.config
     if not openerp.evented and config['pidfile']:
+        pid = os.getpid()
         with open(config['pidfile'], 'w') as fd:
-            pidtext = "%d" % (os.getpid())
-            fd.write(pidtext)
-        atexit.register(rm_pid_file)
+            fd.write(str(pid))
+        atexit.register(rm_pid_file, pid)
 
 
 def export_translation():
@@ -141,6 +142,11 @@ def main(args):
     report_configuration()
 
     config = openerp.tools.config
+
+    # the default limit for CSV fields in the module is 128KiB, which is not
+    # quite sufficient to import images to store in attachment. 500MiB is a
+    # bit overkill, but better safe than sorry I guess
+    csv.field_size_limit(500 * 1024 * 1024)
 
     if config["test_file"]:
         config["test_enable"] = True

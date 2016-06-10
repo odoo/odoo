@@ -172,7 +172,7 @@
     </template>
 
     <template id="simple_choice" name="Simple choice">
-        <div t-if="question.display_mode == 'dropdown'" class="js_drop row">
+        <div t-if="question.display_mode == 'dropdown' and token" class="js_drop row">
             <div class="col-md-12">
                 <select class="form-control" t-att-name="prefix">
                     <option disabled="1" selected="1" value="">Choose...</option>
@@ -192,7 +192,7 @@
                 <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')"/>
             </div>
         </div>
-        <div t-if="question.display_mode == 'columns' " class="row js_radio">
+        <div t-if="question.display_mode == 'columns' or not token" class="row js_radio">
             <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-md-#{question.column_nb}">
                 <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else ''">
                     <input type="radio" t-att-name="prefix" t-att-value='label.id' />
@@ -257,6 +257,12 @@
             <span t-field="question.comments_message"/>
             <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')" />
         </div>
+    </template>
+
+    <template id="assets_frontend_survey" inherit_id="website.assets_frontend" name="Printing Survey assets">
+        <xpath expr="." position="inside">
+            <link href="/survey/static/src/css/survey_print.css" rel="stylesheet" type="text/css"/>
+        </xpath>
     </template>
 
     <!-- Printable view of a survey (all pages) -->

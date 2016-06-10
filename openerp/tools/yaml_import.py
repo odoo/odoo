@@ -136,7 +136,7 @@ class YamlInterpreter(object):
         id = xml_id
         if '.' in xml_id:
             module, id = xml_id.split('.', 1)
-            assert '.' not in id, "The ID reference '%s' must contains maximum one dot.\n" \
+            assert '.' not in id, "The ID reference '%s' must contain at most one dot.\n" \
                                   "It is used to refer to other modules ID, in the form: module.record_id" \
                                   % (xml_id,)
             if module != self.module:
@@ -165,9 +165,9 @@ class YamlInterpreter(object):
                 _, id = self.pool['ir.model.data'].get_object_reference(self.cr, self.uid, module, checked_xml_id)
                 self.id_map[xml_id] = id
             except ValueError:
-                raise ValueError("""%s not found when processing %s.
+                raise ValueError("""%r not found when processing %s.
     This Yaml file appears to depend on missing data. This often happens for
-    tests that belong to a module's test suite and depend on each other.""" % (checked_xml_id, self.filename))
+    tests that belong to a module's test suite and depend on each other.""" % (xml_id, self.filename))
 
         return id
 
@@ -316,10 +316,10 @@ class YamlInterpreter(object):
                     if not self._coerce_bool(record.forcecreate):
                         return None
 
-
             #context = self.get_context(record, self.eval_context)
-            #TOFIX: record.context like {'withoutemployee':True} should pass from self.eval_context. example: test_project.yml in project module
-            context = record.context
+            # FIXME: record.context like {'withoutemployee':True} should pass from self.eval_context. example: test_project.yml in project module
+            # TODO: cleaner way to avoid resetting password in auth_signup (makes user creation costly)
+            context = dict(record.context or {}, no_reset_password=True)
             view_info = False
             if view_id:
                 varg = view_id
@@ -334,7 +334,7 @@ class YamlInterpreter(object):
                 self.cr.commit()
 
     def _create_record(self, model, fields, view_info=None, parent={}, default=True):
-        """This function processes the !record tag in yalm files. It simulates the record creation through an xml
+        """This function processes the !record tag in yaml files. It simulates the record creation through an xml
             view (either specified on the !record tag or the default one for this object), including the calls to
             on_change() functions, and sending only values for fields that aren't set as readonly.
             :param model: model instance
@@ -397,7 +397,7 @@ class YamlInterpreter(object):
             onchange_spec = model._onchange_spec(self.cr, SUPERUSER_ID, view_info, context=self.context)
             # gather the default values on the object. (Can't use `fields´ as parameter instead of {} because we may
             # have references like `base.main_company´ in the yaml file and it's not compatible with the function)
-            defaults = default and model._add_missing_default_values(self.cr, SUPERUSER_ID, {}, context=self.context) or {}
+            defaults = default and model._add_missing_default_values(self.cr, self.uid, {}, context=self.context) or {}
 
             # copy the default values in record_dict, only if they are in the view (because that's what the client does)
             # the other default values will be added later on by the create().
@@ -438,7 +438,7 @@ class YamlInterpreter(object):
                         result = recs.onchange(record_dict, field_name, onchange_spec)
 
                     else:
-                        match = re.match("([a-z_1-9A-Z]+)\((.*)\)", el.attrib['on_change'])
+                        match = re.match("([a-z_1-9A-Z]+)\((.*)\)", el.attrib['on_change'], re.DOTALL)
                         assert match, "Unable to parse the on_change '%s'!" % (el.attrib['on_change'], )
 
                         # creating the context
@@ -458,7 +458,7 @@ class YamlInterpreter(object):
 
                         # Evaluation args
                         args = map(lambda x: eval(x, ctx), match.group(2).split(','))
-                        result = getattr(model, match.group(1))(self.cr, SUPERUSER_ID, [], *args)
+                        result = getattr(model, match.group(1))(self.cr, self.uid, [], *args)
 
                     for key, val in (result or {}).get('value', {}).items():
                         if key in fg:
@@ -482,15 +482,15 @@ class YamlInterpreter(object):
             record_dict[field_name] = field_value
         return record_dict
 
-    def process_ref(self, node, column=None):
+    def process_ref(self, node, field=None):
         assert node.search or node.id, '!ref node should have a `search` attribute or `id` attribute'
         if node.search:
             if node.model:
                 model_name = node.model
-            elif column:
-                model_name = column._obj
+            elif field:
+                model_name = field.comodel_name
             else:
-                raise YamlImportException('You need to give a model for the search, or a column to infer it.')
+                raise YamlImportException('You need to give a model for the search, or a field to infer it.')
             model = self.get_model(model_name)
             q = eval(node.search, self.eval_context)
             ids = model.search(self.cr, self.uid, q)
@@ -500,7 +500,11 @@ class YamlInterpreter(object):
             else:
                 value = ids
         elif node.id:
-            value = self.get_id(node.id)
+            if field and field.type == 'reference':
+                record = self.get_record(node.id)
+                value = "%s,%s" % (record._name, record.id)
+            else:
+                value = self.get_id(node.id)
         else:
             value = None
         return value
@@ -510,43 +514,44 @@ class YamlInterpreter(object):
 
     def _eval_field(self, model, field_name, expression, view_info=False, parent={}, default=True):
         # TODO this should be refactored as something like model.get_field() in bin/osv
-        if field_name in model._columns:
-            column = model._columns[field_name]
-        elif field_name in model._inherit_fields:
-            column = model._inherit_fields[field_name][2]
-        else:
+        if field_name not in model._fields:
             raise KeyError("Object '%s' does not contain field '%s'" % (model, field_name))
+        field = model._fields[field_name]
+
         if is_ref(expression):
-            elements = self.process_ref(expression, column)
-            if column._type in ("many2many", "one2many"):
+            elements = self.process_ref(expression, field)
+            if field.type in ("many2many", "one2many"):
                 value = [(6, 0, elements)]
-            else: # many2one
+            else: # many2one or reference
                 if isinstance(elements, (list,tuple)):
                     value = self._get_first_result(elements)
                 else:
                     value = elements
-        elif column._type == "many2one":
+        elif field.type == "many2one":
             value = self.get_id(expression)
-        elif column._type == "one2many":
-            other_model = self.get_model(column._obj)
+        elif field.type == "one2many":
+            other_model = self.get_model(field.comodel_name)
             value = [(0, 0, self._create_record(other_model, fields, view_info, parent, default=default)) for fields in expression]
-        elif column._type == "many2many":
+        elif field.type == "many2many":
             ids = [self.get_id(xml_id) for xml_id in expression]
             value = [(6, 0, ids)]
-        elif column._type == "date" and is_string(expression):
+        elif field.type == "date" and is_string(expression):
             # enforce ISO format for string date values, to be locale-agnostic during tests
             time.strptime(expression, misc.DEFAULT_SERVER_DATE_FORMAT)
             value = expression
-        elif column._type == "datetime" and is_string(expression):
+        elif field.type == "datetime" and is_string(expression):
             # enforce ISO format for string datetime values, to be locale-agnostic during tests
             time.strptime(expression, misc.DEFAULT_SERVER_DATETIME_FORMAT)
             value = expression
+        elif field.type == "reference":
+            record = self.get_record(expression)
+            value = "%s,%s" % (record._name, record.id)
         else: # scalar field
             if is_eval(expression):
                 value = self.process_eval(expression)
             else:
                 value = expression
-            # raise YamlImportException('Unsupported column "%s" or value %s:%s' % (field_name, type(expression), expression))
+            # raise YamlImportException('Unsupported field "%s" or value %s:%s' % (field_name, type(expression), expression))
         return value
 
     def process_context(self, node):
@@ -744,14 +749,14 @@ class YamlInterpreter(object):
                 noupdate=self.isnoupdate(node), res_id=res and res[0] or False)
 
         if node.id and parent_id:
-            self.id_map[node.id] = int(parent_id)
+            self.id_map[node.id] = int(pid)
 
         if node.action and pid:
             action_type = node.type or 'act_window'
             action_id = self.get_id(node.action)
             action = "ir.actions.%s,%d" % (action_type, action_id)
             self.pool['ir.model.data'].ir_set(self.cr, SUPERUSER_ID, 'action', \
-                    'tree_but_open', 'Menuitem', [('ir.ui.menu', int(parent_id))], action, True, True, xml_id=node.id)
+                    'tree_but_open', 'Menuitem', [('ir.ui.menu', int(pid))], action, True, True, xml_id=node.id)
 
     def process_act_window(self, node):
         assert getattr(node, 'id'), "Attribute %s of act_window is empty !" % ('id',)

@@ -20,12 +20,12 @@
                 <div class="oe_suggested_item">
                     <div class="oe_suggested_item_image">
                         <a t-attf-href="#model=mail.group&amp;id=#{result.id}">
-                            <img t-attf-src="{result.image}" t-attf-alt="{result.name}"/>
+                            <img t-att-src="result.image" t-att-alt="result.name"/>
                         </a>
                     </div>
                     <div class="oe_suggested_item_content">
                         <a class="oe_suggestion_item_name" t-attf-href="#model=mail.group&amp;id=#{result.id}"><t t-esc="result.name"/></a>
-                        <a class="oe_suggestion_remove_item oe_suggestion_group oe_e" t-attf-id="{result.id}">X</a>
+                        <a class="oe_suggestion_remove_item oe_suggestion_group oe_e" t-att-id="result.id">X</a>
                         <br/>
                         <button t-att-id="result.id" class="oe_suggestion_join">Join Group</button>
                     </div>

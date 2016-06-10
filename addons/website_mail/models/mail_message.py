@@ -33,7 +33,7 @@ class MailMessage(osv.Model):
             if message.subject:
                 res[message.id] = message.subject
             else:
-                plaintext_ct = html2plaintext(message.body)
+                plaintext_ct = '' if not message.body else html2plaintext(message.body)
                 res[message.id] = plaintext_ct[:30] + '%s' % (' [...]' if len(plaintext_ct) >= 30 else '')
         return res
 

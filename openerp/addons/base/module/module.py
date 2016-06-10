@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2013 OpenERP S.A. (<http://openerp.com>).
+#    Copyright (C) 2004-2014 OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -22,7 +22,7 @@ from docutils import nodes
 from docutils.core import publish_string
 from docutils.transforms import Transform, writer_aux
 from docutils.writers.html4css1 import Writer
-import imp
+import importlib
 import logging
 from operator import attrgetter
 import os
@@ -48,6 +48,7 @@ from openerp.modules.db import create_categories
 from openerp.modules import get_module_resource
 from openerp.tools.parse_version import parse_version
 from openerp.tools.translate import _
+from openerp.tools import html_sanitize
 from openerp.osv import osv, orm, fields
 from openerp import api, fields as fields2
 
@@ -175,7 +176,7 @@ class module(osv.osv):
                     for element, attribute, link, pos in html.iterlinks():
                         if element.get('src') and not '//' in element.get('src') and not 'static/' in element.get('src'):
                             element.set('src', "/%s/static/description/%s" % (module.name, element.get('src')))
-                    res[module.id] = lxml.html.tostring(html)
+                    res[module.id] = html_sanitize(lxml.html.tostring(html))
             else:
                 overrides = {
                     'embed_stylesheet': False,
@@ -184,7 +185,7 @@ class module(osv.osv):
                     'xml_declaration': False,
                 }
                 output = publish_string(source=module.description or '', settings_overrides=overrides, writer=MyWriter())
-                res[module.id] = output
+                res[module.id] = html_sanitize(output)
         return res
 
     def _get_latest_version(self, cr, uid, ids, field_name=None, arg=None, context=None):
@@ -302,6 +303,7 @@ class module(osv.osv):
             ('GPL-3', 'GPL Version 3'),
             ('GPL-3 or any later version', 'GPL-3 or later version'),
             ('AGPL-3', 'Affero GPL-3'),
+            ('LGPL-3', 'LGPL Version 3'),
             ('Other OSI approved licence', 'Other OSI Approved Licence'),
             ('Other proprietary', 'Other Proprietary')
         ], string='License', readonly=True),
@@ -352,15 +354,10 @@ class module(osv.osv):
         if not depends:
             return
         for pydep in depends.get('python', []):
-            parts = pydep.split('.')
-            parts.reverse()
-            path = None
-            while parts:
-                part = parts.pop()
-                try:
-                    _, path, _ = imp.find_module(part, path and [path] or None)
-                except ImportError:
-                    raise ImportError('No module named %s' % (pydep,))
+            try:
+                importlib.import_module(pydep)
+            except ImportError:
+                raise ImportError('No module named %s' % (pydep,))
 
         for binary in depends.get('bin', []):
             if tools.find_in_path(binary) is None:
@@ -460,7 +457,7 @@ class module(osv.osv):
         ir_model_data = self.pool.get('ir.model.data')
         modules_to_remove = [m.name for m in self.browse(cr, uid, ids, context)]
         ir_model_data._module_data_uninstall(cr, uid, modules_to_remove, context)
-        self.write(cr, uid, ids, {'state': 'uninstalled'})
+        self.write(cr, uid, ids, {'state': 'uninstalled', 'latest_version': False})
         return True
 
     def downstream_dependencies(self, cr, uid, ids, known_dep_ids=None,
@@ -494,6 +491,7 @@ class module(osv.osv):
         function(cr, uid, ids, context=context)
 
         cr.commit()
+        api.Environment.reset()
         registry = openerp.modules.registry.RegistryManager.new(cr.dbname, update_module=True)
 
         config = registry['res.config'].next(cr, uid, [], context=context) or {}
@@ -663,7 +661,7 @@ class module(osv.osv):
 
         apps_server = urlparse.urlparse(self.get_apps_server(cr, uid, context=context))
 
-        OPENERP = 'openerp'
+        OPENERP = openerp.release.product_name.lower()
         tmp = tempfile.mkdtemp()
         _logger.debug('Install from url: %r', urls)
         try:

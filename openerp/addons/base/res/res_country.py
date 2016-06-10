@@ -57,6 +57,7 @@ addresses belonging to this country.\n\nYou can use the python-style string pate
             \n%(country_code)s: the code of the country"""),
         'currency_id': fields.many2one('res.currency', 'Currency'),
         'image': fields.binary("Image"),
+        'country_group_ids': fields.many2many('res.country.group', 'res_country_res_country_group_rel', 'res_country_id', 'res_country_group_id', string='Country Groups'),
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)',
@@ -89,7 +90,7 @@ class CountryGroup(osv.osv):
     _name = 'res.country.group'
     _columns = {
         'name': fields.char('Name', required=True),
-        'country_ids': fields.many2many('res.country', string='Countries'),
+        'country_ids': fields.many2many('res.country', 'res_country_res_country_group_rel', 'res_country_group_id', 'res_country_id', string='Countries'),
     }
 
 class CountryState(osv.osv):

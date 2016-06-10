@@ -1,0 +1,60 @@
+-
+  I create a draft Sale Order with 2 lines but 1 canceled in order to check if the canceled lines are not considered in the logic
+-
+  !record {model: sale.order, id: sale_order_cl_2}:
+    partner_id: base.res_partner_15
+    partner_invoice_id: base.res_partner_address_25
+    partner_shipping_id: base.res_partner_address_25
+    pricelist_id: product.list0
+    order_policy: manual
+-
+  !record {model: sale.order.line, id: sale_order_cl_2_line_1}:
+    order_id: sale_order_cl_2
+    product_id: product.product_product_27
+    product_uom_qty: 1
+    product_uom: 1
+    price_unit: 3645
+    name: 'Laptop Customized'
+-
+  !record {model: sale.order.line, id: sale_order_cl_2_line_2}:
+    order_id: sale_order_cl_2
+    product_id: product.product_product_12
+    product_uom_qty: 1
+    product_uom: 1
+    price_unit: 12.50
+    name: 'Mouse, Wireless'
+-
+  I cancel the first line
+-
+   !python {model: sale.order.line, id: sale_order_cl_2_line_1}: |
+     self.button_cancel()
+-
+  I confirm the sale order
+-
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_cl_2}
+-
+  Invoice the whole sale order
+-
+  !python {model: sale.advance.payment.inv}: |
+    ctx = context.copy()
+    ctx.update({"active_model": 'sale.order',
+                "active_ids": [ref("sale_order_cl_2")],
+                "active_id":ref("sale_order_cl_2")})
+    pay_id = self.create(cr, uid, {'advance_payment_method': 'all'})
+    self.create_invoices(cr, uid, [pay_id], context=ctx)
+-
+  I check the invoice
+-
+  !python {model: sale.order, id: sale_order_cl_2}: |
+    invoice = self.invoice_ids
+    assert len(invoice.invoice_line) == 1, "Only 1 line should be invoiced because the other one is canceled, got %d" % len(invoice.invoice_line)
+-
+  I set the sale to done
+-
+  !python {model: sale.order, id: sale_order_cl_2}: |
+    self.action_done()
+-
+  And check if the canceled line is still canceled
+-
+  !assert {model: sale.order.line, id: sale_order_cl_2_line_1, string: The canceled line should still be canceled}:
+    - state == 'cancel'

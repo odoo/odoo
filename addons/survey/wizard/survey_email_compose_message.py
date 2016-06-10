@@ -41,7 +41,7 @@ class survey_mail_compose_message(osv.TransientModel):
         res = dict((id, 0) for id in ids)
         survey_obj = self.pool.get('survey.survey')
         for wizard in self.browse(cr, uid, ids, context=context):
-            res[wizard.id] = survey_obj.browse(cr, uid, wizard.survey_id, context=context).public_url
+            res[wizard.id] = wizard.survey_id.public_url
         return res
 
     def _get_public_url_html(self, cr, uid, ids, name, arg, context=None):
@@ -154,7 +154,7 @@ class survey_mail_compose_message(osv.TransientModel):
                 'parent_id': None,
                 'partner_ids': partner_id and [(4, partner_id)] or None,
                 'notified_partner_ids': partner_id and [(4, partner_id)] or None,
-                'attachment_ids': wizard.attachment_ids or None,
+                'attachment_ids': wizard.attachment_ids and [(6, 0, wizard.attachment_ids.ids)] or None,
                 'email_from': wizard.email_from or None,
                 'email_to': email,
             }

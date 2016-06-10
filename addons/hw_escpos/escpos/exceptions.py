@@ -78,3 +78,39 @@ class CashDrawerError(Error):
 
     def __str__(self):
         return "Valid pin must be set to send pulse"
+
+class NoStatusError(Error):
+    def __init__(self, msg=""):
+        Error.__init__(self, msg)
+        self.msg = msg
+        self.resultcode = 70
+
+    def __str__(self):
+        return "Impossible to get status from the printer: " + str(self.msg)
+
+class TicketNotPrinted(Error):
+    def __init__(self, msg=""):
+        Error.__init__(self, msg)
+        self.msg = msg
+        self.resultcode = 80
+
+    def __str__(self):
+        return "A part of the ticket was not been printed: " + str(self.msg)
+
+class NoDeviceError(Error):
+    def __init__(self, msg=""):
+        Error.__init__(self, msg)
+        self.msg = msg
+        self.resultcode = 90
+
+    def __str__(self):
+        return str(self.msg)
+
+class HandleDeviceError(Error):
+    def __init__(self, msg=""):
+        Error.__init__(self, msg)
+        self.msg = msg
+        self.resultcode = 100
+
+    def __str__(self):
+        return str(self.msg)

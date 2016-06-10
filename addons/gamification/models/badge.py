@@ -38,7 +38,7 @@ class gamification_badge_user(osv.Model):
     _rec_name = "badge_name"
 
     _columns = {
-        'user_id': fields.many2one('res.users', string="User", required=True),
+        'user_id': fields.many2one('res.users', string="User", required=True, ondelete="cascade"),
         'sender_id': fields.many2one('res.users', string="Sender", help="The user who has send the badge"),
         'badge_id': fields.many2one('gamification.badge', string='Badge', required=True, ondelete="cascade"),
         'challenge_id': fields.many2one('gamification.challenge', string='Challenge originating', help="If this badge was rewarded through a challenge"),

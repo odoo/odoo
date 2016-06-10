@@ -36,7 +36,7 @@ class sale_quote(http.Controller):
     def view(self, order_id, token=None, message=False, **post):
         # use SUPERUSER_ID allow to access/view order for public user
         # only if he knows the private token
-        order = request.registry.get('sale.order').browse(request.cr, token and SUPERUSER_ID or request.uid, order_id)
+        order = request.registry.get('sale.order').browse(request.cr, token and SUPERUSER_ID or request.uid, order_id, request.context)
         now = time.strftime('%Y-%m-%d')
         if token:
             if token != order.access_token:
@@ -54,7 +54,7 @@ class sale_quote(http.Controller):
             'message': message and int(message) or False,
             'option': bool(filter(lambda x: not x.line_id, order.options)),
             'order_valid': (not order.validity_date) or (now <= order.validity_date),
-            'days_valid': max(days, 0)
+            'days_valid': days,
         }
         return request.website.render('website_quote.so_quotation', values)
 
@@ -64,6 +64,8 @@ class sale_quote(http.Controller):
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
         if token != order.access_token:
             return request.website.render('website.404')
+        if order.state != 'sent':
+            return False
         attachments=sign and [('signature.png', sign.decode('base64'))] or []
         order_obj.signal_workflow(request.cr, SUPERUSER_ID, [order_id], 'order_confirm', context=request.context)
         message = _('Order signed by %s') % (signer,)
@@ -76,6 +78,8 @@ class sale_quote(http.Controller):
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
         if token != order.access_token:
             return request.website.render('website.404')
+        if order.state != 'sent':
+            return werkzeug.utils.redirect("/quote/%s/%s?message=4" % (order_id, token))
         request.registry.get('sale.order').action_cancel(request.cr, SUPERUSER_ID, [order_id])
         message = post.get('decline_message')
         if message:
@@ -140,13 +144,15 @@ class sale_quote(http.Controller):
         order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, order_id)
         if token != order.access_token:
             return request.website.render('website.404')
+        if order.state not in ['draft', 'sent']:
+            return request.website.render('website.http_error', {'status_code': 'Forbidden', 'status_message': _('You cannot add options to a confirmed order.')})
         option_obj = request.registry.get('sale.order.option')
         option = option_obj.browse(request.cr, SUPERUSER_ID, option_id)
 
         res = request.registry.get('sale.order.line').product_id_change(request.cr, SUPERUSER_ID, order_id,
             False, option.product_id.id, option.quantity, option.uom_id.id, option.quantity, option.uom_id.id,
             option.name, order.partner_id.id, False, True, time.strftime('%Y-%m-%d'),
-            False, order.fiscal_position.id, True, request.context)
+            False, order.fiscal_position.id, True, dict(request.context or {}, company_id=order.company_id.id))
         vals = res.get('value', {})
         if 'tax_id' in vals:
             vals['tax_id'] = [(6, 0, vals['tax_id'])]

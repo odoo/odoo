@@ -141,7 +141,7 @@
                                 <group colspan="2" col="2" groups="base.group_no_one">
                                     <separator colspan="2" string="Dates"/>
                                     <field name="create_date"/>
-                                    <field name="date_closed"/>
+                                    <field name="date_closed" invisible="1"/>
                                     <field name="write_date"/>
                                 </group>
 
@@ -199,7 +199,7 @@
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}"/>
                         <filter string="Claim Month" icon="terp-go-month" domain="[]" help="Claim Date by Month" context="{'group_by':'date'}"/>
                         <filter string="Deadline" icon="terp-go-month" domain="[]" context="{'group_by':'date_deadline'}"/>
-                        <filter string="Closure" icon="terp-go-month" domain="[]" help="Date Closed" context="{'group_by':'date_closed'}"  groups="base.group_no_one"/>
+                        <filter string="Closure" icon="terp-go-month" domain="[]" help="Date Closed" context="{'group_by':'date_closed'}"  groups="base.group_no_one" invisible="1"/>
                     </group>
                 </search>
             </field>

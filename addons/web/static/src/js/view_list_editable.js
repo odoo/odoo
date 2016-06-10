@@ -226,13 +226,15 @@
             var item = false;
             if (record) {
                 item = record.attributes;
+                this.dataset.select_id(record.get('id'));
             } else {
                 record = this.make_empty_record(false);
                 this.records.add(record, {
                     at: this.prepends_on_create() ? 0 : null});
             }
-
-            return this.ensure_saved().then(function () {
+            return this.ensure_saved().then(function(){
+                return $.when.apply(null, self.editor.form.render_value_defs);
+            }).then(function () {
                 var $recordRow = self.groups.get_row_for(record);
                 var cells = self.get_cells_for($recordRow);
                 var fields = {};
@@ -299,7 +301,7 @@
             var $cell = $(cell);
 
             field.set_dimensions($cell.outerHeight(), $cell.outerWidth());
-            field.$el.position({
+            field.$el.css({top: 0, left: 0}).position({
                 my: 'left top',
                 at: 'left top',
                 of: $cell
@@ -431,7 +433,9 @@
             var self = this;
             var on_write_callback = self.fields_view.arch.attrs.on_write;
             if (!on_write_callback) { return $.when(); }
-            return this.dataset.call(on_write_callback, [source_record.get('id')])
+            var on_write_domain = typeof self.dataset.get_domain === "function" && self.dataset.get_domain() || self.dataset.domain;
+            var context = new instance.web.CompoundContext(self.dataset.get_context(), {'on_write_domain': on_write_domain}).eval();
+            return this.dataset.call(on_write_callback, [source_record.get('id'), context])
                 .then(function (ids) {
                     return $.when.apply(
                         null, _(ids).map(
@@ -648,7 +652,7 @@
             var form = this.editor.form;
             var last_field = _(form.fields_order).chain()
                 .map(function (name) { return form.fields[name]; })
-                .filter(function (field) { return field.$el.is(':visible'); })
+                .filter(function (field) { return field.$el.is(':visible') && !field.get('effective_readonly'); })
                 .last()
                 .value();
             // tabbed from last field in form
@@ -656,6 +660,7 @@
                 e.preventDefault();
                 return this._next();
             }
+            this.editor.form.__clicked_inside = true;
             return $.when();
         }
     });

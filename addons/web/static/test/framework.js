@@ -400,8 +400,68 @@ ropenerp.testing.section('Widget.events', {
         ok(newclicked, "undelegate should only unbind events it created");
     });
 });
+ropenerp.testing.section('Widget.async', {
 
-ropenerp.testing.section('server-formats', {
+}, function (test) {
+    test("alive(alive)", {asserts: 1}, function () {
+        var w = new (openerp.Widget.extend({}));
+        return $.async_when(w.start())
+        .then(function () { return w.alive($.async_when()) })
+        .then(function () { ok(true); });
+    });
+    test("alive(dead)", {asserts: 1}, function () {
+        var w = new (openerp.Widget.extend({}));
+
+        return $.Deferred(function (d) {
+            $.async_when(w.start())
+            .then(function () {
+                // destroy widget
+                w.destroy();
+                var promise = $.async_when();
+                // leave time for alive() to do its stuff
+                promise.then(function () {
+                    return $.async_when();
+                }).then(function () {
+                    ok(true);
+                    d.resolve();
+                });
+                // ensure that w.alive() refuses to resolve or reject
+                return w.alive(promise);
+            }).always(function () {
+                d.reject();
+                ok(false, "alive() should not terminate by default");
+            })
+        });
+    });
+
+
+    test("alive(alive, true)", {asserts: 1}, function () {
+        var w = new (openerp.Widget.extend({}));
+        return $.async_when(w.start())
+        .then(function () { return w.alive($.async_when(), true) })
+        .then(function () { ok(true); });
+    });
+    test("alive(dead, true)", {asserts: 1, fail_on_rejection: false}, function () {
+        var w = new (openerp.Widget.extend({}));
+
+        return $.async_when(w.start())
+        .then(function () {
+            // destroy widget
+            w.destroy();
+            console.log('destroyed');
+            return w.alive($.async_when().done(function () { console.log('when'); }), true);
+        }).then(function () {
+            console.log('unfailed')
+            ok(false, "alive(p, true) should fail its promise");
+        }, function () {
+            console.log('failed')
+            ok(true, "alive(p, true) should fail its promise");
+        });
+    });
+
+});
+
+    ropenerp.testing.section('server-formats', {
     dependencies: ['web.core', 'web.dates']
 }, function (test) {
     test('Parse server datetime', function () {

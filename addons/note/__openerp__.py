@@ -55,11 +55,6 @@ Notes can be found in the 'Home' menu.
     ],
     'test': [
     ],
-    'images': [
-        'images/note_kanban.jpeg',
-        'images/note.jpeg',
-        'images/categories_tree.jpeg'
-    ],
     'installable': True,
     'application': True,
     'auto_install': False,

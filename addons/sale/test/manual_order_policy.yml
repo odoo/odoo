@@ -7,7 +7,7 @@
 -
   !python {model: sale.order}: |
     sale_order = self.browse(cr, uid, ref("sale_order_2"))
-    assert len(sale_order.invoice_ids) == False, "Invoice should not created."
+    assert len(sale_order.invoice_ids) == 0, "Invoice should not created."
 -
   I create advance invoice where type is 'Fixed Price'.
 -

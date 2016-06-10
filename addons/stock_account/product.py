@@ -58,6 +58,11 @@ class product_template(osv.osv):
         'valuation': 'manual_periodic',
     }
 
+    def onchange_type(self, cr, uid, ids, type):
+        res = super(product_template, self).onchange_type(cr, uid, ids, type)
+        if type in ('consu', 'service'):
+            res = {'value': {'valuation': 'manual_periodic'}}
+        return res
 
     def get_product_accounts(self, cr, uid, product_id, context=None):
         """ To get the stock input account, stock output account and stock journal related to product.
@@ -123,16 +128,21 @@ class product_template(osv.osv):
                             'company_id': location.company_id.id,
                         }
                         move_id = move_obj.create(cr, uid, move_vals, context=context)
-    
-                        if diff*qty > 0:
+
+                        counterpart_account = product.property_account_expense and product.property_account_expense.id or False
+                        if not counterpart_account:
+                            counterpart_account = product.categ_id.property_account_expense_categ and product.categ_id.property_account_expense_categ.id or False
+                        if not counterpart_account:
+                            raise osv.except_osv(_('Error!'), _('No expense account defined on the product %s or on its category') % (product.name))
+                        if diff * qty > 0:
                             amount_diff = qty * diff
-                            debit_account_id = datas['stock_account_input']
+                            debit_account_id = counterpart_account
                             credit_account_id = datas['property_stock_valuation_account_id']
                         else:
                             amount_diff = qty * -diff
                             debit_account_id = datas['property_stock_valuation_account_id']
-                            credit_account_id = datas['stock_account_output']
-    
+                            credit_account_id = counterpart_account
+
                         move_line_obj.create(cr, uid, {
                                         'name': _('Standard Price changed'),
                                         'account_id': debit_account_id,
@@ -151,7 +161,14 @@ class product_template(osv.osv):
         return True
 
 
+class product_product(osv.osv):
+    _inherit = 'product.product'
 
+    def onchange_type(self, cr, uid, ids, type):
+        res = super(product_product, self).onchange_type(cr, uid, ids, type)
+        if type in ('consu', 'service'):
+            res = {'value': {'valuation': 'manual_periodic'}}
+        return res
 
 
 class product_category(osv.osv):

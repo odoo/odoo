@@ -38,13 +38,27 @@ class res_users(osv.Model):
     def _auth_oauth_validate(self, cr, uid, provider, access_token, context=None):
         """ return the validation data corresponding to the access token """
         p = self.pool.get('auth.oauth.provider').browse(cr, uid, provider, context=context)
-        validation = self._auth_oauth_rpc(cr, uid, p.validation_endpoint, access_token)
+        validation = self._auth_oauth_rpc(cr, uid, p.validation_endpoint, access_token, context=context)
         if validation.get("error"):
             raise Exception(validation['error'])
         if p.data_endpoint:
-            data = self._auth_oauth_rpc(cr, uid, p.data_endpoint, access_token)
+            data = self._auth_oauth_rpc(cr, uid, p.data_endpoint, access_token, context=context)
             validation.update(data)
         return validation
+
+    def _generate_signup_values(self, cr, uid, provider, validation, params, context=None):
+        oauth_uid = validation['user_id']
+        email = validation.get('email', 'provider_%s_user_%s' % (provider, oauth_uid))
+        name = validation.get('name', email)
+        return {
+            'name': name,
+            'login': email,
+            'email': email,
+            'oauth_provider_id': provider,
+            'oauth_uid': oauth_uid,
+            'oauth_access_token': params['access_token'],
+            'active': True,
+        }
 
     def _auth_oauth_signin(self, cr, uid, provider, validation, params, context=None):
         """ retrieve and sign in the user corresponding to provider and validated access token
@@ -70,18 +84,7 @@ class res_users(osv.Model):
                 return None
             state = simplejson.loads(params['state'])
             token = state.get('t')
-            oauth_uid = validation['user_id']
-            email = validation.get('email', 'provider_%s_user_%s' % (provider, oauth_uid))
-            name = validation.get('name', email)
-            values = {
-                'name': name,
-                'login': email,
-                'email': email,
-                'oauth_provider_id': provider,
-                'oauth_uid': oauth_uid,
-                'oauth_access_token': params['access_token'],
-                'active': True,
-            }
+            values = self._generate_signup_values(cr, uid, provider, validation, params, context=context)
             try:
                 _, login, _ = self.signup(cr, uid, values, token, context=context)
                 return login
@@ -95,10 +98,15 @@ class res_users(osv.Model):
         # else:
         #   continue with the process
         access_token = params.get('access_token')
-        validation = self._auth_oauth_validate(cr, uid, provider, access_token)
+        validation = self._auth_oauth_validate(cr, uid, provider, access_token, context=context)
         # required check
         if not validation.get('user_id'):
-            raise openerp.exceptions.AccessDenied()
+            # Workaround: facebook does not send 'user_id' in Open Graph Api
+            if validation.get('id'):
+                validation['user_id'] = validation['id']
+            else:
+                raise openerp.exceptions.AccessDenied()
+
         # retrieve and sign in user
         login = self._auth_oauth_signin(cr, uid, provider, validation, params, context=context)
         if not login:

@@ -13,7 +13,7 @@
         <li t-attf-class="orderline #{ selected ? 'selected' : ''} #{ quantity !== line.get_quantity() ? 'partially' : '' }"
             t-att-data-id="id">
             <span class="product-name">
-                <t t-esc="line.get_product().name"/>
+                <t t-esc="line.get_product().display_name"/>
             </span>
             <span class="price">
                 <t t-esc="widget.format_currency(line.get_display_price())"/>

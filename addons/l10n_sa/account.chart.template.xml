@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="account_arabic_coa_general" model="account.chart.template">
+            <field name="name">Arabic General CoA</field>
+            <field name="spoken_languages" eval="'en_US;ar_EG;ar_SY'"/>
+            <field name="account_root_id" ref="coa_basic"/>
+            <field name="complete_tax_set" eval="False" />
+            <field name="tax_code_root_id" ref="account.tax_code_chart_root"/>  
+            <field name="bank_account_view_id" ref="cash_expenditure"/>   
+            <field name="property_account_receivable" ref="account_receivable"/>
+            <field name="property_account_payable" ref="account_payable"/>
+            <field name="property_account_expense_categ" ref="cost_of_goods_sold"/>
+            <field name="property_account_income_categ" ref="income"/>
+            <field name="property_account_expense" ref="52900_general_product_cost"/>
+            <field name="property_account_income" ref="47910_general_product_sales"/>
+            <field name="property_account_income_opening" ref="account.conf_o_income"/>
+            <field name="property_account_expense_opening" ref="account.conf_o_expense"/>
+            <field name="currency_id" ref="base.EGP"/>            
+        </record>
+ 
+    </data>
+</openerp>

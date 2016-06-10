@@ -21,5 +21,4 @@ Contains the installer for marketing-related modules.
     'demo': ['marketing_demo.xml'],
     'installable': True,
     'auto_install': False,
-    'images': ['images/config_marketing.jpeg'],
 }

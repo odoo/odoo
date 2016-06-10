@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="ir_cron_update_membership" model="ir.cron">
+            <field name="name">Check membership payment</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="model">res.partner</field>
+            <field name="function">_cron_update_membership</field>
+        </record>
+    </data>
+</openerp>

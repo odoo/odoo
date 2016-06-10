@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+from openerp.tools import float_compare
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
@@ -46,7 +47,7 @@ class stock_move_consume(osv.osv_memory):
         if 'product_uom' in fields:
             res.update({'product_uom': move.product_uom.id})
         if 'product_qty' in fields:
-            res.update({'product_qty': move.product_qty})
+            res.update({'product_qty': move.product_uom_qty})
         if 'location_id' in fields:
             res.update({'location_id': move.location_id.id})
         return res
@@ -57,10 +58,28 @@ class stock_move_consume(osv.osv_memory):
         if context is None:
             context = {}
         move_obj = self.pool.get('stock.move')
+        uom_obj = self.pool.get('product.uom')
+        production_obj = self.pool.get('mrp.production')
         move_ids = context['active_ids']
-        for data in self.browse(cr, uid, ids, context=context):
-            move_obj.action_consume(cr, uid, move_ids,
-                             data.product_qty, data.location_id.id, restrict_lot_id=data.restrict_lot_id.id,
-                             context=context)
-        return {'type': 'ir.actions.act_window_close'}
+        move = move_obj.browse(cr, uid, move_ids[0], context=context)
+        production_id = move.raw_material_production_id.id
+        production = production_obj.browse(cr, uid, production_id, context=context)
+        precision = self.pool['decimal.precision'].precision_get(cr, uid, 'Product Unit of Measure')
 
+        for data in self.browse(cr, uid, ids, context=context):
+            qty = uom_obj._compute_qty(cr, uid, data['product_uom'].id, data.product_qty, data.product_id.uom_id.id)
+            remaining_qty = move.product_qty - qty
+            #check for product quantity is less than previously planned
+            if float_compare(remaining_qty, 0, precision_digits=precision) >= 0:
+                move_obj.action_consume(cr, uid, move_ids, qty, data.location_id.id, restrict_lot_id=data.restrict_lot_id.id, context=context)
+            else:
+                consumed_qty = min(move.product_qty, qty)
+                new_moves = move_obj.action_consume(cr, uid, move_ids, consumed_qty, data.location_id.id, restrict_lot_id=data.restrict_lot_id.id, context=context)
+                #consumed more in wizard than previously planned
+                extra_more_qty = qty - consumed_qty
+                #create new line for a remaining qty of the product
+                extra_move_id = production_obj._make_consume_line_from_data(cr, uid, production, data.product_id, data.product_id.uom_id.id, extra_more_qty, False, 0, context=context)
+                move_obj.write(cr, uid, [extra_move_id], {'restrict_lot_id': data.restrict_lot_id.id}, context=context)
+                move_obj.action_done(cr, uid, [extra_move_id], context=context)
+
+        return {'type': 'ir.actions.act_window_close'}

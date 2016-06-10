@@ -48,7 +48,6 @@ Processes like maintaining general ledgers are done through the defined Financia
 for a particular financial year and for preparation of vouchers there is a module named account_voucher.
     """,
     'website': 'https://www.odoo.com/page/billing',
-    'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],
     'depends' : ['base_setup', 'product', 'analytic', 'board', 'edi', 'report'],
     'data': [
         'security/account_security.xml',
@@ -167,6 +166,7 @@ for a particular financial year and for preparation of vouchers there is a modul
         'test/account_validate_account_move.yml',
         'test/test_edi_invoice.yml',
         'test/account_report.yml',
+        'test/analytic_hierarchy.yml',
         'test/account_fiscalyear_close.yml', #last test, as it will definitively close the demo fiscalyear
     ],
     'installable': True,

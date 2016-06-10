@@ -55,6 +55,16 @@
             </field>
         </field>
     </record>
+    <record id="attribute_tree_view" model="ir.ui.view">
+        <field name="name">product.attribute.tree.type</field>
+        <field name="model">product.attribute</field>
+        <field name="inherit_id" ref="product.attribute_tree_view"></field>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="type"/>
+            </field>
+        </field>
+    </record>
 
     <!-- Product Public Categories -->
     <record id="product_public_category_form_view" model="ir.ui.view">

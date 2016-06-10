@@ -23,11 +23,12 @@ from datetime import timedelta
 import pytz
 
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning
+from openerp.exceptions import AccessError, Warning
 
 class event_type(models.Model):
     """ Event Type """
     _name = 'event.type'
+    _description = 'Event Type'
 
     name = fields.Char(string='Event Type', required=True)
     default_reply_to = fields.Char(string='Default Reply-To',
@@ -45,6 +46,7 @@ class event_type(models.Model):
 class event_event(models.Model):
     """Event"""
     _name = 'event.event'
+    _description = 'Event'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'date_begin'
 
@@ -137,6 +139,11 @@ class event_event(models.Model):
         else:
             self.date_end_located = False
 
+    @api.one
+    @api.depends('address_id')
+    def _compute_country(self):
+        self.country_id = self.address_id.country_id
+
     date_begin_located = fields.Datetime(string='Start Date Located', compute='_compute_date_begin_tz')
     date_end_located = fields.Datetime(string='End Date Located', compute='_compute_date_end_tz')
 
@@ -161,8 +168,8 @@ class event_event(models.Model):
     address_id = fields.Many2one('res.partner', string='Location',
         default=lambda self: self.env.user.company_id.partner_id,
         readonly=False, states={'done': [('readonly', True)]})
-    country_id = fields.Many2one('res.country', string='Country', related='address_id.country_id',
-        store=True, readonly=False, states={'done': [('readonly', True)]})
+    country_id = fields.Many2one('res.country', string='Country',
+        store=True, compute='_compute_country')
     description = fields.Html(string='Description', oldname='note', translate=True,
         readonly=False, states={'done': [('readonly', True)]})
     company_id = fields.Many2one('res.company', string='Company', change_default=True,
@@ -194,7 +201,9 @@ class event_event(models.Model):
     def name_get(self):
         result = []
         for event in self:
-            dates = [dt.split(' ')[0] for dt in [event.date_begin, event.date_end] if dt]
+            date_begin = fields.Datetime.from_string(event.date_begin)
+            date_end = fields.Datetime.from_string(event.date_end)
+            dates = [fields.Date.to_string(fields.Datetime.context_timestamp(event, dt)) for dt in [date_begin, date_end] if dt]
             dates = sorted(set(dates))
             result.append((event.id, '%s (%s)' % (event.name, ' - '.join(dates))))
         return result
@@ -376,6 +385,19 @@ class event_registration(models.Model):
         template = self.event_id.email_confirmation_id
         if template:
             mail_message = template.send_mail(self.id)
+
+    @api.multi
+    def message_get_suggested_recipients(self):
+        recipients = super(event_registration, self).message_get_suggested_recipients()
+        try:
+            for registration in self:
+                if registration.partner_id:
+                    self._message_add_suggested_recipient(recipients, registration, partner=registration.partner_id, reason=_('Registrant'))
+                elif registration.email:
+                    self._message_add_suggested_recipient(recipients, registration, email=registration.email, reason=_('Registrant Email'))
+        except AccessError: # no read access rights -> ignore suggested recipients
+            pass
+        return recipients
 
     @api.onchange('partner_id')
     def _onchange_partner(self):

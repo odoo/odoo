@@ -1,0 +1,608 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * email_template
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-08-18 08:38+0000\n"
+"Last-Translator: choijaeho <hwangtog@gmail.com>\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-8/language/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:365
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (사본)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Add"
+msgstr "추가"
+
+#. module: email_template
+#: field:email.template,user_signature:0
+#: field:email_template.preview,user_signature:0
+msgid "Add Signature"
+msgstr "서명 추가"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Advanced Settings"
+msgstr "확장 설정"
+
+#. module: email_template
+#: field:email.template,model_id:0 field:email_template.preview,model_id:0
+msgid "Applies to"
+msgstr "적용 대상"
+
+#. module: email_template
+#: field:email.template,attachment_ids:0
+#: field:email_template.preview,attachment_ids:0
+msgid "Attachments"
+msgstr "첨부 파일"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Author Signature (mass mail only)"
+msgstr "작성자 서명 (대량 메일 전용)"
+
+#. module: email_template
+#: field:email.template,auto_delete:0
+#: field:email_template.preview,auto_delete:0
+msgid "Auto Delete"
+msgstr "자동 삭제"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Available for mass mailing"
+msgstr "대량 메일 발송 사용 가능"
+
+#. module: email_template
+#: field:email.template,body_html:0 field:email_template.preview,body_html:0
+#: field:ir.actions.server,body_html:0
+msgid "Body"
+msgstr "본문"
+
+#. module: email_template
+#: help:email.template,email_cc:0 help:email_template.preview,email_cc:0
+msgid "Carbon copy recipients (placeholders may be used here)"
+msgstr "참조 대상자 (사전 표시 문자를 여기에 사용할 수 있습니다)"
+
+#. module: email_template
+#: field:email.template,email_cc:0 field:email_template.preview,email_cc:0
+msgid "Cc"
+msgstr "참조"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Choose a template to display its values."
+msgstr "해당 값을 표시하는 서식 파일을 선택합니다."
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Choose an example"
+msgstr "예제 선택"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated carbon copy recipients addresses"
+msgstr "쉼표로 구분한 참조 대상자 주소"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated ids of recipient partners"
+msgstr "쉼표로 구분된 받는 사람 파트너의 ID"
+
+#. module: email_template
+#: help:email.template,partner_to:0 help:email_template.preview,partner_to:0
+msgid ""
+"Comma-separated ids of recipient partners (placeholders may be used here)"
+msgstr "쉼표로 구분된 받는 사람 파트너의 ID (사전 표시 문자를 여기에 사용할 수 있습니다)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated recipient addresses"
+msgstr "쉼표로 구분된 받는 사람 주소"
+
+#. module: email_template
+#: help:email.template,email_to:0 help:email_template.preview,email_to:0
+msgid "Comma-separated recipient addresses (placeholders may be used here)"
+msgstr "쉼표로 구분된 받는 사람 주소 (사전 표시 문자를 여기에 사용할 수 있습니다)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Content"
+msgstr "내용"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Context Action"
+msgstr "문맥 동작"
+
+#. module: email_template
+#: field:email.template,create_uid:0 field:email_template.preview,create_uid:0
+msgid "Created by"
+msgstr "작성자"
+
+#. module: email_template
+#: field:email.template,create_date:0
+#: field:email_template.preview,create_date:0
+msgid "Created on"
+msgstr "작성일"
+
+#. module: email_template
+#: field:email.template,null_value:0 field:email_template.preview,null_value:0
+msgid "Default Value"
+msgstr "기본 값"
+
+#. module: email_template
+#: field:email.template,use_default_to:0
+#: field:email_template.preview,use_default_to:0
+msgid "Default recipients"
+msgstr "기본 받는 사람"
+
+#. module: email_template
+#: help:email.template,use_default_to:0
+#: help:email_template.preview,use_default_to:0
+msgid ""
+"Default recipients of the record:\n"
+"- partner (using id on a partner or the partner_id field) OR\n"
+"- email (using email_from or email field)"
+msgstr "레코드의 기본 수신자 :\n- 파트너 (파트너 ID 또는 partner_id 필드 사용) 또는\n- 이메일 (email_from 또는 email 필드 사용)"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Deletion of the action record failed."
+msgstr "동작 기록을 삭제하지 못했습니다."
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid ""
+"Display an option on related documents to open a composition wizard with "
+"this template"
+msgstr "이 서식을 사용해서 작성 마법사를 열면 관련된 문서에 대한 선택사항을 표시합니다"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Dynamic Placeholder Generator"
+msgstr "동적 사전 표시 문자 생성기"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Email"
+msgstr "이메일"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Email Configuration"
+msgstr "이메일 환경 설정"
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Email Preview"
+msgstr "이메일 미리보기"
+
+#. module: email_template
+#: field:ir.actions.server,template_id:0
+msgid "Email Template"
+msgstr "이메일 서식"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template_preview
+msgid "Email Template Preview"
+msgstr "이메일 서식 "
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template
+msgid "Email Templates"
+msgstr "이메일 서식"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "이메일 작성 마법사"
+
+#. module: email_template
+#: field:email.template,model_object_field:0
+#: field:email_template.preview,model_object_field:0
+msgid "Field"
+msgstr "필드"
+
+#. module: email_template
+#: help:email.template,copyvalue:0 help:email_template.preview,copyvalue:0
+msgid ""
+"Final placeholder expression, to be copy-pasted in the desired template "
+"field."
+msgstr "최종 사전 표시 문자 표현. 원하는 서식 필드에 복사하여 붙여 넣을 수 있습니다."
+
+#. module: email_template
+#: field:email.template,email_from:0 field:email_template.preview,email_from:0
+#: field:ir.actions.server,email_from:0
+msgid "From"
+msgstr "보낸 사람"
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "Group by..."
+msgstr "그룹화"
+
+#. module: email_template
+#: field:email.template,id:0 field:email_template.preview,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: email_template
+#: help:email.template,user_signature:0
+#: help:email_template.preview,user_signature:0
+msgid ""
+"If checked, the user's signature will be appended to the text version of the"
+" message"
+msgstr "선택하면 사용자의 서명이 메시지의 텍스트 버전에 추가됩니다."
+
+#. module: email_template
+#: help:res.partner,opt_out:0
+msgid ""
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the partners when performing mass mailing."
+msgstr "수신 거부를 선택하면 이 연락처는 대량 메일 발송 및 마케팅 캠페인에 대한 이메일 수신을 거부하게 됩니다. '대량 메일 발송 가능' 필터로 사용자는 대량 메일을 발송할 때 파트너를 필터링 할 수 있습니다."
+
+#. module: email_template
+#: field:email.template,lang:0 field:email_template.preview,lang:0
+msgid "Language"
+msgstr "언어"
+
+#. module: email_template
+#: field:email.template,write_uid:0 field:email_template.preview,write_uid:0
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: email_template
+#: field:email.template,write_date:0 field:email_template.preview,write_date:0
+msgid "Last Updated on"
+msgstr "최근 갱신 날짜"
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "Model"
+msgstr "모델"
+
+#. module: email_template
+#: field:email.template,name:0 field:email_template.preview,name:0
+msgid "Name"
+msgstr "명칭"
+
+#. module: email_template
+#: help:email.template,report_name:0 help:email_template.preview,report_name:0
+msgid ""
+"Name to use for the generated report file (may contain placeholders)\n"
+"The extension can be omitted and will then come from the report type."
+msgstr "생성된 보고서 파일에 사용할 이름(사전 표시 문자를 포함할 수 있습니다)\n확장자는 보고서 유형에 따르고 생략될 수 있습니다."
+
+#. module: email_template
+#: field:res.partner,opt_out:0
+msgid "Opt-Out"
+msgstr "탈퇴"
+
+#. module: email_template
+#: help:email.template,mail_server_id:0
+#: help:email_template.preview,mail_server_id:0
+msgid ""
+"Optional preferred server for outgoing mails. If not set, the highest "
+"priority one will be used."
+msgstr "보내는 메일에 대한 선호 서버 선택. 설정되어 있지 않은 경우 가장 높은 우선 순위의 서버가 사용됩니다."
+
+#. module: email_template
+#: field:email.template,report_template:0
+#: field:email_template.preview,report_template:0
+msgid "Optional report to print and attach"
+msgstr "선택적으로 보고서를 인쇄하고 첨부하기"
+
+#. module: email_template
+#: help:email.template,lang:0 help:email_template.preview,lang:0
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
+msgstr "이메일을 보낼 때 번역(ISO 코드) 언어를 선택합니다. 설정하지 않으면 영어 버전이 사용됩니다.이것은 일반적으로 적절한 언어를 제공해서 사전 표시 문자 표현에 사용됩니다. 예 : ${object.partner_id.lang}"
+
+#. module: email_template
+#: help:email.template,null_value:0 help:email_template.preview,null_value:0
+msgid "Optional value to use if the target field is empty"
+msgstr "대상 필드가 비어있을 경우에 사용할 선택 값"
+
+#. module: email_template
+#: field:email.template,mail_server_id:0
+#: field:email_template.preview,mail_server_id:0
+msgid "Outgoing Mail Server"
+msgstr "발신 메일 서버"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Override author's email"
+msgstr "작성자 이메일 재정의"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_res_partner
+msgid "Partner"
+msgstr "파트너"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Partners that did not ask not to be included in mass mailing campaigns"
+msgstr "대량 메일 발송 캠페인에서 제외할지 물어보지 않는 파트너"
+
+#. module: email_template
+#: help:email.template,auto_delete:0 help:email_template.preview,auto_delete:0
+msgid "Permanently delete this email after sending it, to save space"
+msgstr "공간을 절약하기 위해 이메일을 전송한 후에 영구 삭제합니다"
+
+#. module: email_template
+#: field:email.template,copyvalue:0 field:email_template.preview,copyvalue:0
+msgid "Placeholder Expression"
+msgstr "사전 표시 문자 표현"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Please set the Base Model before setting the action details."
+msgstr "동작 세부 사항을 설정하기 전에 기본 모델을 설정하십시오."
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preferred reply address"
+msgstr "기본 회신 주소"
+
+#. module: email_template
+#: help:email.template,reply_to:0 help:email_template.preview,reply_to:0
+msgid "Preferred response address (placeholders may be used here)"
+msgstr "기본 회신 주소 (사전 표시 문자를 여기에 사용할 수 있습니다)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preview"
+msgstr "미리 보기"
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Preview of"
+msgstr "미리 보기"
+
+#. module: email_template
+#: field:email_template.preview,partner_ids:0
+msgid "Recipients"
+msgstr "받는 사람"
+
+#. module: email_template
+#: field:email.template,model:0 field:email_template.preview,model:0
+msgid "Related Document Model"
+msgstr "관련된 문서 모델"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Remove"
+msgstr "제거"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Remove the contextual action to use this template on related documents"
+msgstr "관련된 문서에서 이 서식에 사용된 문맥 동작 제거"
+
+#. module: email_template
+#: field:email.template,reply_to:0 field:email_template.preview,reply_to:0
+msgid "Reply-To"
+msgstr "회신 주소"
+
+#. module: email_template
+#: field:email.template,report_name:0
+#: field:email_template.preview,report_name:0
+msgid "Report Filename"
+msgstr "보고서 파일 이름"
+
+#. module: email_template
+#: help:email.template,body_html:0 help:email_template.preview,body_html:0
+msgid "Rich-text/HTML version of the message (placeholders may be used here)"
+msgstr "메시지의 Rich-text/HTML 버전 (사전 표시 문자를 여기에 사용할 수 있습니다)"
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "SMTP Server"
+msgstr "SMTP 서버"
+
+#. module: email_template
+#: field:email_template.preview,res_id:0
+msgid "Sample Document"
+msgstr "예제 문서"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as a new template"
+msgstr "새 서식으로 저장"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as new template"
+msgstr "새 서식으로 저장"
+
+#. module: email_template
+#: help:email.template,model_object_field:0
+#: help:email_template.preview,model_object_field:0
+msgid ""
+"Select target field from the related document model.\n"
+"If it is a relationship field you will be able to select a target field at the destination of the relationship."
+msgstr "관련된 문서 모델에서 대상 필드를 선택합니다.\n관련된 필드인 경우 관련된 대상에서 대상 필드를 선택할 수 있습니다."
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:318
+#, python-format
+msgid "Send Mail (%s)"
+msgstr "메일 보내기 (%s)"
+
+#. module: email_template
+#: help:email.template,email_from:0 help:email_template.preview,email_from:0
+msgid ""
+"Sender address (placeholders may be used here). If not set, the default "
+"value will be the author's email alias if configured, or email address."
+msgstr "보낸 사람 주소 (사전 표시 문자를 여기에 사용할 수 있습니다). 설정하지 않으면 기본값으로 설정된 작성자의 이메일 별칭 또는 이메일 주소를 사용합니다."
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:551
+#, python-format
+msgid ""
+"Sender email is missing or empty after template rendering. Specify one to "
+"deliver your message"
+msgstr "보낸 사람 이메일이 잘못되었거나 서식을 작성한 후에 비어 있습니다. 귀하의 메시지를 전달하려면 지정해야 합니다."
+
+#. module: email_template
+#: field:email.template,ref_ir_value:0
+#: field:email_template.preview,ref_ir_value:0
+msgid "Sidebar Button"
+msgstr "사이드바 단추"
+
+#. module: email_template
+#: field:email.template,ref_ir_act_window:0
+#: field:email_template.preview,ref_ir_act_window:0
+msgid "Sidebar action"
+msgstr "사이드바 동작"
+
+#. module: email_template
+#: help:email.template,ref_ir_act_window:0
+#: help:email_template.preview,ref_ir_act_window:0
+msgid ""
+"Sidebar action to make this template available on records of the related "
+"document model"
+msgstr "사이드바 동작은 관련된 문서 모델의 레코드를 사용가능하도록 이 서식을 만듭니다."
+
+#. module: email_template
+#: help:email.template,ref_ir_value:0
+#: help:email_template.preview,ref_ir_value:0
+msgid "Sidebar button to open the sidebar action"
+msgstr "사이드바 단추는 사이드바 동작을 실행합니다"
+
+#. module: email_template
+#: field:email.template,sub_model_object_field:0
+#: field:email_template.preview,sub_model_object_field:0
+msgid "Sub-field"
+msgstr "보조 필드"
+
+#. module: email_template
+#: field:email.template,sub_object:0 field:email_template.preview,sub_object:0
+msgid "Sub-model"
+msgstr "보조 모델"
+
+#. module: email_template
+#: field:email.template,subject:0 field:email_template.preview,subject:0
+#: field:ir.actions.server,subject:0
+msgid "Subject"
+msgstr "제목"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+#: help:email.template,subject:0 help:email_template.preview,subject:0
+msgid "Subject (placeholders may be used here)"
+msgstr "제목 (사전 표시 문자를 여기에 사용할 수 있습니다)"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Suppliers"
+msgstr "공급업체"
+
+#. module: email_template
+#: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
+msgid "Template Preview"
+msgstr "서식 미리보기"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+#: view:email.template:email_template.email_template_tree
+#: view:email.template:email_template.view_email_template_search
+#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
+#: model:ir.ui.menu,name:email_template.menu_email_templates
+msgid "Templates"
+msgstr "서식"
+
+#. module: email_template
+#: help:email.template,model_id:0 help:email_template.preview,model_id:0
+msgid "The kind of document with with this template can be used"
+msgstr "이 서식에 사용할 수 있는 문서의 종류"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid ""
+"The values displayed hereunder are informative. When sending the email, the values\n"
+"                                will be taken from the email template."
+msgstr "값은 본 계약의 정보로 표시됩니다. 이메일을 보낼 때\n                                해당 값은 이메일 서식에서 가져옵니다."
+
+#. module: email_template
+#: field:email.template,email_to:0 field:email_template.preview,email_to:0
+#: field:ir.actions.server,email_to:0
+msgid "To (Emails)"
+msgstr "받는 사람 (이메일)"
+
+#. module: email_template
+#: field:email.template,partner_to:0 field:email_template.preview,partner_to:0
+#: field:ir.actions.server,partner_to:0
+msgid "To (Partners)"
+msgstr "받는 사람 (파트너)"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+#: field:mail.compose.message,template_id:0
+msgid "Use template"
+msgstr "서식 사용"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Warning"
+msgstr "경고"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:551
+#, python-format
+msgid "Warning!"
+msgstr "경고!"
+
+#. module: email_template
+#: help:email.template,sub_model_object_field:0
+#: help:email_template.preview,sub_model_object_field:0
+msgid ""
+"When a relationship field is selected as first field, this field lets you "
+"select the target field within the destination document model (sub-model)."
+msgstr "관계 필드를 첫번째 필드로 선택하면 이 필드로 대상 문서 모델(보조 모델) 중에서 대상 필드를 선택할 수 있습니다."
+
+#. module: email_template
+#: help:email.template,sub_object:0 help:email_template.preview,sub_object:0
+msgid ""
+"When a relationship field is selected as first field, this field shows the "
+"document model the relationship goes to."
+msgstr "관계 필드를 첫번째 필드로 선택하면 이 필드는 관계로 이동해서 문서 모델을 보여줍니다."
+
+#. module: email_template
+#: help:email.template,attachment_ids:0
+#: help:email_template.preview,attachment_ids:0
+msgid ""
+"You may attach files to this template, to be added to all emails created "
+"from this template"
+msgstr "이 서식에 파일을 첨부할 수 있습니다. 이 서식으로 작성된 모든 이메일에 추가할 수 있습니다."
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid ""
+"Your template does not defined any email_from. Please update your template."
+msgstr "이 서식에는 어떤 email_from도 정의되지 않았습니다. 서식을 갱신해 주십시오."
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "record:"
+msgstr "레코드 :"

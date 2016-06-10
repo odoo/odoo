@@ -33,6 +33,7 @@ class TestMoveExplode(common.TransactionCase):
         self.sale_order_line = self.registry('sale.order.line')
         self.sale_order = self.registry('sale.order')
         self.mrp_bom = self.registry('mrp.bom')
+        self.product = self.registry('product.product')
 
         #product that has a phantom bom
         self.product_bom_id = self.ir_model_data.get_object_reference(cr, uid, 'product', 'product_product_3')[1]
@@ -40,9 +41,24 @@ class TestMoveExplode(common.TransactionCase):
         self.bom_id = self.ir_model_data.get_object_reference(cr, uid, 'mrp', 'mrp_bom_9')[1]
         #partner agrolait
         self.partner_id = self.ir_model_data.get_object_reference(cr, uid, 'base', 'res_partner_1')[1]
+        #bom: PC Assemble (with property: DDR 512MB)
+        self.bom_prop_id = self.ir_model_data.get_object_reference(cr, uid, 'mrp', 'mrp_bom_property_0')[1]
+
+        self.template_id = self.ir_model_data.get_object_reference(cr, uid, 'product', 'product_product_3_product_template')[1]
+        #property: DDR 512MB
+        self.mrp_property_id = self.ir_model_data.get_object_reference(cr, uid, 'mrp', 'mrp_property_0')[1]
+        #product: RAM SR2
+        self.product_bom_prop_id = self.ir_model_data.get_object_reference(cr, uid, 'product', 'product_product_14')[1]
+        #phantom bom for RAM SR2 with three lines containing properties
+        self.bom_prop_line_id = self.ir_model_data.get_object_reference(cr, uid, 'mrp', 'mrp_bom_property_line')[1]
+        #product: iPod included in the phantom bom
+        self.product_A_id = self.ir_model_data.get_object_reference(cr, uid, 'product', 'product_product_11')[1]
+        #product: Mouse, Wireless included in the phantom bom
+        self.product_B_id = self.ir_model_data.get_object_reference(cr, uid, 'product', 'product_product_12')[1]
+
 
     def test_00_sale_move_explode(self):
-        """check that when creating a sale order with a product that has a phantom BoM, move explode into content of the 
+        """check that when creating a sale order with a product that has a phantom BoM, move explode into content of the
             BoM"""
         cr, uid, context = self.cr, self.uid, {}
         #create sale order with one sale order line containing product with a phantom bom
@@ -57,3 +73,19 @@ class TestMoveExplode(common.TransactionCase):
         bom = self.mrp_bom.browse(cr, uid, self.bom_id, context=context)
         bom_component_length = self.mrp_bom._bom_explode(cr, uid, bom, self.product_bom_id, 1, [])
         self.assertEqual(len(move_ids), len(bom_component_length[0]))
+
+    def test_00_bom_find(self):
+        """Check that _bom_find searches the bom corresponding to the properties passed or takes the bom with the smallest
+            sequence."""
+        cr, uid, context = self.cr, self.uid, {}
+        res_id = self.mrp_bom._bom_find(cr, uid, product_tmpl_id=self.template_id, product_id=None, properties=[self.mrp_property_id], context=context)
+        self.assertEqual(res_id, self.bom_prop_id)
+
+    def test_00_bom_explode(self):
+        """Check that _bom_explode only takes the lines with the right properties."""
+        cr, uid, context = self.cr, self.uid, {}
+        bom = self.mrp_bom.browse(cr, uid, self.bom_prop_line_id)
+        product = self.product.browse(cr, uid, self.product_bom_prop_id)
+        res = self.mrp_bom._bom_explode(cr, uid, bom, product, 1, properties=[self.mrp_property_id], context=context)
+        res = set([p['product_id'] for p in res[0]])
+        self.assertEqual(res, set([self.product_A_id, self.product_B_id]))

@@ -1,21 +1,25 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_journal
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2016-06-04 07:04+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:49+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,active:0
@@ -25,12 +29,12 @@ msgstr "有效"
 #. module: sale_journal
 #: field:sale_journal.invoice.type,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "创建者"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "创建时间"
 
 #. module: sale_journal
 #: help:sale.order,invoice_type_id:0
@@ -40,12 +44,12 @@ msgstr "基于选择的选项生成发票。"
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Grouped"
-msgstr "已分组"
+msgstr "已分群组"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,id:0
 msgid "ID"
-msgstr ""
+msgstr "标识"
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
@@ -63,22 +67,22 @@ msgstr "如果设置active为False，你可以隐藏发票类型，不用删除�
 #: view:stock.picking:sale_journal.view_picking_internal_search
 #: field:stock.picking,invoice_type_id:0
 msgid "Invoice Type"
-msgstr "发票类型"
+msgstr "开票类型"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
 #: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
-msgstr "发票类型"
+msgstr "开票类型"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
 msgid ""
 "Invoice types are used for partners, sales orders and delivery orders. You "
-"can create a specific invoicing journal to group your invoicing according to "
-"your customer's needs: daily, each Wednesday, monthly, etc."
-msgstr "发票类型对业务伙伴，销售订单和发货订单是有用的。你可以根据用户的需要生成专门的发票账簿来对你的发票进行分组：每天，每周三，每周，每月等。"
+"can create a specific invoicing journal to group your invoicing according to"
+" your customer's needs: daily, each Wednesday, monthly, etc."
+msgstr "发票类型对业务伙伴，销售订单和发货订单是有用的。你可以根据用户的需要生成专门的发票分类账来对你的发票进行分组：每天，每周三，每周，每月等。"
 
 #. module: sale_journal
 #: view:res.partner:sale_journal.view_partner_property_form
@@ -98,12 +102,12 @@ msgstr "开票方式"
 #. module: sale_journal
 #: field:sale_journal.invoice.type,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "最后更新人"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "最后更新时间"
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -128,7 +132,7 @@ msgstr "业务伙伴"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
 msgid "Picking List"
-msgstr "装箱单"
+msgstr "分拣清单"
 
 #. module: sale_journal
 #: view:res.partner:sale_journal.view_partner_property_form
@@ -141,7 +145,13 @@ msgid "Sales Order"
 msgstr "销售单"
 
 #. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_move
+msgid "Stock Move"
+msgstr "库存移动"
+
+#. module: sale_journal
 #: help:res.partner,property_invoice_type:0
 msgid ""
-"This invoicing type will be used, by default, to invoice the current partner."
+"This invoicing type will be used, by default, to invoice the current "
+"partner."
 msgstr "这种开票类型已经被使用，默认开票给当前的合作伙伴"

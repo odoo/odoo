@@ -121,6 +121,8 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
         return {}
 
     def onchange_task_work(self, cr, uid, ids, task_work, context=None):
+        if not task_work:
+            return {'value': {}}
         return {'value': {
             'module_project_timesheet': task_work,
             'module_sale_service': task_work,

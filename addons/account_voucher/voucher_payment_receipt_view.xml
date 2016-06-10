@@ -163,10 +163,11 @@
                         	<label for="line_dr_ids"/>
                             <field name="line_dr_ids" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
                                 <tree string="Supplier Invoices and Outstanding transactions" editable="bottom" colors="gray:amount==0">
+                                    <field name="state" invisible="1"/>
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
-                                        required="1"/>
+                                        attrs="{'required': [('state', 'in', [False, 'draft'])]}"/>
                                     <field name="account_id" groups="base.group_no_one" domain="[('type','=','payable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
@@ -179,10 +180,11 @@
                             <label for="line_cr_ids" attrs="{'invisible': [('pre_line','=',False)]}"/>
                             <field name="line_cr_ids" attrs="{'invisible': [('pre_line','=',False)]}" context="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
                                 <tree string="Credits" editable="bottom" colors="gray:amount==0">
+                                    <field name="state" invisible="1"/>
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
-                                        required="1"/>
+                                        attrs="{'required': [('state', 'in', [False, 'draft'])]}"/>
                                     <field name="account_id" groups="base.group_no_one" domain="[('type','=','payable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
@@ -394,7 +396,7 @@
                         </page>
                     </notebook>
                     <footer>
-                        <button name="button_proforma_voucher" string="Pay" class="oe_highlight" type="object"/> or
+                        <button name="button_proforma_voucher" string="Register Payment" class="oe_highlight" type="object"/> or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
                 </form>
@@ -433,9 +435,10 @@
                         </group>
                         <group>
                             <field name="date" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
+                            <field name="period_id"/>
                             <field name="reference" string="Payment Ref" placeholder="e.g. 003/10"/>
                             <field name="name" colspan="2" placeholder="e.g. Invoice SAJ/0042"/>
-                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                            <field name="company_id" widget="selection" on_change="onchange_company(partner_id, journal_id, currency_id, company_id)"  groups="base.group_multi_company"/>
 
                             <field name="account_id"
                                 widget="selection"
@@ -509,7 +512,6 @@
                         </page>
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="4">
-                                <field name="period_id"/>
                                 <field name="audit"/>
                             </group>
                             <field name="move_ids" readonly="1">

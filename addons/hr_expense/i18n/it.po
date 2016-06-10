@@ -1,21 +1,23 @@
-# Italian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_expense
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Paolo Valier, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Italian <it@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2016-04-20 19:28+0000\n"
+"Last-Translator: Paolo Valier\n"
+"Language-Team: Italian (http://www.transifex.com/odoo/odoo-8/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:12+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_expense
 #: field:hr.expense.report,no_of_account:0
@@ -35,7 +37,7 @@ msgstr "Numero di prodotti"
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
 msgid "(Date and signature)."
-msgstr ""
+msgstr "(Data e firma)."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_product
@@ -44,7 +46,7 @@ msgid ""
 "                Click to create a new expense category. \n"
 "             </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Fai click per creare una nuova categoria di spesa.\n             </p>\n            "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.expense_all
@@ -53,13 +55,12 @@ msgid ""
 "                Click to register new expenses. \n"
 "              </p><p>\n"
 "                Odoo will ensure the whole process is followed; the expense\n"
-"                sheet is validated by manager(s), the employee is "
-"reimbursed\n"
+"                sheet is validated by manager(s), the employee is reimbursed\n"
 "                from his expenses, some expenses must be re-invoiced to the\n"
 "                customers.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nFai click per inserire nuove spese.\n</p><p>\nOdoo assicurerà che il seguente flusso di lavoro sia garantito: il foglio spese\ndeve essere convalidato da uno o più manager, le spese sostenute dal dipendente\ndevono essere rimborsate, e, se necessario, alcune spese devono essere fatturate\nal cliente.\n</p>\n            "
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
@@ -69,7 +70,7 @@ msgstr "Accettata"
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Accounting"
-msgstr ""
+msgstr "Contabilità"
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
@@ -83,7 +84,6 @@ msgstr "Biglietto aereo"
 
 #. module: hr_expense
 #: field:hr.expense.line,analytic_account:0
-#: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 #: field:hr.expense.report,analytic_account:0
 msgid "Analytic account"
 msgstr "Contabilità Analitica"
@@ -103,7 +103,7 @@ msgstr "Approvato"
 #. module: hr_expense
 #: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 msgid "Approved Expenses"
-msgstr ""
+msgstr "Spese Approvate"
 
 #. module: hr_expense
 #: field:hr.expense.report,price_average:0
@@ -123,7 +123,7 @@ msgstr "Cancellato"
 #. module: hr_expense
 #: model:product.template,name:hr_expense.car_travel_product_template
 msgid "Car Travel Expenses"
-msgstr ""
+msgstr "Spese trasporto con vettura"
 
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
@@ -145,7 +145,7 @@ msgstr "Conferma"
 #. module: hr_expense
 #: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 msgid "Confirm Expenses"
-msgstr ""
+msgstr "Conferma Spese"
 
 #. module: hr_expense
 #: field:hr.expense.expense,date_confirm:0
@@ -160,20 +160,18 @@ msgstr "Spese confermate"
 
 #. module: hr_expense
 #: view:hr.expense.report:hr_expense.view_hr_expense_report_search
-msgid "Create Date"
+msgid "Create Month"
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.expense,create_uid:0
-#: field:hr.expense.line,create_uid:0
+#: field:hr.expense.expense,create_uid:0 field:hr.expense.line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Creato da"
 
 #. module: hr_expense
-#: field:hr.expense.expense,create_date:0
-#: field:hr.expense.line,create_date:0
+#: field:hr.expense.expense,create_date:0 field:hr.expense.line,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Creato il"
 
 #. module: hr_expense
 #: view:hr.expense.report:hr_expense.view_hr_expense_report_search
@@ -188,8 +186,7 @@ msgid "Currency"
 msgstr "Valuta"
 
 #. module: hr_expense
-#: field:hr.expense.expense,date:0
-#: field:hr.expense.line,date_value:0
+#: field:hr.expense.expense,date:0 field:hr.expense.line,date_value:0
 #: view:website:hr_expense.report_expense
 msgid "Date"
 msgstr "Data"
@@ -204,28 +201,24 @@ msgstr "Data "
 msgid ""
 "Date of the acceptation of the sheet expense. It's filled when the button "
 "Accept is pressed."
-msgstr ""
-"Data di accettazione della nota spese. Viene scritto quando si preme il "
-"bottone: Accetta"
+msgstr "Data di accettazione della nota spese. Viene scritto quando si preme il bottone: Accetta"
 
 #. module: hr_expense
 #: help:hr.expense.expense,date_confirm:0
 msgid ""
 "Date of the confirmation of the sheet expense. It's filled when the button "
 "Confirm is pressed."
-msgstr ""
-"Data di conferma della nota spese. Viene scritta quando si preme il bottone: "
-"Conferma"
+msgstr "Data di conferma della nota spese. Viene scritta quando si preme il bottone: Conferma"
 
 #. module: hr_expense
 #: help:hr.expense.expense,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Data dell'ultimo messaggio postato per questo record"
 
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
 msgid "Date:"
-msgstr ""
+msgstr "Data:"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.product_normal_form_view_installer
@@ -257,26 +250,25 @@ msgstr "Dipartimento"
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
-#: field:hr.expense.expense,name:0
-#: field:hr.expense.line,description:0
+#: field:hr.expense.expense,name:0 field:hr.expense.line,description:0
 msgid "Description"
 msgstr "Descrizione"
 
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
 msgid "Description:"
-msgstr ""
+msgstr "Descrizione:"
 
 #. module: hr_expense
 #: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 #: selection:hr.expense.report,state:0
 msgid "Done"
-msgstr ""
+msgstr "Fatto"
 
 #. module: hr_expense
 #: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 msgid "Done Expenses"
-msgstr ""
+msgstr "Fatte spese"
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
@@ -286,29 +278,28 @@ msgstr "Bozza"
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
 #: field:hr.expense.expense,employee_id:0
-#: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 msgid "Employee"
 msgstr "Dipendente"
 
 #. module: hr_expense
 #: field:hr.expense.report,employee_id:0
 msgid "Employee's Name"
-msgstr "Nome dell'impiegato"
+msgstr "Nome del Dipendente"
 
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
 msgid "Employee:"
-msgstr ""
+msgstr "Dipendente:"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:167
 #: code:addons/hr_expense/hr_expense.py:230
 #: code:addons/hr_expense/hr_expense.py:232
-#: code:addons/hr_expense/hr_expense.py:345
-#: code:addons/hr_expense/hr_expense.py:349
+#: code:addons/hr_expense/hr_expense.py:344
+#: code:addons/hr_expense/hr_expense.py:348
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Errore!"
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
@@ -318,7 +309,7 @@ msgid "Expense"
 msgstr "Spesa"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:374
+#: code:addons/hr_expense/hr_expense.py:373
 #, python-format
 msgid "Expense Account Move"
 msgstr ""
@@ -327,12 +318,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
 #: model:ir.ui.menu,name:hr_expense.menu_hr_product
 msgid "Expense Categories"
-msgstr ""
+msgstr "Categorie di Spesa"
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Expense Date"
-msgstr ""
+msgstr "Data Spesa"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_line
@@ -354,7 +345,7 @@ msgstr "Nota spese"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense approved"
-msgstr ""
+msgstr "Spesa Approvata"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_confirmed
@@ -364,7 +355,7 @@ msgstr ""
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense refused"
-msgstr ""
+msgstr "Spesa rifiutata"
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_editable_expenses_tree
@@ -403,12 +394,12 @@ msgstr "Sommario spese"
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
 msgid "Expenses by Month"
-msgstr ""
+msgstr "Spese per mese"
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
 msgid "Expenses to Invoice"
-msgstr ""
+msgstr "Spese da fatturare"
 
 #. module: hr_expense
 #: view:hr.expense.report:hr_expense.view_hr_expense_report_search
@@ -418,41 +409,38 @@ msgstr "Filtri estesi..."
 #. module: hr_expense
 #: field:hr.expense.expense,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Followers"
 
 #. module: hr_expense
-#: field:hr.expense.expense,journal_id:0
-#: field:hr.expense.report,journal_id:0
+#: field:hr.expense.expense,journal_id:0 field:hr.expense.report,journal_id:0
 msgid "Force Journal"
 msgstr "Forza Sezionale"
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Free Notes"
-msgstr ""
+msgstr "Note libere"
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Generate Accounting Entries"
-msgstr ""
+msgstr "Genera Registrazioni Contabili"
 
 #. module: hr_expense
 #: help:hr.expense.line,sequence:0
 msgid "Gives the sequence order when displaying a list of expense lines."
-msgstr ""
-"Fornisce l'ordine di visualizzazione quando si mostra la lista delle voci di "
-"spesa."
+msgstr "Fornisce l'ordine di visualizzazione quando si mostra la lista delle voci di spesa."
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
 #: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 msgid "Group By"
-msgstr ""
+msgstr "Raggruppa per"
 
 #. module: hr_expense
 #: model:ir.actions.report.xml,name:hr_expense.action_report_hr_expense
 msgid "HR Expense"
-msgstr ""
+msgstr "Spese HR"
 
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
@@ -464,7 +452,7 @@ msgstr "Spese Risorse Umane"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Contiene il riepilogo Chatter (numero di messaggi, ...). Questa sintesi è direttamente in formato HTML, al fine di essere inserita nelle viste kanban."
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.hotel_rent_product_template
@@ -472,43 +460,40 @@ msgid "Hotel Accommodation"
 msgstr "Sistemazione in hotel"
 
 #. module: hr_expense
-#: field:hr.expense.expense,id:0
-#: field:hr.expense.line,id:0
+#: field:hr.expense.expense,id:0 field:hr.expense.line,id:0
 #: field:hr.expense.report,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_expense
 #: help:hr.expense.expense,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Se selezionato, nuovi messaggi richiedono la tua attenzione."
 
 #. module: hr_expense
 #: field:hr.expense.expense,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "È un Follower"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Voci Giornale"
 
 #. module: hr_expense
 #: field:hr.expense.expense,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Data Ultimo Messaggio"
 
 #. module: hr_expense
-#: field:hr.expense.expense,write_uid:0
-#: field:hr.expense.line,write_uid:0
+#: field:hr.expense.expense,write_uid:0 field:hr.expense.line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultima modifica di"
 
 #. module: hr_expense
-#: field:hr.expense.expense,write_date:0
-#: field:hr.expense.line,write_date:0
+#: field:hr.expense.expense,write_date:0 field:hr.expense.line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultima modifica il"
 
 #. module: hr_expense
 #: field:hr.expense.expense,account_move_id:0
@@ -518,12 +503,12 @@ msgstr "Invio registro"
 #. module: hr_expense
 #: field:hr.expense.expense,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Messaggi"
 
 #. module: hr_expense
 #: help:hr.expense.expense,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Storico messaggi e comunicazioni"
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
@@ -539,12 +524,12 @@ msgstr "Nome"
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
 #: selection:hr.expense.expense,state:0
 msgid "New"
-msgstr ""
+msgstr "Nuovo"
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
 msgid "New Expense"
-msgstr ""
+msgstr "Nuova Spesa"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:167
@@ -552,10 +537,10 @@ msgstr ""
 msgid ""
 "No expense journal found. Please make sure you have a journal with type "
 "'purchase' configured."
-msgstr ""
+msgstr "Nessun Giornale per le spese è stato trovato. Assicurati di avere un Giornale di tipo \"Acquisto\" configurato."
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:345
+#: code:addons/hr_expense/hr_expense.py:344
 #, python-format
 msgid ""
 "No purchase account found for the product %s (or for his category), please "
@@ -575,20 +560,20 @@ msgstr "Note"
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Open Accounting Entries"
-msgstr ""
+msgstr "Apri Registrazioni Contabili"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Paid"
-msgstr ""
+msgstr "Pagata"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:349
+#: code:addons/hr_expense/hr_expense.py:348
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product purchase: "
 "`property_account_expense_categ`."
-msgstr ""
+msgstr "Configura il conto predefinito di spesa per l'acquisto del prodotto: `property_account_expense_categ`."
 
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
@@ -603,17 +588,21 @@ msgid "Product"
 msgstr "Prodotto"
 
 #. module: hr_expense
+#: field:hr.expense.report,product_qty:0
+msgid "Product Quantity"
+msgstr "Quantità prodotto"
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Modello Prodotto"
 
 #. module: hr_expense
 #: view:product.product:hr_expense.product_expense_installer_tree_view
 msgid "Products"
-msgstr ""
+msgstr "Prodotti"
 
 #. module: hr_expense
-#: field:hr.expense.report,product_qty:0
 #: view:website:hr_expense.report_expense
 msgid "Qty"
 msgstr "Qtà"
@@ -651,12 +640,12 @@ msgid "Review Your Expenses Products"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:447
+#: code:addons/hr_expense/hr_expense.py:446
 #, python-format
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product "
-"Unit of Measure"
-msgstr ""
+"Selected Unit of Measure does not belong to the same category as the product"
+" Unit of Measure"
+msgstr "L'unità di misura selezionata non appartiene alla stessa categoria dell'unità di misura del prodotto."
 
 #. module: hr_expense
 #: field:hr.expense.line,sequence:0
@@ -671,30 +660,30 @@ msgstr "Imposta come Bozza"
 #. module: hr_expense
 #: help:product.template,hr_expense_ok:0
 msgid "Specify if the product can be selected in an HR expense line."
-msgstr ""
+msgstr "Specifica se il prodotto può essere utilizzato all'interno di una riga di spesa."
 
 #. module: hr_expense
 #: field:hr.expense.expense,state:0
 #: view:hr.expense.report:hr_expense.view_hr_expense_report_search
 #: field:hr.expense.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "Stato"
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
 msgid "Submit to Manager"
-msgstr ""
+msgstr "Sottoponi al manager"
 
 #. module: hr_expense
 #: field:hr.expense.expense,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Riepilogo"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:230
 #, python-format
 msgid "The employee must have a home address."
-msgstr ""
+msgstr "Il dipendente deve avere un indirizzo di residenza."
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:232
@@ -705,12 +694,12 @@ msgstr ""
 #. module: hr_expense
 #: help:hr.expense.expense,journal_id:0
 msgid "The journal used when the expense is done."
-msgstr ""
+msgstr "Il Giornale utilizzato quando la spesa viene completata."
 
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
 msgid "This document must be dated and signed for reimbursement."
-msgstr ""
+msgstr "Questo documento deve essere datato e firmato per il rimborso."
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_hr_expense_filter
@@ -726,8 +715,7 @@ msgstr "Da pagare"
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
 #: view:hr.expense.line:hr_expense.view_expenses_line_tree
-#: field:hr.expense.line,total_amount:0
-#: view:website:hr_expense.report_expense
+#: field:hr.expense.line,total_amount:0 view:website:hr_expense.report_expense
 msgid "Total"
 msgstr "Totale"
 
@@ -743,8 +731,7 @@ msgid "Total Price"
 msgstr "Prezzo Totale"
 
 #. module: hr_expense
-#: field:hr.expense.line,unit_amount:0
-#: view:website:hr_expense.report_expense
+#: field:hr.expense.line,unit_amount:0 view:website:hr_expense.report_expense
 msgid "Unit Price"
 msgstr "Prezzo unitario"
 
@@ -752,12 +739,12 @@ msgstr "Prezzo unitario"
 #: field:hr.expense.line,uom_id:0
 #: view:product.product:hr_expense.product_expense_installer_tree_view
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Unità di misura"
 
 #. module: hr_expense
 #: field:hr.expense.expense,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Messaggi non letti"
 
 #. module: hr_expense
 #: field:hr.expense.expense,user_id:0
@@ -767,16 +754,15 @@ msgstr "Utente"
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
 msgid "Validated By:"
-msgstr ""
+msgstr "Validato da:"
 
 #. module: hr_expense
 #: field:hr.expense.expense,user_valid:0
 msgid "Validation By"
-msgstr ""
+msgstr "Validazione da"
 
 #. module: hr_expense
-#: field:hr.expense.expense,date_valid:0
-#: field:hr.expense.report,date_valid:0
+#: field:hr.expense.expense,date_valid:0 field:hr.expense.report,date_valid:0
 msgid "Validation Date"
 msgstr "Data di convalida"
 
@@ -799,7 +785,7 @@ msgstr "In attesa di approvazione"
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Waiting Payment"
-msgstr ""
+msgstr "In attesa di Pagamento"
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
@@ -807,40 +793,38 @@ msgid "Waiting confirmation"
 msgstr "In attesa di conferma"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:447
+#: code:addons/hr_expense/hr_expense.py:446
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Attenzione"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:116
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Attenzione!"
 
 #. module: hr_expense
 #: field:hr.expense.expense,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Messaggio sito"
 
 #. module: hr_expense
 #: help:hr.expense.expense,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Storico comunicazione sito"
 
 #. module: hr_expense
 #: help:hr.expense.expense,state:0
 msgid ""
 "When the expense request is created the status is 'Draft'.\n"
-" It is confirmed by the user and request is sent to admin, the status is "
-"'Waiting Confirmation'.            \n"
+" It is confirmed by the user and request is sent to admin, the status is 'Waiting Confirmation'.            \n"
 "If the admin accepts it, the status is 'Accepted'.\n"
-" If the accounting entries are made for the expense request, the status is "
-"'Waiting Payment'."
-msgstr ""
+" If the accounting entries are made for the expense request, the status is 'Waiting Payment'."
+msgstr "Quando la richiesta di spesa viene creata, il suo stato è impostato a 'Bozza'.\n Viene confermata dall'utente e inviata all'admin, e impostata sullo stato 'In attesa di conferma'.\nSe l'admin approva la richiesta, viene impostata a 'Accettata'.\n Se le voci contabili relative alla spesa vengono generate, lo stato viene impostato a 'in attesa di pagamento'."
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:116
 #, python-format
 msgid "You can only delete draft expenses!"
-msgstr ""
+msgstr "Puoi cancellare solo le spese in stato di bozza!"

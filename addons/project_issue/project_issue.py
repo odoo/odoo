@@ -193,7 +193,7 @@ class project_issue(osv.Model):
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
             if project and project.partner_id:
-                return {'value': {'partner_id': project.partner_id.id}}
+                return {'value': {'partner_id': project.partner_id.id, 'email_from': project.partner_id.email}}
         return {}
 
     def _get_issue_task(self, cr, uid, ids, context=None):
@@ -272,7 +272,7 @@ class project_issue(osv.Model):
         'progress': fields.function(_hours_get, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
             store = {
                 'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['task_id'], 10),
-                'project.task': (_get_issue_task, ['progress'], 10),
+                'project.task': (_get_issue_task, ['work_ids', 'remaining_hours', 'planned_hours', 'state', 'stage_id'], 10),
                 'project.task.work': (_get_issue_work, ['hours'], 10),
             }),
     }
@@ -303,7 +303,7 @@ class project_issue(osv.Model):
         context = dict(context or {})
         if vals.get('project_id') and not context.get('default_project_id'):
             context['default_project_id'] = vals.get('project_id')
-        if vals.get('user_id'):
+        if vals.get('user_id') and not vals.get('date_open'):
             vals['date_open'] = fields.datetime.now()
         if 'stage_id' in vals:
             vals.update(self.onchange_stage_id(cr, uid, None, vals.get('stage_id'), context=context)['value'])
@@ -319,8 +319,8 @@ class project_issue(osv.Model):
             vals['date_last_stage_update'] = fields.datetime.now()
             if 'kanban_state' not in vals:
                 vals['kanban_state'] = 'normal'
-        # user_id change: update date_start
-        if vals.get('user_id'):
+        # user_id change: update date_open
+        if vals.get('user_id') and 'date_open' not in vals:
             vals['date_open'] = fields.datetime.now()
 
         return super(project_issue, self).write(cr, uid, ids, vals, context)
@@ -464,7 +464,9 @@ class project(osv.Model):
     _inherit = "project.project"
 
     def _get_alias_models(self, cr, uid, context=None):
-        return [('project.task', "Tasks"), ("project.issue", "Issues")]
+        res = super(project, self)._get_alias_models(cr, uid, context=context)
+        res.append(("project.issue", "Issues"))
+        return res
 
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
         Issue = self.pool['project.issue']
@@ -535,7 +537,7 @@ class project_project(osv.Model):
         if use_tasks and not use_issues:
             values['alias_model'] = 'project.task'
         elif not use_tasks and use_issues:
-            values['alias_model'] = 'project.issues'
+            values['alias_model'] = 'project.issue'
         return {'value': values}
 
     def create(self, cr, uid, vals, context=None):

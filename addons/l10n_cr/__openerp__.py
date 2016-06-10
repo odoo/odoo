@@ -35,7 +35,7 @@
 {
     'name': 'Costa Rica - Accounting',
     'version': '0.1',
-    'url': 'http://launchpad.net/openerp-costa-rica',
+    'url': 'https://github.com/CLEARCORP/odoo-costa-rica',
     'author': 'ClearCorp S.A.',
     'website': 'http://clearcorp.co.cr',
     'category': 'Localization/Account Charts',
@@ -68,7 +68,6 @@ please go to http://translations.launchpad.net/openerp-costa-rica.
     'license': 'Other OSI approved licence',
     'installable': True,
     'auto_install': False,
-    'images': ['images/config_chart_l10n_cr.jpeg','images/l10n_cr_chart.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

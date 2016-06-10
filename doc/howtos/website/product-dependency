@@ -1,14 +1,16 @@
 # HG changeset patch
 # Parent 6106208621f01d5aea67727f09adf5c5b2a38642
-diff -r 6106208621f0 -r f882c3b2e7af academy/__openerp__.py
---- a/academy/__openerp__.py	Wed Aug 13 16:32:26 2014 +0200
-+++ b/academy/__openerp__.py	Thu Aug 14 11:44:51 2014 +0200
-@@ -5,7 +5,7 @@
-     'description': """
-     """,
-     # Which modules must be installed for this one to work
+# Parent  ae97cfb61fd0e1a47727a9d8ed4a702116254eff
+
+diff --git a/academy/__openerp__.py b/academy/__openerp__.py
+--- a/academy/__openerp__.py
++++ b/academy/__openerp__.py
+@@ -20,7 +20,7 @@
+     'version': '0.1',
+ 
+     # any module necessary for this one to work correctly
 -    'depends': ['website'],
 +    'depends': ['website_sale'],
-     # data files which are always installed
+ 
+     # always loaded
      'data': [
-         'ir.model.access.csv',

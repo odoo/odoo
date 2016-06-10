@@ -15,7 +15,7 @@
                         <label string="Optional Products &amp; Services" for="options"/>
                         <field name="options">
                             <tree string="Sales Quote Template Lines" editable="bottom">
-                                    <field name="product_id" on_change="on_change_product_id(product_id)"/>
+                                    <field name="product_id"/>
                                     <field name="name"/>
                                     <field name="quantity"/>
                                     <field name="uom_id" groups="product.group_uom"/>
@@ -27,7 +27,7 @@
                     </page>
                 </xpath>
                 <xpath expr="//field[@name='client_order_ref']" position="after">
-                    <field name="template_id" on_change="onchange_template_id(template_id, partner_id, fiscal_position)"/>
+                    <field name="template_id" context="{'company_id': company_id}" on_change="onchange_template_id(template_id, partner_id, fiscal_position, context)"/>
                     <field name="validity_date"/>
                     <field name="website_description" invisible="1"/>
                 </xpath>

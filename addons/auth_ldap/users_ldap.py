@@ -96,7 +96,11 @@ class CompanyLDAP(osv.osv):
             return False
 
         entry = False
-        filter = filter_format(conf['ldap_filter'], (login,))
+        try:
+            filter = filter_format(conf['ldap_filter'], (login,))
+        except TypeError:
+            _logger.warning('Could not format LDAP filter. Your filter should contain one \'%s\'.')
+            return False
         try:
             results = self.query(conf, filter)
 
@@ -105,7 +109,7 @@ class CompanyLDAP(osv.osv):
             if results and len(results) == 1:
                 dn = results[0][0]
                 conn = self.connect(conf)
-                conn.simple_bind_s(dn, password)
+                conn.simple_bind_s(dn, password.encode('utf-8'))
                 conn.unbind()
                 entry = results[0]
         except ldap.INVALID_CREDENTIALS:
@@ -140,8 +144,9 @@ class CompanyLDAP(osv.osv):
         results = []
         try:
             conn = self.connect(conf)
-            conn.simple_bind_s(conf['ldap_binddn'] or '',
-                               conf['ldap_password'] or '')
+            ldap_password = conf['ldap_password'] or ''
+            ldap_binddn = conf['ldap_binddn'] or ''
+            conn.simple_bind_s(ldap_binddn.encode('utf-8'), ldap_password.encode('utf-8'))
             results = conn.search_st(conf['ldap_base'], ldap.SCOPE_SUBTREE,
                                      filter, retrieve_attributes, timeout=60)
             conn.unbind()
@@ -183,7 +188,7 @@ class CompanyLDAP(osv.osv):
         """
         
         user_id = False
-        login = tools.ustr(login.lower())
+        login = tools.ustr(login.lower().strip())
         cr.execute("SELECT id, active FROM res_users WHERE lower(login)=%s", (login,))
         res = cr.fetchone()
         if res:

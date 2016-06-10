@@ -145,7 +145,6 @@
                                 <form string="Depreciation Lines"> 
                                     <group>
                                         <group>
-                                            <field name="asset_id" invisible="1"/>
                                             <field name="parent_state" invisible="1"/>
                                             <field name="name"/>
                                             <field name="amount"/>
@@ -156,13 +155,13 @@
                                         <group>
                                             <field name="sequence"/>
                                             <field name="depreciation_date"/>
-                                            <field name="depreciated_value" readonly="1"/>
-                                            <field name="remaining_value" readonly="1"/>
+                                            <field name="depreciated_value"/>
+                                            <field name="remaining_value"/>
                                         </group>
                                     </group>
                                 </form>
                             </field>
-                            <button type="object" name="compute_depreciation_board" string="Compute" icon="terp-stock_format-scientific" colspan="2" attrs="{'invisible':[('state','=','close')]}"/>
+                            <button type="object" name="compute_depreciation_board" string="Compute" icon="terp-stock_format-scientific" colspan="2" attrs="{'invisible':[('state','in',('close','open'))]}"/>
                         </page>
                         <page string="History">
                             <field name="account_move_line_ids" readonly="1"/>

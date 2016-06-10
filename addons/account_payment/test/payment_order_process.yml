@@ -60,6 +60,10 @@
     assert invoice.partner_id == payment_line.partner_id, "Partner is not correct."
     assert invoice.date_due == payment_line.ml_maturity_date, "Due date is not correct."
     assert invoice.amount_total == payment_line.amount, "Payment amount is not correct."
+    assert payment_line.move_line_id.amount_to_pay > 0, "Move line paid"
+    assert len(self.pool("account.move.line").search(cr, uid,
+      [('amount_to_pay', '>', 0), ('id', '=', payment_line.move_line_id.id)])) == 0, \
+      "No payment order found for this move line"
 -
   After making all payments, I finish the payment order.
 -

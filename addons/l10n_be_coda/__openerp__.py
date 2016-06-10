@@ -71,7 +71,6 @@ description provided by the CODA configuration tables is based upon the CODA
 V2.2 specifications.
 If required, you can manually adjust the descriptions via the CODA configuration menu.
 ''',
-    'images': ['images/coda_logs.jpeg', 'images/import_coda_logs.jpeg'],
     'depends': ['account_voucher', 'base_iban', 'l10n_be_invoice_bba'],
     'demo': ['l10n_be_coda_demo.xml'],
     'data': [

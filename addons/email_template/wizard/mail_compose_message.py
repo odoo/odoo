@@ -74,6 +74,7 @@ class mail_compose_message(osv.TransientModel):
             if wizard.template_id:
                 wizard_context['mail_notify_user_signature'] = False  # template user_signature is added when generating body_html
                 wizard_context['mail_auto_delete'] = wizard.template_id.auto_delete  # mass mailing: use template auto_delete value -> note, for emails mass mailing only
+                wizard_context['mail_server_id'] = wizard.template_id.mail_server_id.id
             if not wizard.attachment_ids or wizard.composition_mode == 'mass_mail' or not wizard.template_id:
                 continue
             new_attachment_ids = []
@@ -98,7 +99,7 @@ class mail_compose_message(osv.TransientModel):
                 values['mail_server_id'] = template.mail_server_id.id
             if template.user_signature and 'body_html' in values:
                 signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
-                values['body_html'] = tools.append_content_to_html(values['body_html'], signature)
+                values['body_html'] = tools.append_content_to_html(values['body_html'], signature, plaintext=False)
         elif template_id:
             values = self.generate_email_for_composer_batch(cr, uid, template_id, [res_id], context=context)[res_id]
             # transform attachments into attachment_ids; not attached to the document because this will
@@ -116,8 +117,8 @@ class mail_compose_message(osv.TransientModel):
                 values.setdefault('attachment_ids', list()).append(ir_attach_obj.create(cr, uid, data_attach, context=context))
         else:
             default_context = dict(context, default_composition_mode=composition_mode, default_model=model, default_res_id=res_id)
-            default_values = self.default_get(cr, uid, ['composition_mode', 'model', 'res_id', 'subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'], context=default_context)
-            values = dict((key, default_values[key]) for key in ['subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'] if key in default_values)
+            default_values = self.default_get(cr, uid, ['composition_mode', 'model', 'res_id', 'parent_id', 'partner_ids', 'subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'], context=default_context)
+            values = dict((key, default_values[key]) for key in ['subject', 'body', 'partner_ids', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'] if key in default_values)
 
         if values.get('body_html'):
             values['body'] = values.pop('body_html')
@@ -129,7 +130,7 @@ class mail_compose_message(osv.TransientModel):
         email_template = self.pool.get('email.template')
         ir_model_pool = self.pool.get('ir.model')
         for record in self.browse(cr, uid, ids, context=context):
-            model_ids = ir_model_pool.search(cr, uid, [('model', '=', record.model)], context=context)
+            model_ids = ir_model_pool.search(cr, uid, [('model', '=', record.model or 'mail.message')], context=context)
             model_id = model_ids and model_ids[0] or False
             model_name = ''
             if model_id:

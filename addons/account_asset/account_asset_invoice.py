@@ -19,13 +19,15 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class account_invoice(osv.osv):
 
     _inherit = 'account.invoice'
-    def action_number(self, cr, uid, ids, *args):
-        result = super(account_invoice, self).action_number(cr, uid, ids, *args)
+    def action_number(self, cr, uid, ids, *args, **kargs):
+        result = super(account_invoice, self).action_number(cr, uid, ids, *args, **kargs)
         for inv in self.browse(cr, uid, ids):
             self.pool.get('account.invoice.line').asset_create(cr, uid, inv.invoice_line)
         return result
@@ -45,6 +47,12 @@ class account_invoice_line(osv.osv):
     def asset_create(self, cr, uid, lines, context=None):
         context = context or {}
         asset_obj = self.pool.get('account.asset.asset')
+        asset_ids = []
+        for line in lines:
+            if line.invoice_id.number:
+                #FORWARDPORT UP TO SAAS-6
+                asset_ids += asset_obj.search(cr, SUPERUSER_ID, [('code', '=', line.invoice_id.number), ('company_id', '=', line.company_id.id)], context=context)
+        asset_obj.write(cr, SUPERUSER_ID, asset_ids, {'active': False})
         for line in lines:
             if line.asset_category_id:
                 vals = {
@@ -52,7 +60,6 @@ class account_invoice_line(osv.osv):
                     'code': line.invoice_id.number or False,
                     'category_id': line.asset_category_id.id,
                     'purchase_value': line.price_subtotal,
-                    'period_id': line.invoice_id.period_id.id,
                     'partner_id': line.invoice_id.partner_id.id,
                     'company_id': line.invoice_id.company_id.id,
                     'currency_id': line.invoice_id.currency_id.id,

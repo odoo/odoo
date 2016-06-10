@@ -137,6 +137,7 @@ class hr_evaluation(osv.Model):
     _name = "hr_evaluation.evaluation"
     _inherit = "mail.thread"
     _description = "Employee Appraisal"
+    _rec_name = "employee_id"
     _columns = {
         'date': fields.date("Appraisal Deadline", required=True, select=True),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True),

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-09-23 16:27+0000\n"
+"POT-Creation-Date: 2016-05-09 10:33+0000\n"
+"PO-Revision-Date: 2016-05-09 10:33+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgid "\n"
 "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
 "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
 "       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       &nbsp;&nbsp;Order date:  ${format_tz(object.date_order, tz=user.tz, context={'lang':object.partner_id.lang})} <br />\n"
 "       % if object.origin:\n"
 "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
 "       % endif\n"
@@ -39,17 +39,12 @@ msgid "\n"
 "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
-"    <p>\n"
-"        You can view your quotation online:\n"
-"    </p>\n"
-"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
-"        href=\"/quote/${object.id}/${object.access_token}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
 "\n"
 "    % if object.paypal_url:\n"
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "\n"
@@ -227,7 +222,7 @@ msgid "Advance Amount"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:203
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:207
 #, python-format
 msgid "Advance Invoice"
 msgstr ""
@@ -238,14 +233,13 @@ msgid "Advance Product"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:107
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:62
 #, python-format
 msgid "Advance of %s %%"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:114
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:116
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:62
 #, python-format
 msgid "Advance of %s %s"
 msgstr ""
@@ -376,7 +370,7 @@ msgid "Before Delivery"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1041
+#: code:addons/sale/sale.py:1048
 #, python-format
 msgid "Before choosing a product,\n"
 " select a customer in the sales form."
@@ -433,13 +427,13 @@ msgid "Cannot cancel this sales order!"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1164
+#: code:addons/sale/sale.py:1171
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1133
+#: code:addons/sale/sale.py:1140
 #, python-format
 msgid "Cannot find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
@@ -495,9 +489,9 @@ msgid "Company"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1141
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:92
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:96
+#: code:addons/sale/sale.py:1148
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:95
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:99
 #, python-format
 msgid "Configuration Error!"
 msgstr ""
@@ -513,6 +507,7 @@ msgid "Confirmation Date"
 msgstr ""
 
 #. module: sale
+#: view:sale.order.line:sale.view_sales_order_line_filter
 #: selection:sale.order.line,state:0
 msgid "Confirmed"
 msgstr ""
@@ -706,6 +701,16 @@ msgid "Discount on lines"
 msgstr ""
 
 #. module: sale
+#: field:sale.advance.payment.inv,display_name:0
+#: field:sale.make.invoice,display_name:0
+#: field:sale.order,display_name:0
+#: field:sale.order.line,display_name:0
+#: field:sale.order.line.make.invoice,display_name:0
+#: field:sale.report,display_name:0
+msgid "Display Name"
+msgstr ""
+
+#. module: sale
 #: field:sale.config.settings,module_sale_margin:0
 msgid "Display margins on sales orders"
 msgstr ""
@@ -761,8 +766,8 @@ msgstr ""
 #: code:addons/sale/sale.py:390
 #: code:addons/sale/sale.py:522
 #: code:addons/sale/sale.py:605
-#: code:addons/sale/sale.py:927
-#: code:addons/sale/sale.py:944
+#: code:addons/sale/sale.py:934
+#: code:addons/sale/sale.py:951
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -905,21 +910,21 @@ msgid "In order to delete a confirmed sales order, you must cancel it before!"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:102
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:105
 #, python-format
 msgid "Incorrect Data"
 msgstr ""
 
 #. module: sale
 #: code:addons/sale/sale.py:274
-#: code:addons/sale/sale.py:983
-#: code:addons/sale/sale.py:1164
+#: code:addons/sale/sale.py:990
+#: code:addons/sale/sale.py:1171
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:121
+#: code:addons/sale/wizard/sale_line_invoice.py:127
 #: model:ir.model,name:sale.model_account_invoice
 #: view:sale.order:sale.view_order_form
 #, python-format
@@ -983,7 +988,7 @@ msgid "Invoice and shipping address:"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:107
+#: code:addons/sale/wizard/sale_line_invoice.py:113
 #, python-format
 msgid "Invoice cannot be created for this Sales Order Line due to one of the following reasons:\n"
 "1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
@@ -991,13 +996,13 @@ msgid "Invoice cannot be created for this Sales Order Line due to one of the fol
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:97
+#: code:addons/sale/wizard/sale_line_invoice.py:102
 #, python-format
 msgid "Invoice created"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1217
+#: code:addons/sale/sale.py:1224
 #, python-format
 msgid "Invoice paid"
 msgstr ""
@@ -1062,6 +1067,16 @@ msgid "Last Message Date"
 msgstr ""
 
 #. module: sale
+#: field:sale.advance.payment.inv,__last_update:0
+#: field:sale.make.invoice,__last_update:0
+#: field:sale.order,__last_update:0
+#: field:sale.order.line,__last_update:0
+#: field:sale.order.line.make.invoice,__last_update:0
+#: field:sale.report,__last_update:0
+msgid "Last Modified on"
+msgstr ""
+
+#. module: sale
 #: field:sale.advance.payment.inv,write_uid:0
 #: field:sale.make.invoice,write_uid:0
 #: field:sale.order,write_uid:0
@@ -1121,19 +1136,19 @@ msgid "New Mail"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1041
+#: code:addons/sale/sale.py:1048
 #, python-format
 msgid "No Customer Defined!"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1125
+#: code:addons/sale/sale.py:1132
 #, python-format
 msgid "No Pricelist ! : "
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1136
+#: code:addons/sale/sale.py:1143
 #, python-format
 msgid "No valid pricelist line found ! :"
 msgstr ""
@@ -1271,7 +1286,7 @@ msgid "Percentage"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:928
+#: code:addons/sale/sale.py:935
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr ""
@@ -1290,6 +1305,11 @@ msgstr ""
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Price"
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,price_reduce:0
+msgid "Price Reduce"
 msgstr ""
 
 #. module: sale
@@ -1415,6 +1435,7 @@ msgstr ""
 
 #. module: sale
 #: selection:sale.order,state:0
+#: selection:sale.report,state:0
 msgid "Quotation Sent"
 msgstr ""
 
@@ -1442,6 +1463,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.action_quotations_salesteams
 #: model:ir.ui.menu,name:sale.menu_sale_quotations
 #: view:sale.order:sale.view_sales_order_filter
+#: view:sale.report:sale.view_order_product_search
 msgid "Quotations"
 msgstr ""
 
@@ -1641,6 +1663,7 @@ msgstr ""
 #: view:account.invoice:sale.account_invoice_groupby_inherit
 #: view:account.invoice:sale.account_invoice_tree
 #: field:account.invoice,section_id:0
+#: view:account.invoice.report:sale.view_account_invoice_report_search_inherit
 #: field:account.invoice.report,section_id:0
 #: view:sale.order:sale.view_sales_order_filter
 #: field:sale.order,section_id:0
@@ -1726,7 +1749,7 @@ msgstr ""
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
-msgid "Shipping address :"
+msgid "Shipping address:"
 msgstr ""
 
 #. module: sale
@@ -1817,13 +1840,13 @@ msgid "The total amount."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:103
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:106
 #, python-format
 msgid "The value of Advance Amount must be positive."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:945
+#: code:addons/sale/sale.py:952
 #, python-format
 msgid "There is no Fiscal Position defined or Income category account defined for default properties of Product categories."
 msgstr ""
@@ -1835,13 +1858,13 @@ msgid "There is no default company for the current user!"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:93
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:96
 #, python-format
 msgid "There is no income account defined as global property."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:97
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:100
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)."
 msgstr ""
@@ -2026,7 +2049,7 @@ msgid "Warehouse Features"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:107
+#: code:addons/sale/wizard/sale_line_invoice.py:113
 #: code:addons/sale/wizard/sale_make_invoice.py:42
 #: code:addons/sale/wizard/sale_make_invoice.py:55
 #, python-format
@@ -2054,7 +2077,7 @@ msgid "What do you want to invoice?"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:983
+#: code:addons/sale/sale.py:990
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
 msgstr ""
@@ -2078,7 +2101,7 @@ msgid "You cannot group sales having different currencies for the same partner."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1123
+#: code:addons/sale/sale.py:1130
 #, python-format
 msgid "You have to select a pricelist or a customer in the sales form !\n"
 "Please set one before choosing a product."
@@ -2093,6 +2116,13 @@ msgstr ""
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Your Reference:"
+msgstr ""
+
+#. module: sale
+#: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
+#: view:sale.make.invoice:sale.view_sale_order_make_invoice
+#: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
+msgid "or"
 msgstr ""
 
 #. module: sale

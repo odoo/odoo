@@ -34,7 +34,7 @@ class MailMailStats(osv.Model):
     _order = 'message_id'
 
     _columns = {
-        'mail_mail_id': fields.many2one('mail.mail', 'Mail', ondelete='set null'),
+        'mail_mail_id': fields.many2one('mail.mail', 'Mail', ondelete='set null', select=True),
         'mail_mail_id_int': fields.integer(
             'Mail ID (tech)',
             help='ID of the related mail_mail. This field is an integer field because'

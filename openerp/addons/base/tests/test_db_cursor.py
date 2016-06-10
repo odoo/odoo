@@ -6,11 +6,10 @@ import openerp
 from openerp.tools.misc import mute_logger
 from openerp.tests import common
 
-DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
 def registry():
-    return openerp.modules.registry.RegistryManager.get(DB)
+    return openerp.modules.registry.RegistryManager.get(common.get_db_name())
 
 
 class test_cr_execute(unittest2.TestCase):

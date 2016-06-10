@@ -196,7 +196,7 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
                         + ' ' + normalize_format(l10n.time_format));
         case 'date':
             if (typeof(value) == "string")
-                value = instance.web.str_to_date(value.substring(0,10));
+                value = instance.web.auto_str_to_date(value);
             return value.toString(normalize_format(l10n.date_format));
         case 'time':
             if (typeof(value) == "string")
@@ -238,10 +238,6 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
                 throw new Error(_.str.sprintf(_t("'%s' is not a correct integer"), value));
             return tmp;
         case 'float':
-            tmp = Number(value);
-            if (!isNaN(tmp))
-                return tmp;
-
             var tmp2 = value;
             do {
                 tmp = tmp2;
@@ -271,9 +267,16 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
                     value, (date_pattern + ' ' + time_pattern));
             if (datetime !== null)
                 return instance.web.datetime_to_str(datetime);
-            datetime = Date.parseExact(value.toString().replace(/\d+/g, function(m){
+            datetime = Date.parseExact(value, (date_pattern));
+            if (datetime !== null)
+                return instance.web.datetime_to_str(datetime);
+            var leading_zero_value = value.toString().replace(/\d+/g, function(m){
                 return m.length === 1 ? "0" + m : m ;
-            }), (date_pattern + ' ' + time_pattern));
+            });
+            datetime = Date.parseExact(leading_zero_value, (date_pattern + ' ' + time_pattern));
+            if (datetime !== null)
+                return instance.web.datetime_to_str(datetime);
+            datetime = Date.parseExact(leading_zero_value, (date_pattern));
             if (datetime !== null)
                 return instance.web.datetime_to_str(datetime);
             datetime = Date.parse(value);
@@ -335,19 +338,28 @@ instance.web.auto_date_to_str = function(value, type) {
  * performs a half up rounding with arbitrary precision, correcting for float loss of precision
  * See the corresponding float_round() in server/tools/float_utils.py for more info
  * @param {Number} the value to be rounded
- * @param {Number} a non zero precision parameter. eg: 0.01 rounds to two digits.
+ * @param {Number} a precision parameter. eg: 0.01 rounds to two digits.
  */
 instance.web.round_precision = function(value, precision){
-    if(!value){
+    if (!value) {
         return 0;
-    }else if(!precision){
-        throw new Error('round_precision(...):  Cannot round value: '+value+' with a precision of zero (or undefined)');
+    } else if (!precision || precision < 0) {
+        precision = 1;
     }
     var normalized_value = value / precision;
     var epsilon_magnitude = Math.log(Math.abs(normalized_value))/Math.log(2);
     var epsilon = Math.pow(2, epsilon_magnitude - 53);
     normalized_value += normalized_value >= 0 ? epsilon : -epsilon;
-    var rounded_value = Math.round(normalized_value);
+
+    /**
+     * Javascript performs strictly the round half up method, which is asymmetric. However, in
+     * Python, the method is symmetric. For example:
+     * - In JS, Math.round(-0.5) is equal to -0.
+     * - In Python, round(-0.5) is equal to -1.
+     * We want to keep the Python behavior for consistency. 
+     */
+    var sign = normalized_value < 0 ? -1.0 : 1.0;
+    var rounded_value = sign * Math.round(Math.abs(normalized_value));
     return rounded_value * precision;
 };
 
@@ -359,6 +371,11 @@ instance.web.round_precision = function(value, precision){
  */
 instance.web.round_decimals = function(value, decimals){
     return instance.web.round_precision(value, Math.pow(10,-decimals));
+};
+
+instance.web.float_is_zero = function(value, decimals){
+    epsilon = Math.pow(10, -decimals);
+    return Math.abs(instance.web.round_precision(value, epsilon)) < epsilon;
 };
 
 })();

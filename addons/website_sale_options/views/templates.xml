@@ -19,7 +19,7 @@
   </xpath>
   <xpath expr="//table[@id='cart_products']/tbody//td[last()]" position="inside">
     <t t-if="line.linked_line_id">
-      <span class="js_quantity text-muted" t-att-data-line-id="line.id" t-esc="int(line.product_uom_qty)"/>
+      <span class="js_quantity text-muted" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-esc="int(line.product_uom_qty)"/>
     </t>
   </xpath>
 </template>
@@ -48,7 +48,7 @@
                   <span t-field="product.image_medium" t-field-options='{"widget": "image" }'/>
                 </td>
                 <td colspan="2">
-                  <strong t-field="product.name"/>
+                  <strong t-field="product.display_name"/>
                   <div class="text-muted">
                     <div t-field="product.description_sale"/>
                     <div class="js_attributes"/>
@@ -61,8 +61,9 @@
                       "widget": "monetary",
                       "from_currency": "website.currency_id",
                       "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
-                   }'/><br/>
+                   }'/>
                   <span class="oe_price" style="white-space: nowrap;"
+                    t-att-data-product-id="product.id"
                     t-field="product.price"
                     t-field-options='{
                        "widget": "monetary",
@@ -71,7 +72,7 @@
                    }'/>
                 </td>
                 <td>
-                  <div class="input-group">
+                  <div class="input-group oe_website_spinner">
                       <span class="input-group-addon">
                           <a t-attf-href="#" class="mb8 js_add_cart_json">
                               <i class="fa fa-minus"></i>
@@ -106,15 +107,13 @@
                   </div>
                 </td>
                 <td>
-                  <t t-if="(compute_currency(product.lst_price) - product.price) &gt; 0.1">
-                  <span class="text-danger" style="text-decoration: line-through; white-space: nowrap;"
+                  <span class="text-danger oe_optional" t-att-style="'' if (compute_currency(product.lst_price) - product.price) &gt; 0.1 else 'display: none;'" style="text-decoration: line-through; white-space: nowrap;"
                     t-field="product.lst_price"
                     t-field-options='{
                       "widget": "monetary",
                       "from_currency": "website.currency_id",
                       "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
                    }'/><br/>
-                  </t>
                   <span class="oe_price" style="white-space: nowrap;"
                     t-field="product.price"
                     t-field-options='{
@@ -131,18 +130,28 @@
                     <a href="#" class="js_remove"><small>Remove from cart</small></a>
                   </span>
                 </td>
+                <t t-set="option_inc" t-value="option_inc+1"/>
               </tr>
 
             </tbody>
           </table>
         </div>
         <div class="modal-footer">
-          <a class="btn btn-default a-submit js_goto_shop"><i class="fa fa-chevron-left"></i> Continue shopping</a>
-          <a class="btn btn-primary pull-right a-submit"><i class="fa fa-shopping-cart fa-fw"></i> Proceed to checkout</a>
+          <a class="btn btn-default a-submit js_goto_shop"><i class="fa fa-chevron-left"></i> <span class="hidden-xs">Continue Shopping</span><span class="visible-xs-inline">Continue</span></a>
+          <a class="btn btn-primary pull-right a-submit"><i class="fa fa-shopping-cart fa-fw"></i> <span class="hidden-xs">Proceed to checkout</span><span class="visible-xs-inline">Checkout</span></a>
         </div>
       </div>
     </div>
   </div>
+</template>
+
+<template id="products_add_to_cart" inherit_id="website_sale.products_add_to_cart">
+  <xpath expr="//div[@class='product_price']/t[1]" position="attributes">
+    <attribute name="t-if">len(product.product_variant_ids) == 1 and not len(product.optional_product_ids) &gt;= 1</attribute>
+  </xpath>
+  <xpath expr="//div[@class='product_price']/t[2]" position="attributes">
+    <attribute name="t-if">len(product.product_variant_ids) &gt; 1 or len(product.optional_product_ids) &gt;= 1</attribute>
+  </xpath>
 </template>
 
 </data>

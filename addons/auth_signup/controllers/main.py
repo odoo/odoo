@@ -54,7 +54,11 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
                 self.do_signup(qcontext)
                 return super(AuthSignupHome, self).web_login(*args, **kw)
             except (SignupError, AssertionError), e:
-                qcontext['error'] = _(e.message)
+                if request.env["res.users"].sudo().search([("login", "=", qcontext.get("login"))]):
+                    qcontext["error"] = _("Another user is already registered using this email address.")
+                else:
+                    _logger.error(e.message)
+                    qcontext['error'] = _("Could not create a new account.")
 
         return request.render('auth_signup.signup', qcontext)
 
@@ -114,6 +118,7 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
         values = dict((key, qcontext.get(key)) for key in ('login', 'name', 'password'))
         assert any([k for k in values.values()]), "The form was not properly filled in."
         assert values.get('password') == qcontext.get('confirm_password'), "Passwords do not match; please retype them."
+        values['lang'] = request.lang
         self._signup_with_values(qcontext.get('token'), values)
         request.cr.commit()
 

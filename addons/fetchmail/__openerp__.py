@@ -64,7 +64,6 @@ For more specific needs, you may also assign custom-defined actions
     'demo': [],
     'installable': True,
     'auto_install': True,
-    'images': ['images/1_email_servers.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

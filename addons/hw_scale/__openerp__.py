@@ -37,6 +37,7 @@ such as the Mettler Toledo Ariva.
 """,
     'author': 'OpenERP SA',
     'depends': ['hw_proxy'],
+    'external_dependencies': {'python': ['serial']},
     'test': [
     ],
     'installable': True,

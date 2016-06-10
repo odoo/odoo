@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='UTF-8' ?>
 <openerp>
     <data>
 
@@ -26,11 +27,18 @@
                     <filter domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
                     <filter domain="[('state','=','validate')]" string="Validated" name="validated"/>
                     <separator/>
-                    <filter name="year" string="Year" domain="[('holiday_status_id.active','=',True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
+                    <filter name="active_types" string="Active Types" domain="[('holiday_status_id.active', '=', True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
                     <separator/>
-                    <filter string="My Requests" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leave Requests"/>
+                    <filter name="year" string="Year"
+                        domain="['|','&amp;',('date_to', '&lt;=', time.strftime('%%Y-12-31')),
+                                             ('date_to', '&gt;=', time.strftime('%%Y-01-01')),
+                                     '&amp;',('date_from', '&lt;=', time.strftime('%%Y-12-31')),
+                                             ('date_from', '&gt;=', time.strftime('%%Y-01-01'))]"
+                        help="Current Year Leaves"/>
                     <separator/>
-                    <filter string="My Department Leaves" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
+                    <filter string="My Requests" name="my_leaves" domain="[('user_id', '=', uid)]" help="My Leave Requests"/>
+                    <separator/>
+                    <filter string="My Department Leaves" name="my_department_leaves" domain="[('department_id.manager_id.user_id', '=', uid)]"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <field name="holiday_status_id"/>

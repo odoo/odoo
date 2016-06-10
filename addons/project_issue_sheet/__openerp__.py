@@ -32,7 +32,6 @@ Worklogs can be maintained to signify number of hours spent by users to handle a
                 """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/project-management',
-    'images': ['images/project_issue_sheet_worklog.jpeg'],
     'depends': [
         'project_issue',
         'hr_timesheet_sheet',

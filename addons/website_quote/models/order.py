@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import api
 from openerp.osv import osv, fields
 import uuid
 import time
@@ -68,7 +69,7 @@ class sale_quote_line(osv.osv):
         if product_obj.description_sale:
             name += '\n' + product_obj.description_sale
         vals.update({
-            'price_unit': product_obj.list_price,
+            'price_unit': product_obj.lst_price,
             'product_uom_id': product_obj.uom_id.id,
             'website_description': product_obj and (product_obj.quote_description or product_obj.website_description) or '',
             'name': name,
@@ -131,15 +132,16 @@ class sale_order(osv.osv):
         for order in self.browse(cr, uid, ids, context=context):
             total = 0.0
             for line in order.order_line:
-                total += (line.product_uom_qty * line.price_unit)
+                total += line.price_subtotal + line.price_unit * ((line.discount or 0.0) / 100.0) * line.product_uom_qty
             res[order.id] = total
         return res
 
     _columns = {
         'access_token': fields.char('Security Token', required=True, copy=False),
-        'template_id': fields.many2one('sale.quote.template', 'Quote Template'),
+        'template_id': fields.many2one('sale.quote.template', 'Quote Template', readonly=True,
+            states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'website_description': fields.html('Description'),
-        'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines'),
+        'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines', copy=True),
         'validity_date': fields.date('Expiry Date'),
         'amount_undiscounted': fields.function(_get_total, string='Amount Before Discount', type="float",
             digits_compute=dp.get_precision('Account'))
@@ -183,6 +185,7 @@ class sale_order(osv.osv):
                 'product_uom': line.product_uom_id.id,
                 'website_description': line.website_description,
                 'state': 'draft',
+                'delay': line.product_id.sale_delay
             })
             lines.append((0, 0, data))
         options = []
@@ -223,6 +226,23 @@ class sale_order(osv.osv):
             'res_id': id,
         }
 
+    def action_quotation_send(self, cr, uid, ids, context=None):
+        action = super(sale_order, self).action_quotation_send(cr, uid, ids, context=context)
+        ir_model_data = self.pool.get('ir.model.data')
+        quote_template_id = self.read(cr, uid, ids, ['template_id'], context=context)[0]['template_id']
+        if quote_template_id:
+            try:
+                template_id = ir_model_data.get_object_reference(cr, uid, 'website_quote', 'email_template_edi_sale')[1]
+            except ValueError:
+                pass
+            else:
+                action['context'].update({
+                    'default_template_id': template_id,
+                    'default_use_template': True
+                })
+
+        return action
+
 
 class sale_quote_option(osv.osv):
     _name = "sale.quote.option"
@@ -249,6 +269,8 @@ class sale_quote_option(osv.osv):
             'name': product_obj.name,
             'uom_id': product_obj.product_tmpl_id.uom_id.id,
         })
+        if product_obj.description_sale:
+            vals['name'] += '\n'+product_obj.description_sale
         return {'value': vals}
 
 class sale_order_option(osv.osv):
@@ -270,6 +292,8 @@ class sale_order_option(osv.osv):
     _defaults = {
         'quantity': 1,
     }
+
+    # TODO master: to remove, replaced by onchange of the new api
     def on_change_product_id(self, cr, uid, ids, product, context=None):
         vals = {}
         if not product:
@@ -281,7 +305,24 @@ class sale_order_option(osv.osv):
             'name': product_obj.name,
             'uom_id': product_obj.product_tmpl_id.uom_id.id,
         })
+        if product_obj.description_sale:
+            vals['name'] += '\n'+product_obj.description_sale
         return {'value': vals}
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        product = self.product_id.with_context(lang=self.order_id.partner_id.lang)
+        self.price_unit = product.list_price
+        self.website_description = product.quote_description or product.website_description
+        self.name = product.name
+        if product.description_sale:
+            self.name += '\n' + product.description_sale
+        self.uom_id = product.product_tmpl_id.uom_id
+        if product and self.order_id.pricelist_id:
+            partner_id = self.order_id.partner_id.id
+            pricelist = self.order_id.pricelist_id.id
+            self.price_unit = self.order_id.pricelist_id.price_get(product.id, self.quantity, partner_id)[pricelist]
+
 
 class product_template(osv.Model):
     _inherit = "product.template"

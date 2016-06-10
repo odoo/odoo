@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-09-23 16:27+0000\n"
+"POT-Creation-Date: 2016-05-25 12:58+0000\n"
+"PO-Revision-Date: 2016-05-25 12:58+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -121,19 +121,19 @@ msgid "<="
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:745
+#: code:addons/gamification/models/challenge.py:756
 #, python-format
 msgid "<br/>Nobody has succeeded to reach every goal, no badge is rewared for this challenge."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:743
+#: code:addons/gamification/models/challenge.py:754
 #, python-format
 msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:752
+#: code:addons/gamification/models/challenge.py:763
 #, python-format
 msgid "<br/>Special rewards were sent to the top competing users. The ranking for this challenge is :"
 msgstr ""
@@ -328,7 +328,7 @@ msgid "Can not grant"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:453
+#: code:addons/gamification/models/goal.py:457
 #, python-format
 msgid "Can not modify the configuration of a started goal"
 msgstr ""
@@ -563,6 +563,18 @@ msgid "Display Mode"
 msgstr ""
 
 #. module: gamification
+#: field:gamification.badge,display_name:0
+#: field:gamification.badge.user,display_name:0
+#: field:gamification.badge.user.wizard,display_name:0
+#: field:gamification.challenge,display_name:0
+#: field:gamification.challenge.line,display_name:0
+#: field:gamification.goal,display_name:0
+#: field:gamification.goal.definition,display_name:0
+#: field:gamification.goal.wizard,display_name:0
+msgid "Display Name"
+msgstr ""
+
+#. module: gamification
 #: field:gamification.goal.definition,display_mode:0
 msgid "Displayed as"
 msgstr ""
@@ -598,9 +610,9 @@ msgid "End Date"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:553
+#: code:addons/gamification/models/challenge.py:561
 #: code:addons/gamification/models/goal.py:148
-#: code:addons/gamification/models/goal.py:453
+#: code:addons/gamification/models/goal.py:457
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -933,7 +945,7 @@ msgid "Inherited models"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:319
+#: code:addons/gamification/models/goal.py:334
 #, python-format
 msgid "Invalid return content from the evaluation of code for definition %s"
 msgstr ""
@@ -965,6 +977,18 @@ msgstr ""
 #: field:gamification.badge,message_last_post:0
 #: field:gamification.challenge,message_last_post:0
 msgid "Last Message Date"
+msgstr ""
+
+#. module: gamification
+#: field:gamification.badge,__last_update:0
+#: field:gamification.badge.user,__last_update:0
+#: field:gamification.badge.user.wizard,__last_update:0
+#: field:gamification.challenge,__last_update:0
+#: field:gamification.challenge.line,__last_update:0
+#: field:gamification.goal,__last_update:0
+#: field:gamification.goal.definition,__last_update:0
+#: field:gamification.goal.wizard,__last_update:0
+msgid "Last Modified on"
 msgstr ""
 
 #. module: gamification
@@ -1136,7 +1160,7 @@ msgid "No one, assigned through challenges"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:755
+#: code:addons/gamification/models/challenge.py:766
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
 msgstr ""
@@ -1312,7 +1336,7 @@ msgid "Responsible"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:553
+#: code:addons/gamification/models/challenge.py:561
 #, python-format
 msgid "Retrieving progress for personal challenge without user information"
 msgstr ""
@@ -1517,7 +1541,7 @@ msgid "The action that will be called to update the goal value."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:739
+#: code:addons/gamification/models/challenge.py:750
 #, python-format
 msgid "The challenge %s is finished."
 msgstr ""
@@ -1583,6 +1607,22 @@ msgstr ""
 #. module: gamification
 #: help:gamification.badge,rule_max_number:0
 msgid "The maximum number of time this badge can be sent per month per person."
+msgstr ""
+
+#. module: gamification
+#: code:addons/gamification/models/goal.py:160
+#, python-format
+msgid "The model configuration for the definition %s seems incorrect, please check it.\n"
+"\n"
+"%s not found"
+msgstr ""
+
+#. module: gamification
+#: code:addons/gamification/models/goal.py:158
+#, python-format
+msgid "The model configuration for the definition %s seems incorrect, please check it.\n"
+"\n"
+"%s not stored"
 msgstr ""
 
 #. module: gamification
@@ -1713,7 +1753,7 @@ msgid "Update"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:487
+#: code:addons/gamification/models/goal.py:491
 #, python-format
 msgid "Update %s"
 msgstr ""
@@ -1742,7 +1782,7 @@ msgstr ""
 #: code:addons/gamification/models/badge.py:240
 #: code:addons/gamification/models/badge.py:242
 #: code:addons/gamification/models/badge.py:244
-#: code:addons/gamification/wizard/grant_badge.py:44
+#: code:addons/gamification/wizard/grant_badge.py:43
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -1781,7 +1821,7 @@ msgid "You are not in the user allowed list."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/wizard/grant_badge.py:44
+#: code:addons/gamification/wizard/grant_badge.py:43
 #, python-format
 msgid "You can not grant a badge to yourself"
 msgstr ""
@@ -1844,6 +1884,13 @@ msgstr ""
 #: code:addons/gamification/static/src/xml/gamification.xml:108
 #, python-format
 msgid "more details..."
+msgstr ""
+
+#. module: gamification
+#: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
+#: view:gamification.challenge:gamification.view_challenge_wizard
+#: view:gamification.goal.wizard:gamification.view_goal_wizard_update_current
+msgid "or"
 msgstr ""
 
 #. module: gamification

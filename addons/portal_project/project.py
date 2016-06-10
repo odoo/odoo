@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp.osv import osv
-
+from openerp.tools.translate import _
 
 class portal_project(osv.Model):
     """ Update of mail_mail class, to add the signin URL to notifications. """
@@ -30,7 +30,7 @@ class portal_project(osv.Model):
         """ Override to add portal option. """
         selection = super(portal_project, self)._get_visibility_selection(cr, uid, context=context)
         idx = [item[0] for item in selection].index('public')
-        selection.insert((idx + 1), ('portal', 'Customer related project: visible through portal'))
+        selection.insert((idx + 1), ('portal', _('Customer related project: visible through portal')))
         return selection
         # return [('public', 'All Users'),
         #         ('portal', 'Portal Users and Employees'),

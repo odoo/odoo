@@ -31,6 +31,7 @@ class TestOnChange(common.TransactionCase):
         self.assertEqual(field_onchange.get('body'), '1')
         self.assertEqual(field_onchange.get('discussion'), '1')
 
+        # changing 'discussion' should recompute 'name'
         values = {
             'discussion': discussion.id,
             'name': "[%s] %s" % ('', USER.name),
@@ -40,9 +41,10 @@ class TestOnChange(common.TransactionCase):
         }
         self.env.invalidate_all()
         result = self.Message.onchange(values, 'discussion', field_onchange)
-        self.assertLessEqual(set(['name']), set(result['value']))
+        self.assertIn('name', result['value'])
         self.assertEqual(result['value']['name'], "[%s] %s" % (discussion.name, USER.name))
 
+        # changing 'body' should recompute 'size'
         values = {
             'discussion': discussion.id,
             'name': "[%s] %s" % (discussion.name, USER.name),
@@ -52,8 +54,21 @@ class TestOnChange(common.TransactionCase):
         }
         self.env.invalidate_all()
         result = self.Message.onchange(values, 'body', field_onchange)
-        self.assertLessEqual(set(['size']), set(result['value']))
+        self.assertIn('size', result['value'])
         self.assertEqual(result['value']['size'], len(BODY))
+
+        # changing 'body' should not recompute 'name', even if 'discussion' and
+        # 'name' are not consistent with each other
+        values = {
+            'discussion': discussion.id,
+            'name': False,
+            'body': BODY,
+            'author': USER.id,
+            'size': 0,
+        }
+        self.env.invalidate_all()
+        result = self.Message.onchange(values, 'body', field_onchange)
+        self.assertNotIn('name', result['value'])
 
     def test_onchange_one2many(self):
         """ test the effect of onchange() on one2many fields """
@@ -87,7 +102,7 @@ class TestOnChange(common.TransactionCase):
         # }
         # self.env.invalidate_all()
         # result = self.Discussion.onchange(values, 'messages', field_onchange)
-        # self.assertLessEqual(set(['messages']), set(result['value']))
+        # self.assertIn('messages', result['value'])
         # self.assertItemsEqual(result['value']['messages'], [
         #     (0, 0, {
         #         'name': "[%s] %s" % ("Foo", USER.name),
@@ -121,7 +136,7 @@ class TestOnChange(common.TransactionCase):
         }
         self.env.invalidate_all()
         result = self.Discussion.onchange(values, 'name', field_onchange)
-        self.assertLessEqual(set(['messages']), set(result['value']))
+        self.assertIn('messages', result['value'])
         self.assertItemsEqual(result['value']['messages'], [
             (0, 0, {
                 'name': "[%s] %s" % ("Foo", USER.name),
@@ -131,11 +146,47 @@ class TestOnChange(common.TransactionCase):
             }),
             (1, message.id, {
                 'name': "[%s] %s" % ("Foo", USER.name),
-                'body': BODY,
-                'author': USER.id,
-                'size': len(BODY),
             }),
         ])
+
+    def test_onchange_one2many_multi(self):
+        """ test the effect of multiple onchange methods on one2many fields """
+        partner = self.env.ref('base.res_partner_1')
+        multi = self.env['test_new_api.multi'].create({'partner': partner.id})
+        line = multi.lines.create({'multi': multi.id})
+
+        field_onchange = multi._onchange_spec()
+        self.assertEqual(field_onchange, {
+            'name': '1',
+            'partner': '1',
+            'lines': None,
+            'lines.name': None,
+            'lines.partner': None,
+        })
+
+        values = multi._convert_to_write({key: multi[key] for key in ('name', 'partner', 'lines')})
+        self.assertEqual(values, {
+            'name': partner.name,
+            'partner': partner.id,
+            'lines': [(6, 0, [line.id])],
+        })
+
+        # modify 'partner'
+        #   -> set 'partner' on all lines
+        #   -> recompute 'name'
+        #       -> set 'name' on all lines
+        partner = self.env.ref('base.res_partner_2')
+        values['partner'] = partner.id
+        values['lines'].append((0, 0, {'name': False, 'partner': False}))
+        self.env.invalidate_all()
+        result = multi.onchange(values, 'partner', field_onchange)
+        self.assertEqual(result['value'], {
+            'name': partner.name,
+            'lines': [
+                (1, line.id, {'name': partner.name, 'partner': partner.id}),
+                (0, 0, {'name': partner.name, 'partner': partner.id}),
+            ],
+        })
 
     def test_onchange_specific(self):
         """ test the effect of field-specific onchange method """
@@ -161,7 +212,7 @@ class TestOnChange(common.TransactionCase):
         self.env.invalidate_all()
         result = discussion.onchange(values, 'moderator', field_onchange)
 
-        self.assertLessEqual(set(['participants']), set(result['value']))
+        self.assertIn('participants', result['value'])
         self.assertItemsEqual(result['value']['participants'], participants + [(4, demo.id)])
 
     def test_onchange_one2many_value(self):
@@ -184,4 +235,5 @@ class TestOnChange(common.TransactionCase):
             'message_changes': 0,
         }
         result = discussion.onchange(values, 'messages', field_onchange)
-        self.assertEqual(result['value'].get('message_changes', 0), len(discussion.messages))
+        self.assertIn('message_changes', result['value'])
+        self.assertEqual(result['value']['message_changes'], len(discussion.messages))

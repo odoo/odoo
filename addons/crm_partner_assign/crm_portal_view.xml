@@ -6,7 +6,7 @@
             <field name="model">crm.lead</field>
             <field name="priority" eval="32"/>
             <field name="arch" type="xml">
-            <tree string="Leads" colors="red:stage_id[1]=='Disinterested';black:stage_id[1]=='Interested'">
+            <tree string="Leads" colors="red:stage_id and stage_id[1]=='Disinterested';black:stage_id and stage_id[1]=='Interested'">
               <field name="date_deadline" invisible="1"/>
               <field name="create_date"/>
               <field name="name" string="Subject"/>

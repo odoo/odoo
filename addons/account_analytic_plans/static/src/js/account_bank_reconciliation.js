@@ -30,6 +30,14 @@ instance.web.account.bankStatementReconciliation.include({
         return this._super().then(function() {
         });
     },
+});
 
+instance.web.account.bankStatementReconciliationLine.include({
+    prepareCreatedMoveLineForPersisting: function(line) {
+        var dict = this._super(line);
+        if (line.analytics_id) dict['analytics_id'] = line.analytics_id;
+        if (dict["analytic_account_id"] !== undefined) delete dict["analytic_account_id"];
+        return dict;
+    },
 });
 };

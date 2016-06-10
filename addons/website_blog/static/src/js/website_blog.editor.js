@@ -30,14 +30,18 @@ $(document).ready(function() {
                 $('body').on('click', '#clear_cover',_.bind(this.clean_bg, self.rte.editor, vHeight));
             },
             save : function() {
-                var res = this._super();
+                var self = this;
+                var _super = this._super;
                 if ($('.cover').length) {
-                    openerp.jsonRpc("/blogpost/change_background", 'call', {
+                    return openerp.jsonRpc("/blogpost/change_background", 'call', {
                         'post_id' : $('#blog_post_name').attr('data-oe-id'),
                         'image' : $('.cover').css('background-image').replace(/url\(|\)|"|'/g,''),
+                    }).then(function () {
+                        return _super.call(self);
                     });
+                } else {
+                    return this._super();
                 }
-                return res;
             },
             clean_bg : function(vHeight) {
                 $('.js_fullheight').css({"background-image":'none', 'min-height': vHeight});

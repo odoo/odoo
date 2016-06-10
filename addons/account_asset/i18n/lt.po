@@ -1,26 +1,28 @@
-# Lithuanian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_asset
+# 
+# Translators:
+# Arminas Grigonis <arminas@versada.lt>, 2015
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Lithuanian <lt@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2016-04-19 09:37+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-8/language/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 06:49+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: lt\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: account_asset
 #: field:account.asset.asset,entry_count:0
 msgid "# Asset Entries"
-msgstr ""
+msgstr "# Nusidevėjimo įrašai"
 
 #. module: account_asset
 #: field:asset.asset.report,nbr:0
@@ -31,14 +33,12 @@ msgstr "# nusidėvėjimo įrašų"
 #: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
 msgid ""
 "<p>\n"
-"            From this report, you can have an overview on all depreciation. "
-"The\n"
-"            tool search can also be used to personalise your Assets reports "
-"and\n"
+"            From this report, you can have an overview on all depreciation. The\n"
+"            tool search can also be used to personalise your Assets reports and\n"
 "            so, match this analysis to your needs;\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p>\n            Šioje ataskaitoje Jūs galite peržvelgti visą nusidevėjimą. Galite naudotis paieškos įrankiu, kuris padės labiau personalizuoti ilgalaikio turto ataskaitas,\n            kad jos atitiktų Jūsų analizės standartus;\n          </p>\n        "
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_search
@@ -68,7 +68,7 @@ msgstr "Nusidėvėjusi vertė"
 #. module: account_asset
 #: view:account.asset.category:account_asset.view_account_asset_category_form
 msgid "Analytic Information"
-msgstr "Analitinė informacija"
+msgstr "Analitinė Informacija"
 
 #. module: account_asset
 #: field:account.asset.category,account_analytic_id:0
@@ -79,8 +79,7 @@ msgstr "Analitinė sąskaita"
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 #: view:account.asset.asset:account_asset.view_account_asset_search
 #: field:account.asset.depreciation.line,asset_id:0
-#: field:account.asset.history,asset_id:0
-#: field:account.move.line,asset_id:0
+#: field:account.asset.history,asset_id:0 field:account.move.line,asset_id:0
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 #: field:asset.asset.report,asset_id:0
 #: model:ir.model,name:account_asset.model_account_asset_asset
@@ -123,6 +122,11 @@ msgid "Asset History"
 msgstr "Ilgalaikio turto istorija"
 
 #. module: account_asset
+#: field:asset.modify,asset_method_time:0
+msgid "Asset Method Time"
+msgstr "Ilgalaikio turto metodo laikas"
+
+#. module: account_asset
 #: field:account.asset.asset,name:0
 msgid "Asset Name"
 msgstr "Ilgalaikio turto pavadinimas"
@@ -138,7 +142,7 @@ msgstr "Ilgalaikio turto kategorija"
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
 msgid "Asset depreciation line"
-msgstr ""
+msgstr "Ilgalaikio turto nusidevėjimo eilutė"
 
 #. module: account_asset
 #: view:account.asset.history:account_asset.view_account_asset_history_tree
@@ -201,59 +205,41 @@ msgstr "Keisti laikotarpį"
 msgid ""
 "Check this if you want to automatically confirm the assets of this category "
 "when created by invoices."
-msgstr ""
-"Ilgalaikis turtas sukurtas iš sąskaitos faktūros ir priklausantis šiai "
-"kategorijai bus automatiškai patvirtintas."
+msgstr "Ilgalaikis turtas sukurtas iš sąskaitos faktūros ir priklausantis šiai kategorijai bus automatiškai patvirtintas."
 
 #. module: account_asset
 #: field:account.asset.asset,child_ids:0
 msgid "Children Assets"
-msgstr ""
+msgstr "Vaikinis turtas"
 
 #. module: account_asset
-#: help:account.asset.asset,method:0
-#: help:account.asset.category,method:0
+#: help:account.asset.asset,method:0 help:account.asset.category,method:0
 msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
-msgstr ""
-"Pasirinkite metodą naudojamą nusidėvėjimo eilučių skaičiavimui.\n"
-"  * Tiesinis: Skaičiuojama pagal: Įsigijimo kaina / Periodų skaičius\n"
-"  * Dvigubo balanso: Skaičiuojama: Likutinė vertė * Nusidėvėjimo procentas"
+msgstr "Pasirinkite metodą naudojamą nusidėvėjimo eilučių skaičiavimui.\n  * Tiesinis: Skaičiuojama pagal: Įsigijimo kaina / Periodų skaičius\n  * Dvigubo balanso: Skaičiuojama: Likutinė vertė * Nusidėvėjimo procentas"
 
 #. module: account_asset
 #: help:account.asset.asset,method_time:0
 #: help:account.asset.category,method_time:0
 msgid ""
-"Choose the method to use to compute the dates and number of depreciation "
-"lines.\n"
-"  * Number of Depreciations: Fix the number of depreciation lines and the "
-"time between 2 depreciations.\n"
-"  * Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
-msgstr ""
-"Pasirinkite metodą naudojamą paskaičiuoti datas ir kartus, per kiek "
-"nusidėvės ilgalaikis turtas.\n"
-"  * Periodų skaičius: Fiksuotas kartų skaičius ir laikotarpis tarp dviejų "
-"nusidėvėjimo skaičiavimų.\n"
-"  * Pabaigos data: Pasirinkite laikotarpį tarp dviejų nusidėvėjimo "
-"skaičiavimų ir turtas bus nudėvėtas iki šios datos."
+"Choose the method to use to compute the dates and number of depreciation lines.\n"
+"  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
+"  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
+msgstr "Pasirinkite metodą naudojamą paskaičiuoti datas ir kartus, per kiek nusidėvės ilgalaikis turtas.\n  * Periodų skaičius: Fiksuotas kartų skaičius ir laikotarpis tarp dviejų nusidėvėjimo skaičiavimų.\n  * Pabaigos data: Pasirinkite laikotarpį tarp dviejų nusidėvėjimo skaičiavimų ir turtas bus nudėvėtas iki šios datos."
 
 #. module: account_asset
 #: help:asset.depreciation.confirmation.wizard,period_id:0
 msgid ""
 "Choose the period for which you want to automatically post the depreciation "
 "lines of running assets"
-msgstr ""
-"Pasirinkite periodą, kuriame užregistruoti naudojamo ilgalaikio turto "
-"nusidėvėjimą DK įrašus"
+msgstr "Pasirinkite periodą, kuriame užregistruoti naudojamo ilgalaikio turto nusidėvėjimą DK įrašus"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0
-#: selection:asset.asset.report,state:0
+#: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
 msgid "Close"
-msgstr "Uždaryta"
+msgstr "Uždaryti"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_search
@@ -269,8 +255,7 @@ msgid "Company"
 msgstr "Įmonė"
 
 #. module: account_asset
-#: field:account.asset.asset,method:0
-#: field:account.asset.category,method:0
+#: field:account.asset.asset,method:0 field:account.asset.category,method:0
 msgid "Computation Method"
 msgstr "Skaičiavimo metodas"
 
@@ -289,7 +274,7 @@ msgstr "Skaičiuoti nusidėvėjimą"
 #: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
 #: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
 msgid "Compute Assets"
-msgstr "Skaičiuoti nusidėvėjimą"
+msgstr "Skaičiuoti nusidėvėjimus"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
@@ -305,7 +290,7 @@ msgstr "Sukurti įrašus"
 #: code:addons/account_asset/wizard/wizard_asset_compute.py:49
 #, python-format
 msgid "Created Asset Moves"
-msgstr ""
+msgstr "Sukurti nusidevėjimo įrašai"
 
 #. module: account_asset
 #: field:account.asset.asset,create_uid:0
@@ -315,7 +300,7 @@ msgstr ""
 #: field:asset.depreciation.confirmation.wizard,create_uid:0
 #: field:asset.modify,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Sukūrė"
 
 #. module: account_asset
 #: field:account.asset.asset,create_date:0
@@ -325,7 +310,7 @@ msgstr ""
 #: field:asset.depreciation.confirmation.wizard,create_date:0
 #: field:asset.modify,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Sukurta"
 
 #. module: account_asset
 #: field:account.asset.asset,currency_id:0
@@ -414,12 +399,12 @@ msgstr "Nusidėvėjimo metodas"
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Depreciation Month"
-msgstr ""
+msgstr "Nusidėvėjimo mėnuo"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,name:0
 msgid "Depreciation Name"
-msgstr "Pavadinimas"
+msgstr "Nusidėvėjimo pavadinimas"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0
@@ -438,8 +423,7 @@ msgstr "Pabaigos data"
 
 #. module: account_asset
 #: field:account.asset.category,method_end:0
-#: field:account.asset.history,method_end:0
-#: field:asset.modify,method_end:0
+#: field:account.asset.history,method_end:0 field:asset.modify,method_end:0
 msgid "Ending date"
 msgstr "Pabaigos data"
 
@@ -453,7 +437,7 @@ msgstr "Įrašai"
 #. module: account_asset
 #: constraint:account.asset.asset:0
 msgid "Error ! You cannot create recursive assets."
-msgstr ""
+msgstr "Klaida! Jūs negalite sukurti ciklinio turto."
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:81
@@ -484,7 +468,7 @@ msgstr "Įsigijimo kaina"
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Group By"
-msgstr ""
+msgstr "Grupuoti pagal"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
@@ -498,24 +482,19 @@ msgid "History name"
 msgstr "Pavadinimas"
 
 #. module: account_asset
-#: field:account.asset.asset,id:0
-#: field:account.asset.category,id:0
-#: field:account.asset.depreciation.line,id:0
-#: field:account.asset.history,id:0
+#: field:account.asset.asset,id:0 field:account.asset.category,id:0
+#: field:account.asset.depreciation.line,id:0 field:account.asset.history,id:0
 #: field:asset.asset.report,id:0
-#: field:asset.depreciation.confirmation.wizard,id:0
-#: field:asset.modify,id:0
+#: field:asset.depreciation.confirmation.wizard,id:0 field:asset.modify,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_asset
-#: help:account.asset.asset,prorata:0
-#: help:account.asset.category,prorata:0
+#: help:account.asset.asset,prorata:0 help:account.asset.category,prorata:0
 msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first January"
-msgstr ""
-"Skaičiuoti nusidėvėjimą nuo pirkimo datos, o ne nuo finansinių metų pradžios"
+msgstr "Skaičiuoti nusidėvėjimą nuo pirkimo datos, o ne nuo finansinių metų pradžios"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice
@@ -552,7 +531,7 @@ msgstr "DK įrašai"
 #: field:asset.depreciation.confirmation.wizard,write_uid:0
 #: field:asset.modify,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Paskutini kartą atnaujino"
 
 #. module: account_asset
 #: field:account.asset.asset,write_date:0
@@ -562,7 +541,7 @@ msgstr ""
 #: field:asset.depreciation.confirmation.wizard,write_date:0
 #: field:asset.modify,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Paskutinį kartą atnaujinta"
 
 #. module: account_asset
 #: selection:account.asset.asset,method:0
@@ -593,8 +572,7 @@ msgid "Next Period Depreciation"
 msgstr "Likutinė vertė"
 
 #. module: account_asset
-#: field:account.asset.asset,note:0
-#: field:account.asset.category,note:0
+#: field:account.asset.asset,note:0 field:account.asset.category,note:0
 #: field:account.asset.history,note:0
 msgid "Note"
 msgstr "Pastaba"
@@ -603,8 +581,7 @@ msgstr "Pastaba"
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 #: view:account.asset.category:account_asset.view_account_asset_category_form
 #: view:account.asset.history:account_asset.view_account_asset_history_form
-#: view:asset.modify:account_asset.asset_modify_form
-#: field:asset.modify,note:0
+#: view:asset.modify:account_asset.asset_modify_form field:asset.modify,note:0
 msgid "Notes"
 msgstr "Pastabos"
 
@@ -665,8 +642,7 @@ msgid "Posted depreciation lines"
 msgstr "Užregistruoti nusidėvėjimo DK įrašai"
 
 #. module: account_asset
-#: field:account.asset.asset,prorata:0
-#: field:account.asset.category,prorata:0
+#: field:account.asset.asset,prorata:0 field:account.asset.category,prorata:0
 msgid "Prorata Temporis"
 msgstr ""
 
@@ -686,7 +662,7 @@ msgstr "Pirkimo data"
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Purchase Month"
-msgstr ""
+msgstr "Pirkimo mėnuo"
 
 #. module: account_asset
 #: field:asset.modify,name:0
@@ -718,7 +694,7 @@ msgstr "Likvidacinė kaina"
 #. module: account_asset
 #: view:account.asset.category:account_asset.view_account_asset_category_search
 msgid "Search Asset Category"
-msgstr ""
+msgstr "Ieškoti ilg. turto kategorijoje"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,sequence:0
@@ -748,11 +724,10 @@ msgstr "Laikotarpis tarp dviejų nusidėvėjimų, mėnesiais"
 #. module: account_asset
 #: field:account.asset.depreciation.line,parent_state:0
 msgid "State of Asset"
-msgstr ""
+msgstr "Turto būklė"
 
 #. module: account_asset
-#: field:account.asset.asset,state:0
-#: field:asset.asset.report,state:0
+#: field:account.asset.asset,state:0 field:asset.asset.report,state:0
 msgid "Status"
 msgstr "Būsena"
 
@@ -765,17 +740,9 @@ msgstr "Laikotarpis mėnesiais tarp dviejų nusidėvėjimų"
 #: help:account.asset.history,method_time:0
 msgid ""
 "The method to use to compute the dates and number of depreciation lines.\n"
-"Number of Depreciations: Fix the number of depreciation lines and the time "
-"between 2 depreciations.\n"
-"Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
-msgstr ""
-"Metodas naudojamas paskaičiuoti datas ir kartus, per kiek nusidėvės "
-"ilgalaikis turtas.\n"
-"Periodų skaičius: Fiksuotas kartų skaičius ir laikotarpis tarp dviejų "
-"nusidėvėjimo skaičiavimų.\n"
-"Pabaigos data: Pasirinkite laikotarpį tarp dviejų nusidėvėjimo skaičiavimų "
-"ir turtas bus nudėvėtas iki šios datos."
+"Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
+"Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
+msgstr "Metodas naudojamas paskaičiuoti datas ir kartus, per kiek nusidėvės ilgalaikis turtas.\nPeriodų skaičius: Fiksuotas kartų skaičius ir laikotarpis tarp dviejų nusidėvėjimo skaičiavimų.\nPabaigos data: Pasirinkite laikotarpį tarp dviejų nusidėvėjimo skaičiavimų ir turtas bus nudėvėtas iki šios datos."
 
 #. module: account_asset
 #: help:account.asset.asset,method_number:0
@@ -794,12 +761,12 @@ msgstr "Laikotarpio metodas"
 #. module: account_asset
 #: help:account.asset.history,method_period:0
 msgid "Time in month between two depreciations"
-msgstr ""
+msgstr "Laikas mėnesyje tarp dviejų nusidevėjimų"
 
 #. module: account_asset
 #: field:asset.asset.report,unposted_value:0
 msgid "Unposted Amount"
-msgstr ""
+msgstr "Nepaskelbta suma"
 
 #. module: account_asset
 #: field:account.asset.history,user_id:0
@@ -810,11 +777,9 @@ msgstr "Naudotojas"
 #: help:account.asset.asset,state:0
 msgid ""
 "When an asset is created, the status is 'Draft'.\n"
-"If the asset is confirmed, the status goes in 'Running' and the depreciation "
-"lines can be posted in the accounting.\n"
-"You can manually close an asset when the depreciation is over. If the last "
-"line of depreciation is posted, the asset automatically goes in that status."
-msgstr ""
+"If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
+"You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
+msgstr "Kai sukuriamas turtas, jam suteikiama \"Juodraštis\" būsena.\nJėigu turtas yra patvirtinimas, jo būsena pakeičiama į \"Veikiantis\" ir nusidevėjimo eilutės gali būti įrašytos į apskaitą.\nJūs rankiniu būdu galite uždaryti turtą, kai pasibaigia nusidevėjimas. Jeigu paskutinis nusidevėjimo įrašas yra įrašomas, turtas automatiškai yra uždaromas."
 
 #. module: account_asset
 #: field:asset.asset.report,name:0
@@ -822,12 +787,26 @@ msgid "Year"
 msgstr "Metai"
 
 #. module: account_asset
+#: code:addons/account_asset/account_asset_invoice.py:53
+#, python-format
+msgid ""
+"You already have assets with the reference %s.\n"
+"Please delete these assets before creating new ones for this invoice."
+msgstr ""
+
+#. module: account_asset
 #: code:addons/account_asset/account_asset.py:81
 #, python-format
 msgid "You cannot delete an asset that contains posted depreciation lines."
-msgstr ""
+msgstr "Jūs negalite ištrinti turto, nes turtas turi nusidevėjimo eilučių"
 
 #. module: account_asset
 #: view:asset.modify:account_asset.asset_modify_form
 msgid "months"
 msgstr "mėnesiai"
+
+#. module: account_asset
+#: view:asset.depreciation.confirmation.wizard:account_asset.view_asset_depreciation_confirmation_wizard
+#: view:asset.modify:account_asset.asset_modify_form
+msgid "or"
+msgstr "arba"

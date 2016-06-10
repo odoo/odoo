@@ -3,6 +3,7 @@
 from openerp.osv import orm, fields
 from openerp import SUPERUSER_ID
 from openerp.addons import decimal_precision
+from openerp.tools.translate import _
 
 
 class delivery_carrier(orm.Model):
@@ -63,7 +64,7 @@ class SaleOrder(orm.Model):
         if not order:
             return False
         if all(line.product_id.type == "service" for line in order.website_order_line):
-            order.write({'carrier_id': None}, context=context)
+            order.write({'carrier_id': None})
             self.pool['sale.order']._delivery_unset(cr, SUPERUSER_ID, [order.id], context=context)
             return True
         else: 
@@ -81,11 +82,11 @@ class SaleOrder(orm.Model):
                     if grid_id:
                         carrier_id = delivery_id
                         break
-                order.write({'carrier_id': carrier_id}, context=context)
+                order.write({'carrier_id': carrier_id})
             if carrier_id:
-                order.delivery_set(context=context)
+                order.delivery_set()
             else:
-                order._delivery_unset(context=context)                    
+                order._delivery_unset()                    
 
         return bool(carrier_id)
 
@@ -95,16 +96,18 @@ class SaleOrder(orm.Model):
         # Following loop is done to avoid displaying delivery methods who are not available for this order
         # This can surely be done in a more efficient way, but at the moment, it mimics the way it's
         # done in delivery_set method of sale.py, from delivery module
-        for delivery_id in list(delivery_ids):
-            grid_id = carrier_obj.grid_get(cr, SUPERUSER_ID, [delivery_id], order.partner_shipping_id.id)
-            if not grid_id:
-                delivery_ids.remove(delivery_id)
+        for delivery_id in carrier_obj.browse(cr, SUPERUSER_ID, delivery_ids, context=dict(context, order_id=order.id)):
+            if not delivery_id.available:
+                delivery_ids.remove(delivery_id.id)
         return delivery_ids
 
     def _get_errors(self, cr, uid, order, context=None):
         errors = super(SaleOrder, self)._get_errors(cr, uid, order, context=context)
         if not self._get_delivery_methods(cr, uid, order, context=context):
-            errors.append(('No delivery method available', 'There is no available delivery method for your order'))            
+            errors.append(
+                (_('Sorry, we are unable to ship your order'),
+                 _('No shipping method is available for your current order and shipping address. '
+                   'Please contact us for more information.')))
         return errors
 
     def _get_website_data(self, cr, uid, order, context=None):
@@ -123,4 +126,16 @@ class SaleOrder(orm.Model):
         delivery_ids = self._get_delivery_methods(cr, uid, order, context=context)
 
         values['deliveries'] = DeliveryCarrier.browse(cr, SUPERUSER_ID, delivery_ids, context=delivery_ctx)
+        return values
+
+    def _cart_update(self, cr, uid, ids, product_id=None, line_id=None, add_qty=0, set_qty=0, context=None, **kwargs):
+        """ Override to update carrier quotation if quantity changed """
+
+        values = super(SaleOrder, self)._cart_update(
+            cr, uid, ids, product_id, line_id, add_qty, set_qty, context, **kwargs)
+
+        if add_qty or set_qty is not None:
+            for sale_order in self.browse(cr, uid, ids, context=context):
+                self._check_carrier_quotation(cr, uid, sale_order, context=context)
+
         return values

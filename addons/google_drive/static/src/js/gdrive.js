@@ -64,7 +64,7 @@ openerp.google_drive = function (instance, m) {
             var loaded = self.fetch('google.drive.config', ['google_drive_resource_id', 'google_drive_client_id'], [['id', '=', doc_item.config_id]])
                 .then(function (configs) {
                 var ds = new instance.web.DataSet(self, 'google.drive.config');
-                ds.call('get_google_drive_url', [doc_item.config_id, doc_item.res_id,configs[0].google_drive_resource_id]).done(function (url) {
+                ds.call('get_google_drive_url', [doc_item.config_id, doc_item.res_id,configs[0].google_drive_resource_id, self.dataset.context]).done(function (url) {
                     if (url){
                         window.open(url, '_blank');
                     }

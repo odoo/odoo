@@ -1,10 +1,10 @@
 # HG changeset patch
 # Parent c72382bf0c5794135fa318f6ba59899b2277d8c5
+# Parent  82f902dbb7aab4d3ddd9caaa9170536afa9d274d
 
-Index: addons/openacademy/__openerp__.py
-===================================================================
---- addons.orig/openacademy/__openerp__.py	2014-08-28 14:22:04.135015524 +0200
-+++ addons/openacademy/__openerp__.py	2014-08-28 14:22:04.131015524 +0200
+diff --git a/openacademy/__openerp__.py b/openacademy/__openerp__.py
+--- a/openacademy/__openerp__.py
++++ b/openacademy/__openerp__.py
 @@ -29,6 +29,7 @@
          'templates.xml',
          'views/openacademy.xml',
@@ -13,23 +13,21 @@ Index: addons/openacademy/__openerp__.py
      ],
      # only loaded in demonstration mode
      'demo': [
-Index: addons/openacademy/models.py
-===================================================================
---- addons.orig/openacademy/models.py	2014-08-28 14:22:04.135015524 +0200
-+++ addons/openacademy/models.py	2014-08-28 14:22:04.131015524 +0200
-@@ -70,7 +70,7 @@
-          ('draft', "Draft"),
-          ('confirmed', "Confirmed"),
-          ('done', "Done"),
+diff --git a/openacademy/models.py b/openacademy/models.py
+--- a/openacademy/models.py
++++ b/openacademy/models.py
+@@ -70,7 +70,7 @@ class Session(models.Model):
+         ('draft', "Draft"),
+         ('confirmed', "Confirmed"),
+         ('done', "Done"),
 -    ], default='draft')
 +    ])
  
-     @api.one
+     @api.multi
      def action_draft(self):
-Index: addons/openacademy/views/openacademy.xml
-===================================================================
---- addons.orig/openacademy/views/openacademy.xml	2014-08-28 14:22:04.135015524 +0200
-+++ addons/openacademy/views/openacademy.xml	2014-08-28 14:22:04.131015524 +0200
+diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml
++++ b/openacademy/views/openacademy.xml
 @@ -97,13 +97,13 @@
              <field name="arch" type="xml">
                  <form string="Session Form">
@@ -47,10 +45,10 @@ Index: addons/openacademy/views/openacademy.xml
                                  string="Mark as done" states="confirmed"
                                  class="oe_highlight"/>
                          <field name="state" widget="statusbar"/>
-Index: addons/openacademy/views/session_workflow.xml
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ addons/openacademy/views/session_workflow.xml	2014-08-28 14:22:04.131015524 +0200
+diff --git a/openacademy/views/session_workflow.xml b/openacademy/views/session_workflow.xml
+new file mode 100644
+--- /dev/null
++++ b/openacademy/views/session_workflow.xml
 @@ -0,0 +1,50 @@
 +<openerp>
 +    <data>

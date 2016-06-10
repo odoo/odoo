@@ -20,6 +20,7 @@
                         </p>
                     </div>
                 </div>
+                <h3>Actif</h3>
                 <table class="table table-condensed">
                     <thead>
                         <tr>
@@ -537,6 +538,154 @@
                             <span t-esc="actif" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                         </td>
                     </tr>
+                </table>
+
+                <h3>Passif</h3>
+                <table class="table table-condensed">
+                    <tbody>
+                        <tr>
+                            <td><strong>CAPITAUX PROPRES</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Capital [dont vers&#xE9;...]</td>
+                            <td><span t-esc="bpvar1" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Primes d'&#xE9;mission, de fusion, d'apport</td>
+                            <td><span t-esc="bpvar2" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>&#xC9;carts de r&#xE9;&#xE9;valuation</td>
+                            <td><span t-esc="bpvar3" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>&#xC9;cart d'&#xE9;quivalence</td>
+                            <td><span t-esc="bpvar4" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>R&#xC9;SERVES</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>R&#xE9;serve l&#xE9;gale</td>
+                            <td><span t-esc="bpvar5" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>R&#xE9;serves statutaires ou contractuelles</td>
+                            <td><span t-esc="bpvar6" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>R&#xE9;serves r&#xE9;glement&#xE9;es</td><td><span t-esc="bpvar7" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td></tr>
+                        <tr>
+                            <td>Autres r&#xE9;serves</td>
+                            <td><span t-esc="bpvar8" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Report &#xE0; nouveau</td>
+                            <td><span t-esc="bpvar9" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>R&#xC9;SULTAT DE L'EXERCICE [b&#xE9;n&#xE9;fice ou perte]</strong></td>
+                            <td><span t-esc="bpvar10" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Subventions d'investissement</td>
+                            <td><span t-esc="bpvar11" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Provisions r&#xE9;glement&#xE9;es</td>
+                            <td><span t-esc="bpvar12" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><strong>TOTAL I</strong></td>
+                            <td><span t-esc="pt1" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>PROVISIONS</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Provisions pour risques</td>
+                            <td><span t-esc="bpvar13" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Provisions pour charges</td>
+                            <td><span t-esc="bpvar14" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><strong>TOTAL II</strong></td>
+                            <td><span t-esc="pt2" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>DETTES</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Emprunts obligataires convertibles</td>
+                            <td><span t-esc="bpvar15" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Autres emprunts obligataires</td>
+                            <td><span t-esc="bpvar16" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Emprunts et dettes aupr&#xE8;s des &#xE9;tablissements de cr&#xE9;dit</td>
+                            <td><span t-esc="bpvar17" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Emprunts et dettes financi&#xE8;res diverses</td>
+                            <td><span t-esc="bpvar18" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Avances et acomptes re&#xE7;us sur commandes en cours</td>
+                            <td><span t-esc="bpvar19" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Dettes fournisseurs et comptes rattach&#xE9;s </td>
+                            <td><span t-esc="bpvar20" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Dettes fiscales et sociales</td>
+                            <td><span t-esc="bpvar21" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Dettes sur immobilisations et comptes rattach&#xE9;s</td>
+                            <td><span t-esc="bpvar22" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Autres dettes</td>
+                            <td><span t-esc="bpvar23" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Instruments de tr&#xE9;sorerie</td>
+                            <td><span t-esc="bpvar24" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Produits constat&#xE9;s d'avance</td>
+                            <td><span t-esc="bpvar25" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><strong>TOTAL III</strong></td>
+                            <td><span t-esc="pt3" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>&#xC9;carts de conversion passif <font face="Times-Roman">( IV )</font></td>
+                            <td><span t-esc="bpvar26" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>TOTAL G&#xC9;N&#xC9;RAL (I + II + III + IV)</strong></td>
+                            <td><span t-esc="passif" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>&amp;nbsp;</td>
+                            <td>&amp;nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ACTIF - PASSIF</strong></td>
+                            <td><span t-esc="round(actif-passif,2)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </t>

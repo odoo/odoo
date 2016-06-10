@@ -232,9 +232,10 @@ class res_company(osv.osv):
         args = [
             ('object_id.model', '=', object),
             ('field_id', '=', field),
+            ('company_id', '=', self.pool['res.users']._get_company(cr, uid, context=context)),
         ]
 
-        ids = proxy.search(cr, uid, args, context=context)
+        ids = proxy.search(cr, uid, args, context=context, order='sequence')
         user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
         for rule in proxy.browse(cr, uid, ids, context):
             if eval(rule.expression, {'context': context, 'user': user}):
@@ -275,7 +276,16 @@ class res_company(osv.osv):
             self.cache_restart(cr)
             return super(res_company, self).create(cr, uid, vals, context=context)
         obj_partner = self.pool.get('res.partner')
-        partner_id = obj_partner.create(cr, uid, {'name': vals['name'], 'is_company':True, 'image': vals.get('logo', False)}, context=context)
+        partner_id = obj_partner.create(cr, uid, {
+            'name': vals['name'],
+            'is_company': True,
+            'image': vals.get('logo', False),
+            'customer': False,
+            'email': vals.get('email'),
+            'phone': vals.get('phone'),
+            'website': vals.get('website'),
+            'vat': vals.get('vat'),
+        }, context=context)
         vals.update({'partner_id': partner_id})
         self.cache_restart(cr)
         company_id = super(res_company, self).create(cr, uid, vals, context=context)

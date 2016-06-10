@@ -1,21 +1,23 @@
-# Hebrew translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * project
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Yves Goldberg <admin@ygol.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Hebrew <he@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-19 06:31+0000\n"
+"PO-Revision-Date: 2016-02-01 10:26+0000\n"
+"Last-Translator: Yves Goldberg <admin@ygol.com>\n"
+"Language-Team: Hebrew (http://www.transifex.com/odoo/odoo-8/language/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:40+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: he\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: project
 #: field:res.partner,task_count:0
@@ -28,13 +30,13 @@ msgid "# of Days"
 msgstr "# ימים"
 
 #. module: project
+#: field:project.task.history.cumulative,nbr_tasks:0
 #: field:report.project.task.user,nbr:0
-msgid "# of tasks"
-msgstr "# משימות"
+msgid "# of Tasks"
+msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:360
-#: code:addons/project/project.py:380
+#: code:addons/project/project.py:360 code:addons/project/project.py:380
 #: code:addons/project/project.py:703
 #, python-format
 msgid "%s (copy)"
@@ -73,8 +75,7 @@ msgid ""
 "                Click to add a stage in the task pipeline.\n"
 "              </p><p>\n"
 "                Define the steps that will be used in the project from the\n"
-"                creation of the task, up to the closing of the task or "
-"issue.\n"
+"                creation of the task, up to the closing of the task or issue.\n"
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue.\n"
 "              </p>\n"
@@ -86,12 +87,9 @@ msgstr ""
 #: model:ir.actions.act_window,help:project.action_view_task
 msgid ""
 "<p>\n"
-"                    Odoo's project management allows you to manage the "
-"pipeline\n"
-"                    of tasks in order to get things done efficiently. You "
-"can\n"
-"                    track progress, discuss on tasks, attach documents, "
-"etc.\n"
+"                    Odoo's project management allows you to manage the pipeline\n"
+"                    of tasks in order to get things done efficiently. You can\n"
+"                    track progress, discuss on tasks, attach documents, etc.\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -102,14 +100,13 @@ msgid ""
 "A task's kanban state indicates special situations affecting it:\n"
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this task\n"
-" * Ready for next stage indicates the task is ready to be pulled to the next "
-"stage"
+" * Ready for next stage indicates the task is ready to be pulled to the next stage"
 msgstr ""
 
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Accept Emails From"
-msgstr ""
+msgstr "אשר קבלת אי-מייל מ "
 
 #. module: project
 #: field:project.project,active:0
@@ -134,7 +131,7 @@ msgstr "ניהול"
 #. module: project
 #: field:project.project,alias_id:0
 msgid "Alias"
-msgstr ""
+msgstr "שם נוסף"
 
 #. module: project
 #: field:project.project,alias_model:0
@@ -169,7 +166,7 @@ msgstr "ניתוח"
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "חשבון אנליטי"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -189,11 +186,12 @@ msgstr "משויך ל"
 #. module: project
 #: field:report.project.task.user,date_start:0
 msgid "Assignation Date"
-msgstr ""
+msgstr "תאריך המחאה"
 
 #. module: project
+#: view:project.task:project.view_task_search_form
 #: view:report.project.task.user:project.view_task_project_user_search
-msgid "Assignation date"
+msgid "Assignation Month"
 msgstr ""
 
 #. module: project
@@ -207,7 +205,9 @@ msgid "Assigned To"
 msgstr "משוייך ל"
 
 #. module: project
+#: view:project.task:project.view_task_search_form
 #: field:project.task,user_id:0
+#: view:project.task.history.cumulative:project.view_task_history_search
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Assigned to"
 msgstr "משויך ל"
@@ -228,6 +228,7 @@ msgstr ""
 #: selection:project.task.history,kanban_state:0
 #: view:project.task.history.cumulative:project.view_task_history_search
 #: selection:project.task.history.cumulative,kanban_state:0
+#: selection:report.project.task.user,state:0
 msgid "Blocked"
 msgstr "חסומה"
 
@@ -297,10 +298,9 @@ msgid "Closed"
 msgstr "סגורה"
 
 #. module: project
-#: field:project.project,color:0
-#: field:project.task,color:0
+#: field:project.project,color:0 field:project.task,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "מפתח צבעים"
 
 #. module: project
 #: view:project.task.type:project.task_type_search
@@ -313,8 +313,8 @@ msgid "Companies"
 msgstr "חברות"
 
 #. module: project
-#: field:project.task,company_id:0
-#: field:project.task.work,company_id:0
+#: view:project.task:project.view_task_search_form
+#: field:project.task,company_id:0 field:project.task.work,company_id:0
 #: view:report.project.task.user:project.view_task_project_user_search
 #: field:report.project.task.user,company_id:0
 msgid "Company"
@@ -346,10 +346,9 @@ msgstr "הגדרות פרוייקט"
 #. module: project
 #: view:project.project:project.view_project
 #: view:project.project:project.view_project_project_filter
-#: view:report.project.task.user:project.view_task_project_user_search
 #: field:report.project.task.user,partner_id:0
 msgid "Contact"
-msgstr ""
+msgstr "צור קשר"
 
 #. module: project
 #: model:project.category,name:project.project_category_01
@@ -369,25 +368,24 @@ msgstr "צור תאריך"
 #. module: project
 #: field:project.category,create_uid:0
 #: field:project.config.settings,create_uid:0
-#: field:project.project,create_uid:0
-#: field:project.task,create_uid:0
+#: field:project.project,create_uid:0 field:project.task,create_uid:0
 #: field:project.task.delegate,create_uid:0
-#: field:project.task.type,create_uid:0
-#: field:project.task.work,create_uid:0
+#: field:project.task.type,create_uid:0 field:project.task.work,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "נוצר על ידי"
 
 #. module: project
 #: field:project.category,create_date:0
 #: field:project.config.settings,create_date:0
 #: field:project.project,create_date:0
 #: field:project.task.delegate,create_date:0
-#: field:project.task.type,create_date:0
-#: field:project.task.work,create_date:0
+#: field:project.task.type,create_date:0 field:project.task.work,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "נוצר ב-"
 
 #. module: project
+#: view:project.task:project.view_task_search_form
+#: view:project.task.history.cumulative:project.view_task_history_search
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Creation Date"
 msgstr "תאריך יצירה"
@@ -399,14 +397,13 @@ msgid "Cumulative Flow"
 msgstr ""
 
 #. module: project
-#: field:project.task,partner_id:0
+#: view:project.project:project.edit_project field:project.task,partner_id:0
 msgid "Customer"
 msgstr "לקוח"
 
 #. module: project
 #: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0
-#: field:project.task.work,date:0
+#: field:project.task.history.cumulative,date:0 field:project.task.work,date:0
 msgid "Date"
 msgstr "תאריך"
 
@@ -414,12 +411,12 @@ msgstr "תאריך"
 #: help:project.project,message_last_post:0
 #: help:project.task,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "תאריך הודעה אחרונה שפורסמה ברשומה."
 
 #. module: project
 #: field:report.project.task.user,opening_days:0
 msgid "Days to Assign"
-msgstr ""
+msgstr "ימים לסגירה"
 
 #. module: project
 #: field:report.project.task.user,closing_days:0
@@ -490,8 +487,7 @@ msgid "Delete"
 msgstr "מחק"
 
 #. module: project
-#: view:project.task:project.view_task_form2
-#: field:project.task,description:0
+#: view:project.task:project.view_task_form2 field:project.task,description:0
 #: field:project.task.type,description:0
 msgid "Description"
 msgstr "תיאור"
@@ -536,7 +532,7 @@ msgstr "שעות אפקטיביות"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Email Alias"
-msgstr ""
+msgstr "שיוך דוא\"ל"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -546,14 +542,13 @@ msgid "End Date"
 msgstr "תאריך סיום"
 
 #. module: project
-#: field:project.task,date_end:0
-#: field:report.project.task.user,date_end:0
+#: field:project.task,date_end:0 field:report.project.task.user,date_end:0
 msgid "Ending Date"
 msgstr "תאריך סיום"
 
 #. module: project
 #: constraint:project.task:0
-msgid "Error ! Task end-date must be greater then task start-date"
+msgid "Error ! Task end-date must be greater than task start-date"
 msgstr ""
 
 #. module: project
@@ -563,7 +558,7 @@ msgstr ""
 
 #. module: project
 #: constraint:project.project:0
-msgid "Error! project start-date must be lower then project end-date."
+msgid "Error! project start-date must be lower than project end-date."
 msgstr ""
 
 #. module: project
@@ -593,7 +588,7 @@ msgstr "ניסוי"
 #. module: project
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "סינון מתקדם"
 
 #. module: project
 #: view:project.task:project.view_task_form2
@@ -608,7 +603,7 @@ msgstr "בקשת פיצ'ר"
 #. module: project
 #: field:project.task.type,fold:0
 msgid "Folded in Kanban View"
-msgstr ""
+msgstr "מקופל במבט קאנבן"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -651,9 +646,10 @@ msgstr ""
 #. module: project
 #: view:project.project:project.view_project_project_filter
 #: view:project.task:project.view_task_search_form
+#: view:project.task.history.cumulative:project.view_task_history_search
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Group By"
-msgstr ""
+msgstr "קבץ לפי"
 
 #. module: project
 #: view:project.config.settings:project.view_config_settings
@@ -664,7 +660,7 @@ msgstr "תמיכה"
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "High"
-msgstr ""
+msgstr "גבוהה"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_history
@@ -673,8 +669,7 @@ msgid "History of Tasks"
 msgstr "היסטוריית משימות"
 
 #. module: project
-#: help:project.project,message_summary:0
-#: help:project.task,message_summary:0
+#: help:project.project,message_summary:0 help:project.task,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
@@ -691,8 +686,7 @@ msgid ""
 "   if portal is activated, portal users see the tasks or issues followed by\n"
 "   them or by someone of their company\n"
 "- Employees Only: employees see all tasks or issues\n"
-"- Followers Only: employees see only the followed tasks or issues; if "
-"portal\n"
+"- Followers Only: employees see only the followed tasks or issues; if portal\n"
 "   is activated, portal users see the followed tasks or issues."
 msgstr ""
 
@@ -707,30 +701,24 @@ msgid "Hours to Validate"
 msgstr ""
 
 #. module: project
-#: field:project.category,id:0
-#: field:project.config.settings,id:0
-#: field:project.project,id:0
-#: field:project.task,id:0
-#: field:project.task.delegate,id:0
-#: field:project.task.history,id:0
-#: field:project.task.history.cumulative,id:0
-#: field:project.task.type,id:0
-#: field:project.task.work,id:0
-#: field:report.project.task.user,id:0
+#: field:project.category,id:0 field:project.config.settings,id:0
+#: field:project.project,id:0 field:project.task,id:0
+#: field:project.task.delegate,id:0 field:project.task.history,id:0
+#: field:project.task.history.cumulative,id:0 field:project.task.type,id:0
+#: field:project.task.work,id:0 field:report.project.task.user,id:0
 msgid "ID"
-msgstr ""
+msgstr "מזהה"
 
 #. module: project
-#: help:project.project,message_unread:0
-#: help:project.task,message_unread:0
+#: help:project.project,message_unread:0 help:project.task,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "אם מסומן אז הודעה חדשה דורשת התייחסותכם."
 
 #. module: project
 #: help:account.analytic.account,use_tasks:0
 msgid ""
-"If checked, this contract will be available in the project menu and you will "
-"be able to manage tasks or track issues"
+"If checked, this contract will be available in the project menu and you will"
+" be able to manage tasks or track issues"
 msgstr ""
 
 #. module: project
@@ -755,8 +743,8 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: selection:project.project,state:0
-#: selection:project.task,kanban_state:0
+#: selection:project.project,state:0 selection:project.task,kanban_state:0
+#: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "בתהליך"
 
@@ -779,10 +767,16 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: code:addons/project/project.py:201
+#, python-format
+msgid "Internal project: all employees can access"
+msgstr ""
+
+#. module: project
 #: code:addons/project/project.py:171
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "פעולה לא חוקית!"
 
 #. module: project
 #: field:project.config.settings,module_project_issue_sheet:0
@@ -793,16 +787,15 @@ msgstr ""
 #: field:project.project,message_is_follower:0
 #: field:project.task,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "הוא עוקב"
 
 #. module: project
 #: view:project.category:project.project_category_search_view
 msgid "Issue Version"
-msgstr ""
+msgstr "גרסת הפנייה"
 
 #. module: project
-#: field:project.task,kanban_state:0
-#: field:project.task.history,kanban_state:0
+#: field:project.task,kanban_state:0 field:project.task.history,kanban_state:0
 #: field:project.task.history.cumulative,kanban_state:0
 msgid "Kanban State"
 msgstr ""
@@ -816,7 +809,7 @@ msgstr ""
 #: field:project.project,message_last_post:0
 #: field:project.task,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "תאריך הודעה אחרונה"
 
 #. module: project
 #: field:project.task,write_date:0
@@ -824,47 +817,39 @@ msgid "Last Modification Date"
 msgstr ""
 
 #. module: project
-#: view:project.task:project.view_task_search_form
 #: field:project.task,date_last_stage_update:0
-#: view:report.project.task.user:project.view_task_project_user_search
 #: field:report.project.task.user,date_last_stage_update:0
 msgid "Last Stage Update"
 msgstr ""
 
 #. module: project
 #: field:project.category,write_uid:0
-#: field:project.config.settings,write_uid:0
-#: field:project.project,write_uid:0
-#: field:project.task,write_uid:0
-#: field:project.task.delegate,write_uid:0
-#: field:project.task.type,write_uid:0
-#: field:project.task.work,write_uid:0
+#: field:project.config.settings,write_uid:0 field:project.project,write_uid:0
+#: field:project.task,write_uid:0 field:project.task.delegate,write_uid:0
+#: field:project.task.type,write_uid:0 field:project.task.work,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "עודכן לאחרונה על ידי"
 
 #. module: project
 #: field:project.category,write_date:0
 #: field:project.config.settings,write_date:0
-#: field:project.project,write_date:0
-#: field:project.task.delegate,write_date:0
-#: field:project.task.type,write_date:0
-#: field:project.task.work,write_date:0
+#: field:project.project,write_date:0 field:project.task.delegate,write_date:0
+#: field:project.task.type,write_date:0 field:project.task.work,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "עודכן לאחרונה על"
 
 #. module: project
 #: help:project.config.settings,module_pad:0
 msgid ""
-"Lets the company customize which Pad installation should be used to link to "
-"new pads (for example: http://ietherpad.com/).\n"
+"Lets the company customize which Pad installation should be used to link to new pads (for example: http://ietherpad.com/).\n"
 "-This installs the module pad."
 msgstr ""
 
 #. module: project
 #: help:project.project,analytic_account_id:0
 msgid ""
-"Link this project to an analytic account if you need financial management on "
-"projects. It enables you to connect projects with budgets, planning, cost "
+"Link this project to an analytic account if you need financial management on"
+" projects. It enables you to connect projects with budgets, planning, cost "
 "and revenue analysis, timesheets on projects, etc."
 msgstr ""
 
@@ -901,21 +886,24 @@ msgid "Merge"
 msgstr "מזג"
 
 #. module: project
-#: field:project.project,message_ids:0
-#: field:project.task,message_ids:0
+#: field:project.project,message_ids:0 field:project.task,message_ids:0
 msgid "Messages"
 msgstr "הודעות"
 
 #. module: project
-#: help:project.project,message_ids:0
-#: help:project.task,message_ids:0
+#: help:project.project,message_ids:0 help:project.task,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "היסטוריית הודעות ותקשורת"
 
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Miscellaneous"
 msgstr "שונות"
+
+#. module: project
+#: view:project.task.history.cumulative:project.view_task_history_search
+msgid "Month"
+msgstr "חודש"
 
 #. module: project
 #: view:project.task.history.cumulative:project.view_task_history_search
@@ -950,7 +938,7 @@ msgstr "חדש"
 #: view:project.project:project.view_project_project_filter
 #: view:project.task:project.view_task_search_form
 msgid "New Mail"
-msgstr ""
+msgstr "דוא\"ל חדש"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -1026,7 +1014,7 @@ msgstr "מידע אחר"
 #. module: project
 #: field:report.project.task.user,delay_endings_days:0
 msgid "Overpassed Deadline"
-msgstr ""
+msgstr "תאריך היעד חלף"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -1041,21 +1029,19 @@ msgid "Parent"
 msgstr "פריט אב"
 
 #. module: project
-#: view:project.task:project.view_task_form2
-#: field:project.task,parent_ids:0
+#: view:project.task:project.view_task_form2 field:project.task,parent_ids:0
 msgid "Parent Tasks"
 msgstr "משימות אב"
 
 #. module: project
 #: model:ir.model,name:project.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "שותף"
 
 #. module: project
 #: view:project.project:project.edit_project
 #: view:project.project:project.view_project_project_filter
-#: selection:project.project,state:0
-#: selection:project.task.delegate,state:0
+#: selection:project.project,state:0 selection:project.task.delegate,state:0
 msgid "Pending"
 msgstr "ממתינה"
 
@@ -1089,8 +1075,7 @@ msgid "Please delete the project linked with this account first."
 msgstr ""
 
 #. module: project
-#: field:project.task,priority:0
-#: field:report.project.task.user,priority:0
+#: field:project.task,priority:0 field:report.project.task.user,priority:0
 msgid "Priority"
 msgstr "עדיפות"
 
@@ -1098,6 +1083,12 @@ msgstr "עדיפות"
 #: field:project.project,privacy_visibility:0
 msgid "Privacy / Visibility"
 msgstr "פרטיות / נראות"
+
+#. module: project
+#: code:addons/project/project.py:202
+#, python-format
+msgid "Private project: followers Only"
+msgstr ""
 
 #. module: project
 #: field:project.project,progress_rate:0
@@ -1111,8 +1102,8 @@ msgstr "התקדמות"
 #: view:project.project:project.edit_project
 #: view:project.task:project.view_task_form2
 #: view:project.task:project.view_task_search_form
-#: field:project.task,project_id:0
-#: field:project.task.delegate,project_id:0
+#: field:project.task,project_id:0 field:project.task.delegate,project_id:0
+#: view:project.task.history.cumulative:project.view_task_history_search
 #: field:project.task.history.cumulative,project_id:0
 #: view:report.project.task.user:project.view_task_project_user_search
 #: field:report.project.task.user,project_id:0
@@ -1123,7 +1114,7 @@ msgstr "פרוייקט"
 #. module: project
 #: view:project.config.settings:project.view_config_settings
 msgid "Project Management"
-msgstr ""
+msgstr "ניהול פרוייקט"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -1200,8 +1191,7 @@ msgstr "משימות הפרוייקט"
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:project.view_project
 #: view:project.project:project.view_project_project_gantt
-#: field:project.task.type,project_ids:0
-#: view:res.company:project.task_company
+#: field:project.task.type,project_ids:0 view:res.company:project.task_company
 #, python-format
 msgid "Projects"
 msgstr "פרוייקטים"
@@ -1221,6 +1211,12 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: code:addons/project/project.py:200
+#, python-format
+msgid "Public project"
+msgstr ""
+
+#. module: project
 #: view:project.project:project.edit_project
 msgid "Re-open project"
 msgstr "פתח פרוייקט מחדש"
@@ -1234,6 +1230,7 @@ msgstr "מוכן"
 #: selection:project.task,kanban_state:0
 #: selection:project.task.history,kanban_state:0
 #: selection:project.task.history.cumulative,kanban_state:0
+#: selection:report.project.task.user,state:0
 msgid "Ready for next stage"
 msgstr "מוכן לשלב הבא"
 
@@ -1284,18 +1281,12 @@ msgid "Reviewer"
 msgstr ""
 
 #. module: project
-#: view:project.task:project.view_task_search_form
-msgid "Reviewers"
-msgstr ""
-
-#. module: project
 #: view:project.project:project.view_project_project_filter
 msgid "Search Project"
 msgstr "חפש פרוייקט"
 
 #. module: project
-#: field:project.project,sequence:0
-#: field:project.task,sequence:0
+#: field:project.project,sequence:0 field:project.task,sequence:0
 #: field:project.task.type,sequence:0
 msgid "Sequence"
 msgstr "רצף"
@@ -1318,9 +1309,10 @@ msgstr "שעות שבוצעו"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
-#: field:project.task,stage_id:0
-#: field:project.task.history,type_id:0
+#: field:project.task,stage_id:0 field:project.task.history,type_id:0
+#: view:project.task.history.cumulative:project.view_task_history_search
 #: field:project.task.history.cumulative,type_id:0
+#: view:report.project.task.user:project.view_task_project_user_search
 #: field:report.project.task.user,stage_id:0
 msgid "Stage"
 msgstr "שלב"
@@ -1351,12 +1343,19 @@ msgid "Stages common to all projects"
 msgstr "שלבים משותפים לכל הפרוייקטים"
 
 #. module: project
+#: view:project.project:project.edit_project
+msgid "Start Date"
+msgstr "תאריך התחלה"
+
+#. module: project
 #: field:project.task,date_start:0
 msgid "Starting Date"
 msgstr "תאריך התחלה"
 
 #. module: project
 #: field:project.project,state:0
+#: view:project.task.history.cumulative:project.view_task_history_search
+#: field:report.project.task.user,state:0
 msgid "Status"
 msgstr "סטטוס"
 
@@ -1404,7 +1403,9 @@ msgstr "תגיות"
 #: model:ir.model,name:project.model_project_task
 #: view:project.config.settings:project.view_config_settings
 #: view:project.task:project.view_task_form2
+#: view:project.task:project.view_task_search_form
 #: field:project.task.history,task_id:0
+#: view:project.task.history.cumulative:project.view_task_history_search
 #: field:project.task.history.cumulative,task_id:0
 #: field:project.task.work,task_id:0
 #: view:report.project.task.user:project.view_task_project_user_search
@@ -1446,6 +1447,11 @@ msgid "Task Delegation"
 msgstr "האצלת משימה"
 
 #. module: project
+#: model:ir.filters,name:project.filter_task_report_task_pipe
+msgid "Task Pipe"
+msgstr ""
+
+#. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready for Next Stage"
@@ -1469,8 +1475,7 @@ msgid "Task Stages"
 msgstr "שלבי משימה"
 
 #. module: project
-#: field:project.task,name:0
-#: field:report.project.task.user,name:0
+#: field:project.task,name:0 field:report.project.task.user,name:0
 msgid "Task Summary"
 msgstr "סיכום משימה"
 
@@ -1573,19 +1578,14 @@ msgstr ""
 #. module: project
 #: help:project.config.settings,module_project_timesheet:0
 msgid ""
-"This allows you to transfer the entries under tasks defined for Project "
-"Management to the timesheet line entries for particular date and user, with "
-"the effect of creating, editing and deleting either ways.\n"
+"This allows you to transfer the entries under tasks defined for Project Management to the timesheet line entries for particular date and user, with the effect of creating, editing and deleting either ways.\n"
 "-This installs the module project_timesheet."
 msgstr ""
 
 #. module: project
 #: help:project.config.settings,module_sale_service:0
 msgid ""
-"This feature automatically creates project tasks from service products in "
-"sale orders. More precisely, tasks are created for procurement lines with "
-"product of type 'Service', procurement method 'Make to Order', and supply "
-"method 'Manufacture'.\n"
+"This feature automatically creates project tasks from service products in sale orders. More precisely, tasks are created for procurement lines with product of type 'Service', procurement method 'Make to Order', and supply method 'Manufacture'.\n"
 "-This installs the module sale_service."
 msgstr ""
 
@@ -1614,15 +1614,16 @@ msgstr ""
 
 #. module: project
 #: help:project.config.settings,time_unit:0
-msgid "This will set the unit of measure used in projects and tasks."
+msgid ""
+"This will set the unit of measure used in projects and tasks.\n"
+"Changing the unit will only impact new entries."
 msgstr ""
 
 #. module: project
 #: help:res.company,project_time_mode_id:0
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects (project_timesheet module), "
-"don't forget to setup the right unit of measure in your employees."
+"If you use the timesheet linked to projects (project_timesheet module), don't forget to setup the right unit of measure in your employees."
 msgstr ""
 
 #. module: project
@@ -1631,8 +1632,7 @@ msgid "Time Estimation on Tasks"
 msgstr "הערכת זמן על משימות"
 
 #. module: project
-#: field:project.project,effective_hours:0
-#: field:project.task.work,hours:0
+#: field:project.project,effective_hours:0 field:project.task.work,hours:0
 msgid "Time Spent"
 msgstr "זמן שהוקדש"
 
@@ -1692,14 +1692,18 @@ msgid "Unassigned Tasks"
 msgstr "משימות שלא שויכו"
 
 #. module: project
-#: field:project.project,message_unread:0
-#: field:project.task,message_unread:0
+#: field:project.project,message_unread:0 field:project.task,message_unread:0
 msgid "Unread Messages"
 msgstr "הודעות שלא נקראו"
 
 #. module: project
 #: model:project.category,name:project.project_category_04
 msgid "Usability"
+msgstr "שימושיות"
+
+#. module: project
+#: view:project.project:project.edit_project
+msgid "Use Tasks"
 msgstr ""
 
 #. module: project
@@ -1724,11 +1728,6 @@ msgid "User you want to delegate this task to"
 msgstr ""
 
 #. module: project
-#: view:project.task:project.view_task_search_form
-msgid "Users"
-msgstr "משתמשים"
-
-#. module: project
 #: field:project.task.delegate,state:0
 msgid "Validation State"
 msgstr ""
@@ -1744,8 +1743,7 @@ msgid "Validation Task Title"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:435
-#: code:addons/project/project.py:921
+#: code:addons/project/project.py:435 code:addons/project/project.py:921
 #: code:addons/project/project.py:1228
 #, python-format
 msgid "Warning!"
@@ -1777,11 +1775,17 @@ msgid "Working time unit"
 msgstr "יחידת זמן לעבודה"
 
 #. module: project
+#: model:ir.filters,name:project.filter_task_report_workload
+msgid "Workload"
+msgstr ""
+
+#. module: project
 #: code:addons/project/project.py:172
 #, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
-"project's tasks and then delete the project or simply deactivate the project."
+"project's tasks and then delete the project or simply deactivate the "
+"project."
 msgstr ""
 
 #. module: project
@@ -1806,10 +1810,16 @@ msgid "oe_kanban_text_red"
 msgstr ""
 
 #. module: project
+#: view:project.config.settings:project.view_config_settings
+#: view:project.task.delegate:project.view_project_task_delegate
+msgid "or"
+msgstr "או"
+
+#. module: project
 #: code:addons/project/project.py:878
 #, python-format
 msgid "tasks"
-msgstr ""
+msgstr "משימות"
 
 #. module: project
 #: field:account.analytic.account,company_uom_id:0

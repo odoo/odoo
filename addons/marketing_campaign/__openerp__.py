@@ -40,7 +40,7 @@ The campaigns are dynamic and multi-channels. The process is as follows:
       send, reports to print and send by email, custom actions
     * Define input segments that will select the items that should enter the
       campaign (e.g leads from certain countries.)
-    * Run you campaign in simulation mode to test it real-time or accelerated,
+    * Run your campaign in simulation mode to test it real-time or accelerated,
       and fine-tune it
     * You may also start the real campaign in manual mode, where each action
       requires manual validation
@@ -67,6 +67,5 @@ input segments, workflow.
     'test': ['test/marketing_campaign.yml'],
     'installable': True,
     'auto_install': False,
-    'images': ['images/campaign.png', 'images/campaigns.jpeg','images/email_account.jpeg','images/email_templates.jpeg','images/segments.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

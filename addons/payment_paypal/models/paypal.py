@@ -113,7 +113,7 @@ class AcquirerPaypal(osv.Model):
         paypal_tx_values.update({
             'cmd': '_xclick',
             'business': acquirer.paypal_email_account,
-            'item_name': tx_values['reference'],
+            'item_name': '%s: %s' % (acquirer.company_id.name, tx_values['reference']),
             'item_number': tx_values['reference'],
             'amount': tx_values['amount'],
             'currency_code': tx_values['currency'] and tx_values['currency'].name or '',
@@ -203,11 +203,7 @@ class TxPaypal(osv.Model):
 
     def _paypal_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
         invalid_parameters = []
-        if data.get('notify_version')[0] != '3.4':
-            _logger.warning(
-                'Received a notification from Paypal with version %s instead of 2.6. This could lead to issues when managing it.' %
-                data.get('notify_version')
-            )
+        _logger.info('Received a notification from Paypal with IPN version %s', data.get('notify_version'))
         if data.get('test_ipn'):
             _logger.warning(
                 'Received a notification from Paypal using sandbox'
@@ -227,10 +223,17 @@ class TxPaypal(osv.Model):
         if tx.partner_reference and data.get('payer_id') != tx.partner_reference:
             invalid_parameters.append(('payer_id', data.get('payer_id'), tx.partner_reference))
         # check seller
-        if data.get('receiver_email') != tx.acquirer_id.paypal_email_account:
-            invalid_parameters.append(('receiver_email', data.get('receiver_email'), tx.acquirer_id.paypal_email_account))
         if data.get('receiver_id') and tx.acquirer_id.paypal_seller_account and data['receiver_id'] != tx.acquirer_id.paypal_seller_account:
             invalid_parameters.append(('receiver_id', data.get('receiver_id'), tx.acquirer_id.paypal_seller_account))
+        if not data.get('receiver_id') or not tx.acquirer_id.paypal_seller_account:
+            # Check receiver_email only if receiver_id was not checked.
+            # In Paypal, this is possible to configure as receiver_email a different email than the business email (the login email)
+            # In Odoo, there is only one field for the Paypal email: the business email. This isn't possible to set a receiver_email
+            # different than the business email. Therefore, if you want such a configuration in your Paypal, you are then obliged to fill
+            # the Merchant ID in the Paypal payment acquirer in Odoo, so the check is performed on this variable instead of the receiver_email.
+            # At least one of the two checks must be done, to avoid fraudsters.
+            if data.get('receiver_email') != tx.acquirer_id.paypal_email_account:
+                invalid_parameters.append(('receiver_email', data.get('receiver_email'), tx.acquirer_id.paypal_email_account))
 
         return invalid_parameters
 

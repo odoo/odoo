@@ -32,6 +32,7 @@ condition/math builtins.
 #  - safe_eval in tryton http://hg.tryton.org/hgwebdir.cgi/trytond/rev/bbb5f73319ad
 
 from opcode import HAVE_ARGUMENT, opmap, opname
+from psycopg2 import OperationalError
 from types import CodeType
 import logging
 
@@ -44,7 +45,7 @@ __all__ = ['test_expr', 'safe_eval', 'const_eval']
 # The time module is usually already provided in the safe_eval environment
 # but some code, e.g. datetime.datetime.now() (Windows/Python 2.5.2, bug
 # lp:703841), does import time.
-_ALLOWED_MODULES = ['_strptime', 'time']
+_ALLOWED_MODULES = ['_strptime', 'math', 'time']
 
 _UNSAFE_ATTRIBUTES = ['f_builtins', 'f_globals', 'f_locals', 'gi_frame',
                       'co_code', 'func_globals']
@@ -272,8 +273,6 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
             'None': None,
             'str': str,
             'unicode': unicode,
-            'globals': locals,
-            'locals': locals,
             'bool': bool,
             'int': int,
             'float': float,
@@ -322,6 +321,10 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     except openerp.exceptions.AccessDenied:
         raise
     except openerp.exceptions.AccessError:
+        raise
+    except OperationalError:
+        # Do not hide PostgreSQL low-level exceptions, to let the auto-replay
+        # of serialized transactions work its magic
         raise
     except Exception, e:
         import sys

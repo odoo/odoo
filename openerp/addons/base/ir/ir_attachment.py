@@ -30,6 +30,8 @@ from openerp.tools.translate import _
 from openerp.exceptions import AccessError
 from openerp.osv import fields,osv
 from openerp import SUPERUSER_ID
+from openerp.osv.orm import except_orm
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -69,7 +71,6 @@ class ir_attachment(osv.osv):
     def _storage(self, cr, uid, context=None):
         return self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'ir_attachment.location', 'file')
 
-    @tools.ormcache(skiparg=3)
     def _filestore(self, cr, uid, context=None):
         return tools.config.filestore(cr.dbname)
 
@@ -138,7 +139,9 @@ class ir_attachment(osv.osv):
         return fname
 
     def _file_delete(self, cr, uid, fname):
-        count = self.search_count(cr, 1, [('store_fname','=',fname)])
+        # using SQL to include files hidden through unlink or due to record rules
+        cr.execute("SELECT COUNT(*) FROM ir_attachment WHERE store_fname = %s", (fname,))
+        count = cr.fetchone()[0]
         full_path = self._full_path(cr, uid, fname)
         if not count and os.path.exists(full_path):
             try:
@@ -212,11 +215,12 @@ class ir_attachment(osv.osv):
     }
 
     def _auto_init(self, cr, context=None):
-        super(ir_attachment, self)._auto_init(cr, context)
+        res = super(ir_attachment, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_attachment_res_idx',))
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_attachment_res_idx ON ir_attachment (res_model, res_id)')
             cr.commit()
+        return res
 
     def check(self, cr, uid, ids, mode, context=None, values=None):
         """Restricts the access to an ir.attachment, according to referred model
@@ -224,12 +228,15 @@ class ir_attachment(osv.osv):
         more complex ones apply there.
         """
         res_ids = {}
+        require_employee = False
         if ids:
             if isinstance(ids, (int, long)):
                 ids = [ids]
-            cr.execute('SELECT DISTINCT res_model, res_id FROM ir_attachment WHERE id = ANY (%s)', (ids,))
-            for rmod, rid in cr.fetchall():
+            cr.execute('SELECT DISTINCT res_model, res_id, create_uid FROM ir_attachment WHERE id = ANY (%s)', (ids,))
+            for rmod, rid, create_uid in cr.fetchall():
                 if not (rmod and rid):
+                    if create_uid != uid:
+                        require_employee = True
                     continue
                 res_ids.setdefault(rmod,set()).add(rid)
         if values:
@@ -241,10 +248,16 @@ class ir_attachment(osv.osv):
             # ignore attachments that are not attached to a resource anymore when checking access rights
             # (resource was deleted but attachment was not)
             if not self.pool.get(model):
+                require_employee = True
                 continue
-            mids = self.pool[model].exists(cr, uid, mids)
+            existing_ids = self.pool[model].exists(cr, uid, mids)
+            if len(existing_ids) != len(mids):
+                require_employee = True
             ima.check(cr, uid, model, mode)
-            self.pool[model].check_access_rule(cr, uid, mids, mode, context=context)
+            self.pool[model].check_access_rule(cr, uid, existing_ids, mode, context=context)
+        if require_employee:
+            if not uid == SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_user'):
+                raise except_orm(_('Access Denied'), _("Sorry, you are not allowed to access this document."))
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
         ids = super(ir_attachment, self)._search(cr, uid, args, offset=offset,

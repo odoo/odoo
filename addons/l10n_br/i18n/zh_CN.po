@@ -1,0 +1,170 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * l10n_br
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
+"PO-Revision-Date: 2015-08-17 14:08+0000\n"
+"Last-Translator: 珠海-老天 <liangjia@qq.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: l10n_br
+#: field:account.tax,tax_discount:0 field:account.tax.code,tax_discount:0
+#: field:account.tax.code.template,tax_discount:0
+#: field:account.tax.template,tax_discount:0
+msgid "Discount this Tax in Prince"
+msgstr "外国商业票据"
+
+#. module: l10n_br
+#: model:ir.actions.act_window,name:l10n_br.action_l10n_br_cst_form
+#: model:ir.model,name:l10n_br.model_l10n_br_account_cst
+#: model:ir.ui.menu,name:l10n_br.menu_action_l10n_br_cst
+#: view:l10n_br_account.cst:0
+msgid "Tax Situation Code"
+msgstr "税编码"
+
+#. module: l10n_br
+#: model:account.account.type,name:l10n_br.despesa
+msgid "Despesas"
+msgstr "Despesas"
+
+#. module: l10n_br
+#: model:ir.model,name:l10n_br.model_account_tax_code
+#: field:l10n_br_account.cst,tax_code_id:0
+msgid "Tax Code"
+msgstr "税编码"
+
+#. module: l10n_br
+#: help:account.tax.code,domain:0 help:account.tax.code.template,domain:0
+msgid ""
+"This field is only used if you develop your own module allowing developers "
+"to create specific taxes in a custom domain."
+msgstr "这字段只用于，如果您开发自己的模块允许开发者在自定义域创建特定的税"
+
+#. module: l10n_br
+#: model:account.account.type,name:l10n_br.resultado
+msgid "Resultado"
+msgstr "Resultado"
+
+#. module: l10n_br
+#: model:ir.model,name:l10n_br.model_account_tax_template
+msgid "account.tax.template"
+msgstr "account.tax.template"
+
+#. module: l10n_br
+#: model:account.account.type,name:l10n_br.passivo
+msgid "Passivo"
+msgstr "Passivo"
+
+#. module: l10n_br
+#: field:l10n_br_account.cst,name:0 field:l10n_br_account.cst.template,name:0
+msgid "Description"
+msgstr "说明"
+
+#. module: l10n_br
+#: constraint:account.tax.code:0
+msgid ""
+"Error!\n"
+"You cannot create recursive accounts."
+msgstr "错误！\n不可创建循环帐户。"
+
+#. module: l10n_br
+#: field:account.tax,amount_mva:0 field:account.tax.template,amount_mva:0
+msgid "MVA Percent"
+msgstr "MVA百分比"
+
+#. module: l10n_br
+#: help:account.tax.template,amount_mva:0
+#: help:account.tax.template,base_reduction:0
+msgid "For taxes of type percentage, enter % ratio between 0-1."
+msgstr "税类型的百分率，请输入0 - 1之间的值"
+
+#. module: l10n_br
+#: field:account.tax,base_reduction:0
+#: field:account.tax.template,base_reduction:0
+msgid "Redution"
+msgstr "Redution"
+
+#. module: l10n_br
+#: sql_constraint:account.tax:0
+msgid "Tax Name must be unique per company!"
+msgstr "税的名称必须是每个公司唯一的"
+
+#. module: l10n_br
+#: model:ir.model,name:l10n_br.model_account_tax
+msgid "account.tax"
+msgstr "account.tax"
+
+#. module: l10n_br
+#: model:account.account.type,name:l10n_br.receita
+msgid "Receita"
+msgstr "Receita"
+
+#. module: l10n_br
+#: model:ir.actions.act_window,name:l10n_br.action_l10n_br_cst_template_form
+#: model:ir.model,name:l10n_br.model_l10n_br_account_cst_template
+#: model:ir.ui.menu,name:l10n_br.menu_action_l10n_br_cst_template
+#: view:l10n_br_account.cst.template:0
+msgid "Tax Situation Code Template"
+msgstr "纳税情况代码模板"
+
+#. module: l10n_br
+#: model:ir.model,name:l10n_br.model_wizard_multi_charts_accounts
+msgid "wizard.multi.charts.accounts"
+msgstr "wizard.multi.charts.accounts"
+
+#. module: l10n_br
+#: model:ir.actions.todo,note:l10n_br.config_call_account_template_brazilian_localization
+msgid ""
+"Generate Chart of Accounts from a Chart Template. You will be asked to pass the name of the company, the chart template to follow, the no. of digits to generate the code for your accounts and Bank account, currency to create Journals. Thus,the pure copy of chart Template is generated.\n"
+"    This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template."
+msgstr "从图表模板生成会计科目表。你会被要求通过该公司的名称，图表模板可循，没有。数字，为您的帐户和银行帐户，货币创造期刊的代码。因此，生成图表模板的纯副本。\n这是一个运行从财务管理会计从图表模板/配置/财务会计/金融账户/图生成同一个向导。"
+
+#. module: l10n_br
+#: constraint:account.tax.code.template:0
+msgid ""
+"Error!\n"
+"You cannot create recursive Tax Codes."
+msgstr "错误!\n不能创建递归的税号。"
+
+#. module: l10n_br
+#: help:account.tax,tax_discount:0 help:account.tax.code,tax_discount:0
+#: help:account.tax.code.template,tax_discount:0
+#: help:account.tax.template,tax_discount:0
+msgid "Mark it for (ICMS, PIS e etc.)."
+msgstr "将其标记为（ICMS，PISË等）。"
+
+#. module: l10n_br
+#: model:account.account.type,name:l10n_br.ativo
+msgid "Ativo"
+msgstr "Ativo"
+
+#. module: l10n_br
+#: field:account.tax.code,domain:0 field:account.tax.code.template,domain:0
+msgid "Domain"
+msgstr "过滤条件"
+
+#. module: l10n_br
+#: field:l10n_br_account.cst,code:0 field:l10n_br_account.cst.template,code:0
+msgid "Code"
+msgstr "代码"
+
+#. module: l10n_br
+#: help:account.tax,amount_mva:0 help:account.tax,base_reduction:0
+msgid "Um percentual decimal em % entre 0-1."
+msgstr "嗯百分比计算的小数点EM％恩特雷里奥斯0-1。"
+
+#. module: l10n_br
+#: model:ir.model,name:l10n_br.model_account_tax_code_template
+#: field:l10n_br_account.cst.template,tax_code_template_id:0
+msgid "Tax Code Template"
+msgstr "税编码模板"

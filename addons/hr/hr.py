@@ -96,7 +96,8 @@ class hr_job(osv.Model):
     _description = "Job Position"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _columns = {
-        'name': fields.char('Job Name', required=True, select=True),
+        'name': fields.char('Job Name', required=True, select=True,
+                            translate=True),
         'expected_employees': fields.function(_get_nbr_employees, string='Total Forecasted Employees',
             help='Expected number of employees for this job position after new recruitment.',
             store = {
@@ -347,8 +348,8 @@ class hr_employee(osv.osv):
         if auto_follow_fields is None:
             auto_follow_fields = ['user_id']
         user_field_lst = []
-        for name, column_info in self._all_columns.items():
-            if name in auto_follow_fields and name in updated_fields and column_info.column._obj == 'res.users':
+        for name, field in self._fields.items():
+            if name in auto_follow_fields and name in updated_fields and field.comodel_name == 'res.users':
                 user_field_lst.append(name)
         return user_field_lst
 
@@ -411,6 +412,8 @@ class hr_department(osv.osv):
             context = {}
         if not ids:
             return []
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
         for record in reads:

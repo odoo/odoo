@@ -68,8 +68,8 @@
                                 <tr class="border-black">
                                     <td><strong>Total Without Taxes</strong></td>
                                     <td class="text-right">
-                                        <span t-field="o.amount_total"
-                                            t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
+                                        <span t-esc="o.amount_total - o.amount_tax"
+                                            t-esc-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -82,8 +82,8 @@
                                 <tr class="border-black">
                                     <td><strong>Total</strong></td>
                                     <td class="text-right">
-                                        <span t-esc="(o.amount_total + o.amount_tax)"
-                                            t-esc-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
+                                        <span t-field="o.amount_total"
+                                            t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
                                     </td>
                                 </tr>
                             </table>

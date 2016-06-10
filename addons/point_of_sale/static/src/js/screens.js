@@ -475,7 +475,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             if(!product || !this.pos){
                 return defaultstr;
             }
-            var unit_id = product.uos_id || product.uom_id;
+            var unit_id = product.uom_id;
             if(!unit_id){
                 return defaultstr;
             }
@@ -751,6 +751,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             new instance.web.Model('res.partner').call('create_from_ui',[fields]).then(function(partner_id){
                 self.saved_client_details(partner_id);
+            },function(err,event){
+                event.preventDefault();
+                self.pos_widget.screen_selector.show_popup('error',{
+                    'message':_t('Error: Could not Save Changes'),
+                    'comment':_t('Your Internet connection is probably down.'),
+                });
             });
         },
         
@@ -887,7 +893,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 contents.append($(QWeb.render('ClientDetailsEdit',{widget:this,partner:partner})));
                 this.toggle_save_button();
 
-                contents.find('.image-uploader').on('change',function(){
+                contents.find('.image-uploader').on('change',function(event){
                     self.load_image_file(event.target.files[0],function(res){
                         if (res) {
                             contents.find('.client-picture img, .client-picture .fa').remove();
@@ -919,8 +925,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     module.ReceiptScreenWidget = module.ScreenWidget.extend({
         template: 'ReceiptScreenWidget',
 
-        show_numpad:     true,
-        show_leftpane:   true,
+        show_numpad:     false,
+        show_leftpane:   false,
 
         show: function(){
             this._super();
@@ -939,7 +945,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 });
 
             this.refresh();
-            this.print();
+
+            if (!this.pos.get('selectedOrder')._printed) {
+                this.print();
+            }
 
             //
             // The problem is that in chrome the print() is asynchronous and doesn't
@@ -964,6 +973,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }, 2000);
         },
         print: function() {
+            this.pos.get('selectedOrder')._printed = true;
             window.print();
         },
         finishOrder: function() {
@@ -998,6 +1008,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 },this);
 
             this.bind_events();
+            this.decimal_point = instance.web._t.database.parameters.decimal_point;
 
             this.line_delete_handler = function(event){
                 var node = this;
@@ -1016,7 +1027,14 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     node = node.parentNode;
                 }
                 if(node){
-                    node.line.set_amount(this.value);
+                    var amount;
+                    try{
+                        amount = instance.web.parse_value(this.value, {type: "float"});
+                    }
+                    catch(e){
+                        amount = 0;
+                    }
+                    node.line.set_amount(amount);
                 }
             };
 
@@ -1067,7 +1085,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
            
             if( this.pos.config.iface_invoicing ){
                 this.add_action_button({
-                        label: 'Invoice',
+                        label: _t('Invoice'),
                         name: 'invoice',
                         icon: '/point_of_sale/static/src/img/icons/png48/invoice.png',
                         click: function(){
@@ -1126,7 +1144,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 paymentlines.bind('change:selected', this.rerender_paymentline, this);
                 paymentlines.bind('change:amount', function(line){
                         if(!line.selected && line.node){
-                            line.node.value = line.amount.toFixed(2);
+                            line.node.value = line.amount.toFixed(this.pos.currency.decimals);
                         }
                         this.update_payment_summary();
                     },this);
@@ -1161,7 +1179,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     input.value = '';
                 }else{
                     input.value = value;
-                    input.select();
+
+                    // Microsoft Edge >= 12 crashes (code 800a025e) when calling
+                    // select on a non-empty input element not part of document
+                    if (! this.hidden) {
+                        input.select();
+                    }
                 }
             }
         },
@@ -1244,6 +1267,25 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             options = options || {};
 
             var currentOrder = this.pos.get('selectedOrder');
+
+            if(currentOrder.get('orderLines').models.length === 0){
+                this.pos_widget.screen_selector.show_popup('error',{
+                    'message': _t('Empty Order'),
+                    'comment': _t('There must be at least one product in your order before it can be validated'),
+                });
+                return;
+            }
+
+            var plines = currentOrder.get('paymentLines').models;
+            for (var i = 0; i < plines.length; i++) {
+                if (plines[i].get_type() === 'bank' && plines[i].get_amount() < 0) {
+                    this.pos_widget.screen_selector.show_popup('error',{
+                        'message': _t('Negative Bank Payment'),
+                        'comment': _t('You cannot have a negative amount in a Bank payment. Use a cash payment method to return money to the customer.'),
+                    });
+                    return;
+                }
+            }
 
             if(!this.is_paid()){
                 return;

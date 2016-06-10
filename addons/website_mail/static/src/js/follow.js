@@ -41,7 +41,7 @@
             this.$target.removeClass('has-error');
 
             var email = $email.length ? $email.val() : false;
-            if (email) {
+            if (email || this.is_user) {
                 openerp.jsonRpc('/website_mail/follow', 'call', {
                     'id': +this.$target.data('id'),
                     'object': this.$target.data('object'),
@@ -53,7 +53,6 @@
             }
         },
         toggle_subscription: function(follow, email) {
-            console.log(follow, email);
             follow = follow || (!email && this.$target.attr('data-unsubscribe'));
             if (follow) {
                 this.$target.find(".js_follow_btn").addClass("hidden");

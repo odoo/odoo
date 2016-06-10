@@ -94,6 +94,10 @@ class lang(osv.osv):
                be 100% cross-platform we map to the directives required by
                the C standard (1989 version), always available on platforms
                with a C standard implementation."""
+            # For some locales, nl_langinfo returns a D_FMT/T_FMT that contains
+            # unsupported '%-' patterns, e.g. for cs_CZ
+            format = format.replace('%-', '%')
+
             for pattern, replacement in tools.DATETIME_FORMATS_MAP.iteritems():
                 format = format.replace(pattern, replacement)
             return str(format)
@@ -121,6 +125,15 @@ class lang(osv.osv):
                 if (lang.time_format and pattern in lang.time_format)\
                     or (lang.date_format and pattern in lang.date_format):
                     return False
+        return True
+
+    def _check_grouping(self, cr, uid, ids, context=None):
+        for lang in self.browse(cr, uid, ids, context=context):
+            try:
+                if not all(isinstance(x, int) for x in eval(lang.grouping)):
+                    return False
+            except Exception:
+                return False
         return True
 
     def _get_default_date_format(self, cursor, user, context=None):
@@ -158,7 +171,8 @@ class lang(osv.osv):
     ]
 
     _constraints = [
-        (_check_format, 'Invalid date/time format directive specified. Please refer to the list of allowed directives, displayed when you edit a language.', ['time_format', 'date_format'])
+        (_check_format, 'Invalid date/time format directive specified. Please refer to the list of allowed directives, displayed when you edit a language.', ['time_format', 'date_format']),
+        (_check_grouping, "The Separator Format should be like [,n] where 0 < n :starting from Unit digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. Provided ',' as the thousand separator in each case.", ['grouping'])
     ]
 
     @tools.ormcache(skiparg=3)
@@ -175,6 +189,10 @@ class lang(osv.osv):
         return grouping, thousands_sep, decimal_point
 
     def write(self, cr, uid, ids, vals, context=None):
+        if 'code' in vals:
+            for rec in self.browse(cr, uid, ids, context):
+                if rec.code != vals['code']:
+                    raise osv.except_osv(_('User Error'), _("Language code cannot be modified."))
         for lang_id in ids :
             self._lang_data_get.clear_cache(self)
         return super(lang, self).write(cr, uid, ids, vals, context)

@@ -1,0 +1,535 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment
+# 
+# Translators:
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2015
+# Daniel Forslund <daniel.forslund@gmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-07-17 07:44+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
+"Language-Team: Swedish (http://www.transifex.com/odoo/odoo-8/language/sv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment
+#: help:account.config.settings,module_payment_adyen:0
+msgid "-It installs the module payment_adyen."
+msgstr "- Installerar modulen payment_adyen."
+
+#. module: payment
+#: help:account.config.settings,module_payment_buckaroo:0
+msgid "-It installs the module payment_buckaroo."
+msgstr "- Installerar modulen payment_buckaroo"
+
+#. module: payment
+#: help:account.config.settings,module_payment_ogone:0
+msgid "-It installs the module payment_ogone."
+msgstr "- Installerar modulen payment_ogone."
+
+#. module: payment
+#: help:account.config.settings,module_payment_paypal:0
+msgid "-It installs the module payment_paypal."
+msgstr "- Installerar modulen payment_paypal."
+
+#. module: payment
+#: field:payment.transaction,acquirer_id:0
+msgid "Acquirer"
+msgstr "Betalväxel"
+
+#. module: payment
+#: field:payment.transaction,acquirer_reference:0
+msgid "Acquirer Order Reference"
+msgstr "Betalväxelns orderreferens"
+
+#. module: payment
+#: field:payment.transaction,partner_address:0
+msgid "Address"
+msgstr "Adress"
+
+#. module: payment
+#: field:payment.transaction,amount:0
+msgid "Amount"
+msgstr "Belopp"
+
+#. module: payment
+#: help:payment.transaction,amount:0
+msgid "Amount in cents"
+msgstr "Total i cent"
+
+#. module: payment
+#: selection:payment.acquirer,validation:0
+msgid "Automatic"
+msgstr "Automatiskt"
+
+#. module: payment
+#: selection:payment.transaction,state:0
+msgid "Canceled"
+msgstr "Avbruten"
+
+#. module: payment
+#: field:payment.transaction,partner_city:0
+msgid "City"
+msgstr "Stad"
+
+#. module: payment
+#: field:payment.acquirer,company_id:0
+msgid "Company"
+msgstr "Företag"
+
+#. module: payment
+#: field:payment.acquirer,fees_active:0
+msgid "Compute fees"
+msgstr "Beräkna avgifter"
+
+#. module: payment
+#: field:payment.transaction,partner_country_id:0
+msgid "Country"
+msgstr "Land"
+
+#. module: payment
+#: field:payment.acquirer,create_uid:0 field:payment.transaction,create_uid:0
+msgid "Created by"
+msgstr "Skapad av"
+
+#. module: payment
+#: field:payment.acquirer,create_date:0
+#: field:payment.transaction,create_date:0
+msgid "Created on"
+msgstr "Skapad den"
+
+#. module: payment
+#: field:payment.transaction,date_create:0
+msgid "Creation Date"
+msgstr "Skapad datum"
+
+#. module: payment
+#: field:payment.transaction,currency_id:0
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: payment
+#: help:payment.transaction,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Datum för senast publicerade meddelandet i loggen."
+
+#. module: payment
+#: selection:payment.transaction,state:0
+msgid "Done"
+msgstr "Klar"
+
+#. module: payment
+#: selection:payment.transaction,state:0
+msgid "Draft"
+msgstr "Draft"
+
+#. module: payment
+#: field:payment.transaction,partner_email:0
+msgid "Email"
+msgstr "E-post"
+
+#. module: payment
+#: field:payment.acquirer,environment:0
+msgid "Environment"
+msgstr "Miljö"
+
+#. module: payment
+#: selection:payment.transaction,state:0
+msgid "Error"
+msgstr "Fel"
+
+#. module: payment
+#: field:payment.transaction,fees:0
+msgid "Fees"
+msgstr "Avgifter"
+
+#. module: payment
+#: help:payment.transaction,fees:0
+msgid "Fees amount; set by the system because depends on the acquirer"
+msgstr "Summa avgifter; beräknas utifrån betalväxeln"
+
+#. module: payment
+#: help:payment.transaction,state_message:0
+msgid "Field used to store error and/or validation messages for information"
+msgstr "Fält används för att lagra fel och/eller valideringsmeddelananden"
+
+#. module: payment
+#: field:payment.acquirer,fees_dom_fixed:0
+msgid "Fixed domestic fees"
+msgstr "Fasta inrikesavgifter"
+
+#. module: payment
+#: field:payment.acquirer,fees_int_fixed:0
+msgid "Fixed international fees"
+msgstr "Fasta internationella avgifter"
+
+#. module: payment
+#: field:payment.transaction,message_follower_ids:0
+msgid "Followers"
+msgstr "Följare"
+
+#. module: payment
+#: selection:payment.transaction,type:0
+msgid "Form"
+msgstr "Formulär"
+
+#. module: payment
+#: field:payment.acquirer,view_template_id:0
+msgid "Form Button Template"
+msgstr "Mall för formulärknapp"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_search
+msgid "Group By"
+msgstr "Gruppera efter"
+
+#. module: payment
+#: help:payment.transaction,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "Lagrar pladder-sammanfattning (antal meddelanden, ...). Denna sammanfattning presenteras i html-format för att kunna sättas in i kanban vyer."
+
+#. module: payment
+#: field:payment.acquirer,id:0 field:payment.transaction,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: payment
+#: help:payment.transaction,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Om ikryssad nya meddelanden som kräver din uppmärksamhet"
+
+#. module: payment
+#: field:payment.transaction,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Är en följare"
+
+#. module: payment
+#: field:payment.transaction,partner_lang:0
+msgid "Lang"
+msgstr "Språk"
+
+#. module: payment
+#: field:payment.transaction,message_last_post:0
+msgid "Last Message Date"
+msgstr "Senast meddelandedatum"
+
+#. module: payment
+#: field:payment.acquirer,write_uid:0 field:payment.transaction,write_uid:0
+msgid "Last Updated by"
+msgstr "Senast uppdaterad av"
+
+#. module: payment
+#: field:payment.acquirer,write_date:0 field:payment.transaction,write_date:0
+msgid "Last Updated on"
+msgstr "Senast uppdaterad"
+
+#. module: payment
+#: help:payment.acquirer,website_published:0
+msgid "Make this payment acquirer available (Customer invoices, etc.)"
+msgstr "Gör detta betalningsinlösen tillgängligt ( Kund fakturor , etc.)"
+
+#. module: payment
+#: field:account.config.settings,module_payment_adyen:0
+msgid "Manage Payments Using Adyen"
+msgstr "Hantera betalningar med Adyen"
+
+#. module: payment
+#: field:account.config.settings,module_payment_buckaroo:0
+msgid "Manage Payments Using Buckaroo"
+msgstr "Hantera betalningar med Buckaroo"
+
+#. module: payment
+#: field:account.config.settings,module_payment_ogone:0
+msgid "Manage Payments Using Ogone"
+msgstr "Hantera betalningar med Ogone"
+
+#. module: payment
+#: field:account.config.settings,module_payment_paypal:0
+msgid "Manage Payments Using Paypal"
+msgstr "Hantera betalningar med Paypal"
+
+#. module: payment
+#: selection:payment.acquirer,validation:0
+msgid "Manual"
+msgstr "Manuell"
+
+#. module: payment
+#: field:payment.acquirer,pre_msg:0 field:payment.transaction,state_message:0
+msgid "Message"
+msgstr "Meddelande"
+
+#. module: payment
+#: help:payment.acquirer,post_msg:0
+msgid "Message displayed after having done the payment process."
+msgstr "Meddelande som visas efter att ha gjort betalningsprocessen ."
+
+#. module: payment
+#: help:payment.acquirer,pre_msg:0
+msgid "Message displayed to explain and help the payment process."
+msgstr "Meddelande visas för att förklara och hjälpa betalningsprocessen ."
+
+#. module: payment
+#: field:payment.transaction,message_ids:0
+msgid "Messages"
+msgstr "Meddelanden"
+
+#. module: payment
+#: help:payment.transaction,message_ids:0
+msgid "Messages and communication history"
+msgstr "Meddelande- och kommunikationshistorik"
+
+#. module: payment
+#: field:payment.acquirer,name:0
+msgid "Name"
+msgstr "Namn"
+
+#. module: payment
+#: field:payment.transaction,reference:0
+msgid "Order Reference"
+msgstr "Orderreferens"
+
+#. module: payment
+#: field:payment.transaction,partner_id:0
+msgid "Partner"
+msgstr "Företag"
+
+#. module: payment
+#: field:payment.transaction,partner_name:0
+msgid "Partner Name"
+msgstr "Företagsnamn"
+
+#. module: payment
+#: field:payment.transaction,partner_reference:0
+msgid "Partner Reference"
+msgstr "Företagsreferens"
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:274
+#, python-format
+msgid "Pay safely online"
+msgstr "Betala säkert online"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_acquirer
+#: view:payment.acquirer:payment.acquirer_form
+msgid "Payment Acquirer"
+msgstr "Betalväxel"
+
+#. module: payment
+#: model:ir.actions.act_window,name:payment.action_payment_acquirer
+#: model:ir.ui.menu,name:payment.payment_acquirer_menu
+#: view:payment.acquirer:payment.acquirer_list
+msgid "Payment Acquirers"
+msgstr "Betalningsinlösen"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Betalningstransaktion"
+
+#. module: payment
+#: model:ir.actions.act_window,name:payment.action_payment_transaction
+#: model:ir.ui.menu,name:payment.payment_transaction_menu
+#: view:payment.transaction:payment.transaction_form
+#: view:payment.transaction:payment.transaction_list
+msgid "Payment Transactions"
+msgstr "Betalningstransaktioner"
+
+#. module: payment
+#: model:ir.ui.menu,name:payment.root_payment_menu
+msgid "Payments"
+msgstr "Betalningar"
+
+#. module: payment
+#: selection:payment.transaction,state:0
+msgid "Pending"
+msgstr "Väntar"
+
+#. module: payment
+#: field:payment.transaction,partner_phone:0
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: payment
+#: field:payment.acquirer,validation:0
+msgid "Process Method"
+msgstr "Processmetod"
+
+#. module: payment
+#: selection:payment.acquirer,environment:0
+msgid "Production"
+msgstr "Produktion"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_search
+#: field:payment.acquirer,provider:0
+msgid "Provider"
+msgstr "Leverantör"
+
+#. module: payment
+#: help:payment.transaction,acquirer_reference:0
+msgid "Reference of the TX as stored in the acquirer database"
+msgstr "Hänvisning till TX som lagras i förvärvad databas"
+
+#. module: payment
+#: help:payment.transaction,partner_reference:0
+msgid "Reference of the customer in the acquirer database"
+msgstr "Hänvisning till kunden i förvärvad databas"
+
+#. module: payment
+#: constraint:payment.acquirer:0
+msgid "Required fields not filled"
+msgstr "Obligatoriska fält är inte ifyllda"
+
+#. module: payment
+#: view:payment.transaction:payment.transaction_form
+msgid "Send a message to the group"
+msgstr "Meddelande att skicka till gruppen"
+
+#. module: payment
+#: selection:payment.transaction,type:0
+msgid "Server To Server"
+msgstr "Server till server"
+
+#. module: payment
+#: help:payment.acquirer,validation:0
+msgid "Static payments are payments like transfer, that require manual steps."
+msgstr "Statiska betalningar är betalningar som t.ex. överföringar, dessa kräver manuella steg."
+
+#. module: payment
+#: field:payment.transaction,state:0
+msgid "Status"
+msgstr "Status"
+
+#. module: payment
+#: field:payment.transaction,message_summary:0
+msgid "Summary"
+msgstr "Sammandrag"
+
+#. module: payment
+#: selection:payment.acquirer,environment:0
+msgid "Test"
+msgstr "Test"
+
+#. module: payment
+#: field:payment.acquirer,post_msg:0
+msgid "Thanks Message"
+msgstr "Tack meddelande"
+
+#. module: payment
+#: sql_constraint:payment.transaction:0
+msgid "The payment transaction reference must be unique!"
+msgstr "Betalningstransaktionens referens måste vara unik!"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid ""
+"This template renders the acquirer button with all necessary values.\n"
+"                                    It is be rendered with qWeb with the following evaluation context:"
+msgstr "Denna mall renderar köpknappen med alla nödvändiga inställningar.\nDen kommer renderas med qWeb med följande kontext:"
+
+#. module: payment
+#: field:payment.transaction,type:0
+msgid "Type"
+msgstr "Typ"
+
+#. module: payment
+#: field:payment.transaction,message_unread:0
+msgid "Unread Messages"
+msgstr "Olästa meddelanden"
+
+#. module: payment
+#: field:payment.transaction,date_validate:0
+msgid "Validation Date"
+msgstr "Bekräftad datum"
+
+#. module: payment
+#: field:payment.acquirer,fees_dom_var:0
+msgid "Variable domestic fees (in percents)"
+msgstr "Värde inrikesavgifter (i procent)"
+
+#. module: payment
+#: field:payment.acquirer,fees_int_var:0
+msgid "Variable international fees (in percents)"
+msgstr "Värde internationella avgifter (i procent)"
+
+#. module: payment
+#: field:payment.acquirer,website_published:0
+msgid "Visible in Portal / Website"
+msgstr "Synlig i Portal / Hemsida"
+
+#. module: payment
+#: field:payment.transaction,website_message_ids:0
+msgid "Website Messages"
+msgstr "Hemsidemeddelanden"
+
+#. module: payment
+#: help:payment.transaction,website_message_ids:0
+msgid "Website communication history"
+msgstr "Hemsidans kommunikationshistorik"
+
+#. module: payment
+#: field:payment.transaction,partner_zip:0
+msgid "Zip"
+msgstr "Postnummer"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "acquirer: payment.acquirer browse record"
+msgstr "betalväxel: payment.acquirer bläddra bland poster"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "amount: the transaction amount, a float"
+msgstr "värde: transaktions värde , en flytande"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "context: the current context dictionary"
+msgstr "Innehåll : det aktuella innehållets ordlista"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "currency: the transaction currency browse record"
+msgstr "valuta: transaktionsvaluta historik"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "partner: the buyer partner browse record, not necessarily set"
+msgstr "partner: köparens sökpost, inte givet att det är lagrat"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid ""
+"partner_values: specific values about the buyer, for example coming from a "
+"shipping form"
+msgstr "partner_values: data om köpare, t ex från ett leveransformulär"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "reference: the transaction reference number"
+msgstr "referens: transaktionens referensnummer"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "tx_url: transaction URL to post the form"
+msgstr "tx_url: transaktions-URL för att spara formuläret"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "tx_values: transaction values"
+msgstr "tx_values: transaktionsvärden"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "user: current user browse record"
+msgstr "användare: aktuell användare bläddra bland poster"

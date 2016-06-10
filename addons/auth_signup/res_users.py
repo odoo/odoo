@@ -35,7 +35,7 @@ class SignupError(Exception):
 def random_token():
     # the token has an entropy of about 120 bits (6 bits/char * 20 chars)
     chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    return ''.join(random.choice(chars) for i in xrange(20))
+    return ''.join(random.SystemRandom().choice(chars) for i in xrange(20))
 
 def now(**kwargs):
     dt = datetime.now() + timedelta(**kwargs)
@@ -64,7 +64,6 @@ class res_partner(osv.Model):
             # when required, make sure the partner has a valid signup token
             if context.get('signup_valid') and not partner.user_ids:
                 self.signup_prepare(cr, uid, [partner.id], context=context)
-                partner.refresh()
 
             route = 'login'
             # the parameters to encode for the query
@@ -166,7 +165,7 @@ class res_partner(osv.Model):
         if partner.user_ids:
             res['login'] = partner.user_ids[0].login
         else:
-            res['email'] = partner.email or ''
+            res['login'] = res['email'] = partner.email or ''
         return res
 
 class res_users(osv.Model):
@@ -265,7 +264,7 @@ class res_users(osv.Model):
         if not user_ids:
             user_ids = self.search(cr, uid, [('email', '=', login)], context=context)
         if len(user_ids) != 1:
-            raise Exception('Reset password: invalid username or email')
+            raise Exception(_('Reset password: invalid username or email'))
         return self.action_reset_password(cr, uid, user_ids, context=context)
 
     def action_reset_password(self, cr, uid, ids, context=None):
@@ -275,8 +274,7 @@ class res_users(osv.Model):
         partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context)]
         res_partner.signup_prepare(cr, uid, partner_ids, signup_type="reset", expiration=now(days=+1), context=context)
 
-        if not context:
-            context = {}
+        context = dict(context or {})
 
         # send email to users with their signup url
         template = False
@@ -293,6 +291,7 @@ class res_users(osv.Model):
         for user in self.browse(cr, uid, ids, context):
             if not user.email:
                 raise osv.except_osv(_("Cannot send email: user has no email address."), user.name)
+            context['lang'] = user.lang  # translate in targeted user language
             self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, force_send=True, raise_exception=True, context=context)
 
     def create(self, cr, uid, values, context=None):
@@ -308,3 +307,9 @@ class res_users(osv.Model):
             except MailDeliveryException:
                 self.pool.get('res.partner').signup_cancel(cr, uid, [user.partner_id.id], context=context)
         return user_id
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default or not default.get('email'):
+            # avoid sending email to the user we are duplicating
+            context = dict(context or {}, reset_password=False)
+        return super(res_users, self).copy(cr, uid, id, default=default, context=context)

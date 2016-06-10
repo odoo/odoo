@@ -13,6 +13,7 @@
             <field name="name">crm.claim.from_delivery.form</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="groups_id" eval="[(4, ref('base.group_sale_salesman')), (4, ref('base.group_partner_manager'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/sheet/h1" position="before">
                     <div class="oe_right oe_button_box">

@@ -31,6 +31,12 @@ from openerp.addons.website.models.website import slug
 class event(osv.osv):
     _name = 'event.event'
     _inherit = ['event.event','website.seo.metadata']
+    _track = {
+        'website_published': {
+            'website_event.mt_event_published': lambda self, cr, uid, obj, ctx=None: obj.website_published,
+            'website_event.mt_event_unpublished': lambda self, cr, uid, obj, ctx=None: not obj.website_published
+        },
+    }
 
     def _get_new_menu_pages(self, cr, uid, event, context=None):
         context = context or {}
@@ -100,7 +106,8 @@ class event(osv.osv):
             help="Website communication history",
         ),
         'website_url': fields.function(_website_url, string="Website url", type="char"),
-        'show_menu': fields.function(_get_show_menu, fnct_inv=_set_show_menu, type='boolean', string='Dedicated Menu'),
+        'show_menu': fields.function(_get_show_menu, fnct_inv=_set_show_menu, type='boolean', string='Dedicated Menu',
+            help="Creates menus Introduction, Location and Register on the page of the event on the website."),
         'menu_id': fields.many2one('website.menu', 'Event Menu'),
     }
     _defaults = {

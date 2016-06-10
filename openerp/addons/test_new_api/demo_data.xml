@@ -26,5 +26,20 @@
             <field name="discussion" ref="discussion_0"/>
             <field name="body">This is a much longer message</field>
         </record>
+        <record id="c1" model="test_old_api.function_counter">
+        </record>
+
+        <record id="bool_1" model="domain.bool">
+            <field name="bool_true" eval="True"/>
+        </record>
+        <record id="bool_2" model="domain.bool">
+            <field name="bool_false" eval="True"/>
+        </record>
+        <record id="bool_3" model="domain.bool">
+            <field name="bool_undefined" eval="True"/>
+        </record>
+        <record id="bool_4" model="domain.bool">
+            <field name="bool_undefined" eval="False"/>
+        </record>
     </data>
 </openerp>

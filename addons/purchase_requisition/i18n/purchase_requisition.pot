@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0rc1\n"
+"Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 13:09+0000\n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-01-21 14:08+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -84,7 +84,7 @@ msgstr ""
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
-msgid "Call for Bids in negociation"
+msgid "Call for Bids in negotiation"
 msgstr ""
 
 #. module: purchase_requisition
@@ -130,7 +130,7 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:292
+#: code:addons/purchase_requisition/purchase_requisition.py:293
 #, python-format
 msgid "Cancelled by the call for bids associated to this request for quotation."
 msgstr ""
@@ -369,6 +369,11 @@ msgid "Order Date"
 msgstr ""
 
 #. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+msgid "Ordering Date"
+msgstr ""
+
+#. module: purchase_requisition
 #: selection:purchase.requisition,state:0
 msgid "PO Created"
 msgstr ""
@@ -463,7 +468,7 @@ msgid "Purchase Requisition Partner"
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:414
+#: code:addons/purchase_requisition/purchase_requisition.py:416
 #, python-format
 msgid "Purchase Requisition created"
 msgstr ""
@@ -496,7 +501,7 @@ msgid "Quantity Bid"
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:191
+#: code:addons/purchase_requisition/purchase_requisition.py:192
 #, python-format
 msgid "RFQ created"
 msgstr ""
@@ -603,11 +608,6 @@ msgstr ""
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
-msgid "Start Month"
-msgstr ""
-
-#. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 #: field:purchase.requisition,state:0
 msgid "Status"
 msgstr ""
@@ -675,9 +675,9 @@ msgid "Warehouse"
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:188
-#: code:addons/purchase_requisition/purchase_requisition.py:239
-#: code:addons/purchase_requisition/purchase_requisition.py:248
+#: code:addons/purchase_requisition/purchase_requisition.py:189
+#: code:addons/purchase_requisition/purchase_requisition.py:240
+#: code:addons/purchase_requisition/purchase_requisition.py:249
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -693,19 +693,19 @@ msgid "Website communication history"
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:239
+#: code:addons/purchase_requisition/purchase_requisition.py:240
 #, python-format
 msgid "You have already generate the purchase order(s)."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:188
+#: code:addons/purchase_requisition/purchase_requisition.py:189
 #, python-format
 msgid "You have already one %s purchase order for this partner, you must cancel this purchase order to create a new quotation."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:248
+#: code:addons/purchase_requisition/purchase_requisition.py:249
 #, python-format
 msgid "You have no line selected for buying."
 msgstr ""
@@ -718,5 +718,11 @@ msgstr ""
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "e.g. PO0025"
+msgstr ""
+
+#. module: purchase_requisition
+#: view:bid.line.qty:purchase_requisition.view_bid_line_qty
+#: view:purchase.requisition.partner:purchase_requisition.view_purchase_requisition_partner
+msgid "or"
 msgstr ""
 

@@ -4,8 +4,9 @@
 from datetime import date, datetime
 from collections import defaultdict
 
+from openerp.exceptions import AccessError, except_orm
 from openerp.tests import common
-from openerp.exceptions import except_orm
+from openerp.tools import mute_logger
 
 
 class TestNewFields(common.TransactionCase):
@@ -185,6 +186,9 @@ class TestNewFields(common.TransactionCase):
         with self.assertRaises(Exception):
             self.env['test_new_api.message'].create({'discussion': discussion.id, 'body': 'Whatever'})
 
+        # make sure that assertRaises() does not leave fields to recompute
+        self.assertFalse(self.env.has_todo())
+
         # put back oneself into discussion participants: now we can create
         # messages in discussion
         discussion.participants += self.env.user
@@ -291,7 +295,7 @@ class TestNewFields(common.TransactionCase):
         # by default related fields are not stored
         field = message._fields['discussion_name']
         self.assertFalse(field.store)
-        self.assertTrue(field.readonly)
+        self.assertFalse(field.readonly)
 
         # check value of related field
         self.assertEqual(message.discussion_name, discussion.name)
@@ -304,6 +308,19 @@ class TestNewFields(common.TransactionCase):
         message.discussion_name = 'Bar'
         self.assertEqual(discussion.name, 'Bar')
         self.assertEqual(message.discussion_name, 'Bar')
+
+        # change discussion name via related field on several records
+        discussion1 = discussion.create({'name': 'X1'})
+        discussion2 = discussion.create({'name': 'X2'})
+        discussion1.participants = discussion2.participants = self.env.user
+        message1 = message.create({'discussion': discussion1.id})
+        message2 = message.create({'discussion': discussion2.id})
+        self.assertEqual(message1.discussion_name, 'X1')
+        self.assertEqual(message2.discussion_name, 'X2')
+
+        (message1 + message2).write({'discussion_name': 'X3'})
+        self.assertEqual(discussion1.name, 'X3')
+        self.assertEqual(discussion2.name, 'X3')
 
         # search on related field, and check result
         search_on_related = self.env['test_new_api.message'].search([('discussion_name', '=', 'Bar')])
@@ -336,6 +353,24 @@ class TestNewFields(common.TransactionCase):
             self.assertEqual(data['display_name'], display_name)
             self.assertEqual(data['size'], size)
 
+    def test_31_prefetch(self):
+        """ test prefetch of records handle AccessError """
+        Category = self.env['test_new_api.category']
+        cat_1 = Category.create({'name': 'NOACCESS'}).id
+        cat_2 = Category.create({'name': 'ACCESS', 'parent': cat_1}).id
+
+        self.env.clear()
+
+        cat = Category.browse(cat_2)
+        self.assertEqual(cat.name, 'ACCESS')
+        # both categories should be in prefetch ids
+        self.assertSetEqual(self.env.prefetch[Category._name], set([cat_1, cat_2]))
+        # but due to our (lame) overwrite of `read`, it should not forbid us to read records we have access to
+        self.assertFalse(len(cat.discussions))
+        self.assertEqual(cat.parent.id, cat_1)
+        with self.assertRaises(AccessError):
+            Category.browse(cat_1).name
+
     def test_40_new(self):
         """ test new records. """
         discussion = self.env.ref('test_new_api.discussion_0')
@@ -349,23 +384,78 @@ class TestNewFields(common.TransactionCase):
         message.body = BODY = "May the Force be with you."
         self.assertEqual(message.discussion, discussion)
         self.assertEqual(message.body, BODY)
-
+        self.assertFalse(message.author)
         self.assertNotIn(message, discussion.messages)
 
         # check computed values of fields
-        user = self.env.user
-        self.assertEqual(message.author, user)
-        self.assertEqual(message.name, "[%s] %s" % (discussion.name, user.name))
+        self.assertEqual(message.name, "[%s] %s" % (discussion.name, ''))
         self.assertEqual(message.size, len(BODY))
 
-    def test_41_defaults(self):
+    @mute_logger('openerp.addons.base.ir.ir_model')
+    def test_41_new_related(self):
+        """ test the behavior of related fields starting on new records. """
+        # make discussions unreadable for demo user
+        access = self.env.ref('test_new_api.access_discussion')
+        access.write({'perm_read': False})
+
+        # create an environment for demo user
+        env = self.env(user=self.env.ref('base.user_demo'))
+        self.assertEqual(env.user.login, "demo")
+
+        # create a new message as demo user
+        discussion = self.env.ref('test_new_api.discussion_0')
+        message = env['test_new_api.message'].new({'discussion': discussion})
+        self.assertEqual(message.discussion, discussion)
+
+        # read the related field discussion_name
+        self.assertEqual(message.discussion.env, env)
+        self.assertEqual(message.discussion_name, discussion.name)
+        with self.assertRaises(AccessError):
+            message.discussion.name
+
+    @mute_logger('openerp.addons.base.ir.ir_model')
+    def test_42_new_related(self):
+        """ test the behavior of related fields traversing new records. """
+        # make discussions unreadable for demo user
+        access = self.env.ref('test_new_api.access_discussion')
+        access.write({'perm_read': False})
+
+        # create an environment for demo user
+        env = self.env(user=self.env.ref('base.user_demo'))
+        self.assertEqual(env.user.login, "demo")
+
+        # create a new discussion and a new message as demo user
+        discussion = env['test_new_api.discussion'].new({'name': 'Stuff'})
+        message = env['test_new_api.message'].new({'discussion': discussion})
+        self.assertEqual(message.discussion, discussion)
+
+        # read the related field discussion_name
+        self.assertNotEqual(message.sudo().env, message.env)
+        self.assertEqual(message.discussion_name, discussion.name)
+
+    def test_50_defaults(self):
         """ test default values. """
         fields = ['discussion', 'body', 'author', 'size']
         defaults = self.env['test_new_api.message'].default_get(fields)
-        self.assertEqual(defaults, {'author': self.env.uid, 'size': 0})
+        self.assertEqual(defaults, {'author': self.env.uid})
 
         defaults = self.env['test_new_api.mixed'].default_get(['number'])
         self.assertEqual(defaults, {'number': 3.14})
+
+    def test_50_search_many2one(self):
+        """ test search through a path of computed fields"""
+        messages = self.env['test_new_api.message'].search(
+            [('author_partner.name', '=', 'Demo User')])
+        self.assertEqual(messages, self.env.ref('test_new_api.message_0_1'))
+
+    def test_60_x2many_domain(self):
+        """ test the cache consistency of a x2many field with a domain """
+        discussion = self.env.ref('test_new_api.discussion_0')
+        message = discussion.messages[0]
+        self.assertNotIn(message, discussion.important_messages)
+
+        message.important = True
+        self.assertIn(message, discussion.important_messages)
 
 
 class TestMagicFields(common.TransactionCase):
@@ -374,20 +464,3 @@ class TestMagicFields(common.TransactionCase):
         record = self.env['test_new_api.discussion'].create({'name': 'Booba'})
         self.assertEqual(record.create_uid, self.env.user)
         self.assertEqual(record.write_uid, self.env.user)
-
-
-class TestInherits(common.TransactionCase):
-
-    def test_inherits(self):
-        """ Check that a many2one field with delegate=True adds an entry in _inherits """
-        Talk = self.env['test_new_api.talk']
-        self.assertEqual(Talk._inherits, {'test_new_api.discussion': 'parent'})
-        self.assertIn('name', Talk._fields)
-        self.assertEqual(Talk._fields['name'].related, ('parent', 'name'))
-
-        talk = Talk.create({'name': 'Foo'})
-        discussion = talk.parent
-        self.assertTrue(discussion)
-        self.assertEqual(talk._name, 'test_new_api.talk')
-        self.assertEqual(discussion._name, 'test_new_api.discussion')
-        self.assertEqual(talk.name, discussion.name)

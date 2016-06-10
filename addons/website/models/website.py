@@ -77,8 +77,10 @@ def is_multilang_url(local_url, langs=None):
         path = url[0]
         query_string = url[1] if len(url) > 1 else None
         router = request.httprequest.app.get_db_router(request.db).bind('')
-        func = router.match(path, query_args=query_string)[0]
-        return func.routing.get('website', False) and func.routing.get('multilang', True)
+        # Force to check method to POST. Odoo uses methods : ['POST'] and ['GET', 'POST']
+        func = router.match(path, method='POST', query_args=query_string)[0]
+        return (func.routing.get('website', False) and
+                func.routing.get('multilang', func.routing['type'] == 'http'))
     except Exception:
         return False
 
@@ -170,7 +172,7 @@ class website(osv.osv):
     }
 
     _defaults = {
-        'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
+        'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.main_company'),
     }
 
     # cf. Wizard hack in website_views.xml
@@ -227,26 +229,34 @@ class website(osv.osv):
             return False
 
     @openerp.tools.ormcache(skiparg=3)
-    def _get_languages(self, cr, uid, id, context=None):
+    def _get_languages(self, cr, uid, id):
         website = self.browse(cr, uid, id)
         return [(lg.code, lg.name) for lg in website.language_ids]
 
     def get_languages(self, cr, uid, ids, context=None):
-        return self._get_languages(cr, uid, ids[0], context=context)
+        return self._get_languages(cr, uid, ids[0])
 
     def get_alternate_languages(self, cr, uid, ids, req=None, context=None):
         langs = []
         if req is None:
             req = request.httprequest
         default = self.get_current_website(cr, uid, context=context).default_lang_code
-        uri = req.path
-        if req.query_string:
-            uri += '?' + req.query_string
         shorts = []
+
+        def get_url_localized(router, lang):
+            arguments = dict(request.endpoint_arguments)
+            for k, v in arguments.items():
+                if isinstance(v, orm.browse_record):
+                    arguments[k] = v.with_context(lang=lang)
+            return router.build(request.endpoint, arguments)
+        router = request.httprequest.app.get_db_router(request.db).bind('')
         for code, name in self.get_languages(cr, uid, ids, context=context):
             lg_path = ('/' + code) if code != default else ''
             lg = code.split('_')
             shorts.append(lg[0])
+            uri = request.endpoint and get_url_localized(router, code) or request.httprequest.path
+            if req.query_string:
+                uri += '?' + req.query_string
             lang = {
                 'hreflang': ('-'.join(lg)).lower(),
                 'short': lg[0],
@@ -345,7 +355,8 @@ class website(osv.osv):
         :rtype: bool
         """
         endpoint = rule.endpoint
-        methods = rule.methods or ['GET']
+        methods = endpoint.routing.get('methods') or ['GET']
+
         converters = rule._converters.values()
         if not ('GET' in methods
             and endpoint.routing['type'] == 'http'
@@ -381,7 +392,7 @@ class website(osv.osv):
         """
         router = request.httprequest.app.get_db_router(request.db)
         # Force enumeration to be performed as public user
-        url_list = []
+        url_set = set()
         for rule in router.iter_rules():
             if not self.rule_is_enumerable(rule):
                 continue
@@ -413,9 +424,9 @@ class website(osv.osv):
                         page[key[2:]] = val
                 if url in ('/sitemap.xml',):
                     continue
-                if url in url_list:
+                if url in url_set:
                     continue
-                url_list.append(url)
+                url_set.add(url)
 
                 yield page
 
@@ -533,9 +544,11 @@ class website(osv.osv):
         Model = self.pool[model]
         id = int(id)
 
-        ids = Model.search(cr, uid,
-                           [('id', '=', id)], context=context)
-        if not ids and 'website_published' in Model._all_columns:
+        ids = None
+        if Model.check_access_rights(cr, uid, 'read', raise_exception=False):
+            ids = Model.search(cr, uid,
+                               [('id', '=', id)], context=context)
+        if not ids and 'website_published' in Model._fields:
             ids = Model.search(cr, openerp.SUPERUSER_ID,
                                [('id', '=', id), ('website_published', '=', True)], context=context)
         if not ids:
@@ -591,7 +604,7 @@ class website(osv.osv):
             response.data = data
         else:
             size = (max_w, max_h)
-            img = image_resize_and_sharpen(image, size)
+            img = image_resize_and_sharpen(image, size, preserve_aspect_ratio=True)
             image_save_for_web(img, response.stream, format=image.format)
             # invalidate content-length computed by make_conditional as
             # writing to response.stream does not do it (as of werkzeug 0.9.3)
@@ -602,7 +615,8 @@ class website(osv.osv):
     def image_url(self, cr, uid, record, field, size=None, context=None):
         """Returns a local url that points to the image field of a given browse record."""
         model = record._name
-        id = '%s_%s' % (record.id, hashlib.sha1(record.sudo().write_date).hexdigest()[0:7])
+        sudo_record = record.sudo()
+        id = '%s_%s' % (record.id, hashlib.sha1(sudo_record.write_date or sudo_record.create_date or '').hexdigest()[0:7])
         size = '' if size is None else '/%s' % size
         return '/website/image/%s/%s/%s%s' % (model, id, field, size)
 
@@ -684,12 +698,12 @@ class ir_attachment(osv.osv):
                 result[attach.id] = self.pool['website'].image_url(cr, uid, attach, 'datas')
         return result
     def _datas_checksum(self, cr, uid, ids, name, arg, context=None):
-        return dict(
-            (attach['id'], self._compute_checksum(attach))
-            for attach in self.read(
-                cr, uid, ids, ['res_model', 'res_id', 'type', 'datas'],
-                context=context)
-        )
+        result = dict.fromkeys(ids, False)
+        attachments = self.read(cr, uid, ids, ['res_model'], context=context)
+        view_attachment_ids = [attachment['id'] for attachment in attachments if attachment['res_model'] == 'ir.ui.view']
+        for attach in self.read(cr, uid, view_attachment_ids, ['res_model', 'res_id', 'type', 'datas'], context=context):
+            result[attach['id']] = self._compute_checksum(attach)
+        return result
 
     def _compute_checksum(self, attachment_dict):
         if attachment_dict.get('res_model') == 'ir.ui.view'\
@@ -705,7 +719,7 @@ class ir_attachment(osv.osv):
             return result
 
         for record in self.browse(cr, uid, ids, context=context):
-            if not record.datas: continue
+            if record.res_model != 'ir.ui.view' or not record.datas: continue
             try:
                 result[record.id] = openerp.tools.image_resize_image_big(record.datas)
             except IOError: # apparently the error PIL.Image.open raises
@@ -778,13 +792,13 @@ class res_partner(osv.osv):
             'zoom': zoom,
             'sensor': 'false',
         }
-        return urlplus('http://maps.googleapis.com/maps/api/staticmap' , params)
+        return urlplus('//maps.googleapis.com/maps/api/staticmap' , params)
 
-    def google_map_link(self, cr, uid, ids, zoom=8, context=None):
+    def google_map_link(self, cr, uid, ids, zoom=10, context=None):
         partner = self.browse(cr, uid, ids[0], context=context)
         params = {
             'q': '%s, %s %s, %s' % (partner.street or '', partner.city  or '', partner.zip or '', partner.country_id and partner.country_id.name_get()[0][1] or ''),
-            'z': 10
+            'z': zoom,
         }
         return urlplus('https://maps.google.com/maps' , params)
 

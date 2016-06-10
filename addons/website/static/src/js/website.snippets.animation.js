@@ -137,7 +137,8 @@
             var title = encodeURIComponent($("title").text());
             this.$target.find("a").each(function () {
                 var $a = $(this);
-                $a.attr("href", $(this).attr("href").replace("{url}", url).replace("{title}", title));
+                var url_regex = /\{url\}|%7Burl%7D/, title_regex = /\{title\}|%7Btitle%7D/;
+                $a.attr("href", $(this).attr("href").replace(url_regex, url).replace(title_regex, title));
                 if ($a.attr("target") && $a.attr("target").match(/_blank/i)) {
                     $a.click(function () {
                         window.open(this.href,'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=600');
@@ -151,7 +152,7 @@
     website.snippet.animationRegistry.media_video = website.snippet.Animation.extend({
         selector: ".media_iframe_video",
         start: function () {
-            this.$target.html('<div class="css_editable_mode_display">&nbsp;</div><iframe src="'+this.$target.data("src")+'" frameborder="0" allowfullscreen="allowfullscreen"></iframe>');
+            this.$target.html('<div class="css_editable_mode_display">&nbsp;</div><iframe src="'+_.escape(this.$target.data("src"))+'" frameborder="0" allowfullscreen="allowfullscreen"></iframe>');
         },
     });
 })();

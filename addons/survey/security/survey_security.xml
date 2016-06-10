@@ -50,7 +50,7 @@
         <record id="survey_input_users_access" model="ir.rule">
             <field name="name">Access to user_input for regular users</field>
             <field name="model_id" ref="survey.model_survey_user_input"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="domain_force">['|', ('create_uid', '=', user.id), ('partner_id', '=', user.partner_id.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_survey_user'))]"/>
             <field eval="0" name="perm_unlink"/>
             <field eval="0" name="perm_write"/>

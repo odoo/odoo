@@ -18,6 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
+
+import threading
+
 from openerp.osv import osv, fields
 from openerp import tools, SUPERUSER_ID
 from openerp.tools.translate import _
@@ -183,7 +186,7 @@ class mail_notification(osv.Model):
         message = self.pool['mail.message'].browse(cr, SUPERUSER_ID, message_id, context=context)
 
         # compute partners
-        email_pids = self.get_partners_to_email(cr, uid, ids, message, context=None)
+        email_pids = self.get_partners_to_email(cr, uid, ids, message, context=context)
         if not email_pids:
             return True
 
@@ -208,16 +211,28 @@ class mail_notification(osv.Model):
         chunks = [email_pids[x:x + max_recipients] for x in xrange(0, len(email_pids), max_recipients)]
         email_ids = []
         for chunk in chunks:
+            if message.model and message.res_id and self.pool.get(message.model) and hasattr(self.pool[message.model], 'message_get_recipient_values'):
+                recipient_values = self.pool[message.model].message_get_recipient_values(cr, uid, message.res_id, notif_message=message, recipient_ids=chunk, context=context)
+            else:
+                recipient_values = self.pool['mail.thread'].message_get_recipient_values(cr, uid, message.res_id, notif_message=message, recipient_ids=chunk, context=context)
             mail_values = {
                 'mail_message_id': message.id,
-                'auto_delete': True,
+                'auto_delete': (context or {}).get('mail_auto_delete', True),
+                'mail_server_id': (context or {}).get('mail_server_id', False),
                 'body_html': body_html,
-                'recipient_ids': [(4, id) for id in chunk],
                 'references': references,
             }
             mail_values.update(custom_values)
+            mail_values.update(recipient_values)
             email_ids.append(self.pool.get('mail.mail').create(cr, uid, mail_values, context=context))
-        if force_send and len(chunks) < 2:  # for more than 50 followers, use the queue system
+        # NOTE:
+        #   1. for more than 50 followers, use the queue system
+        #   2. do not send emails immediately if the registry is not loaded,
+        #      to prevent sending email during a simple update of the database
+        #      using the command-line.
+        if force_send and len(chunks) < 2 and \
+               (not self.pool._init or
+                getattr(threading.currentThread(), 'testing', False)):
             self.pool.get('mail.mail').send(cr, uid, email_ids, context=context)
         return True
 

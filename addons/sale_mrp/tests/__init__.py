@@ -21,8 +21,4 @@
 
 from . import test_move_explode
 
-checks = [
-    test_move_explode,
-]
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

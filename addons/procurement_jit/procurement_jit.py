@@ -26,9 +26,11 @@ class procurement_order(osv.osv):
     _inherit = "procurement.order"
 
     def create(self, cr, uid, vals, context=None):
+        context = context or {}
         procurement_id = super(procurement_order, self).create(cr, uid, vals, context=context)
-        self.run(cr, uid, [procurement_id], context=context)
-        self.check(cr, uid, [procurement_id], context=context)
+        if not context.get('procurement_autorun_defer'):
+            self.run(cr, uid, [procurement_id], context=context)
+            self.check(cr, uid, [procurement_id], context=context)
         return procurement_id
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

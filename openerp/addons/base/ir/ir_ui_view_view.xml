@@ -17,6 +17,7 @@
                         <group>
                             <field name="field_parent"/>
                             <field name="inherit_id"/>
+                            <field name="mode"/>
                             <field name="model_data_id"/>
                             <field name="xml_id"/>
                             <field name="active"/>
@@ -63,6 +64,7 @@
                     <field name="name" filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('model_data_id','ilike',self)]" string="View"/>
                     <filter string="Active" name="active" domain="[('active', '=',True)]"/>
                     <filter string="Unactive" domain="[('active', '=',False)]"/>
+                    <separator/>
                     <filter string="Form" domain="[('type', '=','form')]"/>
                     <filter string="Tree" domain="[('type', '=', 'tree')]"/>
                     <filter string="Kanban" domain="[('type', '=', 'kanban')]"/>

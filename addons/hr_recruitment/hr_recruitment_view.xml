@@ -311,7 +311,7 @@
         <field name="name">Applications</field>
         <field name="res_model">hr.applicant</field>
         <field name="view_mode">kanban,tree,form,graph,calendar</field>
-        <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id, 'empty_list_help_model': 'hr.job'}</field>
+        <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
         <field name="help" type="html">
               <p>
                 Odoo helps you track applicants in the recruitment
@@ -350,7 +350,7 @@
                 </div>
                 <label for="address_id"/>
                 <div>
-                    <field name="address_id" context="{'show_address': 1}"/>
+                    <field name="address_id" context="{'show_address': 1}" options="{'always_reload': True}"/>
                     <span class="oe_grey">(empty = remote work)</span>
                 </div>
             </group>

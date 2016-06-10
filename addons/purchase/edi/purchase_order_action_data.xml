@@ -37,7 +37,7 @@
     <p style="border-left: 1px solid #8e0000; margin-left: 30px;">
        &nbsp;&nbsp;<strong>REFERENCES</strong><br />
        &nbsp;&nbsp;RFQ number: <strong>${object.name}</strong><br />
-       &nbsp;&nbsp;RFQ date: ${object.date_order}<br />
+       &nbsp;&nbsp;RFQ date: ${format_tz(object.date_order, tz=user.tz, context={'lang':object.partner_id.lang})}<br />
        % if object.origin:
        &nbsp;&nbsp;RFQ reference: ${object.origin}<br />
        % endif
@@ -112,7 +112,7 @@
        &nbsp;&nbsp;<strong>REFERENCES</strong><br />
        &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />
        &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />
-       &nbsp;&nbsp;Order date: ${object.date_order}<br />
+       &nbsp;&nbsp;Order date: ${format_tz(object.date_order, tz=user.tz, context={'lang':object.partner_id.lang})}<br />
        % if object.origin:
        &nbsp;&nbsp;Order reference: ${object.origin}<br />
        % endif

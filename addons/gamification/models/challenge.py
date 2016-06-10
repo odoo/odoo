@@ -36,7 +36,10 @@ MAX_VISIBILITY_RANKING = 3
 def start_end_date_for_period(period, default_start_date=False, default_end_date=False):
     """Return the start and end date for a goal period based on today
 
-    :return: (start_date, end_date), datetime.date objects, False if the period is
+    :param str default_start_date: string date in DEFAULT_SERVER_DATE_FORMAT format
+    :param str default_end_date: string date in DEFAULT_SERVER_DATE_FORMAT format
+
+    :return: (start_date, end_date), dates in string format, False if the period is
     not defined or unknown"""
     today = date.today()
     if period == 'daily':
@@ -57,11 +60,9 @@ def start_end_date_for_period(period, default_start_date=False, default_end_date
         start_date = default_start_date  # for manual goal, start each time
         end_date = default_end_date
 
-    if start_date and end_date:
-        return (datetime.strftime(start_date, DF), datetime.strftime(end_date, DF))
-    else:
         return (start_date, end_date)
 
+    return (datetime.strftime(start_date, DF), datetime.strftime(end_date, DF))
 
 class gamification_challenge(osv.Model):
     """Gamification challenge
@@ -275,7 +276,7 @@ class gamification_challenge(osv.Model):
         # close scheduled challenges
         planned_challenge_ids = self.search(cr, uid, [
             ('state', '=', 'inprogress'),
-            ('end_date', '>=', fields.date.today())])
+            ('end_date', '<', fields.date.today())])
         if planned_challenge_ids:
             self.write(cr, uid, planned_challenge_ids, {'state': 'done'}, context=context)
 
@@ -292,23 +293,31 @@ class gamification_challenge(osv.Model):
 
         :param list(int) ids: the ids of the challenges to update, if False will
         update only challenges in progress."""
+        if not ids:
+            return True
+
         if isinstance(ids, (int,long)):
             ids = [ids]
 
         goal_obj = self.pool.get('gamification.goal')
 
-        # we use yesterday to update the goals that just ended
+        # include yesterday goals to update the goals that just ended
+        # exclude goals for users that did not connect since the last update
         yesterday = date.today() - timedelta(days=1)
-        goal_ids = goal_obj.search(cr, uid, [
-            ('challenge_id', 'in', ids),
-            '|',
-                ('state', '=', 'inprogress'),
-                '&',
-                    ('state', 'in', ('reached', 'failed')),
-                    '|',
-                        ('end_date', '>=', yesterday.strftime(DF)),
-                        ('end_date', '=', False)
-        ], context=context)
+        cr.execute("""SELECT gg.id
+                        FROM gamification_goal as gg,
+                             gamification_challenge as gc,
+                             res_users as ru
+                       WHERE gg.challenge_id = gc.id
+                         AND gg.user_id = ru.id
+                         AND gg.write_date < ru.login_date
+                         AND gg.closed IS false
+                         AND gc.id IN %s
+                         AND (gg.state = 'inprogress'
+                              OR (gg.state = 'reached'
+                                  AND (gg.end_date >= %s OR gg.end_date IS NULL)))
+        """, (tuple(ids), yesterday.strftime(DF)))
+        goal_ids = [res[0] for res in cr.fetchall()]
         # update every running goal already generated linked to selected challenges
         goal_obj.update(cr, uid, goal_ids, context=context)
 
@@ -371,6 +380,9 @@ class gamification_challenge(osv.Model):
 
         Create goals that haven't been created yet (eg: if added users)
         Recompute the current value for each goal related"""
+        goal_obj = self.pool['gamification.goal']
+        goal_ids = goal_obj.search(cr, uid, [('challenge_id', 'in', ids), ('state', '=', 'inprogress')], context=context)
+        goal_obj.unlink(cr, uid, goal_ids, context=context)
         return self._update_all(cr, uid, ids=ids, context=context)
 
     def action_report_progress(self, cr, uid, ids, context=None):
@@ -705,6 +717,7 @@ class gamification_challenge(osv.Model):
         """
         if isinstance(ids, (int,long)):
             ids = [ids]
+        commit = context.get('commit_gamification', False)
         for challenge in self.browse(cr, uid, ids, context=context):
             (start_date, end_date) = start_end_date_for_period(challenge.period, challenge.start_date, challenge.end_date)
             yesterday = date.today() - timedelta(days=1)
@@ -733,6 +746,8 @@ class gamification_challenge(osv.Model):
                                 continue
                         self.reward_user(cr, uid, user_id, challenge.reward_id.id, challenge.id, context=context)
                         rewarded_users.append(user_id)
+                        if commit:
+                            cr.commit()
 
             if challenge_ended:
                 # open chatter message
@@ -765,6 +780,8 @@ class gamification_challenge(osv.Model):
                     partner_ids=[user.partner_id.id for user in challenge.user_ids],
                     body=message_body,
                     context=context)
+                if commit:
+                    cr.commit()
 
         return True
 

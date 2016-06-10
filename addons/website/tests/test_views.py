@@ -174,6 +174,36 @@ class TestViewSaving(common.TransactionCase):
             )
         )
 
+    def test_save_escaped_text(self):
+        """ Test saving html special chars in text nodes """
+        view_id = self.registry('ir.ui.view').create(self.cr, self.uid, {
+            'arch':'<t><p><h1>hello world</h1></p></t>',
+            'type':'qweb'
+        })
+        view = self.registry('ir.ui.view').browse(self.cr, self.uid, view_id)
+        # script and style text nodes should not escaped client side
+        replacement = '<script>1 && "hello & world"</script>'
+        view.save(replacement, xpath='/t/p/h1')
+        self.assertIn(
+                replacement.replace('&', '&amp;'),
+                view.arch,
+                'inline script should be escaped server side'
+        )
+        self.assertIn(
+                replacement,
+                view.render(),
+                'inline script should not be escaped when rendering'
+        )
+        # common text nodes should be be escaped client side
+        replacement = 'world &amp;amp; &amp;lt;b&amp;gt;cie'
+        view.save(replacement, xpath='/t/p')
+        self.assertIn(replacement, view.arch, 'common text node should not be escaped server side')
+        self.assertIn(
+                replacement,
+                view.render().replace('&', '&amp;'),
+                'text node characters wrongly unescaped when rendering'
+        )
+
     def test_save_only_embedded(self):
         Company = self.registry('res.company')
         company_id = 1

@@ -1,0 +1,81 @@
+id,code,name,type,user_type:id,parent_id:id,reconcile
+coa_basic,0,Basic,view,user_type_view,,False
+asset,1,Assets,view,user_type_current_asset,coa_basic,False
+current_asset,100,Current Assets,view,user_type_current_asset,asset,False
+cash_expenditure,1000,Cash and Bank,view,user_type_cash,current_asset,False
+receivables,1200,Receivable,view,user_type_current_asset,current_asset,False
+account_receivable,12001,Account Receivable,receivable,user_type_account_receivable,receivables,True
+fixed_asset,150,Fixed Assets,view,user_type_fixed_asset,asset,False
+15000_furniture_equipments,15000,Furniture and Equipment,other,user_type_fixed_asset,fixed_asset,False
+17000_accu_deprec,17000,Accumulated Depreciation,other,user_type_accumulated_depreciation,fixed_asset,False
+liability_equity,2,Liabilities and Equity,view,user_type_liability,coa_basic,False
+liability,20,Liabilities,view,user_type_liability,liability_equity,False
+current_liability,200,Current Liabilities,view,user_type_current_liability,liability,False
+payable,2000,Payable,view,user_type_account_payable,current_liability,False
+account_payable,20001,Account Payable,payable,user_type_account_payable,payable,True
+other_current_liability,240,Other Current Liabilities,view,user_type_other_current_liability,liability,False
+24000_payroll_exp,24000,Payroll Liabilities,other,user_type_other_current_liability,other_current_liability,False
+25500_sales_tax_pay,25500,Sales Tax Payable,other,user_type_other_current_liability,other_current_liability,False
+26500_use_tax_pay,26500,Use Tax Payable,other,user_type_other_current_liability,other_current_liability,False
+equity,30,Equity,view,user_type_equity,liability_equity,False
+30100_capital_stock,30100,Capital Stock,other,user_type_equity,equity,False
+30200_divid_paid,30200,Dividends Paid,other,user_type_equity,equity,False
+30000_open_balance,30000,Opening Balance Equity,other,user_type_equity,equity,False
+32000_retain_earn,32000,Retained Earnings,other,user_type_equity,equity,False
+expense,60,Expenses,view,user_type_expense,coa_basic,False
+60000_advert_promo,60000,Advertising and Promotion,other,user_type_expense,expense,False
+60200_auto_exp,60200,Automobile Expense,other,user_type_expense,expense,False
+60400_bank_charge,60400,Bank Service Charges,other,user_type_expense,expense,False
+61000_license_permit,61000,Business Licenses and Permits,other,user_type_expense,expense,False
+62000_financial_services,62000,Continuing Education,other,user_type_expense,expense,False
+61400_charit_contrib,61400,Charitable Contributions,other,user_type_expense,expense,False
+61700_computer_internet,61700,Computer and Internet Expenses,other,user_type_expense,expense,False
+62400_depreciation_exp,62400,Depreciation Expense,other,user_type_expense,expense,False
+62500_dues_subscrip,62500,Dues and Subscriptions,other,user_type_expense,expense,False
+62600_equip_rent,62600,Equipment Rental,other,user_type_expense,expense,False
+63400_interest_exp,63400,Interest Expense,other,user_type_expense,expense,False
+64300_meals_entertain,64300,Meals and Entertainment,other,user_type_expense,expense,False
+64900_office_supp,64900,Office Supplies,other,user_type_expense,expense,False
+66000_payroll_exp,66000,Payroll Expenses,other,user_type_expense,expense,False
+66500_postage_deliver,66500,Postage and Delivery,other,user_type_expense,expense,False
+66660_printing_reporduction,66600,Printing and Reproduction,other,user_type_expense,expense,False
+66700_prof_fees,66700,Professional Fees,other,user_type_expense,expense,False
+67100_rent_exp,67100,Rent Expense,other,user_type_expense,expense,False
+67200_repair_mainten,67200,Repairs and Maintenance,other,user_type_expense,expense,False
+68000_tax_property,68000,Taxes - Property,other,user_type_expense,expense,False
+68100_telephone_exp,68100,Telephone Expense,other,user_type_expense,expense,False
+68400_transport_travel,68400,Travel Expense,other,user_type_expense,expense,False
+68600_utilities,68600,Utilities,other,user_type_expense,expense,False
+64200_marketing_exp,64200,Marketing Expense,other,user_type_expense,expense,False
+63200_gas_oil_exp,63200,"Gasoline, Fuel and Oil",other,user_type_expense,expense,False
+base_miscexpense,69000,Miscellaneous Expense,other,user_type_expense,expense,False
+insurance,693,Insurance Expense,view,user_type_expense,expense,False
+69310_general_liab_insurance,69310,General Liability Insurance,other,user_type_expense,insurance,False
+69320_health_insurance,69320,Health Insurance,other,user_type_expense,insurance,False
+69330_life_insurance,69330,Life and Disability Insurance,other,user_type_expense,insurance,False
+69350_prof_insurance,69350,Professional Liability,other,user_type_expense,insurance,False
+69360_worker_compons,69360,Worker's Compensation,other,user_type_expense,insurance,False
+income,40,Income,view,user_type_income,coa_basic,False
+42400_commission_income,42400,Commission income,other,user_type_income,income,False
+47400_rent_income,47400,Rent Income,other,user_type_income,income,False
+47900_general_service_sales,47900,Service Sales,other,user_type_income,income,False
+47910_general_product_sales,47910,Product Sales,other,user_type_income,income,False
+48310_product_sales_discount,48310,Sales Discounts,other,user_type_income,income,False
+48900_product_shipping_income,48900,Shipping and Delivery Income,other,user_type_income,income,False
+base_miscincome,49000,Miscellaneous Income,other,user_type_income,income,False
+other_income,70,Other Income,view,user_type_other_income,coa_basic,False
+70000_finance_income,70000,Finance Charge Income,other,user_type_other_income,other_income,False
+70200_interest_income,70200,Interest Income,other,user_type_other_income,other_income,False
+70500_assets_sold,70500,Proceeds from Sale of Assets,other,user_type_other_income,other_income,False
+70100_insurance_income,70100,Insurance Proceeds Received,other,user_type_other_income,other_income,False
+cost_of_goods_sold,50,Cost of Goods Sold,view,user_type_cogs,coa_basic,False
+53600_other_related_costs,53600,Other Job Related Costs,other,user_type_cogs,cost_of_goods_sold,False
+51100_product_shipping_cost,51100,Freight and Shipping Costs,other,user_type_cogs,cost_of_goods_sold,False
+52500_product_purchase_discount,52500,Purchase Discounts,other,user_type_cogs,cost_of_goods_sold,False
+52900_general_product_cost,52900,Purchases - Resale Items,other,user_type_cogs,cost_of_goods_sold,False
+50300_commissions_paid,50300,Commissions Paid,other,user_type_cogs,cost_of_goods_sold,False
+53500_subcontracted_services,53500,Subcontractors Expense,other,user_type_cogs,cost_of_goods_sold,False
+52000_merchant_fees,52000,Merchant Account Fees,other,user_type_cogs,cost_of_goods_sold,False
+53800_subcontract_exp,53800,Subcontractors Expense,other,user_type_cogs,cost_of_goods_sold,False
+54100_tools_equip,54100,Tools and Small Equipment,other,user_type_cogs,cost_of_goods_sold,False
+24600_customer_deposit,24600,Customer Deposits Received,other,user_type_other_current_liability,other_current_liability,False

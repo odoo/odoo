@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -127,7 +128,7 @@ class project_task(osv.osv):
         proc_obj = self.pool.get("procurement.order")
         for task in self.browse(cr, uid, ids, context=context):
             if task.procurement_id:
-                proc_obj.check(cr, uid, [task.procurement_id.id], context=context)
+                proc_obj.check(cr, SUPERUSER_ID, [task.procurement_id.id], context=context)
 
     def write(self, cr, uid, ids, values, context=None):
         """ When closing tasks, validate subflows. """
@@ -142,7 +143,7 @@ class product_template(osv.osv):
     _inherit = "product.template"
     _columns = {
         'project_id': fields.many2one('project.project', 'Project', ondelete='set null',),
-        'auto_create_task': fields.boolean('Create Task Automatically', help="Thick this option if you want to create a task automatically each time this product is sold"),
+        'auto_create_task': fields.boolean('Create Task Automatically', help="Tick this option if you want to create a task automatically each time this product is sold"),
     }
 
 class product_product(osv.osv):

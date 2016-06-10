@@ -56,12 +56,9 @@ def main():
     if len(args) and not args[0].startswith("-"):
         logging.disable(logging.CRITICAL)
         for m in module.get_modules():
-            m = 'openerp.addons.' + m
-            __import__(m)
-            #try:
-            #except Exception, e:
-            #    raise
-            #    print e
+            m_path = module.get_module_path(m)
+            if os.path.isdir(os.path.join(m_path, 'cli')):
+                __import__('openerp.addons.' + m)
         logging.disable(logging.NOTSET)
         command = args[0]
         args = args[1:]

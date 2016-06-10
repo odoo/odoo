@@ -1,6 +1,5 @@
 (function () {
     'use strict';
-
     openerp.Tour.register({
         id:   'shop_buy_product',
         name: "Try to buy products",
@@ -71,7 +70,7 @@
                     if ($("input[name='email']").val() === "")
                         $("input[name='email']").val("website_sale_test_shoptest@websitesaletest.odoo.com");
                     $("input[name='phone']").val("123");
-                    $("input[name='street']").val("123");
+                    $("input[name='street2']").val("123");
                     $("input[name='city']").val("123");
                     $("input[name='zip']").val("123");
                     $("select[name='country_id']").val("21");

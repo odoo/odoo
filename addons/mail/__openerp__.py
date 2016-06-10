@@ -71,14 +71,6 @@ Main Features
     ],
     'installable': True,
     'application': True,
-    'images': [
-        'images/inbox.jpeg',
-        'images/messages_form.jpeg',
-        'images/messages_list.jpeg',
-        'images/email.jpeg',
-        'images/join_a_group.jpeg',
-        'images/share_a_message.jpeg',
-    ],
     'qweb': [
         'static/src/xml/mail.xml',
         'static/src/xml/mail_followers.xml',

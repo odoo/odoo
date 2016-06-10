@@ -22,7 +22,7 @@
     'name': 'Gamification',
     'version': '1.0',
     'author': 'OpenERP SA',
-    'category': 'Human Ressources',
+    'category': 'Human Resources',
     'website' : 'https://www.odoo.com/page/gamification',
     'depends': ['mail', 'email_template', 'web_kanban_gauge'],
     'description': """

@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2013 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2014 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -90,7 +90,7 @@ class MigrationManager(object):
             'post': '[%s>]',
         }
 
-        if not (hasattr(pkg, 'update') or pkg.state == 'to upgrade') or pkg.installed_version is None:
+        if not (hasattr(pkg, 'update') or pkg.state == 'to upgrade') or pkg.state == 'to install':
             return
 
         def convert_version(version):
@@ -131,11 +131,6 @@ class MigrationManager(object):
             lst.sort()
             return lst
 
-        def mergedict(a, b):
-            a = a.copy()
-            a.update(b)
-            return a
-
         parsed_installed_version = parse_version(pkg.installed_version or '')
         current_version = parse_version(convert_version(pkg.data['version']))
 
@@ -155,19 +150,20 @@ class MigrationManager(object):
                         continue
                     mod = fp = fp2 = None
                     try:
-                        fp = tools.file_open(pyfile)
+                        fp, fname = tools.file_open(pyfile, pathinfo=True)
 
-                        # imp.load_source need a real file object, so we create
-                        # one from the file-like object we get from file_open
-                        fp2 = os.tmpfile()
-                        fp2.write(fp.read())
-                        fp2.seek(0)
+                        if not isinstance(fp, file):
+                            # imp.load_source need a real file object, so we create
+                            # one from the file-like object we get from file_open
+                            fp2 = os.tmpfile()
+                            fp2.write(fp.read())
+                            fp2.seek(0)
                         try:
-                            mod = imp.load_source(name, pyfile, fp2)
-                            _logger.info('module %(addon)s: Running migration %(version)s %(name)s' % mergedict({'name': mod.__name__}, strfmt))
+                            mod = imp.load_source(name, fname, fp2 or fp)
+                            _logger.info('module %(addon)s: Running migration %(version)s %(name)s' % dict(strfmt, name=mod.__name__))
                             migrate = mod.migrate
                         except ImportError:
-                            _logger.exception('module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % mergedict({'file': pyfile}, strfmt))
+                            _logger.exception('module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % dict(strfmt, file=pyfile))
                             raise
                         except AttributeError:
                             _logger.error('module %(addon)s: Each %(stage)s-migration file must have a "migrate(cr, installed_version)" function' % strfmt)

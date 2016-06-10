@@ -72,7 +72,7 @@ header
 // the beginning of paragraphs so they don't "disappear" after saving when
 // used solely for spacing.
 #wrapwrap p:empty:after
-    content: '\2060'
+    content: '\202f'
 
 /* ----- Snippets Styles ----- */
 
@@ -127,6 +127,7 @@ html,body, #wrapwrap
 
 #wrapwrap
     display: table
+    table-layout: fixed
     width: 100%
 
 header, main, footer
@@ -137,15 +138,15 @@ footer
     background: rgb(239, 248, 248)
     background: rgba(200, 200, 200, 0.1)
 
-#footer_container
+#footer_container, #footer
     padding-top: 24px
     padding-bottom: 12px
 
 /* ----- BOOTSTRAP FIX ----- */
 
-.col-md-12
-    float: left
-    width: 100%
+@-moz-document url-prefix()
+    .table .img-responsive
+        width: 100%
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
 
@@ -288,6 +289,48 @@ ul.nav-stacked > li > a
 .hr
     padding: 4px 0
 
+
+.o_image_floating
+    width: 40%
+    margin: 4px
+    div.o_container
+        position: relative
+        mark
+            display: block
+            position: absolute
+            bottom: 0
+            width: 100%
+            background-color: rgba(86,61,124,.25)
+            a
+                color: white
+    &.o_hide_link div.o_container mark
+        display: none
+    &.o_margin_s
+        margin-bottom: 4px
+        &.pull-right
+            margin-left: 8px
+        &.pull-left
+            margin-right: 8px
+    &.o_margin_m
+        margin-bottom: 8px
+        &.pull-right
+            margin-left: 12px
+        &.pull-left
+            margin-right: 12px
+    &.o_margin_l
+        margin-bottom: 12px
+        &.pull-right
+            margin-left: 16px
+        &.pull-left
+            margin-right: 16px
+    &.o_margin_xl
+        margin-bottom: 24px
+        &.pull-right
+            margin-left: 32px
+        &.pull-left
+            margin-right: 32px
+
+
 /* Parallax Theme */
 
 div.carousel
@@ -414,6 +457,11 @@ span[data-oe-type="monetary"]
     overflow:hidden
     text-overflow:ellipsis
 
+.oe_website_spinner
+    width: 121px
+    input
+        text-align: center
+
 div.media_iframe_video
     height: 0
     margin: 0 auto
@@ -433,6 +481,9 @@ div.media_iframe_video
         display: none
         z-index: 2
 
+html[data-browser^="msie"] div.media_iframe_video iframe
+    margin-left: 0
+
 /* Mobile view */
 
 @media (max-width: 768px)
@@ -442,3 +493,62 @@ div.media_iframe_video
         -ms-transform: none !important
         -o-transform: none !important
         transform: none !important
+
+
+/* Fix: backward compatibility saas-3 */
+
+div.carousel
+    .container
+        > .carousel-caption
+            position: absolute
+            right: 50%
+            left: 50%
+            bottom: 20px
+            > div
+                position: absolute
+                text-align: left
+                padding: 20px
+                background: rgba(0, 0, 0, 0.4)
+                bottom: 20px
+        > .carousel-image
+            top: 5%
+            bottom: 5%
+            position: absolute
+            max-height: 90%
+            margin: 0 auto
+    .item.text_image
+        .container
+            > .carousel-caption
+                left: 10%
+                > div
+                    right: 50%
+                    margin-right: -20%
+                    max-width: 550px
+            > .carousel-image
+                right: 10%
+                left: 50%
+    .item.image_text
+        .container
+            > .carousel-caption
+                right: 10%
+                > div
+                    left: 50%
+                    margin-left: -20%
+                    max-width: 550px
+            > .carousel-image
+                right: 50%
+                left: 10%
+    .item.text_only
+        .container
+            > .carousel-caption
+                left: 10%
+                right: 10%
+                top: 10%
+                bottom: auto
+                > div
+                    text-align: center
+                    background: transparent
+                    bottom: auto
+                    width: 100%
+            > .carousel-image
+                display: none !important

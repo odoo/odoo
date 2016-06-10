@@ -32,7 +32,7 @@ class publisher_warranty_contract(AbstractModel):
         nbr_active_users = user_count([("login_date", ">=", limit_date_str)])
         nbr_share_users = 0
         nbr_active_share_users = 0
-        if "share" in Users._all_columns:
+        if "share" in Users._fields:
             nbr_share_users = user_count([("share", "=", True)])
             nbr_active_share_users = user_count([("share", "=", True), ("login_date", ">=", limit_date_str)])
         user = Users.browse(cr, uid, uid)
@@ -53,7 +53,9 @@ class publisher_warranty_contract(AbstractModel):
             "web_base_url": web_base_url,
             "apps": [app['name'] for app in apps],
         }
-        msg.update(self.pool.get("res.company").read(cr, uid, [1], ["name", "email", "phone"])[0])
+        if user.partner_id.company_id:
+            company_id = user.partner_id.company_id.id
+            msg.update(self.pool.get("res.company").read(cr, uid, [company_id], ["name", "email", "phone"])[0])
         return msg
 
     def _get_sys_logs(self, cr, uid):

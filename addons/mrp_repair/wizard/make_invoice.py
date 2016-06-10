@@ -54,7 +54,7 @@ class make_invoice(osv.osv_memory):
         form_res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
         form_id = form_res and form_res[1] or False
         tree_res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_tree')
-        tree_id = tree_res and tree_res[1] or Fals
+        tree_id = tree_res and tree_res[1] or False
 
         return {
             'domain': [('id','in', newinv.values())],

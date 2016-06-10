@@ -45,7 +45,7 @@ class MailThread(osv.AbstractModel):
         email_to = decode_header(message, 'To')
 
         # 0. Verify whether this is a bounced email (wrong destination,...) -> use it to collect data, such as dead leads
-        if bounce_alias in email_to:
+        if bounce_alias and bounce_alias in email_to:
             # Bounce regex
             # Typical form of bounce is bounce_alias-128-crm.lead-34@domain
             # group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID
@@ -77,7 +77,7 @@ class MailThread(osv.AbstractModel):
         Mail Returned to Sender) is received for an existing thread. The default
         behavior is to check is an integer  ``message_bounce`` column exists.
         If it is the case, its content is incremented. """
-        if self._all_columns.get('message_bounce'):
+        if 'message_bounce' in self._fields:
             for obj in self.browse(cr, uid, ids, context=context):
                 self.write(cr, uid, [obj.id], {'message_bounce': obj.message_bounce + 1}, context=context)
 

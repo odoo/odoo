@@ -81,19 +81,19 @@ function openerp_restaurant_multiprint(instance,module){
                 if (typeof old[product] === 'undefined'){
                     add.push({
                         'id': product,
-                        'name': this.pos.db.get_product_by_id(product).name,
+                        'name': this.pos.db.get_product_by_id(product).display_name,
                         'quantity': current[product],
                     });
                 }else if( old[product] < current[product]){
                     add.push({
                         'id': product,
-                        'name': this.pos.db.get_product_by_id(product).name,
+                        'name': this.pos.db.get_product_by_id(product).display_name,
                         'quantity': current[product] - old[product],
                     });
                 }else if( old[product] > current[product]){
                     rem.push({
                         'id': product,
-                        'name': this.pos.db.get_product_by_id(product).name,
+                        'name': this.pos.db.get_product_by_id(product).display_name,
                         'quantity': old[product] - current[product],
                     });
                 }
@@ -103,7 +103,7 @@ function openerp_restaurant_multiprint(instance,module){
                 if(typeof current[product] === 'undefined'){
                     rem.push({
                         'id': product,
-                        'name': this.pos.db.get_product_by_id(product).name,
+                        'name': this.pos.db.get_product_by_id(product).display_name,
                         'quantity': old[product], 
                     });
                 }

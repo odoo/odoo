@@ -20,9 +20,6 @@
 ##############################################################################
 from openerp import tools
 
-import math
-
-
 def rounding(f, r):
 	# TODO for trunk: log deprecation warning
 	# _logger.warning("Deprecated rounding method, please use tools.float_round to round floats.")
@@ -32,4 +29,4 @@ def rounding(f, r):
 def ceiling(f, r):
     if not r:
         return f
-    return math.ceil(f / r) * r
+    return tools.float_round(f, precision_rounding=r, rounding_method='UP')

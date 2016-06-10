@@ -40,7 +40,7 @@ def grouplines(self, ordered_lines, sortkey):
 
 class SaleLayoutCategory(osv.Model):
     _name = 'sale_layout.category'
-    _order = 'sequence'
+    _order = 'sequence, id'
     _columns = {
         'name': fields.char('Name', required=True),
         'sequence': fields.integer('Sequence', required=True),
@@ -85,7 +85,6 @@ class AccountInvoiceLine(osv.Model):
     categ_sequence = openerp.fields.Integer(related='sale_layout_cat_id.sequence',
                                             string='Layout Sequence', store=True)
 
-
 class SaleOrder(osv.Model):
     _inherit = 'sale.order'
 
@@ -113,7 +112,8 @@ class SaleOrderLine(osv.Model):
                                          string='Layout Sequence', store=True)
         #  Store is intentionally set in order to keep the "historic" order.
     }
-    _order = 'order_id, categ_sequence, sequence, id'
+
+    _order = 'order_id, categ_sequence, sale_layout_cat_id, sequence, id'
 
     def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
         """Save the layout when converting to an invoice line."""

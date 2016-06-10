@@ -9,6 +9,7 @@
 -
   !record {model: stock.inventory, id: inventory_test0}:
     name: Test
+    filter: product
     product_id: inventory_product
 -
   I confirm the inventory and check that my inventory has no line, as the product is a new one.
@@ -60,6 +61,7 @@
 -
   !record {model: stock.inventory, id: inventory_test1}:
     name: second test inventory 
+    filter: product
     product_id: inventory_product
 -
   I confirm the inventory and check that my inventory has one line, with a quantity of 10.

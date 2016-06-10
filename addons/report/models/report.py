@@ -20,8 +20,11 @@
 ##############################################################################
 
 from openerp import api
-from openerp.osv import osv
-from openerp.tools import config, which
+from openerp import SUPERUSER_ID
+from openerp.exceptions import AccessError
+from openerp.osv import osv, fields
+from openerp.tools import config
+from openerp.tools.misc import find_in_path
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
 from openerp.tools.safe_eval import safe_eval as eval
@@ -38,6 +41,7 @@ from contextlib import closing
 from distutils.version import LooseVersion
 from functools import partial
 from pyPdf import PdfFileWriter, PdfFileReader
+from reportlab.graphics.barcode import createBarcodeDrawing
 
 
 #--------------------------------------------------------------------------
@@ -46,8 +50,10 @@ from pyPdf import PdfFileWriter, PdfFileReader
 _logger = logging.getLogger(__name__)
 
 def _get_wkhtmltopdf_bin():
-    defpath = os.environ.get('PATH', os.defpath).split(os.pathsep)
-    return which('wkhtmltopdf', path=os.pathsep.join(defpath))
+    wkhtmltopdf_bin = find_in_path('wkhtmltopdf')
+    if wkhtmltopdf_bin is None:
+        raise IOError
+    return wkhtmltopdf_bin
 
 
 #--------------------------------------------------------------------------
@@ -84,6 +90,31 @@ class Report(osv.Model):
     #--------------------------------------------------------------------------
     # Extension of ir_ui_view.render with arguments frequently used in reports
     #--------------------------------------------------------------------------
+
+    def translate_doc(self, cr, uid, doc_id, model, lang_field, template, values, context=None):
+        """Helper used when a report should be translated into a specific lang.
+
+        <t t-foreach="doc_ids" t-as="doc_id">
+        <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', account.report_invoice_document')"/>
+        </t>
+
+        :param doc_id: id of the record to translate
+        :param model: model of the record to translate
+        :param lang_field': field of the record containing the lang
+        :param template: name of the template to translate into the lang_field
+        """
+        ctx = context.copy()
+        doc = self.pool[model].browse(cr, uid, doc_id, context=ctx)
+        qcontext = values.copy()
+        # Do not force-translate if we chose to display the report in a specific lang
+        if ctx.get('translatable') is True:
+            qcontext['o'] = doc
+        else:
+            # Reach the lang we want to translate the doc into
+            ctx['lang'] = eval('doc.%s' % lang_field, {'doc': doc})
+            qcontext['o'] = self.pool[model].browse(cr, uid, doc_id, context=ctx)
+        return self.pool['ir.ui.view'].render(cr, uid, template, qcontext, context=ctx)
+
     def render(self, cr, uid, ids, template, values=None, context=None):
         """Allow to render a QWeb template python-side. This function returns the 'ir.ui.view'
         render but embellish it with some variables/methods used in reports.
@@ -97,33 +128,12 @@ class Report(osv.Model):
         if context is None:
             context = {}
 
-        context.update(inherit_branding=True)  # Tell QWeb to brand the generated html
+        context = dict(context, inherit_branding=True)  # Tell QWeb to brand the generated html
 
         view_obj = self.pool['ir.ui.view']
 
         def translate_doc(doc_id, model, lang_field, template):
-            """Helper used when a report should be translated into a specific lang.
-
-            <t t-foreach="doc_ids" t-as="doc_id">
-            <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', account.report_invoice_document')"/>
-            </t>
-
-            :param doc_id: id of the record to translate
-            :param model: model of the record to translate
-            :param lang_field': field of the record containing the lang
-            :param template: name of the template to translate into the lang_field
-            """
-            ctx = context.copy()
-            doc = self.pool[model].browse(cr, uid, doc_id, context=ctx)
-            qcontext = values.copy()
-            # Do not force-translate if we chose to display the report in a specific lang
-            if ctx.get('translatable') is True:
-                qcontext['o'] = doc
-            else:
-                # Reach the lang we want to translate the doc into
-                ctx['lang'] = eval('doc.%s' % lang_field, {'doc': doc})
-                qcontext['o'] = self.pool[model].browse(cr, uid, doc_id, context=ctx)
-            return view_obj.render(cr, uid, template, qcontext, context=ctx)
+            return self.translate_doc(cr, uid, doc_id, model, lang_field, template, values, context=context)
 
         user = self.pool['res.users'].browse(cr, uid, uid)
         website = None
@@ -133,6 +143,7 @@ class Report(osv.Model):
                 context = dict(context, translatable=context.get('lang') != request.website.default_lang_code)
         values.update(
             time=time,
+            context_timestamp=lambda t: fields.datetime.context_timestamp(cr, uid, t, context),
             translate_doc=translate_doc,
             editable=True,
             user=user,
@@ -167,8 +178,8 @@ class Report(osv.Model):
 
     @api.v8
     def get_html(self, records, report_name, data=None):
-        return self._model.get_html(self._cr, self._uid, records.ids, report_name,
-                                    data=data, context=self._context)
+        return Report.get_html(self._model, self._cr, self._uid, records.ids,
+                               report_name, data=data, context=self._context)
 
     @api.v7
     def get_pdf(self, cr, uid, ids, report_name, html=None, data=None, context=None):
@@ -198,7 +209,8 @@ class Report(osv.Model):
         headerhtml = []
         contenthtml = []
         footerhtml = []
-        base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
+        irconfig_obj = self.pool['ir.config_parameter']
+        base_url = irconfig_obj.get_param(cr, SUPERUSER_ID, 'report.url') or irconfig_obj.get_param(cr, SUPERUSER_ID, 'web.base.url')
 
         # Minimal page renderer
         view_obj = self.pool['ir.ui.view']
@@ -208,21 +220,22 @@ class Report(osv.Model):
         # in order to extract headers, bodies and footers.
         try:
             root = lxml.html.fromstring(html)
+            match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
 
             for node in root.xpath("//html/head/style"):
                 css += node.text
 
-            for node in root.xpath("//div[@class='header']"):
+            for node in root.xpath(match_klass.format('header')):
                 body = lxml.html.tostring(node)
                 header = render_minimal(dict(css=css, subst=True, body=body, base_url=base_url))
                 headerhtml.append(header)
 
-            for node in root.xpath("//div[@class='footer']"):
+            for node in root.xpath(match_klass.format('footer')):
                 body = lxml.html.tostring(node)
                 footer = render_minimal(dict(css=css, subst=True, body=body, base_url=base_url))
                 footerhtml.append(footer)
 
-            for node in root.xpath("//div[@class='page']"):
+            for node in root.xpath(match_klass.format('page')):
                 # Previously, we marked some reports to be saved in attachment via their ids, so we
                 # must set a relation between report ids and report's content. We use the QWeb
                 # branding in order to do so: searching after a node having a data-oe-model
@@ -264,8 +277,8 @@ class Report(osv.Model):
 
     @api.v8
     def get_pdf(self, records, report_name, html=None, data=None):
-        return self._model.get_pdf(self._cr, self._uid, records.ids, report_name,
-                                   html=html, data=data, context=self._context)
+        return Report.get_pdf(self._model, self._cr, self._uid, records.ids,
+                              report_name, html=html, data=data, context=self._context)
 
     @api.v7
     def get_action(self, cr, uid, ids, report_name, data=None, context=None):
@@ -301,8 +314,8 @@ class Report(osv.Model):
 
     @api.v8
     def get_action(self, records, report_name, data=None):
-        return self._model.get_action(self._cr, self._uid, records.ids, report_name,
-                                      data=data, context=self._context)
+        return Report.get_action(self._model, self._cr, self._uid, records.ids,
+                                 report_name, data=data, context=self._context)
 
     #--------------------------------------------------------------------------
     # Report generation helpers
@@ -348,8 +361,8 @@ class Report(osv.Model):
 
     @api.v8
     def _check_attachment_use(self, records, report):
-        return self._model._check_attachment_use(
-            self._cr, self._uid, records.ids, report, context=self._context)
+        return Report._check_attachment_use(
+            self._model, self._cr, self._uid, records.ids, report, context=self._context)
 
     def _check_wkhtmltopdf(self):
         return wkhtmltopdf_state
@@ -453,9 +466,14 @@ class Report(osv.Model):
                             'res_model': save_in_attachment.get('model'),
                             'res_id': reporthtml[0],
                         }
-                        self.pool['ir.attachment'].create(cr, uid, attachment)
-                    _logger.info('The PDF document %s is now saved in the '
-                                 'database' % attachment['name'])
+                        try:
+                            self.pool['ir.attachment'].create(cr, uid, attachment)
+                        except AccessError:
+                            _logger.warning("Cannot save PDF report %r as attachment",
+                                            attachment['name'])
+                        else:
+                            _logger.info('The PDF document %s is now saved in the database',
+                                         attachment['name'])
 
                 pdfdocuments.append(pdfreport_path)
             except:
@@ -507,7 +525,7 @@ class Report(osv.Model):
 
         if specific_paperformat_args and specific_paperformat_args.get('data-report-margin-top'):
             command_args.extend(['--margin-top', str(specific_paperformat_args['data-report-margin-top'])])
-        elif paperformat.margin_top:
+        else:
             command_args.extend(['--margin-top', str(paperformat.margin_top)])
 
         if specific_paperformat_args and specific_paperformat_args.get('data-report-dpi'):
@@ -524,12 +542,9 @@ class Report(osv.Model):
         elif paperformat.header_spacing:
             command_args.extend(['--header-spacing', str(paperformat.header_spacing)])
 
-        if paperformat.margin_left:
-            command_args.extend(['--margin-left', str(paperformat.margin_left)])
-        if paperformat.margin_bottom:
-            command_args.extend(['--margin-bottom', str(paperformat.margin_bottom)])
-        if paperformat.margin_right:
-            command_args.extend(['--margin-right', str(paperformat.margin_right)])
+        command_args.extend(['--margin-left', str(paperformat.margin_left)])
+        command_args.extend(['--margin-bottom', str(paperformat.margin_bottom)])
+        command_args.extend(['--margin-right', str(paperformat.margin_right)])
         if paperformat.orientation:
             command_args.extend(['--orientation', str(paperformat.orientation)])
         if paperformat.header_line:
@@ -560,3 +575,18 @@ class Report(osv.Model):
             stream.close()
 
         return merged_file_path
+
+    def barcode(self, barcode_type, value, width=600, height=100, humanreadable=0):
+        if barcode_type == 'UPCA' and len(value) in (11, 12, 13):
+            barcode_type = 'EAN13'
+            if len(value) in (11, 12):
+                value = '0%s' % value
+        try:
+            width, height, humanreadable = int(width), int(height), bool(humanreadable)
+            barcode = createBarcodeDrawing(
+                barcode_type, value=value, format='png', width=width, height=height,
+                humanReadable=humanreadable
+            )
+            return barcode.asString('png')
+        except (ValueError, AttributeError):
+            raise ValueError("Cannot convert into barcode.")

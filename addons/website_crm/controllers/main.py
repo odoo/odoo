@@ -28,9 +28,10 @@ class contactus(http.Controller):
 
     def create_lead(self, request, values, kwargs):
         """ Allow to be overrided """
-        return request.registry['crm.lead'].create(request.cr, SUPERUSER_ID, values, request.context)
+        cr, context = request.cr, request.context
+        return request.registry['crm.lead'].create(cr, SUPERUSER_ID, values, context=dict(context, mail_create_nosubscribe=True))
 
-    def preRenderThanks(self, request, values, kwargs):
+    def preRenderThanks(self, values, kwargs):
         """ Allow to be overrided """
         company = request.website.company_id
         return {
@@ -38,6 +39,10 @@ class contactus(http.Controller):
             '_values': values,
             '_kwargs': kwargs,
         }
+
+    def get_contactus_response(self, values, kwargs):
+        values = self.preRenderThanks(values, kwargs)
+        return request.website.render(kwargs.get("view_callback", "website_crm.contactus_thanks"), values)
 
     @http.route(['/crm/contactus'], type='http', auth="public", website=True)
     def contactus(self, **kwargs):
@@ -55,10 +60,13 @@ class contactus(http.Controller):
         post_description = []  # Info to add after the message
         values = {}
 
+        values['medium_id'] = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, SUPERUSER_ID, 'crm.crm_medium_website')
+        values['section_id'] = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, SUPERUSER_ID, 'website.salesteam_website_sales')
+
         for field_name, field_value in kwargs.items():
             if hasattr(field_value, 'filename'):
                 post_file.append(field_value)
-            elif field_name in request.registry['crm.lead']._all_columns and field_name not in _BLACKLIST:
+            elif field_name in request.registry['crm.lead']._fields and field_name not in _BLACKLIST:
                 values[field_name] = field_value
             elif field_name not in _TECHNICAL:  # allow to add some free fields or blacklisted field like ID
                 post_description.append("%s: %s" % (field_name, field_value))
@@ -68,16 +76,9 @@ class contactus(http.Controller):
         # fields validation : Check that required field from model crm_lead exists
         error = set(field for field in _REQUIRED if not values.get(field))
 
-        values = dict(values, error=error)
         if error:
-            values.update(kwargs=kwargs.items())
+            values = dict(values, error=error, kwargs=kwargs.items())
             return request.website.render(kwargs.get("view_from", "website.contactus"), values)
-
-        try:
-            values['medium_id'] = request.registry['ir.model.data'].get_object_reference(request.cr, SUPERUSER_ID, 'crm', 'crm_tracking_medium_website')[1]
-            values['section_id'] = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, SUPERUSER_ID, 'website.salesteam_website_sales')
-        except ValueError:
-            pass
 
         # description is required, so it is always already initialized
         if post_description:
@@ -106,5 +107,4 @@ class contactus(http.Controller):
                 }
                 request.registry['ir.attachment'].create(request.cr, SUPERUSER_ID, attachment_value, context=request.context)
 
-        values = self.preRenderThanks(request, values, kwargs)
-        return request.website.render(kwargs.get("view_callback", "website_crm.contactus_thanks"), values)
+        return self.get_contactus_response(values, kwargs)

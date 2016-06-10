@@ -8,6 +8,13 @@ CTL_FF    = '\x0c'             # Form feed
 CTL_CR    = '\x0d'             # Carriage return
 CTL_HT    = '\x09'             # Horizontal tab
 CTL_VT    = '\x0b'             # Vertical tab
+
+# RT Status commands
+DLE_EOT_PRINTER   = '\x10\x04\x01'  # Transmit printer status
+DLE_EOT_OFFLINE   = '\x10\x04\x02'
+DLE_EOT_ERROR     = '\x10\x04\x03'
+DLE_EOT_PAPER     = '\x10\x04\x04'
+
 # Printer hardware
 HW_INIT   = '\x1b\x40'         # Clear data in buffer and reset modes
 HW_SELECT = '\x1b\x3d\x01'     # Printer select
@@ -68,6 +75,7 @@ TXT_ENC_PC861   = '\x1b\x74\x23' # PC861 Icelandic
 TXT_ENC_PC862   = '\x1b\x74\x24' # PC862 Hebrew
 TXT_ENC_PC864   = '\x1b\x74\x25' # PC864 Arabic
 TXT_ENC_PC869   = '\x1b\x74\x26' # PC869 Greek
+TXT_ENC_PC936   = '\x1C\x21\x00' # PC936 GBK(Guobiao Kuozhan)
 TXT_ENC_8859_2  = '\x1b\x74\x27' # ISO8859-2 Latin2
 TXT_ENC_8859_9  = '\x1b\x74\x28' # ISO8859-2 Latin9
 TXT_ENC_PC1098  = '\x1b\x74\x29' # PC1098 Farsi

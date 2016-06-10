@@ -315,14 +315,14 @@
                 <separator string="Previous Activities"/>
                 <field name="from_ids" mode="tree" context="{'default_activity_to_id': active_id}">
                     <tree string="Incoming Transitions" editable="bottom">
-                        <field name="activity_from_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
+                        <field name="activity_from_id" domain="[('campaign_id', '=', parent.campaign_id)]" options="{'no_create': True}" />
                         <field name='trigger'/>
                         <field name="interval_nbr"/>
                         <field name="interval_type"/>
                     </tree>
                     <form string="Incoming Transitions">
                         <group col="4">
-                            <field name="activity_from_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
+                            <field name="activity_from_id" domain="[('campaign_id', '=', parent.campaign_id)]" options="{'no_create': True}" />
                             <field name='trigger'/>
                             <field name="interval_nbr"/>
                             <field name="interval_type"/>
@@ -332,14 +332,14 @@
                 <separator string="Next Activities"/>
                 <field name="to_ids" mode="tree" context="{'default_activity_from_id': active_id}">
                     <tree string="Outgoing Transitions" editable="bottom">
-                        <field name="activity_to_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
+                        <field name="activity_to_id" domain="[('campaign_id', '=', parent.campaign_id)]" options="{'no_create': True}" />
                         <field name='trigger'/>
                         <field name="interval_nbr"/>
                         <field name="interval_type"/>
                     </tree>
                     <form string="Outgoing Transitions">
                         <group col="4">
-                            <field name="activity_to_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
+                            <field name="activity_to_id" domain="[('campaign_id', '=', parent.campaign_id)]" options="{'no_create': True}" />
                             <field name='trigger'/>
                             <field name="interval_nbr"/>
                             <field name="interval_type"/>

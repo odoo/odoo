@@ -87,8 +87,8 @@ class res_partner(osv.osv):
 class crm_lead(osv.osv):
     _inherit = "crm.lead"
     _columns = {
-        'partner_latitude': fields.float('Geo Latitude'),
-        'partner_longitude': fields.float('Geo Longitude'),
+        'partner_latitude': fields.float('Geo Latitude', digits=(16, 5)),
+        'partner_longitude': fields.float('Geo Longitude', digits=(16, 5)),
         'partner_assigned_id': fields.many2one('res.partner', 'Assigned Partner',track_visibility='onchange' , help="Partner this case has been forwarded/assigned to.", select=True),
         'date_assign': fields.date('Assignation Date', help="Last date this case was forwarded/assigned to a partner"),
     }
@@ -207,7 +207,8 @@ class crm_lead(osv.osv):
                     # warning: point() type takes (longitude, latitude) as parameters in this order!
                     cr.execute("""SELECT id, distance
                                   FROM  (select id, (point(partner_longitude, partner_latitude) <-> point(%s,%s)) AS distance FROM res_partner
-                                  WHERE partner_longitude is not null
+                                  WHERE active
+                                        AND partner_longitude is not null
                                         AND partner_latitude is not null
                                         AND partner_weight > 0) AS d
                                   ORDER BY distance LIMIT 1""", (longitude, latitude))

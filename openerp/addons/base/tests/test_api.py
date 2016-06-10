@@ -31,12 +31,10 @@ class TestAPI(common.TransactionCase):
         self.assertTrue(ids)
         self.assertTrue(partners)
 
-        # partners and its contents are instance of the model, and share its ormcache
+        # partners and its contents are instance of the model
         self.assertIsRecordset(partners, 'res.partner')
-        self.assertIs(partners._ormcache, self.env['res.partner']._ormcache)
         for p in partners:
             self.assertIsRecord(p, 'res.partner')
-            self.assertIs(p._ormcache, self.env['res.partner']._ormcache)
 
         self.assertEqual([p.id for p in partners], ids)
         self.assertEqual(self.env['res.partner'].browse(ids), partners)
@@ -69,6 +67,15 @@ class TestAPI(common.TransactionCase):
         self.assertEqual(list(partners1), list(partners2))
 
     @mute_logger('openerp.models')
+    def test_04_query_count(self):
+        """ Test the search method with count=True. """
+        count1 = self.registry('res.partner').search(self.cr, self.uid, [], count=True)
+        count2 = self.env['res.partner'].search([], count=True)
+        self.assertIsInstance(count1, (int, long))
+        self.assertIsInstance(count2, (int, long))
+        self.assertEqual(count1, count2)
+
+    @mute_logger('openerp.models')
     def test_05_immutable(self):
         """ Check that a recordset remains the same, even after updates. """
         domain = [('name', 'ilike', 'j')]
@@ -93,17 +100,17 @@ class TestAPI(common.TransactionCase):
         self.assertIsRecordset(user.groups_id, 'res.groups')
 
         partners = self.env['res.partner'].search([])
-        for name, cinfo in partners._all_columns.iteritems():
-            if cinfo.column._type == 'many2one':
+        for name, field in partners._fields.iteritems():
+            if field.type == 'many2one':
                 for p in partners:
-                    self.assertIsRecord(p[name], cinfo.column._obj)
-            elif cinfo.column._type == 'reference':
+                    self.assertIsRecord(p[name], field.comodel_name)
+            elif field.type == 'reference':
                 for p in partners:
                     if p[name]:
-                        self.assertIsRecord(p[name], cinfo.column._obj)
-            elif cinfo.column._type in ('one2many', 'many2many'):
+                        self.assertIsRecord(p[name], field.comodel_name)
+            elif field.type in ('one2many', 'many2many'):
                 for p in partners:
-                    self.assertIsRecordset(p[name], cinfo.column._obj)
+                    self.assertIsRecordset(p[name], field.comodel_name)
 
     @mute_logger('openerp.models')
     def test_07_null(self):

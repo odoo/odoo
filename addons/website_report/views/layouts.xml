@@ -23,6 +23,7 @@
         <ul class="list-inline js_language_selector mt16" t-if="(request and request.website_multilang and len(languages) &gt; 1) or (website and editable)">
             <li t-foreach="languages" t-as="lg">
                 <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
+                   t-att-data-lang="lg[0]"
                    t-att-data-default-lang="editable and 'true' if website and lg[0] == website.default_lang_code else None">
                     <t t-esc="lg[1].split('/').pop()"/>
                 </a>

@@ -31,11 +31,16 @@ import openerp
 from openerp import SUPERUSER_ID, models
 from openerp import tools
 import openerp.exceptions
+from openerp import api
 from openerp.osv import fields, osv, expression
+from openerp.service.security import check_super
 from openerp.tools.translate import _
 from openerp.http import request
 
 _logger = logging.getLogger(__name__)
+
+# Only users who can modify the user (incl. the user herself) see the real contents of these fields
+USER_PRIVATE_FIELDS = ['password']
 
 #----------------------------------------------------------
 # Basic res.groups and res.users
@@ -91,7 +96,7 @@ class res_groups(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
         'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
-        'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls'),
+        'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls', copy=True),
         'rule_groups': fields.many2many('ir.rule', 'rule_group_rel',
             'group_id', 'rule_group_id', 'Rules', domain=[('global', '=', False)]),
         'menu_access': fields.many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', 'Access Menu'),
@@ -139,12 +144,13 @@ class res_users(osv.osv):
         avatar, ... The user model is now dedicated to technical data.
     """
     __admin_ids = {}
-    _uid_cache = {}
+    __uid_cache = {}
     _inherits = {
         'res.partner': 'partner_id',
     }
     _name = "res.users"
     _description = 'Users'
+    _order = 'name, login'
 
     def _set_new_password(self, cr, uid, id, name, value, args, context=None):
         if value is False:
@@ -190,8 +196,8 @@ class res_users(osv.osv):
 
     # overridden inherited fields to bypass access rights, in case you have
     # access to the user but not its corresponding partner
-    name = openerp.fields.Char(related='partner_id.name')
-    email = openerp.fields.Char(related='partner_id.email')
+    name = openerp.fields.Char(related='partner_id.name', inherited=True)
+    email = openerp.fields.Char(related='partner_id.email', inherited=True)
 
     def on_change_login(self, cr, uid, ids, login, context=None):
         if login and tools.single_email_re.match(login):
@@ -274,16 +280,25 @@ class res_users(osv.osv):
     }
 
     # User can write on a few of his own fields (but not his groups for example)
-    SELF_WRITEABLE_FIELDS = ['password', 'signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz']
+    SELF_WRITEABLE_FIELDS = ['signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz']
     # User can read a few of his own fields
-    SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz', 'tz_offset', 'groups_id', 'partner_id', '__last_update']
+    SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz', 'tz_offset', 'groups_id', 'partner_id', '__last_update', 'action_id']
+
+    @api.multi
+    def _read_from_database(self, field_names, inherited_field_names=[]):
+        super(res_users, self)._read_from_database(field_names, inherited_field_names)
+        canwrite = self.check_access_rights('write', raise_exception=False)
+        if not canwrite and set(USER_PRIVATE_FIELDS).intersection(field_names):
+            for record in self:
+                for f in USER_PRIVATE_FIELDS:
+                    try:
+                        record._cache[f]
+                        record._cache[f] = '********'
+                    except Exception:
+                        # skip SpecialValue (e.g. for missing record or access right)
+                        pass
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        def override_password(o):
-            if 'password' in o and ('id' not in o or o['id'] != uid):
-                o['password'] = '********'
-            return o
-
         if fields and (ids == [uid] or ids == uid):
             for key in fields:
                 if not (key in self.SELF_READABLE_FIELDS or key.startswith('context_')):
@@ -291,16 +306,25 @@ class res_users(osv.osv):
             else:
                 # safe fields only, so we read as super-user to bypass access rights
                 uid = SUPERUSER_ID
+        return super(res_users, self).read(cr, uid, ids, fields=fields, context=context, load=load)
 
-        result = super(res_users, self).read(cr, uid, ids, fields=fields, context=context, load=load)
-        canwrite = self.pool['ir.model.access'].check(cr, uid, 'res.users', 'write', False)
-        if not canwrite:
-            if isinstance(ids, (int, long)):
-                result = override_password(result)
-            else:
-                result = map(override_password, result)
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
+        if uid != SUPERUSER_ID:
+            groupby_fields = set([groupby] if isinstance(groupby, basestring) else groupby)
+            if groupby_fields.intersection(USER_PRIVATE_FIELDS):
+                raise openerp.exceptions.AccessError('Invalid groupby')
+        return super(res_users, self).read_group(
+            cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, lazy=lazy)
 
-        return result
+    def _search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
+        if user != SUPERUSER_ID and args:
+            domain_terms = [term for term in args if isinstance(term, (tuple, list))]
+            domain_fields = set(left for (left, op, right) in domain_terms)
+            if domain_fields.intersection(USER_PRIVATE_FIELDS):
+                raise openerp.exceptions.AccessError('Invalid search criterion')
+        return super(res_users, self)._search(
+            cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count,
+            access_rights_uid=access_rights_uid)
 
     def create(self, cr, uid, vals, context=None):
         user_id = super(res_users, self).create(cr, uid, vals, context=context)
@@ -329,16 +353,18 @@ class res_users(osv.osv):
                 # if partner is global we keep it that way
                 if user.partner_id.company_id and user.partner_id.company_id.id != values['company_id']: 
                     user.partner_id.write({'company_id': user.company_id.id})
+            # clear default ir values when company changes
+            self.pool['ir.values'].get_defaults_dict.clear_cache(self.pool['ir.values'])
         # clear caches linked to the users
         self.pool['ir.model.access'].call_cache_clearing_methods(cr)
         clear = partial(self.pool['ir.rule'].clear_cache, cr)
         map(clear, ids)
         db = cr.dbname
-        if db in self._uid_cache:
+        if db in self.__uid_cache:
             for id in ids:
-                if id in self._uid_cache[db]:
-                    del self._uid_cache[db][id]
-        self.context_get.clear_cache(self)
+                if id in self.__uid_cache[db]:
+                    del self.__uid_cache[db][id]
+        self._context_get.clear_cache(self)
         self.has_group.clear_cache(self)
         return res
 
@@ -346,10 +372,10 @@ class res_users(osv.osv):
         if 1 in ids:
             raise osv.except_osv(_('Can not remove root user!'), _('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
         db = cr.dbname
-        if db in self._uid_cache:
+        if db in self.__uid_cache:
             for id in ids:
-                if id in self._uid_cache[db]:
-                    del self._uid_cache[db][id]
+                if id in self.__uid_cache[db]:
+                    del self.__uid_cache[db][id]
         return super(res_users, self).unlink(cr, uid, ids, context=context)
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
@@ -358,7 +384,7 @@ class res_users(osv.osv):
         if not context:
             context={}
         ids = []
-        if name:
+        if name and operator in ['=', 'ilike']:
             ids = self.search(cr, user, [('login','=',name)]+ args, limit=limit, context=context)
         if not ids:
             ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
@@ -374,10 +400,10 @@ class res_users(osv.osv):
         return super(res_users, self).copy(cr, uid, id, default, context)
 
     @tools.ormcache(skiparg=2)
-    def context_get(self, cr, uid, context=None):
-        user = self.browse(cr, SUPERUSER_ID, uid, context)
+    def _context_get(self, cr, uid):
+        user = self.browse(cr, SUPERUSER_ID, uid)
         result = {}
-        for k in self._all_columns.keys():
+        for k in self._fields:
             if k.startswith('context_'):
                 context_key = k[8:]
             elif k in ['lang', 'tz']:
@@ -391,16 +417,16 @@ class res_users(osv.osv):
                 result[context_key] = res or False
         return result
 
+    def context_get(self, cr, uid, context=None):
+        return self._context_get(cr, uid)
+
     def action_get(self, cr, uid, context=None):
         dataobj = self.pool['ir.model.data']
         data_id = dataobj._get_id(cr, SUPERUSER_ID, 'base', 'action_res_users_my')
         return dataobj.browse(cr, uid, data_id, context=context).res_id
 
     def check_super(self, passwd):
-        if passwd == tools.config['admin_passwd']:
-            return True
-        else:
-            raise openerp.exceptions.AccessDenied()
+        return check_super(passwd)
 
     def check_credentials(self, cr, uid, password):
         """ Override this method to plug additional authentication methods"""
@@ -485,15 +511,12 @@ class res_users(osv.osv):
         if not passwd:
             # empty passwords disallowed for obvious security reasons
             raise openerp.exceptions.AccessDenied()
-        if self._uid_cache.get(db, {}).get(uid) == passwd:
+        if self.__uid_cache.setdefault(db, {}).get(uid) == passwd:
             return
         cr = self.pool.cursor()
         try:
             self.check_credentials(cr, uid, passwd)
-            if self._uid_cache.has_key(db):
-                self._uid_cache[db][uid] = passwd
-            else:
-                self._uid_cache[db] = {uid:passwd}
+            self.__uid_cache[db][uid] = passwd
         finally:
             cr.close()
 
@@ -508,7 +531,7 @@ class res_users(osv.osv):
         """
         self.check(cr.dbname, uid, old_passwd)
         if new_passwd:
-            return self.write(cr, uid, uid, {'password': new_passwd})
+            return self.write(cr, SUPERUSER_ID, uid, {'password': new_passwd})
         raise osv.except_osv(_('Warning!'), _("Setting empty passwords is not allowed for security reasons!"))
 
     def preference_save(self, cr, uid, ids, context=None):
@@ -524,8 +547,19 @@ class res_users(osv.osv):
             'target': 'new',
         }
 
-    @tools.ormcache(skiparg=2)
+    @api.v7
     def has_group(self, cr, uid, group_ext_id):
+        return self._has_group(cr, uid, group_ext_id)
+    @api.v8
+    def has_group(self, group_ext_id):
+        # use singleton's id if called on a non-empty recordset, otherwise
+        # context uid
+        uid = self.id or self.env.uid
+        return self._has_group(self.env.cr, uid, group_ext_id)
+
+    @api.noguess
+    @tools.ormcache(skiparg=2)
+    def _has_group(self, cr, uid, group_ext_id):
         """Checks whether user belongs to given group.
 
         :param str group_ext_id: external ID (XML ID) of the group.
@@ -540,6 +574,8 @@ class res_users(osv.osv):
                         (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
                    (uid, module, ext_id))
         return bool(cr.fetchone())
+    # for a few places explicitly clearing the has_group cache
+    has_group.clear_cache = _has_group.clear_cache
 
 #----------------------------------------------------------
 # Implied groups
@@ -696,7 +732,7 @@ def parse_m2m(commands):
     for command in commands:
         if isinstance(command, (tuple, list)):
             if command[0] in (1, 4):
-                ids.append(command[2])
+                ids.append(command[1])
             elif command[0] == 5:
                 ids = []
             elif command[0] == 6:
@@ -729,6 +765,10 @@ class groups_view(osv.osv):
         # and introduces the reified group fields
         # we have to try-catch this, because at first init the view does not exist
         # but we are already creating some basic groups
+        if not context or context.get('install_mode'):
+            # use installation/admin language for translatable names in the view
+            context = dict(context or {})
+            context.update(self.pool['res.users'].context_get(cr, uid))
         view = self.pool['ir.model.data'].xmlid_to_object(cr, SUPERUSER_ID, 'base.user_groups_view', context=context)
         if view and view.exists() and view._name == 'ir.ui.view':
             xml1, xml2 = [], []
@@ -756,6 +796,21 @@ class groups_view(osv.osv):
         return True
 
     def get_application_groups(self, cr, uid, domain=None, context=None):
+        """ return the list of groups available to an user to generate virtual fields """
+
+        # TO REMOVE IN 9.0
+        # verify if share column is present on the table
+        # can not be done with override as can not ensure the module share is loaded
+        # during an upgrade of another module (e.g. if has less dependencies than share)
+        # use ir.model.fields as _fields may not have been populated yet
+        got_share = self.pool['ir.model.fields'].search_count(cr, uid, [
+            ('name', '=', 'share'), ('model', '=', 'res.groups')], context=context)
+        if got_share:
+            if domain is None:
+                domain = []
+            # remove non-shared groups in SQL as 'share' may not be in _fields
+            cr.execute("SELECT id FROM res_groups WHERE share IS true")
+            domain.append(('id', 'not in', [gid for (gid,) in cr.fetchall()]))
         return self.search(cr, uid, domain or [])
 
     def get_groups_by_application(self, cr, uid, context=None):
@@ -886,9 +941,11 @@ class users_view(osv.osv):
                 selected = [gid for gid in get_selection_groups(f) if gid in gids]
                 values[f] = selected and selected[-1] or False
 
-    def fields_get(self, cr, uid, allfields=None, context=None, write_access=True):
-        res = super(users_view, self).fields_get(cr, uid, allfields, context, write_access)
+    def fields_get(self, cr, uid, allfields=None, context=None, write_access=True, attributes=None):
+        res = super(users_view, self).fields_get(cr, uid, allfields, context, write_access, attributes)
         # add reified groups fields
+        if uid != SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
+            return res
         for app, kind, gs in self.pool['res.groups'].get_groups_by_application(cr, uid, context):
             if kind == 'selection':
                 # selection group field

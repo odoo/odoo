@@ -84,6 +84,7 @@ class mrp_production(osv.osv):
         """ Confirms production order and calculates quantity based on subproduct_type.
         @return: Newly generated picking Id.
         """
+        move_obj = self.pool.get('stock.move')
         picking_id = super(mrp_production,self).action_confirm(cr, uid, ids, context=context)
         product_uom_obj = self.pool.get('product.uom')
         for production in self.browse(cr, uid, ids):
@@ -93,30 +94,23 @@ class mrp_production(osv.osv):
             for sub_product in production.bom_id.sub_products:
                 product_uom_factor = product_uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, production.bom_id.product_uom.id)
                 qty1 = sub_product.product_qty
-                qty2 = production.product_uos and production.product_uos_qty or False
-                product_uos_factor = 0.0
-                if qty2 and production.bom_id.product_uos.id:
-                    product_uos_factor = product_uom_obj._compute_qty(cr, uid, production.product_uos.id, production.product_uos_qty, production.bom_id.product_uos.id)
                 if sub_product.subproduct_type == 'variable':
                     if production.product_qty:
                         qty1 *= product_uom_factor / (production.bom_id.product_qty or 1.0)
-                    if production.product_uos_qty:
-                        qty2 *= product_uos_factor / (production.bom_id.product_uos_qty or 1.0)
                 data = {
                     'name': 'PROD:'+production.name,
                     'date': production.date_planned,
                     'product_id': sub_product.product_id.id,
                     'product_uom_qty': qty1,
                     'product_uom': sub_product.product_uom.id,
-                    'product_uos_qty': qty2,
-                    'product_uos': production.product_uos and production.product_uos.id or False,
                     'location_id': source,
                     'location_dest_id': production.location_dest_id.id,
                     'move_dest_id': production.move_prod_id.id,
-                    'state': 'waiting',
                     'production_id': production.id
                 }
-                self.pool.get('stock.move').create(cr, uid, data)
+                move_id = move_obj.create(cr, uid, data, context=context)
+                move_obj.action_confirm(cr, uid, [move_id], context=context)
+
         return picking_id
 
     def _get_subproduct_factor(self, cr, uid, production_id, move_id=None, context=None):

@@ -1,0 +1,29 @@
+/** base */
+.openerp .oe_form label + .oe_form_field.oe_form_field_one2many {
+  display: block;
+}
+.openerp .oe_leftbar > div > div > div > div.oe_secondary_menus_container {
+  position: static;
+}
+.openerp .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper > div > .oe_view_manager_body {
+  position: static;
+}
+
+/** web_calendar */
+.fc .ui-draggable-dragging .fc-event-bg, /* TODO: something nicer like .fc-opacity */
+.fc-select-helper .fc-event-bg {
+  display: none; /* for IE6/7/8. nested opacity filters while dragging don't work */
+}
+
+/** web_graph */
+.openerp svg:not(:root) { /* width and height are not take in consideration */
+    overflow: visible;
+}
+.graph_main_content.graph_chart_mode > div > svg {
+    min-height: 521px;
+}
+
+/** web_kanban */
+.openerp .oe_kanban_column_cards {
+  min-height: 80px;
+}
