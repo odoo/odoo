@@ -13,6 +13,8 @@ class PaymentAcquirerStripe(models.Model):
 
     stripe_secret_key = fields.Char(required_if_provider='stripe')
     stripe_publishable_key = fields.Char(required_if_provider='stripe')
+    image_url = fields.Char("Image URL", required_if_provider='stripe',
+                            help="A relative or absolute URL pointing to a square image of your brand or product. As defined in your Stripe profile. See: https://stripe.com/docs/checkout")
 
     @api.model
     def _get_providers(self):
