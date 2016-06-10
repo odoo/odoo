@@ -107,7 +107,7 @@
                         <page string="Settings">
                             <group>
                                 <field name="privacy_visibility" widget="radio"/>
-                                <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer"
+                                <field name="partner_id" string="Customer"
                                         attrs="{'invisible':[('privacy_visibility','in',['employees', 'followers'])]}"/>
                                 <field name="user_id" string="Project Manager"
                                         attrs="{'readonly':[('active','=',False)]}"
@@ -360,9 +360,8 @@
                     </div>
                     <group>
                         <group>
-                            <field name="project_id" domain="[('active', '=', False)]" on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
+                            <field name="project_id" domain="[('active', '=', False)]" context="{'default_use_tasks':1}"/>
                             <field name="user_id"
-                                on_change="onchange_user_id(user_id, context)"
                                 class="o_task_user_field"
                                 options='{"no_open": True}'/>
                             <field name="legend_blocked" invisible="1"/>
