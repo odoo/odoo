@@ -7,5 +7,3 @@
 #               Hector Ivan Valencia Muñoz (TIX SAS)
 #               Nhomar Hernandez (Vauxoo)
 #               Humberto Ochoa (Vauxoo)
-
-import wizard
