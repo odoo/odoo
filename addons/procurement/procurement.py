@@ -153,7 +153,7 @@ class procurement_order(osv.osv):
                 unlink_ids.append(s['id'])
             else:
                 raise UserError(_('Cannot delete Procurement Order(s) which are in %s state.') % s['state'])
-        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
+        return super(procurement_order, self).unlink(cr, uid, unlink_ids, context=context)
 
     def do_view_procurements(self, cr, uid, ids, context=None):
         '''
