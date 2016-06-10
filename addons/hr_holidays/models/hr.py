@@ -199,18 +199,18 @@ class Employee(models.Model):
             if item['employee_id_count'] >= 1:
                 result[item['employee_id'][0]] = True
         for employee in self:
-            employee.is_absent_totay = result.get(employee.id)
+            employee.is_absent_totay = result[employee.id]
 
     @api.multi
     def _search_absent_employee(self, operator, value):
         today_date = datetime.datetime.utcnow().date()
         today_start = fields.Datetime.to_string(today_date)  # get the midnight of the current utc day
         today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
-        holiday_values = self.env['hr.holidays'].search_read([
+        holidays = self.env['hr.holidays'].search([
+            ('employee_id', '!=', False),
             ('state', 'not in', ['cancel', 'refuse']),
             ('date_from', '<=', today_end),
             ('date_to', '>=', today_start),
             ('type', '=', 'remove')
         ], ['employee_id'])
-        absent_employee_ids = [holiday['employee_id'][0] for holiday in holiday_values if holiday['employee_id']]
-        return [('id', 'in', absent_employee_ids)]
+        return [('id', 'in', holidays.mapped('employee_id').ids)]

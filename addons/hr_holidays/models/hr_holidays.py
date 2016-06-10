@@ -98,8 +98,8 @@ class HolidaysType(models.Model):
         if 'employee_id' in self._context:
             employee_id = self._context['employee_id']
         else:
-            employee = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)], limit=1)
-            employee_id = employee.id if employee else False
+            employee_id = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)], limit=1).id
+
         if employee_id:
             data_days = self.get_days(employee_id)
 
