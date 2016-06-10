@@ -149,3 +149,50 @@ class TestGroupBooleans(common.TransactionCase):
                 'bool_array': [False, False]
             },
         ], groups)
+
+    def test_group_by_aggregable(self):
+        self.Model.create({'bool_and': False, 'key': 1, 'bool_array': True})
+        self.Model.create({'bool_and': False, 'key': 2, 'bool_array': True})
+        self.Model.create({'bool_and': False, 'key': 2, 'bool_array': True})
+        self.Model.create({'bool_and': True, 'key': 2, 'bool_array': True})
+        self.Model.create({'bool_and': True, 'key': 3, 'bool_array': True})
+        self.Model.create({'bool_and': True, 'key': 3, 'bool_array': True})
+
+        groups = self.Model.read_group(
+            domain=[],
+            fields=['key', 'bool_and', 'bool_array'],
+            groupby=['bool_and', 'key'],
+            lazy=False
+        )
+
+        self.assertEqual([
+            {
+                'bool_and': False,
+                'key': 1,
+                'bool_array': [True],
+                '__count': 1,
+                '__domain': ['&', ('bool_and', '=', False), ('key', '=', 1)]
+            },
+            {
+                'bool_and': False,
+                'key': 2,
+                'bool_array': [True, True],
+                '__count': 2,
+                '__domain': ['&', ('bool_and', '=', False), ('key', '=', 2)]
+
+            },
+            {
+                'bool_and': True,
+                'key': 2,
+                'bool_array': [True],
+                '__count': 1,
+                '__domain': ['&', ('bool_and', '=', True), ('key', '=', 2)]
+            },
+            {
+                'bool_and': True,
+                'key': 3,
+                'bool_array': [True, True],
+                '__count': 2,
+                '__domain': ['&', ('bool_and', '=', True), ('key', '=', 3)]
+            }
+        ], groups)
