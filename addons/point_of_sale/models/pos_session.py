@@ -88,8 +88,24 @@ class PosSession(models.Model):
         string='Available Payment Methods')
     order_ids = fields.One2many('pos.order', 'session_id',  string='Orders')
     statement_ids = fields.One2many('account.bank.statement', 'pos_session_id', string='Bank Statement', readonly=True)
+    picking_count = fields.Integer(compute='_compute_picking_count')
 
     _sql_constraints = [('uniq_name', 'unique(name)', _("The name of this POS Session must be unique !"))]
+
+    @api.multi
+    def _compute_picking_count(self):
+        for pos in self:
+            pickings = pos.order_ids.mapped('picking_id').filtered(lambda x: x.state != 'done')
+            pos.picking_count = len(pickings.ids)
+
+    @api.multi
+    def action_stock_picking(self):
+        pickings = self.order_ids.mapped('picking_id').filtered(lambda x: x.state != 'done')
+        action_picking = self.env.ref('stock.action_picking_tree_ready')
+        action = action_picking.read()[0]
+        action['context'] = {}
+        action['domain'] = [('id', 'in', pickings.ids)]
+        return action
 
     @api.depends('cash_control', 'cash_journal_id', 'config_id.cash_control')
     def _compute_cash_all(self):
