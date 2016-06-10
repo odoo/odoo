@@ -12,9 +12,5 @@
         - Copy translations for COA, Tax, Tax Code and Fiscal Position from
           templates to target objects.
     """,
-    'depends' : ['account'],
-    'data': [],
-    'demo': [],
-    'installable': True,
-    'auto_install': False,
+    'depends': ['account'],
 }

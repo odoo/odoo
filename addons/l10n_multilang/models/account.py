@@ -2,73 +2,64 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
-
+from odoo import fields, models
 
 #in this file, we mostly add the tag translate=True on existing fields that we now want to be translated
 
-class account_account_template(osv.osv):
+
+class AccountAccountTemplate(models.Model):
     _inherit = 'account.account.template'
-    _columns = {
-        'name': fields.char('Name', required=True, select=True, translate=True),
-    }
 
-class account_account(osv.osv):
+    name = fields.Char(required=True, index=True, translate=True)
+
+
+class AccountAccount(models.Model):
     _inherit = 'account.account'
-    _columns = {
-        'name': fields.char('Name', required=True, select=True, translate=True),
-    }
 
-class account_tax(osv.osv):
+    name = fields.Char(required=True, index=True, translate=True)
+
+
+class AccountTax(models.Model):
     _inherit = 'account.tax'
-    _columns = {
-        'name': fields.char('Tax Name', required=True, select=True, translate=True),
-    }
+
+    name = fields.Char(string='Tax Name', required=True, index=True, translate=True)
 
 
-class account_tax_template(osv.osv):
+class AccountTaxTemplate(models.Model):
     _inherit = 'account.tax.template'
-    _columns = {
-        'name': fields.char('Tax Name', required=True, select=True, translate=True),
-    }
+
+    name = fields.Char(string='Tax Name', required=True, index=True, translate=True)
 
 
-class account_chart_template(osv.osv):
+class AccountChartTemplate(models.Model):
     _inherit = 'account.chart.template'
-    _columns={
-        'name': fields.char('Name', required=True, translate=True),
-        'spoken_languages': fields.char('Spoken Languages', help="State here the languages for which the translations of templates could be loaded at the time of installation of this localization module and copied in the final object when generating them from templates. You must provide the language codes separated by ';'"),
-    }
     _order = 'name'
 
+    name = fields.Char(required=True, translate=True)
+    spoken_languages = fields.Char(string='Spoken Languages', help="State here the languages for which the translations of templates could be loaded at the time of installation of this localization module and copied in the final object when generating them from templates. You must provide the language codes separated by ';'")
 
-class account_fiscal_position(osv.osv):
+
+class AccountFiscalPosition(models.Model):
     _inherit = 'account.fiscal.position'
-    _columns = {
-        'name': fields.char('Fiscal Position', required=True, translate=True),
-        'note': fields.text('Notes', translate=True),
-    }
+
+    name = fields.Char(string='Fiscal Position', required=True, translate=True)
+    note = fields.Text(string='Notes', translate=True)
 
 
-class account_fiscal_position_template(osv.osv):
+class AccountFiscalPositionTemplate(models.Model):
     _inherit = 'account.fiscal.position.template'
-    _columns = {
-        'name': fields.char('Fiscal Position Template', required=True, translate=True),
-        'note': fields.text('Notes', translate=True),
-    }
+
+    name = fields.Char(string='Fiscal Position Template', required=True, translate=True)
+    note = fields.Text(string='Notes', translate=True)
 
 
-class account_journal(osv.osv):
+class AccountJournal(models.Model):
     _inherit = 'account.journal'
-    _columns = {
-        'name': fields.char('Journal Name', required=True, translate=True),
-    }
+
+    name = fields.Char(string='Journal Name', required=True, translate=True)
 
 
-class account_analytic_account(osv.osv):
+class AccountAnalyticAccount(models.Model):
     _inherit = 'account.analytic.account'
-    _columns = {
-        'name': fields.char('Account Name', required=True, translate=True),
-    }
 
+    name = fields.Char(string='Account Name', required=True, translate=True)

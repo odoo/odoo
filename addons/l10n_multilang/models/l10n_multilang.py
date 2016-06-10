@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, models, SUPERUSER_ID
 import logging
+
+from odoo import api, models
+
 _logger = logging.getLogger(__name__)
+
 
 class AccountChartTemplate(models.Model):
     _inherit = 'account.chart.template'
@@ -38,7 +41,7 @@ class AccountChartTemplate(models.Model):
                         'value': value[element.id],
                     })
                 else:
-                    _logger.info('Language: %s. Translation from template: there is no translation available for %s!' %(lang,  element.name))
+                    _logger.info('Language: %s. Translation from template: there is no translation available for %s!' % (lang, element.name))
                 counter += 1
         return True
 
@@ -85,16 +88,15 @@ class AccountChartTemplate(models.Model):
         return self.process_translations(langs, field, in_ids, out_ids)
 
 
-class base_language_install(models.TransientModel):
+class BaseLanguageInstall(models.TransientModel):
     """ Install Language"""
-
     _inherit = "base.language.install"
 
     @api.multi
     def lang_install(self):
         self.ensure_one()
         already_installed = self.env['res.lang'].search_count([('code', '=', self.lang)])
-        res = super(base_language_install, self).lang_install()
+        res = super(BaseLanguageInstall, self).lang_install()
         if already_installed:
             # update of translations instead of new installation
             # skip to avoid duplicating the translations
