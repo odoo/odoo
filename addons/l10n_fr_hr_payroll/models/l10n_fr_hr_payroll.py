@@ -1,34 +1,29 @@
-#-*- coding:utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
-import openerp.addons.decimal_precision as dp
+from odoo import fields, models
+from odoo.addons import decimal_precision as dp
 
 
-class res_company(osv.osv):
+class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    _columns = {
-        'plafond_secu': fields.float('Plafond de la Securite Sociale', digits_compute=dp.get_precision('Payroll')),
-        'nombre_employes': fields.integer('Nombre d\'employes'),
-        'cotisation_prevoyance': fields.float('Cotisation Patronale Prevoyance', digits_compute=dp.get_precision('Payroll')),
-        'org_ss': fields.char('Organisme de securite sociale'),
-        'conv_coll': fields.char('Convention collective'),
-    }
+    plafond_secu = fields.Float(string='Plafond de la Securite Sociale', digits_compute=dp.get_precision('Payroll'))
+    nombre_employes = fields.Integer(string='Nombre d\'employes')
+    cotisation_prevoyance = fields.Float(string='Cotisation Patronale Prevoyance', digits_compute=dp.get_precision('Payroll'))
+    org_ss = fields.Char(string='Organisme de securite sociale')
+    conv_coll = fields.Char(string='Convention collective')
 
 
-class hr_contract(osv.osv):
+class HrContract(models.Model):
     _inherit = 'hr.contract'
 
-    _columns = {
-        'qualif': fields.char('Qualification'),
-        'niveau': fields.char('Niveau'),
-        'coef': fields.char('Coefficient'),
-    }
+    qualif = fields.Char(string='Qualification')
+    niveau = fields.Char()
+    coef = fields.Char(string='Coefficient')
 
-class hr_payslip(osv.osv):
+
+class HrPayslip(models.Model):
     _inherit = 'hr.payslip'
 
-    _columns = {
-        'payment_mode': fields.char('Mode de paiement'),
-    }
+    payment_mode = fields.Char(string='Mode de paiement')

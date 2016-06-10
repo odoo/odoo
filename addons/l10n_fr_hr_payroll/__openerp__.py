@@ -1,11 +1,11 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'French Payroll',
     'category': 'Localization',
     'author': 'Yannick Buron (SYNERPGY)',
     'depends': ['hr_payroll', 'l10n_fr'],
-    'version': '1.0',
     'description': """
 French Payroll Rules.
 =====================
@@ -25,13 +25,10 @@ TODO:
     - The payslip.line with appears_in_payslip = False should appears in the
       payslip interface, but not in the payslip report
     """,
-
-    'active': False,
     'data': [
         'data/l10n_fr_hr_payroll_data.xml',
         'views/l10n_fr_hr_payroll_view.xml',
         'report/report_l10n_fr_fiche_paye.xml',
         'report/l10n_fr_hr_payroll_report.xml',
     ],
-    'installable': True
 }
