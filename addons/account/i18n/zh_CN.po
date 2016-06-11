@@ -27,6 +27,7 @@
 # zhangpeiqing <zpq001@live.com>, 2015
 # zhining wu <wzn63@21cn.com>, 2015
 # 卓忆科技 <zhanghao@jointd.com>, 2016
+# 尘 王 <2119205914@qq.com>, 2016
 # 榴莲 <nocoolyoyo@bengentea.top>, 2016
 # liAnGjiA <liangjia@qq.com>, 2015
 # 钟小华 <mackz@sina.com>, 2015
@@ -35,8 +36,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-06-04 07:50+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
+"PO-Revision-Date: 2016-06-11 15:31+0000\n"
+"Last-Translator: 尘 王 <2119205914@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -110,7 +111,7 @@ msgid ""
 " * The 'Open' status is used when user create invoice, an invoice number is generated. Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr " * 当用户编辑一个新的且未确认的发票时, 状态为\"草稿\"\n * 当发票还没有发票号时, 状态为\"形式发票\"\n * 当发票有了发票号以后, 状态为\"待支付\".  这个状态一直持续到支付完成.\n * 当发票付款后, 状态自动改为\"已支付\".  相关的凭证可能已调节, 也可能没有.\n * 当用户取消发票后, 状态改为\"已取消\""
+msgstr " * 当用户编辑一个新的且未确认的发票时, 状态为\"草稿\"\n * 当发票还没有发票号时, 状态为\"形式发票\"\n * 当发票有了发票号以后, 状态为\"待支付\".  这个状态一直持续到支付完成.\n * 当发票付款后, 状态自动改为\"已支付\".  相关的日记账分录可能已调节, 也可能没有.\n * 当用户取消发票后, 状态改为\"已取消\""
 
 #. module: account
 #. openerp-web
@@ -1390,14 +1391,14 @@ msgid ""
 "journal. In that case, they will behave as journal entries automatically "
 "created by the system on document validation (invoices, bank statements...) "
 "and will be created in 'Posted' status."
-msgstr "所有手工创建的分类账分录通常为“未登帐”状态，但您可以配置跳过这一状态的选项，这样，系统会自动创建分类账分录的有效凭证（发票、银行对账单...），并且会处于“已登帐”状态。"
+msgstr "所有手工创建的日记账分录通常为“未过账”状态，但您可以配置跳过这一状态的选项，这样，系统会自动创建分类账分录的有效凭证（发票、银行对账单...），并且会处于“已登帐”状态。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.validate_account_move_view
 msgid ""
 "All selected journal entries will be validated and posted. You won't be able"
 " to modify them afterwards."
-msgstr "所有的分类账分录被确认和过账，随后你将不能更改"
+msgstr "所有的日记账分录被确认和过账，随后你将不能更改"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:246
@@ -1490,7 +1491,7 @@ msgstr "到期金额"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal_signed
 msgid "Amount Signed"
-msgstr "签核的总量"
+msgstr "签署量"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile_amount
@@ -1667,7 +1668,7 @@ msgid ""
 "Asset management: This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr "资产管理：允许管理由公司或个人所拥有的资产。此模块将跟踪资产的折旧并为折旧明细产生会计凭证。\n\n- 本操作将会安装 account_asset 模块，如果未选中此框，将仅能进行开票和付款而不能进行专业的会计操作（日记账、科目表等）"
+msgstr "资产管理：允许管理由公司或个人所拥有的资产。此模块将跟踪资产的折旧并为折旧明细产生会计凭证。\n\n- 本操作将会安装 account_asset 模块，如果未选中此框，将仅能进行开票和付款而不能进行专业的会计操作（流水账、账户一览表,...）"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -4769,7 +4770,7 @@ msgstr "它将作为借方金额的默认科目"
 msgid ""
 "It indicates that the invoice has been paid and the journal entry of the "
 "invoice has been reconciled with one or several journal entries of payment."
-msgstr "此字段表示发票已付款，也就是说这张发票对应的分类账分录与一张或几张付款对应的分类账分录已调节。"
+msgstr "此字段表示发票已付款，也就是说这张发票对应的分类账分录与一张或几张付款对应的日记账分录已调节。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_sent
@@ -4863,12 +4864,12 @@ msgstr "分类账 & 业务伙伴"
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
 #: model:ir.ui.view,arch_db:account.view_move_tree
 msgid "Journal Entries"
-msgstr "分类账分录"
+msgstr "日记账分录"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Journal Entries by Month"
-msgstr "分类账分录按月（排序）"
+msgstr "日记账分录 按月"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_move_id
@@ -5819,7 +5820,7 @@ msgid ""
 "                document: invoice, refund, vendor payment, bank statements,\n"
 "                etc. So, you should record journal entries manually only/mainly\n"
 "                for miscellaneous operations."
-msgstr "Odoo会自动的根据分类账分录：发票，退款，供应商付款，银行对账单等等创建分类账分录。所以，你应该只对杂项操作手工的记录分类账分录"
+msgstr "Odoo会自动的根据分类账分录：发票，退款，供应商付款，银行对账单等等创建日记账分录。所以，你应该只对杂项操作手工的记录分类账分录"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6536,7 +6537,7 @@ msgstr "给差异过账"
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 #: model:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Post Journal Entries"
-msgstr "分类账分录过账"
+msgstr "日记账分录过账"
 
 #. module: account
 #: selection:account.move,state:0 selection:account.payment,state:0
@@ -6549,7 +6550,7 @@ msgstr "已过账"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr "过账分类账分录"
+msgstr "过账日记账分录"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -6587,7 +6588,7 @@ msgstr "保持余额符号"
 #: model:ir.model,name:account.model_account_operation_template
 msgid ""
 "Preset to create journal entries during a invoices and payments matching"
-msgstr "请在发票和付款匹配期间创建分类账分录"
+msgstr "请在发票和付款匹配期间创建日记账分录"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -6887,7 +6888,7 @@ msgstr "调节"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Reconciling journal entries"
-msgstr "调节分类账分录"
+msgstr "调节日记账分录"
 
 #. module: account
 #: selection:account.journal,bank_statements_source:0
@@ -7818,7 +7819,7 @@ msgid ""
 "in case of fluctuation of the currency exchange rate. This is needed when "
 "cancelling the source: it will post the inverse journal entry to cancel that"
 " part too."
-msgstr "当货币汇率变化时，字段会追踪原始凭证。当原始单据被删除时，同时会冲销这部分。"
+msgstr "当货币汇率变化时，字段会追踪日记账分录。当原始单据被删除时，同时会冲销这部分。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_chart_template_id
@@ -8050,7 +8051,7 @@ msgstr "分类账%s 没有序列号，请指定一个"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_code
 msgid "The journal entries of this journal will be named using this prefix."
-msgstr "这个分类账中的分录会被用这个前缀命名"
+msgstr "这个分类账中的日记账分录会被用这个前缀命名"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_form
@@ -8311,7 +8312,7 @@ msgstr "这个公司有它自己的科目表"
 msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
-msgstr "这个字段包含和这个分类账中分录数量相关的信息"
+msgstr "这个字段包含和这个分类账中日记账分录数量相关的信息"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence_id
@@ -8331,7 +8332,7 @@ msgstr "这一字段在银行对账单调节中被忽略掉"
 msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
-msgstr "这一字段被用在应收应付的分类账分录你可以在这行放置付款的限定日期"
+msgstr "这一字段被用在应收应付的日记账分录你可以在这行放置付款的限定日期"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_partner_name
@@ -8455,7 +8456,7 @@ msgstr "这个技术字段可以用于对账单行创建或导入时，用以避
 msgid ""
 "This wizard will validate all journal entries selected. Once journal entries"
 " are validated, you can not update them anymore."
-msgstr "这个向导会审核所有选择的分类账分录. 一旦分录被审核，就再也不能更改"
+msgstr "这个向导会审核选择的所有日记账分录. 一旦分录被审核，就再也不能更改"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_operation_template
@@ -8714,7 +8715,7 @@ msgstr "未过账"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
-msgstr "未过账分类账分录"
+msgstr "未过账日记账分录"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -9661,7 +9662,7 @@ msgstr "产品列表"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "to describe<br/> your experience or to suggest improvements !"
-msgstr "去描述<br/> 你的经历或者改进建议 !"
+msgstr "去描述<br/> 你的经验，以及改进建议 !"
 
 #. module: account
 #. openerp-web
