@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2016-06-03 11:49+0000\n"
+"PO-Revision-Date: 2016-06-09 07:32+0000\n"
 "Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -57,18 +57,18 @@ msgid ""
 "</body>\n"
 "                \n"
 "            "
-msgstr ""
+msgstr "\n<body>\n    <div style=\"max-width:600px; height:auto; margin-left:30px;\">\n        <div style=\"margin-left:30px;align=center;\">\n            Szanowny/-a ${object.partner_id.name},\n        </div><br>\n        <div style=\"margin-left:30px;align=center;\" width=\"60%\">\n            Mamy nadzieję, że wyświadczone usługi spełniły pańskie oczekiwania.\n            <br>Jeśli ma Pan/-i więcej pytań lub komentarzy, proszę się nie wahać, aby odpowiedzieć na ten e-mail.\n            <br><br>Proszę, pomóż nam, by udoskonalać nas samych poprzez ocenę usług jakie wykonujemy.\n        </div><br>\n        <table style=\"margin-left:50px;\" width=\"70%\">\n            <tr>\n                <td>\n                    <a href=\"/rating/${object.access_token}/10\">\n                        <img alt=\"Great\" src=\"rating/static/src/img/rating_10.png\" title=\"It was great\"/>\n                    </a>\n                </td>\n                <td>\n                    <a href=\"/rating/${object.access_token}/5\">\n                        <img alt=\"Okay\" src=\"rating/static/src/img/rating_5.png\" title=\"It was okay\"/>\n                    </a>\n                </td>\n                <td>\n                    <a href=\"/rating/${object.access_token}/0\">\n                        <img alt=\"Bad\" src=\"rating/static/src/img/rating_0.png\" title=\"It wasn't good\"/>\n                    </a>\n                </td>\n            </tr>\n        </table><br>\n        <h4 style=\"margin-left:30px;font-weight:normal;\">Dziękujemy </h4>\n        <h4 style=\"margin-left:30px;font-weight:normal;\">${object.rated_partner_id.name or ''} </h4>\n    </div>\n</body>\n                \n            "
 
 #. module: rating_project
 #: model:mail.template,subject:rating_project.rating_project_request_email_template
 msgid "${object.res_name}"
-msgstr ""
+msgstr "${object.res_name}"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_task
 msgid "% Happy"
-msgstr ""
+msgstr "% Szczęście"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
