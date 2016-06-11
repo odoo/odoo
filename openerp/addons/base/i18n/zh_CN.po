@@ -9,6 +9,7 @@
 # Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2015-2016
 # mrshelly <mrshelly@hotmail.com>, 2015
 # Talway <9010446@qq.com>, 2015
 # THL <wt39181819@gmail.com>, 2015
@@ -21,7 +22,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2016-04-20 00:31+0000\n"
+"PO-Revision-Date: 2016-06-04 07:26+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -138,7 +139,7 @@ msgid ""
 "\n"
 "\n"
 "[object with reference: %s - %s]"
-msgstr "\n\n[object with reference: %s - %s]"
+msgstr "\n\n[参考引用关联对象: %s - %s]"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_invoice_bba
@@ -3181,7 +3182,7 @@ msgid ""
 "Keeps account of the attendances of the employees on the basis of the\n"
 "actions(Sign in/Sign out) performed by them.\n"
 "       "
-msgstr "\n此模块用于管理员工的考勤.\n==================================================\n\n以员工的登入/退出时间为准，记录员工考勤.\n       "
+msgstr "\n此模块用于管理员工的考勤。\n==================================================\n\n本模块将统计员工的上下班考勤(以点击右上角的签入/签出数据为基准) 。\n       "
 
 #. module: base
 #: model:ir.module.module,description:base.module_procurement_jit
@@ -3861,7 +3862,7 @@ msgid ""
 "------------------------------------------------------\n"
 "* Stock Inventory Value at given date (support dates in the past)\n"
 "    "
-msgstr "\n管理会计模块\n====================== \n这个模块是“库存”和“会计”模块之间的连接，允许你创建会计分录来对库存移动进行估值\n\n关键特征\n------------ \n*库存估值（定期或自动）\n*分拣产生的发票\n\n仓库管理仪表板/报告包括：\n------------------------------------------------------ \n*在给定的日期（在过去的日期）的库存估值"
+msgstr "\nWMS会计模块\n====================== \n这个模块是“库存”和“会计”模块之间的连接，允许你创建会计分录来对库存运动进行计价\n\n关键特征\n------------ \n*库存计价（定期或自动）\n*从分拣开票\n\n仓库管理仪表板/报告包括：\n------------------------------------------------------ \n*对给定的日期（在过去的日期）的库存计价"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_gengo
@@ -4313,7 +4314,7 @@ msgstr "一个模块生成异常。"
 #. module: base
 #: model:ir.module.module,description:base.module_test_workflow
 msgid "A module to play with workflows."
-msgstr "模块工作流程"
+msgstr "使用工作流程的模块"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_impex
@@ -5120,7 +5121,7 @@ msgstr "作者"
 #: model:ir.module.module,description:base.module_payment_authorize
 #: model:ir.module.module,shortdesc:base.module_payment_authorize
 msgid "Authorize.Net Payment Acquirer"
-msgstr "Authorize.Net 付款方式"
+msgstr "Authorize.Net 付款托收方"
 
 #. module: base
 #: field:ir.actions.act_window,auto_search:0
@@ -5970,7 +5971,7 @@ msgstr "索赔管理"
 #. module: base
 #: view:base.module.update:base.view_base_module_update
 msgid "Click on Update below to start the process..."
-msgstr "点击下面的更新 以便 开始 处理..."
+msgstr "点击【更新】按钮让odoo认识您新增加进来的模块。中文详解：当你新增了odoo模块到服务器的addons目录下（注意模块文件夹目录层级）之后需要到odoo的设置菜单下，做更新模块列表这个动作才能让odoo认识出新增加了模块。"
 
 #. module: base
 #: view:res.company:base.view_company_form
@@ -6286,7 +6287,7 @@ msgstr "约束"
 #: code:addons/model.py:129
 #, python-format
 msgid "Constraint Error"
-msgstr "约束性错误"
+msgstr "约束错误"
 
 #. module: base
 #: field:ir.model.constraint,type:0
@@ -6548,7 +6549,7 @@ msgstr "为系统创建和管理用户。在一段时间内用该系统的用户
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
 msgid "Create surveys, collect answers and print statistics"
-msgstr "生成调查问卷、 搜集问卷答案、 打印问卷统计"
+msgstr "创建调查问卷、 搜集问卷答案、 打印问卷统计"
 
 #. module: base
 #: field:ir.actions.server,crud_model_name:0
@@ -6725,7 +6726,7 @@ msgstr "货币"
 #: view:res.currency:base.view_currency_search field:res.currency,name:0
 #: field:res.currency.rate,currency_id:0
 msgid "Currency"
-msgstr "币别"
+msgstr "货币"
 
 #. module: base
 #: help:res.currency,name:0
@@ -6839,7 +6840,7 @@ msgstr "客户"
 #: view:ir.ui.view.custom:base.view_view_custom_search
 #: view:ir.ui.view.custom:base.view_view_custom_tree
 msgid "Customized Views"
-msgstr "自定义视图"
+msgstr "自定义的视图"
 
 #. module: base
 #: model:res.country,name:base.cy
@@ -7202,7 +7203,7 @@ msgstr "显示一个选择或相当文档去运行这个服务服动"
 msgid ""
 "Display and manage the list of all countries group. You can create or delete"
 " country group to make sure the ones you are working on will be maintained."
-msgstr "显示和管理所有国家组的列表。您可以创建或删除国家组，以确保您正在使用的国家组被维护。"
+msgstr "显示和管理所有国家群组的列表。您可以创建或删除国家群组，以确保您正在使用的国家群组被维护。"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country
@@ -7418,7 +7419,7 @@ msgstr "Email"
 #: view:res.users:base.view_users_form
 #: view:res.users:base.view_users_simple_form
 msgid "Email Address"
-msgstr "电子邮件地址"
+msgstr "Email地址"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fetchmail
@@ -7469,7 +7470,7 @@ msgstr "英语(AU)"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "English (UK)"
-msgstr "英语（英国）"
+msgstr "英语(英国)"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -7486,7 +7487,7 @@ msgstr "在这里键入Python代码。关于Python表达式的帮助在这个文
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sequence
 msgid "Entries Sequence Numbering"
-msgstr "分录 序列 编号"
+msgstr "分录序列编码"
 
 #. module: base
 #: model:res.country,name:base.gq
@@ -7829,7 +7830,7 @@ msgstr "字段 `%(field_name)s`不存在！"
 #: code:addons/models.py:1268
 #, python-format
 msgid "Field(s) `%s` failed against a constraint: %s"
-msgstr "Field(s) `%s` 违反约束: %s"
+msgstr "字段 `%s` 违反约束: %s"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
@@ -8371,7 +8372,7 @@ msgstr "格林纳达"
 #: view:ir.model.access:base.ir_access_view_search
 #: field:ir.model.access,group_id:0 view:res.groups:base.view_groups_search
 msgid "Group"
-msgstr "组"
+msgstr "群组"
 
 #. module: base
 #: view:ir.actions.act_window:base.view_window_action_search
@@ -8395,12 +8396,12 @@ msgstr "分组"
 #. module: base
 #: field:res.groups,full_name:0
 msgid "Group Name"
-msgstr "组名称"
+msgstr "群组名称"
 
 #. module: base
 #: field:workflow.transition,group_id:0
 msgid "Group Required"
-msgstr "必须的组 "
+msgstr "必填群组 "
 
 #. module: base
 #: field:ir.actions.act_window,groups_id:0
@@ -8416,12 +8417,12 @@ msgstr "必须的组 "
 #: view:res.groups:base.view_groups_form
 #: view:res.groups:base.view_groups_search field:res.users,groups_id:0
 msgid "Groups"
-msgstr "组"
+msgstr "群组"
 
 #. module: base
 #: view:ir.rule:base.view_rule_form
 msgid "Groups (no group = global)"
-msgstr "组 (无组 = 全局)"
+msgstr "群组 (无群组 = 全局，意思是如果没有用户群组则表示作用于全局)"
 
 #. module: base
 #: model:res.country,name:base.gp
@@ -8645,7 +8646,7 @@ msgstr "梵蒂冈"
 #. module: base
 #: field:res.users,action_id:0
 msgid "Home Action"
-msgstr "主页动作"
+msgstr "家动作"
 
 #. module: base
 #: model:res.country,name:base.hn
@@ -8775,7 +8776,7 @@ msgstr "数据库中目标记录的id"
 #. module: base
 #: help:ir.ui.view,xml_id:0
 msgid "ID of the view defined in xml file"
-msgstr "定义在 XML 文件里的视图的ID"
+msgstr "定义在 XML 文件里的视图ID"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bus
@@ -8834,7 +8835,7 @@ msgstr "打开此项时, 在DEBUG日志模式下, SMTP的详细日志会记录�
 #. module: base
 #: help:ir.rule,global:0
 msgid "If no group is specified the rule is global and applied to everyone"
-msgstr "如果不指定组，规则是全局的并应用于每个用户."
+msgstr "如果不指定群组，规则是全局的并应用于每个用户."
 
 #. module: base
 #: help:ir.property,res_id:0
@@ -8900,7 +8901,7 @@ msgstr "联系人默认语言分两种情况，一是事先在设置菜单中已
 msgid ""
 "If this field is empty, the view applies to all users. Otherwise, the view "
 "applies to the users of those groups only."
-msgstr "如果这字段是空，视图应用到所有用户。\r\n否则这些视图只能用于这些组内的用户。"
+msgstr "如果这字段是空，视图应用到所有用户。\n否则这些视图只能用于这些群组内的用户。"
 
 #. module: base
 #: help:ir.ui.view,active:0
@@ -8946,7 +8947,7 @@ msgid ""
 "If you have groups, the visibility of this menu will be based on these "
 "groups. If this field is empty, Odoo will compute visibility based on the "
 "related object's read access."
-msgstr "如果您归属于用户组，则此菜单的可见性将有这些用户组决定。如果该字段为空，系统将基于关联对象的读取权限计算可见性。"
+msgstr "如果您归属于用户群组，则此菜单的可见性将有这些用户群组决定。如果该字段为空，系统将基于关联对象的读取权限计算可见性。"
 
 #. module: base
 #: help:ir.model.access,active:0
@@ -9015,7 +9016,7 @@ msgstr "在模块中"
 #: view:workflow.activity:base.view_workflow_activity_form
 #: field:workflow.activity,in_transitions:0
 msgid "Incoming Transitions"
-msgstr "进来的转移"
+msgstr "进来的转换"
 
 #. module: base
 #: constraint:ir.actions.server:0
@@ -9128,7 +9129,7 @@ msgstr "行内编辑"
 #. module: base
 #: selection:ir.actions.act_window,target:0
 msgid "Inline View"
-msgstr "内嵌的视图"
+msgstr "内联视图"
 
 #. module: base
 #: code:addons/base/module/module.py:436
@@ -10182,7 +10183,7 @@ msgid ""
 " line and then delete it through the button that appeared. Items can be "
 "assigned to specific groups in order to make them accessible to some users "
 "within the system."
-msgstr "管理和自定义用户的菜单项。你可以用勾选一些菜单项，然后删除。菜单项可以分配给某些特定的用户组，以便他们使用系统的某些特定的功能"
+msgstr "管理和自定义用户的菜单项。你可以用勾选一些菜单项，然后删除。菜单项可以分配给某些特定的用户群组，以便他们使用系统的某些特定的功能"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_customer_relationship_management
@@ -10211,7 +10212,7 @@ msgstr "管理您系统中可用的业务伙伴称谓。业务伙伴称谓是公
 #: model:res.groups,name:base.group_sale_manager
 #: model:res.groups,name:base.group_tool_manager
 msgid "Manager"
-msgstr "经理"
+msgstr "管理者"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_managing_vehicles_and_contracts
@@ -10399,7 +10400,7 @@ msgstr "消息"
 #. module: base
 #: view:res.users:base.view_users_form
 msgid "Messaging and Social"
-msgstr "通信与社交"
+msgstr "消息与社交"
 
 #. module: base
 #: field:ir.cron,function:0
@@ -10525,7 +10526,7 @@ msgstr "模型数据"
 #: view:ir.model:base.view_model_form view:ir.model:base.view_model_search
 #: view:ir.model:base.view_model_tree field:ir.model,name:0
 msgid "Model Description"
-msgstr "模型 说明"
+msgstr "模型说明"
 
 #. module: base
 #: field:ir.actions.server,model_name:0 field:ir.model.data,model:0
@@ -10997,7 +10998,7 @@ msgstr "找不到汇率\n货币: %s \n日期: %s"
 #. module: base
 #: field:ir.model.data,noupdate:0
 msgid "Non Updatable"
-msgstr "非 可更新"
+msgstr "不可更新"
 
 #. module: base
 #: selection:ir.mail_server,smtp_encryption:0
@@ -11162,7 +11163,7 @@ msgstr "办公用品"
 #. module: base
 #: model:res.groups,name:base.group_hr_user
 msgid "Officer"
-msgstr "经理"
+msgstr "主管"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_ogone
@@ -11415,7 +11416,7 @@ msgstr "其它私有协议"
 #. module: base
 #: view:ir.mail_server:base.view_ir_mail_server_search
 msgid "Outgoing Mail Server"
-msgstr "出去的 邮件 服务器"
+msgstr "出去的邮件服务器"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ir_mail_server_list
@@ -11424,13 +11425,13 @@ msgstr "出去的 邮件 服务器"
 #: view:ir.mail_server:base.view_ir_mail_server_search
 #: model:ir.ui.menu,name:base.menu_mail_servers
 msgid "Outgoing Mail Servers"
-msgstr "出去的 邮件 服务器"
+msgstr "出去的邮件服务器"
 
 #. module: base
 #: view:workflow.activity:base.view_workflow_activity_form
 #: field:workflow.activity,out_transitions:0
 msgid "Outgoing Transitions"
-msgstr "出去的 转移"
+msgstr "出去的转换"
 
 #. module: base
 #: field:base.language.import,overwrite:0
@@ -11715,7 +11716,7 @@ msgstr "Paypal付款托收"
 #: model:ir.module.category,name:base.module_category_localization_payroll
 #: model:ir.module.module,shortdesc:base.module_hr_payroll
 msgid "Payroll"
-msgstr "薪水册"
+msgstr "工资表"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account
@@ -12302,7 +12303,7 @@ msgstr "记录 "
 #: code:addons/models.py:4769
 #, python-format
 msgid "Record #%d of %s not found, cannot copy!"
-msgstr "记录 #%d %s 无法找到，不能复制！"
+msgstr "记录 #%d  %s 之 无法找到，不能复制！"
 
 #. module: base
 #: field:ir.actions.act_window,res_id:0 field:ir.actions.server,id_value:0
@@ -12656,12 +12657,12 @@ msgstr "规则"
 #. module: base
 #: constraint:ir.rule:0
 msgid "Rules can not be applied on Transient models."
-msgstr "规则不能应用在Transient 模型"
+msgstr "规则不能应用在瞬态模型"
 
 #. module: base
 #: constraint:ir.rule:0
 msgid "Rules can not be applied on the Record Rules model."
-msgstr "规则不能应用在Record Rules模型"
+msgstr "规则不能应用在记录规则模型"
 
 #. module: base
 #: code:addons/base/ir/ir_actions.py:809
@@ -12906,7 +12907,7 @@ msgstr "搜索视图"
 #. module: base
 #: field:ir.actions.act_window,search_view_id:0
 msgid "Search View Ref."
-msgstr "搜索视图 参考."
+msgstr "搜索视图参照."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_applicant_document
@@ -12982,7 +12983,7 @@ msgstr "选择执行的客户端动作"
 #. module: base
 #: help:ir.actions.server,wkf_transition_id:0
 msgid "Select the workflow signal to trigger."
-msgstr "选择触发工作流信号"
+msgstr "选择要触发的工作流信号"
 
 #. module: base
 #: help:res.partner,use_parent_address:0
@@ -13216,7 +13217,7 @@ msgstr "信号（subflow.*）"
 #. module: base
 #: field:ir.actions.server,wkf_transition_id:0
 msgid "Signal to Trigger"
-msgstr "信号触发"
+msgstr "触发信号"
 
 #. module: base
 #: field:res.users,signature:0
@@ -13363,7 +13364,7 @@ msgstr "对不起，您未被允许修改此单据。"
 #: code:addons/models.py:4618
 #, python-format
 msgid "Sorting field %s not found on model %s"
-msgstr "模块 %s 中未找到Sorting field %s "
+msgstr "模块 %s 中未找到排序字段 %s "
 
 #. module: base
 #: field:ir.translation,source:0
@@ -13726,7 +13727,7 @@ msgstr "调查"
 #. module: base
 #: model:res.groups,name:base.group_survey_manager
 msgid "Survey / Manager"
-msgstr "调查 / 经理"
+msgstr "调查 / 管理者"
 
 #. module: base
 #: model:res.groups,name:base.group_survey_user
@@ -14142,7 +14143,7 @@ msgstr "国家全名"
 msgid ""
 "The group that a user must have to be authorized to validate this "
 "transition."
-msgstr "用户组中的用户需要授权才能确认此迁移。"
+msgstr "用户群组中的用户需要授权才能确认此转换。"
 
 #. module: base
 #: help:res.partner,user_id:0
@@ -14184,12 +14185,12 @@ msgstr "国家名必须唯一"
 #: code:addons/base/res/res_users.py:131
 #, python-format
 msgid "The name of the group can not start with \"-\""
-msgstr "用户组的名称不能以“-”开始"
+msgstr "用户群组的名称不能以“-”开始"
 
 #. module: base
 #: sql_constraint:res.groups:0
 msgid "The name of the group must be unique within an application!"
-msgstr "在一个应用中用户组的名称必须唯一！"
+msgstr "在一个应用中用户群组的名称必须唯一！"
 
 #. module: base
 #: sql_constraint:res.lang:0
@@ -14219,7 +14220,7 @@ msgid ""
 "The operation cannot be completed, probably due to the following:\n"
 "- deletion: you may be trying to delete a record while other records still reference it\n"
 "- creation/update: a mandatory field is not correctly set"
-msgstr "该操作无法完成，可能是由于以下原因：\\n - 删除：您可能会试图删除一个记录，但是仍有其它记录引用到它 \\n - 创建/更新：一个必须要输入的字段不正确"
+msgstr "操作无法完成。失败的原因也许是以下（敬请参考）:\n- 删除操作: 您试图删除的记录中还有其他东西引用关联着它，请自行追查断开引用关联才能删除它。\n- 新建或更新操作: 必填字段必须填写或必须正确的值才能新建或更新操作。"
 
 #. module: base
 #: help:ir.model.fields,domain:0
@@ -14568,21 +14569,21 @@ msgstr "转账付款托收"
 #. module: base
 #: field:ir.model,osv_memory:0
 msgid "Transient Model"
-msgstr "Transient 模型"
+msgstr "瞬态模型"
 
 #. module: base
 #: view:workflow.transition:base.view_workflow_transition_form
 #: view:workflow.transition:base.view_workflow_transition_search
 #: view:workflow.transition:base.view_workflow_transition_tree
 msgid "Transition"
-msgstr "迁移"
+msgstr "转换"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_transition_form
 #: model:ir.ui.menu,name:base.menu_workflow_transition
 #: view:workflow.activity:base.view_workflow_activity_form
 msgid "Transitions"
-msgstr "迁移"
+msgstr "转换"
 
 #. module: base
 #: field:res.groups,trans_implied_ids:0
@@ -14958,7 +14959,7 @@ msgstr "更新模块列表"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_view_base_module_update
 msgid "Update Modules List"
-msgstr "更新模块列表"
+msgstr "更新本地模块列表"
 
 #. module: base
 #: field:ir.actions.server,use_write:0
@@ -15136,12 +15137,12 @@ msgstr "用户"
 #: view:res.groups:base.view_groups_form
 msgid ""
 "Users added to this group are automatically added in the following groups."
-msgstr "加入本群组的用户也将自动加入以下群组."
+msgstr "加入本群组的用户也将自动加入以下群组。"
 
 #. module: base
 #: help:res.groups,implied_ids:0
 msgid "Users of this group automatically inherit those groups"
-msgstr "这个组的用户自动继承那些组"
+msgstr "这个群组的用户自动继承那些群组"
 
 #. module: base
 #: model:res.country,name:base.uz
@@ -15557,7 +15558,7 @@ msgid ""
 "When the operation of transition comes from a button pressed in the client "
 "form, signal tests the name of the pressed button. If signal is NULL, no "
 "button is necessary to validate this transition."
-msgstr "如果转换的操作来源于界面上的一个按钮，信号字段存储按钮的名称。如果该值为NULL，界面上不需要按钮"
+msgstr "当转换操作来源于客户端表单上的一个按钮，信号测试被按下去的按钮的名称。如果信号为NULL，不需要按钮验证该转换。"
 
 #. module: base
 #: help:ir.model.fields,translate:0
@@ -15630,7 +15631,7 @@ msgstr "工作流活动"
 #. module: base
 #: view:workflow:base.view_workflow_diagram
 msgid "Workflow Editor"
-msgstr "工作流 编辑器"
+msgstr "工作流编辑器"
 
 #. module: base
 #: view:workflow.instance:base.view_workflow_instance_form
@@ -15642,7 +15643,7 @@ msgstr "工作流实例"
 #. module: base
 #: view:workflow.transition:base.view_workflow_transition_search
 msgid "Workflow Transition"
-msgstr "工作流 迁移"
+msgstr "工作流转换"
 
 #. module: base
 #: view:workflow.workitem:base.view_workflow_workitem_form
@@ -15702,12 +15703,12 @@ msgstr "Write a python expression, beginning with object, that gives the record 
 #. module: base
 #: field:ir.actions.report.xml,report_xml:0
 msgid "XML Path"
-msgstr "XML 路径"
+msgstr "XML路径"
 
 #. module: base
 #: view:ir.actions.report.xml:base.act_report_xml_view
 msgid "XML Report"
-msgstr "XML 报告"
+msgstr "XML报告"
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -15910,17 +15911,17 @@ msgstr "bank_bic"
 #. module: base
 #: selection:base.language.export,state:0
 msgid "choose"
-msgstr "选择"
+msgstr "选取"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "condition: True"
-msgstr "condition：True"
+msgstr "condition: True"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid "condition: object.list_price > 5000"
-msgstr "condition：object.list_price > 5000"
+msgstr "condition: object.list_price > 5000"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form

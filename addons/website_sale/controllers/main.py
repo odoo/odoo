@@ -142,6 +142,10 @@ class website_sale(http.Controller):
 
         return attribute_value_ids
 
+    def _get_search_order(self, post):
+        # OrderBy will be parsed in orm and so no direct sql injection
+        return 'website_published desc,%s' % post.get('order', 'website_sequence desc')
+
     def _get_search_domain(self, search, category, attrib_values):
         domain = request.website.sale_product_domain()
 
@@ -207,7 +211,7 @@ class website_sale(http.Controller):
         if attrib_list:
             post['attrib'] = attrib_list
         pager = request.website.pager(url=url, total=product_count, page=page, step=PPG, scope=7, url_args=post)
-        product_ids = product_obj.search(cr, uid, domain, limit=PPG, offset=pager['offset'], order='website_published desc, website_sequence desc', context=context)
+        product_ids = product_obj.search(cr, uid, domain, limit=PPG, offset=pager['offset'], order=self._get_search_order(post), context=context)
         products = product_obj.browse(cr, uid, product_ids, context=context)
 
         style_obj = pool['product.style']

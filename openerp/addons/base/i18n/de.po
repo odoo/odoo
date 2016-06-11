@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2015-12-17 13:53+0000\n"
+"PO-Revision-Date: 2016-06-02 11:01+0000\n"
 "Last-Translator: Tina Rittmüller <tr@ife.de>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-8/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -112,7 +112,7 @@ msgid ""
 "[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\n\nÜberblick:\n---------\n\n* Kontenplan und Umsatzsteuer Vorlagen für Unternehmen in Japan.\n* Dieser Kontenplan deckt u.U. nicht alle erforderlichen Konten für ein japanisches Unternehmen. Es wird deshalb vorausgesetzt, dass Sie weitere Konten zur \nBasis dieser Vorlage hinzufügen / löschen / ändern.\n\nHinweis:\n-----\n\n* Die Steuerzuordnungen \"内 税 'und' 外 税 ' wurden hinzugefügt, um die besonderen Anforderungen einer  POS-Implementierung zu erfüllen. [1] Sie müssen diese allerdings nicht zwingend anwenden.\n\n[1] Siehe https://github.com/odoo/odoo/pull/6470 zum Detail.\n\n    "
 
 #. module: base
 #: code:addons/base/res/res_config.py:379
@@ -781,7 +781,7 @@ msgid ""
 "the portal automatically adds it to the portal users, etc).  That feature is\n"
 "very handy when used in combination with the module 'share'.\n"
 "    "
-msgstr ""
+msgstr "\nPassen Sie den Zugriff auf Ihre Odoo-Datenbank durch externe Benutzer an, indem Sie Portale anlegen.\n================================================================================\nEin Portal definiert ein spezifisches Nutzermenü für dessen Mitglieder mit entsprechenden Zugriffsberechtigungen. Dieses Menü kann durch Portalnutzer, Öffentliche Nutzer oder jeden Nutzer mit Berechtigung auf technische Einstellungen (z.B. Administrator) gesehen werden. Also auch jeder Portalnutzer, der mit einem bestimmten Partner verknüpft ist.\n\nDieses Modul verknüpft auch Benutzergruppen mit Portalnutzern (Hinzufügen einer Gruppe im Portal fügt diese automatisch beim Portalnutzer hinzu, usw. ). Dieses Merkmal kann sehr nützlich sein in Verbindung mit dem Modul 'Teilen'. \n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_delivery
@@ -907,7 +907,7 @@ msgid ""
 "- Council Implementing Regulation (EU) No 1042/2013\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\nEU Mini One Stop Shop (MOSS) USt für Telekommunikations-, Rundfunk- und Fernsehdienstleistungen\n=============================================================================================\n\nSeit dem 1. Januar 2015 sind innerhalb der Europäischen Union verkaufte Telekommunikations-, Rundfunk- und Fernsehdienstleistungen immer im Land des Leistungsempfängers zu versteuern. Folge der Regelung wäre grundsätzlich, dass sich der betroffene Dienstleister in jedem Mitgliedstaat, in dem er seine Dienstleistung für den Kunden erbringt, umsatzsteuerlich registrieren lassen und die Umsatzsteuer abführen müsste. Um dies zu vermeiden, wird nun aber zeitgleich mit der Änderung zum Leistungsort ein vereinfachtes Besteuerungsverfahren eingeführt, die sogenannte „kleine einzige Anlaufstelle“ (KEA oder MOSS = Mini-One-Stop-Shop). In Deutschland ist dies das Bundeszentralamt für Steuern (BZSt).\n\nDieses Modul ermöglicht diese durch Hilfestellung beim Erstellen der entsprechenden EU-Steuerzuordnungen und -steuern, um automatisch die erforderlichen Steuern anzuwenden und zu erfassen.\n\nDieses Modul installiert einen Assistenten, der Hilfestellung beim Einrichten der Steuerzuordnungen und Steuern, für den Verkauf elektronischer Dienstleistungen innerhalb der EU, bietet.\n\nDer Assistent erlaubt Ihnen die Auswahl:\n- der EU-Länder in die Sie die Leistung verkaufen\n- Ihre Ausgangssteuer für Dienstleistungen auf die Steuer des Bestimmungslandes umzusetzen\n- optional: Eine Vorlage-Steuerzuordnung, um die Kontenzuordnung zu kopieren. Dies sollte Ihre bestehende B2C Innereuropäische Steuerzuordnung sein (Vorgabe ist ohne Zuordnung)\n- optional: Ein Konto zum sammeln der Steuerbeträge (Vorgabe ist das Konto für Ihre nationale USt für Dienstleistungen)\n\nEs legt entsprechende Steuerzuordnungen und Steuern an, die automatisch angewendet werden bei Verkäufen in die gewählten EU-Länder.\nDer Assistent kann erneut aufgerufen werden, um weitere Länder hinzuzufügen.\n\nDer Assistent erstellt einen zusätzlichen Steuer-Kontenplan, um die Umsatzsteuerbeträge der MOSS-Steuererklärung aufzunehmen, so dass die Extrahierung der MOSS-Daten ein Leichtes sein sollte.\nSuchen Sie nach dem Kontenplan mit der Bezeichung \"EU MOSS USt-Kontenplan\" im Steuerbericht des Menüs \"Allgemeine Buchhaltungsberichte\".\n\nReferenzen\n++++++++++\n- VERORDNUNG (EU) Nr. 967/2012 DES RATES\n- DURCHFÜHRUNGSVERORDNUNG (EU) Nr. 1042/2013 DES RATES\nvom 7. Oktober 2013\n\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing
@@ -2190,7 +2190,7 @@ msgid ""
 "Product extension. This module adds:\n"
 "  * Computes standard price from the BoM of the product with a button on the product variant based\n"
 "    on the materials in the BoM and the work centers.  It can create the necessary accounting entries when necessary.\n"
-msgstr ""
+msgstr "\nProdukterweiterung. Dieses Modul ergänzt:\n  * Standardpreisermittelung aus der Produkt-Stückliste mit einer Schaltfläche in der Produktvariante, basierend auf Stücklistenmaterialien und Arbeitsplätzen. Die erforderlichen Finanzbuchungen können ausgeführt werden.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_edi
@@ -2789,7 +2789,7 @@ msgid ""
 "\n"
 "Procurements in exception should be checked manually and can be re-run.\n"
 "    "
-msgstr ""
+msgstr "\nDies ist das Grundmodul zur Disposition.\n===================================================\n\nDieses Dispositions-Modul baut auf das Produktmodul auf und macht alleine keinen Sinn. Beschaffungsanfragen entstehen aus Bedarfen, die mittels Beschaffungsregeln aufgelöst werden müssen. Wenn eine Beschaffungsanfrage angelegt wurde, muss diese zur Bestellung freigegeben werden. Wenn eine passende Beschaffungsregel gefunden wird, wird diese in den Status Bearbeitung überführt. Danach wird überwacht, ob die auszuführende Aufgabe abgeschlossen wurde und der Status in Erledigt geändert. Eine Beschaffung kann ggf. auch in den Status Fehlerhaft wechseln, wenn z. B. keine Regel gefunden wird und die Beschaffung storniert werden kann.\n\nDieser Mechanismus kann durch andere Module erweitert werden. Die Lager-Beschaffungsregel führt zu hieraus erstellten Lagerbuchungen, die wenn abgeschlossen, auch die Beschaffung vollenden.\n\nDie Dienstleistungs-Beschaffungsregel erzeugt eine Aufgabe. Aufgaben mit Dispositionsart Einkauf oder Fertigung führen zu entsprechender Bestellung oder Fertigungsauftrag.\n\nDer Dispositionslauf prüft, ob eine Regel freiegebenen Beschaffungen zugeordnet oder laufende Beschaffungen abgeschlossen werden können.\n\nFehlerhafte Beschaffungsanfragen sollten manuell geprüft werden und können dann erneut ausgeführt werden.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
@@ -3626,7 +3626,7 @@ msgid ""
 "      module, but this will also install the CRM application as it depends on\n"
 "      CRM Leads.\n"
 "    "
-msgstr ""
+msgstr "\nDieses Modul bietet Leads-Automatisierung durch Marketing-Maßnahmen (Kampagnen können tatsächlich auf jedes beliebige Objekt, nicht nur CRM-Leads, erstellt werden).\n=============================================================================================================================================================================\n\nDie Kampagnen sind dynamisch und Mehrkanilig. Der Prozess sieht wie folgt aus:\n-----------------------------------------------------------------------------\n    * Entwurf von Marketingkampagnen, wie Abläufe, zu verwendende Email-Vorlagen, Berichtsdrucke und -versand, individuelle Aktionen\n    * Defnition von Marktsegmenten, die die Auswahl an Kampagnenteilnehmern bestimmt (z. B. Leads bestimmter Länder).\n    * Lassen Sie die Kampagne im Simulationsmodus laufen, um diese in Echtzeit oder Zeitraffer zu überprüfen und zu verbessern.\n    * Sie können auch die echte Kampagne manuell starten, wobei jede Aktion individuelle Freigabe erfordert.\n    * Schließlich starten Sie Ihre Kampagne live und beobachten die Statistiken während die Maßnahme ansonsten vollautomatisch abläuft.\n\nWährend die Kampagne läuft, können Sie natürlich weiterhin Feinabstimmung betreiben, Marktsegmente oder den Workflow verändern.\n\n**Hinweis** Sollten Sie Demo-Daten benötigen, installieren Sie das Modul marketing_campaign_crm_demo. Dies installiert allerdings automatisch das Modul CRM, da dies auf CRM-Leads aufbaut und davon abhängig ist.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at
@@ -3834,7 +3834,7 @@ msgid ""
 "* Add services, fuel log entry, odometer values for all vehicles\n"
 "* Show all costs associated to a vehicle or to a type of service\n"
 "* Analysis graph for costs\n"
-msgstr ""
+msgstr "\nFahrzeuge, Leasing, Versicherungen, Kosten\n=========================================\nMit diesem Modul hilft Ihnen Odoo bei der Verwaltung all Ihrer Fahrzeuge, den damit zusammenhängenden Verträgen, als auch Wartung und Benzinverbrauch, Kosten und vielen anderen Merkmalen, die für die Verwaltung Ihres/r Fahrzeugs/e erforderlich ist/sind.\n\nHauptmerkmale\n-------------\n* Fahrzeuge zur Flotte hinzufügen\n* Verträge zum Fahrzeug verwalten\n* Erinnerung an anstehenden Vertragsablauf\n* Hinzufügen von Wartung, Tankquittung, Kilometerstand aller Fahrzeuge\n* Anzeige aller Kosten zu einem Fahrzeug oder einer Leistungsart\n* Auswertungsgrafik zu Kosten\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_account
@@ -3881,7 +3881,7 @@ msgid ""
 "\n"
 "Works with Worldline keys version 2.0, contains implementation of\n"
 "payments acquirer using Worldline SIPS."
-msgstr ""
+msgstr "\nWorldline SIPS Zahlungsvermittler für Online-Zahlungen\n\nFunktioniert mit Worldline Schlüsseln Version 2.0, enthält Umsetzung der Zahlungsvermittlung unter Verwendung von Worldline SIPS."
 
 #. module: base
 #: code:addons/base/res/res_company.py:68
@@ -5366,7 +5366,7 @@ msgstr "Weißrussland"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
-msgstr ""
+msgstr "Belgische Intrastat-Meldung"
 
 #. module: base
 #: model:res.country,name:base.be
@@ -6907,7 +6907,7 @@ msgstr "Datenbankstruktur"
 msgid ""
 "Database fetch misses ids ({}) and has extra ids ({}), may be caused by a "
 "type incoherence in a previous request"
-msgstr ""
+msgstr "Der Datenbankabfrage fehlen ids ({}) und haben zusätzliche ids ({}), könnte durch eine fehlerhafte Typisierung in vorigem Aufruf verursacht sein."
 
 #. module: base
 #: help:ir.values,res_id:0
@@ -8901,7 +8901,7 @@ msgid ""
 "* if True, the view always extends its parent\n"
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "             "
-msgstr ""
+msgstr "Wenn dieses Sicht abgeleitet wurde,\n* Wenn wahr, Erweitert die Sicht immer die übergeordnete\n* Wenn falsch, erweitert die Sicht derzeit die übergeordnete nicht, kann aber dahingehend verändert werden\n             "
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country_state
@@ -11253,7 +11253,7 @@ msgid ""
 "  different model than this one), then this view's inheritance specs\n"
 "  (<xpath/>) are applied, and the result is used as if it were this view's\n"
 "  actual arch.\n"
-msgstr ""
+msgstr "Trifft nur zu, wenn diese Sicht eine andere ableitet (inherit_id ist nicht Null/Leer).\n\n* Bei extension (Vorgabe), wenn diese Sicht angefordert wird, wird die naheliegendste Hauptsicht (über inherit_id) gesucht und dieses Modell auf alle mit diesem Modell aus der Hauptsicht ableitenden Sichten angewendet.\n* Bei primary, wird die naheliegendste Hauptsicht vollständig aufgelöst (selbst wenn diese ein von diesem abweichendes Modell verwendet), dann werden die Vererbungselemente (<xpath/>) aufgerufen und das Ergebnis wird verwendet, als wäre es der tatsächliche Inhalt dieser Sicht.\n"
 
 #. module: base
 #: help:res.partner.bank,company_id:0
@@ -11814,7 +11814,7 @@ msgstr "Bitte definieren Sie das base Datenmodell vor weiterer Festlegung von Ak
 msgid ""
 "Please set the Base Model of the action to enable the dynamic expression "
 "buidler."
-msgstr ""
+msgstr "Setzen Sie bitte das Basismodell der Aktion, um den dynamischen Ausdrucksassistenten zu aktivieren."
 
 #. module: base
 #: code:addons/base/ir/ir_actions.py:832
@@ -14153,7 +14153,7 @@ msgstr "Die Liste der Models die das aktuelle Model erweitern."
 msgid ""
 "The menu action this filter applies to. When left empty the filter applies "
 "to all menus for this model."
-msgstr ""
+msgstr "Die Manü-Aktion auf die sich dieser Filter bezieht. Wenn leer gelassen, trifft dieser Filter auf alle Menüpunkte dieses Modells zu."
 
 #. module: base
 #: help:ir.actions.server,wkf_model_id:0
@@ -14740,7 +14740,7 @@ msgid ""
 "- 'Write on a Record': update the values of a record\n"
 "- 'Execute several actions': define an action that triggers several other server actions\n"
 "- 'Send Email': automatically send an email (available in email_template)"
-msgstr ""
+msgstr "Art der Server-Aktion. Die folgenden Werte sind verwendbar:\n- 'Python Code ausführen': Ein Python-Code-Block, der ausgeführt wird\n- 'Ein Workflow-Signal auslösen': Sende ein Signal an einen Workflow\n- 'Eine Client Action ausführen': Wähle eine auszuführend Client-Aktion\n- 'Anlegen oder kopieren einen neuen Datensatzes': Lege einen neuen Datensatz mit neuen Werten an, oder kopiere einen bestehenden Datensatz Ihrer Datenbank\n- 'Schreibe einen Datensatz': Aktualisiere Werte eines Datensatzes\n- 'Mehrere Aktionen ausführen': Lege eine Aktion fest, die mehrere Aktionen zur Folge hat\n- 'Email versenden': Automatischer Versand eine Email (Verfügbar als email_template)"
 
 #. module: base
 #: help:ir.model.constraint,type:0
@@ -14908,7 +14908,7 @@ msgstr "Abhängigkeit wurde nicht erfüllt!"
 #, python-format
 msgid ""
 "Unrecognized extension: must be one of .csv, .po, or .tgz (received .%s)."
-msgstr ""
+msgstr "Erweiterung nicht erkannt: Muss eine von .csv, .po, or .tgz sein (erhalten .%s)."
 
 #. module: base
 #: view:ir.translation:base.view_translation_search
@@ -15028,7 +15028,7 @@ msgid ""
 "The HR officer can now manage challenges and badges.\n"
 "This allow the user to send badges to employees instead of simple users.\n"
 "Badge received are displayed on the user profile.\n"
-msgstr ""
+msgstr "Verwende Personalressourcen für die Motivationsförderung.\n\nDer Personalleiter kann nun Herausforderungen und Auszeichnungen verwalten.\nDies erlaubt es dem Benutzer Auszeichnungen an Mitarbeiter anstatt nur an Nutzer zu senden. Erhaltene Auszeichnungen werden im Nutzerprofil sichtbar angezeigt.\n\n"
 
 #. module: base
 #: selection:ir.actions.server,use_relational_model:0
@@ -15682,14 +15682,14 @@ msgstr "Schreiben"
 msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about pyhon expression is given in the help tab."
-msgstr ""
+msgstr "Schreiben Sie Python-Code den die Aktion ausführen soll. Einige Variablen stehen zur Verfügung; Hilfe zu Python-Ausdrücken ist dem Hilfe-Reiter verfügbar."
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid ""
 "Write a python expression, beginning with object, that gives the record to "
 "update. An expression builder is available in the help tab. Examples:"
-msgstr ""
+msgstr "Schreiben Sie einen Python-Ausdruck, der mit object beginnt, welcher den zu aktualisierenden Datensatz liefert. Ein Ausdrucks-Assistent ist im Hilfe-Reiter verfügbar.\nBeispiele:"
 
 #. module: base
 #: field:ir.actions.report.xml,report_xml:0
@@ -15824,7 +15824,7 @@ msgstr "Sie versuchen ein Modul zu aktualisieren, das vom Modul %s abhängt.\nDi
 msgid ""
 "You will be able to define additional access rights by editing the newly "
 "created user under the Settings / Users menu."
-msgstr ""
+msgstr "Sie können zusätzliche Berechtigungen definieren, indem Sie den neu angelegten Benutzer im Menü Einstellungen / Benutzer bearbeiten."
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:234

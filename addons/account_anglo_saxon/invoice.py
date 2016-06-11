@@ -50,13 +50,14 @@ class account_invoice_line(osv.osv):
             return res
         if type in ('in_invoice','in_refund'):
             product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
-            oa = product_obj.property_stock_account_input and product_obj.property_stock_account_input.id
-            if not oa:
-                oa = product_obj.categ_id.property_stock_account_input_categ and product_obj.categ_id.property_stock_account_input_categ.id
-            if oa:
-                fpos = fposition_id and fiscal_pool.browse(cr, uid, fposition_id, context=context) or False
-                a = fiscal_pool.map_account(cr, uid, fpos, oa)
-                res['value'].update({'account_id':a})
+            if product_obj.type in ('consu', 'product'):
+                oa = product_obj.property_stock_account_input and product_obj.property_stock_account_input.id
+                if not oa:
+                    oa = product_obj.categ_id.property_stock_account_input_categ and product_obj.categ_id.property_stock_account_input_categ.id
+                if oa:
+                    fpos = fposition_id and fiscal_pool.browse(cr, uid, fposition_id, context=context) or False
+                    a = fiscal_pool.map_account(cr, uid, fpos, oa)
+                    res['value'].update({'account_id':a})
         return res
 
     def _get_price(self, cr, uid, inv, company_currency, i_line, price_unit):
