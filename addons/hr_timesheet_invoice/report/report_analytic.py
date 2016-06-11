@@ -99,7 +99,7 @@ class report_account_analytic_line_to_invoice(osv.osv):
                 left join
                     product_template t on (p.product_tmpl_id=t.id)
                 WHERE
-                    (invoice_id IS NULL) and (to_invoice IS NOT NULL)
+                    (l.invoice_id IS NULL) and (l.to_invoice IS NOT NULL)
                 GROUP BY
                     to_char(l.date, 'YYYY'), to_char(l.date,'MM'), l.product_id, l.product_uom_id, l.account_id
             )
