@@ -632,14 +632,12 @@ class hr_payslip(osv.osv):
         old_worked_days_ids = ids and worked_days_obj.search(cr, uid, [('payslip_id', '=', ids[0])], context=context) or False
         if old_worked_days_ids:
             worked_days_ids_to_remove = map(lambda x: (2, x,),old_worked_days_ids)
-            #worked_days_obj.unlink(cr, uid, old_worked_days_ids, context=context)
 
         #delete old input lines
         input_line_ids_to_remove=[]
         old_input_ids = ids and input_obj.search(cr, uid, [('payslip_id', '=', ids[0])], context=context) or False
         if old_input_ids:
             input_line_ids_to_remove = map(lambda x: (2,x,), old_input_ids)
-            #input_obj.unlink(cr, uid, old_input_ids, context=context)
 
 
         #defaults
