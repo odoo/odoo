@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-14 12:26+0000\n"
-"PO-Revision-Date: 2016-06-04 07:24+0000\n"
+"PO-Revision-Date: 2016-06-07 12:21+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -154,7 +154,7 @@ msgid ""
 "* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to me manufactured...\n"
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
-msgstr "* 新建: 当库位移动被创建还没被确实时。\n* 等待另外的移动: 当需要等待另外一个移库完成时，出现该状态。例如：链式物流。\n* 等待可用: 当补货还不能被直接了当地解决时，出现该状态。可能需要等调度程序被运行，有个部件在制造等等...\n* 可用: 当产品被保留，状态就被设置为 可用。\n* 完成: 当装运处理好，状态就是“完成”。"
+msgstr "* 新建: 当库位移动被创建还没被确实时。\n* 等待另外的移动: 当需要等待另外一个移库完成时，出现该状态。例如：链式物流。\n* 等待可用: 当补货还不能被直接了当地解决时，出现该状态。可能需要等调度程序被运行，有个部件在制造等等...\n* 可用: 当产品被保留，状态就被设置为 可用。\n* 完成: 当送货处理好，状态就是“完成”。"
 
 #. module: stock
 #: help:stock.location,usage:0
@@ -282,7 +282,7 @@ msgid ""
 "                if it should show the customer.  \n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                单击创建新的分拣类型。\n              </p><p>\n                分拣类型允许您为每个库存操作\n                定义一个特定的类型来警示。  \n                例如：在分拣类型里您可以定义是否需要默认包装。 \n                如果需要展示给客户。   \n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击创建新的拣货类型。\n              </p><p>\n               拣货类型允许您为每个库存作业指派一个特定的类型，相应的修改它的视图。  \n                例如：在拣货类型，您可以，定义是否默认需要包装，它是否显示客户。   \n              </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_move_form2
@@ -508,7 +508,7 @@ msgstr "可应用于产品"
 #. module: stock
 #: field:stock.location.route,product_categ_selectable:0
 msgid "Applicable on Product Category"
-msgstr "可应用于产品分类"
+msgstr "可应用于产品类别"
 
 #. module: stock
 #: field:stock.location.route,warehouse_selectable:0
@@ -624,7 +624,7 @@ msgstr "大供应商"
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Bring goods to output location before shipping (Pick + Ship)"
-msgstr "在送货之前将货物送到出货位置（分拣+发货）"
+msgstr "在送货之前将货物送到出货位置（分拣+送货）"
 
 #. module: stock
 #: view:stock.quant.package:stock.view_quant_package_form
@@ -1188,7 +1188,7 @@ msgstr "默认源位置"
 #. module: stock
 #: help:stock.warehouse,reception_steps:0
 msgid "Default incoming route to follow"
-msgstr "默认进货路线"
+msgstr "要遵循的默认进货路线"
 
 #. module: stock
 #: help:stock.warehouse,delivery_steps:0
@@ -1465,12 +1465,12 @@ msgstr "筛选器"
 #. module: stock
 #: view:product.putaway:stock.view_putaway
 msgid "Fixed Locations Per Categories"
-msgstr "每个分类固定位置"
+msgstr "每个类别固定位置"
 
 #. module: stock
 #: field:product.putaway,fixed_location_ids:0
 msgid "Fixed Locations Per Product Category"
-msgstr "每个产品分类固定位置"
+msgstr "每个产品类别固定位置"
 
 #. module: stock
 #: field:stock.picking,message_follower_ids:0
@@ -1538,7 +1538,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr "预测数量(计算方法：在手数量-将要出货的数量+将要进货的数量) \n对于一个位置来说，这包括了将要到达此位置或其子位置的产品。\n对于一个仓库来说，这包括了将要到达这个仓库的位置,或其子位置的产品。\n另外，这包括了要到达所有“内部”类型的位置的产品。"
+msgstr "预测数量(计算为 在手数量 - 出货 + 进货) \n对于单一库存位置来说，这包括了存储在这个位置及其子位置的货物。\n对于单一仓库来说，这包括了存储在这个仓库的库存位置及其子位置的货物。\n否则，这包括存储在任何“内部”类型位置的货物。"
 
 #. module: stock
 #: view:product.template:stock.product_template_kanban_stock_view
@@ -1606,7 +1606,7 @@ msgstr "B 大门"
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "General Informations"
-msgstr "通用信息"
+msgstr "一般信息"
 
 #. module: stock
 #: field:stock.config.settings,module_procurement_jit:0
@@ -1623,7 +1623,7 @@ msgstr "一般IT供应商"
 msgid ""
 "Give to the more specialized category, a higher priority to have them in top"
 " of the list."
-msgstr "给予更专业的分类，更高的优先级让他们显示在列表的顶部。"
+msgstr "给予更专业的类别，更高的优先级让他们显示在列表的顶部。"
 
 #. module: stock
 #: help:stock.warehouse,default_resupply_wh_id:0
@@ -1801,7 +1801,7 @@ msgstr "如果这是一个负的份。将会因这个负的份被移动。"
 msgid ""
 "If this shipment was split, then this field links to the shipment which "
 "contains the already processed part."
-msgstr "如果这个装运被分割，该字段将连接到包括了已经处理的部分的装运。"
+msgstr "如果这个送货被拆分，该字段将连接到包括了已经处理的部分的送货。"
 
 #. module: stock
 #: help:stock.location.path,active:0
@@ -1843,7 +1843,7 @@ msgstr "进货"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_receipt_picking_move
 msgid "Incoming  Products"
-msgstr "进货产品"
+msgstr "进货的产品"
 
 #. module: stock
 #: field:stock.quant,in_date:0
@@ -1853,7 +1853,7 @@ msgstr "进货日期"
 #. module: stock
 #: field:stock.warehouse,reception_steps:0
 msgid "Incoming Shipments"
-msgstr "进来的装运"
+msgstr "进来的送货"
 
 #. module: stock
 #: help:stock.incoterms,code:0
@@ -2095,7 +2095,7 @@ msgstr "盘存"
 #. module: stock
 #: field:stock.config.settings,group_uos:0
 msgid "Invoice products in a different unit of measure than the sales order"
-msgstr "开票产品的计量单位和销售订单不一致。"
+msgstr "以不同于销售订单的计量单位为产品开票"
 
 #. module: stock
 #: field:stock.picking,message_is_follower:0
@@ -2399,7 +2399,7 @@ msgstr "按订单生成"
 msgid ""
 "Make packages into a dedicated location, then bring them to the output "
 "location for shipping (Pick + Pack + Ship)"
-msgstr "将包裹放入到特定位置，然后将他们转移到出货位置等待送货(分拣+打包+发货)"
+msgstr "在专用位置制作包裹，然后将他们送到出货位置等待送货(分拣+打包+发货)"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
@@ -2566,7 +2566,7 @@ msgstr "移动负数份"
 #. module: stock
 #: field:stock.move,split_from:0
 msgid "Move Split From"
-msgstr "移动拆分来自"
+msgstr "移动拆分自"
 
 #. module: stock
 #: field:procurement.rule,procure_method:0
@@ -2730,7 +2730,7 @@ msgstr "不紧急"
 #: view:stock.inventory:stock.view_inventory_form field:stock.move,note:0
 #: field:stock.picking,note:0
 msgid "Notes"
-msgstr "便签"
+msgstr "备注"
 
 #. module: stock
 #: code:addons/stock/stock.py:880
@@ -3071,12 +3071,12 @@ msgstr "参数"
 #: view:stock.location:stock.view_location_search
 #: field:stock.location,location_id:0
 msgid "Parent Location"
-msgstr "父级位置"
+msgstr "上级位置"
 
 #. module: stock
 #: field:stock.quant.package,parent_id:0
 msgid "Parent Package"
-msgstr "父级包裹"
+msgstr "上级包裹"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -3167,36 +3167,36 @@ msgstr "分拣清单"
 #: field:stock.picking,picking_type_id:0
 #: view:stock.picking.type:stock.view_pickingtype_filter
 msgid "Picking Type"
-msgstr "分拣类型"
+msgstr "拣货类型"
 
 #. module: stock
 #: field:stock.picking,picking_type_code:0
 msgid "Picking Type Code"
-msgstr "分拣类型代码"
+msgstr "拣货类型代码"
 
 #. module: stock
 #: field:stock.picking.type,name:0
 msgid "Picking Type Name"
-msgstr "分拣类型名称"
+msgstr "拣货类型名称"
 
 #. module: stock
 #: help:procurement.rule,picking_type_id:0
 msgid ""
 "Picking Type determines the way the picking should be shown in the view, "
 "reports, ..."
-msgstr "分拣类型决定了展示在视图、报表...等中的分拣方式"
+msgstr "拣货类型决定了展示拣货在视图、报表...等中的展示方式"
 
 #. module: stock
 #: field:stock.picking.type,return_picking_type_id:0
 msgid "Picking Type for Returns"
-msgstr "退货的分拣类型"
+msgstr "退货的拣货类型"
 
 #. module: stock
 #: view:stock.picking.type:stock.view_picking_type_form
 #: view:stock.picking.type:stock.view_picking_type_tree
 #: view:stock.warehouse:stock.view_warehouse
 msgid "Picking Types"
-msgstr "分拣类型"
+msgstr "拣货类型"
 
 #. module: stock
 #: view:stock.picking:stock.vpicktree
@@ -3270,7 +3270,7 @@ msgstr "首选的包装形式"
 #. module: stock
 #: field:procurement.order,route_ids:0
 msgid "Preferred Routes"
-msgstr "Preferred Routes"
+msgstr "首选路线"
 
 #. module: stock
 #: help:stock.move,route_ids:0
@@ -3998,7 +3998,7 @@ msgstr "退货分拣记忆"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
 msgid "Return Shipment"
-msgstr "退回的装运"
+msgstr "退回的送货"
 
 #. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
@@ -4071,7 +4071,7 @@ msgstr "规则"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_proc_schedulers
 msgid "Run Schedulers"
-msgstr "运行排程器"
+msgstr "运行调度"
 
 #. module: stock
 #. openerp-web
@@ -4122,17 +4122,17 @@ msgstr "此库存移动处理的日程表日期"
 msgid ""
 "Scheduled time for the first part of the shipment to be processed. Setting "
 "manually a value here would set it as expected date for all the stock moves."
-msgstr "计划时间的第一部分装运即将进行。在此手动设定一个值表示所有库存移动的期望时间。"
+msgstr "计划时间的第一部分送货即将进行。在此手动设定一个值表示所有库存移动的期望时间。"
 
 #. module: stock
 #: help:stock.picking,max_date:0
 msgid "Scheduled time for the last part of the shipment to be processed"
-msgstr "待处理的最后一部分装运的计划时间"
+msgstr "待处理的最后一部分送货的计划时间"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_sched
 msgid "Schedulers"
-msgstr "排程器"
+msgstr "调度"
 
 #. module: stock
 #: view:stock.move:stock.view_move_form
@@ -4246,7 +4246,7 @@ msgstr "设为可用"
 msgid ""
 "Set a specific removal strategy that will be used regardless of the source "
 "location for this product category"
-msgstr "设置一个特殊的移除策略，它将被使用，而不考虑此产品分类的源位置。"
+msgstr "设置一个特殊的移除策略，它将被使用，而不考虑此产品类别的源位置。"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
@@ -4404,12 +4404,12 @@ msgstr "库存"
 #. module: stock
 #: view:website:stock.report_inventory
 msgid "Stock Inventory"
-msgstr "库存存货"
+msgstr "库存盘点"
 
 #. module: stock
 #: view:stock.inventory.line:stock.stock_inventory_line_tree
 msgid "Stock Inventory Lines"
-msgstr "库存盘存明细行"
+msgstr "库存盘点明细"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_product_history
@@ -4498,7 +4498,7 @@ msgstr "存储位置"
 #. module: stock
 #: field:stock.config.settings,group_uos:0
 msgid "Store products in a different unit of measure than the sales order"
-msgstr "开票产品的计量单位和销售订单不一致。"
+msgstr "以不同于销售订单的计量单位为存储产品"
 
 #. module: stock
 #: field:stock.picking,message_summary:0
@@ -4625,14 +4625,14 @@ msgid ""
 "Technical field used to record the product cost set by the user during a "
 "picking confirmation (when costing method used is 'average price' or "
 "'real'). Value given in company currency and in product uom."
-msgstr "该技术字段用来记录用户在分拣确认期间的产品成本变化（在使用 '平均价格' 或'实际价格'的成本方法时）。以公司的当前货币及产品的默认计量单位赋值。"
+msgstr "该技术字段用来记录用户在分拣确认期间设置的产品成本（在使用 '平均价格' 或'实际价格'的成本方法时）。以公司的当前货币及产品的默认计量单位赋值。"
 
 #. module: stock
 #: help:stock.move,split_from:0
 msgid ""
 "Technical field used to track the origin of a split move, which can be "
 "useful in case of debug"
-msgstr "技术字段是用来记录在调试模式分批移动的目标位置"
+msgstr "技术字段是用来追踪拆分移动的原始，调试时非常有用处。"
 
 #. module: stock
 #: help:product.template,sale_delay:0
@@ -4699,7 +4699,7 @@ msgstr "分拣动作的目标位置必须相同的"
 msgid ""
 "The following routes will apply to the products in this category taking into"
 " account parent categories:"
-msgstr "考虑到其父分类，下面的路线将应用到这个分类的产品："
+msgstr "考虑到其上级类别，下面的路线将应用到这个类别的产品："
 
 #. module: stock
 #: help:stock.quant,reservation_id:0
@@ -4729,7 +4729,7 @@ msgstr "该包裹包含此份"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "The picking type determines the picking view"
-msgstr "分拣类型决定分拣视图"
+msgstr "拣货类型决定拣货视图"
 
 #. module: stock
 #: help:stock.warehouse.orderpoint,qty_multiple:0
@@ -4868,7 +4868,7 @@ msgstr "这是库存分析所有者"
 #. module: stock
 #: help:stock.location.path,picking_type_id:0
 msgid "This is the picking type associated with the different pickings"
-msgstr "这是不同与不同分拣相关的分拣类型。"
+msgstr "这是与不同拣货相关的拣货类型"
 
 #. module: stock
 #: help:stock.move,product_uom_qty:0
@@ -4953,7 +4953,7 @@ msgstr "这样你就可以得到一个归属于某个所有者的产品属性。
 msgid ""
 "This will show you the locations and allows you to define multiple picking "
 "types and warehouses."
-msgstr "这将告诉你位置并且允许你定义多个分拣类型和仓库"
+msgstr "这将显示位置，并且允许你定义多个拣货类型和仓库。"
 
 #. module: stock
 #. openerp-web
@@ -5484,7 +5484,7 @@ msgstr "不能拆分一个移动草稿。你需要先确认它。"
 #: code:addons/stock/stock.py:2461
 #, python-format
 msgid "You cannot split a move done"
-msgstr "您无法分割一个已完成的移动"
+msgstr "您无法拆分一个已完成的移动"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:132
@@ -5546,7 +5546,7 @@ msgstr "天"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "e.g. Annual inventory"
-msgstr "例如：年度库存清单"
+msgstr "例如：年度盘点"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
