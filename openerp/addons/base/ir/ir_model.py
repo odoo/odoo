@@ -225,6 +225,18 @@ class IrModelFields(models.Model):
                                                       "    name, partner_id.name")
     store = fields.Boolean(string='Stored', default=True, help="Whether the value is stored in the database.")
 
+    @api.model_cr_context
+    def _auto_init(self):
+        res = super(IrModelFields, self)._auto_init()
+        self._cr.execute(
+            "SELECT indexname FROM pg_indexes "
+            "WHERE indexname = 'ir_model_fields_name_model_index'")
+        if not self._cr.fetchone():
+            self._cr.execute(
+                "CREATE INDEX ir_model_fields_name_model_index "
+                "ON ir_model_data (name, model)')
+        return res
+
     @api.model
     def _get_field_types(self):
         # retrieve the possible field types from the field classes' metaclass
