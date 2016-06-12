@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-14 12:26+0000\n"
-"PO-Revision-Date: 2016-06-03 06:18+0000\n"
+"PO-Revision-Date: 2016-06-09 00:01+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-8/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -704,7 +704,7 @@ msgstr "キャンセル済"
 #: code:addons/stock/stock.py:1840
 #, python-format
 msgid "Cannot unreserve a done move"
-msgstr ""
+msgstr "完了済の移動は引当解除できません"
 
 #. module: stock
 #: field:product.template,loc_case:0
@@ -757,7 +757,7 @@ msgstr "廃棄 / 破損品を置くためにこの場所を使用する場合は
 #. module: stock
 #: field:stock.inventory.line,product_qty:0
 msgid "Checked Quantity"
-msgstr ""
+msgstr "実際数量"
 
 #. module: stock
 #: help:stock.move,partially_available:0
@@ -1571,7 +1571,7 @@ msgstr "将来の数量"
 #: code:addons/stock/product.py:252
 #, python-format
 msgid "Future Receipts"
-msgstr ""
+msgstr "将来の入荷"
 
 #. module: stock
 #: code:addons/stock/product.py:258
@@ -1715,7 +1715,7 @@ msgstr ""
 msgid ""
 "If a product is not at the right place, set the checked quantity to 0 and "
 "create a new line with correct location."
-msgstr ""
+msgstr "システム上製品の所在が正しくない場合は、実際数量を 0 にした上で、正しいロケーションで新規に明細を追加してください。"
 
 #. module: stock
 #: help:stock.picking,message_unread:0
@@ -1829,12 +1829,12 @@ msgstr "入庫"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_receipt_picking_move
 msgid "Incoming  Products"
-msgstr ""
+msgstr "入荷製品"
 
 #. module: stock
 #: field:stock.quant,in_date:0
 msgid "Incoming Date"
-msgstr ""
+msgstr "入荷日"
 
 #. module: stock
 #: field:stock.warehouse,reception_steps:0
@@ -1925,7 +1925,7 @@ msgstr "内部参照"
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
 msgid "Internal Transfers"
-msgstr ""
+msgstr "内部転送"
 
 #. module: stock
 #: field:res.company,internal_transit_location_id:0
@@ -2013,7 +2013,7 @@ msgstr "在庫調整日"
 #: view:stock.inventory:stock.view_inventory_form
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 msgid "Inventory Details"
-msgstr ""
+msgstr "在庫詳細"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_line
@@ -2059,7 +2059,7 @@ msgstr ""
 #. module: stock
 #: field:stock.quant,inventory_value:0
 msgid "Inventory Value"
-msgstr ""
+msgstr "在庫金額"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
@@ -2461,7 +2461,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Mark as Todo"
-msgstr ""
+msgstr "処理準備"
 
 #. module: stock
 #: field:stock.picking,max_date:0
@@ -3072,7 +3072,7 @@ msgstr "部分的"
 #. module: stock
 #: field:stock.move,partially_available:0 selection:stock.picking,state:0
 msgid "Partially Available"
-msgstr ""
+msgstr "一部利用可能"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner
@@ -3412,7 +3412,7 @@ msgstr "製品カテゴリ"
 #. module: stock
 #: field:stock.inventory.line,product_code:0
 msgid "Product Code"
-msgstr ""
+msgstr "製品コード"
 
 #. module: stock
 #: view:stock.production.lot:stock.search_product_lot_filter
@@ -3796,7 +3796,7 @@ msgstr ""
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
-msgstr ""
+msgstr "入荷"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
@@ -4209,7 +4209,7 @@ msgstr "シリアル番号"
 #. module: stock
 #: field:stock.inventory.line,prodlot_name:0
 msgid "Serial Number Name"
-msgstr ""
+msgstr "シリアル番号名"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
@@ -5150,7 +5150,7 @@ msgstr "未読メッセージ"
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Unreserve"
-msgstr ""
+msgstr "引当解除"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
@@ -5417,7 +5417,7 @@ msgstr "はい"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "You can delete lines to ignore some products."
-msgstr ""
+msgstr "今回処理しない製品は削除してください。"
 
 #. module: stock
 #: code:addons/stock/stock.py:368
