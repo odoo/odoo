@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-05-13 12:34+0000\n"
+"PO-Revision-Date: 2016-06-07 12:04+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -32,7 +32,7 @@ msgid ""
 "* The 'Pro-forma' when voucher is in Pro-forma status,voucher does not have an voucher number.                         \n"
 "* The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account                         \n"
 "* The 'Cancelled' status is used when user cancel voucher."
-msgstr "* '草稿'状态用于新建的和未确认凭单.                         \\n\n* '形式发票'状态下凭单，没有凭单编号.                         \\n\n* '已登账'状态指用户创建了凭单，凭单号已经生成，凭单中的项目已经进入账户                         \\n\n* '取消' 状态用于用户将凭单取消. "
+msgstr "* '草稿'状态用于新建的和未确认凭单.                         \\n\n* '形式发票'状态下凭单，没有凭单编号.                         \\n\n* '已过账'状态指用户创建了凭单，凭单号已经生成，凭单中的项目已经进入账户                         \\n\n* '取消' 状态用于用户将凭单取消. "
 
 #. module: account_voucher
 #: field:sale.receipt.report,nbr:0
@@ -766,7 +766,7 @@ msgstr "登帐"
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 #: selection:sale.receipt.report,state:0
 msgid "Posted"
-msgstr "已登账"
+msgstr "已过账"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -1060,7 +1060,7 @@ msgstr "反调节"
 #. module: account_voucher
 #: field:account.voucher.line,untax_amount:0
 msgid "Untax Amount"
-msgstr "未税总额"
+msgstr "不含税金额"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
