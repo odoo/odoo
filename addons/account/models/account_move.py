@@ -934,10 +934,10 @@ class AccountMoveLine(models.Model):
             if aml.currency_id and aml.currency_id == currency:
                 total_amount_currency += aml.amount_currency
         if currency and aml_to_balance_currency:
-            aml = aml_to_balance_currency
+            aml = aml_to_balance_currency[0]
             #eventually create journal entries to book the difference due to foreign currency's exchange rate that fluctuates
             partial_rec = aml.credit and aml.matched_debit_ids[0] or aml.matched_credit_ids[0]
-            aml_id, partial_rec_id = partial_rec.create_exchange_rate_entry(aml, 0.0, total_amount_currency, currency, maxdate)
+            aml_id, partial_rec_id = partial_rec.with_context(skip_full_reconcile_check=True).create_exchange_rate_entry(aml_to_balance_currency, 0.0, total_amount_currency, currency, maxdate)
 
     @api.multi
     def remove_move_reconcile(self):
