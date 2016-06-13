@@ -24,8 +24,8 @@
 
     <t t-call="web_editor.layout">
         <div>
-            <div t-if="not edit_translations" id="editable_area" class="o_editable" t-att-data-oe-model="model" t-att-data-oe-field="field" t-att-data-oe-id="res_id" data-oe-type="html"><t t-raw="content"/></div>
-            <div t-if="edit_translations" id="editable_area"><t t-raw="content"/></div>
+            <div t-if="not edit_translations" id="editable_area" class="o_editable" t-att-data-oe-model="model" t-att-data-oe-field="field" t-att-data-oe-id="res_id" data-oe-type="html" t-att-data-content="content"><t t-raw="content"/></div>
+            <div t-if="edit_translations" id="editable_area" t-att-data-content="content"><t t-raw="content"/></div>
         </div>
         <div id="templates" class="o_not_editable o_css_editor hidden" t-if="enable_editor">
             <h1 class="page-header mt16 email_head panel-primary">
@@ -66,7 +66,7 @@
             <div class="modal-content o_popup_modal_content">
                 <div class="o_popup_modal_body text-center">
                     <div class="o_popup_content_dev">
-                        <div id="editable_area" class="o_editable" t-att-data-oe-model="model" t-att-data-oe-field="field" t-att-data-oe-id="res_id" data-oe-type="html">
+                        <div id="editable_area" class="o_editable" t-att-data-oe-model="model" t-att-data-oe-field="field" t-att-data-oe-id="res_id" data-oe-type="html" t-att-data-content="content">
                             <!-- Can be removed once default values are ok for the editor -->
                             <t t-raw="content">
                             </t>

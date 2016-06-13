@@ -5,18 +5,26 @@ var editor = require('web_editor.editor');
 var translator = require('web_editor.translate');
 var rte = require('web_editor.rte');
 var snippet_editor = require('web_editor.snippet.editor');
+var summernote = require('web_editor.rte.summernote');
+var dom = summernote.core.dom;
+var pluginEvents = summernote.pluginEvents;
 
 window.top.odoo[callback+"_updown"] = function (value, fields_values, field_name) {
+    var se = snippet_editor.instance;
     var $editable = $("#editable_area");
-    if(value !== $editable.prop("innerHTML")) {
+    if(value !== se.get_codesource()) {
         if ($('body').hasClass('editor_enable')) {
             if (value !== fields_values[field_name]) {
                 rte.history.recordUndo($editable);
             }
-            snippet_editor.instance.make_active(false);
+            se.make_active(false);
         }
         
-        $editable.html(value);
+        if (!$editable.hasClass('codeview')) {
+            $('.note-popover button[data-name="codeview"]').click();
+        }
+        $('textarea.codesource').val(value).data('indexOfnit', value);
+        $('.note-popover button[data-name="codeview"]').click();
 
         if ($('body').hasClass('editor_enable') && value !== fields_values[field_name]) {
             $editable.trigger("content_changed");
@@ -49,11 +57,35 @@ editor.Class.include({
         this.on("snippets:ready", this, function () {
             $(window.top).trigger("resize");
         });
+
         return this._super();
-    }
+    },
 });
 
 snippet_editor.Class.include({
+    start: function () {
+        // overwrite dom.html for codeview
+        var self = this;
+        var _html = dom.html;
+        dom.html = function ($dom, prettifyHtml) {
+            if (prettifyHtml) {
+                self.clean_for_save();
+            }
+            return _html($dom, prettifyHtml);
+        };
+
+        var _codeview = pluginEvents.codeview;
+        pluginEvents.codeview = function (event, editor, layoutInfo) {
+            self.make_active(false);
+            _codeview(event, editor, layoutInfo);
+            self.$el.toggle(!$("#editable_area").hasClass('codeview'));
+        };
+
+        return this._super();
+    },
+    get_codesource: function () {
+        return $("#editable_area").data('codesource')();
+    },
     _get_snippet_url: function () {
         return snippets_url;
     }
@@ -66,6 +98,16 @@ rte.Class.include({
             config.airPopover.splice(7, 0, ['view', ['codeview']]);
         }
         return config;
+    },
+    onEnableEditableArea: function () {
+        var $editable = $("#editable_area");
+        if ($editable.data('content') != null) {
+            $editable.html('');
+            $('.note-popover button[data-name="codeview"]').click();
+            $('textarea.codesource').val($editable.data('content'));
+            $editable.data('content', null);
+            $('.note-popover button[data-name="codeview"]').click();
+        }
     }
 });
 
