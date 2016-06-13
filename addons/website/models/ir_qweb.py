@@ -34,9 +34,9 @@ class QWeb(orm.AbstractModel):
 
         url_att = self.URL_ATTRS.get(el.tag)
         cdn_att = self.CDN_TRIGGERS.get(el.tag)
-        for item in items:
-            if isinstance(item, tuple) and (item[0] == url_att or item[0] == cdn_att):
-                items[items.index(item)] = (item[0], ast.Call(
+        def process(item):
+            if isinstance(item, tuple) and (item[0] in (url_att, cdn_att)):
+                return (item[0], ast.Call(
                     func=ast.Attribute(
                         value=ast.Name(id='self', ctx=ast.Load()),
                         attr='_website_build_attribute',
@@ -51,10 +51,13 @@ class QWeb(orm.AbstractModel):
                     ], keywords=[],
                     starargs=None, kwargs=None
                 ))
-        return items
+            else:
+                return item
 
-    def _serialize_static_attributes(self, el, options):
-        items = super(QWeb, self)._serialize_static_attributes(el, options)
+        return map(process, items)
+
+    def _compile_static_attributes(self, el, options):
+        items = super(QWeb, self)._compile_static_attributes(el, options)
         return self._wrap_build_attributes(el, items, options)
 
     def _compile_dynamic_attributes(self, el, options):
@@ -74,4 +77,6 @@ class QWeb(orm.AbstractModel):
     def _is_static_node(self, el):
         url_att = self.URL_ATTRS.get(el.tag)
         cdn_att = self.CDN_TRIGGERS.get(el.tag)
-        return super(QWeb, self)._is_static_node(el) and (not url_att or not el.get(url_att)) and (not cdn_att or not el.get(cdn_att))
+        return super(QWeb, self)._is_static_node(el) and \
+                (not url_att or not el.get(url_att)) and \
+                (not cdn_att or not el.get(cdn_att))

@@ -356,8 +356,7 @@ class QWeb(object):
             'range': range,
             'xrange': xrange,
             'zip': zip,
-
-            'format': self.format
+            'format': self.format,
         }
 
     def get_template(self, template, options):
@@ -641,39 +640,38 @@ class QWeb(object):
         if self._is_static_node(el):
             return self._compile_static_node(el, options)
 
-        # create directive iterator
+        # create an iterator on directives to compile in order
         options['iter_directives'] = iter(self._directives_eval_order() + [None])
 
         el.set('t-tag', el.tag)
         if not (set(['t-esc', 't-raw', 't-field']) & set(el.attrib)):
             el.set('t-content', 'True')
 
-        return body + self._switch_directives(el, options)
+        return body + self._compile_directives(el, options)
 
-    def _switch_directives(self, el, options):
+    def _compile_directives(self, el, options):
         """
         :return ast list
         """
-        # skip directives not present on the element
+        # compile the first directive present on the element
         for directive in options['iter_directives']:
             if ('t-' + directive) in el.attrib:
-                break
-        else:
-            if any(att.startswith('t-') for att in el.attrib):
-                raise "Unknown directive on %s" % ("', '".join(directives), etree.tostring(el))
-            return []
+                mname = directive.replace('-', '_')
+                compile_handler = getattr(self, '_compile_directive_%s' % mname, None)
 
-        mname = directive.replace('-', '_')
-        compile_handler = getattr(self, '_compile_directive_%s' % mname, None)
+                interpret_handler = 'render_tag_%s' % mname
+                if hasattr(self, interpret_handler):
+                    _logger.warning(
+                        "Directive '%s' must be AST-compiled. Dynamic interpreter %s will ignored",
+                        name, interpret_handler
+                    )
 
-        interpret_handler = 'render_tag_%s' % mname
-        if hasattr(self, interpret_handler):
-            _logger.warning(
-                "Directive '%s' must be AST-compiled. Dynamic interpreter %s will ignored",
-                name, interpret_handler
-            )
+                return compile_handler(el, options)
 
-        return compile_handler(el, options)
+        # all directives have been compiled, there should be none left
+        if any(att.startswith('t-') for att in el.attrib):
+            raise "Unknown directive on %s" % ("', '".join(directives), etree.tostring(el))
+        return []
 
     def _values_var(self, varname, ctx):
         return ast.Subscript(
@@ -723,7 +721,7 @@ class QWeb(object):
         else:
             return [self._append(ast.Str(tag + '>'))] + content + [self._append(ast.Str('</%s>' % el.tag))]
 
-    def _serialize_static_attributes(self, el, options):
+    def _compile_static_attributes(self, el, options):
         nodes = []
         for key, value in el.attrib.iteritems():
             if not key.startswith('t-'):
@@ -770,7 +768,7 @@ class QWeb(object):
                     )
                 )
 
-            items = self._serialize_static_attributes(el, options) + self._compile_dynamic_attributes(el, options)
+            items = self._compile_static_attributes(el, options) + self._compile_dynamic_attributes(el, options)
             for item in items:
                 if isinstance(item, tuple):
                     body.append(ast.Assign(
@@ -862,7 +860,7 @@ class QWeb(object):
 
     def _compile_directive_debug(self, el, options):
         debugger = el.attrib.pop('t-debug')
-        body = self._switch_directives(el, options)
+        body = self._compile_directives(el, options)
         if options['dev_mode']:
             body = ast.parse("__import__('%s').set_trace()" % re.sub('[^a-zA-Z]', '', debugger)).body + body  # pdb, ipdb, pudb, ...
         else:
@@ -871,7 +869,7 @@ class QWeb(object):
 
     def _compile_directive_tag(self, el, options):
         el.attrib.pop('t-tag', None)
-        content = self._switch_directives(el, options)
+        content = self._compile_directives(el, options)
         if el.tag == 't':
             return content
         return self._compile_tag(el, content, options, False)
@@ -981,9 +979,9 @@ class QWeb(object):
 
     def _compile_directive_else(self, el, options):
         if not options.pop('t_if', None):
-            raise "t-else directive must be call by t-if directive"
+            raise ValueError("t-else directive must be preceded by t-if directive")
         el.attrib.pop('t-else')
-        return self._switch_directives(el, options)
+        return self._compile_directives(el, options)
 
     def _compile_directive_if(self, el, options):
         orelse = []
@@ -996,7 +994,7 @@ class QWeb(object):
         return [
             ast.If(
                 test=self._compile_expr(el.attrib.pop('t-if')),
-                body=self._switch_directives(el, options),
+                body=self._compile_directives(el, options),
                 orelse=orelse
             )
         ]
@@ -1013,7 +1011,7 @@ class QWeb(object):
                     args=[ast.Str(el.attrib.pop('t-groups'))], keywords=[],
                     starargs=None, kwargs=None
                 ),
-                body=self._switch_directives(el, options),
+                body=self._compile_directives(el, options),
                 orelse=[]
             )
         ]
@@ -1024,7 +1022,7 @@ class QWeb(object):
         values = self._make_name('values')
 
         # create function $foreach
-        def_name = self._create_def(options, self._switch_directives(el, options), prefix='foreach', lineno=el.sourceline)
+        def_name = self._create_def(options, self._compile_directives(el, options), prefix='foreach', lineno=el.sourceline)
 
         # for x in foreach_iterator(values, $expr, $varname):
         #     $foreach(self, append, values, options)
@@ -1094,7 +1092,6 @@ class QWeb(object):
         )]
 
         # default content
-
         default_content = self._make_name('default_content')
         body = self._compile_directive_content(el, options)
         if body:
