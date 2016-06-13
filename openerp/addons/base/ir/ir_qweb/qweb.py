@@ -1017,12 +1017,13 @@ class QWeb(object):
 
     def _compile_directive_if(self, el, options):
         orelse = []
-        if el.tail and re.search(r'\S', el.tail):
-            next = el.getnext()
-            if next is not None and 't-else' in next.attrib:
-                el.tail = None
-                orelse = self._compile_node(next, dict(options, t_if=True))
-                next.getparent().remove(next)
+        next_el = el.getnext()
+        if next_el is not None and 't-else' in next_el.attrib:
+            if el.tail and not el.tail.isspace():
+                raise ValueError("Unexpected non-whitespace characters between t-if and t-else directives")
+            el.tail = None
+            orelse = self._compile_node(next_el, dict(options, t_if=True))
+            next_el.getparent().remove(next_el)
         return [
             # if $t-if:
             #    next tag directive
