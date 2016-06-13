@@ -198,13 +198,8 @@ def foreach_iterator(base_ctx, enum, name):
         base_ctx[k] = ctx[k]
 
 _FORMAT_REGEX = re.compile(
-    '(?:'
-        # ruby-style pattern
-        '#\{(.+?)\}'
-    ')|(?:'
-        # jinja-style pattern
-        '\{\{(.+?)\}\}'
-    ')')
+    # ( ruby-style )|(  jinja-style  )
+    r'(?:#\{(.+?)\})|(?:\{\{(.+?)\}\})')
 
 
 class frozendict(dict):
@@ -899,7 +894,7 @@ class QWeb(object):
         debugger = el.attrib.pop('t-debug')
         body = self._compile_directives(el, options)
         if options['dev_mode']:
-            body = ast.parse("__import__('%s').set_trace()" % re.sub('[^a-zA-Z]', '', debugger)).body + body  # pdb, ipdb, pudb, ...
+            body = ast.parse("__import__('%s').set_trace()" % re.sub(r'[^a-zA-Z]', '', debugger)).body + body  # pdb, ipdb, pudb, ...
         else:
             _logger.warning("@t-debug in template is only available in dev mode options")
         return body
