@@ -239,9 +239,9 @@ window.top.odoo[callback+"_updown"] = function (value, fields_values, field_name
         delete odoo_top[callback+"_updown"];
         return;
     }
-
+    var se = snippets_editor.instance;
     var $editable = $("#editable_area");
-    var _val = $editable.prop("innerHTML");
+    var _val = se.get_codesource();
     var editor_enable = $('body').hasClass('editor_enable');
     value = value || "";
     
@@ -250,12 +250,16 @@ window.top.odoo[callback+"_updown"] = function (value, fields_values, field_name
             if (value !== fields_values[field_name]) {
                 rte.history.recordUndo($editable);
             }
-            snippets_editor.instance.make_active(false);
+            se.make_active(false);
         }
         
         if (value.indexOf('on_change_model_and_list') === -1) {
 
-            $editable.html(value);
+            if (!$editable.hasClass('codeview')) {
+                $('.note-popover button[data-name="codeview"]').click();
+            }
+            $('textarea.codesource').val(value).data('indexOfnit', value);
+            $('.note-popover button[data-name="codeview"]').click();
 
             if (editor_enable) {
                 web_editor.editor_bar.display_theme_from_html();
