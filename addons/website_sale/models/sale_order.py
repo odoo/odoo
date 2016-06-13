@@ -170,7 +170,7 @@ class Website(models.Model):
             pricelists |= all_pl.filtered(lambda pl: not show_visible or pl.selectable or pl.pricelist_id.id in (current_pl, order_pl)).mapped('pricelist_id')
 
         partner = self.env.user.partner_id
-        if not pricelists or partner.property_product_pricelist.id != website_pl:
+        if not pricelists or (partner_pl or partner.property_product_pricelist.id) != website_pl:
             pricelists |= partner.property_product_pricelist
 
         return pricelists.sorted(lambda pl: pl.name)
