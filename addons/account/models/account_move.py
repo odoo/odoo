@@ -1192,7 +1192,7 @@ class AccountMoveLine(models.Model):
             'unit_amount': self.quantity,
             'product_id': self.product_id and self.product_id.id or False,
             'product_uom_id': self.product_uom_id and self.product_uom_id.id or False,
-            'amount': self.company_currency_id.with_context(date=self.date or fields.Date.context_today(self)).compute(amount, self.currency_id) if self.currency_id else amount,
+            'amount': self.company_currency_id.with_context(date=self.date or fields.Date.context_today(self)).compute(amount, self.analytic_account_id.currency_id) if self.analytic_account_id.currency_id else amount,
             'general_account_id': self.account_id.id,
             'ref': self.ref,
             'move_id': self.id,
