@@ -521,7 +521,10 @@ class AccountInvoice(models.Model):
         self.delete_workflow()
         self.create_workflow()
         # Delete former printed invoice
-        report_invoice = self.env['report']._get_report_from_name('account.report_invoice')
+        try:
+            report_invoice = self.env['report']._get_report_from_name('account.report_invoice')
+        except IndexError:
+            report_invoice = False
         if report_invoice:
             for invoice in self:
                 with invoice.env.do_in_draft():
