@@ -442,7 +442,12 @@ class Home(http.Controller):
     def web_client(self, s_action=None, **kw):
         ensure_db()
         if not request.session.uid:
-            return werkzeug.utils.redirect('/web/login', 303)
+            if kw.get("debug") == "assets":
+                return werkzeug.utils.redirect('/web/login?debug=assets', 303)
+            elif 'debug' in kw:
+                return werkzeug.utils.redirect('/web/login?debug', 303)
+            else:
+                return werkzeug.utils.redirect('/web/login', 303)
         if kw.get('redirect'):
             return werkzeug.utils.redirect(kw.get('redirect'), 303)
 
@@ -482,10 +487,18 @@ class Home(http.Controller):
             if uid is not False:
                 request.params['login_success'] = True
                 if not redirect:
-                    redirect = '/web'
+                    if kw.get("debug") == "assets":
+                        redirect = '/web?debug=assets'
+                    elif 'debug' in kw:
+                        redirect = '/web?debug'
+                    else:
+                        redirect = '/web'
                 return http.redirect_with_hash(redirect)
             request.uid = old_uid
             values['error'] = _("Wrong login/password")
+
+        if 'debug' in values and values['debug'] == '':
+            values['debug'] = True
         return request.render('web.login', values)
 
 class WebClient(http.Controller):
