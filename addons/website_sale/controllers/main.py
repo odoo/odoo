@@ -4,6 +4,7 @@ import werkzeug
 
 from openerp import SUPERUSER_ID
 from openerp import http
+from openerp import tools
 from openerp.http import request
 from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
@@ -532,6 +533,10 @@ class website_sale(http.Controller):
         for field_name in self._get_mandatory_billing_fields():
             if not data.get(field_name):
                 error[field_name] = 'missing'
+
+        # email validation
+        if data.get('email') and not tools.single_email_re.match(data.get('email')):
+            error["email"] = 'error'
 
         if data.get("vat") and hasattr(registry["res.partner"], "check_vat"):
             if request.website.company_id.vat_check_vies:
