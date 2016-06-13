@@ -784,8 +784,9 @@ class product_template(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        template = self.browse(cr, uid, id, context=context)
-        default['name'] = _("%s (copy)") % (template['name'])
+        if 'name' not in default:
+            template = self.browse(cr, uid, id, context=context)
+            default['name'] = _("%s (copy)") % (template['name'])
         return super(product_template, self).copy(cr, uid, id, default=default, context=context)
 
     _defaults = {
