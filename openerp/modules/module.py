@@ -177,9 +177,16 @@ def get_resource_from_path(path):
     :rtype: tuple
     :return: tuple(module_name, relative_path, os_relative_path) if possible, else None
     """
-    resource = [path.replace(adpath, '') for adpath in ad_paths if path.startswith(adpath)]
+    resource = False
+    for adpath in ad_paths:
+        # force trailing separator
+        adpath = os.path.join(adpath, "")
+        if os.path.commonprefix([adpath, path]) == adpath:
+            resource = path.replace(adpath, "", 1)
+            break
+
     if resource:
-        relative = resource[0].split(os.path.sep)
+        relative = resource.split(os.path.sep)
         if not relative[0]:
             relative.pop(0)
         module = relative.pop(0)
