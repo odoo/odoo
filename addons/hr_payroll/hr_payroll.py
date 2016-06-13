@@ -628,21 +628,23 @@ class hr_payslip(osv.osv):
         if context is None:
             context = {}
         #delete old worked days lines
+        worked_days_ids_to_remove=[]
         old_worked_days_ids = ids and worked_days_obj.search(cr, uid, [('payslip_id', '=', ids[0])], context=context) or False
         if old_worked_days_ids:
-            worked_days_obj.unlink(cr, uid, old_worked_days_ids, context=context)
+            worked_days_ids_to_remove = map(lambda x: (2, x,),old_worked_days_ids)
 
         #delete old input lines
+        input_line_ids_to_remove=[]
         old_input_ids = ids and input_obj.search(cr, uid, [('payslip_id', '=', ids[0])], context=context) or False
         if old_input_ids:
-            input_obj.unlink(cr, uid, old_input_ids, context=context)
+            input_line_ids_to_remove = map(lambda x: (2,x,), old_input_ids)
 
 
         #defaults
         res = {'value':{
                       'line_ids':[],
-                      'input_line_ids': [],
-                      'worked_days_line_ids': [],
+                      'input_line_ids': input_line_ids_to_remove,
+                      'worked_days_line_ids': worked_days_ids_to_remove,
                       #'details_by_salary_head':[], TODO put me back
                       'name':'',
                       'contract_id': False,
