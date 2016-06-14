@@ -69,7 +69,7 @@
         <meta itemprop="name" content="View ${ctx['model_name']}"/>
     </div>
 </div>
-% if not ctx['is_discussion'] or not len(ctx['actions']) == 0:
+% if not ctx['is_discussion'] or not len(ctx['actions']) == 0 or ctx.get('is_accessible'):
 <div summary="o_mail_notification" style="padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777">
     <table cellspacing="0" cellpadding="0" style="width:600px; border-collapse:collapse; background:inherit; color:inherit">
         <tbody><tr>
