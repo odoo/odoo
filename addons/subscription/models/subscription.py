@@ -78,7 +78,7 @@ class Subscription(models.Model):
                 'priority': 6,
                 'user_id': subscription.user_id.id
             }
-            cron = self.env['ir.cron'].create(cron_data)
+            cron = self.env['ir.cron'].sudo().create(cron_data)
             subscription.write({'cron_id': cron.id, 'state': 'running'})
 
     @api.multi
