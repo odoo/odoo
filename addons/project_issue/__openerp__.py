@@ -16,7 +16,6 @@ It allows the manager to quickly check the issues, assign them and decide on the
     """,
     'website': 'https://www.odoo.com/page/project-management',
     'depends': [
-        'sales_team',
         'project',
     ],
     'data': [
