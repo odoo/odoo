@@ -44,7 +44,7 @@ class project_issue(osv.Model):
         # lame hack to allow reverting search, should just work in the trivial case
         if read_group_order == 'stage_id desc':
             order = "%s desc" % order
-        # retrieve team_id from the context, add them to already fetched columns (ids)
+        # retrieve project_id from the context, add them to already fetched columns (ids)
         if 'default_project_id' in context:
             search_domain = ['|', ('project_ids', '=', context['default_project_id']), ('id', 'in', ids)]
         else:
@@ -133,9 +133,6 @@ class project_issue(osv.Model):
                                                multi='compute_day', type="integer", help="Difference in days between creation date and current date",
                                                groups='base.group_user'),
         'date_deadline': fields.date('Deadline'),
-        'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id',\
-                        select=True, help='Sales team to which Case belongs to.\
-                             Define Responsible user and Email account for mail gateway.'),
         'partner_id': fields.many2one('res.partner', 'Contact', select=1),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Private Note'),
@@ -194,7 +191,6 @@ class project_issue(osv.Model):
 
     _defaults = {
         'active': 1,
-        'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, uid, context=c),
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool['res.users']._get_company(cr, uid, context=c),
         'priority': '0',
@@ -275,28 +271,28 @@ class project_issue(osv.Model):
             return {'value': {'date_closed': fields.datetime.now()}}
         return {'value': {'date_closed': False}}
 
-    def stage_find(self, cr, uid, cases, team_id, domain=[], order='sequence', context=None):
+    def stage_find(self, cr, uid, cases, project_id, domain=[], order='sequence', context=None):
         """ Override of the base.stage method
             Parameter of the stage search taken from the issue:
             - type: stage type must be the same or 'both'
-            - team_id: if set, stages must belong to this team or
+            - project_id: if set, stages must belong to this project or
               be a default case
         """
         if isinstance(cases, (int, long)):
             cases = self.browse(cr, uid, cases, context=context)
-        # collect all team_ids
-        team_ids = []
-        if team_id:
-            team_ids.append(team_id)
+        # collect all project_ids
+        project_ids = []
+        if project_id:
+            project_ids.append(project_id)
         for task in cases:
             if task.project_id:
-                team_ids.append(task.project_id.id)
-        # OR all team_ids and OR with case_default
+                project_ids.append(task.project_id.id)
+        # OR all project_ids and OR with case_default
         search_domain = []
-        if team_ids:
-            search_domain += [('|')] * (len(team_ids)-1)
-            for team_id in team_ids:
-                search_domain.append(('project_ids', '=', team_id))
+        if project_ids:
+            search_domain += [('|')] * (len(project_ids) - 1)
+            for project_id in project_ids:
+                search_domain.append(('project_ids', '=', project_id))
         search_domain += list(domain)
         # perform search, return the first found
         stage_ids = self.pool.get('project.task.type').search(cr, uid, search_domain, order=order, context=context)
