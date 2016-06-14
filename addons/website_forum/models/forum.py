@@ -792,6 +792,7 @@ class Post(models.Model):
             # TDE END FIXME
             if not post.can_comment:
                 raise KarmaError('Not enough karma to comment')
+            kwargs['record_name'] = kwargs.get('record_name') or post.parent_id and post.parent_id.name
         return super(Post, self).message_post(cr, uid, thread_id, message_type=message_type, subtype=subtype, context=context, **kwargs)
 
 
@@ -895,3 +896,12 @@ class Tags(models.Model):
         if self.env.user.karma < forum.karma_tag_create:
             raise KarmaError(_('Not enough karma to create a new Tag'))
         return super(Tags, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals)
+
+class Message(models.Model):
+    _name = 'mail.message'
+    _inherit = ['mail.message']
+
+    @api.multi
+    def _is_accessible(self):
+        res = super(Message, self)._is_accessible()
+        return self.model == 'forum.post' or res

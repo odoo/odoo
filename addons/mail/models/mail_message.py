@@ -119,6 +119,11 @@ class Message(models.Model):
         for message in self:
             message.needaction = message in my_messages
 
+    @api.multi
+    def _is_accessible(self):
+        self.ensure_one()
+        return False
+
     @api.model
     def _search_needaction(self, operator, operand):
         if operator == '=' and operand:
