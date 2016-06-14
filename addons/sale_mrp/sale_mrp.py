@@ -42,13 +42,13 @@ class SaleOrderLine(models.Model):
             if bom.type != 'phantom':
                 continue
             bom_delivered[bom.id] = False
-            product_uom_qty_bom = self.env['product.uom']._compute_qty_obj(self.product_uom, self.product_uom_qty, bom.product_uom)
+            product_uom_qty_bom = self.product_uom._compute_qty_obj(self.product_uom_qty, bom.product_uom)
             bom_exploded = self.env['mrp.bom']._bom_explode(bom, self.product_id, product_uom_qty_bom)[0]
             for bom_line in bom_exploded:
                 qty = 0.0
                 for move in self.procurement_ids.mapped('move_ids'):
                     if move.state == 'done' and move.product_id.id == bom_line.get('product_id', False):
-                        qty += self.env['product.uom']._compute_qty(move.product_uom.id, move.product_uom_qty, bom_line['product_uom'])
+                        qty += move.product_uom._compute_qty(move.product_uom_qty, bom_line['product_uom'])
                 if float_compare(qty, bom_line['product_qty'], precision_digits=precision) < 0:
                     bom_delivered[bom.id] = False
                     break
@@ -62,9 +62,10 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _get_bom_component_qty(self, bom):
-        product_uom_qty_bom = self.env['product.uom']._compute_qty_obj(self.product_uom, self.product_uom_qty, bom.product_uom)
+        product_uom_qty_bom = self.product_uom._compute_qty_obj(self.product_uom_qty, bom.product_uom)
         bom_exploded = self.env['mrp.bom']._bom_explode(bom, self.product_id, product_uom_qty_bom)[0]
         components = {}
+        ProductUOM = self.env['product.uom']
         for bom_line in bom_exploded:
             product = bom_line['product_id']
             uom = bom_line['product_uom']
@@ -73,13 +74,13 @@ class SaleOrderLine(models.Model):
                 if uom != components[product]['uom']:
                     from_uom_id = uom
                     to_uom_id = components[product]['uom']
-                    qty = self.env['product.uom']._compute_qty(from_uom_id, qty, to_uom_id=to_uom_id)
+                    qty = ProductUOM.browse(from_uom_id)._compute_qty(qty, to_uom_id=to_uom_id)
                 components[product]['qty'] += qty
             else:
                 # To be in the uom reference of the product
                 to_uom = self.env['product.product'].browse([product])[0].uom_id.id
                 if uom != to_uom:
-                    qty = self.env['product.uom']._compute_qty(uom, qty, to_uom_id=to_uom)
+                    qty = ProductUOM.browse(uom)._compute_qty(qty, to_uom_id=to_uom)
                 components[product] = {'qty': qty, 'uom': to_uom}
         return components
 
@@ -118,12 +119,11 @@ class AccountInvoiceLine(models.Model):
         price_unit = super(AccountInvoiceLine, self)._get_anglo_saxon_price_unit()
         # in case of anglo saxon with a product configured as invoiced based on delivery, with perpetual
         # valuation and real price costing method, we must find the real price for the cost of good sold
-        uom_obj = self.env['product.uom']
         if self.product_id.invoice_policy == "delivery":
             for s_line in self.sale_line_ids:
                 # qtys already invoiced
-                qty_done = sum([uom_obj._compute_qty_obj(x.uom_id, x.quantity, x.product_id.uom_id) for x in s_line.invoice_lines if x.invoice_id.state in ('open', 'paid')])
-                quantity = uom_obj._compute_qty_obj(self.uom_id, self.quantity, self.product_id.uom_id)
+                qty_done = sum([x.uom_id._compute_qty_obj(x.quantity, x.product_id.uom_id) for x in s_line.invoice_lines if x.invoice_id.state in ('open', 'paid')])
+                quantity = self.uom_id._compute_qty_obj(self.quantity, self.product_id.uom_id)
                 # Put moves in fixed order by date executed
                 moves = self.env['stock.move']
                 for procurement in s_line.procurement_ids:
@@ -143,5 +143,5 @@ class AccountInvoiceLine(models.Model):
                         prod_quantity = factor * quantity
                         average_price_unit += factor * self._compute_average_price(prod_qty_done, prod_quantity, prod_moves)
                     price_unit = average_price_unit or price_unit
-                    price_unit = uom_obj._compute_qty_obj(self.uom_id, price_unit, self.product_id.uom_id, round=False)
+                    price_unit = self.uom_id._compute_qty_obj(price_unit, self.product_id.uom_id, round=False)
         return price_unit

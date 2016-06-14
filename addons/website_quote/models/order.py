@@ -355,7 +355,7 @@ class sale_quote_option(osv.osv):
             self.price_unit = 0.0
             return
         if self.uom_id.id != self.product_id.uom_id.id:
-            new_price = self.product_id.uom_id._compute_price(self.product_id.uom_id.id, self.price_unit, self.uom_id.id)
+            new_price = self.product_id.uom_id._compute_price(self.price_unit, self.uom_id.id)
             self.price_unit = new_price
 
     def on_change_product_id(self, cr, uid, ids, product, uom_id=None, context=None):

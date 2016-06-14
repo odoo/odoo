@@ -148,7 +148,7 @@ class SaleOrderLine(models.Model):
             return {}
         if self.product_id.type == 'product':
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            product_qty = self.env['product.uom']._compute_qty_obj(self.product_uom, self.product_uom_qty, self.product_id.uom_id)
+            product_qty = self.product_uom._compute_qty_obj(self.product_uom_qty, self.product_id.uom_id)
             if float_compare(self.product_id.virtual_available, product_qty, precision_digits=precision) == -1:
                 is_available = self._check_routing()
                 if not is_available:
@@ -194,9 +194,9 @@ class SaleOrderLine(models.Model):
         qty = 0.0
         for move in self.procurement_ids.mapped('move_ids').filtered(lambda r: r.state == 'done' and not r.scrapped):
             if move.location_dest_id.usage == "customer":
-                qty += self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
+                qty += move.product_uom._compute_qty_obj(move.product_uom_qty, self.product_uom)
             elif move.location_dest_id.usage == "internal" and move.to_refund_so:
-                qty -= self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
+                qty -= move.product_uom._compute_qty_obj(move.product_uom_qty, self.product_uom)
         return qty
 
     @api.multi
@@ -204,7 +204,7 @@ class SaleOrderLine(models.Model):
         default_uom = self.product_id.uom_id
         pack = self.product_packaging
         qty = self.product_uom_qty
-        q = self.env['product.uom']._compute_qty_obj(default_uom, pack.qty, self.product_uom)
+        q = default_uom._compute_qty_obj(pack.qty, self.product_uom)
         if qty and q and (qty % q):
             newqty = qty - (qty % q) + q
             return {
@@ -356,12 +356,11 @@ class AccountInvoiceLine(models.Model):
         price_unit = super(AccountInvoiceLine,self)._get_anglo_saxon_price_unit()
         # in case of anglo saxon with a product configured as invoiced based on delivery, with perpetual
         # valuation and real price costing method, we must find the real price for the cost of good sold
-        uom_obj = self.env['product.uom']
         if self.product_id.invoice_policy == "delivery":
             for s_line in self.sale_line_ids:
                 # qtys already invoiced
-                qty_done = sum([uom_obj._compute_qty_obj(x.uom_id, x.quantity, x.product_id.uom_id) for x in s_line.invoice_lines if x.invoice_id.state in ('open', 'paid')])
-                quantity = uom_obj._compute_qty_obj(self.uom_id, self.quantity, self.product_id.uom_id)
+                qty_done = sum([x.uom_id._compute_qty_obj(x.quantity, x.product_id.uom_id) for x in s_line.invoice_lines if x.invoice_id.state in ('open', 'paid')])
+                quantity = self.uom_id._compute_qty_obj(self.quantity, self.product_id.uom_id)
                 # Put moves in fixed order by date executed
                 moves = self.env['stock.move']
                 for procurement in s_line.procurement_ids:
@@ -372,7 +371,7 @@ class AccountInvoiceLine(models.Model):
                 # on the moves we encounter.
                 average_price_unit = self._compute_average_price(qty_done, quantity, moves)
                 price_unit = average_price_unit or price_unit
-                price_unit = uom_obj._compute_qty_obj(self.uom_id, price_unit, self.product_id.uom_id, round=False)
+                price_unit = self.uom_id._compute_qty_obj(price_unit, self.product_id.uom_id, round=False)
         return price_unit
 
     def _compute_average_price(self, qty_done, quantity, moves):

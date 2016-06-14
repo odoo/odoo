@@ -1237,8 +1237,7 @@ class AccountInvoiceLine(models.Model):
                     self.price_unit = self.price_unit * currency.with_context(dict(self._context or {}, date=self.invoice_id.date_invoice)).rate
 
                 if self.uom_id and self.uom_id.id != product.uom_id.id:
-                    self.price_unit = self.env['product.uom']._compute_price(
-                        product.uom_id.id, self.price_unit, self.uom_id.id)
+                    self.price_unit = product.uom_id._compute_price(self.price_unit, self.uom_id.id)
         return {'domain': domain}
 
     @api.onchange('account_id')
