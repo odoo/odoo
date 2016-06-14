@@ -8,7 +8,7 @@
             <div class="row">
                 <div name="invoice_address" class="col-xs-5 col-xs-offset-7">
                     <address t-field="o.partner_id"
-                        t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+                        t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
                     <span t-if="o.partner_id.vat">TIN: <span t-field="o.partner_id.vat"/></span>
                 </div>
             </div>

@@ -59,7 +59,7 @@
                         <th>Address</th>
                         <td  t-att-class="(not company_id.partner_id.street or not company_id.partner_id.zip) and 'danger'">
                             <span t-field="company_id.partner_id"
-                                t-field-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
+                                t-field-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
                         </td>
                         <td>
                             <a class="fa fa-arrow-right" t-attf-href="#{prepare_backend_url('base.action_res_company_form', 'form')}&amp;id=#{company_id.id}">

@@ -259,7 +259,7 @@
                             <strong>Invoicing Address</strong>
                           </div>
                           <div>
-                            <address t-field="order.partner_invoice_id" t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
+                            <address t-field="order.partner_invoice_id" t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                           </div>
                           <t t-set="invoices" t-value="[i for i in order.invoice_ids if i.state not in ['draft', 'cancel']]"/>
                           <t t-if="invoices">
@@ -289,7 +289,7 @@
                             <strong>Shipping Address</strong>
                           </div>
                           <div>
-                            <address t-field="order.partner_shipping_id" t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
+                            <address t-field="order.partner_shipping_id" t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                           </div>
                         </div>
                       </div>

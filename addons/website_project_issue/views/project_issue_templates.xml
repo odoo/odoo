@@ -94,13 +94,13 @@
                                     <div class="col-md-6" t-if="issue.user_id">
                                         <strong>Assigned to</strong>
                                         <div>
-                                            <address t-field="issue.user_id" t-field-options='{"widget": "contact", "fields": ["name", "email", "phone"], "no_marker": true}'/>
+                                            <address t-field="issue.user_id" t-field-options='{"widget": "contact", "fields": ["name", "email", "phone"], "no_marker": True}'/>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <strong>Reported by</strong>
                                         <div t-if="issue.partner_id">
-                                            <address t-field="issue.partner_id" t-field-options='{"widget": "contact", "fields": ["name", "email"], "no_marker": true}'/>
+                                            <address t-field="issue.partner_id" t-field-options='{"widget": "contact", "fields": ["name", "email"], "no_marker": True}'/>
                                         </div>
                                     </div>
                                 </div>
