@@ -1814,6 +1814,9 @@ class MailThread(models.AbstractModel):
         for x in ('from', 'to', 'cc'):
             values.pop(x, None)
 
+        if not values['subject'] and self._name == 'forum.post':
+            values['record_name'] = self.parent_id and self.parent_id.name
+
         # Post the message
         new_message = MailMessage.create(values)
 
