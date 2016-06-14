@@ -773,7 +773,7 @@ class Picking(models.Model):
                 if (picking_type.use_create_lots or picking_type.use_existing_lots):
                     for pack in pick.pack_operation_ids:
                         if pack.product_id and pack.product_id.tracking != 'none':
-                            raise UserError(_('Some products require lots, so you need to specify those first!'))
+                            raise UserError(_('Some products require lots/serial numbers, so you need to specify those first!'))
                 view = self.env.ref('stock.view_immediate_transfer')
                 wiz = self.env['stock.immediate.transfer'].create({'pick_id': pick.id})
                 # TDE FIXME: a return in a loop, what a good idea. Really.
