@@ -47,10 +47,6 @@ Print product labels with barcode.
         'data/product_demo.xml',
         'data/product_image_demo.xml',
     ],
-    'test': [
-        'test/product_pricelist_demo.yml',
-        'test/product_pricelist.yml',
-    ],
     'installable': True,
     'auto_install': False,
 }

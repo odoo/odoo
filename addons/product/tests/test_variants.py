@@ -15,7 +15,6 @@ class TestVariants(common.TestProductCommon):
         return res
 
     def test_variants_creation_mono(self):
-        print '-------------------------------'
         test_template = self.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
@@ -25,14 +24,12 @@ class TestVariants(common.TestProductCommon):
                 'value_ids': [(4, self.size_attr_value_s.id)],
             })]
         })
-        print '-------------------------------'
 
         # produced variants: one variant, because mono value
         self.assertEqual(len(test_template.product_variant_ids), 1)
         self.assertEqual(test_template.product_variant_ids.attribute_value_ids, self.size_attr_value_s)
 
     def test_variants_creation_mono_double(self):
-        print '-------------------------------'
         test_template = self.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
@@ -45,14 +42,12 @@ class TestVariants(common.TestProductCommon):
                 'value_ids': [(4, self.size_attr_value_s.id)],
             })]
         })
-        print '-------------------------------'
 
         # produced variants: one variant, because only 1 combination is possible
         self.assertEqual(len(test_template.product_variant_ids), 1)
         self.assertEqual(test_template.product_variant_ids.attribute_value_ids, self.size_attr_value_s + self.prod_attr1_v2)
 
     def test_variants_creation_mono_multi(self):
-        print '-------------------------------'
         test_template = self.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
@@ -65,7 +60,6 @@ class TestVariants(common.TestProductCommon):
                 'value_ids': [(4, self.size_attr_value_s.id), (4, self.size_attr_value_m.id)],
             })]
         })
-        print '-------------------------------'
 
         # produced variants: two variants, simple matrix
         self.assertEqual(len(test_template.product_variant_ids), 2)
@@ -78,7 +72,6 @@ class TestVariants(common.TestProductCommon):
             self.assertEqual(len(products), 1)
 
     def test_variants_creation_matrix(self):
-        print '-------------------------------'
         test_template = self.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
@@ -91,7 +84,6 @@ class TestVariants(common.TestProductCommon):
                 'value_ids': [(4, self.size_attr_value_s.id), (4, self.size_attr_value_m.id), (4, self.size_attr_value_l.id)],
             })]
         })
-        print '-------------------------------'
 
         # produced variants: value matrix : 2x3 values
         self.assertEqual(len(test_template.product_variant_ids), 6)
@@ -105,7 +97,6 @@ class TestVariants(common.TestProductCommon):
                 self.assertEqual(len(products), 1)
 
     def test_variants_creation_multi_update(self):
-        print '-------------------------------'
         test_template = self.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
@@ -118,11 +109,9 @@ class TestVariants(common.TestProductCommon):
                 'value_ids': [(4, self.size_attr_value_s.id), (4, self.size_attr_value_m.id)],
             })]
         })
-        print '-------------------------------'
         size_attribute_line = test_template.attribute_line_ids.filtered(lambda line: line.attribute_id == self.size_attr)
         test_template.write({
             'attribute_line_ids': [(1, size_attribute_line.id, {
                 'value_ids': [(4, self.size_attr_value_l.id)],
             })]
         })
-        print '-------------------------------'
