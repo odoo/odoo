@@ -144,7 +144,7 @@ class AccountVoucher(models.Model):
     def unlink(self):
         for voucher in self:
             if voucher.state not in ('draft', 'cancel'):
-                raise Warning(_('Cannot delete voucher(s) which are already opened or paid.'))
+                raise UserError(_('Cannot delete voucher(s) which are already opened or paid.'))
         return super(AccountVoucher, self).unlink()
 
     @api.multi
