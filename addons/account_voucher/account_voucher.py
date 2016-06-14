@@ -351,7 +351,7 @@ class account_voucher_line(models.Model):
             self = self.with_context(lang=part.lang)
 
         product = self.env['product.product'].browse(product_id)
-        fpos = part.property_account_position_id.id
+        fpos = part.property_account_position_id
         account = self._get_account(product, fpos, type)
         values = {
             'name': product.partner_ref,
