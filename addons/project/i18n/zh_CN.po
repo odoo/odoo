@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2016-06-04 07:49+0000\n"
+"PO-Revision-Date: 2016-06-07 04:38+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -289,7 +289,7 @@ msgstr "项目任务以及问题的类别"
 msgid ""
 "Child task still open.\n"
 "Please cancel or complete child task first."
-msgstr "子任务仍然开启。\n请先取消或完成子任务。"
+msgstr "下级任务仍然开启。\n请先取消或完成子任务。"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -755,7 +755,7 @@ msgstr "进行中"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Incoming Emails create"
-msgstr "收到电子邮件后创建"
+msgstr "收到的邮件创建"
 
 #. module: project
 #: field:project.task,planned_hours:0
@@ -960,7 +960,7 @@ msgstr "新任务说明"
 msgid ""
 "New state of your own task. Pending will be reopened automatically when the "
 "delegated task is closed"
-msgstr "你的任务进入了新的阶段。等待状态将在分派的任务结束后重启任务"
+msgstr "你的任务进入了新的阶段。等待状态将在分派的任务关闭后重启任务"
 
 #. module: project
 #: help:project.task.delegate,name:0
@@ -993,7 +993,7 @@ msgstr "距开始日期"
 #. module: project
 #: help:report.project.task.user,closing_days:0
 msgid "Number of Days to close the task"
-msgstr "距结束日期"
+msgstr "距关闭日期"
 
 #. module: project
 #: field:project.project,doc_count:0
@@ -1052,7 +1052,7 @@ msgstr "待定"
 #. module: project
 #: help:project.project,progress_rate:0
 msgid "Percent of tasks closed according to the total of tasks todo."
-msgstr "已结束任务和未结束任务的百分比。"
+msgstr "已关闭任务和未关闭任务的百分比。"
 
 #. module: project
 #: field:project.task.delegate,planned_hours:0
@@ -1368,7 +1368,7 @@ msgstr "状态"
 msgid ""
 "Sum of planned hours of all tasks related to this project and its child "
 "projects."
-msgstr "项目下的任务和子任务计划工时的合计数"
+msgstr "项目下的任务和下级任务计划工时的合计数"
 
 #. module: project
 #: help:project.project,effective_hours:0
@@ -1382,7 +1382,7 @@ msgstr "本项目和相关项目的任务实际花费的小时数合计"
 msgid ""
 "Sum of total hours of all tasks related to this project and its child "
 "projects."
-msgstr "此项目极其子项目的所有任务的实际工时数"
+msgstr "此项目极其下级项目的所有任务的实际工时数"
 
 #. module: project
 #: field:project.project,message_summary:0
@@ -1453,7 +1453,7 @@ msgstr "任务委派"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
 msgid "Task Pipe"
-msgstr "任务通道"
+msgstr "任务管道"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready

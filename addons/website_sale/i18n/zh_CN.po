@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:09+0000\n"
-"PO-Revision-Date: 2016-06-04 07:22+0000\n"
+"PO-Revision-Date: 2016-06-07 11:43+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -58,7 +58,7 @@ msgid ""
 "            a photo on categories for small (1024x768) screens.\n"
 "          </p>\n"
 "        "
-msgstr "<p class=\"oe_view_nocontent_create\">\n点此定义一个新的分类.\n</p><p>\n在触屏界面上，可以根据分类来浏览你的产品。\n</p><p>\n如果你为分类设置了图片，在触屏界面上将自动显示。\n但是如果你的触屏分辨率低于（1024*768），我们不建议为分类设置图片。</p>\n        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n点此定义一个新的类别.\n</p><p>\n在触屏界面上，可以根据类别来浏览你的产品。\n</p><p>\n如果你为类别设置了图片，在触屏界面上将自动显示。\n但是如果你的触屏分辨率低于（1024*768），我们不建议为类别设置图片。</p>\n        "
 
 #. module: website_sale
 #: field:product.template,accessory_product_ids:0
@@ -355,7 +355,7 @@ msgstr "为你的产品输入一个名称，然后点击'继续'."
 #. module: website_sale
 #: constraint:product.public.category:0
 msgid "Error ! You cannot create recursive categories."
-msgstr "错误！您不能创建循环分类。"
+msgstr "错误！您不能创建循环类别。"
 
 #. module: website_sale
 #: view:website:website_sale.product
@@ -440,7 +440,7 @@ msgid ""
 "Medium-sized image of the category. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr "中等尺寸的分类图片.它将保持长宽比,并被自动调整为128x128px大小.它将在一些表单界面或看板界面上显示."
+msgstr "中等尺寸的类别图片.它将保持长宽比,并被自动调整为128x128px大小.它将在一些表单界面或看板界面上显示."
 
 #. module: website_sale
 #: view:website:website.layout
@@ -456,7 +456,7 @@ msgstr "名称"
 #. module: website_sale
 #: view:website:website_sale.checkout
 msgid "Name (Shipping)"
-msgstr "名称 (配送)"
+msgstr "名称 (送货)"
 
 #. module: website_sale
 #. openerp-web
@@ -516,7 +516,7 @@ msgstr "其它设置"
 #. module: website_sale
 #: field:product.public.category,parent_id:0
 msgid "Parent Category"
-msgstr "上级分类"
+msgstr "上级类别"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:654
@@ -595,7 +595,7 @@ msgstr "产品名称"
 #. module: website_sale
 #: view:product.public.category:website_sale.product_public_category_tree_view
 msgid "Product Product Categories"
-msgstr "产品分类"
+msgstr "产品产品类别"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template
@@ -630,19 +630,19 @@ msgstr "优惠代码"
 #. module: website_sale
 #: view:product.public.category:website_sale.product_public_category_form_view
 msgid "Public Categories"
-msgstr "POS产品分类"
+msgstr "POS产品类别"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_public_category
 #: field:product.template,public_categ_ids:0
 msgid "Public Category"
-msgstr "公开的分类"
+msgstr "公开类别"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action
 #: model:ir.ui.menu,name:website_sale.menu_product_public_category
 msgid "Public Product Categories"
-msgstr "POS产品分类"
+msgstr "POS产品类别"
 
 #. module: website_sale
 #. openerp-web
@@ -777,7 +777,7 @@ msgstr "配送至默认地址"
 #. module: website_sale
 #: view:website:website_sale.checkout
 msgid "Shipping"
-msgstr "发货"
+msgstr "送货"
 
 #. module: website_sale
 #: view:website:website_sale.cart view:website:website_sale.checkout
@@ -788,7 +788,7 @@ msgstr "送货及账单"
 #. module: website_sale
 #: view:website:website_sale.checkout
 msgid "Shipping Information"
-msgstr "配送信息"
+msgstr "送货信息"
 
 #. module: website_sale
 #: view:website:website_sale.products
@@ -854,7 +854,7 @@ msgid ""
 "Small-sized image of the category. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr "中等尺寸保持长宽比的分类图片，自动调整为64x64px大小用于在一些表单界面或看板界面上以及任何需要显示小图片的界面上。"
+msgstr "中等尺寸保持长宽比的类别图片，自动调整为64x64px大小用于在一些表单界面或看板界面上以及任何需要显示小图片的界面上。"
 
 #. module: website_sale
 #: view:website:website_sale.404
@@ -942,7 +942,7 @@ msgstr "你的请求可能有错误。"
 msgid ""
 "This field holds the image used as image for the category, limited to "
 "1024x1024px."
-msgstr "这个字段记录了这个分类使用的图片，限制在1024x1024像素。"
+msgstr "这个字段记录了这个类别使用的图片，限制在1024x1024像素。"
 
 #. module: website_sale
 #. openerp-web
@@ -954,7 +954,7 @@ msgstr "这个网页包括了与这个新产品相关的所有信息."
 #. module: website_sale
 #: help:product.template,public_categ_ids:0
 msgid "Those categories are used to group similar products for e-commerce."
-msgstr "那些分类是为了将相似的产品进行分组以进行电子商务的销售."
+msgstr "那些类别是为了将相似的产品进行分组以进行电子商务的销售."
 
 #. module: website_sale
 #: view:website:website_sale.checkout

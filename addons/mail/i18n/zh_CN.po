@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-06-04 06:42+0000\n"
+"PO-Revision-Date: 2016-06-06 16:27+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -406,7 +406,7 @@ msgstr "抄送"
 #. module: mail
 #: field:mail.compose.message,child_ids:0 field:mail.message,child_ids:0
 msgid "Child Messages"
-msgstr "子信息"
+msgstr "下级信息"
 
 #. module: mail
 #: selection:mail.compose.message,type:0 view:mail.mail:mail.view_mail_search
@@ -840,7 +840,7 @@ msgstr "ID"
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
-msgstr "父记录ID支持别名(例如:项目支持任务创建别名)"
+msgstr "上级记录ID支持别名(例如:项目支持任务创建别名)"
 
 #. module: mail
 #: help:mail.followers,res_id:0 help:mail.wizard.invite,res_id:0
@@ -1288,7 +1288,7 @@ msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr "所有的来邮都将附上一条线索（记录）选配的ID，即使它们不曾回复过它。如果设置了，这个将完全阻止新记录的创建。"
+msgstr "所有的进来的邮件都将附上一条线索（记录）选配的ID，即使它们不曾回复过它。如果设置了，这个将完全阻止新记录的创建。"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_my_stuff
@@ -1303,13 +1303,13 @@ msgstr "出局"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_mail
 msgid "Outgoing Mails"
-msgstr "出局邮件"
+msgstr "出去的邮件"
 
 #. module: mail
 #: field:mail.compose.message,mail_server_id:0
 #: field:mail.message,mail_server_id:0
 msgid "Outgoing mail server"
-msgstr "出局邮件服务器"
+msgstr "发信邮件服务器"
 
 #. module: mail
 #: field:mail.alias,alias_user_id:0
@@ -1334,7 +1334,7 @@ msgstr "上级模型"
 #. module: mail
 #: field:mail.alias,alias_parent_thread_id:0
 msgid "Parent Record Thread ID"
-msgstr "父记录线程ID"
+msgstr "上级记录线程ID"
 
 #. module: mail
 #: help:mail.alias,alias_parent_model_id:0
@@ -1342,7 +1342,7 @@ msgid ""
 "Parent model holding the alias. The model holding the alias reference\n"
 "is not necessarily the model given by alias_model_id\n"
 "(example: project (parent_model) and task (model))"
-msgstr "父模型支持别名。模型支持别名参考不需要给出alias_model_id\n(例如:project(parent_model) 和 task(model))"
+msgstr "上级模型支持别名。模型支持别名参考不需要给出alias_model_id\n(例如:project(parent_model) 和 task(model))"
 
 #. module: mail
 #: help:mail.message.subtype,parent_id:0
@@ -1405,7 +1405,7 @@ msgid ""
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document\n"
-msgstr "文档信息发送使用邮件服务器规则。\n- 所有人：所有人都允许\n- 业务伙伴：仅认证的业务伙伴\n- 关注者：仅关注相关文档者\n"
+msgstr "使用mailgateway在单据上张贴消息的政策。\n- 所有人：所有人\n- 业务伙伴：仅验证过的业务伙伴\n- 关注者：仅相关单据的关注者\n"
 
 #. module: mail
 #: help:res.partner,notify_email:0
@@ -1929,7 +1929,7 @@ msgstr "警告！\n您将被该单据的邮件或者公告提醒。你确信要�
 #. module: mail
 #: help:mail.compose.message,is_log:0
 msgid "Whether the message is an internal note (comment mode only)"
-msgstr "该消息是否是一个内部笔记(注释模式)"
+msgstr "该消息是否是一个内部备注(注释模式)"
 
 #. module: mail
 #: model:mail.group,name:mail.group_all_employees
