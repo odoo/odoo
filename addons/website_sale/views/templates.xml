@@ -1273,6 +1273,7 @@
                                 <th>Products</th>
                                 <th>Quantity</th>
                                 <th class="text-right" width="100">Unit Price</th>
+                                <th class="text-right" width="100">Taxes</th>
                                 <th class="text-right" width="100">Subtotal</th>
                             </tr>
                         </thead>
@@ -1297,6 +1298,11 @@
                                         <div t-field="line.price_unit"
                                             t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
                                     </strong>
+                                </td>
+                                <td>
+                                    <div class="text-right"
+                                        t-field="line.price_tax"
+                                        t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
                                 </td>
                                 <td>
                                     <div class="text-right"
