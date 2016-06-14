@@ -447,11 +447,7 @@ class Home(http.Controller):
             return werkzeug.utils.redirect(kw.get('redirect'), 303)
 
         request.uid = request.session.uid
-
-        context = {
-            'menu_data': request.registry['ir.ui.menu'].load_menus(request.cr, request.uid, request.debug, context=request.context),
-            'session_info': json.dumps(request.env['ir.http'].session_info()),
-        }
+        context = request.env['ir.http'].webclient_rendering_context()
 
         return request.render('web.webclient_bootstrap', qcontext=context)
 
