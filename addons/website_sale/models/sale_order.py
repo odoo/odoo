@@ -120,17 +120,6 @@ class SaleOrder(models.Model):
             return random.sample(accessory_products, min(len(accessory_products), 3))
 
 
-class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
-
-    discounted_price = fields.Float(compute='_compute_discounted_price', digits_compute=dp.get_precision('Product Price'))
-
-    @api.depends('price_unit', 'discount')
-    def _compute_discounted_price(self):
-        for line in self:
-            line.discounted_price = line.price_unit * (1.0 - line.discount / 100.0)
-
-
 class Website(models.Model):
     _inherit = 'website'
 
@@ -383,6 +372,11 @@ class Website(models.Model):
             'sale_transaction_id': False,
             'website_sale_current_pl': False,
         })
+
+    @api.model
+    def get_product_price(self, product, qty=1, public=False, **kw):
+        pricelist = request.website.get_current_pricelist()
+        return product.get_an_estimated_price(pricelist, qty=qty, public=public)
 
 
 class WebsitePricelist(models.Model):
