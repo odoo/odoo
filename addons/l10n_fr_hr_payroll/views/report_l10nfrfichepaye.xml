@@ -17,7 +17,7 @@
                                 <tr>
                                     <td>
                                         <div t-field="o.employee_id.company_id.partner_id"  
-                                    t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />SIRET:
+                                    t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />SIRET:
                                         <span t-esc="o.employee_id.company_id.siret or '_'"/> APE:
                                         <span t-esc="o.employee_id.company_id.ape or '_'"/>
                                     </td>
@@ -25,7 +25,7 @@
                                 <tr>
                                     <td>
                                         <div t-field="o.employee_id.address_home_id"
-                                          t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
+                                          t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                                     </td>
                                 </tr>
                             </table>

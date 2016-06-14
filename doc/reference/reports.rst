@@ -161,7 +161,7 @@ For example, let's look at the Sale Order report from the Sale module::
                     <div class="col-xs-6">
                         <strong t-if="doc.partner_shipping_id == doc.partner_invoice_id">Invoice and shipping address:</strong>
                         <strong t-if="doc.partner_shipping_id != doc.partner_invoice_id">Invoice address:</strong>
-                        <div t-field="doc.partner_invoice_id" t-field-options="{&quot;no_marker&quot;: true}"/>
+                        <div t-field="doc.partner_invoice_id" t-field-options="{&quot;no_marker&quot;: True}"/>
                     <...>
                 <div class="oe_structure"/>
             </div>
