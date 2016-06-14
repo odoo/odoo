@@ -472,8 +472,8 @@
     <updated t-esc="(posts[0] if posts else blog).write_date.replace(' ', 'T') + 'Z'"/>
     <entry t-foreach="posts" t-as="post">
         <title t-esc="post.name"/>
-        <link t-att-href="'%s/%s' % (base_url, post.website_url)"/>
-        <id t-esc="'%s/%s' % (base_url, post.website_url)"/>
+        <link t-att-href="'%s%s' % (base_url, post.website_url)"/>
+        <id t-esc="'%s%s' % (base_url, post.website_url)"/>
         <author><name t-esc="post.sudo().author_id.name"/></author>
         <summary t-esc="post.subtitle"/>
         <updated t-esc="post.write_date.replace(' ', 'T') + 'Z'"/>

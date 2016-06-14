@@ -150,10 +150,10 @@
                 <li>
                     <t t-esc="value.changed_field"/>:
                     <t t-if="value.old_value">
-                        <span> <t t-esc="value.old_value"/> </span>
+                        <span> <t t-esc="value.old_value || ((value.field_type !== 'boolean') and '')"/> </span>
                         <span class="fa fa-long-arrow-right"/>
                     </t>
-                    <span> <t t-esc="value.new_value"/> </span>
+                    <span> <t t-esc="value.new_value || ((value.field_type !== 'boolean') and '')"/> </span>
                 </li>
             </t>
         </ul>

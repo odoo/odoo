@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-06-03 08:49+0000\n"
+"PO-Revision-Date: 2016-06-10 09:49+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -1366,7 +1366,7 @@ msgid ""
 "journal. In that case, they will behave as journal entries automatically "
 "created by the system on document validation (invoices, bank statements...) "
 "and will be created in 'Posted' status."
-msgstr ""
+msgstr "Tots els assentaments creats manualment solen estar en l'estat 'Sense assentar', llevat quan s'estableix l'opció de saltar aquest estat al diària relacionat. En aquest cas, es comportaran com assentaments creats automàticament pel sistema en la validació de documents (factures, extractes bancaris...) i seran creats amb l'estat 'Assentat'."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.validate_account_move_view
@@ -2080,7 +2080,7 @@ msgstr "Factura cancel·lada"
 msgid ""
 "Cannot create an automatic sequence for this piece.\n"
 "Put a sequence in the journal definition for automatic numbering or create a sequence manually for this piece."
-msgstr ""
+msgstr "No es pot crear una seqüència automàtica per aquest element.\nFiqui una seqüència en la definició del diari per la numeració automàtica o creï una seqüència manual per aquest element."
 
 #. module: account
 #: code:addons/account/models/account_move.py:164
@@ -2100,7 +2100,7 @@ msgstr ""
 msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
 "Please go to Account Configuration."
-msgstr ""
+msgstr "No s'ha pogut trobar un arbre de comptes d'aquesta companyia, haurà de configurar una. Si us plau, dirigeixis a la configuració de comptes."
 
 #. module: account
 #: code:addons/account/models/account_move.py:281
@@ -2108,7 +2108,7 @@ msgstr ""
 msgid ""
 "Cannot find any account journal of \"%s\" type for this company, You should create one.\n"
 " Please go to Journal Configuration"
-msgstr ""
+msgstr "No es pot trobar cap diari del tipus \"%s\" per aquesta companyia. Hauria de configurar un.\nSi us plau, vagi a la configuració de diaris."
 
 #. module: account
 #: code:addons/account/models/account.py:376
@@ -2283,7 +2283,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_expects_chart_of_accounts
 msgid "Check this box if this company is a legal entity."
-msgstr ""
+msgstr "Marqui aquesta casella si vol que la companyia és una entitat legal."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence
@@ -3901,7 +3901,7 @@ msgid ""
 "the sign of the balance; e.g.: Expense account. The same applies for "
 "accounts that are typically more credited than debited and that you would "
 "like to print as positive amounts in your reports; e.g.: Income account."
-msgstr ""
+msgstr "Per comptes que típicament tenen més dèbit que crèdit i que desitgi imprimir amb imports negatius als seus informes, hauria de revertir el signe de balanç; p. ex.: compte de despesa. La mateixa s'aplica per comptes que típicament tenen més crèdit que dèbit i que es desitgi imprimir amb imports positius als seus informes. p. ex.: compte d'ingressos."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line_value_amount
@@ -3953,7 +3953,7 @@ msgstr ""
 msgid ""
 "Full accounting features: journals, legal statements, chart of accounts, "
 "etc."
-msgstr ""
+msgstr "Funcionalitat completa de comptabilitat: Diaris, informes legals, arbre de comptes, etc."
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:103
@@ -4207,7 +4207,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:394
 #, python-format
 msgid "If \"Amount Currency\" is specified, then \"Amount\" must be as well."
-msgstr ""
+msgstr "Si s'especifica \"Import en moneda\", llavors el \"Import\" ha d'estar també."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_message_unread
@@ -4294,7 +4294,7 @@ msgid ""
 "this total tax amount will be rounded. If you sell with tax included, you "
 "should choose 'Round per line' because you certainly want the sum of your "
 "tax-included line subtotals to be equal to the total amount with taxes."
-msgstr ""
+msgstr "Si selecciona 'Arrodoniment per línia': per cada impost, l'import de l'impost serà calculat i arrodonit per a cada línia de PO/SO/Factura i els imports seran sumats, resultant a l'import total per aquest impost. Si selecciona 'Arrodoniment de forma global': per cada impost, l'import d'impost serà calculat per cada línia de PO/SO/Factura, els imports seran sumats i aquest import total serà arrodonit. Si ven amb impost inclosos, hauria d'escollir 'Arrodoniment per línia' perquè segurament vol que la suma dels subtotals de línia, impostos inclosos sigui igual a l'import total amb impostos."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_tax_calculation_rounding_method
@@ -4320,7 +4320,7 @@ msgstr ""
 msgid ""
 "If you unreconcile transactions, you must also verify all the actions that "
 "are linked to those transactions because they will not be disabled"
-msgstr ""
+msgstr "Si concilia transaccions, ha de verificar també totes les accions que estan enllaçades amb elles perquè no es deshabilitaran."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_payment_term_id
@@ -4339,7 +4339,7 @@ msgid ""
 "dates, for example 50% now and 50% in one month, but if you want to force a "
 "due date, make sure that the payment term is not set on the invoice. If you "
 "keep the payment term and the due date empty, it means direct payment."
-msgstr ""
+msgstr "Si utilitza terminis de pagament, la data de venciment es calcularà automàticament amb la generació dels assentaments comptables. El termini de pagament pot calcular diverses dates de venciment, per exemple 50% ara i 50% en un mes, però si vol forçar una data de venciment, asseguri's que el termini de pagament no s'estableix en la factura. Si deixa buit el termini de pagament i la data de venciment, significa pagament directe."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4399,7 +4399,7 @@ msgstr ""
 msgid ""
 "In order to delete a bank statement line, you must first cancel it to delete"
 " related journal items."
-msgstr ""
+msgstr "Per a poder esborrar una línia de l'extracte bancari, primer ha de cancel·lar-lo per esborrar els apunts comptables relacionats."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:198
@@ -4407,7 +4407,7 @@ msgstr ""
 msgid ""
 "In order to delete a bank statement, you must first cancel it to delete "
 "related journal items."
-msgstr ""
+msgstr "Per a poder esborrar un extracte bancari, primer ha de cancel·lar-lo per esborrar els apunts comptables relacionats."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:124
@@ -4597,7 +4597,7 @@ msgstr "Línies de factura"
 #. module: account
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "El número de factura ha de ser únic per companyia!"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_invoice_id
@@ -4651,7 +4651,7 @@ msgstr "Factura validada"
 msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
-msgstr ""
+msgstr "Factura_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -4745,12 +4745,12 @@ msgstr "Actua com un compte per defecte per la quantitat del deure"
 msgid ""
 "It indicates that the invoice has been paid and the journal entry of the "
 "invoice has been reconciled with one or several journal entries of payment."
-msgstr ""
+msgstr "Indica que la factura ha estat pagada i que l'assentament de la factura ha estat conciliada amb un o diversos assentaments de pagament."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_sent
 msgid "It indicates that the invoice has been sent."
-msgstr ""
+msgstr "Indica que la factura ha estat enviada."
 
 #. module: account
 #: code:addons/account/models/account_move.py:811
@@ -5835,7 +5835,7 @@ msgid ""
 "                        to modify them. The invoices will receive a unique\n"
 "                        number and journal items will be created in your chart\n"
 "                        of accounts."
-msgstr ""
+msgstr "Una vegada que les factures es confirmin, no podrà modificar-les. Les factures reben un número únic i es crearan uns apunts al diari corresponent."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5865,7 +5865,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_only_one_chart_template
 msgid "Only One Chart Template Available"
-msgstr ""
+msgstr "Només una plantilla de comptes disponible"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:311
@@ -5885,7 +5885,7 @@ msgstr "Només els administradors poden canviar les configuracions"
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1509
 #, python-format
 msgid "Only use the ctrl-enter shortcut to validate reconciliations."
-msgstr ""
+msgstr "Utilitzi Ctrl-enter com drecera només per a validar reconciliacions."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_period_lock_date
@@ -6442,7 +6442,7 @@ msgstr ""
 #: code:addons/account/wizard/pos_box.py:27
 #, python-format
 msgid "Please check that the field 'Journal' is set on the Bank Statement"
-msgstr ""
+msgstr "Comprovi per favor que el camp ' Compte de transferències internes' està establert al mètode de pagament '%s'."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:29
@@ -6460,13 +6460,13 @@ msgstr ""
 #: code:addons/account/models/account_move.py:133
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr ""
+msgstr "Defineixi si us plau una seqüència al diari."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:660
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
-msgstr ""
+msgstr "Si us plau, defineixi la seqüència de diari relacionada amb aquesta factura."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -7284,7 +7284,7 @@ msgstr ""
 msgid ""
 "Selected invoice(s) cannot be cancelled as they are already in 'Cancelled' "
 "or 'Done' state."
-msgstr ""
+msgstr "Les factures seleccionades no es poden cancel·lar si ja estan en estat 'Cancel·lada' o 'Realitzada'."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:21
@@ -7292,7 +7292,7 @@ msgstr ""
 msgid ""
 "Selected invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-"
 "Forma' state."
-msgstr ""
+msgstr "Les factures seleccionades no poden ser confirmades si no estan en estat 'Esborrany' o 'Proforma'"
 
 #. module: account
 #: selection:account.abstract.payment,payment_type:0
@@ -7359,7 +7359,7 @@ msgid ""
 " wizard that generate Chart of Accounts from templates, this is useful when "
 "you want to generate accounts of this template only when loading its child "
 "template."
-msgstr ""
+msgstr "Estableixi això a falç si no desitja que aquesta plantilla sigui utilitzada de forma activa en l'assistent que genera l'arbre de comptes des de plantilles. Això és útil quan desitja generar comptes d'aquesta plantilla només en carregar la seva plantilla filla."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -7380,7 +7380,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_tax_tree
 msgid "Short Name"
-msgstr ""
+msgstr "Nom curt"
 
 #. module: account
 #. openerp-web
@@ -7919,7 +7919,7 @@ msgstr ""
 msgid ""
 "The amount expressed in the secondary currency must be positive when account"
 " is debited and negative when account is credited."
-msgstr ""
+msgstr "L'import expressat en la moneda secundària ha de ser positiu quan la compta és de dèbit i negatiu quan la compta és de crèdit."
 
 #. module: account
 #: code:addons/account/models/account.py:524
@@ -7940,7 +7940,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:786
 #, python-format
 msgid "The bank statement line was already reconciled."
-msgstr ""
+msgstr "L'extracte bancari utilitzat per la conciliació bancaria."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_statement_id
@@ -7971,7 +7971,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_invoice_commercial_partner_id
 msgid ""
 "The commercial entity that will be used on Journal Entries for this invoice"
-msgstr ""
+msgstr "L'entitat comercial que s'utilitzarà en els assentaments comptables per aquesta factura."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_currency_id
@@ -8004,7 +8004,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_partner_property_account_position_id
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr ""
+msgstr "La posició fiscal determinarà els impostos i comptes utilitzats per l'empresa."
 
 #. module: account
 #: code:addons/account/models/account.py:272
@@ -8117,7 +8117,7 @@ msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
-msgstr ""
+msgstr "El compte seleccionat al seu assentament força a tenir una moneda secundària. Hauria d'eliminar la moneda secundària del compte o assignar al diari una vista multi moneda."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1162
@@ -8125,7 +8125,7 @@ msgstr ""
 msgid ""
 "The selected unit of measure is not compatible with the unit of measure of "
 "the product."
-msgstr ""
+msgstr "La unitat de mesura seleccionada no és compatible amb la unitat de mesura del producte."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_sequence
@@ -8210,12 +8210,12 @@ msgstr "Aquest compte s'utilitzarà per les factures en comptes del valor de ven
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category_property_account_expense_categ_id
 msgid "This account will be used for invoices to value expenses."
-msgstr ""
+msgstr "Aquest compte s'utilitzarà en factures per a valorar despeses."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category_property_account_income_categ_id
 msgid "This account will be used for invoices to value sales."
-msgstr ""
+msgstr "Aquest compte s'utilitzarà en factures per valorar ingressos."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_account_payable_id
@@ -8236,7 +8236,7 @@ msgstr ""
 msgid ""
 "This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account.\n"
 "-This installs the module account_budget."
-msgstr ""
+msgstr "Això permet als comptables gestionar pressupostos analítics i acceptats. Una vegada definits els pressupostos mestres i pressupostos, els gestors del projecte poden establir la quantitat proveïda en cada compta analítica.\n-Això instal·lara el mòdul account_budget."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_reports_followup
@@ -8266,7 +8266,7 @@ msgid ""
 "This boolean helps you to choose if you want to propose to the user to "
 "encode the sale and purchase rates or choose from list of taxes. This last "
 "choice assumes that the set of tax defined on this template is complete"
-msgstr ""
+msgstr "Aquest booleà t'ajuda a triar si vol proposar a l'usuari codificar les ràtios de venda i compra o escollir d'una llista d'impostos. Aquesta última elecció assumeix que el conjunt d'impostos definits per la plantilla està completa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_wizard_multi_charts_accounts_complete_tax_set
@@ -8275,19 +8275,19 @@ msgid ""
 "encode the sales and purchase rates or use the usual m2o fields. This last "
 "choice assumes that the set of tax defined for the chosen template is "
 "complete"
-msgstr ""
+msgstr "Aquest booleà t'ajuda a triar si vol proposar a l'usuari codificar les ràtios de vendes i compres o utilitzar l'usual camp m2o. Aquesta última elecció assumeix que el conjunt d'impostos definits per la plantilla està completa."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_expects_chart_of_accounts
 msgid "This company has its own chart of accounts"
-msgstr ""
+msgstr "Aquesta companyia té el seu propi pla de comptes"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence_id
 msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
-msgstr ""
+msgstr "Aquest camp conte la informació relacionada amb la numeració d'aquest diari."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence_id
@@ -8315,7 +8315,7 @@ msgid ""
 "This field is used to record the third party name when importing bank "
 "statement in electronic format, when the partner doesn't exist yet in the "
 "database (or cannot be found)."
-msgstr ""
+msgstr "Aquest camp s'utilitzarà per a gravar el nom de les terceres parts quan s'importen els extractes bancaris en format electrònic, quan l'empresa encara no existeix en la base de dades (o no pot ser trobat)."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8352,7 +8352,7 @@ msgstr ""
 msgid ""
 "This label will be displayed on report to show the balance computed for the "
 "given comparison filter."
-msgstr ""
+msgstr "Aquesta etiqueta serà visible a l'informe per mostrar el saldo calculat pel filtre de comparació introduït."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_accounting_report_debit_credit
@@ -8360,7 +8360,7 @@ msgid ""
 "This option allows you to get more details about the way your balances are "
 "computed. Because it is space consuming, we do not allow to use it while "
 "doing a comparison."
-msgstr ""
+msgstr "Aquesta opció li permet obtenir més detalls sobre la forma en la qual es calculen els saldos. Com que consumeix espai, no es permet utilitzar-la quan es realitza una comparació."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template_chart_template_id
@@ -8370,7 +8370,7 @@ msgid ""
 " allow you to define chart templates that extend another and complete it "
 "with few new accounts (You don't need to define the whole structure that is "
 "common to both several times)."
-msgstr ""
+msgstr "Aquest camp opcional li permet associar una plantilla de comptes a una plantilla específica d'arbres de comptes que pot diferir de la pertanyent al seu pare. Això li permet definir plantilles de comptes que entenguin a un altre i les completen amb alguns comptes nous (No necessita definir l'estructura completa que és comú a 2 diverses vegades)"
 
 #. module: account
 #. openerp-web
@@ -8379,7 +8379,7 @@ msgstr ""
 msgid ""
 "This page displays all the bank transactions that are to be reconciled and "
 "provides with a neat interface to do so."
-msgstr ""
+msgstr "Aquesta pàgina mostra totes les transaccions dels bancs que han de ser conciliats i proveïx una interfície simple per fer-ho."
 
 #. module: account
 #. openerp-web
@@ -8400,12 +8400,12 @@ msgstr ""
 msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
-msgstr ""
+msgstr "S'utilitzarà aquest termini de pagament en lloc del predeterminat per les comandes de venda i factures de client."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_default_purchase_tax_id
 msgid "This purchase tax will be assigned by default on new products."
-msgstr ""
+msgstr "Aquest impost de compra s'assignarà per defecte als nous productes."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8416,7 +8416,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_default_sale_tax_id
 msgid "This sale tax will be assigned by default on new products."
-msgstr ""
+msgstr "Aquest impost hauria de ser assignat per defecte als productes nous."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_account_id
@@ -8424,7 +8424,7 @@ msgid ""
 "This technical field can be used at the statement line creation/import time "
 "in order to avoid the reconciliation process on it later on. The statement "
 "line will simply create a counterpart on this account"
-msgstr ""
+msgstr "Aquest camp tècnic pot ser utilitzat en el moment per la creació/importació de la línia d'extracte per evitar més tard el procés de conciliació. La línia d'extracte crearà solament una contrapartida d'aquest compte."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_validate_account_move
@@ -9144,7 +9144,7 @@ msgid ""
 "You can set up here the format you want this record to be displayed. If you "
 "leave the automatic formatting, it will be computed based on the financial "
 "reports hierarchy (auto-computed field 'level')."
-msgstr ""
+msgstr "Pot configurar aquí el format que desitgi que mostri aquest registre. Si deixa el format automàtic, serà calculat d'acord amb la jerarquia dels informes financers (compte autocalculat 'nivell')."
 
 #. module: account
 #: code:addons/account/models/account_move.py:175
@@ -9160,7 +9160,7 @@ msgstr ""
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
-msgstr ""
+msgstr "No pot cancel·lar una factura que ja està parcialment pagada. Necessita trencar la conciliació del pagament relacionat primer."
 
 #. module: account
 #: code:addons/account/models/account.py:162
@@ -9168,13 +9168,13 @@ msgstr ""
 msgid ""
 "You cannot change the owner company of an account that already contains "
 "journal items."
-msgstr ""
+msgstr "No pot canviar al propietari de la companyia en una compta que ja conté assentaments."
 
 #. module: account
 #: code:addons/account/models/account_move.py:997
 #, python-format
 msgid "You cannot change the tax, you should remove and recreate lines."
-msgstr ""
+msgstr "No pot canviar l'impost. Hauria d'eliminar i recrear les línies."
 
 #. module: account
 #: code:addons/account/models/account_move.py:379
