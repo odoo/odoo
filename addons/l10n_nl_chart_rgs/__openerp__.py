@@ -15,9 +15,9 @@
     'data' : [
         'data/account_account_template.xml',
         'data/account_chart_template.xml',
-        'data/account_fiscal_position_account_template.xml',
-        'data/account_fiscal_position_tax_template.xml',
         'data/account_fiscal_position_template.xml',
+        'data/account_fiscal_position_account_template.xml',
         'data/account_tax_template.xml',
+        'data/account_fiscal_position_tax_template.xml',
     ],
 }

@@ -47,6 +47,7 @@ def get_type(row):
     account_type = 'view'
     row_type = row[0][0]  # first letter of first column - B or W
     row_subtype = row[0][0:4]  # first four letters
+    row_subsubtype = row[0][0:7]  # first seven letters
     level = int(row[4].strip())
     if ((row_type == 'B' and level == 5) or
         # TODO: Some subtypes have both level 4 and 5:
@@ -58,9 +59,9 @@ def get_type(row):
             (row_type == 'W' and level == 4)):
         if row_subtype == 'BLim':
             account_type = 'liquidity'
-        elif row_subtype == 'BVor':
+        elif row_subsubtype == 'BVorDeb' and level == 4:
             account_type = 'receivable'  # 'vorderingen'
-        elif row_subtype == 'BSch':
+        elif row_subsubtype == 'BSchCre' and level == 4:
             account_type = 'payable'  # 'schulden'
         else:
             account_type = 'other'
@@ -102,6 +103,10 @@ def get_user_type(row, account_type):
         ]
         if 'Btw' in row[0]:
             xml_id = 'conf_account_type_tax'
+        elif account_type == 'payable':
+            xml_id = 'data_account_type_payable'
+        elif account_type == 'receivable':
+            xml_id = 'data_account_type_receivable'
         elif row_subtype in asset_subtypes and account_type == 'other':
             xml_id = 'data_account_type_asset'
         elif row_subtype in asset_subtypes and account_type == 'view':
@@ -124,11 +129,9 @@ def get_user_type(row, account_type):
     return "account.%s" % xml_id
 
 
-def get_reconcile(row):
+def get_reconcile(account_type):
     """Wether account should be reconciled."""
-    xml_id = row[0].lower()
-    level = int(row[4].strip())
-    if level == 4 and xml_id[:7] in ['bvordeb', 'bschcre']:
+    if account_type in ['payable', 'receivable']:
         return 'True'
     return 'False'
 
@@ -139,6 +142,20 @@ def get_parent_id(row):
     if len(reference_code) < 4:
         return 'rgs_root'
     return reference_code[0:(len(reference_code) - 3)].lower()
+
+
+def get_code(row):
+    """Get code for row."""
+    return row[1] or row[0]
+
+
+def get_description(row):
+    """Get description for row."""
+    if row[2]:
+        description = row[2].replace('<', '&lt;').replace('>', '&gt;')
+    else:
+        description = row[0]
+    return description
 
 
 print HEADER
@@ -154,11 +171,11 @@ with open('rgs2dot0.csv', 'rb') as csvfile:
         user_type = get_user_type(row, account_type)  # link to account_account_type
         print RECORD % {
             'xml_id': row[0].lower(),
-            'code': row[1],
-            'name': row[2],
+            'code': get_code(row),
+            'name': get_description(row),
             'type': account_type,
             'user_type': user_type,
             'parent_id': get_parent_id(row),
-            'reconcile': get_reconcile(row)
+            'reconcile': get_reconcile(account_type)
         }
 print FOOTER

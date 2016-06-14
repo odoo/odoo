@@ -10,8 +10,8 @@
     </record>
 
     <record id="b" model="account.account.template">
-        <field name="name"></field>
-        <field name="code"></field>
+        <field name="name">B</field>
+        <field name="code">B</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="rgs_root"/>
@@ -20,7 +20,7 @@
 
     <record id="biva" model="account.account.template">
         <field name="name">IMMATERIËLE VASTE ACTIVA</field>
-        <field name="code"></field>
+        <field name="code">BIva</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.account_type_asset_view1"/>
         <field name="parent_id" ref="b"/>
@@ -1829,7 +1829,7 @@
 
     <record id="bmva" model="account.account.template">
         <field name="name">MATERIËLE VASTE ACTIVA</field>
-        <field name="code"></field>
+        <field name="code">BMva</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.account_type_asset_view1"/>
         <field name="parent_id" ref="b"/>
@@ -5969,7 +5969,7 @@
 
     <record id="bfva" model="account.account.template">
         <field name="name">FINANCIËLE VASTE ACTIVA</field>
-        <field name="code"></field>
+        <field name="code">BFva</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.account_type_asset_view1"/>
         <field name="parent_id" ref="b"/>
@@ -7580,7 +7580,7 @@
 
     <record id="beff" model="account.account.template">
         <field name="name">EFFECTEN</field>
-        <field name="code"></field>
+        <field name="code">BEff</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.conf_account_type_equity"/>
         <field name="parent_id" ref="b"/>
@@ -7985,7 +7985,7 @@
 
     <record id="beiv" model="account.account.template">
         <field name="name">EIGEN VERMOGEN</field>
-        <field name="code"></field>
+        <field name="code">BEiv</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.conf_account_type_equity"/>
         <field name="parent_id" ref="b"/>
@@ -10874,7 +10874,7 @@
 
     <record id="bvrz" model="account.account.template">
         <field name="name">VOORZIENINGEN</field>
-        <field name="code"></field>
+        <field name="code">BVrz</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.account_type_liability_view1"/>
         <field name="parent_id" ref="b"/>
@@ -12512,7 +12512,7 @@
 
     <record id="blas" model="account.account.template">
         <field name="name">LANGLOPENDE SCHULDEN</field>
-        <field name="code"></field>
+        <field name="code">BLas</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.account_type_liability_view1"/>
         <field name="parent_id" ref="b"/>
@@ -13412,7 +13412,7 @@
 
     <record id="blim" model="account.account.template">
         <field name="name">LIQUIDE MIDDELEN</field>
-        <field name="code"></field>
+        <field name="code">BLim</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.data_account_type_bank"/>
         <field name="parent_id" ref="b"/>
@@ -13547,7 +13547,7 @@
 
     <record id="bvor" model="account.account.template">
         <field name="name">VORDERINGEN</field>
-        <field name="code"></field>
+        <field name="code">BVor</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="b"/>
@@ -13567,7 +13567,7 @@
         <field name="name">Handelsdebiteuren</field>
         <field name="code">1101010</field>
         <field name="type">receivable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="user_type" ref="account.data_account_type_receivable"/>
         <field name="parent_id" ref="bvordeb"/>
         <field name="reconcile" eval="True"/>
     </record>
@@ -13576,7 +13576,7 @@
         <field name="name">Handelsdebiteuren intercompany</field>
         <field name="code">1101020</field>
         <field name="type">receivable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="user_type" ref="account.data_account_type_receivable"/>
         <field name="parent_id" ref="bvordeb"/>
         <field name="reconcile" eval="True"/>
     </record>
@@ -13585,7 +13585,7 @@
         <field name="name">Voorziening dubieuze debiteuren</field>
         <field name="code">1101030</field>
         <field name="type">receivable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="user_type" ref="account.data_account_type_receivable"/>
         <field name="parent_id" ref="bvordeb"/>
         <field name="reconcile" eval="True"/>
     </record>
@@ -13594,7 +13594,7 @@
         <field name="name">Huurdebiteuren</field>
         <field name="code">1101040</field>
         <field name="type">receivable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="user_type" ref="account.data_account_type_receivable"/>
         <field name="parent_id" ref="bvordeb"/>
         <field name="reconcile" eval="True"/>
     </record>
@@ -13603,7 +13603,7 @@
         <field name="name">Gefactureerde termijnen</field>
         <field name="code">1101050</field>
         <field name="type">receivable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="user_type" ref="account.data_account_type_receivable"/>
         <field name="parent_id" ref="bvordeb"/>
         <field name="reconcile" eval="True"/>
     </record>
@@ -13620,7 +13620,7 @@
     <record id="bvorbtwttv" model="account.account.template">
         <field name="name">Terug te vorderen omzetbelasting</field>
         <field name="code">1102010</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bvorbtw"/>
         <field name="reconcile" eval="False"/>
@@ -13629,7 +13629,7 @@
     <record id="bvorbtwttvbeg" model="account.account.template">
         <field name="name">Beginbalans terug te vorderen omzetbelasting</field>
         <field name="code">1102010.01</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bvorbtwttv"/>
         <field name="reconcile" eval="False"/>
@@ -13638,7 +13638,7 @@
     <record id="bvorbtwttvola" model="account.account.template">
         <field name="name">Omzetbelasting leveringen/diensten algemeen tarief </field>
         <field name="code">1102010.02</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bvorbtwttv"/>
         <field name="reconcile" eval="False"/>
@@ -13647,7 +13647,7 @@
     <record id="bvorbtwttvolv" model="account.account.template">
         <field name="name">Omzetbelasting leveringen/diensten verlaagd tarief </field>
         <field name="code">1102010.03</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bvorbtwttv"/>
         <field name="reconcile" eval="False"/>
@@ -13656,7 +13656,7 @@
     <record id="bvorbtwttvolo" model="account.account.template">
         <field name="name">Omzetbelasting leveringen/diensten overige tarieven </field>
         <field name="code">1102010.04</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bvorbtwttv"/>
         <field name="reconcile" eval="False"/>
@@ -13665,7 +13665,7 @@
     <record id="bvorbtwttvoop" model="account.account.template">
         <field name="name">Omzetbelasting over privégebruik </field>
         <field name="code">1102010.05</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bvorbtwttv"/>
         <field name="reconcile" eval="False"/>
@@ -13674,7 +13674,7 @@
     <record id="bvorbtwttvolw" model="account.account.template">
         <field name="name">Omzetbelasting leveringen/diensten waarbij heffing is verlegd </field>
         <field name="code">1102010.06</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bvorbtwttv"/>
         <field name="reconcile" eval="False"/>
@@ -13683,7 +13683,7 @@
     <record id="bvorbtwttvolb" model="account.account.template">
         <field name="name">Omzetbelasting leveringen/diensten uit landen buiten de EU </field>
         <field name="code">1102010.07</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bvorbtwttv"/>
         <field name="reconcile" eval="False"/>
@@ -13692,7 +13692,7 @@
     <record id="bvorbtwttvolu" model="account.account.template">
         <field name="name">Omzetbelasting leveringen/diensten uit landen binnen EU </field>
         <field name="code">1102010.08</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bvorbtwttv"/>
         <field name="reconcile" eval="False"/>
@@ -13701,7 +13701,7 @@
     <record id="bvorbtwttvvoo" model="account.account.template">
         <field name="name">Voorbelasting </field>
         <field name="code">1102010.09</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bvorbtwttv"/>
         <field name="reconcile" eval="False"/>
@@ -13710,7 +13710,7 @@
     <record id="bvorbtwttvvvd" model="account.account.template">
         <field name="name">Vermindering volgens de kleineondernemersregeling </field>
         <field name="code">1102010.10</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bvorbtwttv"/>
         <field name="reconcile" eval="False"/>
@@ -13719,7 +13719,7 @@
     <record id="bvorbtwttvsva" model="account.account.template">
         <field name="name">Schatting vorige aangifte(n) </field>
         <field name="code">1102010.11</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bvorbtwttv"/>
         <field name="reconcile" eval="False"/>
@@ -13728,7 +13728,7 @@
     <record id="bvorbtwttvsda" model="account.account.template">
         <field name="name">Schatting deze aangifte </field>
         <field name="code">1102010.12</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bvorbtwttv"/>
         <field name="reconcile" eval="False"/>
@@ -13737,7 +13737,7 @@
     <record id="bvorbtwttvteo" model="account.account.template">
         <field name="name">Terugontvangen omzetbelasting </field>
         <field name="code">1102010.13</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bvorbtwttv"/>
         <field name="reconcile" eval="False"/>
@@ -13746,7 +13746,7 @@
     <record id="bvorbtwttvnah" model="account.account.template">
         <field name="name">Naheffingsaanslagen omzetbelasting</field>
         <field name="code">1102010.14</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bvorbtwttv"/>
         <field name="reconcile" eval="False"/>
@@ -13755,7 +13755,7 @@
     <record id="bvorbtwttvovm" model="account.account.template">
         <field name="name">Overige mutaties omzetbelasting</field>
         <field name="code">1102010.15</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bvorbtwttv"/>
         <field name="reconcile" eval="False"/>
@@ -13773,7 +13773,7 @@
     <record id="bvorovrwbs" model="account.account.template">
         <field name="name">Waarborgsom</field>
         <field name="code">1103010</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorovr"/>
         <field name="reconcile" eval="False"/>
@@ -13782,7 +13782,7 @@
     <record id="bvorovrtvd" model="account.account.template">
         <field name="name">Te vorderen dividend</field>
         <field name="code">1103020</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorovr"/>
         <field name="reconcile" eval="False"/>
@@ -13791,7 +13791,7 @@
     <record id="bvorovrind" model="account.account.template">
         <field name="name">Ingehouden dividendbelasting</field>
         <field name="code">1103030</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorovr"/>
         <field name="reconcile" eval="False"/>
@@ -13800,7 +13800,7 @@
     <record id="bvorovrtvs" model="account.account.template">
         <field name="name">Te vorderen overheidssubsidies</field>
         <field name="code">1103040</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorovr"/>
         <field name="reconcile" eval="False"/>
@@ -13809,7 +13809,7 @@
     <record id="bvorovrtvl" model="account.account.template">
         <field name="name">Te vorderen loonsubsidie</field>
         <field name="code">1103050</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorovr"/>
         <field name="reconcile" eval="False"/>
@@ -13818,7 +13818,7 @@
     <record id="bvorovrtos" model="account.account.template">
         <field name="name">Te vorderen overige subsidies</field>
         <field name="code">1103060</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorovr"/>
         <field name="reconcile" eval="False"/>
@@ -13827,7 +13827,7 @@
     <record id="bvorovrtvr" model="account.account.template">
         <field name="name">Te vorderen rente lening</field>
         <field name="code">1103070</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorovr"/>
         <field name="reconcile" eval="False"/>
@@ -13836,7 +13836,7 @@
     <record id="bvorovrtvo" model="account.account.template">
         <field name="name">Te vorderen overige rente</field>
         <field name="code">1103080</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorovr"/>
         <field name="reconcile" eval="False"/>
@@ -13845,7 +13845,7 @@
     <record id="bvorovrvrb" model="account.account.template">
         <field name="name">Vooruitbetalingen</field>
         <field name="code">1103090</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorovr"/>
         <field name="reconcile" eval="False"/>
@@ -13854,7 +13854,7 @@
     <record id="bvorovrvgk" model="account.account.template">
         <field name="name">Vorderingen op groepsmaatschappijen (kortlopend)</field>
         <field name="code">1103100</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorovr"/>
         <field name="reconcile" eval="False"/>
@@ -13863,7 +13863,7 @@
     <record id="bvorovrvok" model="account.account.template">
         <field name="name">Vorderingen op overige verbonden maatschappijen (kortlopend)</field>
         <field name="code">1103110</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorovr"/>
         <field name="reconcile" eval="False"/>
@@ -13872,7 +13872,7 @@
     <record id="bvorovrvpk" model="account.account.template">
         <field name="name">Vorderingen op participanten en op maatschappijen waarin wordt deelgenomen (kortlopend)</field>
         <field name="code">1103120</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorovr"/>
         <field name="reconcile" eval="False"/>
@@ -13881,7 +13881,7 @@
     <record id="bvorovrvao" model="account.account.template">
         <field name="name">Van aandeelhouders opgevraagde stortingen</field>
         <field name="code">1103130</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorovr"/>
         <field name="reconcile" eval="False"/>
@@ -13890,7 +13890,7 @@
     <record id="bvorovrrcb" model="account.account.template">
         <field name="name">Rekening-courant bestuurders</field>
         <field name="code">1103140</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorovr"/>
         <field name="reconcile" eval="False"/>
@@ -13899,7 +13899,7 @@
     <record id="bvorovrvup" model="account.account.template">
         <field name="name">Vorderingen uit hoofde van pensioenen</field>
         <field name="code">1103150</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorovr"/>
         <field name="reconcile" eval="False"/>
@@ -13908,7 +13908,7 @@
     <record id="bvorovrvub" model="account.account.template">
         <field name="name">Vorderingen uit hoofde van belastingen</field>
         <field name="code">1103160</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorovr"/>
         <field name="reconcile" eval="False"/>
@@ -13917,7 +13917,7 @@
     <record id="bvorovrblk" model="account.account.template">
         <field name="name">Latente belastingvorderingen (kortlopend)</field>
         <field name="code">1103170</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorovr"/>
         <field name="reconcile" eval="False"/>
@@ -13926,7 +13926,7 @@
     <record id="bvorovrlek" model="account.account.template">
         <field name="name">Ledenlening (kortlopend)</field>
         <field name="code">1103180</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorovr"/>
         <field name="reconcile" eval="False"/>
@@ -13935,7 +13935,7 @@
     <record id="bvorovrovk" model="account.account.template">
         <field name="name">Overige vorderingen (kortlopend)</field>
         <field name="code">1103190</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorovr"/>
         <field name="reconcile" eval="False"/>
@@ -13953,7 +13953,7 @@
     <record id="bvorovavof" model="account.account.template">
         <field name="name">Vooruitbetaalde facturen</field>
         <field name="code">1104010</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorova"/>
         <field name="reconcile" eval="False"/>
@@ -13962,7 +13962,7 @@
     <record id="bvorovavbs" model="account.account.template">
         <field name="name">Vooruitverzonden op bestellingen</field>
         <field name="code">1104020</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorova"/>
         <field name="reconcile" eval="False"/>
@@ -13971,7 +13971,7 @@
     <record id="bvorovantf" model="account.account.template">
         <field name="name">Nog te factureren of nog te verzenden facturen</field>
         <field name="code">1104030</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorova"/>
         <field name="reconcile" eval="False"/>
@@ -13980,7 +13980,7 @@
     <record id="bvorovator" model="account.account.template">
         <field name="name">Te ontvangen rente</field>
         <field name="code">1104040</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorova"/>
         <field name="reconcile" eval="False"/>
@@ -13989,7 +13989,7 @@
     <record id="bvorovavbr" model="account.account.template">
         <field name="name">Vooruitbetaalde rente</field>
         <field name="code">1104050</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorova"/>
         <field name="reconcile" eval="False"/>
@@ -13998,7 +13998,7 @@
     <record id="bvorovaooa" model="account.account.template">
         <field name="name">Overige overlopende activa</field>
         <field name="code">1104060</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="bvorova"/>
         <field name="reconcile" eval="False"/>
@@ -14006,7 +14006,7 @@
 
     <record id="bsch" model="account.account.template">
         <field name="name">KORTLOPENDE SCHULDEN</field>
-        <field name="code"></field>
+        <field name="code">BSch</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.account_type_liability_view1"/>
         <field name="parent_id" ref="b"/>
@@ -14025,8 +14025,8 @@
     <record id="bschkolalk" model="account.account.template">
         <field name="name">Achtergestelde leningen (kortlopend)</field>
         <field name="code">1201010</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschkol"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14034,8 +14034,8 @@
     <record id="bschkolclk" model="account.account.template">
         <field name="name">Converteerbare leningen (kortlopend)</field>
         <field name="code">1201020</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschkol"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14043,8 +14043,8 @@
     <record id="bschkolaok" model="account.account.template">
         <field name="name">Andere obligaties en onderhandse leningen (kortlopend)</field>
         <field name="code">1201030</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschkol"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14052,8 +14052,8 @@
     <record id="bschkolflk" model="account.account.template">
         <field name="name">Financiële lease verplichtingen (kortlopend)</field>
         <field name="code">1201040</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschkol"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14061,8 +14061,8 @@
     <record id="bschkolopl" model="account.account.template">
         <field name="name">Operationele lease verplichtingen (kortlopend)</field>
         <field name="code">1201050</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschkol"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14070,8 +14070,8 @@
     <record id="bschkolhvk" model="account.account.template">
         <field name="name">Hypotheken van kredietinstellingen (kortlopend)</field>
         <field name="code">1201060</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschkol"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14079,8 +14079,8 @@
     <record id="bschkolfvk" model="account.account.template">
         <field name="name">Financieringen van kredietinstellingen (kortlopend)</field>
         <field name="code">1201070</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschkol"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14088,8 +14088,8 @@
     <record id="bschkollvk" model="account.account.template">
         <field name="name">Leningen van kredietinstellingen (kortlopend)</field>
         <field name="code">1201080</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschkol"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14106,8 +14106,8 @@
     <record id="bschsavsgk" model="account.account.template">
         <field name="name">Schulden aan groepsmaatschappijen (kortlopend)</field>
         <field name="code">1202010</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschsav"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14115,8 +14115,8 @@
     <record id="bschsavsvk" model="account.account.template">
         <field name="name">Schulden aan overige verbonden maatschappijen (kortlopend)</field>
         <field name="code">1202020</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschsav"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14124,8 +14124,8 @@
     <record id="bschsavspk" model="account.account.template">
         <field name="name">Schulden aan participanten en aan maatschappijen waarin wordt deelgenomen (kortlopend)</field>
         <field name="code">1202030</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschsav"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14143,7 +14143,7 @@
         <field name="name">Handelscrediteuren</field>
         <field name="code">1203010</field>
         <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="user_type" ref="account.data_account_type_payable"/>
         <field name="parent_id" ref="bschcre"/>
         <field name="reconcile" eval="True"/>
     </record>
@@ -14152,7 +14152,7 @@
         <field name="name">Handelscrediteuren intercompany</field>
         <field name="code">1203020</field>
         <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="user_type" ref="account.data_account_type_payable"/>
         <field name="parent_id" ref="bschcre"/>
         <field name="reconcile" eval="True"/>
     </record>
@@ -14161,7 +14161,7 @@
         <field name="name">Vooruitontvangen op bestellingen</field>
         <field name="code">1203030</field>
         <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="user_type" ref="account.data_account_type_payable"/>
         <field name="parent_id" ref="bschcre"/>
         <field name="reconcile" eval="True"/>
     </record>
@@ -14170,7 +14170,7 @@
         <field name="name">Kostencrediteuren</field>
         <field name="code">1203040</field>
         <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="user_type" ref="account.data_account_type_payable"/>
         <field name="parent_id" ref="bschcre"/>
         <field name="reconcile" eval="True"/>
     </record>
@@ -14187,8 +14187,8 @@
     <record id="bschsalnet" model="account.account.template">
         <field name="name">Nettolonen</field>
         <field name="code">1204010</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschsal"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14196,8 +14196,8 @@
     <record id="bschsalvpe" model="account.account.template">
         <field name="name">Voorschotten personeel</field>
         <field name="code">1204020</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschsal"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14205,8 +14205,8 @@
     <record id="bschsaltan" model="account.account.template">
         <field name="name">Tantièmes</field>
         <field name="code">1204030</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschsal"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14214,8 +14214,8 @@
     <record id="bschsaltvg" model="account.account.template">
         <field name="name">Te betalen vakantiebijslag</field>
         <field name="code">1204040</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschsal"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14223,8 +14223,8 @@
     <record id="bschsaltbv" model="account.account.template">
         <field name="name">Reservering vakantiedagen</field>
         <field name="code">1204050</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschsal"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14232,8 +14232,8 @@
     <record id="bschsalvab" model="account.account.template">
         <field name="name">Vakantiebonnen</field>
         <field name="code">1204060</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschsal"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14241,8 +14241,8 @@
     <record id="bschsalbls" model="account.account.template">
         <field name="name">Bruto lonen en salarissen</field>
         <field name="code">1204070</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschsal"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14250,8 +14250,8 @@
     <record id="bschsalpsv" model="account.account.template">
         <field name="name">Premies sociale verzekeringen</field>
         <field name="code">1204080</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschsal"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14259,8 +14259,8 @@
     <record id="bschsalpen" model="account.account.template">
         <field name="name">Pensioenpremies</field>
         <field name="code">1204090</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschsal"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14268,8 +14268,8 @@
     <record id="bschsalper" model="account.account.template">
         <field name="name">Personeelsfonds</field>
         <field name="code">1204100</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschsal"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14277,8 +14277,8 @@
     <record id="bschsalona" model="account.account.template">
         <field name="name">Overige netto-afdrachten</field>
         <field name="code">1204110</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschsal"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14295,7 +14295,7 @@
     <record id="bschbtwatd" model="account.account.template">
         <field name="name">Af te dragen omzetbelasting</field>
         <field name="code">1205010</field>
-        <field name="type">payable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bschbtw"/>
         <field name="reconcile" eval="False"/>
@@ -14304,7 +14304,7 @@
     <record id="bschbtwatdbeg" model="account.account.template">
         <field name="name">Beginbalans af te dragen omzetbelasting</field>
         <field name="code">1205010.01</field>
-        <field name="type">payable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bschbtwatd"/>
         <field name="reconcile" eval="False"/>
@@ -14313,7 +14313,7 @@
     <record id="bschbtwatdola" model="account.account.template">
         <field name="name">Omzetbelasting leveringen/diensten algemeen tarief </field>
         <field name="code">1205010.02</field>
-        <field name="type">payable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bschbtwatd"/>
         <field name="reconcile" eval="False"/>
@@ -14322,7 +14322,7 @@
     <record id="bschbtwatdolv" model="account.account.template">
         <field name="name">Omzetbelasting leveringen/diensten verlaagd tarief </field>
         <field name="code">1205010.03</field>
-        <field name="type">payable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bschbtwatd"/>
         <field name="reconcile" eval="False"/>
@@ -14331,7 +14331,7 @@
     <record id="bschbtwatdolo" model="account.account.template">
         <field name="name">Omzetbelasting leveringen/diensten overige tarieven </field>
         <field name="code">1205010.04</field>
-        <field name="type">payable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bschbtwatd"/>
         <field name="reconcile" eval="False"/>
@@ -14340,7 +14340,7 @@
     <record id="bschbtwatdoop" model="account.account.template">
         <field name="name">Omzetbelasting over privégebruik </field>
         <field name="code">1205010.05</field>
-        <field name="type">payable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bschbtwatd"/>
         <field name="reconcile" eval="False"/>
@@ -14349,7 +14349,7 @@
     <record id="bschbtwatdolw" model="account.account.template">
         <field name="name">Omzetbelasting leveringen/diensten waarbij heffing is verlegd </field>
         <field name="code">1205010.06</field>
-        <field name="type">payable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bschbtwatd"/>
         <field name="reconcile" eval="False"/>
@@ -14358,7 +14358,7 @@
     <record id="bschbtwatdolb" model="account.account.template">
         <field name="name">Omzetbelasting leveringen/diensten uit landen buiten de EU </field>
         <field name="code">1205010.07</field>
-        <field name="type">payable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bschbtwatd"/>
         <field name="reconcile" eval="False"/>
@@ -14367,7 +14367,7 @@
     <record id="bschbtwatdolu" model="account.account.template">
         <field name="name">Omzetbelasting leveringen/diensten uit landen binnen EU </field>
         <field name="code">1205010.08</field>
-        <field name="type">payable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bschbtwatd"/>
         <field name="reconcile" eval="False"/>
@@ -14376,7 +14376,7 @@
     <record id="bschbtwatdvoo" model="account.account.template">
         <field name="name">Voorbelasting </field>
         <field name="code">1205010.09</field>
-        <field name="type">payable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bschbtwatd"/>
         <field name="reconcile" eval="False"/>
@@ -14385,7 +14385,7 @@
     <record id="bschbtwatdvvd" model="account.account.template">
         <field name="name">Vermindering volgens de kleineondernemersregeling </field>
         <field name="code">1205010.10</field>
-        <field name="type">payable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bschbtwatd"/>
         <field name="reconcile" eval="False"/>
@@ -14394,7 +14394,7 @@
     <record id="bschbtwatdsva" model="account.account.template">
         <field name="name">Schatting vorige aangifte(n) </field>
         <field name="code">1205010.11</field>
-        <field name="type">payable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bschbtwatd"/>
         <field name="reconcile" eval="False"/>
@@ -14403,7 +14403,7 @@
     <record id="bschbtwatdsda" model="account.account.template">
         <field name="name">Schatting deze aangifte </field>
         <field name="code">1205010.12</field>
-        <field name="type">payable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bschbtwatd"/>
         <field name="reconcile" eval="False"/>
@@ -14412,7 +14412,7 @@
     <record id="bschbtwatdafo" model="account.account.template">
         <field name="name">Afgedragen omzetbelasting </field>
         <field name="code">1205010.13</field>
-        <field name="type">payable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bschbtwatd"/>
         <field name="reconcile" eval="False"/>
@@ -14421,7 +14421,7 @@
     <record id="bschbtwatdnah" model="account.account.template">
         <field name="name">Naheffingsaanslagen omzetbelasting</field>
         <field name="code">1205010.14</field>
-        <field name="type">payable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bschbtwatd"/>
         <field name="reconcile" eval="False"/>
@@ -14430,7 +14430,7 @@
     <record id="bschbtwatdovm" model="account.account.template">
         <field name="name">Overige mutaties omzetbelasting</field>
         <field name="code">1205010.15</field>
-        <field name="type">payable</field>
+        <field name="type">other</field>
         <field name="user_type" ref="account.conf_account_type_tax"/>
         <field name="parent_id" ref="bschbtwatd"/>
         <field name="reconcile" eval="False"/>
@@ -14448,8 +14448,8 @@
     <record id="bschlheafb" model="account.account.template">
         <field name="name">Af te dragen loonheffing</field>
         <field name="code">1206010</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschlhe"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14457,8 +14457,8 @@
     <record id="bschlheafbbeg" model="account.account.template">
         <field name="name">Beginbalans af te dragen loonheffing </field>
         <field name="code">1206010.01</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschlheafb"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14466,8 +14466,8 @@
     <record id="bschlheafbaal" model="account.account.template">
         <field name="name">Aangifte loonheffing </field>
         <field name="code">1206010.02</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschlheafb"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14475,8 +14475,8 @@
     <record id="bschlheafbalh" model="account.account.template">
         <field name="name">Afgedragen Loonheffing </field>
         <field name="code">1206010.03</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschlheafb"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14484,8 +14484,8 @@
     <record id="bschlheafbnah" model="account.account.template">
         <field name="name">Naheffingsaanslagen loonheffing</field>
         <field name="code">1206010.04</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschlheafb"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14493,8 +14493,8 @@
     <record id="bschlheafbovm" model="account.account.template">
         <field name="name">Overige mutaties loonheffing</field>
         <field name="code">1206010.05</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschlheafb"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14511,8 +14511,8 @@
     <record id="bschvpbatv" model="account.account.template">
         <field name="name">Af te dragen vennootschapsbelasting</field>
         <field name="code">1207010</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschvpb"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14520,8 +14520,8 @@
     <record id="bschvpbatvbeg" model="account.account.template">
         <field name="name">Beginbalans af te dragen vennootschapsbelasting</field>
         <field name="code">1207010.01</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschvpbatv"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14529,8 +14529,8 @@
     <record id="bschvpbatvaav" model="account.account.template">
         <field name="name">Aangifte vennootschapsbelasting </field>
         <field name="code">1207010.02</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschvpbatv"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14538,8 +14538,8 @@
     <record id="bschvpbatvagv" model="account.account.template">
         <field name="name">Aanslag vennootschapsbelasting </field>
         <field name="code">1207010.03</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschvpbatv"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14547,8 +14547,8 @@
     <record id="bschvpbatvtvv" model="account.account.template">
         <field name="name">Te verrekenen vennootschapsbelasting </field>
         <field name="code">1207010.04</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschvpbatv"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14556,8 +14556,8 @@
     <record id="bschvpbatvafv" model="account.account.template">
         <field name="name">Afgedragen vennootschapsbelasting </field>
         <field name="code">1207010.05</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschvpbatv"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14565,8 +14565,8 @@
     <record id="bschvpbatvnah" model="account.account.template">
         <field name="name">Naheffingsaanslagen vennootschapsbelasting</field>
         <field name="code">1207010.06</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschvpbatv"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14574,8 +14574,8 @@
     <record id="bschvpbatvovm" model="account.account.template">
         <field name="name">Overige mutaties vennootschapsbelasting</field>
         <field name="code">1207010.07</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschvpbatv"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14592,8 +14592,8 @@
     <record id="bschovbbib" model="account.account.template">
         <field name="name">Binnenlandse belastingen</field>
         <field name="code">1208010</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschovb"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14601,8 +14601,8 @@
     <record id="bschovbbut" model="account.account.template">
         <field name="name">Buitenlandse belastingen</field>
         <field name="code">1208020</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschovb"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14610,8 +14610,8 @@
     <record id="bschovbprb" model="account.account.template">
         <field name="name">Provinciale belastingen</field>
         <field name="code">1208030</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschovb"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14619,8 +14619,8 @@
     <record id="bschovbgbe" model="account.account.template">
         <field name="name">Gemeentelijke belastingen</field>
         <field name="code">1208040</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschovb"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14628,8 +14628,8 @@
     <record id="bschovbbgd" model="account.account.template">
         <field name="name">Belastingen op verkochte goederen en diensten uitgezonderd BTW</field>
         <field name="code">1208050</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschovb"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14637,8 +14637,8 @@
     <record id="bschovbovb" model="account.account.template">
         <field name="name">Overige belastingen</field>
         <field name="code">1208060</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschovb"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14655,8 +14655,8 @@
     <record id="bschovssaa" model="account.account.template">
         <field name="name">Schulden aan aandeelhouders</field>
         <field name="code">1209010</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschovs"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14664,8 +14664,8 @@
     <record id="bschovsrcb" model="account.account.template">
         <field name="name">Rekening-courant bestuurders</field>
         <field name="code">1209020</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschovs"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14673,8 +14673,8 @@
     <record id="bschovsrba" model="account.account.template">
         <field name="name">Rekening-courant bank</field>
         <field name="code">1209030</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschovs"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14682,8 +14682,8 @@
     <record id="bschovssag" model="account.account.template">
         <field name="name">Overige schulden aan groepsmaatschappijen</field>
         <field name="code">1209040</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschovs"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14691,8 +14691,8 @@
     <record id="bschovssao" model="account.account.template">
         <field name="name">Overige schulden aan overige verbonden maatschappijen</field>
         <field name="code">1209050</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschovs"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14700,8 +14700,8 @@
     <record id="bschovssap" model="account.account.template">
         <field name="name">Overige schulden aan participanten en aan maatschappijen waarin wordt deelgenomen</field>
         <field name="code">1209060</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschovs"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14709,8 +14709,8 @@
     <record id="bschovstbd" model="account.account.template">
         <field name="name">Te betalen dividend</field>
         <field name="code">1209070</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschovs"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14718,8 +14718,8 @@
     <record id="bschovstbw" model="account.account.template">
         <field name="name">Te betalen wissels en cheques</field>
         <field name="code">1209080</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschovs"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14727,8 +14727,8 @@
     <record id="bschovsgif" model="account.account.template">
         <field name="name">Giftenverplichtingen</field>
         <field name="code">1209090</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschovs"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14736,8 +14736,8 @@
     <record id="bschovssuv" model="account.account.template">
         <field name="name">Subsidieverplichtingen</field>
         <field name="code">1209100</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschovs"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14745,8 +14745,8 @@
     <record id="bschovsstp" model="account.account.template">
         <field name="name">Schulden terzake van pensioenen</field>
         <field name="code">1209110</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschovs"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14754,8 +14754,8 @@
     <record id="bschovssuh" model="account.account.template">
         <field name="name">Schulden uit hoofde van projecten</field>
         <field name="code">1209120</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschovs"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14763,8 +14763,8 @@
     <record id="bschovsvvv" model="account.account.template">
         <field name="name">Verplichtingen uit hoofde van onroerende zaken verkocht onder voorwaarden</field>
         <field name="code">1209130</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschovs"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14772,8 +14772,8 @@
     <record id="bschovsvpo" model="account.account.template">
         <field name="name">Verplichtingen aan overheid</field>
         <field name="code">1209140</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschovs"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14781,8 +14781,8 @@
     <record id="bschovsovs" model="account.account.template">
         <field name="name">Overige schulden</field>
         <field name="code">1209150</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschovs"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14799,8 +14799,8 @@
     <record id="bschopanto" model="account.account.template">
         <field name="name">Nog te ontvangen facturen</field>
         <field name="code">1210010</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschopa"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14808,8 +14808,8 @@
     <record id="bschopantb" model="account.account.template">
         <field name="name">Nog te betalen kosten</field>
         <field name="code">1210020</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschopa"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14817,8 +14817,8 @@
     <record id="bschopatbr" model="account.account.template">
         <field name="name">Te betalen rente</field>
         <field name="code">1210030</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschopa"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14826,8 +14826,8 @@
     <record id="bschopavor" model="account.account.template">
         <field name="name">Vooruitontvangen rente</field>
         <field name="code">1210040</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschopa"/>
         <field name="reconcile" eval="False"/>
     </record>
@@ -14835,15 +14835,15 @@
     <record id="bschopaoop" model="account.account.template">
         <field name="name">Overige overlopende passiva</field>
         <field name="code">1210050</field>
-        <field name="type">payable</field>
-        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
         <field name="parent_id" ref="bschopa"/>
         <field name="reconcile" eval="False"/>
     </record>
 
     <record id="bvrd" model="account.account.template">
         <field name="name">VOORRADEN</field>
-        <field name="code"></field>
+        <field name="code">BVrd</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.account_type_asset_view1"/>
         <field name="parent_id" ref="b"/>
@@ -15329,7 +15329,7 @@
 
     <record id="bpro" model="account.account.template">
         <field name="name">PROJECTEN</field>
-        <field name="code"></field>
+        <field name="code">BPro</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="parent_id" ref="b"/>
@@ -15760,8 +15760,8 @@
     </record>
 
     <record id="w" model="account.account.template">
-        <field name="name"></field>
-        <field name="code"></field>
+        <field name="name">W</field>
+        <field name="code">W</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.account_type_expense_view1"/>
         <field name="parent_id" ref="rgs_root"/>
@@ -15770,7 +15770,7 @@
 
     <record id="wper" model="account.account.template">
         <field name="name">PERSONEELSKOSTEN</field>
-        <field name="code"></field>
+        <field name="code">WPer</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.account_type_expense_view1"/>
         <field name="parent_id" ref="w"/>
@@ -17074,7 +17074,7 @@
     </record>
 
     <record id="wperwkveub" model="account.account.template">
-        <field name="name">Eenmalige uitkering/verstrekking bij 25/40-jarig diensttijdjubileum werknemer (voorzover =< 1 x maandloon)</field>
+        <field name="name">Eenmalige uitkering/verstrekking bij 25/40-jarig diensttijdjubileum werknemer (voorzover =&lt; 1 x maandloon)</field>
         <field name="code">4010030</field>
         <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_expense"/>
@@ -17101,7 +17101,7 @@
     </record>
 
     <record id="wperwkveuo" model="account.account.template">
-        <field name="name">Eenmalige uitkering/verstrekking bij overlijden werknemer, zijn partner of kinderen (voorzover = < 3 x maandloon)</field>
+        <field name="name">Eenmalige uitkering/verstrekking bij overlijden werknemer, zijn partner of kinderen (voorzover = &lt; 3 x maandloon)</field>
         <field name="code">4010060</field>
         <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_expense"/>
@@ -17372,7 +17372,7 @@
 
     <record id="wafs" model="account.account.template">
         <field name="name">AFSCHRIJVINGEN</field>
-        <field name="code"></field>
+        <field name="code">WAfs</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.account_type_expense_view1"/>
         <field name="parent_id" ref="w"/>
@@ -18065,7 +18065,7 @@
 
     <record id="wbed" model="account.account.template">
         <field name="name">OVERIGE BEDRIJFSKOSTEN</field>
-        <field name="code"></field>
+        <field name="code">WBed</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.account_type_expense_view1"/>
         <field name="parent_id" ref="w"/>
@@ -20387,7 +20387,7 @@
 
     <record id="wbeddok" model="account.account.template">
         <field name="name">Doorberekende kosten</field>
-        <field name="code">4302000</field>
+        <field name="code">4302005</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.account_type_income_view1"/>
         <field name="parent_id" ref="wbed"/>
@@ -20396,7 +20396,7 @@
 
     <record id="wbeddokdok" model="account.account.template">
         <field name="name">Doorberekende kosten</field>
-        <field name="code">4302010</field>
+        <field name="code">4302015</field>
         <field name="type">other</field>
         <field name="user_type" ref="account.data_account_type_income"/>
         <field name="parent_id" ref="wbeddok"/>
@@ -20405,7 +20405,7 @@
 
     <record id="wkpr" model="account.account.template">
         <field name="name">INKOOPWAARDE VAN DE OMZET</field>
-        <field name="code"></field>
+        <field name="code">WKpr</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.account_type_expense_view1"/>
         <field name="parent_id" ref="w"/>
@@ -20765,7 +20765,7 @@
 
     <record id="womz" model="account.account.template">
         <field name="name">OMZET</field>
-        <field name="code"></field>
+        <field name="code">WOmz</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.account_type_income_view1"/>
         <field name="parent_id" ref="w"/>
@@ -21341,7 +21341,7 @@
 
     <record id="wwiv" model="account.account.template">
         <field name="name">WIJZIGING VOORRADEN</field>
-        <field name="code"></field>
+        <field name="code">WWiv</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.account_type_income_view1"/>
         <field name="parent_id" ref="w"/>
@@ -21467,7 +21467,7 @@
 
     <record id="wovb" model="account.account.template">
         <field name="name">OVERIGE BEDRIJFSOPBRENGSTEN</field>
-        <field name="code"></field>
+        <field name="code">WOvb</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.account_type_income_view1"/>
         <field name="parent_id" ref="w"/>
@@ -21944,7 +21944,7 @@
 
     <record id="wvhe" model="account.account.template">
         <field name="name">VRIJVAL HERWAARDERINGSRESERVE EN EGALISATIEREKENINGEN</field>
-        <field name="code"></field>
+        <field name="code">WVhe</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.account_type_income_view1"/>
         <field name="parent_id" ref="w"/>
@@ -22007,7 +22007,7 @@
 
     <record id="wfbe" model="account.account.template">
         <field name="name">FINANCIËLE BATEN EN LASTEN</field>
-        <field name="code"></field>
+        <field name="code">WFbe</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.account_type_income_view1"/>
         <field name="parent_id" ref="w"/>
@@ -22583,7 +22583,7 @@
 
     <record id="wbbe" model="account.account.template">
         <field name="name">BUITENGEWONE BATEN EN LASTEN</field>
-        <field name="code"></field>
+        <field name="code">WBbe</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.account_type_income_view1"/>
         <field name="parent_id" ref="w"/>
@@ -22628,7 +22628,7 @@
 
     <record id="waad" model="account.account.template">
         <field name="name">AANDEEL DERDEN</field>
-        <field name="code"></field>
+        <field name="code">WAad</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.account_type_expense_view1"/>
         <field name="parent_id" ref="w"/>
@@ -22655,7 +22655,7 @@
 
     <record id="wbel" model="account.account.template">
         <field name="name">BELASTINGEN</field>
-        <field name="code"></field>
+        <field name="code">WBel</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.account_type_expense_view1"/>
         <field name="parent_id" ref="w"/>
@@ -22736,7 +22736,7 @@
 
     <record id="wner" model="account.account.template">
         <field name="name">NETTO RESULTAAT</field>
-        <field name="code"></field>
+        <field name="code">WNer</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.account_type_income_view1"/>
         <field name="parent_id" ref="w"/>
