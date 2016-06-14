@@ -396,9 +396,11 @@ var DataImport = Widget.extend(ControlPanelMixin, {
         var fields = this.$('.oe_import_fields input.oe_import_match_field').map(function (index, el) {
             return $(el).select2('val') || false;
         }).get();
+        var tracking_disable = 'tracking_disable' in kwargs ? kwargs.tracking_disable : !this.$('#oe_import_tracking').prop('checked')
+        delete kwargs.tracking_disable
         kwargs.context = _.extend(
             {}, this.parent_context,
-            {tracking_disable: !this.$('#oe_import_tracking').prop('checked')}
+            {tracking_disable: tracking_disable}
         );
         return this.Import.call('do', [this.id, fields, this.import_options()], kwargs)
             .then(undefined, function (error, event) {
@@ -414,7 +416,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
             }) ;
     },
     onvalidate: function () {
-        return this.call_import({ dryrun: true })
+        return this.call_import({ dryrun: true, tracking_disable: true })
             .done(this.proxy('validated'));
     },
     onimport: function () {
