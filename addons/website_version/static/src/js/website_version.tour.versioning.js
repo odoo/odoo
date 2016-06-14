@@ -2,7 +2,7 @@
     'use strict';
 
     var _t = openerp._t;
-
+    openerp.website.ready().done(function() {
     openerp.Tour.register({
         id:   'versioning',
         name: "Tutorial versioning",
@@ -185,7 +185,7 @@
 
         ]
     });
-
+    });
 }());
 
 
