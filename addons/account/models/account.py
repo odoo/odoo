@@ -776,7 +776,7 @@ class AccountOperationTemplate(models.Model):
 
     account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('deprecated', '=', False)])
     journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation.")
-    label = fields.Char(string='Journal Item Label')
+    label = fields.Char(string='Force Journal Item Label')
     amount_type = fields.Selection([
         ('fixed', 'Fixed'),
         ('percentage', 'Percentage of balance')
