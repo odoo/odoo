@@ -45,8 +45,4 @@ Print product labels with barcode.
         'views/report_productlabel.xml',
         'views/report_producttemplatelabel.xml',
     ],
-    'test': [
-        'product_pricelist_demo.yml',
-        'test/product_pricelist.yml',
-    ],
 }
