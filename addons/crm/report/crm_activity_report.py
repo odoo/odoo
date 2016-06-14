@@ -13,8 +13,8 @@ class crm_activity_report(models.Model):
     _rec_name = 'id'
 
     date = fields.Datetime('Date', readonly=True)
-    author_id = fields.Many2one('res.partner', 'Author', readonly=True)
-    user_id = fields.Many2one('res.users', 'Responsible', readonly=True)
+    author_id = fields.Many2one('res.partner', 'Created By', readonly=True)
+    user_id = fields.Many2one('res.users', 'Salesperson', readonly=True)
     team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True)
     lead_id = fields.Many2one('crm.lead', "Lead", readonly=True)
     subject = fields.Char('Summary', readonly=True)
