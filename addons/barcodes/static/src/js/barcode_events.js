@@ -36,7 +36,9 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
         if (match) {
             var barcode = match[1];
 
-            core.bus.trigger('barcode_scanned', barcode);
+            // Send the target in case there are several barcode widgets on the same page (e.g.
+            // registering the lot numbers in a stock picking)
+            core.bus.trigger('barcode_scanned', barcode, this.buffered_key_events[0].target);
 
             // Dispatch a barcode_scanned DOM event to elements that have barcode_events="true" set.
             if (this.buffered_key_events[0].target.getAttribute("barcode_events") === "true")
