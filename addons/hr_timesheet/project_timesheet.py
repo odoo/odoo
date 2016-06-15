@@ -65,8 +65,8 @@ class task(osv.osv):
     def _get_subtask_count(self, cr, uid, ids, field_names, args, context=None):
         res = dict.fromkeys(ids, 0)
         for task_id in ids:
-            res[task_id] = (self.search_count(
-                cr, uid, [('id', 'child_of', task_id)], context=context) - 1) # don't count task itself
+            res[task_id] = (len(set(self.search(
+                cr, uid, [('id', 'child_of', task_id)], context=context)) - {task_id})) # don't count task itself
         return res
 
     def _get_task(self, cr, uid, ids, context=None):

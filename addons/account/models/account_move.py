@@ -100,6 +100,10 @@ class AccountMove(models.Model):
         return move
 
     @api.multi
+    def copy(self, default=None):
+        return super(AccountMove, self.with_context(dont_create_taxes=True)).copy(default)
+
+    @api.multi
     def write(self, vals):
         if 'line_ids' in vals:
             res = super(AccountMove, self.with_context(check_move_validity=False)).write(vals)
@@ -936,10 +940,10 @@ class AccountMoveLine(models.Model):
                 partial_rec_set |= aml.matched_debit_ids | aml.matched_credit_ids
 
         if currency and aml_to_balance_currency:
-            aml = aml_to_balance_currency
+            aml = aml_to_balance_currency[0]
             #eventually create journal entries to book the difference due to foreign currency's exchange rate that fluctuates
             partial_rec = aml.credit and aml.matched_debit_ids[0] or aml.matched_credit_ids[0]
-            aml_id, partial_rec_id = partial_rec.create_exchange_rate_entry(aml, 0.0, total_amount_currency, currency, maxdate)
+            aml_id, partial_rec_id = partial_rec.with_context(skip_full_reconcile_check=True).create_exchange_rate_entry(aml_to_balance_currency, 0.0, total_amount_currency, currency, maxdate)
 
         partial_rec_ids = [x.id for x in list(partial_rec_set)]
         #if the total debit and credit are equal, and the total amount in currency is 0, the reconciliation is full
@@ -1204,7 +1208,7 @@ class AccountMoveLine(models.Model):
             'unit_amount': self.quantity,
             'product_id': self.product_id and self.product_id.id or False,
             'product_uom_id': self.product_uom_id and self.product_uom_id.id or False,
-            'amount': self.company_currency_id.with_context(date=self.date or fields.Date.context_today(self)).compute(amount, self.currency_id) if self.currency_id else amount,
+            'amount': self.company_currency_id.with_context(date=self.date or fields.Date.context_today(self)).compute(amount, self.analytic_account_id.currency_id) if self.analytic_account_id.currency_id else amount,
             'general_account_id': self.account_id.id,
             'ref': self.ref,
             'move_id': self.id,
