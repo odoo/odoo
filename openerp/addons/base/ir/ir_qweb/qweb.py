@@ -121,18 +121,21 @@ class QWebException(Exception):
         else:
             self.code = None
 
+        if self.error:
+            self.message = "%s\n%s: %s" % (self.message, self.error.__class__.__name__, self.error)
+        if self.name:
+            self.message = "%s\nTemplate: %s" % (self.message, self.name)
+        if self.path:
+            self.message = "%s\nPath: %s" % (self.message, self.path)
+        if self.html:
+            self.message = "%s\nNode: %s" % (self.message, self.html)
+
         super(QWebException, self).__init__(message)
 
     def __str__(self):
         message = "%s\n%s\n%s" % (self.error, self.stack, self.message)
-        if self.name:
-            message = "%s\nTemplate: %s" % (message, self.name)
         if self.code:
             message = "%s\nCompiled code:\n%s" % (message, self.code)
-        if self.path:
-            message = "%s\nPath: %s" % (message, self.path)
-        if self.html:
-            message = "%s\nNode: %s" % (message, self.html)
         return message
 
     def __repr__(self):
