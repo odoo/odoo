@@ -1,7 +1,5 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
-
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
         <!-- Email Templates -->
         <record model="ir.ui.view" id="email_template_form_minimal">
             <field name="name">email.template.form.minimal</field>
@@ -97,6 +95,4 @@
         <menuitem name="Mail Templates" id="menu_email_template"
             parent="menu_mass_mailing_configuration" sequence="3"
             action="action_email_template_marketing" groups="mass_mailing.group_mass_mailing_user"/>
-
-    </data>
-</openerp>
+</odoo>

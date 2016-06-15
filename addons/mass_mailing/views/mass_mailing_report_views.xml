@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-
+<odoo>
         <record id="view_mail_statistics_report_pivot" model="ir.ui.view">
             <field name="name">mail.statistics.report.pivot</field>
             <field name="model">mail.statistics.report</field>
@@ -63,6 +61,4 @@
        <menuitem name="Mass Mailing" id="mass_mailing_menu_root" sequence="60"/>
        <menuitem name="Reports" id="menu_mass_mailing_report" sequence="99"
             parent="mass_mailing_menu_root" action="action_mail_statistics_report" groups="mass_mailing.group_mass_mailing_user"/>
-
-    </data>
-</openerp>
+</odoo>
