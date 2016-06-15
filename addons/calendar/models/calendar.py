@@ -55,6 +55,24 @@ def get_real_ids(ids):
         return [calendar_id2real_id(id) for id in ids]
 
 
+class calendar_contacts(osv.osv):
+    _name = 'calendar.contacts'
+
+    _columns = {
+        'user_id': fields.many2one('res.users', 'Me'),
+        'partner_id': fields.many2one('res.partner', 'Employee', required=True, domain=[]),
+        'active': fields.boolean('active'),
+    }
+
+    _defaults = {
+        'user_id': lambda self, cr, uid, ctx: uid,
+        'active': True,
+    }
+
+    def unlink_from_partner_id(self, cr, uid, partner_id, context=None):
+        self.unlink(cr, uid, self.search(cr, uid, [('partner_id', '=', partner_id)]), context)
+
+
 class calendar_attendee(osv.Model):
     """
     Calendar Attendee Information
@@ -288,37 +306,6 @@ class calendar_attendee(osv.Model):
             vals['cn'] = vals.get("cn")
         res = super(calendar_attendee, self).create(cr, uid, vals, context=context)
         return res
-
-
-class res_partner(osv.Model):
-    _inherit = 'res.partner'
-    _columns = {
-        'calendar_last_notif_ack': fields.datetime('Last notification marked as read from base Calendar'),
-    }
-
-    def get_attendee_detail(self, cr, uid, ids, meeting_id, context=None):
-        """
-        Return a list of tuple (id, name, status)
-        Used by web_calendar.js : Many2ManyAttendee
-        """
-        datas = []
-        meeting = None
-        if meeting_id:
-            meeting = self.pool['calendar.event'].browse(cr, uid, get_real_ids(meeting_id), context=context)
-        for partner in self.browse(cr, uid, ids, context=context):
-            data = self.name_get(cr, uid, [partner.id], context)[0]
-            data = [data[0], data[1], False, partner.color]
-            if meeting:
-                for attendee in meeting.attendee_ids:
-                    if attendee.partner_id.id == partner.id:
-                        data[2] = attendee.state
-            datas.append(data)
-        return datas
-
-    def _set_calendar_last_notif_ack(self, cr, uid, context=None):
-        partner = self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id
-        self.write(cr, uid, partner.id, {'calendar_last_notif_ack': datetime.now()}, context=context)
-        return
 
 
 class calendar_alarm_manager(osv.AbstractModel):
@@ -627,32 +614,6 @@ class calendar_alarm(osv.Model):
         self._update_cron(cr, uid, context=context)
 
         return res
-
-
-class ir_values(osv.Model):
-    _inherit = 'ir.values'
-
-    def set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=False, preserve_user=False, company=False):
-        new_model = []
-        for data in models:
-            if type(data) in (list, tuple):
-                new_model.append((data[0], calendar_id2real_id(data[1])))
-            else:
-                new_model.append(data)
-        return super(ir_values, self).set(cr, uid, key, key2, name, new_model,
-                                          value, replace, isobject, meta, preserve_user, company)
-
-    def get(self, cr, uid, key, key2, models, meta=False, context=None, res_id_req=False, without_user=True, key2_req=True):
-        if context is None:
-            context = {}
-        new_model = []
-        for data in models:
-            if type(data) in (list, tuple):
-                new_model.append((data[0], calendar_id2real_id(data[1])))
-            else:
-                new_model.append(data)
-        return super(ir_values, self).get(cr, uid, key, key2, new_model,
-                                          meta, context, res_id_req, without_user, key2_req)
 
 
 class calendar_event_type(osv.Model):
@@ -1790,94 +1751,3 @@ class calendar_event(osv.Model):
         self.pool['calendar.alarm_manager'].notify_next_alarm(cr, uid, partner_ids)
 
         return res
-
-
-class mail_message(osv.Model):
-    _inherit = "mail.message"
-
-    def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
-        '''
-        convert the search on real ids in the case it was asked on virtual ids, then call super()
-        '''
-        args = list(args)
-        for index in range(len(args)):
-            if args[index][0] == "res_id":
-                if isinstance(args[index][2], basestring):
-                    args[index] = (args[index][0], args[index][1], get_real_ids(args[index][2]))
-                elif isinstance(args[index][2], list):
-                    args[index] = (args[index][0], args[index][1], map(lambda x: get_real_ids(x), args[index][2]))
-        return super(mail_message, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
-
-    def _find_allowed_model_wise(self, cr, uid, doc_model, doc_dict, context=None):
-        if context is None:
-            context = {}
-        if doc_model == 'calendar.event':
-            order = context.get('order', self._order)
-            for virtual_id in self.pool[doc_model].get_recurrent_ids(cr, uid, doc_dict.keys(), [], order=order, context=context):
-                doc_dict.setdefault(virtual_id, doc_dict[get_real_ids(virtual_id)])
-        return super(mail_message, self)._find_allowed_model_wise(cr, uid, doc_model, doc_dict, context=context)
-
-
-class ir_attachment(osv.Model):
-    _inherit = "ir.attachment"
-
-    def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
-        '''
-        convert the search on real ids in the case it was asked on virtual ids, then call super()
-        '''
-        args = list(args)
-        if any([leaf for leaf in args if leaf[0] ==  "res_model" and leaf[2] == 'calendar.event']):
-            for index in range(len(args)):
-                if args[index][0] == "res_id" and isinstance(args[index][2], basestring):
-                    args[index] = (args[index][0], args[index][1], get_real_ids(args[index][2]))
-        return super(ir_attachment, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
-
-    def write(self, cr, uid, ids, vals, context=None):
-        '''
-        when posting an attachment (new or not), convert the virtual ids in real ids.
-        '''
-        if isinstance(vals.get('res_id'), basestring):
-            vals['res_id'] = get_real_ids(vals.get('res_id'))
-        return super(ir_attachment, self).write(cr, uid, ids, vals, context=context)
-
-
-class ir_http(osv.AbstractModel):
-    _inherit = 'ir.http'
-
-    def _auth_method_calendar(self):
-        token = request.params['token']
-        db = request.params['db']
-
-        registry = openerp.modules.registry.RegistryManager.get(db)
-        attendee_pool = registry.get('calendar.attendee')
-        error_message = False
-        with registry.cursor() as cr:
-            attendee_id = attendee_pool.search(cr, openerp.SUPERUSER_ID, [('access_token', '=', token)])
-            if not attendee_id:
-                error_message = """Invalid Invitation Token."""
-            elif request.session.uid and request.session.login != 'anonymous':
-                 # if valid session but user is not match
-                attendee = attendee_pool.browse(cr, openerp.SUPERUSER_ID, attendee_id[0])
-                user = registry.get('res.users').browse(cr, openerp.SUPERUSER_ID, request.session.uid)
-                if attendee.partner_id.id != user.partner_id.id:
-                    error_message = """Invitation cannot be forwarded via email. This event/meeting belongs to %s and you are logged in as %s. Please ask organizer to add you.""" % (attendee.email, user.email)
-
-        if error_message:
-            raise BadRequest(error_message)
-
-        return True
-
-
-class invite_wizard(osv.osv_memory):
-    _inherit = 'mail.wizard.invite'
-
-    def default_get(self, cr, uid, fields, context=None):
-        '''
-        in case someone clicked on 'invite others' wizard in the followers widget, transform virtual ids in real ids
-        '''
-        if 'default_res_id' in context:
-            context = dict(context, default_res_id=get_real_ids(context['default_res_id']))
-        result = super(invite_wizard, self).default_get(cr, uid, fields, context=context)
-        if 'res_id' in result:
-            result['res_id'] = get_real_ids(result['res_id'])
-        return result
