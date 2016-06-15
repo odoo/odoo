@@ -691,6 +691,9 @@ var ActionManager = Widget.extend({
                     // underlying form view (see comments above)
                     pre_dialog.on_close();
                 }
+                if (!pre_dialog) {
+                    self.dialog = null;
+                }
             };
             this.dialog.on("closed", null, this.dialog.on_close);
             this.dialog_widget = executor.widget();

@@ -4,3 +4,4 @@ import crm_team
 import res_partner
 import res_users
 import res_config
+import ir_ui_view
