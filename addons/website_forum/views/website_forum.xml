@@ -879,10 +879,13 @@
                         </li>
                     </ul>
                     <ul class="list-inline mb0">
-                        <li t-if="(question.post_type != 'question' or question.post_type == 'question' and not question.uid_has_answered) and question.state != 'close' and question.active != False">
+                        <li t-if="(question.post_type in ('link','question') and not question.uid_has_answered) and question.state != 'close' and question.active != False">
                             <a t-attf-class="fa fa-reply #{not question.can_answer and 'karma_required text-muted' or ''}"
                             t-att-data-karma="question.forum_id.karma_answer"
                             href="#post_reply"> Reply</a>
+                        </li>
+                        <li t-if="question.post_type == 'discussion'">
+                            <a t-attf-class="fa fa-comment-o #{not question.can_answer and 'karma_required text-muted' or None}" t-att-data-karma="question.forum_id.karma_answer" href="#post_reply"> Comment</a>
                         </li>
                         <li t-if="question.post_type == 'question'">
                             <a style="cursor: pointer" t-att-data-toggle="question.can_comment and 'collapse' or None"
