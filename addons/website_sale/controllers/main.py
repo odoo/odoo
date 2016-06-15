@@ -604,9 +604,11 @@ class website_sale(http.Controller):
         return error, error_message
 
     def _get_shipping_info(self, checkout):
+        company_id = request.env.user.company_id.id
         shipping_info = {}
         shipping_info.update(self.checkout_parse('shipping', checkout, True))
         shipping_info['type'] = 'delivery'
+        shipping_info['company_id'] = company_id
         return shipping_info
 
     def checkout_form_save(self, checkout):
@@ -622,7 +624,7 @@ class website_sale(http.Controller):
 
         partner_lang = request.lang if request.lang in [lang.code for lang in request.website.language_ids] else None
 
-        billing_info = {'customer': True}
+        billing_info = {'customer': True, 'company_id': company_id}
         if partner_lang:
             billing_info['lang'] = partner_lang
         billing_info.update(self.checkout_parse('billing', checkout, True))
@@ -725,8 +727,7 @@ class website_sale(http.Controller):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         # Switch to user's company
         company_id = request.env.user.company_id.id
-        context.update(company_id=company_id
-                       )
+        context.update(company_id=company_id)
         # Check that this option is activated
         extra_step = registry['ir.model.data'].xmlid_to_object(cr, uid, 'website_sale.extra_info_option', raise_if_not_found=True)
         if not extra_step.active:
