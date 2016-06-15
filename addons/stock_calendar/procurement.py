@@ -30,7 +30,7 @@ class procurement_order(osv.osv):
                 date_planned = datetime.strptime(procurement.date_planned, DEFAULT_SERVER_DATETIME_FORMAT)
                 purchase_date, delivery_date = self._get_previous_dates(cr, uid, orderpoint, date_planned, context=context)
                 if purchase_date and delivery_date:
-                    self.write(cr, uid, {'next_delivery_date': delivery_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    self.write(cr, uid, [procurement.id], {'next_delivery_date': delivery_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                                          'next_purchase_date': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),}, context=context)
 
     @api.v8
