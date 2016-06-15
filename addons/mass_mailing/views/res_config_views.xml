@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <record id="view_mass_mailing_configuration" model="ir.ui.view">
             <field name="name">Configure Mass Mailing</field>
             <field name="model">mass.mailing.config.settings</field>
@@ -35,5 +34,4 @@
             sequence="100"/>
         <menuitem id="menu_mass_mailing_global_settings" name="Settings" 
             parent="menu_mass_mailing_configuration" sequence="0" action="action_mass_mailing_configuration" groups="base.group_system"/>
-    </data>
-</openerp>
+</odoo>

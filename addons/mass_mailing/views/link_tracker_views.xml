@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<!-- LINK TRACKER VIEWS -->
+    <record model="ir.ui.view" id="view_mail_mass_mailing_links_tree">
+        <field name="name">link.tracker.tree</field>
+        <field name="model">link.tracker</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <tree string="Mailing Statistics of Clicks">
+                <field name="title"/>
+                <field name="url"/>
+                <field name="count"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="view_mail_mass_mailing_links_search">
+        <field name="name">link.tracker.search</field>
+        <field name="model">link.tracker</field>
+        <field name="inherit_id" ref="link_tracker.view_link_tracker_filter"/>
+        <field name="arch" type="xml">
+           <search string="Tracked Link">
+                <field name="mass_mailing_id"/>
+                <field name="mass_mailing_campaign_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_view_mass_mailing_links_statistics">
+        <field name="name">Statistics of Clicks</field>
+        <field name="res_model">link.tracker</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{'search_default_mass_mailing_id': active_id}</field>
+    </record>
+       
+    <record model="ir.actions.act_window" id="dropdb snipp">
+        <field name="name">Statistics of Clicks</field>
+        <field name="res_model">link.tracker</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{'search_default_mass_mailing_campaign_id': active_id}</field>
+    </record>
+</odoo>
