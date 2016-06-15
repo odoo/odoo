@@ -138,9 +138,12 @@ class website_sale(http.Controller):
 
     @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True)
     def pricelist_change(self, pl_id, **post):
-        if request.website.is_pricelist_available(pl_id.id, context=request.context):
+        context = request.context
+        company_id = request.env.user.company_id.id
+        context.update(company_id=company_id)
+        if request.website.is_pricelist_available(pl_id.id, context=context):
             request.session['website_sale_current_pl'] = pl_id.id
-            request.website.sale_get_order(force_pricelist=pl_id.id, context=request.context)
+            request.website.sale_get_order(force_pricelist=pl_id.id, context=context)
         return request.redirect(request.httprequest.referrer or '/shop')
 
 
@@ -181,7 +184,7 @@ class website_sale(http.Controller):
     ], type='http', auth="public", website=True)
     def shop(self, page=0, category=None, search='', ppg=False, **post):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
-
+        context.update(company_id=request.env.user.company_id.id)
         if ppg:
             try:
                 ppg = int(ppg)
@@ -327,6 +330,9 @@ class website_sale(http.Controller):
     @http.route(['/shop/pricelist'], type='http', auth="public", website=True)
     def pricelist(self, promo, **post):
         cr, uid, pool, context = request.cr, request.uid, request.registry, request.context
+        # Switch to user's company
+        company_id = request.env.user.company_id.id
+        context.update(company_id=company_id)
         pl = pool['product.pricelist'].search(cr, SUPERUSER_ID, [('code', '=', promo)], context=context)
         if pl:
             if not request.website.is_pricelist_available(pl[0], context=context):
@@ -338,7 +344,10 @@ class website_sale(http.Controller):
     @http.route(['/shop/cart'], type='http', auth="public", website=True)
     def cart(self, **post):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
-        order = request.website.sale_get_order()
+        # Switch to user's company
+        company_id = request.env.user.company_id.id
+        context.update(company_id=company_id)
+        order = request.website.sale_get_order(context=context)
         if order:
             from_currency = order.company_id.currency_id
             to_currency = order.pricelist_id.currency_id
@@ -367,12 +376,14 @@ class website_sale(http.Controller):
 
     @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True)
     def cart_update(self, product_id, add_qty=1, set_qty=0, **kw):
-        request.website.sale_get_order(force_create=1)._cart_update(product_id=int(product_id), add_qty=float(add_qty), set_qty=float(set_qty))
+        company_id = request.env.user.company_id.id
+        request.website.with_context(company_id=company_id).sale_get_order(force_create=1)._cart_update(product_id=int(product_id), add_qty=float(add_qty), set_qty=float(set_qty))
         return request.redirect("/shop/cart")
 
     @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True)
     def cart_update_json(self, product_id, line_id=None, add_qty=None, set_qty=None, display=True):
-        order = request.website.sale_get_order(force_create=1)
+        company_id = request.env.user.company_id.id
+        order = request.website.with_context(company_id=company_id).sale_get_order(force_create=1)
         if order.state != 'draft':
             request.website.sale_reset()
             return {}
@@ -384,7 +395,7 @@ class website_sale(http.Controller):
         if not display:
             return None
 
-        order = request.website.sale_get_order()
+        order = request.website.with_context(company_id=company_id).sale_get_order()
         value['cart_quantity'] = order.cart_quantity
         value['website_sale.cart_lines'] = request.website._render("website_sale.cart_lines", {
                 'website_sale_order': order,
@@ -424,7 +435,9 @@ class website_sale(http.Controller):
         states_ids = state_orm.search(cr, SUPERUSER_ID, [], context=context)
         states = state_orm.browse(cr, SUPERUSER_ID, states_ids, context)
         partner = orm_user.browse(cr, SUPERUSER_ID, request.uid, context).partner_id
-
+        # If using using different companies on multi-websites, switch to user's company
+        company_id = request.env.user.company_id.id
+        context.update(company_id=company_id)
         order = None
 
         shipping_id = data and data.get('shipping_id') or None
@@ -598,7 +611,9 @@ class website_sale(http.Controller):
 
     def checkout_form_save(self, checkout):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
-
+        company_id = request.env.user.company_id.id
+        # Switch to user's company
+        context.update(company_id=company_id)
         order = request.website.sale_get_order(force_create=1, context=context)
 
         orm_partner = registry.get('res.partner')
@@ -654,7 +669,9 @@ class website_sale(http.Controller):
     @http.route(['/shop/checkout'], type='http', auth="public", website=True)
     def checkout(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
-
+        company_id = request.env.user.company_id.id
+        # Switch to user's company
+        context.update(company_id=company_id)
         order = request.website.sale_get_order(force_create=1, context=context)
 
         redirection = self.checkout_redirection(order)
@@ -668,7 +685,9 @@ class website_sale(http.Controller):
     @http.route(['/shop/confirm_order'], type='http', auth="public", website=True)
     def confirm_order(self, **post):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
-
+        company_id = request.env.user.company_id.id
+        # Switch to user's company
+        context.update(company_id=company_id)
         order = request.website.sale_get_order(context=context)
         if not order:
             return request.redirect("/shop")
@@ -704,7 +723,10 @@ class website_sale(http.Controller):
     @http.route(['/shop/extra_info'], type='http', auth="public", website=True)
     def extra_info(self, **post):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
-
+        # Switch to user's company
+        company_id = request.env.user.company_id.id
+        context.update(company_id=company_id
+                       )
         # Check that this option is activated
         extra_step = registry['ir.model.data'].xmlid_to_object(cr, uid, 'website_sale.extra_info_option', raise_if_not_found=True)
         if not extra_step.active:
@@ -753,7 +775,9 @@ class website_sale(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         payment_obj = request.registry.get('payment.acquirer')
         sale_order_obj = request.registry.get('sale.order')
-
+        # Switch to user's company
+        company_id = request.env.user.company_id.id
+        context.update(company_id=company_id)
         order = request.website.sale_get_order(context=context)
 
         redirection = self.checkout_redirection(order)
@@ -805,6 +829,9 @@ class website_sale(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         payment_obj = request.registry.get('payment.acquirer')
         transaction_obj = request.registry.get('payment.transaction')
+        # Switch to user's company
+        company_id = request.env.user.company_id.id
+        context.update(company_id=company_id)
         order = request.website.sale_get_order(context=context)
 
         if not order or not order.order_line or acquirer_id is None:
@@ -904,7 +931,9 @@ class website_sale(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         email_act = None
         sale_order_obj = request.registry['sale.order']
-
+        # Switch to user's company
+        company_id = request.env.user.company_id.id
+        context.update(company_id=company_id)
         if transaction_id is None:
             tx = request.website.sale_get_transaction()
         else:
