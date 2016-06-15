@@ -21,7 +21,7 @@ class Task(models.Model):
     @api.multi
     def _get_subtask_count(self):
         for task in self:
-            task.subtask_count = self.search_count([('id', 'child_of', task.id)]) - 1  # Don't count task itself
+            task.subtask_count = self.search_count([('id', 'child_of', task.id), ('id', '!=', task.id)])
 
     @api.depends('timesheet_ids.unit_amount', 'planned_hours', 'child_ids.stage_id',
                  'child_ids.planned_hours', 'child_ids.effective_hours', 'child_ids.children_hours')
