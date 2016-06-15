@@ -3,9 +3,11 @@
 
 import random
 
+from openerp import SUPERUSER_ID
 from openerp.addons.base_geolocalize.models.res_partner import geo_find, geo_query_address
 from openerp.osv import osv
 from openerp.osv import fields
+from openerp.tools.translate import _
 
 
 class res_partner_grade(osv.osv):
@@ -70,6 +72,12 @@ class crm_lead(osv.osv):
         'partner_latitude': fields.float('Geo Latitude', digits=(16, 5)),
         'partner_longitude': fields.float('Geo Longitude', digits=(16, 5)),
         'partner_assigned_id': fields.many2one('res.partner', 'Assigned Partner',track_visibility='onchange' , help="Partner this case has been forwarded/assigned to.", select=True),
+        'partner_declined_ids': fields.many2many(
+            'res.partner',
+            relation="crm_lead_declined_partner",
+            column1="lead_id",
+            column2="partner_id",
+            string='Partner not interested'),
         'date_assign': fields.date('Assignation Date', help="Last date this case was forwarded/assigned to a partner"),
     }
     def _merge_data(self, cr, uid, ids, oldest, fields, context=None):
@@ -103,13 +111,16 @@ class crm_lead(osv.osv):
             if not partner_id:
                 partner_id = partner_ids.get(lead.id, False)
             if not partner_id:
+                tag_to_add = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'website_crm_partner_assign', 'tag_portal_lead_partner_unavailable')[1]
+                self.write(cr, uid, [lead.id], {'tag_ids': [(4, tag_to_add, False)]}, context=context)
                 continue
             self.assign_geo_localize(cr, uid, [lead.id], lead.partner_latitude, lead.partner_longitude, context=context)
             partner = res_partner.browse(cr, uid, partner_id, context=context)
             if partner.user_id:
                 salesteam_id = partner.team_id and partner.team_id.id or False
                 self.allocate_salesman(cr, uid, [lead.id], [partner.user_id.id], team_id=salesteam_id, context=context)
-            self.write(cr, uid, [lead.id], {'date_assign': fields.date.context_today(self,cr,uid,context=context), 'partner_assigned_id': partner_id}, context=context)
+            values = {'date_assign': fields.date.context_today(self,cr,uid,context=context), 'partner_assigned_id': partner_id}
+            self.write(cr, uid, [lead.id], values, context=context)
         return res
 
     def assign_geo_localize(self, cr, uid, ids, latitude=False, longitude=False, context=None):
@@ -153,6 +164,7 @@ class crm_lead(osv.osv):
                     ('partner_latitude', '>', latitude - 2), ('partner_latitude', '<', latitude + 2),
                     ('partner_longitude', '>', longitude - 1.5), ('partner_longitude', '<', longitude + 1.5),
                     ('country_id', '=', lead.country_id.id),
+                    ('id', 'not in', lead.partner_declined_ids.mapped('id')),
                 ], context=context)
 
                 # 2. second way: in the same country, big area
@@ -162,6 +174,7 @@ class crm_lead(osv.osv):
                         ('partner_latitude', '>', latitude - 4), ('partner_latitude', '<', latitude + 4),
                         ('partner_longitude', '>', longitude - 3), ('partner_longitude', '<' , longitude + 3),
                         ('country_id', '=', lead.country_id.id),
+                        ('id', 'not in', lead.partner_declined_ids.mapped('id')),
                     ], context=context)
 
                 # 3. third way: in the same country, extra large area
@@ -171,6 +184,7 @@ class crm_lead(osv.osv):
                         ('partner_latitude','>', latitude - 8), ('partner_latitude','<', latitude + 8),
                         ('partner_longitude','>', longitude - 8), ('partner_longitude','<', longitude + 8),
                         ('country_id', '=', lead.country_id.id),
+                        ('id', 'not in', lead.partner_declined_ids.mapped('id')),
                     ], context=context)
 
                 # 5. fifth way: anywhere in same country
@@ -179,6 +193,7 @@ class crm_lead(osv.osv):
                     partner_ids = res_partner.search(cr, uid, [
                         ('partner_weight', '>', 0),
                         ('country_id', '=', lead.country_id.id),
+                        ('id', 'not in', lead.partner_declined_ids.mapped('id')),
                     ], context=context)
 
                 # 6. sixth way: closest partner whatsoever, just to have at least one result
@@ -189,8 +204,10 @@ class crm_lead(osv.osv):
                                   WHERE active
                                         AND partner_longitude is not null
                                         AND partner_latitude is not null
-                                        AND partner_weight > 0) AS d
-                                  ORDER BY distance LIMIT 1""", (longitude, latitude))
+                                        AND partner_weight > 0
+                                        AND id not in (select partner_id from crm_lead_declined_partner where lead_id = %s)
+                                        ) AS d
+                                  ORDER BY distance LIMIT 1""", (longitude, latitude, lead.id))
                     res = cr.dictfetchone()
                     if res:
                         partner_ids.append(res['id'])
@@ -208,3 +225,67 @@ class crm_lead(osv.osv):
                         res_partner_ids[lead.id] = partner_id
                         break
         return res_partner_ids
+
+    def partner_interested(self, cr, uid, ids, comment=False, context=None):
+        self.check_access_rights(cr, uid, 'write')
+        message = _('<p>I am interested by this lead.</p>')
+        if comment:
+            message += '<p>%s</p>' % comment
+        for active_id in map(int, ids):
+            self.message_post(cr, uid, active_id, body=message, subtype="mail.mt_note", context=context)
+            lead = self.browse(cr, uid, active_id, context=context)
+            self.convert_opportunity(cr, SUPERUSER_ID, [lead.id], lead.partner_id and lead.partner_id.id or None, context=None)
+
+    def partner_desinterested(self, cr, uid, ids, comment=False, contacted=False, context=None):
+        self.check_access_rights(cr, uid, 'write')
+        ids = map(int, ids)
+        if contacted:
+            message = _('<p>I am not interested by this lead. I contacted the lead.</p>')
+        else:
+            message = _('<p>I am not interested by this lead. I have not contacted the lead.</p>')
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        partner_ids = self.pool.get('res.partner').search(
+            cr, SUPERUSER_ID,
+            [('id', 'child_of', user.partner_id.commercial_partner_id.id)],
+            context=context)
+        self.message_unsubscribe(cr, SUPERUSER_ID, ids, partner_ids, context=None)
+        if comment:
+            message += '<p>%s</p>' % comment
+        for active_id in ids:
+            self.message_post(cr, uid, active_id, body=message, subtype="mail.mt_note", context=context)
+        values = {
+            'partner_assigned_id': False
+        }
+        if partner_ids:
+            values['partner_declined_ids'] = map(lambda p: (4, p, 0), partner_ids)
+        self.write(cr, SUPERUSER_ID, ids, values, context=context)
+
+    def update_lead_portal(self, cr, uid, ids, values, context=None):
+        self.check_access_rights(cr, uid, 'write')
+        for active_id in map(int, ids):
+            lead = self.browse(cr, uid, active_id, context=context)
+            if values['date_action'] == '':
+                values['date_action'] = False
+            if lead.next_activity_id.id != values['activity_id'] or lead.title_action != values['title_action']\
+               or lead.date_action != values['date_action']:
+                activity = self.pool.get('crm.activity').browse(cr, SUPERUSER_ID, [lead.next_activity_id.id], context=context)
+                body_html = "<div><b>%(title)s</b>: %(next_activity)s</div>%(description)s" % {
+                    'title': _('Activity Done'),
+                    'next_activity': activity.name,
+                    'description': lead.title_action and '<p><em>%s</em></p>' % lead.title_action or '',
+                }
+                self.message_post(
+                    cr, uid, active_id,
+                    body=body_html,
+                    subject=lead.title_action,
+                    subtype="mail.mt_note",
+                    context=context)
+            self.write(cr, uid, active_id, {
+                'planned_revenue': values['planned_revenue'],
+                'probability': values['probability'],
+                'next_activity_id': values['activity_id'],
+                'title_action': values['title_action'],
+                'date_action': values['date_action'] if values['date_action'] else False,
+                'priority': values['priority'],
+                'date_deadline': values['date_deadline'] if values['date_deadline'] else False,
+            }, context=context)
