@@ -574,7 +574,7 @@
                     <tr t-foreach="quotation.options" t-as="option">
                         <t t-if="not option.line_id">
                             <td>
-                                <div t-field="option.product_id.name_template"/>
+                                <div t-field="option.product_id.product_tmpl_id.name"/>
                             </td>
                             <td>
                                 <div t-field="option.name"/>
