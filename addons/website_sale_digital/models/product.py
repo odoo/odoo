@@ -9,9 +9,10 @@ class ProductTemplate(models.Model):
 
     @api.multi
     def _compute_attachment_count(self):
-        IrAttachment = self.env['ir.attachment']
-        for ptemplate in self:
-            ptemplate.attachment_count = IrAttachment.search_count([('res_model', '=', ptemplate._name), ('res_id', 'in', ptemplate.ids), ('product_downloadable', '=', True)])
+        attachment_data = self.env['ir.attachment'].read_group([('res_model', '=', self._name), ('res_id', 'in', self.ids), ('product_downloadable', '=', True)], ['res_id'], ['res_id'])
+        mapped_data = dict([(data['res_id'], data['res_id_count']) for data in attachment_data])
+        for product_template in self:
+            product_template.attachment_count = mapped_data.get(product_template.id, 0)
 
     @api.multi
     def action_open_attachments(self):
