@@ -13,5 +13,9 @@
         <record id="crm_partner_assign.res_partner_grade_bronze" model="res.partner.grade">
             <field name="website_published" eval="True" />
         </record>
+        <record id="portal.partner_demo_portal" model="res.partner">
+            <field name="grade_id" ref="crm_partner_assign.res_partner_grade_platinium"/>
+            <field name="partner_weight">10</field>
+        </record>
     </data>
 </openerp>

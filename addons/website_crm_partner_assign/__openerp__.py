@@ -8,10 +8,13 @@
 Publish and Assign Partner
 ==========================
         """,
-    'depends': ['crm_partner_assign','website_partner', 'website_google_map'],
+    'depends': ['crm_partner_assign','website_partner', 'website_google_map', 'website_portal'],
     'data': [
+        'data/portal_data.xml',
+        'security/ir.model.access.csv',
         'views/partner_grade.xml',
         'views/website_crm_partner_assign.xml',
+        'views/website_crm_portal_lead_templates.xml'
     ],
     'demo': [
         'data/res_partner_grade_demo.xml',
