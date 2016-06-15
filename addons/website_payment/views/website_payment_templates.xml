@@ -24,7 +24,6 @@
 
     <template id="pay_methods" name="Payment Methods">
         <t t-call="website.layout">
-            <t t-set="additional_title">Payment Methods</t>
             <div class="wrap">
                 <div class="container">
                   <div class="row">
@@ -35,41 +34,78 @@
                             </ol>
                         </div>
                     </div>
-                    <h1>Payment Methods</h1>
-                    <h4 t-if="acquirers">Add a new payment method:</h4>
-                    <div t-if="acquirers" class="row">
-                        <div class="col-md-6">
-                            <div t-if="error_message" class="alert alert-danger">
-                              <t t-foreach="error_message" t-as="err"><t t-esc="err"/><br /></t>
+                    <div class="modal fade" role="dialog" aria-hidden="true" id="newpayment_method">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                                    <h4 class="modal-titled">New Payment Method</h4>
+                                 </div>
+                                <div class="modal-body">
+                                    <div t-if="acquirers" class="row">
+                                        <div class="col-md-12">
+                                            <div t-if="error_message" class="alert alert-danger">
+                                              <t t-foreach="error_message" t-as="err"><t t-esc="err"/><br /></t>
+                                            </div>
+                                            <div t-if='len(acquirers)>1'>
+                                                <label class="control-label" for="pm_acquirer_id">Acquirer</label>
+                                                <select name="pm_acquirer_id" class="form-control">
+                                                    <t t-foreach="acquirers" t-as="acquirer">
+                                                        <option t-att-value="acquirer.id" t-esc="acquirer.name"/>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                            <t t-foreach="acquirers" t-as="acquirer">
+                                                <div t-raw="acquirer.form" t-att-data-acquirer-id="acquirer.id" t-attf-class="acquirer #{'hidden' if acquirer!=acquirers[0] else ''}"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div t-if='len(acquirers)>1'>
-                                <label class="control-label" for="pm_acquirer_id">Acquirer</label>
-                                <select name="pm_acquirer_id" class="form-control">
-                                    <t t-foreach="acquirers" t-as="acquirer">
-                                        <option t-att-value="acquirer.id" t-esc="acquirer.name"/>
-                                    </t>
-                                </select>
-                            </div>
-                            <t t-foreach="acquirers" t-as="acquirer">
-                                <div t-raw="acquirer.form" t-att-data-acquirer-id="acquirer.id" t-attf-class="acquirer #{'hidden' if acquirer!=acquirers[0] else ''}"/>
-                            </t>
                         </div>
                     </div>
+                    <div t-if="acquirers and not pms">
+                        <h4>Create your First Payment Method.<a data-toggle="modal" data-target="#newpayment_method">Click here..</a></h4>
+                    </div>
                     <div class="clearfix"></div>
-                    <h4>Delete a payment method:</h4>
                     <div class="row">
-                        <div class="col-md-6">
-                            <form method="post" action="/website_payment/delete/">
+                        <div class="col-md-8">
+                            <form id="payment_form">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                <div class="form-group">
-                                    <select name="delete_pm_id" class="form-control" >
-                                        <t t-foreach="pms" t-as="pm">
-                                            <option t-att-value="pm.id" t-esc="pm.name"/>
-                                        </t>
-                                    </select>
+                                <div class="form-group" t-if="pms">
+                                    <table class="table table-hover  table-striped table-condensed">
+                                        <thead>
+                                            <tr>
+                                                <th>Payment Method</th>
+                                                <th>Payment Acquirer</th>
+                                                <th>
+                                                    <span class="pull-right"><a data-toggle="modal" data-target="#newpayment_method" t-if="acquirers" >
+                                                       <i class="fa fa-plus-circle"/>
+                                                       Add credit/debit card</a>
+                                                    </span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="pms" t-as="pm">
+                                                <tr>
+                                                    <td>
+                                                        <input name="delete_pm_id" type="radio" t-att-checked="'checked' if pm_first else ''" t-att-value="pm.id"/>
+                                                        <span t-esc="pm.name"/>
+                                                    </td>
+                                                    <td><t t-esc="pm.acquirer_id.name"/></td>
+                                                    <td>
+                                                        <span class="pull-right">
+                                                            <a t-attf-href="/website_payment/#{pm.id}/delete/">
+                                                                <i class='fa fa-trash'> Delete</i>
+                                                            </a>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div class="clearfix"></div>
-                                <button class="btn btn-primary">Delete <span class="fa fa-long-arrow-right"></span></button>
                             </form>
                         </div>
                     </div>
