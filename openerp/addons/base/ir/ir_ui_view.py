@@ -902,7 +902,7 @@ actual arch.
         return arch
 
     @api.model
-    def read_template(self, xml_id):
+    def read_template(self, id):
         if isinstance(id, (int, long)):
             view_id = id
         else:
