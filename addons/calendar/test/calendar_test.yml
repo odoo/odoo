@@ -34,7 +34,7 @@
      ids = self.search(cr, uid, [('start', '>=', '2011-04-30 16:00:00'), ('start', '<=', '2011-05-31 00:00:00')], context={'virtual_id': True} )
      before = self.search(cr, uid, [('start', '>=', '2011-04-30 16:00:00'), ('start', '<=', '2011-05-31 00:00:00')], context={'virtual_id': False})
      # We start by detach the event
-     newid = self._detach_one_event(cr, uid,ids[1])
+     newid = self._detach_one_event(cr, uid,ids[1]).id
      self.write(cr, uid,[newid], {'name':'New Name','recurrency' : True}, context={'virtual_id': True})
      after = self.search(cr, uid, [('start', '>=', '2011-04-30 16:00:00'), ('start', '<=', '2011-05-31 00:00:00')], context={'virtual_id': False})
      assert len(after) == len(before)+1, 'Wrong number of events found, after to have moved a virtual event'

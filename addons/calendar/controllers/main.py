@@ -1,42 +1,44 @@
-import json
-import openerp
-import openerp.http as http
-from openerp.http import request
-import openerp.addons.web.controllers.main as webmain
-import json
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import werkzeug
 
 from odoo.api import Environment
+import odoo.http as http
+
+from odoo.http import request
+from odoo import SUPERUSER_ID
+from odoo import registry as registry_get
 
 
-class meeting_invitation(http.Controller):
+class CalendarController(http.Controller):
 
     @http.route('/calendar/meeting/accept', type='http', auth="calendar")
     def accept(self, db, token, action, id, **kwargs):
-        registry = openerp.modules.registry.RegistryManager.get(db)
-        attendee_pool = registry.get('calendar.attendee')
+        registry = registry_get(db)
         with registry.cursor() as cr:
-            attendee_id = attendee_pool.search(cr, openerp.SUPERUSER_ID, [('access_token', '=', token), ('state', '!=', 'accepted')])
-            if attendee_id:
-                attendee_pool.do_accept(cr, openerp.SUPERUSER_ID, attendee_id)
+            env = Environment(cr, SUPERUSER_ID, {})
+            attendee = env['calendar.attendee'].search([('access_token', '=', token), ('state', '!=', 'accepted')])
+            if attendee:
+                attendee.do_accept()
         return self.view(db, token, action, id, view='form')
 
     @http.route('/calendar/meeting/decline', type='http', auth="calendar")
     def declined(self, db, token, action, id):
-        registry = openerp.modules.registry.RegistryManager.get(db)
-        attendee_pool = registry.get('calendar.attendee')
+        registry = registry_get(db)
         with registry.cursor() as cr:
-            attendee_id = attendee_pool.search(cr, openerp.SUPERUSER_ID, [('access_token', '=', token), ('state', '!=', 'declined')])
-            if attendee_id:
-                attendee_pool.do_decline(cr, openerp.SUPERUSER_ID, attendee_id)
+            env = Environment(cr, SUPERUSER_ID, {})
+            attendee = env['calendar.attendee'].search([('access_token', '=', token), ('state', '!=', 'declined')])
+            if attendee:
+                attendee.do_decline()
         return self.view(db, token, action, id, view='form')
 
     @http.route('/calendar/meeting/view', type='http', auth="calendar")
     def view(self, db, token, action, id, view='calendar'):
-        registry = openerp.modules.registry.RegistryManager.get(db)
+        registry = registry_get(db)
         with registry.cursor() as cr:
             # Since we are in auth=none, create an env with SUPERUSER_ID
-            env = Environment(cr, openerp.SUPERUSER_ID, {})
+            env = Environment(cr, SUPERUSER_ID, {})
             attendee = env['calendar.attendee'].search([('access_token', '=', token)])
             timezone = attendee.partner_id.tz
             event = env['calendar.event'].with_context(tz=timezone).browse(int(id))
