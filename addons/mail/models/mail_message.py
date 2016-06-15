@@ -119,6 +119,11 @@ class Message(models.Model):
         for message in self:
             message.needaction = message in my_messages
 
+    @api.multi
+    def _is_accessible(self):
+        self.ensure_one()
+        return False
+
     @api.model
     def _search_needaction(self, operator, operand):
         if operator == '=' and operand:
@@ -298,6 +303,7 @@ class Message(models.Model):
             'changed_field': tracking.field_desc,
             'old_value': tracking.get_old_display_value()[0],
             'new_value': tracking.get_new_display_value()[0],
+            'field_type': tracking.field_type,
         }) for tracking in trackings)
 
         # 4. Update message dictionaries
