@@ -71,7 +71,7 @@
                                     <span t-field="job.address_id" t-field-options='{
                                         "widget": "contact",
                                         "fields": ["address"],
-                                        "no_tag_br": true
+                                        "no_tag_br": True
                                         }'/>
                                     <span t-if="not job.website_published" class="label label-danger">unpublished</span>
                                     <div class="text-muted">
@@ -114,7 +114,7 @@
             <h5 class="text-center" t-field="job.address_id" t-field-options='{
                 "widget": "contact",
                 "fields": ["address"],
-                "no_tag_br": true
+                "no_tag_br": True
                 }'/>
            <h5 class="text-center text-muted">
                 <i class="fa fa-clock-o"/> <span t-field="job.write_date"/>
