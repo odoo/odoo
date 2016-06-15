@@ -4,6 +4,7 @@ import base64
 import datetime
 import dateutil
 import email
+import json
 import lxml
 from lxml import etree
 import logging
@@ -601,7 +602,7 @@ class MailThread(models.AbstractModel):
             link = '/mail/workflow?%s' % url_encode(params)
         elif link_type == 'method':
             method = kwargs.pop('method')
-            params = dict(base_params, method=method, params=kwargs)
+            params = dict(base_params, method=method, params=json.dumps(kwargs))
             link = '/mail/method?%s' % url_encode(params)
         elif link_type == 'new':
             params = dict(base_params, action_id=kwargs.get('action_id'))
