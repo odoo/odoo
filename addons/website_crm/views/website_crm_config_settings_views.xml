@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_website_config_settings_form_inherit_website_crm" model="ir.ui.view">
+        <field name="name">website.config.settings.form.inherit</field>
+        <field name="model">website.config.settings</field>
+        <field name="inherit_id" ref="website.view_website_config_settings"/>
+        <field name="arch" type="xml">
+            <group name="google_analytics" position="after">
+                <group string="CRM" groups="base.group_no_one">
+                    <label string="Default Sales Team" for="crm_default_team_id"/>
+                    <div class="oe_inline">
+                        <field name="crm_default_team_id"/>
+                    </div>
+                    <label string="Default Salesperson" for="crm_default_user_id"/>
+                    <div class="oe_inline">
+                        <field name="crm_default_user_id"/>
+                    </div>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>
