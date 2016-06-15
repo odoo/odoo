@@ -216,11 +216,9 @@ class Project(models.Model):
     date_start = fields.Date(string='Start Date')
     date = fields.Date(string='Expiration Date', index=True, track_visibility='onchange')
 
-    # TODO: Why not using a SQL contraints ?
-    @api.constrains('date_start', 'date')
-    def _check_dates(self):
-        if any(self.filtered(lambda project: project.date_start and project.date and project.date_start > project.date)):
-            raise ValidationError(_('Error! project start-date must be lower than project end-date.'))
+    _sql_constraints = [
+        ('project_date_greater', 'check(date >= date_start)', 'Error! project start-date must be lower than project end-date.')
+    ]
 
     @api.multi
     def map_tasks(self, new_project_id):
