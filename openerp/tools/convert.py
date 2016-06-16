@@ -883,19 +883,6 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
     input = cStringIO.StringIO(csvcontent) #FIXME
     reader = csv.reader(input, quotechar='"', delimiter=',')
     fields = reader.next()
-    fname_partial = ""
-    if config.get('import_partial'):
-        fname_partial = module + '/'+ fname
-        if not os.path.isfile(config.get('import_partial')):
-            pickle.dump({}, file(config.get('import_partial'),'w+'))
-        else:
-            data = pickle.load(file(config.get('import_partial')))
-            if fname_partial in data:
-                if not data[fname_partial]:
-                    return
-                else:
-                    for i in range(data[fname_partial]):
-                        reader.next()
 
     if not (mode == 'init' or 'id' in fields):
         _logger.error("Import specification does not contain 'id' and we are in init mode, Cannot continue.")
@@ -912,15 +899,16 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
             _logger.error("Cannot import the line: %s", line)
 
     registry = openerp.registry(cr.dbname)
-    result, rows, warning_msg, dummy = registry[model].import_data(cr, uid, fields, datas,mode, module, noupdate, filename=fname_partial)
-    if result < 0:
+    context = {
+        'mode': mode,
+        'module': module,
+        'noupdate': noupdate,
+    }
+    result = registry[model].load(cr, uid, fields, datas, context=context)
+    if any(msg['type'] == 'error' for msg in result['messages']):
         # Report failed import and abort module install
+        warning_msg = "\n".join(msg['message'] for msg in result['messages'])
         raise Exception(_('Module loading %s failed: file %s could not be processed:\n %s') % (module, fname, warning_msg))
-    if config.get('import_partial'):
-        data = pickle.load(file(config.get('import_partial')))
-        data[fname_partial] = 0
-        pickle.dump(data, file(config.get('import_partial'),'wb'))
-        cr.commit()
 
 def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=False, report=None):
     doc = etree.parse(xmlfile)

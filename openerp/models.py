@@ -38,6 +38,7 @@ import babel.dates
 import dateutil.relativedelta
 import psycopg2
 from lxml import etree
+from lxml.builder import E
 
 import openerp
 from . import SUPERUSER_ID
@@ -213,16 +214,11 @@ def get_pg_type(f, type_override=None):
 
 
 class MetaModel(api.Meta):
-    """ Metaclass for the models.
-
-    This class is used as the metaclass for the class :class:`BaseModel` to
-    discover the models defined in a module (without instantiating them).
-    If the automatic discovery is not needed, it is possible to set the model's
-    ``_register`` attribute to False.
-
+    """ The metaclass of all model classes.
+        Its main purpose is to register the models per module.
     """
 
-    module_to_models = {}
+    module_to_models = defaultdict(list)
 
     def __init__(self, name, bases, attrs):
         if not self._register:
@@ -235,7 +231,7 @@ class MetaModel(api.Meta):
 
         # Remember which models to instanciate for this module.
         if not self._custom:
-            self.module_to_models.setdefault(self._module, []).append(self)
+            self.module_to_models[self._module].append(self)
 
         # check for new-api conversion error: leave comma after field definition
         for key, val in attrs.iteritems():
@@ -279,6 +275,7 @@ PREFETCH_MAX = 1000
 LOG_ACCESS_COLUMNS = ['create_uid', 'create_date', 'write_uid', 'write_date']
 MAGIC_COLUMNS = ['id'] + LOG_ACCESS_COLUMNS
 
+
 class BaseModel(object):
     """ Base class for Odoo models.
 
@@ -312,69 +309,61 @@ class BaseModel(object):
     _register = False           # not visible in ORM registry
     _transient = False          # not transient
 
-    _name = None
-    _columns = {}
-    _constraints = []
-    _custom = False
-    _defaults = {}
-    _rec_name = None
-    _parent_name = 'parent_id'
-    _parent_store = False
-    _parent_order = False
-    _date_name = 'date'
-    _order = 'id'
-    _sequence = None
-    _description = None
-    _needaction = False
-    _translate = True # set to False to disable translations export for this model
+    _name = None                # the model name
+    _description = None         # the model's informal name
+    _custom = False             # should be True for custom models only
 
-    # dict of {field:method}, with method returning the (name_get of records, {id: fold})
-    # to include in the _read_group, if grouped on this field
-    _group_by_full = {}
+    _inherit = None             # Python-inherited models ('model' or ['model'])
+    _inherits = {}              # inherited models {'parent_model': 'm2o_field'}
+    _columns = {}               # field definitions (old API)
+    _defaults = {}              # field defaults (old API)
+    _constraints = []           # Python constraints (old API)
 
-    # structure:
-    #  { 'parent_model': 'm2o_field', ... }
-    _inherits = {}
+    _table = None               # SQL table name used by model
+    _sequence = None            # SQL sequence to use for ID field
+    _sql_constraints = []       # SQL constraints [(name, sql_def, message)]
 
-    # Mapping from inherits'd field name to triple (m, r, f, n) where m is the
-    # model from which it is inherits'd, r is the (local) field towards m, f
-    # is the _column object itself, and n is the original (i.e. top-most)
-    # parent model.
-    # Example:
-    #  { 'field_name': ('parent_model', 'm2o_field_to_reach_parent',
-    #                   field_column_obj, origina_parent_model), ... }
-    _inherit_fields = {}
+    _rec_name = None            # field to use for labeling records
+    _order = 'id'               # default order for searching results
+    _parent_name = 'parent_id'  # the many2one field used as parent field
+    _parent_store = False       # set to True to compute MPTT (parent_left, parent_right)
+    _parent_order = False       # order to use for siblings in MPTT
+    _date_name = 'date'         # field to use for default calendar view
 
-    _table = None
-    _sql_constraints = []
+    _needaction = False         # whether the model supports "need actions" (see mail)
+    _translate = True           # False disables translations export for this model
 
-    # model dependencies, for models backed up by sql views:
-    # {model_name: field_names, ...}
-    _depends = {}
+    _depends = {}               # dependencies of models backed up by sql views
+                                # {model_name: field_names, ...}
+
+    _group_by_full = {}         # {field: method}, where method returns (records
+                                # name_get, {id: fold}) used by read_group()
+
+    # Implementation-generated mapping for inherited fields (with _inherits)
+    # {fname: (mname, rname, column, oname)} where 'mname' is the model from
+    # which 'fname' is inherited, 'rname' is the many2one field towards 'mname',
+    # 'column' is the original _column object itself, and 'oname' is the
+    # original (i.e. top-most) parent model.
+    _inherit_fields = None
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
-    def view_init(self, cr, uid, fields_list, context=None):
-        """Override this method to do specific things when a view on the object is opened."""
+    @api.model
+    def view_init(self, fields_list):
+        """ Override this method to do specific things when a form view is
+        opened. This method is invoked by :meth:`~default_get`.
+        """
         pass
 
-    def _field_create(self, cr, context=None):
-        """ Create entries in ir_model_fields for all the model's fields.
-
-        If necessary, also create an entry in ir_model, and if called from the
-        modules loading scheme (by receiving 'module' in the context), also
-        create entries in ir_model_data (for the model and the fields).
-
-        - create an entry in ir_model (if there is not already one),
-        - create an entry in ir_model_data (if there is not already one, and if
-          'module' is in the context),
-        - update ir_model_fields with the fields found in _columns
-          (TODO there is some redundancy as _columns is updated from
-          ir_model_fields in __init__).
-
+    @api.model_cr_context
+    def _field_create(self):
+        """ Reflect the models and its fields in the models 'ir.model' and
+        'ir.model.fields'. Also create entries in 'ir.model.data' if the key
+        'module' is passed to the context.
         """
-        if context is None:
-            context = {}
+        cr = self._cr
+
+        # create/update the entries in 'ir.model' and 'ir.model.data'
         params = {
             'model': self._name,
             'name': self._description,
@@ -382,94 +371,86 @@ class BaseModel(object):
             'state': 'manual' if self._custom else 'base',
             'transient': self._transient,
         }
-        cr.execute("""
-            UPDATE ir_model
-               SET name=%(name)s, info=%(info)s, transient=%(transient)s
-             WHERE model=%(model)s
-         RETURNING id
-        """, params)
+        cr.execute(""" UPDATE ir_model
+                       SET name=%(name)s, info=%(info)s, transient=%(transient)s
+                       WHERE model=%(model)s
+                       RETURNING id """, params)
         if not cr.rowcount:
-            cr.execute("""
-                INSERT INTO ir_model (model, name, info, state, transient)
-                VALUES (%(model)s, %(name)s, %(info)s, %(state)s, %(transient)s)
-                RETURNING id
-            """, params)
+            cr.execute(""" INSERT INTO ir_model (model, name, info, state, transient)
+                           VALUES (%(model)s, %(name)s, %(info)s, %(state)s, %(transient)s)
+                           RETURNING id """, params)
         model_id = cr.fetchone()[0]
-        if 'module' in context:
-            name_id = 'model_'+self._name.replace('.', '_')
-            cr.execute('select * from ir_model_data where name=%s and module=%s', (name_id, context['module']))
+        if 'module' in self._context:
+            xmlid = 'model_' + self._name.replace('.', '_')
+            cr.execute("SELECT * FROM ir_model_data WHERE name=%s AND module=%s",
+                       (xmlid, self._context['module']))
             if not cr.rowcount:
-                cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s)", \
-                    (name_id, context['module'], 'ir.model', model_id)
-                )
+                cr.execute(""" INSERT INTO ir_model_data (name, date_init, date_update, module, model, res_id)
+                               VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s) """,
+                           (xmlid, self._context['module'], 'ir.model', model_id))
 
+        # create/update the entries in 'ir.model.fields' and 'ir.model.data'
         cr.execute("SELECT * FROM ir_model_fields WHERE model=%s", (self._name,))
-        cols = {}
-        for rec in cr.dictfetchall():
-            cols[rec['name']] = rec
+        cols = {rec['name']: rec for rec in cr.dictfetchall()}
 
-        ir_model_fields_obj = self.pool.get('ir.model.fields')
+        Fields = self.env['ir.model.fields']
 
-        # sparse field should be created at the end, as it depends on its serialized field already existing
-        model_fields = sorted(self._fields.items(), key=lambda x: 1 if x[1].type == 'sparse' else 0)
-        for (k, f) in model_fields:
+        # sparse fields should be created at the end, as they depend on their serialized field
+        model_fields = sorted(self._fields.itervalues(), key=lambda field: field.type == 'sparse')
+        for field in model_fields:
             vals = {
                 'model_id': model_id,
                 'model': self._name,
-                'name': k,
-                'field_description': f.string,
-                'help': f.help or None,
-                'ttype': f.type,
-                'relation': f.comodel_name or None,
-                'index': bool(f.index),
-                'store': bool(f.store),
-                'copy': bool(f.copy),
-                'related': f.related and ".".join(f.related),
-                'readonly': bool(f.readonly),
-                'required': bool(f.required),
-                'selectable': bool(f.search or f.store),
-                'translate': bool(getattr(f, 'translate', False)),
-                'relation_field': f.type == 'one2many' and f.inverse_name or None,
+                'name': field.name,
+                'field_description': field.string,
+                'help': field.help or None,
+                'ttype': field.type,
+                'relation': field.comodel_name or None,
+                'index': bool(field.index),
+                'store': bool(field.store),
+                'copy': bool(field.copy),
+                'related': ".".join(field.related) if field.related else None,
+                'readonly': bool(field.readonly),
+                'required': bool(field.required),
+                'selectable': bool(field.search or field.store),
+                'translate': bool(getattr(field, 'translate', False)),
+                'relation_field': field.inverse_name if field.type == 'one2many' else None,
                 'serialization_field_id': None,
-                'relation_table': f.type == 'many2many' and f.relation or None,
-                'column1': f.type == 'many2many' and f.column1 or None,
-                'column2': f.type == 'many2many' and f.column2 or None,
+                'relation_table': field.relation if field.type == 'many2many' else None,
+                'column1': field.column1 if field.type == 'many2many' else None,
+                'column2': field.column2 if field.type == 'many2many' else None,
             }
-            if getattr(f, 'serialization_field', None):
+            if getattr(field, 'serialization_field', None):
                 # resolve link to serialization_field if specified by name
-                serialization_field_id = ir_model_fields_obj.search(cr, SUPERUSER_ID, [('model','=',vals['model']), ('name', '=', f.serialization_field)])
-                if not serialization_field_id:
-                    raise UserError(_("Serialization field `%s` not found for sparse field `%s`!") % (f.serialization_field, k))
-                vals['serialization_field_id'] = serialization_field_id[0]
+                serialization_field = Fields.search([('model', '=', vals['model']), ('name', '=', field.serialization_field)])
+                if not serialization_field:
+                    raise UserError(_("Serialization field `%s` not found for sparse field `%s`!") % (field.serialization_field, field.name))
+                vals['serialization_field_id'] = serialization_field.id
 
-            if k not in cols:
-                cr.execute('select nextval(%s)', ('ir_model_fields_id_seq',))
-                id = cr.fetchone()[0]
-                vals['id'] = id
-                query = "INSERT INTO ir_model_fields (%s) VALUES (%s)" % (
+            if field.name not in cols:
+                query = "INSERT INTO ir_model_fields (%s) VALUES (%s) RETURNING id" % (
                     ",".join(vals),
                     ",".join("%%(%s)s" % name for name in vals),
                 )
                 cr.execute(query, vals)
-                module = f._module or context.get('module')
+                field_id = cr.fetchone()[0]
+                module = field._module or self._context.get('module')
                 if module:
-                    name1 = 'field_' + self._table + '_' + k
-                    cr.execute("select name from ir_model_data where name=%s", (name1,))
+                    xmlid = 'field_%s_%s' % (self._table, field.name)
+                    cr.execute("SELECT name FROM ir_model_data WHERE name=%s", (xmlid,))
                     if cr.fetchone():
-                        name1 = name1 + "_" + str(id)
-                    cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s)", \
-                        (name1, module, 'ir.model.fields', id)
-                    )
+                        xmlid = xmlid + "_" + str(field_id)
+                    cr.execute(""" INSERT INTO ir_model_data (name, date_init, date_update, module, model, res_id)
+                                   VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s) """,
+                               (xmlid, module, 'ir.model.fields', field_id))
             else:
-                for key, val in vals.items():
-                    if cols[k][key] != vals[key]:
-                        names = set(vals) - set(['model', 'name'])
-                        query = "UPDATE ir_model_fields SET %s WHERE model=%%(model)s and name=%%(name)s" % (
-                            ",".join("%s=%%(%s)s" % (name, name) for name in names),
-                        )
-                        cr.execute(query, vals)
-                        break
-        self.invalidate_cache(cr, SUPERUSER_ID)
+                if not all(cols[field.name][key] == vals[key] for key in vals):
+                    names = set(vals) - {'model', 'name'}
+                    query = "UPDATE ir_model_fields SET %s WHERE model=%%(model)s and name=%%(name)s" % (
+                        ",".join("%s=%%(%s)s" % (name, name) for name in names),
+                    )
+                    cr.execute(query, vals)
+        self.invalidate_cache()
 
     @api.model
     def _add_field(self, name, field):
@@ -545,17 +526,15 @@ class BaseModel(object):
         self._add_field(self.CONCURRENCY_CHECK_FIELD, fields.Datetime(
             string='Last Modified on', compute=last_modified_name, automatic=True))
 
-    @api.one
     def compute_concurrency_field(self):
-        self[self.CONCURRENCY_CHECK_FIELD] = \
-            datetime.datetime.utcnow().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        for record in self:
+            record[self.CONCURRENCY_CHECK_FIELD] = openerp.fields.Datetime.now()
 
-    @api.one
     @api.depends('create_date', 'write_date')
     def compute_concurrency_field_with_access(self):
-        self[self.CONCURRENCY_CHECK_FIELD] = \
-            self.write_date or self.create_date or \
-            datetime.datetime.utcnow().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        for record in self:
+            record[self.CONCURRENCY_CHECK_FIELD] = \
+                record.write_date or record.create_date or openerp.fields.Datetime.now()
 
     #
     # Goal: try to apply inheritance at the instantiation level and
@@ -612,7 +591,7 @@ class BaseModel(object):
         cls._local_sql_constraints = cls.__dict__.get('_sql_constraints', [])
 
         # determine inherited models
-        parents = getattr(cls, '_inherit', [])
+        parents = cls._inherit
         parents = [parents] if isinstance(parents, basestring) else (parents or [])
 
         # determine the model's name
@@ -668,6 +647,7 @@ class BaseModel(object):
         cls._log_access = cls._auto
         cls._inherits = {}
         cls._depends = {}
+        cls._group_by_full = {}
         cls._constraints = {}
         cls._sql_constraints = []
 
@@ -683,6 +663,9 @@ class BaseModel(object):
 
             for mname, fnames in base._depends.iteritems():
                 cls._depends[mname] = cls._depends.get(mname, []) + fnames
+
+            for fname, func in base._group_by_full.iteritems():
+                cls._group_by_full[fname] = api.guess(func)
 
             for cons in base._constraints:
                 # cons may override a constraint with the same function name
@@ -991,90 +974,8 @@ class BaseModel(object):
             self = self.with_context(export_raw_data=True)
         return {'datas': self.__export_rows(fields_to_export)}
 
-    def import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
-        """
-        .. deprecated:: 7.0
-            Use :meth:`~load` instead
-
-        Import given data in given module
-
-        This method is used when importing data via client menu.
-
-        Example of fields to import for a sale.order::
-
-            .id,                         (=database_id)
-            partner_id,                  (=name_search)
-            order_line/.id,              (=database_id)
-            order_line/name,
-            order_line/product_id/id,    (=xml id)
-            order_line/price_unit,
-            order_line/product_uom_qty,
-            order_line/product_uom/id    (=xml_id)
-
-        This method returns a 4-tuple with the following structure::
-
-            (return_code, errored_resource, error_message, unused)
-
-        * The first item is a return code, it is ``-1`` in case of
-          import error, or the last imported row number in case of success
-        * The second item contains the record data dict that failed to import
-          in case of error, otherwise it's 0
-        * The third item contains an error message string in case of error,
-          otherwise it's 0
-        * The last item is currently unused, with no specific semantics
-
-        :param fields: list of fields to import
-        :param datas: data to import
-        :param mode: 'init' or 'update' for record creation
-        :param current_module: module name
-        :param noupdate: flag for record creation
-        :param filename: optional file to store partial import state for recovery
-        :returns: 4-tuple in the form (return_code, errored_resource, error_message, unused)
-        :rtype: (int, dict or 0, str or 0, str or 0)
-        """
-        context = dict(context) if context is not None else {}
-        context['_import_current_module'] = current_module
-
-        fields = map(fix_import_export_id_paths, fields)
-        ir_model_data_obj = self.pool.get('ir.model.data')
-
-        def log(m):
-            if m['type'] == 'error':
-                raise Exception(m['message'])
-
-        if config.get('import_partial') and filename:
-            with open(config.get('import_partial'), 'rb') as partial_import_file:
-                data = pickle.load(partial_import_file)
-                position = data.get(filename, 0)
-
-        position = 0
-        try:
-            for res_id, xml_id, res, info in self._convert_records(cr, uid,
-                            self._extract_records(cr, uid, fields, datas,
-                                                  context=context, log=log),
-                            context=context, log=log):
-                ir_model_data_obj._update(cr, uid, self._name,
-                     current_module, res, mode=mode, xml_id=xml_id,
-                     noupdate=noupdate, res_id=res_id, context=context)
-                position = info.get('rows', {}).get('to', 0) + 1
-                if config.get('import_partial') and filename and (not (position%100)):
-                    with open(config.get('import_partial'), 'rb') as partial_import:
-                        data = pickle.load(partial_import)
-                    data[filename] = position
-                    with open(config.get('import_partial'), 'wb') as partial_import:
-                        pickle.dump(data, partial_import)
-                    if context.get('defer_parent_store_computation'):
-                        self._parent_store_compute(cr)
-                    cr.commit()
-        except Exception, e:
-            cr.rollback()
-            return -1, {}, 'Line %d : %s' % (position + 1, tools.ustr(e)), ''
-
-        if context.get('defer_parent_store_computation'):
-            self._parent_store_compute(cr)
-        return position, 0, 0, 0
-
-    def load(self, cr, uid, fields, data, context=None):
+    @api.model
+    def load(self, fields, data):
         """
         Attempts to load the data matrix, and returns a list of ids (or
         ``False`` if there was an error and no id could be generated) and a
@@ -1088,57 +989,52 @@ class BaseModel(object):
         :type fields: list(str)
         :param data: row-major matrix of data to import
         :type data: list(list(str))
-        :param dict context:
         :returns: {ids: list(int)|False, messages: [Message]}
         """
+        # determine values of mode, current_module and noupdate
+        mode = self._context.get('mode', 'init')
+        current_module = self._context.get('module', '')
+        noupdate = self._context.get('noupdate', False)
+
+        # add current module in context for the conversion of xml ids
+        self = self.with_context(_import_current_module=current_module)
+
+        cr = self._cr
         cr.execute('SAVEPOINT model_load')
-        messages = []
 
         fields = map(fix_import_export_id_paths, fields)
-        ModelData = self.pool['ir.model.data'].clear_caches()
-
-        fg = self.fields_get(cr, uid, context=context)
-
-        mode = 'init'
-        current_module = ''
-        noupdate = False
+        fg = self.fields_get()
 
         ids = []
-        for id, xid, record, info in self._convert_records(cr, uid,
-                self._extract_records(cr, uid, fields, data,
-                                      context=context, log=messages.append),
-                context=context, log=messages.append):
+        messages = []
+        ModelData = self.env['ir.model.data'].clear_caches()
+        extracted = self._extract_records(fields, data, log=messages.append)
+        converted = self._convert_records(extracted, log=messages.append)
+        for id, xid, record, info in converted:
             try:
                 cr.execute('SAVEPOINT model_load_save')
-            except psycopg2.InternalError, e:
+            except psycopg2.InternalError as e:
                 # broken transaction, exit and hope the source error was
                 # already logged
                 if not any(message['type'] == 'error' for message in messages):
-                    messages.append(dict(info, type='error',message=
-                        u"Unknown database error: '%s'" % e))
+                    messages.append(dict(info, type='error',message=u"Unknown database error: '%s'" % e))
                 break
             try:
-                ids.append(ModelData._update(cr, uid, self._name,
-                     current_module, record, mode=mode, xml_id=xid,
-                     noupdate=noupdate, res_id=id, context=context))
+                ids.append(ModelData._update(self._name, current_module, record, mode=mode,
+                                             xml_id=xid, noupdate=noupdate, res_id=id))
                 cr.execute('RELEASE SAVEPOINT model_load_save')
-            except psycopg2.Warning, e:
+            except psycopg2.Warning as e:
                 messages.append(dict(info, type='warning', message=str(e)))
                 cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
-            except psycopg2.Error, e:
-                messages.append(dict(
-                    info, type='error',
-                    **PGERROR_TO_OE[e.pgcode](self, fg, info, e)))
+            except psycopg2.Error as e:
+                messages.append(dict(info, type='error', **PGERROR_TO_OE[e.pgcode](self, fg, info, e)))
                 # Failed to write, log to messages, rollback savepoint (to
                 # avoid broken transaction) and keep going
                 cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
-            except Exception, e:
-                message = (_('Unknown error during import:') +
-                           ' %s: %s' % (type(e), unicode(e)))
+            except Exception as e:
+                message = (_('Unknown error during import:') + ' %s: %s' % (type(e), unicode(e)))
                 moreinfo = _('Resolve other errors first')
-                messages.append(dict(info, type='error',
-                                     message=message,
-                                     moreinfo=moreinfo))
+                messages.append(dict(info, type='error', message=message, moreinfo=moreinfo))
                 # Failed for some reason, perhaps due to invalid data supplied,
                 # rollback savepoint and keep going
                 cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
@@ -1147,15 +1043,15 @@ class BaseModel(object):
             ids = False
         return {'ids': ids, 'messages': messages}
 
-    def _add_fake_fields(self, cr, uid, fields, context=None):
+    def _add_fake_fields(self, fields):
         from openerp.fields import Char, Integer
         fields[None] = Char('rec_name')
         fields['id'] = Char('External ID')
         fields['.id'] = Integer('Database ID')
         return fields
 
-    def _extract_records(self, cr, uid, fields_, data,
-                         context=None, log=lambda a: None):
+    @api.model
+    def _extract_records(self, fields_, data, log=lambda a: None):
         """ Generates record dicts from the data sequence.
 
         The result is a generator of dicts mapping field names to raw
@@ -1171,30 +1067,33 @@ class BaseModel(object):
         """
         fields = dict(self._fields)
         # Fake fields to avoid special cases in extractor
-        fields = self._add_fake_fields(cr, uid, fields, context=context)
+        fields = self._add_fake_fields(fields)
         # m2o fields can't be on multiple lines so exclude them from the
         # is_relational field rows filter, but special-case it later on to
         # be handled with relational fields (as it can have subfields)
         is_relational = lambda field: fields[field].relational
-        get_o2m_values = itemgetter_tuple(
-            [index for index, field in enumerate(fields_)
-                   if fields[field[0]].type == 'one2many'])
-        get_nono2m_values = itemgetter_tuple(
-            [index for index, field in enumerate(fields_)
-                   if fields[field[0]].type != 'one2many'])
-        # Checks if the provided row has any non-empty non-relational field
-        def only_o2m_values(row, f=get_nono2m_values, g=get_o2m_values):
-            return any(g(row)) and not any(f(row))
+        get_o2m_values = itemgetter_tuple([
+            index
+            for index, fnames in enumerate(fields_)
+            if fields[fnames[0]].type == 'one2many'
+        ])
+        get_nono2m_values = itemgetter_tuple([
+            index
+            for index, fnames in enumerate(fields_)
+            if fields[fnames[0]].type != 'one2many'
+        ])
+        # Checks if the provided row has any non-empty one2many fields
+        def only_o2m_values(row):
+            return any(get_o2m_values(row)) and not any(get_nono2m_values(row))
 
         index = 0
-        while True:
-            if index >= len(data): return
-
+        while index < len(data):
             row = data[index]
+
             # copy non-relational fields to record dict
-            record = dict((field[0], value)
-                for field, value in itertools.izip(fields_, row)
-                if not is_relational(field[0]))
+            record = {fnames[0]: value
+                      for fnames, value in itertools.izip(fields_, row)
+                      if not is_relational(fnames[0])}
 
             # Get all following rows which have relational values attached to
             # the current record (no non-relational values)
@@ -1202,34 +1101,31 @@ class BaseModel(object):
                 only_o2m_values, itertools.islice(data, index + 1, None))
             # stitch record row back on for relational fields
             record_span = list(itertools.chain([row], record_span))
-            for relfield in set(
-                    field[0] for field in fields_
-                             if is_relational(field[0])):
-                # FIXME: how to not use _obj without relying on fields_get?
-                Model = self.pool[fields[relfield].comodel_name]
+            for relfield in set(fnames[0] for fnames in fields_ if is_relational(fnames[0])):
+                comodel = self.env[fields[relfield].comodel_name]
 
                 # get only cells for this sub-field, should be strictly
                 # non-empty, field path [None] is for name_get field
-                indices, subfields = zip(*((index, field[1:] or [None])
-                                           for index, field in enumerate(fields_)
-                                           if field[0] == relfield))
+                indices, subfields = zip(*((index, fnames[1:] or [None])
+                                           for index, fnames in enumerate(fields_)
+                                           if fnames[0] == relfield))
 
                 # return all rows which have at least one value for the
                 # subfields of relfield
                 relfield_data = filter(any, map(itemgetter_tuple(indices), record_span))
-                record[relfield] = [subrecord
-                    for subrecord, _subinfo in Model._extract_records(
-                        cr, uid, subfields, relfield_data,
-                        context=context, log=log)]
+                record[relfield] = [
+                    subrecord
+                    for subrecord, _subinfo in comodel._extract_records(subfields, relfield_data, log=log)
+                ]
 
             yield record, {'rows': {
                 'from': index,
-                'to': index + len(record_span) - 1
+                'to': index + len(record_span) - 1,
             }}
             index += len(record_span)
-    
-    def _convert_records(self, cr, uid, records,
-                         context=None, log=lambda a: None):
+
+    @api.model
+    def _convert_records(self, records, log=lambda a: None):
         """ Converts records from the source iterable (recursive dicts of
         strings) into forms which can be written to the database (via
         self.create or (ir.model.data)._update)
@@ -1237,45 +1133,36 @@ class BaseModel(object):
         :returns: a list of triplets of (id, xid, record)
         :rtype: list((int|None, str|None, dict))
         """
-        if context is None: context = {}
-        Converter = self.pool['ir.fields.converter']
-        Translation = self.pool['ir.translation']
-        fields = dict(self._fields)
-        field_names = {name: field.string for name, field in fields.iteritems()}
-        if context.get('lang'):
-            field_names.update(
-                Translation.get_field_string(cr, uid, self._name, context=context)
-            )
+        field_names = {name: field.string for name, field in self._fields.iteritems()}
+        if self.env.lang:
+            field_names.update(self.env['ir.translation'].get_field_string(self._name))
 
-        convert = Converter.for_model(cr, uid, self, context=context)
+        convert = self.env['ir.fields.converter'].for_model(self)
 
-        def _log(base, field, exception):
+        def _log(base, record, field, exception):
             type = 'warning' if isinstance(exception, Warning) else 'error'
             # logs the logical (not human-readable) field name for automated
             # processing of response, but injects human readable in message
-            record = dict(base, type=type, field=field,
-                          message=unicode(exception.args[0]) % base)
+            exc_vals = dict(base, record=record, field=field_names[field])
+            record = dict(base, type=type, record=record, field=field,
+                          message=unicode(exception.args[0]) % exc_vals)
             if len(exception.args) > 1 and exception.args[1]:
                 record.update(exception.args[1])
             log(record)
 
         stream = CountingStream(records)
         for record, extras in stream:
-            dbid = False
-            xid = False
-            # name_get/name_create
-            if None in record: pass
             # xid
-            if 'id' in record:
-                xid = record['id']
+            xid = record.get('id', False)
             # dbid
+            dbid = False
             if '.id' in record:
                 try:
                     dbid = int(record['.id'])
                 except ValueError:
                     # in case of overridden id column
                     dbid = record['.id']
-                if not self.search(cr, uid, [('id', '=', dbid)], context=context):
+                if not self.search([('id', '=', dbid)]):
                     log(dict(extras,
                         type='error',
                         record=stream.index,
@@ -1283,8 +1170,7 @@ class BaseModel(object):
                         message=_(u"Unknown database identifier '%s'") % dbid))
                     dbid = False
 
-            converted = convert(record, lambda field, err:\
-                _log(dict(extras, record=stream.index, field=field_names[field]), field, err))
+            converted = convert(record, functools.partial(_log, extras, stream.index))
 
             yield dbid, xid, converted, dict(extras, record=stream.index)
 
@@ -1391,25 +1277,24 @@ class BaseModel(object):
 
         return defaults
 
-    def fields_get_keys(self, cr, user, context=None):
-        res = self._columns.keys()
-        # TODO I believe this loop can be replace by
-        # res.extend(self._inherit_fields.key())
-        for parent in self._inherits:
-            res.extend(self.pool[parent].fields_get_keys(cr, user, context))
-        return res
+    @api.model
+    def fields_get_keys(self):
+        return list(self._fields)
 
-    def _rec_name_fallback(self, cr, uid, context=None):
+    @api.model
+    def _rec_name_fallback(self):
         # if self._rec_name is set, it belongs to self._fields
         return self._rec_name or 'id'
 
     #
-    # Overload this method if you need a window title which depends on the context
+    # Override this method if you need a window title that depends on the context
     #
-    def view_header_get(self, cr, user, view_id=None, view_type='form', context=None):
+    @api.model
+    def view_header_get(self, view_id=None, view_type='form'):
         return False
 
-    def user_has_groups(self, cr, uid, groups, context=None):
+    @api.model
+    def user_has_groups(self, groups):
         """Return true if the user is member of at least one of the groups in
         ``groups``, and is not a member of any of the groups in ``groups``
         preceded by ``!``. Typically used to resolve ``groups`` attribute in
@@ -1423,7 +1308,7 @@ class BaseModel(object):
             preceded by ``!``
         """
         from openerp.http import request
-        Users = self.pool['res.users']
+        user = self.env.user
 
         has_groups = []
         not_has_groups = []
@@ -1437,89 +1322,81 @@ class BaseModel(object):
         for group_ext_id in not_has_groups:
             if group_ext_id == 'base.group_no_one':
                 # check: the group_no_one is effective in debug mode only
-                if Users.has_group(cr, uid, group_ext_id) and request and request.debug:
+                if user.has_group(group_ext_id) and request and request.debug:
                     return False
             else:
-                if Users.has_group(cr, uid, group_ext_id):
+                if user.has_group(group_ext_id):
                     return False
 
         for group_ext_id in has_groups:
             if group_ext_id == 'base.group_no_one':
                 # check: the group_no_one is effective in debug mode only
-                if Users.has_group(cr, uid, group_ext_id) and request and request.debug:
+                if user.has_group(group_ext_id) and request and request.debug:
                     return True
             else:
-                if Users.has_group(cr, uid, group_ext_id):
+                if user.has_group(group_ext_id):
                     return True
 
         return not has_groups
 
-    def _get_default_form_view(self, cr, user, context=None):
+    @api.model
+    def _get_default_form_view(self):
         """ Generates a default single-line form view using all fields
         of the current model except the m2m and o2m ones.
 
-        :param cr: database cursor
-        :param int user: user id
-        :param dict context: connection context
         :returns: a form view as an lxml document
         :rtype: etree._Element
         """
-        view = etree.Element('form', string=self._description)
-        group = etree.SubElement(view, 'group', col="4")
+        group = E.group(col="4")
         for fname, field in self._fields.iteritems():
             if field.automatic or field.type in ('one2many', 'many2many'):
                 continue
-
-            etree.SubElement(group, 'field', name=fname)
+            group.append(E.field(name=fname))
             if field.type == 'text':
-                etree.SubElement(group, 'newline')
+                group.append(E.newline())
+        group.append(E.separator())
+        return E.form(group, string=self._description)
 
-        etree.SubElement(group, 'separator')
-        return view
-
-    def _get_default_search_view(self, cr, user, context=None):
+    @api.model
+    def _get_default_search_view(self):
         """ Generates a single-field search view, based on _rec_name.
 
-        :param cr: database cursor
-        :param int user: user id
-        :param dict context: connection context
         :returns: a tree view as an lxml document
         :rtype: etree._Element
         """
-        view = etree.Element('search', string=self._description)
-        etree.SubElement(view, 'field', name=self._rec_name_fallback(cr, user, context))
-        return view
+        element = E.field(name=self._rec_name_fallback())
+        return E.search(element, string=self._description)
 
-    def _get_default_tree_view(self, cr, user, context=None):
+    @api.model
+    def _get_default_tree_view(self):
         """ Generates a single-field tree view, based on _rec_name.
 
-        :param cr: database cursor
-        :param int user: user id
-        :param dict context: connection context
         :returns: a tree view as an lxml document
         :rtype: etree._Element
         """
-        view = etree.Element('tree', string=self._description)
-        etree.SubElement(view, 'field', name=self._rec_name_fallback(cr, user, context))
-        return view
+        element = E.field(name=self._rec_name_fallback())
+        return E.tree(element, string=self._description)
 
-    def _get_default_pivot_view(self, cr, user, context=None):
-        view = etree.Element('pivot', string=self._description)
-        return view
-        
-    def _get_default_calendar_view(self, cr, user, context=None):
+    @api.model
+    def _get_default_pivot_view(self):
+        """ Generates an empty pivot view.
+
+        :returns: a pivot view as an lxml document
+        :rtype: etree._Element
+        """
+        return E.pivot(string=self._description)
+
+    @api.model
+    def _get_default_calendar_view(self):
         """ Generates a default calendar view by trying to infer
         calendar fields from a number of pre-set attribute names
 
-        :param cr: database cursor
-        :param int user: user id
-        :param dict context: connection context
         :returns: a calendar view
         :rtype: etree._Element
         """
         def set_first_of(seq, in_, to):
             """Sets the first value of ``seq`` also found in ``in_`` to
-            the ``to`` attribute of the view being closed over.
+            the ``to`` attribute of the ``view`` being closed over.
 
             Returns whether it's found a suitable value (and set it on
             the attribute) or not
@@ -1530,65 +1407,61 @@ class BaseModel(object):
                     return True
             return False
 
-        view = etree.Element('calendar', string=self._description)
-        etree.SubElement(view, 'field', name=self._rec_name_fallback(cr, user, context))
+        view = E.calendar(string=self._description)
+        view.append(E.field(name=self._rec_name_fallback()))
 
-        if self._date_name not in self._columns:
+        if self._date_name not in self._fields:
             date_found = False
             for dt in ['date', 'date_start', 'x_date', 'x_date_start']:
-                if dt in self._columns:
+                if dt in self._fields:
                     self._date_name = dt
-                    date_found = True
                     break
-
-            if not date_found:
+            else:
                 raise UserError(_("Insufficient fields for Calendar View!"))
         view.set('date_start', self._date_name)
 
         set_first_of(["user_id", "partner_id", "x_user_id", "x_partner_id"],
-                     self._columns, 'color')
+                     self._fields, 'color')
 
         if not set_first_of(["date_stop", "date_end", "x_date_stop", "x_date_end"],
-                            self._columns, 'date_stop'):
+                            self._fields, 'date_stop'):
             if not set_first_of(["date_delay", "planned_hours", "x_date_delay", "x_planned_hours"],
-                                self._columns, 'date_delay'):
+                                self._fields, 'date_delay'):
                 raise UserError(_("Insufficient fields to generate a Calendar View for %s, missing a date_stop or a date_delay") % self._name)
 
         return view
 
-    def load_views(self, cr, uid, views, options=None, context=None):
+    @api.model
+    def load_views(self, views, options=None):
         """ Returns the fields_views of given views, and optionally filters and fields.
 
         :param views: list of [view_id, view_type]
-        :param options.toolbar: true to include contextual actions when loading fields_views
-        :param options.load_filters: true to return the model's filters
-        :param options.action_id: id of the action to get the filters
-        :param options.load_fields: true to load the model's fields
+        :param options['toolbar']: True to include contextual actions when loading fields_views
+        :param options['load_filters']: True to return the model's filters
+        :param options['action_id']: id of the action to get the filters
+        :param options['load_fields']: True to load the model's fields
         :return: dictionary with fields_views, filters and fields
         """
-        if options is None:
-            options = {}
-        if context is None:
-            context = {}
+        options = options or {}
         result = {}
 
         toolbar = options.get('toolbar')
         result['fields_views'] = {
-            v_type: self.fields_view_get(cr, uid, v_id, v_type if v_type != 'list' else 'tree',
-                                         toolbar=toolbar if v_type != 'search' else False,
-                                         context=context)
+            v_type: self.fields_view_get(v_id, v_type if v_type != 'list' else 'tree',
+                                         toolbar=toolbar if v_type != 'search' else False)
             for [v_id, v_type] in views
         }
 
         if options.get('load_filters'):
-            result['filters'] = self.pool['ir.filters'].get_filters(cr, uid, self._name, options.get('action_id'), context=context)
+            result['filters'] = self.env['ir.filters'].get_filters(self._name, options.get('action_id'))
 
         if options.get('load_fields'):
-            result['fields'] = self.fields_get(cr, uid, context=context)
+            result['fields'] = self.fields_get()
 
         return result
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         """ fields_view_get([view_id | view_type='form'])
 
         Get the detailed composition of the requested view like fields, model, view architecture
@@ -1603,9 +1476,7 @@ class BaseModel(object):
                             * if some tag other than 'position' is found in parent view
         :raise Invalid ArchitectureError: if there is view type other than form, tree, calendar, search etc defined on the structure
         """
-        if context is None:
-            context = {}
-        View = self.pool['ir.ui.view']
+        View = self.env['ir.ui.view']
 
         result = {
             'model': self._name,
@@ -1616,12 +1487,13 @@ class BaseModel(object):
         if not view_id:
             # <view_type>_view_ref in context can be used to overrride the default view
             view_ref_key = view_type + '_view_ref'
-            view_ref = context.get(view_ref_key)
+            view_ref = self._context.get(view_ref_key)
             if view_ref:
                 if '.' in view_ref:
                     module, view_ref = view_ref.split('.', 1)
-                    cr.execute("SELECT res_id FROM ir_model_data WHERE model='ir.ui.view' AND module=%s AND name=%s", (module, view_ref))
-                    view_ref_res = cr.fetchone()
+                    query = "SELECT res_id FROM ir_model_data WHERE model='ir.ui.view' AND module=%s AND name=%s"
+                    self._cr.execute(query, (module, view_ref))
+                    view_ref_res = self._cr.fetchone()
                     if view_ref_res:
                         view_id = view_ref_res[0]
                 else:
@@ -1631,26 +1503,24 @@ class BaseModel(object):
 
             if not view_id:
                 # otherwise try to find the lowest priority matching ir.ui.view
-                view_id = View.default_view(cr, uid, self._name, view_type, context=context)
+                view_id = View.default_view(self._name, view_type)
 
         # context for post-processing might be overriden
-        ctx = context
         if view_id:
             # read the view with inherited views applied
-            root_view = View.read_combined(cr, uid, view_id, fields=['id', 'name', 'field_parent', 'type', 'model', 'arch'], context=context)
+            root_view = View.browse(view_id).read_combined(['id', 'name', 'field_parent', 'type', 'model', 'arch'])
             result['arch'] = root_view['arch']
             result['name'] = root_view['name']
             result['type'] = root_view['type']
             result['view_id'] = root_view['id']
             result['field_parent'] = root_view['field_parent']
             # override context from postprocessing
-            if root_view.get('model') != self._name:
-                ctx = dict(context, base_model_name=root_view.get('model'))
+            if root_view['model'] != self._name:
+                View = View.with_context(base_model_name=root_view['model'])
         else:
             # fallback on default views methods if no ir.ui.view could be found
             try:
-                get_func = getattr(self, '_get_default_%s_view' % view_type)
-                arch_etree = get_func(cr, uid, context)
+                arch_etree = getattr(self, '_get_default_%s_view' % view_type)()
                 result['arch'] = etree.tostring(arch_etree, encoding='utf-8')
                 result['type'] = view_type
                 result['name'] = 'default'
@@ -1658,7 +1528,7 @@ class BaseModel(object):
                 raise UserError(_("No default view of type '%s' could be found !") % view_type)
 
         # Apply post processing, groups and modifiers etc...
-        xarch, xfields = View.postprocess_and_fields(cr, uid, self._name, etree.fromstring(result['arch']), view_id, context=ctx)
+        xarch, xfields = View.postprocess_and_fields(self._name, etree.fromstring(result['arch']), view_id)
         result['arch'] = xarch
         result['fields'] = xfields
 
@@ -1670,14 +1540,19 @@ class BaseModel(object):
                 for key in toclean:
                     x.pop(key, None)
                 return x
-            ir_values_obj = self.pool.get('ir.values')
-            resprint = ir_values_obj.get_actions(cr, uid, 'client_print_multi', self._name, context=context)
-            resaction = ir_values_obj.get_actions(cr, uid, 'client_action_multi', self._name, context=context)
-            resrelate = ir_values_obj.get_actions(cr, uid, 'client_action_relate', self._name, context=context)
-            resaction = [clean(action) for action in resaction if view_type == 'tree' or not action[2].get('multi')]
-            resprint = [clean(print_) for print_ in resprint if view_type == 'tree' or not print_[2].get('multi')]
+            IrValues = self.env['ir.values']
+            resprint = IrValues.get_actions('client_print_multi', self._name)
+            resaction = IrValues.get_actions('client_action_multi', self._name)
+            resrelate = IrValues.get_actions('client_action_relate', self._name)
+            resprint = [clean(print_)
+                        for print_ in resprint
+                        if view_type == 'tree' or not print_[2].get('multi')]
+            resaction = [clean(action)
+                         for action in resaction
+                         if view_type == 'tree' or not action[2].get('multi')]
             #When multi="True" set it will display only in More of the list view
-            resrelate = [clean(action) for action in resrelate
+            resrelate = [clean(action)
+                         for action in resrelate
                          if (action[2].get('multi') and view_type == 'tree') or (not action[2].get('multi') and view_type == 'form')]
 
             for x in itertools.chain(resprint, resaction, resrelate):
@@ -1686,25 +1561,25 @@ class BaseModel(object):
             result['toolbar'] = {
                 'print': resprint,
                 'action': resaction,
-                'relate': resrelate
+                'relate': resrelate,
             }
         return result
 
-    def get_formview_id(self, cr, uid, id, context=None):
-        """ Return an view id to open the document with. This method is meant to be
-            overridden in addons that want to give specific view ids for example.
-
-            :param int id: id of the document to open
+    @api.multi
+    def get_formview_id(self):
+        """ Return an view id to open the document ``self`` with. This method is
+            meant to be overridden in addons that want to give specific view ids
+            for example.
         """
         return False
 
-    def get_formview_action(self, cr, uid, id, context=None):
-        """ Return an action to open the document. This method is meant to be
-            overridden in addons that want to give specific view ids for example.
-
-            :param int id: id of the document to open
+    @api.multi
+    def get_formview_action(self):
+        """ Return an action to open the document ``self``. This method is meant
+            to be overridden in addons that want to give specific view ids for
+            example.
         """
-        view_id = self.get_formview_id(cr, uid, id, context=context)
+        view_id = self.get_formview_id()
         return {
             'type': 'ir.actions.act_window',
             'res_model': self._name,
@@ -1712,38 +1587,33 @@ class BaseModel(object):
             'view_mode': 'form',
             'views': [(view_id, 'form')],
             'target': 'current',
-            'res_id': id,
-            'context': context,
+            'res_id': self.id,
+            'context': dict(self._context),
         }
 
-    def get_access_action(self, cr, uid, ids, context=None):
+    @api.multi
+    def get_access_action(self):
         """ Return an action to open the document. This method is meant to be
         overridden in addons that want to give specific access to the document.
         By default it opens the formview of the document.
-
-        :param int id: id of the document to open
         """
-        return self.get_formview_action(cr, uid, ids[0], context=context)
+        return self[0].get_formview_action()
 
-    def _view_look_dom_arch(self, cr, uid, node, view_id, context=None):
-        return self.pool['ir.ui.view'].postprocess_and_fields(
-            cr, uid, self._name, node, view_id, context=context)
-
-    def search_count(self, cr, user, args, context=None):
+    @api.model
+    def search_count(self, args):
         """ search_count(args) -> int
 
         Returns the number of records in the current model matching :ref:`the
         provided domain <reference/orm/domains>`.
         """
-        res = self.search(cr, user, args, context=context, count=True)
-        if isinstance(res, list):
-            return len(res)
-        return res
+        res = self.search(args, count=True)
+        return res if isinstance(res, (int, long)) else len(res)
 
+    @api.model
     @api.returns('self',
         upgrade=lambda self, value, args, offset=0, limit=None, order=None, count=False: value if count else self.browse(value),
         downgrade=lambda self, value, args, offset=0, limit=None, order=None, count=False: value if count else value.ids)
-    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
+    def search(self, args, offset=0, limit=None, order=None, count=False):
         """ search(args[, offset=0][, limit=None][, order=None][, count=False])
 
         Searches for records based on the ``args``
@@ -1759,7 +1629,8 @@ class BaseModel(object):
 
         :raise AccessError: * if user tries to bypass access rules for read on the requested object.
         """
-        return self._search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
+        res = self._search(args, offset=offset, limit=limit, order=order, count=count)
+        return res if count else self.browse(res)
 
     #
     # display_name, name_get, name_create, name_search
@@ -1842,7 +1713,8 @@ class BaseModel(object):
         """
         return self._name_search(name, args, operator, limit=limit)
 
-    def _name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100, name_get_uid=None):
+    @api.model
+    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
         # private implementation of name_search, allows passing a dedicated user
         # for the name_get part to solve some access rights issues
         args = list(args or [])
@@ -1851,44 +1723,44 @@ class BaseModel(object):
             _logger.warning("Cannot execute name_search, no _rec_name defined on %s", self._name)
         elif not (name == '' and operator == 'ilike'):
             args += [(self._rec_name, operator, name)]
-        access_rights_uid = name_get_uid or user
-        ids = self._search(cr, user, args, limit=limit, context=context, access_rights_uid=access_rights_uid)
-        res = self.name_get(cr, access_rights_uid, ids, context)
-        return res
+        access_rights_uid = name_get_uid or self._uid
+        ids = self._search(args, limit=limit, access_rights_uid=access_rights_uid)
+        recs = self.browse(ids)
+        return recs.sudo(access_rights_uid).name_get()
 
-    def _add_missing_default_values(self, cr, uid, values, context=None):
+    @api.model
+    def _add_missing_default_values(self, values):
         # avoid overriding inherited values when parent is set
-        avoid_tables = []
-        for tables, parent_field in self._inherits.items():
-            if parent_field in values:
-                avoid_tables.append(tables)
+        avoid_models = {
+            parent_model
+            for parent_model, parent_field in self._inherits.iteritems()
+            if parent_field in values
+        }
 
         # compute missing fields
-        missing_defaults = set()
-        for field in self._columns.keys():
-            if not field in values:
-                missing_defaults.add(field)
-        for field in self._inherit_fields.keys():
-            if (field not in values) and (self._inherit_fields[field][0] not in avoid_tables):
-                missing_defaults.add(field)
-        # discard magic fields
-        missing_defaults -= set(MAGIC_COLUMNS)
+        missing_defaults = {
+            name
+            for name, field in self._fields.iteritems()
+            if name not in values
+            if name not in MAGIC_COLUMNS
+            if field.base_field.column
+            if not (field.inherited and field.related_field.model_name in avoid_models)
+        }
 
-        if missing_defaults:
-            # override defaults with the provided values, never allow the other way around
-            defaults = self.default_get(cr, uid, list(missing_defaults), context)
-            for dv in defaults:
-                if ((dv in self._columns and self._columns[dv]._type == 'many2many') \
-                     or (dv in self._inherit_fields and self._inherit_fields[dv][2]._type == 'many2many')) \
-                        and defaults[dv] and isinstance(defaults[dv][0], (int, long)):
-                    defaults[dv] = [(6, 0, defaults[dv])]
-                if (dv in self._columns and self._columns[dv]._type == 'one2many' \
-                    or (dv in self._inherit_fields and self._inherit_fields[dv][2]._type == 'one2many')) \
-                        and isinstance(defaults[dv], (list, tuple)) and defaults[dv] and isinstance(defaults[dv][0], dict):
-                    defaults[dv] = [(0, 0, x) for x in defaults[dv]]
-            defaults.update(values)
-            values = defaults
-        return values
+        if not missing_defaults:
+            return values
+
+        # override defaults with the provided values, never allow the other way around
+        defaults = self.default_get(list(missing_defaults))
+        for name, value in defaults.iteritems():
+            if self._fields[name].type == 'many2many' and value and isinstance(value[0], (int, long)):
+                # convert a list of ids into a list of commands
+                defaults[name] = [(6, 0, value)]
+            elif self._fields[name].type == 'one2many' and value and isinstance(value[0], dict):
+                # convert a list of dicts into a list of commands
+                defaults[name] = [(0, 0, x) for x in value]
+        defaults.update(values)
+        return defaults
 
     def clear_caches(self):
         """ Clear the caches
@@ -1902,10 +1774,10 @@ class BaseModel(object):
         except AttributeError:
             pass
 
-
-    def _read_group_fill_results(self, cr, uid, domain, groupby, remaining_groupbys,
+    @api.model
+    def _read_group_fill_results(self, domain, groupby, remaining_groupbys,
                                  aggregated_fields, count_field,
-                                 read_group_result, read_group_order=None, context=None):
+                                 read_group_result, read_group_order=None):
         """Helper method for filling in empty groups for all possible values of
            the field being grouped by"""
 
@@ -1917,10 +1789,13 @@ class BaseModel(object):
 
         # Grab the list of all groups that should be displayed, including all present groups
         present_group_ids = [x[groupby][0] for x in read_group_result if x[groupby]]
-        all_groups,folded = self._group_by_full[groupby](self, cr, uid, present_group_ids, domain,
-                                                  read_group_order=read_group_order,
-                                                  access_rights_uid=openerp.SUPERUSER_ID,
-                                                  context=context)
+        all_groups, folded = self._group_by_full[groupby](
+            # Beware: present_group_ids do not belong to model self!
+            self.browse(present_group_ids),
+            domain,
+            read_group_order=read_group_order,
+            access_rights_uid=openerp.SUPERUSER_ID,
+        )
 
         result_template = dict.fromkeys(aggregated_fields, False)
         result_template[groupby + '_count'] = 0
@@ -2066,7 +1941,8 @@ class BaseModel(object):
             'qualified_field': qualified_field
         }
 
-    def _read_group_prepare_data(self, key, value, groupby_dict, context):
+    @api.model
+    def _read_group_prepare_data(self, key, value, groupby_dict):
         """
             Helper method to sanitize the data received by read_group. The None
             values are converted to False, and the date/datetime are formatted,
@@ -2079,10 +1955,11 @@ class BaseModel(object):
                 dt_format = DEFAULT_SERVER_DATETIME_FORMAT if gb['type'] == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
                 value = datetime.datetime.strptime(value, dt_format)
             if gb['tz_convert']:
-                value =  pytz.timezone(context['tz']).localize(value)
+                value = pytz.timezone(self._context['tz']).localize(value)
         return value
 
-    def _read_group_format_result(self, data, annotated_groupbys, groupby, domain, context):
+    @api.model
+    def _read_group_format_result(self, data, annotated_groupbys, groupby, domain):
         """
             Helper method to format the data contained in the dictionary data by 
             adding the domain corresponding to its values, the groupbys in the 
@@ -2105,7 +1982,7 @@ class BaseModel(object):
                 if ftype == 'many2one':
                     value = value[0]
                 elif ftype in ('date', 'datetime'):
-                    locale = context.get('lang', 'en_US')
+                    locale = self._context.get('lang', 'en_US')
                     fmt = DEFAULT_SERVER_DATETIME_FORMAT if ftype == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
                     tzinfo = None
                     range_start = value
@@ -2149,12 +2026,11 @@ class BaseModel(object):
         del data['id']
         return data
 
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         """
         Get the list of records in list view grouped by the given ``groupby`` fields
 
-        :param cr: database cursor
-        :param uid: current user id
         :param domain: list specifying search criteria [['field_name', 'operator', 'value'], ...]
         :param list fields: list of fields present in the list view specified on the object
         :param list groupby: list of groupby descriptions by which the records will be grouped.  
@@ -2164,7 +2040,6 @@ class BaseModel(object):
                 date/datetime fields.
         :param int offset: optional number of records to skip
         :param int limit: optional max number of records to return
-        :param dict context: context arguments, like lang, time zone. 
         :param list orderby: optional ``order by`` specification, for
                              overriding the natural sort ordering of the
                              groups, see also :py:meth:`~osv.osv.osv.search`
@@ -2181,9 +2056,7 @@ class BaseModel(object):
         :raise AccessError: * if user has no read rights on the requested object
                             * if user tries to bypass access rules for read on the requested object
         """
-        if context is None:
-            context = context
-        result = self._read_group_raw(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, lazy=lazy)
+        result = self._read_group_raw(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
         groupby = [groupby] if isinstance(groupby, basestring) else groupby
         dt = [
@@ -2203,27 +2076,24 @@ class BaseModel(object):
                     group[df] = group[df][1]
         return result
 
-    def _read_group_raw(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
-        if context is None:
-            context = {}
-        self.check_access_rights(cr, uid, 'read')
-        query = self._where_calc(cr, uid, domain, context=context) 
+    @api.model
+    def _read_group_raw(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        self.check_access_rights('read')
+        query = self._where_calc(domain)
         fields = fields or self._columns.keys()
 
         groupby = [groupby] if isinstance(groupby, basestring) else groupby
         groupby_list = groupby[:1] if lazy else groupby
-        annotated_groupbys = [
-            self._read_group_process_groupby(cr, uid, gb, query, context=context)
-            for gb in groupby_list
-        ]
+        annotated_groupbys = [self._read_group_process_groupby(gb, query) for gb in groupby_list]
         groupby_fields = [g['field'] for g in annotated_groupbys]
         order = orderby or ','.join([g for g in groupby_list])
         groupby_dict = {gb['groupby']: gb for gb in annotated_groupbys}
 
-        self._apply_ir_rules(cr, uid, query, 'read', context=context)
+        self._apply_ir_rules(query, 'read')
         for gb in groupby_fields:
             assert gb in fields, "Fields in 'groupby' must appear in the list of fields to read (perhaps it's missing in the list view?)"
-            groupby_def = self._columns.get(gb) or (self._inherit_fields.get(gb) and self._inherit_fields.get(gb)[2])
+            assert gb in self._fields, "Unknown field %r in 'groupby'" % gb
+            groupby_def = self._fields[gb].base_field.column
             assert groupby_def and groupby_def._classic_write, "Fields in 'groupby' must be regular database-persisted fields (no function or related fields), or function fields with store=True"
             if not (gb in self._fields):
                 # Don't allow arbitrary values, as this would be a SQL injection vector!
@@ -2240,7 +2110,7 @@ class BaseModel(object):
 
         field_formatter = lambda f: (
             self._fields[f].group_operator or 'sum',
-            self._inherits_join_calc(cr, uid, self._table, f, query, context=context),
+            self._inherits_join_calc(self._table, f, query),
             f,
         )
         select_terms = ['%s(%s) AS "%s" ' % field_formatter(f) for f in aggregated_fields]
@@ -2248,9 +2118,9 @@ class BaseModel(object):
         for gb in annotated_groupbys:
             select_terms.append('%s as "%s" ' % (gb['qualified_field'], gb['groupby']))
 
-        groupby_terms, orderby_terms = self._read_group_prepare(cr, uid, order, aggregated_fields, annotated_groupbys, query, context=context)
+        groupby_terms, orderby_terms = self._read_group_prepare(order, aggregated_fields, annotated_groupbys, query)
         from_clause, where_clause, where_clause_params = query.get_sql()
-        if lazy and (len(groupby_fields) >= 2 or not context.get('group_by_no_leaf')):
+        if lazy and (len(groupby_fields) >= 2 or not self._context.get('group_by_no_leaf')):
             count_field = groupby_fields[0] if len(groupby_fields) >= 1 else '_'
         else:
             count_field = '_'
@@ -2278,8 +2148,8 @@ class BaseModel(object):
             'limit': prefix_term('LIMIT', int(limit) if limit else None),
             'offset': prefix_term('OFFSET', int(offset) if limit else None),
         }
-        cr.execute(query, where_clause_params)
-        fetched_data = cr.dictfetchall()
+        self._cr.execute(query, where_clause_params)
+        fetched_data = self._cr.dictfetchall()
 
         if not groupby_fields:
             return fetched_data
@@ -2288,20 +2158,21 @@ class BaseModel(object):
         if many2onefields:
             data_ids = [r['id'] for r in fetched_data]
             many2onefields = list(set(many2onefields))
-            data_dict = {d['id']: d for d in self.read(cr, uid, data_ids, many2onefields, context=context)} 
+            data_dict = {d['id']: d for d in self.browse(data_ids).read(many2onefields)}
             for d in fetched_data:
                 d.update(data_dict[d['id']])
 
-        data = map(lambda r: {k: self._read_group_prepare_data(k,v, groupby_dict, context) for k,v in r.iteritems()}, fetched_data)
-        result = [self._read_group_format_result(d, annotated_groupbys, groupby, domain, context) for d in data]
+        data = map(lambda r: {k: self._read_group_prepare_data(k,v, groupby_dict) for k,v in r.iteritems()}, fetched_data)
+        result = [self._read_group_format_result(d, annotated_groupbys, groupby, domain) for d in data]
         if lazy and groupby_fields[0] in self._group_by_full:
             # Right now, read_group only fill results in lazy mode (by default).
             # If you need to have the empty groups in 'eager' mode, then the
             # method _read_group_fill_results need to be completely reimplemented
             # in a sane way 
-            result = self._read_group_fill_results(cr, uid, domain, groupby_fields[0], groupby[len(annotated_groupbys):],
-                                                       aggregated_fields, count_field, result, read_group_order=order,
-                                                       context=context)
+            result = self._read_group_fill_results(
+                domain, groupby_fields[0], groupby[len(annotated_groupbys):],
+                aggregated_fields, count_field, result, read_group_order=order,
+            )
         return result
 
     def _inherits_join_add(self, current_model, parent_model_name, query):
@@ -2317,81 +2188,82 @@ class BaseModel(object):
         return parent_alias
 
     @api.model
-    def _inherits_join_calc(self, alias, field, query, implicit=True, outer=False):
+    def _inherits_join_calc(self, alias, fname, query, implicit=True, outer=False):
         """
         Adds missing table select and join clause(s) to ``query`` for reaching
         the field coming from an '_inherits' parent table (no duplicates).
 
         :param alias: name of the initial SQL alias
-        :param field: name of inherited field to reach
+        :param fname: name of inherited field to reach
         :param query: query object on which the JOIN should be added
         :return: qualified name of field, to be used in SELECT clause
         """
         # INVARIANT: alias is the SQL alias of model._table in query
-        model = self
-        while field in model._inherit_fields and field not in model._columns:
+        model, field = self, self._fields[fname]
+        while field.inherited:
             # retrieve the parent model where field is inherited from
-            parent_model_name = model._inherit_fields[field][0]
-            parent_model = self.env[parent_model_name]
-            parent_field = model._inherits[parent_model_name]
-            # JOIN parent_model._table AS parent_alias ON alias.parent_field = parent_alias.id
+            parent_model = self.env[field.related_field.model_name]
+            parent_fname = field.related[0]
+            # JOIN parent_model._table AS parent_alias ON alias.parent_fname = parent_alias.id
             parent_alias, _ = query.add_join(
-                (alias, parent_model._table, parent_field, 'id', parent_field),
+                (alias, parent_model._table, parent_fname, 'id', parent_fname),
                 implicit=implicit, outer=outer,
             )
-            model, alias = parent_model, parent_alias
+            model, alias, field = parent_model, parent_alias, field.related_field
         # handle the case where the field is translated
-        translate = model._columns[field].translate
+        translate = getattr(field, 'translate', None)
         if translate and not callable(translate):
-            return model._generate_translated_field(alias, field, query)
+            return model._generate_translated_field(alias, fname, query)
         else:
-            return '"%s"."%s"' % (alias, field)
+            return '"%s"."%s"' % (alias, fname)
 
-    def _parent_store_compute(self, cr):
+    @api.model_cr
+    def _parent_store_compute(self):
         if not self._parent_store:
             return
+
         _logger.info('Computing parent left and right for table %s...', self._table)
-        def browse_rec(root, pos=0):
-            # TODO: set order
-            where = self._parent_name+'='+str(root)
-            if not root:
-                where = self._parent_name+' IS NULL'
-            if self._parent_order:
-                where += ' order by '+self._parent_order
-            cr.execute('SELECT id FROM '+self._table+' WHERE '+where)
-            pos2 = pos + 1
-            for id in cr.fetchall():
-                pos2 = browse_rec(id[0], pos2)
-            cr.execute('update '+self._table+' set parent_left=%s, parent_right=%s where id=%s', (pos, pos2, root))
-            return pos2 + 1
-        query = 'SELECT id FROM '+self._table+' WHERE '+self._parent_name+' IS NULL'
-        if self._parent_order:
-            query += ' order by ' + self._parent_order
+        cr = self._cr
+        select = "SELECT id FROM %s WHERE %s=%%s ORDER BY %s" % \
+                    (self._table, self._parent_name, self._parent_order)
+        update = "UPDATE %s SET parent_left=%%s, parent_right=%%s WHERE id=%%s" % self._table
+
+        def process(root, left):
+            """ Set root.parent_left to ``left``, and return root.parent_right + 1 """
+            cr.execute(select, (root,))
+            right = left + 1
+            for (id,) in cr.fetchall():
+                right = process(id, right)
+            cr.execute(update, (left, right, root))
+            return right + 1
+
+        select0 = "SELECT id FROM %s WHERE %s IS NULL ORDER BY %s" % \
+                    (self._table, self._parent_name, self._parent_order)
+        cr.execute(select0)
         pos = 0
-        cr.execute(query)
-        for (root,) in cr.fetchall():
-            pos = browse_rec(root, pos)
-        self.invalidate_cache(cr, SUPERUSER_ID, ['parent_left', 'parent_right'])
+        for (id,) in cr.fetchall():
+            pos = process(id, pos)
+        self.invalidate_cache(['parent_left', 'parent_right'])
         return True
 
-    def _update_store(self, cr, f, k):
-        _logger.info("storing computed values of fields.function '%s'", k)
-        ss = self._columns[k]._symbol_set
-        update_query = 'UPDATE "%s" SET "%s"=%s WHERE id=%%s' % (self._table, k, ss[0])
-        cr.execute('select id from '+self._table)
-        ids_lst = map(lambda x: x[0], cr.fetchall())
-        while ids_lst:
-            iids = ids_lst[:AUTOINIT_RECALCULATE_STORED_FIELDS]
-            ids_lst = ids_lst[AUTOINIT_RECALCULATE_STORED_FIELDS:]
-            res = f.get(cr, self, iids, k, SUPERUSER_ID, {})
-            for key, val in res.items():
-                if f._multi:
-                    val = val[k]
+    @api.model_cr
+    def _update_store(self, column, name):
+        _logger.info("storing computed values of fields.function '%s'", name)
+        cr = self._cr
+        setc, setf = column._symbol_set
+        update_query = 'UPDATE "%s" SET "%s"=%s WHERE id=%%s' % (self._table, name, setc)
+        cr.execute('SELECT id FROM "%s"' % self._table)
+        ids = [row[0] for row in cr.fetchall()]
+        for sub_ids in cr.split_for_in_conditions(ids, AUTOINIT_RECALCULATE_STORED_FIELDS):
+            res = column.get(cr, self._model, sub_ids, name, SUPERUSER_ID, {})
+            for id, val in res.iteritems():
+                if column._multi:
+                    val = val[name]
                 # if val is a many2one, just write the ID
-                if type(val) == tuple:
+                if isinstance(val, tuple):
                     val = val[0]
-                if f._type == 'boolean' or val is not False:
-                    cr.execute(update_query, (ss[1](val), key))
+                if column._type == 'boolean' or val is not False:
+                    cr.execute(update_query, (setf(val), id))
 
     @api.model
     def _check_selection_field_value(self, field, value):
@@ -2401,29 +2273,34 @@ class BaseModel(object):
         field = self._fields[field]
         field.convert_to_cache(value, self)
 
-    def _check_removed_columns(self, cr, log=False):
-        # iterate on the database columns to drop the NOT NULL constraints
-        # of fields which were required but have been removed (or will be added by another module)
-        columns = [c for c in self._columns if not (isinstance(self._columns[c], fields.function) and not self._columns[c].store)]
-        columns += MAGIC_COLUMNS
+    @api.model_cr
+    def _check_removed_columns(self, log=False):
+        # iterate on the database columns to drop the NOT NULL constraints of
+        # fields which were required but have been removed (or will be added by
+        # another module)
+        cr = self._cr
+        cols = [name
+                for name, column in self._columns.iteritems()
+                if not (isinstance(column, fields.function) and not column.store)]
         cr.execute("SELECT a.attname, a.attnotnull"
                    "  FROM pg_class c, pg_attribute a"
                    " WHERE c.relname=%s"
                    "   AND c.oid=a.attrelid"
                    "   AND a.attisdropped=%s"
                    "   AND pg_catalog.format_type(a.atttypid, a.atttypmod) NOT IN ('cid', 'tid', 'oid', 'xid')"
-                   "   AND a.attname NOT IN %s", (self._table, False, tuple(columns))),
+                   "   AND a.attname NOT IN %s", (self._table, False, tuple(cols))),
 
-        for column in cr.dictfetchall():
+        for row in cr.dictfetchall():
             if log:
                 _logger.debug("column %s is in the table %s but not in the corresponding object %s",
-                              column['attname'], self._table, self._name)
-            if column['attnotnull']:
-                cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, column['attname']))
+                              row['attname'], self._table, self._name)
+            if row['attnotnull']:
+                cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, row['attname']))
                 _schema.debug("Table '%s': column '%s': dropped NOT NULL constraint",
-                              self._table, column['attname'])
+                              self._table, row['attname'])
 
-    def _save_constraint(self, cr, constraint_name, type, definition, module):
+    @api.model_cr
+    def _save_constraint(self, constraint_name, type, definition, module):
         """
         Record the creation of a constraint for this model, to make it possible
         to delete it later when the module is uninstalled. Type can be either
@@ -2434,6 +2311,7 @@ class BaseModel(object):
             # of any module
             return
         assert type in ('f', 'u')
+        cr = self._cr
         cr.execute("""
             SELECT type, definition FROM ir_model_constraint, ir_module_module
             WHERE ir_model_constraint.module=ir_module_module.id
@@ -2456,11 +2334,17 @@ class BaseModel(object):
                 WHERE name=%s AND module = (SELECT id FROM ir_module_module WHERE name=%s)""",
                     (type, definition, constraint_name, module))
 
-    def _save_relation_table(self, cr, relation_table, module):
+    @api.model_cr
+    def _drop_constraint(self, source_table, constraint_name):
+        self._cr.execute("ALTER TABLE %s DROP CONSTRAINT %s" % (source_table, constraint_name))
+
+    @api.model_cr
+    def _save_relation_table(self, relation_table, module):
         """
         Record the creation of a many2many for this model, to make it possible
         to delete it later when the module is uninstalled.
         """
+        cr = self._cr
         cr.execute("""
             SELECT 1 FROM ir_model_relation, ir_module_module
             WHERE ir_model_relation.module=ir_module_module.id
@@ -2473,7 +2357,7 @@ class BaseModel(object):
                     (SELECT id FROM ir_module_module WHERE name=%s),
                     (SELECT id FROM ir_model WHERE model=%s))""",
                        (relation_table, module, self._name))
-            self.invalidate_cache(cr, SUPERUSER_ID)
+            self.invalidate_cache()
 
     # checked version: for direct m2o starting from ``self``
     def _m2o_add_foreign_key_checked(self, source_field, dest_model, ondelete):
@@ -2493,29 +2377,28 @@ class BaseModel(object):
         self._foreign_keys.add(fk_def)
         _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s", *fk_def[:-1])
 
-    def _drop_constraint(self, cr, source_table, constraint_name):
-        cr.execute("ALTER TABLE %s DROP CONSTRAINT %s" % (source_table,constraint_name))
-
-    def _m2o_fix_foreign_key(self, cr, source_table, source_field, dest_model, ondelete):
+    @api.model_cr
+    def _m2o_fix_foreign_key(self, source_table, source_field, dest_model, ondelete):
         # Find FK constraint(s) currently established for the m2o field,
         # and see whether they are stale or not
-        cr.execute("""SELECT confdeltype as ondelete_rule, conname as constraint_name,
-                             cl2.relname as foreign_table
+        query = """ SELECT confdeltype as ondelete_rule, conname as constraint_name,
+                           cl2.relname as foreign_table
                       FROM pg_constraint as con, pg_class as cl1, pg_class as cl2,
                            pg_attribute as att1, pg_attribute as att2
-                      WHERE con.conrelid = cl1.oid
-                        AND cl1.relname = %s
-                        AND con.confrelid = cl2.oid
-                        AND array_lower(con.conkey, 1) = 1
-                        AND con.conkey[1] = att1.attnum
-                        AND att1.attrelid = cl1.oid
-                        AND att1.attname = %s
-                        AND array_lower(con.confkey, 1) = 1
-                        AND con.confkey[1] = att2.attnum
-                        AND att2.attrelid = cl2.oid
-                        AND att2.attname = %s
-                        AND con.contype = 'f'""", (source_table, source_field, 'id'))
-        constraints = cr.dictfetchall()
+                     WHERE con.conrelid = cl1.oid
+                       AND cl1.relname = %s
+                       AND con.confrelid = cl2.oid
+                       AND array_lower(con.conkey, 1) = 1
+                       AND con.conkey[1] = att1.attnum
+                       AND att1.attrelid = cl1.oid
+                       AND att1.attname = %s
+                       AND array_lower(con.confkey, 1) = 1
+                       AND con.confkey[1] = att2.attnum
+                       AND att2.attrelid = cl2.oid
+                       AND att2.attname = %s
+                       AND con.contype = 'f' """
+        self._cr.execute(query, (source_table, source_field, 'id'))
+        constraints = self._cr.dictfetchall()
         if constraints:
             if len(constraints) == 1:
                 # Is it the right constraint?
@@ -2525,7 +2408,7 @@ class BaseModel(object):
                     # Wrong FK: drop it and recreate
                     _schema.debug("Table '%s': dropping obsolete FK constraint: '%s'",
                                   source_table, cons['constraint_name'])
-                    self._drop_constraint(cr, source_table, cons['constraint_name'])
+                    self._drop_constraint(source_table, cons['constraint_name'])
                 else:
                     # it's all good, nothing to do!
                     return
@@ -2534,48 +2417,49 @@ class BaseModel(object):
                 for cons in constraints:
                     _schema.debug("Table '%s': dropping duplicate FK constraints: '%s'",
                                   source_table, cons['constraint_name'])
-                    self._drop_constraint(cr, source_table, cons['constraint_name'])
+                    self._drop_constraint(source_table, cons['constraint_name'])
 
         # (re-)create the FK
         self._m2o_add_foreign_key_checked(source_field, dest_model, ondelete)
 
-    def _init_column(self, cr, column_name, context=None):
+    @api.model_cr_context
+    def _init_column(self, column_name):
         """ Initialize the value of the given column for existing rows. """
         # get the default value; ideally, we should use default_get(), but it
         # fails due to ir.values not being ready
-        default = self._defaults.get(column_name)
-        if callable(default):
-            default = default(self, cr, SUPERUSER_ID, context)
-
-        column = self._columns[column_name]
-        ss = column._symbol_set
-        db_default = ss[1](default)
-        # Write default if non-NULL, except for booleans for which False means
+        field = self._fields[column_name]
+        setc, setf = field.column._symbol_set
+        if field.default:
+            value = field.default(self)
+            value = field.convert_to_cache(value, self, validate=False)
+            value = field.convert_to_record(value, self)
+            value = field.convert_to_write(value, self)
+            value = setf(value)
+        else:
+            value = None
+        # Write value if non-NULL, except for booleans for which False means
         # the same as NULL - this saves us an expensive query on large tables.
-        write_default = (db_default is not None if column._type != 'boolean'
-                            else db_default)
-        if write_default:
+        necessary = (value is not None) if field.type != 'boolean' else value
+        if necessary:
             _logger.debug("Table '%s': setting default value of new column %s to %r",
-                          self._table, column_name, default)
-            query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" is NULL' % (
-                self._table, column_name, ss[0], column_name)
-            cr.execute(query, (db_default,))
+                          self._table, column_name, value)
+            query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" IS NULL' % (
+                self._table, column_name, setc, column_name)
+            self._cr.execute(query, (value,))
             # this is a disgrace
-            cr.commit()
+            self._cr.commit()
 
-    def _auto_init(self, cr, context=None):
-        """
-        Call _field_create and, unless _auto is False:
-
-        - create the corresponding table in database for the model,
-        - possibly add the parent columns in database,
-        - possibly add the columns 'create_uid', 'create_date', 'write_uid',
-          'write_date' in database if _log_access is True (the default),
-        - report on database columns no more existing in _columns,
+    @api.model_cr_context
+    def _auto_init(self):
+        """ Reflect the model and initialize the database schema of ``self``:
+        - create the corresponding table in database,
+        - add the parent columns in database,
+        - add the '_log_access' columns if required,
+        - report on database columns no more existing in ``self._columns``,
         - remove no more existing not null constraints,
-        - alter existing database columns to match _columns,
-        - create database tables to match _columns,
-        - add database indices to match _columns,
+        - alter existing database columns to match ``self._columns``,
+        - create database tables to match ``self._columns``,
+        - add database indices to match ``self._columns``,
         - save in self._foreign_keys a list a foreign keys to create (see
           _auto_end).
 
@@ -2583,31 +2467,28 @@ class BaseModel(object):
         model's database schema by overriding method :meth:`~.init`, which is
         called right after this one.
         """
-        assert 'todo' in (context or {}), "Context not passed correctly to method _auto_init()."
+        assert 'todo' in self._context, "Context not passed correctly to method _auto_init()."
 
-        self._foreign_keys = set()
+        type(self)._foreign_keys = set()
         raise_on_invalid_object_name(self._name)
 
         # This prevents anything called by this method (in particular default
         # values) from prefetching a field for which the corresponding column
         # has not been added in database yet!
-        context = dict(context or {}, prefetch_fields=False)
+        self = self.with_context(prefetch_fields=False)
 
-        # Make sure an environment is available for get_pg_type(). This is
-        # because we access column.digits, which retrieves a cursor from
-        # existing environments.
-        env = api.Environment(cr, SUPERUSER_ID, context)
-
-        store_compute = False
+        cr = self._cr
+        parent_store_compute = False
         stored_fields = []              # new-style stored fields with compute
-        todo_end = context['todo']
-        update_custom_fields = context.get('update_custom_fields', False)
-        self._field_create(cr, context=context)
-        create = not self._table_exist(cr)
+        todo_end = self._context['todo']
+        update_custom_fields = self._context.get('update_custom_fields', False)
+        self._field_create()
+        create = not self._table_exist()
+
         if self._auto:
 
             if create:
-                self._create_table(cr)
+                self._create_table()
                 has_rows = False
             else:
                 cr.execute('SELECT 1 FROM "%s" LIMIT 1' % self._table)
@@ -2615,112 +2496,109 @@ class BaseModel(object):
 
             cr.commit()
             if self._parent_store:
-                if not self._parent_columns_exist(cr):
-                    self._create_parent_columns(cr)
-                    store_compute = True
+                if not self._parent_columns_exist():
+                    self._create_parent_columns()
+                    parent_store_compute = True
 
-            self._check_removed_columns(cr, log=False)
+            self._check_removed_columns(log=False)
 
-            # iterate on the "object columns"
-            column_data = self._select_column_data(cr)
+            # retrieve existing database columns
+            column_data = self._select_column_data()
 
-            for k, f in self._columns.iteritems():
-                if k == 'id': # FIXME: maybe id should be a regular column?
-                    continue
-                # Don't update custom (also called manual) fields
-                if f.manual and not update_custom_fields:
+            for name, column in self._columns.iteritems():
+                if name == 'id':
                     continue
 
-                if isinstance(f, fields.one2many):
-                    self._o2m_raise_on_missing_reference(cr, f)
+                if column.manual and not update_custom_fields:
+                    # Don't update custom (also called manual) fields
+                    continue
 
-                elif isinstance(f, fields.many2many):
-                    res = self._m2m_raise_or_create_relation(cr, f)
-                    if res and self._fields[k].depends:
-                        stored_fields.append(self._fields[k])
+                if isinstance(column, fields.one2many):
+                    self._o2m_raise_on_missing_reference(column)
+
+                elif isinstance(column, fields.many2many):
+                    res = self._m2m_raise_or_create_relation(column)
+                    if res and self._fields[name].depends:
+                        stored_fields.append(self._fields[name])
 
                 else:
-                    res = column_data.get(k)
+                    res = column_data.get(name)
 
-                    # The field is not found as-is in database, try if it
-                    # exists with an old name.
-                    if not res and hasattr(f, 'oldname'):
-                        res = column_data.get(f.oldname)
+                    # The column is not found as-is in database. Check whether
+                    # it exists with an old name, and rename it.
+                    if not res and hasattr(column, 'oldname'):
+                        res = column_data.get(column.oldname)
                         if res:
-                            cr.execute('ALTER TABLE "%s" RENAME "%s" TO "%s"' % (self._table, f.oldname, k))
-                            res['attname'] = k
-                            column_data[k] = res
-                            _schema.debug("Table '%s': renamed column '%s' to '%s'",
-                                self._table, f.oldname, k)
+                            cr.execute('ALTER TABLE "%s" RENAME "%s" TO "%s"' % (self._table, column.oldname, name))
+                            res['attname'] = name
+                            _schema.debug("Table '%s': renamed column '%s' to '%s'", self._table, column.oldname, name)
 
-                    # The field already exists in database. Possibly
-                    # change its type, rename it, drop it or change its
-                    # constraints.
+                    # The column already exists in database. Possibly change its
+                    # type, rename it, drop it or change its constraints.
                     if res:
                         f_pg_type = res['typname']
                         f_pg_size = res['size']
                         f_pg_notnull = res['attnotnull']
-                        if isinstance(f, fields.function) and not f.store and\
-                                not getattr(f, 'nodrop', False):
+                        if isinstance(column, fields.function) and not column.store and \
+                                not getattr(column, 'nodrop', False):
                             _logger.info('column %s (%s) converted to a function, removed from table %s',
-                                         k, f.string, self._table)
-                            cr.execute('ALTER TABLE "%s" DROP COLUMN "%s" CASCADE' % (self._table, k))
+                                         name, column.string, self._table)
+                            cr.execute('ALTER TABLE "%s" DROP COLUMN "%s" CASCADE' % (self._table, name))
                             cr.commit()
-                            _schema.debug("Table '%s': dropped column '%s' with cascade",
-                                self._table, k)
+                            _schema.debug("Table '%s': dropped column '%s' with cascade", self._table, name)
                             f_obj_type = None
                         else:
-                            f_obj_type = get_pg_type(f) and get_pg_type(f)[0]
+                            f_obj_type = get_pg_type(column) and get_pg_type(column)[0]
 
                         if f_obj_type:
-                            ok = False
+                            converted = False
                             casts = [
-                                ('text', 'char', pg_varchar(f.size), '::%s' % pg_varchar(f.size)),
+                                ('text', 'char', pg_varchar(column.size), '::%s' % pg_varchar(column.size)),
                                 ('varchar', 'text', 'TEXT', ''),
-                                ('int4', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
+                                ('int4', 'float', get_pg_type(column)[1], '::'+get_pg_type(column)[1]),
                                 ('date', 'datetime', 'TIMESTAMP', '::TIMESTAMP'),
                                 ('timestamp', 'date', 'date', '::date'),
-                                ('numeric', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
-                                ('float8', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
-                                ('float8', 'monetary', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
+                                ('numeric', 'float', get_pg_type(column)[1], '::'+get_pg_type(column)[1]),
+                                ('float8', 'float', get_pg_type(column)[1], '::'+get_pg_type(column)[1]),
+                                ('float8', 'monetary', get_pg_type(column)[1], '::'+get_pg_type(column)[1]),
                             ]
-                            if f_pg_type == 'varchar' and f._type in ('char', 'selection') and f_pg_size and (f.size is None or f_pg_size < f.size):
+                            if f_pg_type == 'varchar' and column._type in ('char', 'selection') and f_pg_size and (column.size is None or f_pg_size < column.size):
                                 try:
                                     with cr.savepoint():
-                                        cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" TYPE %s' % (self._table, k, pg_varchar(f.size)), log_exceptions=False)
+                                        cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" TYPE %s' % (self._table, name, pg_varchar(column.size)), log_exceptions=False)
                                 except psycopg2.NotSupportedError:
                                     # In place alter table cannot be done because a view is depending of this field.
                                     # Do a manual copy. This will drop the view (that will be recreated later)
-                                    cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
-                                    cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, pg_varchar(f.size)))
-                                    cr.execute('UPDATE "%s" SET "%s"=temp_change_size::%s' % (self._table, k, pg_varchar(f.size)))
+                                    cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, name))
+                                    cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, name, pg_varchar(column.size)))
+                                    cr.execute('UPDATE "%s" SET "%s"=temp_change_size::%s' % (self._table, name, pg_varchar(column.size)))
                                     cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
                                 cr.commit()
                                 _schema.debug("Table '%s': column '%s' (type varchar) changed size from %s to %s",
-                                    self._table, k, f_pg_size or 'unlimited', f.size or 'unlimited')
+                                              self._table, name, f_pg_size or 'unlimited', column.size or 'unlimited')
                             for c in casts:
-                                if (f_pg_type==c[0]) and (f._type==c[1]):
+                                if (f_pg_type == c[0]) and (column._type == c[1]):
                                     if f_pg_type != f_obj_type:
-                                        ok = True
+                                        converted = True
                                         try:
                                             with cr.savepoint():
-                                                cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" TYPE %s' % (self._table, k, c[2]), log_exceptions=False)
+                                                cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" TYPE %s' % (self._table, name, c[2]), log_exceptions=False)
                                         except psycopg2.NotSupportedError:
                                             # can't do inplace change -> use a casted temp column
-                                            cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO __temp_type_cast' % (self._table, k))
-                                            cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, c[2]))
-                                            cr.execute('UPDATE "%s" SET "%s"= __temp_type_cast%s' % (self._table, k, c[3]))
+                                            cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO __temp_type_cast' % (self._table, name))
+                                            cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, name, c[2]))
+                                            cr.execute('UPDATE "%s" SET "%s"= __temp_type_cast%s' % (self._table, name, c[3]))
                                             cr.execute('ALTER TABLE "%s" DROP COLUMN  __temp_type_cast CASCADE' % (self._table,))
                                         cr.commit()
                                         _schema.debug("Table '%s': column '%s' changed type from %s to %s",
-                                            self._table, k, c[0], c[1])
+                                                      self._table, name, c[0], c[1])
                                     break
 
                             if f_pg_type != f_obj_type:
-                                if not ok:
+                                if not converted:
                                     i = 0
                                     while True:
-                                        newname = k + '_moved' + str(i)
+                                        newname = name + '_moved' + str(i)
                                         cr.execute("SELECT count(1) FROM pg_class c,pg_attribute a " \
                                             "WHERE c.relname=%s " \
                                             "AND a.attname=%s " \
@@ -2729,107 +2607,104 @@ class BaseModel(object):
                                             break
                                         i += 1
                                     if f_pg_notnull:
-                                        cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, k))
-                                    cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO "%s"' % (self._table, k, newname))
-                                    cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, get_pg_type(f)[1]))
-                                    cr.execute("COMMENT ON COLUMN %s.\"%s\" IS %%s" % (self._table, k), (f.string,))
+                                        cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, name))
+                                    cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO "%s"' % (self._table, name, newname))
+                                    cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, name, get_pg_type(column)[1]))
+                                    cr.execute("COMMENT ON COLUMN %s.\"%s\" IS %%s" % (self._table, name), (column.string,))
                                     _schema.warning("Table `%s`: column `%s` has changed type (DB=%s, def=%s), data moved to column `%s`",
-                                                    self._table, k, f_pg_type, f._type, newname)
+                                                    self._table, name, f_pg_type, column._type, newname)
 
                             # if the field is required and hasn't got a NOT NULL constraint
-                            if f.required and f_pg_notnull == 0:
+                            if column.required and f_pg_notnull == 0:
                                 if has_rows:
-                                    self._init_column(cr, k, context=context)
+                                    self._init_column(name)
                                 # add the NOT NULL constraint
                                 try:
-                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k), log_exceptions=False)
+                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, name), log_exceptions=False)
                                     cr.commit()
                                     _schema.debug("Table '%s': column '%s': added NOT NULL constraint",
-                                        self._table, k)
+                                                  self._table, name)
                                 except Exception:
                                     msg = "Table '%s': unable to set a NOT NULL constraint on column '%s' !\n"\
                                         "If you want to have it, you should update the records and execute manually:\n"\
                                         "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL"
-                                    _schema.warning(msg, self._table, k, self._table, k)
+                                    _schema.warning(msg, self._table, name, self._table, name)
                                 cr.commit()
-                            elif not f.required and f_pg_notnull == 1:
-                                cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, k))
+                            elif not column.required and f_pg_notnull == 1:
+                                cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, name))
                                 cr.commit()
                                 _schema.debug("Table '%s': column '%s': dropped NOT NULL constraint",
-                                    self._table, k)
+                                              self._table, name)
                             # Verify index
-                            indexname = '%s_%s_index' % (self._table, k)
+                            indexname = '%s_%s_index' % (self._table, name)
                             cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = %s and tablename = %s", (indexname, self._table))
                             res2 = cr.dictfetchall()
-                            if not res2 and f.select:
-                                cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (self._table, k, self._table, k))
+                            if not res2 and column.select:
+                                cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (self._table, name, self._table, name))
                                 cr.commit()
-                                if f._type == 'text':
+                                if column._type == 'text':
                                     # FIXME: for fields.text columns we should try creating GIN indexes instead (seems most suitable for an ERP context)
                                     msg = "Table '%s': Adding (b-tree) index for %s column '%s'."\
                                         "This is probably useless (does not work for fulltext search) and prevents INSERTs of long texts"\
                                         " because there is a length limit for indexable btree values!\n"\
                                         "Use a search view instead if you simply want to make the field searchable."
-                                    _schema.warning(msg, self._table, f._type, k)
-                            if res2 and not f.select:
-                                cr.execute('DROP INDEX "%s_%s_index"' % (self._table, k))
+                                    _schema.warning(msg, self._table, column._type, name)
+                            if res2 and not column.select:
+                                cr.execute('DROP INDEX "%s_%s_index"' % (self._table, name))
                                 cr.commit()
                                 msg = "Table '%s': dropping index for column '%s' of type '%s' as it is not required anymore"
-                                _schema.debug(msg, self._table, k, f._type)
+                                _schema.debug(msg, self._table, name, column._type)
 
-                            if isinstance(f, fields.many2one) or (isinstance(f, fields.function) and f._type == 'many2one' and f.store):
-                                dest_model = self.pool[f._obj]
+                            if isinstance(column, fields.many2one) or (isinstance(column, fields.function) and column._type == 'many2one' and column.store):
+                                dest_model = self.pool[column._obj]
                                 if dest_model._auto and dest_model._table != 'ir_actions':
-                                    self._m2o_fix_foreign_key(cr, self._table, k, dest_model, f.ondelete)
+                                    self._m2o_fix_foreign_key(self._table, name, dest_model, column.ondelete)
 
-                    # The field doesn't exist in database. Create it if necessary.
-                    else:
-                        if f._classic_write:
-                            # add the missing field
-                            cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, get_pg_type(f)[1]))
-                            cr.execute("COMMENT ON COLUMN %s.\"%s\" IS %%s" % (self._table, k), (f.string,))
-                            _schema.debug("Table '%s': added column '%s' with definition=%s",
-                                self._table, k, get_pg_type(f)[1])
+                    elif column._classic_write:
+                        # the column doesn't exist in database, create it
+                        cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, name, get_pg_type(column)[1]))
+                        cr.execute("COMMENT ON COLUMN %s.\"%s\" IS %%s" % (self._table, name), (column.string,))
+                        _schema.debug("Table '%s': added column '%s' with definition=%s",
+                                      self._table, name, get_pg_type(column)[1])
 
-                            # initialize it
-                            if has_rows:
-                                self._init_column(cr, k, context=context)
+                        # initialize it
+                        if has_rows:
+                            self._init_column(name)
 
-                            # remember the functions to call for the stored fields
-                            if isinstance(f, fields.function):
-                                order = 10
-                                if f.store is not True: # i.e. if f.store is a dict
-                                    order = f.store[f.store.keys()[0]][2]
-                                todo_end.append((order, self._update_store, (f, k)))
+                        # remember the functions to call for the stored fields
+                        if isinstance(column, fields.function):
+                            order = 10
+                            if column.store is not True: # i.e. if column.store is a dict
+                                order = column.store[column.store.keys()[0]][2]
+                            todo_end.append((order, self._update_store, (column, name)))
 
-                            # remember new-style stored fields with compute method
-                            if k in self._fields and self._fields[k].depends:
-                                stored_fields.append(self._fields[k])
+                        # remember new-style stored fields with compute method
+                        if self._fields[name].depends:
+                            stored_fields.append(self._fields[name])
 
-                            # and add constraints if needed
-                            if isinstance(f, fields.many2one) or (isinstance(f, fields.function) and f._type == 'many2one' and f.store):
-                                if f._obj not in self.pool:
-                                    raise ValueError(_('There is no reference available for %s') % (f._obj,))
-                                dest_model = self.pool[f._obj]
-                                ref = dest_model._table
-                                # ir_actions is inherited so foreign key doesn't work on it
-                                if dest_model._auto and ref != 'ir_actions':
-                                    self._m2o_add_foreign_key_checked(k, dest_model, f.ondelete)
-                            if f.select:
-                                cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (self._table, k, self._table, k))
-                            if f.required:
-                                try:
-                                    cr.commit()
-                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k))
-                                    _schema.debug("Table '%s': column '%s': added a NOT NULL constraint",
-                                        self._table, k)
-                                except Exception:
-                                    msg = "WARNING: unable to set column %s of table %s not null !\n"\
-                                        "Try to re-run: openerp-server --update=module\n"\
-                                        "If it doesn't work, update records and execute manually:\n"\
-                                        "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL"
-                                    _logger.warning(msg, k, self._table, self._table, k, exc_info=True)
-                            cr.commit()
+                        # and add constraints if needed
+                        if self._fields[name].type == 'many2one' and self._fields[name].store:
+                            if column._obj not in self.env:
+                                raise ValueError(_('There is no reference available for %s') % (column._obj,))
+                            dest_model = self.env[column._obj]
+                            # ir_actions is inherited so foreign key doesn't work on it
+                            if dest_model._auto and dest_model._table != 'ir_actions':
+                                self._m2o_add_foreign_key_checked(name, dest_model, column.ondelete)
+                        if column.select:
+                            cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (self._table, name, self._table, name))
+                        if column.required:
+                            try:
+                                cr.commit()
+                                cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, name))
+                                _schema.debug("Table '%s': column '%s': added a NOT NULL constraint",
+                                              self._table, name)
+                            except Exception:
+                                msg = "WARNING: unable to set column %s of table %s not null !\n"\
+                                    "Try to re-run: openerp-server --update=module\n"\
+                                    "If it doesn't work, update records and execute manually:\n"\
+                                    "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL"
+                                _logger.warning(msg, name, self._table, self._table, name, exc_info=True)
+                        cr.commit()
 
         else:
             cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (self._table,))
@@ -2838,152 +2713,173 @@ class BaseModel(object):
         cr.commit()     # start a new transaction
 
         if self._auto:
-            self._add_sql_constraints(cr)
+            self._add_sql_constraints()
 
         if create:
-            self._execute_sql(cr)
+            self._execute_sql()
 
-        if store_compute:
-            self._parent_store_compute(cr)
+        if parent_store_compute:
+            self._parent_store_compute()
             cr.commit()
 
         if stored_fields:
             # trigger computation of new-style stored fields with a compute
-            def func(cr):
+            def func():
                 fnames = [f.name for f in stored_fields]
                 _logger.info("Storing computed values of %s fields %s",
                              self._name, ', '.join(sorted(fnames)))
-                recs = self.browse(cr, SUPERUSER_ID, [], {'active_test': False})
-                recs = recs.search([])
+                recs = self.with_context(active_test=False).search([])
                 if recs:
                     recs.invalidate_cache(fnames, recs.ids)
-                    map(recs._recompute_todo, stored_fields)
+                    for f in stored_fields:
+                        recs._recompute_todo(f)
 
             todo_end.append((1000, func, ()))
 
-    def _auto_end(self, cr, context=None):
+    @api.model_cr_context
+    def _auto_end(self):
         """ Create the foreign keys recorded by _auto_init. """
+        cr = self._cr
         query = 'ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s'
         for table1, column, table2, ondelete, module in self._foreign_keys:
             cr.execute(query % (table1, column, table2, ondelete))
-            self._save_constraint(cr, "%s_%s_fkey" % (table1, column), 'f', False, module)
+            self._save_constraint("%s_%s_fkey" % (table1, column), 'f', False, module)
         cr.commit()
-        del self._foreign_keys
+        del type(self)._foreign_keys
 
-    def init(self, cr):
+    @api.model_cr
+    def init(self):
         """ This method is called after :meth:`~._auto_init`, and may be
             overridden to create or modify a model's database schema.
         """
         pass
 
-    def _table_exist(self, cr):
-        cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (self._table,))
-        return cr.rowcount
+    @api.model_cr
+    def _table_exist(self):
+        query = "SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s"
+        self._cr.execute(query, (self._table,))
+        return self._cr.rowcount
 
-
-    def _create_table(self, cr):
-        cr.execute('CREATE TABLE "%s" (id SERIAL NOT NULL, PRIMARY KEY(id))' % (self._table,))
-        cr.execute(("COMMENT ON TABLE \"%s\" IS %%s" % self._table), (self._description,))
+    @api.model_cr
+    def _create_table(self):
+        self._cr.execute('CREATE TABLE "%s" (id SERIAL NOT NULL, PRIMARY KEY(id))' % (self._table,))
+        self._cr.execute("COMMENT ON TABLE \"%s\" IS %%s" % self._table, (self._description,))
         _schema.debug("Table '%s': created", self._table)
 
+    @api.model_cr
+    def _parent_columns_exist(self):
+        query = """ SELECT c.relname FROM pg_class c, pg_attribute a
+                    WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid """
+        self._cr.execute(query, (self._table, 'parent_left'))
+        return self._cr.rowcount
 
-    def _parent_columns_exist(self, cr):
-        cr.execute("""SELECT c.relname
-            FROM pg_class c, pg_attribute a
-            WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid
-            """, (self._table, 'parent_left'))
-        return cr.rowcount
-
-
-    def _create_parent_columns(self, cr):
-        cr.execute('ALTER TABLE "%s" ADD COLUMN "parent_left" INTEGER' % (self._table,))
-        cr.execute('ALTER TABLE "%s" ADD COLUMN "parent_right" INTEGER' % (self._table,))
+    @api.model_cr
+    def _create_parent_columns(self):
+        self._cr.execute('ALTER TABLE "%s" ADD COLUMN "parent_left" INTEGER' % (self._table,))
+        self._cr.execute('ALTER TABLE "%s" ADD COLUMN "parent_right" INTEGER' % (self._table,))
         if 'parent_left' not in self._columns:
-            _logger.error('create a column parent_left on object %s: fields.integer(\'Left Parent\', select=1)',
-                          self._table)
-            _schema.debug("Table '%s': added column '%s' with definition=%s",
-                self._table, 'parent_left', 'INTEGER')
+            _logger.error('add a field parent_left on model %s: parent_left = fields.Integer(\'Left Parent\', index=True)', self._name)
+            _schema.debug("Table '%s': added column '%s' with definition=%s", self._table, 'parent_left', 'INTEGER')
         elif not self._columns['parent_left'].select:
-            _logger.error('parent_left column on object %s must be indexed! Add select=1 to the field definition)',
-                          self._table)
+            _logger.error('parent_left field on model %s must be indexed! Add index=True to the field definition)', self._name)
         if 'parent_right' not in self._columns:
-            _logger.error('create a column parent_right on object %s: fields.integer(\'Right Parent\', select=1)',
-                          self._table)
-            _schema.debug("Table '%s': added column '%s' with definition=%s",
-                self._table, 'parent_right', 'INTEGER')
+            _logger.error('add a field parent_right on model %s: parent_right = fields.Integer(\'Left Parent\', index=True)', self._name)
+            _schema.debug("Table '%s': added column '%s' with definition=%s", self._table, 'parent_right', 'INTEGER')
         elif not self._columns['parent_right'].select:
-            _logger.error('parent_right column on object %s must be indexed! Add select=1 to the field definition)',
-                          self._table)
+            _logger.error('parent_right field on model %s must be indexed! Add index=True to the field definition)', self._name)
         if self._columns[self._parent_name].ondelete not in ('cascade', 'restrict'):
-            _logger.error("The column %s on object %s must be set as ondelete='cascade' or 'restrict'",
-                          self._parent_name, self._name)
+            _logger.error("The field %s on model %s must be set as ondelete='cascade' or 'restrict'", self._parent_name, self._name)
+        self._cr.commit()
 
-        cr.commit()
-
-
-    def _select_column_data(self, cr):
+    @api.model_cr
+    def _select_column_data(self):
         # attlen is the number of bytes necessary to represent the type when
         # the type has a fixed size. If the type has a varying size attlen is
         # -1 and atttypmod is the size limit + 4, or -1 if there is no limit.
-        cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN (CASE WHEN a.atttypmod=-1 THEN 0 ELSE a.atttypmod-4 END) ELSE a.attlen END as size " \
-           "FROM pg_class c,pg_attribute a,pg_type t " \
-           "WHERE c.relname=%s " \
-           "AND c.oid=a.attrelid " \
-           "AND a.atttypid=t.oid", (self._table,))
-        return dict(map(lambda x: (x['attname'], x),cr.dictfetchall()))
+        query = """ SELECT c.relname, a.attname, a.attlen, a.atttypmod, a.attnotnull, a.atthasdef, t.typname,
+                           CASE WHEN a.attlen=-1 THEN (CASE WHEN a.atttypmod=-1 THEN 0 ELSE a.atttypmod-4 END) ELSE a.attlen END as size
+                    FROM pg_class c, pg_attribute a, pg_type t
+                    WHERE c.relname=%s AND c.oid=a.attrelid AND a.atttypid=t.oid """
+        self._cr.execute(query, (self._table,))
+        return {row['attname']: row for row in self._cr.dictfetchall()}
 
-
-    def _o2m_raise_on_missing_reference(self, cr, f):
+    @api.model_cr
+    def _o2m_raise_on_missing_reference(self, column):
         # TODO this check should be a method on fields.one2many.
-        if f._obj in self.pool:
-            other = self.pool[f._obj]
+        if column._obj in self.env:
+            other = self.env[column._obj]
             # TODO the condition could use fields_get_keys().
-            if f._fields_id not in other._columns.keys():
-                if f._fields_id not in other._inherit_fields.keys():
-                    raise UserError(_("There is no reference field '%s' found for '%s'") % (f._fields_id, f._obj))
+            if column._fields_id not in other._fields:
+                raise UserError(_("There is no reference field '%s' found for '%s'") % (f._fields_id, f._obj))
 
-    def _m2m_raise_or_create_relation(self, cr, f):
+    @api.model_cr
+    def _m2m_raise_or_create_relation(self, column):
         """ Create the table for the relation if necessary.
         Return ``True`` if the relation had to be created.
         """
-        m2m_tbl, col1, col2 = f._sql_names(self)
+        cr = self._cr
+        m2m_tbl, col1, col2 = column._sql_names(self)
         # do not create relations for custom fields as they do not belong to a module
         # they will be automatically removed when dropping the corresponding ir.model.field
         # table name for custom relation all starts with x_, see __init__
         if not m2m_tbl.startswith('x_'):
-            self._save_relation_table(cr, m2m_tbl, f._module)
+            self._save_relation_table(m2m_tbl, column._module)
         cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (m2m_tbl,))
         if not cr.dictfetchall():
-            if f._obj not in self.pool:
-                raise UserError(_('Many2Many destination model does not exist: `%s`') % (f._obj,))
-            dest_model = self.pool[f._obj]
-            ref = dest_model._table
+            if column._obj not in self.env:
+                raise UserError(_('Many2Many destination model does not exist: `%s`') % (column._obj,))
+            dest_model = self.env[column._obj]
             cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s"))' % (m2m_tbl, col1, col2, col1, col2))
             # create foreign key references with ondelete=cascade, unless the targets are SQL views
-            cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (ref,))
+            cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (dest_model._table,))
             if not cr.fetchall():
-                self._m2o_add_foreign_key_unchecked(m2m_tbl, col2, dest_model, 'cascade', f._module)
+                self._m2o_add_foreign_key_unchecked(m2m_tbl, col2, dest_model, 'cascade', column._module)
             cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (self._table,))
             if not cr.fetchall():
-                self._m2o_add_foreign_key_unchecked(m2m_tbl, col1, self, 'cascade', f._module)
+                self._m2o_add_foreign_key_unchecked(m2m_tbl, col1, self, 'cascade', column._module)
 
             cr.execute('CREATE INDEX ON "%s" ("%s")' % (m2m_tbl, col1))
             cr.execute('CREATE INDEX ON "%s" ("%s")' % (m2m_tbl, col2))
-            cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (m2m_tbl, self._table, ref))
+            cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (m2m_tbl, self._table, dest_model._table))
             cr.commit()
-            _schema.debug("Create table '%s': m2m relation between '%s' and '%s'", m2m_tbl, self._table, ref)
+            _schema.debug("Create table '%s': m2m relation between '%s' and '%s'", m2m_tbl, self._table, dest_model._table)
             return True
 
-
-    def _add_sql_constraints(self, cr):
+    @api.model_cr
+    def _add_sql_constraints(self):
         """
 
         Modify this model's database table constraints so they match the one in
         _sql_constraints.
 
         """
+        cr = self._cr
+
         def unify_cons_text(txt):
             return txt.lower().replace(', ',',').replace(' (','(')
+
+        def drop(name, definition, old_definition):
+            try:
+                cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (self._table, name))
+                cr.commit()
+                _schema.debug("Table '%s': dropped constraint '%s'. Reason: its definition changed from '%s' to '%s'",
+                              self._table, name, old_definition, definition)
+            except Exception:
+                _schema.warning("Table '%s': unable to drop constraint '%s'!", self._table, definition)
+                cr.rollback()
+
+        def add(name, definition):
+            query = 'ALTER TABLE "%s" ADD CONSTRAINT "%s" %s' % (self._table, name, definition)
+            try:
+                cr.execute(query)
+                cr.commit()
+                _schema.debug("Table '%s': added constraint '%s' with definition=%s",
+                              self._table, name, definition)
+            except Exception:
+                _schema.warning("Table '%s': unable to add constraint '%s'!\n"
+                                "If you want to have it, you should update the records and execute manually:\n%s",
+                                self._table, definition, query)
+                cr.rollback()
 
         # map each constraint on the name of the module where it is defined
         constraint_module = {
@@ -2993,7 +2889,7 @@ class BaseModel(object):
             for constraint in getattr(cls, '_local_sql_constraints', ())
         }
 
-        for (key, con, _) in self._sql_constraints:
+        for (key, definition, _) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
 
             # using 1 to get result if no imc but one pgc
@@ -3003,60 +2899,25 @@ class BaseModel(object):
                           ON (pgc.conname = imc.name)
                           WHERE pgc.conname=%s
                           """, (conname, ))
-            existing_constraints = cr.dictfetchone()
-            sql_actions = {
-                'drop': {
-                    'execute': False,
-                    'query': 'ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (self._table, conname, ),
-                    'msg_ok': "Table '%s': dropped constraint '%s'. Reason: its definition changed from '%%s' to '%s'" % (
-                        self._table, conname, con),
-                    'msg_err': "Table '%s': unable to drop \'%s\' constraint !" % (self._table, con),
-                    'order': 1,
-                },
-                'add': {
-                    'execute': False,
-                    'query': 'ALTER TABLE "%s" ADD CONSTRAINT "%s" %s' % (self._table, conname, con,),
-                    'msg_ok': "Table '%s': added constraint '%s' with definition=%s" % (self._table, conname, con),
-                    'msg_err': "Table '%s': unable to add \'%s\' constraint !\n If you want to have it, you should update the records and execute manually:\n%%s" % (
-                        self._table, con),
-                    'order': 2,
-                },
-            }
-
-            if not existing_constraints:
-                # constraint does not exists:
-                sql_actions['add']['execute'] = True
-                sql_actions['add']['msg_err'] = sql_actions['add']['msg_err'] % (sql_actions['add']['query'], )
-            elif unify_cons_text(con) != existing_constraints['definition']:
-                # constraint exists but its definition has changed:
-                sql_actions['drop']['execute'] = True
-                sql_actions['drop']['msg_ok'] = sql_actions['drop']['msg_ok'] % (existing_constraints['definition'] or '', )
-                sql_actions['add']['execute'] = True
-                sql_actions['add']['msg_err'] = sql_actions['add']['msg_err'] % (sql_actions['add']['query'], )
+            existing = cr.dictfetchone()
+            if not existing:
+                # constraint does not exists
+                add(conname, definition)
+            elif unify_cons_text(definition) != existing['definition']:
+                # constraint exists but its definition has changed
+                drop(conname, definition, existing['definition'] or '')
+                add(conname, definition)
 
             # we need to add the constraint:
             module = constraint_module.get(key)
-            self._save_constraint(cr, conname, 'u', unify_cons_text(con), module)
-            sql_actions = [item for item in sql_actions.values()]
-            sql_actions.sort(key=lambda x: x['order'])
-            for sql_action in [action for action in sql_actions if action['execute']]:
-                try:
-                    cr.execute(sql_action['query'])
-                    cr.commit()
-                    _schema.debug(sql_action['msg_ok'])
-                except:
-                    _schema.warning(sql_action['msg_err'])
-                    cr.rollback()
+            self._save_constraint(conname, 'u', unify_cons_text(definition), module)
 
-
-    def _execute_sql(self, cr):
+    @api.model_cr
+    def _execute_sql(self):
         """ Execute the SQL code from the _sql attribute (if any)."""
         if hasattr(self, "_sql"):
-            for line in self._sql.split(';'):
-                line2 = line.replace('\n', '').strip()
-                if line2:
-                    cr.execute(line2)
-                    cr.commit()
+            self._cr.execute(self._sql)
+            self._cr.commit()
 
     #
     # Update objects that uses this one to update their _inherits fields
@@ -3292,7 +3153,12 @@ class BaseModel(object):
         elif 'x_name' in cls._fields:
             cls._rec_name = 'x_name'
 
-    def fields_get(self, cr, user, allfields=None, context=None, write_access=True, attributes=None):
+        # make sure parent_order is set when necessary
+        if cls._parent_store and not cls._parent_order:
+            cls._parent_order = cls._order
+
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
         """ fields_get([fields][, attributes])
 
         Return the definition of each field.
@@ -3304,30 +3170,30 @@ class BaseModel(object):
         :param allfields: list of fields to document, all if empty or not provided
         :param attributes: list of description attributes to return for each field, all if empty or not provided
         """
-        recs = self.browse(cr, user, [], context)
-
-        has_access = functools.partial(recs.check_access_rights, raise_exception=False)
+        has_access = functools.partial(self.check_access_rights, raise_exception=False)
         readonly = not (has_access('write') or has_access('create'))
 
         res = {}
         for fname, field in self._fields.iteritems():
             if allfields and fname not in allfields:
                 continue
-            if field.groups and not recs.user_has_groups(field.groups):
+            if field.groups and not self.user_has_groups(field.groups):
                 continue
 
-            description = field.get_description(recs.env)
+            description = field.get_description(self.env)
             if readonly:
                 description['readonly'] = True
                 description['states'] = {}
             if attributes:
-                description = {k: v for k, v in description.iteritems()
-                               if k in attributes}
+                description = {key: val
+                               for key, val in description.iteritems()
+                               if key in attributes}
             res[fname] = description
 
         return res
 
-    def get_empty_list_help(self, cr, user, help, context=None):
+    @api.model
+    def get_empty_list_help(self, help):
         """ Generic method giving the help message displayed when having
             no result to display in a list or kanban view. By default it returns
             the help given in parameter that is generally the help message
@@ -3335,21 +3201,22 @@ class BaseModel(object):
         """
         return help
 
-    def check_field_access_rights(self, cr, user, operation, fields, context=None):
+    @api.model
+    def check_field_access_rights(self, operation, fields):
         """
         Check the user access rights on the given fields. This raises Access
         Denied if the user does not have the rights. Otherwise it returns the
         fields (as is if the fields is not falsy, or the readable/writable
         fields if fields is falsy).
         """
-        if user == SUPERUSER_ID:
+        if self._uid == SUPERUSER_ID:
             return fields or list(self._fields)
 
         def valid(fname):
             """ determine whether user has access to field ``fname`` """
             field = self._fields.get(fname)
             if field and field.groups:
-                return self.user_has_groups(cr, user, groups=field.groups, context=context)
+                return self.user_has_groups(field.groups)
             else:
                 return True
 
@@ -3359,10 +3226,10 @@ class BaseModel(object):
             invalid_fields = set(filter(lambda name: not valid(name), fields))
             if invalid_fields:
                 _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s, fields: %s',
-                    operation, user, self._name, ', '.join(invalid_fields))
+                    operation, self._uid, self._name, ', '.join(invalid_fields))
                 raise AccessError(_('The requested operation cannot be completed due to security restrictions. '
-                                        'Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
-                                        (self._description, operation))
+                                    'Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
+                                  (self._description, operation))
 
         return fields
 
@@ -3676,45 +3543,46 @@ class BaseModel(object):
             del r['name'], r['module']
         return res
 
-    def _check_concurrency(self, cr, ids, context):
-        if not context:
-            return
-        if not (context.get(self.CONCURRENCY_CHECK_FIELD) and self._log_access):
+    @api.multi
+    def _check_concurrency(self):
+        if not (self._log_access and self._context.get(self.CONCURRENCY_CHECK_FIELD)):
             return
         check_clause = "(id = %s AND %s < COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp)"
-        for sub_ids in cr.split_for_in_conditions(ids):
-            ids_to_check = []
+        for sub_ids in self._cr.split_for_in_conditions(self.ids):
+            nclauses = 0
+            params = []
             for id in sub_ids:
                 id_ref = "%s,%s" % (self._name, id)
-                update_date = context[self.CONCURRENCY_CHECK_FIELD].pop(id_ref, None)
+                update_date = self._context[self.CONCURRENCY_CHECK_FIELD].pop(id_ref, None)
                 if update_date:
-                    ids_to_check.extend([id, update_date])
-            if not ids_to_check:
+                    nclauses += 1
+                    params.extend([id, update_date])
+            if not nclauses:
                 continue
-            cr.execute("SELECT id FROM %s WHERE %s" % (self._table, " OR ".join([check_clause]*(len(ids_to_check)/2))), tuple(ids_to_check))
-            res = cr.fetchone()
+            query = "SELECT id FROM %s WHERE %s" % (self._table, " OR ".join([check_clause] * nclauses))
+            self._cr.execute(query, tuple(params))
+            res = self._cr.fetchone()
             if res:
                 # mention the first one only to keep the error message readable
                 raise ValidationError(_('A document was modified since you last viewed it (%s:%d)') % (self._description, res[0]))
 
-    def _check_record_rules_result_count(self, cr, uid, ids, result_ids, operation, context=None):
-        """Verify the returned rows after applying record rules matches
-           the length of ``ids``, and raise an appropriate exception if it does not.
+    @api.multi
+    def _check_record_rules_result_count(self, result_ids, operation):
+        """ Verify the returned rows after applying record rules matches the
+            length of ``self``, and raise an appropriate exception if it does not.
         """
-        if context is None:
-            context = {}
-        ids, result_ids = set(ids), set(result_ids)
+        ids, result_ids = set(self.ids), set(result_ids)
         missing_ids = ids - result_ids
         if missing_ids:
             # Attempt to distinguish record rule restriction vs deleted records,
-            # to provide a more specific error message - check if the missinf
-            cr.execute('SELECT id FROM ' + self._table + ' WHERE id IN %s', (tuple(missing_ids),))
-            forbidden_ids = [x[0] for x in cr.fetchall()]
+            # to provide a more specific error message
+            self._cr.execute('SELECT id FROM %s WHERE id IN %%s' % self._table, (tuple(missing_ids),))
+            forbidden_ids = [x[0] for x in self._cr.fetchall()]
             if forbidden_ids:
                 # the missing ids are (at least partially) hidden by access rules
-                if uid == SUPERUSER_ID:
+                if self._uid == SUPERUSER_ID:
                     return
-                _logger.info('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, forbidden_ids, uid, self._name)
+                _logger.info('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, forbidden_ids, self._uid, self._name)
                 raise AccessError(_('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
                                     (self._description, operation))
             else:
@@ -3724,24 +3592,26 @@ class BaseModel(object):
                     # And no error when reading a record that was deleted, to prevent spurious
                     # errors for non-transactional search/read sequences coming from clients
                     return
-                _logger.info('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, uid, self._name)
+                _logger.info('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, self._uid, self._name)
                 raise MissingError(_('Missing document(s)') + ':' + _('One of the documents you are trying to access has been deleted, please try again after refreshing.'))
 
+    @api.model
+    def check_access_rights(self, operation, raise_exception=True):
+        """ Verifies that the operation given by ``operation`` is allowed for
+            the current user according to the access rights.
+        """
+        return self.env['ir.model.access'].check(self._name, operation, raise_exception)
 
-    def check_access_rights(self, cr, uid, operation, raise_exception=True): # no context on purpose.
-        """Verifies that the operation given by ``operation`` is allowed for the user
-           according to the access rights."""
-        return self.pool.get('ir.model.access').check(cr, uid, self._name, operation, raise_exception)
-
-    def check_access_rule(self, cr, uid, ids, operation, context=None):
-        """Verifies that the operation given by ``operation`` is allowed for the user
-           according to ir.rules.
+    @api.multi
+    def check_access_rule(self, operation):
+        """ Verifies that the operation given by ``operation`` is allowed for
+            the current user according to ir.rules.
 
            :param operation: one of ``write``, ``unlink``
            :raise UserError: * if current ir.rules do not permit this operation.
            :return: None if the operation is allowed
         """
-        if uid == SUPERUSER_ID:
+        if self._uid == SUPERUSER_ID:
             return
 
         if self.is_transient():
@@ -3750,67 +3620,68 @@ class BaseModel(object):
             # have log_access enabled so that the create_uid column is always there.
             # And even with _inherits, these fields are always present in the local
             # table too, so no need for JOINs.
-            cr.execute("""SELECT distinct create_uid
-                          FROM %s
-                          WHERE id IN %%s""" % self._table, (tuple(ids),))
-            uids = [x[0] for x in cr.fetchall()]
-            if len(uids) != 1 or uids[0] != uid:
+            query = "SELECT DISTINCT create_uid FROM %s WHERE id IN %%s" % self._table
+            self._cr.execute(query, (tuple(self.ids),))
+            uids = [x[0] for x in self._cr.fetchall()]
+            if len(uids) != 1 or uids[0] != self._uid:
                 raise AccessError(_('For this kind of document, you may only access records you created yourself.\n\n(Document type: %s)') % (self._description,))
         else:
-            where_clause, where_params, tables = self.pool.get('ir.rule').domain_get(cr, uid, self._name, operation, context=context)
+            where_clause, where_params, tables = self.env['ir.rule'].domain_get(self._name, operation)
             if where_clause:
-                where_clause = ' and ' + ' and '.join(where_clause)
-                for sub_ids in cr.split_for_in_conditions(ids):
-                    cr.execute('SELECT ' + self._table + '.id FROM ' + ','.join(tables) +
-                               ' WHERE ' + self._table + '.id IN %s' + where_clause,
-                               [sub_ids] + where_params)
-                    returned_ids = [x['id'] for x in cr.dictfetchall()]
-                    self._check_record_rules_result_count(cr, uid, sub_ids, returned_ids, operation, context=context)
+                query = "SELECT %s.id FROM %s WHERE %s.id IN %%s AND " % (self._table, ",".join(tables), self._table)
+                query = query + " AND ".join(where_clause)
+                for sub_ids in self._cr.split_for_in_conditions(self.ids):
+                    self._cr.execute(query, [sub_ids] + where_params)
+                    returned_ids = [x[0] for x in self._cr.fetchall()]
+                    self.browse(sub_ids)._check_record_rules_result_count(returned_ids, operation)
 
-    def create_workflow(self, cr, uid, ids, context=None):
-        """Create a workflow instance for each given record IDs."""
+    @api.multi
+    def create_workflow(self):
+        """ Create a workflow instance for the given records. """
         from openerp import workflow
-        for res_id in ids:
-            workflow.trg_create(uid, self._name, res_id, cr)
-        # self.invalidate_cache(cr, uid, context=context) ?
+        for res_id in self.ids:
+            workflow.trg_create(self._uid, self._name, res_id, self._cr)
         return True
 
-    def delete_workflow(self, cr, uid, ids, context=None):
-        """Delete the workflow instances bound to the given record IDs."""
+    @api.multi
+    def delete_workflow(self):
+        """ Delete the workflow instances bound to the given records. """
         from openerp import workflow
-        for res_id in ids:
-            workflow.trg_delete(uid, self._name, res_id, cr)
-        self.invalidate_cache(cr, uid, context=context)
+        for res_id in self.ids:
+            workflow.trg_delete(self._uid, self._name, res_id, self._cr)
+        self.invalidate_cache()
         return True
 
-    def step_workflow(self, cr, uid, ids, context=None):
-        """Reevaluate the workflow instances of the given record IDs."""
+    @api.multi
+    def step_workflow(self):
+        """ Reevaluate the workflow instances of the given records. """
         from openerp import workflow
-        for res_id in ids:
-            workflow.trg_write(uid, self._name, res_id, cr)
-        # self.invalidate_cache(cr, uid, context=context) ?
+        for res_id in self.ids:
+            workflow.trg_write(self._uid, self._name, res_id, self._cr)
         return True
 
-    def signal_workflow(self, cr, uid, ids, signal, context=None):
-        """Send given workflow signal and return a dict mapping ids to workflow results"""
+    @api.multi
+    def signal_workflow(self, signal):
+        """ Send the workflow signal, and return a dict mapping ids to workflow results. """
         from openerp import workflow
         result = {}
-        for res_id in ids:
-            result[res_id] = workflow.trg_validate(uid, self._name, res_id, signal, cr)
-        # self.invalidate_cache(cr, uid, context=context) ?
+        for res_id in self.ids:
+            result[res_id] = workflow.trg_validate(self._uid, self._name, res_id, signal, self._cr)
         return result
 
-    def redirect_workflow(self, cr, uid, old_new_ids, context=None):
+    @api.model
+    def redirect_workflow(self, old_new_ids):
         """ Rebind the workflow instance bound to the given 'old' record IDs to
             the given 'new' IDs. (``old_new_ids`` is a list of pairs ``(old, new)``.
         """
         from openerp import workflow
         for old_id, new_id in old_new_ids:
-            workflow.trg_redirect(uid, self._name, old_id, new_id, cr)
-        self.invalidate_cache(cr, uid, context=context)
+            workflow.trg_redirect(self._uid, self._name, old_id, new_id, self._cr)
+        self.invalidate_cache()
         return True
 
-    def unlink(self, cr, uid, ids, context=None):
+    @api.multi
+    def unlink(self):
         """ unlink()
 
         Deletes the records of the current set
@@ -3820,89 +3691,86 @@ class BaseModel(object):
         :raise UserError: if the record is default property for other records
 
         """
-        if not ids:
+        if not self:
             return True
-        if isinstance(ids, (int, long)):
-            ids = [ids]
 
-        result_store = self._store_get_values(cr, uid, ids, self._fields.keys(), context)
+        # for recomputing old-style and new-style fields
+        result_store = self._store_get_values(self._fields)
+        self.modified(self._fields)
 
-        # for recomputing new-style fields
-        recs = self.browse(cr, uid, ids, context)
-        recs.modified(self._fields)
+        self._check_concurrency()
 
-        self._check_concurrency(cr, ids, context)
-
-        self.check_access_rights(cr, uid, 'unlink')
-
-        ir_property = self.pool.get('ir.property')
+        self.check_access_rights('unlink')
 
         # Check if the records are used as default properties.
-        domain = [('res_id', '=', False),
-                  ('value_reference', 'in', ['%s,%s' % (self._name, i) for i in ids]),
-                 ]
-        if ir_property.search(cr, uid, domain, context=context):
+        refs = ['%s,%s' % (self._name, i) for i in self.ids]
+        if self.env['ir.property'].search([('res_id', '=', False), ('value_reference', 'in', refs)]):
             raise UserError(_('Unable to delete this document because it is used as a default property'))
 
         # Delete the records' properties.
-        property_ids = ir_property.search(cr, uid, [('res_id', 'in', ['%s,%s' % (self._name, i) for i in ids])], context=context)
-        ir_property.unlink(cr, uid, property_ids, context=context)
+        self.env['ir.property'].search([('res_id', 'in', refs)]).unlink()
 
-        self.delete_workflow(cr, uid, ids, context=context)
+        self.delete_workflow()
 
-        self.check_access_rule(cr, uid, ids, 'unlink', context=context)
-        pool_model_data = self.pool.get('ir.model.data')
-        ir_values_obj = self.pool.get('ir.values')
-        ir_attachment_obj = self.pool.get('ir.attachment')
-        for sub_ids in cr.split_for_in_conditions(ids):
-            cr.execute('delete from ' + self._table + ' ' \
-                       'where id IN %s', (sub_ids,))
+        self.check_access_rule('unlink')
 
-            # Removing the ir_model_data reference if the record being deleted is a record created by xml/csv file,
-            # as these are not connected with real database foreign keys, and would be dangling references.
-            # Note: following steps performed as admin to avoid access rights restrictions, and with no context
-            #       to avoid possible side-effects during admin calls.
-            # Step 1. Calling unlink of ir_model_data only for the affected IDS
-            reference_ids = pool_model_data.search(cr, SUPERUSER_ID, [('res_id','in',list(sub_ids)),('model','=',self._name)])
-            # Step 2. Marching towards the real deletion of referenced records
-            if reference_ids:
-                pool_model_data.unlink(cr, SUPERUSER_ID, reference_ids)
+        cr = self._cr
+        Data = self.env['ir.model.data'].sudo().with_context({})
+        Values = self.env['ir.values']
+        Attachment = self.env['ir.attachment']
 
-            # For the same reason, removing the record relevant to ir_values
-            ir_value_ids = ir_values_obj.search(cr, uid,
-                    ['|',('value','in',['%s,%s' % (self._name, sid) for sid in sub_ids]),'&',('res_id','in',list(sub_ids)),('model','=',self._name)],
-                    context=context)
-            if ir_value_ids:
-                ir_values_obj.unlink(cr, uid, ir_value_ids, context=context)
+        for sub_ids in cr.split_for_in_conditions(self.ids):
+            query = "DELETE FROM %s WHERE id IN %%s" % self._table
+            cr.execute(query, (sub_ids,))
 
-            # For the same reason, removing the record relevant to ir_attachment
-            # The search is performed with sql as the search method of ir_attachment is overridden to hide attachments of deleted records
-            cr.execute('select id from ir_attachment where res_model = %s and res_id in %s', (self._name, sub_ids))
-            ir_attachment_ids = [ir_attachment[0] for ir_attachment in cr.fetchall()]
-            if ir_attachment_ids:
-                ir_attachment_obj.unlink(cr, uid, ir_attachment_ids, context=context)
+            # Removing the ir_model_data reference if the record being deleted
+            # is a record created by xml/csv file, as these are not connected
+            # with real database foreign keys, and would be dangling references.
+            #
+            # Note: the following steps are performed as superuser to avoid
+            # access rights restrictions, and with no context to avoid possible
+            # side-effects during admin calls.
+            data = Data.search([('model', '=', self._name), ('res_id', 'in', sub_ids)])
+            if data:
+                data.unlink()
+
+            # For the same reason, remove the relevant records in ir_values
+            refs = ['%s,%s' % (self._name, i) for i in sub_ids]
+            values = Values.search(['|', ('value', 'in', refs),
+                                         '&', ('model', '=', self._name),
+                                              ('res_id', 'in', sub_ids)])
+            if values:
+                values.unlink()
+
+            # For the same reason, remove the relevant records in ir_attachment
+            # (the search is performed with sql as the search method of
+            # ir_attachment is overridden to hide attachments of deleted
+            # records)
+            query = 'SELECT id FROM ir_attachment WHERE res_model=%s AND res_id IN %s'
+            cr.execute(query, (self._name, sub_ids))
+            attachments = Attachment.browse([row[0] for row in cr.fetchall()])
+            if attachments:
+                attachments.unlink()
 
         # invalidate the *whole* cache, since the orm does not handle all
         # changes made in the database, like cascading delete!
-        recs.invalidate_cache()
+        self.invalidate_cache()
 
-        for order, obj_name, store_ids, fields in result_store:
-            if obj_name == self._name:
-                effective_store_ids = set(store_ids) - set(ids)
-            else:
-                effective_store_ids = store_ids
-            if effective_store_ids:
-                obj = self.pool[obj_name]
-                cr.execute('select id from '+obj._table+' where id IN %s', (tuple(effective_store_ids),))
-                rids = map(lambda x: x[0], cr.fetchall())
-                if rids:
-                    obj._store_set_values(cr, uid, rids, fields, context)
+        # recompute old-style fields
+        for order, model_name, ids, fields in result_store:
+            ids = set(ids) - set(self.ids) if model_name == self._name else ids
+            if ids:
+                model = self.env[model_name]
+                query = "SELECT id FROM %s WHERE id IN %%s" % model._table
+                cr.execute(query, (tuple(ids),))
+                recs = model.browse([row[0] for row in cr.fetchall()])
+                recs._store_set_values(fields)
 
         # recompute new-style fields
-        recs.recompute()
+        self.recompute()
 
         # auditing: deletions are infrequent and leave no trace in the database
-        _unlink.info('User #%s deleted %s records with IDs: %r', uid, self._name, ids)
+        _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, self._name, self.ids)
 
         return True
 
@@ -3992,7 +3860,7 @@ class BaseModel(object):
         if not self:
             return True
 
-        self._check_concurrency(self._ids)
+        self._check_concurrency()
         self.check_access_rights('write')
 
         # No user-driven update of these columns
@@ -4027,178 +3895,153 @@ class BaseModel(object):
 
         return True
 
-    def _write(self, cr, user, ids, vals, context=None):
+    @api.multi
+    def _write(self, vals):
         # low-level implementation of write()
-        if not context:
-            context = {}
+        self.check_field_access_rights('write', list(vals))
 
-        readonly = None
-        self.check_field_access_rights(cr, user, 'write', vals.keys())
-        deleted_related = defaultdict(list)
-        for field in vals.keys():
-            fobj = None
-            if field in self._columns:
-                fobj = self._columns[field]
-            elif field in self._inherit_fields:
-                fobj = self._inherit_fields[field][2]
-            if not fobj:
-                continue
-            if fobj._type in ['one2many', 'many2many'] and vals[field]:
-                for wtuple in vals[field]:
-                    if isinstance(wtuple, (tuple, list)) and wtuple[0] == 2:
-                        deleted_related[fobj._obj].append(wtuple[1])
-            groups = fobj.write
+        cr = self._cr
 
-            if groups:
-                edit = False
-                for group in groups:
-                    module = group.split(".")[0]
-                    grp = group.split(".")[1]
-                    cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name=%s and module=%s and model=%s) and uid=%s", \
-                               (grp, module, 'res.groups', user))
-                    readonly = cr.fetchall()
-                    if readonly[0][0] >= 1:
-                        edit = True
-                        break
-
-                if not edit:
-                    vals.pop(field)
-
-        result = self._store_get_values(cr, user, ids, vals.keys(), context) or []
+        # for recomputing old-style fields
+        deleted_related = defaultdict(list)     # {model_name: ids}
+        for name, val in vals.iteritems():
+            field = self._fields[name]
+            if field.type in ('one2many', 'many2many') and val:
+                for command in val:
+                    if isinstance(command, (tuple, list)) and command[0] == 2:
+                        deleted_related[field.comodel_name].append(command[1])
+        result_store = self._store_get_values(list(vals))
 
         # for recomputing new-style fields
-        recs = self.browse(cr, user, ids, context)
-        modified_fields = list(vals)
-        if self._log_access:
-            modified_fields += ['write_date', 'write_uid']
-        recs.modified(modified_fields)
+        extra_fields = ['write_date', 'write_uid'] if self._log_access else []
+        self.modified(list(vals) + extra_fields)
 
+        # for updating parent_left, parent_right
         parents_changed = []
-        parent_order = self._parent_order or self._order
-        if self._parent_store and (self._parent_name in vals) and not context.get('defer_parent_store_computation'):
-            # The parent_left/right computation may take up to
-            # 5 seconds. No need to recompute the values if the
-            # parent is the same.
+        if self._parent_store and (self._parent_name in vals) and \
+                not self._context.get('defer_parent_store_computation'):
+            # The parent_left/right computation may take up to 5 seconds. No
+            # need to recompute the values if the parent is the same.
+            #
             # Note: to respect parent_order, nodes must be processed in
             # order, so ``parents_changed`` must be ordered properly.
             parent_val = vals[self._parent_name]
             if parent_val:
                 query = "SELECT id FROM %s WHERE id IN %%s AND (%s != %%s OR %s IS NULL) ORDER BY %s" % \
-                                (self._table, self._parent_name, self._parent_name, parent_order)
-                cr.execute(query, (tuple(ids), parent_val))
+                                (self._table, self._parent_name, self._parent_name, self._parent_order)
+                cr.execute(query, (tuple(self.ids), parent_val))
             else:
                 query = "SELECT id FROM %s WHERE id IN %%s AND (%s IS NOT NULL) ORDER BY %s" % \
-                                (self._table, self._parent_name, parent_order)
-                cr.execute(query, (tuple(ids),))
+                                (self._table, self._parent_name, self._parent_order)
+                cr.execute(query, (tuple(self.ids),))
             parents_changed = map(operator.itemgetter(0), cr.fetchall())
 
         updates = []            # list of (column, expr) or (column, pattern, value)
-        upd_todo = []
-        updend = []
-        direct = []
-        has_trans = context.get('lang') and context['lang'] != 'en_US'
-        single_lang = len(self.pool['res.lang'].get_installed(cr, user, context)) <= 1
-        for field in vals:
-            ffield = self._fields.get(field)
-            if ffield and ffield.deprecated:
-                _logger.warning('Field %s.%s is deprecated: %s', self._name, field, ffield.deprecated)
-            if field in self._columns:
-                column = self._columns[field]
-                if hasattr(column, 'selection') and vals[field]:
-                    self._check_selection_field_value(cr, user, field, vals[field], context=context)
+        upd_todo = []           # list of column names to set explicitly
+        updend = []             # list of possibly inherited field names
+        direct = []             # list of direcly updated columns
+        has_trans = self.env.lang and self.env.lang != 'en_US'
+        single_lang = len(self.env['res.lang'].get_installed()) <= 1
+        for name, val in vals.iteritems():
+            field = self._fields[name]
+            if field and field.deprecated:
+                _logger.warning('Field %s.%s is deprecated: %s', self._name, name, field.deprecated)
+            if field.column:
+                column = field.column
+                if hasattr(column, 'selection') and val:
+                    self._check_selection_field_value(name, val)
                 if column._classic_write and not hasattr(column, '_fnct_inv'):
                     if single_lang or not (has_trans and column.translate and not callable(column.translate)):
-                        # vals[field] is not a translation: update the table
-                        updates.append((field, column._symbol_set[0], column._symbol_set[1](vals[field])))
-                    direct.append(field)
+                        # val is not a translation: update the table
+                        setc, setf = column._symbol_set
+                        updates.append((name, setc, setf(val)))
+                    direct.append(name)
                 else:
-                    upd_todo.append(field)
+                    upd_todo.append(name)
             else:
-                updend.append(field)
+                updend.append(name)
 
         if self._log_access:
-            updates.append(('write_uid', '%s', user))
+            updates.append(('write_uid', '%s', self._uid))
             updates.append(('write_date', "(now() at time zone 'UTC')"))
             direct.append('write_uid')
             direct.append('write_date')
 
         if updates:
-            self.check_access_rule(cr, user, ids, 'write', context=context)
+            self.check_access_rule('write')
             query = 'UPDATE "%s" SET %s WHERE id IN %%s' % (
-                self._table, ','.join('"%s"=%s' % u[:2] for u in updates),
+                self._table, ','.join('"%s"=%s' % (u[0], u[1]) for u in updates),
             )
             params = tuple(u[2] for u in updates if len(u) > 2)
-            for sub_ids in cr.split_for_in_conditions(set(ids)):
+            for sub_ids in cr.split_for_in_conditions(set(self.ids)):
                 cr.execute(query, params + (sub_ids,))
                 if cr.rowcount != len(sub_ids):
                     raise MissingError(_('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description)
 
             # TODO: optimize
-            for f in direct:
-                column = self._columns[f]
+            for name in direct:
+                column = self._columns[name]
                 if callable(column.translate):
                     # The source value of a field has been modified,
                     # synchronize translated terms when possible.
-                    self.pool['ir.translation']._sync_terms_translations(
-                        cr, user, self._fields[f], recs, context=context)
+                    self.env['ir.translation']._sync_terms_translations(self._fields[name], self)
 
                 elif has_trans and column.translate:
                     # The translated value of a field has been modified.
-                    src_trans = self.pool[self._name].read(cr, user, ids, [f])[0][f]
+                    src_trans = self.read([name])[0][name]
                     if not src_trans:
                         # Insert value to DB
-                        src_trans = vals[f]
-                        context_wo_lang = dict(context, lang=None)
-                        self.write(cr, user, ids, {f: vals[f]}, context=context_wo_lang)
-                    translation_value = self._columns[f]._symbol_set[1](vals[f])
-                    self.pool['ir.translation']._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, translation_value, src_trans)
+                        src_trans = vals[name]
+                        self.with_context(lang=None).write({name: src_trans})
+                    val = column._symbol_set[1](vals[name])
+                    tname = "%s,%s" % (self._name, name)
+                    self.env['ir.translation']._set_ids(
+                        tname, 'model', self.env.lang, self.ids, val, src_trans)
 
         # invalidate and mark new-style fields to recompute; do this before
         # setting other fields, because it can require the value of computed
         # fields, e.g., a one2many checking constraints on records
-        recs.modified(direct)
+        self.modified(direct)
+
+        # defaults in context must be removed when call a one2many or many2many
+        rel_context = {key: val
+                       for key, val in self._context.iteritems()
+                       if not key.startswith('default_')}
 
         # call the 'set' method of fields which are not classic_write
-        upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
-
-        # default element in context must be removed when call a one2many or many2many
-        rel_context = context.copy()
-        for c in context.items():
-            if c[0].startswith('default_'):
-                del rel_context[c[0]]
-
-        for field in upd_todo:
-            for id in ids:
-                result += self._columns[field].set(cr, self, id, field, vals[field], user, context=rel_context) or []
+        for name in sorted(upd_todo, key=lambda name: self._columns[name].priority):
+            column = self._columns[name]
+            for id in self.ids:
+                result_store += column.set(self._cr, self._model, id, name, vals[name],
+                                           self._uid, context=rel_context) or []
 
         # for recomputing new-style fields
-        recs.modified(upd_todo)
+        self.modified(upd_todo)
 
+        # write inherited fields on the corresponding parent records
         unknown_fields = set(updend)
-        for table, inherit_field in self._inherits.iteritems():
-            col = self._inherits[table]
-            nids = []
-            for sub_ids in cr.split_for_in_conditions(ids):
-                cr.execute('select distinct "'+col+'" from "'+self._table+'" ' \
-                           'where id IN %s', (sub_ids,))
-                nids.extend([x[0] for x in cr.fetchall()])
+        for parent_model, parent_field in self._inherits.iteritems():
+            parent_ids = []
+            for sub_ids in cr.split_for_in_conditions(self.ids):
+                query = "SELECT DISTINCT %s FROM %s WHERE id IN %%s" % (parent_field, self._table)
+                cr.execute(query, (sub_ids,))
+                parent_ids.extend([row[0] for row in cr.fetchall()])
 
-            v = {}
-            for fname in updend:
-                field = self._fields[fname]
-                if field.inherited and field.related[0] == inherit_field:
-                    v[fname] = vals[fname]
-                    unknown_fields.discard(fname)
-            if v:
-                self.pool[table].write(cr, user, nids, v, context)
+            parent_vals = {}
+            for name in updend:
+                field = self._fields[name]
+                if field.inherited and field.related[0] == parent_field:
+                    parent_vals[name] = vals[name]
+                    unknown_fields.discard(name)
+
+            if parent_vals:
+                self.env[parent_model].browse(parent_ids).write(parent_vals)
 
         if unknown_fields:
-            _logger.warning(
-                'No such field(s) in model %s: %s.',
-                self._name, ', '.join(unknown_fields))
+            _logger.warning('No such field(s) in model %s: %s.', self._name, ', '.join(unknown_fields))
 
         # check Python constraints
-        recs._validate_fields(vals)
+        self._validate_fields(vals)
 
         # TODO: use _order to set dest at the right position and not first node of parent
         # We can't defer parent_store computation because the stored function
@@ -4208,79 +4051,78 @@ class BaseModel(object):
             if self.pool._init:
                 self.pool._init_parent[self._name] = True
             else:
-                order = self._parent_order or self._order
                 parent_val = vals[self._parent_name]
                 if parent_val:
-                    clause, params = '%s=%%s' % (self._parent_name,), (parent_val,)
+                    clause, params = '%s=%%s' % self._parent_name, (parent_val,)
                 else:
-                    clause, params = '%s IS NULL' % (self._parent_name,), ()
+                    clause, params = '%s IS NULL' % self._parent_name, ()
 
                 for id in parents_changed:
-                    cr.execute('SELECT parent_left, parent_right FROM %s WHERE id=%%s' % (self._table,), (id,))
-                    pleft, pright = cr.fetchone()
-                    distance = pright - pleft + 1
+                    # determine old parent_left, parent_right of current record
+                    cr.execute('SELECT parent_left, parent_right FROM %s WHERE id=%%s' % self._table, (id,))
+                    pleft0, pright0 = cr.fetchone()
+                    width = pright0 - pleft0 + 1
 
-                    # Positions of current siblings, to locate proper insertion point;
-                    # this can _not_ be fetched outside the loop, as it needs to be refreshed
-                    # after each update, in case several nodes are sequentially inserted one
-                    # next to the other (i.e computed incrementally)
-                    cr.execute('SELECT parent_right, id FROM %s WHERE %s ORDER BY %s' % (self._table, clause, parent_order), params)
-                    parents = cr.fetchall()
-
-                    # Find Position of the element
-                    position = None
-                    for (parent_pright, parent_id) in parents:
-                        if parent_id == id:
+                    # determine new parent_left of current record; it comes
+                    # right after the parent_right of its closest left sibling
+                    # (this CANNOT be fetched outside the loop, as it needs to
+                    # be refreshed after each update, in case several nodes are
+                    # sequentially inserted one next to the other)
+                    pleft1 = None
+                    cr.execute('SELECT id, parent_right FROM %s WHERE %s ORDER BY %s' % \
+                               (self._table, clause, self._parent_order), params)
+                    for (sibling_id, sibling_parent_right) in cr.fetchall():
+                        if sibling_id == id:
                             break
-                        position = parent_pright and parent_pright + 1 or 1
-
-                    # It's the first node of the parent
-                    if not position:
+                        pleft1 = (sibling_parent_right or 0) + 1
+                    if not pleft1:
+                        # the current record is the first node of the parent
                         if not parent_val:
-                            position = 1
+                            pleft1 = 0          # the first node starts at 0
                         else:
-                            cr.execute('select parent_left from '+self._table+' where id=%s', (parent_val,))
-                            position = cr.fetchone()[0] + 1
+                            cr.execute('SELECT parent_left FROM %s WHERE id=%%s' % self._table, (parent_val,))
+                            pleft1 = cr.fetchone()[0] + 1
 
-                    if pleft < position <= pright:
+                    if pleft0 < pleft1 <= pright0:
                         raise UserError(_('Recursivity Detected.'))
 
-                    if pleft < position:
-                        cr.execute('update '+self._table+' set parent_left=parent_left+%s where parent_left>=%s', (distance, position))
-                        cr.execute('update '+self._table+' set parent_right=parent_right+%s where parent_right>=%s', (distance, position))
-                        cr.execute('update '+self._table+' set parent_left=parent_left+%s, parent_right=parent_right+%s where parent_left>=%s and parent_left<%s', (position-pleft, position-pleft, pleft, pright))
+                    # make some room for parent_left and parent_right at the new position
+                    cr.execute('UPDATE %s SET parent_left=parent_left+%%s WHERE %%s<=parent_left' % self._table, (width, pleft1))
+                    cr.execute('UPDATE %s SET parent_right=parent_right+%%s WHERE %%s<=parent_right' % self._table, (width, pleft1))
+                    # slide the subtree of the current record to its new position
+                    if pleft0 < pleft1:
+                        cr.execute('''UPDATE %s SET parent_left=parent_left+%%s, parent_right=parent_right+%%s
+                                      WHERE %%s<=parent_left AND parent_left<%%s''' % self._table,
+                                   (pleft1 - pleft0, pleft1 - pleft0, pleft0, pright0))
                     else:
-                        cr.execute('update '+self._table+' set parent_left=parent_left+%s where parent_left>=%s', (distance, position))
-                        cr.execute('update '+self._table+' set parent_right=parent_right+%s where parent_right>=%s', (distance, position))
-                        cr.execute('update '+self._table+' set parent_left=parent_left-%s, parent_right=parent_right-%s where parent_left>=%s and parent_left<%s', (pleft-position+distance, pleft-position+distance, pleft+distance, pright+distance))
-                    recs.invalidate_cache(['parent_left', 'parent_right'])
+                        cr.execute('''UPDATE %s SET parent_left=parent_left-%%s, parent_right=parent_right-%%s
+                                      WHERE %%s<=parent_left AND parent_left<%%s''' % self._table,
+                                   (pleft0 - pleft1 + width, pleft0 - pleft1 + width, pleft0 + width, pright0 + width))
 
-        result += self._store_get_values(cr, user, ids, vals.keys(), context)
+                self.invalidate_cache(['parent_left', 'parent_right'])
 
-        done = {}
-        recs.env.recompute_old.extend(result)
-        while recs.env.recompute_old:
-            sorted_recompute_old = sorted(recs.env.recompute_old)
-            recs.env.clear_recompute_old()
-            for __, model_name, ids_to_update, fields_to_recompute in \
-                    sorted_recompute_old:
-                key = (model_name, tuple(fields_to_recompute))
-                done.setdefault(key, {})
+        result_store += self._store_get_values(vals)
+
+        done = defaultdict(set)        # {(model, fields): ids}
+        self.env.recompute_old.extend(result_store)
+        while self.env.recompute_old:
+            sorted_recompute_old = sorted(self.env.recompute_old)
+            self.env.clear_recompute_old()
+            for order, model_name, ids, fnames in sorted_recompute_old:
+                key = (model_name, tuple(fnames))
                 # avoid to do several times the same computation
-                todo = []
-                for id in ids_to_update:
-                    if id not in done[key]:
-                        done[key][id] = True
-                        if id not in deleted_related[model_name]:
-                            todo.append(id)
-                self.pool[model_name]._store_set_values(
-                    cr, user, todo, fields_to_recompute, context)
+                ids = [id for id in ids
+                       if id not in done[key]
+                       if id not in deleted_related[model_name]]
+                done[key].update(ids)
+                recs = self.env[model_name].browse(ids)
+                recs._store_set_values(fnames)
 
         # recompute new-style fields
-        if recs.env.recompute and context.get('recompute', True):
-            recs.recompute()
+        if self.env.recompute and self._context.get('recompute', True):
+            self.recompute()
 
-        self.step_workflow(cr, user, ids, context=context)
+        self.step_workflow()
         return True
 
     #
@@ -4340,255 +4182,229 @@ class BaseModel(object):
 
         return record
 
-    def _create(self, cr, user, vals, context=None):
+    @api.model
+    def _create(self, vals):
         # low-level implementation of create()
-        if not context:
-            context = {}
-
         if self.is_transient():
-            self._transient_vacuum(cr, user)
+            self._transient_vacuum()
 
-        tocreate = {}
-        for v in self._inherits:
-            if self._inherits[v] not in vals:
-                tocreate[v] = {}
-            else:
-                tocreate[v] = {'id': vals[self._inherits[v]]}
+        # data of parent records to create or update, by model
+        tocreate = {
+            parent_model: {'id': vals.pop(parent_field, None)}
+            for parent_model, parent_field in self._inherits.iteritems()
+        }
 
+        # list of column assignments defined as tuples like:
+        #   (column_name, format_string, column_value)
+        #   (column_name, sql_formula)
+        # Those tuples will be used by the string formatting for the INSERT
+        # statement below.
         updates = [
-            # list of column assignments defined as tuples like:
-            #   (column_name, format_string, column_value)
-            #   (column_name, sql_formula)
-            # Those tuples will be used by the string formatting for the INSERT
-            # statement below.
             ('id', "nextval('%s')" % self._sequence),
         ]
 
         upd_todo = []
         unknown_fields = []
-        for v in vals.keys():
-            if v in self._inherit_fields and v not in self._columns:
-                (table, col, col_detail, original_parent) = self._inherit_fields[v]
-                tocreate[table][v] = vals[v]
-                del vals[v]
-            else:
-                if (v not in self._inherit_fields) and (v not in self._columns):
-                    del vals[v]
-                    unknown_fields.append(v)
+        for name, val in vals.items():
+            field = self._fields.get(name)
+            if not field:
+                unknown_fields.append(name)
+                del vals[name]
+            elif field.inherited:
+                tocreate[field.related_field.model_name][name] = val
+                del vals[name]
+            elif not field.column:
+                del vals[name]
         if unknown_fields:
-            _logger.warning(
-                'No such field(s) in model %s: %s.',
-                self._name, ', '.join(unknown_fields))
+            _logger.warning('No such field(s) in model %s: %s.', self._name, ', '.join(unknown_fields))
 
-        for table in tocreate:
-            if self._inherits[table] in vals:
-                del vals[self._inherits[table]]
-
-            record_id = tocreate[table].pop('id', None)
-
-            if record_id is None or not record_id:
-                record_id = self.pool[table].create(cr, user, tocreate[table], context=context)
+        # create or update parent records
+        for parent_model, parent_vals in tocreate.iteritems():
+            parent_id = parent_vals.pop('id')
+            if not parent_id:
+                parent_id = self.env[parent_model].create(parent_vals).id
             else:
-                self.pool[table].write(cr, user, [record_id], tocreate[table], context=context)
+                self.env[parent_model].browse(parent_id).write(parent_vals)
+            updates.append((self._inherits[parent_model], '%s', parent_id))
 
-            updates.append((self._inherits[table], '%s', record_id))
+        # set boolean fields to False by default (to make search more powerful)
+        for name, field in self._fields.iteritems():
+            if field.type == 'boolean' and field.store and name not in vals:
+                vals[name] = False
 
-        #Start : Set bool fields to be False if they are not touched(to make search more powerful)
-        bool_fields = [x for x in self._columns.keys() if self._columns[x]._type=='boolean']
-
-        for bool_field in bool_fields:
-            if bool_field not in vals:
-                vals[bool_field] = False
-        #End
-        for field in vals.keys():
-            fobj = None
-            if field in self._columns:
-                fobj = self._columns[field]
-            else:
-                fobj = self._inherit_fields[field][2]
-            if not fobj:
-                continue
-            groups = fobj.write
-            if groups:
-                edit = False
-                for group in groups:
-                    module = group.split(".")[0]
-                    grp = group.split(".")[1]
-                    cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name='%s' and module='%s' and model='%s') and uid=%s" % \
-                               (grp, module, 'res.groups', user))
-                    readonly = cr.fetchall()
-                    if readonly[0][0] >= 1:
-                        edit = True
-                        break
-                    elif readonly[0][0] == 0:
-                        edit = False
-                    else:
-                        edit = False
-
-                if not edit:
-                    vals.pop(field)
-        for field in vals:
-            column = self._columns[field]
+        # determine SQL values
+        for name, val in vals.iteritems():
+            column = self._columns[name]
             if column._classic_write:
-                updates.append((field, column._symbol_set[0], column._symbol_set[1](vals[field])))
+                setc, setf = column._symbol_set
+                updates.append((name, setc, setf(val)))
 
-                #for the function fields that receive a value, we set them directly in the database
-                #(they may be required), but we also need to trigger the _fct_inv()
+                # for the function fields that receive a value, we set them
+                # directly in the database (they may be required), but we also
+                # need to trigger the _fct_inv()
                 if (hasattr(column, '_fnct_inv')) and not isinstance(column, fields.related):
-                    #TODO: this way to special case the related fields is really creepy but it shouldn't be changed at
-                    #one week of the release candidate. It seems the only good way to handle correctly this is to add an
-                    #attribute to make a field `really readonly´ and thus totally ignored by the create()... otherwise
-                    #if, for example, the related has a default value (for usability) then the fct_inv is called and it
-                    #may raise some access rights error. Changing this is a too big change for now, and is thus postponed
-                    #after the release but, definitively, the behavior shouldn't be different for related and function
-                    #fields.
-                    upd_todo.append(field)
-            else:
-                #TODO: this `if´ statement should be removed because there is no good reason to special case the fields
-                #related. See the above TODO comment for further explanations.
-                if not isinstance(column, fields.related):
-                    upd_todo.append(field)
-            if hasattr(column, 'selection') and vals[field]:
-                self._check_selection_field_value(cr, user, field, vals[field], context=context)
+                    # TODO: this way to special case the related fields is
+                    # really creepy but it shouldn't be changed at one week of
+                    # the release candidate. It seems the only good way to
+                    # handle correctly this is to add an attribute to make a
+                    # field `really readonly´ and thus totally ignored by the
+                    # create()... otherwise if, for example, the related has a
+                    # default value (for usability) then the fct_inv is called
+                    # and it may raise some access rights error. Changing this
+                    # is a too big change for now, and is thus postponed after
+                    # the release but, definitively, the behavior shouldn't be
+                    # different for related and function fields.
+                    upd_todo.append(name)
+            elif not isinstance(column, fields.related):
+                # TODO: this special case should be removed because there is no
+                # good reason to special case the fields related. See the above
+                # comment for further explanations.
+                upd_todo.append(name)
+
+            if hasattr(column, 'selection') and val:
+                self._check_selection_field_value(name, val)
+
         if self._log_access:
-            updates.append(('create_uid', '%s', user))
-            updates.append(('write_uid', '%s', user))
+            updates.append(('create_uid', '%s', self._uid))
+            updates.append(('write_uid', '%s', self._uid))
             updates.append(('create_date', "(now() at time zone 'UTC')"))
             updates.append(('write_date', "(now() at time zone 'UTC')"))
 
-        # the list of tuples used in this formatting corresponds to
-        # tuple(field_name, format, value)
-        # In some case, for example (id, create_date, write_date) we does not
-        # need to read the third value of the tuple, because the real value is
-        # encoded in the second value (the format).
-        cr.execute(
-            """INSERT INTO "%s" (%s) VALUES(%s) RETURNING id""" % (
+        # insert a row for this record
+        cr = self._cr
+        query = """INSERT INTO "%s" (%s) VALUES(%s) RETURNING id""" % (
                 self._table,
                 ', '.join('"%s"' % u[0] for u in updates),
-                ', '.join(u[1] for u in updates)
-            ),
-            tuple([u[2] for u in updates if len(u) > 2])
-        )
+                ', '.join(u[1] for u in updates),
+            )
+        cr.execute(query, tuple(u[2] for u in updates if len(u) > 2))
 
+        # from now on, self is the new record
         id_new, = cr.fetchone()
-        recs = self.browse(cr, user, id_new, context)
+        self = self.browse(id_new)
 
-        if context.get('lang') and context['lang'] != 'en_US':
-            # add translations for context['lang']
-            for field in vals:
-                column = self._columns[field]
+        if self.env.lang and self.env.lang != 'en_US':
+            # add translations for self.env.lang
+            for name, val in vals.iteritems():
+                column = self._columns[name]
                 if column._classic_write and column.translate and not callable(column.translate):
-                    self.pool['ir.translation']._set_ids(
-                        cr, user, self._name+','+field, 'model',
-                        context['lang'], recs.ids, vals[field], vals[field],
-                    )
+                    tname = "%s,%s" % (self._name, name)
+                    self.env['ir.translation']._set_ids(tname, 'model', self.env.lang, self.ids, val, val)
 
-        if self._parent_store and not context.get('defer_parent_store_computation'):
+        if self._parent_store and not self._context.get('defer_parent_store_computation'):
             if self.pool._init:
                 self.pool._init_parent[self._name] = True
             else:
-                parent = vals.get(self._parent_name, False)
-                if parent:
-                    cr.execute('select parent_right from '+self._table+' where '+self._parent_name+'=%s order by '+(self._parent_order or self._order), (parent,))
-                    pleft_old = None
-                    result_p = cr.fetchall()
-                    for (pleft,) in result_p:
-                        if not pleft:
+                parent_val = vals.get(self._parent_name)
+                if parent_val:
+                    # determine parent_left: it comes right after the
+                    # parent_right of its closest left sibling
+                    pleft = None
+                    cr.execute("SELECT parent_right FROM %s WHERE %s=%%s ORDER BY %s" % \
+                                    (self._table, self._parent_name, self._parent_order),
+                               (parent_val,))
+                    for (pright,) in cr.fetchall():
+                        if not pright:
                             break
-                        pleft_old = pleft
-                    if not pleft_old:
-                        cr.execute('select parent_left from '+self._table+' where id=%s', (parent,))
-                        pleft_old = cr.fetchone()[0]
-                    pleft = pleft_old
+                        pleft = pright + 1
+                    if not pleft:
+                        # this is the leftmost child of its parent
+                        cr.execute("SELECT parent_left FROM %s WHERE id=%%s" % self._table, (parent_val,))
+                        pleft = cr.fetchone()[0] + 1
                 else:
-                    cr.execute('select max(parent_right) from '+self._table)
-                    pleft = cr.fetchone()[0] or 0
-                cr.execute('update '+self._table+' set parent_left=parent_left+2 where parent_left>%s', (pleft,))
-                cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%s', (pleft,))
-                cr.execute('update '+self._table+' set parent_left=%s,parent_right=%s where id=%s', (pleft+1, pleft+2, id_new))
-                recs.invalidate_cache(['parent_left', 'parent_right'])
+                    # determine parent_left: it comes after all top-level parent_right
+                    cr.execute("SELECT MAX(parent_right) FROM %s" % self._table)
+                    pleft = (cr.fetchone()[0] or 0) + 1
+
+                # make some room for the new node, and insert it in the MPTT
+                cr.execute("UPDATE %s SET parent_left=parent_left+2 WHERE parent_left>=%%s" % self._table,
+                           (pleft,))
+                cr.execute("UPDATE %s SET parent_right=parent_right+2 WHERE parent_right>=%%s" % self._table,
+                           (pleft,))
+                cr.execute("UPDATE %s SET parent_left=%%s, parent_right=%%s WHERE id=%%s" % self._table,
+                           (pleft, pleft + 1, id_new))
+                self.invalidate_cache(['parent_left', 'parent_right'])
 
         # invalidate and mark new-style fields to recompute; do this before
         # setting other fields, because it can require the value of computed
         # fields, e.g., a one2many checking constraints on records
-        recs.modified(self._fields)
+        self.modified(self._fields)
+
+
+        # defaults in context must be removed when call a one2many or many2many
+        rel_context = {key: val
+                       for key, val in self._context.iteritems()
+                       if not key.startswith('default_')}
 
         # call the 'set' method of fields which are not classic_write
-        upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
-
-        # default element in context must be remove when call a one2many or many2many
-        rel_context = context.copy()
-        for c in context.items():
-            if c[0].startswith('default_'):
-                del rel_context[c[0]]
-
-        result = []
-        for field in upd_todo:
-            result += self._columns[field].set(cr, self, id_new, field, vals[field], user, rel_context) or []
+        result_store = []
+        for name in sorted(upd_todo, key=lambda name: self._columns[name].priority):
+            column = self._columns[name]
+            result_store += column.set(self._cr, self._model, id_new, name, vals[name],
+                                       self._uid, context=rel_context) or []
 
         # for recomputing new-style fields
-        recs.modified(upd_todo)
+        self.modified(upd_todo)
 
         # check Python constraints
-        recs._validate_fields(vals)
+        self._validate_fields(vals)
 
-        result += self._store_get_values(cr, user, [id_new],
-                list(set(vals.keys() + self._inherits.values())),
-                context)
-        recs.env.recompute_old.extend(result)
+        result_store += self._store_get_values(list(set(vals.keys() + self._inherits.values())))
+        self.env.recompute_old.extend(result_store)
 
-        if recs.env.recompute and context.get('recompute', True):
+        if self.env.recompute and self._context.get('recompute', True):
             done = []
-            while recs.env.recompute_old:
-                sorted_recompute_old = sorted(recs.env.recompute_old)
-                recs.env.clear_recompute_old()
-                for __, model_name, ids, fields2 in sorted_recompute_old:
-                    if not (model_name, ids, fields2) in done:
-                        self.pool[model_name]._store_set_values(
-                            cr, user, ids, fields2, context)
-                        done.append((model_name, ids, fields2))
+            while self.env.recompute_old:
+                sorted_recompute_old = sorted(self.env.recompute_old)
+                self.env.clear_recompute_old()
+                for order, model_name, ids, fnames in sorted_recompute_old:
+                    if (model_name, ids, fnames) not in done:
+                        recs = self.env[model_name].browse(ids)
+                        recs._store_set_values(fnames)
+                        done.append((model_name, ids, fnames))
 
             # recompute new-style fields
-            recs.recompute()
+            self.recompute()
 
-        self.check_access_rule(cr, user, [id_new], 'create', context=context)
-        self.create_workflow(cr, user, [id_new], context=context)
+        self.check_access_rule('create')
+        self.create_workflow()
         return id_new
 
-    def _store_get_values(self, cr, uid, ids, fields, context):
-        """Returns an ordered list of fields.function to call due to
-           an update operation on ``fields`` of records with ``ids``,
-           obtained by calling the 'store' triggers of these fields,
-           as setup by their 'store' attribute.
+    @api.multi
+    def _store_get_values(self, fields):
+        """ Returns an ordered list of fields.function to call due to an update
+            operation on ``fields`` of records ``self``, obtained by calling the
+            'store' triggers of these fields, as setup by their 'store' attribute.
 
-           :return: [(priority, model_name, [record_ids,], [function_fields,])]
+            :return: [(priority, model_name, [record_ids,], [function_fields,])]
         """
-        if fields is None: fields = []
-        stored_functions = self.pool._store_function.get(self._name, [])
+        fields = fields or []
 
-        # use indexed names for the details of the stored_functions:
-        model_name_, func_field_to_compute_, target_ids_func_, trigger_fields_, priority_ = range(5)
+        # use indexed names for the details of the triggers:
+        MODEL, FUNC, TARGET_FUNC, FIELDS, PRIORITY = range(5)
 
         # only keep store triggers that should be triggered for the ``fields``
         # being written to.
-        triggers_to_compute = (
-            f for f in stored_functions
-            if not f[trigger_fields_] or set(fields).intersection(f[trigger_fields_])
-        )
+        triggers = [
+            trigger
+            for trigger in self.pool._store_function.get(self._name, [])
+            if not trigger[FIELDS] or set(fields).intersection(trigger[FIELDS])
+        ]
 
-        to_compute_map = {}
+        to_compute_map = defaultdict(lambda: defaultdict(set))
         target_id_results = {}
-        for store_trigger in triggers_to_compute:
-            target_func_id_ = id(store_trigger[target_ids_func_])
-            if target_func_id_ not in target_id_results:
+        for trigger in triggers:
+            target_func_id = id(trigger[TARGET_FUNC])
+            if target_func_id not in target_id_results:
                 # use admin user for accessing objects having rules defined on store fields
-                target_id_results[target_func_id_] = [i for i in store_trigger[target_ids_func_](self, cr, SUPERUSER_ID, ids, context) if i]
-            target_ids = target_id_results[target_func_id_]
+                ids = trigger[TARGET_FUNC](self._model, self._cr, SUPERUSER_ID, self.ids, self._context)
+                target_id_results[target_func_id] = filter(None, ids)
+            target_ids = target_id_results[target_func_id]
 
             # the compound key must consider the priority and model name
-            key = (store_trigger[priority_], store_trigger[model_name_])
+            key = (trigger[PRIORITY], trigger[MODEL])
             for target_id in target_ids:
-                to_compute_map.setdefault(key, {}).setdefault(target_id,set()).add(tuple(store_trigger))
+                to_compute_map[key][target_id].add(tuple(trigger))
 
         # Here to_compute_map looks like:
         # { (10, 'model_a') : { target_id1: [ (trigger_1_tuple, trigger_2_tuple) ], ... }
@@ -4599,107 +4415,100 @@ class BaseModel(object):
         # Now we need to generate the batch function calls list
         # call_map =
         #   { (10, 'model_a') : [(10, 'model_a', [record_ids,], [function_fields,])] }
-        call_map = {}
-        for ((priority,model), id_map) in to_compute_map.iteritems():
-            trigger_ids_maps = {}
+        call_map = defaultdict(list)
+        for ((priority, model), id_map) in to_compute_map.iteritems():
+            trigger_ids_maps = defaultdict(list)
             # function_ids_maps =
             #   { (function_1_tuple, function_2_tuple) : [target_id1, target_id2, ..] }
             for target_id, triggers in id_map.iteritems():
-                trigger_ids_maps.setdefault(tuple(triggers), []).append(target_id)
+                trigger_ids_maps[tuple(triggers)].append(target_id)
             for triggers, target_ids in trigger_ids_maps.iteritems():
-                call_map.setdefault((priority,model),[]).append((priority, model, target_ids,
-                                                                 [t[func_field_to_compute_] for t in triggers]))
-        result = []
-        if call_map:
-            result = reduce(operator.add, (call_map[k] for k in sorted(call_map)))
-        return result
+                call_map[(priority, model)].append((priority, model, target_ids, [t[FUNC] for t in triggers]))
 
-    def _store_set_values(self, cr, uid, ids, fields, context):
-        """Calls the fields.function's "implementation function" for all ``fields``, on records with ``ids`` (taking care of
-           respecting ``multi`` attributes), and stores the resulting values in the database directly."""
-        if not ids:
+        return list(itertools.chain.from_iterable(v for k, v in sorted(call_map.iteritems())))
+
+    @api.multi
+    def _store_set_values(self, fields):
+        """ Call the fields.function's "implementation function" for all
+            ``fields``, on records ``self`` (taking care of respecting ``multi``
+            attributes), and store the resulting values in the database directly.
+        """
+        if not self:
             return True
-        field_flag = False
-        field_dict = {}
+
+        from .fields import Datetime
+        cr = self._cr
+        field_dict = defaultdict(list)
         if self._log_access:
-            cr.execute('select id,write_date from '+self._table+' where id IN %s', (tuple(ids),))
-            res = cr.fetchall()
-            for r in res:
-                if r[1]:
-                    field_dict.setdefault(r[0], [])
-                    res_date = time.strptime((r[1])[:19], '%Y-%m-%d %H:%M:%S')
-                    write_date = datetime.datetime.fromtimestamp(time.mktime(res_date))
-                    for i in self.pool._store_function.get(self._name, []):
-                        if i[5]:
-                            up_write_date = write_date + datetime.timedelta(hours=i[5])
+            cr.execute('SELECT id, write_date FROM %s WHERE id IN %%s' % self._table, [tuple(self.ids)])
+            for id, write_date in cr.fetchall():
+                if write_date:
+                    write_date = Datetime.from_string(write_date)
+                    for trigger in self.pool._store_function.get(self._name, []):
+                        if trigger[5]:
+                            up_write_date = write_date + datetime.timedelta(hours=trigger[5])
                             if datetime.datetime.now() < up_write_date:
-                                if i[1] in fields:
-                                    field_dict[r[0]].append(i[1])
-                                    if not field_flag:
-                                        field_flag = True
-        todo = {}
-        keys = []
-        for f in fields:
-            if self._columns[f]._multi not in keys:
-                keys.append(self._columns[f]._multi)
-            todo.setdefault(self._columns[f]._multi, [])
-            todo[self._columns[f]._multi].append(f)
-        for key in keys:
-            val = todo[key]
+                                if trigger[1] in fields:
+                                    field_dict[id].append(trigger[1])
+
+        todo = defaultdict(list)
+        for name in fields:
+            todo[self._columns[name]._multi].append(name)
+
+        for key, names in todo.iteritems():
             if key:
+                column = self._columns[names[0]]
                 # use admin user for accessing objects having rules defined on store fields
-                result = self._columns[val[0]].get(cr, self, ids, val, SUPERUSER_ID, context=context)
-                for id, value in result.items():
-                    if field_flag:
-                        for f in value.keys():
-                            if f in field_dict[id]:
-                                value.pop(f)
+                result = column.get(cr, self._model, self.ids, names, SUPERUSER_ID, context=self._context)
+                for id, vals in result.iteritems():
+                    if field_dict:
+                        for name in field_dict[id]:
+                            vals.pop(name, None)
                     updates = []        # list of (column, pattern, value)
-                    for v in value:
-                        if v not in val:
+                    for name, val in vals.iteritems():
+                        if name not in names:
                             continue
-                        column = self._columns[v]
+                        column = self._columns[name]
                         if column._type == 'many2one':
                             try:
-                                value[v] = value[v][0]
+                                val = val[0]
                             except:
                                 pass
-                        updates.append((v, column._symbol_set[0], column._symbol_set[1](value[v])))
+                        setc, setf = column._symbol_set
+                        updates.append((name, setc, setf(val)))
                     if updates:
-                        query = 'UPDATE "%s" SET %s WHERE id = %%s' % (
+                        query = 'UPDATE "%s" SET %s WHERE id=%%s' % (
                             self._table, ','.join('"%s"=%s' % u[:2] for u in updates),
                         )
                         params = tuple(u[2] for u in updates)
                         cr.execute(query, params + (id,))
 
             else:
-                for f in val:
-                    column = self._columns[f]
+                for name in names:
+                    column = self._columns[name]
                     # use admin user for accessing objects having rules defined on store fields
-                    result = column.get(cr, self, ids, f, SUPERUSER_ID, context=context)
-                    for r in result.keys():
-                        if field_flag:
-                            if r in field_dict.keys():
-                                if f in field_dict[r]:
-                                    result.pop(r)
-                    for id, value in result.items():
+                    result = column.get(cr, self._model, self.ids, name, SUPERUSER_ID, context=self._context)
+                    for rid in result.keys():
+                        if rid in field_dict and name in field_dict[rid]:
+                            result.pop(rid)
+                    for id, val in result.iteritems():
                         if column._type == 'many2one':
                             try:
-                                value = value[0]
+                                val = val[0]
                             except:
                                 pass
-                        query = 'UPDATE "%s" SET "%s"=%s WHERE id = %%s' % (
-                            self._table, f, column._symbol_set[0],
-                        )
-                        cr.execute(query, (column._symbol_set[1](value), id))
+                        setc, setf = column._symbol_set
+                        query = 'UPDATE "%s" SET "%s"=%s WHERE id=%%s' % (self._table, name, setc)
+                        cr.execute(query, (setf(val), id))
 
         # invalidate and mark new-style fields to recompute
-        self.browse(cr, uid, ids, context).modified(fields)
+        self.modified(fields)
 
         return True
 
     # TODO: ameliorer avec NULL
-    def _where_calc(self, cr, user, domain, active_test=True, context=None):
+    @api.model
+    def _where_calc(self, domain, active_test=True):
         """Computes the WHERE clause needed to implement an OpenERP domain.
         :param domain: the domain to compute
         :type domain: list
@@ -4708,25 +4517,19 @@ class BaseModel(object):
         :return: the query expressing the given domain as provided in domain
         :rtype: osv.query.Query
         """
-        if not context:
-            context = {}
-        domain = domain[:]
         # if the object has a field named 'active', filter out all inactive
         # records unless they were explicitely asked for
-        if 'active' in self._fields and active_test and context.get('active_test', True):
-            if domain:
-                # the item[0] trick below works for domain items and '&'/'|'/'!'
-                # operators too
-                if not any(item[0] == 'active' for item in domain):
-                    domain.insert(0, ('active', '=', 1))
-            else:
-                domain = [('active', '=', 1)]
+        if 'active' in self._fields and active_test and self._context.get('active_test', True):
+            # the item[0] trick below works for domain items and '&'/'|'/'!'
+            # operators too
+            if not any(item[0] == 'active' for item in domain):
+                domain = [('active', '=', 1)] + domain
 
         if domain:
-            e = expression.expression(cr, user, domain, self, context)
+            e = expression.expression(domain, self)
             tables = e.get_tables()
             where_clause, where_params = e.to_sql()
-            where_clause = where_clause and [where_clause] or []
+            where_clause = [where_clause] if where_clause else []
         else:
             where_clause, where_params, tables = [], [], ['"%s"' % self._table]
 
@@ -4737,55 +4540,51 @@ class BaseModel(object):
             raise UserError(_('Invalid "order" specified. A valid "order" specification is a comma-separated list of valid field names (optionally followed by asc/desc for the direction)'))
         return True
 
-    def _apply_ir_rules(self, cr, uid, query, mode='read', context=None):
+    @api.model
+    def _apply_ir_rules(self, query, mode='read'):
         """Add what's missing in ``query`` to implement all appropriate ir.rules
           (using the ``model_name``'s rules or the current model's rules if ``model_name`` is None)
 
            :param query: the current query object
         """
-        if uid == SUPERUSER_ID:
+        if self._uid == SUPERUSER_ID:
             return
 
-        def apply_rule(added_clause, added_params, added_tables, parent_model=None):
+        def apply_rule(clauses, params, tables, parent_model=None):
             """ :param parent_model: name of the parent model, if the added
                     clause comes from a parent model
             """
-            if added_clause:
+            if clauses:
                 if parent_model:
-                    # as inherited rules are being applied, we need to add the missing JOIN
-                    # to reach the parent table (if it was not JOINed yet in the query)
-                    parent_alias = self._inherits_join_add(self, parent_model, query)
-                    # inherited rules are applied on the external table -> need to get the alias and replace
-                    parent_table = self.pool[parent_model]._table
-                    added_clause = [clause.replace('"%s"' % parent_table, '"%s"' % parent_alias) for clause in added_clause]
-                    # change references to parent_table to parent_alias, because we now use the alias to refer to the table
-                    new_tables = []
-                    for table in added_tables:
-                        # table is just a table name -> switch to the full alias
-                        if table == '"%s"' % parent_table:
-                            new_tables.append('"%s" as "%s"' % (parent_table, parent_alias))
-                        # table is already a full statement -> replace reference to the table to its alias, is correct with the way aliases are generated
-                        else:
-                            new_tables.append(table.replace('"%s"' % parent_table, '"%s"' % parent_alias))
-                    added_tables = new_tables
-                query.where_clause += added_clause
-                query.where_clause_params += added_params
-                for table in added_tables:
+                    # as inherited rules are being applied, we need to add the
+                    # missing JOIN to reach the parent table (if not JOINed yet)
+                    parent_table = '"%s"' % self.env[parent_model]._table
+                    parent_alias = '"%s"' % self._inherits_join_add(self, parent_model, query)
+                    # inherited rules are applied on the external table, replace
+                    # parent_table by parent_alias
+                    clauses = [clause.replace(parent_table, parent_alias) for clause in clauses]
+                    # replace parent_table by parent_alias, and introduce
+                    # parent_alias if needed
+                    tables = [
+                        (parent_table + ' as ' + parent_alias) if table == parent_table \
+                            else table.replace(parent_table, parent_alias)
+                        for table in tables
+                    ]
+                query.where_clause += clauses
+                query.where_clause_params += params
+                for table in tables:
                     if table not in query.tables:
                         query.tables.append(table)
-                return True
-            return False
 
         # apply main rules on the object
-        rule_obj = self.pool.get('ir.rule')
-        rule_where_clause, rule_where_clause_params, rule_tables = rule_obj.domain_get(cr, uid, self._name, mode, context=context)
-        apply_rule(rule_where_clause, rule_where_clause_params, rule_tables)
+        Rule = self.env['ir.rule']
+        where_clause, where_params, tables = Rule.domain_get(self._name, mode)
+        apply_rule(where_clause, where_params, tables)
 
         # apply ir.rules from the parents (through _inherits)
-        for inherited_model in self._inherits:
-            rule_where_clause, rule_where_clause_params, rule_tables = rule_obj.domain_get(cr, uid, inherited_model, mode, context=context)
-            apply_rule(rule_where_clause, rule_where_clause_params, rule_tables,
-                       parent_model=inherited_model)
+        for parent_model in self._inherits:
+            where_clause, where_params, tables = Rule.domain_get(parent_model, mode)
+            apply_rule(where_clause, where_params, tables, parent_model)
 
     @api.model
     def _generate_translated_field(self, table_alias, field, query):
@@ -4795,27 +4594,23 @@ class BaseModel(object):
 
         :return: the qualified field name (or expression) to use for ``field``
         """
-        lang = self._context.get('lang')
-        if lang:
+        if self.env.lang:
             # Sub-select to return at most one translation per record.
             # Even if it shoud probably not be the case,
             # this is possible to have multiple translations for a same record in the same language.
             # The parenthesis surrounding the select are important, as this is a sub-select.
             # The quotes surrounding `ir_translation` are important as well.
             unique_translation_subselect = """
-            (SELECT DISTINCT ON (res_id) res_id, value
-            FROM "ir_translation"
-            WHERE
-                name = %s AND
-                lang = %s AND
-                value != %s
-            ORDER BY res_id, id DESC)
+                (SELECT DISTINCT ON (res_id) res_id, value
+                 FROM "ir_translation"
+                 WHERE name=%s AND lang=%s AND value!=%s
+                 ORDER BY res_id, id DESC)
             """
             alias, alias_statement = query.add_join(
                 (table_alias, unique_translation_subselect, 'id', 'res_id', field),
                 implicit=False,
                 outer=True,
-                extra_params=["%s,%s" % (self._name, field), lang, ""],
+                extra_params=["%s,%s" % (self._name, field), self.env.lang, ""],
             )
             return 'COALESCE("%s"."%s", "%s"."%s")' % (alias, 'value', table_alias, field)
         else:
@@ -4830,23 +4625,24 @@ class BaseModel(object):
 
         :return: the qualified field name to use in an ORDER BY clause to sort by ``order_field``
         """
-        if order_field not in self._columns and order_field in self._inherit_fields:
+        field = self._fields[order_field]
+        if field.inherited:
             # also add missing joins for reaching the table containing the m2o field
-            order_field_column = self._inherit_fields[order_field][2]
             qualified_field = self._inherits_join_calc(alias, order_field, query)
             alias, order_field = qualified_field.replace('"', '').split('.', 1)
+            column = field.base_field.column
         else:
-            order_field_column = self._columns[order_field]
+            column = field.column
 
-        assert order_field_column._type == 'many2one', 'Invalid field passed to _generate_m2o_order_by()'
-        if not order_field_column._classic_write and not getattr(order_field_column, 'store', False):
+        assert field.type == 'many2one', 'Invalid field passed to _generate_m2o_order_by()'
+        if not (column and column._classic_write):
             _logger.debug("Many2one function/related fields must be stored "
                           "to be used as ordering fields! Ignoring sorting for %s.%s",
                           self._name, order_field)
             return []
 
         # figure out the applicable order_by for the m2o
-        dest_model = self.env[order_field_column._obj]
+        dest_model = self.env[field.comodel_name]
         m2o_order = dest_model._order
         if not regex_order.match(m2o_order):
             # _order is complex, can't use it here, so we default to _rec_name
@@ -4855,16 +4651,17 @@ class BaseModel(object):
         # Join the dest m2o table if it's not joined yet. We use [LEFT] OUTER join here
         # as we don't want to exclude results that have NULL values for the m2o
         join = (alias, dest_model._table, order_field, 'id', order_field)
-        dst_alias, dst_alias_statement = query.add_join(join, implicit=False, outer=True)
-        return dest_model._generate_order_by_inner(dst_alias, m2o_order, query,
-                                                   reverse_direction=reverse_direction, seen=seen)
+        dest_alias, _ = query.add_join(join, implicit=False, outer=True)
+        return dest_model._generate_order_by_inner(dest_alias, m2o_order, query,
+                                                   reverse_direction, seen)
 
     @api.model
     def _generate_order_by_inner(self, alias, order_spec, query, reverse_direction=False, seen=None):
         if seen is None:
             seen = set()
-        order_by_elements = []
         self._check_qorder(order_spec)
+
+        order_by_elements = []
         for order_part in order_spec.split(','):
             order_split = order_part.strip().split(' ')
             order_field = order_split[0].strip()
@@ -4872,49 +4669,30 @@ class BaseModel(object):
             if reverse_direction:
                 order_direction = 'ASC' if order_direction == 'DESC' else 'DESC'
             do_reverse = order_direction == 'DESC'
-            order_column = None
-            inner_clauses = []
-            add_dir = False
+
+            field = self._fields.get(order_field)
+            if not field:
+                raise ValueError(_("Sorting field %s not found on model %s") % (order_field, self._name))
+
             if order_field == 'id':
                 order_by_elements.append('"%s"."%s" %s' % (alias, order_field, order_direction))
-            elif order_field in self._columns:
-                order_column = self._columns[order_field]
-                if order_column._classic_read:
-                    if order_column.translate and not callable(order_column.translate):
-                        inner_clauses = [self._generate_translated_field(alias, order_field, query)]
-                    else:
-                        inner_clauses = ['"%s"."%s"' % (alias, order_field)]
-                    add_dir = True
-                elif order_column._type == 'many2one':
-                    key = (self._name, order_column._obj, order_field)
-                    if key not in seen:
-                        seen.add(key)
-                        inner_clauses = self._generate_m2o_order_by(alias, order_field, query, do_reverse, seen)
-                else:
-                    continue  # ignore non-readable or "non-joinable" fields
-            elif order_field in self._inherit_fields:
-                parent_obj = self.pool[self._inherit_fields[order_field][3]]
-                order_column = parent_obj._columns[order_field]
-                if order_column._classic_read:
-                    inner_clauses = [self._inherits_join_calc(alias, order_field, query, implicit=False, outer=True)]
-                    add_dir = True
-                elif order_column._type == 'many2one':
-                    key = (parent_obj._name, order_column._obj, order_field)
-                    if key not in seen:
-                        seen.add(key)
-                        inner_clauses = self._generate_m2o_order_by(alias, order_field, query, do_reverse, seen)
-                else:
-                    continue  # ignore non-readable or "non-joinable" fields
             else:
-                raise ValueError(_("Sorting field %s not found on model %s") % (order_field, self._name))
-            if order_column and order_column._type == 'boolean':
-                inner_clauses = ["COALESCE(%s, false)" % inner_clauses[0]]
-
-            for clause in inner_clauses:
-                if add_dir:
-                    order_by_elements.append("%s %s" % (clause, order_direction))
+                if field.inherited:
+                    field = field.base_field
+                column = field.column
+                if column and column._classic_read:
+                    qualifield_name = self._inherits_join_calc(alias, order_field, query, implicit=False, outer=True)
+                    if field.type == 'boolean':
+                        qualifield_name = "COALESCE(%s, false)" % qualifield_name
+                    order_by_elements.append("%s %s" % (qualifield_name, order_direction))
+                elif column and column._type == 'many2one':
+                    key = (field.model_name, field.comodel_name, order_field)
+                    if key not in seen:
+                        seen.add(key)
+                        order_by_elements += self._generate_m2o_order_by(alias, order_field, query, do_reverse, seen)
                 else:
-                    order_by_elements.append(clause)
+                    continue  # ignore non-readable or "non-joinable" fields
+
         return order_by_elements
 
     @api.model
@@ -4934,7 +4712,8 @@ class BaseModel(object):
 
         return order_by_clause and (' ORDER BY %s ' % order_by_clause) or ''
 
-    def _search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
+    @api.model
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         """
         Private implementation of search() method, allowing specifying the uid to use for the access right check.
         This is useful for example when filling in the selection list for a drop-down and avoiding access rights errors,
@@ -4943,18 +4722,17 @@ class BaseModel(object):
 
         :param access_rights_uid: optional user ID to use when checking access rights
                                   (not for ir.rules, this is only for ir.model.access)
+        :return: a list of record ids or an integer (if count is True)
         """
-        if context is None:
-            context = {}
-        self.check_access_rights(cr, access_rights_uid or user, 'read')
+        self.sudo(access_rights_uid or self._uid).check_access_rights('read')
 
         # For transient models, restrict access to the current user, except for the super-user
-        if self.is_transient() and self._log_access and user != SUPERUSER_ID:
-            args = expression.AND(([('create_uid', '=', user)], args or []))
+        if self.is_transient() and self._log_access and self._uid != SUPERUSER_ID:
+            args = expression.AND(([('create_uid', '=', self._uid)], args or []))
 
-        query = self._where_calc(cr, user, args, context=context)
-        self._apply_ir_rules(cr, user, query, 'read', context=context)
-        order_by = self._generate_order_by(cr, user, order, query, context=context)
+        query = self._where_calc(args)
+        self._apply_ir_rules(query, 'read')
+        order_by = self._generate_order_by(order, query)
         from_clause, where_clause, where_clause_params = query.get_sql()
 
         where_str = where_clause and (" WHERE %s" % where_clause) or ''
@@ -4963,15 +4741,15 @@ class BaseModel(object):
             # Ignore order, limit and offset when just counting, they don't make sense and could
             # hurt performance
             query_str = 'SELECT count(1) FROM ' + from_clause + where_str
-            cr.execute(query_str, where_clause_params)
-            res = cr.fetchone()
+            self._cr.execute(query_str, where_clause_params)
+            res = self._cr.fetchone()
             return res[0]
 
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
         query_str = 'SELECT "%s".id FROM ' % self._table + from_clause + where_str + order_by + limit_str + offset_str
-        cr.execute(query_str, where_clause_params)
-        res = cr.fetchall()
+        self._cr.execute(query_str, where_clause_params)
+        res = self._cr.fetchall()
 
         # TDE note: with auto_join, we could have several lines about the same result
         # i.e. a lead with several unread messages; we uniquify the result using
@@ -4982,184 +4760,166 @@ class BaseModel(object):
 
         return _uniquify_list([x[0] for x in res])
 
-    # returns the different values ever entered for one field
-    # this is used, for example, in the client when the user hits enter on
-    # a char field
-    def distinct_field_get(self, cr, uid, field, value, args=None, offset=0, limit=None):
-        if not args:
-            args = []
-        if field in self._inherit_fields:
-            return self.pool[self._inherit_fields[field][0]].distinct_field_get(cr, uid, field, value, args, offset, limit)
-        else:
-            return self._columns[field].search(cr, self, args, field, value, offset, limit, uid)
+    @api.model
+    def distinct_field_get(self, field, value, args=None, offset=0, limit=None):
+        """ Returns the different values ever entered for one field. This is used,
+            for example, in the client when the user hits enter on a char field.
 
-    def copy_data(self, cr, uid, id, default=None, context=None):
+            Deprecated.
+        """
+        ffield = self._fields[field]
+        if ffield.inherited:
+            parent_model = ffield.related_field.model_name
+            return self.env[parent_model].distinct_field_get(field, value, args, offset, limit)
+        else:
+            return ffield.column.search(self._cr, self._model, args or [], field, value, offset, limit, self._uid)
+
+    @api.multi
+    @api.returns(None, lambda value: value[0])
+    def copy_data(self, default=None):
         """
         Copy given record's data with all its fields values
 
-        :param cr: database cursor
-        :param uid: current user id
-        :param id: id of the record to copy
         :param default: field values to override in the original values of the copied record
-        :type default: dictionary
-        :param context: context arguments, like lang, time zone
-        :type context: dictionary
-        :return: dictionary containing all the field values
+        :return: list with a dictionary containing all the field values
         """
-
-        if context is None:
-            context = {}
+        # In the old API, this method took a single id and return a dict. When
+        # invoked with the new API, it returned a list of dicts.
+        self.ensure_one()
 
         # avoid recursion through already copied records in case of circular relationship
-        if '__copy_data_seen' not in context:
-            context = dict(context, __copy_data_seen=defaultdict(list))
-        seen_map = context['__copy_data_seen']
-        if id in seen_map[self._name]:
+        if '__copy_data_seen' not in self._context:
+            self = self.with_context(__copy_data_seen=defaultdict(set))
+        seen_map = self._context['__copy_data_seen']
+        if self.id in seen_map[self._name]:
             return
-        seen_map[self._name].append(id)
+        seen_map[self._name].add(self.id)
 
-        if default is None:
-            default = {}
-        if 'state' not in default:
-            if 'state' in self._defaults:
-                if callable(self._defaults['state']):
-                    default['state'] = self._defaults['state'](self, cr, uid, context)
-                else:
-                    default['state'] = self._defaults['state']
+        default = dict(default or [])
+        if 'state' not in default and 'state' in self._fields:
+            field = self._fields['state']
+            if field.default:
+                value = field.default(self)
+                value = field.convert_to_cache(value, self)
+                value = field.convert_to_record(value, self)
+                value = field.convert_to_write(value, self)
+                default['state'] = value
 
         # build a black list of fields that should not be copied
         blacklist = set(MAGIC_COLUMNS + ['parent_left', 'parent_right'])
         whitelist = set(name for name, field in self._fields.iteritems() if not field.inherited)
 
-        def blacklist_given_fields(obj):
+        def blacklist_given_fields(model):
             # blacklist the fields that are given by inheritance
-            for other, field_to_other in obj._inherits.items():
-                blacklist.add(field_to_other)
-                if field_to_other in default:
-                    # all the fields of 'other' are given by the record: default[field_to_other],
-                    # except the ones redefined in self
-                    blacklist.update(set(self.pool[other]._fields) - whitelist)
+            for parent_model, parent_field in model._inherits.items():
+                blacklist.add(parent_field)
+                if parent_field in default:
+                    # all the fields of 'parent_model' are given by the record:
+                    # default[parent_field], except the ones redefined in self
+                    blacklist.update(set(self.env[parent_model]._fields) - whitelist)
                 else:
-                    blacklist_given_fields(self.pool[other])
+                    blacklist_given_fields(self.env[parent_model])
             # blacklist deprecated fields
-            for name, field in obj._fields.iteritems():
+            for name, field in model._fields.iteritems():
                 if field.deprecated:
                     blacklist.add(name)
 
         blacklist_given_fields(self)
 
+        fields_to_copy = {name: field
+                          for name, field in self._fields.iteritems()
+                          if field.copy and name not in default and name not in blacklist}
 
-        fields_to_copy = dict((f,fi) for f, fi in self._fields.iteritems()
-                                     if fi.copy
-                                     if f not in default
-                                     if f not in blacklist)
-
-        data = self.read(cr, uid, [id], fields_to_copy.keys(), context=context)
-        if data:
-            data = data[0]
-        else:
-            raise IndexError(_("Record #%d of %s not found, cannot copy!") % ( id, self._name))
-
-        res = dict(default)
-        for f, field in fields_to_copy.iteritems():
-            if field.type == 'many2one':
-                res[f] = data[f] and data[f][0]
-            elif field.type == 'one2many':
-                other = self.pool[field.comodel_name]
+        for name, field in fields_to_copy.iteritems():
+            if field.type == 'one2many':
                 # duplicate following the order of the ids because we'll rely on
                 # it later for copying translations in copy_translation()!
-                lines = [other.copy_data(cr, uid, line_id, context=context) for line_id in sorted(data[f])]
+                lines = [rec.copy_data()[0] for rec in self[name].sorted(key='id')]
                 # the lines are duplicated using the wrong (old) parent, but then
                 # are reassigned to the correct one thanks to the (0, 0, ...)
-                res[f] = [(0, 0, line) for line in lines if line]
+                default[name] = [(0, 0, line) for line in lines if line]
             elif field.type == 'many2many':
-                res[f] = [(6, 0, data[f])]
+                default[name] = [(6, 0, self[name].ids)]
             else:
-                res[f] = data[f]
+                default[name] = field.convert_to_write(self[name], self)
 
-        return res
+        return [default]
 
+    @api.v7
     def copy_translations(self, cr, uid, old_id, new_id, context=None):
-        if context is None:
-            context = {}
+        old = self.browse(cr, uid, old_id, context)
+        new = self.browse(cr, uid, new_id, context)
+        BaseModel.copy_translations(old, new)
 
+    @api.v8
+    def copy_translations(old, new):
         # avoid recursion through already copied records in case of circular relationship
-        if '__copy_translations_seen' not in context:
-            context = dict(context, __copy_translations_seen=defaultdict(list))
-        seen_map = context['__copy_translations_seen']
-        if old_id in seen_map[self._name]:
+        if '__copy_translations_seen' not in old._context:
+            old = old.with_context(__copy_translations_seen=defaultdict(set))
+        seen_map = old._context['__copy_translations_seen']
+        if old.id in seen_map[old._name]:
             return
-        seen_map[self._name].append(old_id)
+        seen_map[old._name].add(old.id)
 
-        trans_obj = self.pool.get('ir.translation')
+        def get_trans(field, old, new):
+            """ Return the 'name' of the translations to search for, together
+                with the record ids corresponding to ``old`` and ``new``.
+            """
+            if field.inherited:
+                pname = field.related[0]
+                return get_trans(field.related_field, old[pname], new[pname])
+            return "%s,%s" % (field.model_name, field.name), old.id, new.id
 
-        for field_name, field in self._fields.iteritems():
+        # removing the lang to compare untranslated values
+        old_wo_lang, new_wo_lang = (old + new).with_context(lang=None)
+        Translation = old.env['ir.translation']
+
+        for name, field in old._fields.iteritems():
             if not field.copy:
                 continue
-            # removing the lang to compare untranslated values
-            context_wo_lang = dict(context, lang=None)
-            old_record, new_record = self.browse(cr, uid, [old_id, new_id], context=context_wo_lang)
-            # we must recursively copy the translations for o2o and o2m
-            if field.type == 'one2many':
-                target_obj = self.pool[field.comodel_name]
-                # here we rely on the order of the ids to match the translations
-                # as foreseen in copy_data()
-                old_children = sorted(r.id for r in old_record[field_name])
-                new_children = sorted(r.id for r in new_record[field_name])
-                for (old_child, new_child) in zip(old_children, new_children):
-                    target_obj.copy_translations(cr, uid, old_child, new_child, context=context)
-            # and for translatable fields we keep them for copy
-            elif getattr(field, 'translate', False):
-                if field_name in self._columns:
-                    trans_name = self._name + "," + field_name
-                    target_id = new_id
-                    source_id = old_id
-                elif field_name in self._inherit_fields:
-                    trans_name = self._inherit_fields[field_name][0] + "," + field_name
-                    # get the id of the parent record to set the translation
-                    inherit_field_name = self._inherit_fields[field_name][1]
-                    target_id = new_record[inherit_field_name].id
-                    source_id = old_record[inherit_field_name].id
-                else:
-                    continue
 
-                trans_ids = trans_obj.search(cr, uid, [
-                        ('name', '=', trans_name),
-                        ('res_id', '=', source_id)
-                ])
-                user_lang = context.get('lang')
-                for record in trans_obj.read(cr, uid, trans_ids, context=context):
-                    del record['id']
-                    # remove source to avoid triggering _set_src
-                    del record['source']
-                    # duplicated record is not linked to any module
-                    del record['module']
-                    record.update({'res_id': target_id})
-                    if user_lang and user_lang == record['lang']:
+            if field.type == 'one2many':
+                # we must recursively copy the translations for o2m; here we
+                # rely on the order of the ids to match the translations as
+                # foreseen in copy_data()
+                old_lines = old[name].sorted(key='id')
+                new_lines = new[name].sorted(key='id')
+                for (old_line, new_line) in zip(old_lines, new_lines):
+                    old_line.copy_translations(new_line)
+
+            elif getattr(field, 'translate', False):
+                # for translatable fields we copy their translations
+                trans_name, source_id, target_id = get_trans(field, old, new)
+                domain = [('name', '=', trans_name), ('res_id', '=', source_id)]
+                for vals in Translation.search_read(domain):
+                    del vals['id']
+                    del vals['source']      # remove source to avoid triggering _set_src
+                    del vals['module']      # duplicated vals is not linked to any module
+                    vals['res_id'] = target_id
+                    if vals['lang'] == old.env.lang:
                         # 'source' to force the call to _set_src
                         # 'value' needed if value is changed in copy(), want to see the new_value
-                        record['source'] = old_record[field_name]
-                        record['value'] = new_record[field_name]
-                    trans_obj.create(cr, uid, record, context=context)
+                        vals['source'] = old_wo_lang[name]
+                        vals['value'] = new_wo_lang[name]
+                    Translation.create(vals)
 
+    @api.multi
     @api.returns('self', lambda value: value.id)
-    def copy(self, cr, uid, id, default=None, context=None):
+    def copy(self, default=None):
         """ copy(default=None)
 
-        Duplicate record with given id updating it with default values
+        Duplicate record ``self`` updating it with default values
 
         :param dict default: dictionary of field values to override in the
                original values of the copied record, e.g: ``{'field_name': overridden_value, ...}``
         :returns: new record
 
         """
-        if context is None:
-            context = {}
-        context = context.copy()
-        data = self.copy_data(cr, uid, id, default, context)
-        new_id = self.create(cr, uid, data, context)
-        self.copy_translations(cr, uid, id, new_id, context)
-        return new_id
+        self.ensure_one()
+        vals = self.copy_data(default)[0]
+        new = self.create(vals)
+        self.copy_translations(new)
+        return new
 
     @api.multi
     @api.returns('self')
@@ -5189,33 +4949,25 @@ class BaseModel(object):
             (self - existing)._cache.update(FailedValue(exc))
         return existing
 
-    def check_recursion(self, cr, uid, ids, context=None, parent=None):
-        _logger.warning("You are using deprecated %s.check_recursion(). Please use the '_check_recursion()' instead!" % \
-                        self._name)
-        assert parent is None or parent in self._columns or parent in self._inherit_fields,\
-                    "The 'parent' parameter passed to check_recursion() must be None or a valid field name"
-        return self._check_recursion(cr, uid, ids, context, parent)
-
-    def _check_recursion(self, cr, uid, ids, context=None, parent=None):
+    @api.multi
+    def _check_recursion(self, parent=None):
         """
         Verifies that there is no loop in a hierarchical structure of records,
-        by following the parent relationship using the **parent** field until a loop
-        is detected or until a top-level record is found.
+        by following the parent relationship using the **parent** field until a
+        loop is detected or until a top-level record is found.
 
-        :param cr: database cursor
-        :param uid: current user id
-        :param ids: list of ids of records to check
-        :param parent: optional parent field name (default: ``self._parent_name = parent_id``)
-        :return: **True** if the operation can proceed safely, or **False** if an infinite loop is detected.
+        :param parent: optional parent field name (default: ``self._parent_name``)
+        :return: **True** if no loop was found, **False** otherwise.
         """
         if not parent:
             parent = self._parent_name
 
         # must ignore 'active' flag, ir.rules, etc. => direct SQL query
+        cr = self._cr
         query = 'SELECT "%s" FROM "%s" WHERE id = %%s' % (parent, self._table)
-        for id in ids:
+        for id in self.ids:
             current_id = id
-            while current_id is not None:
+            while current_id:
                 cr.execute(query, (current_id,))
                 result = cr.fetchone()
                 current_id = result[0] if result else None
@@ -5223,45 +4975,50 @@ class BaseModel(object):
                     return False
         return True
 
-    def _check_m2m_recursion(self, cr, uid, ids, field_name):
+    @api.multi
+    def _check_m2m_recursion(self, field_name):
         """
-        Verifies that there is no loop in a hierarchical structure of records,
-        by following the parent relationship using the **parent** field until a loop
-        is detected or until a top-level record is found.
+        Verifies that there is no loop in a directed graph of records, by
+        following a many2many relationship with the given field name.
 
-        :param cr: database cursor
-        :param uid: current user id
-        :param ids: list of ids of records to check
         :param field_name: field to check
-        :return: **True** if the operation can proceed safely, or **False** if an infinite loop is detected.
+        :return: **True** if no loop was found, **False** otherwise.
         """
-
         field = self._fields.get(field_name)
         if not (field and field.type == 'many2many' and
                 field.comodel_name == self._name and field.store):
             # field must be a many2many on itself
             raise ValueError('invalid field_name: %r' % (field_name,))
 
-        query = 'SELECT distinct "%s" FROM "%s" WHERE "%s" IN %%s' % \
-                    (field.column2, field.relation, field.column1)
-        ids_parent = ids[:]
-        while ids_parent:
-            ids_parent2 = []
-            for i in range(0, len(ids_parent), cr.IN_MAX):
-                j = i + cr.IN_MAX
-                sub_ids_parent = ids_parent[i:j]
-                cr.execute(query, (tuple(sub_ids_parent),))
-                ids_parent2.extend(filter(None, map(lambda x: x[0], cr.fetchall())))
-            ids_parent = ids_parent2
-            for i in ids_parent:
-                if i in ids:
-                    return False
+        cr = self._cr
+        query = 'SELECT "%s", "%s" FROM "%s" WHERE "%s" IN %%s AND "%s" IS NOT NULL' % \
+                    (field.column1, field.column2, field.relation, field.column1, field.column2)
+
+        succs = defaultdict(set)        # transitive closure of successors
+        preds = defaultdict(set)        # transitive closure of predecessors
+        todo, done = set(self.ids), set()
+        while todo:
+            # retrieve the respective successors of the nodes in 'todo'
+            cr.execute(query, [tuple(todo)])
+            done.update(todo)
+            todo.clear()
+            for id1, id2 in cr.fetchall():
+                # connect id1 and its predecessors to id2 and its successors
+                for x, y in itertools.product([id1] + list(preds[id1]),
+                                              [id2] + list(succs[id2])):
+                    if x == y:
+                        return False    # we found a cycle here!
+                    succs[x].add(y)
+                    preds[y].add(x)
+                if id2 not in done:
+                    todo.add(id2)
         return True
 
-    def _get_external_ids(self, cr, uid, ids, *args, **kwargs):
+    @api.multi
+    def _get_external_ids(self):
         """Retrieve the External ID(s) of any database record.
 
-        **Synopsis**: ``_get_xml_ids(cr, uid, ids) -> { 'id': ['module.xml_id'] }``
+        **Synopsis**: ``_get_xml_ids() -> { 'id': ['module.xml_id'] }``
 
         :return: map of ids to the list of their fully qualified External IDs
                  in the form ``module.key``, or an empty list when there's no External
@@ -5270,18 +5027,14 @@ class BaseModel(object):
                      { 'id': ['module.ext_id', 'module.ext_id_bis'],
                        'id2': [] }
         """
-        ir_model_data = self.pool.get('ir.model.data')
-        data_ids = ir_model_data.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)])
-        data_results = ir_model_data.read(cr, uid, data_ids, ['module', 'name', 'res_id'])
-        result = {}
-        for id in ids:
-            # can't use dict.fromkeys() as the list would be shared!
-            result[id] = []
-        for record in data_results:
-            result[record['res_id']].append('%(module)s.%(name)s' % record)
+        result = {record.id: [] for record in self}
+        domain = [('model', '=', self._name), ('res_id', 'in', self.ids)]
+        for data in self.env['ir.model.data'].search_read(domain, ['module', 'name', 'res_id']):
+            result[data['res_id']].append('%(module)s.%(name)s' % data)
         return result
 
-    def get_external_id(self, cr, uid, ids, *args, **kwargs):
+    @api.multi
+    def get_external_id(self):
         """Retrieve the External ID of any database record, if there
         is one. This method works as a possible implementation
         for a function field, to be able to add it to any
@@ -5298,26 +5051,24 @@ class BaseModel(object):
                      { 'id': 'module.ext_id',
                        'id2': '' }
         """
-        results = self._get_xml_ids(cr, uid, ids)
-        for k, v in results.iteritems():
-            if results[k]:
-                results[k] = v[0]
-            else:
-                results[k] = ''
-        return results
+        results = self._get_external_ids()
+        return {key: val[0] if val else ''
+                for key, val in results.iteritems()}
 
     # backwards compatibility
     get_xml_id = get_external_id
     _get_xml_ids = _get_external_ids
 
-    def print_report(self, cr, uid, ids, name, data, context=None):
+    @api.multi
+    def print_report(self, name, data):
         """
         Render the report ``name`` for the given IDs. The report must be defined
         for this model, not another.
         """
-        report = self.pool['ir.actions.report.xml']._lookup_report(cr, name)
+        report = self.env['ir.actions.report.xml']._lookup_report(name)
         assert self._name == report.table
-        return report.create(cr, uid, ids, data, context)
+        cr, uid, context = self.env.args
+        return report.create(cr, uid, self.ids, data, context)
 
     # Transience
     @classmethod
@@ -5329,26 +5080,29 @@ class BaseModel(object):
         """
         return cls._transient
 
-    def _transient_clean_rows_older_than(self, cr, seconds):
+    @api.model_cr
+    def _transient_clean_rows_older_than(self, seconds):
         assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
         # Never delete rows used in last 5 minutes
         seconds = max(seconds, 300)
         query = ("SELECT id FROM " + self._table + " WHERE"
             " COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp"
             " < ((now() at time zone 'UTC') - interval %s)")
-        cr.execute(query, ("%s seconds" % seconds,))
-        ids = [x[0] for x in cr.fetchall()]
-        self.unlink(cr, SUPERUSER_ID, ids)
+        self._cr.execute(query, ("%s seconds" % seconds,))
+        ids = [x[0] for x in self._cr.fetchall()]
+        self.sudo().browse(ids).unlink()
 
-    def _transient_clean_old_rows(self, cr, max_count):
+    @api.model_cr
+    def _transient_clean_old_rows(self, max_count):
         # Check how many rows we have in the table
-        cr.execute("SELECT count(*) AS row_count FROM " + self._table)
-        res = cr.fetchall()
+        self._cr.execute("SELECT count(*) AS row_count FROM " + self._table)
+        res = self._cr.fetchall()
         if res[0][0] <= max_count:
             return  # max not reached, nothing to do
-        self._transient_clean_rows_older_than(cr, 300)
+        self._transient_clean_rows_older_than(300)
 
-    def _transient_vacuum(self, cr, uid, force=False):
+    @api.model
+    def _transient_vacuum(self, force=False):
         """Clean the transient records.
 
         This unlinks old records from the transient model tables whenever the
@@ -5367,22 +5121,24 @@ class BaseModel(object):
         """
         assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
         _transient_check_time = 20          # arbitrary limit on vacuum executions
-        self._transient_check_count += 1
-        if not force and (self._transient_check_count < _transient_check_time):
+        cls = type(self)
+        cls._transient_check_count += 1
+        if not force and (cls._transient_check_count < _transient_check_time):
             return True  # no vacuum cleaning this time
-        self._transient_check_count = 0
+        cls._transient_check_count = 0
 
         # Age-based expiration
         if self._transient_max_hours:
-            self._transient_clean_rows_older_than(cr, self._transient_max_hours * 60 * 60)
+            self._transient_clean_rows_older_than(self._transient_max_hours * 60 * 60)
 
         # Count-based expiration
         if self._transient_max_count:
-            self._transient_clean_old_rows(cr, self._transient_max_count)
+            self._transient_clean_old_rows(self._transient_max_count)
 
         return True
 
-    def resolve_2many_commands(self, cr, uid, field_name, commands, fields=None, context=None):
+    @api.model
+    def resolve_2many_commands(self, field_name, commands, fields=None):
         """ Serializes one2many and many2many commands into record dictionaries
             (as if all the records came from the database via a read()).  This
             method is aimed at onchange methods on one2many and many2many fields.
@@ -5401,9 +5157,9 @@ class BaseModel(object):
                 (except records may be missing the ``id`` field if they don't exist in db)
             :rtype: list(dict)
         """
-        result = []             # result (list of dict)
-        record_ids = []         # ids of records to read
-        updates = {}            # {id: dict} of updates on particular records
+        result = []                     # result (list of dict)
+        record_ids = []                 # ids of records to read
+        updates = defaultdict(dict)     # {id: vals} of updates on records
 
         for command in commands or []:
             if not isinstance(command, (list, tuple)):
@@ -5412,7 +5168,7 @@ class BaseModel(object):
                 result.append(command[2])
             elif command[0] == 1:
                 record_ids.append(command[1])
-                updates.setdefault(command[1], {}).update(command[2])
+                updates[command[1]].update(command[2])
             elif command[0] in (2, 3):
                 record_ids = [id for id in record_ids if id != command[1]]
             elif command[0] == 4:
@@ -5423,54 +5179,55 @@ class BaseModel(object):
                 result, record_ids = [], list(command[2])
 
         # read the records and apply the updates
-        other_model = self.pool[self._fields[field_name].comodel_name]
-        for record in other_model.read(cr, uid, record_ids, fields=fields, context=context):
-            record.update(updates.get(record['id'], {}))
-            result.append(record)
+        field = self._fields[field_name]
+        records = self.env[field.comodel_name].browse(record_ids)
+        for data in records.read(fields):
+            data.update(updates.get(data['id'], {}))
+            result.append(data)
 
         return result
 
     # for backward compatibility
     resolve_o2m_commands_to_record_dicts = resolve_2many_commands
 
-    def search_read(self, cr, uid, domain=None, fields=None, offset=0, limit=None, order=None, context=None):
+    @api.model
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
         """
         Performs a ``search()`` followed by a ``read()``.
 
-        :param cr: database cursor
-        :param user: current user id
         :param domain: Search domain, see ``args`` parameter in ``search()``. Defaults to an empty domain that will match all records.
         :param fields: List of fields to read, see ``fields`` parameter in ``read()``. Defaults to all fields.
         :param offset: Number of records to skip, see ``offset`` parameter in ``search()``. Defaults to 0.
         :param limit: Maximum number of records to return, see ``limit`` parameter in ``search()``. Defaults to no limit.
         :param order: Columns to sort result, see ``order`` parameter in ``search()``. Defaults to no sort.
-        :param context: context arguments.
         :return: List of dictionaries containing the asked fields.
         :rtype: List of dictionaries.
 
         """
-        record_ids = self.search(cr, uid, domain or [], offset=offset, limit=limit, order=order, context=context)
-        if not record_ids:
+        records = self.search(domain or [], offset=offset, limit=limit, order=order)
+        if not records:
             return []
 
         if fields and fields == ['id']:
             # shortcut read if we only want the ids
-            return [{'id': id} for id in record_ids]
+            return [{'id': record.id} for record in records]
 
         # read() ignores active_test, but it would forward it to any downstream search call
         # (e.g. for x2m or function fields), and this is not the desired behavior, the flag
         # was presumably only meant for the main search().
-        # TODO: Move this to read() directly?                                                                                                
-        read_ctx = dict(context or {})                                                                                                       
-        read_ctx.pop('active_test', None)                                                                                                    
-                                                                                                                                             
-        result = self.read(cr, uid, record_ids, fields, context=read_ctx) 
+        # TODO: Move this to read() directly?
+        if 'active_test' in self._context:
+            context = dict(self._context)
+            del context['active_test']
+            records = records.with_context(context)
+
+        result = records.read(fields)
         if len(result) <= 1:
             return result
 
         # reorder read
-        index = dict((r['id'], r) for r in result)
-        return [index[x] for x in record_ids if x in index]
+        index = {vals['id']: vals for vals in result}
+        return [index[record.id] for record in records if record.id in index]
 
     @api.multi
     def toggle_active(self):
@@ -5478,7 +5235,8 @@ class BaseModel(object):
         for record in self:
             record.active = not record.active
 
-    def _register_hook(self, cr):
+    @api.model_cr
+    def _register_hook(self):
         """ stuff to do right after the registry is built """
         pass
 
