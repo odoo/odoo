@@ -4337,6 +4337,9 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     commit_value: function() {
         return this.save_any_view();
     },
+    is_false: function () {
+        return _(this.dataset.ids).isEmpty();
+    },
     save_any_view: function() {
         var view = this.get_active_view();
         if (view) {
