@@ -10,6 +10,7 @@ var form_common = require('web.form_common');
 var formats = require('web.formats');
 var Model = require('web.DataModel');
 var time = require('web.time');
+var utils = require('web.utils');
 var View = require('web.View');
 var widgets = require('web_calendar.widgets');
 var local_storage = require('web.local_storage');
@@ -138,14 +139,14 @@ var CalendarView = View.extend({
         //if quick_add = not specified in view, we use the default quick_create_instance
         //if quick_add = is NOT False and IS specified in view, we this one for quick_create_instance'   
 
-        this.quick_add_pop = (isNullOrUndef(attrs.quick_add) || _.str.toBoolElse(attrs.quick_add, true));
+        this.quick_add_pop = (isNullOrUndef(attrs.quick_add) || utils.toBoolElse(attrs.quick_add, true));
         // The display format which will be used to display the event where fields are between "[" and "]"
         if (!isNullOrUndef(attrs.display)) {
             this.how_display_event = attrs.display; // String with [FIELD]
         }
 
         // If this field is set ot true, we don't open the event in form view, but in a popup with the view_id passed by this parameter
-        if (isNullOrUndef(attrs.event_open_popup) || !_.str.toBoolElse(attrs.event_open_popup, true)) {
+        if (isNullOrUndef(attrs.event_open_popup) || !utils.toBoolElse(attrs.event_open_popup, true)) {
             this.open_popup_action = false;
         } else {
             this.open_popup_action = attrs.event_open_popup;
@@ -155,7 +156,7 @@ var CalendarView = View.extend({
 
         // If this field is set ot true, we don't add itself as an attendee when we use attendee_people to add each attendee icon on an event
         // The color is the color of the attendee, so don't need to show again that it will be present
-        this.colorIsAttendee = !(isNullOrUndef(attrs.color_is_attendee) || !_.str.toBoolElse(attrs.color_is_attendee, true));
+        this.colorIsAttendee = !(isNullOrUndef(attrs.color_is_attendee) || !utils.toBoolElse(attrs.color_is_attendee, true));
 
         // if we have not sidebar, (eg: Dashboard), we don't use the filter "coworkers"
         if (isNullOrUndef(this.options.sidebar)) {
@@ -807,7 +808,7 @@ var CalendarView = View.extend({
                                     value: key,
                                     label: val[1],
                                     color: self.get_color(key),
-                                    avatar_model: (_.str.toBoolElse(self.avatar_filter, true) ? self.avatar_filter : false ),
+                                    avatar_model: (utils.toBoolElse(self.avatar_filter, true) ? self.avatar_filter : false ),
                                     is_checked: true
                                 };
                                 self.all_filters[key] = filter_item;

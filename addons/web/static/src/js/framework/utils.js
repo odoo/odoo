@@ -462,6 +462,15 @@ function swap(array, elem1, elem2) {
     array[i1] = elem2;
 }
 
+function toBoolElse (str, elseValues, trueValues, falseValues) {
+    var ret = _.str.toBool(str, trueValues, falseValues);
+    if (_.isUndefined(ret)) {
+        return elseValues;
+    }
+    return ret;
+}
+
+
 return {
     divmod: divmod,
     modf: modf,
@@ -491,6 +500,7 @@ return {
     reject_after: reject_after,
     delay: delay,
     swap: swap,
+    toBoolElse: toBoolElse,
 };
 
 });

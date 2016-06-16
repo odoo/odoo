@@ -37,17 +37,6 @@ _.each('resize,scroll'.split(','), function(evtype) {
     });
 });
 
-
-// Underscore customization
-//-------------------------------------------------------------------------
-_.str.toBoolElse = function (str, elseValues, trueValues, falseValues) {
-    var ret = _.str.toBool(str, trueValues, falseValues);
-    if (_.isUndefined(ret)) {
-        return elseValues;
-    }
-    return ret;
-};
-
 // IE patch
 //-------------------------------------------------------------------------
 if (typeof(console) === "undefined") {
