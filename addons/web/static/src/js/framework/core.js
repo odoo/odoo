@@ -24,16 +24,16 @@ var Bus = Class.extend(mixins.EventDispatcherMixin, {
     },
 });
 
-var main_bus = new Bus ();
+var bus = new Bus ();
 
 _.each('click,dblclick,keydown,keypress,keyup'.split(','), function(evtype) {
     $('html').on(evtype, function(ev) {
-        main_bus.trigger(evtype, ev);
+        bus.trigger(evtype, ev);
     });
 });
 _.each('resize,scroll'.split(','), function(evtype) {
     $(window).on(evtype, function(ev) {
-        main_bus.trigger(evtype, ev);
+        bus.trigger(evtype, ev);
     });
 });
 
@@ -174,7 +174,8 @@ return {
     Class: Class,
     Bus: Bus,
     mixins: mixins,
-    bus: main_bus,
+    bus: bus,
+    main_bus: new Bus(),
     _t: _t,
     _lt: _lt,
 
