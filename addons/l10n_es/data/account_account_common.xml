@@ -3376,7 +3376,7 @@
             <field name="code">404</field>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_404"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="name">Proveedores, empresas asociadas</field>
             <field name="user_type" ref="account.data_account_type_payable"/>
         </record>
@@ -3392,7 +3392,7 @@
             <field name="code">405</field>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_405"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="name">Proveedores, otras partes vinculadas</field>
             <field name="user_type" ref="account.data_account_type_payable"/>
         </record>
@@ -4080,7 +4080,7 @@
             <field name="code">465</field>
             <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pgc_465"/>
-            <field name="type">other</field>
+            <field name="type">payable</field>
             <field name="name">Remuneraciones pendientes de pago</field>
             <field name="user_type" ref="account.data_account_type_payable"/>
         </record>
@@ -4102,7 +4102,7 @@
         </record>
         <record id="pgc_4700" model="account.account.template">
             <field name="code">4700</field>
-            <field name="reconcile" eval="True"/>
+            <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_470"/>
             <field name="type">view</field>
             <field name="name">Hacienda Pública, deudora por IVA</field>
@@ -4110,7 +4110,7 @@
         </record>
         <record id="pgc_4700_child" model="account.account.template">
             <field name="code">4700</field>
-            <field name="reconcile" eval="True"/>
+            <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_4700"/>
             <field name="type">receivable</field>
             <field name="name">Hacienda Pública, deudora por IVA</field>
@@ -4118,7 +4118,7 @@
         </record>
         <record id="pgc_4708" model="account.account.template">
             <field name="code">4708</field>
-            <field name="reconcile" eval="True"/>
+            <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_470"/>
             <field name="type">view</field>
             <field name="name">Hacienda Pública, deudora por subvenciones concedidas</field>
@@ -4126,7 +4126,7 @@
         </record>
         <record id="pgc_4708_child" model="account.account.template">
             <field name="code">4708</field>
-            <field name="reconcile" eval="True"/>
+            <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_4708"/>
             <field name="type">receivable</field>
             <field name="name">Hacienda Pública, deudora por subvenciones concedidas</field>
@@ -4134,7 +4134,7 @@
         </record>
         <record id="pgc_4709" model="account.account.template">
             <field name="code">4709</field>
-            <field name="reconcile" eval="True"/>
+            <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_470"/>
             <field name="type">view</field>
             <field name="name">Hacienda Pública, deudora por devolución de impuestos</field>
@@ -4174,7 +4174,7 @@
         </record>
         <record id="pgc_472_child" model="account.account.template">
             <field name="code">472</field>
-            <field name="reconcile" eval="True"/>
+            <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_472"/>
             <field name="type">other</field>
             <field name="name">Hacienda Pública. IVA soportado</field>
@@ -4190,7 +4190,7 @@
         </record>
         <record id="pgc_473_child" model="account.account.template">
             <field name="code">473</field>
-            <field name="reconcile" eval="True"/>
+            <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_473"/>
             <field name="type">other</field>
             <field name="name">Hacienda Pública, retenciones y pagos a cuenta</field>
@@ -4262,7 +4262,7 @@
         </record>
         <record id="pgc_4750" model="account.account.template">
             <field name="code">4750</field>
-            <field name="reconcile" eval="True"/>
+            <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_475"/>
             <field name="type">view</field>
             <field name="name">Hacienda Pública, acreedora por IVA</field>
@@ -4278,7 +4278,7 @@
         </record>
         <record id="pgc_4751" model="account.account.template">
             <field name="code">4751</field>
-            <field name="reconcile" eval="True"/>
+            <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_475"/>
             <field name="type">view</field>
             <field name="name">Hacienda Pública, acreedora por retenciones practicadas</field>
@@ -4286,7 +4286,7 @@
         </record>
         <record id="pgc_4751_child" model="account.account.template">
             <field name="code">4751</field>
-            <field name="reconcile" eval="True"/>
+            <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_4751"/>
             <field name="type">other</field>
             <field name="name">Hacienda Pública, acreedora por retenciones practicadas</field>
@@ -4294,7 +4294,7 @@
         </record>
         <record id="pgc_4752" model="account.account.template">
             <field name="code">4752</field>
-            <field name="reconcile" eval="True"/>
+            <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_475"/>
             <field name="type">view</field>
             <field name="name">Hacienda Pública, acreedora por impuesto sobre sociedades</field>
@@ -4302,7 +4302,7 @@
         </record>
         <record id="pgc_4752_child" model="account.account.template">
             <field name="code">4752</field>
-            <field name="reconcile" eval="True"/>
+            <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_4752"/>
             <field name="type">payable</field>
             <field name="name">Hacienda Pública, acreedora por impuesto sobre sociedades</field>
@@ -4310,7 +4310,7 @@
         </record>
         <record id="pgc_4758" model="account.account.template">
             <field name="code">4758</field>
-            <field name="reconcile" eval="True"/>
+            <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_475"/>
             <field name="type">view</field>
             <field name="name">Hacienda Pública, acreedora por subvenciones a reintegrar</field>
@@ -4318,7 +4318,7 @@
         </record>
         <record id="pgc_4758_child" model="account.account.template">
             <field name="code">4758</field>
-            <field name="reconcile" eval="True"/>
+            <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_4758"/>
             <field name="type">payable</field>
             <field name="name">Hacienda Pública, acreedora por subvenciones a reintegrar</field>
@@ -4350,7 +4350,7 @@
         </record>
         <record id="pgc_477_child" model="account.account.template">
             <field name="code">477</field>
-            <field name="reconcile" eval="True"/>
+            <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_477"/>
             <field name="type">other</field>
             <field name="name">Hacienda Pública. IVA repercutido</field>
