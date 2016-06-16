@@ -59,4 +59,8 @@ $(document).ready(function () {
         $('.acquirer[data-acquirer-id="'+acquirer_id+'"]').removeClass('hidden');
     });
 
+    $('#delete_payment_method').on('show.bs.modal', function(e){
+        var pm_method_id = $(e.relatedTarget).data('pm_id')
+        $(e.target).find('input[name="delete_pm_id"]').val(pm_method_id)
+    });
 });
