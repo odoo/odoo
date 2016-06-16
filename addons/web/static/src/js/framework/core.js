@@ -1,6 +1,7 @@
 odoo.define('web.core', function (require) {
 "use strict";
 
+var Bus = require('web.Bus');
 var Class = require('web.Class');
 var mixins = require('web.mixins');
 var Registry = require('web.Registry');
@@ -12,15 +13,6 @@ var debug = $.deparam($.param.querystring()).debug !== undefined;
 
 var _t = translation._t;
 var _lt = translation._lt;
-
-/**
- * Event Bus used to bind events scoped in the current instance
- */
-var Bus = Class.extend(mixins.EventDispatcherMixin, {
-    init: function() {
-        mixins.EventDispatcherMixin.init.call(this, parent);
-    },
-});
 
 var bus = new Bus ();
 
