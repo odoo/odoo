@@ -25,7 +25,7 @@ Main Features
 * Includes an extensible generic email composition assistant, that can turn into a mass-mailing assistant and is capable of interpreting simple *placeholder expressions* that will be replaced with dynamic data when each email is actually sent.
     """,
     'website': 'https://www.odoo.com/page/enterprise-social-network',
-    'depends': ['base', 'base_setup', 'bus'],
+    'depends': ['base', 'base_setup', 'bus', 'web_tour'],
     'data': [
         'wizard/invite_view.xml',
         'wizard/mail_compose_message_view.xml',
