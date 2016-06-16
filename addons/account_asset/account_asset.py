@@ -363,7 +363,7 @@ class AccountAssetAsset(models.Model):
         if default is None:
             default = {}
         default['name'] = self.name + _(' (copy)')
-        return super(AccountAssetAsset, self).copy_data(default)[0]
+        return super(AccountAssetAsset, self).copy_data(default)
 
     @api.multi
     def _compute_entries(self, date, group_entries=False):

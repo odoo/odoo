@@ -400,6 +400,10 @@ class TestPartnerRecursion(TransactionCase):
         self.p2 = res_partner.create({'name': 'Elmtree Child 1', 'parent_id': self.p1.id})
         self.p3 = res_partner.create({'name': 'Elmtree Grand-Child 1.1', 'parent_id': self.p2.id})
 
+    def test_100_res_partner_recursion(self):
+        self.assertTrue(self.p3._check_recursion())
+        self.assertTrue((self.p1 + self.p2 + self.p3)._check_recursion())
+
     # split 101, 102, 103 tests to force SQL rollback between them
 
     def test_101_res_partner_recursion(self):
@@ -511,3 +515,15 @@ class TestGroups(TransactionCase):
 
         groups = all_groups.search([('full_name', 'in', ['Administration / Access Rights','Contact Creation'])])
         self.assertTrue(groups, "did not match search for 'Administration / Access Rights' and 'Contact Creation'")
+
+    def test_res_group_recursion(self):
+        # four groups with no cycle, check them all together
+        a = self.env['res.groups'].create({'name': 'A'})
+        b = self.env['res.groups'].create({'name': 'B'})
+        c = self.env['res.groups'].create({'name': 'G', 'implied_ids': [(6, 0, (a + b).ids)]})
+        d = self.env['res.groups'].create({'name': 'D', 'implied_ids': [(6, 0, c.ids)]})
+        self.assertTrue((a + b + c + d)._check_m2m_recursion('implied_ids'))
+
+        # create a cycle and check
+        a.implied_ids = d
+        self.assertFalse(a._check_m2m_recursion('implied_ids'))

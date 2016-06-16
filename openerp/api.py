@@ -45,11 +45,9 @@ __all__ = [
 ]
 
 import logging
-import operator
-
-from inspect import currentframe, getargspec
-from collections import defaultdict, MutableMapping
+from collections import defaultdict, Mapping
 from contextlib import contextmanager
+from inspect import currentframe, getargspec
 from pprint import pformat
 from weakref import WeakSet
 from werkzeug.local import Local, release_local
@@ -293,10 +291,10 @@ def get_upgrade(method):
             return upgrade
         elif model == 'self':
             return lambda self, *args, **kwargs: self.browse(args[0])
-        else:
+        elif model:
             return lambda self, *args, **kwargs: self.env[model].browse(args[0])
-    else:
-        return lambda self, *args, **kwargs: args[0]
+
+    return lambda self, *args, **kwargs: args[0]
 
 
 def get_aggregate(method):
@@ -309,10 +307,10 @@ def get_aggregate(method):
         model, _, _ = spec
         if model == 'self':
             return lambda self, value: sum(value, self.browse())
-        else:
+        elif model:
             return lambda self, value: sum(value, self.env[model].browse())
-    else:
-        return lambda self, value: value
+
+    return lambda self, value: value
 
 
 def get_context_split(method):
@@ -813,7 +811,7 @@ def expected(decorator, func):
 
 
 
-class Environment(object):
+class Environment(Mapping):
     """ An environment wraps data for ORM records:
 
          - :attr:`cr`, the current database cursor;
@@ -871,6 +869,10 @@ class Environment(object):
         envs.add(self)
         return self
 
+    #
+    # Mapping methods
+    #
+
     def __contains__(self, model_name):
         """ Test whether the given model exists. """
         return model_name in self.registry
@@ -886,6 +888,15 @@ class Environment(object):
     def __len__(self):
         """ Return the size of the model registry. """
         return len(self.registry)
+
+    def __eq__(self, other):
+        return self is other
+
+    def __ne__(self, other):
+        return self is not other
+
+    def __hash__(self):
+        return object.__hash__(self)
 
     def __call__(self, cr=None, user=None, context=None):
         """ Return an environment based on ``self`` with modified parameters.
