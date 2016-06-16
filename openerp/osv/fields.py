@@ -20,6 +20,7 @@
 import base64
 import datetime as DT
 import functools
+import itertools
 import logging
 import pytz
 import re
@@ -849,9 +850,10 @@ class one2many(_column):
                     domain = self._domain(obj) if callable(self._domain) else self._domain
                     extra_domain = domain or []
                     ids_to_unlink = obj.search(cr, user, [(self._fields_id,'=',id)] + extra_domain, context=context)
-                    # BUG Odoo - self.o2m_ids = self.o2m_ids deletes kept lines
-                    # filter out those who will be added back
-                    ids_to_keep = [cmd[1] for cmd in values if cmd[0] == 4]
+                    # acts (1,_,{}) and (4,_) may try to restore records removed by (5,)
+                    # this will be impossible if they are unlinked
+                    later_acts = itertools.takewhile(lambda x: x[0] != 5, reversed(values))
+                    ids_to_keep = [cmd[1] for cmd in later_acts if cmd[0] == 1 or cmd[0] == 4]
                     ids_to_unlink = [old for old in ids_to_unlink if old not in ids_to_keep]
                     # If the model has cascade deletion, we delete the rows because it is the intended behavior,
                     # otherwise we only nullify the reverse foreign key column.
