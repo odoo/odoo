@@ -583,7 +583,14 @@ class AccountMoveLine(models.Model):
             ]
             try:
                 amount = float(str)
-                amount_domain = ['|', ('amount_residual', '=', amount), '|', ('amount_residual_currency', '=', amount), '|', ('amount_residual', '=', -amount), ('amount_residual_currency', '=', -amount)]
+                amount_domain = [
+                    '|', ('amount_residual', '=', amount),
+                    '|', ('amount_residual_currency', '=', amount),
+                    '|', ('amount_residual', '=', -amount),
+                    '|', ('amount_residual_currency', '=', -amount),
+                    '&', ('account_id.internal_type', '=', 'liquidity'),
+                    '|', '|', ('debit', '=', amount), ('credit', '=', amount), ('amount_currency', '=', amount),
+                ]
                 str_domain = expression.OR([str_domain, amount_domain])
             except:
                 pass
