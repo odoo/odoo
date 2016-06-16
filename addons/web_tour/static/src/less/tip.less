@@ -36,6 +36,7 @@
     height: @o-tip-size;
     border: @o-tip-border-width solid @odoo-brand-primary;
     border-radius: 50%;
+    padding: 0; // ! Cannot be changed ! Javascript rely on this.
     z-index: @zindex-modal+1;
     background-color: @o-tip-background-color;
     box-shadow: 0 0 2px 0 @odoo-brand-lightsecondary;
@@ -101,7 +102,8 @@
         z-index: -1;
     }
     > .o_tooltip_content {
-        padding: 8px 15px;
+        overflow: hidden;
+        padding: floor(@o-tip-size/4) floor(@o-tip-size/2);
         visibility: hidden;
         transition: visibility 0s ease 0s;
         color: black;
