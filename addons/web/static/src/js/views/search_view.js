@@ -12,6 +12,7 @@ var pyeval = require('web.pyeval');
 var search_inputs = require('web.search_inputs');
 var View = require('web.View');
 var Widget = require('web.Widget');
+var local_storage = require('web.local_storage');
 var _t = core._t;
 
 var Backbone = window.Backbone;
@@ -233,7 +234,8 @@ var SearchView = View.extend({
     events: {
         'click .o_searchview_more': function (e) {
             $(e.target).toggleClass('fa-search-plus fa-search-minus');
-            localStorage.visible_search_menu = (localStorage.visible_search_menu !== 'true');
+            var visible_search_menu = (local_storage.getItem('visible_search_menu') !== 'true');
+            local_storage.setItem('visible_search_menu', visible_search_menu);
             this.toggle_buttons();
         },
         'keydown .o_searchview_input, .o_searchview_facet': function (e) {
@@ -279,7 +281,7 @@ var SearchView = View.extend({
         this.search_fields = [];
         this.filters = [];
         this.groupbys = [];
-        this.visible_filters = (localStorage.visible_search_menu === 'true');
+        this.visible_filters = (local_storage.getItem('visible_search_menu') === 'true');
         this.input_subviews = []; // for user input in searchbar
         this.search_defaults = this.options.search_defaults || {};
         this.headless = this.options.hidden &&  _.isEmpty(this.search_defaults);

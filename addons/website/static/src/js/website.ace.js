@@ -8,6 +8,7 @@ var Widget = require('web.Widget');
 var base = require('web_editor.base');
 var ace_call = require('website.ace_call');
 var website = require('website.website');
+var local_storage = require('web.local_storage');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -106,10 +107,10 @@ var ViewEditor = Widget.extend({
             self.$el.width(width);
         }
         function storeEditorWidth() {
-            window.localStorage.setItem('ace_editor_width', self.$el.width());
+            local_storage.setItem('ace_editor_width', self.$el.width());
         }
         function readEditorWidth() {
-            var width = window.localStorage.getItem('ace_editor_width');
+            var width = local_storage.getItem('ace_editor_width');
             return parseInt(width || 720, 10);
         }
         function startResizing (e) {
