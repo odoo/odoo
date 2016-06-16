@@ -266,15 +266,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         options.session = this;
         ajax.get_file(options);
     },
-    synchronized_mode: function(to_execute) {
-        var synch = this.synch;
-        this.synch = true;
-        try {
-            return to_execute();
-        } finally {
-            this.synch = synch;
-        }
-    },
     /**
      * (re)loads the content of a session: db name, username, user id, session
      * context and status of the support contract

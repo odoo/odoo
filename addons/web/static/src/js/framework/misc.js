@@ -43,17 +43,6 @@ var Throbber = Widget.extend({
     },
 });
 
-
-// special tweak for the web client
-var old_async_when = $.async_when;
-$.async_when = function() {
-    if (session.synch)
-        return $.when.apply(this, arguments);
-    else
-        return old_async_when.apply(this, arguments);
-};
-
-
 /** Setup blockui */
 if ($.blockUI) {
     $.blockUI.defaults.baseZ = 1100;
