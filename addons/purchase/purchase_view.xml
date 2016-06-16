@@ -274,7 +274,7 @@
                             <group>
                                 <group>
                                     <field name="minimum_planned_date"/>
-                                    <field name="location_id" groups="stock.group_locations"/>
+                                    <field name="location_id" groups="stock.group_locations" on_change="onchange_location_id(location_id, context)"/>
                                     <field name="shipped" groups="base.group_no_one"/>
                                 </group>
                                 <group>
