@@ -129,32 +129,6 @@ qweb.preprocess_node = function() {
     _t('%d years ago');
 }
 
-$.async_when = function() {
-    var async = false;
-    var def = $.Deferred();
-    $.when.apply($, arguments).done(function() {
-        var args = arguments;
-        var action = function() {
-            def.resolve.apply(def, args);
-        };
-        if (async)
-            action();
-        else
-            setTimeout(action, 0);
-    }).fail(function() {
-        var args = arguments;
-        var action = function() {
-            def.reject.apply(def, args);
-        };
-        if (async)
-            action();
-        else
-            setTimeout(action, 0);
-    });
-    async = true;
-    return def;
-};
-
 return {
     debug: debug,
     qweb: qweb,
