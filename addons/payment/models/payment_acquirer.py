@@ -129,7 +129,7 @@ class PaymentAcquirer(osv.Model):
         return True
 
     _constraints = [
-        (_check_required_if_provider, 'Required fields not filled', ['required for this provider']),
+        (_check_required_if_provider, 'Required fields not filled', []),
     ]
 
     @openerp.api.model
