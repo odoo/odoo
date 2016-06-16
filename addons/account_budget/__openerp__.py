@@ -52,6 +52,4 @@ Three reports are available:
         'test/account_budget.yml',
         'test/account_budget_report.yml',
     ],
-    'installable': True,
-    'auto_install': False,
 }
