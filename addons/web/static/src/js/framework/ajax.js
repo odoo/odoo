@@ -119,6 +119,11 @@ function jsonpRpc(url, fct_name, params, settings) {
     });
 }
 
+// helper function to make a rpc with a function name hardcoded to 'call' 
+function rpc(url, params, settings) {
+    return jsonRpc(url, 'call', params, settings);
+}
+
 // helper
 function realSetTimeout (fct, millis) {
     var finished = new Date().getTime() + millis;
@@ -363,6 +368,7 @@ var loadXML = (function () {
 return {
     jsonRpc: jsonRpc,
     jsonpRpc: jsonpRpc,
+    rpc: rpc,
     loadCSS: loadCSS,
     loadJS: loadJS,
     loadXML: loadXML,
