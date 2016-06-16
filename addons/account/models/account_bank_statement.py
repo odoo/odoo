@@ -574,7 +574,18 @@ class AccountBankStatementLine(models.Model):
                 else:
                     domain = [(f, '>', 0), (f, '<', amount)]
             elif comparator == '=':
-                domain = [(f, '=', float_round(amount, precision_digits=p))]
+                if f == 'amount_residual':
+                    domain = [
+                        '|', (f, '=', float_round(amount, precision_digits=p)),
+                        '&', ('account_id.internal_type', '=', 'liquidity'),
+                        '|', ('debit', '=', amount), ('credit', '=', amount),
+                    ]
+                else:
+                    domain = [
+                        '|', (f, '=', float_round(amount, precision_digits=p)),
+                        '&', ('account_id.internal_type', '=', 'liquidity'),
+                        ('amount_currency', '=', amount),
+                    ]
             else:
                 raise UserError(_("Programmation error : domain_maker_move_line_amount requires comparator '=' or '<'"))
             domain += [('currency_id', '=', c)]
