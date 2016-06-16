@@ -1370,6 +1370,9 @@ class AccountPartialReconcile(models.Model):
                     partial_rec_set[x] = None
         #then, if the total debit and credit are equal, or the total amount in currency is 0, the reconciliation is full
         if currency and aml_to_balance and (float_is_zero(total_amount_currency, precision_rounding=currency.rounding) or float_compare(total_debit, total_credit, precision_rounding=currency.rounding) == 0):
+            # If both condition are satisfied, no need to create exchange rate entry
+            if float_is_zero(total_amount_currency, precision_rounding=currency.rounding) and float_compare(total_debit, total_credit, precision_rounding=currency.rounding) == 0:
+                return res
             #eventually create a journal entry to book the difference due to foreign currency's exchange rate that fluctuates
             aml_id, partial_rec_id = partial_rec.create_exchange_rate_entry(aml_to_balance, total_debit - total_credit, total_amount_currency, currency, maxdate)
         return res
