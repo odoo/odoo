@@ -3,8 +3,6 @@ odoo.define('web.translation', function (require) {
 "use strict";
 
 var Class = require('web.Class');
-var qweb = require('qweb');
-
 
 var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# */{
     init: function() {
@@ -80,12 +78,6 @@ var _lt = function (s) {
     return {toString: function () { return _t(s); }};
 };
 
-qweb.default_dict = {
-    '_' : _,
-    'JSON': JSON,
-    '_t' : _t,
-};
-
 return {
     _t: _t,
     _lt: _lt,
@@ -93,4 +85,3 @@ return {
 };
 
 });
-
