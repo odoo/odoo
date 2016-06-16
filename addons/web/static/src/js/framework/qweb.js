@@ -3,6 +3,8 @@ odoo.define('web.QWeb', function (require) {
 
 var translation = require('web.translation');
 
+var _t = translation._t;
+
 function QWeb(debug) {
     var qweb = new QWeb2.Engine();
     qweb.default_dict = {
