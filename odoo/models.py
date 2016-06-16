@@ -1281,6 +1281,30 @@ class BaseModel(object):
         return E.pivot(string=self._description)
 
     @api.model
+    def _get_default_kanban_view(self):
+        """ Generates a single-field kanban view, based on _rec_name.
+
+        :returns: a kanban view as an lxml document
+        :rtype: etree._Element
+        """
+
+        field = E.field(name=self._rec_name_fallback())
+        div = E.div(field, {'class': "oe_kanban_card oe_kanban_global_click"})
+        kanban_box = E.t(div, {'t-name': "kanban-box"})
+        templates = E.templates(kanban_box)
+        return E.kanban(templates, string=self._description)
+
+    @api.model
+    def _get_default_graph_view(self):
+        """ Generates a single-field graph view, based on _rec_name.
+
+        :returns: a graph view as an lxml document
+        :rtype: etree._Element
+        """
+        element = E.field(name=self._rec_name_fallback())
+        return E.graph(element, string=self._description)
+
+    @api.model
     def _get_default_calendar_view(self):
         """ Generates a default calendar view by trying to infer
         calendar fields from a number of pre-set attribute names
