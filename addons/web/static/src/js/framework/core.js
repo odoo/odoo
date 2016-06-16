@@ -6,9 +6,7 @@ var mixins = require('web.mixins');
 var Registry = require('web.Registry');
 var translation = require('web.translation');
 
-var qweb = require('qweb');
-var _ = require('_');
-var $ = require('$');
+var QWeb = require('web.QWeb');
 
 var debug = $.deparam($.param.querystring()).debug !== undefined;
 
@@ -37,31 +35,6 @@ _.each('resize,scroll'.split(','), function(evtype) {
     });
 });
 
-// IE patch
-//-------------------------------------------------------------------------
-if (typeof(console) === "undefined") {
-    // Even IE9 only exposes console object if debug window opened
-    window.console = {};
-    ('log error debug info warn assert clear dir dirxml trace group'
-        + ' groupCollapsed groupEnd time timeEnd profile profileEnd count'
-        + ' exception').split(/\s+/).forEach(function(property) {
-            console[property] = _.identity;
-    });
-}
-
-/**
-    Some hack to make placeholders work in ie9.
-*/
-if (!('placeholder' in document.createElement('input'))) {    
-    document.addEventListener("DOMNodeInserted",function(event){
-        var nodename =  event.target.nodeName.toLowerCase();
-        if ( nodename === "input" || nodename == "textarea" ) {
-            $(event.target).placeholder();
-        }
-    });
-}
-
-
 
 /**
  * Lazy translation function, only performs the translation when actually
@@ -74,39 +47,9 @@ if (!('placeholder' in document.createElement('input'))) {
  * @param {String} s string to translate
  * @returns {Object} lazy translation object
  */
-qweb.debug = debug;
-_.extend(qweb.default_dict, {
-    '__debug__': debug,
-    'moment': function(date) { return new moment(date); },
-});
+var qweb = new QWeb(debug);
 
-qweb.default_dict.csrf_token = odoo.csrf_token;
 
-qweb.preprocess_node = function() {
-    // Note that 'this' is the Qweb Node
-    switch (this.node.nodeType) {
-        case Node.TEXT_NODE:
-        case Node.CDATA_SECTION_NODE:
-            // Text and CDATAs
-            var translation = this.node.parentNode.attributes['t-translation'];
-            if (translation && translation.value === 'off') {
-                return;
-            }
-            var match = /^(\s*)([\s\S]+?)(\s*)$/.exec(this.node.data);
-            if (match) {
-                this.node.data = match[1] + _t(match[2]) + match[3];
-            }
-            break;
-        case Node.ELEMENT_NODE:
-            // Element
-            var attr, attrs = ['label', 'title', 'alt', 'placeholder'];
-            while ((attr = attrs.pop())) {
-                if (this.attributes[attr]) {
-                    this.attributes[attr] = _t(this.attributes[attr]);
-                }
-            }
-    }
-};
 
 /** Setup jQuery timeago */
 /*

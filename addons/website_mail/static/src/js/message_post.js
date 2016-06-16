@@ -1,11 +1,13 @@
 odoo.define('website_mail.thread', function(require) {
     'use strict';
 
-    var web_editor_base = require('web_editor.base')
-    var qweb = require('qweb');
+    var web_editor_base = require('web_editor.base');
     var ajax = require('web.ajax');
+    var core = require('web.core');
     var Widget = require('web.Widget');
 
+    var qweb = core.qweb;
+    
     // load qweb template
     ajax.loadXML('/website_mail/static/src/xml/chatter_message.xml', qweb);
 

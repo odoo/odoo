@@ -27,9 +27,6 @@ var _t = core._t;
 var QWeb = core.qweb;
 var bus = core.bus;
 
-var _ = require('_');
-var $ = require('$');
-
 function defaultIfUndef(variable, defaultValue) {
     return variable === undefined ? defaultValue : variable;
 }
