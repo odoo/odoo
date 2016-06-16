@@ -4,6 +4,7 @@ odoo.define('web.test.menu', function (require) {
 "use strict";
 
 var Tour = require('web.Tour');
+var local_storage = require('web.local_storage');
 
 function openmenu () {
     setTimeout(function () {
@@ -21,8 +22,8 @@ Tour.register({
         {
             title:     "begin test",
             onload: function () {
-                localStorage.setItem('active_step', 0);
-                localStorage.setItem('menu_tested', "[]");
+                local_storage.setItem('active_step', 0);
+                local_storage.setItem('menu_tested', "[]");
             },
         },
 
@@ -39,7 +40,7 @@ Tour.register({
             title:     "load web admin",
             waitFor:   ".oe_view_manager_body",
             onload: function () {
-                localStorage.setItem('active_step', (+localStorage.getItem('active_step'))+1 );
+                local_storage.setItem('active_step', (+local_storage.getItem('active_step'))+1 );
                 openmenu();
             },
         },
@@ -105,7 +106,7 @@ Tour.register({
             element:   'td:contains(Technical Features) + td input:not(:disabled):visible',
             onend: function () {
                 $('td:contains(Technical Features) + td input:not(:disabled):visible').attr("checked", true);
-                if (localStorage.getItem('active_step') === "2") {
+                if (local_storage.getItem('active_step') === "2") {
                     $('input').attr("checked", true);
                     $('.oe_view_manager_body td:contains(Portal) + td input:visible').attr("checked", null);
                     $('.oe_view_manager_body td:contains(Public) + td input:visible').attr("checked", null);
@@ -218,7 +219,7 @@ Tour.register({
             waitNot:  "body.oe_wait",
             onload: function () {
 
-                var tested = JSON.parse(localStorage.getItem('menu_tested') || "[]");
+                var tested = JSON.parse(local_storage.getItem('menu_tested') || "[]");
 
                 $('.oe_application_menu_placeholder li.active [data-menu]').addClass('already_tested');
 
@@ -236,7 +237,7 @@ Tour.register({
                 if (tested.indexOf(key) === -1) {
                     tested.push(key);
                 }
-                localStorage.setItem('menu_tested', JSON.stringify(tested));
+                local_storage.setItem('menu_tested', JSON.stringify(tested));
 
 
                 $(tested.join(",")).addClass('already_tested');
@@ -278,7 +279,7 @@ Tour.register({
             title:     "log out",
             element:   'a[data-menu="logout"]',
             onend: function () {
-                if (localStorage.getItem('active_step') == "1") {
+                if (local_storage.getItem('active_step') == "1") {
                     return "log on as admin";
                 }
             },
@@ -288,8 +289,8 @@ Tour.register({
             title:     "finish",
             waitFor:   "form.oe_login_form",
             onload: function () {
-                localStorage.removeItem('active_step');
-                localStorage.removeItem('menu_tested');
+                local_storage.removeItem('active_step');
+                local_storage.removeItem('menu_tested');
             },
         }
     ]

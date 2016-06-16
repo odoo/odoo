@@ -12,6 +12,7 @@ var Model = require('web.DataModel');
 var time = require('web.time');
 var View = require('web.View');
 var widgets = require('web_calendar.widgets');
+var local_storage = require('web.local_storage');
 
 var CompoundDomain = data.CompoundDomain;
 
@@ -275,8 +276,8 @@ var CalendarView = View.extend({
         }
     },
     toggle_full_width: function () {
-        var full_width = (localStorage.web_calendar_full_width !== 'true');
-        localStorage.web_calendar_full_width = full_width;
+        var full_width = (local_storage.getItem('web_calendar_full_width') !== 'true');
+        local_storage.setItem('web_calendar_full_width', full_width);
         this.toggle_sidebar(!full_width);
         this.$calendar.fullCalendar('render'); // to reposition the events
     },
@@ -390,7 +391,7 @@ var CalendarView = View.extend({
 
             // Add show/hide button and possibly hide the sidebar
             this.$sidebar_container.append($('<i>').addClass('o_calendar_sidebar_toggler fa'));
-            this.toggle_sidebar((localStorage.web_calendar_full_width !== 'true'));
+            this.toggle_sidebar((local_storage.getItem('web_calendar_full_width') !== 'true'));
         }
         this.$calendar.fullCalendar(this.get_fc_init_options());
 

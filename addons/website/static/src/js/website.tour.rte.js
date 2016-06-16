@@ -2,6 +2,7 @@ odoo.define('website.tour.rte', function (require) {
 'use strict';
 
 var Tour = require('web.Tour');
+var local_storage = require('web.local_storage');
 
 Tour.register({
     id:   'rte_translator',
@@ -27,7 +28,7 @@ Tour.register({
             waitFor:   'html[lang*="fr"]',
             element:   '.js_language_selector a[data-lang="en_US"]',
             onload: function () {
-                localStorage.removeItem('website_translator_nodialog');
+                local_storage.removeItem('website_translator_nodialog');
             }
         },
         {
