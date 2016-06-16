@@ -70,6 +70,7 @@ var KanbanView = View.extend({
         this.grouped = undefined;
         this.group_by_field = undefined;
         this.default_group_by = this.fields_view.arch.attrs.default_group_by;
+        this.on_create = this.fields_view.arch.attrs.on_create;
         this.grouped_by_m2o = undefined;
         this.relation = undefined;
         this.is_empty = undefined;
@@ -157,7 +158,8 @@ var KanbanView = View.extend({
     },
 
     do_reload: function() {
-        this.do_search(this.search_domain, this.search_context, [this.group_by_field]);
+        var group_by = this.group_by_field ? [this.group_by_field] : [];
+        this.do_search(this.search_domain, this.search_context, group_by);
     },
 
     load_records: function (offset, dataset) {
@@ -319,9 +321,33 @@ var KanbanView = View.extend({
      * $node may be undefined, in which case the ListView inserts them into this.options.$buttons
      */
     render_buttons: function($node) {
+        var self = this;
         if (this.options.action_buttons !== false && this.is_action_enabled('create')) {
             this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
-            this.$buttons.on('click', 'button.o-kanban-button-new', this.add_record.bind(this));
+            this.$buttons.on('click', 'button.o-kanban-button-new', function () {
+                if (self.grouped && self.widgets.length && self.on_create === 'quick_create') {
+                    // Activate the quick create in the first column
+                    self.widgets[0].add_quick_create();
+                } else if (self.on_create) {
+                    // Execute the given action
+                    self.do_action(self.on_create, {
+                        on_close: self.do_reload.bind(self),
+                    });
+                } else {
+                    // Open the form view
+                    self.add_record();
+                }
+            });
+
+            // Set 'Create' button as btn-default if there is no column
+            if (this.grouped && this.widgets.length === 0) {
+                var $button_new = this.$buttons.find('.o-kanban-button-new');
+                $button_new.removeClass('btn-primary').addClass('btn-default');
+                this.once('new_column_added', this, function () {
+                    $button_new.removeClass('btn-default').addClass('btn-primary');
+                });
+            }
+
             this.$buttons.appendTo($node);
         }
     },
@@ -730,6 +756,7 @@ var KanbanView = View.extend({
             var column = new KanbanColumn(self, group_data, options, record_options);
             column.insertBefore(self.$('.o_column_quick_create'));
             self.widgets.push(column);
+            self.trigger('new_column_added', column);
             self.trigger_up('scrollTo', {selector: '.o_column_quick_create'});
         });
     },

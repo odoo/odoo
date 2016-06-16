@@ -16,8 +16,8 @@
         'portal',
         'resource',
         'web_kanban',
-        'web_tip',
         'web_planner',
+        'web_tour',
     ],
     'description': """
 Track multi-level projects, tasks, work done on tasks
@@ -44,8 +44,8 @@ Dashboard / Reports for Project Management will include:
         'report/project_cumulative.xml',
         'res_config_view.xml',
         'views/project.xml',
-        'project_tip_data.xml',
         'project_dashboard.xml',
+        'tour_view.xml',
         'web_planner_data.xml',
         'project_mail_template_data.xml',
     ],

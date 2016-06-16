@@ -163,9 +163,9 @@ class SaleOrder(models.Model):
             'name': action.name,
             'help': action.help,
             'type': action.type,
-            'views': [[list_view_id, 'tree'], [False, 'kanban'], [form_view_id, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot'], [False, 'graph']],
+            'views': [[False, 'kanban'], [list_view_id, 'tree'], [form_view_id, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot'], [False, 'graph']],
             'target': action.target,
-            'context': action.context,
+            'context': "{'group_by':'stage_id'}",
             'res_model': action.res_model,
         }
         if len(self.tasks_ids) > 1:

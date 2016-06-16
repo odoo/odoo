@@ -66,17 +66,15 @@ var DebugManager = Widget.extend({
         // whether group is currently enabled for current user
         this._has_features = false;
         // whether the current user is an administrator
-        this._is_admin = false;
+        this._is_admin = session.is_admin;
         return $.when(
             new Model('res.users').call('check_access_rights', {operation: 'write', raise_exception: false}),
-            this.session.user_has_group('base.group_no_one'),
+            session.user_has_group('base.group_no_one'),
             new Model('ir.model.data').call('xmlid_to_res_id', {xmlid: 'base.group_no_one'}),
-            this.session.user_has_group('base.group_system'),
             this._super()
-        ).then(function (can_write_user, has_group_no_one, group_no_one_id, is_admin) {
+        ).then(function (can_write_user, has_group_no_one, group_no_one_id) {
             this._features_group = can_write_user && group_no_one_id;
             this._has_features = has_group_no_one;
-            this._is_admin = is_admin;
             return this.update();
         }.bind(this));
     },
@@ -376,7 +374,7 @@ DebugManager.include({
                 nested: true,
             }
         };
-        this.session.get_file({
+        session.get_file({
             url: '/web/report',
             data: {action: JSON.stringify(action)},
             complete: framework.unblockUI

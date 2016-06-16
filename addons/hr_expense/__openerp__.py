@@ -26,7 +26,7 @@ The whole flow is implemented as:
 This module also uses analytic accounting and is compatible with the invoice on timesheet module so that you are able to automatically re-invoice your customers' expenses if your work by project.
     """,
     'website': 'https://www.odoo.com/page/expenses',
-    'depends': ['hr_contract', 'account_accountant', 'report'],
+    'depends': ['hr_contract', 'account_accountant', 'report', 'web_tour'],
     'data': [
         'security/ir.model.access.csv',
         'data/hr_expense_data.xml',
@@ -35,8 +35,9 @@ This module also uses analytic accounting and is compatible with the invoice on 
         'views/hr_expense_views.xml',
         'security/ir_rule.xml',
         'views/report_expense.xml',
-        'data/web_tip_data.xml',
         'views/hr_dashboard.xml',
+        'views/hr_expense.xml',
+        'views/tour_views.xml',
     ],
     'demo': ['data/hr_expense_demo.xml'],
     'installable': True,

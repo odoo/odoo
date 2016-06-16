@@ -126,6 +126,10 @@
             <script type="text/javascript">
                 var odoo = {
                     csrf_token: "<t t-esc="request.csrf_token(None)"/>",
+                    session_info: {
+                        is_admin: <t t-esc="json.dumps(request.env.user.has_group('base.group_system'))"/>,
+                        is_frontend: true,
+                    },
                 };
             </script>
 
