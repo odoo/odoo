@@ -1459,7 +1459,7 @@ ListView.Groups = Class.extend({
 
         var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field";}), 'name');
         var options = { offset: current_min - 1, limit: view._limit, context: {bin_size: true} };
-        return $.async_when().then(function() {
+        return utils.async_when().then(function() {
             return dataset.read_slice(fields, options).then(function (records) {
                 // FIXME: ignominious hacks, parents (aka form view) should not send two ListView#reload_content concurrently
                 if (self.records.length) {
@@ -1525,7 +1525,7 @@ ListView.Groups = Class.extend({
                     seq = to ? list.records.at(to - 1).get(seqname) : 0;
                 var defs = [];
                 var fct = function (dataset, id, seq) {
-                    defs.push($.async_when().then(function () {
+                    defs.push(utils.async_when().then(function () {
                         var attrs = {};
                         attrs[seqname] = seq;
                         return dataset.write(id, attrs, {internal_dataset_changed: true});
@@ -2047,5 +2047,3 @@ function for_ (id, field, node) {
 
 return ListView;
 });
-
-
