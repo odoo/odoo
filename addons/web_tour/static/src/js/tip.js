@@ -38,14 +38,20 @@ return Widget.extend({
         });
     },
     start: function() {
-        this.init_width = this.$el.innerWidth();
-        this.init_height = this.$el.innerHeight();
         this.$tooltip_overlay = this.$(".o_tooltip_overlay");
         this.$tooltip_content = this.$(".o_tooltip_content");
+        this.init_width = this.$el.innerWidth();
+        this.init_height = this.$el.innerHeight();
+        this.border_width = this.$el.outerWidth() - this.init_width;
+        this.content_width = this.$tooltip_content.outerWidth(true);
+        this.content_height = this.$tooltip_content.outerHeight(true);
+        this.$window = $(window);
+
         _.each(this.info.event_handlers, (function(data) {
             this.$tooltip_content.on(data.event, data.selector, data.handler);
         }).bind(this));
         this._bind_anchor_events();
+
         this._reposition();
         core.bus.on('scroll resize', this, function() {
             if (this.tip_opened) {
@@ -53,6 +59,11 @@ return Widget.extend({
             }
             this._reposition();
         });
+        this.$tooltip_content.css({
+            width: "100%",
+            height: "100%",
+        });
+
         return this._super.apply(this, arguments);
     },
     update: function($anchor) {
@@ -66,18 +77,24 @@ return Widget.extend({
     _reposition: function() {
         if (this.tip_opened) return;
         this.$el.removeClass("o_animated");
+
         this.$el.position({
             my: this._get_spaced_inverted_position(this.info.position),
             at: this.info.position,
             of: this.$anchor,
             collision: "none",
         });
+
+        var offset = this.$el.offset();
+        offset.left += this.border_width;
+        offset.top += this.border_width;
         this.$tooltip_overlay.css({
-            top: -(this.info.position === "bottom" ? this.info.space : this.info.overlay.y),
-            right: -(this.info.position === "left" ? this.info.space : this.info.overlay.x),
-            bottom: -(this.info.position === "top" ? this.info.space : this.info.overlay.y),
-            left: -(this.info.position === "right" ? this.info.space : this.info.overlay.x),
+            top: -Math.min((this.info.position === "bottom" ? this.info.space : this.info.overlay.y), offset.top),
+            right: -Math.min((this.info.position === "left" ? this.info.space : this.info.overlay.x), this.$window.width() - (offset.left + this.init_width)),
+            bottom: -Math.min((this.info.position === "top" ? this.info.space : this.info.overlay.y), this.$window.height() - (offset.top + this.init_height)),
+            left: -Math.min((this.info.position === "right" ? this.info.space : this.info.overlay.x), offset.left),
         });
+
         this.$el.addClass("o_animated");
     },
     _bind_anchor_events: function () {
@@ -109,9 +126,6 @@ return Widget.extend({
         clearTimeout(this.timerIn);
         this.timerIn = undefined;
 
-        var content_width = this.$tooltip_content.outerWidth();
-        var content_height = this.$tooltip_content.outerHeight();
-
         this.tip_opened = true;
 
         var offset = this.$el.offset();
@@ -120,22 +134,22 @@ return Widget.extend({
         var overflow = false;
         var posVertical = (this.info.position === "top" || this.info.position === "bottom");
         if (posVertical) {
-            overflow = (offset.left + content_width + this.info.overlay.x > $(window).width());
+            overflow = (offset.left + this.content_width + 2 * this.border_width + this.info.overlay.x > this.$window.width());
         } else {
-            overflow = (offset.top + content_height + this.info.overlay.y > $(window).height());
+            overflow = (offset.top + this.content_height + 2 * this.border_width + this.info.overlay.y > this.$window.height());
         }
         if (posVertical && overflow || this.info.position === "left") {
-            mbLeft -= (content_width - this.init_width);
+            mbLeft -= (this.content_width - this.init_width);
         }
         if (!posVertical && overflow || this.info.position === "top") {
-            mbTop -= (content_height - this.init_height);
+            mbTop -= (this.content_height - this.init_height);
         }
 
         this.$el.toggleClass("inverse", overflow);
         this.$el.removeClass("o_animated").addClass("active");
         this.$el.css({
-            width: content_width,
-            height: content_height,
+            width: this.content_width,
+            height: this.content_height,
             "margin-left": mbLeft,
             "margin-top": mbTop,
         });
