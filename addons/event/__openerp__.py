@@ -17,7 +17,7 @@ Key Features
 * Manage your Events and Registrations
 * Use emails to automatically confirm and send acknowledgements for any event registration
 """,
-    'depends': ['base_setup', 'mail', 'web_tip'],
+    'depends': ['base_setup', 'mail'],
     'data': [
         'security/event_security.xml',
         'security/ir.model.access.csv',
@@ -27,7 +27,6 @@ Key Features
         'report/event_event_templates.xml',
         'report/event_event_reports.xml',
         'data/event_data.xml',
-        'data/event_data_tip.xml',
         'views/event_config_settings_views.xml',
         'views/event_templates.xml',
         'data/email_template_data.xml',

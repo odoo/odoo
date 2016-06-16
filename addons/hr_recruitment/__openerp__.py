@@ -26,6 +26,7 @@ You can define the different phases of interviews and easily rate the applicant 
         'web_kanban_gauge',
         'utm',
         'document',
+        'web_tour',
     ],
     'data': [
         'security/hr_recruitment_security.xml',
@@ -38,6 +39,7 @@ You can define the different phases of interviews and easily rate the applicant 
         'views/hr_recruitment_templates.xml',
         'views/hr_department_views.xml',
         'views/hr_job_views.xml',
+        'views/tour_views.xml',
     ],
     'demo': ['data/hr_recruitment_demo.xml'],
     'test': ['test/recruitment_process.yml'],

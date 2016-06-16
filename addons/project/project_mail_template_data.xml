@@ -11,7 +11,7 @@
             <field name="auto_delete" eval="True"/>
             <field name="scheduled_date">${(datetime.datetime.now() + relativedelta(days=3)).strftime('%Y-%m-%d %H:%M')}</field>
             <field name="body_html" ><![CDATA[
-            % set last_created_project = user.env['project.project'].search([], order="create_date desc")[0]
+            % set last_created_project = user.env['project.project'].search([('alias_id','<>',False)], order="create_date desc")[0]
 
             <div style="margin: 10px auto;">
             <table cellspacing="0" cellpadding="0" style="width:100%;">
@@ -35,14 +35,16 @@
                             <p dir="ltr" style="margin-top:0pt;margin-bottom:8pt;">
                                 <span style="font-size:13px;font-weight:bold;">What’s next?</span></p>
                             <ul style="margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;">
-                                <li dir="ltr">
-                                    <p dir="ltr" style="margin-top:0pt;margin-bottom:0pt;">
-                                        <span>Try creating a task by sending an email to </span>
-                                        <a href="mailto:${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}">
-                                            <span style="font-weight:bold; text-decoration:underline;">${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}</span>
-                                        </a>
-                                    </p>
-                                </li>
+                                % if last_created_project:
+                                    <li dir="ltr">
+                                        <p dir="ltr" style="margin-top:0pt;margin-bottom:0pt;">
+                                            <span>Try creating a task by sending an email to </span>
+                                            <a href="mailto:${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}">
+                                                <span style="font-weight:bold; text-decoration:underline;">${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}</span>
+                                            </a>
+                                        </p>
+                                    </li>
+                                % endif
                                 <li dir="ltr">
                                     <p dir="ltr" style="margin-top:0pt;margin-bottom:8pt;">
                                         <span><a href="/web#view_type=list&model=res.users&action=base.action_res_users">

@@ -226,12 +226,49 @@
             </field>
         </record>
 
-    <!-- CRM Lead Kanban View  -->
+        <!-- CRM Lead simplified Form View -->
+        <record id="view_create_opportunity_simplified" model="ir.ui.view">
+            <field name="name">crm.lead.form.simple</field>
+            <field name="model">crm.lead</field>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <form string="Create an Opportunity">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" string="Opportunity Title" placeholder="e.g. Customer Deal"/>
+                                <field name="partner_id"/>
+                                <label for="planned_revenue"/>
+                                <div class="o_row">
+                                    <field name="planned_revenue"/>
+                                    <field name="company_currency" options="{'no_create': True, 'no_open': True}"/>
+                                </div>
+                                <field name="priority" widget="priority"/>
+                            </group>
+                        </group>
+                        <footer>
+                            <button string="Create" name="close_dialog" type="object" class="btn-primary"/>
+                            <button string="Discard" class="btn-default" special="cancel"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="create_opportunity_simplified" model="ir.actions.act_window">
+            <field name="name">Create an Opportunity</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_create_opportunity_simplified"/>
+            <field name="target">new</field>
+        </record>
+
+        <!-- CRM Lead Kanban View  -->
         <record model="ir.ui.view" id="crm_case_kanban_view_leads">
             <field name="name">CRM - Leads Kanban</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="stage_id" class="o_kanban_small_column">
+                <kanban default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban" on_create="crm.create_opportunity_simplified">
                     <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description", "legend_priority": "Use of stars"}}'/>
                     <field name="color"/>
                     <field name="priority"/>
@@ -288,7 +325,6 @@
                                             </a>
                                             <a name="%(crm.crm_activity_schedule_action)d" type="action" t-if="record.kanban_state.raw_value=='red'">
                                               <span
-                                                title="No 'next activity' scheduled, click to set one."
                                                 class="oe_kanban_status oe_kanban_status_red"/>
                                             </a>
                                             <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
@@ -352,7 +388,7 @@
             <field name="model">crm.lead</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <form string="Opportunities">
+                <form string="Opportunities" class="o_opportunity_form">
                     <header>
                         <button name="action_set_won" string="Mark Won"
                                 type="object" class="oe_highlight o_wow"

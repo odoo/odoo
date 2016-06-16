@@ -1,9 +1,42 @@
 <odoo>
+    <record id="edit_project_simplified" model="ir.ui.view">
+        <field name="name">project.project.form.popup</field>
+        <field name="model">project.project</field>
+        <field name="arch" type="xml">
+            <form string="Project">
+                <sheet>
+                    <group>
+                        <field name="name" class="o_project_name oe_inline"
+                            string="Project Name" placeholder="e.g. Office Party"/>
+                        <label for="alias_name" string="Choose a Project Email" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                        <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                            <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                        </div>
+                    </group>
+                    <footer>
+                        <button string="Create" name="close_dialog" type="object" class="btn-primary"/>
+                        <button string="Discard" class="btn-default" special="cancel"/>
+                    </footer>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="open_create_project" model="ir.actions.act_window">
+        <field name="name">Create a Project</field>
+        <field name="res_model">project.project</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="edit_project_simplified"/>
+        <field name="target">new</field>
+    </record>
+
     <record model="ir.ui.view" id="view_project_kanban">
         <field name="name">project.project.kanban</field>
         <field name="model">project.project</field>
         <field name="arch" type="xml">
-            <kanban class="oe_background_grey o_kanban_dashboard o_project_kanban">
+            <kanban class="oe_background_grey o_kanban_dashboard o_project_kanban" on_create="project.open_create_project">
                 <field name="name"/>
                 <field name="use_tasks"/>
                 <field name="user_id"/>

@@ -12,7 +12,7 @@
         <field name="name">hr.job.kanban</field>
         <field name="model">hr.job</field>
         <field name="arch" type="xml">
-            <kanban class="oe_background_grey o_kanban_dashboard o_hr_recruitment_kanban">
+            <kanban class="oe_background_grey o_kanban_dashboard o_hr_recruitment_kanban" on_create="hr_recruitment.create_job_simple">
                 <field name="name"/>
                 <field name="alias_name"/>
                 <field name="alias_domain"/>
@@ -31,10 +31,8 @@
                             <div class="o_kanban_card_header">
                                 <div class="o_kanban_card_header_title">
                                     <div class="o_primary"><t t-esc="record.name.value"/></div>
-                                    <div class="o_secondary">
-                                        <span><t t-esc="record.department_id.value"/></span>
-                                        <span t-if="record.manager_id.value">(<t t-esc="record.manager_id.value"/>)</span>
-                                        <small t-if="record.alias_name.value and record.alias_domain.value and record.state.raw_value == 'recruit'"><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
+                                    <div t-if="record.alias_name.value and record.alias_domain.value and record.state.raw_value == 'recruit'" class="o_secondary o_job_alias">
+                                        <small> <i class="fa fa-envelope-o"></i> <field name="alias_id"/> </small>
                                     </div>
                                 </div>
                                 <div class="o_kanban_manage_button_section">
