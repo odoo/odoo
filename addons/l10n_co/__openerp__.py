@@ -16,8 +16,8 @@
     ],
     'data': [
         'data/data_account_type.xml',
-        'data/account_account_template.xml',
         'data/account_chart_template.xml',
+        'data/account_account_template.xml',
         'data/account_chart_template.yml',
     ],
     'demo': [],
