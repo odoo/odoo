@@ -3,6 +3,7 @@ odoo.testing = {};
 
 odoo.testing.start_services = function () {
     var factories = odoo.__DEBUG__.factories;
+    delete factories['mail.chat_manager'];
     var jobs = _.map(factories, function (factory, name) {
         return {
             name: name,
