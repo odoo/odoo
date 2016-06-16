@@ -1107,10 +1107,11 @@ class AccountMoveLine(models.Model):
             msg = _('New expected payment date: ') + vals['expected_pay_date'] + '.\n' + vals.get('internal_note', '')
             self.invoice_id.message_post(body=msg) #TODO: check it is an internal note (not a regular email)!
         #when making a reconciliation on an existing liquidity journal item, mark the payment as reconciled
-        if 'statement_id' in vals and self.payment_id:
-            # In case of an internal transfer, there are 2 liquidity move lines to match with a bank statement
-            if all(line.statement_id for line in self.payment_id.move_line_ids.filtered(lambda r: r.id != self.id and r.account_id.internal_type=='liquidity')):
-                self.payment_id.state = 'reconciled'
+        for record in self:
+            if 'statement_id' in vals and record.payment_id:
+                # In case of an internal transfer, there are 2 liquidity move lines to match with a bank statement
+                if all(line.statement_id for line in record.payment_id.move_line_ids.filtered(lambda r: r.id != record.id and r.account_id.internal_type=='liquidity')):
+                    record.payment_id.state = 'reconciled'
 
         result = super(AccountMoveLine, self).write(vals)
         if self._context.get('check_move_validity', True):
