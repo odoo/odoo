@@ -48,7 +48,7 @@ class Currency(models.Model):
         self._cr.execute(query, (date, company_id, tuple(self.ids)))
         currency_rates = dict(self._cr.fetchall())
         for currency in self:
-            currency.rate = currency_rates.get(currency.id, 1.0)
+            currency.rate = currency_rates.get(currency.id) or 1.0
 
     @api.multi
     @api.depends('rounding')
