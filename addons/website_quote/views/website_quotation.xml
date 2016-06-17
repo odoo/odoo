@@ -71,11 +71,11 @@
                                     </div>
                               </td>
                               <td class="text-right" groups="sale.group_show_price_subtotal">
-                                  <span t-field="l.price_subtotal"
+                                  <span t-field="line.price_subtotal"
                                         t-field-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                               </td>
                               <td class="text-right" groups="sale.group_show_price_total">
-                                  <span t-field="l.price_total"
+                                  <span t-field="line.price_total"
                                         t-field-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                               </td>
                               <td class="text-center">
