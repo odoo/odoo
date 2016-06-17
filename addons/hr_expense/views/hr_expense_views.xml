@@ -43,7 +43,7 @@
                     <div class="oe_title">
                         <label for="name"/>
                         <h1>
-                            <field name="name" placeholder="e.g. Business Trip NY"/>
+                            <field name="name" placeholder="e.g. Lunch with Customer"/>
                         </h1>
                     </div>
                     <group>
@@ -191,10 +191,16 @@
             <field name="search_view_id" ref="view_hr_expense_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click here to create new expenses.
+                  Create a new expense.<br/>
+                  <!-- Or send receipts to .... -->
               </p><p>
-                Once you have created your expense, submit it to your manager who will validate it.
-              </p>
+                  Expenses will go through these steps:
+              </p><ol>
+                  <li>You record expenses</li>
+                  <li>Periodically, you submit expenses report to your manager,</li>
+                  <li>Once approved, your expenses report goes to the accounting,</li>
+                  <li>The accountant validates journal entries and reimburse you.</li>
+              </ol>
             </field>
         </record>
 
@@ -207,10 +213,16 @@
             <field name="context">{'show_report': True}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click here to create new expenses.
+                  Create a new expense.<br/>
+                  <!-- Or send receipts to .... -->
               </p><p>
-                Once you have created your expense, submit it to your manager who will validate it.
-              </p>
+                  Expenses will go through these steps:
+              </p><ol>
+                  <li>You record expenses</li>
+                  <li>Periodically, you submit expenses report to your manager,</li>
+                  <li>Once approved, your expenses report goes to the accounting,</li>
+                  <li>The accountant validates journal entries and reimburse you.</li>
+              </ol>
             </field>
         </record>
 
@@ -295,7 +307,7 @@
         </record>
 
         <record id="action_approved_expense" model="ir.actions.act_window">
-            <field name="name">Unsubmitted Expenses</field>
+            <field name="name">Unreported Expenses</field>
             <field name="res_model">hr.expense</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
@@ -362,7 +374,7 @@
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
-                            <field name="name" placeholder="e.g. Business lunch with X"/>
+                            <field name="name" placeholder="e.g. Trip to NY"/>
                         </h1>
                     </div>
                     <group>
@@ -390,12 +402,12 @@
                                 <field name="name"/>
                                 <field name="state" invisible="1"/>
                                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                                <field name="total_amount" sum="Total Amount" widget="monetary"/>
                                 <field name="message_unread" invisible="1"/>
                                 <field name="attachment_number" invisible="1"/>
-                                <field name="tax_ids" widget="many2many_tags"/>
                                 <field name="attachment_number" string=" "/>
                                 <button name="action_get_attachment_view" string="View Attachments" type="object" icon="fa-paperclip"/>
+                                <field name="tax_ids" widget="many2many_tags"/>
+                                <field name="total_amount" sum="Total Amount" widget="monetary"/>
                            </tree>
                         </field>
                 </sheet>
@@ -696,7 +708,7 @@
         <menuitem id="menu_hr_expense_root" name="Expenses" sequence="100" web_icon="hr_expense,static/description/icon.png"/>
 
         <menuitem id="menu_hr_expense_my_expenses" name="My Expenses" sequence="10" parent="menu_hr_expense_root"/>
-        <menuitem id="menu_hr_expense_my_unsubmitted" name="Unsubmitted Expenses" sequence="1" parent="menu_hr_expense_my_expenses" action="hr_expense_actions_my_unsubmitted"/>
+        <menuitem id="menu_hr_expense_my_unsubmitted" name="Unreported Expenses" sequence="1" parent="menu_hr_expense_my_expenses" action="hr_expense_actions_my_unsubmitted"/>
         <menuitem id="menu_hr_expense_my_all" name="All Expenses" sequence="2" parent="menu_hr_expense_my_expenses"
             action="hr_expense_actions_my_all"/>
 
