@@ -78,6 +78,10 @@ class PaymentAcquirer(models.Model):
     journal_id = fields.Many2one(
         'account.journal', 'Payment Journal',
         help="Account journal used for automatic payment reconciliation.")
+    country_ids = fields.Many2many(
+        'res.country', 'payment_country_rel',
+        'payment_id', 'country_id', 'Countries',
+        help="This payment gateway is available for selected countries. If none is selected it is available for all countries.")
 
     pre_msg = fields.Html(
         'Help Message', translate=True,

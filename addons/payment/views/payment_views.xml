@@ -82,6 +82,7 @@
                                     <field name="auto_confirm" widget="radio"/>
                                     <field name="save_token" widget="radio" attrs="{'invisible': [('token_implemented', '=', False)]}"/>
                                     <field name="journal_id" attrs="{'required': [('auto_confirm', '=', 'generate_and_pay_invoice')], 'invisible': [('auto_confirm', '!=', 'generate_and_pay_invoice')]}"/>
+                                    <field name="country_ids" widget="many2many_tags"/>
                                     <label for="view_template_id" groups="base.group_no_one"/>
                                     <div groups="base.group_no_one">
                                         <field name="view_template_id" nolabel="1"/>
