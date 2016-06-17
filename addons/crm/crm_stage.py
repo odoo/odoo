@@ -20,7 +20,7 @@ class crm_stage(osv.Model):
     _name = "crm.stage"
     _description = "Stage of case"
     _rec_name = 'name'
-    _order = "sequence"
+    _order = "sequence, name, id"
 
     _columns = {
         'name': fields.char('Stage Name', required=True, translate=True),

@@ -13,8 +13,13 @@ return {
     init: function() {
         var self = this;
         this._super.apply(this, arguments);
-        this.__on_barcode_scanned = function () {
-            self.on_barcode_scanned.apply(self, arguments);
+        this.__on_barcode_scanned = function (barcode, target) {
+            // Handle the case where there are several barcode widgets on the same page. Since the
+            // event is global on the page, all barcode widgets will be triggered. However, we only
+            // want to keep the event on the target widget.
+            if ($.contains(target, self.el)) {
+                self.on_barcode_scanned.call(self, barcode);
+            }
         };
         this.start_listening();
         // Handlers inside a View managed by a ViewManager only listen to barcode events while their view is displayed

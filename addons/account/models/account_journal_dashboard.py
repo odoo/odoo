@@ -142,11 +142,22 @@ class account_journal(models.Model):
         if self.type in ['bank', 'cash']:
             last_bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids)], order="date desc, id desc", limit=1)
             last_balance = last_bank_stmt and last_bank_stmt[0].balance_end or 0
-            ac_bnk_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids),('state', '=', 'open')])
-            for ac_bnk in ac_bnk_stmt:
-                for line in ac_bnk.line_ids:
-                    if not line.journal_entry_ids:
-                        number_to_reconcile += 1
+            #Get the number of items to reconcile for that bank journal
+            self.env.cr.execute("""SELECT COUNT(DISTINCT(statement_line_id)) 
+                        FROM account_move where statement_line_id 
+                        IN (SELECT line.id 
+                            FROM account_bank_statement_line AS line 
+                            LEFT JOIN account_bank_statement AS st 
+                            ON line.statement_id = st.id 
+                            WHERE st.journal_id IN %s and st.state = 'open')""", (tuple(self.ids),))
+            already_reconciled = self.env.cr.fetchone()[0]
+            self.env.cr.execute("""SELECT COUNT(line.id) 
+                            FROM account_bank_statement_line AS line 
+                            LEFT JOIN account_bank_statement AS st 
+                            ON line.statement_id = st.id 
+                            WHERE st.journal_id IN %s and st.state = 'open'""", (tuple(self.ids),))
+            all_lines = self.env.cr.fetchone()[0]
+            number_to_reconcile = all_lines - already_reconciled
             # optimization to read sum of balance from account_move_line
             account_ids = tuple(filter(None, [self.default_debit_account_id.id, self.default_credit_account_id.id]))
             if account_ids:
