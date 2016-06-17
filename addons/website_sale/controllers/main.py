@@ -719,23 +719,10 @@ class WebsiteSale(http.Controller):
         values['errors'] = SaleOrder._get_errors(order)
         values.update(SaleOrder._get_website_data(order))
         if not values['errors']:
-            acquirers = request.env['payment.acquirer'].search(
-                [('website_published', '=', True), ('company_id', '=', order.company_id.id)]
-            )
-            values['acquirers'] = []
-            for acquirer in acquirers:
-                acquirer_button = acquirer.with_context(submit_class='btn btn-primary', submit_txt=_('Pay Now')).sudo().render(
-                    '/',
-                    order.amount_total,
-                    order.pricelist_id.currency_id.id,
-                    values={
-                        'return_url': '/shop/payment/validate',
-                        'partner_id': shipping_partner_id,
-                        'billing_partner_id': order.partner_invoice_id.id,
-                    }
-                )
-                acquirer.button = acquirer_button
-                values['acquirers'].append(acquirer)
+            button_values = dict(return_url='/shop/payment/validate',
+                                 partner_id=shipping_partner_id,
+                                 billing_partner_id=order.partner_invoice_id.id)
+            values['acquirers'] = request.env['payment.acquirer'].with_context(submit_class='btn btn-primary', submit_txt=_('Pay Now'))._get_acquirer_buttons(order, button_values)
 
             values['tokens'] = request.env['payment.token'].search([('partner_id', '=', order.partner_id.id), ('acquirer_id', 'in', acquirers.ids)])
 
