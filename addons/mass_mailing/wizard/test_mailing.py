@@ -33,8 +33,8 @@ class TestMassMailing(models.TransientModel):
             }
             mail = self.env['mail.mail'].create(mail_values)
             unsubscribe_url = mail._get_unsubscribe_url(test_mail)
-            tools.append_content_to_html(mailing.body_html, unsubscribe_url, plaintext=False, container_tag='p')
-            mail.body_html = mailing.body_html
+            body = tools.append_content_to_html(mailing.body_html, unsubscribe_url, plaintext=False, container_tag='p')
+            mail.write({'body_html': body})
             mails |= mail
         mails.send()
         return True
