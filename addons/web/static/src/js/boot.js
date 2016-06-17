@@ -36,11 +36,7 @@
     var job_deps = [];
     var job_deferred = [];
 
-    var services = Object.create({
-        qweb: new QWeb2.Engine(),
-        $: $,
-        _: _,
-    });
+    var services = Object.create({});
 
     var commentRegExp = /(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/mg;
     var cjsRequireRegExp = /[^.]\s*require\s*\(\s*["']([^'"\s]+)["']\s*\)/g;

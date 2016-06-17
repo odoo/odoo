@@ -3,7 +3,7 @@ odoo.define('web.framework', function (require) {
 
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
-var session = require('web.session');
+var ajax = require('web.ajax');
 var Widget = require('web.Widget');
 
 var _t = core._t;
@@ -42,17 +42,6 @@ var Throbber = Widget.extend({
         }, 1000);
     },
 });
-
-
-// special tweak for the web client
-var old_async_when = $.async_when;
-$.async_when = function() {
-    if (session.synch)
-        return $.when.apply(this, arguments);
-    else
-        return old_async_when.apply(this, arguments);
-};
-
 
 /** Setup blockui */
 if ($.blockUI) {
@@ -100,7 +89,7 @@ function redirect (url, wait) {
     };
 
     var wait_server = function() {
-        session.rpc("/web/webclient/version_info", {}).done(load).fail(function() {
+        ajax.rpc("/web/webclient/version_info", {}).done(load).fail(function() {
             setTimeout(wait_server, 250);
         });
     };
@@ -176,7 +165,7 @@ core.action_registry.add("logout", logout);
  */
 function ReloadContext (parent, action) {
     // side-effect of get_session_info is to refresh the session context
-    session.rpc("/web/session/get_session_info", {}).then(function() {
+    ajax.rpc("/web/session/get_session_info", {}).then(function() {
         Reload(parent, action);
     });
 }

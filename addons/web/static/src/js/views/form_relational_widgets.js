@@ -802,13 +802,13 @@ var FieldX2Many = AbstractManyField.extend({
         this.viewmanager.on("switch_mode", self, function(n_mode) {
             $.when(self.commit_value()).done(function() {
                 if (n_mode === "list") {
-                    $.async_when().done(function() {
+                    utils.async_when().done(function() {
                         self.reload_current_view();
                     });
                 }
             });
         });
-        $.async_when().done(function () {
+        utils.async_when().done(function () {
             self.$el.addClass('o_view_manager_content');
             self.alive(self.viewmanager.attachTo(self.$el));
         });

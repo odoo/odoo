@@ -717,7 +717,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                     def.resolve();
                 });
             } else {
-                $.async_when().done(function () {
+                utils.async_when().done(function () {
                     def.reject();
                 });
             }

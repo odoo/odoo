@@ -31,7 +31,7 @@ return ControlPanelMixin;
 odoo.define('web.ControlPanel', function (require) {
 "use strict";
 
-var core = require('web.core');
+var Bus = require('web.Bus');
 var data = require('web.data');
 var Widget = require('web.Widget');
 
@@ -47,7 +47,7 @@ var ControlPanel = Widget.extend({
             this.template = template;
         }
 
-        this.bus = new core.Bus();
+        this.bus = new Bus();
         this.bus.on("update", this, this.update);
     },
     /**

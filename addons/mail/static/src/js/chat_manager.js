@@ -4,6 +4,7 @@ odoo.define('mail.chat_manager', function (require) {
 var bus = require('bus.bus').bus;
 var utils = require('mail.utils');
 var config = require('web.config');
+var Bus = require('web.Bus');
 var core = require('web.core');
 var data = require('web.data');
 var Model = require('web.Model');
@@ -837,7 +838,7 @@ var chat_manager = {
             return message.channel_ids.length === 0 && message.model === model;
         });
     },
-    bus: new core.Bus(),
+    bus: new Bus(),
 
     create_channel: function (name, type) {
         var method = type === "dm" ? "channel_get" : "channel_create";

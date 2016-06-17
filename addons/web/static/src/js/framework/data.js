@@ -1,15 +1,15 @@
 odoo.define('web.data', function (require) {
 "use strict";
 
-var core = require('web.core');
+var Class = require('web.Class');
+var mixins = require('web.mixins');
 var Model = require('web.Model');
 var session = require('web.session');
+var translation = require('web.translation');
 var pyeval = require('web.pyeval');
 var utils = require('web.utils');
 
-var Class = core.Class;
-var mixins = core.mixins;
-var _t = core._t;
+var _t = translation._t;
 
 /**
  * Serializes the sort criterion array of a dataset into a form which can be
@@ -816,7 +816,7 @@ var BufferedDataSet = DataSetStatic.extend({
         });
         this.set_ids(_.difference(this.ids, _.pluck(_.filter(this.cache, function (c) {return c.to_delete;}), 'id')));
         this.trigger("dataset_changed", ids, callback, error_callback);
-        return $.async_when({result: true}).done(callback);
+        return utils.async_when({result: true}).done(callback);
     },
     reset_ids: function(ids, options) {
         var self = this;

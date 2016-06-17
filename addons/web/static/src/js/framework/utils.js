@@ -462,6 +462,40 @@ function swap(array, elem1, elem2) {
     array[i1] = elem2;
 }
 
+function toBoolElse (str, elseValues, trueValues, falseValues) {
+    var ret = _.str.toBool(str, trueValues, falseValues);
+    if (_.isUndefined(ret)) {
+        return elseValues;
+    }
+    return ret;
+}
+
+function async_when() {
+    var async = false;
+    var def = $.Deferred();
+    $.when.apply($, arguments).done(function() {
+        var args = arguments;
+        var action = function() {
+            def.resolve.apply(def, args);
+        };
+        if (async)
+            action();
+        else
+            setTimeout(action, 0);
+    }).fail(function() {
+        var args = arguments;
+        var action = function() {
+            def.reject.apply(def, args);
+        };
+        if (async)
+            action();
+        else
+            setTimeout(action, 0);
+    });
+    async = true;
+    return def;
+}
+
 return {
     divmod: divmod,
     modf: modf,
@@ -491,6 +525,8 @@ return {
     reject_after: reject_after,
     delay: delay,
     swap: swap,
+    toBoolElse: toBoolElse,
+    async_when: async_when,
 };
 
 });
