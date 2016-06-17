@@ -72,8 +72,8 @@ class sale_configuration(osv.TransientModel):
         'group_show_price_subtotal': fields.boolean("Show subtotal", implied_group='sale.group_show_price_subtotal', group='base.group_portal,base.group_user,base.group_public'),
         'group_show_price_total': fields.boolean("Show total", implied_group='sale.group_show_price_total', group='base.group_portal,base.group_user,base.group_public'),
         'sale_show_tax': fields.selection([
-            ('total', 'Show line subtotals with taxes included (B2C)'),
-            ('subtotal', 'Show line subtotals without taxes (except if unit price includes taxes) (B2B)')], "Tax Display",
+            ('subtotal', 'Show line subtotals without taxes (B2B)'),
+            ('total', 'Show line subtotals with taxes included (B2C)')], "Tax Display",
             required=True),
         'default_invoice_policy': fields.selection([
             ('order', 'Invoice ordered quantities'),
