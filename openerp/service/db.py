@@ -102,6 +102,11 @@ def exp_duplicate_database(db_original_name, db_name):
         _drop_conn(cr, db_original_name)
         cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (db_name, db_original_name))
 
+    registry = openerp.modules.registry.RegistryManager.new(db_name)
+    with registry.cursor() as cr:
+        # if it's a copy of a database, force generation of a new dbuuid
+        registry['ir.config_parameter'].init(cr, force=True)
+
     from_fs = openerp.tools.config.filestore(db_original_name)
     to_fs = openerp.tools.config.filestore(db_name)
     if os.path.exists(from_fs) and not os.path.exists(to_fs):
