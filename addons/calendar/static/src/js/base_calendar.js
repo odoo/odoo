@@ -221,7 +221,7 @@ WebClient.include({
     show_application: function() {
         return this._super.apply(this, arguments).then(this.check_notifications.bind(this));
     },
-    //Override addons/web/static/src/js/chrome.js       
+    //Override addons/web/static/src/js/chrome.js
     // FIXME: on_logout is no longer used
     on_logout: function() {
         this._super();
@@ -243,20 +243,7 @@ var Many2ManyAttendee = FieldMany2ManyTags.extend({
     },
 });
 
-function showCalendarInvitation(db, action, id, view, attendee_data) {
-    session.session_bind(session.origin).then(function () {
-        if (session.session_is_valid(db) && session.username !== "anonymous") {
-            window.location.href = _.str.sprintf('/web?db=%s#id=%s&view_type=form&model=calendar.event', db, id);
-        } else {
-            $("body").prepend(QWeb.render('CalendarInvitation', {attendee_data: JSON.parse(attendee_data)}));
-        }
-    });
-}
-
 core.form_widget_registry.add('many2manyattendee', Many2ManyAttendee);
 
-return {
-    showCalendarInvitation: showCalendarInvitation,
-};
 
 });
