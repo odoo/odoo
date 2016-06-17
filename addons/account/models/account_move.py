@@ -1057,13 +1057,13 @@ class AccountMoveLine(models.Model):
                 if vals['debit'] != 0.0: vals['debit'] = res['total_excluded']
                 if vals['credit'] != 0.0: vals['credit'] = -res['total_excluded']
                 if vals.get('amount_currency'):
-                    vals['amount_currency'] = self.env['res.currency'].browse(vals['currency_id']).round(vals['amount_currency'] * (amount / res['total_excluded']))
+                    vals['amount_currency'] = self.env['res.currency'].browse(vals['currency_id']).round(vals['amount_currency'] * (res['total_excluded']/amount))
             # Create tax lines
             for tax_vals in res['taxes']:
                 if tax_vals['amount']:
                     account_id = (amount > 0 and tax_vals['account_id'] or tax_vals['refund_account_id'])
                     if not account_id: account_id = vals['account_id']
-                    tax_lines_vals.append({
+                    temp = {
                         'account_id': account_id,
                         'name': vals['name'] + ' ' + tax_vals['name'],
                         'tax_line_id': tax_vals['id'],
@@ -1072,7 +1072,12 @@ class AccountMoveLine(models.Model):
                         'statement_id': vals.get('statement_id'),
                         'debit': tax_vals['amount'] > 0 and tax_vals['amount'] or 0.0,
                         'credit': tax_vals['amount'] < 0 and -tax_vals['amount'] or 0.0,
-                    })
+                    }
+                    bank = self.env["account.bank.statement"].browse(vals.get('statement_id'))
+                    if bank.currency_id != bank.company_id.currency_id:
+                        temp['currency_id'] = bank.currency_id.id
+                        temp['amount_currency'] = bank.company_id.currency_id.compute(tax_vals['amount'], bank.currency_id, round=True)
+                    tax_lines_vals.append(temp)
 
         new_line = super(AccountMoveLine, self).create(vals)
         for tax_line_vals in tax_lines_vals:

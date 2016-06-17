@@ -217,7 +217,6 @@ class sale_order(osv.osv):
                 'website_description': line.website_description,
                 'state': 'draft',
                 'customer_lead': self._get_customer_lead(cr, uid, line.product_id.product_tmpl_id),
-                'delay': line.product_id.sale_delay
             })
             lines.append((0, 0, data))
         options = []
