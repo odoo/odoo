@@ -158,6 +158,7 @@ class stock_history(osv.osv):
                     not (source_location.company_id is null and dest_location.company_id is null) or
                     source_location.company_id != dest_location.company_id or
                     source_location.usage not in ('internal', 'transit'))
+                  AND source_location.id != dest_location.id
                 ) UNION ALL
                 (SELECT
                     (-1) * stock_move.id AS id,
@@ -189,6 +190,7 @@ class stock_history(osv.osv):
                     not (dest_location.company_id is null and source_location.company_id is null) or
                     dest_location.company_id != source_location.company_id or
                     dest_location.usage not in ('internal', 'transit'))
+                 AND source_location.id != dest_location.id
                 ))
                 AS foo
                 GROUP BY move_id, location_id, company_id, product_id, product_categ_id, date, source
