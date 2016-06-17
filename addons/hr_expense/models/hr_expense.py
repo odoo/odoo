@@ -14,7 +14,7 @@ class HrExpense(models.Model):
     _description = "Expense"
     _order = "date desc, id desc"
 
-    name = fields.Char(string='Expense Description', readonly=True, required=True, states={'draft': [('readonly', False)]}, default=fields.Date.context_today)
+    name = fields.Char(string='Expense Description', readonly=True, required=True, states={'draft': [('readonly', False)]})
     date = fields.Date(readonly=True, states={'draft': [('readonly', False)]}, default=fields.Date.context_today, string="Date")
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1))
     product_id = fields.Many2one('product.product', string='Product', readonly=True, states={'draft': [('readonly', False)]}, domain=[('can_be_expensed', '=', True)], required=True)
