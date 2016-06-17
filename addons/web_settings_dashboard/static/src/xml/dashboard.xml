@@ -52,7 +52,9 @@
                 <t t-set="active_users" t-value="widget.data.active_users"></t>
                 <t t-set="pending_users" t-value="widget.data.pending_users"></t>
                 <t t-if="active_users">
-                    <t t-esc="active_users"></t> Active User<t t-if="active_users > 1">s</t>
+                    <t t-esc="active_users"></t>
+                    <t t-if="active_users &lt;= 1"> Active User</t>
+                    <t t-if="active_users &gt; 1">Active Users</t>
                 </t>
             </div>
             <div class="text-center">
