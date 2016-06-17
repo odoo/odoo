@@ -55,7 +55,7 @@ return Widget.extend({
         this._reposition();
         core.bus.on('scroll resize', this, function() {
             if (this.tip_opened) {
-                this._to_bubble_mode();
+                this._to_bubble_mode(true);
             }
             this._reposition();
         });
@@ -109,7 +109,7 @@ return Widget.extend({
         if (position === "bottom") return "top+" + this.info.space;
         return "bottom-" + this.info.space;
     },
-    _to_info_mode: function(force) {
+    _to_info_mode: function (force) {
         if (this.timerOut !== undefined) {
             clearTimeout(this.timerOut);
             this.timerOut = undefined;
@@ -117,12 +117,12 @@ return Widget.extend({
         }
 
         if (force === true) {
-            this.__to_info_mode();
+            this._build_info_mode();
         } else {
-            this.timerIn = setTimeout(this.__to_info_mode.bind(this), 100);
+            this.timerIn = setTimeout(this._build_info_mode.bind(this), 100);
         }
     },
-    __to_info_mode: function() {
+    _build_info_mode: function () {
         clearTimeout(this.timerIn);
         this.timerIn = undefined;
 
@@ -162,12 +162,12 @@ return Widget.extend({
         }
 
         if (force === true) {
-            this.__to_bubble_mode();
+            this._build_bubble_mode();
         } else {
-            this.timerOut = setTimeout(this.__to_bubble_mode.bind(this), 300);
+            this.timerOut = setTimeout(this._build_bubble_mode.bind(this), 300);
         }
     },
-    __to_bubble_mode: function() {
+    _build_bubble_mode: function () {
         clearTimeout(this.timerOut);
         this.timerOut = undefined;
 
