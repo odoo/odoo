@@ -54,12 +54,35 @@
                                     <tree name="Messages">
                                         <field name="name"/>
                                         <field name="body"/>
+                                        <field name="important"/>
                                     </tree>
                                     <form string="Message" version="7.0">
                                         <group>
                                             <field name="name"/>
                                             <field name="author"/>
                                             <field name="size"/>
+                                            <field name="important"/>
+                                        </group>
+                                        <label for="body"/>
+                                        <field name="body"/>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Emails">
+                                <field name="important_emails">
+                                    <tree name="Important Messages">
+                                        <field name="name"/>
+                                        <field name="body"/>
+                                        <field name="important"/>
+                                        <field name="email_to"/>
+                                    </tree>
+                                    <form string="Important Message" version="7.0">
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="author"/>
+                                            <field name="size"/>
+                                            <field name="important"/>
+                                            <field name="email_to"/>
                                         </group>
                                         <label for="body"/>
                                         <field name="body"/>
