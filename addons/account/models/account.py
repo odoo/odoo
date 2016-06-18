@@ -683,9 +683,6 @@ class AccountTax(models.Model):
             else:
                 total_included += tax_amount
 
-            if tax.include_base_amount:
-                base += tax_amount
-
             taxes.append({
                 'id': tax.id,
                 'name': tax.with_context(**{'lang': partner.lang} if partner else {}).name,
@@ -694,7 +691,11 @@ class AccountTax(models.Model):
                 'account_id': tax.account_id.id,
                 'refund_account_id': tax.refund_account_id.id,
                 'analytic': tax.analytic,
+                'base': base,
             })
+
+            if tax.include_base_amount:
+                base += tax_amount
 
         return {
             'taxes': sorted(taxes, key=lambda k: k['sequence']),

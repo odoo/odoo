@@ -554,6 +554,7 @@ class AccountInvoice(models.Model):
                     'name': tax['name'],
                     'tax_id': tax['id'],
                     'amount': tax['amount'],
+                    'base': tax['base'],
                     'manual': False,
                     'sequence': tax['sequence'],
                     'account_analytic_id': tax['analytic'] and line.account_analytic_id.id or False,
@@ -572,6 +573,7 @@ class AccountInvoice(models.Model):
                     tax_grouped[key] = val
                 else:
                     tax_grouped[key]['amount'] += val['amount']
+                    tax_grouped[key]['base'] += val['base']
         return tax_grouped
 
     @api.multi
@@ -1268,14 +1270,6 @@ class AccountInvoiceTax(models.Model):
     _description = "Invoice Tax"
     _order = 'sequence'
 
-    def _compute_base_amount(self):
-        for tax in self:
-            base = 0.0
-            for line in tax.invoice_id.invoice_line_ids:
-                if tax.tax_id in line.invoice_line_tax_ids:
-                    base += line.price_subtotal
-            tax.base = base
-
     invoice_id = fields.Many2one('account.invoice', string='Invoice', ondelete='cascade', index=True)
     name = fields.Char(string='Tax Description', required=True)
     tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict')
@@ -1286,7 +1280,7 @@ class AccountInvoiceTax(models.Model):
     sequence = fields.Integer(help="Gives the sequence order when displaying a list of invoice tax.")
     company_id = fields.Many2one('res.company', string='Company', related='account_id.company_id', store=True, readonly=True)
     currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True, readonly=True)
-    base = fields.Monetary(string='Base', compute='_compute_base_amount')
+    base = fields.Monetary(string='Base')
 
 
 
