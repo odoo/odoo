@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-06-04 07:41+0000\n"
+"PO-Revision-Date: 2016-06-07 12:04+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -132,7 +132,7 @@ msgid ""
 "                interface.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                单击来加入一个新的产品。\n              </p><p>\n                你必须定义你要通过POS销售的\n                每一个产品。\n              </p><p>\n                不要忘了设置价格和所属的\n                分类。 如果一个产品没有POS分类\n                ，你就不能通过POS来\n               销售它。\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击来加入一个新的产品。\n              </p><p>\n                你必须定义你要通过POS销售的\n                每一个产品。\n              </p><p>\n                不要忘了设置价格和所属的\n                类别。 如果一个产品没有POS分类\n                ，你就不能通过POS来\n               销售它。\n              </p>\n            "
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_account_journal_form
@@ -197,7 +197,7 @@ msgstr "<p class=\"oe_view_nocontent_create\">\n                单击来开始�
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "= Theoretical Closing Balance"
-msgstr "=理论的关账余额"
+msgstr "=理论的期末余额"
 
 #. module: point_of_sale
 #. openerp-web
@@ -656,7 +656,7 @@ msgstr "请检查你的网络连接然后重试。"
 #. module: point_of_sale
 #: field:pos.category,child_id:0
 msgid "Children Categories"
-msgstr "儿童分类"
+msgstr "儿童类"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chimay_bleu_33cl_product_template
@@ -727,7 +727,7 @@ msgstr "已关闭"
 #: selection:pos.session,state:0 selection:pos.session.opening,pos_state:0
 #, python-format
 msgid "Closed & Posted"
-msgstr "关闭 & 登账"
+msgstr "关闭 & 过账"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
@@ -1349,7 +1349,7 @@ msgstr "错误"
 #. module: point_of_sale
 #: constraint:pos.category:0
 msgid "Error ! You cannot create recursive categories."
-msgstr "错误！您不能创建循环分类。"
+msgstr "错误！您不能创建循环类别。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:383
@@ -1483,7 +1483,7 @@ msgstr "果酒"
 #. module: point_of_sale
 #: view:pos.order:point_of_sale.view_pos_pos_form
 msgid "General Information"
-msgstr "通用信息"
+msgstr "一般信息"
 
 #. module: point_of_sale
 #: view:pos.confirm:point_of_sale.view_pos_confirm
@@ -1904,7 +1904,7 @@ msgid ""
 "Medium-sized image of the category. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr "分类里的中等大小的图片。它被在保持比率不变的情况下自动更改为128x128px，。在一些看板视图中的窗体视图中使用此字段。"
+msgstr "类别里的中等大小的图片。它被在保持比率不变的情况下自动更改为128x128px，。在一些看板视图中的窗体视图中使用此字段。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:799
@@ -1912,7 +1912,7 @@ msgstr "分类里的中等大小的图片。它被在保持比率不变的情况
 msgid ""
 "Missing source or destination location for picking type %s. Please configure"
 " those fields and try again."
-msgstr "分拣类型 %s的目标库位丢失，请设置这个字段然后重试。"
+msgstr "拣货类型 %s的目标库位丢失，请设置这个字段然后重试。"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
@@ -2504,7 +2504,7 @@ msgstr "分拣"
 #. module: point_of_sale
 #: field:pos.config,picking_type_id:0 field:pos.order,picking_type_id:0
 msgid "Picking Type"
-msgstr "分拣类型"
+msgstr "拣货类型"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pils
@@ -2780,7 +2780,7 @@ msgstr "产品号"
 #. module: point_of_sale
 #: view:pos.category:point_of_sale.product_pos_category_tree_view
 msgid "Product Product Categories"
-msgstr "产品类别"
+msgstr "产品产品类别"
 
 #. module: point_of_sale
 #: field:report.pos.order,product_qty:0
@@ -2803,7 +2803,7 @@ msgstr "产品"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_category
 msgid "Public Category"
-msgstr "公用分类"
+msgstr "公开类别"
 
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
@@ -3238,7 +3238,7 @@ msgid ""
 "Small-sized image of the category. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr "分类里的小尺寸图片。自动转化为64x64px图片，保持原来的相对比例。当需要小尺寸图片时使用此字段。"
+msgstr "类别里的小尺寸图片。自动转化为64x64px图片，保持原来的相对比例。当需要小尺寸图片时使用此字段。"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.soda
@@ -3710,7 +3710,7 @@ msgstr "这个序列号是由Odoo自动产生的，不过你可以自己定义�
 #. module: point_of_sale
 #: help:product.template,pos_categ_id:0
 msgid "Those categories are used to group similar products for point of sale."
-msgstr "这些分类用于为POS的类似产品分组。"
+msgstr "这些类别用于为POS的类似产品分组。"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.timmermans_faro_37,5cl_product_template
