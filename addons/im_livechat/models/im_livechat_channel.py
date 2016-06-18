@@ -215,27 +215,27 @@ class ImLivechatChannelRule(models.Model):
 
 
     regex_url = fields.Char('URL Regex',
-        help="Regular expression identifying the web page on which the rules will be applied.")
+        help="Regular expression specifying the web pages this rule will be applied on.")
     action = fields.Selection([('display_button', 'Display the button'), ('auto_popup', 'Auto popup'), ('hide_button', 'Hide the button')],
         string='Action', required=True, default='display_button',
-        help="* Select 'Display the button' to simply display the chat button on the pages.\n"\
-             "* Select 'Auto popup' for to display the button, and automatically open the conversation window.\n"\
-             "* Select 'Hide the button' to hide the chat button on the pages.")
+        help="* 'Display the button' displays the chat button on the pages.\n"\
+             "* 'Auto popup' displays the button and automatically open the conversation pane.\n"\
+             "* 'Hide the button' hides the chat button on the pages.")
     auto_popup_timer = fields.Integer('Auto popup timer', default=0,
-        help="Delay (in seconds) to automatically open the converssation window. Note : the selected action must be 'Auto popup', otherwise this parameter will not be take into account.")
+        help="Delay (in seconds) to automatically open the conversation window. Note: the selected action must be 'Auto popup' otherwise this parameter will not be taken into account.")
     channel_id = fields.Many2one('im_livechat.channel', 'Channel',
         help="The channel of the rule")
     country_ids = fields.Many2many('res.country', 'im_livechat_channel_country_rel', 'channel_id', 'country_id', 'Country',
-        help="The actual rule will match only for this country. So if you set select 'Belgium' and 'France' and you set the action to 'Hide Buttun', this 2 country will not be see the support button for the specified URL. This feature requires GeoIP installed on your server.")
+        help="The rule will only be applied for these countries. Example: if you select 'Belgium' and 'United States' and that you set the action to 'Hide Button', the chat button will be hidden on the specified URL from the visitors located in these 2 countries. This feature requires GeoIP installed on your server.")
     sequence = fields.Integer('Matching order', default=10,
         help="Given the order to find a matching rule. If 2 rules are matching for the given url/country, the one with the lowest sequence will be chosen.")
 
     def match_rule(self, channel_id, url, country_id=False):
-        """ determine if a rule of the given channel match with the given url
+        """ determine if a rule of the given channel matches with the given url
             :param channel_id : the identifier of the channel_id
             :param url : the url to match with a rule
             :param country_id : the identifier of the country
-            :returns the rule that match the given condition. False otherwise.
+            :returns the rule that matches the given condition. False otherwise.
             :rtype : im_livechat.channel.rule
         """
         def _match(rules):
