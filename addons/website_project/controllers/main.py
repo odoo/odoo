@@ -25,23 +25,16 @@ class WebsiteAccount(website_account):
         return response
 
     @http.route(['/my/projects', '/my/projects/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_projects(self, page=1, date_begin=None, date_end=None, state=None, sortby=None, **kw):
+    def portal_my_projects(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
         Project = request.env['project.project']
-
-        filters = {
-            'all': {'label': _('All'), 'domain': []},
-            'open': {'label': _('In Progress'), 'domain': [("state", "=", "open")]},
-            'closed': {'label': _('Close'), 'domain': [("state", "=", 'close')]},
-        }
 
         sortings = {
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
             'name': {'label': _('Name'), 'order': 'name'},
-            'state': {'label': _('State'), 'order': 'state'},
         }
 
-        domain = filters.get(state, filters['all'])['domain']
+        domain = []
         order = sortings.get(sortby, sortings['date'])['order']
 
         # archive groups - Default Group By 'create_date'
@@ -52,7 +45,7 @@ class WebsiteAccount(website_account):
         project_count = Project.search_count(domain)
         pager = request.website.pager(
             url="/my/projects",
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'state': state},
+            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
             total=project_count,
             page=page,
             step=self._items_per_page
@@ -64,8 +57,6 @@ class WebsiteAccount(website_account):
         values.update({
             'date': date_begin,
             'date_end': date_end,
-            'filters': filters,
-            'state': state,
             'sortings': sortings,
             'sortby': sortby,
             'projects': projects,

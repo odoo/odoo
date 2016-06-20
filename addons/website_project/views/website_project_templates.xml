@@ -52,18 +52,7 @@
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="sortby">
                             <li t-foreach="sortings" t-as="option" t-attf-class="#{sortby == option and 'active'}">
-                                <a t-att-href="default_url + '?' + keep_query('date_begin', 'date_end', 'state', sortby=option)"><span t-esc="sortings.get(option).get('label')"/></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="dropdown pull-right mr8">
-                        <button id="filters" class="btn btn-default" type="button" data-toggle="dropdown">
-                            Status: <span t-esc="filters.get(state, {}).get('label', 'All')"/>
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="filters">
-                            <li t-foreach="filters" t-as="option" t-attf-class="#{state == option and 'active'}">
-                                <a t-att-href="default_url + '?' + keep_query('date_begin', 'date_end', 'sortby', state=option)"><span t-esc="filters.get(option).get('label')"/></a>
+                                <a t-att-href="default_url + '?' + keep_query('date_begin', 'date_end', sortby=option)"><span t-esc="sortings.get(option).get('label')"/></a>
                             </li>
                         </ul>
                     </div>
@@ -79,7 +68,6 @@
                     <thead>
                         <tr class="active">
                             <th class="col-md-6">Name</th>
-                            <th>Status</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -87,9 +75,6 @@
                         <tr t-foreach="projects" t-as="project">
                             <td>
                                 <a t-attf-href="/my/project/#{project.id}?{{ keep_query() }}"><span t-field="project.name"/></a>
-                            </td>
-                            <td>
-                                <span class="label label-info" title="Current state of the project" t-field="project.state" />
                             </td>
                             <td>
                                 <a t-if="project.use_tasks" t-attf-href="/my/tasks?project=#{project.id}">
@@ -129,7 +114,6 @@
                                     <div class="col-md-12">
                                         <h4>
                                             Project - <span t-field="project.name"/>
-                                            <span t-field="project.state" class="pull-right label label-info" title="Current stage of this project"/>
                                         </h4>
                                     </div>
                                 </div>

@@ -31,8 +31,6 @@ class TestPortalProject(TestPortalProjectBase):
         # Do: Chell reads project -> ok (portal ok public)
         pigs.sudo(self.user_portal).read(['user_id'])
         # Do: Donovan reads project -> ko (public ko portal)
-        # TODO: Change the except_orm to Warning ( Because here it's call check_access_rule
-        # which still generate exception in except_orm.)
         self.assertRaises(AccessError, pigs.sudo(self.user_public).read, ['user_id'])
         # Test: no access right to project.task
         self.assertRaises(AccessError, self.env['project.task'].sudo(self.user_public).search, [])
