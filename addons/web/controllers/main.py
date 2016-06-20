@@ -1139,8 +1139,8 @@ class Export(http.Controller):
         ]
 
     def fields_get(self, model):
-        Model = request.session.model(model)
-        fields = Model.fields_get(False, request.context)
+        Model = request.env[model]
+        fields = Model.fields_get()
         return fields
 
     @http.route('/web/export/get_fields', type='json', auth="user")
