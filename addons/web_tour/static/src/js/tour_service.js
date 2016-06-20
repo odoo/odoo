@@ -4,6 +4,7 @@ odoo.define('web_tour.tour', function(require) {
 var ajax = require('web.ajax');
 var config = require('web.config');
 var core = require('web.core');
+var Model = require('web.Model');
 var session = require('web.session');
 var TourManager = require('web_tour.TourManager');
 
@@ -12,13 +13,16 @@ var QWeb = core.qweb;
 if (config.device.size_class <= config.device.SIZES.XS) { return; }
 
 return session.is_bound.then(function () {
-    var template_def;
+    var defs = [];
+    // Load the list of consumed tours and the tip template only if we are admin, in the frontend,
+    // tours being only available for the admin. For the backend, the list of consumed is directly
+    // in the page source.
     if (session.is_frontend && session.is_admin) {
-        // Manually load tip template if we are in the frontend, as admin
-        template_def = ajax.loadXML('/web_tour/static/src/xml/tip.xml', QWeb);
+        defs.push(new Model('web_tour.tour').call('get_consumed_tours'));
+        defs.push(ajax.loadXML('/web_tour/static/src/xml/tip.xml', QWeb));
     }
-    return $.when(template_def).then(function () {
-        var tour = new TourManager(session.web_tours);
+    return $.when.apply($, defs).then(function (consumed_tours) {
+        var tour = new TourManager(session.is_frontend ? consumed_tours : session.web_tours);
 
         // Use a MutationObserver to detect DOM changes
         var untracked_classnames = ["o_tooltip", "o_tooltip_content", "o_tooltip_overlay"];
