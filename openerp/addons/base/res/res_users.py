@@ -614,7 +614,7 @@ class GroupsImplied(models.Model):
         if values.get('users') or values.get('implied_ids'):
             # add all implied groups (to all users of each group)
             for group in self:
-                vals = {'users': zip(repeat(4), group.users.ids)}
+                vals = {'users': zip(repeat(4), group.with_context(active_test=False).users.ids)}
                 super(GroupsImplied, group.trans_implied_ids).write(vals)
         return res
 
