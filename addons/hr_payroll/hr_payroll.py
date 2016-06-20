@@ -9,6 +9,7 @@ from dateutil import relativedelta
 
 from openerp import api, tools
 from openerp.osv import fields, osv
+from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
@@ -973,7 +974,9 @@ class hr_employee(osv.osv):
     def _payslip_count(self, cr, uid, ids, field_name, arg, context=None):
         Payslip = self.pool['hr.payslip']
         return {
-            employee_id: Payslip.search_count(cr,uid, [('employee_id', '=', employee_id)], context=context)
+            employee_id: Payslip.search_count(
+                cr, SUPERUSER_ID, [('employee_id', '=', employee_id)],
+                context=context)
             for employee_id in ids
         }
 
