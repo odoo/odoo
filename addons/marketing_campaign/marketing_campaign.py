@@ -120,43 +120,6 @@ Normal - the campaign runs normally and automatically sends all emails and repor
         self.write(cr, uid, ids, {'state': 'cancelled'})
         return True
 
-    # dead code
-    def signal(self, cr, uid, model, res_id, signal, run_existing=True, context=None):
-        record = self.pool[model].browse(cr, uid, res_id, context)
-        return self._signal(cr, uid, record, signal, run_existing, context)
-
-    #dead code
-    def _signal(self, cr, uid, record, signal, run_existing=True, context=None):
-        if not signal:
-            raise ValueError('Signal cannot be False.')
-
-        Workitems = self.pool.get('marketing.campaign.workitem')
-        domain = [('object_id.model', '=', record._name),
-                  ('state', '=', 'running')]
-        campaign_ids = self.search(cr, uid, domain, context=context)
-        for campaign in self.browse(cr, uid, campaign_ids, context=context):
-            for activity in campaign.activity_ids:
-                if activity.signal != signal:
-                    continue
-
-                data = dict(activity_id=activity.id,
-                            res_id=record.id,
-                            state='todo')
-                wi_domain = [(k, '=', v) for k, v in data.items()]
-
-                wi_ids = Workitems.search(cr, uid, wi_domain, context=context)
-                if wi_ids:
-                    if not run_existing:
-                        continue
-                else:
-                    partner = self._get_partner_for(campaign, record)
-                    if partner:
-                        data['partner_id'] = partner.id
-                    wi_id = Workitems.create(cr, uid, data, context=context)
-                    wi_ids = [wi_id]
-                Workitems.process(cr, uid, wi_ids, context=context)
-        return True
-
     def _get_partner_for(self, campaign, record):
         partner_field = campaign.partner_field_id.name
         if partner_field:
