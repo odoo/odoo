@@ -10,6 +10,7 @@ import uuid
 from datetime import datetime
 from subprocess import Popen, PIPE
 from odoo import fields, tools
+from openerp import http
 from openerp.http import request
 from odoo.modules.module import get_resource_path
 import psycopg2
@@ -237,7 +238,7 @@ class AssetsBundle(object):
             return self.save_attachment('js', content)
         return attachments[0]
 
-    def js_translations(self, modules=None, lang=None):
+    def js_translations(self, modules=None, lang='en_US'):
         module_obj = self.env['ir.module.module'].sudo()
         res_lang_obj = self.env['res.lang'].sudo()
         ir_translation_obj = self.env['ir.translation'].sudo()
@@ -248,7 +249,7 @@ class AssetsBundle(object):
         lang_rec = res_lang_obj.search([("code", "=", lang)], limit=1)
         lang_params = None
         if lang_rec:
-            lang_params = lang_rec.read(["name", "direction", "date_format", "time_format", "grouping", "decimal_point", "thousands_sep"])
+            lang_params = lang_rec.read(["name", "direction", "date_format", "time_format", "grouping", "decimal_point", "thousands_sep"])[0]
 
         # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
         # done server-side when the language is loaded, so we only need to load the user's lang.
@@ -262,6 +263,7 @@ class AssetsBundle(object):
         for mod, msg_group in itertools.groupby(messages, key=operator.itemgetter('module')):
             translations_per_module.setdefault(mod, {'messages': []})
             translations_per_module[mod]['messages'].extend({'id': m['src'], 'string': m['value']} for m in msg_group)
+
         return {
             'lang_parameters': lang_params,
             'modules': translations_per_module,
