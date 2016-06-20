@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-06-06 14:15+0000\n"
+"PO-Revision-Date: 2016-06-17 12:41+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -750,7 +750,7 @@ msgid ""
 "A description of the Product that you want to communicate to your customers."
 " This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
-msgstr "一个传达给客户的、关于该产品的描述。这个描述将会拷贝到每一个销售单，交货单和客户发票/退款单。"
+msgstr "一个传达给客户的、关于该产品的说明。这个描述将会拷贝到每一个销售单，交货单和客户发票/退款单。"
 
 #. module: product
 #: help:product.template,description_purchase:0
@@ -758,14 +758,14 @@ msgid ""
 "A description of the Product that you want to communicate to your suppliers."
 " This description will be copied to every Purchase Order, Receipt and "
 "Supplier Invoice/Refund."
-msgstr "一个传达给供应商的、关于该产品的描述。这个描述将会拷贝到每一个采购单，收货单和供应商发票/退款单。"
+msgstr "一个传达给供应商的、关于该产品的说明。这个描述将会拷贝到每一个采购单，收货单和供应商发票/退款单。"
 
 #. module: product
 #: help:product.template,description:0
 msgid ""
 "A precise description of the Product, used only for internal information "
 "purposes."
-msgstr "精确的产品描述，仅用于内部备注。"
+msgstr "产品的精确说明，仅用于内部备注。"
 
 #. module: product
 #: model:product.category,name:product.product_category_7
@@ -1300,14 +1300,14 @@ msgstr "错误！你不能在价格表项目里指派这个主价格表作为其
 msgid ""
 "Error! You cannot define a rounding factor for the company's main currency "
 "that is smaller than the decimal precision of 'Account'."
-msgstr "错误！公司本位币的四舍五入系数不能定义得小于”科目“的小数位数"
+msgstr "错误！公司本位币的舍入系数不能定义得小于”科目“的小数位数"
 
 #. module: product
 #: constraint:decimal.precision:0
 msgid ""
 "Error! You cannot define the decimal precision of 'Account' as greater than "
 "the rounding factor of the company's main currency"
-msgstr "错误！你不能定义'科目'的精度大于 公司本位币的四舍五入系数。"
+msgstr "错误！你不能定义'科目'的精度大于 公司本位币的舍入系数。"
 
 #. module: product
 #: constraint:product.packaging:0
@@ -1425,7 +1425,7 @@ msgstr "毛重"
 #. module: product
 #: view:product.template:product.product_template_search_view
 msgid "Group by..."
-msgstr "分组 于"
+msgstr "分组于..."
 
 #. module: product
 #: model:product.template,name:product.product_product_17_product_template
@@ -1752,7 +1752,7 @@ msgid ""
 "Lead time in days between the confirmation of the purchase order and the "
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
-msgstr "提前期是订单确认到仓库收到货物天数,使用于采购单自动计算规划调度"
+msgstr "提前时间是订单确认到仓库收到货物天数,使用于采购单自动计算规划调度"
 
 #. module: product
 #: field:product.category,parent_left:0
@@ -2164,12 +2164,12 @@ msgstr "价格名称"
 #. module: product
 #: field:product.pricelist.item,price_round:0
 msgid "Price Rounding"
-msgstr "价格四舍五入"
+msgstr "价格舍入"
 
 #. module: product
 #: field:product.pricelist.item,price_surcharge:0
 msgid "Price Surcharge"
-msgstr "价格额外费用"
+msgstr "价格附加费用"
 
 #. module: product
 #: model:ir.model,name:product.model_product_price_type
@@ -2548,12 +2548,12 @@ msgstr "右父项"
 #. module: product
 #: view:product.pricelist.item:product.product_pricelist_item_form_view
 msgid "Rounding Method"
-msgstr "四舍五入方法"
+msgstr "舍入方法"
 
 #. module: product
 #: field:product.uom,rounding:0
 msgid "Rounding Precision"
-msgstr "四舍五入精度"
+msgstr "舍入精度"
 
 #. module: product
 #: model:product.template,name:product.product_product_45_product_template
@@ -2621,7 +2621,7 @@ msgstr "为当前产品选择一个类别"
 #: field:product.packaging,sequence:0 field:product.pricelist.item,sequence:0
 #: field:product.supplierinfo,sequence:0
 msgid "Sequence"
-msgstr "序列"
+msgstr "序号"
 
 #. module: product
 #: model:product.public.category,name:product.server
@@ -2647,7 +2647,7 @@ msgid ""
 "Sets the price so that it is a multiple of this value.\n"
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr "设定价格,因为它是一个多元价格, 四舍五入后打折或加入附加费. \n以价格9.99为例四舍五入为10附加费为-0.001."
+msgstr "设定价格，这样它是此数值的整数倍。\n舍入应用在打折后，附加费用之前。 \n要将价格设置为9.99结尾，设置舍入为10，附加费用为-0.001。"
 
 #. module: product
 #: field:product.product,image_small:0 field:product.template,image_small:0
@@ -2764,7 +2764,7 @@ msgstr "供应商信息"
 #. module: product
 #: field:product.template,seller_delay:0
 msgid "Supplier Lead Time"
-msgstr "供应商交货提前期"
+msgstr "供应商提前时间"
 
 #. module: product
 #: field:product.supplierinfo,pricelist_ids:0
