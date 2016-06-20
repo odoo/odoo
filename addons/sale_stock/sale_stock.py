@@ -20,7 +20,7 @@
 #
 ##############################################################################
 from datetime import datetime, timedelta
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare, float_is_zero
 from openerp.osv import fields, osv
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
@@ -418,10 +418,14 @@ class stock_move(osv.osv):
             res['account_analytic_id'] = sale_line.order_id.project_id and sale_line.order_id.project_id.id or False
             res['discount'] = sale_line.discount
             if move.product_id.id != sale_line.product_id.id:
-                res['price_unit'] = self.pool['product.pricelist'].price_get(
-                    cr, uid, [sale_line.order_id.pricelist_id.id],
-                    move.product_id.id, move.product_uom_qty or 1.0,
-                    sale_line.order_id.partner_id, context=context)[sale_line.order_id.pricelist_id.id]
+                precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Discount')
+                if float_is_zero(sale_line.discount, precision_digits=precision):
+                    res['price_unit'] = self.pool['product.pricelist'].price_get(
+                        cr, uid, [sale_line.order_id.pricelist_id.id],
+                        move.product_id.id, move.product_uom_qty or 1.0,
+                        sale_line.order_id.partner_id, context=context)[sale_line.order_id.pricelist_id.id]
+                else:
+                    res['price_unit'] = move.product_id.lst_price
             else:
                 res['price_unit'] = sale_line.price_unit
             uos_coeff = move.product_uom_qty and move.product_uos_qty / move.product_uom_qty or 1.0
