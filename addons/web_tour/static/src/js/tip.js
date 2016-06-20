@@ -68,7 +68,7 @@ return Widget.extend({
     },
     update: function($anchor) {
         if (!$anchor.is(this.$anchor)) {
-            this.$anchor.off();
+            this._unbind_anchor_events();
             this.$anchor = $anchor;
             this._bind_anchor_events();
         }
@@ -98,10 +98,24 @@ return Widget.extend({
         this.$el.addClass("o_animated");
     },
     _bind_anchor_events: function () {
-        var consume_event = this.$anchor.is('input,textarea') ? 'change' : 'mousedown';
-        this.$anchor.one(consume_event, this.trigger.bind(this, 'tip_consumed'));
-        this.$anchor.on('mouseenter', this._to_info_mode.bind(this));
-        this.$anchor.on('mouseleave', this._to_bubble_mode.bind(this));
+        var consume_event = "mousedown";
+        if (this.$anchor.is("textarea") || this.$anchor.filter("input").is(function () {
+            return !!$(this).attr("type").match(/^(email|number|password|search|tel|text|url)$/);
+        })) {
+            consume_event = "input";
+        }
+
+        this.$anchor.on(consume_event + ".anchor", (function (e) {
+            if (e.type !== "mousedown" || e.which === 1) { // only left click
+                this.trigger("tip_consumed");
+                this._unbind_anchor_events();
+            }
+        }).bind(this));
+        this.$anchor.on('mouseenter.anchor', this._to_info_mode.bind(this));
+        this.$anchor.on('mouseleave.anchor', this._to_bubble_mode.bind(this));
+    },
+    _unbind_anchor_events: function () {
+        this.$anchor.off(".anchor");
     },
     _get_spaced_inverted_position: function (position) {
         if (position === "right") return "left+" + this.info.space;
