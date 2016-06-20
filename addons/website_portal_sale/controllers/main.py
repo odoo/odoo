@@ -55,7 +55,7 @@ class website_account(website_account):
 
         archive_groups = self._get_archive_groups('sale.order', domain)
         if date_begin and date_end:
-            domain += [('create_date', '>=', date_begin), ('create_date', '<', date_end)]
+            domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
         # count for pager
         quotation_count = SaleOrder.search_count(domain)
@@ -91,7 +91,7 @@ class website_account(website_account):
         ]
         archive_groups = self._get_archive_groups('sale.order', domain)
         if date_begin and date_end:
-            domain += [('create_date', '>=', date_begin), ('create_date', '<', date_end)]
+            domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
         # count for pager
         order_count = SaleOrder.search_count(domain)
@@ -146,7 +146,7 @@ class website_account(website_account):
         ]
         archive_groups = self._get_archive_groups('account.invoice', domain)
         if date_begin and date_end:
-            domain += [('create_date', '>=', date_begin), ('create_date', '<', date_end)]
+            domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
         # count for pager
         invoice_count = AccountInvoice.search_count(domain)
