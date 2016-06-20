@@ -269,6 +269,9 @@ class sale_order(osv.osv):
     ]
     _order = 'date_order desc, id desc'
 
+    def _get_customer_lead(self, cr, uid, product_tmpl_id):
+        return False
+
     # Form filling
     def unlink(self, cr, uid, ids, context=None):
         sale_orders = self.read(cr, uid, ids, ['state'], context=context)
