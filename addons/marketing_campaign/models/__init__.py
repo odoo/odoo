@@ -2,3 +2,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import marketing_campaign
+import mail_template
+import ir_actions
