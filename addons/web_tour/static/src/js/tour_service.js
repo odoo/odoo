@@ -33,15 +33,19 @@ return session.is_bound.then(function () {
             }
         }, 500, {leading: false});
         var observer = new MutationObserver(check_tooltip);
-        var observe = observer.observe.bind(observer, document.body, {
-            attributes: true,
-            childList: true,
-            subtree: true,
-        });
+        var observe = function () {
+            $(function () {
+                observer.observe(document.body, {
+                    attributes: true,
+                    childList: true,
+                    subtree: true,
+                });
+            });
+        };
 
         // Enable the MutationObserver for the admin or if a tour is running, when the DOM is ready
         if (session.is_admin || tour.running_tour) {
-            $(observe);
+            observe();
         }
         // Override the TourManager so that it enables/disables the observer when necessary
         if (!session.is_admin) {
