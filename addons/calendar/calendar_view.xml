@@ -13,7 +13,7 @@
                 <field name="name"/>
             </tree>
         </field>
-    </record>    
+    </record>
 
     <record id="action_calendar_event_type" model="ir.actions.act_window">
         <field name="name">Meeting Types</field>
@@ -61,7 +61,7 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="view_calendar_alarm_tree"/>
     </record>
-    
+
     <!-- Calendar Events Form View -->
 
     <record model="ir.ui.view" id="view_calendar_event_form">
@@ -173,14 +173,14 @@
                                     </div>
                                 </div>
                                 <group>
-                                    <field name="class"/>
+                                    <field name="privacy"/>
                                     <field name="show_as"/>
-                                    <field name="rrule" invisible="1" readonly="0" />                                    
+                                    <field name="rrule" invisible="1" readonly="0" />
                                     <field name="recurrent_id" invisible="1" />
                                 </group>
                             </group>
                         </page>
-                        
+
                         <page string="Invitations" groups="base.group_no_one">
                             <button name="do_sendmail" type="object" string="Send mail" icon="fa-envelope" class="oe_link"/>
                             <field name="attendee_ids" widget="one2many" >
@@ -188,7 +188,7 @@
                                     <field name="partner_id" />
                                     <field name="state" />
                                     <field name="email" widget="email"/>
-                                     
+
                                     <button name="do_tentative" states="needsAction,declined,accepted" string="Uncertain" type="object" icon="fa-asterisk" />
                                     <button name="do_accept" string="Accept" states="needsAction,tentative,declined" type="object" icon="fa-check text-success"/>
                                     <button name="do_decline" string="Decline" states="needsAction,tentative,accepted" type="object" icon="fa-times-circle text-danger"/>
@@ -210,7 +210,7 @@
             </form>
         </field>
     </record>
-    
+
     <record model="ir.ui.view" id="view_calendar_event_form_popup">
         <field name="name">Meetings Dialog</field>
         <field name="model">calendar.event</field>
@@ -268,7 +268,7 @@
         <field name="model">calendar.event</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <calendar string="Meetings" date_start="start" date_stop="stop" date_delay="duration" all_day="allday" 
+            <calendar string="Meetings" date_start="start" date_stop="stop" date_delay="duration" all_day="allday"
                          display="[name]" color="color_partner_id" attendee="partner_ids" avatar_model="res.partner"
                          use_contacts="True" event_open_popup="%(calendar.view_calendar_event_form_popup)s">
                 <field name="name"/>
@@ -290,7 +290,7 @@
                 <field name="categ_ids"/>
                 <field name="user_id"/>
                 <field name="show_as"/>
-                <field name="class" string="Privacy"/>
+                <field name="privacy" string="Privacy"/>
                 <filter string="My Events" domain="[('user_id','=',uid)]" help="My Events"/>
                 <filter string="My Meetings" help="My Meetings" name="mymeetings" context='{"mymeetings": 1}'/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
@@ -298,7 +298,7 @@
                 <group expand="0" string="Group By">
                     <filter string="Responsible" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Availability" domain="[]" context="{'group_by':'show_as'}"/>
-                    <filter string="Privacy" domain="[]" context="{'group_by':'class'}"/>
+                    <filter string="Privacy" domain="[]" context="{'group_by':'privacy'}"/>
                 </group>
             </search>
         </field>
@@ -353,7 +353,7 @@
         <field name="view_mode">form,calendar,tree</field>
         <field name="view_id" ref="view_calendar_event_form"/>
     </record>
-       
-    
+
+
     </data>
 </openerp>
