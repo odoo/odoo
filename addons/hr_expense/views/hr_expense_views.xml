@@ -205,39 +205,41 @@
         </record>
 
         <record id="hr_expense_actions_my_all" model="ir.actions.act_window">
-            <field name="name">My Expenses</field>
+            <field name="name">All My Expenses</field>
             <field name="res_model">hr.expense</field>
             <field name="view_mode">tree,kanban,form,graph,pivot</field>
             <field name="search_view_id" ref="view_hr_expense_filter"/>
             <field name="domain">[('employee_id.user_id', '=', uid)]</field>
             <field name="context">{'show_report': True}</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                  Create a new expense.<br/>
-                  <!-- Or send receipts to .... -->
-              </p><p>
-                  Expenses will go through these steps:
-              </p><ol>
-                  <li>You record expenses</li>
-                  <li>Periodically, you submit expenses report to your manager,</li>
-                  <li>Once approved, your expenses report goes to the accounting,</li>
-                  <li>The accountant validates journal entries and reimburse you.</li>
-              </ol>
+              <p>
+                The steps to process expenses are:
+                <ol>
+                    <li>You record expenses,</li>
+                    <li>Periodically, you submit expenses report to your manager,</li>
+                    <li>Once approved, your expense report, goes to the accounting,</li>
+                    <li>The accountant validates entries and reimburse you.</li>
+                </ol>
+              </p>
             </field>
         </record>
 
         <record id="hr_expense_actions_my_unsubmitted" model="ir.actions.act_window">
-            <field name="name">My Expenses</field>
+            <field name="name">All My Unsubmitted Expenses</field>
             <field name="res_model">hr.expense</field>
             <field name="view_mode">tree,kanban,form,graph,pivot</field>
             <field name="search_view_id" ref="view_hr_expense_filter"/>
             <field name="domain">[('employee_id.user_id', '=', uid)]</field>
             <field name="context">{'search_default_to_report': 1}</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click here to create new expenses.
-              </p><p>
-                Once you have created your expense, submit it to your manager who will validate it.
+              <p>
+                The steps to process expenses are:
+                <ol>
+                    <li>You record expenses,</li>
+                    <li>Periodically, you submit expenses report to your manager,</li>
+                    <li>Once approved, your expense report, goes to the accounting,</li>
+                    <li>The accountant validates entries and reimburse you.</li>
+                </ol>
               </p>
             </field>
         </record>
@@ -277,11 +279,56 @@
             </field>
         </record>
 
+        <record id="product_product_expense_form_view" model="ir.ui.view">
+            <field name="name">product.product.expense.form</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <form string="Expense Products">
+                    <sheet>
+                        <field name="is_product_variant" invisible="1"/>
+                        <field name='product_variant_count' invisible='1'/>
+                        <field name="id" invisible="True"/>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object"
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                    options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <field name="image_medium" widget="image" class="oe_avatar"/>
+                        <div class="oe_title">
+                            <label class="oe_edit_only" for="name" string="Product Name"/>
+                            <h1><field name="name" placeholder="Product Name"/></h1>
+                            <div name="options" groups="base.group_user" invisible="1">
+                                <div>
+                                    <field name="can_be_expensed"/>
+                                    <label for="can_be_expensed"/>
+                                </div>
+                            </div>
+                        </div>
+                        <group>
+                            <group string="General Information">
+                                <field name="type"/>
+                                <field name="lst_price"/>
+                                <field name="default_code"/>
+                                <field name="uom_id"/>
+                            </group>
+                            <group string="Accounting">
+                                <field name="property_account_expense_id"/>
+                                <field name="supplier_taxes_id" widget="many2many_tags"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record id="hr_expense_product" model="ir.actions.act_window">
             <field name="name">Expense Products</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="product_product_expense_form_view"/>
             <field name="context">{"default_can_be_expensed": 1}</field>
             <field name="domain">[('can_be_expensed', '=', True)]</field>
             <field name="help" type="html">
@@ -390,8 +437,7 @@
                         </group>
                         <group>
                             <field name="journal_id" domain="[('type', '=', 'purchase')]" groups="account.group_account_user" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'own_account')]}"/>
-                            <field name="bank_journal_id" groups="account.group_account_user" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'company_account')]}"/>
-                            <field name="account_id" groups="account.group_account_user"/>
+                            <field name="bank_journal_id" groups="account.group_account_user" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'company_account')]}" domain="[('type', 'in', ['cash', 'bank'])]"/>
                             <field name="accounting_date" groups="account.group_account_user" attrs="{'invisible': [('state', 'not in', ['approve', 'post', 'done'])]}"/>
                             <field name="account_move_id" attrs="{'invisible': [('state', 'not in', ['post', 'done'])]}" groups="account.group_account_user"/>
                         </group>
