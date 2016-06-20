@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <template id="hr_expense_planner">
+        <t t-call="web_planner.pages">
+            <t t-call="web_planner.category">
+                <t t-set="menu_categorytitle">Automation</t>
+                <t t-set="menu_categoryclasses" t-value="'fa-magic'"/>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title">Incoming Emails</t>
+                    <p class="text-muted">
+                        There are several ways for your company to create expenses with Odoo. 
+                        One of them is using your company's generic email address as a trigger 
+                        to create a new expense in the system. Try it! Send an email with the 
+                        receipt in attachment to the email address below. This will create an
+                        expense in the system with your information automatically set on it.
+                        Be sure that your email address is correctly set on your employee or your
+                        employee's user. Try to set the price in your mail subject and see what 
+                        happens.
+                    </p>
+                    <p>
+                        That's the easiest way to integrate Odoo with third party apps.
+                    </p>
+                    <h4>The point of contact <strong>for all your expenses when you're out of office</strong></h4>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="well well-sm text-center">
+                                <h6><span class="fa" data-icon="&#xe01e;"/><t t-if="alias_name and alias_domain"> <t t-esc="alias_name"/>@<t t-esc="alias_domain"/></t></h6>
+                            </div>
+                            <div class="well well-sm text-center relative">
+                                <p>
+                                    This email address has been preconfigured as the default
+                                    for your sales department.<br/>
+                                    <a t-att-href="prepare_backend_url('hr_expense.action_hr_expense_configuration')">(you can change it here)</a>
+                                </p>
+                                <span class="arrow-down"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="well well-lg">
+                                <h4><span class="label label-default text-center odoo_purple">Incoming email</span></h4>
+                                <span class="fa fa-angle-down fa-2x"></span>
+                                <h4><span class="label label-default text-center odoo_purple">Expense</span></h4>
+                                <span class="fa fa-angle-down fa-2x"></span>
+                                <h4><span class="label label-default text-center odoo_purple">Report</span></h4>
+                                <span class="fa fa-angle-down fa-2x"></span>
+                                <h4><span class="label label-default text-center odoo_purple">Validation</span></h4>
+                                <span class="fa fa-angle-down fa-2x"></span>
+                                <h4><span class="label label-default text-center odoo_purple">Payment</span></h4>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="well well-lg">
+                                <p><strong>
+                                <h4><a href="mailto:info@odoo.com?subject=HrExpense%20Planner" target="_blank">Contact Us</a></h4>to setup your own domain
+                                 name (e.g. sales@yourcompany.com)</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert alert-info" role="alert">
+                        <p>Don't forget:</p>
+                        <ul>
+                            <li>Set your email address on your employee. Otherwise, the expense will not be created.</li>
+                            <li>Put your receipt as an attachement. You'll need it one day or another as proof. Let's start directly.</li>
+                            <li>Communicate the email address to your colleagues.</li>
+                            <li>Tip: You can type the expense amount on the mail subject to set it automatically in Odoo. You can also put the product code into brackets if you often use it. By default the product 'Fixed Cost' will be used.</li>
+                        </ul>
+                    </div>
+                </t>
+            </t>
+
+            <t t-call="web_planner.page">
+                <t t-set="page_title">End</t>
+                <t t-set="hide_title" t-value="True"/>
+                <t t-set="hide_from_menu" t-value="True"/>
+                <t t-set="hide_mark_as_done" t-value="True"/>
+                <h1 class="text-center o_planner_trophy" data-icon="&#xe006;" />
+                <div class="text-center">
+                    <h1>Congratulations, you're done!</h1>
+                    <h3>We hope this process helped your managing your expenses in a new way.</h3>
+                    <h4>Don't hesitate to <a href="mailto:info@odoo.com?subject=HrExpense%20Planner" target="_blank">send us an email</a> to describe<br/> your experience or to suggest improvements!</h4>
+
+                    <p>Have a wonderful day!<br/>- The Odoo Team</p>
+                    <img src="/web_planner/static/src/img/odoo_logo.png"/>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!--Planner Data-->
+    <record id="planner_hr_expense" model="web.planner">
+        <field name="name">Expense strategy planner</field>
+        <field name="view_id" ref="hr_expense_planner"/>
+        <field name="menu_id" ref="hr_expense.menu_hr_expense_root"/>
+        <field name="planner_application">planner_hr_expense</field>
+        <field name="tooltip_planner"><![CDATA[
+            Manage your expenses more efficiently! Create them immediatly by sending the receipts by email!
+            ]]>
+        </field>
+    </record>
+
+</odoo>

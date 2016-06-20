@@ -79,4 +79,11 @@ class HrExpenseRegisterPaymentWizard(models.TransientModel):
         body = (_("A payment of %s %s with the reference %s related to your expense %s has been made.") % (payment.amount, payment.currency_id.symbol, payment.name, expense_sheet.name))
         expense_sheet.message_post(body=body)
 
+        # Reconcile the payment and the expense, i.e. lookup on the payable account move lines
+        account_move_lines_to_reconcile = self.env['account.move.line']
+        for line in payment.move_line_ids + expense_sheet.account_move_id.line_ids:
+            if line.account_id.internal_type == 'payable':
+                account_move_lines_to_reconcile |= line
+        account_move_lines_to_reconcile.reconcile()
+
         return {'type': 'ir.actions.act_window_close'}

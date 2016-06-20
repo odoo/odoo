@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, fields, models, _
-from openerp.exceptions import UserError
+import re
 
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+from odoo.tools import email_split
 import openerp.addons.decimal_precision as dp
 
 
@@ -113,6 +115,7 @@ class HrExpense(models.Model):
             'context': {
                 'default_expense_line_ids': [line.id for line in self],
                 'default_employee_id': self[0].employee_id.id,
+                'default_name': self[0].name if len(self.ids) == 1 else ''
             }
         }
 
@@ -227,8 +230,8 @@ class HrExpense(models.Model):
     def _move_line_get(self):
         account_move = []
         for expense in self:
-            if expense.sheet_id and expense.sheet_id.account_id:
-                account = expense.sheet_id.account_id
+            if expense.account_id:
+                account = expense.account_id
             elif expense.product_id:
                 account = expense.product_id.product_tmpl_id._get_product_accounts()['expense']
                 if not account:
@@ -275,6 +278,82 @@ class HrExpense(models.Model):
         res['context'] = {'default_res_model': 'hr.expense', 'default_res_id': self.id}
         return res
 
+    @api.model
+    def get_empty_list_help(self, help_message):
+        if help_message:
+            alias_record = self.env.ref('hr_expense.mail_alias_expense')
+            if alias_record and alias_record.alias_domain and alias_record.alias_name:
+                dynamic_help = '<p>%s</p>' % _("""Create a new expense, or send receipts by email to %(link)s  to automatically create a new expense. Send an email right now and see it here.""") % {
+                    'link': "<a href='mailto:%(email)s'>%(email)s</a>" % {'email': '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)}
+                }
+                return '<p class="oe_view_nocontent_create">%s</p>%s%s' % (
+                    _('Click to add a new expense'),
+                    dynamic_help,
+                    help_message)
+        return super(HrExpense, self).get_empty_list_help(help_message)
+
+    @api.model
+    def message_new(self, msg_dict, custom_values=None):
+        if custom_values is None:
+            custom_values = {}
+
+        # Retrieve the email address from the email field. The string is constructed like
+        # 'foo <bar>'. We will extract 'bar' from this
+        email_address = email_split(msg_dict.get('email_from', False))[0]
+
+        # Look after an employee who has this email address or an employee for whom the related
+        # user has this email address. In the case not employee is found, we send back an email
+        # to explain that the expense will not be created.
+        employee = self.env['hr.employee'].search([('work_email', 'ilike', email_address)], limit=1)
+        if not employee:
+            employee = self.env['hr.employee'].search([('user_id.email', 'ilike', email_address)], limit=1)
+        if not employee:
+            # Send back an email to explain why the expense has not been created
+            mail_template = self.env.ref('hr_expense.mail_template_data_expense_unknown_email_address')
+            mail_template.with_context(email_to=email_address).send_mail(self.env.ref('base.module_hr_expense').id)
+            return False
+
+        expense_description = msg_dict.get('subject', '')
+
+        # Match the first occurence of '[]' in the string and extract the content inside it
+        # Example: '[foo] bar (baz)' becomes 'foo'. This is potentially the product code
+        # of the product to encode on the expense. If not, take the default product instead
+        # which is 'Fixed Cost'
+        default_product = self.env.ref('hr_expense.product_product_fixed_cost')
+        pattern = '\[([^)]*)\]'
+        product_code = re.search(pattern, expense_description)
+        if product_code is None:
+            product = default_product
+        else:
+            expense_description = expense_description.replace(product_code.group(), '')
+            product = self.env['product.product'].search([('default_code', 'ilike', product_code.group(1))]) or default_product
+
+        pattern = '[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?'
+        # Match the last occurence of a float in the string
+        # Example: '[foo] 50.3 bar 34.5' becomes '34.5'. This is potentially the price
+        # to encode on the expense. If not, take 1.0 instead
+        expense_price = re.findall(pattern, expense_description)
+        # TODO: International formatting
+        if not expense_price:
+            price = 1.0
+        else:
+            price = expense_price[-1][0]
+            expense_description = expense_description.replace(price, '')
+            try:
+                price = float(price)
+            except ValueError:
+                price = 1.0
+
+        custom_values.update({
+            'name': expense_description.strip(),
+            'employee_id': employee.id,
+            'product_id': product.id,
+            'product_uom_id': product.uom_id.id,
+            'quantity': 1,
+            'unit_amount': price
+        })
+        return super(HrExpense, self).message_new(msg_dict, custom_values)
+
 class HrExpenseSheet(models.Model):
 
     _name = "hr.expense.sheet"
@@ -304,7 +383,6 @@ class HrExpenseSheet(models.Model):
         help="The journal used when the expense is done.")
     bank_journal_id = fields.Many2one('account.journal', string='Bank Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, default=lambda self: self.env['account.journal'].search([('type', 'in', ['case', 'bank'])], limit=1), help="The payment method used when the expense is paid by the company.")
     accounting_date = fields.Date(string="Accounting Date")
-    account_id = fields.Many2one('account.account', string='Account', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, default=lambda self: self.env['ir.property'].get('property_account_payable_id', 'account.chart.template'))
     account_move_id = fields.Many2one('account.move', string='Journal Entry', copy=False, track_visibility="onchange")
     department_id = fields.Many2one('hr.department', string='Department', states={'post': [('readonly', True)], 'done': [('readonly', True)]})
 
@@ -363,14 +441,6 @@ class HrExpenseSheet(models.Model):
     def _onchange_employee_id(self):
         self.address_id = self.employee_id.address_home_id
         self.department_id = self.employee_id.department_id
-        self.account_id = self.employee_id.address_home_id.id and self.employee_id.address_home_id.property_account_payable_id.id
-
-    @api.onchange('payment_mode')
-    def _onchange_payment_mode(self):
-        if self.payment_mode == 'own_account':
-            self.account_id = self.employee_id.address_home_id.property_account_payable_id.id
-        else:
-            self.account_id = self.bank_journal_id.default_credit_account_id.id        
 
     @api.one
     @api.depends('expense_line_ids')
