@@ -22,7 +22,7 @@ return core.Class.extend({
         this.$body = $('body');
         this.active_tooltips = {};
         this.tours = {};
-        this.consumed_tours = consumed_tours;
+        this.consumed_tours = consumed_tours || [];
         this.running_tour = local_storage.getItem(getRunningKey());
         this.TourModel = new Model('web_tour.tour');
     },
