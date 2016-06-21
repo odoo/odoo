@@ -147,7 +147,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
         context.update(context1)
         if action['type'] in ['ir.actions.act_window', 'ir.actions.submenu']:
             for key in ('res_id', 'res_model', 'view_type', 'view_mode',
-                    'limit', 'auto_refresh', 'search_view', 'auto_search', 'search_view_id'):
+                        'limit', 'search_view', 'auto_search', 'search_view_id'):
                 datas[key] = action.get(key, datas.get(key, None))
 
             view_id = False
