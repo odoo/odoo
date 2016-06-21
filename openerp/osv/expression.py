@@ -961,7 +961,10 @@ class expression(object):
                 if right is not False:
                     if isinstance(right, basestring):
                         op = {'!=': '=', 'not like': 'like', 'not ilike': 'ilike'}.get(operator, operator)
-                        ids2 = [x[0] for x in comodel.name_search(cr, uid, right, [], op, context=context, limit=None)]
+                        domain = column._domain
+                        if callable(domain):
+                            domain = domain(model)
+                        ids2 = [x[0] for x in comodel.name_search(cr, uid, right, domain or [], op, context=context, limit=None)]
                         if ids2:
                             operator = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
                     elif isinstance(right, collections.Iterable):
@@ -1012,7 +1015,10 @@ class expression(object):
                     if right is not False:
                         if isinstance(right, basestring):
                             op = {'!=': '=', 'not like': 'like', 'not ilike': 'ilike'}.get(operator, operator)
-                            res_ids = [x[0] for x in comodel.name_search(cr, uid, right, [], op, context=context, limit=None)]
+                            domain = column._domain
+                            if callable(domain):
+                                domain = domain(model)
+                            res_ids = [x[0] for x in comodel.name_search(cr, uid, right, domain or [], op, context=context, limit=None)]
                             if res_ids:
                                 operator = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
                         else:

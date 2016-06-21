@@ -641,7 +641,7 @@ Model Reference
     .. automethod:: read
     .. automethod:: read_group
 
-    .. rubric:: Research
+    .. rubric:: Searching
 
     .. automethod:: search
     .. automethod:: search_count

@@ -2632,8 +2632,8 @@ class BaseModel(object):
                                     self._init_column(cr, k, context=context)
                                 # add the NOT NULL constraint
                                 try:
-                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k), log_exceptions=False)
                                     cr.commit()
+                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k), log_exceptions=False)
                                     _schema.debug("Table '%s': column '%s': added NOT NULL constraint",
                                         self._table, k)
                                 except Exception:
