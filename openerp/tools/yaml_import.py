@@ -757,7 +757,6 @@ class YamlInterpreter(object):
             'view_mode': node.view_mode or 'tree,form',
             'usage': node.usage,
             'limit': node.limit,
-            'auto_refresh': node.auto_refresh,
             'multi': getattr(node, 'multi', False),
         }
 

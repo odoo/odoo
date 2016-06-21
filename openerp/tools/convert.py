@@ -360,7 +360,6 @@ form: module.record_id""" % (xml_id,)
         view_mode = rec.get('view_mode','').encode('utf-8') or 'tree,form'
         usage = rec.get('usage','').encode('utf-8')
         limit = rec.get('limit','').encode('utf-8')
-        auto_refresh = rec.get('auto_refresh','').encode('utf-8')
         uid = self.uid
 
         # Act_window's 'domain' and 'context' contain mostly literals
@@ -390,7 +389,6 @@ form: module.record_id""" % (xml_id,)
             'view_mode': view_mode,
             'usage': usage,
             'limit': limit,
-            'auto_refresh': auto_refresh,
             'uid' : uid,
             'active_id': active_id,
             'active_ids': active_ids,
@@ -420,7 +418,6 @@ form: module.record_id""" % (xml_id,)
             'view_mode': view_mode,
             'usage': usage,
             'limit': limit,
-            'auto_refresh': auto_refresh,
         }
 
         if rec.get('groups'):

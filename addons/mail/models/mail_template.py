@@ -260,7 +260,7 @@ class MailTemplate(models.Model):
                 'view_mode': 'form,tree',
                 'view_id': view.id,
                 'target': 'new',
-                'auto_refresh': 1})
+            })
             ir_value = IrValuesSudo.create({
                 'name': button_name,
                 'model': src_obj,
