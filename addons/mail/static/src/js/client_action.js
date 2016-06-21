@@ -293,11 +293,11 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
 
     render_sidebar: function () {
         var self = this;
-        var $sidebar = $(QWeb.render("mail.chat.Sidebar", {
+        var $sidebar = this._render_sidebar({
             active_channel_id: this.channel ? this.channel.id: undefined,
             channels: chat_manager.get_channels(),
             needaction_counter: chat_manager.get_needaction_counter(),
-        }));
+        });
         this.$(".o_mail_chat_sidebar").html($sidebar.contents());
 
         this.$('.o_mail_add_channel[data-type=public]').find("input").autocomplete({
@@ -347,6 +347,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 chat_manager.create_channel(name, "private");
             }
         });
+    },
+
+    _render_sidebar: function (options) {
+        return $(QWeb.render("mail.chat.Sidebar", options));
     },
 
     render_snackbar: function (template, context, timeout) {

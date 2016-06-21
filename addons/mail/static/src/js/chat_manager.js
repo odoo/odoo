@@ -273,6 +273,9 @@ function make_channel (data, options) {
     } else if ('anonymous_name' in data) {
         channel.name = data.anonymous_name;
     }
+    if (data.last_message_date) {
+        channel.last_message_date = moment(time.str_to_datetime(data.last_message_date));
+    }
     channel.is_chat = !channel.type.match(/^(public|private|static)$/);
     if (data.message_unread_counter) {
         update_channel_unread_counter(channel, data.message_unread_counter);
