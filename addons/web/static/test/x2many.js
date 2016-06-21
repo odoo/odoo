@@ -66,10 +66,45 @@ Tour.register({
         },
         {
             title:      "check the onchange from the o2m to the m2m",
-            waitFor:    '.tab-pane:eq(1) .o_form_field.o_view_manager_content tbody tr td:contains(user_test)',
+            waitFor:    '.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr td:contains(user_test)',
+        },
+
+        // add ourself as participant
+        {
+            title:      "change tab to Participants",
+            element:    '[data-toggle="tab"]:contains(Participants)'
+        },
+        {
+            title:      "click to add participants",
+            element:    '.tab-pane:eq(2).active .o_form_field_x2many_list_row_add a'
+        },
+        {
+            title:      "select Admin",
+            element:    '.modal tr:has(td[data-field="name"]:containsExact(Administrator)) .o_list_record_selector input[type="checkbox"]'
+        },
+        {
+            title:      "save selected participants",
+            waitFor:    '.modal tr:has(td[data-field="name"]:containsExact(Administrator)) .o_list_record_selector input[type="checkbox"]:propChecked',
+            element:    '.o_selectcreatepopup_search_select'
+        },
+
+        // save
+        {
+            title:      "save discussion",
+            waitFor:    '.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr:has(td:containsExact(Administrator))',
+            element:    'button.o_form_button_save'
+        },
+        // edit
+        {
+            title:      "edit discussion",
+            element:    'button.o_form_button_edit'
         },
 
         // add message a
+        {
+            title:      "Select First Tab",
+            element:    'a[role=tab]:first',
+        },
         {
             title:      "create new message a",
             element:    '.tab-pane:eq(0) .o_form_field_x2many_list_row_add a'
@@ -167,15 +202,10 @@ Tour.register({
         },
         {
             title:      "click to add participants",
-            element:    '.tab-pane:eq(1).active .o_form_field_x2many_list_row_add a'
-        },
-        {
-            title:      "select Admin",
-            element:    '.modal tr:has(td[data-field="name"]:containsExact(Administrator)) .o_list_record_selector input[type="checkbox"]'
+            element:    '.tab-pane:eq(2).active .o_form_field_x2many_list_row_add a'
         },
         {
             title:      "select Demo User",
-            waitFor:    '.modal tr:has(td[data-field="name"]:containsExact(Administrator)) .o_list_record_selector input[type="checkbox"]:propChecked',
             element:    '.modal tr:has(td[data-field="name"]:containsExact(Demo User)) .o_list_record_selector input[type="checkbox"]'
         },
         {
@@ -187,8 +217,8 @@ Tour.register({
         // save
         {
             title:      "save discussion",
-            waitFor:    '.tab-pane:eq(1) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
-            waitNot:    '.tab-pane:eq(1) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(3)',
+            waitFor:    '.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
+            waitNot:    '.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(3)',
             element:    'button.o_form_button_save'
         },
 
@@ -204,8 +234,8 @@ Tour.register({
         },
         {
             title:      "check data 3",
-            waitFor:    '.tab-pane:eq(1) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
-            waitNot:    '.tab-pane:eq(1) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(3)',
+            waitFor:    '.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
+            waitNot:    '.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(3)',
         },
 
         // edit
@@ -214,7 +244,7 @@ Tour.register({
             element:    'button.o_form_button_edit'
         },
         {
-            title:      "change tab to Participants",
+            title:      "change tab to Messages",
             waitFor:    '.o_form_editable',
             element:    '[data-toggle="tab"]:contains(Messages)'
         },
@@ -344,8 +374,8 @@ Tour.register({
         },
         {
             title:      "check data 7",
-            waitFor:    '.tab-pane:eq(1) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
-            waitNot:    '.tab-pane:eq(1) .o_form_field.o_view_manager_content tbody tr[date-id]:eq(3)',
+            waitFor:    '.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
+            waitNot:    '.tab-pane:eq(2) .o_form_field.o_view_manager_content tbody tr[date-id]:eq(3)',
         },
 
         // edit
