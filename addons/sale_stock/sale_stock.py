@@ -110,6 +110,12 @@ class sale_order(osv.osv):
         'picking_policy': 'direct',
         'order_policy': 'manual',
     }
+
+    #FORWARDPORT UP TO SAAS-6
+    def _get_customer_lead(self, cr, uid, product_tmpl_id):
+        super(sale_order, self)._get_customer_lead(cr, uid, product_tmpl_id)
+        return product_tmpl_id.sale_delay
+
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context=None):
         val = {}
         if warehouse_id:
