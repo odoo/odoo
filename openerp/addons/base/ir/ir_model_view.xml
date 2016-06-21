@@ -105,7 +105,7 @@
                                             </group>
                                             <group string="Advanced Properties">
                                                 <field name="serialization_field_id"
-                                                    domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]"
+                                                    domain="[('ttype','=','serialized'), ('model_id', '=', parent.model)]"
                                                     attrs="{'readonly': [('state','=','base')]}"/>
                                                 <field name="related"/>
                                                 <field name="depends"/>
