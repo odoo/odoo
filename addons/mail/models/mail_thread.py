@@ -1895,10 +1895,7 @@ class MailThread(models.AbstractModel):
             provided, subscribe uid instead. """
         if user_ids is None:
             user_ids = [self._uid]
-        result = self.message_subscribe(self.env['res.users'].browse(user_ids).mapped('partner_id').ids, subtype_ids=subtype_ids)
-        if user_ids and result:
-            self.pool['ir.ui.menu'].clear_caches()
-        return result
+        return self.message_subscribe(self.env['res.users'].browse(user_ids).mapped('partner_id').ids, subtype_ids=subtype_ids)
 
     @api.multi
     def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, force=True):
@@ -1939,10 +1936,7 @@ class MailThread(models.AbstractModel):
         if user_ids is None:
             user_ids = [self._uid]
         partner_ids = [user.partner_id.id for user in self.env['res.users'].browse(user_ids)]
-        result = self.message_unsubscribe(partner_ids)
-        if partner_ids and result:
-            self.pool['ir.ui.menu'].clear_caches()
-        return result
+        return self.message_unsubscribe(partner_ids)
 
     @api.multi
     def message_unsubscribe(self, partner_ids=None, channel_ids=None):
