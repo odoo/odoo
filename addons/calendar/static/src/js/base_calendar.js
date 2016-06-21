@@ -1,6 +1,7 @@
 odoo.define('base_calendar.base_calendar', function (require) {
 "use strict";
 
+var bus = require('bus.bus').bus;
 var core = require('web.core');
 var CalendarView = require('web_calendar.CalendarView');
 var data = require('web.data');
@@ -189,43 +190,60 @@ var CalendarNotification = Notification.extend({
 });
 
 WebClient.include({
-    get_next_notif: function() {
+    display_calendar_notif: function(notifications) {
         var self = this;
+        var last_notif_timer = 0;
 
-        this.rpc("/calendar/notify", {}, {shadow: true})
-        .done(function(result) {
-            _.each(result, function(res) {
-                setTimeout(function() {
-                    // If notification not already displayed, we create and display it (FIXME is this check usefull?)
-                    if(self.$(".eid_" + res.event_id).length === 0) {
-                        self.notification_manager.display(new CalendarNotification(self.notification_manager, res.title, res.message, res.event_id));
-                    }
-                }, res.timer * 1000);
-            });
-        })
-        .fail(function(err, ev) {
-            if(err.code === -32098) {
-                // Prevent the CrashManager to display an error
-                // in case of an xhr error not due to a server error
-                ev.preventDefault();
+        // Clear previously set timeouts and destroy currently displayed calendar notifications
+        clearTimeout(this.get_next_calendar_notif_timeout);
+        _.each(this.calendar_notif_timeouts, clearTimeout);
+        _.each(this.calendar_notif, function(notif) {
+            if (!notif.isDestroyed()) {
+                notif.destroy();
             }
         });
+        this.calendar_notif_timeouts = {};
+        this.calendar_notif = {};
+
+        // For each notification, set a timeout to display it
+        _.each(notifications, function(notif) {
+            self.calendar_notif_timeouts[notif.event_id] = setTimeout(function() {
+                var notification = new CalendarNotification(self.notification_manager, notif.title, notif.message, notif.event_id);
+                self.notification_manager.display(notification);
+                self.calendar_notif[notif.event_id] = notification;
+            }, notif.timer * 1000);
+            last_notif_timer = Math.max(last_notif_timer, notif.timer);
+        });
+
+        // Set a timeout to get the next notifications when the last one has been displayed
+        if (last_notif_timer > 0) {
+            this.get_next_calendar_notif_timeout = setTimeout(this.get_next_calendar_notif.bind(this), last_notif_timer * 1000);
+        }
     },
-    check_notifications: function() {
-        var self = this;
-        this.get_next_notif();
-        this.intervalNotif = setInterval(function() {
-            self.get_next_notif();
-        }, 5 * 60 * 1000);
+    get_next_calendar_notif: function() {
+        this.rpc("/calendar/notify", {}, {shadow: true})
+            .done(this.display_calendar_notif.bind(this))
+            .fail(function(err, ev) {
+                if(err.code === -32098) {
+                    // Prevent the CrashManager to display an error
+                    // in case of an xhr error not due to a server error
+                    ev.preventDefault();
+                }
+            });
     },
     show_application: function() {
-        return this._super.apply(this, arguments).then(this.check_notifications.bind(this));
-    },
-    //Override addons/web/static/src/js/chrome.js
-    // FIXME: on_logout is no longer used
-    on_logout: function() {
-        this._super();
-        clearInterval(this.intervalNotif);
+        // An event is triggered on the bus each time a calendar event with alarm
+        // in which the current user is involved is created, edited or deleted
+        this.calendar_notif_timeouts = {};
+        this.calendar_notif = {};
+        bus.on('notification', this, function (notifications) {
+            _.each(notifications, (function (notification) {
+                if (notification[0][1] === 'calendar.alarm') {
+                    this.display_calendar_notif(notification[1]);
+                }
+            }).bind(this));
+        });
+        return this._super.apply(this, arguments).then(this.get_next_calendar_notif.bind(this));
     },
 });
 
