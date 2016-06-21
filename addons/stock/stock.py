@@ -3031,7 +3031,7 @@ class stock_inventory_line(osv.osv):
         elif inventory_line.package_id:
             stock_move_obj.action_done(cr, uid, move_id, context=context)
             quants = [x.id for x in move.quant_ids]
-            quant_obj.write(cr, uid, quants, {'package_id': inventory_line.package_id.id}, context=context)
+            quant_obj.write(cr, SUPERUSER_ID, quants, {'package_id': inventory_line.package_id.id}, context=context)
             res = quant_obj.search(cr, uid, [('qty', '<', 0.0), ('product_id', '=', move.product_id.id),
                                     ('location_id', '=', move.location_dest_id.id), ('package_id', '!=', False)], limit=1, context=context)
             if res:
