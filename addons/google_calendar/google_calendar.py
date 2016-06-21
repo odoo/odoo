@@ -245,7 +245,7 @@ class google_calendar(osv.AbstractModel):
                 "useDefault": "false"
             },
             "location": event.location or '',
-            "visibility": event['class'] or 'public',
+            "visibility": event['privacy'] or 'public',
         }
         if event.recurrency and event.rrule:
             data["recurrence"] = ["RRULE:" + event.rrule]
