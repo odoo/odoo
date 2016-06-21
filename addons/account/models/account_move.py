@@ -1091,8 +1091,11 @@ class AccountMoveLine(models.Model):
                     }
                     bank = self.env["account.bank.statement"].browse(vals.get('statement_id'))
                     if bank.currency_id != bank.company_id.currency_id:
+                        ctx = {}
+                        if 'date' in vals:
+                            ctx['date'] = vals['date']
                         temp['currency_id'] = bank.currency_id.id
-                        temp['amount_currency'] = bank.company_id.currency_id.compute(tax_vals['amount'], bank.currency_id, round=True)
+                        temp['amount_currency'] = bank.company_id.currency_id.with_context(ctx).compute(tax_vals['amount'], bank.currency_id, round=True)
                     tax_lines_vals.append(temp)
 
         new_line = super(AccountMoveLine, self).create(vals)
