@@ -708,6 +708,7 @@
                           <a t-attf-href="/quote/#{quotation.id}?#{keep_query()}"><t t-esc="quotation.name"/></a>
                       </t>
                   </td>
+                  <td><span t-field="quotation.date_order"/></td>
                   <td><span t-field="quotation.validity_date"/></td>
                       <td>
                         <t t-if="quotation.state == 'cancel'">

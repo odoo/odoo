@@ -25,24 +25,27 @@ class WebsiteAccount(website_account):
     def my_projects(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
         Project = request.env['project.project']
+        domain = [('privacy_visibility', '=', 'portal')]
 
-        sortings = {
+        searchbar_sortings = {
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
             'name': {'label': _('Name'), 'order': 'name'},
         }
-
-        domain = [('privacy_visibility','=','portal')]
-        order = sortings.get(sortby, sortings['date'])['order']
+        if not sortby:
+            sortby = 'date'
+        order = searchbar_sortings[sortby]['order']
 
         # archive groups - Default Group By 'create_date'
         archive_groups = self._get_archive_groups('project.project', domain)
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
+        # projects count
+        project_count = Project.search_count(domain)
         # pager
         pager = request.website.pager(
             url="/my/projects",
             url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
-            total=values['project_count'],
+            total=project_count,
             page=page,
             step=self._items_per_page
         )
@@ -53,13 +56,13 @@ class WebsiteAccount(website_account):
         values.update({
             'date': date_begin,
             'date_end': date_end,
-            'sortings': sortings,
-            'sortby': sortby,
             'projects': projects,
             'page_name': 'project',
             'archive_groups': archive_groups,
             'default_url': '/my/projects',
-            'pager': pager
+            'pager': pager,
+            'searchbar_sortings': searchbar_sortings,
+            'sortby': sortby
         })
         return request.render("website_project.my_projects", values)
 
@@ -68,41 +71,47 @@ class WebsiteAccount(website_account):
         return request.render("website_project.my_project", {'project': project})
 
     @http.route(['/my/tasks', '/my/tasks/page/<int:page>'], type='http', auth="user", website=True)
-    def my_tasks(self, page=1, date_begin=None, date_end=None, project=None, sortby=None, **kw):
+    def my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
         values = self._prepare_portal_layout_values()
+        domain = [('project_id.privacy_visibility', '=', 'portal')]
 
-        sortings = {
+        searchbar_sortings = {
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
             'name': {'label': _('Name'), 'order': 'name'},
             'stage': {'label': _('Stage'), 'order': 'stage_id'},
             'update': {'label': _('Last Stage Update'), 'order': 'date_last_stage_update desc'},
         }
-
-        projects = request.env['project.project'].search([('privacy_visibility', '=', 'portal')])
-
-        project_filters = {
+        searchbar_filters = {
             'all': {'label': _('All'), 'domain': []},
         }
-
+        # extends filterby criteria with project (criteria name is the project id)
+        projects = request.env['project.project'].search([('privacy_visibility', '=', 'portal')])
         for proj in projects:
-            project_filters.update({
+            searchbar_filters.update({
                 str(proj.id): {'label': proj.name, 'domain': [('project_id', '=', proj.id)]}
             })
 
-        domain = [('project_id.privacy_visibility', '=', 'portal')]
-        domain += project_filters.get(project, project_filters['all'])['domain']
-        order = sortings.get(sortby, sortings['date'])['order']
+        # default sort by value
+        if not sortby:
+            sortby = 'date'
+        order = searchbar_sortings[sortby]['order']
+        # default filter by value
+        if not filterby:
+            filterby = 'all'
+        domain += searchbar_filters[filterby]['domain']
 
         # archive groups - Default Group By 'create_date'
         archive_groups = self._get_archive_groups('project.task', domain)
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
+        # task count
+        task_count = request.env['project.task'].search_count(domain)
         # pager
         pager = request.website.pager(
             url="/my/tasks",
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'project': project},
-            total=values['task_count'],
+            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'filterby': filterby},
+            total=task_count,
             page=page,
             step=self._items_per_page
         )
@@ -112,16 +121,16 @@ class WebsiteAccount(website_account):
         values.update({
             'date': date_begin,
             'date_end': date_end,
-            'project_filters': OrderedDict(sorted(project_filters.items())),
             'projects': projects,
-            'project': project,
-            'sortings': sortings,
-            'sortby': sortby,
             'tasks': tasks,
             'page_name': 'task',
             'archive_groups': archive_groups,
             'default_url': '/my/tasks',
-            'pager': pager
+            'pager': pager,
+            'searchbar_sortings': searchbar_sortings,
+            'sortby': sortby,
+            'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
+            'filterby': filterby,
         })
         return request.render("website_project.my_tasks", values)
 

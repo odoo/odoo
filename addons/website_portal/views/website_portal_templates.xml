@@ -26,6 +26,50 @@
         </ul>
     </template>
 
+    <!--
+        The search bar is composed of 2 buttons : a "filter by" and a "sort by". Changing the 'sortby'
+        criteria will keep the number of page, query params, ... Changing the 'filterby' param will
+        redirect the user to the beginning of document list, keeping query parameters.
+
+        :param dict searchbar_sortings : containing the sort criteria like
+            {'date': {'label': _('Newest'), 'order': 'create_date desc'}}
+        :param string sortby : name of the sort criteria
+        :param dict searchbar_filters : containing the filter criteria like
+            {'open': {'label': _('In Progress'), 'domain': [('state', '=', 'open')]}}
+        :param string filterby : name of the filter criteria
+        :param default_url : the base url of the pages (like '/my/orders')
+    -->
+    <template id="portal_searchbar" name="Portal Search Bar">
+        <div t-if="searchbar_sortings" class="dropdown pull-right mr8">
+            <button id="portal_searchbar_sortby" class="btn btn-default" type="button" data-toggle="dropdown">
+                <span class="fa fa-sort fa-lg" />
+                <span t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="portal_searchbar_sortby">
+                <li t-foreach="searchbar_sortings" t-as="option" t-attf-class="#{sortby == option and 'active'}">
+                    <a t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)">
+                        <span t-esc="searchbar_sortings[option].get('label')"/>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div t-if="searchbar_filters" class="dropdown pull-right mr8">
+            <button id="portal_searchbar_filters" class="btn btn-default" type="button" data-toggle="dropdown">
+                <span class="fa fa-filter fa-lg" />
+                <span t-esc="searchbar_filters[filterby].get('label', 'All')"/>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="portal_searchbar_filters">
+                <li t-foreach="searchbar_filters" t-as="option" t-att-class="filterby == option and 'active'">
+                    <a t-att-href="default_url + '?' + keep_query('*', filterby=option)">
+                        <span t-esc="searchbar_filters[option].get('label')"/>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </template>
+
     <template id="portal_layout" name="Portal Layout">
         <t t-call="website.layout">
             <div class="container mt16">
