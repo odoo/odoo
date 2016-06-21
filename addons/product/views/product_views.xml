@@ -104,7 +104,7 @@
                             <page string="General Information">
                                 <group>
                                     <group name="group_general">
-                                        <field name="type" on_change="onchange_type(type, context)"/>
+                                        <field name="type"/>
                                     </group>
                                     <group name="group_standard_price">
                                         <field name="list_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
@@ -112,7 +112,7 @@
                                         <div name="standard_price_uom" groups="base.group_user">
                                             <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}" class="oe_inline"/>
                                         </div>
-                                        <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom" options="{'no_create': True}"/>
+                                        <field name="uom_id" groups="product.group_uom" options="{'no_create': True}"/>
                                         <field name="uom_po_id" groups="product.group_uom" options="{'no_create': True}"/>
                                         <field name="currency_id" invisible="1"/> 
                                     </group>
@@ -663,7 +663,7 @@
                         <group>
                             <field name="name"/>
                             <field name="category_id"/>
-                            <field name="uom_type" on_change="onchange_type(uom_type)"/>
+                            <field name="uom_type"/>
                             <field name="factor"
                                 digits="[42,5]"
                                 attrs="{'invisible':[('uom_type','!=','smaller')],
