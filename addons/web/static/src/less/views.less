@@ -67,7 +67,19 @@
 }
 
 // No content helper
-.oe_view.oe_cannot_create .oe_view_nocontent_create {
+.oe_view_nocontent {
+    a {
+        cursor: pointer;
+    }
+    span, a {
+        display: inline!important;
+    }
+}
+// Hide view_nocontent in x2many fields
+.o_form_field .oe_view_nocontent {
+    display: none;
+}
+.o_cannot_create .oe_view_nocontent_create {
     display: none;
 }
 

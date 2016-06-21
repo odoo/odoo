@@ -77,7 +77,7 @@ class configmanager(object):
         # Not exposed in the configuration file.
         self.blacklist_for_save = set([
             'publisher_warranty_url', 'load_language', 'root_path',
-            'init', 'save', 'config', 'update', 'stop_after_init'
+            'init', 'save', 'config', 'update', 'stop_after_init', 'dev_mode'
         ])
 
         # dictionary mapping option destination (keys in self.options) to MyOptions.

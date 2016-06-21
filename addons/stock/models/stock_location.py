@@ -214,6 +214,7 @@ class PushedFlow(models.Model):
                 'propagate': self.propagate,
                 'push_rule_id': self.id,
                 'warehouse_id': self.warehouse_id.id,
+                'procurement_id': False,
             })
             move.write({'move_dest_id': new_move.id})
             new_move.action_confirm()
