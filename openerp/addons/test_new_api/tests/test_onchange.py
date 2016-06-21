@@ -89,7 +89,7 @@ class TestOnChange(common.TransactionCase):
         self.assertEqual(field_onchange.get('messages'), '1')
         self.assertItemsEqual(
             strip_prefix('messages.', field_onchange),
-            ['author', 'body', 'name', 'size'],
+            ['author', 'body', 'name', 'size', 'important'],
         )
 
         # modify discussion name
@@ -105,6 +105,7 @@ class TestOnChange(common.TransactionCase):
                     'body': BODY,
                     'author': USER.id,
                     'size': len(BODY),
+                    'important': False,
                 }),
             ],
         }
@@ -118,12 +119,14 @@ class TestOnChange(common.TransactionCase):
                 'body': message.body,
                 'author': message.author.name_get()[0],
                 'size': message.size,
+                'important': message.important,
             }),
             (0, 0, {
                 'name': "[%s] %s" % ("Foo", USER.name),
                 'body': BODY,
                 'author': USER.name_get()[0],
                 'size': len(BODY),
+                'important': False,
             }),
         ])
 
@@ -248,6 +251,7 @@ class TestOnChange(common.TransactionCase):
             'body': BODY,
             'author': USER.id,
             'important': False,
+            'email_to': demo.email,
         })
 
         # check if server-side cache is working correctly
@@ -276,8 +280,18 @@ class TestOnChange(common.TransactionCase):
 
         # When one2many domain contains non-computed field, things are ok
         self.assertEqual(result['value']['important_messages'],
-            [(1, email.message.id, {'name': u'[Foo Bar] %s' % USER.name})])
+                         [(5,)] + [(4, msg.id) for msg in discussion.important_messages])
 
         # But here with commit 5676d81, we get value of: [(2, email.id)]
-        self.assertEqual(result['value']['important_emails'],
-            [(1, email.id, {'name': u'[Foo Bar] %s' % USER.name})])
+        self.assertEqual(
+            result['value']['important_emails'],
+            [(5,),
+             (1, email.id, {
+                 'name': u'[Foo Bar] %s' % USER.name,
+                 'body': email.body,
+                 'author': USER.name_get()[0],
+                 'important': True,
+                 'email_to': demo.email,
+                 'size': email.size,
+             })]
+        )
