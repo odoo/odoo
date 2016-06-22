@@ -39,7 +39,7 @@ editor.Class.include({
     },
     save: function () {
         this.buildingBlock.clean_for_save();
-        this._super();
+        return this._super.apply(this, arguments);
     },
 });
 
