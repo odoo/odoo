@@ -502,6 +502,7 @@ class pos_session(osv.osv):
         jobj = self.pool.get('pos.config')
         pos_config = jobj.browse(cr, uid, config_id, context=context)
         context.update({'company_id': pos_config.company_id.id})
+        is_pos_user = self.pool['res.users'].has_group(cr, uid, 'point_of_sale.group_pos_user')
         if not pos_config.journal_id:
             jid = jobj.default_get(cr, uid, ['journal_id'], context=context)['journal_id']
             if jid:
@@ -522,7 +523,7 @@ class pos_session(osv.osv):
             jobj.write(cr, SUPERUSER_ID, [pos_config.id], {'journal_ids': [(6,0, cashids)]})
 
         statements = []
-        create_statement = partial(self.pool['account.bank.statement'].create, cr, uid)
+        create_statement = partial(self.pool['account.bank.statement'].create, cr, is_pos_user and SUPERUSER_ID or uid)
         for journal in pos_config.journal_ids:
             # set the journal_id which should be used by
             # account.bank.statement to set the opening balance of the
@@ -540,7 +541,7 @@ class pos_session(osv.osv):
             'config_id': config_id
         })
 
-        return super(pos_session, self).create(cr, uid, values, context=context)
+        return super(pos_session, self).create(cr, is_pos_user and SUPERUSER_ID or uid, values, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
