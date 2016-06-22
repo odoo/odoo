@@ -13,7 +13,7 @@ import pytz
 import xmlrpclib
 
 from openerp.sql_db import LazyCursor
-from openerp.tools import float_round, frozendict, html_sanitize, ustr, OrderedSet
+from openerp.tools import float_precision, float_round, frozendict, html_sanitize, ustr, OrderedSet
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from openerp.tools.translate import html_translate
@@ -1177,7 +1177,8 @@ class Monetary(Field):
             # FIXME @rco-odoo: currency may not be already initialized if it is
             # a function or related field!
             if currency:
-                return currency.round(float(value or 0.0))
+                value = currency.round(float(value or 0.0))
+                return float_precision(value, currency.decimal_places)
         return float(value or 0.0)
 
 

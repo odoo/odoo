@@ -404,9 +404,15 @@ class float(_column):
     def digits_change(self, cr):
         pass
 
+def _symbol_set_monetary(val):
+    try:
+        return val.float_repr()         # see float_precision.float_repr()
+    except Exception:
+        return __builtin__.float(val or 0.0)
+
 class monetary(_column):
     _type = 'monetary'
-    _symbol_set = ('%s', lambda x: __builtin__.float(x or 0.0))
+    _symbol_set = ('%s', _symbol_set_monetary)
     _symbol_get = lambda self,x: x or 0.0
 
     def to_field_args(self):
