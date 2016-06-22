@@ -45,8 +45,8 @@ WebsiteBackend.include({
         return this._super().then(function() {
             var leads = self.dashboards_data.leads.leads;
             if (leads && leads.length) {
-                self.lead_fields = Object.keys(self.dashboards_data.leads.leads[0]);
-                self.lead_field = self.lead_fields[0];
+                self.lead_fields = self.dashboards_data.leads.lead_fields;
+                self.lead_field = Object.keys(self.lead_fields)[0];
                 self.compute_percentages();
             }
         });
