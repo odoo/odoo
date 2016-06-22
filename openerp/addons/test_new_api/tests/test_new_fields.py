@@ -235,6 +235,22 @@ class TestNewFields(common.TransactionCase):
         record.number = 2.4999999999999996
         self.assertEqual(record.number, 2.50)
 
+    def test_20_monetary(self):
+        """ test monetary fields """
+        record = self.env['test_new_api.mixed'].create({})
+        self.assertTrue(record.currency_id)
+        self.assertEqual(record.currency_id.rounding, 0.01)
+
+        # the conversion to cache should round the value to 14.700000000000001
+        record.amount = 14.7
+        self.assertNotEqual(record.amount, 14.7)
+        self.assertEqual(record.amount, 14.700000000000001)
+
+        # however when stored to database, it should be serialized as 14.70
+        self.cr.execute('SELECT amount FROM test_new_api_mixed WHERE id=%s', (record.id,))
+        (amount,) = self.cr.fetchone()
+        self.assertEqual(amount, 14.7)
+
     def test_21_date(self):
         """ test date fields """
         record = self.env['test_new_api.mixed'].create({})

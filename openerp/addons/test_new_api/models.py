@@ -264,6 +264,9 @@ class MixedModel(models.Model):
     comment3 = fields.Html(sanitize=True, strip_classes=True)
     comment4 = fields.Html(sanitize=True, strip_style=True)
 
+    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.ref('base.EUR'))
+    amount = fields.Monetary()
+
     @api.one
     def _compute_now(self):
         # this is a non-stored computed field without dependencies
