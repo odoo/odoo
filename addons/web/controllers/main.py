@@ -129,6 +129,7 @@ def ensure_db(redirect='/web/database/selector'):
             query_string = iri_to_uri(r.query_string)
             url_redirect = url_redirect.replace(query=query_string)
         request.session.db = db
+        request.session.modified = True
         abort_and_redirect(url_redirect)
 
     # if db not provided, use the session one
