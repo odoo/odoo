@@ -115,3 +115,6 @@ class TestEventFlow(TestEventCommon):
                 'auto_confirmation': 1
             })
             event_config.execute()
+
+    def test_event_data(self):
+        self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'Tomorrow')

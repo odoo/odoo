@@ -46,6 +46,9 @@ class TestEventCommon(common.TransactionCase):
 
         self.event_0 = self.env['event.event'].create({
             'name': 'TestEvent',
-            'date_begin': fields.Datetime.to_string(datetime.today() - timedelta(days=5)),
-            'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=5)),
+            'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
+            'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
+            'registration_ids': [(0, 0, {
+                'partner_id': self.user_eventuser.partner_id.id,
+            })]
         })
