@@ -42,7 +42,7 @@ return Widget.extend({
         this.$tooltip_content = this.$(".o_tooltip_content");
         this.init_width = this.$el.innerWidth();
         this.init_height = this.$el.innerHeight();
-        this.border_width = this.$el.outerWidth() - this.init_width;
+        this.border_width = (this.$el.outerWidth() - this.init_width)/2;
         this.content_width = this.$tooltip_content.outerWidth(true);
         this.content_height = this.$tooltip_content.outerHeight(true);
         this.$window = $(window);
@@ -88,8 +88,6 @@ return Widget.extend({
         });
 
         var offset = this.$el.offset();
-        offset.left += this.border_width;
-        offset.top += this.border_width;
         this.$tooltip_overlay.css({
             top: -Math.min((this.info.position === "bottom" ? this.info.space : this.info.overlay.y), offset.top),
             right: -Math.min((this.info.position === "left" ? this.info.space : this.info.overlay.x), this.$window.width() - (offset.left + this.init_width)),
@@ -197,4 +195,5 @@ return Widget.extend({
         });
     },
 });
+
 });
