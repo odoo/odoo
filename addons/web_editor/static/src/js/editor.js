@@ -130,7 +130,7 @@ editor.Class = Widget.extend({
         return this.rte.save();
     },
     cancel: function () {
-        new $.Deferred(function (d) {
+        return new $.Deferred(function (d) {
             if (!rte.history.getEditableHasUndo().length) {
                 return d.resolve();
             }
