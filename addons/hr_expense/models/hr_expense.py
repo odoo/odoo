@@ -283,7 +283,7 @@ class HrExpense(models.Model):
         if help_message:
             alias_record = self.env.ref('hr_expense.mail_alias_expense')
             if alias_record and alias_record.alias_domain and alias_record.alias_name:
-                dynamic_help = '<p>%s</p>' % _("""Create a new expense, or send receipts by email to %(link)s  to automatically create a new expense. Send an email right now and see it here.""") % {
+                dynamic_help = '<p>%s</p>' % _("""Create a new expense, or send receipts by email to %(link)s to automatically create new expenses.""") % {
                     'link': "<a href='mailto:%(email)s'>%(email)s</a>" % {'email': '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)}
                 }
                 return '<p class="oe_view_nocontent_create">%s</p>%s%s' % (
