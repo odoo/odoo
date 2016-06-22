@@ -20,7 +20,7 @@
                             class="oe_stat_button"
                             icon="fa-book"
                             type="action"
-                            groups="base.group_hr_manager">
+                            groups="hr_contract.group_hr_contract_manager">
                             <field name="contracts_count" widget="statinfo" string="Contracts"/>
                         </button>
                     </xpath>
@@ -213,11 +213,17 @@
         </record>
 
         <menuitem
+            id="hr.menu_human_resources_configuration"
+            name="Configuration"
+            parent="hr.menu_hr_root"
+            groups="hr_contract.group_hr_contract_manager"
+            sequence="100"/>
+        <menuitem
             id="hr_menu_contract_type"
             action="action_hr_contract_type"
             parent="hr.menu_human_resources_configuration"
             sequence="3"
-            groups="base.group_no_one"/>
+            groups="hr_contract.group_hr_contract_manager"/>
 
         <menuitem
             id="hr_menu_contract"
@@ -225,6 +231,6 @@
             action="action_hr_contract"
             parent="hr.menu_hr_root"
             sequence="4"
-            groups="base.group_hr_manager"/>
+            groups="hr_contract.group_hr_contract_manager"/>
 
 </odoo>

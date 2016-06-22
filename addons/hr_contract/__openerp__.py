@@ -19,6 +19,7 @@ You can assign several contracts per employee.
     'website': 'https://www.odoo.com/page/employees',
     'depends': ['base_action_rule', 'hr'],
     'data': [
+        'security/hr_contract_security.xml',
         'security/ir.model.access.csv',
         'data/hr_contract_data.xml',
         'views/base_action_rule_views.xml',
