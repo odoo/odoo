@@ -44,7 +44,6 @@ input segments, workflow.
         'report/campaign_analysis_views.xml',
     ],
     'demo': ['data/marketing_campaign_demo.xml'],
-    'test': ['test/marketing_campaign.yml'],
     'installable': True,
     'auto_install': False,
 }
