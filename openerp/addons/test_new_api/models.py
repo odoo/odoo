@@ -299,3 +299,25 @@ class BoolModel(models.Model):
     bool_true = fields.Boolean('b1', default=True)
     bool_false = fields.Boolean('b2', default=False)
     bool_undefined = fields.Boolean('b3')
+
+
+class Foo(models.Model):
+    _name = 'test_new_api.foo'
+
+    name = fields.Char()
+    value1 = fields.Integer()
+    value2 = fields.Integer()
+
+
+class Bar(models.Model):
+    _name = 'test_new_api.bar'
+
+    name = fields.Char()
+    foo = fields.Many2one('test_new_api.foo', compute='_compute_foo')
+    value1 = fields.Integer(related='foo.value1')
+    value2 = fields.Integer(related='foo.value2')
+
+    @api.depends('name')
+    def _compute_foo(self):
+        for bar in self:
+            bar.foo = self.env['test_new_api.foo'].search([('name', '=', bar.name)], limit=1)
