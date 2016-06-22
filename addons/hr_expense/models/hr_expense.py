@@ -507,7 +507,10 @@ class HrExpenseSheet(models.Model):
         if not self.accounting_date:
             self.accounting_date = self.account_move_id.date
 
-        self.write({'state': 'post'})
+        if self.payment_mode=='own_account':
+            self.write({'state': 'post'})
+        else:
+            self.write({'state': 'done'})
         return res
 
     @api.multi
