@@ -977,10 +977,13 @@ class QWeb(object):
         return body
 
     def _compile_directive_else(self, el, options):
+        if el.attrib.pop('t-else') == '_t_skip_else_':
+            return []
         if not options.pop('t_if', None):
             raise ValueError("t-else directive must be preceded by t-if directive")
-        el.attrib.pop('t-else')
-        return self._compile_directives(el, options)
+        compiled = self._compile_directives(el, options)
+        el.attrib['t-else'] = '_t_skip_else_'
+        return compiled
 
     def _compile_directive_if(self, el, options):
         orelse = []
@@ -990,7 +993,6 @@ class QWeb(object):
                 raise ValueError("Unexpected non-whitespace characters between t-if and t-else directives")
             el.tail = None
             orelse = self._compile_node(next_el, dict(options, t_if=True))
-            next_el.getparent().remove(next_el)
         return [
             # if $t-if:
             #    next tag directive
