@@ -312,7 +312,7 @@ class QWeb(object):
 
         def _compiled_fn(self, append, values):
             log = {'last_path_node': None}
-            values.update(self.default_values())
+            values = dict(self.default_values(), **values)
             try:
                 return compiled(self, append, values, options, log)
             except QWebException, e:
@@ -327,43 +327,7 @@ class QWeb(object):
 
     def default_values(self):
         """ Return attributes added to the values for each computed template. """
-        return {
-            'True': True,
-            'False': False,
-            'None': None,
-            'str': str,
-            'unicode': unicode,
-            'bool': bool,
-            'int': int,
-            'float': float,
-            'long': long,
-            'enumerate': enumerate,
-            'dict': dict,
-            'list': list,
-            'tuple': tuple,
-            'map': map,
-            'abs': abs,
-            'min': min,
-            'max': max,
-            'sum': sum,
-            'reduce': reduce,
-            'filter': filter,
-            'round': round,
-            'len': len,
-            'repr': repr,
-            'set': set,
-            'all': all,
-            'any': any,
-            'ord': ord,
-            'chr': chr,
-            'cmp': cmp,
-            'divmod': divmod,
-            'isinstance': isinstance,
-            'range': range,
-            'xrange': xrange,
-            'zip': zip,
-            'format': self.format,
-        }
+        return dict(format=self.format)
 
     def get_template(self, template, options):
         """ Retrieve the given template, and return it as a pair ``(element,
@@ -1402,11 +1366,13 @@ class QWeb(object):
 
     def _compile_expr(self, expr):
         """ Compiles a purported Python expression to ast, and alter its
-        variable references to access values data instead. Can be overridden to
-        use a safe eval method.
+        variable references to access values data instead exept for
+        python buildins.
+        This compile method is unsafe!
+        Can be overridden to use a safe eval method.
         """
         # string must be stripped otherwise whitespace before the start for
         # formatting purpose are going to break parse/compile
         st = ast.parse(expr.strip(), mode='eval')
         # ast.Expression().body -> expr
-        return Contextifier().visit(st).body
+        return Contextifier(builtin_defaults).visit(st).body
