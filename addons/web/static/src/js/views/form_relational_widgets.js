@@ -1287,13 +1287,15 @@ var FieldOne2Many = FieldX2Many.extend({
     },
     commit_value: function() {
         var self = this;
-        var view = this.viewmanager.active_view;
-        if(view.type === "list" && view.controller.editable()) {
-            return this.mutex.def.then(function () {
-                return view.controller.save_edition();
-            });
-        }
-        return this.mutex.def;
+        return this.is_loaded.then(function() {
+            var view = self.viewmanager.active_view;
+            if(view.type === "list" && view.controller.editable()) {
+                return self.mutex.def.then(function () {
+                    return view.controller.save_edition();
+                });
+            }
+            return self.mutex.def;
+        });
     },
 });
 
