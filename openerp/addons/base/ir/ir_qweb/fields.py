@@ -5,7 +5,7 @@ from odoo import api, fields, models, _
 from PIL import Image
 from cStringIO import StringIO
 import babel
-from openerp.tools import html_escape as escape, posix_to_ldml
+from openerp.tools import html_escape as escape, posix_to_ldml, safe_eval
 from .qweb import unicodifier
 
 import logging
@@ -299,6 +299,15 @@ class MonetaryConverter(models.AbstractModel):
     @api.model
     def record_to_html(self, record, field_name, options, values=None):
         field = record._fields[field_name]
+
+        # for backward compatibility to remove after v10
+        if isinstance(options.get('display_currency'), str):
+            _logger.warning("Use new syntax for '%s' monetary widget 'display_currency' option (instead of deprecated JSON syntax) to improve speed." % options['display_currency'])
+            options['display_currency'] = safe_eval.safe_eval(options['display_currency'], mode='eval', globals_dict=values)
+        if isinstance(options.get('from_currency'), str):
+            _logger.warning("Use new syntax for '%s' monetary widget 'from_currency' option (instead of deprecated JSON syntax) to improve speed." % options['from_currency'])
+            options['from_currency'] = safe_eval.safe_eval(options['from_currency'], mode='eval', globals_dict=values)
+        # end backward
 
         display_currency = False
         #currency should be specified by monetary field
