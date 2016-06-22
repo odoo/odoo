@@ -31,7 +31,8 @@
     @o-tip-arrow-delay-out: floor(@o-tip-duration-out / 2);
 
     box-sizing: content-box;
-    position: absolute;
+    .o-position-absolute(@top: 50%, @left: 50%);
+    opacity: 0;
     width: @o-tip-size;
     height: @o-tip-size;
     border: @o-tip-border-width solid @odoo-brand-primary;

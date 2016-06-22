@@ -47,21 +47,23 @@ return Widget.extend({
         this.content_height = this.$tooltip_content.outerHeight(true);
         this.$window = $(window);
 
+        this.$tooltip_content.css({
+            width: "100%",
+            height: "100%",
+        });
+
         _.each(this.info.event_handlers, (function(data) {
             this.$tooltip_content.on(data.event, data.selector, data.handler);
         }).bind(this));
         this._bind_anchor_events();
 
         this._reposition();
+        this.$el.css("opacity", 1);
         core.bus.on('scroll resize', this, function() {
             if (this.tip_opened) {
                 this._to_bubble_mode(true);
             }
             this._reposition();
-        });
-        this.$tooltip_content.css({
-            width: "100%",
-            height: "100%",
         });
 
         return this._super.apply(this, arguments);
