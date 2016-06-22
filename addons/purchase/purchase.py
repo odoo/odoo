@@ -1468,7 +1468,7 @@ class procurement_order(osv.osv):
             qty[procurement.product_id.id] = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
             if seller_qty:
                 qty[procurement.product_id.id] = max(qty[procurement.product_id.id], seller_qty)
-            prices_qty += [(procurement.product_id, qty[procurement.product_id.id], partner)]
+            prices_qty += [(procurement.product_id, qty[procurement.product_id.id], partner.id)]
         prices = pricelist_obj.price_get_multi(cr, uid, [pricelist_id], prices_qty, context=context)
 
         #Passing partner_id to context for purchase order line integrity of Line name
