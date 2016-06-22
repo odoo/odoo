@@ -682,9 +682,6 @@
                 <br/>
             </t>
             <div font='b'>
-                <t t-if='receipt.shop.name'>
-                    <div><t t-esc='receipt.shop.name' /></div>
-                </t>
                 <t t-if='receipt.company.contact_address'>
                     <div><t t-esc='receipt.company.contact_address' /></div>
                 </t>
@@ -1303,7 +1300,6 @@
             <t t-esc="widget.pos.company.name"/><br />
             Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
             User: <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/><br />
-            Shop: <t t-esc="widget.pos.shop.name"/><br />
             <br />
             <t t-if="receipt.header">
                 <div style='text-align:center'>
