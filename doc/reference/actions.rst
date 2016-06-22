@@ -417,6 +417,11 @@ Triggers an action implemented entirely in the client.
 ``params`` (optional)
     a Python dictionary of additional data to send to the client, alongside
     the client action tag
+``target`` (optional)
+    whether the client action should be open in the main content area
+    (``current``), in full screen mode (``fullscreen``) or in a dialog/popup
+    (``new``). Use ``main`` instead of ``current`` to clear the breadcrumbs.
+    Defaults to ``current``.
 
 ::
 

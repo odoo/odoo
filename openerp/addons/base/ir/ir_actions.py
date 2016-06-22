@@ -1133,6 +1133,7 @@ class IrActionsActClient(models.Model):
                       help="An arbitrary string, interpreted by the client"
                            " according to its own needs and wishes. There "
                            "is no central tag repository across clients.")
+    target = fields.Selection([('current', 'Current Window'), ('new', 'New Window'), ('fullscreen', 'Full Screen'), ('main', 'Main action of Current Window')], default="current", string='Target Window')
     res_model = fields.Char(string='Destination Model', help="Optional model, mostly used for needactions.")
     context = fields.Char(string='Context Value', default="{}", required=True, help="Context dictionary as Python expression, empty by default (Default: {})")
     params = fields.Binary(compute='_compute_params', inverse='_inverse_params', string='Supplementary arguments',
