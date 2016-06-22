@@ -15,6 +15,9 @@ Report
         'views/report.xml',
         'views/ir_actions.xml',
     ],
+    'qweb' : [
+        'static/src/xml/*.xml',
+    ],
     'installable': True,
     'auto_install': True,
 }
