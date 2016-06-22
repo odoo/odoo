@@ -7,7 +7,9 @@
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2016
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
+# Marko Happonen <marko.happonen@sprintit.fi>, 2016
 # Miku Laitinen <miku.laitinen@gmail.com>, 2016
+# salmemik <salmemik@gmail.com>, 2016
 # Timo Koukkari <timo.koukkari@seamk.fi>, 2015
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
 msgid ""
@@ -15,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-06-10 05:53+0000\n"
+"PO-Revision-Date: 2016-06-21 06:50+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -2667,7 +2669,7 @@ msgstr "Onnittelut, homma on hoidettu!"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Congratulations, you're done!"
-msgstr ""
+msgstr "Onnittelut. Nyt on valmista!"
 
 #. module: account
 #: model:ir.model,name:account.model_account_abstract_payment
@@ -2714,7 +2716,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Create Customers"
-msgstr ""
+msgstr "Perusta asiakkaita"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
@@ -2724,7 +2726,7 @@ msgstr "Luo hyvitys"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Create Vendors"
-msgstr ""
+msgstr "Perusta toimittajia"
 
 #. module: account
 #. openerp-web
@@ -2760,7 +2762,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Create your products"
-msgstr ""
+msgstr "Luo tuotteet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_create_uid
@@ -3635,7 +3637,7 @@ msgstr "Virhe!"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Excel template"
-msgstr ""
+msgstr "Excel-malli"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:158
@@ -3669,7 +3671,7 @@ msgstr ""
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_expense0
 msgid "Expense"
-msgstr "menot"
+msgstr "Kulu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category_property_account_expense_categ_id
@@ -3986,12 +3988,12 @@ msgstr "Yleistiedot"
 #: model:ir.actions.report.xml,name:account.action_report_general_ledger
 #: model:ir.ui.menu,name:account.menu_general_ledger
 msgid "General Ledger"
-msgstr "Yleinen tilikirja"
+msgstr "Pääkirja"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_general_ledger
 msgid "General Ledger Report"
-msgstr "Kirjanpitoraportti"
+msgstr "Pääkirjaraportti"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_tax_cash_basis
@@ -5389,7 +5391,7 @@ msgstr ""
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
 msgid "March"
-msgstr ""
+msgstr "Maaliskuu"
 
 #. module: account
 #: selection:account.payment,payment_difference_handling:0
@@ -5409,7 +5411,7 @@ msgstr ""
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
 msgid "May"
-msgstr ""
+msgstr "Toukokuu"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_inbound_payment_method_ids
@@ -5564,7 +5566,7 @@ msgstr "Nimi"
 #: code:addons/account/static/src/xml/account_payment.xml:52
 #, python-format
 msgid "Name:"
-msgstr ""
+msgstr "Nimi:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_tax_net
@@ -5673,7 +5675,7 @@ msgstr "pitkäaikaiset velat"
 #: selection:account.tax,type_tax_use:0
 #: selection:account.tax.template,type_tax_use:0
 msgid "None"
-msgstr ""
+msgstr "Ei mitään"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -5715,7 +5717,7 @@ msgstr ""
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
 msgid "November"
-msgstr ""
+msgstr "Marraskuu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_number
@@ -5771,7 +5773,7 @@ msgstr ""
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
 msgid "October"
-msgstr ""
+msgstr "Lokakuu"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5882,7 +5884,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:699
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr ""
+msgstr "Vain järjestelmäylläpitäjät voivat muuttaa asetuksia"
 
 #. module: account
 #. openerp-web
@@ -6579,7 +6581,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_common_report_view
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Print"
-msgstr ""
+msgstr "Tulosta"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -6721,7 +6723,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_finance_payables
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Purchases"
-msgstr ""
+msgstr "Ostot"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_cash_box_in
@@ -6774,7 +6776,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_form
 #: model:ir.ui.view,arch_db:account.view_account_search
 msgid "Receivable Accounts"
-msgstr "myyntisaatavat"
+msgstr "myyntisaamiset"
 
 #. module: account
 #: selection:account.aged.trial.balance,result_selection:0
@@ -7032,7 +7034,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_financial_report_form
 msgid "Report"
-msgstr "Informe"
+msgstr "Raportti"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_name
@@ -7064,7 +7066,7 @@ msgstr "Raportointi"
 #. module: account
 #: model:ir.ui.menu,name:account.account_report_folder
 msgid "Reports"
-msgstr ""
+msgstr "Raportit"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -7343,7 +7345,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax_sequence
 #: model:ir.model.fields,field_description:account.field_account_tax_template_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Järjestys"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_active
@@ -7374,7 +7376,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_account_config
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Settings"
-msgstr ""
+msgstr "Asetukset"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_code
@@ -7384,7 +7386,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_tax_tree
 msgid "Short Name"
-msgstr ""
+msgstr "Lyhyt nimi"
 
 #. module: account
 #. openerp-web
@@ -7580,7 +7582,7 @@ msgstr "Kohteen liikkeet"
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 #, python-format
 msgid "Tax"
-msgstr ""
+msgstr "Vero"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:680
@@ -7713,7 +7715,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Taxes"
-msgstr ""
+msgstr "Verot"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
@@ -8190,12 +8192,12 @@ msgstr ""
 #: code:addons/account/models/account_journal_dashboard.py:101
 #, python-format
 msgid "This Week"
-msgstr ""
+msgstr "Tällä viikolla"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "This Year"
-msgstr ""
+msgstr "Kuluva vuosi"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_template_property_account_expense_id
@@ -8527,12 +8529,12 @@ msgstr "Laskutettu yhteensä"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_debit
 msgid "Total Payable"
-msgstr ""
+msgstr "Maksettavat yhteensä"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_credit
 msgid "Total Receivable"
-msgstr ""
+msgstr "Saatavat yhteensä"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_residual
@@ -8624,7 +8626,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Transfers"
-msgstr ""
+msgstr "Siirtoa"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_balance_menu
@@ -8913,7 +8915,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 #, python-format
 msgid "Vendor Bills"
-msgstr ""
+msgstr "Toimittajien laskut"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8929,7 +8931,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_supplier_payment_term_id
 msgid "Vendor Payment Term"
-msgstr ""
+msgstr "Toimittajan maksuehto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reference
