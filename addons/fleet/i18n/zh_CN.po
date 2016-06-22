@@ -7,8 +7,9 @@
 # fausthuang, 2015
 # fausthuang, 2015
 # Jeffery Chenn <jeffery9@gmail.com>, 2015
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
 # jerry hao <erp_hao@163.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2015
 # Xu Lei <xulei8@qq.com>, 2015
 # liAnGjiA <liangjia@qq.com>, 2015
 msgid ""
@@ -16,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:27+0000\n"
-"PO-Revision-Date: 2016-06-02 13:38+0000\n"
+"PO-Revision-Date: 2016-06-16 09:06+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -35,7 +36,7 @@ msgstr "车辆%s %s已添加到车队"
 #: code:addons/fleet/fleet.py:649
 #, python-format
 msgid "%s contract(s) need(s) to be renewed and/or closed!"
-msgstr "%s续期的合同或需要终止！"
+msgstr "%s 合约，需续订或关闭！"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_form
@@ -373,7 +374,7 @@ msgstr "合同细节"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_log_contract
 msgid "Contract information on a vehicle"
-msgstr "车辆上的联系人信息"
+msgstr "车辆的合约信息"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
@@ -756,7 +757,7 @@ msgstr "生成的费用"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
 msgid "Generated Recurring Costs"
-msgstr "生成的定期费用"
+msgstr "生成的经常性费用"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_search
@@ -1089,7 +1090,7 @@ msgstr "人工"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_image_medium
 msgid "Medium-sized image"
-msgstr "中等尺寸图片"
+msgstr "中等尺寸图像"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_brand_image_medium
@@ -1185,7 +1186,7 @@ msgstr "名称"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_contract_renewal_name
 msgid "Name of contract to renew soon"
-msgstr "尽快更新合同名称"
+msgstr "需马上续签合同的名称"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
@@ -1324,7 +1325,7 @@ msgstr "Odoo能帮你管理不同车辆的费用.费用从服务，合同中产�
 msgid ""
 "Odoo will warn you when services or contract have to be\n"
 "                renewed."
-msgstr "当服务和合同需要更新时，Odoo会提醒你。"
+msgstr "当服务和合约必须更新时，Odoo会提醒你。"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_31
@@ -1435,12 +1436,12 @@ msgstr "散热器修理"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_generated
 msgid "Recurring Cost Amount"
-msgstr "定期费用金额"
+msgstr "经常性费用金额"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_frequency
 msgid "Recurring Cost Frequency"
-msgstr "定期费用频率"
+msgstr "经常性费用频率"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_refueling
@@ -1458,7 +1459,7 @@ msgstr "加油明细"
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
 #, python-format
 msgid "Renew Contract"
-msgstr "合同续订"
+msgstr "续签合同"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_12
@@ -1576,7 +1577,7 @@ msgstr "车辆服务"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
 msgid "Set Contract In Progress"
-msgstr "设置合同进度"
+msgstr "设置合同为履行中"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_image_small
@@ -1589,7 +1590,7 @@ msgid ""
 "Small-sized logo of the brand. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr "小尺寸照片的品牌。它会自动调整大小为64X64像素的图像，保存采用宽高比。使用此字段可存放任意一个小图片。"
+msgstr "小尺寸照片的品牌。它会自动调整大小为64X64像素的图像，保存采用宽高比。使用此字段可存放任意一个小图像。"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_6
@@ -1653,7 +1654,7 @@ msgstr "税单"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
 msgid "Terminate Contract"
-msgstr "终止合同"
+msgstr "终结合同"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,state:0

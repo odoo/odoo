@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-06-07 12:04+0000\n"
+"PO-Revision-Date: 2016-06-22 02:42+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -219,12 +219,12 @@ msgstr "<strong>已开票</strong>"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
 msgid "<strong>Journal</strong>"
-msgstr "<strong>分类账</strong>"
+msgstr "<strong>日记账</strong>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Journal</strong>:<br/>"
-msgstr "<strong>分类账</strong>:<br/>"
+msgstr "<strong>日记账</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_payment
@@ -467,7 +467,7 @@ msgstr "该POS配置的全局唯一标识符，用来防止客户端数据的冲
 msgid ""
 "A sequence number that is incremented each time a user resumes the pos "
 "session"
-msgstr "每次用户重启POS工作时的自增长序号"
+msgstr "每次用户重启POS工作时的自增长序列"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_sequence_number
@@ -858,12 +858,12 @@ msgstr "现金管理"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_journal_id
 msgid "Cash Journal"
-msgstr "现金分类账"
+msgstr "现金日记账"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos_jl_id
 msgid "Cash Journals"
-msgstr "现金分类账"
+msgstr "现金日记账"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_id
@@ -874,7 +874,7 @@ msgstr "现金出纳机"
 #: code:addons/point_of_sale/point_of_sale.py:364
 #, python-format
 msgid "Cash control can only be applied to cash journals."
-msgstr "只能在现金分类账上进行现金控制"
+msgstr "只能在现金日记账上进行现金控制"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_cashdrawer
@@ -957,14 +957,14 @@ msgstr "在开张和关张检查钱箱的总额"
 msgid ""
 "Check this box if this journal define a payment method that can be used in a"
 " point of sale."
-msgstr "如果这个分类账中定义了能够在‘POS’用的付款方式就勾选这个选项"
+msgstr "如果这个日记账中定义了能够在‘POS’用的付款方式就勾选这个选项"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_group_by
 msgid ""
 "Check this if you want to group the Journal Items by Product while closing a"
 " Session"
-msgstr "如果你想在关闭一个会话时，按产品来对分类账项目进行分组，请勾选此项。"
+msgstr "如果你想在关闭一个会话时，按产品来对日记账项目进行分组，请勾选此项。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1158,7 +1158,7 @@ msgstr "继续销售"
 #: code:addons/point_of_sale/static/src/js/screens.js:1233
 #, python-format
 msgid "Could Not Read Image"
-msgstr "不能读取图片。"
+msgstr "不能读取图像。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1780,7 +1780,7 @@ msgstr "分组"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_by
 msgid "Group Journal Items"
-msgstr "分类账项目分组"
+msgstr "分组日记账项目"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1983,17 +1983,17 @@ msgstr "蜜餞小紅莓、焦糖蘋果、"
 #: model:ir.model,name:point_of_sale.model_account_journal
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_journal_id
 msgid "Journal"
-msgstr "分类账"
+msgstr "日记账"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_account_move
 msgid "Journal Entry"
-msgstr "分类账分录"
+msgstr "日记账分录"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "Journals"
-msgstr "分类账"
+msgstr "日记账"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_big_scrollbars
@@ -2134,7 +2134,7 @@ msgstr "位置"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_login_number
 msgid "Login Sequence Number"
-msgstr "登陆序号"
+msgstr "登录序列号码"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2161,7 +2161,7 @@ msgstr "管理公司间交易"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_group_product_variant
 msgid "Manage Product Variants"
-msgstr "管理产品规格"
+msgstr "管理产品变型"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
@@ -2181,7 +2181,7 @@ msgstr "经理"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_image_medium
 msgid "Medium-sized image"
-msgstr "中等尺寸图片"
+msgstr "中等尺寸图像"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category_image_medium
@@ -2189,7 +2189,7 @@ msgid ""
 "Medium-sized image of the category. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr "中等尺寸的类别图片.它将保持长宽比,并被自动调整为128x128px大小.它将在一些表单界面或看板界面上显示."
+msgstr "中等尺寸的类别图像.它将保持长宽比,并被自动调整为128x128px大小.它将在一些表单界面或看板界面上显示."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2301,7 +2301,7 @@ msgstr "没有重打印"
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:40
 #, python-format
 msgid "No sequence defined on the journal"
-msgstr "分类账没有设置序列号"
+msgstr "日记账没有设置序列号"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2381,7 +2381,7 @@ msgstr "洋葱"
 #: code:addons/point_of_sale/static/src/js/screens.js:1219
 #, python-format
 msgid "Only web-compatible Image formats such as .png or .jpeg are supported"
-msgstr "仅仅支持与网页兼容的图片格式，如.png 或 .jpeg"
+msgstr "仅仅支持与网页兼容的图像格式，如.png 或 .jpeg"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -2672,7 +2672,7 @@ msgid ""
 "                field <i>PoS Payment Method</i> checked. In order to be useable\n"
 "                from the touchscreen interface, you must set the payment method\n"
 "                on the <i>Point of Sale</i> configuration."
-msgstr "勾选了<i>POS支付方式</i>的会计分类账定义了付款方式。为了能在触摸屏上能用，\n你需要在<i>POS</i>配置上设置付款方式"
+msgstr "勾选了<i>POS支付方式</i>的会计日记账定义了付款方式。为了能在触摸屏上能用，\n你需要在<i>POS</i>配置上设置付款方式"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_statement_ids
@@ -2861,7 +2861,7 @@ msgstr "登录所有订单"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_confirm
 msgid "Post POS Journal Entries"
-msgstr "登录PoS机日记帐分录"
+msgstr "登录POS日记帐分录"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3144,7 +3144,7 @@ msgstr "销售详情"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_journal_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_sale_journal
 msgid "Sale Journal"
-msgstr "销售分类账"
+msgstr "销售日记账"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line
@@ -3161,7 +3161,7 @@ msgstr "销售明细"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos_journal_id
 msgid "Sales Journal"
-msgstr "销售分类账"
+msgstr "销售日记账"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_report
@@ -3489,7 +3489,7 @@ msgid ""
 "Small-sized image of the category. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr "中等尺寸保持长宽比的类别图片，自动调整为64x64px大小用于在一些表单界面或看板界面上以及任何需要显示小图片的界面上。"
+msgstr "中等尺寸保持长宽比的类别图像，自动调整为64x64px大小用于在一些表单界面或看板界面上以及任何需要显示小图像的界面上。"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.soft
@@ -3851,7 +3851,7 @@ msgstr "该交易用MercuryPay完成"
 #, python-format
 msgid ""
 "The type of the journal for your payment method should be bank or cash "
-msgstr "你的付款方式的分类账应该为银行或现金"
+msgstr "你的付款方式的日记账应该为银行或现金"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_balance_end
@@ -3936,7 +3936,7 @@ msgstr "该字段定义了在关闭一个会话时候理论的余额和实际余
 msgid ""
 "This field holds the image used as image for the cateogry, limited to "
 "1024x1024px."
-msgstr "用来代表类型的图片大小, 限制在 1024x1024px。"
+msgstr "用来代表类型的图像大小, 限制在 1024x1024px。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_group_pos_manager_id
@@ -4148,7 +4148,7 @@ msgstr "不能取消分拣."
 msgid ""
 "Unable to open the session. You have to assign a sale journal to your point "
 "of sale."
-msgstr "不能进行交易，你必须为你的POS设置一个销售分类账。"
+msgstr "不能进行交易，你必须为你的POS设置一个销售日记账。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_price_unit
@@ -4365,7 +4365,7 @@ msgid ""
 "Method\" from the \"Point of Sale\" tab. You can also create new payment "
 "methods directly from menu \"PoS Backend / Configuration / Payment "
 "Methods\"."
-msgstr "使用菜单\"科目/设置/分类账/分类账\"，通过再次使用银行和现金，你必须定义哪个付款方法必须在POS中有效。选择一个分类账并在 \"POS\"选项卡中点选\"POS付款方式\"。你也可以直接通过菜单 \"POS后台 / 设置 /付款方式\"来新建一个付款方式。"
+msgstr "使用菜单\"科目/设置/日记账/日记账\"，通过再次使用银行和现金，你必须定义哪个付款方法必须在POS中有效。选择一个日记账并在 \"POS\"选项卡中点选\"POS付款方式\"。你也可以直接通过菜单 \"POS后台 / 设置 /付款方式\"来新建一个付款方式。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1036
