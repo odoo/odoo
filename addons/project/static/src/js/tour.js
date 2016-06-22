@@ -50,6 +50,18 @@ tour.register('project_tour', {
     extra_trigger: '.o_form_project_tasks',
     content: _t("Use the breadcrumbs to <b>go back to tasks</b>."),
     position: "bottom"
+}, {
+    trigger: ".o_main_navbar .o_menu_toggle",
+    content: _t("Come back on the 'Home' screen to install other apps or to invite people."),
+    position: "bottom"
+}, {
+    trigger: ".o_apps .o_app:last",
+    content: _t("Let's invite some people to collaborate with you in your project."),
+    position: "bottom"
+}, {
+    trigger: ".o_web_settings_dashboard .o_web_settings_dashboard_invitations",
+    content: _t("Enter email addresses of colleagues you want to invite. Login instruction will be sent in an invitation email."),
+    position: "bottom"
 }]);
 
 });
