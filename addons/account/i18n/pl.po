@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-06-20 14:21+0000\n"
+"PO-Revision-Date: 2016-06-22 14:16+0000\n"
 "Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -802,7 +802,7 @@ msgstr "Wyciąg nie może być anulowany jeśli pozycje zostały uzgodnione."
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only once time on same taxes."
-msgstr "Obszar podatkowy na podatku może być zdefiniowany tylko raz."
+msgstr "Obszar podatkowy dla podatku może być zdefiniowany tylko raz."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:388
@@ -1483,7 +1483,7 @@ msgstr "Kwota dotycząca tego dopasowania.  Przyjmuje się że zawsze będzie do
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount_currency
 #: model:ir.model.fields,field_description:account.field_account_move_line_amount_currency
 msgid "Amount currency"
-msgstr "Waluta kwoty"
+msgstr "Kwota w walucie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_amount_currency
@@ -1658,7 +1658,7 @@ msgstr "Środki trwałe"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_asset
 msgid "Assets management"
-msgstr "Zarządzanie Aktywami"
+msgstr "Zarządzanie aktywami"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_account_ids
@@ -4779,7 +4779,7 @@ msgid ""
 "                            data to import and balances to set. If you plan to do so, \n"
 "                            we recommend you start using Odoo for invoicing and payments \n"
 "                            now, and then move all other accounting transactions at a later time."
-msgstr "Powszechną praktyką jest zmiana oprogramowania księgowego\nna  koniec roku obrotowego. Pozwala to na import mniejszej\nilości danych i sald. Jeśli planujesz to zrobić,\nzalecamy rozpoczęcie używania Odoo do fakturowania i płatności\nteraz, a później przeniesienie innych transakcji księgowych."
+msgstr "Powszechną praktyką jest zmiana oprogramowania księgowego\nna  koniec roku podatkowego. Pozwala to na import mniejszej\nilości danych i sald. Jeśli planujesz to zrobić,\nzalecamy rozpoczęcie używania Odoo do fakturowania i płatności\nteraz, a później przeniesienie innych transakcji księgowych."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5647,7 +5647,7 @@ msgstr "Brak pasujących wyników'"
 msgid ""
 "No users, including Advisers, can edit accounts prior to and inclusive of "
 "this date. Use it for fiscal year locking for example."
-msgstr "Żaden użyktownik, włącznie z księgowym, nie może edytować kont przed tą datą i włącznie z nią. Użyj tego na przykład do zamykania roku podatkowego."
+msgstr "Żaden użyktownik, włącznie z księgowym, nie może edytować zapisów na kontach sprzed tej daty i włącznie z nią. Użyj tego na przykład do zamykania roku podatkowego."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_code_digits
@@ -5899,7 +5899,7 @@ msgid ""
 "Only users with the 'Adviser' role can edit accounts prior to and inclusive "
 "of this date. Use it for period locking inside an open fiscal year, for "
 "example."
-msgstr "Tylko użytkownicy posiadający rolę \"Księgowych\" mogą edytować konta przed tą datą i włącznie z nią. Użyj tego na przykład do zamknięcia okresu i otwarcia roku obrotowego."
+msgstr "Tylko użytkownicy posiadający rolę \"Księgowych\" mogą edytować zapisy na kontach sprzed tej daty i włącznie z nią. Użyj tego na przykład do zamknięcia okresu i otwarcia roku podatkowego."
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -6072,7 +6072,7 @@ msgstr "Zapłacone faktury"
 #: code:addons/account/static/src/xml/account_payment.xml:28
 #, python-format
 msgid "Paid on"
-msgstr "Zapłacono za"
+msgstr "Zapłacono dnia"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reconciled
@@ -6393,7 +6393,7 @@ msgstr "Procent"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_matched_percentage
 msgid "Percentage Matched"
-msgstr "Dopasuj Procentowo"
+msgstr "Dopasuj procentowo"
 
 #. module: account
 #: selection:account.tax,amount_type:0
@@ -7262,7 +7262,7 @@ msgid ""
 "customer or vendor payments. Select 'General' for miscellaneous operations "
 "journals. Select 'Opening/Closing Situation' for entries generated for new "
 "fiscal years."
-msgstr "Wybierz Sprzedaż dla dziennika faktur sprzedaży. Wybierz Zakup dla dziennika faktur zakupu. Wybierz Bank dla dzienników związanych z płatnościami. Wybierz Ogólne dla pozostałych operacji. Wybierz Sytuacja otwarcia/zamknięcia dla zapisów wygenerowanych dla nowego roku obrotowego."
+msgstr "Wybierz Sprzedaż dla dziennika faktur sprzedaży. Wybierz Zakup dla dziennika faktur zakupu. Wybierz Bank dla dzienników związanych z płatnościami. Wybierz Ogólne dla pozostałych operacji. Wybierz Sytuacja otwarcia/zamknięcia dla zapisów wygenerowanych dla nowego roku podatkowego."
 
 #. module: account
 #. openerp-web
@@ -7658,7 +7658,7 @@ msgstr "Nazwa podatku"
 #: model:ir.model.fields,field_description:account.field_account_tax_template_type_tax_use
 #: model:ir.model.fields,field_description:account.field_account_tax_type_tax_use
 msgid "Tax Scope"
-msgstr "Obszar podatkowy"
+msgstr "Zastosowanie podatku"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template_tax_src_id
@@ -8478,7 +8478,7 @@ msgid ""
 "To manage the tax applied when invoicing a Company, Odoo uses the concept of"
 " Fiscal Position: they serve to automatically set the right tax and/or "
 "account according to the customer country and state."
-msgstr "By zarządzać stosowaniem podatku podczas fakturowania, Odoo korzysta z koncepcji obszarów podatkowych: automatycznie dostosowują odpowiedni podatek i/lub konto w zależności od kraju klienta."
+msgstr "By zarządzać stosowaniem podatku podczas fakturowania, Odoo korzysta z koncepcji obszarów podatkowych: automatycznie dostosowują one odpowiedni podatek i/lub konto w zależności od kraju i regionu klienta."
 
 #. module: account
 #: code:addons/account/models/account_move.py:776
@@ -8820,7 +8820,7 @@ msgid ""
 "beginning of time instead of from the fiscal year only. Account types that "
 "should be reset to zero at each new fiscal year (like expenses, revenue..) "
 "should not have this option set."
-msgstr "Używana w raportach aby wiedzieć czy powinniśmy rozważać pozycje dziennika od początku ich tworzenia  czy tylko od początku roku obrotowego. Nie włączaj tej opcji dla kont, których saldo powinno wynosić 0 na początku każdego roku obrotowego (konta wynikowe - przychody, koszty..)."
+msgstr "Używane w raportach aby wiedzieć czy powinniśmy rozważać pozycje dziennika od początku ich tworzenia czy tylko od początku roku podatkowego. Nie włączaj tej opcji dla kont, których saldo powinno wynosić 0 na początku każdego roku podatkowego (konta wynikowe - przychody, koszty..)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence
