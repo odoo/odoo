@@ -269,10 +269,6 @@ odoo.define('website.website', function (require) {
         error: error,
         form: form,
         TopBar: TopBar,
-        ready: function () {
-            console.warn("website.ready is deprecated: Please use require('web_editor.base').ready()");
-            return base.ready();
-        },
     };
 
     setTimeout(function () {

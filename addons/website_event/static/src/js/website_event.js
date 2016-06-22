@@ -36,7 +36,7 @@ var EventRegistrationForm = Widget.extend({
     },
 });
 
-web_editor_base.ready().then(function(){
+_.defer(function(){
     var event_registration_form = new EventRegistrationForm().appendTo($('#registration_form'));
 });
 

@@ -3,12 +3,10 @@ odoo.define("website_forum.tour_forum", function (require) {
 
     var core = require("web.core");
     var tour = require("web_tour.tour");
-    var base = require("web_editor.base");
 
     var _t = core._t;
 
-    base.ready().done(function () {
-        tour.register("question", {
+    tour.register("question", {
             url: "/",
         }, [tour.STEPS.WEBSITE_NEW_PAGE, {
             trigger: "a[data-action=new_forum]",
@@ -70,6 +68,6 @@ odoo.define("website_forum.tour_forum", function (require) {
             trigger: "a[data-karma=\"20\"]:first",
             content: _t("Click here to accept this answer."),
             position: "right",
-        }]);
-    });
+        }
+    ]);
 });
