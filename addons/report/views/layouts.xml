@@ -26,6 +26,7 @@
     <link href="/report/static/src/less/report.editor.less" rel="stylesheet" type="text/less"/>
 
     <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
+    <script type="text/javascript" src="/report/static/src/js/utils.js"></script>
     <script type="text/javascript" src='/report/static/src/js/report.editor.js' />
 </template>
 
@@ -37,7 +38,8 @@
           t-att-data-main-object="repr(main_object) if editable else None"
           t-att-data-report-margin-top="data_report_margin_top"
           t-att-data-report-header-spacing="data_report_header_spacing"
-          t-att-data-report-dpi="data_report_dpi">
+          t-att-data-report-dpi="data_report_dpi"
+          t-att-web-base-url="web_base_url">
         <head>
             <meta charset="utf-8" />
             <meta name="viewport" content="initial-scale=1"/>

@@ -114,6 +114,7 @@ class Report(osv.Model):
             user=user,
             res_company=user.company_id,
             website=website,
+            web_base_url=self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'web.base.url', default='')
         )
         return view_obj.render_template(cr, uid, template, values, context=context)
 
