@@ -4,6 +4,7 @@ odoo.define('web.ListView', function (require) {
 
 var core = require('web.core');
 var data = require('web.data');
+var data_manager = require('web.data_manager');
 var DataExport = require('web.DataExport');
 var formats = require('web.formats');
 var common = require('web.list_common');
@@ -36,6 +37,7 @@ var row_decoration = [
 var ListView = View.extend({
     _template: 'ListView',
     accesskey: "l",
+    require_fields: true,
     defaults: _.extend({}, View.prototype.defaults, {
         // records can be selected one by one
         selectable: true,
@@ -151,6 +153,7 @@ var ListView = View.extend({
         }
     },
     willStart: function() {
+        var self = this;
         // Retrieve the decoration defined on the model's list view
         this.decoration = _.pick(this.fields_view.arch.attrs, function(value, key) {
             return row_decoration.indexOf(key) >= 0;
@@ -158,7 +161,10 @@ var ListView = View.extend({
         this.decoration = _.mapObject(this.decoration, function(value) {
             return py.parse(py.tokenize(value));
         });
-        return this._super();
+        var fields_def = data_manager.load_fields(this.dataset).then(function(fields_get) {
+            self.fields_get = fields_get;
+        });
+        return $.when(this._super(), fields_def);
     },
     /**
      * Set a custom Group construct as the root of the List View.
@@ -1379,6 +1385,12 @@ ListView.Groups = Class.extend({
                     }
                 } else {
                     group_label = group.value;
+                    var grouped_on_field = self.view.fields_get[group.grouped_on];
+                    if (grouped_on_field.type === 'selection') {
+                        group_label = _.find(grouped_on_field.selection, function(selection) {
+                            return selection[0] === group.value;
+                        });
+                    }
                     if (group_label instanceof Array) {
                         group_label = group_label[1];
                     }
