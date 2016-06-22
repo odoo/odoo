@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-17 08:18+0000\n"
+"PO-Revision-Date: 2016-06-21 07:11+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-8/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -43,7 +43,7 @@ msgid ""
 "${object.company_id.email or ''}\n"
 "${object.company_id.phone or ''}\n"
 "</pre>"
-msgstr ""
+msgstr "\n<p>\n    Witaj ${object.name},\n</p>\n<p>\n    Zostałaś/eś zaproszona/y do uprawomocnienia twojego emailu w celu uzyskania dostępu do \"${object.company_id.name}\" Forum pytań i odpowiedzi.\n</p>\n<p>\n    Aby uprawomocnić twój email, proszę kliknąć na link poniżej:\n</p>\n<ul>\n    <li><a href=\"${ctx.get('token_url')}\">Uprawomocnienie mojego konta dla \"${object.company_id.name}\" Forum pytań i odpowiedzi</a></li>\n</ul>\n<p>\n    Dziękujemy,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
 
 #. module: website_forum
 #: model:email.template,subject:website_forum.validation_email

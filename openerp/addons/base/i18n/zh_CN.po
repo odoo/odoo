@@ -22,8 +22,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2016-06-18 02:45+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
+"PO-Revision-Date: 2016-06-22 02:43+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1526,7 +1526,7 @@ msgid ""
 "* *On Demand*: Invoices are created manually from Sales Orders when needed\n"
 "* *On Delivery Order*: Invoices are generated from picking (delivery)\n"
 "* *Before Delivery*: A Draft invoice is created and must be paid before delivery\n"
-msgstr "\n管理销售报价单和订单\n==================================\n\n这个模块关联了销售和仓库管理程序。\n\nPreferences\n-----------\n* 运输: Choice of delivery at once or partial delivery\n* 开票: choose how invoices will be paid\n* 国际贸易术语: International Commercial terms\n\nYou can choose flexible invoicing methods:\n\n* *On Demand*: Invoices are created manually from Sales Orders when needed\n* *On Delivery Order*: Invoices are generated from picking (delivery)\n* *Before Delivery*: A Draft invoice is created and must be paid before delivery\n"
+msgstr "\n管理销售报价单和订单\n==================================\n\n这个模块关联了销售和仓库管理程序。\n\n选项参数\n-----------\n* 运输: 交货或分批交货的选择\n* 开票: 选择如何开票\n* 国际贸易术语: 国际贸易术语\n\n您可以选择灵活的开票方式：\n\n* *按需求开票*: 在手动创建销售订单时按需开票\n* *按订单交期*: 按(交货)装箱清单开票\n* *交货前开票*: 是必须在交货前就得开好的\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp
@@ -2974,7 +2974,7 @@ msgid ""
 "pay online on their Sale Orders and Invoices that are not paid yet. Paypal is included\n"
 "by default, you simply need to configure a Paypal account in the Accounting/Invoicing settings.\n"
 "    "
-msgstr "\n如果你安装了销售模块和门户模块的话，这模块会增加一个销售菜单到你的门户页面。\n======================================================================================\n\n安装后，门户的用户可以通过以下菜单访问自己的文档：\n - 报价 - 销售订单\n - 发货单\n - 产品（公共的）\n - 发票\n - 付款/退款\n\n如果在线支付已设定收款方，门户用户也有可以在线支付他尚未结帐的销售订单和发票。\n预设已经包含了Paypal支付，你只需要在会计中的设定，简单的设置Paypal帐号。"
+msgstr "\n如果你安装了销售模块和门户模块的话，这模块会增加一个销售菜单到你的门户页面。\n======================================================================================\n\n安装后，门户的用户可以通过以下菜单访问自己的文档：\n - 报价单 - 销售订单\n - 发货单\n - 产品（公共的）\n - 发票\n - 付款/退款\n\n如果在线支付已设定收款方，门户用户也有可以在线支付他尚未结帐的销售订单和发票。\n预设已经包含了Paypal支付，你只需要在会计中的设定，简单的设置Paypal帐号。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_report_webkit
@@ -6717,7 +6717,7 @@ msgstr "库拉索岛"
 #: view:res.currency:base.view_currency_search
 #: view:res.currency:base.view_currency_tree
 msgid "Currencies"
-msgstr "货币"
+msgstr "币种"
 
 #. module: base
 #: model:ir.model,name:base.model_res_currency field:res.company,currency_id:0
@@ -6991,7 +6991,7 @@ msgid ""
 "\n"
 "Thank you in advance for your cooperation.\n"
 "Best Regards,"
-msgstr "亲爱的先生/女士,\n    我们的记录表明，您的到期帐款尚未支付。请看下面的明细信息。\n    如果这些金额已经支付，请忽略本次提醒。否则，请向我们说明如下金额。\n    如果有任何关于账单的疑问，请联系我们。\n\n    谢谢您的合作。\n    此致  \n           敬礼"
+msgstr "尊敬的先生/女士,\n    我们的记录表明，您的账户仍有到期的付款。请查找下面的明细。\n    如果款项已经支付，请忽略此通知。否则，请按如下所述的总金额转交给我们。\n    如果有任何关于账户的疑问，请联系我们。\n\n    谢谢您的合作。\n    此致  \n           敬礼"
 
 #. module: base
 #: field:ir.mail_server,smtp_debug:0
@@ -8646,7 +8646,7 @@ msgstr "梵蒂冈"
 #. module: base
 #: field:res.users,action_id:0
 msgid "Home Action"
-msgstr "家动作"
+msgstr "主页动作"
 
 #. module: base
 #: model:res.country,name:base.hn
@@ -8781,7 +8781,7 @@ msgstr "定义在 XML 文件里的视图ID"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bus
 msgid "IM Bus"
-msgstr "IM 总线"
+msgstr "IM 即时消息总线"
 
 #. module: base
 #: field:base.language.import,code:0
@@ -8879,7 +8879,7 @@ msgstr "假如几个子活动返回一个活动,仅最后一个活动被执行.\
 msgid ""
 "If specified, this action will be opened at log on for this user, in "
 "addition to the standard menu."
-msgstr "如果指定的话，这个动作将在这个用户登录后和标准的菜单一起执行。"
+msgstr "如果指定的话，这个动作将在该用户账号登录后与标准的菜单一起执行。就是说登陆第一画面将看到指定的菜单页面，懂吗"
 
 #. module: base
 #: help:ir.ui.menu,needaction_enabled:0
@@ -9185,7 +9185,7 @@ msgstr "即时消息"
 #. module: base
 #: model:ir.module.module,description:base.module_bus
 msgid "Instant Messaging Bus allow you to send messages to users, in live."
-msgstr "即时消息总线允许您在线发送信息给用户。"
+msgstr "您可以通过即时消息总线给用户发送在线即时信息，类似QQ，但限于odoo的web框架内。"
 
 #. module: base
 #: code:addons/models.py:1460
@@ -10390,7 +10390,7 @@ msgstr "菜单"
 #. module: base
 #: view:res.users:base.view_users_form
 msgid "Menus Customization"
-msgstr "定制菜单"
+msgstr "菜单定制"
 
 #. module: base
 #: field:ir.logging,message:0
@@ -10761,7 +10761,7 @@ msgstr "多公司"
 #. module: base
 #: model:res.groups,name:base.group_multi_currency
 msgid "Multi Currencies"
-msgstr "多货币"
+msgstr "多币种"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_multilang
@@ -11342,7 +11342,7 @@ msgstr "商机列表"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_crm
 msgid "Opportunity to Quotation"
-msgstr "商机到报价"
+msgstr "商机到报价单"
 
 #. module: base
 #: help:ir.actions.act_window,domain:0
@@ -12213,12 +12213,12 @@ msgstr "限定"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_stock
 msgid "Quotation, Sale Orders, Delivery & Invoicing Control"
-msgstr "报价，销售订单，交货和开票控制"
+msgstr "报价单，销售订单，交货和开票控制"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale
 msgid "Quotations, Sales Orders, Invoicing"
-msgstr "报价，销售订单，开票"
+msgstr "报价单，销售订单，开票"
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -14269,18 +14269,18 @@ msgstr "用整数表示的工作优先级：0表示高优先级，10表示低优
 #. module: base
 #: help:res.currency.rate,rate:0
 msgid "The rate of the currency to the currency of rate 1"
-msgstr "币别到其他币别的汇率为 1"
+msgstr "货币的比率到比率 1的货币"
 
 #. module: base
 #: help:res.currency,rate_silent:0
 msgid ""
 "The rate of the currency to the currency of rate 1 (0 if no rate defined)."
-msgstr "汇率，跟本位币（1）之间的兑换比率（0为汇率没有定义）"
+msgstr "货币的比率到比率 1的货币(0为没有定义比率)"
 
 #. module: base
 #: help:res.currency,rate:0
 msgid "The rate of the currency to the currency of rate 1."
-msgstr "汇率，跟本位币（1）之间的兑换比率"
+msgstr "币别到其他币别的汇率为 1"
 
 #. module: base
 #: help:ir.attachment,res_id:0
@@ -15833,7 +15833,7 @@ msgstr "您试图升级一个依赖于模块： %s的模块，但您的系统中
 msgid ""
 "You will be able to define additional access rights by editing the newly "
 "created user under the Settings / Users menu."
-msgstr "通过编辑在【设置/用户】菜单下的新建用户，你将能够定义额外的进入权限"
+msgstr "通过编辑在设置/用户菜单下的新建用户，你将能够定义额外的进入权限"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:234
