@@ -271,7 +271,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         )
 
         # ast.Expression().body -> expr
-        return Contextifier().visit(st).body
+        return Contextifier(safe_eval._BUILTINS).visit(st).body
 
     def _get_attr_bool(self, attr, default=False):
         if attr:
