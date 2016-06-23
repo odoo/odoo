@@ -8,10 +8,7 @@ var common = require('web.form_common');
 var base = require('web_editor.base');
 var editor = require('web_editor.editor');
 var summernote = require('web_editor.summernote');
-require('web_editor.rte.summernote');
 var transcoder = require('web_editor.transcoder');
-
-var form_widgets = require('web.form_widgets');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -23,43 +20,6 @@ var _t = core._t;
  */
 
 var widget = common.AbstractField.extend(common.ReinitializeFieldMixin);
-var dom = $.summernote.core.dom;
-
-var _html = dom.html;
-dom.html = function ($dom, prettifyHtml) {
-    if (prettifyHtml) {
-        transcoder.font_to_img($dom);
-        transcoder.class_to_style($dom);
-
-        // fix outlook image rendering bug
-        _.each(['width', 'height'], function(attribute) {
-            $dom.find('img[style*="width"], img[style*="height"]').attr(attribute, function(){
-                return $(this)[attribute]();
-            }).css(attribute, function(){
-                return $(this).get(0).style[attribute] || 'auto';
-            });
-        });
-    }
-    return _html($dom, prettifyHtml);
-};
-
-var _value = dom.value;
-dom.value = function ($dom, stripLinebreaks, $editable) {
-    var value = _value($dom, stripLinebreaks);
-    if (stripLinebreaks) {
-        $editable = $editable || $('<div/>');
-        $editable.html(value);
-        transcoder.img_to_font($editable);
-        transcoder.style_to_class($editable);
-
-        // fix outlook image rendering bug
-        $editable.find('img[style*="width"], img[style*="height"]').removeAttr('height width');
-
-        value = $editable.html();
-    }
-    return value;
-};
-
 
 var FieldTextHtmlSimple = widget.extend({
     template: 'web_editor.FieldTextHtmlSimple',
@@ -78,12 +38,13 @@ var FieldTextHtmlSimple = widget.extend({
                 ['insert', ['link', 'picture']],
                 ['history', ['undo', 'redo']]
             ],
-            'prettifyHtml': !!this.options['style-inline'],
+            'prettifyHtml': false,
             'styleWithSpan': false,
             'inlinemedia': ['p'],
             'lang': "odoo",
             'onChange': function (value) {
                 self.internal_set_value(value);
+                self.trigger('changed_value');
             }
         };
         if (session.debug) {
@@ -92,7 +53,6 @@ var FieldTextHtmlSimple = widget.extend({
         return config;
     },
     start: function() {
-        var self = this;
         var def = this._super.apply(this, arguments);
         this.$translate.remove();
         this.$translate = $();
@@ -134,22 +94,9 @@ var FieldTextHtmlSimple = widget.extend({
             setTimeout(reset, 0);
 
             this.$content = this.$('.note-editable:first');
-            this.$content.html(dom.value(this.$textarea, this.options['style-inline'], this.$content));
-
-            var layoutInfo = this.$textarea.data('layoutInfo');
-            var $codable = layoutInfo.codable();
-            var $toolbar = layoutInfo.toolbar();
-            $toolbar.find('button[data-event="codeview"]').on('click', function (event) {
-                if ($codable.is(':visible')) {
-                    if (dom.check_unvalid_preview($codable.val())) {
-                        event.preventDefault();
-                        self.do_notify(_t("You can't use html preview when you use non html code (like jinja)"));
-                    }
-                }
-            });
-            $codable.on('input', function () {
-                self.internal_set_value($codable.val());
-            });
+            if (this.options['style-inline']) {
+                transcoder.style_to_class(this.$content);
+            }
         }
 
         $(".oe-view-manager-content").on("scroll", function () {
@@ -168,11 +115,11 @@ var FieldTextHtmlSimple = widget.extend({
         var value = text || "";
         if (value.match(/^\s*$/)) {
             value = '<p><br/></p>';
-        } else if (!value.match(/<(a|span|font|strong|u|i|strong|b|td|p)[^>]*>/i)) {
+        } else {
             value = "<p>"+value.split(/<br\/?>/).join("<br/></p><p>")+"</p>";
-            value = value.replace(/<p[^>]*><p([^>]*)>/g, '<p\$1>').replace('</p></p>', '</p>');
+            value = value.replace(/<p><\/p>/g, '').replace('<p><p>', '<p>').replace('<p><p ', '<p ').replace('</p></p>', '</p>');
         }
-        return value.replace(/<p[^>]*><\/p>/g, '');
+        return value;
     },
     focus: function() {
         if (this.get("effective_readonly")) {
@@ -192,22 +139,10 @@ var FieldTextHtmlSimple = widget.extend({
         var value = this.get('value');
         this.$textarea.val(value || '');
         this.$content.html(this.text_to_html(value));
-
-        var layoutInfo = this.$textarea.data('layoutInfo');
-        if (layoutInfo) {
-            var $codable = layoutInfo.codable();
-            $codable.val(value);
-            var $toolbar = layoutInfo.toolbar();
-            if ($codable.is(':visible') != !!dom.check_unvalid_preview(value)) {
-                $toolbar.find('button[data-event="codeview"]').trigger('click');
-            }
-        }
-
         if (this.get("effective_readonly")) {
             this.resize();
         } else {
             transcoder.style_to_class(this.$content);
-            transcoder.img_to_font(this.$content);
         }
         if (this.$content.is(document.activeElement)) {
             this.focus();
@@ -221,11 +156,6 @@ var FieldTextHtmlSimple = widget.extend({
         return !this.get('value') || this.get('value') === "<p><br/></p>" || !this.get('value').match(/\S/);
     },
     commit_value: function() {
-        var layoutInfo = this.$textarea.data('layoutInfo');
-        if (layoutInfo && layoutInfo.codable().is(':visible')) {
-            return this.internal_set_value(layoutInfo.codable().val());
-        }
-
         if (this.options['style-inline']) {
             transcoder.class_to_style(this.$content);
             transcoder.font_to_img(this.$content);
@@ -238,7 +168,6 @@ var FieldTextHtmlSimple = widget.extend({
         this._super();
     }
 });
-
 
 var FieldTextHtml = widget.extend({
     template: 'web_editor.FieldTextHtml',
@@ -438,7 +367,8 @@ var FieldTextHtml = widget.extend({
             this._dirty_flag = false;
             return this.editor.save();
         } else if (this._dirty_flag && this.editor && this.editor.buildingBlock) {
-            this.internal_set_value( this.editor.buildingBlock.get_codesource() );
+            this.editor.buildingBlock.clean_for_save();
+            this.internal_set_value( this.$content.html() );
         }
     },
     destroy: function () {

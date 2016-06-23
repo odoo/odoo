@@ -234,7 +234,7 @@ define([
     var hToolbarAndPopoverClick = function (event) {
       var $btn = $(event.target).closest('[data-event]');
 
-      if (!$btn.length || $btn.hasClass('disabled')) {
+      if (!$btn.length) {
         return;
       }
 

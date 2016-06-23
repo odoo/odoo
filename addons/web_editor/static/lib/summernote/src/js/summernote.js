@@ -221,7 +221,6 @@ define([
 
           var layoutInfo = renderer.layoutInfoFromHolder($holder);
           $holder.data('layoutInfo', layoutInfo);
-          layoutInfo.editable().data('options', options);
 
           eventHandler.attach(layoutInfo, options);
           eventHandler.attachCustomEvent(layoutInfo, options);
