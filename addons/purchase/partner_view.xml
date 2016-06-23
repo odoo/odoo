@@ -9,7 +9,7 @@
             <field name="groups_id" eval="[(4, ref('base.group_multi_currency'))]"/>
             <field name="arch" type="xml">
                 <group name="purchase" position="inside">
-                    <field name="property_purchase_currency_id"/>
+                    <field name="property_purchase_currency_id" options="{'no_create': True, 'no_open': True}"/>
                 </group>
             </field>
     </record>
