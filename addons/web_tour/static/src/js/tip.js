@@ -11,7 +11,6 @@ return Widget.extend({
         mouseleave: "_to_bubble_mode",
     },
     /**
-     * @param {$anchor} [JQuery] the node on which the tip should be placed
      * @param {info} [Object] description of the tip, containing the following keys:
      *  - content [String] the html content of the tip
      *  - event_handlers [Object] description of optional event handlers to bind to the tip:
@@ -24,9 +23,8 @@ return Widget.extend({
      *  - overlay [Object] x and y values for the number of pixels the mouseout detection area
      *    overlaps the opened tip, default {x: 50, y: 50}
      */
-    init: function(parent, $anchor, info) {
+    init: function(parent, info) {
         this._super(parent);
-        this.$anchor = $anchor;
         this.info = _.defaults(info, {
             position: "right",
             width: 270,
@@ -36,6 +34,24 @@ return Widget.extend({
                 y: 50,
             },
         });
+        this.position = {
+            top: "50%",
+            left: "50%",
+        };
+    },
+    /**
+     * @param {$anchor} [JQuery] the node on which the tip should be placed
+     */
+    attach_to: function ($anchor) {
+        this.$anchor = $anchor;
+        this.$ideal_location = this._get_ideal_location();
+
+        var position = this.$ideal_location.css("position");
+        if (position === "static") {
+            this.$ideal_location.addClass("o_tooltip_parent");
+        }
+
+        return this.appendTo(this.$ideal_location);
     },
     start: function() {
         this.$tooltip_overlay = this.$(".o_tooltip_overlay");
@@ -59,12 +75,20 @@ return Widget.extend({
 
         this._reposition();
         this.$el.css("opacity", 1);
-        core.bus.on('scroll resize', this, function() {
+        core.bus.on("resize", this, function () {
             if (this.tip_opened) {
                 this._to_bubble_mode(true);
             }
             this._reposition();
         });
+
+        this.$el.on("transitionend oTransitionEnd webkitTransitionEnd", (function () {
+            if (!this.tip_opened && this.$el.parent()[0] === document.body) {
+                this.$el.detach();
+                this.$el.css(this.position);
+                this.$el.appendTo(this.$ideal_location);
+            }
+        }).bind(this));
 
         return this._super.apply(this, arguments);
     },
@@ -72,17 +96,37 @@ return Widget.extend({
         this._unbind_anchor_events();
         clearTimeout(this.timerIn);
         clearTimeout(this.timerOut);
+
+        // Do not remove the parent class if it contains other tooltips
+        if (this.$ideal_location.children(".o_tooltip").not(this.$el[0]).length === 0) {
+            this.$ideal_location.removeClass("o_tooltip_parent");
+        }
+
         return this._super.apply(this, arguments);
     },
-    update: function($anchor) {
+    update: function ($anchor) {
         if (!$anchor.is(this.$anchor)) {
             this._unbind_anchor_events();
             this.$anchor = $anchor;
+            this.$ideal_location = this._get_ideal_location();
+            if (this.$el.parent()[0] !== document.body) {
+                this.$el.appendTo(this.$ideal_location);
+            }
             this._bind_anchor_events();
         }
         this._reposition();
     },
-    _reposition: function() {
+    _get_ideal_location: function () {
+        var $location = this.$anchor;
+        var o;
+        do {
+            $location = $location.parent();
+            o = $location.css("overflow");
+        } while ((o === "visible" || o === "hidden") && $location[0] !== document.body);
+
+        return $location;
+    },
+    _reposition: function () {
         if (this.tip_opened) return;
         this.$el.removeClass("o_animated");
 
@@ -100,6 +144,8 @@ return Widget.extend({
             bottom: -Math.min((this.info.position === "top" ? this.info.space : this.info.overlay.y), this.$window.height() - (offset.top + this.init_height)),
             left: -Math.min((this.info.position === "right" ? this.info.space : this.info.overlay.x), offset.left),
         });
+
+        this.position = this.$el.position();
 
         this.$el.addClass("o_animated");
     },
@@ -135,6 +181,9 @@ return Widget.extend({
             this.timerOut = undefined;
             return;
         }
+        if (this.tip_opened) {
+            return;
+        }
 
         if (force === true) {
             this._build_info_mode();
@@ -149,6 +198,13 @@ return Widget.extend({
         this.tip_opened = true;
 
         var offset = this.$el.offset();
+
+        if (this.$el.parent()[0] !== document.body) {
+            this.$el.detach();
+            this.$el.css(offset);
+            this.$el.appendTo(document.body);
+        }
+
         var mbLeft = 0;
         var mbTop = 0;
         var overflow = false;
@@ -178,6 +234,9 @@ return Widget.extend({
         if (this.timerIn !== undefined) {
             clearTimeout(this.timerIn);
             this.timerIn = undefined;
+            return;
+        }
+        if (!this.tip_opened) {
             return;
         }
 
