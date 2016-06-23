@@ -6,45 +6,6 @@ var rte = require('web_editor.rte');
 var widget = require('web_editor.widget');
 var transcoder = require('web_editor.transcoder');
 var snippet_editor = require('web_editor.snippet.editor');
-var summernote = require('web_editor.rte.summernote');
-var pluginEvents = summernote.pluginEvents;
-var dom = summernote.core.dom;
-
-var _html = dom.html;
-dom.html = function ($dom, prettifyHtml) {
-    if (prettifyHtml) {
-        transcoder.font_to_img($dom);
-        transcoder.class_to_style($dom);
-
-        // fix outlook image rendering bug
-        _.each(['width', 'height'], function(attribute) {
-            $dom.find('img[style*="width"], img[style*="height"]').attr(attribute, function(){
-                return $(this)[attribute]();
-            }).css(attribute, function(){
-                return $(this).get(0).style[attribute] || 'auto';
-            });
-        });
-    }
-    return _html($dom, prettifyHtml);
-};
-
-var _value = dom.value;
-dom.value = function ($dom, stripLinebreaks, $editable) {
-    var value = _value($dom, stripLinebreaks);
-    if (stripLinebreaks) {
-        $editable = $editable || $('<div/>');
-        $editable.html(value);
-        transcoder.img_to_font($editable);
-        transcoder.style_to_class($editable);
-
-        // fix outlook image rendering bug
-        $editable.find('img[style*="width"], img[style*="height"]').removeAttr('height width');
-
-        value = $editable.html();
-    }
-    return value;
-};
-
 
 widget.MediaDialog.include({
     start: function () {
@@ -74,6 +35,37 @@ editor.Class.include({
         }
         return this._super.apply(this, arguments);
     },
+});
+
+snippet_editor.Class.include({
+    start: function () {
+        var self = this;
+        this._super();
+        setTimeout(function () {
+            var $editable = $("#editable_area");
+            transcoder.img_to_font($editable);
+            transcoder.style_to_class($editable);
+
+            // fix outlook image rendering bug
+            $editable.find('img[style*="width"], img[style*="height"]').removeAttr('height width');
+        });
+    },
+    clean_for_save: function () {
+        this._super();
+        var $editable = $("#editable_area");
+        transcoder.font_to_img($editable);
+        transcoder.class_to_style($editable);
+
+        // fix outlook image rendering bug
+        _.each(['width', 'height'], function(attribute) {
+            $editable.find('img[style*="width"], img[style*="height"]').attr(attribute, function(){
+                return $(this)[attribute]();
+            }).css(attribute, function(){
+                return $(this).get(0).style[attribute] || 'auto';
+            });
+        });
+    },
+
 });
 
 window.top.odoo[callback+"_updown"] = function (value, fields_values) {

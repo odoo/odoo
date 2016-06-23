@@ -340,7 +340,7 @@ Tour.register({
     id:   'rte_inline',
     name: "Test RTE Inline",
     mode: 'test',
-    path: '/web_editor/field/html/inline?debug=assets&callback=FieldTextHtml_0&enable_editor=1&datarecord=%7B%7D',
+    path: '/web_editor/field/html/inline?callback=FieldTextHtml_0&enable_editor=1&datarecord=%7B%7D',
     steps: [
         {
             title:     "Change html for this test",
@@ -369,7 +369,7 @@ Tour.register({
             title:     "call clean for save",
             element:   '#wrapwrap table',
             onload: function () {
-                $("#editable_area").html($("#editable_area").data('codesource'));
+                snippet_editor.instance.clean_for_save();
             }
         },
         {

@@ -28,7 +28,6 @@ var range = $.summernote.core.range;
 var eventHandler = $.summernote.eventHandler;
 var renderer = $.summernote.renderer;
 var options = $.summernote.options;
-var pluginEvents = $.summernote.pluginEvents;
 
 var tplButton = renderer.getTemplate().button;
 var tplIconButton = renderer.getTemplate().iconButton;
@@ -371,7 +370,7 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
     editor.appendTo(document.body);
     return new $.Deferred().reject();
 };
-pluginEvents.alt = function (event, editor, layoutInfo, sorted) {
+$.summernote.pluginEvents.alt = function (event, editor, layoutInfo, sorted) {
     var $editable = layoutInfo.editable();
     var $selection = layoutInfo.handle().find('.note-control-selection');
     var media = $selection.data('target');
@@ -412,8 +411,8 @@ dom.isFont = function (node) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-var fn_visible = pluginEvents.visible;
-pluginEvents.visible = function (event, editor, layoutInfo) {
+var fn_visible = $.summernote.pluginEvents.visible;
+$.summernote.pluginEvents.visible = function (event, editor, layoutInfo) {
     var res = fn_visible.call(this, event, editor, layoutInfo);
     var rng = range.create();
     if(!rng) return res;
@@ -429,12 +428,8 @@ pluginEvents.visible = function (event, editor, layoutInfo) {
     return res;
 };
 
-
-dom.check_unvalid_preview = function(value) {
-    return /\n\s*(%|\{%)\s*\S+/.test(value); // jinja test
-};
-dom.html = function ($dom, prettifyHtml) {
-    var html = $dom.html().trim();
+function prettify_html(html) {
+    html = html.trim();
     var result = '',
         level = 0,
         get_space = function (level) {
@@ -442,7 +437,7 @@ dom.html = function ($dom, prettifyHtml) {
             while (i--) space += '  ';
             return space;
         },
-        reg = /^<\/?(a|span|font|strong|u|i|strong|b|td|p)(\s|>)/i,
+        reg = /^<\/?(a|span|font|strong|u|i|strong|b)(\s|>)/i,
         inline_level = Infinity,
         tokens = _.compact(_.flatten(_.map(html.split(/</), function (value) {
             value = value.replace(/\s+/g, ' ').split(/>/);
@@ -489,53 +484,17 @@ dom.html = function ($dom, prettifyHtml) {
         }
     }
     return result;
-};
-dom.value = function ($node, stripLinebreaks) {
-  var val = dom.isTextarea($node[0]) ? $node.val() : $node.html();
-  if (stripLinebreaks) {
-    return val.replace(/\s*[\n\r]+\s*/g, '');
-  }
-  return val;
-};
-pluginEvents.codeview = function (event, editor, layoutInfo) {
-    if (event.isDefaultPrevented()) {
-        return;
-    }
-    var $editor = layoutInfo.editable();
-    var $codable = layoutInfo.codable ? layoutInfo.codable() : $editor.prev('textarea');
-
-    $codable.prev('.check_unvalid_preview').remove();
-    if ($editor.hasClass('codeview') && dom.check_unvalid_preview($codable.val())) {
-        var $unvalid = $('<div class="check_unvalid_preview" style="color: #a94442; background-color: #f2dede; border-color: #ebccd1; padding: 15px; border-radius: 4px;"/>');
-        $codable.before($unvalid.text(_t("You can't use html preview when you use non html code (like jinja)")));
-        setTimeout(function () {
-            $unvalid.fadeOut();
-        }, 1000);
-        return;
-    }
-
-    var prettifyHtml = $editor.data('options').prettifyHtml;
-
-    // getter
-    $editor.data('codesource', function () {
-        return $editor.hasClass('codeview') ?
-            (layoutInfo.codable ? layoutInfo.codable() : $editor.prev('textarea')).val() :
-            dom.html($editor, prettifyHtml);
-    });
-
+}
+$.summernote.pluginEvents.codeview = function (event, editor, layoutInfo) {
     if (layoutInfo.toolbar) {
-        var codeview = eventHandler.modules.codeview.toggle(layoutInfo);
-        if (codeview) {
-            $codable.val(dom.html($editor, prettifyHtml));
-        } else {
-            $editor.html(dom.value($codable, prettifyHtml, $editor));
-            $editor.trigger('content_changed');
-        }
+        return eventHandler.modules.codeview.toggle(layoutInfo);
     } else {
-        var $textarea = $editor.prev('textarea.codesource');
+        var $editor = layoutInfo.editor();
+        var $textarea = $editor.prev('textarea');
 
         if (!$textarea.length) {
             // init and create texarea
+            var html = prettify_html($editor.prop("innerHTML"));
             $editor.parent().css({
                 'position': 'absolute',
                 'top': 0,
@@ -543,7 +502,7 @@ pluginEvents.codeview = function (event, editor, layoutInfo) {
                 'left': 0,
                 'right': 0
             });
-            $textarea = $('<textarea class="codesource"/>').css({
+            $textarea = $('<textarea/>').css({
                 'margin': '0 -4px',
                 'padding': '0 4px',
                 'border': 0,
@@ -554,30 +513,15 @@ pluginEvents.codeview = function (event, editor, layoutInfo) {
                 'font-size': '13px',
                 'height': '98%',
                 'white-space': 'pre',
-                'word-wrap': 'normal',
-                'display': 'none',
-            });
+                'word-wrap': 'normal'
+            }).val(html).data('init', html);
             $editor.before($textarea);
-        }
-
-        if (!$editor.hasClass('codeview')) {
-            setTimeout(function () {
-                layoutInfo.popover().find('button:not([data-event="codeview"])').addClass('hidden');
-            }, 10);
-            var html = dom.html($editor, prettifyHtml);
-            $textarea.val(html).data('indexOfnit', html);
-            $textarea.show();
-            $editor.addClass('codeview').hide();
+            $editor.hide();
         } else {
-            layoutInfo.popover().find('button:not([data-event="codeview"])').removeClass('hidden');
             // save changes
-            $editor.html(dom.value($textarea, prettifyHtml, $editor));
-            $textarea.hide();
-            $editor.removeClass('codeview').show();
-            if ($textarea.data('indexOfnit') != $textarea.val()) {
-                $editor.trigger('content_changed');
-
-            }
+            $editor.prop('innerHTML', $textarea.val().replace(/\s*\n\s*/g, '')).trigger('content_changed');
+            $textarea.remove();
+            $editor.show();
         }
     }
 };
@@ -751,19 +695,17 @@ function summernote_ie_fix (event, pred) {
 var fn_attach = eventHandler.attach;
 eventHandler.attach = function (oLayoutInfo, options) {
     fn_attach.call(this, oLayoutInfo, options);
-    var $editor = oLayoutInfo.editor();
-
-    $editor.on('dragstart', 'img', function (e) { e.preventDefault(); });
+    oLayoutInfo.editor().on('dragstart', 'img', function (e) { e.preventDefault(); });
     $(document).on('mousedown', summernote_mousedown);
     $(document).on('mouseup', summernote_mouseup);
-    $editor.off('click').on('click', function (e) {e.preventDefault();}); // if the content editable is a link
-    $editor.on('dblclick', 'img, .media_iframe_video, span.fa, i.fa, span.fa, a.o_image', function (event) {
+    oLayoutInfo.editor().off('click').on('click', function (e) {e.preventDefault();}); // if the content editable is a link
+    oLayoutInfo.editor().on('dblclick', 'img, .media_iframe_video, span.fa, i.fa, span.fa, a.o_image', function (event) {
         if (!$(event.target).closest(".note-toolbar").length) { // prevent icon edition of top bar for default summernote
-            new widgets.MediaDialog($editor, event.target).appendTo(document.body);
+            new widgets.MediaDialog(oLayoutInfo.editor(), event.target).appendTo(document.body);
         }
     });
-    if($editor.is('[data-oe-model][data-oe-type="image"]')) {
-        $editor.on('click', 'img', function (event) {
+    if(oLayoutInfo.editor().is('[data-oe-model][data-oe-type="image"]')) {
+        oLayoutInfo.editor().on('click', 'img', function (event) {
             $(event.target).trigger("dblclick");
         });
     }
@@ -774,41 +716,36 @@ eventHandler.attach = function (oLayoutInfo, options) {
     });
     $(document).on("keyup", reRangeSelectKey);
     var clone_data = false;
-
-    // getter
-    $editor.data('codesource', function () {
-        return dom.html($editor, true);
-    });
-
-    if ($editor.data('oe-model') || $editor.data('oe-translation-id')) {
-        $editor.on('content_changed', function () {
+    var $node = oLayoutInfo.editor();
+    if ($node.data('oe-model') || $node.data('oe-translation-id')) {
+        $node.on('content_changed', function () {
             var $nodes = $('[data-oe-model], [data-oe-translation-id]')
-                .filter(function () { return this != $editor[0];});
+                .filter(function () { return this != $node[0];});
 
-            if ($editor.data('oe-model')) {
-                $nodes = $nodes.filter('[data-oe-model="'+$editor.data('oe-model')+'"]')
-                    .filter('[data-oe-id="'+$editor.data('oe-id')+'"]')
-                    .filter('[data-oe-field="'+$editor.data('oe-field')+'"]');
+            if ($node.data('oe-model')) {
+                $nodes = $nodes.filter('[data-oe-model="'+$node.data('oe-model')+'"]')
+                    .filter('[data-oe-id="'+$node.data('oe-id')+'"]')
+                    .filter('[data-oe-field="'+$node.data('oe-field')+'"]');
             }
-            if ($editor.data('oe-translation-id')) $nodes = $nodes.filter('[data-oe-translation-id="'+$editor.data('oe-translation-id')+'"]');
-            if ($editor.data('oe-type')) $nodes = $nodes.filter('[data-oe-type="'+$editor.data('oe-type')+'"]');
-            if ($editor.data('oe-expression')) $nodes = $nodes.filter('[data-oe-expression="'+$editor.data('oe-expression')+'"]');
-            if ($editor.data('oe-xpath')) $nodes = $nodes.filter('[data-oe-xpath="'+$editor.data('oe-xpath')+'"]');
-            if ($editor.data('oe-contact-options')) $nodes = $nodes.filter('[data-oe-contact-options="'+$editor.data('oe-contact-options')+'"]');
+            if ($node.data('oe-translation-id')) $nodes = $nodes.filter('[data-oe-translation-id="'+$node.data('oe-translation-id')+'"]');
+            if ($node.data('oe-type')) $nodes = $nodes.filter('[data-oe-type="'+$node.data('oe-type')+'"]');
+            if ($node.data('oe-expression')) $nodes = $nodes.filter('[data-oe-expression="'+$node.data('oe-expression')+'"]');
+            if ($node.data('oe-xpath')) $nodes = $nodes.filter('[data-oe-xpath="'+$node.data('oe-xpath')+'"]');
+            if ($node.data('oe-contact-options')) $nodes = $nodes.filter('[data-oe-contact-options="'+$node.data('oe-contact-options')+'"]');
 
-            var nodes = $editor.get();
+            var nodes = $node.get();
 
-            if ($editor.data('oe-type') === "many2one") {
+            if ($node.data('oe-type') === "many2one") {
                 $nodes = $nodes.add($('[data-oe-model]')
-                    .filter(function () { return this != $editor[0] && nodes.indexOf(this) === -1; })
-                    .filter('[data-oe-many2one-model="'+$editor.data('oe-many2one-model')+'"]')
-                    .filter('[data-oe-many2one-id="'+$editor.data('oe-many2one-id')+'"]')
+                    .filter(function () { return this != $node[0] && nodes.indexOf(this) === -1; })
+                    .filter('[data-oe-many2one-model="'+$node.data('oe-many2one-model')+'"]')
+                    .filter('[data-oe-many2one-id="'+$node.data('oe-many2one-id')+'"]')
                     .filter('[data-oe-type="many2one"]'));
 
                 $nodes = $nodes.add($('[data-oe-model]')
-                    .filter(function () { return this != $editor[0] && nodes.indexOf(this) === -1; })
-                    .filter('[data-oe-model="'+$editor.data('oe-many2one-model')+'"]')
-                    .filter('[data-oe-id="'+$editor.data('oe-many2one-id')+'"]')
+                    .filter(function () { return this != $node[0] && nodes.indexOf(this) === -1; })
+                    .filter('[data-oe-model="'+$node.data('oe-many2one-model')+'"]')
+                    .filter('[data-oe-id="'+$node.data('oe-many2one-id')+'"]')
                     .filter('[data-oe-field="name"]'));
             }
 
@@ -824,7 +761,7 @@ eventHandler.attach = function (oLayoutInfo, options) {
     var $toolbar = $(oLayoutInfo.popover()).add(custom_toolbar);
     $('button[data-event="undo"], button[data-event="redo"]', $toolbar).attr('disabled', true);
 
-    $($editor)
+    $(oLayoutInfo.editor())
         .add(oLayoutInfo.handle())
         .add(oLayoutInfo.popover())
         .add(custom_toolbar)
@@ -950,7 +887,5 @@ $.summernote.lang.odoo = {
       redo: _t('Redo')
     }
 };
-
-return $.summernote;
 
 });
