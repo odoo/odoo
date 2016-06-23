@@ -7,7 +7,11 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     barcode = fields.Char(string='Barcode', help="BarCode", oldname='ean13')
-    pos_order_count = fields.Integer(compute='_compute_pos_order', help="The number of point of sale orders related to this customer")
+    pos_order_count = fields.Integer(
+        compute='_compute_pos_order',
+        help="The number of point of sale orders related to this customer",
+        groups="point_of_sale.group_pos_user",
+    )
 
     def _compute_pos_order(self):
         partners_data = self.env['pos.order'].read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
