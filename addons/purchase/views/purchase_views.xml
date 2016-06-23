@@ -571,6 +571,33 @@
             </field>
         </record>
 
+        <record id="product_product_supplier_form_inherit" model="ir.ui.view">
+            <field name="name">product.product.supplier.form.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <field name="seller_ids" position="attributes">
+                    <attribute name="readonly">True</attribute>
+                </field>
+                <field name="seller_ids" position="after">
+                    <separator string="Variant Vendors"/>
+                    <field name="product_seller_ids"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="product_variant_supplier_easy_edit_view" model="ir.ui.view">
+            <field name="name">product.product.supplier.view.form.easy</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+            <field name="arch" type="xml">
+                <group name="pricing_and_weight" position="after">
+                    <separator string="Vendors"/>
+                    <field name="product_seller_ids"/>
+                </group>
+            </field>
+        </record>
+
         <record id="view_category_property_form" model="ir.ui.view">
             <field name="name">product.category.property.form.inherit.stock</field>
             <field name="model">product.category</field>
