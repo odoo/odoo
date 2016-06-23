@@ -68,6 +68,12 @@ return Widget.extend({
 
         return this._super.apply(this, arguments);
     },
+    destroy: function () {
+        this._unbind_anchor_events();
+        clearTimeout(this.timerIn);
+        clearTimeout(this.timerOut);
+        return this._super.apply(this, arguments);
+    },
     update: function($anchor) {
         if (!$anchor.is(this.$anchor)) {
             this._unbind_anchor_events();
