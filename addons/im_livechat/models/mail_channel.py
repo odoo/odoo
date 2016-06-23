@@ -62,8 +62,8 @@ class MailChannel(models.Model):
         return values
 
     @api.model
-    def cron_remove_empty_session(self):
-        hours = 1 # never remove empty session created within the last hour
+    def remove_empty_livechat_sessions(self):
+        hours = 1  # never remove empty session created within the last hour
         self.env.cr.execute("""
             SELECT id as id
             FROM mail_channel C
