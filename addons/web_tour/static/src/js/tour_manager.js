@@ -125,9 +125,9 @@ return core.Class.extend({
                 }],
             });
         }
-        tip.widget = new Tip(this, $anchor, tip_info);
-        tip.widget.appendTo(document.body);
+        tip.widget = new Tip(this, tip_info);
         tip.widget.on('tip_consumed', this, this._consume_tip.bind(this, tip, tour_name));
+        tip.widget.attach_to($anchor);
 
         if (this.running_tour === tour_name) {
             clearTimeout(this.running_tour_timeout);
