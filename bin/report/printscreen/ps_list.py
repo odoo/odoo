@@ -25,7 +25,6 @@ import tools
 from tools.safe_eval import safe_eval as eval
 from lxml  import etree
 from report import render
-import locale
 
 import time, os
 from operator import itemgetter
@@ -67,6 +66,12 @@ class report_printscreen_list(report_int):
         self.groupby = context.get('group_by',[])
         self.groupby_no_leaf = context.get('group_by_no_leaf',False)
         pool = pooler.get_pool(cr.dbname)
+        lang_obj = pool.get('res.lang')
+        lang_id = lang_obj.search(cr, uid, [('code','=',context.get('lang') or 'en_US')], context=context)
+        lang = lang_obj.browse(cr, uid, lang_id[0], context=context)
+        self.d_fmt = lang.date_format
+        self.t_fmt = lang.time_format
+        self.d_t_fmt = self.d_fmt + ' ' + self.t_fmt
         model = pool.get(datas['model'])
         model_id = pool.get('ir.model').search(cr, uid, [('model','=',model._name)])
         model_desc = model._description
@@ -128,7 +133,7 @@ class report_printscreen_list(report_int):
             n.text = text
 
         #_append_node('date', time.strftime('%d/%m/%Y'))
-        _append_node('date', time.strftime(str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))))
+        _append_node('date', time.strftime(self.d_fmt))
         _append_node('PageSize', '%.2fmm,%.2fmm' % tuple(pageSize))
         _append_node('PageWidth', '%.2f' % (pageSize[0] * 2.8346,))
         _append_node('PageHeight', '%.2f' %(pageSize[1] * 2.8346,))
@@ -137,7 +142,7 @@ class report_printscreen_list(report_int):
         _append_node('company', pooler.get_pool(self.cr.dbname).get('res.users').browse(self.cr,uid,uid).company_id.name)
         rpt_obj = pooler.get_pool(self.cr.dbname).get('res.users')
         rml_obj=report_sxw.rml_parse(self.cr, uid, rpt_obj._name,context)
-        _append_node('header-date', str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")))
+        _append_node('header-date', datetime.now().strftime(self.d_t_fmt))
         l = []
         t = 0
         strmax = (pageSize[0]-40) * 2.8346
@@ -197,25 +202,22 @@ class report_printscreen_list(report_int):
                 if fields[f]['type'] == 'date' and line[f]:
                     new_d1 = line[f]
                     if not line.get('__group'):
-                        format = str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))
-                        d1 = datetime.strptime(line[f],'%Y-%m-%d')
-                        new_d1 = d1.strftime(format)
+                        d1 = datetime.strptime(line[f], tools.DEFAULT_SERVER_DATE_FORMAT)
+                        new_d1 = d1.strftime(self.d_fmt)
                     line[f] = new_d1
 
                 if fields[f]['type'] == 'time' and line[f]:
                     new_d1 = line[f]
                     if not line.get('__group'):
-                        format = str(locale.nl_langinfo(locale.T_FMT))
-                        d1 = datetime.strptime(line[f], '%H:%M:%S')
-                        new_d1 = d1.strftime(format)
+                        d1 = datetime.strptime(line[f], tools.DEFAULT_SERVER_TIME_FORMAT)
+                        new_d1 = d1.strftime(self.t_fmt)
                     line[f] = new_d1
 
                 if fields[f]['type'] == 'datetime' and line[f]:
                     new_d1 = line[f]
                     if not line.get('__group'):
-                        format = str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))+' '+str(locale.nl_langinfo(locale.T_FMT))
-                        d1 = datetime.strptime(line[f], '%Y-%m-%d %H:%M:%S')
-                        new_d1 = d1.strftime(format)
+                        d1 = datetime.strptime(line[f][:19], tools.DEFAULT_SERVER_DATETIME_FORMAT)
+                        new_d1 = d1.strftime(self.d_t_fmt)
                     line[f] = new_d1
 
 
