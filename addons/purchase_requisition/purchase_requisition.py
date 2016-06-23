@@ -348,6 +348,7 @@ class purchase_order(osv.osv):
     def button_confirm(self, cr, uid, ids, context=None):
         res = super(purchase_order, self).button_confirm(cr, uid, ids, context=context)
         proc_obj = self.pool.get('procurement.order')
+        stock_move_obj = self.pool.get('stock.move')
         for po in self.browse(cr, uid, ids, context=context):
             if po.requisition_id and (po.requisition_id.exclusive == 'exclusive'):
                 for order in po.requisition_id.purchase_ids:
@@ -358,6 +359,11 @@ class purchase_order(osv.osv):
                         order.button_cancel()
                     po.requisition_id.tender_done(context=context)
             for element in po.order_line:
+                if element.product_id == po.requisition_id.procurement_id.product_id:
+                    stock_move_obj.write(cr, uid, element.move_ids.ids, {
+                        'procurement_id': po.requisition_id.procurement_id.id,
+                        'move_dest_id': po.requisition_id.procurement_id.move_dest_id.id,
+                        }, context=context)
                 if not element.quantity_tendered:
                     element.write({'quantity_tendered': element.product_qty})
         return res
