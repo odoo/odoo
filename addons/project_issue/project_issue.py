@@ -139,12 +139,12 @@ class project_issue(osv.Model):
         'partner_id': fields.many2one('res.partner', 'Contact', select=1),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Private Note'),
-        'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
+        'kanban_state': fields.selection([('normal', 'Grey'),('blocked', 'Red'),('done', 'Green')], 'Kanban State',
                                          track_visibility='onchange',
                                          help="A Issue's kanban state indicates special situations affecting it:\n"
-                                              " * Normal is the default situation\n"
-                                              " * Blocked indicates something is preventing the progress of this issue\n"
-                                              " * Ready for next stage indicates the issue is ready to be pulled to the next stage",
+                                              " * Grey is the default situation\n"
+                                              " * Red indicates something is preventing the progress of this issue\n"
+                                              " * Green indicates the issue is ready to be pulled to the next stage",
                                          required=True),
         'email_from': fields.char('Email', size=128, help="These people will receive email.", select=1),
         'email_cc': fields.char('Watchers Emails', size=256, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
