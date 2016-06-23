@@ -10,4 +10,5 @@ class AutoVacuum(models.AbstractModel):
     @api.model
     def power_on(self, *args, **kwargs):
         self.pool['mail.channel'].remove_empty_livechat_sessions()
+        self.pool['mail.channel.partner'].unpin_old_livechat_sessions()
         return super(AutoVacuum, self).power_on(*args, **kwargs)
