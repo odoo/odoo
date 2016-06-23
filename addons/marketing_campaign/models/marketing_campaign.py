@@ -334,7 +334,9 @@ class MarketingCampaignActivity(models.Model):
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
         if self._context.get('segment_id'):
-            return self.env['marketing.campaign.segment'].browse(self._context['segment_id']).campaign_id.activity_ids
+            context = dict(self._context)
+            segment_id = context.pop('segment_id')
+            return self.env['marketing.campaign.segment'].browse(segment_id).campaign_id.with_context(context).activity_ids
         return super(MarketingCampaignActivity, self).search(args, offset, limit, order, count)
 
     #dead code
