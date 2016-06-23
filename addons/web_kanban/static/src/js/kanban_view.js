@@ -60,7 +60,7 @@ var KanbanView = View.extend({
     init: function () {
         this._super.apply(this, arguments);
 
-        this.qweb = new QWeb(session.debug);
+        this.qweb = new QWeb(session.debug, {_s: session.origin});
 
         this.limit = this.options.limit || 40;
         this.fields = {};
