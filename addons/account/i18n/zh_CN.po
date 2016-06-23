@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2016-06-18 02:43+0000\n"
+"PO-Revision-Date: 2016-06-22 02:43+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -205,7 +205,7 @@ msgstr "(如果您想打开它发票要反调节)"
 #: view:account.analytic.chart:account.account_analytic_chart_view
 #: view:project.account.analytic.line:account.view_project_account_analytic_line_form
 msgid "(Keep empty to open the current situation)"
-msgstr "(留空打开当前的情形)"
+msgstr "(保持空白打开当前情况)"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -321,7 +321,7 @@ msgid ""
 "                secondary currency set.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                点击添加一个账户.\n              </p><p>\n                在处理多币种交易时，由于兑换汇率的变化，可能会发生兑换增益或者损失。这个菜单提供给您一个假定在今天终结交易预测的损益。只有在账户有多币种时需要配置。\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击添加一个账户.\n              </p><p>\n                在处理多种货币交易时，由于兑换汇率的变化，可能会发生兑换增益或者损失。这个菜单提供给您一个假定在今天终结交易预测的损益。只有在账户有多币种时需要配置。\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree1
@@ -712,7 +712,7 @@ msgstr "会计共通报告"
 #. module: account
 #: field:account.analytic.line,currency_id:0
 msgid "Account Currency"
-msgstr "会计币种"
+msgstr "会计货币"
 
 #. module: account
 #: field:account.fiscal.position.account,account_dest_id:0
@@ -1017,12 +1017,12 @@ msgstr "会计税金"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_chart
 msgid "Account tax chart"
-msgstr "会计税金图表"
+msgstr "会计税金表"
 
 #. module: account
 #: view:account.tax.chart:account.view_account_tax_chart
 msgid "Account tax charts"
-msgstr "会计税金图表"
+msgstr "会计税金表"
 
 #. module: account
 #: field:account.bank.statement,account_id:0
@@ -1328,7 +1328,7 @@ msgstr "允许调节"
 #. module: account
 #: field:account.config.settings,group_multi_currency:0
 msgid "Allow multi currencies"
-msgstr "允许多货币"
+msgstr "允许多币种"
 
 #. module: account
 #: field:account.config.settings,group_proforma_invoices:0
@@ -1343,7 +1343,7 @@ msgstr "允许销账"
 #. module: account
 #: help:account.config.settings,group_multi_currency:0
 msgid "Allows you multi currency environment"
-msgstr "允许多币别环境"
+msgstr "允许多种货币环境"
 
 #. module: account
 #: help:account.config.settings,group_proforma_invoices:0
@@ -1394,7 +1394,7 @@ msgstr "总额计算"
 #: field:account.model.line,amount_currency:0
 #: field:account.move.line,amount_currency:0
 msgid "Amount Currency"
-msgstr "外币总额"
+msgstr "外币金额"
 
 #. module: account
 #: view:account.payment.term.line:account.view_payment_term_line_form
@@ -1840,7 +1840,7 @@ msgstr "资产负债表（负债账户）"
 #. module: account
 #: help:account.bank.statement,balance_end:0
 msgid "Balance as calculated based on Opening Balance and transaction lines"
-msgstr "余额，基于期初余额和交易明细行计算"
+msgstr "余额的计算基于期初余额和交易明细行"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_receivable_graph
@@ -1881,7 +1881,7 @@ msgid ""
 "Bank Account Number to which the invoice will be paid. A Company bank "
 "account if this is a Customer Invoice or Supplier Refund, otherwise a "
 "Partner bank account number."
-msgstr "发票的收款银行账户。如果是客户发票或供应商红字发票，这里是本公司的银行账户，否则这里是业务伙伴的银行账户。"
+msgstr "发票的收款银行账户。如果是客户发票或供应商退款，这里是本公司的银行账户，否则这里是业务伙伴的银行账户。"
 
 #. module: account
 #: model:ir.model,name:account.model_res_partner_bank
@@ -2191,7 +2191,7 @@ msgstr "这部分不能自动形成顺序.\n在这个部分的日志里配置一
 #: code:addons/account/account.py:1554
 #, python-format
 msgid "Cannot create move with currency different from .."
-msgstr "不能创建不同币种的分录"
+msgstr "不能创建分录，货币不同于..."
 
 #. module: account
 #: code:addons/account/account.py:1550
@@ -2215,7 +2215,7 @@ msgstr "无法创建发票。\n相关的付款条款可能没有正确配置，�
 msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
 "Please go to Account Configuration."
-msgstr "找不到本公司的会计科目表. \n请到会计配置进行配置"
+msgstr "找不到本公司的科目表. \n请到会计配置进行配置"
 
 #. module: account
 #: code:addons/account/account_move_line.py:551
@@ -2344,7 +2344,7 @@ msgstr "更改"
 #: model:ir.actions.act_window,name:account.action_account_change_currency
 #: model:ir.model,name:account.model_account_change_currency
 msgid "Change Currency"
-msgstr "更改币别"
+msgstr "更改货币"
 
 #. module: account
 #: field:account.change.currency,currency_id:0
@@ -2899,7 +2899,7 @@ msgstr "配置错误！\n对于内部类型是‘应收/应付’的会计科目
 msgid ""
 "Configuration error!\n"
 "The currency chosen should be shared by the default accounts too."
-msgstr "配置错误!\n所选币种也应当与默认科目共享。"
+msgstr "配置错误!\n所选货币也应当与默认科目共享。"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -3297,12 +3297,12 @@ msgstr "贷方集中制"
 #. module: account
 #: view:account.invoice.refund:account.view_account_invoice_refund
 msgid "Credit Note"
-msgstr "信用证"
+msgstr "退款"
 
 #. module: account
 #: view:account.tax.template:account.view_account_tax_template_form
 msgid "Credit Notes"
-msgstr "信用证"
+msgstr "退款"
 
 #. module: account
 #: field:account.move.line.reconcile,credit:0
@@ -3312,7 +3312,7 @@ msgstr "贷方总额"
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_prefix:0
 msgid "Credit note sequence"
-msgstr "信用证序列"
+msgstr "退款序列"
 
 #. module: account
 #: field:account.bank.statement,currency:0
@@ -3340,7 +3340,7 @@ msgstr "信用证序列"
 #: view:website:account.report_salepurchasejournal
 #: field:wizard.multi.charts.accounts,currency_id:0
 msgid "Currency"
-msgstr "币别"
+msgstr "货币"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
@@ -3357,17 +3357,17 @@ msgstr "汇率"
 #. module: account
 #: help:wizard.multi.charts.accounts,currency_id:0
 msgid "Currency as per company's country."
-msgstr "币种根据公司所属国家配置。"
+msgstr "币按公司所在的国家。"
 
 #. module: account
 #: help:res.partner.bank,currency_id:0
 msgid "Currency of the related account journal."
-msgstr "相关会计分类账的币种。"
+msgstr "相关会计日记账的货币。"
 
 #. module: account
 #: view:website:account.report_analyticjournal
 msgid "Currency:"
-msgstr "币别："
+msgstr "货币："
 
 #. module: account
 #: view:account.analytic.account:account.view_account_analytic_account_search
@@ -3379,7 +3379,7 @@ msgstr "当前账户"
 #: code:addons/account/wizard/account_change_currency.py:70
 #, python-format
 msgid "Current currency is not configured properly."
-msgstr "当前的币别配置不正确。"
+msgstr "当前货币没有正确配置。"
 
 #. module: account
 #: code:addons/account/installer.py:69
@@ -4045,7 +4045,7 @@ msgstr "结束期间"
 #: field:account.bank.statement,balance_end_real:0
 #: field:account.treasury.report,ending_balance:0
 msgid "Ending Balance"
-msgstr "期末余额"
+msgstr "结束余额"
 
 #. module: account
 #: field:account.move,line_id:0
@@ -4628,7 +4628,7 @@ msgstr "对发票涉及的如付款，这发票的分录必须有要调节对应
 msgid ""
 "For cash or bank journal, this option should be unchecked when the starting "
 "balance should always set to 0 for new documents."
-msgstr "对现金或银行分录，对新文档的期起始余额始终配置为0时，这个选项应不选。"
+msgstr "对现金或银行分录，对新文档的起始余额始终配置为0时，这个选项应不选。"
 
 #. module: account
 #: help:account.payment.term.line,value_amount:0
@@ -4657,7 +4657,7 @@ msgstr "强制会计期间"
 #: help:account.account.template,currency_id:0
 #: help:account.bank.accounts.wizard,currency_id:0
 msgid "Forces all moves for this account to have this secondary currency."
-msgstr "强制将这科目的所有分录转为第二币别。"
+msgstr "强制将这科目的所有分录转为第二货币。"
 
 #. module: account
 #: field:account.account,foreign_balance:0
@@ -5016,7 +5016,7 @@ msgstr "图标"
 #: code:addons/account/account_bank_statement.py:428
 #, python-format
 msgid "If \"Amount Currency\" is specified, then \"Amount\" must be as well."
-msgstr "如果指定“总额币种”，那么“总额”要与之匹配"
+msgstr "如果指定“外币金额”，那么“金额”要与之匹配"
 
 #. module: account
 #: help:account.bank.statement,message_unread:0
@@ -5303,7 +5303,7 @@ msgstr "其它信息"
 #: view:website:account.report_partnerledger
 #: view:website:account.report_partnerledgerother
 msgid "Initial Balance"
-msgstr "期初余额"
+msgstr "初始余额"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -5418,7 +5418,7 @@ msgstr "发票"
 #. module: account
 #: view:account.change.currency:account.view_account_change_currency
 msgid "Invoice Currency"
-msgstr "发票币别"
+msgstr "发票货币"
 
 #. module: account
 #: field:account.invoice,date_invoice:0
@@ -5464,7 +5464,7 @@ msgstr "发票参考"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_refund
 msgid "Invoice Refund"
-msgstr "发票退款"
+msgstr "发票退回"
 
 #. module: account
 #: field:account.invoice.report,state:0
@@ -5611,7 +5611,7 @@ msgstr "它将充当默认帐户的信贷数额"
 #. module: account
 #: help:account.journal,default_debit_account_id:0
 msgid "It acts as a default account for debit amount"
-msgstr "它将作为一个默认的借方科目"
+msgstr "它将作为一个默认借方科目"
 
 #. module: account
 #: help:account.partner.ledger,amount_currency:0
@@ -5619,7 +5619,7 @@ msgstr "它将作为一个默认的借方科目"
 msgid ""
 "It adds the currency column on report if the currency differs from the "
 "company currency."
-msgstr "当所用币种与公司币种不同时，报告将添加币种栏。"
+msgstr "当货币不同于公司货币时，在报告添加外币列。"
 
 #. module: account
 #: help:account.invoice,reconciled:0
@@ -5943,7 +5943,7 @@ msgstr "留空为所有开启的会计年度"
 #. module: account
 #: help:account.chart,fiscalyear:0
 msgid "Keep empty for all open fiscal years"
-msgstr "保留空为打开所有的会计年度"
+msgstr "保持空白为打开所有的会计年度"
 
 #. module: account
 #: help:account.invoice,date_invoice:0
@@ -6280,7 +6280,7 @@ msgstr "主标题 （加粗，下划线）"
 #. module: account
 #: help:account.config.settings,currency_id:0
 msgid "Main currency of the company."
-msgstr "该公司的主要币种。"
+msgstr "公司的主货币。"
 
 #. module: account
 #: field:account.config.settings,module_account_followup:0
@@ -6421,7 +6421,7 @@ msgstr "模型"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create refund, reconcile and create a new draft invoice"
-msgstr "修改：创建退款，调节并创建一个新的草稿发票"
+msgstr "修改：创建退款，调节并创建新草稿发票"
 
 #. module: account
 #: view:account.treasury.report:account.view_account_treasury_report_search
@@ -6567,7 +6567,7 @@ msgstr "下一个待调节的业务伙伴"
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_next:0
 msgid "Next credit note number"
-msgstr "下一个信用证号码"
+msgstr "下一个退款号码"
 
 #. module: account
 #: field:account.config.settings,sale_sequence_next:0
@@ -6577,7 +6577,7 @@ msgstr "下一个发票号"
 #. module: account
 #: field:account.config.settings,purchase_refund_sequence_next:0
 msgid "Next supplier credit note number"
-msgstr "下个供应商信用记录编号"
+msgstr "下个供应商退款号码"
 
 #. module: account
 #: field:account.config.settings,purchase_sequence_next:0
@@ -6918,7 +6918,7 @@ msgstr "开启为取消调节"
 #: code:addons/account/account.py:435 code:addons/account/account.py:447
 #, python-format
 msgid "Opening Balance"
-msgstr "期初余额"
+msgstr "开始余额"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -6996,7 +6996,7 @@ msgstr "开帐/关账期间"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Opening/Closing Situation"
-msgstr "开帐/关账情形"
+msgstr "开帐/关账情况"
 
 #. module: account
 #: view:account.move.line:account.view_move_line_form2
@@ -7643,7 +7643,7 @@ msgstr "打印发票"
 msgid ""
 "Print Report with the currency column if the currency differs from the "
 "company currency."
-msgstr "如果币种跟公司本位币不同，带币种打印报告。"
+msgstr "当货币不同于公司货币时，打印报告带有外币列。"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_print_sale_purchase_journal
@@ -8173,7 +8173,7 @@ msgstr "退款基础代码符号"
 #: view:account.invoice:account.invoice_form
 #: model:ir.actions.act_window,name:account.action_account_invoice_refund
 msgid "Refund Invoice"
-msgstr "退款发票"
+msgstr "退回发票"
 
 #. module: account
 #: field:account.invoice.refund,journal_id:0
@@ -8320,7 +8320,7 @@ msgstr "残值总额"
 #. module: account
 #: field:account.move.line,amount_residual_currency:0
 msgid "Residual Amount in Currency"
-msgstr "外币结余总额"
+msgstr "外币残余金额"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -8571,7 +8571,7 @@ msgstr "搜索税模板"
 #: field:account.account.template,currency_id:0
 #: field:account.bank.accounts.wizard,currency_id:0
 msgid "Secondary Currency"
-msgstr "外币"
+msgstr "第二货币"
 
 #. module: account
 #: help:account.journal,type:0
@@ -8581,7 +8581,7 @@ msgid ""
 "customer or supplier payments. Select 'General' for miscellaneous operations"
 " journals. Select 'Opening/Closing Situation' for entries generated for new "
 "fiscal years."
-msgstr "‘销售’用于客户发票的分类账；‘采购’用于供应商发票的分类账；‘现金’或‘银行’用于客户或供应商付款的分类账。‘普通’用于其他各种业务。‘初始化’用于生成新会计年度的年初余额。"
+msgstr "‘销售’用于客户发票的分类账；‘采购’用于供应商发票的分类账；‘现金’或‘银行’用于客户或供应商付款的分类账。‘普通’用于其他各种业务。‘开张/关张情况’用于为新会计年度生成的分录。"
 
 #. module: account
 #: help:account.aged.trial.balance,chart_account_id:0
@@ -8648,7 +8648,7 @@ msgstr "选择一个适合的科目表"
 #. module: account
 #: help:account.change.currency,currency_id:0
 msgid "Select a currency to apply on the invoice"
-msgstr "在发票上选择合适的币别"
+msgstr "选择应用在发票的货币"
 
 #. module: account
 #: help:account.fiscalyear.close.state,fy_id:0
@@ -8659,7 +8659,7 @@ msgstr "选择关闭一个会计年度"
 #: code:addons/account/wizard/account_financial_report.py:72
 #, python-format
 msgid "Select a starting and an ending period"
-msgstr "选择会计期间的开始和结束时间"
+msgstr "选择会计期间的起始和结束时间"
 
 #. module: account
 #: code:addons/account/wizard/account_report_common.py:163
@@ -8860,7 +8860,7 @@ msgstr "报告上的符号"
 #. module: account
 #: selection:account.analytic.journal,type:0
 msgid "Situation"
-msgstr "情形"
+msgstr "情况"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -9005,7 +9005,7 @@ msgstr "开始期间应在结束期间前。"
 #: field:account.bank.statement,balance_start:0
 #: field:account.treasury.report,starting_balance:0
 msgid "Starting Balance"
-msgstr "开始余额"
+msgstr "起始余额"
 
 #. module: account
 #: field:account.entries.report,move_line_state:0
@@ -9180,7 +9180,7 @@ msgstr "进项税"
 #. module: account
 #: field:account.config.settings,purchase_refund_sequence_prefix:0
 msgid "Supplier credit note sequence"
-msgstr "供应商信用证序列"
+msgstr "供应商退款序列"
 
 #. module: account
 #: field:account.config.settings,purchase_sequence_prefix:0
@@ -9603,14 +9603,14 @@ msgstr "如果它是一个多货币凭证,这总额表示一个可选的其它�
 #. module: account
 #: help:account.model.line,amount_currency:0
 msgid "The amount expressed in an optional other currency."
-msgstr "备选币种所示总额"
+msgstr "金额以可选的其他货币表示。"
 
 #. module: account
 #: help:account.analytic.line,amount_currency:0
 msgid ""
 "The amount expressed in the related account currency if not equal to the "
 "company one."
-msgstr "如果不是同一公司, 这总额表示相关科目的币别。"
+msgstr "如果不等于公司那一个，金额以相关科目的货币表示。"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -9644,7 +9644,7 @@ msgid ""
 "entries of all fiscal years. Note that you should define it with default "
 "debit/credit accounts, of type 'situation' and with a centralized "
 "counterpart."
-msgstr "最佳实践是使用一个分类账专门用来放置所有会计年度的开账分录。\n注意，应该设置默认借方/贷方科目，类型为 “期初/期末状态”，并且选中“集中式对方科目”。"
+msgstr "最佳实践是使用一个分类账专门用来放置所有会计年度的开账分录。\n注意，应该设置默认借方/贷方科目，类型为 “开张/关张情况”，并且选中“集中式对方科目”。"
 
 #. module: account
 #: sql_constraint:account.account:0
@@ -9753,7 +9753,7 @@ msgstr "这个分类账的“集中式对方科目”必须被选中，并且不
 #: code:addons/account/wizard/account_fiscalyear_close.py:101
 #, python-format
 msgid "The journal must have default credit and debit account."
-msgstr "分类账必须有默认的借贷科目。"
+msgstr "分类账必须有默认借方和贷方科目。"
 
 #. module: account
 #: help:account.model.line,date_maturity:0
@@ -9826,14 +9826,14 @@ msgstr "供应商提供的发票参考"
 #. module: account
 #: help:account.analytic.line,currency_id:0
 msgid "The related account currency if not equal to the company one."
-msgstr "如果不是同一公司, 相关科目的币别"
+msgstr "如果不等于公司那一个，相关科目的货币。"
 
 #. module: account
 #: help:account.move.line,amount_residual_currency:0
 msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in its currency (maybe different of the company currency)."
-msgstr "基于当前币别的应收或应付款的余额"
+msgstr "日记账分录的应收及应付的残留金额以它的货币表示(可能不同于公司的货币)"
 
 #. module: account
 #: help:account.move.line,amount_residual:0
@@ -9848,7 +9848,7 @@ msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
-msgstr "分类账分录上的科目要求输入一个外币。您可以在科目配置中去掉这个外币或在分类账配置上选择一个支持多币种的输入界面。"
+msgstr "分类账分录上的科目要求输入一个外币。您可以在科目配置中去掉这个外币或在分类账配置上选择一个支持多种货币的输入界面。"
 
 #. module: account
 #: code:addons/account/account_invoice.py:1391
@@ -9961,7 +9961,7 @@ msgstr "产品 \"%s\" (id:%d) 未定义收入科目。"
 msgid ""
 "There is no opening/closing period defined, please create one to set the "
 "initial balance."
-msgstr "没有定义开帐/关账期间，请予创建以设定期初余额。"
+msgstr "没有定义开帐/关账期间，请予创建以设定初始余额。"
 
 #. module: account
 #: code:addons/account/account.py:2642
@@ -10142,7 +10142,7 @@ msgstr "该公司有自己的科目表"
 msgid ""
 "This date will be used as the invoice date for credit note and period will "
 "be chosen accordingly!"
-msgstr "此日期会用作信用证发票日期，且会选择相应的期间！"
+msgstr "此日期会用作退款的开票日期，并且期间会相应的选择！"
 
 #. module: account
 #: help:account.journal,sequence_id:0
@@ -10307,7 +10307,7 @@ msgstr "这一付款条件用以取代采购单和供应商发票的默认项。
 msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
-msgstr "在销售订单和客户发票上，该付款方式将替换默认的付款方式。"
+msgstr "在销售订单和客户发票上，该付款方式将替换默认付款方式。"
 
 #. module: account
 #: help:account.config.settings,default_purchase_tax:0
@@ -10350,7 +10350,7 @@ msgstr "将选择要兑换货币的当前汇率。在大多数国家法定为“
 #. module: account
 #: view:account.change.currency:account.view_account_change_currency
 msgid "This wizard will change the currency of the invoice"
-msgstr "该向导将改变发票的币种"
+msgstr "该向导将改变发票的货币"
 
 #. module: account
 #: view:account.fiscalyear.close:account.view_account_fiscalyear_close
@@ -10514,7 +10514,7 @@ msgstr "此科目根据外币总额折算后的公司本位币金额总计"
 msgid ""
 "Total amount (in Secondary currency) for transactions held in secondary "
 "currency for this account."
-msgstr "此科目上以第二币种发生交易的金额总计（第二币种）"
+msgstr "此账户交易的总金额(以第二货币)以第二货币"
 
 #. module: account
 #: view:website:account.report_overdue_document
@@ -10675,7 +10675,7 @@ msgstr "单价"
 #. module: account
 #: field:account.cashbox.line,pieces:0
 msgid "Unit of Currency"
-msgstr "币别单位"
+msgstr "货币的单元"
 
 #. module: account
 #: field:account.analytic.line,product_uom_id:0
@@ -10827,7 +10827,7 @@ msgid ""
 "                                    one. The credit note will be created, validated and reconciled\n"
 "                                    with the current invoice. A new, draft, invoice will be created \n"
 "                                    so that you can edit it."
-msgstr "用此选项删除发票并创建一张新的\n                                    信用证将会创建、生效、并与当前发票关联，\n                                    将人创建一张新的草稿发票，\n                                    以便您可以编缉它。"
+msgstr "用此选项删除发票并创建一张新的\n                                    退款将会创建、生效、并与当前发票关联，\n                                    将人创建一张新的草稿发票，\n                                    以便您可以编缉它。"
 
 #. module: account
 #: view:account.invoice.refund:account.view_account_invoice_refund
@@ -10835,7 +10835,7 @@ msgid ""
 "Use this option if you want to cancel an invoice you should not\n"
 "                                    have issued. The credit note will be created, validated and reconciled\n"
 "                                    with the invoice. You will not be able to modify the credit note."
-msgstr "删除一张不应有的发票用此选项\n                                    已发布，信用证会与发票一起开出、生效和关联\n                                    不可修改信用证."
+msgstr "删除一张不应有的发票用此选项\n                                    已发布，退款会与发票一起开出、生效和关联\n                                    不可修改退款."
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
@@ -11017,7 +11017,7 @@ msgstr "哇，太快了！"
 #: field:account.print.journal,amount_currency:0
 #: field:account.report.general.ledger,amount_currency:0
 msgid "With Currency"
-msgstr "币别"
+msgstr "使用货币"
 
 #. module: account
 #: selection:account.balance.report,display_account:0
@@ -11175,7 +11175,7 @@ msgstr "您不能选择一个或者一组国家"
 #: code:addons/account/wizard/account_change_currency.py:38
 #, python-format
 msgid "You can only change currency for Draft Invoice."
-msgstr "您只能修改草稿发票的币种。"
+msgstr "您只能修改草稿发票的货币。"
 
 #. module: account
 #: constraint:account.move.reconcile:0
@@ -11188,7 +11188,7 @@ msgid ""
 "You can select here the journal to use for the credit note that will be "
 "created. If you leave that field empty, it will use the same journal as the "
 "current invoice."
-msgstr "可选择这里的分类帐用于将要创建的信用证，如果该栏留空，它将会用于相同分类帐的当前发票。"
+msgstr "你可以在这选择日记账用于创建的退款。如果该栏留空，它将会使用当前发票的同一个日记账。"
 
 #. module: account
 #: help:account.financial.report,style_overwrite:0
@@ -11294,7 +11294,7 @@ msgstr "已关闭科目无法创建分类账项。"
 msgid ""
 "You cannot create journal items with a secondary currency without recording "
 "both 'currency' and 'amount currency' field."
-msgstr "对于没有币种和外币总额的第二货币，您不能用它来创建分类账项。"
+msgstr "没有记录  'currency' 以及 'amount currency' 字段，不能使用第二货币创建日记账项目。"
 
 #. module: account
 #: constraint:account.move:0
@@ -11366,7 +11366,7 @@ msgstr "不能编辑或删除该时期有记录的分类账。"
 msgid ""
 "You cannot provide a secondary currency if it is the same than the company "
 "one."
-msgstr "如果币种与公司的币种相同，不能配置为第二币种。"
+msgstr "如果它不同于公司那一个，不能提供第二货币。"
 
 #. module: account
 #: code:addons/account/account.py:659
@@ -11582,7 +11582,7 @@ msgid ""
 "                                    credit note directly or keep it draft,\n"
 "                                    waiting for the document to be issued by\n"
 "                                    your supplier/customer."
-msgstr "您可以编缉和批准这一信用证\n                                    或保存草稿,\n                                    以等待供应商\n                                    或客户的文件."
+msgstr "您可以编缉和验证此退款\n                                    或保存为草稿,\n                                    以等待供应商\n                                    或客户的文件."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_line_extended_form
@@ -11765,4 +11765,4 @@ msgid ""
 "\n"
 "Thank you in advance for your cooperation.\n"
 "Best Regards,"
-msgstr "亲爱的女士/先生,\n    我们根据Odoo系统中的记录显示，您的到期帐款尚未支付。请看下面的明细信息。\n    如果这些金额已经支付，请忽略本次提醒。否则，请向我们说明如下金额。\n    如果有任何关于账单的疑问，请联系我们。\n\n    谢谢您的合作。\n    此致  \n           敬礼"
+msgstr "尊敬的先生/女士,\n    我们的记录表明，您的账户仍有到期的付款。请查找下面的明细。\n    如果款项已经支付，请忽略此通知。否则，请按如下所述的总金额转交给我们。\n    如果有任何关于账户的疑问，请联系我们。\n\n    谢谢您的合作。\n    此致  \n           敬礼"
