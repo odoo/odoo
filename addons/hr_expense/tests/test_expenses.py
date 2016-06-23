@@ -1,5 +1,4 @@
 from openerp.tests.common import TransactionCase
-from openerp import workflow
 
 
 class TestCheckJournalEntry(TransactionCase):
