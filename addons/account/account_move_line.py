@@ -768,11 +768,14 @@ class account_move_line(osv.osv):
         if self.pool.get('res.currency').is_zero(cr, uid, company_currency_id, total):
             res = self.reconcile(cr, uid, merges+unmerge, context=context)
             return res
+        # marking the lines as reconciled does not change their validity, so there is no need
+        # to revalidate their moves completely.
+        reconcile_context = dict(context, novalidate=True)
         r_id = move_rec_obj.create(cr, uid, {
             'type': type,
             'line_partial_ids': map(lambda x: (4,x,False), merges+unmerge)
-        })
-        move_rec_obj.reconcile_partial_check(cr, uid, [r_id] + merges_rec, context=context)
+            }, context=reconcile_context)
+        move_rec_obj.reconcile_partial_check(cr, uid, [r_id] + merges_rec, context=reconcile_context)
         return True
 
     def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context=None):
@@ -897,11 +900,14 @@ class account_move_line(osv.osv):
                 writeoff_line_ids = [writeoff_line_ids[1]]
             ids += writeoff_line_ids
 
+        # marking the lines as reconciled does not change their validity, so there is no need
+        # to revalidate their moves completely.
+        reconcile_context = dict(context, novalidate=True)
         r_id = move_rec_obj.create(cr, uid, {
             'type': type,
             'line_id': map(lambda x: (4, x, False), ids),
             'line_partial_ids': map(lambda x: (3, x, False), ids)
-        })
+            }, context=reconcile_context)
         wf_service = netsvc.LocalService("workflow")
         # the id of the move.reconcile is written in the move.line (self) by the create method above
         # because of the way the line_id are defined: (4, x, False)
@@ -1110,18 +1116,19 @@ class account_move_line(osv.osv):
         return True
 
     def unlink(self, cr, uid, ids, context=None, check=True):
-        if context is None:
-            context = {}
+        context = context or {}
         move_obj = self.pool.get('account.move')
         self._update_check(cr, uid, ids, context)
         result = False
+        move_ids = set()
         for line in self.browse(cr, uid, ids, context=context):
+            move_ids.add(line.move_id.id)
             context['journal_id'] = line.journal_id.id
             context['period_id'] = line.period_id.id
             result = super(account_move_line, self).unlink(cr, uid, [line.id], context=context)
-            if check:
-                context.update({'lines_cancel': 'cancel'})
-                move_obj.validate(cr, uid, [line.move_id.id], context=context)
+        move_ids = list(move_ids)
+        if check and move_ids:
+            move_obj.validate(cr, uid, move_ids, context=context)
         return result
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
