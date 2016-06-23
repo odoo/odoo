@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-from openerp.addons.web.http import request
+from openerp.http import request
 from openerp.osv import orm
+from lxml import etree
+from itertools import chain, ifilter
 import ast
 
 
@@ -67,6 +69,14 @@ class QWeb(orm.AbstractModel):
         return self._wrap_build_attributes(el, items, options)
 
     # method called by computing code
+
+    def _get_asset(self, xmlid, options, css=True, js=True, debug=False, async=False, values=None):
+        html = super(QWeb, self)._get_asset(xmlid, options, css=css, js=js, debug=debug, async=async, values=values)
+        root = etree.fromstring("<root>%s</root>" % html)
+        for node in root:
+            for name, value in node.attrib.iteritems():
+                node.attrib[name] = self._website_build_attribute(node.tag, name, value, options, values)
+        return u''.join(ifilter(None, chain([root.text], [etree.tostring(c, method='html', with_tail=True) for c in root.getchildren()], [root.tail])))
 
     def _get_dynamic_att(self, tagName, atts, options, values):
         atts = super(QWeb, self)._get_dynamic_att(tagName, atts, options, values)
