@@ -1,9 +1,8 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Timesheet on Issues',
-    'version': '1.0',
     'category': 'Project Management',
     'description': """
 This module adds the Timesheet support for the Issues/Bugs Management in Project.
@@ -17,11 +16,8 @@ Worklogs can be maintained to signify number of hours spent by users to handle a
         'hr_timesheet_sheet',
     ],
     'data': [
-        'project_issue_sheet_view.xml',
+        'views/project_issue_sheet_view.xml',
         'security/ir.model.access.csv',
         'security/portal_security.xml',
     ],
-    'demo': [],
-    'installable': True,
-    'auto_install': False,
 }
