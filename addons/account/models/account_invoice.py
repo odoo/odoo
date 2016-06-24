@@ -1378,7 +1378,7 @@ class AccountPaymentTermLine(models.Model):
         if self.option in ('last_day_current_month', 'last_day_following_month'):
             self.days = 0
 
-class MailComposeMessage(models.Model):
+class MailComposeMessage(models.TransientModel):
     _inherit = 'mail.compose.message'
 
     @api.multi
