@@ -5,10 +5,9 @@ Store database-specific configuration parameters
 """
 
 import uuid
-import datetime
 
 from odoo import api, fields, models
-from odoo.tools import misc, config, ormcache
+from odoo.tools import config, ormcache
 
 """
 A dictionary holding some configuration parameters to be initialized when the database is created.
