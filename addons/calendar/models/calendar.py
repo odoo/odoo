@@ -122,66 +122,6 @@ class Attendee(models.Model):
     def copy(self, default=None):
         raise UserError(_('You cannot duplicate a calendar attendee.'))
 
-    # TODO JEM : should be moved on calendar.event ?
-    @api.model
-    def get_ics_file(self, event_record):
-        """ Returns iCalendar file for the event invitation.
-            :param event: record of calendar.event
-            :returns the .ics file content
-        """
-        res = None
-
-        def ics_datetime(idate, allday=False):
-            if idate:
-                if allday:
-                    return fields.Date.from_string(idate)
-                else:
-                    return fields.Datetime.from_string(idate).replace(tzinfo=pytz.timezone('UTC'))
-            return False
-
-        try:
-            # FIXME: why isn't this in CalDAV?
-            import vobject
-        except ImportError:
-            return res
-
-        cal = vobject.iCalendar()
-        event = cal.add('vevent')
-
-        if not event_record.start or not event_record.stop:
-            raise UserError(_("First you have to specify the date of the invitation."))
-        event.add('created').value = ics_datetime(time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
-        event.add('dtstart').value = ics_datetime(event_record.start, event_record.allday)
-        event.add('dtend').value = ics_datetime(event_record.stop, event_record.allday)
-        event.add('summary').value = event_record.name
-        if event_record.description:
-            event.add('description').value = event_record.description
-        if event_record.location:
-            event.add('location').value = event_record.location
-        if event_record.rrule:
-            event.add('rrule').value = event_record.rrule
-
-        if event_record.alarm_ids:
-            for alarm in event_record.alarm_ids:
-                valarm = event.add('valarm')
-                interval = alarm.interval
-                duration = alarm.duration
-                trigger = valarm.add('TRIGGER')
-                trigger.params['related'] = ["START"]
-                if interval == 'days':
-                    delta = timedelta(days=duration)
-                elif interval == 'hours':
-                    delta = timedelta(hours=duration)
-                elif interval == 'minutes':
-                    delta = timedelta(minutes=duration)
-                trigger.value = delta
-                valarm.add('DESCRIPTION').value = alarm.name or 'Odoo'
-        for attendee in event_record.attendee_ids:
-            attendee_add = event.add('attendee')
-            attendee_add.value = 'MAILTO:' + (attendee.email or '')
-        res = cal.serialize()
-        return res
-
     @api.multi
     def _send_mail_to_attendees(self, email_from=False, template_xmlid=False, force=False):
         """ Send mail for event invitation to event attendees.
@@ -223,7 +163,7 @@ class Attendee(models.Model):
         mails_to_send = self.env['mail.mail']
         for attendee in self:
             if attendee.email and email_from and (attendee.email != email_from or force):
-                ics_file = self.get_ics_file(attendee.event_id)
+                ics_file = attendee.event_id.get_ics_file()
                 mail_id = invitation_template.send_mail(attendee.id)
 
                 vals = {}
@@ -408,7 +348,7 @@ class AlarmManager(models.AbstractModel):
             if meeting.recurrency:
                 at_least_one = False
                 last_found = False
-                for one_date in self.env['calendar.event'].get_recurrent_date_by_event(current_event):
+                for one_date in current_event.get_recurrent_date_by_event():
                     in_date_format = one_date.replace(tzinfo=None)
                     last_found = self.do_check_alarm_for_one_date(in_date_format, meeting, max_delta, 0, 'email', after=last_notif_mail, missing=True)
                     for alert in last_found:
@@ -439,7 +379,7 @@ class AlarmManager(models.AbstractModel):
             if meeting.recurrency:
                 b_found = False
                 last_found = False
-                for one_date in self.env["calendar.event"].get_recurrent_date_by_event(current_event):
+                for one_date in current_event.get_recurrent_date_by_event():
                     in_date_format = one_date.replace(tzinfo=None)
                     last_found = self.do_check_alarm_for_one_date(in_date_format, meeting, max_delta, time_limit, 'notification', after=partner.calendar_last_notif_ack)
                     if last_found:
@@ -585,12 +525,11 @@ class Meeting(models.Model):
                 partners |= self.env['res.partner'].browse(active_id)
         return partners
 
-    # TODO JEM : make it api.multi and remove args
-    @api.model
-    def get_recurrent_date_by_event(self, event):
-        """ Get recurrent dates based on Rule string and all event where recurrent_id is child
-            :param event : calendar.event record
-        """
+    @api.multi
+    def get_recurrent_date_by_event(self):
+        """ Get recurrent dates based on Rule string and all event where recurrent_id is child """
+        self.ensure_one()
+
         def todate(date):
             val = parser.parse(''.join((re.compile('\d')).findall(date)))
             ## Dates are localized to saved timezone if any, else current timezone.
@@ -599,15 +538,15 @@ class Meeting(models.Model):
             return val.astimezone(timezone)
 
         timezone = pytz.timezone(self._context.get('tz') or 'UTC')
-        startdate = pytz.UTC.localize(fields.Datetime.from_string(event.start))  # Add "+hh:mm" timezone
+        startdate = pytz.UTC.localize(fields.Datetime.from_string(self.start))  # Add "+hh:mm" timezone
         if not startdate:
             startdate = datetime.now()
 
         # Convert the start date to saved timezone (or context tz) as it'll
         # define the correct hour/day asked by the user to repeat for recurrence.
         startdate = startdate.astimezone(timezone)  # transform "+hh:mm" timezone
-        rset1 = rrule.rrulestr(str(event.rrule), dtstart=startdate, forceset=True)
-        recurring_meetings = self.search([('recurrent_id', '=', event.id), '|', ('active', '=', False), ('active', '=', True)])
+        rset1 = rrule.rrulestr(str(self.rrule), dtstart=startdate, forceset=True)
+        recurring_meetings = self.search([('recurrent_id', '=', self.id), '|', ('active', '=', False), ('active', '=', True)])
 
         for meeting in recurring_meetings:
             rset1._exdate.append(todate(meeting.recurrent_id_date))
@@ -959,7 +898,64 @@ class Meeting(models.Model):
                 self.stop_datetime = fields.Datetime.to_string(end)
                 self.stop = fields.Datetime.to_string(end)
 
-    # TODO JEM : change return value, use recordset instead of ids
+    @api.multi
+    def get_ics_file(self):
+        """ Returns iCalendar file for the event invitation.
+            :returns the .ics file content
+        """
+        result = None
+
+        def ics_datetime(idate, allday=False):
+            if idate:
+                if allday:
+                    return fields.Date.from_string(idate)
+                else:
+                    return fields.Datetime.from_string(idate).replace(tzinfo=pytz.timezone('UTC'))
+            return False
+
+        try:
+            # FIXME: why isn't this in CalDAV?
+            import vobject
+        except ImportError:
+            return result
+
+        cal = vobject.iCalendar()
+        event = cal.add('vevent')
+
+        if not self.start or not self.stop:
+            raise UserError(_("First you have to specify the date of the invitation."))
+        event.add('created').value = ics_datetime(time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+        event.add('dtstart').value = ics_datetime(self.start, self.allday)
+        event.add('dtend').value = ics_datetime(self.stop, self.allday)
+        event.add('summary').value = self.name
+        if self.description:
+            event.add('description').value = self.description
+        if self.location:
+            event.add('location').value = self.location
+        if self.rrule:
+            event.add('rrule').value = self.rrule
+
+        if self.alarm_ids:
+            for alarm in self.alarm_ids:
+                valarm = event.add('valarm')
+                interval = alarm.interval
+                duration = alarm.duration
+                trigger = valarm.add('TRIGGER')
+                trigger.params['related'] = ["START"]
+                if interval == 'days':
+                    delta = timedelta(days=duration)
+                elif interval == 'hours':
+                    delta = timedelta(hours=duration)
+                elif interval == 'minutes':
+                    delta = timedelta(minutes=duration)
+                trigger.value = delta
+                valarm.add('DESCRIPTION').value = alarm.name or 'Odoo'
+        for attendee in self.attendee_ids:
+            attendee_add = event.add('attendee')
+            attendee_add.value = 'MAILTO:' + (attendee.email or '')
+        result = cal.serialize()
+        return result
+
     @api.multi
     def create_attendees(self):
         current_user = self.env.user
@@ -995,43 +991,40 @@ class Meeting(models.Model):
                 meeting.message_subscribe(partner_ids=meeting_partners.ids)
 
             # We remove old attendees who are not in partner_ids now.
-            all_partner_ids = meeting.partner_ids.ids
-            all_part_attendee_ids = meeting.attendee_ids.mapped('partner_id').ids
-            all_attendee_ids = meeting.attendee_ids.ids
-            partner_ids_to_remove = map(lambda x: x, set(all_part_attendee_ids + new_att_partner_ids) - set(all_partner_ids))
+            all_partners = meeting.partner_ids
+            all_partner_attendees = meeting.attendee_ids.mapped('partner_id')
+            old_attendees = meeting.attendee_ids
+            partners_to_remove = all_partner_attendees + meeting_partners - all_partners
 
-            attendee_ids_to_remove = []
-
-            if partner_ids_to_remove:
-                attendee_ids_to_remove = self.env["calendar.attendee"].search([('partner_id.id', 'in', partner_ids_to_remove), ('event_id', '=', meeting.id)]).ids
-                if attendee_ids_to_remove:
-                    self.env['calendar.attendee'].browse(attendee_ids_to_remove).unlink()
+            attendees_to_remove = self.env["calendar.attendee"]
+            if partners_to_remove:
+                attendees_to_remove = self.env["calendar.attendee"].search([('partner_id', 'in', partners_to_remove.ids), ('event_id', '=', meeting.id)]).ids
+                attendees_to_remove.unlink()
 
             result[meeting.id] = {
-                'new_attendee_ids': meeting_attendees.ids,
-                'old_attendee_ids': all_attendee_ids,
-                'removed_attendee_ids': attendee_ids_to_remove,
-                'removed_partner_ids': partner_ids_to_remove
+                'new_attendees': meeting_attendees,
+                'old_attendees': old_attendees,
+                'removed_attendees': attendees_to_remove,
+                'removed_partners': partners_to_remove
             }
         return result
 
-    #TODO JEM : clean code !! make it api.multi
-    @api.model
-    def get_search_fields(self, browse_event, order_fields, r_date=None):
+    @api.multi
+    def get_search_fields(self, order_fields, r_date=None):
         sort_fields = {}
         for field in order_fields:
             if field == 'id' and r_date:
-                sort_fields[field] = real_id2calendar_id(browse_event.id, r_date)
+                sort_fields[field] = real_id2calendar_id(self.id, r_date)
             else:
-                sort_fields[field] = browse_event[field]
-                if isinstance(browse_event[field], models.BaseModel):
-                    name_get = browse_event[field].name_get()
+                sort_fields[field] = self[field]
+                if isinstance(self[field], models.BaseModel):
+                    name_get = self[field].name_get()
                     if len(name_get) and len(name_get[0]) >= 2:
                         sort_fields[field] = name_get[0][1]
         if r_date:
             sort_fields['sort_start'] = r_date.strftime(VIRTUALID_DATETIME_FORMAT)
         else:
-            display_start = browse_event['display_start']
+            display_start = self.display_start
             sort_fields['sort_start'] = display_start.replace(' ', '').replace('-', '') if display_start else False
         return sort_fields
 
@@ -1056,9 +1049,9 @@ class Meeting(models.Model):
         for meeting in self:
             if not meeting.recurrency or not meeting.rrule:
                 result.append(meeting.id)
-                result_data.append(self.get_search_fields(meeting, order_fields))
+                result_data.append(meeting.get_search_fields(order_fields))
                 continue
-            rdates = self.get_recurrent_date_by_event(meeting)
+            rdates = meeting.get_recurrent_date_by_event()
 
             for r_date in rdates:
                 # fix domain evaluation
@@ -1101,7 +1094,7 @@ class Meeting(models.Model):
 
                 if [True for item in new_pile if not item]:
                     continue
-                result_data.append(self.get_search_fields(meeting, order_fields, r_date=r_date))
+                result_data.append(meeting.get_search_fields(order_fields, r_date=r_date))
 
         if order_fields:
             uniq = lambda it: collections.OrderedDict((id(x), x) for x in it).values()
@@ -1296,20 +1289,15 @@ class Meeting(models.Model):
                 meeting.attendee_ids._send_mail_to_attendees(email_from=email)
         return True
 
-    # TODO JEM : remove date arg, and call self.start instead
     @api.multi
-    def get_interval(self, date, interval, tz=None):
+    def get_interval(self, interval, tz=None):
         """ Format and localize some dates to be used in email templates
-
-            :param string date: date/time to be formatted
             :param string interval: Among 'day', 'month', 'dayname' and 'time' indicating the desired formatting
             :param string tz: Timezone indicator (optional)
             :return unicode: Formatted date or time (as unicode string, to prevent jinja2 crash)
-
-            (Function used only in calendar_event_data.xml)
         """
         self.ensure_one()
-        date = fields.Datetime.from_string(date)
+        date = fields.Datetime.from_string(self.start)
 
         if tz:
             timezone = pytz.timezone(tz or 'UTC')
@@ -1474,19 +1462,19 @@ class Meeting(models.Model):
                     partners_to_notify = meeting.partner_ids.ids
                     event_attendees_changes = attendees_create and attendees_create[real_ids[0]]
                     if event_attendees_changes:
-                        partners_to_notify.update(event_attendees_changes['removed_partner_ids'])
+                        partners_to_notify.update(event_attendees_changes['removed_partners'].ids)
                     self.env['calendar.alarm_manager'].notify_next_alarm(partners_to_notify)
 
             if (values.get('start_date') or values.get('start_datetime')) and values.get('active', True):
                 for current_meeting in all_meetings:
                     if attendees_create:
                         attendees_create = attendees_create[current_meeting.id]
-                        mail_to_ids = list(set(attendees_create['old_attendee_ids']) - set(attendees_create['removed_attendee_ids']))
+                        attendee_to_email = attendees_create['old_attendees'] - attendees_create['removed_attendees']
                     else:
-                        mail_to_ids = current_meeting.attendee_ids.ids
+                        attendee_to_email = current_meeting.attendee_ids
 
-                    if mail_to_ids:
-                        self.env['calendar.attendee'].browse(mail_to_ids)._send_mail_to_attendees(template_xmlid='calendar_template_meeting_changedate', email_from=self.env.user.email)
+                    if attendee_to_email:
+                        attendee_to_email._send_mail_to_attendees(template_xmlid='calendar_template_meeting_changedate', email_from=self.env.user.email)
         return True
 
     @api.model
