@@ -4,7 +4,7 @@
 
 {
     'name': 'Membership Management',
-    'version': '0.1',
+    'version': '1.0',
     'category': 'Sales',
     'description': """
 This module allows you to manage all operations for managing memberships.
@@ -37,6 +37,4 @@ invoice and send propositions for membership renewal.
         '../account/test/account_minimal_test.xml',
         'test/test_membership.yml'
     ],
-    'installable': True,
-    'auto_install': False,
 }
