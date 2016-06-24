@@ -265,6 +265,14 @@ class WebRequest(object):
         self.disable_db = True
         self.uid = None
 
+    def _params_prepare(self, params):
+        """Give the right format to parameters."""
+        try:
+            flat = not self.endpoint.routing["multi"]
+        except (AttributeError, KeyError):
+            flat = True
+        return params.to_dict(flat)
+
     def set_handler(self, endpoint, arguments, auth):
         # is this needed ?
         arguments = dict((k, v) for k, v in arguments.iteritems()
@@ -447,6 +455,10 @@ def route(route=None, **kw):
                    database nor the current user.
     :param methods: A sequence of http methods this route applies to. If not
                     specified, all methods are allowed.
+    :param bool multi:
+        If ``True``, each parameter will be a list of received values. This is
+        useful if your controller expects multiple values per key. Otherwise,
+        you will only get the first value received for each key.
     :param cors: The Access-Control-Allow-Origin cors directive value.
     :param bool csrf: Whether CSRF protection should be enabled for the route.
 
@@ -682,7 +694,7 @@ class JsonRequest(WebRequest):
                     rpc_request.debug('%s: %s %s, %s',
                         endpoint, model, method, pprint.pformat(args))
 
-            result = self._call_function(**self.params)
+            result = self._call_function(**self._params_prepare(self.params))
 
             if rpc_request_flag or rpc_response_flag:
                 end_time = time.time()
@@ -772,11 +784,10 @@ class HttpRequest(WebRequest):
 
     def __init__(self, *args):
         super(HttpRequest, self).__init__(*args)
-        params = self.httprequest.args.to_dict()
-        params.update(self.httprequest.form.to_dict())
-        params.update(self.httprequest.files.to_dict())
-        params.pop('session_id', None)
-        self.params = params
+        self.params = self.httprequest.files.copy()
+        self.params.update(self.httprequest.form)
+        self.params.update(self.httprequest.args)
+        self.params.pop('session_id', None)
 
     def _handle_exception(self, exception):
         """Called within an except block to allow converting exceptions
@@ -842,7 +853,7 @@ more details.
 
                 raise werkzeug.exceptions.BadRequest('Invalid CSRF Token')
 
-        r = self._call_function(**self.params)
+        r = self._call_function(**self._params_prepare(self.params))
         if not r:
             r = Response(status=204)  # no content
         return r
