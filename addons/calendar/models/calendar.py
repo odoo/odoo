@@ -23,6 +23,7 @@ from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
+VIRTUALID_DATETIME_FORMAT = "%Y%m%d%H%M%S"
 
 def calendar_id2real_id(calendar_id=None, with_date=False):
     """ Convert a "virtual/recurring event id" (type string) into a real event id (type int).
@@ -36,7 +37,7 @@ def calendar_id2real_id(calendar_id=None, with_date=False):
         if len(res) == 2:
             real_id = res[0]
             if with_date:
-                real_date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT, time.strptime(res[1], "%Y%m%d%H%M%S"))
+                real_date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT, time.strptime(res[1], VIRTUALID_DATETIME_FORMAT))
                 start = datetime.strptime(real_date, DEFAULT_SERVER_DATETIME_FORMAT)
                 end = start + timedelta(hours=with_date)
                 return (int(real_id), real_date, end.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
@@ -50,6 +51,14 @@ def get_real_ids(ids):
 
     if isinstance(ids, (list, tuple)):
         return [calendar_id2real_id(_id) for _id in ids]
+
+
+def real_id2calendar_id(record_id, date):
+    return '%s-%s' % (record_id, date.strftime(VIRTUALID_DATETIME_FORMAT))
+
+
+def is_calendar_id(record_id):
+    return len(str(record_id).split('-')) != 1
 
 
 class Contacts(models.Model):
@@ -1012,7 +1021,7 @@ class Meeting(models.Model):
         sort_fields = {}
         for field in order_fields:
             if field == 'id' and r_date:
-                sort_fields[field] = '%s-%s' % (browse_event[field], r_date.strftime("%Y%m%d%H%M%S"))
+                sort_fields[field] = real_id2calendar_id(browse_event.id, r_date)
             else:
                 sort_fields[field] = browse_event[field]
                 if isinstance(browse_event[field], models.BaseModel):
@@ -1020,7 +1029,7 @@ class Meeting(models.Model):
                     if len(name_get) and len(name_get[0]) >= 2:
                         sort_fields[field] = name_get[0][1]
         if r_date:
-            sort_fields['sort_start'] = r_date.strftime("%Y%m%d%H%M%S")
+            sort_fields['sort_start'] = r_date.strftime(VIRTUALID_DATETIME_FORMAT)
         else:
             display_start = browse_event['display_start']
             sort_fields['sort_start'] = display_start.replace(' ', '').replace('-', '') if display_start else False
@@ -1426,7 +1435,7 @@ class Meeting(models.Model):
             # special write of complex IDS
             real_ids = []
             new_ids = []
-            if '-' not in str(meeting.id):
+            if not is_calendar_id(meeting.id):
                 real_ids = [int(meeting.id)]
             else:
                 real_event_id = calendar_id2real_id(meeting.id)
@@ -1580,7 +1589,7 @@ class Meeting(models.Model):
         records_to_unlink = self.env['calendar.event']
 
         for meeting in self:
-            if can_be_deleted and is_calendar_id(meeting.id):  # if  ID REAL
+            if can_be_deleted and not is_calendar_id(meeting.id):  # if  ID REAL
                 if meeting.recurrent_id:
                     records_to_exclude |= meeting
                 else:
