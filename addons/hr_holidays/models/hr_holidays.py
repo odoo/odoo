@@ -224,9 +224,9 @@ class Holidays(models.Model):
             or if he is an Hr Manager.
         """
         user = self.env.user
-        group_hr_manager = self.env.ref('base.group_hr_manager')
+        group_leave_manager = self.env.ref('hr_holidays.group_leave_manager')
         for holiday in self:
-            if group_hr_manager in user.groups_id or holiday.employee_id and holiday.employee_id.user_id == user:
+            if group_leave_manager in user.groups_id or holiday.employee_id and holiday.employee_id.user_id == user:
                 holiday.can_reset = True
 
     @api.constrains('date_from', 'date_to')
@@ -332,7 +332,7 @@ class Holidays(models.Model):
         return res
 
     def _check_state_access_right(self, vals):
-        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not self.env['res.users'].has_group('base.group_hr_user'):
+        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not self.env['res.users'].has_group('hr_holidays.group_leave_manager'):
             return False
         return True
 
@@ -518,16 +518,16 @@ class Holidays(models.Model):
         return super(Holidays, self)._track_subtype(init_values)
 
     def _notification_group_recipients(self, message, recipients, done_ids, group_data):
-        """ Override the mail.thread method to handle HR users and officers
+        """ Override the mail.thread method to handle HR users and leave manager
             recipients. Indeed those will have specific action in their notification
             emails.
         """
-        group_hr_user = self.env.ref('base.group_hr_user')
+        group_leave_manager = self.env.ref('hr_holidays.group_leave_manager')
         for recipient in recipients:
             if recipient.id in done_ids:
                 continue
-            if recipient.user_ids and group_hr_user in recipient.user_ids[0].groups_id:
-                group_data['group_hr_user'] |= recipient
+            if recipient.user_ids and group_leave_manager in recipient.user_ids[0].groups_id.ids:
+                group_data['group_leave_manager'] |= recipient
                 done_ids.add(recipient.id)
         return super(Holidays, self)._notification_group_recipients(message, recipients, done_ids, group_data)
 
@@ -544,7 +544,7 @@ class Holidays(models.Model):
         if self.state in ['confirm', 'validate', 'validate1']:
             actions.append({'url': ref_action, 'title': 'Refuse'})
 
-        result['group_hr_user'] = {
+        result['group_leave_manager'] = {
             'actions': actions
         }
         return result

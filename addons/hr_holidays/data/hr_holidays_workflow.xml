@@ -92,7 +92,7 @@
         <field name="act_to" ref="act_validate" />
         <field name="signal">validate</field>
         <field name="condition">not double_validation</field>
-        <field name="group_id" ref="base.group_hr_user"/>
+        <field name="group_id" ref="hr_holidays.group_leave_manager"/>
     </record>
 
     <!-- 2. submitted -> first_accepted (validate signal) if double_validation -->
@@ -101,7 +101,7 @@
         <field name="act_to" ref="act_validate1" />
         <field name="signal">validate</field>
         <field name="condition">double_validation</field>
-        <field name="group_id" ref="base.group_hr_user"/>
+        <field name="group_id" ref="hr_holidays.group_leave_manager"/>
     </record>
 
     <!-- 2. submitted->refused (refuse signal) -->
@@ -110,7 +110,7 @@
         <field name="act_to" ref="act_refuse" />
         <field name="signal">refuse</field>
         <field name="condition">True</field>
-        <field name="group_id" ref="base.group_hr_user"/>
+        <field name="group_id" ref="hr_holidays.group_leave_manager"/>
     </record>
 
     <!-- 3. accepted->refused (refuse signal) -->
@@ -119,7 +119,7 @@
         <field name="act_to" ref="act_refuse" />
         <field name="signal">refuse</field>
         <field name="condition">True</field>
-        <field name="group_id" ref="base.group_hr_user"/>
+        <field name="group_id" ref="hr_holidays.group_leave_manager"/>
     </record>
 
     <!-- 3. accepted->refused (refuse signal) -->
@@ -128,7 +128,7 @@
         <field name="act_to" ref="act_refuse" />
         <field name="signal">refuse</field>
         <field name="condition">True</field>
-        <field name="group_id" ref="base.group_hr_user"/>
+        <field name="group_id" ref="hr_holidays.group_leave_manager"/>
     </record>
 
     <!-- 4. first_accepted -> accepted (second_validate  signal) -->
@@ -137,7 +137,7 @@
         <field name="act_to" ref="act_validate" />
         <field name="condition">True</field>
         <field name="signal">second_validate</field>
-        <field name="group_id" ref="base.group_hr_user"/>
+        <field name="group_id" ref="hr_holidays.group_leave_manager"/>
     </record>
 
     <!-- 4. first_accepted->refused (refuse signal) -->
@@ -146,7 +146,7 @@
         <field name="act_to" ref="act_refuse" />
         <field name="signal">refuse</field>
         <field name="condition">True</field>
-        <field name="group_id" ref="base.group_hr_user"/>
+        <field name="group_id" ref="hr_holidays.group_leave_manager"/>
     </record>
 
     <!-- 5. refused->draft (reset signal) -->
@@ -155,7 +155,7 @@
         <field name="act_to" ref="act_draft" />
         <field name="signal">reset</field>
         <field name="condition">can_reset</field>
-        <field name="group_id" ref="base.group_hr_manager"/>
+        <field name="group_id" ref="hr_holidays.group_leave_manager"/>
     </record>
 
 </odoo>
