@@ -44,7 +44,7 @@ var Menu = Widget.extend({
         });
 
         // Hide second level submenus
-        this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
+        this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').addClass('o_hidden');
         if (self.current_menu) {
             self.open_menu(self.current_menu);
         }
