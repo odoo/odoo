@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-
-from openerp import tools
-from openerp.osv import fields, osv
-import openerp.addons.decimal_precision as dp
-from openerp.tools.translate import _
-from openerp.exceptions import UserError
+from odoo import api, fields, models
+import odoo.addons.decimal_precision as dp
 
 STATE = [
     ('none', 'Non Member'),
@@ -20,50 +15,41 @@ STATE = [
 ]
 
 
-class membership_line(osv.osv):
+class MembershipLine(models.Model):
     _name = 'membership.membership_line'
-    _description = __doc__
+    _rec_name = 'partner'
+    _order = 'id desc'
 
-    def _get_partners(self, cr, uid, ids, context=None):
-        list_membership_line = []
-        member_line_obj = self.pool.get('membership.membership_line')
-        for partner in self.pool.get('res.partner').browse(cr, uid, ids, context=context):
-            if partner.member_lines:
-                list_membership_line += member_line_obj.search(cr, uid, [('id', 'in', [ l.id for l in partner.member_lines])], context=context)
-        return list_membership_line
+    partner = fields.Many2one('res.partner', string='Partner', ondelete='cascade', index=True)
+    membership_id = fields.Many2one('product.product', string="Membership", required=True)
+    date_from = fields.Date(string='From', readonly=True)
+    date_to = fields.Date(string='To', readonly=True)
+    date_cancel = fields.Date(string='Cancel date')
+    date = fields.Date(string='Join Date',
+        help="Date on which member has joined the membership")
+    member_price = fields.Float(string='Membership Fee',
+        digits_compute=dp.get_precision('Product Price'), required=True,
+        help='Amount for the membership')
+    account_invoice_line = fields.Many2one('account.invoice.line', string='Account Invoice line', readonly=True)
+    account_invoice_id = fields.Many2one('account.invoice', related='account_invoice_line.invoice_id', string='Invoice', readonly=True)
+    company_id = fields.Many2one('res.company', related='account_invoice_line.invoice_id.company_id', string="Company", readonly=True, store=True)
+    state = fields.Selection(STATE, compute='_compute_state', string='Membership Status', store=True,
+        help="It indicates the membership status.\n"
+             "-Non Member: A member who has not applied for any membership.\n"
+             "-Cancelled Member: A member who has cancelled his membership.\n"
+             "-Old Member: A member whose membership date has expired.\n"
+             "-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+             "-Invoiced Member: A member whose invoice has been created.\n"
+             "-Paid Member: A member who has paid the membership amount.")
 
-    def _get_membership_lines(self, cr, uid, ids, context=None):
-        list_membership_line = []
-        member_line_obj = self.pool.get('membership.membership_line')
-        for invoice in self.pool.get('account.invoice').browse(cr, uid, ids, context=context):
-            if invoice.invoice_line_ids:
-                list_membership_line += member_line_obj.search(cr, uid, [('account_invoice_line', 'in', [ l.id for l in invoice.invoice_line_ids])], context=context)
-        return list_membership_line
-
-    def _check_membership_date(self, cr, uid, ids, context=None):
-        """Check if membership product is not in the past """
-
-        cr.execute('''
-         SELECT MIN(ml.date_to - ai.date_invoice)
-             FROM membership_membership_line ml
-             JOIN account_invoice_line ail ON (
-                ml.account_invoice_line = ail.id
-                )
-            JOIN account_invoice ai ON (
-            ai.id = ail.invoice_id)
-            WHERE ml.id IN %s''', (tuple(ids),))
-        res = cr.fetchall()
-        for r in res:
-            if r[0] and r[0] < 0:
-                return False
-        return True
-
-    def _state(self, cr, uid, ids, name, args, context=None):
+    @api.depends('account_invoice_line.invoice_id.state',
+                 'account_invoice_line.invoice_id.payment_ids',
+                 'account_invoice_line.invoice_id.payment_ids.invoice_ids.type')
+    def _compute_state(self):
         """Compute the state lines """
-        res = {}
-        inv_obj = self.pool.get('account.invoice')
-        for line in self.browse(cr, uid, ids, context=context):
-            cr.execute('''
+        Invoice = self.env['account.invoice']
+        for line in self:
+            self._cr.execute('''
             SELECT i.state, i.id FROM
             account_invoice i
             WHERE
@@ -77,53 +63,21 @@ class membership_line(osv.osv):
                     )
                 )
             ''', (line.id,))
-            fetched = cr.fetchone()
+            fetched = self._cr.fetchone()
             if not fetched:
-                res[line.id] = 'canceled'
+                line.state = 'canceled'
                 continue
             istate = fetched[0]
-            state = 'none'
-            if (istate == 'draft') | (istate == 'proforma'):
-                state = 'waiting'
+            if istate in ('draft', 'proforma'):
+                line.state = 'waiting'
             elif istate == 'open':
-                state = 'invoiced'
+                line.state = 'invoiced'
             elif istate == 'paid':
-                state = 'paid'
-                inv = inv_obj.browse(cr, uid, fetched[1], context=context)
-                for payment in inv.payment_ids:
-                    if payment.invoice_ids and any(inv.type == 'out_refund' for inv in payment.invoice_ids):
-                        state = 'canceled'
+                line.state = 'paid'
+                invoices = Invoice.browse(fetched[1]).payment_ids.mapped('invoice_ids')
+                if invoices.filtered(lambda invoice: invoice.type == 'out_refund'):
+                    line.state = 'canceled'
             elif istate == 'cancel':
-                state = 'canceled'
-            res[line.id] = state
-        return res
-
-    _columns = {
-        'partner': fields.many2one('res.partner', 'Partner', ondelete='cascade', select=1),
-        'membership_id': fields.many2one('product.product', string="Membership", required=True),
-        'date_from': fields.date('From', readonly=True),
-        'date_to': fields.date('To', readonly=True),
-        'date_cancel': fields.date('Cancel date'),
-        'date': fields.date('Join Date', help="Date on which member has joined the membership"),
-        'member_price': fields.float('Membership Fee', digits_compute= dp.get_precision('Product Price'), required=True, help='Amount for the membership'),
-        'account_invoice_line': fields.many2one('account.invoice.line', 'Account Invoice line', readonly=True),
-        'account_invoice_id': fields.related('account_invoice_line', 'invoice_id', type='many2one', relation='account.invoice', string='Invoice', readonly=True),
-        'state': fields.function(_state,
-                        string='Membership Status', type='selection',
-                        selection=STATE, store = {
-                        'account.invoice': (_get_membership_lines, ['state'], 10),
-                        'res.partner': (_get_partners, ['membership_state'], 12),
-                        }, help="""It indicates the membership status.
-                        -Non Member: A member who has not applied for any membership.
-                        -Cancelled Member: A member who has cancelled his membership.
-                        -Old Member: A member whose membership date has expired.
-                        -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.
-                        -Invoiced Member: A member whose invoice has been created.
-                        -Paid Member: A member who has paid the membership amount."""),
-        'company_id': fields.related('account_invoice_line', 'invoice_id', 'company_id', type="many2one", relation="res.company", string="Company", readonly=True, store=True)
-    }
-    _rec_name = 'partner'
-    _order = 'id desc'
-    _constraints = [
-        (_check_membership_date, 'Error, this membership product is out of date', [])
-    ]
+                line.state = 'canceled'
+            else:
+                line.state = 'none'
