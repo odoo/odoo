@@ -2,8 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from .test_project_base import TestProjectBase
-from openerp.exceptions import AccessError
-from openerp.tools import mute_logger
+from odoo.tools import mute_logger
 
 
 EMAIL_TPL = """Return-Path: <whatever-2a840@postmaster.twitter.com>
@@ -11,7 +10,7 @@ X-Original-To: {to}
 Delivered-To: {to}
 To: {to}
 cc: {cc}
-Received: by mail1.openerp.com (Postfix, from userid 10002)
+Received: by mail1.odoo.com (Postfix, from userid 10002)
     id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
 Message-ID: {msg_id}
 Date: Tue, 29 Nov 2011 12:43:21 +0530

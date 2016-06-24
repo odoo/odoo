@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp.addons.mail.tests.common import TestMail
+from odoo.addons.mail.tests.common import TestMail
 
 
 class TestProjectBase(TestMail):
