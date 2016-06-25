@@ -9,6 +9,7 @@ from openerp.tools.translate import _
 from openerp.tools.float_utils import float_is_zero, float_compare
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import UserError, AccessError
+from openerp.tools.misc import formatLang
 from openerp.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 class PurchaseOrder(models.Model):
@@ -178,6 +179,8 @@ class PurchaseOrder(models.Model):
             name = po.name
             if po.partner_ref:
                 name += ' ('+po.partner_ref+')'
+            if po.amount_total:
+                name += ': ' + formatLang(self.env, po.amount_total, currency_obj=po.currency_id)
             result.append((po.id, name))
         return result
 
