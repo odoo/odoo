@@ -182,8 +182,8 @@ class Applicant(models.Model):
         for record in self:
             record.attachment_number = attach_data.get(record.id, 0)
 
-    @api.model
-    def _read_group_stage_ids(self, ids, domain, read_group_order=None, access_rights_uid=None):
+    @api.multi
+    def _read_group_stage_ids(self, domain, read_group_order=None, access_rights_uid=None):
         access_rights_uid = access_rights_uid or self.env.uid
         Stage = self.env['hr.recruitment.stage']
         order = Stage._order
