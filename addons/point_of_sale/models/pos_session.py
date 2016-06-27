@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 class PosSession(models.Model):
     _name = 'pos.session'
@@ -109,12 +109,12 @@ class PosSession(models.Model):
     def _check_unicity(self):
         # open if there is no session in 'opening_control', 'opened', 'closing_control' for one user
         if self.search_count([('state', 'not in', ('closed', 'closing_control')), ('user_id', '=', self.user_id.id)]) > 1:
-            raise UserError(_("You cannot create two active sessions with the same responsible!"))
+            raise ValidationError(_("You cannot create two active sessions with the same responsible!"))
 
     @api.constrains('config_id')
     def _check_pos_config(self):
         if self.search_count([('state', '!=', 'closed'), ('config_id', '=', self.config_id.id)]) > 1:
-            raise UserError(_("You cannot create two active sessions related to the same point of sale!"))
+            raise ValidationError(_("You cannot create two active sessions related to the same point of sale!"))
 
     @api.model
     def create(self, values):
