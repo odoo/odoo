@@ -7,19 +7,16 @@
 # Copyright (C) 2008-now  开阖软件 jeff@osbzr.com    < PM and LTS >
 
 {
-    'name': '中国小企业会计科目表',
+    'name': '中国会计科目表-企业会计准则',
     'version': '1.8',
     'category': 'Localization/Account Charts',
     'author': 'www.openerp-china.org',
     'maintainer': 'jeff@osbzr.com',
     'website': 'http://openerp-china.org',
     'description': """
-
-    科目类型\会计科目表模板\增值税\辅助核算类别\管理会计凭证簿\财务会计凭证簿
-
-    添加中文省份数据
-
-    增加小企业会计科目表
+此模块包含基础模块的本地化数据
+==============================
+企业会计科目表
 
     """,
     'depends': ['l10n_cn'],
