@@ -283,7 +283,10 @@ class QWeb(object):
         astmod.body.extend(_options['ast_calls'])
 
         if 'profile' in options:
-            self._profiling(astmod, _options)
+            if astor:
+                self._profiling(astmod, _options)
+            else:
+                _logger.warning("Can't use QWeb 'profile' option without 'astor' python module")
 
         ast.fix_missing_locations(astmod)
 
