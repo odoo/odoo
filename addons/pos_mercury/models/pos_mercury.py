@@ -88,3 +88,11 @@ class pos_order_card(models.Model):
                 break
 
         return statement_id
+
+class AutoVacuum(models.AbstractModel):
+    _inherit = 'ir.autovacuum'
+
+    @api.model
+    def power_on(self, *args, **kwargs):
+        self.env['pos_mercury.mercury_transaction'].cleanup_old_tokens()
+        return super(AutoVacuum, self).power_on(*args, **kwargs)
