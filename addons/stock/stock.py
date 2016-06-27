@@ -2562,8 +2562,9 @@ class stock_move(osv.osv):
             move_rec = self.pool['stock.move'].browse(cr, uid, move, context=context)
             # Assign quants already reserved with lot to the correct
             for quant in quants_taken:
-                move_quants_dict.setdefault(quant[0].lot_id.id, [])
-                move_quants_dict[quant[0].lot_id.id] += [quant]
+                if quant[0] <= move_rec.reserved_quant_ids:
+                    move_quants_dict.setdefault(quant[0].lot_id.id, [])
+                    move_quants_dict[quant[0].lot_id.id] += [quant]
             false_quants_move = [x for x in false_quants if x[0].reservation_id.id == move]
             for lot in lot_qty:
                 move_quants_dict.setdefault(lot, [])
