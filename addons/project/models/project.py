@@ -699,7 +699,7 @@ class AccountAnalyticAccount(models.Model):
 
     def _compute_project_count(self):
         for account in self:
-            account.project_count = len(account.project_ids)
+            account.project_count = len(account.with_context(active_test=False).project_ids)
 
     @api.model
     def _trigger_project_creation(self, vals):
@@ -715,7 +715,7 @@ class AccountAnalyticAccount(models.Model):
         '''
         self.ensure_one()
         Project = self.env['project.project']
-        project = Project.search([('analytic_account_id', '=', self.id)])
+        project = Project.with_context(active_test=False).search([('analytic_account_id', '=', self.id)])
         if not project and self._trigger_project_creation(vals):
             project_values = {
                 'name': vals.get('name'),
@@ -759,7 +759,7 @@ class AccountAnalyticAccount(models.Model):
 
     @api.multi
     def projects_action(self):
-        projects = self.mapped('project_ids')
+        projects = self.with_context(active_test=False).mapped('project_ids')
         result = {
             "type": "ir.actions.act_window",
             "res_model": "project.project",
