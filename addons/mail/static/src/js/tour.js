@@ -11,7 +11,7 @@ tour.register('mail_tour', {
 }, [{
     trigger: '.o_mail_chat .o_mail_chat_sidebar .o_add[data-type="public"]',
     content: _t("<p>Channels help organize information across different topics and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, marketing, product XYZ, after work party...).</p>"),
-    position: 'right',
+    position: 'bottom',
 }, {
     trigger: '.o_mail_chat .o_composer_text_field',
     content: _t("<p><b>Write a message</b> to the members of the channel here.</p> <p>You can notify someone with <i>\'@\'</i> or link another channel with <i>\'#\'</i>. Start your message with <i>\'/\'</i> to get the list of possible commands.</p>"),
@@ -24,7 +24,7 @@ tour.register('mail_tour', {
 }, {
     trigger: '.o_mail_chat .o_mail_chat_channel_item[data-channel-id="channel_starred"]',
     content: _t("Get all your <b>starred messages</b> here."),
-    position: "right",
+    position: "bottom",
 }]);
 
 });
