@@ -150,7 +150,10 @@
                             <field name="parent_id"
                                 placeholder="Company"
                                 domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'default_supplier': supplier, 'default_customer': customer}"
-                                attrs="{'invisible': [('is_company','=', True),('parent_id', '=', False)]}"/>
+                                attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('display_company_name', '!=', False),('display_company_name', '!=', '')]}"/>
+                                <field name="display_company_name" attrs="{'invisible': ['|', '|', ('display_company_name', '=', False), ('display_company_name', '=', ''), ('is_company', '=', True)]}"/>
+                                <button name="create_company" type="object" string="Create company" class="btn btn-sm oe_edit_only fa fa-external-link btn btn-link " attrs="{'invisible': ['|', '|', ('is_company','=', True), ('display_company_name', '=', ''), ('display_company_name', '=', False)]}"/>
+
                         </div>
                     </div>
 
