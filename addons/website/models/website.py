@@ -301,12 +301,12 @@ class website(osv.osv):
             for page in View.browse(cr, uid, pages, context=context):
                 if page.page:
                     dep[page_key].append({
-                        'text': _('Page <b>%s</b> seems to have a link to this page !') % page.key,
+                        'text': _('Page <b>%s</b> contains a link to this page') % page.key,
                         'link': '/page/%s' % page.key
                     })
                 else:
                     dep[page_key].append({
-                        'text': _('Template <b>%s (id:%s)</b> seems to have a link to this page !') % (page.key, page.id),
+                        'text': _('Template <b>%s (id:%s)</b> contains a link to this page') % (page.key, page.id),
                         'link': '#'
                     })
 
@@ -322,7 +322,7 @@ class website(osv.osv):
                 dep[menu_key] = []
             for menu in Menu.browse(cr, uid, menus, context=context):
                 dep[menu_key].append({
-                    'text': _('Menu <b>%s</b> seems to have a link to this page !') % menu.name,
+                    'text': _('This page is in the menu <b>%s</b>') % menu.name,
                     'link': False
                 })
 
