@@ -86,12 +86,6 @@ class FileSystemLoader(object):
                 arch = etree.tostring(root, encoding='utf-8', xml_declaration=True)
                 return arch
 
-def stringify_children(node):
-    parts = ([node.text] +
-            list(chain(*([c.text, etree.tostring(c), c.tail] for c in node.getchildren() if not isinstance(c, etree._Comment)))) +
-            [node.tail])
-    # filter removes possible Nones in texts and tails
-    return ''.join(filter(None, parts))
 
 class TestQWeb(TransactionCase):
     matcher = re.compile(r'^qweb-test-(.*)\.xml$')
@@ -132,7 +126,7 @@ class TestQWeb(TransactionCase):
             # so output is predictable & repeatable
             params = {} if param is None else json.loads(param.text, object_pairs_hook=collections.OrderedDict)
 
-            result = stringify_children(doc.find('result[@id="{}"]'.format(template)))
+            result = doc.find('result[@id="{}"]'.format(template)).text
             self.assertEqual(
                 qweb.render(template, values=params, load=loader).strip().encode('utf-8'),
                 (result or u'').strip().encode('utf-8'),
