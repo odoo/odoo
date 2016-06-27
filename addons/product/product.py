@@ -942,6 +942,13 @@ class product_product(osv.osv):
             break
         return res
 
+    def _get_items(self, cr, uid, ids, field_name, args, context=None):
+        res = {}
+        for prod in self.browse(cr, uid, ids, context=context):
+            item_ids = self.pool['product.pricelist.item'].search(cr, uid, ['|', ('product_id', '=', prod.id), ('product_tmpl_id', '=', prod.product_tmpl_id.id)], context=context)
+            res[prod.id] = item_ids
+        return res
+
     _columns = {
         'price': fields.function(_product_price, fnct_inv=_set_product_lst_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
         'price_extra': fields.function(_get_price_extra, type='float', string='Variant Extra Price', help="This is the sum of the extra price of all attributes", digits_compute=dp.get_precision('Product Price')),
@@ -978,6 +985,7 @@ class product_product(osv.osv):
                                           groups="base.group_user", string="Cost"),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The weight of the contents in Kg, not including any packaging, etc."),
+        'item_ids': fields.function(_get_items, type='many2many', relation='product.pricelist.item', string='Pricelist Items', store=False),
     }
 
     _defaults = {
