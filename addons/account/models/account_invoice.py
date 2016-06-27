@@ -672,6 +672,7 @@ class AccountInvoice(models.Model):
         for tax_line in self.tax_line_ids:
             if tax_line.amount:
                 res.append({
+                    'invoice_tax_line_id': tax_line.id,
                     'tax_line_id': tax_line.tax_id.id,
                     'type': 'tax',
                     'name': tax_line.name,
