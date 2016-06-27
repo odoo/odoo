@@ -10,20 +10,7 @@
 -
   !record {model: res.users, id: res_hr_timesheet_manager}:
     groups_id:
-      - base.group_hr_manager
--
-  Create a user as 'HR timesheet Officer'
--
-  !record {model: res.users, id: res_hr_timesheet_officer, view: False}:
-    company_id: base.main_company
-    name: HR timesheet Officer
-    login: hrto
--
-  I added groups for HR timesheet Officer.
--
-  !record {model: res.users, id: res_hr_timesheet_officer}:
-    groups_id:
-      - base.group_hr_user
+      - hr_timesheet.group_timesheet_manager
 -
   Create a user as 'Timesheet Employee'
 -
