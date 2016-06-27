@@ -491,9 +491,25 @@ class stock_picking(osv.osv):
                 if sale_ids:
                     res[picking.id] = sale_ids[0]
         return res
-    
+
+    def _search_sale_id(self, cr, uid, obj, name, args, context=None):
+        res = []
+        sale_obj = self.pool.get("sale.order")
+        for field, operator, value in args:
+            assert field == name
+            if all([isinstance(v, int) for v in value]):
+                so_ids = sale_obj.search(cr, uid, [('id', operator, value)], context=context)
+            else:
+                so_ids = sale_obj.search(cr, uid, [('name', operator, value)], context=context)
+            so = sale_obj.browse(cr, uid, so_ids, context=context)
+            group_ids = so.mapped('procurement_group_id').ids
+            res_ids = self.search(cr, uid, [('group_id', 'in', group_ids)], context=context)
+            res.append(('id', 'in', res_ids))
+        return res
+
+
     _columns = {
-        'sale_id': fields.function(_get_sale_id, type="many2one", relation="sale.order", string="Sale Order"),
+        'sale_id': fields.function(_get_sale_id, type="many2one", relation="sale.order", string="Sale Order", fnct_search=_search_sale_id),
     }
 
     def _create_invoice_from_picking(self, cr, uid, picking, vals, context=None):
