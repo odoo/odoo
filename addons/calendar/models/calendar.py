@@ -656,7 +656,6 @@ class Meeting(models.Model):
                 else:
                     allday = False
                     _logger.debug("Calendar - All day is not specified, arbitrarily set to False")
-                    #raise UserError(_("Need to know if it's an allday or not..."))
 
             key = "date" if allday else "datetime"
             notkey = "datetime" if allday else "date"
@@ -773,7 +772,10 @@ class Meeting(models.Model):
         for meeting in self:
             meeting.display_time = self._get_display_time(meeting.start, meeting.stop, meeting.duration, meeting.allday)
 
-    # TODO JEM : this is strange, if we add depends, then it erase default value
+    # TODO JEM : Add depends when rco will have fixed the stored computed field recomputing problem.
+    # Also, remove `_onchange_start_date` and `_onchange_stop_date` since they will be done with this
+    # computed field. Normally, the `_set_dates` method should be removed to (adapt something for the
+    # duration computation).
     @api.multi
     def _compute_dates(self):
         for meeting in self:
@@ -786,10 +788,6 @@ class Meeting(models.Model):
         """ Gets Recurrence rule string according to value type RECUR of iCalendar from the values given.
             :return dictionary of rrule value.
         """
-        #read these fields as SUPERUSER because if the record is private a normal search could raise an error
-        recurrent_fields = self._get_recurrent_fields()
-        data = self.sudo().read(recurrent_fields)
-
         for meeting in self:
             if meeting.recurrency:
                 meeting.rrule = meeting._rrule_serialize()
@@ -871,8 +869,6 @@ class Meeting(models.Model):
     @api.onchange('start_date')
     def _onchange_start_date(self):
         if self.allday:
-            #TODO JEM : is it still required ?
-            self.allday = True  # Force to be rewrited
 
             if self.start_date:
                 start = fields.Date.from_string(self.start_date)
@@ -882,8 +878,6 @@ class Meeting(models.Model):
     @api.onchange('stop_date')
     def _onchange_stop_date(self):
         if self.allday:
-            #TODO JEM : is it still required ?
-            self.allday = True  # Force to be rewrited
 
             if self.stop_date:
                 end = fields.Date.from_string(self.stop_date)
