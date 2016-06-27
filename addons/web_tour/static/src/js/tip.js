@@ -75,12 +75,12 @@ return Widget.extend({
 
         this._reposition();
         this.$el.css("opacity", 1);
-        core.bus.on("resize", this, function () {
+        core.bus.on("resize", this, _.debounce(function () {
             if (this.tip_opened) {
                 this._to_bubble_mode(true);
             }
             this._reposition();
-        });
+        }, 500));
 
         this.$el.on("transitionend oTransitionEnd webkitTransitionEnd", (function () {
             if (!this.tip_opened && this.$el.parent()[0] === document.body) {
