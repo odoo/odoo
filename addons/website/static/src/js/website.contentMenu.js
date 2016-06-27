@@ -90,7 +90,7 @@ var TopBarContent = Widget.extend({
         }).then(function (deps) {
             website.prompt({
                 id: "editor_rename_page",
-                window_title: _t("Rename Page"),
+                window_title: _t("Rename This Page"),
                 dependencies: deps,
             }, 'website.rename_page').then(function (val, field, $dialog) {
                 ajax.jsonRpc('/web/dataset/call_kw', 'call', {
