@@ -5496,7 +5496,10 @@ class BaseModel(object):
             case, the order of the returned recordset is arbitrary.
 
             :param func: a function or a dot-separated sequence of field names
+                (string); any falsy value simply returns the recordset ``self``
         """
+        if not func:
+            return self                 # support for an empty path of fields
         if isinstance(func, basestring):
             recs = self
             for name in func.split('.'):
