@@ -24,7 +24,7 @@ tour.register('project_tour', {
     position: 'right',
 }, {
     trigger: '.o_project_kanban .o_kanban_record:first-child',
-    content: _t('Click here to <b>go to your project</b> and start organizing tasks.'),
+    content: _t('Click on the card to <b>go to your project</b> and start organizing tasks.'),
     position: 'right',
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create",
