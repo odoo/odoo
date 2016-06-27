@@ -21,6 +21,7 @@ up a management by affair.
     'website': 'https://www.odoo.com/page/employees',
     'depends': ['account', 'hr', 'project'],
     'data': [
+        'security/hr_timesheet_security.xml',
         'security/ir.model.access.csv',
         'hr_timesheet_view.xml',
         'project_timesheet_view.xml',
