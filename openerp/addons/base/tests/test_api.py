@@ -518,6 +518,9 @@ class TestAPI(common.TransactionCase):
             [p.name for p in parents]
         )
 
+        # map an empty sequence of fields
+        self.assertEqual(ps.mapped(''), ps)
+
     @mute_logger('openerp.models')
     def test_80_sorted(self):
         """ Check sorted on recordsets. """
