@@ -166,8 +166,8 @@ class AccountConfigSettings(models.TransientModel):
             ir_values = self.env['ir.values']
             taxes_id = ir_values.get_default('product.template', 'taxes_id', company_id = self.company_id.id)
             supplier_taxes_id = ir_values.get_default('product.template', 'supplier_taxes_id', company_id = self.company_id.id)
-            self.default_sale_tax_id = isinstance(taxes_id, list) and taxes_id[0] or taxes_id
-            self.default_purchase_tax_id = isinstance(supplier_taxes_id, list) and supplier_taxes_id[0] or supplier_taxes_id
+            self.default_sale_tax_id = isinstance(taxes_id, list) and len(taxes_id) > 0 and taxes_id[0] or taxes_id
+            self.default_purchase_tax_id = isinstance(supplier_taxes_id, list) and len(supplier_taxes_id) > 0 and supplier_taxes_id[0] or supplier_taxes_id
         return {}
 
     @api.onchange('chart_template_id')
