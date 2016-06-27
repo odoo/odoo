@@ -28,7 +28,7 @@ tour.register('project_tour', {
     position: 'right',
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create",
-    content: _t("Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. Specification &gt; Development &gt; Tests</i>"),
+    content: _t("Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. Specification &gt; Development &gt; Done</i>"),
     position: "right"
 }, {
     trigger: ".o-kanban-button-new",
