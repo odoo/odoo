@@ -237,20 +237,10 @@ class IrQWeb(models.AbstractModel, QWeb):
         return (attributes, content, inherit_branding or translate)
 
     # formating methods
-    def _format_func_monetary(self, value, display_currency=None, from_currency=None):
-        env = display_currency.env
-        precision = int(round(math.log10(display_currency.rounding)))
-        fmt = "%.{0}f".format(-precision if precision < 0 else 0)
-        lang = env['res.lang']._lang_get(env.context.get('lang', 'en_US'))
-        formatted_amount = lang.format(fmt, value, grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}')
-        pre = post = u''
-        if display_currency.position == 'before':
-            pre = u'{symbol}\N{NO-BREAK SPACE}'
-        else:
-            post = u'\N{NO-BREAK SPACE}{symbol}'
-        return u'{pre}{0}{post}'.format(
-            formatted_amount, pre=pre, post=post
-        ).format(symbol=display_currency.symbol,)
+
+    def _format_func_monetary(self, value, display_currency, from_currency=None):
+        pre, value, post = self.env['ir.qweb.field.monetary']._format_func_monetary(value, display_currency, from_currency)
+        return u'{pre}{0}{post}'.format(value, pre=pre, post=post)
 
     def _format_func_htmlcontact(self, value, options, values=None):
         return self.pool['ir.qweb.field.contact'].record_to_html(
