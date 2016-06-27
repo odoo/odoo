@@ -50,7 +50,7 @@ class PurchaseOrder(models.Model):
     def _get_invoiced(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for order in self:
-            if order.state != 'purchase':
+            if order.state not in ('purchase', 'to approve'):
                 order.invoice_status = 'no'
                 continue
 
@@ -161,6 +161,7 @@ class PurchaseOrder(models.Model):
         help="Technical field used to display the Drop Ship Address", readonly=True)
     group_id = fields.Many2one('procurement.group', string="Procurement Group")
     is_shipped = fields.Boolean(compute="_compute_is_shipped")
+    is_editable = fields.Boolean()
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
@@ -325,12 +326,14 @@ class PurchaseOrder(models.Model):
             # Deal with double validation process
             if order.company_id.po_double_validation == 'one_step'\
                     or (order.company_id.po_double_validation == 'two_step'\
-                        and order.amount_total < self.env.user.company_id.currency_id.compute(order.company_id.po_double_validation_amount, order.currency_id))\
+                        and order.amount_untaxed < self.env.user.company_id.currency_id.compute(order.company_id.po_double_validation_amount, order.currency_id))\
                     or order.user_has_groups('purchase.group_purchase_manager'):
                 order.button_approve()
             else:
                 order.write({'state': 'to approve'})
-        return {}
+        if self.env['ir.values'].get_default('purchase.config.settings', 'auto_done_setting'):
+            order.is_editable = True
+        return True
 
     @api.multi
     def button_cancel(self):
@@ -398,7 +401,6 @@ class PurchaseOrder(models.Model):
                     picking.message_post_with_view('mail.message_origin_link',
                         values={'self': picking, 'origin': order},
                         subtype_id=self.env.ref('mail.mt_note').id)
-
                 else:
                     moves = order.order_line._create_stock_moves(pickings)
                     moves.force_assign()
@@ -533,6 +535,11 @@ class PurchaseOrderLine(models.Model):
     @api.model
     def create(self, values):
         line = super(PurchaseOrderLine, self).create(values)
+        if line.order_id.state == 'purchase':
+            if line.order_id.company_id.po_double_validation == 'two_step'\
+                and line.order_id.amount_untaxed >= line.order_id.env.user.company_id.currency_id.compute(line.order_id.company_id.po_double_validation_amount, line.order_id.currency_id)\
+                and line.order_id.user_has_groups('purchase.group_purchase_user'):
+                line.order_id.write({'state': 'to approve'})
         if line.state == 'purchase':
             line.order_id._create_picking()
         return line
@@ -545,6 +552,19 @@ class PurchaseOrderLine(models.Model):
             lines = self.filtered(
                 lambda r: r.state == 'purchase' and float_compare(r.product_qty, values['product_qty'], precision_digits=precision) == -1)
         result = super(PurchaseOrderLine, self).write(values)
+        for line in self:
+            if line.state == 'purchase':
+                if line.order_id.company_id.po_double_validation == 'two_step'\
+                    and line.order_id.amount_untaxed >= self.env.user.company_id.currency_id.compute(line.order_id.company_id.po_double_validation_amount, line.order_id.currency_id)\
+                    and not line.order_id.user_has_groups('purchase.group_purchase_manager'):
+                    line.order_id.write({'state': 'to approve', 'invoice_status': 'to invoice'})
+
+            if line.state == 'to approve':
+                if line.order_id.company_id.po_double_validation == 'two_step'\
+                    and line.order_id.amount_untaxed < self.env.user.company_id.currency_id.compute(line.order_id.company_id.po_double_validation_amount, line.order_id.currency_id)\
+                    and not line.order_id.user_has_groups('purchase.group_purchase_manager'):
+                    line.order_id.write({'state': 'purchase'})
+                    line.order_id._create_picking()
         if lines:
             lines.order_id._create_picking()
         return result
@@ -648,12 +668,23 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             if line.filtered(lambda x: x.state in ('purchase', 'done')):
                 raise UserError(_('You can not remove a purchase order line.\nDiscard changes and try setting the quantity to 0.'))
+            if line.filtered(lambda x: x.state in ('to approve')):
+                product_ids = line.order_id.picking_ids.move_lines.mapped('product_id')
+                if line.product_id in product_ids:
+                    raise UserError(_('You can not remove a purchase order line.\nDiscard changes and try setting the quantity to 0.'))
             if line.order_id.state in ['approved', 'done']:
                 raise UserError(_('Cannot delete a purchase order line which is in state \'%s\'.') %(line.state,))
             for proc in line.procurement_ids:
                 proc.message_post(body=_('Purchase order line deleted.'))
             line.procurement_ids.filtered(lambda r: r.state != 'cancel').write({'state': 'exception'})
-        return super(PurchaseOrderLine, self).unlink()
+        order = self.mapped('order_id')
+        result = super(PurchaseOrderLine, self).unlink()
+        if order.state == 'to approve':
+            if order.company_id.po_double_validation == 'two_step'\
+                and order.amount_untaxed < self.env.user.company_id.currency_id.compute(order.company_id.po_double_validation_amount, order.currency_id)\
+                and order.user_has_groups('purchase.group_purchase_user'):
+                order.write({'state': 'purchase'})
+        return result
 
     @api.model
     def _get_date_planned(self, seller, po=False):
@@ -755,7 +786,7 @@ class PurchaseOrderLine(models.Model):
 
     @api.onchange('product_qty')
     def _onchange_product_qty(self):
-        if self.state == 'purchase' and self.product_id.type in ['product', 'consu'] and self.product_qty < self._origin.product_qty:
+        if (self.state == 'purchase' or self.state == 'to approve') and self.product_id.type in ['product', 'consu'] and self.product_qty < self._origin.product_qty:
             warning_mess = {
                 'title': _('Ordered quantity decreased!'),
                 'message' : _('You are decreasing the ordered quantity! \nYou must update the quantities on the reception.'),

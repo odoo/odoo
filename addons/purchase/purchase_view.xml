@@ -179,17 +179,19 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase" readonly="1"/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box" attrs="{'invisible': [('state', 'not in', ('purchase', 'done', 'cancel'))]}">
+                    <div class="oe_button_box" name="button_box">
                         <button type="object"
                             name="action_view_picking"
                             class="oe_stat_button"
-                            icon="fa-truck">
+                            icon="fa-truck" attrs="{'invisible':[('state', 'in', ('draft','sent','to approve')),('picking_ids','=',[])]}">
                             <field name="picking_count" widget="statinfo" string="Shipment" help="Incoming Shipments"/>
+                            <field name="picking_ids" invisible="1"/>
                         </button>
                         <button type="object"  name="action_view_invoice"
                             class="oe_stat_button"
-                            icon="fa-pencil-square-o">
+                            icon="fa-pencil-square-o" attrs="{'invisible':[('state', 'in', ('draft','sent','to approve')),('invoice_ids','=',[])]}">
                             <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                            <field name='invoice_ids' invisible="1"/>
                         </button> 
                     </div>
                     <div class="oe_title">
@@ -214,11 +216,12 @@
                     </group>
                     <notebook>
                         <page string="Products">
-                            <field name="order_line">
-                                <tree string="Purchase Order Lines" editable="bottom">
+                            <field name='is_editable' invisible='1'/>
+                            <field name="order_line" attrs="{'readonly': ['|', ('is_editable', '=', True),('state', 'in', ('done', 'cancel'))]}">
+                                 <tree string="Purchase Order Lines" editable="bottom">
                                     <field name="state" invisible="1"/>
                                     <field name="sequence" widget="handle"/>
-                                    <field name="product_id" attrs="{'readonly': [('state', 'in', ('purchase','done', 'cancel'))]}" context="{'partner_id':parent.partner_id, 'quantity':product_qty,'uom':product_uom, 'company_id': parent.company_id}"/>
+                                    <field name="product_id" attrs="{'readonly': [('state', 'in', ('purchase', 'to approve','done', 'cancel'))]}" context="{'partner_id':parent.partner_id, 'quantity':product_qty,'uom':product_uom, 'company_id': parent.company_id}"/>
                                     <field name="name"/>
                                     <field name="date_planned"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
