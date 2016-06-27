@@ -55,8 +55,8 @@
             <t t-set="locations" t-value="days[day]['locations']"/>
             <t t-set="dates" t-value="days[day]['dates']"/>
             <h3 class="page-header mt0">
-                <t t-esc="day"/>
-                <small><t t-esc="days_nbr[day]"/> talks</small>
+                <span t-field="tracks_by_days[day][0].date" t-field-options="{'widget': 'date'}"/>
+                <small><t t-esc="len(tracks_by_days[day])"/> talks</small>
             </h3>
             <table id="table_search" class="table table-bordered table-condensed">
             <tr>
@@ -69,7 +69,7 @@
             </tr>
             <tr t-foreach="dates" t-as="dt">
                 <td class="active">
-                    <b t-esc="dt[0].strftime('%H:%M')"/>
+                    <b t-esc="dt[-1]"/>
                 </td>
                 <t t-if="dt[2]"> <!-- Not a multi location -->
                     <t t-foreach="locations" t-as="location">
