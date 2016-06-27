@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="group_payroll_manager" model="res.groups">
+         <field name="name">Payroll Manager</field>
+         <field name="category_id" ref="base.module_category_human_resources"/>
+         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+         <field name="users" eval="[(4, ref('base.user_root'))]"/>
+         <field name="comment">The user will be able to manage Payroll.</field>
+    </record>
+    <record id="base.group_hr_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_payroll_manager'))]"/>
+    </record>
 <data noupdate="1">
 
     <record id="property_rule_employee_payslip" model="ir.rule">
         <field name="name">Employee Payslip</field>
         <field name="model_id" ref="model_hr_payslip"/>
         <field name="domain_force">['|', ('employee_id.user_id', '=', user.id), ('employee_id.department_id.manager_id.user_id', '=', user.id)]</field>
-        <field name="groups" eval="[(4,ref('base.group_hr_user'))]"/>
+        <field name="groups" eval="[(4,ref('hr_payroll.group_payroll_manager'))]"/>
     </record>
 
 </data>
