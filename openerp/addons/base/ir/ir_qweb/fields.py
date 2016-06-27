@@ -298,8 +298,6 @@ class MonetaryConverter(models.AbstractModel):
 
     @api.model
     def record_to_html(self, record, field_name, options, values=None):
-        field = record._fields[field_name]
-
         # for backward compatibility to remove after v10
         if isinstance(options.get('display_currency'), str):
             _logger.warning("Use new syntax for '%s' monetary widget 'display_currency' option (instead of deprecated JSON syntax) to improve speed." % options['display_currency'])
@@ -309,14 +307,17 @@ class MonetaryConverter(models.AbstractModel):
             options['from_currency'] = safe_eval.safe_eval(options['from_currency'], mode='eval', globals_dict=values)
         # end backward
 
-        display_currency = False
-        #currency should be specified by monetary field
-        if field.type == 'monetary' and field.currency_field:
-            display_currency = record[field.currency_field]
-        #otherwise fall back to old method
-        if not display_currency:
-            display_currency = options['display_currency']
+        field = record._fields[field_name]
+        from_amount = record[field_name]
 
+        #currency should be specified by monetary field
+        if not options.get('display_currency') and field.type == 'monetary' and field.currency_field:
+            options['display_currency'] = record[field.currency_field]
+
+        pre, value, post = self._format_func_monetary(from_amount, options['display_currency'], options.get('from_currency'))
+        return u'{pre}<span class="oe_currency_value">{0}</span>{post}'.format(value, pre=pre, post=post)
+
+    def _format_func_monetary(self, from_amount, display_currency, from_currency=None):
         # lang.format mandates a sprintf-style format. These formats are non-
         # minimal (they have a default fixed precision instead), and
         # lang.format will not set one by default. currency.round will not
@@ -324,10 +325,8 @@ class MonetaryConverter(models.AbstractModel):
         # (integer > 0) from the currency's rounding (a float generally < 1.0).
         fmt = "%.{0}f".format(display_currency.decimal_places)
 
-        from_amount = record[field_name]
-
-        if options.get('from_currency'):
-            from_amount = options['from_currency'].compute(from_amount, display_currency)
+        if from_currency:
+            from_amount = from_currency.compute(from_amount, display_currency)
 
         lang = self.user_lang()
         formatted_amount = lang.format(fmt, display_currency.round(from_amount),
@@ -335,15 +334,12 @@ class MonetaryConverter(models.AbstractModel):
 
         pre = post = u''
         if display_currency.position == 'before':
-            pre = u'{symbol}\N{NO-BREAK SPACE}'
+            pre = u'{symbol}\N{NO-BREAK SPACE}'.format(symbol=display_currency.symbol)
         else:
-            post = u'\N{NO-BREAK SPACE}{symbol}'
+            post = u'\N{NO-BREAK SPACE}{symbol}'.format(symbol=display_currency.symbol)
 
-        return u'{pre}<span class="oe_currency_value">{0}</span>{post}'.format(
-            formatted_amount, pre=pre, post=post,
-        ).format(
-            symbol=display_currency.symbol,
-        )
+        return pre, formatted_amount, post
+
 
 TIMEDELTA_UNITS = (
     ('year',   3600 * 24 * 365),
