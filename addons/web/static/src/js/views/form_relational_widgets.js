@@ -325,7 +325,8 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
             var dataset = new data.DataSetStatic(this, this.field.relation, self.build_context());
             var def = this.alive(dataset.name_get([self.get("value")])).done(function(data) {
                 if (!data[0]) {
-                    self.do_warn(_t("Render"), _t("No value found for the field "+self.field.string+" for value "+self.get("value")));
+                    self.do_warn(_t("Render"),
+                        _.str.sprintf(_t("No value found for the field %s for value %s"), self.field.string, self.get("value")));
                     return;
                 }
                 self.display_value["" + self.get("value")] = data[0][1];
