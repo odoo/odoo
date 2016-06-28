@@ -1264,6 +1264,7 @@ var FieldOne2Many = FieldX2Many.extend({
         return this._super.apply(this, arguments);
     },
     commit_value: function() {
+        var self = this;
         return this.is_loaded.then(function() {
             var view = self.viewmanager.active_view;
             if(view.type === "list" && view.controller.editable()) {
