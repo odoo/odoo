@@ -16,7 +16,7 @@ e.g. To have an invoice generated automatically periodically:
 -------------------------------------------------------------
     * Define a document type based on Invoice object
     * Define a subscription whose source document is the document defined as
-      above. Specify the interval information and partner to be invoice.
+      above. Specify the interval information and partner to be invoiced.
     """,
     'depends': ['base'],
     'data': [
