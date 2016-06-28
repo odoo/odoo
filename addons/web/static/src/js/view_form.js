@@ -4370,6 +4370,9 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         }
         return true;
     },
+    is_false: function() {
+        return _(this.get_value()).isEmpty();
+    },
 });
 
 instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
