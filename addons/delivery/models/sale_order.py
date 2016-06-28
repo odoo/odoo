@@ -95,7 +95,7 @@ class SaleOrder(models.Model):
         }
         if self.order_line:
             values['sequence'] = self.order_line[-1].sequence + 1
-        sol = SaleOrderLine.create(values)
+        sol = SaleOrderLine.sudo().create(values)
         return sol
 
 

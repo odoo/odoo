@@ -3,13 +3,13 @@
 # * mrp
 # 
 # Translators:
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2015
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-21 09:18+0000\n"
-"PO-Revision-Date: 2016-06-09 00:02+0000\n"
+"PO-Revision-Date: 2016-06-23 00:23+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -341,12 +341,12 @@ msgstr "部品表タイプ"
 #. module: mrp
 #: selection:mrp.product.produce,tracking:0
 msgid "By Lots"
-msgstr ""
+msgstr "ロット"
 
 #. module: mrp
 #: selection:mrp.product.produce,tracking:0
 msgid "By Unique Serial Number"
-msgstr ""
+msgstr "シリアル番号"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_byproduct
@@ -556,7 +556,7 @@ msgstr "消費構成品"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consumed_for
 msgid "Consumed for"
-msgstr ""
+msgstr "使用先"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
@@ -993,12 +993,12 @@ msgstr "遅延"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_location_id
 msgid "Location"
-msgstr "場所"
+msgstr "ロケーション"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_location_src_id
 msgid "Location where the system will look for components."
-msgstr "システムが構成部品を探す場所"
+msgstr "システムが構成品を探すロケーション"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_location_dest_id
@@ -1057,7 +1057,7 @@ msgstr "製造ルール"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_manufacture_to_resupply
 msgid "Manufacture in this Warehouse"
-msgstr ""
+msgstr "この倉庫で製造する"
 
 #. module: mrp
 #: selection:mrp.bom,type:0
@@ -1219,7 +1219,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.config.settings,group_product_variant:0
 msgid "No variants on products"
-msgstr ""
+msgstr "製品バリアントなし"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -1361,7 +1361,7 @@ msgstr "調達"
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "調達規則"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
@@ -1475,12 +1475,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_production_id
 msgid "Production Order for Produced Products"
-msgstr ""
+msgstr "生産品の製造オーダ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_raw_material_production_id
 msgid "Production Order for Raw Materials"
-msgstr ""
+msgstr "構成品の製造オーダ"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
@@ -1529,7 +1529,7 @@ msgstr ""
 msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
-msgstr ""
+msgstr "製品の特性（サイズ・色等）に基づきバリアントを生成"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_lines
@@ -2132,7 +2132,7 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_stock_warehouse_manufacture_to_resupply
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
-msgstr ""
+msgstr "製造対象の製品がこの倉庫で製造できることを示します。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_state

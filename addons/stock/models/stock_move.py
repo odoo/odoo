@@ -711,7 +711,8 @@ class StockMove(models.Model):
 
             # Assign quants already reserved with lot to the correct
             for quant in quants_taken:
-                lot_to_quants[quant[0].lot_id.id].append(quant)
+                if quant[0] <= move_rec_updateme.reserved_quant_ids:
+                    lot_to_quants[quant[0].lot_id.id].append(quant)
 
             false_quants_move = [x for x in false_quants if x[0].reservation_id.id == move_rec_updateme.id]
             for lot_id in lot_quantities.keys():

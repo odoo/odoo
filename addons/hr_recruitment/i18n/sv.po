@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2016-05-03 00:48+0000\n"
+"PO-Revision-Date: 2016-06-20 03:28+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -42,37 +42,37 @@ msgstr "0-15"
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_2
 msgid "16-20"
-msgstr ""
+msgstr "16-20"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_3
 msgid "21-30"
-msgstr ""
+msgstr "21-30"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_4
 msgid "31-40"
-msgstr ""
+msgstr "31-40"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_5
 msgid "41-50"
-msgstr ""
+msgstr "41-50"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_6
 msgid "51-60"
-msgstr ""
+msgstr "51-60"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_7
 msgid "61-70"
-msgstr ""
+msgstr "61-70"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_8
 msgid "71+"
-msgstr ""
+msgstr "71+"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -100,7 +100,7 @@ msgid ""
 "        <p>Kind regards,</p>\n"
 "        <br/>\n"
 "         ${object.user_id.signature | safe}"
-msgstr ""
+msgstr "<p>Hej ${object.partner_name or 'applicant'},</p>\n        <p>Grattis! Din meritförteckning gjorde oss nyfikna!\n        Jag kommer ringar dig inom kort för ett 10 minuters samtal och planering av den fortsatta processen.</p>\n        <p>Om vi inte kan nås, finns det inget hinder att du ringer mig på 001 312 349 3030\nOm jag inte har möjlighet att svara, kan du alltid lämna ett meddelade.</p>\n        <p>Vänliga hälsningar,</p>\n        <br/>\n         ${object.user_id.signature | safe}"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.applicant_refuse
@@ -113,7 +113,7 @@ msgid ""
 "        <p>Kind regards,</p>\n"
 "        <br/>\n"
 "         ${object.user_id and object.user_id.signature | safe or ''}"
-msgstr ""
+msgstr "<p>Hej ${object.partner_name or 'applicant'},</p>\n        <p>Vi tackar för ditt intresse för vårt företag och din ansökan. \nTyvärr uppfyller du inte vårt behov just nu.</p>\n        <p>Vill du veta mer, vänligen kontakta mig per telefon.</p>\n        <p>Vänliga hälsningar,</p>\n        <br/>\n         ${object.user_id and object.user_id.signature | safe or ''}"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -179,7 +179,7 @@ msgstr "Aktiviteter"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_address_id
 msgid "Address where employees are working"
-msgstr ""
+msgstr "Arbetsplatsadress för den anställde"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_id
@@ -214,12 +214,12 @@ msgstr "Aliasobjekt"
 #. module: hr_recruitment
 #: selection:hr.recruitment.config.settings,module_document:0
 msgid "Allow the automatic indexation of resumes"
-msgstr ""
+msgstr "Tillåter automatisk indexering av resumeer"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Answer related job question"
-msgstr ""
+msgstr "Svara på relaterad jobbfråga"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant
@@ -235,12 +235,12 @@ msgstr "Sökande anställd"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_stage_changed
 msgid "Applicant Stage Changed"
-msgstr ""
+msgstr "Ansökningssteg ändrat"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_new
 msgid "Applicant created"
-msgstr ""
+msgstr "Sökande skapad"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
@@ -289,12 +289,12 @@ msgstr "Summering av ansökningar"
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.applicant_interest
 msgid "Application approved"
-msgstr ""
+msgstr "Ansökan godkänd"
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.applicant_refuse
 msgid "Application refused"
-msgstr ""
+msgstr "Ansökan avslagen"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -374,22 +374,22 @@ msgstr "Kandidatexamen"
 #. module: hr_recruitment
 #: model:survey.page,title:hr_recruitment.recruitment_1
 msgid "Basic information"
-msgstr ""
+msgstr "Basinformation"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.filter_recruitment_report_departmnet
 msgid "By Department"
-msgstr ""
+msgstr "Per avdelning"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.filter_recruitment_report_job
 msgid "By Job"
-msgstr ""
+msgstr "Per tjänst"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.filter_recruitment_report_recruiter
 msgid "By Recruiter"
-msgstr ""
+msgstr "Per rektyterare"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_campaign_id
@@ -558,7 +558,7 @@ msgstr "Registeringsdatum"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
 msgid "Creation Week"
-msgstr ""
+msgstr "Skapande vecka"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_message_last_post
@@ -642,7 +642,7 @@ msgstr "Avdelning"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_manager_id
 msgid "Department Manager"
-msgstr ""
+msgstr "Avdelningschef"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_description
@@ -652,7 +652,7 @@ msgstr "Beskrivning"
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_4
 msgid "Desk space"
-msgstr ""
+msgstr "Skrivbordsutrymme"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -705,17 +705,17 @@ msgstr ""
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_11
 msgid "Dress code"
-msgstr ""
+msgstr "Klädkod"
 
 #. module: hr_recruitment
 #: model:survey.question,question:hr_recruitment.recruitment_2_2
 msgid "Education"
-msgstr ""
+msgstr "Utbildning"
 
 #. module: hr_recruitment
 #: model:survey.page,title:hr_recruitment.recruitment_2
 msgid "Education and Activities"
-msgstr ""
+msgstr "Utbildning och erfarenhet"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_email_from
@@ -782,7 +782,7 @@ msgstr "Förväntade förmåner"
 #. module: hr_recruitment
 #: model:survey.question,question:hr_recruitment.recruitment_2_3
 msgid "Experience"
-msgstr ""
+msgstr "Erfarenhet"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
@@ -832,22 +832,22 @@ msgstr "Följare (Kanaler)"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Följare (Partners)"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_8
 msgid "Freebies such as tea, coffee and stationery"
-msgstr ""
+msgstr "Fringisar som te, kaffe och kontorsmaterial"
 
 #. module: hr_recruitment
 #: model:survey.question,question:hr_recruitment.recruitment_1_1
 msgid "From which university will you graduate?"
-msgstr ""
+msgstr "Från vilket universitet har du din examen?"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_2
 msgid "Getting on with colleagues"
-msgstr ""
+msgstr "Umgås med kollegor"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_degree_sequence
@@ -868,17 +868,17 @@ msgstr "Bra"
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_7
 msgid "Good management"
-msgstr ""
+msgstr "Bra ledning"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_1
 msgid "Good pay"
-msgstr ""
+msgstr "Bra betalt"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_13
 msgid "Good social life"
-msgstr ""
+msgstr "Bra socialt umgänge"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_graduate
@@ -899,7 +899,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Hired Employees"
-msgstr ""
+msgstr "Rekryterade"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
@@ -958,7 +958,7 @@ msgstr "Om den aktiva fältet är satt till false, kommer det att du kan dölja 
 #. module: hr_recruitment
 #: model:survey.page,title:hr_recruitment.recruitment_3
 msgid "Importance"
-msgstr ""
+msgstr "Viktighetsgrad"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rcol_3_1_3
@@ -978,7 +978,7 @@ msgstr "Intervjuformulär"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Är följare"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -999,7 +999,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_address_id
 msgid "Job Location"
-msgstr ""
+msgstr "Arbetsplats"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job
@@ -1068,7 +1068,7 @@ msgstr "Senast redigerad"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_last_stage_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_last_stage_id
 msgid "Last Stage"
-msgstr ""
+msgstr "Sista steget"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_last_stage_update
@@ -1142,12 +1142,12 @@ msgstr "Mobil:"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr ""
+msgstr "Mer <i class=\"fa fa-caret-down\"/>"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rcol_3_1_5
 msgid "Most important"
-msgstr ""
+msgstr "Viktigast"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1191,7 +1191,7 @@ msgstr ""
 #: code:addons/hr_recruitment/models/hr_recruitment.py:428
 #, python-format
 msgid "New Employee %s Hired"
-msgstr ""
+msgstr "Ny anställd %s"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_employee_view_search
@@ -1242,7 +1242,7 @@ msgstr "Inget ämne"
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_10
 msgid "No out of hours working"
-msgstr ""
+msgstr "Ingen övertid"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -1253,7 +1253,7 @@ msgstr "Normal"
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rcol_3_1_1
 msgid "Not important"
-msgstr ""
+msgstr "Oviktigt"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_message_needaction_counter
@@ -1263,7 +1263,7 @@ msgstr "Antalet åtgärder"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_attachment_number
 msgid "Number of Attachments"
-msgstr ""
+msgstr "Antal bilagor"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_report_delay_close
@@ -1297,12 +1297,12 @@ msgstr ""
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_3
 msgid "Office environment"
-msgstr ""
+msgstr "Kontorsmiljö"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_6
 msgid "Office location"
-msgstr ""
+msgstr "Kontorsadress"
 
 #. module: hr_recruitment
 #: model:ir.actions.client,name:hr_recruitment.action_client_hr_recruitment_menu
@@ -1348,7 +1348,7 @@ msgstr "Företag"
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_9
 msgid "Perks such as free parking, gym passes"
-msgstr ""
+msgstr "Förmåner som fri parkering och friskvårdscheckar"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_phone
@@ -1387,7 +1387,7 @@ msgstr "Föreslagna förmåner"
 #. module: hr_recruitment
 #: model:survey.question,question:hr_recruitment.recruitment_3_1
 msgid "Rate the Importance"
-msgstr ""
+msgstr "Gradera viktighetsgraden"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_force_thread_id
@@ -1419,17 +1419,17 @@ msgstr "Rekryteringsanalys"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Recruitment Done"
-msgstr ""
+msgstr "Rektyrering klar"
 
 #. module: hr_recruitment
 #: model:survey.survey,title:hr_recruitment.recruitment_form
 msgid "Recruitment Form"
-msgstr ""
+msgstr "Rekryteringsformulär"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_user_id
 msgid "Recruitment Responsible"
-msgstr ""
+msgstr "Rekryteringsansvarig"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
@@ -1454,7 +1454,7 @@ msgstr "Neka"
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_12
 msgid "Regular meetings"
-msgstr ""
+msgstr "Regelbundna möten"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
@@ -1493,7 +1493,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_resumes
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job02
 msgid "Resumes and Letters"
-msgstr ""
+msgstr "Meriter och brev"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_salary_exp
@@ -1533,7 +1533,7 @@ msgstr "Planerad intervju"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Schedule interview with this applicant"
-msgstr ""
+msgstr "Planera intervju med den sökande"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1565,7 +1565,7 @@ msgstr "Inställningar"
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rcol_3_1_2
 msgid "Somewhat important"
-msgstr ""
+msgstr "Något viktigt"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_source_id
@@ -1594,7 +1594,7 @@ msgstr "Källor för sökande"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Specific Email Address"
-msgstr ""
+msgstr "Egen e-postadress"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_stage_id
@@ -1652,7 +1652,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_5
 msgid "State of the art technology"
-msgstr ""
+msgstr "Senaste tekniken"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1662,7 +1662,7 @@ msgstr "Rubrik / Sökande"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_name
 msgid "Subject / Application Name"
-msgstr ""
+msgstr "Ansökandes namn"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_survey
@@ -1780,7 +1780,7 @@ msgstr "Det här är källan till länken. Ex: Sökmotor, en annan domän eller 
 #: model:survey.question,constr_error_msg:hr_recruitment.recruitment_2_4
 #: model:survey.question,constr_error_msg:hr_recruitment.recruitment_3_1
 msgid "This question requires an answer."
-msgstr ""
+msgstr "Denna fråga kräver svar."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_fold
@@ -1816,7 +1816,7 @@ msgstr "Uppdateringsdatum"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_template_id
 msgid "Use template"
-msgstr ""
+msgstr "Använd mall"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_user_id
@@ -1862,12 +1862,12 @@ msgstr ""
 #. module: hr_recruitment
 #: model:survey.question,question:hr_recruitment.recruitment_1_3
 msgid "What age group do you belong to?"
-msgstr ""
+msgstr "Vilken åldersgrupp tillhör du?"
 
 #. module: hr_recruitment
 #: model:survey.question,question:hr_recruitment.recruitment_1_2
 msgid "What is your gender?"
-msgstr ""
+msgstr "Vilket kön?"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee

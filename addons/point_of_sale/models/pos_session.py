@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.exceptions import UserError, ValidationError
 
 class PosSession(models.Model):
     _name = 'pos.session'
@@ -108,12 +108,12 @@ class PosSession(models.Model):
     def _check_unicity(self):
         # open if there is no session in 'opening_control', 'opened', 'closing_control' for one user
         if self.search_count([('state', 'not in', ('closed', 'closing_control')), ('user_id', '=', self.user_id.id)]) > 1:
-            raise UserError(_("You cannot create two active sessions with the same responsible!"))
+            raise ValidationError(_("You cannot create two active sessions with the same responsible!"))
 
     @api.constrains('config_id')
     def _check_pos_config(self):
         if self.search_count([('state', '!=', 'closed'), ('config_id', '=', self.config_id.id)]) > 1:
-            raise UserError(_("You cannot create two active sessions related to the same point of sale!"))
+            raise ValidationError(_("You cannot create two active sessions related to the same point of sale!"))
 
     @api.model
     def create(self, values):
@@ -145,6 +145,7 @@ class PosSession(models.Model):
 
         statements = []
         ABS = self.env['account.bank.statement']
+        uid = SUPERUSER_ID if self.env.user.has_group('point_of_sale.group_pos_user') else self.env.user.id
         for journal in pos_config.journal_ids:
             # set the journal_id which should be used by
             # account.bank.statement to set the opening balance of the
@@ -155,7 +156,7 @@ class PosSession(models.Model):
                 'user_id': self.env.user.id,
             }
 
-            statements.append(ABS.with_context(ctx).create(st_values).id)
+            statements.append(ABS.with_context(ctx).sudo(uid).create(st_values).id)
 
         values.update({
             'name': self.env['ir.sequence'].with_context(ctx).next_by_code('pos.session'),
@@ -163,7 +164,7 @@ class PosSession(models.Model):
             'config_id': config_id
         })
 
-        return super(PosSession, self.with_context(ctx)).create(values)
+        return super(PosSession, self.with_context(ctx).sudo(uid)).create(values)
 
     @api.multi
     def unlink(self):

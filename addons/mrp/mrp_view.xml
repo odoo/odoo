@@ -466,7 +466,7 @@
             <field name="name">mrp.bom.tree</field>
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
-                <tree string="Bill of Materials">
+                <tree string="Bill of Materials" default_order="product_tmpl_id">
                     <field name="active" invisible="1"/>
                     <field name="product_tmpl_id"/>
                     <field name="code"/>

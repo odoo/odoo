@@ -264,11 +264,19 @@ class purchase_order(osv.osv):
 
     def button_confirm(self, cr, uid, ids, context=None):
         res = super(purchase_order, self).button_confirm(cr, uid, ids, context=context)
+        stock_move_obj = self.pool.get('stock.move')
         for po in self.browse(cr, uid, ids, context=context):
             if po.requisition_id and (po.requisition_id.type_id.exclusive == 'exclusive'):
                 others_po = po.requisition_id.mapped('purchase_ids').filtered(lambda r: r.id != po.id)
                 others_po.button_cancel()
                 po.requisition_id.action_done(context=context)
+
+            for element in po.order_line:
+                if element.product_id == po.requisition_id.procurement_id.product_id:
+                    stock_move_obj.write(cr, uid, element.move_ids.ids, {
+                        'procurement_id': po.requisition_id.procurement_id.id,
+                        'move_dest_id': po.requisition_id.procurement_id.move_dest_id.id,
+                    }, context=context)
         return res
 
 
