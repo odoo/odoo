@@ -748,7 +748,7 @@
 </t>
 <t t-name="FieldMany2ManyTag">
     <t t-foreach="elements" t-as="el">
-        <span t-attf-class="badge dropdown #{'o_tag_color_' + (el['color'] || 0)}" t-att-data-color="(el['color'] || 0)" t-att-data-index="el_index" t-att-data-id="el['id']">
+        <span t-attf-class="badge dropdown o_tag_color_#{el.color}" t-att-data-color="el.color" t-att-data-index="el_index" t-att-data-id="el.id">
             <span class="o_badge_text" t-attf-title="#{el['display_name']}"><t t-raw="el['display_name']"/></span>
             <span t-if="!readonly" class="fa fa-times o_delete"/>
         </span>
@@ -757,10 +757,10 @@
 <t t-name="FieldMany2ManyTag.colorpicker">
     <ul class="o_colorpicker dropdown-menu" role="menu">
         <li t-foreach="10" t-as="color">
-            <span t-att-data-id="tag_id" t-att-data-color="color_index + 1" t-attf-class="o_tag_color_#{color + 1}"/>
+            <span t-att-data-id="tag_id" t-att-data-color="color" t-attf-class="o_tag_color_#{color}"/>
         </li>
         <li>
-            <span t-att-data-id="tag_id" t-att-data-color="0" class="o_tag_color_0"/>
+            <span t-att-data-id="tag_id" t-att-data-color="10" class="o_tag_color_10"/>
         </li>
         <li>
             Not shown in kanban

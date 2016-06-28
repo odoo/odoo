@@ -4,6 +4,7 @@
             <field name="name">res.partner.pos.form.inherit</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="sale.res_partner_view_buttons"/>
+            <field name="groups_id" eval="[(4, ref('group_pos_user'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='sale_order_count']" position="after">
                     <button class="oe_stat_button" type="action" name="%(point_of_sale.action_pos_pos_form)d" 
@@ -24,6 +25,7 @@
             <field name="name">res.partner.pos.kanban.inherit</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="sale.crm_lead_partner_kanban_view"/>
+            <field name="groups_id" eval="[(4, ref('group_pos_user'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='sale_order_count']" position="after">
                     <field name="pos_order_count"/>

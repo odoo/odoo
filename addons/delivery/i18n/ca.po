@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2016-05-25 08:39+0000\n"
+"PO-Revision-Date: 2016-06-23 09:59+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -147,12 +147,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_avg_price
 msgid "Avg. Price in Customer Invoices."
-msgstr ""
+msgstr "Preu mitjà en factures de client."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_avg_price
 msgid "Avg. Price in Vendor Bills "
-msgstr ""
+msgstr "Preu mitjà en factures de proveïdors"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_avg_price
@@ -195,7 +195,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_ok
 msgid "Can be Purchased"
-msgstr ""
+msgstr "Pot ser comprat"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_rental
@@ -333,12 +333,12 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Quantitat actual dels productes.\nEn un context d'una sola ubicació d'existències, això no inclou els béns emmagatzemats en aquesta ubicació, o qualsevol dels seus fills.\nEn un context d'un sol magatzem, això inclou els béns emmagatzemats en la ubicació d'existències d'aquest magatzem, o qualsevol dels seus fills.\nEn qualsevol altre cas, això inclou els béns emmagatzemats en qualsevol ubicació d'existències de tipus intern."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_delay
 msgid "Customer Lead Time"
-msgstr ""
+msgstr "Termini d'entrega del client"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_taxes_id
@@ -417,7 +417,7 @@ msgstr "Producte d'enviament"
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO/MTS,..."
-msgstr ""
+msgstr "Depenent dels mòduls instal·lats, aquest permet definir la ruta del producte: si serà comprat, facturat, sota comanda o des d'existències..."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description
@@ -544,7 +544,7 @@ msgstr "Seguidors (Socis)"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_virtual_available
 msgid "Forecast Quantity"
-msgstr ""
+msgstr "Quantitat prevista"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_virtual_available
@@ -553,7 +553,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Quantitat prevista (calculada com quantitat en mà - sortint + entrant)\nEn un context d'una sola ubicació d'existències, això inclou els béns emmagatzemats en aquesta ubicació, o qualsevol dels seus fills. En un context d'un sol magatzem, això inclou els béns emmagatzemats en la ubicació d'existències d'aquest magatzem, o qualsevol dels seus fills.\nEn qualsevol altre cas, això inclou els béns emmagatzemats en qualsevol ubicació d'existències de tipus 'intern'."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -881,7 +881,7 @@ msgstr "Sortida"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
 msgid "Packages"
-msgstr ""
+msgstr "Paquets"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -891,7 +891,7 @@ msgstr "Empresa"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
 msgid "Physical Packages"
-msgstr ""
+msgstr "Paquets físics"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1023,7 +1023,7 @@ msgstr "Quantitat"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_qty_available
 msgid "Quantity On Hand"
-msgstr ""
+msgstr "Quantitat a ma"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_incoming_qty
@@ -1032,7 +1032,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Quantitat de productes que està planificat que arribi. En un context d'una sola ubicació, o qualsevol dels seus fills. En un context d'un sol magatzem, això inclou els béns emmagatzemats en la ubicació d'existències d'aquest magatzem, o qualsevol dels seus fills. En qualsevol altre cas, això inclou béns emmagatzemats en qualsevol ubicació d'existències de tipus 'intern'."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_outgoing_qty
@@ -1041,7 +1041,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Quantitat dels productes que està planificat que surti.\nEn un context d'una sola ubicació d'exigències, això inclou béns emmagatzemats en aquesta ubicació, o qualsevol de les seves filles.\nEn un context d'un sol magatzem, inclou els béns emmagatzemats en la ubicació d'existències d'aquest magatzem, o qualsevol de les seves filles.\nEn qualsevol altre cas, inclou els béns emmagatzemats en qualsevol ubicació d'existències de tipus 'Intern'."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reception_count
@@ -1051,12 +1051,12 @@ msgstr "Rebut"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_nbr_reordering_rules
 msgid "Reordering Rules"
-msgstr ""
+msgstr "Regles d'abastiment"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_ids
 msgid "Routes"
-msgstr ""
+msgstr "Rutes"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_list_base_price
@@ -1258,7 +1258,7 @@ msgid ""
 "The average delay in days between the confirmation of the customer order and"
 " the delivery of the finished products. It's the time you promise to your "
 "customers."
-msgstr ""
+msgstr "El retard mitjà en dies entre la confirmació de la comanda del client i l'entrega dels productes finals. És el temps que promet als seus clients."
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:53
@@ -1332,21 +1332,21 @@ msgstr ""
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by manufacturing orders."
-msgstr ""
+msgstr "S'utilitzarà aquesta ubicació d'existències, en lloc de la de per defecte, com la ubicació font pels moviments d'existències generats per les ordres de fabricació."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_procurement
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by procurements."
-msgstr ""
+msgstr "S'utilitzarà l'ubicació d'existències, en lloc de la de per defecte, com la ubicació font pels moviments d'existències generades pels abastiments."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_inventory
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
-msgstr ""
+msgstr "S'utilitzarà aquesta ubicació d'existències, en lloc de la de per defecte, com la ubicació font pels moviments d'existències generades quan es realitzen inventaris."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_cost
@@ -1361,7 +1361,7 @@ msgstr "Marge total"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_margin_rate
 msgid "Total Margin Rate(%)"
-msgstr ""
+msgstr "Taxa de marge total (%)"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_total_margin_rate

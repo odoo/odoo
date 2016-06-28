@@ -8,6 +8,7 @@
 # Gary Wei <Gary.wei@elico-corp.com>, 2015
 # Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2015
 # wxb <bd5dml@gmail.com>, 2015
 # zhangpeiqing <zpq001@live.com>, 2015
 # zhining wu <wzn63@21cn.com>, 2015
@@ -17,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2016-06-04 07:24+0000\n"
+"PO-Revision-Date: 2016-06-22 13:07+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -160,7 +161,7 @@ msgstr "<span>kg</span>"
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Currency</strong>:<br/>"
-msgstr "<strong>币种</strong>:<br/>"
+msgstr "<strong>货币</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
@@ -344,7 +345,7 @@ msgstr "应用于"
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Archived"
-msgstr "归档"
+msgstr "存档"
 
 #. module: product
 #: model:product.product,name:product.product_assembly
@@ -416,7 +417,7 @@ msgid ""
 " Public Price: The base price will be the Sale/public Price. \n"
 " Cost Price : The base price will be the cost price. \n"
 " Other Pricelist : Computation of the base price based on another Pricelist."
-msgstr "基准价格计算。 公共价格：基本价格为公共价格。公价成本价格：基本价格为成本价。 其他价格表：基于另一个价目表基价的计算。"
+msgstr "基准价格计算。 公开价格：基本价格为公开价格。成本价格：基本价格为成本价。 其他价格表：基于另一个价目表基价的计算。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_list_price
@@ -452,7 +453,7 @@ msgstr "漂亮的宽屏幕显示。"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image
 msgid "Big-sized image"
-msgstr "大尺寸图片"
+msgstr "大尺寸图像"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_factor_inv
@@ -787,7 +788,7 @@ msgstr "创造这样一个惊人的超薄设计了技术创新的一些同样令
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_currency_id
 #: model:ir.model.fields,field_description:product.field_product_template_currency_id
 msgid "Currency"
-msgstr "币种"
+msgstr "货币"
 
 #. module: product
 #: model:product.product,name:product.product_product_5
@@ -1421,21 +1422,21 @@ msgid ""
 "Image of the product variant (Big-sized image of product template if false)."
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
-msgstr "产品变型的图片(如果为False,采用大尺寸图片模板）. 它保持图片的宽高比,并自动调整图片大小为1024 x 1024px."
+msgstr "产品变型的图像(如果为False,采用大尺寸图像模板). 它保持图像的宽高比,并自动调整图像大小为1024 x 1024px."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_medium
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
-msgstr "产品变型的图片(如果为Flase,采用普通尺寸图片模板)"
+msgstr "产品变型的图像(如果为Flase,采用产品模板的中尺寸图像)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_small
 msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
-msgstr "产品图片规格(如果为Flase,采用小尺寸图片模板)"
+msgstr "产品变型的图像(如果为Flase,采用产品模板的小尺寸图像)"
 
 #. module: product
 #: selection:product.template,state:0
@@ -1524,7 +1525,7 @@ msgstr "关键特性"
 #. module: product
 #: model:product.public.category,name:product.Keyboard_Mouse
 msgid "Keyboard / Mouse"
-msgstr "键盘、鼠标"
+msgstr "键盘 / 鼠标"
 
 #. module: product
 #: model:product.product,name:product.product_product_27
@@ -1573,7 +1574,7 @@ msgstr "最后消息日期"
 #: model:ir.model.fields,field_description:product.field_product_uom_categ___last_update
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist___last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_write_uid
@@ -1592,7 +1593,7 @@ msgstr "最后修改日"
 #: model:ir.model.fields,field_description:product.field_product_uom_categ_write_uid
 #: model:ir.model.fields,field_description:product.field_product_uom_write_uid
 msgid "Last Updated by"
-msgstr "最后更新"
+msgstr "最后更新者"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_write_date
@@ -1611,7 +1612,7 @@ msgstr "最后更新"
 #: model:ir.model.fields,field_description:product.field_product_uom_categ_write_date
 #: model:ir.model.fields,field_description:product.field_product_uom_write_date
 msgid "Last Updated on"
-msgstr "最后更新"
+msgstr "最后更新时间"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_delay
@@ -1704,7 +1705,7 @@ msgstr "最大毛利价格"
 #: model:ir.model.fields,field_description:product.field_product_product_image_medium
 #: model:ir.model.fields,field_description:product.field_product_template_image_medium
 msgid "Medium-sized image"
-msgstr "中等尺寸图片"
+msgstr "中等尺寸图像"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_image_medium
@@ -1712,7 +1713,7 @@ msgid ""
 "Medium-sized image of the product. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved, only when the image exceeds "
 "one of those sizes. Use this field in form views or some kanban views."
-msgstr "产品的中等尺寸的图片。保持纵横比例，图像超出尺寸后，自动缩放为128x128px ，这字段通常用于看板视图。"
+msgstr "产品的中等尺寸的图像。保持纵横比例，图像超出尺寸后，自动缩放为128x128px ，这字段通常用于看板视图。"
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
@@ -2285,7 +2286,7 @@ msgstr "公开价格"
 #. module: product
 #: model:product.pricelist,name:product.list0
 msgid "Public Pricelist"
-msgstr "公共价格表"
+msgstr "公开价格表"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description_purchase
@@ -2527,7 +2528,7 @@ msgid ""
 "Sets the price so that it is a multiple of this value.\n"
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr "设定价格,因为它是一个多元价格, 四舍五入后打折或加入附加费. \n以价格9.99为例四舍五入为10附加费为-0.001."
+msgstr "设定价格，这样它是此数值的整数倍。\n舍入应用在打折后，附加费用之前。 \n要将价格设置为9.99结尾，设置舍入为10，附加费用为-0.001。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_base_config_settings_company_share_product
@@ -2552,7 +2553,7 @@ msgstr "圆滑，紧凑的设计"
 #: model:ir.model.fields,field_description:product.field_product_product_image_small
 #: model:ir.model.fields,field_description:product.field_product_template_image_small
 msgid "Small-sized image"
-msgstr "小尺寸图片"
+msgstr "小尺寸图像"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_image_small
@@ -2560,7 +2561,7 @@ msgid ""
 "Small-sized image of the product. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr "产品的小尺寸图片。保持纵横比，自动缩放为64x64px。用于任何需要小图片的场合"
+msgstr "产品的小尺寸图像。保持纵横比，自动缩放为64x64px。用于任何需要小图像的场合"
 
 #. module: product
 #: selection:product.uom,uom_type:0
@@ -2908,14 +2909,14 @@ msgstr "此处源自该产品表单。"
 msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
-msgstr "该字段保存产品的图片，限制图片大小须小于 1024x1024px."
+msgstr "该字段保存产品的图像，限制图像大小须小于 1024x1024px."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_image
 msgid ""
 "This field holds the image used as image for the product, limited to "
 "1024x1024px."
-msgstr "该字段保存产品的图片，限制到  1024x1024px."
+msgstr "该字段保存产品的图像，限制到  1024x1024px."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_qty
@@ -3111,7 +3112,7 @@ msgstr "变型附加价格"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image_variant
 msgid "Variant Image"
-msgstr "变型图片"
+msgstr "变型图像"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view

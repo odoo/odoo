@@ -571,7 +571,7 @@ class AccountInvoice(models.Model):
                 if not val.get('account_analytic_id') and line.account_analytic_id and val['account_id'] == line.account_id.id:
                     val['account_analytic_id'] = line.account_analytic_id.id
 
-                key = tax['id']
+                key = str(tax['id']) + '-' + str(val['account_id'])
                 if key not in tax_grouped:
                     tax_grouped[key] = val
                 else:
@@ -680,6 +680,7 @@ class AccountInvoice(models.Model):
         for tax_line in self.tax_line_ids:
             if tax_line.amount:
                 res.append({
+                    'invoice_tax_line_id': tax_line.id,
                     'tax_line_id': tax_line.tax_id.id,
                     'type': 'tax',
                     'name': tax_line.name,

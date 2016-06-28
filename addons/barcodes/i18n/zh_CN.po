@@ -4,16 +4,17 @@
 # 
 # Translators:
 # fausthuang, 2015
+# fausthuang, 2015
 # Gang LIU <liu9ang@hotmail.com>, 2016
 # Jeffery Chenn <jeffery9@gmail.com>, 2015
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
 # zhangpeiqing <zpq001@live.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2016-06-02 13:38+0000\n"
+"PO-Revision-Date: 2016-06-22 13:04+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -26,19 +27,19 @@ msgstr ""
 #: code:addons/barcodes/barcodes.py:223
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
-msgstr "'*' 不是一个有效的规则的条码类型，你的意思是'.*' ?"
+msgstr "'*' 不是一个有效的正则条码模式，你的意思是'.*' ?"
 
 #. module: barcodes
 #: code:addons/barcodes/barcodes.py:221
 #, python-format
 msgid ": a rule can only contain one pair of braces."
-msgstr ": 一条规则只能包含一对大括号"
+msgstr ": 规则只能包含一对大括号"
 
 #. module: barcodes
 #: code:addons/barcodes/barcodes.py:217
 #, python-format
 msgid ": braces can only contain N's followed by D's."
-msgstr ": 括号只能包含跟随D's的N's"
+msgstr ": 大括号只能后跟D序列的N序列"
 
 #. module: barcodes
 #: code:addons/barcodes/barcodes.py:219
@@ -156,14 +157,14 @@ msgstr "编码"
 #: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:122
 #, python-format
 msgid "Error : Document not editable"
-msgstr "错误：文档不可编辑"
+msgstr "错误：单据不可编辑"
 
 #. module: barcodes
 #. openerp-web
 #: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:56
 #, python-format
 msgid "Error : No last scanned barcode"
-msgstr "错误 : 没有扫描到条码"
+msgstr "错误 : 没有最近扫描到的条码"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_id
@@ -183,7 +184,7 @@ msgstr "最后修改时间"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_write_uid
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_write_uid
 msgid "Last Updated by"
-msgstr "最后更新人"
+msgstr "最后更新者"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_write_date
@@ -315,7 +316,7 @@ msgstr "单位产品"
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_sequence
 msgid ""
 "Used to order rules such that rules with a smaller sequence match first"
-msgstr "用于规则排序，这样较小序号的规则最先匹配"
+msgstr "用于规则排序，这样较小序列的规则最先匹配"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin__barcode_scanned

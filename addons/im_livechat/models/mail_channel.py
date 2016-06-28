@@ -65,11 +65,16 @@ class MailChannel(models.Model):
             partner_name = self.env['res.partner'].browse(self.env.context.get('im_livechat_operator_partner_id')).name_get()[0]
             for channel_info in channel_infos:
                 channel_info['operator_pid'] = partner_name
-        # add the anonymous name
         channel_infos_dict = dict((c['id'], c) for c in channel_infos)
         for channel in self:
+            # add the anonymous name
             if channel.anonymous_name:
                 channel_infos_dict[channel.id]['anonymous_name'] = channel.anonymous_name
+            # add the last message date
+            if channel.channel_type == 'livechat':
+                last_msg = self.env['mail.message'].search([("channel_ids", "in", [channel.id])], limit=1)
+                if last_msg:
+                    channel_infos_dict[channel.id]['last_message_date'] = last_msg.date
         return channel_infos_dict.values()
 
     @api.model

@@ -958,7 +958,7 @@ function eval_arg (arg) {
     case 'context': case 'compound_context':
         return pyeval('contexts', [arg]);
     default:
-        throw new Error(_t("Unknown nonliteral type " + arg.__ref));
+        throw new Error(_t("Unknown nonliteral type ") + ' ' + arg.__ref);
     }
 }
 

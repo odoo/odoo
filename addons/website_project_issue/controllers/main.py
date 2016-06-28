@@ -10,7 +10,14 @@ class WebsiteAccount(website_account):
     @http.route()
     def account(self):
         response = super(WebsiteAccount, self).account()
-        issue_count = request.env['project.issue'].search_count([])
+        # TDE FIXME: shouldn't that be mnaged by the access rule itself ?
+        # portal projects where you or someone from your company are a follower
+        user = request.env.user
+        issue_count = request.env['project.issue'].sudo().search_count([
+            '&',
+            ('project_id.privacy_visibility', '=', 'portal'),
+            ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id, user.partner_id.id])
+        ])
         response.qcontext.update({'issue_count': issue_count})
         return response
 
