@@ -293,7 +293,7 @@ html[lang] > body.editor_enable{
 // MANIPULATORS
 #oe_manipulators {
     @odoo-handle-edge-size: 8px;
-    @odoo-handle-border-width: 3px;
+    @odoo-handle-border-width: 1px;
 
     // SNIPPET MANIPULATORS
     .oe_overlay {
@@ -550,6 +550,7 @@ html[lang] > body.editor_enable{
                     margin-left: -125px;
 
                     > .oe_handle_button {
+                        position: relative;
                         display: block;
                         width: 100px;
                         height: @o-handle-size-height;
@@ -570,6 +571,13 @@ html[lang] > body.editor_enable{
                         &.size {
                             cursor: row-resize;
                             float: right;
+                        }
+                        &.active:before {
+                            content: "\f00c";
+                            font-family: "FontAwesome";
+                            color: @odoo-brand-optional;
+                            .o-position-absolute(@top: 0, @left: 3px);
+                            font-size: 11px;
                         }
                     }
                 }

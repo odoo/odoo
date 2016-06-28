@@ -123,7 +123,7 @@ options.registry.slider = options.Class.extend({
                 self.$target.off('slid.bs.carousel');
                 self.rebind_event();
                 self.remove_process = false;
-                if (cycle == 1) {
+                if (cycle === 1) {
                     self.on_remove_slide(event);
                 }
             });
@@ -196,7 +196,14 @@ options.registry.marginAndResize = options.Class.extend({
         if (resize_values.w) this.$overlay.find(".oe_handle.w").removeClass("readonly");
         if (resize_values.size) this.$overlay.find(".oe_handle.size").removeClass("readonly");
 
-        this.$overlay.find(".oe_handle:not(.size), .oe_handle.size .size").on('mousedown', function (event) {
+        var $auto_size = this.$overlay.find(".oe_handle.size .auto_size");
+        var $fixed_size = this.$overlay.find(".oe_handle.size .size");
+
+        var auto_sized = isNaN(parseInt(self.$target.prop("style").height));
+        $fixed_size.toggleClass("active", !auto_sized);
+        $auto_size.toggleClass("active", auto_sized);
+
+        $fixed_size.add(this.$overlay.find(".oe_handle:not(.size)")).on('mousedown', function (event) {
             event.preventDefault();
 
             var $handle = $(this);
@@ -280,7 +287,7 @@ options.registry.marginAndResize = options.Class.extend({
                     current = next;
                     change = true;
                 }
-                if (prev != current && dd < (2*resize[1][prev] + resize[1][current])/3) {
+                if (prev !== current && dd < (2*resize[1][prev] + resize[1][current])/3) {
                     self.$target.attr("class", (self.$target.attr("class")||'').replace(regClass, ''));
                     self.$target.addClass(resize[0][prev]);
                     current = prev;
@@ -304,15 +311,24 @@ options.registry.marginAndResize = options.Class.extend({
                     }
                 },0);
                 self.$target.removeClass("resize_editor_busy");
+
+                if (compass === "size") {
+                    $fixed_size.addClass("active");
+                    $auto_size.removeClass("active");
+                }
             };
             $body.mousemove(body_mousemove);
             $body.mouseup(body_mouseup);
         });
-        this.$overlay.find(".oe_handle.size .auto_size").on('click', function () {
+        $auto_size.on('click', function () {
             self.$target.css("height", "");
             self.$target.css("overflow", "");
             self.buildingBlock.getParent().rte.historyRecordUndo(self.$target, 'resize_Y');
             self.buildingBlock.cover_target(self.$overlay, self.$target);
+
+            $fixed_size.removeClass("active");
+            $auto_size.addClass("active");
+
             return false;
         });
     },

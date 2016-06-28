@@ -27,8 +27,9 @@ website.TopBar.include({
             .filter(".oe_no_empty")
             .addClass("oe_empty");
 
-        if (location.search.indexOf("enable_editor") >= 0 && $('html').attr('lang') === "en_US") {
+        if (location.search.indexOf("enable_editor") >= 0 && $('html').attr('lang').match(/en[-_]US/)) {
             this.$el.addClass('editing_mode');
+            this.delayed_hide();
         }
 
         return this._super.apply(this, arguments);
@@ -39,6 +40,13 @@ website.TopBar.include({
         editor.editor_bar = new editor.Class(this);
         editor.editor_bar.prependTo(document.body);
         $('.o_homepage_editor_welcome_message').remove();
+
+        this.delayed_hide();
+    },
+    delayed_hide: function () {
+        _.delay((function () {
+            this.do_hide();
+        }).bind(this), 800);
     },
 });
 
