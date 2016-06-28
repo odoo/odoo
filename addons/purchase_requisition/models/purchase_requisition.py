@@ -234,6 +234,13 @@ class PurchaseOrder(models.Model):
                 others_po = po.requisition_id.mapped('purchase_ids').filtered(lambda r: r.id != po.id)
                 others_po.button_cancel()
                 po.requisition_id.action_done()
+
+            for element in po.order_line:
+                if element.product_id == po.requisition_id.procurement_id.product_id:
+                    element.move_ids.write({
+                        'procurement_id': po.requisition_id.procurement_id.id,
+                        'move_dest_id': po.requisition_id.procurement_id.move_dest_id.id,
+                    })
         return res
 
     @api.model

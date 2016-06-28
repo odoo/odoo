@@ -13,6 +13,10 @@ Fiscal Data Module Hardware Driver
 
 This module allows a Point Of Sale client to communicate with a
 connected Belgian Fiscal Data Module.
+
+This module does **not** turn an Odoo Point Of Sale module into a certified
+Belgian cash register. It allows the communication on with a certified Fiscal
+Data Module but will not modify the behaviour of the Point of Sale.
 """,
     'depends': ['hw_proxy'],
     'external_dependencies': {'python': ['serial']},

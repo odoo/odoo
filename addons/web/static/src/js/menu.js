@@ -44,7 +44,7 @@ var Menu = Widget.extend({
         });
 
         // Hide second level submenus
-        this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
+        this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').addClass('o_hidden');
         if (self.current_menu) {
             self.open_menu(self.current_menu);
         }
@@ -160,12 +160,12 @@ var Menu = Widget.extend({
         $sub_menu.show();
 
         // Hide/Show the leftbar menu depending of the presence of sub-items
-        this.$secondary_menus.toggle(!!$sub_menu.children().length);
+        this.$secondary_menus.toggleClass('o_hidden', !$sub_menu.children().length);
 
         // Activate current menu item and show parents
         this.$secondary_menus.find('.active').removeClass('active');
         if ($main_menu !== $clicked_menu) {
-            $clicked_menu.parents().show();
+            $clicked_menu.parents().removeClass('o_hidden');
             if ($clicked_menu.is('.oe_menu_toggler')) {
                 $clicked_menu.toggleClass('oe_menu_opened').siblings('.oe_secondary_submenu:first').toggle();
             } else {

@@ -320,7 +320,8 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
             var dataset = new data.DataSetStatic(this, this.field.relation, self.build_context());
             var def = this.alive(dataset.name_get([self.get("value")])).done(function(data) {
                 if (!data[0]) {
-                    self.do_warn(_t("Render"), _t("No value found for the field "+self.field.string+" for value "+self.get("value")));
+                    self.do_warn(_t("Render"),
+                        _.str.sprintf(_t("No value found for the field %s for value %s"), self.field.string, self.get("value")));
                     return;
                 }
                 self.display_value["" + self.get("value")] = data[0][1];
@@ -819,6 +820,7 @@ var FieldX2Many = AbstractManyField.extend({
         self.is_loaded = self.is_loaded.then(function() {
             var view = self.get_active_view();
             if (view.type === "list") {
+                view.controller.page = 0;
                 return view.controller.reload_content();
             } else if (view.controller.do_search) {
                 return view.controller.do_search(self.build_domain(), self.dataset.get_context(), []);
@@ -862,6 +864,9 @@ var FieldX2Many = AbstractManyField.extend({
             return view.controller.is_valid();
         }
         return true;
+    },
+    is_false: function() {
+        return _(this.dataset.ids).isEmpty();
     },
 });
 
@@ -1259,13 +1264,16 @@ var FieldOne2Many = FieldX2Many.extend({
         return this._super.apply(this, arguments);
     },
     commit_value: function() {
-        var view = this.viewmanager.active_view;
-        if(view.type === "list" && view.controller.editable()) {
-            return this.mutex.def.then(function () {
-                return view.controller.save_edition();
-            });
-        }
-        return this.mutex.def;
+        var self = this;
+        return this.is_loaded.then(function() {
+            var view = self.viewmanager.active_view;
+            if(view.type === "list" && view.controller.editable()) {
+                return self.mutex.def.then(function () {
+                    return view.controller.save_edition();
+                });
+            }
+            return self.mutex.def;
+        });
     },
 });
 
