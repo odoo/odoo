@@ -15,9 +15,6 @@ class Project(models.Model):
 class Task(models.Model):
     _inherit = "project.task"
 
-    def _get_total_hours(self):
-        return super(Task, self)._get_total_hours() + self.effective_hours
-
     @api.multi
     def _get_subtask_count(self):
         for task in self:
