@@ -13,6 +13,7 @@ var QWeb = core.qweb;
 var AUTHORIZED_MESSAGES = [
     'report.editor:save_ok',
     'report.editor:discard_ok',
+    'report:do_action',
 ];
 
 var ReportAction = Widget.extend(ControlPanelMixin, {
@@ -124,6 +125,9 @@ var ReportAction = Widget.extend(ControlPanelMixin, {
 
             // Check the syntax of the received message.
             var message = ev.originalEvent.data;
+            if (_.isObject(message)) {
+                message = message.message;
+            }
             if (! _.isString(message) || (_.isString(message) && ! _.contains(AUTHORIZED_MESSAGES, message))) {
                 return;
             }
@@ -141,6 +145,8 @@ var ReportAction = Widget.extend(ControlPanelMixin, {
                     this.in_edit_mode = false;
                     this._update_control_panel_buttons();
                     break;
+                case 'report:do_action':
+                    return this.do_action(ev.originalEvent.data.action);
                 default:
             }
         }
