@@ -303,7 +303,14 @@ class StockPicking(models.Model):
                     break
             picking.sale_id = sale_order.id if sale_order else False
 
-    sale_id = fields.Many2one(comodel_name='sale.order', string="Sale Order", compute='_compute_sale_id')
+    def _search_sale_id(self, operator, value):
+        moves = self.env['stock.move'].search(
+            [('picking_id', '!=', False), ('procurement_id.sale_line_id.order_id', operator, value)]
+        )
+        return [('id', 'in', moves.mapped('picking_id').ids)]
+
+    sale_id = fields.Many2one(comodel_name='sale.order', string="Sale Order",
+                              compute='_compute_sale_id', search='_search_sale_id')
 
 
 class AccountInvoiceLine(models.Model):
