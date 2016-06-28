@@ -604,9 +604,6 @@ class task(osv.osv):
             self._store_history(cr, uid, ids, context=context)
         return result
 
-    def _get_total_hours(self):
-        return self.remaining_hours
-
     # ---------------------------------------------------
     # Mail gateway
     # ---------------------------------------------------
