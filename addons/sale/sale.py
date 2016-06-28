@@ -1142,9 +1142,7 @@ class sale_order_line(osv.osv):
                 uos = False
 
         fpos = False
-        if not fiscal_position:
-            fpos = partner.property_account_position or False
-        else:
+        if fiscal_position:
             fpos = self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position)
 
         if uid == SUPERUSER_ID and context.get('company_id'):
