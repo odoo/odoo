@@ -10,7 +10,7 @@ class website_payment(http.Controller):
         acquirers = list(request.env['payment.acquirer'].search([('website_published', '=', True), ('registration_view_template_id', '!=', False)]))
         partner = request.env.user.partner_id
         payment_tokens = partner.payment_token_ids
-        payment_methods |= partner.commercial_partner_id.sudo().payment_method_ids
+        payment_tokens |= partner.commercial_partner_id.sudo().payment_token_ids
         values = {
             'pms': payment_tokens,
             'acquirers': acquirers
