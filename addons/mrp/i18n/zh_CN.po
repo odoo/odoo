@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-06-07 04:47+0000\n"
+"PO-Revision-Date: 2016-06-17 13:41+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -275,7 +275,7 @@ msgstr "批准"
 msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
-msgstr "生成该产品的平均延时天数。在多级BoM的情况下，部件的制造提前期将被累加"
+msgstr "生成该产品的平均延迟天数。在多级BoM的情况下，部件的制造提前时间将被累加的。"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -683,7 +683,7 @@ msgstr "说明"
 msgid ""
 "Description of the Work Center. Explain here what's a cycle according to "
 "this Work Center."
-msgstr "工作中心的描述。该工作中心要执行周期的解释。"
+msgstr "工作中心的说明。在此解释下关于此工作中心的一个周期。"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -797,7 +797,7 @@ msgstr "用于显示顺序"
 #. module: mrp
 #: view:mrp.property:mrp.view_mrp_property_search
 msgid "Group By"
-msgstr "分组"
+msgstr "分组于"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -806,7 +806,7 @@ msgstr "分组"
 #: view:mrp.routing:mrp.mrp_routing_search_view
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
 msgid "Group By..."
-msgstr "分组..."
+msgstr "分组于..."
 
 #. module: mrp
 #: help:mrp.bom,message_summary:0 help:mrp.production,message_summary:0
@@ -1020,7 +1020,7 @@ msgstr "生产效率"
 #: field:product.template,produce_delay:0
 #: field:res.company,manufacturing_lead:0
 msgid "Manufacturing Lead Time"
-msgstr "生产提前期"
+msgstr "生产提前时间"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -1375,7 +1375,7 @@ msgstr "数量"
 #. module: mrp
 #: field:mrp.bom,product_rounding:0 field:mrp.bom.line,product_rounding:0
 msgid "Product Rounding"
-msgstr "产品四舍五入"
+msgstr "产品舍入"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_template
@@ -1544,7 +1544,7 @@ msgstr "属性类别"
 #. module: mrp
 #: field:mrp.property,composition:0
 msgid "Properties composition"
-msgstr "属性成分"
+msgstr "属性组成"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property
@@ -1644,7 +1644,7 @@ msgstr "负责人"
 #. module: mrp
 #: help:mrp.bom,product_rounding:0 help:mrp.bom.line,product_rounding:0
 msgid "Rounding applied on the product quantity."
-msgstr "应用在产品数量上的四舍五入"
+msgstr "应用在产品数量上的舍入"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing
@@ -1865,7 +1865,7 @@ msgstr "每一单位的供应商价格"
 #. module: mrp
 #: help:stock.move,consumed_for:0
 msgid "Technical field used to make the traceability of produced products"
-msgstr "技术字段常被用于追溯产品制造"
+msgstr "技术字段常被用于产成品的追溯"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:333 code:addons/mrp/mrp.py:421
@@ -1882,7 +1882,7 @@ msgid ""
 "product. The routing is mainly used to compute work center costs during "
 "operations and to plan future loads on work centers based on production "
 "plannification."
-msgstr "制造产成品需要的工序列表（也就是工作中心的列表）。工艺主要用于计算工作中心在制造过程中的成本和在生产计划过程中规划工作中心的工作负载"
+msgstr "生产成品需要的工序列表（也就是工作中心的列表）。工艺主要用于计算工作中心在制造过程中的成本和在生产计划过程中规划工作中心的工作负载"
 
 #. module: mrp
 #: help:mrp.bom,routing_id:0 help:mrp.bom.line,routing_id:0
@@ -1986,12 +1986,12 @@ msgstr "总数量"
 #. module: mrp
 #: field:product.template,track_production:0
 msgid "Track Manufacturing Lots"
-msgstr "追踪生产批次"
+msgstr "跟踪制造批次"
 
 #. module: mrp
 #: field:mrp.product.produce,track_production:0
 msgid "Track production"
-msgstr "追踪生产"
+msgstr "跟踪生产"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
