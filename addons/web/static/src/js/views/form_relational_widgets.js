@@ -886,6 +886,9 @@ var FieldX2Many = AbstractManyField.extend({
         }
         return true;
     },
+    is_false: function () {
+        return _(this.dataset.ids).isEmpty();
+    },
 });
 
 var X2ManyDataSet = data.BufferedDataSet.extend({
