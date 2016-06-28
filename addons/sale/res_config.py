@@ -128,3 +128,10 @@ class sale_configuration(osv.TransientModel):
         res = {'value': dict(group_show_price_subtotal=False, group_show_price_total=False)}
         res['value']['group_show_price_%s' % sale_show_tax] = True
         return res
+class account_config_settings(osv.osv_memory):
+    _inherit = 'account.config.settings'
+    _columns = {
+        'group_analytic_account_for_sales': fields.boolean('Analytic accounting for sales',
+            implied_group='sale.group_analytic_accounting',
+            help="Allows you to specify an analytic account on sales orders."),
+    }
