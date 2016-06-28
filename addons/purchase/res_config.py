@@ -50,3 +50,12 @@ class purchase_config_settings(osv.osv_memory):
             ], "Vendor Price", 
             implied_group="purchase.group_manage_vendor_price"),
     }
+
+
+class account_config_settings(osv.osv_memory):
+    _inherit = 'account.config.settings'
+    _columns = {
+        'group_analytic_account_for_purchases': fields.boolean('Analytic accounting for purchases',
+            implied_group='purchase.group_analytic_accounting',
+            help="Allows you to specify an analytic account on purchase order lines."),
+    }
