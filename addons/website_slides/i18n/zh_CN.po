@@ -8,6 +8,9 @@
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
 # Joray <13637815@qq.com>, 2016
+# Joray <13637815@qq.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2015
+# lttlsnk <lttlsnk@gmail.com>, 2016
 # lttlsnk <lttlsnk@gmail.com>, 2016
 # Siyuan Gu <siyuancn@hotmail.com>, 2015
 # Xia Fajin <xia.fajin@elico-corp.com>, 2015
@@ -17,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-21 09:20+0000\n"
-"PO-Revision-Date: 2016-06-07 11:43+0000\n"
+"PO-Revision-Date: 2016-06-22 13:04+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -477,7 +480,7 @@ msgstr "创建者"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_create_date
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag_create_date
 msgid "Created on"
-msgstr "创建于"
+msgstr "创建时间"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_message_last_post
@@ -490,7 +493,7 @@ msgstr "发布到记录上的最后消息的日期"
 msgid ""
 "Default channel for slides, all public users can access content of this "
 "channel."
-msgstr "默认的幻灯片频道，所有的公共用户都可以访问这个频道。"
+msgstr "默认的幻灯片频道，所有的公众用户都可以访问这个频道。"
 
 #. module: website_slides
 #. openerp-web
@@ -673,7 +676,7 @@ msgstr "关注者（合作伙伴）"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see_full
 msgid "Full Access"
-msgstr "完全访问权限"
+msgstr "完全访问"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -763,7 +766,7 @@ msgstr "专访盖伊克里斯蒂安，财务经理Alpinter，有关其使用Odoo
 #: code:addons/website_slides/static/src/js/slides_upload.js:85
 #, python-format
 msgid "Invalid file type. Please select pdf or image file"
-msgstr "错误的文件类型。请选择pfd文件或者图片"
+msgstr "错误的文件类型。请选择pfd文件或者图像"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_message_is_follower
@@ -784,7 +787,7 @@ msgstr "最后消息日期"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide___last_update
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag___last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_write_uid
@@ -793,7 +796,7 @@ msgstr "最后修改日"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_write_uid
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag_write_uid
 msgid "Last Updated by"
-msgstr "最后更新"
+msgstr "最后更新者"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_write_date
@@ -802,7 +805,7 @@ msgstr "最后更新"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_write_date
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag_write_date
 msgid "Last Updated on"
-msgstr "最后更新"
+msgstr "最后更新时间"
 
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
@@ -1031,7 +1034,7 @@ msgstr "开源CMS，性能对比 - Mantavya Gajjar"
 #: code:addons/website_slides/static/src/xml/website_slides.xml:28
 #, python-format
 msgid "PDF or Image File"
-msgstr "PDF或图片文档"
+msgstr "PDF或图像文件"
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.channel_partial
@@ -1106,12 +1109,12 @@ msgstr "私人频道"
 #. module: website_slides
 #: selection:slide.channel,visibility:0
 msgid "Public"
-msgstr "公共的"
+msgstr "公开"
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.channel_public
 msgid "Public Channel"
-msgstr "公共频道"
+msgstr "公开频道"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_date_published
@@ -1290,7 +1293,7 @@ msgstr "这"
 #: model:ir.model.fields,help:website_slides.field_slide_channel_website_url
 #: model:ir.model.fields,help:website_slides.field_slide_slide_website_url
 msgid "The full URL to access the document through the website."
-msgstr "通过网站完整的URL来访问操作服务器。"
+msgstr "通过网站访问单据的完整URL。"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_4
@@ -1554,7 +1557,7 @@ msgstr "YouTube视频网址"
 #: code:addons/website_slides/static/src/xml/website_slides.xml:34
 #, python-format
 msgid "Youtube or Google Doc URL"
-msgstr "YouTube或谷歌文档的URL"
+msgstr "YouTube或谷歌文档的网址"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide_document_id
@@ -1564,7 +1567,7 @@ msgstr "YouTube或谷歌文档ID"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide_url
 msgid "Youtube or Google Document URL"
-msgstr "YouTube或谷歌文档的URL"
+msgstr "YouTube或谷歌文档的网址"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email

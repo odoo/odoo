@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-06-09 06:37+0000\n"
+"PO-Revision-Date: 2016-06-15 10:45+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -646,7 +646,7 @@ msgid ""
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this task\n"
 " * Ready for next stage indicates the task is ready to be pulled to the next stage"
-msgstr ""
+msgstr "Un estat de kanban en una tasca indica situacions especials que l'afecten:\n* 'Normal' és la situació per defecte.\n* 'Bloquejat' indica que alguna cosa està impedint el progrés de la tasca.\n* 'Llesta per la següent etapa' indica que la tasca pot ser portada a la següent etapa."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1618,7 +1618,7 @@ msgstr ""
 msgid ""
 "Follow this project to automatically track the events associated to tasks "
 "and issues of this project."
-msgstr ""
+msgstr "Seguiu aquest projecte per rastrejar automàticament els esdeveniments associats a les tasques i a les incidències del mateix."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1682,7 +1682,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
 msgid "GTD"
-msgstr ""
+msgstr "GTD"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1722,7 +1722,7 @@ msgstr "Indica l'ordre de seqüència quan es mostra una llista de projectes."
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_sequence
 msgid "Gives the sequence order when displaying a list of tasks."
-msgstr ""
+msgstr "Indica l'ordre quan es mostra la llista de tasques."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1751,7 +1751,7 @@ msgstr "Agrupa per"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Helpdesk & Support"
-msgstr ""
+msgstr "Taula d'ajuda (Helpdesk) i suport"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1925,7 +1925,7 @@ msgstr "Entrant"
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Incoming Emails create"
-msgstr ""
+msgstr "Crear correus electrònics d'entrada"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_planned_hours
@@ -2052,7 +2052,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_history_kanban_state
 #: model:ir.model.fields,field_description:project.field_project_task_kanban_state
 msgid "Kanban State"
-msgstr ""
+msgstr "Estat kanban"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_done
@@ -2133,7 +2133,7 @@ msgstr ""
 msgid ""
 "Lets the company customize which Pad installation should be used to link to new pads (for example: http://ietherpad.com/).\n"
 "-This installs the module pad."
-msgstr ""
+msgstr "Permet personalitzar a escala de companyia quina instal·lació de Pad ha d'utilitzar per gestionar els nous pads (per exemple: http://ietherpad.com/).\n- Això instal·la el mòdul pad."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_analytic_account_id
@@ -2156,7 +2156,7 @@ msgstr "Baixa"
 #. module: project
 #: selection:project.config.settings,group_time_work_estimation_tasks:0
 msgid "Manage time estimation on tasks"
-msgstr ""
+msgstr "Gestionar estimació de temps de tasques"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2368,7 +2368,7 @@ msgstr "Obre"
 #. module: project
 #: model:ir.actions.client,name:project.action_client_project_menu
 msgid "Open Project Menu"
-msgstr ""
+msgstr "Obrir menú de projecte"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_force_thread_id
@@ -2644,7 +2644,7 @@ msgstr ""
 msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "-This installs the module project_issue_sheet."
-msgstr ""
+msgstr "Proveir de suport de parts d'hores per la gestió d'incidències/errors als projectes.\n- Això instal·la el mòdul project_issue_sheet."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_rating_project
@@ -3039,7 +3039,7 @@ msgstr ""
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
 msgid "Task Pipe"
-msgstr ""
+msgstr "Canonada de tasques"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_ready
@@ -3218,7 +3218,7 @@ msgstr ""
 msgid ""
 "The kind of document created when an email is received on this project's "
 "email alias"
-msgstr ""
+msgstr "El tipus de document creat quan es rep un correu electrònica en l'àlies de correu de projecte"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_model_id
@@ -3268,7 +3268,7 @@ msgstr ""
 msgid ""
 "This allows you to transfer the entries under tasks defined for Project Management to the timesheet line entries for particular date and user, with the effect of creating, editing and deleting either ways.\n"
 "-This installs the module project_timesheet."
-msgstr ""
+msgstr "Això permet transferir les entrades de les tasques de la gestió de projectes a les entrades del part d'hores per una data i usuari en concret, amb l'efecte de crear, editar i esborrar en els dos sentits.\n- Això instal·la el mòdul project_timesheet."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_module_sale_service
@@ -3679,7 +3679,7 @@ msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
 "project's tasks and then delete the project or simply deactivate the "
 "project."
-msgstr ""
+msgstr "No pot esborrar un projecte que conté tasques. Pot esborrar totes les tasques del projecte i llavors esborrar el projecte, o simplement desactivar el projecte."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner

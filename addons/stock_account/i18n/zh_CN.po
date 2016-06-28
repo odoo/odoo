@@ -4,13 +4,13 @@
 # 
 # Translators:
 # Jeffery Chenn <jeffery9@gmail.com>, 2015
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:26+0000\n"
-"PO-Revision-Date: 2016-06-07 12:06+0000\n"
+"PO-Revision-Date: 2016-06-22 13:04+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -271,19 +271,19 @@ msgstr "到岸成本"
 #: model:ir.model.fields,field_description:stock_account.field_stock_history___last_update
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history___last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_write_uid
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_write_uid
 msgid "Last Updated by"
-msgstr "最近更新者"
+msgstr "最后更新者"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_write_date
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_write_date
 msgid "Last Updated on"
-msgstr "最近更新时间"
+msgstr "最后更新时间"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_location_id
@@ -477,7 +477,7 @@ msgstr "仓库收货科目"
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
 #, python-format
 msgid "Stock Journal"
-msgstr "库存分类账"
+msgstr "库存日记账"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
@@ -598,7 +598,7 @@ msgid ""
 "specific valuation account set on the source location. This is the default "
 "value for all products in this category. It can also directly be set on each"
 " product"
-msgstr "在进行实时库存计价时，除非在源库位指定一个核算科目，否则所有进仓调拨在对应的的分类账将登入这科目。这是该产品类别的默认值。它也可以直接设定在每个产品上。"
+msgstr "在进行实时库存计价时，除非在源库位指定一个核算科目，否则所有进仓调拨在对应的的日记账将登入这科目。这是该产品类别的默认值。它也可以直接设定在每个产品上。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_input
@@ -608,7 +608,7 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr "在进行实时库存计价时，除非为源库位指定一个库存核算科目，否则所有的入库调拨分类账明细将登入这科目。当没在产品设定时，使用产品类别的设定。"
+msgstr "在进行实时库存计价时，除非为源库位指定一个库存核算科目，否则所有的入库调拨日记账明细将登入这科目。当没在产品设定时，使用产品类别的设定。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_output_categ_id
@@ -618,7 +618,7 @@ msgid ""
 "specific valuation account set on the destination location. This is the "
 "default value for all products in this category. It can also directly be set"
 " on each product"
-msgstr "在进行实时库存计价时，除非目标库位指定一个核算科目否则所有出库调拨分类账明细将记录到这科目。这是该产品类别的默认设置。它也可直接设定在每个产品上。"
+msgstr "在进行实时库存计价时，除非目标库位指定一个核算科目否则所有出库调拨日记账明细将记录到这科目。这是该产品类别的默认设置。它也可直接设定在每个产品上。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_output
@@ -628,14 +628,14 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr "在进行实时估值时，除非对目标库位指定一个核算科目否则出库调拨分类账分录将登入这个科目。当产品没设定时，它默认继承产品的类别的设定。"
+msgstr "在进行实时估值时，除非对目标库位指定一个核算科目否则出库调拨日记账分录将登入这个科目。当产品没设定时，它默认继承产品的类别的设定。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_journal
 msgid ""
 "When doing real-time inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
-msgstr "在进行实时库存计价时，库存调拨处理将自动登入这分类账的明细里."
+msgstr "在进行实时库存计价时，库存调拨处理将自动登入这日记账的明细里."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_valuation_account_id
@@ -655,7 +655,7 @@ msgstr "打开库存计价历史表格的向导"
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts"
-msgstr "没有在产品种类中设置库存分类账，检查是否安装科目表"
+msgstr "没有在产品种类中设置库存日记账，检查是否安装科目表"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
