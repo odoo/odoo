@@ -78,6 +78,8 @@ body .modal {
 
             .close {
                 color: lightgray;
+                opacity: 1;
+                font-size: 25px;
             }
 
             .modal-content {
@@ -85,7 +87,6 @@ body .modal {
                 color: lightgray!important;
                 border: 3px outset gray;
                 border-radius: 20px;
-                box-shadow: 0 0 100em 0 white;
 
                 .modal-header {
                     border: none;
@@ -123,34 +124,36 @@ body .modal {
 
     // ADD NEW PAGE MODAL
     &#o_website_add_page_modal {
-        text-align: center;
-        line-height: 100%;
-
+        &.in {
+            .o-flex-display()!important;
+            .o-justify-content(center);
+            .o-align-items(center);
+        }
         .modal-dialog {
-            line-height: 100vh;
-            margin: 0 auto;
+            width: auto;
+            max-width: 60%;
+            max-height: 100%;
+
             ul {
-                display: inline-block;
-                width: 100%;
+                .o-flex-display();
+                .o-flex-flow(row, wrap);
+                .o-justify-content(space-around);
                 margin: 0;
                 padding: 0;
-                vertical-align: middle;
-                line-height: 1;
                 list-style: none;
-                text-align: center;
 
                 li {
+                    display: block;
                     opacity: 0;
                     .animation(fadeInDownSmall 1s forwards);
-                    display: inline-block;
-                    width: 33%;
-                    margin: 2em 0;
+                    margin: 2em 32px;
                     padding: 0 15px;
 
                     a {
                         display: block;
                         font-size: 34px;
                         margin: auto;
+                        text-align: center;
 
                         i {
                             width: 110px;
