@@ -17,7 +17,7 @@ class ProjectTaskType(models.Model):
         return [('model', '=', 'project.task')]
 
     def _get_default_project_ids(self):
-        default_project_id = self._context.get('default_project_id')
+        default_project_id = self.env.context.get('default_project_id')
         return [default_project_id] if default_project_id else None
 
     name = fields.Char(string='Stage Name', required=True, translate=True)
@@ -161,7 +161,7 @@ class Project(models.Model):
             project.is_favorite = self.env.user in project.favorite_user_ids
 
     def _get_default_favorite_user_ids(self):
-        return [(6, 0, [self._uid])]
+        return [(6, 0, [self.env.uid])]
 
     @api.model
     def default_get(self, flds):
@@ -278,8 +278,8 @@ class Project(models.Model):
                 not_fav_projects |= project
 
         # Project User has no write access for project.
-        not_fav_projects.write({'favorite_user_ids': [(4, self._uid)]})
-        favorite_projects.write({'favorite_user_ids': [(3, self._uid)]})
+        not_fav_projects.write({'favorite_user_ids': [(4, self.env.uid)]})
+        favorite_projects.write({'favorite_user_ids': [(3, self.env.uid)]})
 
     @api.multi
     def close_dialog(self):
@@ -295,23 +295,23 @@ class Task(models.Model):
     _order = "priority desc, sequence, date_start, name, id"
 
     def _get_default_partner(self):
-        if 'default_project_id' in self._context:
-            default_project_id = self.env['project.project'].browse(self._context['default_project_id'])
+        if 'default_project_id' in self.env.context:
+            default_project_id = self.env['project.project'].browse(self.env.context['default_project_id'])
             return default_project_id.exists().partner_id
 
     def _get_default_stage_id(self):
         """ Gives default stage_id """
-        return self.stage_find(self._context.get('default_project_id'), [('fold', '=', False)])
+        return self.stage_find(self.env.context.get('default_project_id'), [('fold', '=', False)])
 
     @api.multi
     def _read_group_stage_ids(self, domain, read_group_order=None, access_rights_uid=None):
         TaskType = self.env['project.task.type']
         order = TaskType._order
-        access_rights_uid = access_rights_uid or self._uid
+        access_rights_uid = access_rights_uid or self.env.uid
         if read_group_order == 'stage_id desc':
             order = '%s desc' % order
-        if 'default_project_id' in self._context:
-            search_domain = ['|', ('project_ids', '=', self._context['default_project_id']), ('id', 'in', self.ids)]
+        if 'default_project_id' in self.env.context:
+            search_domain = ['|', ('project_ids', '=', self.env.context['default_project_id']), ('id', 'in', self.ids)]
         else:
             search_domain = [('id', 'in', self.ids)]
         stage_ids = TaskType._search(search_domain, order=order, access_rights_uid=access_rights_uid)
@@ -366,7 +366,7 @@ class Task(models.Model):
         readonly=True)
     project_id = fields.Many2one('project.project',
         string='Project',
-        default=lambda self: self._context.get('default_project_id'),
+        default=lambda self: self.env.context.get('default_project_id'),
         index=True,
         track_visibility='onchange',
         change_default=True)
@@ -375,7 +375,7 @@ class Task(models.Model):
     remaining_hours = fields.Float(string='Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
     user_id = fields.Many2one('res.users',
         string='Assigned to',
-        default=lambda self: self._uid,
+        default=lambda self: self.env.uid,
         index=True, track_visibility='onchange')
     partner_id = fields.Many2one('res.partner',
         string='Customer',
@@ -462,7 +462,7 @@ class Task(models.Model):
     @api.model
     def get_empty_list_help(self, help):
         self = self.with_context(
-            empty_list_help_id=self._context.get('default_project_id'),
+            empty_list_help_id=self.env.context.get('default_project_id'),
             empty_list_help_model='project.project',
             empty_list_help_document_name=_("tasks")
         )
@@ -513,7 +513,7 @@ class Task(models.Model):
     @api.model
     def create(self, vals):
         # context: no_log, because subtype already handle this
-        context = dict(self._context, mail_create_nolog=True)
+        context = dict(self.env.context, mail_create_nolog=True)
 
         # for default stage
         if vals.get('project_id') and not context.get('default_project_id'):
@@ -708,7 +708,7 @@ class AccountAnalyticAccount(models.Model):
         '''
         This function is used to decide if a project needs to be automatically created or not when an analytic account is created. It returns True if it needs to be so, False otherwise.
         '''
-        return vals.get('use_tasks') and 'project_creation_in_progress' not in self._context
+        return vals.get('use_tasks') and 'project_creation_in_progress' not in self.env.context
 
     @api.multi
     def project_create(self, vals):
@@ -754,7 +754,7 @@ class AccountAnalyticAccount(models.Model):
     def name_search(self, name, args=None, operator='ilike', limit=100):
         if args is None:
             args = []
-        if self._context.get('current_model') == 'project.project':
+        if self.env.context.get('current_model') == 'project.project':
             return self.search(args + [('name', operator, name)], limit=limit).name_get()
 
         return super(AccountAnalyticAccount, self).name_search(name, args=args, operator=operator, limit=limit)
@@ -793,7 +793,7 @@ class ProjectTaskHistory(models.Model):
             if history.type_id and history.type_id.fold:
                 history.end_date = history.date
                 continue
-            self._cr.execute('''select
+            self.env.cr.execute('''select
                     date
                 from
                     project_task_history
@@ -801,7 +801,7 @@ class ProjectTaskHistory(models.Model):
                     task_id=%s and
                     id>%s
                 order by id limit 1''', (history.task_id.id, history.id))
-            res = self._cr.fetchone()
+            res = self.env.cr.fetchone()
             history.end_date = res and res[0] or False
 
     task_id = fields.Many2one('project.task', string='Task', ondelete='cascade', required=True, index=True)
