@@ -6,7 +6,7 @@
             <field name="name">Customer Ratings</field>
             <field name="res_model">rating.rating</field>
             <field name="view_mode">kanban,pivot,graph</field>
-            <field name="domain">[('res_model','=','project.task'),('res_id','=',active_id)]</field>
+            <field name="domain">[('res_model', '=', 'project.task'), ('res_id', '=', active_id)]</field>
             <field name="help" type="html">
                 <p>
                     Customer ratings on tasks. If you have no rating, change your project Settings to activate it.
@@ -14,8 +14,8 @@
             </field>
         </record>
 
-        <record id="view_task_form2_inherit_rating_project" model="ir.ui.view">
-            <field name="name">project.task.form.inherit</field>
+        <record id="project_task_view_form_inherit_rating" model="ir.ui.view">
+            <field name="name">project.task.view.form.inherit.rating</field>
             <field name="model">project.task</field>
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
@@ -28,8 +28,8 @@
             </field>
         </record>
 
-        <record id="view_task_kanban_inherit_rating_project" model="ir.ui.view">
-            <field name="name">project.task.kanban.inherit</field>
+        <record id="project_task_view_kanban_inherit_rating" model="ir.ui.view">
+            <field name="name">project.task.view.kanban.inherit.rating</field>
             <field name="model">project.task</field>
             <field name="inherit_id" ref="project.view_task_kanban"/>
             <field name="arch" type="xml">
@@ -100,7 +100,7 @@
                 </p>
             </field>
         </record>
-        <menuitem id="menu_rating_rating_action_project" action="rating_rating_action_project" parent="base.menu_project_report" sequence="5"/>
+        <menuitem id="rating_rating_menu_project" action="rating_rating_action_project" parent="base.menu_project_report" sequence="5"/>
 
     </data>
 </openerp>

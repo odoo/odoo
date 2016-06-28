@@ -23,17 +23,17 @@ class Rating(models.Model):
     res_id = fields.Integer(string='Document ID', required=True, help="Identifier of the rated object", index=True)
     rated_partner_id = fields.Many2one('res.partner', string="Rated Partner", help="Owner of the rated resource")
     partner_id = fields.Many2one('res.partner', string='Customer', help="Author of the rating")
-    rating = fields.Float(string="Rating", group_operator="avg", help="Rating value")
+    rating = fields.Float(string="Rating", group_operator="avg", default=0, help="Rating value")
     feedback = fields.Text('Feedback reason', help="Reason of the rating")
-
+    token_ids = fields.One2many('rating.token', 'rating_id', string='Tokens')
     message_id = fields.Many2one('mail.message', string="Linked message", help="Associated message when posting a review. Mainly used in website addons.", index=True)
 
-    @api.one
-    def reset(self):
-        self.write({
-            'rating': 0,
-            'feedback': False
-        })
+    # @api.one
+    # def reset(self):
+    #     self.write({
+    #         'rating': 0,
+    #         'feedback': False
+    #     })
 
 
 class RatingToken(models.TransientModel):
@@ -85,7 +85,7 @@ class RatingMixin(models.AbstractModel):
     @api.multi
     def rating_get_request(self,  partner_id, rated_partner_id, reuse_rating=True):
         """ This method fetches ratings related to the given records. It either
-        creates empty rating objects or search existing one to reset and resue
+        creates empty rating objects or search existing one to reuse
         depending on the reuse_rating parameter. """
         ratings = self.env['rating.rating']
         Token = self.env['rating.token']
@@ -103,7 +103,7 @@ class RatingMixin(models.AbstractModel):
                 rating = ratings.search([('res_id', '=', record.id), ('res_model', '=', self._name), ('partner_id', '=', partner_id.id)], limit=1)
             if rating:
                 values['rating_id'] = rating.id
-                rating.reset()
+                # rating.reset()
             token = Token.create(values)
             Token |= token
         return Token

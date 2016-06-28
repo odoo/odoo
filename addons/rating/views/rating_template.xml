@@ -95,7 +95,25 @@
         </template>
 
         <!-- External page : thanks message -->
-        <template id="rating_form">
+        <template id="rating_external_page_view">
+            <head>
+                <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+                <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
+            </head>
+            <div class="container">
+                <div clas="row" t-if="is_rated">
+                    <h1 class="text-center"><i class="fa fa-frown-o fa-2x text-danger" /></h1>
+                    <h1 class="text-center">Sorry you have already voted!</h1>
+                </div>
+                <div clas="row" t-if="is_public">
+                    <h1 class="text-center"><i class="fa fa-check-circle fa-2x text-success" /></h1>
+                    <h1 class="text-center">Thank you for submitting your feedback!</h1>
+                </div>
+            </div>
+        </template>
+
+        <!-- External page: rate and submit feedback -->
+        <template id="rating_external_page_submit">
             <head>
                 <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
             </head>
@@ -117,23 +135,6 @@
                             </div>
                         </div>
                     </form>
-                </div>
-            </div>
-        </template>
-
-        <template id="rating_result">
-            <head>
-                <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
-                <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
-            </head>
-            <div class="container">
-                <div clas="row" t-if="is_rated">
-                    <h1 class="text-center"><i class="fa fa-frown-o fa-2x text-danger" /></h1>
-                    <h1 class="text-center">Sorry you have already voted!</h1>
-                </div>
-                <div clas="row" t-if="is_public">
-                    <h1 class="text-center"><i class="fa fa-check-circle fa-2x text-success" /></h1>
-                    <h1 class="text-center">Thank you for submitting your feedback!</h1>
                 </div>
             </div>
         </template>
