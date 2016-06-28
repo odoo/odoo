@@ -9,7 +9,7 @@ var _t = core._t;
 
 var WidgetWebsiteButton = form_common.AbstractField.extend({
     template: 'WidgetWebsiteButton',
-    render_value: function() {
+    render_value: function () {
         this._super.apply(this, arguments);
 
         var $value = this.$('.o_value');
@@ -19,7 +19,7 @@ var WidgetWebsiteButton = form_common.AbstractField.extend({
                   .removeClass('text-danger')
                   .addClass('text-success');
         } else {
-            $value.html(_t('Not Published'))
+            $value.html(_t('Unpublished'))
                   .removeClass('text-success')
                   .addClass('text-danger');
         }
@@ -28,7 +28,7 @@ var WidgetWebsiteButton = form_common.AbstractField.extend({
             this.$el.addClass(this.node.attrs.class);
         }
     },
-    is_false: function() {
+    is_false: function () {
         return false;
     },
 });

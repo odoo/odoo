@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from lxml.etree import XMLSyntaxError
 import unittest
-from openerp.tools.translate import quote, unquote, xml_translate, html_translate
+
+from odoo.tools.translate import quote, unquote, xml_translate, html_translate
+from odoo.tests.common import TransactionCase
+
 
 class TranslationToolsTestCase(unittest.TestCase):
 
@@ -167,3 +169,56 @@ class TranslationToolsTestCase(unittest.TestCase):
         self.assertEquals(result, """<i class="fa-check"/>""")
         result = html_translate(lambda term: term, source)
         self.assertEquals(result, source)
+
+
+class TestTranslation(TransactionCase):
+
+    def setUp(self):
+        super(TestTranslation, self).setUp()
+        self.env['ir.translation'].load_module_terms(['base'], ['fr_FR'])
+        self.customers = self.env['res.partner.category'].create({'name': 'Customers'})
+        self.env['ir.translation'].create({
+            'type': 'model',
+            'name': 'res.partner.category,name',
+            'module':'base',
+            'lang': 'fr_FR',
+            'res_id': self.customers.id,
+            'value': 'Clients',
+            'state': 'translated',
+        })
+
+    def test_101_create_translated_record(self):
+        category = self.customers.with_context({})
+        self.assertEqual(category.name, 'Customers', "Error in basic name_get")
+
+        category_fr = category.with_context({'lang': 'fr_FR'})
+        self.assertEqual(category_fr.name, 'Clients', "Translation not found")
+
+    def test_102_duplicate_record(self):
+        category = self.customers.with_context({'lang': 'fr_FR'}).copy()
+
+        category_no = category.with_context({})
+        self.assertEqual(category_no.name, 'Customers', "Duplication did not set untranslated value")
+
+        category_fr = category.with_context({'lang': 'fr_FR'})
+        self.assertEqual(category_fr.name, 'Clients', "Did not found translation for initial value")
+
+    def test_103_duplicate_record_fr(self):
+        category = self.customers.with_context({'lang': 'fr_FR'}).copy({'name': 'Clients (copie)'})
+
+        category_no = category.with_context({})
+        self.assertEqual(category_no.name, 'Customers', "Duplication erased original untranslated value")
+
+        category_fr = category.with_context({'lang': 'fr_FR'})
+        self.assertEqual(category_fr.name, 'Clients (copie)', "Did not used default value for translated value")
+
+    def test_104_orderby_translated_field(self):
+        """ Test search ordered by a translated field. """
+        # create a category with a French translation
+        padawans = self.env['res.partner.category'].create({'name': 'Padawans'})
+        padawans_fr = padawans.with_context(lang='fr_FR')
+        padawans_fr.write({'name': 'Apprentis'})
+        # search for categories, and sort them by (translated) name
+        categories = padawans_fr.search([('id', 'in', [self.customers.id, padawans.id])], order='name')
+        self.assertEqual(categories.ids, [padawans.id, self.customers.id],
+            "Search ordered by translated name should return Padawans (Apprentis) before Customers (Clients)")

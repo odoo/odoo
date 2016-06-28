@@ -324,8 +324,17 @@ class res_partner(osv.Model):
 class calendar_alarm_manager(osv.AbstractModel):
     _name = 'calendar.alarm_manager'
 
-    def get_next_potential_limit_alarm(self, cr, uid, seconds, notif=True, mail=True, partner_id=None, context=None):
+    def get_next_potential_limit_alarm(self, cr, uid, alarm_type, seconds=None, partner_id=None, context=None):
         res = {}
+        delta_request = """
+            SELECT
+                rel.calendar_event_id, max(alarm.duration_minutes) AS max_delta,min(alarm.duration_minutes) AS min_delta
+            FROM
+                calendar_alarm_calendar_event_rel AS rel
+            LEFT JOIN calendar_alarm AS alarm ON alarm.id = rel.calendar_alarm_id
+            WHERE alarm.type = %s
+            GROUP BY rel.calendar_event_id
+        """
         base_request = """
                     SELECT
                         cal.id,
@@ -344,16 +353,7 @@ class calendar_alarm_manager(osv.AbstractModel):
                         cal.rrule AS rule
                     FROM
                         calendar_event AS cal
-                        RIGHT JOIN
-                            (
-                                SELECT
-                                    rel.calendar_event_id, max(alarm.duration_minutes) AS max_delta,min(alarm.duration_minutes) AS min_delta
-                                FROM
-                                    calendar_alarm_calendar_event_rel AS rel
-                                        LEFT JOIN calendar_alarm AS alarm ON alarm.id = rel.calendar_alarm_id
-                                WHERE alarm.type in %s
-                                GROUP BY rel.calendar_event_id
-                            ) AS calcul_delta ON calcul_delta.calendar_event_id = cal.id
+                    RIGHT JOIN calcul_delta ON calcul_delta.calendar_event_id = cal.id
              """
 
         filter_user = """
@@ -361,28 +361,36 @@ class calendar_alarm_manager(osv.AbstractModel):
                     AND part_rel.res_partner_id = %s
         """
 
-        #Add filter on type
-        type_to_read = ()
-        if notif:
-            type_to_read += ('notification',)
-        if mail:
-            type_to_read += ('email',)
+        # Add filter on alarm type
+        tuple_params = (alarm_type,)
 
-        tuple_params = (type_to_read,)
-
-        # ADD FILTER ON PARTNER_ID
+        # Add filter on partner_id
         if partner_id:
             base_request += filter_user
             tuple_params += (partner_id, )
 
-        #Add filter on hours
-        tuple_params += (seconds,)
+        # Upper bound on first_alarm of requested events
+        first_alarm_max_value = ""
+        if seconds is None:
+            # first alarm in the future + 3 minutes if there is one, now otherwise
+            first_alarm_max_value = """
+                COALESCE((SELECT MIN(cal.start - interval '1' minute  * calcul_delta.max_delta)
+                FROM calendar_event cal
+                RIGHT JOIN calcul_delta ON calcul_delta.calendar_event_id = cal.id
+                WHERE cal.start - interval '1' minute  * calcul_delta.max_delta > now() at time zone 'utc'
+            ) + interval '3' minute, now() at time zone 'utc')"""
+        else:
+            # now + given seconds
+            first_alarm_max_value = "(now() at time zone 'utc' + interval '%s' second )"
+            tuple_params += (seconds,)
 
-        cr.execute("""SELECT *
+        cr.execute("""
+                    WITH calcul_delta AS (%s)
+                    SELECT *
                         FROM ( %s WHERE cal.active = True ) AS ALL_EVENTS
-                       WHERE ALL_EVENTS.first_alarm < (now() at time zone 'utc' + interval '%%s' second )
+                       WHERE ALL_EVENTS.first_alarm < %s
                          AND ALL_EVENTS.last_event_date > (now() at time zone 'utc')
-                   """ % base_request, tuple_params)
+                   """ % (delta_request, base_request, first_alarm_max_value), tuple_params)
 
         for event_id, first_alarm, last_alarm, first_meeting, last_meeting, min_duration, max_duration, rule in cr.fetchall():
             res[event_id] = {
@@ -398,28 +406,20 @@ class calendar_alarm_manager(osv.AbstractModel):
 
         return res
 
-    def do_check_alarm_for_one_date(self, cr, uid, one_date, event, event_maxdelta, in_the_next_X_seconds, after=False, notif=True, mail=True, missing=False, context=None):
+    def do_check_alarm_for_one_date(self, cr, uid, one_date, event, event_maxdelta, in_the_next_X_seconds, alarm_type, after=False, missing=False, context=None):
         # one_date: date of the event to check (not the same that in the event browse if recurrent)
         # event: Event browse record
         # event_maxdelta: biggest duration from alarms for this event
         # in_the_next_X_seconds: looking in the future (in seconds)
+        # alarm_type: the type of alarm we are looking for ('notification' or 'email')
         # after: if not False: will return alert if after this date (date as string - todo: change in master)
         # missing: if not False: will return alert even if we are too late
-        # notif: Looking for type notification
-        # mail: looking for type email
 
         res = []
-
-        # TODO: replace notif and email in master by alarm_type + remove event_maxdelta and if using it
-        alarm_type = []
-        if notif:
-            alarm_type.append('notification')
-        if mail:
-            alarm_type.append('email')
-
+        # TODO: remove event_maxdelta and if using it
         if one_date - timedelta(minutes=(missing and 0 or event_maxdelta)) < datetime.now() + timedelta(seconds=in_the_next_X_seconds):  # if an alarm is possible for this date
             for alarm in event.alarm_ids:
-                if alarm.type in alarm_type and \
+                if alarm.type == alarm_type and \
                     one_date - timedelta(minutes=(missing and 0 or alarm.duration_minutes)) < datetime.now() + timedelta(seconds=in_the_next_X_seconds) and \
                         (not after or one_date - timedelta(minutes=alarm.duration_minutes) > openerp.fields.Datetime.from_string(after)):
                         alert = {
@@ -456,7 +456,7 @@ class calendar_alarm_manager(osv.AbstractModel):
 
         cron_interval = cron.interval_number * interval_to_second[cron.interval_type]
 
-        all_events = self.get_next_potential_limit_alarm(cr, uid, cron_interval, notif=False, context=context)
+        all_events = self.get_next_potential_limit_alarm(cr, uid, 'email', seconds=cron_interval, context=context)
 
         for curEvent in self.pool.get('calendar.event').browse(cr, uid, all_events.keys(), context=context):
             max_delta = all_events[curEvent.id]['max_duration']
@@ -466,7 +466,7 @@ class calendar_alarm_manager(osv.AbstractModel):
                 last_found = False
                 for one_date in self.pool.get('calendar.event').get_recurrent_date_by_event(cr, uid, curEvent, context=context):
                     in_date_format = one_date.replace(tzinfo=None)
-                    last_found = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, 0, after=last_notif_mail, notif=False, missing=True, context=context)
+                    last_found = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, 0, 'email', after=last_notif_mail, missing=True, context=context)
                     for alert in last_found:
                         self.do_mail_reminder(cr, uid, alert, context=context)
                         at_least_one = True  # if it's the first alarm for this recurrent event
@@ -474,21 +474,20 @@ class calendar_alarm_manager(osv.AbstractModel):
                         break
             else:
                 in_date_format = datetime.strptime(curEvent.start, DEFAULT_SERVER_DATETIME_FORMAT)
-                last_found = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, 0, after=last_notif_mail, notif=False, missing=True, context=context)
+                last_found = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, 0, 'email', after=last_notif_mail, missing=True, context=context)
                 for alert in last_found:
                     self.do_mail_reminder(cr, uid, alert, context=context)
         icp.set_param(cr, SUPERUSER_ID, 'calendar.last_notif_mail', now)
 
     def get_next_notif(self, cr, uid, context=None):
-        ajax_check_every_seconds = 300
         partner = self.pool['res.users'].read(cr, SUPERUSER_ID, uid, ['partner_id', 'calendar_last_notif_ack'], context=context)
         all_notif = []
 
         if not partner:
             return []
 
-        all_events = self.get_next_potential_limit_alarm(cr, uid, ajax_check_every_seconds, partner_id=partner['partner_id'][0], mail=False, context=context)
-
+        all_events = self.get_next_potential_limit_alarm(cr, uid, 'notification', partner_id=partner['partner_id'][0], context=context)
+        time_limit = 3600 * 24  # return alarms of the next 24 hours
         for event in all_events:  # .values()
             max_delta = all_events[event]['max_duration']
             curEvent = self.pool.get('calendar.event').browse(cr, uid, event, context=context)
@@ -497,7 +496,7 @@ class calendar_alarm_manager(osv.AbstractModel):
                 LastFound = False
                 for one_date in self.pool.get("calendar.event").get_recurrent_date_by_event(cr, uid, curEvent, context=context):
                     in_date_format = one_date.replace(tzinfo=None)
-                    LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, ajax_check_every_seconds, after=partner['calendar_last_notif_ack'], mail=False, context=context)
+                    LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, time_limit, 'notification', after=partner['calendar_last_notif_ack'], context=context)
                     if LastFound:
                         for alert in LastFound:
                             all_notif.append(self.do_notif_reminder(cr, uid, alert, context=context))
@@ -507,7 +506,7 @@ class calendar_alarm_manager(osv.AbstractModel):
                         break
             else:
                 in_date_format = datetime.strptime(curEvent.start, DEFAULT_SERVER_DATETIME_FORMAT)
-                LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, ajax_check_every_seconds, after=partner['calendar_last_notif_ack'], mail=False, context=context)
+                LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, time_limit, 'notification', after=partner['calendar_last_notif_ack'], context=context)
                 if LastFound:
                     for alert in LastFound:
                         all_notif.append(self.do_notif_reminder(cr, uid, alert, context=context))
@@ -536,9 +535,8 @@ class calendar_alarm_manager(osv.AbstractModel):
 
     def do_notif_reminder(self, cr, uid, alert, context=None):
         alarm = self.pool['calendar.alarm'].browse(cr, uid, alert['alarm_id'], context=context)
-        event = self.pool['calendar.event'].browse(cr, uid, alert['event_id'], context=context)
-
         if alarm.type == 'notification':
+            event = self.pool['calendar.event'].browse(cr, uid, alert['event_id'], context=context)
             message = event.display_time
 
             delta = alert['notify_at'] - datetime.now()
@@ -551,6 +549,18 @@ class calendar_alarm_manager(osv.AbstractModel):
                 'timer': delta,
                 'notify_at': alert['notify_at'].strftime(DEFAULT_SERVER_DATETIME_FORMAT),
             }
+
+    def notify_next_alarm(self, cr, uid, partner_ids, context=None):
+        """ Sends through the bus the next alarm of given partners """
+        notifications = []
+        user_obj = self.pool['res.users']
+        user_ids = user_obj.search(cr, uid, [('partner_id', 'in', tuple(partner_ids))], context=context)
+        users = user_obj.browse(cr, uid, user_ids, context=context)
+        for user in users:
+            notif = self.get_next_notif(cr, user.id, context=context)
+            notifications.append([(cr.dbname, 'calendar.alarm', user.partner_id.id), notif])
+        if len(notifications) > 0:
+            self.pool['bus.bus'].sendmany(cr, uid, notifications)
 
 
 class calendar_alarm(osv.Model):
@@ -901,7 +911,7 @@ class calendar_event(osv.Model):
         'stop_datetime': fields.datetime('End Datetime', states={'done': [('readonly', True)]}, track_visibility='onchange'),  # old date_deadline
         'duration': fields.float('Duration', states={'done': [('readonly', True)]}),
         'description': fields.text('Description', states={'done': [('readonly', True)]}),
-        'class': fields.selection([('public', 'Everyone'), ('private', 'Only me'), ('confidential', 'Only internal users')], 'Privacy', states={'done': [('readonly', True)]}),
+        'privacy': fields.selection([('public', 'Everyone'), ('private', 'Only me'), ('confidential', 'Only internal users')], 'Privacy', states={'done': [('readonly', True)]}, oldname='class'),
         'location': fields.char('Location', help="Location of Event", track_visibility='onchange', states={'done': [('readonly', True)]}),
         'show_as': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Show Time as', states={'done': [('readonly', True)]}),
 
@@ -931,7 +941,7 @@ class calendar_event(osv.Model):
         'color_partner_id': fields.related('user_id', 'partner_id', 'id', type="integer", string="Color index of creator", store=False),  # Color of creator
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the event alarm information without removing it."),
         'categ_ids': fields.many2many('calendar.event.type', 'meeting_category_rel', 'event_id', 'type_id', 'Tags'),
-        'attendee_ids': fields.one2many('calendar.attendee', 'event_id', 'Attendees', ondelete='cascade'),
+        'attendee_ids': fields.one2many('calendar.attendee', 'event_id', 'Participant', ondelete='cascade'),
         'partner_ids': fields.many2many('res.partner', 'calendar_event_res_partner_rel', string='Attendees', states={'done': [('readonly', True)]}),
         'alarm_ids': fields.many2many('calendar.alarm', 'calendar_alarm_calendar_event_rel', string='Reminders', ondelete="restrict", copy=False),
     }
@@ -950,7 +960,7 @@ class calendar_event(osv.Model):
         'rrule_type': False,
         'allday': False,
         'state': 'draft',
-        'class': 'public',
+        'privacy': 'public',
         'show_as': 'busy',
         'month_by': 'date',
         'interval': 1,
@@ -1084,8 +1094,7 @@ class calendar_event(osv.Model):
                 if not current_user.email or current_user.email != partner.email:
                     mail_from = current_user.email or tools.config.get('email_from', False)
                     if not context.get('no_email'):
-                        if self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, att_id, email_from=mail_from, context=context):
-                            self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee %s") % (partner.name,), subtype="calendar.subtype_invitation", context=context)
+                        self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, att_id, email_from=mail_from, context=context)
 
             if new_attendees:
                 self.write(cr, uid, [event.id], {'attendee_ids': [(4, att) for att in new_attendees]}, context=context)
@@ -1101,14 +1110,15 @@ class calendar_event(osv.Model):
             attendee_ids_to_remove = []
 
             if partner_ids_to_remove:
-                attendee_ids_to_remove = self.pool["calendar.attendee"].search(cr, uid, [('partner_id.id', 'in', partner_ids_to_remove), ('event_id.id', '=', event.id)], context=context)
+                attendee_ids_to_remove = self.pool["calendar.attendee"].search(cr, uid, [('partner_id.id', 'in', partner_ids_to_remove), ('event_id', '=', event.id)], context=context)
                 if attendee_ids_to_remove:
                     self.pool['calendar.attendee'].unlink(cr, uid, attendee_ids_to_remove, context)
 
             res[event.id] = {
                 'new_attendee_ids': new_attendees,
                 'old_attendee_ids': all_attendee_ids,
-                'removed_attendee_ids': attendee_ids_to_remove
+                'removed_attendee_ids': attendee_ids_to_remove,
+                'removed_partner_ids': partner_ids_to_remove
             }
         return res
 
@@ -1337,14 +1347,6 @@ class calendar_event(osv.Model):
             data['end_type'] = 'end_date'
         return data
 
-    def _track_subtype(self, cr, uid, ids, init_values, context=None):
-        record = self.browse(cr, uid, ids[0], context=context)
-        if 'start' in init_values and record.start:
-            return 'calendar.subtype_invitation'
-        elif 'location' in init_values and record.location:
-            return 'calendar.subtype_invitation'
-        return super(calendar_event, self)._track_subtype(cr, uid, ids, init_values, context=context)
-
     def onchange_partner_ids(self, cr, uid, ids, value, context=None):
         """ The basic purpose of this method is to check that destination partners
             effectively have email addresses. Otherwise a warning is thrown.
@@ -1438,8 +1440,7 @@ class calendar_event(osv.Model):
             current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
 
             if current_user.email:
-                if self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, [att.id for att in event.attendee_ids], email_from=current_user.email, context=context):
-                    self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee(s)"), subtype="calendar.subtype_invitation", context=context)
+                self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, [att.id for att in event.attendee_ids], email_from=current_user.email, context=context)
         return
 
     def get_attendee(self, cr, uid, meeting_id, context=None):
@@ -1581,6 +1582,7 @@ class calendar_event(osv.Model):
             ids = [ids]
 
         values0 = values
+        dont_notify_ctx = dict(context, dont_notify=True)  # to prevent multiple notify_next_alarm
 
         # process events one by one
         for event_id in ids:
@@ -1605,7 +1607,7 @@ class calendar_event(osv.Model):
                 else:
                     data = self.read(cr, uid, event_id, ['start', 'stop', 'rrule', 'duration'])
                     if data.get('rrule'):
-                        new_ids = [self._detach_one_event(cr, uid, event_id, values, context=None)]
+                        new_ids = [self._detach_one_event(cr, uid, event_id, values, context=dont_notify_ctx)]
 
             super(calendar_event, self).write(cr, uid, real_ids, values, context=context)
 
@@ -1618,7 +1620,18 @@ class calendar_event(osv.Model):
 
             attendees_create = False
             if values.get('partner_ids', False):
-                attendees_create = self.create_attendees(cr, uid, real_ids + new_ids, context)
+                attendees_create = self.create_attendees(cr, uid, real_ids + new_ids, context=dont_notify_ctx)
+
+            # Notify attendees if there is an alarm on the modified event, or if there was an alarm
+            # that has just been removed, as it might have changed their next event notification
+            if not context.get('dont_notify'):
+                event = self.browse(cr, uid, event_id, context=context)
+                if len(event.alarm_ids) > 0 or values.get('alarm_ids'):
+                    partners_to_notify = set([p.id for p in event.partner_ids])
+                    event_attendees_changes = attendees_create and attendees_create[real_ids[0]]
+                    if event_attendees_changes:
+                        partners_to_notify.update(event_attendees_changes['removed_partner_ids'])
+                    self.pool['calendar.alarm_manager'].notify_next_alarm(cr, uid, partners_to_notify)
 
             if (values.get('start_date') or values.get('start_datetime')) and values.get('active', True):
                 for the_id in real_ids + new_ids:
@@ -1630,8 +1643,7 @@ class calendar_event(osv.Model):
 
                     if mail_to_ids:
                         current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
-                        if self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, mail_to_ids, template_xmlid='calendar_template_meeting_changedate', email_from=current_user.email, context=context):
-                            self.message_post(cr, uid, the_id, body=_("A email has been send to specify that the date has been changed !"), subtype="calendar.subtype_invitation", context=context)
+                        self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, mail_to_ids, template_xmlid='calendar_template_meeting_changedate', email_from=current_user.email, context=context)
 
         return True
 
@@ -1645,10 +1657,20 @@ class calendar_event(osv.Model):
 
         res = super(calendar_event, self).create(cr, uid, vals, context=context)
 
-        final_date = self._get_recurrency_end_date(cr, uid, res, context=context)
-        self.write(cr, uid, [res], {'final_date': final_date}, context=context)
+        dont_notify_context = dict(context, dont_notify=True)  # to prevent multiple notify_next_alarm
 
-        self.create_attendees(cr, uid, [res], context=context)
+        final_date = self._get_recurrency_end_date(cr, uid, res, context=context)
+        self.write(cr, uid, [res], {'final_date': final_date}, context=dont_notify_context)
+
+        self.create_attendees(cr, uid, [res], context=dont_notify_context)
+
+        # Notify attendees if there is an alarm on the created event, as it might have changed their
+        # next event notification
+        if not context.get('dont_notify'):
+            event = self.browse(cr, uid, [res], context=context)  # remove this when migrating to new API
+            if len(event.alarm_ids) > 0:
+                self.pool['calendar.alarm_manager'].notify_next_alarm(cr, uid, [p.id for p in event.partner_ids])
+
         return res
 
     def export_data(self, cr, uid, ids, *args, **kwargs):
@@ -1673,7 +1695,7 @@ class calendar_event(osv.Model):
         if context is None:
             context = {}
         fields2 = fields and fields[:] or None
-        EXTRAFIELDS = ('class', 'user_id', 'duration', 'allday', 'start', 'start_date', 'start_datetime', 'rrule')
+        EXTRAFIELDS = ('privacy', 'user_id', 'duration', 'allday', 'start', 'start_date', 'start_datetime', 'rrule')
         for f in EXTRAFIELDS:
             if fields and (f not in fields):
                 fields2.append(f)
@@ -1711,7 +1733,7 @@ class calendar_event(osv.Model):
                 user_id = type(r['user_id']) in (tuple, list) and r['user_id'][0] or r['user_id']
                 if user_id == uid:
                     continue
-            if r['class'] == 'private':
+            if r['privacy'] == 'private':
                 for f in r.keys():
                     recurrent_fields = self._get_recurrent_fields(cr, uid, context=context)
                     public_fields = list(set(recurrent_fields + ['id', 'allday', 'start', 'stop', 'display_start', 'display_stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date', 'rrule']))
@@ -1739,6 +1761,14 @@ class calendar_event(osv.Model):
         ids_to_exclure = []
         ids_to_unlink = []
 
+        # Get concerned attendees to notify them if there is an alarm on the unlinked events,
+        # as it might have changed their next event notification
+        event_ids = self.search(cr, uid, [('id', 'in', ids), ('alarm_ids', '!=', False)], context=context)
+        events = self.browse(cr, uid, event_ids, context=context)
+        partner_ids = set()
+        for event in events:
+            partner_ids.update([p.id for p in event.partner_ids])
+
         for event_id in ids:
             if can_be_deleted and len(str(event_id).split('-')) == 1:  # if  ID REAL
                 if self.browse(cr, uid, int(event_id), context).recurrent_id:
@@ -1752,8 +1782,12 @@ class calendar_event(osv.Model):
             res = super(calendar_event, self).unlink(cr, uid, ids_to_unlink, context=context)
 
         if ids_to_exclure:
+            ctx = dict(context, dont_notify=True)  # to prevent multiple notify_next_alarm
             for id_to_exclure in ids_to_exclure:
-                res = self.write(cr, uid, id_to_exclure, {'active': False}, context=context)
+                res = self.write(cr, uid, id_to_exclure, {'active': False}, context=ctx)
+
+        # Notify the concerned attendees (must be done after removing the events)
+        self.pool['calendar.alarm_manager'].notify_next_alarm(cr, uid, partner_ids)
 
         return res
 

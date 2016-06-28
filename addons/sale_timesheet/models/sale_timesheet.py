@@ -4,7 +4,7 @@
 from openerp import models, api, fields
 from openerp.tools.translate import _
 
-from openerp.exceptions import UserError
+from openerp.exceptions import ValidationError
 
 
 class ResCompany(models.Model):
@@ -27,13 +27,16 @@ class HrEmployee(models.Model):
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
-    track_service = fields.Selection(selection_add=[('timesheet', 'Timesheets on contract')])
+    track_service = fields.Selection(selection_add=[('timesheet', 'Timesheets on project'), ('task', 'Create a task and track hours')])
+    project_id = fields.Many2one('project.project', string='Project',
+                                 help='Create a task under this project on sale order validation. This setting must be set for each company.',
+                                 company_dependent=True)
 
     @api.onchange('type', 'invoice_policy')
     def onchange_type_timesheet(self):
-        if self.type == 'service' and self.invoice_policy == 'cost':
+        if self.type == 'service':
             self.track_service = 'timesheet'
-        if self.type != 'service':
+        else:
             self.track_service = 'manual'
         return {}
 
@@ -43,12 +46,12 @@ class AccountAnalyticLine(models.Model):
 
     def _get_sale_order_line(self, vals=None):
         result = dict(vals or {})
-        if self.is_timesheet:
+        if self.project_id:
             if result.get('so_line'):
                 sol = self.env['sale.order.line'].browse([result['so_line']])
             else:
                 sol = self.so_line
-            if not sol and self.account_id:
+            if not sol:
                 sol = self.env['sale.order.line'].search([
                     ('order_id.project_id', '=', self.account_id.id),
                     ('state', '=', 'sale'),
@@ -67,7 +70,7 @@ class AccountAnalyticLine(models.Model):
 
     def _get_timesheet_cost(self, vals=None):
         result = dict(vals or {})
-        if result.get('is_timesheet') or self.is_timesheet:
+        if result.get('project_id') or self.project_id:
             if result.get('amount'):
                 return result
             unit_amount = result.get('unit_amount', 0.0) or self.unit_amount
@@ -83,8 +86,15 @@ class AccountAnalyticLine(models.Model):
             )
         return result
 
+    @api.model
+    def _update_values(self, values):
+        if values.get('task_id', False):
+            task = self.env['project.task'].browse(values['task_id'])
+            values['so_line'] = task.sale_line_id and task.sale_line_id.id or values.get('so_line', False)
+
     @api.multi
     def write(self, values):
+        self._update_values(values)
         for line in self:
             values = line._get_timesheet_cost(vals=values)
             super(AccountAnalyticLine, line).write(values)
@@ -92,8 +102,10 @@ class AccountAnalyticLine(models.Model):
 
     @api.model
     def create(self, values):
+        self._update_values(values)
         values = self._get_timesheet_cost(vals=values)
         return super(AccountAnalyticLine, self).create(values)
+
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
@@ -101,12 +113,24 @@ class SaleOrder(models.Model):
     timesheet_ids = fields.Many2many('account.analytic.line', compute='_compute_timesheet_ids', string='Timesheet activities associated to this sale')
     timesheet_count = fields.Float(string='Timesheet activities', compute='_compute_timesheet_ids')
 
+    tasks_ids = fields.Many2many('project.task', compute='_compute_tasks_ids', string='Tasks associated to this sale')
+    tasks_count = fields.Integer(string='Tasks', compute='_compute_tasks_ids')
+
+    project_project_id = fields.Many2one('project.project', compute='_compute_project_project_id', string='Project associated to this sale')
+
     @api.multi
     @api.depends('project_id.line_ids')
     def _compute_timesheet_ids(self):
         for order in self:
-            order.timesheet_ids = self.env['account.analytic.line'].search([('is_timesheet', '=', True), ('account_id', '=', order.project_id.id)]) if order.project_id else []
-            order.timesheet_count = round(sum([line.unit_amount for line in order.timesheet_ids]), 2)
+            if order.project_id:
+                order.timesheet_ids = self.env['account.analytic.line'].search(
+                    [('so_line', 'in', order.order_line.ids),
+                     '|',
+                        ('amount', '<=', 0.0),
+                        ('project_id', '!=', False)])
+            else:
+                order.timesheet_ids = []
+            order.timesheet_count = len(order.timesheet_ids)
 
     @api.multi
     @api.constrains('order_line')
@@ -117,17 +141,77 @@ class SaleOrder(models.Model):
                 if line.product_id.track_service == 'timesheet':
                     count += 1
                 if count > 1:
-                    raise UserError(_("You can use only one product on timesheet within the same sale order. You should split your order to include only one contract based on time and material."))
+                    raise ValidationError(_("You can use only one product on timesheet within the same sale order. You should split your order to include only one contract based on time and material."))
         return {}
+
+    @api.multi
+    @api.depends('order_line.product_id.project_id')
+    def _compute_tasks_ids(self):
+        for order in self:
+            order.tasks_ids = self.env['project.task'].search([('sale_line_id', 'in', order.order_line.ids)])
+            order.tasks_count = len(order.tasks_ids)
+
+    @api.multi
+    def action_view_task(self):
+        self.ensure_one()
+        imd = self.env['ir.model.data']
+        action = imd.xmlid_to_object('project.action_view_task')
+        list_view_id = imd.xmlid_to_res_id('project.view_task_tree2')
+        form_view_id = imd.xmlid_to_res_id('project.view_task_form2')
+
+        result = {
+            'name': action.name,
+            'help': action.help,
+            'type': action.type,
+            'views': [[False, 'kanban'], [list_view_id, 'tree'], [form_view_id, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot'], [False, 'graph']],
+            'target': action.target,
+            'context': "{'group_by':'stage_id'}",
+            'res_model': action.res_model,
+        }
+        if len(self.tasks_ids) > 1:
+            result['domain'] = "[('id','in',%s)]" % self.tasks_ids.ids
+        elif len(self.tasks_ids) == 1:
+            result['views'] = [(form_view_id, 'form')]
+            result['res_id'] = self.tasks_ids.id
+        else:
+            result = {'type': 'ir.actions.act_window_close'}
+        return result
+
+    @api.multi
+    @api.depends('project_id.project_ids')
+    def _compute_project_project_id(self):
+        for order in self:
+            order.project_project_id = self.env['project.project'].search([('analytic_account_id', '=', order.project_id.id)])
+
+    @api.multi
+    def action_view_project_project(self):
+        self.ensure_one()
+        imd = self.env['ir.model.data']
+        action = imd.xmlid_to_object('project.open_view_project_all')
+        form_view_id = imd.xmlid_to_res_id('project.edit_project')
+
+        result = {
+            'name': action.name,
+            'help': action.help,
+            'type': action.type,
+            'views': [(form_view_id, 'form')],
+            'target': action.target,
+            'context': action.context,
+            'res_model': action.res_model,
+            'res_id': self.project_project_id.id,
+        }
+        return result
 
     @api.multi
     def action_confirm(self):
         result = super(SaleOrder, self).action_confirm()
         for order in self:
-            if not order.project_id:
+            if not order.project_project_id:
                 for line in order.order_line:
                     if line.product_id.track_service == 'timesheet':
-                        order._create_analytic_account(prefix=line.product_id.default_code or None)
+                        if not order.project_id:
+                            order._create_analytic_account(prefix=line.product_id.default_code or None)
+                        order.project_id.project_create({'name': order.project_id.name, 'use_tasks': True})
                         break
         return result
 
@@ -135,7 +219,7 @@ class SaleOrder(models.Model):
     def action_view_timesheet(self):
         self.ensure_one()
         imd = self.env['ir.model.data']
-        action = imd.xmlid_to_object('hr_timesheet.act_hr_timesheet_line_evry1_all_form')
+        action = imd.xmlid_to_object('hr_timesheet.act_hr_timesheet_line')
         list_view_id = imd.xmlid_to_res_id('hr_timesheet.hr_timesheet_line_tree')
         form_view_id = imd.xmlid_to_res_id('hr_timesheet.hr_timesheet_line_form')
 
@@ -154,6 +238,7 @@ class SaleOrder(models.Model):
             result = {'type': 'ir.actions.act_window_close'}
         return result
 
+
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
@@ -161,9 +246,12 @@ class SaleOrderLine(models.Model):
     def _compute_analytic(self, domain=None):
         if not domain:
             # To filter on analyic lines linked to an expense
-            domain = [('so_line', 'in', self.ids), '|', ('amount', '<=', 0.0), ('is_timesheet', '=', True)]
+            domain = [('so_line', 'in', self.ids), '|', ('amount', '<=', 0.0), ('project_id', '!=', False)]
         return super(SaleOrderLine, self)._compute_analytic(domain=domain)
 
     @api.model
-    def _get_analytic_track_service(self):
-        return super(SaleOrderLine, self)._get_analytic_track_service() + ['timesheet']
+    def create(self, values):
+        line = super(SaleOrderLine, self).create(values)
+        if line.state == 'sale' and not line.order_id.project_id and line.product_id.track_service in ['timesheet', 'task']:
+            line.order_id._create_analytic_account()
+        return line

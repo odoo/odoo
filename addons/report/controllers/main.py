@@ -4,8 +4,10 @@
 from openerp.addons.web.http import Controller, route, request
 from openerp.addons.web.controllers.main import _serialize_exception, content_disposition
 from openerp.tools import html_escape
+from openerp.tools.safe_eval import safe_eval as eval
 
 import json
+import time
 from werkzeug import exceptions, url_decode
 from werkzeug.test import Client
 from werkzeug.wrappers import BaseResponse
@@ -102,6 +104,11 @@ class ReportController(Controller):
                 cr, uid = request.cr, request.uid
                 report = request.registry['report']._get_report_from_name(cr, uid, reportname)
                 filename = "%s.%s" % (report.name, "pdf")
+                if docids:
+                    ids = [int(x) for x in docids.split(",")]
+                    obj = request.env[report.model].browse(ids)
+                    if report.print_report_name and not len(obj) > 1:
+                        filename = eval(report.print_report_name, {'object': obj, 'time': time})
                 response.headers.add('Content-Disposition', content_disposition(filename))
                 response.set_cookie('fileToken', token)
                 return response

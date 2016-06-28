@@ -88,41 +88,51 @@ class mrp_production(osv.osv):
                     'location_id': source,
                     'location_dest_id': production.location_dest_id.id,
                     'move_dest_id': production.move_prod_id.id,
-                    'production_id': production.id
+                    'production_id': production.id,
+                    'origin': production.name,
+                    'subproduct_id': sub_product.id
                 }
                 move_id = move_obj.create(cr, uid, data, context=context)
                 move_obj.action_confirm(cr, uid, [move_id], context=context)
 
         return picking_id
 
-    def _get_subproduct_factor(self, cr, uid, production_id, move_id=None, context=None):
-        """Compute the factor to compute the qty of procucts to produce for the given production_id. By default, 
-            it's always equal to the quantity encoded in the production order or the production wizard, but with 
+    def _get_subproduct_factor(self, cr, uid, move, context=None):
+        """Compute the factor to compute the quantity of products to produce. By default,
+            it's always equal to the quantity encoded in the production order or the production wizard, but with
             the module mrp_byproduct installed it can differ for byproducts having type 'variable'.
-        :param production_id: ID of the mrp.order
-        :param move_id: ID of the stock move that needs to be produced. Identify the product to produce.
+        :param move: Record set of stock move that needs to be produced, identify the product to produce.
         :return: The factor to apply to the quantity that we should produce for the given production order and stock move.
         """
-        sub_obj = self.pool.get('mrp.subproduct')
-        move_obj = self.pool.get('stock.move')
-        production_obj = self.pool.get('mrp.production')
-        production_browse = production_obj.browse(cr, uid, production_id, context=context)
-        move_browse = move_obj.browse(cr, uid, move_id, context=context)
-        subproduct_factor = 1
-        sub_id = sub_obj.search(cr, uid,[('product_id', '=', move_browse.product_id.id),('bom_id', '=', production_browse.bom_id.id), ('subproduct_type', '=', 'variable')], context=context)
-        if sub_id:
-            subproduct_record = sub_obj.browse(cr ,uid, sub_id[0], context=context)
+        subproduct_record = move.subproduct_id
+        if subproduct_record.subproduct_type == 'variable':
             if subproduct_record.bom_id.product_qty:
                 subproduct_factor = subproduct_record.product_qty / subproduct_record.bom_id.product_qty
                 return subproduct_factor
-        return super(mrp_production, self)._get_subproduct_factor(cr, uid, production_id, move_id, context=context)
+        return super(mrp_production, self)._get_subproduct_factor(cr, uid, move, context=context)
+
+    def _calculate_produce_line_qty(self, cr, uid, move, quantity, context=None):
+        """ Compute the quantity and remainig quantity of products to produce.
+        :param move: stock.move record that needs to be produced, identify the product to produce.
+        :param quantity: quantity to produce, in the uom of the production order.
+        :return: The quantity and remaining quantity of product produce.
+        """
+        if move.subproduct_id.subproduct_type == 'variable':
+            subproduct_factor = self._get_subproduct_factor(cr, uid, move, context=context)
+            # Needed when producing more than maximum quantity
+            qty = min(subproduct_factor * quantity, move.product_qty)
+            remaining_qty = subproduct_factor * quantity - qty
+            return qty, remaining_qty
+        elif move.subproduct_id.subproduct_type == 'fixed':
+            return move.product_qty, 0
+        # no subproduct
+        return super(mrp_production, self)._calculate_produce_line_qty(cr, uid, move, quantity, context=context)
 
 
 class change_production_qty(osv.osv_memory):
     _inherit = 'change.production.qty'
 
     def _update_product_to_produce(self, cr, uid, prod, qty, context=None):
-        bom_obj = self.pool.get('mrp.bom')
         move_lines_obj = self.pool.get('stock.move')
         prod_obj = self.pool.get('mrp.production')
         for m in prod.move_created_ids:
@@ -131,6 +141,6 @@ class change_production_qty(osv.osv_memory):
             else:
                 for sub_product_line in prod.bom_id.sub_products:
                     if sub_product_line.product_id.id == m.product_id.id:
-                        factor = prod_obj._get_subproduct_factor(cr, uid, prod.id, m.id, context=context)
+                        factor = prod_obj._get_subproduct_factor(cr, uid, m, context=context)
                         subproduct_qty = sub_product_line.subproduct_type == 'variable' and qty * factor or sub_product_line.product_qty
                         move_lines_obj.write(cr, uid, [m.id], {'product_uom_qty': subproduct_qty})

@@ -86,14 +86,13 @@ class _column(object):
         'translate',
         'select',
         'manual',
-        'write',
-        'read',
         'selectable',
         'group_operator',
         'groups',               # CSV list of ext IDs of groups
         'deprecated',           # Optional deprecation warning
         '_args',
         '_prefetch',
+        '_module',              # the column's module name
     ]
 
     def __init__(self, string='unknown', required=False, readonly=False, domain=[], context={}, states=None, priority=0, change_default=False, size=None, ondelete=None, translate=False, select=False, manual=False, **args):
@@ -119,13 +118,12 @@ class _column(object):
         args['translate'] = translate
         args['select'] = select
         args['manual'] = manual
-        args['write'] = args.get('write', False)
-        args['read'] = args.get('read', False)
         args['selectable'] = args.get('selectable', True)
         args['group_operator'] = args.get('group_operator', None)
         args['groups'] = args.get('groups', None)
         args['deprecated'] = args.get('deprecated', None)
         args['_prefetch'] = args.get('_prefetch', True)
+        args['_module'] = args.get('_module', None)
 
         self._args = EMPTY_DICT
         for key, val in args.iteritems():
@@ -178,9 +176,17 @@ class _column(object):
     def to_field_args(self):
         """ return a dictionary with all the arguments to pass to the field """
         base_items = [
-            ('copy', self.copy),
+            ('_module', self._module),
+            ('automatic', False),
+            ('inherited', False),
+            ('store', True),
             ('index', self.select),
             ('manual', self.manual),
+            ('copy', self.copy),
+            ('compute', None),
+            ('inverse', None),
+            ('search', None),
+            ('related', None),
             ('string', self.string),
             ('help', self.help),
             ('readonly', self.readonly),
@@ -333,19 +339,20 @@ class text(_column):
 class html(text):
     _type = 'html'
     _symbol_c = '%s'
-    __slots__ = ['_sanitize', '_strip_style', '_symbol_f', '_symbol_set']
+    __slots__ = ['_sanitize', '_strip_style', '_strip_classes', '_symbol_f', '_symbol_set']
 
     def _symbol_set_html(self, value):
         if value is None or value is False:
             return None
         if not self._sanitize:
             return value
-        return html_sanitize(value, strip_style=self._strip_style)
+        return html_sanitize(value, silent=True, strict=True, strip_style=self._strip_style, strip_classes=self._strip_classes)
 
-    def __init__(self, string='unknown', sanitize=True, strip_style=False, **args):
+    def __init__(self, string='unknown', sanitize=True, strip_style=False, strip_classes=False, **args):
         super(html, self).__init__(string=string, **args)
         self._sanitize = sanitize
         self._strip_style = strip_style
+        self._strip_classes = strip_classes
         # symbol_set redefinition because of sanitize specific behavior
         self._symbol_f = self._symbol_set_html
         self._symbol_set = (self._symbol_c, self._symbol_f)
@@ -354,6 +361,7 @@ class html(text):
         args = super(html, self).to_field_args()
         args['sanitize'] = self._sanitize
         args['strip_style'] = self._strip_style
+        args['strip_classes'] = self._strip_classes
         return args
 
 import __builtin__
@@ -396,9 +404,15 @@ class float(_column):
     def digits_change(self, cr):
         pass
 
+def _symbol_set_monetary(val):
+    try:
+        return val.float_repr()         # see float_precision.float_repr()
+    except Exception:
+        return __builtin__.float(val or 0.0)
+
 class monetary(_column):
     _type = 'monetary'
-    _symbol_set = ('%s', lambda x: __builtin__.float(x or 0.0))
+    _symbol_set = ('%s', _symbol_set_monetary)
     _symbol_get = lambda self,x: x or 0.0
 
     def to_field_args(self):
@@ -935,6 +949,7 @@ class many2many(_column):
         args['relation'] = self._rel
         args['column1'] = self._id1
         args['column2'] = self._id2
+        args['auto_join'] = self._auto_join
         args['limit'] = self._limit
         return args
 
@@ -1754,26 +1769,26 @@ class property(function):
         ir_property.set_multi(cr, uid, prop_name, obj._name, {id: value}, context=context)
         return True
 
-    def _property_read(self, obj, cr, uid, ids, prop_names, obj_dest, context=None):
+    def _property_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
         ir_property = obj.pool['ir.property']
 
-        res = {id: {} for id in ids}
-        for prop_name in prop_names:
-            field = obj._fields[prop_name]
-            values = ir_property.get_multi(cr, uid, prop_name, obj._name, ids, context=context)
-            if field.type == 'many2one':
-                # name_get the non-null values as SUPERUSER_ID
-                vals = sum(set(filter(None, values.itervalues())),
-                           obj.pool[field.comodel_name].browse(cr, uid, [], context=context))
-                vals_name = dict(vals.sudo().name_get()) if vals else {}
-                for id, value in values.iteritems():
-                    ng = False
-                    if value and value.id in vals_name:
-                        ng = value.id, vals_name[value.id]
-                    res[id][prop_name] = ng
-            else:
-                for id, value in values.iteritems():
-                    res[id][prop_name] = value
+        res = dict.fromkeys(ids, False)
+
+        field = obj._fields[prop_name]
+        values = ir_property.get_multi(cr, uid, prop_name, obj._name, ids, context=context)
+        if field.type == 'many2one':
+            # name_get the non-null values as SUPERUSER_ID
+            vals = sum(set(filter(None, values.itervalues())),
+                       obj.pool[field.comodel_name].browse(cr, uid, [], context=context))
+            vals_name = dict(vals.sudo().name_get()) if vals else {}
+            for id, value in values.iteritems():
+                ng = False
+                if value and value.id in vals_name:
+                    ng = value.id, vals_name[value.id]
+                res[id] = ng
+        else:
+            for id, value in values.iteritems():
+                res[id] = value
 
         return res
 
@@ -1786,7 +1801,6 @@ class property(function):
             fnct=self._property_read,
             fnct_inv=self._property_write,
             fnct_search=self._property_search,
-            multi='properties',
             **args
         )
 

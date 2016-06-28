@@ -23,7 +23,7 @@ class AuthorizeCommon(PaymentAcquirerCommon):
         # authorize only support USD in test environment
         self.currency_usd = self.env['res.currency'].search([('name', '=', 'USD')], limit=1)[0]
         # get the authorize account
-        model, self.authorize_id = self.env['ir.model.data'].get_object_reference('payment_authorize', 'payment_acquirer_authorize')
+        model, self.authorize_id = self.env['ir.model.data'].get_object_reference('payment', 'payment_acquirer_authorize')
 
 
 @openerp.tests.common.at_install(True)

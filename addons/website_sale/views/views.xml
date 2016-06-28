@@ -23,6 +23,8 @@
                     <field name="public_categ_ids" widget="many2many_tags" string="Website Categories"/>
                     <field name="alternative_product_ids" widget="many2many_tags"/>
                     <field name="accessory_product_ids" widget="many2many_tags"/>
+                    <field name="availability" widget="selection"/>
+                    <field name="availability_warning" attrs="{'invisible': [('availability', '!=', 'warning')]}"/>
                     <field name="website_style_ids" widget="many2many_tags" groups="base.group_no_one"/>
                 </group>
             </group>
@@ -43,7 +45,7 @@
         <field name="inherit_id" ref="product.product_attribute_value_view_tree"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="color"/>
+                <field name="html_color"/>
             </field>
         </field>
     </record>
@@ -53,7 +55,7 @@
         <field name="inherit_id" ref="product.variants_tree_view"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="color"/>
+                <field name="html_color"/>
             </field>
         </field>
     </record>
@@ -75,7 +77,7 @@
         <field name="arch" type="xml">
             <form string="Website Public Categories">
                 <sheet>
-                    <field name="image_medium" widget='image' class="oe_avatar oe_right"/>
+                    <field name="image_medium" widget='image' class="oe_avatar"/>
                     <div class="oe_left">
                         <group>
                             <field name="name"/>
@@ -92,9 +94,9 @@
         <field name="model">product.public.category</field>
         <field name="field_parent" eval="False"/>
         <field name="arch" type="xml">
-            <tree string="Product Product Categories">
+            <tree string="Product Public Categories">
                 <field name="sequence" invisible="1"/>
-                <field name="complete_name"/>
+                <field name="display_name"/>
             </tree>
         </field>
     </record>
@@ -114,7 +116,7 @@
           </p>
         </field>
     </record>
-    <menuitem action="product_public_category_action" id="menu_product_public_category" parent="product.prod_config_main" sequence="2" />
+    <menuitem action="product_public_category_action" id="menu_product_public_category" parent="sale.prod_config_main" sequence="2" />
 
     <record id="website_sale_pricelists_by_website" model="ir.actions.act_window">
         <field name="name">Website Pricelist</field>
@@ -124,7 +126,7 @@
         <field name="view_mode">tree,form</field>
         <field name="view_id" eval="False"/>
     </record>
-    <menuitem action="website_sale_pricelists_by_website" id="menu_website_sale_pricelists" parent="product.menu_product_pricelist_main" sequence="1" />
+    <menuitem action="website_sale_pricelists_by_website" id="menu_website_sale_pricelists" parent="sale.menu_product_pricelist_main" sequence="1" />
 
      <!-- Product Public Categories -->
     <record id="website_pricelist_form_view" model="ir.ui.view">

@@ -6,7 +6,7 @@
     'version': '1.0',
     'category': 'Tools',
     'description': """
-This module allows users to create their own notes inside OpenERP
+This module allows users to create their own notes inside Odoo
 =================================================================
 
 Use notes to write meeting minutes, organize ideas, organize personal todo
@@ -24,14 +24,14 @@ Notes can be found in the 'Home' menu.
         'mail',
     ],
     'data': [
-        'security/ir.rule.xml',
+        'security/note_security.xml',
         'security/ir.model.access.csv',
-        'note_data.xml',
-        'note_view.xml',
-        'views/note.xml',
+        'data/note_data.xml',
+        'views/note_views.xml',
+        'views/note_templates.xml',
     ],
     'demo': [
-        'note_demo.xml',
+        'data/note_demo.xml',
     ],
     'test': [
     ],

@@ -26,6 +26,7 @@ class website_config_settings(osv.osv_memory):
         'cdn_filters': fields.related('website_id', 'cdn_filters', type="text", string='CDN Filters'),
         'module_website_form_editor': fields.boolean("Form builder: create and customize forms"),
         'module_website_version': fields.boolean("A/B testing and versioning"),
+        'favicon': fields.related('website_id', 'favicon', type="binary", string="Favicon", help="This field holds the image used to display a favicon on the website."),
     }
 
     def on_change_website_id(self, cr, uid, ids, website_id, context=None):

@@ -30,6 +30,7 @@ class Channel(models.Model):
     }
 
     name = fields.Char('Name', translate=True, required=True)
+    active = fields.Boolean(default=True)
     description = fields.Html('Description', translate=True)
     sequence = fields.Integer(default=10, help='Display order')
     category_ids = fields.One2many('slide.category', 'channel_id', string="Categories")
@@ -151,6 +152,14 @@ class Channel(models.Model):
         if self.visibility == 'public':
             self.group_ids = False
 
+    @api.multi
+    def write(self, vals):
+        res = super(Channel, self).write(vals)
+        if 'active' in vals:
+            # archiving/unarchiving a channel does it on its slides, too
+            self.with_context(active_test=False).mapped('slide_ids').write({'active': vals['active']})
+        return res
+
 
 class Category(models.Model):
     """ Channel contain various categories to manage its slides """
@@ -247,6 +256,7 @@ class Slide(models.Model):
 
     # description
     name = fields.Char('Title', required=True, translate=True)
+    active = fields.Boolean(default=True)
     description = fields.Text('Description', translate=True)
     channel_id = fields.Many2one('slide.channel', string="Channel", required=True)
     category_id = fields.Many2one('slide.category', string="Category", domain="[('channel_id', '=', channel_id)]")
@@ -277,7 +287,7 @@ class Slide(models.Model):
         ('video', 'Video')],
         string='Type', required=True,
         default='document',
-        help="Document type will be set automatically depending on file type, height and width.")
+        help="The document type will be set automatically based on the document URL and properties (e.g. height and width for presentation and document).")
     index_content = fields.Text('Transcript')
     datas = fields.Binary('Content')
     url = fields.Char('Document URL', help="Youtube or Google Document URL")
@@ -406,6 +416,32 @@ class Slide(models.Model):
                 fields = [field for field in fields if field in self._PROMOTIONAL_FIELDS]
         return fields
 
+    @api.multi
+    def get_access_action(self):
+        """ Override method that generated the link to access the document. Instead
+        of the classic form view, redirect to the slide on the website directly
+        if it is published. """
+        self.ensure_one()
+        if self.website_published:
+            return {
+                'type': 'ir.actions.act_url',
+                'url': '%s' % self.website_url,
+                'target': 'self',
+                'res_id': self.id,
+            }
+        return super(Slide, self).get_access_action()
+
+    @api.multi
+    def _notification_get_recipient_groups(self, message, recipients):
+        """ Override to set the access button: everyone can see an access button
+        on their notification email if the slide is published. """
+        res = super(Slide, self)._notification_get_recipient_groups(message, recipients)
+        if all(slide.website_published for slide in self):
+            access_action = self._notification_link_helper('view', model=message.model, res_id=message.res_id)
+            for category, data in res.iteritems():
+                res[category]['button_access'] = {'url': access_action, 'title': _('View Slide')}
+        return res
+
     def get_related_slides(self, limit=20):
         domain = [('website_published', '=', True), ('channel_id.visibility', '!=', 'private'), ('id', '!=', self.id)]
         if self.category_id:
@@ -419,10 +455,14 @@ class Slide(models.Model):
 
     def _post_publication(self):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        for slide in self.filtered(lambda slide: slide.website_published):
+        for slide in self.filtered(lambda slide: slide.website_published and slide.channel_id.publish_template_id):
             publish_template = slide.channel_id.publish_template_id
             html_body = publish_template.with_context({'base_url': base_url}).render_template(publish_template.body_html, 'slide.slide', slide.id)
-            slide.channel_id.message_post(body=html_body, subtype='website_slides.mt_channel_slide_published')
+            subject = publish_template.render_template(publish_template.subject, 'slide.slide', slide.id)
+            slide.channel_id.message_post(
+                subject=subject,
+                body=html_body,
+                subtype='website_slides.mt_channel_slide_published')
         return True
 
     @api.one

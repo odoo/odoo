@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <template id="assets" inherit_id="point_of_sale.assets">
+          <xpath expr="." position="inside">
+              <script type="text/javascript" src="/pos_restaurant/static/lib/js/jquery.event.drag-2.2.js"></script>
+              <script type="text/javascript" src="/pos_restaurant/static/src/js/multiprint.js"></script>
+              <script type="text/javascript" src="/pos_restaurant/static/src/js/splitbill.js"></script>
+              <script type="text/javascript" src="/pos_restaurant/static/src/js/printbill.js"></script>
+              <script type="text/javascript" src="/pos_restaurant/static/src/js/floors.js"></script>
+              <script type="text/javascript" src="/pos_restaurant/static/src/js/notes.js"></script>
+          </xpath>
+          <xpath expr="//link[@id='pos-stylesheet']" position="after">
+              <link rel="stylesheet" href="/pos_restaurant/static/src/css/restaurant.css" />
+          </xpath>
+        </template>
+
+</odoo>

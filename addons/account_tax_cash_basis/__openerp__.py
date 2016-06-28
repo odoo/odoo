@@ -3,7 +3,6 @@
 {
     'name' : 'Account Tax Cash Basis',
     'version' : '1.1',
-    'author' : 'OpenERP SA',
     'summary': 'Allow to have cash basis on tax',
     'sequence': 4,
     'description': """

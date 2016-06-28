@@ -13,6 +13,7 @@ KARMA = {
     'post': 100, 'flag': 500, 'moderate': 1000,
     'gen_que_new': 1, 'gen_que_upv': 5, 'gen_que_dwv': -10,
     'gen_ans_upv': 10, 'gen_ans_dwv': -20, 'gen_ans_flag': -45,
+    'tag_create': 30,
 }
 
 

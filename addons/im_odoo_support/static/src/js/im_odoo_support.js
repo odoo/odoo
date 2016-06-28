@@ -73,7 +73,7 @@ var OdooSupport = Widget.extend({
     },
     error_on_start: function(e){
         this.assets_loaded = false;
-        this.do_warn(_t("Error"), _t("The connection with the Odoo Support Server failed. Please retry in a few minutes, or send an email to support@odoo.com ."));
+        this.do_warn(_t("Error"), _t("The connection with the Odoo Support Server failed. Please retry in a few minutes, or send an email to help@odoo.com ."));
     },
     load_assets: function(){
         var self = this;

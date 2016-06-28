@@ -3,15 +3,14 @@
       <!-- Top menu item -->
           <menuitem id="menu_board_root" name="Dashboards" sequence="305" web_icon="base,static/description/board.png" groups="base.group_user"/>
           <menuitem id="menu_reporting_dashboard" name="Dashboards" parent="menu_board_root" sequence="0"/>
-          <menuitem id="menu_reporting_config" name="Configuration" parent="menu_board_root" sequence="100" groups="base.group_configuration"/>
+          <menuitem id="menu_reporting_config" name="Configuration" parent="menu_board_root" sequence="100" groups="base.group_system"/>
 
       <!-- Top menu item -->
       <menuitem name="Settings"
           id="menu_administration"
-          icon="fa-cog"
           web_icon="base,static/description/settings.png"
           sequence="500"
-          groups="base.group_system"/>
+          groups="base.group_erp_manager"/>
           <menuitem id="menu_management" name="Apps" sequence="310" web_icon="base,static/description/modules.png" groups="base.group_system"/>
           <menuitem id="menu_administration_shortcut" parent="menu_administration" name="Custom Shortcuts" sequence="50"/>
           <menuitem id="menu_users" name="Users" parent="menu_administration" sequence="0"/>
@@ -42,5 +41,9 @@
           <field name="sequence">100</field>
           <field name="state">done</field>
       </record>
-
+      <record id="action_open_website" model="ir.actions.act_url">
+          <field name="name">App Switcher</field>
+          <field name="target">self</field>
+          <field name="url">/web</field>
+      </record>
 </odoo>

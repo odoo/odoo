@@ -35,17 +35,19 @@ __all__ = [
     'Environment',
     'Meta', 'guess', 'noguess',
     'model', 'multi', 'one',
-    'cr', 'cr_context', 'cr_uid', 'cr_uid_context',
-    'cr_uid_id', 'cr_uid_id_context', 'cr_uid_ids', 'cr_uid_ids_context',
+    'model_cr', 'model_cr_context',
+    'cr', 'cr_context',
+    'cr_uid', 'cr_uid_context',
+    'cr_uid_id', 'cr_uid_id_context',
+    'cr_uid_ids', 'cr_uid_ids_context',
+    'cr_uid_records', 'cr_uid_records_context',
     'constrains', 'depends', 'onchange', 'returns',
 ]
 
 import logging
-import operator
-
-from inspect import currentframe, getargspec
-from collections import defaultdict, MutableMapping
+from collections import defaultdict, Mapping
 from contextlib import contextmanager
+from inspect import currentframe, getargspec
 from pprint import pformat
 from weakref import WeakSet
 from werkzeug.local import Local, release_local
@@ -289,10 +291,10 @@ def get_upgrade(method):
             return upgrade
         elif model == 'self':
             return lambda self, *args, **kwargs: self.browse(args[0])
-        else:
+        elif model:
             return lambda self, *args, **kwargs: self.env[model].browse(args[0])
-    else:
-        return lambda self, *args, **kwargs: args[0]
+
+    return lambda self, *args, **kwargs: args[0]
 
 
 def get_aggregate(method):
@@ -305,10 +307,10 @@ def get_aggregate(method):
         model, _, _ = spec
         if model == 'self':
             return lambda self, value: sum(value, self.browse())
-        else:
+        elif model:
             return lambda self, value: sum(value, self.env[model].browse())
-    else:
-        return lambda self, value: value
+
+    return lambda self, value: value
 
 
 def get_context_split(method):
@@ -426,6 +428,64 @@ def one(method):
         return aggregate(self, result)
 
     return make_wrapper(one, method, old_api, new_api)
+
+
+def model_cr(method):
+    """ Decorate a record-style method where ``self`` is a recordset, but its
+        contents is not relevant, only the model is. Such a method::
+
+            @api.model_cr
+            def method(self, args):
+                ...
+
+        may be called in both record and traditional styles, like::
+
+            # recs = model.browse(cr, uid, ids, context)
+            recs.method(args)
+
+            model.method(cr, args)
+
+        Notice that no ``uid``, ``ids``, ``context`` are passed to the method in
+        the traditional style.
+    """
+    downgrade = get_downgrade(method)
+
+    def old_api(self, cr, *args, **kwargs):
+        recs = self.browse(cr, SUPERUSER_ID, [], {})
+        result = method(recs, *args, **kwargs)
+        return downgrade(recs, result, *args, **kwargs)
+
+    return make_wrapper(model_cr, method, old_api, method)
+
+
+def model_cr_context(method):
+    """ Decorate a record-style method where ``self`` is a recordset, but its
+        contents is not relevant, only the model is. Such a method::
+
+            @api.model_cr_context
+            def method(self, args):
+                ...
+
+        may be called in both record and traditional styles, like::
+
+            # recs = model.browse(cr, uid, ids, context)
+            recs.method(args)
+
+            model.method(cr, args, context=context)
+
+        Notice that no ``uid``, ``ids`` are passed to the method in the
+        traditional style.
+    """
+    split = get_context_split(method)
+    downgrade = get_downgrade(method)
+
+    def old_api(self, cr, *args, **kwargs):
+        context, args, kwargs = split(args, kwargs)
+        recs = self.browse(cr, SUPERUSER_ID, [], context)
+        result = method(recs, *args, **kwargs)
+        return downgrade(recs, result, *args, **kwargs)
+
+    return make_wrapper(model_cr_context, method, old_api, method)
 
 
 def cr(method):
@@ -577,6 +637,57 @@ def cr_uid_ids_context(method):
     return make_wrapper(cr_uid_ids_context, method, method, new_api)
 
 
+def cr_uid_records(method):
+    """ Decorate a traditional-style method that takes ``cr``, ``uid``, a
+        recordset of model ``self`` as parameters. Such a method::
+
+            @api.cr_uid_records
+            def method(self, cr, uid, records, args):
+                ...
+
+        may be called in both record and traditional styles, like::
+
+            # records = model.browse(cr, uid, ids, context)
+            records.method(args)
+
+            model.method(cr, uid, records, args)
+    """
+    upgrade = get_upgrade(method)
+
+    def new_api(self, *args, **kwargs):
+        cr, uid, context = self.env.args
+        result = method(self._model, cr, uid, self, *args, **kwargs)
+        return upgrade(self, result)
+
+    return make_wrapper(cr_uid_records, method, method, new_api)
+
+
+def cr_uid_records_context(method):
+    """ Decorate a traditional-style method that takes ``cr``, ``uid``, a
+        recordset of model ``self``, ``context`` as parameters. Such a method::
+
+            @api.cr_uid_records_context
+            def method(self, cr, uid, records, args, context=None):
+                ...
+
+        may be called in both record and traditional styles, like::
+
+            # records = model.browse(cr, uid, ids, context)
+            records.method(args)
+
+            model.method(cr, uid, records, args, context=context)
+    """
+    upgrade = get_upgrade(method)
+
+    def new_api(self, *args, **kwargs):
+        cr, uid, context = self.env.args
+        kwargs['context'] = context
+        result = method(self._model, cr, uid, self, *args, **kwargs)
+        return upgrade(self, result)
+
+    return make_wrapper(cr_uid_records_context, method, method, new_api)
+
+
 def v7(method_v7):
     """ Decorate a method that supports the old-style api only. A new-style api
         may be provided by redefining a method with the same name and decorated
@@ -700,7 +811,7 @@ def expected(decorator, func):
 
 
 
-class Environment(object):
+class Environment(Mapping):
     """ An environment wraps data for ORM records:
 
          - :attr:`cr`, the current database cursor;
@@ -752,12 +863,15 @@ class Environment(object):
         self.cr, self.uid, self.context = self.args = (cr, uid, frozendict(context))
         self.registry = RegistryManager.get(cr.dbname)
         self.cache = defaultdict(dict)      # {field: {id: value, ...}, ...}
-        self.prefetch = defaultdict(set)    # {model_name: set(id), ...}
         self.computed = defaultdict(set)    # {field: set(id), ...}
         self.dirty = defaultdict(set)       # {record: set(field_name), ...}
         self.all = envs
         envs.add(self)
         return self
+
+    #
+    # Mapping methods
+    #
 
     def __contains__(self, model_name):
         """ Test whether the given model exists. """
@@ -765,7 +879,7 @@ class Environment(object):
 
     def __getitem__(self, model_name):
         """ Return an empty recordset from the given model. """
-        return self.registry[model_name]._browse(self, ())
+        return self.registry[model_name]._browse((), self)
 
     def __iter__(self):
         """ Return an iterator on model names. """
@@ -774,6 +888,15 @@ class Environment(object):
     def __len__(self):
         """ Return the size of the model registry. """
         return len(self.registry)
+
+    def __eq__(self, other):
+        return self is other
+
+    def __ne__(self, other):
+        return self is not other
+
+    def __hash__(self):
+        return object.__hash__(self)
 
     def __call__(self, cr=None, user=None, context=None):
         """ Return an environment based on ``self`` with modified parameters.
@@ -860,7 +983,6 @@ class Environment(object):
         """ Clear the cache of all environments. """
         for env in list(self.all):
             env.cache.clear()
-            env.prefetch.clear()
             env.computed.clear()
             env.dirty.clear()
 
@@ -925,6 +1047,8 @@ class Environment(object):
 
     def check_cache(self):
         """ Check the cache consistency. """
+        from openerp.fields import SpecialValue
+
         # make a full copy of the cache, and invalidate it
         cache_dump = dict(
             (field, dict(field_cache))
@@ -940,9 +1064,11 @@ class Environment(object):
             for record in records:
                 try:
                     cached = field_dump[record.id]
+                    cached = cached.get() if isinstance(cached, SpecialValue) else cached
+                    value = field.convert_to_record(cached, record)
                     fetched = record[field.name]
-                    if fetched != cached:
-                        info = {'cached': cached, 'fetched': fetched}
+                    if fetched != value:
+                        info = {'cached': value, 'fetched': fetched}
                         invalids.append((field, record, info))
                 except (AccessError, MissingError):
                     pass

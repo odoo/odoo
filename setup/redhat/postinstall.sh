@@ -57,4 +57,4 @@ ExecStart=/usr/bin/odoo.py --config=/etc/odoo/openerp-server.conf
 [Install]
 WantedBy=multi-user.target
 EOF
-easy_install pyPdf vatnumber pydot psycogreen suds ofxparse
+easy_install pyPdf vatnumber pydot psycogreen suds ofxparse XlsxWriter

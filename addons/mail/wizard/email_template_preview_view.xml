@@ -22,6 +22,8 @@
                                 attrs="{'invisible':[('email_cc','=',False)]}"/>
                         <field name="reply_to" readonly="1"
                                 attrs="{'invisible':[('reply_to','=',False)]}"/>
+                        <field name="scheduled_date" readonly="1"
+                                attrs="{'invisible':[('scheduled_date','=',False)]}"/>
                     </group>
                     <field name="body_html" widget="html" readonly="1"
                             nolabel="1" options='{"safe": True}'/>
@@ -38,7 +40,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="email_template_preview_form"/>
-            <field name="auto_refresh" eval="1" />
             <field name="target">new</field>
             <field name="context">{'template_id':active_id}</field>
         </record>

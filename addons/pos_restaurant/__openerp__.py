@@ -21,11 +21,13 @@ This module adds several restaurant features to the Point of Sale:
     'depends': ['point_of_sale'],
     'website': 'https://www.odoo.com/page/point-of-sale',
     'data': [
-        'restaurant_view.xml',
         'security/ir.model.access.csv',
-        'views/templates.xml',
+        'views/pos_config_views.xml',
+        'views/pos_order_views.xml',
+        'views/pos_restaurant_views.xml',
+        'views/pos_restaurant_templates.xml',
     ],
-    'qweb':[
+    'qweb': [
         'static/src/xml/multiprint.xml',
         'static/src/xml/splitbill.xml',
         'static/src/xml/printbill.xml',
@@ -33,7 +35,7 @@ This module adds several restaurant features to the Point of Sale:
         'static/src/xml/floors.xml',
     ],
     'demo': [
-        'restaurant_demo.xml',
+        'data/pos_restaurant_demo.xml',
     ],
     'installable': True,
     'auto_install': False,

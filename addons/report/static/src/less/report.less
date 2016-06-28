@@ -1,0 +1,106 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    color: #000 !important;
+    word-wrap: break-word;
+}
+.border-black td {
+    border-top: 1px solid black !important;
+}
+/* See https://github.com/wkhtmltopdf/wkhtmltopdf/issues/1524 */
+.table-condensed {
+    > thead > tr > th {
+        border-bottom: 1px solid black !important;
+    }
+    > tbody > tr {
+        page-break-inside: avoid !important;
+    }
+}
+.zero_min_height {
+    min-height: 0px !important;
+}
+
+/* To avoid broken snippets in report rendering */
+.jumbotron, .panel, .carousel, section{
+    page-break-inside: avoid;
+}
+/* Wkhtmltopdf doesn't support very well the media-print CSS (depends on the version) */
+.hidden-print{
+    display: none;
+}
+
+/* Missing css rules since the website/web_editor split */
+.mt128 {
+    margin-top: 128px!important;
+}
+.mt92 {
+    margin-top: 92px!important;
+}
+.mt64 {
+    margin-top: 64px!important;
+}
+.mt48 {
+    margin-top: 48px!important;
+}
+.mt32 {
+    margin-top: 32px!important;
+}
+.mt16 {
+    margin-top: 16px!important;
+}
+.mt8 {
+    margin-top: 8px!important;
+}
+.mt4 {
+    margin-top: 4px!important;
+}
+.mt0 {
+    margin-top: 0px!important;
+}
+.mb128 {
+    margin-bottom: 128px!important;
+}
+.mb92 {
+    margin-bottom: 92px!important;
+}
+.mb64 {
+    margin-bottom: 64px!important;
+}
+.mb48 {
+    margin-bottom: 48px!important;
+}
+.mb32 {
+    margin-bottom: 32px!important;
+}
+.mb16 {
+    margin-bottom: 16px!important;
+}
+.mb8 {
+    margin-bottom: 8px!important;
+}
+.mb4 {
+    margin-bottom: 4px!important;
+}
+.mb0 {
+    margin-bottom: 0px!important;
+}
+.ml8 {
+    margin-left: 8px!important;
+}
+.ml4 {
+    margin-left: 4px!important;
+}
+.ml0 {
+    margin-left: 0px!important;
+}
+.mr8 {
+    margin-right: 8px!important;
+}
+.mr4 {
+    margin-right: 4px!important;
+}
+.mr0 {
+    margin-right: 0px!important;
+}

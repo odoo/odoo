@@ -10,10 +10,12 @@ import tests
 
 def post_init(cr, registry):
     """Rewrite ICP's to force groups"""
-    from openerp import SUPERUSER_ID
+    from openerp import api, SUPERUSER_ID
     from openerp.addons.base.ir.ir_config_parameter import _default_parameters
-    ICP = registry['ir.config_parameter']
-    for k, func in _default_parameters.items():
-        v = ICP.get_param(cr, SUPERUSER_ID, k)
-        _, g = func()
-        ICP.set_param(cr, SUPERUSER_ID, k, v, g)
+
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    ICP = env['ir.config_parameter']
+    for key, func in _default_parameters.iteritems():
+        val = ICP.get_param(key)
+        _, groups = func()
+        ICP.set_param(key, val, groups)

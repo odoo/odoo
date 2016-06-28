@@ -6,7 +6,7 @@
     'category': 'hidden',
     'website': 'https://www.odoo.com/page/employees',
     'depends': ['gamification', 'hr'],
-    'description': """Use the HR ressources for the gamification process.
+    'description': """Use the HR resources for the gamification process.
 
 The HR officer can now manage challenges and badges.
 This allow the user to send badges to employees instead of simple users.

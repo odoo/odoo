@@ -96,13 +96,11 @@ class TestReconciliation(AccountingTestCase):
             self.assertEquals(round(move_line.amount_currency, 2), aml_dict[move_line.account_id.id]['amount_currency'])
             self.assertEquals(move_line.currency_id.id, aml_dict[move_line.account_id.id]['currency_id'])
             if 'currency_diff' in aml_dict[move_line.account_id.id]:
-                if move_line.credit:
-                    rec_ids = [r.id for r in move_line.matched_debit_ids]
-                else:
-                    rec_ids = [r.id for r in move_line.matched_credit_ids]
-                currency_diff_move = self.env['account.move'].search([('rate_diff_partial_rec_id', 'in', rec_ids)])
-                self.assertEqual(len(currency_diff_move), 1)
-                for currency_diff_line in currency_diff_move[0].line_ids:
+                currency_diff_move = move_line.full_reconcile_id.exchange_move_id
+                for currency_diff_line in currency_diff_move.line_ids:
+                    if aml_dict[move_line.account_id.id].get('currency_diff') == 0:
+                        if currency_diff_line.account_id.id == move_line.account_id.id:
+                            self.assertAlmostEquals(currency_diff_line.amount_currency, aml_dict[move_line.account_id.id].get('amount_currency_diff'))
                     if aml_dict[move_line.account_id.id].get('currency_diff') == 0:
                         if currency_diff_line.account_id.id == move_line.account_id.id:
                             self.assertAlmostEquals(currency_diff_line.amount_currency, aml_dict[move_line.account_id.id].get('amount_currency_diff'))

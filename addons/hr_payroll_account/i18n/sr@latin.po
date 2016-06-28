@@ -3,14 +3,13 @@
 # * hr_payroll_account
 # 
 # Translators:
-# Nemanja Dragovic <nemanjadragovic94@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-10-28 23:21+0000\n"
-"Last-Translator: Nemanja Dragovic <nemanjadragovic94@gmail.com>\n"
+"PO-Revision-Date: 2015-09-07 21:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-9/language/sr@latin/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +26,7 @@ msgstr "Računovodstvo"
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_move_id
 msgid "Accounting Entry"
-msgstr "Nalog"
+msgstr "Stavka naloga"
 
 #. module: hr_payroll_account
 #: code:addons/hr_payroll_account/hr_payroll_account.py:147
@@ -50,32 +49,32 @@ msgstr "Ugovor"
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_account_credit
 msgid "Credit Account"
-msgstr "Potražni konto"
+msgstr "Platni nalog"
 
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_date
 msgid "Date Account"
-msgstr "Datum"
+msgstr ""
 
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_account_debit
 msgid "Debit Account"
-msgstr "Dugovni konto"
+msgstr "Platni nalog"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
 msgid "Generate payslips for all selected employees"
-msgstr "Napravi platne liste za sve izabrane zaposlene"
+msgstr "Napravi obračunski list za sve izabrane zaposlene"
 
 #. module: hr_payroll_account
 #: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip_date
 msgid "Keep empty to use the period of the validation(Payslip) date."
-msgstr "Sačuvajte prazno mesto radi korišćenja perioda validacije (platna lista) datuma."
+msgstr "Sačuvajte prazno mesto radi korišćenja datum validacije (obračuski list)"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip
 msgid "Pay Slip"
-msgstr "Platna lista"
+msgstr "Platnio listovi"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
@@ -85,20 +84,20 @@ msgstr "Serije obračunskih listova plate"
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_line
 msgid "Payslip Line"
-msgstr "Stavka platne liste"
+msgstr ""
 
 #. module: hr_payroll_account
 #: code:addons/hr_payroll_account/hr_payroll_account.py:98
 #, python-format
 msgid "Payslip of %s"
-msgstr "Platna lista %s"
+msgstr "Obračunski list %s"
 
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract_journal_id
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_journal_id
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_run_journal_id
 msgid "Salary Journal"
-msgstr "Dnevnik plata"
+msgstr "Dnevnika plata"
 
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_account_tax_id
@@ -109,13 +108,13 @@ msgstr "Porez"
 #: code:addons/hr_payroll_account/hr_payroll_account.py:145
 #, python-format
 msgid "The Expense Journal \"%s\" has not properly configured the Credit Account!"
-msgstr "U dnevniku troškova \"%s\" nije korektno podešen potražni konto!"
+msgstr "Dnevnik troškova \"%s\" nije tačno podesio platni nalog!"
 
 #. module: hr_payroll_account
 #: code:addons/hr_payroll_account/hr_payroll_account.py:161
 #, python-format
 msgid "The Expense Journal \"%s\" has not properly configured the Debit Account!"
-msgstr "U dnevniku troškova \"%s\" nije korektno podešen dugovni konto!"
+msgstr "Dnevnik troškova \"%s\" nije tačno podesio dužnički nalog!"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_salary_rule

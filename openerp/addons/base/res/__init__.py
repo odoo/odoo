@@ -11,5 +11,4 @@ import res_font
 import res_company
 import res_users
 import res_request
-import res_lang
 import ir_property

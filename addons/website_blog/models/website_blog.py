@@ -20,7 +20,22 @@ class Blog(osv.Model):
     _columns = {
         'name': fields.char('Blog Name', required=True, translate=True),
         'subtitle': fields.char('Blog Subtitle', translate=True),
+        'active': fields.boolean('Active'),
     }
+
+    _defaults = {
+        'active': True,
+    }
+
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(Blog, self).write(cr, uid, ids, vals, context=context)
+        if 'active' in vals:
+            # archiving/unarchiving a blog does it on its posts, too
+            BlogPost = self.pool['blog.post']
+            ctx = dict(context or {}, active_test=False)
+            post_ids = BlogPost.search(cr, uid, [('blog_id', 'in', ids)], context=ctx)
+            BlogPost.write(cr, uid, post_ids, {'active': vals['active']}, context=context)
+        return res
 
     def all_tags(self, cr, uid, ids, min_limit=1, context=None):
         req = """
@@ -96,6 +111,7 @@ class BlogPost(osv.Model):
         'name': fields.char('Title', required=True, translate=True),
         'subtitle': fields.char('Sub Title', translate=True),
         'author_id': fields.many2one('res.partner', 'Author'),
+        'active': fields.boolean('Active'),
         'cover_properties': fields.text('Cover Properties'),
         'blog_id': fields.many2one(
             'blog.blog', 'Blog',
@@ -119,7 +135,7 @@ class BlogPost(osv.Model):
             select=True, readonly=True,
         ),
         'create_uid': fields.many2one(
-            'res.users', 'Author',
+            'res.users', 'Created by',
             select=True, readonly=True,
         ),
         'write_date': fields.datetime(
@@ -130,6 +146,7 @@ class BlogPost(osv.Model):
             'res.users', 'Last Contributor',
             select=True, readonly=True,
         ),
+        'published_date': fields.datetime('Published Date'),
         'author_avatar': fields.related(
             'author_id', 'image_small',
             string="Avatar", type="binary"),
@@ -139,6 +156,7 @@ class BlogPost(osv.Model):
 
     _defaults = {
         'name': '',
+        'active': True,
         'content': _default_content,
         'cover_properties': '{"background-image": "none", "background-color": "oe_none", "opacity": "0.6", "resize_class": ""}',
         'author_id': lambda self, cr, uid, ctx=None: self.pool['res.users'].browse(cr, uid, uid, context=ctx).partner_id.id,
@@ -213,17 +231,12 @@ class BlogPost(osv.Model):
 
     def _check_for_publication(self, cr, uid, ids, vals, context=None):
         if vals.get('website_published'):
-            base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
             for post in self.browse(cr, uid, ids, context=context):
-                post.blog_id.message_post(
-                    body='<p>%(post_publication)s <a href="%(base_url)s/blog/%(blog_slug)s/post/%(post_slug)s">%(post_link)s</a></p>' % {
-                        'post_publication': _('A new post %s has been published on the %s blog.') % (post.name, post.blog_id.name),
-                        'post_link': _('Click here to access the post.'),
-                        'base_url': base_url,
-                        'blog_slug': slug(post.blog_id),
-                        'post_slug': slug(post),
-                    },
-                    subtype='website_blog.mt_blog_blog_published')
+                post.blog_id.message_post_with_view(
+                    'website_blog.blog_post_template_new_post',
+                    subject=post.name,
+                    values={'post': post},
+                    subtype_id=self.pool['ir.model.data'].xmlid_to_res_id(cr, SUPERUSER_ID, 'website_blog.mt_blog_blog_published'))
             return True
         return False
 
@@ -242,6 +255,8 @@ class BlogPost(osv.Model):
             ids = [ids]
         if 'content' in vals:
             vals['content'] = self._postproces_content(cr, uid, ids[0], vals['content'], context=context)
+        if 'website_published' in vals:
+            vals['published_date'] = fields.datetime.now() if vals['website_published'] else False
         result = super(BlogPost, self).write(cr, uid, ids, vals, context)
         self._check_for_publication(cr, uid, ids, vals, context=context)
         return result

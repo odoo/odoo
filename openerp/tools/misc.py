@@ -27,6 +27,8 @@ from lxml import etree
 from which import which
 from threading import local
 import traceback
+import csv
+from operator import itemgetter
 
 try:
     from html2text import html2text
@@ -292,6 +294,14 @@ def reverse_enumerate(l):
     """
     return izip(xrange(len(l)-1, -1, -1), reversed(l))
 
+def partition(pred, elems):
+    """ Return a pair equivalent to:
+        ``filter(pred, elems), filter(lambda x: not pred(x), elems)` """
+    yes, nos = [], []
+    for elem in elems:
+        (yes if pred(elem) else nos).append(elem)
+    return yes, nos
+
 def topological_sort(elems):
     """ Return a list of elements sorted so that their dependencies are listed
     before them in the result.
@@ -448,94 +458,28 @@ def get_iso_codes(lang):
             lang = lang.split('_')[0]
     return lang
 
-ALL_LANGUAGES = {
-        'am_ET': u'Amharic / አምሃርኛ',
-        'ar_SY': u'Arabic / الْعَرَبيّة',
-        'bg_BG': u'Bulgarian / български език',
-        'bs_BA': u'Bosnian / bosanski jezik',
-        'ca_ES': u'Catalan / Català',
-        'cs_CZ': u'Czech / Čeština',
-        'da_DK': u'Danish / Dansk',
-        'de_DE': u'German / Deutsch',
-        'de_CH': u'German (CH) / Deutsch (CH)',
-        'el_GR': u'Greek / Ελληνικά',
-        'en_AU': u'English (AU)',
-        'en_GB': u'English (UK)',
-        'en_US': u'English (US)',
-        'es_AR': u'Spanish (AR) / Español (AR)',
-        'es_BO': u'Spanish (BO) / Español (BO)',
-        'es_CL': u'Spanish (CL) / Español (CL)',
-        'es_CO': u'Spanish (CO) / Español (CO)',
-        'es_CR': u'Spanish (CR) / Español (CR)',
-        'es_DO': u'Spanish (DO) / Español (DO)',
-        'es_EC': u'Spanish (EC) / Español (EC)',
-        'es_ES': u'Spanish / Español',
-        'es_GT': u'Spanish (GT) / Español (GT)',
-        'es_MX': u'Spanish (MX) / Español (MX)',
-        'es_PA': u'Spanish (PA) / Español (PA)',
-        'es_PE': u'Spanish (PE) / Español (PE)',
-        'es_PY': u'Spanish (PY) / Español (PY)',
-        'es_UY': u'Spanish (UY) / Español (UY)',
-        'es_VE': u'Spanish (VE) / Español (VE)',
-        'et_EE': u'Estonian / Eesti keel',
-        'eu_ES': u'Basque / Euskara',
-        'fa_IR': u'Persian / فارس',
-        'fi_FI': u'Finnish / Suomi',
-        'fr_BE': u'French (BE) / Français (BE)',
-        'fr_CA': u'French (CA) / Français (CA)',
-        'fr_CH': u'French (CH) / Français (CH)',
-        'fr_CA': u'French (CA) / Français (CA)',
-        'fr_FR': u'French / Français',
-        'gl_ES': u'Galician / Galego',
-        'gu_IN': u'Gujarati / ગુજરાતી',
-        'he_IL': u'Hebrew / עִבְרִי',
-        'hi_IN': u'Hindi / हिंदी',
-        'hr_HR': u'Croatian / hrvatski jezik',
-        'hu_HU': u'Hungarian / Magyar',
-        'id_ID': u'Indonesian / Bahasa Indonesia',
-        'it_IT': u'Italian / Italiano',
-        'ja_JP': u'Japanese / 日本語',
-        'ka_GE': u'Georgian / ქართული ენა',
-        'kab_DZ': u'Kabyle / Taqbaylit',
-        'ko_KP': u'Korean (KP) / 한국어 (KP)',
-        'ko_KR': u'Korean (KR) / 한국어 (KR)',
-        'lo_LA': u'Lao / ພາສາລາວ',
-        'lt_LT': u'Lithuanian / Lietuvių kalba',
-        'lv_LV': u'Latvian / latviešu valoda',
-        'mk_MK': u'Macedonian / македонски јазик',
-        'mn_MN': u'Mongolian / монгол',
-        'my_MM': u'Burmese / မြန်မာဘာသာ',
-        'nb_NO': u'Norwegian Bokmål / Norsk bokmål',
-        'nl_NL': u'Dutch / Nederlands',
-        'nl_BE': u'Dutch (BE) / Nederlands (BE)',
-        'pl_PL': u'Polish / Język polski',
-        'pt_BR': u'Portuguese (BR) / Português (BR)',
-        'pt_PT': u'Portuguese / Português',
-        'ro_RO': u'Romanian / română',
-        'ru_RU': u'Russian / русский язык',
-        'sl_SI': u'Slovenian / slovenščina',
-        'sk_SK': u'Slovak / Slovenský jazyk',
-        'sq_AL': u'Albanian / Shqip',
-        'sr_RS': u'Serbian (Cyrillic) / српски',
-        'sr@latin': u'Serbian (Latin) / srpski',
-        'sv_SE': u'Swedish / svenska',
-        'te_IN': u'Telugu / తెలుగు',
-        'tr_TR': u'Turkish / Türkçe',
-        'vi_VN': u'Vietnamese / Tiếng Việt',
-        'uk_UA': u'Ukrainian / українська',
-        'zh_CN': u'Chinese (CN) / 简体中文',
-        'zh_HK': u'Chinese (HK)',
-        'zh_TW': u'Chinese (TW) / 正體字',
-        'th_TH': u'Thai / ภาษาไทย',
-    }
-
 def scan_languages():
     """ Returns all languages supported by OpenERP for translation
 
     :returns: a list of (lang_code, lang_name) pairs
     :rtype: [(str, unicode)]
     """
-    return sorted(ALL_LANGUAGES.iteritems(), key=lambda k: k[1])
+    csvpath = openerp.modules.module.get_resource_path('base', 'res', 'res.lang.csv')
+    try:
+        # read (code, name) from languages in base/res/res.lang.csv
+        result = []
+        with open(csvpath) as csvfile:
+            reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            fields = reader.next()
+            code_index = fields.index("code")
+            name_index = fields.index("name")
+            for row in reader:
+                result.append((ustr(row[code_index]), ustr(row[name_index])))
+    except Exception:
+        _logger.error("Could not read %s", csvpath)
+        result = []
+
+    return sorted(result or [('en_US', u'English')], key=itemgetter(1))
 
 def get_user_companies(cr, user):
     def _get_company_children(cr, ids):
@@ -1040,14 +984,17 @@ def dumpstacks(sig=None, frame=None):
 
     # code from http://stackoverflow.com/questions/132058/getting-stack-trace-from-a-running-python-application#answer-2569696
     # modified for python 2.5 compatibility
-    threads_info = dict([(th.ident, {'name': th.name, 'uid': getattr(th, 'uid', 'n/a')})
-                        for th in threading.enumerate()])
+    threads_info = {th.ident: {'name': th.name,
+                               'uid': getattr(th, 'uid', 'n/a'),
+                               'dbname': getattr(th, 'dbname', 'n/a')}
+                    for th in threading.enumerate()}
     for threadId, stack in sys._current_frames().items():
-        thread_info = threads_info.get(threadId)
-        code.append("\n# Thread: %s (id:%s) (uid:%s)" %
-                    (thread_info and thread_info['name'] or 'n/a',
+        thread_info = threads_info.get(threadId, {})
+        code.append("\n# Thread: %s (id:%s) (db:%s) (uid:%s)" %
+                    (thread_info.get('name', 'n/a'),
                      threadId,
-                     thread_info and thread_info['uid'] or 'n/a'))
+                     thread_info.get('dbname', 'n/a'),
+                     thread_info.get('uid', 'n/a')))
         for line in extract_stack(stack):
             code.append(line)
 
@@ -1113,7 +1060,7 @@ class Collector(Mapping):
         return len(self._map)
 
 class OrderedSet(OrderedDict):
-    """ A simple collection that remembers the elements insertion order. """
+    """ A set collection that remembers the elements first insertion order. """
     def __init__(self, seq=()):
         super(OrderedSet, self).__init__([(x, None) for x in seq])
 
@@ -1122,6 +1069,12 @@ class OrderedSet(OrderedDict):
 
     def discard(self, elem):
         self.pop(elem, None)
+
+class LastOrderedSet(OrderedSet):
+    """ A set collection that remembers the elements last insertion order. """
+    def add(self, elem):
+        OrderedSet.discard(self, elem)
+        OrderedSet.add(self, elem)
 
 @contextmanager
 def ignore(*exc):
@@ -1163,7 +1116,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
     lang = env.user.company_id.partner_id.lang or 'en_US'
     lang_objs = env['res.lang'].search([('code', '=', lang)])
     if not lang_objs:
-        lang_objs = env['res.lang'].search([('code', '=', 'en_US')])
+        lang_objs = env['res.lang'].search([], limit=1)
     lang_obj = lang_objs[0]
 
     res = lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)

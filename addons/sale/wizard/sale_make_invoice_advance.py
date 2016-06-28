@@ -76,6 +76,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'reference': False,
             'account_id': order.partner_id.property_account_receivable_id.id,
             'partner_id': order.partner_invoice_id.id,
+            'partner_shipping_id': order.partner_shipping_id.id,
             'invoice_line_ids': [(0, 0, {
                 'name': name,
                 'origin': order.name,
@@ -93,8 +94,12 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'payment_term_id': order.payment_term_id.id,
             'fiscal_position_id': order.fiscal_position_id.id or order.partner_id.property_account_position_id.id,
             'team_id': order.team_id.id,
+            'comment': order.note,
         })
         invoice.compute_taxes()
+        invoice.message_post_with_view('mail.message_origin_link',
+                    values={'self': invoice, 'origin': order},
+                    subtype_id=self.env.ref('mail.mt_note').id)
         return invoice
 
     @api.multi

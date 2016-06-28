@@ -6,7 +6,7 @@
                 <img class="media-object img-circle" t-att-src="res.author_image" style="width: 30px;"/>
             </div>
             <div t-attf-class="pull-right btn-group js_publish_management #{res.website_published and 'css_published' or 'css_unpublished'} #{res.publish ? '' : 'hidden'}" data-object="mail.message" t-att-data-id="res.id">
-                <button class="btn btn-danger btn-xs js_publish_btn">Not Published</button>
+                <button class="btn btn-danger btn-xs js_publish_btn">Unpublished</button>
                 <button class="btn btn-success btn-xs js_publish_btn">Published</button>
             </div>
             <div class="media-body discussion_scroll_post">

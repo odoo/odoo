@@ -5,7 +5,6 @@
     'description': 'Questions on Events',
     'category': 'Website',
     'version': '1.0',
-    'author': 'Odoo S.A.',
     'depends': ['website_event'],
     'data': [
         'views/website_event_questions_backend.xml',

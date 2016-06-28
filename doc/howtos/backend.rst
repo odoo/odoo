@@ -643,7 +643,8 @@ instead of a single view its ``arch`` field is composed of any number of
     ``inside``
         appends ``xpath``'s body at the end of the matched element
     ``replace``
-        replaces the matched element by the ``xpath``'s body
+        replaces the matched element with the ``xpath``'s body, replacing any `$0` node occurrence
+        in the new body with the original element
     ``before``
         inserts the ``xpath``'s body as a sibling before the matched element
     ``after``
@@ -1396,7 +1397,7 @@ the same convention as the method :meth:`~openerp.models.Model.write` of the ORM
     <record id="delete_cancelled_only" model="ir.rule">
         <field name="name">Only cancelled leads may be deleted</field>
         <field name="model_id" ref="crm.model_crm_lead"/>
-        <field name="groups" eval="[(4, ref('base.group_sale_manager'))]"/>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
         <field name="perm_read" eval="0"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_create" eval="0"/>

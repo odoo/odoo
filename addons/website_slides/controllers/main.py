@@ -171,7 +171,7 @@ class website_slides(http.Controller):
     def slide_comment(self, slide, **post):
         """ Controller for message_post. Public user can post; their name and
         email is used to find or create a partner and post as admin with the
-        right partner. Their comments are not published by default. Logged
+        right partner. Their comments are unpublished by default. Logged
         users can post as usual. """
         # TDE TODO :
         # - subscribe partner instead of user writing the message ?

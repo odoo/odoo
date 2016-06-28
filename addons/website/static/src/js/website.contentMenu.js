@@ -15,16 +15,18 @@ var qweb = core.qweb;
 ajax.loadXML('/website/static/src/xml/website.contentMenu.xml', qweb);
 
 var TopBarContent = Widget.extend({
-    start: function() {
+    start: function () {
         var self = this;
-        self.$el.on('click', 'a[data-action]', function(ev) {
-            ev.preventDefault();
-            var $content_item = $(this);
-            self[$content_item.data('action')]();
+
+        // Add page modal + menu content event
+        this.$el.add($('#o_website_add_page_modal')).on('click', 'a[data-action]', function (e) {
+            e.preventDefault();
+            self[$(this).data('action')]();
         });
+
         return this._super();
     },
-    edit_menu: function() {
+    edit_menu: function () {
         var self = this;
         var context = base.get_context();
         var def = $.Deferred();
@@ -52,7 +54,7 @@ var TopBarContent = Widget.extend({
             });
         });
     },
-    new_page: function() {
+    new_page: function () {
         website.prompt({
             id: "editor_new_page",
             window_title: _t("New Page"),
@@ -61,13 +63,10 @@ var TopBarContent = Widget.extend({
                 var $group = this.$dialog.find("div.form-group");
                 $group.removeClass("mb0");
 
-                var $add = $(
-                    '<div class="form-group mb0">'+
-                        '<label class="col-sm-offset-3 col-sm-9 text-left">'+
-                        '    <input type="checkbox" checked="checked" required="required"/> '+
-                        '</label>'+
-                    '</div>');
-                $add.find('label').append(_t("Add page in menu"));
+                var $add = $('<div/>', {'class': 'form-group mb0'})
+                            .append($('<span/>', {'class': 'col-sm-offset-3 col-sm-9 text-left'})
+                                    .append(qweb.render('web_editor.components.switch', {id: 'switch_addTo_menu', label: _t("Add page in menu")})));
+                $add.find('input').prop('checked', true);
                 $group.after($add);
             }
         }).then(function (val, field, $dialog) {
@@ -78,7 +77,7 @@ var TopBarContent = Widget.extend({
             }
         });
     },
-    rename_page: function() {
+    rename_page: function () {
         var self = this;
         var context = base.get_context();
         self.mo_id = self.getMainObject().id;
@@ -112,7 +111,7 @@ var TopBarContent = Widget.extend({
             });
         });
     },
-    delete_page: function() {
+    delete_page: function () {
         var self = this;
         var context = base.get_context();
         self.mo_id = self.getMainObject().id;
@@ -122,17 +121,17 @@ var TopBarContent = Widget.extend({
             method: 'page_search_dependencies',
             args: [self.mo_id],
             kwargs: {
-                context: context
+                context: context,
             },
         }).then(function (deps) {
             website.prompt({
                 id: "editor_delete_page",
                 window_title: _t("Delete Page"),
                 dependencies: deps,
-                    init: function() { $('.btn-continue').prop("disabled", true)},
+                    init: function () { $('.btn-continue').prop("disabled", true)},
             }, 'website.delete_page').then(function (val, field, $dialog) {
 
-                if ($dialog.find('input[type="checkbox"]').is(':checked')){
+                if ($dialog.find('input[type="checkbox"]').is(':checked')) {
                     ajax.jsonRpc('/web/dataset/call_kw', 'call', {
                         model: 'website',
                         method: 'delete_page',

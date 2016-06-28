@@ -2,8 +2,8 @@
 
 .o_calendar_container {
     height: 100%;
-    padding-top: @odoo-horizontal-padding/2;
-    padding-bottom: @odoo-horizontal-padding/2;
+    .o-webclient-padding(@top: @odoo-horizontal-padding/2, @bottom: @odoo-horizontal-padding/2);
+    .o-flex-display();
 
     .calendar_color_loop(@index) when (@index < @nb-calendar-colors+1) {
         .o_calendar_color_@{index} {
@@ -24,11 +24,9 @@
     }
     .underline_color_loop(1);
 
-    > .row {
-        height: 100%;
-    }
-
     .o_calendar_view {
+        .o-flex(1, 1, auto);
+        min-width: 0;
         height: 100%;
 
         .o_calendar_widget {
@@ -52,45 +50,79 @@
     }
 
     .o_calendar_sidebar_container {
-        padding-left: 0;
+        .o-flex(0, 0, @odoo-horizontal-padding);
+        position: relative;
+
+        &.o_sidebar_hidden {
+            margin-right: -@odoo-horizontal-padding; // hack to display the toggler in the gutter
+            .o_calendar_sidebar_toggler {
+                padding: 4px;
+                color: darken(@odoo-webclient-background-color, 30%);
+            }
+        }
+
+        .o_calendar_sidebar_toggler {
+            .o-position-absolute(@top: 0, @right: 0);
+            cursor: pointer;
+            padding: 6px;
+            &:hover {
+                color: black;
+            }
+        }
+
+        .o_calendar_sidebar {
+            width: 250px;
+            padding-left: 8px;
+        }
 
         .ui-datepicker {
             width: 100%;
             font-size: 8pt;
-            font-family: Roboto, "Nimbus Sans L";
+            border-radius: 0;
+            border: none;
+            padding: 0;
 
             .ui-widget-header {
+                .o-flex-display();
                 background: none;
                 background-color: lighten(@odoo-brand-secondary, 30%);
+                border-radius: 0;
 
-                .ui-corner-all {
+                .ui-datepicker-prev, .ui-datepicker-next {
+                    .o-flex(0, 0, auto);
                     position: static;
                     cursor: pointer;
+                    padding: 2px;
                     text-align: center;
-                    &:hover {
-                        color: @odoo-view-background-color;
+                    color: @odoo-main-text-color;
+                    &.ui-state-hover {
                         background: none;
-                        background-color: @odoo-brand-secondary;
                         border: none;
-                        text-decoration: none;
+                        color: black;
                     }
                     .ui-icon {
                         display: none;
                     }
                 }
                 .ui-datepicker-prev {
-                    float: left;
-                    &::after {
+                    order: 1;
+                    &:after {
                         font-family: FontAwesome;
                         content: "";
                     }
                 }
                 .ui-datepicker-next {
-                    float: right;
-                    &::before {
+                    order: 3;
+                    &:before {
                         font-family: FontAwesome;
                         content: "";
                     }
+                }
+                .ui-datepicker-title {
+                    .o-flex(0, 0, auto);
+                    order: 2;
+                    display: inline-block;
+                    margin: 0 10px;
                 }
             }
             table {
@@ -101,6 +133,7 @@
                         border: none;
                         background: none;
                         background-color: lighten(@odoo-brand-secondary, 40%);
+                        text-align: center;
                     }
                 }
                 .ui-state-default {
@@ -122,16 +155,20 @@
         .o_calendar_filter {
             padding: 8px;
             background: @odoo-view-background-color;
+            border-top: 1px solid lightgray;
         }
+    }
+}
+
+.modal {
+    .o_attendee_head {
+        width: 32px;
+        margin-right: 5px;
     }
 }
 
 .o_dashboard {
     .o_calendar_container .o_calendar_sidebar_container {
         display: none;
-    }
-
-    .o_calendar_container .o_calendar_view {
-        width: 100%;
     }
 }

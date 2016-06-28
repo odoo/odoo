@@ -4,7 +4,7 @@ import datetime
 
 from openerp import models, fields, api, _
 import openerp.addons.decimal_precision as dp
-from openerp.exceptions import AccessError, UserError
+from openerp.exceptions import AccessError, ValidationError
 
 
 class LunchOrder(models.Model):
@@ -17,7 +17,7 @@ class LunchOrder(models.Model):
     _order = 'date desc'
 
     def _default_previous_order_ids(self):
-        prev_order = self.env['lunch.order.line'].search([('user_id', '=', self.env.uid)], limit=20, order='id desc')
+        prev_order = self.env['lunch.order.line'].search([('user_id', '=', self.env.uid), ('product_id.active', '!=', False)], limit=20, order='id desc')
         # If we return return prev_order.ids, we will have duplicates (identical orders).
         # Therefore, this following part removes duplicates based on product_id and note.
         return {
@@ -95,7 +95,7 @@ class LunchOrder(models.Model):
         date_order = datetime.datetime.strptime(self.date, '%Y-%m-%d')
         date_today = datetime.datetime.strptime(fields.Date.context_today(self), '%Y-%m-%d')
         if (date_order < date_today):
-            raise UserError(_('The date of your order is in the past.'))
+            raise ValidationError(_('The date of your order is in the past.'))
 
     @api.one
     @api.depends('order_line_ids.state')
@@ -130,7 +130,7 @@ class LunchOrderLine(models.Model):
     _name = 'lunch.order.line'
     _description = 'lunch order line'
 
-    name = fields.Char(related='product_id.name', readonly=True)
+    name = fields.Char(related='product_id.name', string="Product Name", readonly=True)
     order_id = fields.Many2one('lunch.order', 'Order', ondelete='cascade', required=True)
     product_id = fields.Many2one('lunch.product', 'Product', required=True)
     category_id = fields.Many2one('lunch.product.category', string='Product Category',
@@ -156,32 +156,41 @@ class LunchOrderLine(models.Model):
         """
         The order_line is ordered to the vendor but isn't received yet
         """
-        self.state = 'ordered'
+        if self.user_has_groups("lunch.group_lunch_manager"):
+            self.state = 'ordered'
+        else:
+            raise AccessError(_("Only your lunch manager processes the orders."))
 
     @api.one
     def confirm(self):
         """
         confirm one or more order line, update order status and create new cashmove
         """
-        if self.state != 'confirmed':
-            values = {
-                'user_id': self.user_id.id,
-                'amount': -self.price,
-                'description': self.product_id.name,
-                'order_id': self.id,
-                'state': 'order',
-                'date': self.date,
-            }
+        if self.user_has_groups("lunch.group_lunch_manager"):
+            if self.state != 'confirmed':
+                values = {
+                    'user_id': self.user_id.id,
+                    'amount': -self.price,
+                    'description': self.product_id.name,
+                    'order_id': self.id,
+                    'state': 'order',
+                    'date': self.date,
+                }
             self.env['lunch.cashmove'].create(values)
             self.state = 'confirmed'
+        else:
+            raise AccessError(_("Only your lunch manager sets the orders as received."))
 
     @api.one
     def cancel(self):
         """
         cancel one or more order.line, update order status and unlink existing cashmoves
         """
-        self.state = 'cancelled'
-        self.cashmove.unlink()
+        if self.user_has_groups("lunch.group_lunch_manager"):
+            self.state = 'cancelled'
+            self.cashmove.unlink()
+        else:
+            raise AccessError(_("Only your lunch manager cancels the orders."))
 
 
 class LunchProduct(models.Model):
@@ -194,6 +203,7 @@ class LunchProduct(models.Model):
     description = fields.Text('Description')
     price = fields.Float('Price', digits=dp.get_precision('Account'))
     supplier = fields.Many2one('res.partner', 'Vendor')
+    active = fields.Boolean(default=True)
 
 
 class LunchProductCategory(models.Model):
@@ -245,6 +255,7 @@ class LunchAlert(models.Model):
     sunday = fields.Boolean('Sunday')
     start_hour = fields.Float('Between', oldname='active_from', required=True, default=7)
     end_hour = fields.Float('And', oldname='active_to', required=True, default=23)
+    active = fields.Boolean(default=True)
 
     @api.multi
     def name_get(self):

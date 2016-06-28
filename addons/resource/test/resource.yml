@@ -20,7 +20,7 @@
     dt = now - timedelta(days=now.weekday()) 
     for resource in resources:
         result = calendar_pool.working_hours_on_day(cr, uid, resource.calendar_id, dt, context)
-        assert float_compare(result, 9.0, precision_digits=2) == 0, 'Wrong calculation of day work hour availability of the Resource (found %d).' % result
+        assert float_compare(result, 8.0, precision_digits=2) == 0, 'Wrong calculation of day work hour availability of the Resource (found %d).' % result
 -
   Now, resource "Developer" drafted leave on Thursday in this week.
 -
@@ -51,4 +51,3 @@
     work_intreval = self.interval_min_get(cr, uid, ref('timesheet_group1'), now, 20.0, resource=ref('resource_designer'))
     assert len(work_intreval) >= 5, 'Wrong Schedule Calculated'
     
-

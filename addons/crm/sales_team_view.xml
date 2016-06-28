@@ -15,7 +15,6 @@
                     'search_default_team_id': [active_id],
                     'default_team_id': active_id,
                     'default_type': 'lead',
-                    'stage_type': 'lead',
                 }
             </field>
             <field name="help" type="html">
@@ -43,7 +42,6 @@
             <field name="context">{
                     'search_default_team_id': [active_id],
                     'default_team_id': active_id,
-                    'stage_type': 'opportunity',
                     'default_type': 'opportunity',
                     'default_user_id': uid,
                 }
@@ -96,13 +94,7 @@
                             <label for="use_opportunities"/>
                         </div>
                     </xpath>
-                    <xpath expr="//page[@name='members']" position="after">
-                        <page string="Stages" groups="base.group_no_one">
-                            <separator string="Select Stages for this Sales Team"/>
-                                <field name="stage_ids"/>
-                        </page>
-                   </xpath>
-                   <xpath expr="//field[@name='code']" position="after">
+                   <xpath expr="//field[@name='user_id']" position="after">
                         <label for="alias_name" string="Email Alias"
                             attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}"/>
                         <div name="alias_def"

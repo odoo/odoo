@@ -10,9 +10,8 @@
             'unit_amount': 2.00,
             'product_id': ref('product.product_product_1'),
             'product_uom_id': ref('product.product_uom_hour'),
-            'account_id': ref('analytic.analytic_administratif'),
+            'project_id': ref('project.project_project_2'),
             'amount': -60.00,
-            'is_timesheet': True,
         }
         self._update(cr, uid, 'account.analytic.line', 'hr_timesheet', vals, 'working_hours_requirements')
         vals = {
@@ -22,9 +21,8 @@
             'unit_amount': 1.00,
             'product_id': ref('product.product_product_1'),
             'product_uom_id': ref('product.product_uom_hour'),
-            'account_id': ref('analytic.analytic_administratif'),
+            'project_id': ref('project.project_project_2'),
             'amount': -30.00,
-            'is_timesheet': True,
         }
         self._update(cr, uid, 'account.analytic.line', 'hr_timesheet', vals, 'working_hours_design')
         vals = {
@@ -34,9 +32,8 @@
             'unit_amount': 3.00,
             'product_id': ref('product.product_product_1'),
             'product_uom_id': ref('product.product_uom_hour'),
-            'account_id': ref('analytic.analytic_administratif'),
+            'project_id': ref('project.project_project_2'),
             'amount': -90.00,
-            'is_timesheet': True,
         }
         self._update(cr, uid, 'account.analytic.line', 'hr_timesheet', vals, 'working_hours_coding')
         vals = {
@@ -46,9 +43,8 @@
             'unit_amount': 1.00,
             'product_id': ref('product.product_product_1'),
             'product_uom_id': ref('product.product_uom_hour'),
-            'account_id': ref('analytic.analytic_administratif'),
+            'project_id': ref('project.project_project_2'),
             'amount': -30.00,
-            'is_timesheet': True,
         }
         self._update(cr, uid, 'account.analytic.line', 'hr_timesheet', vals, 'working_hours_testing')
         vals = {
@@ -58,8 +54,7 @@
             'unit_amount': 1.00,
             'product_id': ref('product.product_product_1'),
             'product_uom_id': ref('product.product_uom_hour'),
-            'account_id': ref('analytic.analytic_administratif'),
+            'project_id': ref('project.project_project_2'),
             'amount': -30.00,
-            'is_timesheet': True,
         }
         self._update(cr, uid, 'account.analytic.line', 'hr_timesheet', vals, 'working_hours_maintenance')

@@ -1,4 +1,4 @@
-# -*- coding: utf-'8' "-*-"
+# coding: utf-8
 
 import base64
 import json
@@ -61,25 +61,6 @@ class AcquirerPaypal(osv.Model):
         'fees_int_var': 3.9,
         'paypal_api_enabled': False,
     }
-
-    def _migrate_paypal_account(self, cr, uid, context=None):
-        """ COMPLETE ME """
-        cr.execute('SELECT id, paypal_account FROM res_company')
-        res = cr.fetchall()
-        for (company_id, company_paypal_account) in res:
-            if company_paypal_account:
-                company_paypal_ids = self.search(cr, uid, [('company_id', '=', company_id), ('provider', '=', 'paypal')], limit=1, context=context)
-                if company_paypal_ids:
-                    self.write(cr, uid, company_paypal_ids, {'paypal_email_account': company_paypal_account}, context=context)
-                else:
-                    paypal_view = self.pool['ir.model.data'].get_object(cr, uid, 'payment_paypal', 'paypal_acquirer_button')
-                    self.create(cr, uid, {
-                        'name': 'Paypal',
-                        'provider': 'paypal',
-                        'paypal_email_account': company_paypal_account,
-                        'view_template_id': paypal_view.id,
-                    }, context=context)
-        return True
 
     def paypal_compute_fees(self, cr, uid, id, amount, currency_id, country_id, context=None):
         """ Compute paypal fees.
@@ -215,8 +196,8 @@ class TxPaypal(osv.Model):
         if 'handling_amount' in data and float_compare(float(data.get('handling_amount')), tx.fees, 2) != 0:
             invalid_parameters.append(('handling_amount', data.get('handling_amount'), tx.fees))
         # check buyer
-        if tx.payment_method_id and data.get('payer_id') != tx.payment_method_id.acquirer_ref:
-            invalid_parameters.append(('payer_id', data.get('payer_id'), tx.payment_method_id.acquirer_ref))
+        if tx.payment_token_id and data.get('payer_id') != tx.payment_token_id.acquirer_ref:
+            invalid_parameters.append(('payer_id', data.get('payer_id'), tx.payment_token_id.acquirer_ref))
         # check seller
         if data.get('receiver_id') and tx.acquirer_id.paypal_seller_account and data['receiver_id'] != tx.acquirer_id.paypal_seller_account:
             invalid_parameters.append(('receiver_id', data.get('receiver_id'), tx.acquirer_id.paypal_seller_account))

@@ -28,13 +28,13 @@ class TestForum(TestForumCommon):
             })
 
         # Portal user asks a question with tags: ok if enough karma
-        self.user_portal.karma = KARMA['ask']
+        self.user_portal.karma = KARMA['tag_create']
         Post.sudo(self.user_portal).create({
             'name': " Q0",
             'forum_id': self.forum.id,
             'tag_ids': [(0, 0, {'name': 'Tag1', 'forum_id': self.forum.id})]
         })
-        self.assertEqual(self.user_portal.karma, KARMA['ask'], 'website_forum: wrong karma generation when asking question')
+        self.assertEqual(self.user_portal.karma, KARMA['tag_create'], 'website_forum: wrong karma generation when asking question')
 
         self.user_portal.karma = KARMA['post']
         Post.sudo(self.user_portal).create({

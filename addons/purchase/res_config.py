@@ -17,8 +17,8 @@ class purchase_config_settings(osv.osv_memory):
             implied_group='product.group_product_variant'),
         'group_uom':fields.selection([
             (0, 'Products have only one unit of measure (easier)'),
-            (1, 'Some products may be sold/puchased in different unit of measures (advanced)')
-            ], "Unit of Measures",
+            (1, 'Some products may be sold/puchased in different units of measure (advanced)')
+            ], "Units of Measure",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
         'group_costing_method':fields.selection([
@@ -31,20 +31,18 @@ class purchase_config_settings(osv.osv_memory):
             (0, 'Purchase propositions trigger draft purchase orders to a single supplier'),
             (1, 'Allow using call for tenders to get quotes from multiple suppliers (advanced)')
             ], "Calls for Tenders",
-            help="""Calls for tenders are used when you want to generate requests for quotations to several vendors for a given set of products.
-                    You can configure per product if you directly do a Request for Quotation
-                    to one vendor or if you want a Call for Tenders to compare offers from several vendors."""),
-        'group_advance_purchase_requisition': fields.selection([
-            (0, 'Simple call for tender (only choose from one RFQ)'),
-            (1, 'Advanced call for tender (choose products from different RFQ)')
-            ], "Advanced Calls for Tenders",
-            implied_group='purchase.group_advance_bidding',
-            help="""In the process of a public tendering, you can compare the tender lines and choose for each requested product which quantity you will buy from each bid."""),
+            help="Calls for tenders are used when you want to generate requests for quotations to several vendors for a given set of products.\n"
+                 "You can configure per product if you directly do a Request for Quotation "
+                 "to one vendor or if you want a Call for Tenders to compare offers from several vendors."),
+        'group_warning_purchase': fields.selection([
+            (0, 'All the products and the customers can be used in purchase orders'),
+            (1, 'An informative or blocking warning can be set on a product or a customer')
+            ], "Warning", implied_group='purchase.group_warning_purchase'),
         'module_stock_dropshipping': fields.selection([
             (0, 'Suppliers always deliver to your warehouse(s)'),
             (1, "Allow suppliers to deliver directly to your customers")
             ], "Dropshipping",
-            help='\nCreates the dropship Route and add more complex tests'
+            help='\nCreates the dropship Route and add more complex tests\n'
                  '-This installs the module stock_dropshipping.'),
         'group_manage_vendor_price': fields.selection([
             (0, 'Manage vendor price on the product form'),

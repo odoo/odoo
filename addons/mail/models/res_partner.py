@@ -16,6 +16,7 @@ class Partner(models.Model):
     _mail_flat_thread = False
     _mail_mass_mailing = _('Customers')
 
+    message_bounce = fields.Integer('Bounce', help="Counter of the number of bounced emails for this contact")
     notify_email = fields.Selection([
         ('none', 'Never'),
         ('always', 'All Messages')],
@@ -72,6 +73,8 @@ class Partner(models.Model):
                              tracking_value.get_old_display_value()[0],
                              tracking_value.get_new_display_value()[0]))
 
+        is_discussion = message.subtype_id.id == self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
+
         return {
             'signature': signature,
             'website_url': website_url,
@@ -79,6 +82,8 @@ class Partner(models.Model):
             'model_name': model_name,
             'record_name': record_name,
             'tracking': tracking,
+            'is_discussion': is_discussion,
+            'is_accessible': message._is_accessible()
         }
 
     @api.model
@@ -158,6 +163,7 @@ class Partner(models.Model):
             base_template_ctx['signature'] = False
         base_mail_values = self._notify_prepare_email_values(message)
 
+
         # classify recipients: actions / no action
         if message.model and message.res_id and hasattr(self.env[message.model], '_message_notification_recipients'):
             recipients = self.env[message.model].browse(message.res_id)._message_notification_recipients(message, self)
@@ -220,6 +226,18 @@ class Partner(models.Model):
                 WHERE R.res_partner_id = %s """, (self.env.user.partner_id.id,))
             return self.env.cr.dictfetchall()[0].get('needaction_count')
         _logger.error('Call to needaction_count without partner_id')
+        return 0
+
+    @api.model
+    def get_starred_count(self):
+        """ compute the number of starred of the current user """
+        if self.env.user.partner_id:
+            self.env.cr.execute("""
+                SELECT count(*) as starred_count
+                FROM mail_message_res_partner_starred_rel R
+                WHERE R.res_partner_id = %s """, (self.env.user.partner_id.id,))
+            return self.env.cr.dictfetchall()[0].get('starred_count')
+        _logger.error('Call to starred_count without partner_id')
         return 0
 
     @api.model

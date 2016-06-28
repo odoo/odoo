@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.invoice_form"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="//field[@name='origin']" position="after">
+                <xpath expr="//page[@name='other_info']//field[@name='origin']" position="after">
                 <field name="incoterms_id" widget="selection" groups="sale.group_display_incoterm"/>
                 </xpath>
             </data>

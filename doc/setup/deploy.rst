@@ -218,6 +218,18 @@ It should be stored securely, and should be generated randomly e.g.
 
 which will generate a 32 characters pseudorandom printable string.
 
+Supported Browsers
+==================
+
+Odoo is supported by multiple browsers for each of its versions. No 
+distinction is made according to the browser version in order to be
+up-to-date. Odoo is supported on the current browser version. The list 
+of the supported browsers by Odoo version is the following:
+
+- **Odoo 8:** IE9, Mozilla Firefox, Google Chrome, Safari, Microsoft Edge
+- **Odoo 9:** IE11, Mozilla Firefox, Google Chrome, Safari, Microsoft Edge
+- **Odoo 10:** Mozilla Firefox, Google Chrome, Safari, Microsoft Edge
+
 .. [#different-machines]
     to have multiple Odoo installations use the same PostgreSQL database,
     or to provide more computing resources to both software.

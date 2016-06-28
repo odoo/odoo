@@ -22,7 +22,7 @@ from openerp import SUPERUSER_ID
 
 from openerp.tools.translate import _
 from openerp.modules.module import initialize_sys_path, \
-    load_openerp_module, init_module_models, adapt_version
+    load_openerp_module, init_models, adapt_version
 from module import runs_post_install
 
 _logger = logging.getLogger(__name__)
@@ -104,7 +104,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
     loaded_modules = []
     registry = openerp.registry(cr.dbname)
     migrations = openerp.modules.migration.MigrationManager(cr, graph)
-    _logger.info('loading %d modules...', len(graph))
+    module_count = len(graph)
+    _logger.info('loading %d modules...', module_count)
 
     registry.clear_manual_fields()
 
@@ -112,13 +113,14 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
     t0 = time.time()
     t0_sql = openerp.sql_db.sql_counter
 
-    for index, package in enumerate(graph):
+    for index, package in enumerate(graph, 1):
         module_name = package.name
         module_id = package.id
 
         if skip_modules and module_name in skip_modules:
             continue
 
+        _logger.debug('loading module %s (%d/%d)', module_name, index, module_count)
         migrations.migrate_module(package, 'pre')
         load_openerp_module(package.name)
 
@@ -134,7 +136,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         loaded_modules.append(package.name)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             registry.setup_models(cr, partial=True)
-            init_module_models(cr, package.name, models)
+            init_models(models, cr, {'module': package.name})
 
         idref = {}
 
@@ -144,7 +146,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             # Can't put this line out of the loop: ir.module.module will be
-            # registered by init_module_models() above.
+            # registered by init_models() above.
             modobj = registry['ir.module.module']
 
             if perform_checks:

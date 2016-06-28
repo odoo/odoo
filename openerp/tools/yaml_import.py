@@ -1,27 +1,27 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from collections import OrderedDict
 from datetime import datetime, timedelta
 import logging
+import re
 import time # used to eval time.strftime expressions
 import types
 
-import openerp
-import openerp.sql_db as sql_db
-import openerp.workflow
-import misc
-from config import config
-import yaml_tag
-import yaml
-import re
 from lxml import etree
+import yaml
+
+import openerp
+from . import assertion_report
+from . import yaml_tag
+from .config import config
+from .misc import file_open, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp import SUPERUSER_ID
 
 # YAML import needs both safe and unsafe eval, but let's
 # default to /safe/.
 unsafe_eval = eval
-from safe_eval import safe_eval as eval
-
-import assertion_report
+from .safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 
@@ -116,24 +116,18 @@ class YamlInterpreter(object):
         self.assertion_report = report
         self.noupdate = noupdate
         self.loglevel = loglevel
-        self.pool = openerp.registry(cr.dbname)
-        self.uid = 1
+        self.uid = SUPERUSER_ID
         self.context = {} # opererp context
-        self.eval_context = {'ref': self._ref(),
-                             '_ref': self._ref(), # added '_ref' so that record['ref'] is possible
+        self.eval_context = {'ref': self.get_id,
+                             '_ref': self.get_id, # added '_ref' so that record['ref'] is possible
                              'time': time,
                              'datetime': datetime,
                              'timedelta': timedelta}
         self.env = openerp.api.Environment(self.cr, self.uid, self.context)
+        self.sudo_env = self.env
 
     def _log(self, *args, **kwargs):
         _logger.log(self.loglevel, *args, **kwargs)
-
-    def _ref(self):
-        return lambda xml_id: self.get_id(xml_id)
-
-    def get_model(self, model_name):
-        return self.pool[model_name]
 
     def validate_xml_id(self, xml_id):
         id = xml_id
@@ -143,8 +137,7 @@ class YamlInterpreter(object):
                                   "It is used to refer to other modules ID, in the form: module.record_id" \
                                   % (xml_id,)
             if module != self.module:
-                module_count = self.pool['ir.module.module'].search_count(self.cr, self.uid, \
-                        ['&', ('name', '=', module), ('state', 'in', ['installed'])])
+                module_count = self.env['ir.module.module'].search_count([('name', '=', module), ('state', '=', 'installed')])
                 assert module_count == 1, 'The ID "%s" refers to an uninstalled module.' % (xml_id,)
         if len(id) > 64: # TODO where does 64 come from (DB is 128)? should be a constant or loaded form DB
             _logger.error('id: %s is to long (max: 64)', id)
@@ -159,13 +152,11 @@ class YamlInterpreter(object):
         elif xml_id in self.id_map:
             id = self.id_map[xml_id]
         else:
-            if '.' in xml_id:
-                module, checked_xml_id = xml_id.split('.', 1)
-            else:
-                module = self.module
-                checked_xml_id = xml_id
+            full_xml_id = xml_id
+            if '.' not in full_xml_id:
+                full_xml_id = self.module + '.' + full_xml_id
             try:
-                _, id = self.pool['ir.model.data'].get_object_reference(self.cr, self.uid, module, checked_xml_id)
+                id = self.env.ref(full_xml_id).id
                 self.id_map[xml_id] = id
             except ValueError:
                 raise ValueError("""%r not found when processing %s.
@@ -209,7 +200,7 @@ class YamlInterpreter(object):
             ids = [self.get_id(assertion.id)]
         elif assertion.search:
             q = eval(assertion.search, self.eval_context)
-            ids = self.pool[assertion.model].search(self.cr, self.uid, q, context=assertion.context)
+            ids = self.env(context=assertion.context)[assertion.model].search(q)
         else:
             raise YamlImportException('Nothing to assert: you must give either an id or a search criteria.')
         return ids
@@ -223,7 +214,7 @@ class YamlInterpreter(object):
         if self.isnoupdate(assertion) and self.mode != 'init':
             _logger.warning('This assertion was not evaluated ("%s").', assertion.string)
             return
-        model = self.get_model(assertion.model)
+        model = self.env[assertion.model]
         ids = self._get_assertion_id(assertion)
         if assertion.count is not None and len(ids) != assertion.count:
             msg = 'assertion "%s" failed!\n'   \
@@ -234,8 +225,8 @@ class YamlInterpreter(object):
             self._log_assert_failure(msg, *args)
         else:
             context = self.get_context(assertion, self.eval_context)
-            for id in ids:
-                record = model.browse(self.cr, self.uid, id, context)
+            records = model.with_context(context).browse(ids)
+            for record in records:
                 for test in expressions:
                     try:
                         success = unsafe_eval(test, self.eval_context, RecordDictWrapper(record))
@@ -281,22 +272,21 @@ class YamlInterpreter(object):
         return b
 
     def create_osv_memory_record(self, record, fields):
-        model = self.get_model(record.model)
+        model = self.env[record.model]
         context = self.get_context(record, self.eval_context)
         record_dict = self._create_record(model, fields, context=context)
-        id_new = model.create(self.cr, self.uid, record_dict, context=context)
+        id_new = model.with_context(context).create(record_dict).id
         self.id_map[record.id] = int(id_new)
         return record_dict
 
     def process_record(self, node):
         record, fields = node.items()[0]
-        model = self.get_model(record.model)
+        model = self.env[record.model]
         view_id = record.view
         if view_id and (view_id is not True) and isinstance(view_id, basestring):
-            module = self.module
-            if '.' in view_id:
-                module, view_id = view_id.split('.',1)
-            view_id = self.pool['ir.model.data'].get_object_reference(self.cr, SUPERUSER_ID, module, view_id)[1]
+            if '.' not in view_id:
+                view_id = self.module + '.' + view_id
+            view_id = self.env.ref(view_id).id
 
         if model.is_transient():
             record_dict=self.create_osv_memory_record(record, fields)
@@ -307,13 +297,13 @@ class YamlInterpreter(object):
             if '.' in record_id:
                 module, record_id = record_id.split('.',1)
             try:
-                self.pool['ir.model.data']._get_id(self.cr, SUPERUSER_ID, module, record_id)
+                self.sudo_env['ir.model.data']._get_id(module, record_id)
                 default = False
             except ValueError:
                 default = True
 
             if self.isnoupdate(record) and self.mode != 'init':
-                id = self.pool['ir.model.data']._update_dummy(self.cr, SUPERUSER_ID, record.model, module, record_id)
+                id = self.sudo_env['ir.model.data']._update_dummy(record.model, module, record_id)
                 # check if the resource already existed at the last update
                 if id:
                     self.id_map[record] = int(id)
@@ -326,15 +316,16 @@ class YamlInterpreter(object):
             # FIXME: record.context like {'withoutemployee':True} should pass from self.eval_context. example: test_project.yml in project module
             # TODO: cleaner way to avoid resetting password in auth_signup (makes user creation costly)
             context = dict(record.context or {}, no_reset_password=True)
+            env = self.env(user=SUPERUSER_ID, context=context)
             view_info = False
             if view_id:
                 varg = view_id
                 if view_id is True: varg = False
-                view_info = model.fields_view_get(self.cr, SUPERUSER_ID, varg, 'form', context)
+                view_info = model.with_env(env).fields_view_get(varg, 'form')
 
             record_dict = self._create_record(model, fields, view_info, default=default, context=context)
-            id = self.pool['ir.model.data']._update(self.cr, SUPERUSER_ID, record.model, \
-                    module, record_dict, record_id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
+            id = env['ir.model.data']._update(record.model, \
+                    module, record_dict, record_id, noupdate=self.isnoupdate(record), mode=self.mode)
             self.id_map[record.id] = int(id)
             if config.get('import_partial'):
                 self.cr.commit()
@@ -343,7 +334,7 @@ class YamlInterpreter(object):
         """This function processes the !record tag in yaml files. It simulates the record creation through an xml
             view (either specified on the !record tag or the default one for this object), including the calls to
             on_change() functions, and sending only values for fields that aren't set as readonly.
-            :param model: model instance
+            :param model: model instance (new API)
             :param fields: dictonary mapping the field names and their values
             :param view_info: result of fields_view_get() called on the object
             :param parent: dictionary containing the values already computed for the parent, in case of one2many fields
@@ -384,8 +375,9 @@ class YamlInterpreter(object):
 
         def get_2many_view(fg, field_name, view_type):
             """ return a view of the given type for the given field's comodel """
-            return fg[field_name]['views'].get(view_type) or \
-                   self.pool[fg[field_name]['relation']].fields_view_get(self.cr, SUPERUSER_ID, False, view_type, self.context)
+            fdesc = fg[field_name]
+            return fdesc['views'].get(view_type) or \
+                   self.sudo_env[fdesc['relation']].fields_view_get(False, view_type)
 
         def process_vals(fg, vals):
             """ sanitize the given field values """
@@ -436,7 +428,7 @@ class YamlInterpreter(object):
         if view_info:
             fg = view_info['fields']
             elems = get_field_elems(view_info)
-            recs = model.browse(self.cr, SUPERUSER_ID, [], dict(self.context, **context))
+            recs = model.sudo().with_context(**context)
             onchange_spec = recs._onchange_spec(view_info)
             record_dict = {}
 
@@ -520,14 +512,13 @@ class YamlInterpreter(object):
                 model_name = field.comodel_name
             else:
                 raise YamlImportException('You need to give a model for the search, or a field to infer it.')
-            model = self.get_model(model_name)
+            model = self.env[model_name]
             q = eval(node.search, self.eval_context)
-            ids = model.search(self.cr, self.uid, q)
+            instances = model.search(q)
             if node.use:
-                instances = model.browse(self.cr, self.uid, ids)
                 value = [inst[node.use] for inst in instances]
             else:
-                value = ids
+                value = instance.ids
         elif node.id:
             if field and field.type == 'reference':
                 record = self.get_record(node.id)
@@ -559,18 +550,18 @@ class YamlInterpreter(object):
         elif field.type == "many2one":
             value = self.get_id(expression)
         elif field.type == "one2many":
-            other_model = self.get_model(field.comodel_name)
-            value = [(0, 0, self._create_record(other_model, fields, view_info, parent=parent, default=default, context=context)) for fields in expression]
+            comodel = self.env[field.comodel_name]
+            value = [(0, 0, self._create_record(comodel, fields, view_info, parent=parent, default=default, context=context)) for fields in expression]
         elif field.type == "many2many":
             ids = [self.get_id(xml_id) for xml_id in expression]
             value = [(6, 0, ids)]
         elif field.type == "date" and is_string(expression):
             # enforce ISO format for string date values, to be locale-agnostic during tests
-            time.strptime(expression, misc.DEFAULT_SERVER_DATE_FORMAT)
+            time.strptime(expression, DEFAULT_SERVER_DATE_FORMAT)
             value = expression
         elif field.type == "datetime" and is_string(expression):
             # enforce ISO format for string datetime values, to be locale-agnostic during tests
-            time.strptime(expression, misc.DEFAULT_SERVER_DATETIME_FORMAT)
+            time.strptime(expression, DEFAULT_SERVER_DATETIME_FORMAT)
             value = expression
         elif field.type == "reference":
             record = self.get_record(expression)
@@ -590,12 +581,13 @@ class YamlInterpreter(object):
         if node.noupdate:
             self.noupdate = node.noupdate
         self.env = openerp.api.Environment(self.cr, self.uid, self.context)
+        self.sudo_env = self.env(user=SUPERUSER_ID)
 
     def process_python(self, node):
         python, statements = node.items()[0]
         assert python.model or python.id, "!python node must have attribute `model` or `id`"
         if python.id is None:
-            record = self.pool[python.model]
+            record = self.env[python.model]._model
         elif isinstance(python.id, basestring):
             record = self.get_record(python.id)
         else:
@@ -639,8 +631,8 @@ class YamlInterpreter(object):
             value = values[0]
             if not 'model' in value and (not 'eval' in value or not 'search' in value):
                 raise YamlImportException('You must provide a "model" and an "eval" or "search" to evaluate.')
-            value_model = self.get_model(value['model'])
-            local_context = {'obj': lambda x: value_model.browse(self.cr, self.uid, x, context=self.context)}
+            value_model = self.env[value['model']]
+            local_context = {'obj': value_model.browse}
             local_context.update(self.id_map)
             id = eval(value['eval'], self.eval_context, local_context)
 
@@ -652,7 +644,8 @@ class YamlInterpreter(object):
         signals=[x['signal'] for x in self.cr.dictfetchall()]
         if workflow.action not in signals:
             raise YamlImportException('Incorrect action %s. No such action defined' % workflow.action)
-        openerp.workflow.trg_validate(uid, workflow.model, id, workflow.action, self.cr)
+        record = self.env(user=uid)[workflow.model].browse(id)
+        record.signal_workflow(workflow.action)
 
     def _eval_params(self, model, params):
         args = []
@@ -664,13 +657,13 @@ class YamlInterpreter(object):
             elif is_eval(param):
                 value = self.process_eval(param)
             elif isinstance(param, types.DictionaryType): # supports XML syntax
-                param_model = self.get_model(param.get('model', model))
+                param_model = self.env[param.get('model', model)]
                 if 'search' in param:
                     q = eval(param['search'], self.eval_context)
-                    ids = param_model.search(self.cr, self.uid, q)
+                    ids = param_model.search(q).ids
                     value = self._get_first_result(ids)
                 elif 'eval' in param:
-                    local_context = {'obj': lambda x: param_model.browse(self.cr, self.uid, x, self.context)}
+                    local_context = {'obj': param_model.browse}
                     local_context.update(self.id_map)
                     value = eval(param['eval'], self.eval_context, local_context)
                 else:
@@ -684,12 +677,13 @@ class YamlInterpreter(object):
         function, params = node.items()[0]
         if self.isnoupdate(function) and self.mode != 'init':
             return
-        model = self.get_model(function.model)
+        model = self.env[function.model]._model
         if function.eval:
             args = self.process_eval(function.eval)
         else:
             args = self._eval_params(function.model, params)
         method = function.name
+        # this one still depends on the old API
         getattr(model, method)(self.cr, self.uid, *args)
 
     def _set_group_values(self, node, values):
@@ -734,9 +728,8 @@ class YamlInterpreter(object):
 
         self._set_group_values(node, values)
 
-        pid = self.pool['ir.model.data']._update(self.cr, SUPERUSER_ID, \
-                'ir.ui.menu', self.module, values, node.id, mode=self.mode, \
-                noupdate=self.isnoupdate(node), res_id=res and res[0] or False)
+        pid = self.sudo_env['ir.model.data']._update('ir.ui.menu', self.module, values, node.id, \
+                mode=self.mode, noupdate=self.isnoupdate(node), res_id=res and res[0] or False)
 
         if node.id and pid:
             self.id_map[node.id] = int(pid)
@@ -764,7 +757,6 @@ class YamlInterpreter(object):
             'view_mode': node.view_mode or 'tree,form',
             'usage': node.usage,
             'limit': node.limit,
-            'auto_refresh': node.auto_refresh,
             'multi': getattr(node, 'multi', False),
         }
 
@@ -772,27 +764,26 @@ class YamlInterpreter(object):
 
         if node.target:
             values['target'] = node.target
-        id = self.pool['ir.model.data']._update(self.cr, SUPERUSER_ID, \
-                'ir.actions.act_window', self.module, values, node.id, mode=self.mode)
+        id = self.sudo_env['ir.model.data']._update('ir.actions.act_window', self.module, values, node.id, mode=self.mode)
         self.id_map[node.id] = int(id)
 
         if node.src_model:
             keyword = 'client_action_relate'
             value = 'ir.actions.act_window,%s' % id
             replace = node.replace or True
-            self.pool['ir.model.data'].ir_set(self.cr, SUPERUSER_ID, 'action', keyword, \
-                    node.id, [node.src_model], value, replace=replace, noupdate=self.isnoupdate(node), isobject=True, xml_id=node.id)
+            self.sudo_env['ir.model.data'].ir_set('action', keyword, node.id, [node.src_model], value, \
+                replace=replace, noupdate=self.isnoupdate(node), isobject=True, xml_id=node.id)
         # TODO add remove ir.model.data
 
     def process_delete(self, node):
         assert getattr(node, 'model'), "Attribute %s of delete tag is empty !" % ('model',)
-        if node.model in self.pool:
+        if node.model in self.env:
             if node.search:
-                ids = self.pool[node.model].search(self.cr, self.uid, eval(node.search, self.eval_context))
+                records = self.env[node.model].search(eval(node.search, self.eval_context))
             else:
-                ids = [self.get_id(node.id)]
-            if len(ids):
-                self.pool[node.model].unlink(self.cr, self.uid, ids)
+                records = self.env[node.model].browse(self.get_id(node.id))
+            if records:
+                records.unlink()
         else:
             self._log("Record not deleted.")
 
@@ -801,16 +792,15 @@ class YamlInterpreter(object):
 
         res = {'name': node.name, 'url': node.url, 'target': node.target}
 
-        id = self.pool['ir.model.data']._update(self.cr, SUPERUSER_ID, \
-                "ir.actions.act_url", self.module, res, node.id, mode=self.mode)
+        id = self.sudo_env['ir.model.data']._update("ir.actions.act_url", self.module, res, node.id, mode=self.mode)
         self.id_map[node.id] = int(id)
         # ir_set
         if (not node.menu or eval(node.menu)) and id:
             keyword = node.keyword or 'client_action_multi'
             value = 'ir.actions.act_url,%s' % id
             replace = node.replace or True
-            self.pool['ir.model.data'].ir_set(self.cr, SUPERUSER_ID, 'action', \
-                    keyword, node.url, ["ir.actions.act_url"], value, replace=replace, \
+            self.sudo_env['ir.model.data'].ir_set('action', keyword, node.url, \
+                    ["ir.actions.act_url"], value, replace=replace, \
                     noupdate=self.isnoupdate(node), isobject=True, xml_id=node.id)
 
     def process_ir_set(self, node):
@@ -824,7 +814,7 @@ class YamlInterpreter(object):
             else:
                 value = expression
             res[fieldname] = value
-        self.pool['ir.model.data'].ir_set(self.cr, SUPERUSER_ID, res['key'], res['key2'], \
+        self.sudo_env['ir.model.data'].ir_set(res['key'], res['key2'], \
                 res['name'], res['models'], res['value'], replace=res.get('replace',True), \
                 isobject=res.get('isobject', False), meta=res.get('meta',None))
 
@@ -839,7 +829,7 @@ class YamlInterpreter(object):
         if node.auto:
             values['auto'] = eval(node.auto)
         if node.sxw:
-            sxw_file = misc.file_open(node.sxw)
+            sxw_file = file_open(node.sxw)
             try:
                 sxw_content = sxw_file.read()
                 values['report_sxw_content'] = sxw_content
@@ -853,7 +843,7 @@ class YamlInterpreter(object):
 
         self._set_group_values(node, values)
 
-        id = self.pool['ir.model.data']._update(self.cr, SUPERUSER_ID, "ir.actions.report.xml", \
+        id = self.sudo_env['ir.model.data']._update("ir.actions.report.xml", \
                 self.module, values, xml_id, noupdate=self.isnoupdate(node), mode=self.mode)
         self.id_map[xml_id] = int(id)
 
@@ -861,7 +851,7 @@ class YamlInterpreter(object):
             keyword = node.keyword or 'client_print_multi'
             value = 'ir.actions.report.xml,%s' % id
             replace = node.replace or True
-            self.pool['ir.model.data'].ir_set(self.cr, SUPERUSER_ID, 'action', \
+            self.sudo_env['ir.model.data'].ir_set('action', \
                     keyword, values['name'], [values['model']], value, replace=replace, isobject=True, xml_id=xml_id)
 
     def process_none(self):

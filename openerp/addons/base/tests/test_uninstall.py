@@ -1,57 +1,31 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 # This assumes an existing but uninitialized database.
+
+from contextlib import contextmanager
 import unittest
 
-import openerp
-from openerp import SUPERUSER_ID
-import common
+from openerp import api, registry, SUPERUSER_ID
+from openerp.tests import common
+from openerp.modules.registry import RegistryManager
 
-ADMIN_USER_ID = common.ADMIN_USER_ID
 
-def registry(model):
-    return openerp.modules.registry.RegistryManager.get(common.get_db_name())[model]
+@contextmanager
+def environment():
+    """ Return an environment with a new cursor for the current database; the
+        cursor is committed and closed after the context block.
+    """
+    reg = registry(common.get_db_name())
+    with reg.cursor() as cr:
+        yield api.Environment(cr, SUPERUSER_ID, {})
+        cr.commit()
 
-def cursor():
-    return openerp.modules.registry.RegistryManager.get(common.get_db_name()).cursor()
 
-def get_module(module_name):
-    registry = openerp.modules.registry.RegistryManager.get(common.get_db_name())
-    return registry.get(module_name)
+MODULE = 'test_uninstall'
+MODEL = 'test_uninstall.model'
 
-def reload_registry():
-    openerp.modules.registry.RegistryManager.new(
-        common.get_db_name(), update_module=True)
-
-def search_registry(model_name, domain):
-    cr = cursor()
-    model = registry(model_name)
-    record_ids = model.search(cr, SUPERUSER_ID, domain, {})
-    cr.close()
-    return record_ids
-
-def install_module(module_name):
-    ir_module_module = registry('ir.module.module')
-    cr = cursor()
-    module_ids = ir_module_module.search(cr, SUPERUSER_ID,
-        [('name', '=', module_name)], {})
-    assert len(module_ids) == 1
-    ir_module_module.button_install(cr, SUPERUSER_ID, module_ids, {})
-    cr.commit()
-    cr.close()
-    reload_registry()
-
-def uninstall_module(module_name):
-    ir_module_module = registry('ir.module.module')
-    cr = cursor()
-    module_ids = ir_module_module.search(cr, SUPERUSER_ID,
-        [('name', '=', module_name)], {})
-    assert len(module_ids) == 1
-    ir_module_module.button_uninstall(cr, SUPERUSER_ID, module_ids, {})
-    cr.commit()
-    cr.close()
-    reload_registry()
-
-class test_uninstall(unittest.TestCase):
+class TestUninstall(unittest.TestCase):
     """
     Test the install/uninstall of a test module. The module is available in
     `openerp.tests` which should be present in the addons-path.
@@ -59,26 +33,29 @@ class test_uninstall(unittest.TestCase):
 
     def test_01_install(self):
         """ Check a few things showing the module is installed. """
-        install_module('test_uninstall')
-        assert get_module('test_uninstall.model')
+        with environment() as env:
+            module = env['ir.module.module'].search([('name', '=', MODULE)])
+            assert len(module) == 1
+            module.button_install()
+        RegistryManager.new(common.get_db_name(), update_module=True)
 
-        assert search_registry('ir.model.data',
-            [('module', '=', 'test_uninstall')])
-
-        assert search_registry('ir.model.fields',
-            [('model', '=', 'test_uninstall.model')])
+        with environment() as env:
+            self.assertIn('test_uninstall.model', env.registry)
+            self.assertTrue(env['ir.model.data'].search([('module', '=', MODULE)]))
+            self.assertTrue(env['ir.model.fields'].search([('model', '=', MODEL)]))
 
     def test_02_uninstall(self):
         """ Check a few things showing the module is uninstalled. """
-        uninstall_module('test_uninstall')
-        assert not get_module('test_uninstall.model')
+        with environment() as env:
+            module = env['ir.module.module'].search([('name', '=', MODULE)])
+            assert len(module) == 1
+            module.button_uninstall()
+        RegistryManager.new(common.get_db_name(), update_module=True)
 
-        assert not search_registry('ir.model.data',
-            [('module', '=', 'test_uninstall')])
-
-        assert not search_registry('ir.model.fields',
-            [('model', '=', 'test_uninstall.model')])
-
+        with environment() as env:
+            self.assertNotIn('test_uninstall.model', env.registry)
+            self.assertFalse(env['ir.model.data'].search([('module', '=', MODULE)]))
+            self.assertFalse(env['ir.model.fields'].search([('model', '=', MODEL)]))
 
 
 if __name__ == '__main__':

@@ -34,10 +34,6 @@ class AccountConfigSettings(models.TransientModel):
         help='Check this box if this company is a legal entity.')
     currency_id = fields.Many2one('res.currency', compute='_get_currency_id', inverse='_set_currency_id', required=True,
         string='Default company currency', help="Main currency of the company.")
-    paypal_account = fields.Char(related='company_id.paypal_account', size=128, string='Paypal account',
-        help="""Paypal account (email) for receiving online payments (credit card, etc.)
-             If you set a paypal account, the customer  will be able to pay your invoices or quotations
-             with a button \"Pay with  Paypal\" in automated emails or through the Odoo portal.""")
     company_footer = fields.Text(related='company_id.rml_footer', string='Bank accounts footer preview',
         readonly=True, help="Bank accounts as printed in the footer of each printed document")
 
@@ -85,18 +81,26 @@ class AccountConfigSettings(models.TransientModel):
     module_account_reports = fields.Boolean("Get dynamic accounting reports")
     group_multi_currency = fields.Boolean(string='Allow multi currencies',
         implied_group='base.group_multi_currency',
-        help="Allows you multi currency environment")
+        help="Allows to work in a multi currency environment")
     group_analytic_accounting = fields.Boolean(string='Analytic accounting',
         implied_group='analytic.group_analytic_accounting',
         help="Allows you to use the analytic accounting.")
+    group_warning_account = fields.Selection([
+            (0, 'All the partners can be used in invoices'),
+            (1, 'An informative or blocking warning can be set on a partner')
+            ], "Warning", implied_group='account.group_warning_account')
     currency_exchange_journal_id = fields.Many2one('account.journal',
         related='company_id.currency_exchange_journal_id',
         string="Rate Difference Journal",)
     module_account_asset = fields.Boolean(string='Assets management',
         help='Asset management: This allows you to manage the assets owned by a company or a person. '
                  'It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n\n'
-             '-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, '
-             'but not accounting (Journal Items, Chart of Accounts, ...)')
+             '-This installs the module account_asset.')
+    module_account_deferred_revenue = fields.Boolean(string="Revenue Recognition", 
+        help='This allows you to manage the revenue recognition on selling products. '
+             'It keeps track of the installments occurred on those revenue recognitions, '
+             'and creates account moves for those installment lines\n'
+             '-This installs the module account_deferred_revenue.')
     module_account_budget = fields.Boolean(string='Budget management',
         help='This allows accountants to manage analytic and crossovered budgets. '
              'Once the master budgets and the budgets are defined, '
@@ -126,16 +130,19 @@ class AccountConfigSettings(models.TransientModel):
 
     module_account_plaid = fields.Boolean(string="Plaid Connector",
                                           help='Get your bank statements from you bank and import them through plaid.com.\n'
-                                          '-that installs the module account_plaid.')
+                                          '-This installs the module account_plaid.')
     module_account_yodlee = fields.Boolean("Bank Interface - Sync your bank feeds automatically",
         help='Get your bank statements from your bank and import them through yodlee.com.\n'
-                                          '-that installs the module account_yodlee.')
+                                          '-This installs the module account_yodlee.')
     module_account_bank_statement_import_qif = fields.Boolean("Import .qif files",
         help='Get your bank statements from your bank and import them in Odoo in the .QIF format.\n'
-            'This installs the module account_bank_statement_import_qif.')
+            '-This installs the module account_bank_statement_import_qif.')
     module_account_bank_statement_import_ofx = fields.Boolean("Import in .ofx format",
         help='Get your bank statements from your bank and import them in Odoo in the .OFX format.\n'
-            'This installs the module account_bank_statement_import_ofx.')
+            '-This installs the module account_bank_statement_import_ofx.')
+    module_account_bank_statement_import_csv = fields.Boolean("Import in .csv format",
+        help='Get your bank statements from your bank and import them in Odoo in the .CSV format.\n'
+            '-This installs the module account_bank_statement_import_csv.')
 
 
     @api.model
@@ -155,7 +162,6 @@ class AccountConfigSettings(models.TransientModel):
             self.expects_chart_of_accounts = company.expects_chart_of_accounts
             self.currency_id = company.currency_id
             self.transfer_account_id = company.transfer_account_id
-            self.paypal_account = company.paypal_account
             self.company_footer = company.rml_footer
             self.tax_calculation_rounding_method = company.tax_calculation_rounding_method
             self.bank_account_code_prefix = company.bank_account_code_prefix

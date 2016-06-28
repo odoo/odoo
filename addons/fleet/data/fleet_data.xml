@@ -1,0 +1,656 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+      <record forcecreate="True" id="ir_cron_contract_costs_generator" model="ir.cron">
+        <field name="name">Generation of contracts costs based on the costs frequency</field>
+        <field eval="True" name="active" />
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field eval="False" name="doall" />
+        <field eval="'fleet.vehicle.log.contract'" name="model" />
+        <field eval="'run_scheduler'" name="function" />
+        <field eval="'()'" name="args" />
+      </record>
+
+      <record id="type_service_service_1" model="fleet.service.type">
+          <field name="name">Calculation Benefit In Kind</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_2" model="fleet.service.type">
+          <field name="name">Depreciation and Interests</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_3" model="fleet.service.type">
+          <field name="name">Tax roll</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_5" model="fleet.service.type">
+          <field name="name">Summer tires</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_6" model="fleet.service.type">
+          <field name="name">Snow tires</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_7" model="fleet.service.type">
+          <field name="name">Summer tires</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_8" model="fleet.service.type">
+          <field name="name">Repair and maintenance</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_9" model="fleet.service.type">
+          <field name="name">Assistance</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_10" model="fleet.service.type">
+          <field name="name">Replacement Vehicle</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_11" model="fleet.service.type">
+          <field name="name">Management Fee</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_12" model="fleet.service.type">
+          <field name="name">Rent (Excluding VAT)</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_13" model="fleet.service.type">
+          <field name="name">Entry into service tax</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_14" model="fleet.service.type">
+          <field name="name">Total expenses (Excluding VAT)</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_15" model="fleet.service.type">
+          <field name="name">Residual value (Excluding VAT)</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_16" model="fleet.service.type">
+          <field name="name">Options</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_17" model="fleet.service.type">
+          <field name="name">Emissions</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_18" model="fleet.service.type">
+          <field name="name">Touring Assistance</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_19" model="fleet.service.type">
+          <field name="name">Residual value in %</field>
+          <field name="category">service</field>
+      </record>
+
+    	<record id="type_service_1" model="fleet.service.type">
+          <field name="name">A/C Compressor Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_2" model="fleet.service.type">
+          <field name="name">A/C Condenser Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_3" model="fleet.service.type">
+          <field name="name">A/C Diagnosis</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_4" model="fleet.service.type">
+          <field name="name">A/C Evaporator Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_5" model="fleet.service.type">
+          <field name="name">A/C Recharge</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_6" model="fleet.service.type">
+          <field name="name">Air Filter Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_7" model="fleet.service.type">
+          <field name="name">Alternator Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_8" model="fleet.service.type">
+          <field name="name">Ball Joint Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_9" model="fleet.service.type">
+          <field name="name">Battery Inspection</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_10" model="fleet.service.type">
+          <field name="name">Battery Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_11" model="fleet.service.type">
+          <field name="name">Brake Caliper Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_12" model="fleet.service.type">
+          <field name="name">Brake Inspection</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_13" model="fleet.service.type">
+          <field name="name">Brake Pad(s) Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_14" model="fleet.service.type">
+          <field name="name">Car Wash</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_15" model="fleet.service.type">
+          <field name="name">Catalytic Converter Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_16" model="fleet.service.type">
+          <field name="name">Charging System Diagnosis</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_17" model="fleet.service.type">
+          <field name="name">Door Window Motor/Regulator Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_18" model="fleet.service.type">
+          <field name="name">Engine Belt Inspection</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_19" model="fleet.service.type">
+          <field name="name">Engine Coolant Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_20" model="fleet.service.type">
+          <field name="name">Engine/Drive Belt(s) Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_21" model="fleet.service.type">
+          <field name="name">Exhaust Manifold Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_22" model="fleet.service.type">
+          <field name="name">Fuel Injector Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_23" model="fleet.service.type">
+          <field name="name">Fuel Pump Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_24" model="fleet.service.type">
+          <field name="name">Head Gasket(s) Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_25" model="fleet.service.type">
+          <field name="name">Heater Blower Motor Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_26" model="fleet.service.type">
+          <field name="name">Heater Control Valve Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_27" model="fleet.service.type">
+          <field name="name">Heater Core Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_28" model="fleet.service.type">
+          <field name="name">Heater Hose Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_29" model="fleet.service.type">
+          <field name="name">Ignition Coil Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_30" model="fleet.service.type">
+          <field name="name">Intake Manifold Gasket Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_31" model="fleet.service.type">
+          <field name="name">Oil Change</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_32" model="fleet.service.type">
+          <field name="name">Oil Pump Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_33" model="fleet.service.type">
+          <field name="name">Other Maintenance</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_34" model="fleet.service.type">
+          <field name="name">Oxygen Sensor Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_35" model="fleet.service.type">
+          <field name="name">Power Steering Hose Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_36" model="fleet.service.type">
+          <field name="name">Power Steering Pump Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_37" model="fleet.service.type">
+          <field name="name">Radiator Repair</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_38" model="fleet.service.type">
+          <field name="name">Resurface Rotors</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_39" model="fleet.service.type">
+          <field name="name">Rotate Tires</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_40" model="fleet.service.type">
+          <field name="name">Rotor Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_41" model="fleet.service.type">
+          <field name="name">Spark Plug Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_42" model="fleet.service.type">
+          <field name="name">Starter Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_43" model="fleet.service.type">
+          <field name="name">Thermostat Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_44" model="fleet.service.type">
+          <field name="name">Tie Rod End Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_45" model="fleet.service.type">
+          <field name="name">Tire Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_46" model="fleet.service.type">
+          <field name="name">Tire Service</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_47" model="fleet.service.type">
+          <field name="name">Transmission Filter Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_48" model="fleet.service.type">
+          <field name="name">Transmission Fluid Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_49" model="fleet.service.type">
+          <field name="name">Transmission Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_50" model="fleet.service.type">
+          <field name="name">Water Pump Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_51" model="fleet.service.type">
+          <field name="name">Wheel Alignment</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_52" model="fleet.service.type">
+          <field name="name">Wheel Bearing Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_53" model="fleet.service.type">
+          <field name="name">Windshield Wiper(s) Replacement</field>
+          <field name="category">service</field>
+      </record>
+
+
+      <record id="type_contract_omnium" model="fleet.service.type">
+          <field name="name">Omnium</field>
+          <field name="category">contract</field>
+      </record>
+
+      <record id="type_contract_leasing" model="fleet.service.type">
+          <field name="name">Leasing</field>
+          <field name="category">contract</field>
+      </record>
+
+       <record id="type_contract_repairing" model="fleet.service.type">
+          <field name="name">Repairing</field>
+          <field name="category">both</field>
+      </record>  
+
+      <record id="type_service_refueling" model="fleet.service.type">
+          <field name="name">Refueling</field>
+          <field name="category">service</field>
+      </record> 
+
+      <record id="vehicle_tag_junior" model="fleet.vehicle.tag" >
+        <field name="name">Junior</field>
+        <field name="color" eval="1"/>
+      </record>
+
+      <record id="vehicle_tag_senior" model="fleet.vehicle.tag" >
+        <field name="name">Senior</field>
+        <field name="color" eval="2"/>
+      </record>
+
+      <record id="vehicle_tag_leasing" model="fleet.vehicle.tag" >
+        <field name="name">Employee Car</field>
+        <field name="color" eval="3"/>
+      </record>
+
+      <record id="vehicle_tag_purchased" model="fleet.vehicle.tag" >
+        <field name="name">Purchased</field>
+        <field name="color" eval="4"/>
+      </record>
+
+      <record id="vehicle_tag_compact" model="fleet.vehicle.tag" >
+        <field name="name">Compact</field>
+        <field name="color" eval="5"/>
+      </record>
+
+      <record id="vehicle_tag_sedan" model="fleet.vehicle.tag" >
+        <field name="name">Sedan</field>
+        <field name="color" eval="6"/>
+      </record>
+
+      <record id="vehicle_tag_convertible" model="fleet.vehicle.tag" >
+        <field name="name">Convertible</field>
+        <field name="color" eval="7"/>
+      </record>
+
+      <record id="vehicle_tag_break" model="fleet.vehicle.tag" >
+        <field name="name">Break</field>
+        <field name="color" eval="8"/>
+      </record>
+
+      <record id="model_corsa" model="fleet.vehicle.model">
+          <field name="name">Corsa</field>
+          <field name="brand_id" ref="brand_opel" />
+      </record>
+
+      <record id="model_astra" model="fleet.vehicle.model">
+          <field name="name">Astra</field>
+          <field name="brand_id" ref="brand_opel" />
+      </record>
+
+      <record id="model_agila" model="fleet.vehicle.model">
+          <field name="name">Agila</field>
+          <field name="brand_id" ref="brand_opel" />
+      </record>
+
+      <record id="model_combotour" model="fleet.vehicle.model">
+          <field name="name">Combo Tour</field>
+          <field name="brand_id" ref="brand_opel" />
+      </record>
+
+      <record id="model_meriva" model="fleet.vehicle.model">
+          <field name="name">Meriva</field>
+          <field name="brand_id" ref="brand_opel" />
+      </record>
+
+      <record id="model_astragtc" model="fleet.vehicle.model">
+          <field name="name">AstraGTC</field>
+          <field name="brand_id" ref="brand_opel" />
+      </record>
+
+      <record id="model_zafira" model="fleet.vehicle.model">
+          <field name="name">Zafira</field>
+          <field name="brand_id" ref="brand_opel" />
+      </record>
+
+      <record id="model_zafiratourer" model="fleet.vehicle.model">
+          <field name="name">Zafira Tourer</field>
+          <field name="brand_id" ref="brand_opel" />
+      </record>
+
+      <record id="model_insignia" model="fleet.vehicle.model">
+          <field name="name">Insignia</field>
+          <field name="brand_id" ref="brand_opel" />
+      </record>
+
+      <record id="model_mokka" model="fleet.vehicle.model">
+          <field name="name">Mokka</field>
+          <field name="brand_id" ref="brand_opel" />
+      </record>
+
+      <record id="model_antara" model="fleet.vehicle.model">
+          <field name="name">Antara</field>
+          <field name="brand_id" ref="brand_opel" />
+      </record>
+
+      <record id="model_ampera" model="fleet.vehicle.model">
+          <field name="name">Ampera</field>
+          <field name="brand_id" ref="brand_opel" />
+      </record>
+
+      <record id="model_a1" model="fleet.vehicle.model">
+          <field name="name">A1</field>
+          <field name="brand_id" ref="brand_audi" />
+      </record>
+
+      <record id="model_a3" model="fleet.vehicle.model">
+          <field name="name">A3</field>
+          <field name="brand_id" ref="brand_audi" />
+      </record>
+
+      <record id="model_a4" model="fleet.vehicle.model">
+          <field name="name">A4</field>
+          <field name="brand_id" ref="brand_audi" />
+      </record>
+
+      <record id="model_a5" model="fleet.vehicle.model">
+          <field name="name">A5</field>
+          <field name="brand_id" ref="brand_audi" />
+      </record>
+
+      <record id="model_a6" model="fleet.vehicle.model">
+          <field name="name">A6</field>
+          <field name="brand_id" ref="brand_audi" />
+      </record>
+
+      <record id="model_a7" model="fleet.vehicle.model">
+          <field name="name">A7</field>
+          <field name="brand_id" ref="brand_audi" />
+      </record>
+
+      <record id="model_a8" model="fleet.vehicle.model">
+          <field name="name">A8</field>
+          <field name="brand_id" ref="brand_audi" />
+      </record>
+
+      <record id="model_q3" model="fleet.vehicle.model">
+          <field name="name">Q3</field>
+          <field name="brand_id" ref="brand_audi" />
+      </record>
+
+      <record id="model_q5" model="fleet.vehicle.model">
+          <field name="name">Q5</field>
+          <field name="brand_id" ref="brand_audi" />
+      </record>
+
+      <record id="model_q7" model="fleet.vehicle.model">
+          <field name="name">Q7</field>
+          <field name="brand_id" ref="brand_audi" />
+      </record>
+
+      <record id="model_tt" model="fleet.vehicle.model">
+          <field name="name">TT</field>
+          <field name="brand_id" ref="brand_audi" />
+      </record>
+
+      <record id="model_serie1" model="fleet.vehicle.model">
+          <field name="name">Serie 1</field>
+          <field name="brand_id" ref="brand_bmw" />
+      </record>
+
+      <record id="model_serie3" model="fleet.vehicle.model">
+          <field name="name">Serie 3</field>
+          <field name="brand_id" ref="brand_bmw" />
+      </record>
+
+      <record id="model_serie5" model="fleet.vehicle.model">
+          <field name="name">Serie 5</field>
+          <field name="brand_id" ref="brand_bmw" />
+      </record>
+
+      <record id="model_serie6" model="fleet.vehicle.model">
+          <field name="name">Serie 6</field>
+          <field name="brand_id" ref="brand_bmw" />
+      </record>
+
+      <record id="model_serie7" model="fleet.vehicle.model">
+          <field name="name">Serie 7</field>
+          <field name="brand_id" ref="brand_bmw" />
+      </record>
+
+      <record id="model_seriex" model="fleet.vehicle.model">
+          <field name="name">Serie X</field>
+          <field name="brand_id" ref="brand_bmw" />
+      </record>
+
+      <record id="model_seriez4" model="fleet.vehicle.model">
+          <field name="name">Serie Z4</field>
+          <field name="brand_id" ref="brand_bmw" />
+      </record>
+
+      <record id="model_seriem" model="fleet.vehicle.model">
+          <field name="name">Serie M</field>
+          <field name="brand_id" ref="brand_bmw" />
+      </record>
+
+      <record id="model_seriehybrid" model="fleet.vehicle.model">
+          <field name="name">Serie Hybrid</field>
+          <field name="brand_id" ref="brand_bmw" />
+      </record>
+
+      <record id="model_classa" model="fleet.vehicle.model">
+          <field name="name">Class A</field>
+          <field name="brand_id" ref="brand_mercedes" />
+      </record>
+
+      <record id="model_classb" model="fleet.vehicle.model">
+          <field name="name">Class B</field>
+          <field name="brand_id" ref="brand_mercedes" />
+      </record>
+
+      <record id="model_classc" model="fleet.vehicle.model">
+          <field name="name">Class C</field>
+          <field name="brand_id" ref="brand_mercedes" />
+      </record>
+
+      <record id="model_classcl" model="fleet.vehicle.model">
+          <field name="name">Class CL</field>
+          <field name="brand_id" ref="brand_mercedes" />
+      </record>
+
+      <record id="model_classcls" model="fleet.vehicle.model">
+          <field name="name">Class CLS</field>
+          <field name="brand_id" ref="brand_mercedes" />
+      </record>
+
+      <record id="model_classe" model="fleet.vehicle.model">
+          <field name="name">Class E</field>
+          <field name="brand_id" ref="brand_mercedes" />
+      </record>
+
+      <record id="model_classm" model="fleet.vehicle.model">
+          <field name="name">Class M</field>
+          <field name="brand_id" ref="brand_mercedes" />
+      </record>
+
+      <record id="model_classgl" model="fleet.vehicle.model">
+          <field name="name">Class GL</field>
+          <field name="brand_id" ref="brand_mercedes" />
+      </record>
+
+      <record id="model_classglk" model="fleet.vehicle.model">
+          <field name="name">Class GLK</field>
+          <field name="brand_id" ref="brand_mercedes" />
+      </record>
+
+      <record id="model_classr" model="fleet.vehicle.model">
+          <field name="name">Class R</field>
+          <field name="brand_id" ref="brand_mercedes" />
+      </record>
+
+      <record id="model_classs" model="fleet.vehicle.model">
+          <field name="name">Class S</field>
+          <field name="brand_id" ref="brand_mercedes" />
+      </record>
+
+      <record id="model_classslk" model="fleet.vehicle.model">
+          <field name="name">Class SLK</field>
+          <field name="brand_id" ref="brand_mercedes" />
+      </record>
+
+      <record id="model_classsls" model="fleet.vehicle.model">
+          <field name="name">SLS</field>
+          <field name="brand_id" ref="brand_mercedes" />
+      </record>
+</odoo>

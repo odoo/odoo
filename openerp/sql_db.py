@@ -11,6 +11,7 @@ the ORM does, in fact.
 from contextlib import contextmanager
 from functools import wraps
 import logging
+import time
 import urlparse
 import uuid
 
@@ -47,7 +48,6 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,)
 
 import tools
 from tools.func import frame_codeinfo
-from datetime import datetime as mdt
 from datetime import timedelta
 import threading
 from inspect import currentframe
@@ -205,23 +205,17 @@ class Cursor(object):
 
     @check
     def execute(self, query, params=None, log_exceptions=None):
-        if '%d' in query or '%f' in query:
-            _logger.info("SQL queries cannot contain %%d or %%f anymore. Use only %%s:\n%s" % query, 
-                exc_info=_logger.isEnabledFor(logging.DEBUG))
         if params and not isinstance(params, (tuple, list, dict)):
-            _logger.info("SQL query parameters should be a tuple, list or dict; got %r", params)
+            # psycopg2's TypeError is not clear if you mess up the params
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
         if self.sql_log:
-            now = mdt.now()
+            now = time.time()
+            _logger.debug("query: %s", query)
 
         try:
             params = params or None
             res = self._obj.execute(query, params)
-        except psycopg2.ProgrammingError, pe:
-            if self._default_log_exceptions if log_exceptions is None else log_exceptions:
-                _logger.info("Programming error: %s, in query %s", pe, query)
-            raise
         except Exception:
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
                 _logger.info("bad query: %s", self._obj.query or query)
@@ -232,10 +226,8 @@ class Cursor(object):
 
         # advanced stats only if sql_log is enabled
         if self.sql_log:
-            delay = mdt.now() - now
-            delay = delay.seconds * 1E6 + delay.microseconds
+            delay = (time.time() - now) * 1E6
 
-            _logger.debug("query: %s", self._obj.query)
             res_from = re_from.match(query.lower())
             if res_from:
                 self.sql_from_log.setdefault(res_from.group(1), [0, 0])
@@ -248,10 +240,10 @@ class Cursor(object):
                 self.sql_into_log[res_into.group(1)][1] += delay
         return res
 
-    def split_for_in_conditions(self, ids):
+    def split_for_in_conditions(self, ids, size=None):
         """Split a list of identifiers into one or more smaller tuples
            safe for IN conditions, after uniquifying them."""
-        return tools.misc.split_every(self.IN_MAX, ids)
+        return tools.misc.split_every(size or self.IN_MAX, ids)
 
     def print_log(self):
         global sql_counter

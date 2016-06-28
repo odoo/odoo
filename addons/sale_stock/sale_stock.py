@@ -193,10 +193,10 @@ class SaleOrderLine(models.Model):
         super(SaleOrderLine, self)._get_delivered_qty()
         qty = 0.0
         for move in self.procurement_ids.mapped('move_ids').filtered(lambda r: r.state == 'done' and not r.scrapped):
-            #Note that we don't decrease quantity for customer returns on purpose: these are exeptions that must be treated manually. Indeed,
-            #modifying automatically the delivered quantity may trigger an automatic reinvoicing (refund) of the SO, which is definitively not wanted
             if move.location_dest_id.usage == "customer":
                 qty += self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
+            elif move.location_dest_id.usage == "internal" and move.to_refund_so:
+                qty -= self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
         return qty
 
     @api.multi
@@ -228,13 +228,13 @@ class SaleOrderLine(models.Model):
         if wh_mto_route and wh_mto_route <= product_routes:
             is_available = True
         else:
-            mto_route_id = False
+            mto_route = False
             try:
-                mto_route_id = self.env['stock.warehouse']._get_mto_route()
+                mto_route = self.env['stock.warehouse']._get_mto_route()
             except UserError:
                 # if route MTO not found in ir_model_data, we treat the product as in MTS
                 pass
-            if mto_route_id and mto_route_id in product_routes.ids:
+            if mto_route and mto_route in product_routes:
                 is_available = True
 
         # Check Drop-Shipping
@@ -265,16 +265,17 @@ class AccountInvoice(models.Model):
 class ProcurementOrder(models.Model):
     _inherit = "procurement.order"
 
-    @api.model
-    def _run_move_create(self, procurement):
-        vals = super(ProcurementOrder, self)._run_move_create(procurement)
+    def _run_move_create(self):
+        vals = super(ProcurementOrder, self)._run_move_create()
         if self.sale_line_id:
             vals.update({'sequence': self.sale_line_id.sequence})
         return vals
 
-
 class StockMove(models.Model):
     _inherit = "stock.move"
+
+    to_refund_so = fields.Boolean(string="To Refund in SO", default=False,
+        help='Trigger a decrease of the delivered quantity in the associated Sale Order')
 
     @api.multi
     def action_done(self):
@@ -283,12 +284,23 @@ class StockMove(models.Model):
         # Update delivered quantities on sale order lines
         todo = self.env['sale.order.line']
         for move in self:
-            if (move.procurement_id.sale_line_id) and (move.product_id.invoice_policy in ('order', 'delivery')):
+            if (move.procurement_id.sale_line_id) and (move.product_id.expense_policy=='no'):
                 todo |= move.procurement_id.sale_line_id
         for line in todo:
             line.qty_delivered = line._get_delivered_qty()
         return result
 
+    @api.multi
+    def assign_picking(self):
+        result = super(StockMove, self).assign_picking()
+        for move in self:
+            if move.picking_id and move.picking_id.group_id:
+                picking = move.picking_id
+                order = self.env['sale.order'].search([('procurement_group_id', '=', picking.group_id.id)])
+                picking.message_post_with_view('mail.message_origin_link',
+                    values={'self': picking, 'origin': order},
+                    subtype_id=self.env.ref('mail.mt_note').id)
+        return result
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
@@ -311,6 +323,37 @@ class StockPicking(models.Model):
 
     sale_id = fields.Many2one(comodel_name='sale.order', string="Sale Order",
                               compute='_compute_sale_id', search='_search_sale_id')
+
+    @api.multi
+    def _create_backorder(self, backorder_moves=[]):
+        res = super(StockPicking, self)._create_backorder(backorder_moves)
+        for picking in self.filtered(lambda pick: pick.picking_type_id.code == 'outgoing'):
+            backorder = picking.search([('backorder_id', '=', picking.id)])
+            order = self.env['sale.order'].search([('procurement_group_id', '=', backorder.group_id.id)])
+            backorder.message_post_with_view('mail.message_origin_link',
+                values={'self': backorder, 'origin': order},
+                subtype_id=self.env.ref('mail.mt_note').id)
+        return res
+
+class StockReturnPicking(models.TransientModel):
+    _inherit = "stock.return.picking"
+
+    @api.multi
+    def _create_returns(self):
+        new_picking_id, pick_type_id = super(StockReturnPicking, self)._create_returns()
+        new_picking = self.env['stock.picking'].browse([new_picking_id])
+        for move in new_picking.move_lines:
+            return_picking_line = self.product_return_moves.filtered(lambda r: r.move_id == move.origin_returned_move_id)
+            if return_picking_line and return_picking_line.to_refund_so:
+                move.to_refund_so = True
+
+        return new_picking_id, pick_type_id
+
+
+class StockReturnPickingLine(models.TransientModel):
+    _inherit = "stock.return.picking.line"
+
+    to_refund_so = fields.Boolean(string="To Refund", help='Trigger a decrease of the delivered quantity in the associated Sale Order')
 
 
 class AccountInvoiceLine(models.Model):

@@ -13,19 +13,19 @@
                     </t>
                     <th class="oe_timesheet_weekly_date_head">Total</th>
                 </tr>
-                <tr t-foreach="widget.accounts" t-as="account">
-                    <td class="oe_timesheet_weekly_account" colspan="2"><a href="javascript:void(0)" t-att-data-id="JSON.stringify(account.account)"><t t-esc="widget.account_names[account.account]"/></a></td>
+                <tr t-foreach="widget.projects" t-as="project">
+                    <td class="oe_timesheet_weekly_account" colspan="2"><a href="javascript:void(0)" t-att-data-id="JSON.stringify(project.project)"><t t-esc="widget.project_names[project.project]"/></a></td>
                     <t t-set="day_count" t-value="0"/>
-                    <t t-foreach="account.days" t-as="day">
+                    <t t-foreach="project.days" t-as="day">
                         <td t-att-class="moment().format('DD-MM-YYYY') === moment(day.day).format('DD-MM-YYYY') ? 'oe_timesheet_weekly_today' : ''">
-                            <input t-if="!widget.get('effective_readonly')" class="oe_timesheet_weekly_input" t-att-data-account="account.account"
+                            <input t-if="!widget.get('effective_readonly')" class="oe_timesheet_weekly_input" t-att-data-project="project.project"
                                 t-att-data-day-count="day_count" type="text"/>
-                            <span t-if="widget.get('effective_readonly')" t-att-data-account="account.account"
+                            <span t-if="widget.get('effective_readonly')" t-att-data-project="project.project"
                                 t-att-data-day-count="day_count" class="oe_timesheet_weekly_box"/>
                             <t t-set="day_count" t-value="day_count + 1"/>
                         </td>
                     </t>
-                    <td t-att-data-account-total="account.account" class="oe_timesheet_total"/>
+                    <td t-att-data-project-total="project.project" class="oe_timesheet_total"/>
                 </tr>
                 <tr>
                     <td class="o_add_timesheet_line">
@@ -46,7 +46,7 @@
                     <td class="oe_timesheet_weekly_supertotal oe_timesheet_total"/>
                 </tr>
             </table>
-            <div t-if="widget.accounts.length == 0">
+            <div t-if="widget.projects.length == 0">
                 <div class="oe_view_nocontent oe_edit_only">
                     <p class="oe_view_nocontent_create">Click to add projects, contracts or analytic accounts.</p>
                     <p>You will be able to register your working hours and activities.</p>

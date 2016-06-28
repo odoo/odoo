@@ -6,7 +6,6 @@
         <menuitem id="base.menu_mrp_root"
             name="Manufacturing"
             groups="group_mrp_user,group_mrp_manager"
-            icon="fa-wrench"
             web_icon="mrp,static/description/icon.png"
             sequence="35"/>
 
@@ -28,7 +27,7 @@
         <menuitem id="menu_mrp_configuration"
             name="Configuration"
             parent="base.menu_mrp_root"
-            groups="group_mrp_manager,base.group_configuration"
+            groups="group_mrp_manager"
             sequence="100"/>
 
         <menuitem id="menu_pm_resources_config"
@@ -166,6 +165,7 @@
                 <tree string="Work Center">
                     <field name="code"/>
                     <field name="name"/>
+                    <field name="active" invisible="1"/>
                     <field name="resource_type"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
@@ -176,6 +176,11 @@
             <field name="model">mrp.workcenter</field>
             <field name="arch" type="xml">
                 <form string="Work Center">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
                     <group col="4">
                         <group>
                             <field name="name"/>
@@ -185,7 +190,6 @@
                         <group>
                             <field name="code"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                            <field name="active"/>
                         </group>
                     </group>
                     <notebook>
@@ -221,7 +225,7 @@
                 <search string="Search for mrp workcenter">
                     <field name="name" string="Mrp Workcenter" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
                     <field name="resource_type"/>
-                    <filter string="Inactive" domain="[('active','=',False)]"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By...">
                         <filter string="Type" domain="[]" context="{'group_by':'resource_type'}"/>
                         <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
@@ -299,6 +303,11 @@
             <field name="arch" type="xml">
                 <form string="Routing">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
                         <group>
                             <group>
                                 <field name="name"/>
@@ -307,7 +316,6 @@
                             <group>
                                 <field name="location_id"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                <field name="active"/>
                            </group>
                         </group>
                         <notebook>
@@ -329,6 +337,7 @@
                 <tree string="Routing">
                     <field name="code"/>
                     <field name="name"/>
+                    <field name="active" invisible="1"/>
                     <field name="location_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
@@ -340,7 +349,7 @@
             <field name="arch" type="xml">
                 <search string="Routing">
                     <field name="name" string="Routing" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
-                    <filter string="Inactive" domain="[('active','=',False)]"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <field name="location_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <group expand="0" string="Group By...">
@@ -380,6 +389,11 @@
             <field name="arch" type="xml">
                 <form string="Bill of Material">
                     <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
                     <group>
                         <group>
                             <field name="product_tmpl_id" on_change="onchange_product_tmpl_id(product_tmpl_id, product_qty, context)"/>
@@ -422,7 +436,6 @@
                                 <group>
                                     <field name="position"/>
                                     <field name="sequence"/>
-                                    <field name="active"/>
                                 </group>
                                 <group>
                                     <field name="date_start"/>
@@ -453,6 +466,7 @@
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
                 <tree string="Bill of Materials" default_order="product_tmpl_id">
+                    <field name="active" invisible="1"/>
                     <field name="product_tmpl_id"/>
                     <field name="code"/>
                     <field name="product_id" groups="product.group_product_variant"/>
@@ -466,6 +480,7 @@
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
                 <search string="Search Bill Of Material">
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <field name="code"/>
                     <field name="bom_line_ids" string="Components"/>
                     <field name="product_tmpl_id" string="Product"/>
@@ -617,10 +632,10 @@
                                                 ('product_id','=',False)]"
                                 context="{'default_product_id': product_id, 'default_product_tmpl_id': product_tmpl_id}" on_change="bom_id_change(bom_id)" required="1"/>
                             <field name="routing_id" groups="mrp.group_mrp_routings"/>
-                            <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'mrp.group_mrp_user']}"/>
+                            <field name="user_id"/>
                             <field name="origin"/>
                         </group>
-                        <group groups="stock.group_locations">
+                        <group groups="stock.group_stock_multi_locations">
                             <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
                             <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                         </group>
@@ -637,12 +652,12 @@
                                             <field name="state" invisible="1"/>
                                             <button name="%(mrp.move_consume)d"
                                                 string="Consume Products" type="action"
-                                                icon="gtk-go-forward" context="{'consume': True}"
+                                                icon="fa-arrow-right text-success" context="{'consume': True}"
                                                 states="assigned"
                                                  />
                                             <button name="%(stock.move_scrap)d"
                                                 string="Scrap Products" type="action"
-                                                icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
+                                                icon="fa-sign-in text-warning" context="{'scrap': True}"
                                                 states="draft,waiting,confirmed,assigned"/>
                                         </tree>
                                     </field>
@@ -680,11 +695,11 @@
                                             <field name="product_uom_qty" readonly="1"/>
                                             <field name="restrict_lot_id" groups="stock.group_production_lot"/>
                                             <field name="product_uom" options="{'no_open':True,'no_create':True}" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
-                                            <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection" groups="stock.group_locations"/>
+                                            <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection" groups="stock.group_stock_multi_locations"/>
                                             <field name="scrapped" invisible="1"/>
                                             <field name="state" invisible="1"/>
                                             <button name="%(stock.move_scrap)d"
-                                                string="Scrap Products" type="action" icon="terp-gtk-jump-to-ltr"
+                                                string="Scrap Products" type="action" icon="fa-sign-in text-warning"
                                                 states="done,cancel"/>
                                         </tree>
                                     </field>
@@ -694,7 +709,7 @@
                         <page string="Work Orders" groups="mrp.group_mrp_routings">
                             <button name="action_compute" states="draft"
                                 string="Compute Data" type="object"
-                                icon="terp-stock_format-scientific"/>
+                                icon="fa-calculator"/>
                             <field name="workcenter_lines" options="{'reload_on_button': true}">
                                 <form string="Production Work Centers">
                                     <group col="4">
@@ -717,7 +732,7 @@
                         <page string="Scheduled Products">
                             <button name="action_compute" states="draft"
                                 string="Compute Data" type="object"
-                                icon="terp-stock_format-scientific"/>
+                                icon="fa-calculator"/>
                             <field name="product_lines"/>
                         </page>
                         <page string="Extra Information">
@@ -788,7 +803,10 @@
                                         <span><t t-esc="record.name.value"/> <t t-esc="record.date_planned.value and record.date_planned.value.split(' ')[0] or False"/></span>
                                     </div>
                                     <div class="col-xs-6">
-                                        <span t-attf-class="pull-right text-right label #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'label-default' : ['none'].indexOf(record.state.raw_value) > -1 ? 'label-danger' : ['confirmed'].indexOf(record.state.raw_value) > -1 ? 'label-warning' : ['done'].indexOf(record.state.raw_value) > -1 ? 'label-success' : 'label-primary'}"><t t-esc="record.state.value"/></span>
+                                        <span class="pull-right text-right">
+                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'none': 'danger', 'confirmed': 'warning',
+                                            'done': 'success'}}"/>
+                                        </span>
                                     </div>
                                 </div>
                             </div>

@@ -11,7 +11,6 @@ class project_issue_report(osv.osv):
     _auto = False
 
     _columns = {
-        'team_id':fields.many2one('crm.team', 'Sale Team', oldname='section_id', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'opening_date': fields.datetime('Date of Opening', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True),
@@ -47,7 +46,6 @@ class project_issue_report(osv.osv):
                     c.user_id,
                     c.working_hours_open,
                     c.working_hours_close,
-                    c.team_id,
                     c.stage_id,
                     date(c.date_closed) as date_closed,
                     c.company_id as company_id,

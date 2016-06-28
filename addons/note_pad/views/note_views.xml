@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <record id="view_note_note_pad_form" model="ir.ui.view">
+      <field name="name">note_pad.view.form</field>
+      <field name="model">note.note</field>
+      <field name="inherit_id" ref="note.view_note_note_form"/>
+      <field name="arch" type="xml">
+        <field name="memo" position="replace">
+           <field name="note_pad_url" widget="pad" class="oe_memo"/>
+        </field>
+      </field>
+    </record>
+
+</odoo>

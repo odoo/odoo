@@ -37,27 +37,7 @@ class TestProjectFlow(TestProjectBase):
     def test_project_process_project_manager_duplicate(self):
         pigs = self.project_pigs.sudo(self.user_projectmanager)
         dogs = pigs.copy()
-        self.assertEqual(dogs.state, 'open')
         self.assertEqual(len(dogs.tasks), 2, 'project: duplicating a project must duplicate its tasks')
-
-    def test_project_process_project_manager_state(self):
-        pigs = self.project_pigs.sudo(self.user_projectmanager)
-        pigs.state = 'pending'
-        self.assertEqual(pigs.state, 'pending')
-        # Re-open
-        pigs.state = 'open'
-        self.assertEqual(pigs.state, 'open')
-        # Close project
-        pigs.state = 'close'
-        self.assertEqual(pigs.state, 'close')
-        # Re-open
-        pigs.state = 'open'
-        # Copy the project
-        dogs = pigs.copy()
-        self.assertEqual(len(dogs.tasks), 2, 'project: copied project should have copied task')
-        # Cancel the project
-        pigs.state = 'cancelled'
-        self.assertEqual(pigs.state, 'cancelled', 'project: cancelled project should be in cancel state')
 
     @mute_logger('openerp.addons.mail.mail_thread')
     def test_task_process_without_stage(self):

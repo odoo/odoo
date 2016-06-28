@@ -16,13 +16,14 @@ class stock_inventory(osv.osv):
         'accounting_date': fields.date('Force Accounting Date', help="Choose the accounting date at which you want to value the stock moves created by the inventory instead of the default one (the inventory end date)"),
     }
 
-    def post_inventory(self, cr, uid, inv, context=None):
+    def post_inventory(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         ctx = context.copy()
+        inv = self.browse(cr, uid, ids, context=context)[0]
         if inv.accounting_date:
             ctx['force_period_date'] = inv.accounting_date
-        return super(stock_inventory, self).post_inventory(cr, uid, inv, context=ctx)
+        return super(stock_inventory, self).post_inventory(cr, uid, ids, context=ctx)
 
 
 class account_invoice_line(osv.osv):
@@ -41,11 +42,9 @@ class account_invoice_line(osv.osv):
         return round(price, inv.currency_id.decimal_places)
 
     def get_invoice_line_account(self, type, product, fpos, company):
-        if company.anglo_saxon_accounting and type in ('in_invoice', 'in_refund') and product and product.type in ('consu', 'product'):
+        if company.anglo_saxon_accounting and type in ('in_invoice', 'in_refund') and product and product.type == 'product':
             accounts = product.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)
-            if type == 'in_invoice':
-                return accounts['stock_input']
-            return accounts['stock_output']
+            return accounts['stock_input']
         return super(account_invoice_line, self).get_invoice_line_account(type, product, fpos, company)
 
 class account_invoice(osv.osv):
@@ -70,7 +69,7 @@ class account_invoice(osv.osv):
         inv = i_line.invoice_id
         company_currency = inv.company_id.currency_id.id
 
-        if i_line.product_id.type in ('product', 'consu') and i_line.product_id.valuation == 'real_time':
+        if i_line.product_id.type  == 'product' and i_line.product_id.valuation == 'real_time':
             fpos = i_line.invoice_id.fiscal_position_id
             accounts = i_line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)
             # debit account dacc will be the output account
@@ -106,27 +105,6 @@ class account_invoice(osv.osv):
                 ]
         return []
 
-    def _prepare_refund(self, cr, uid, invoice, date_invoice=None, date=None, description=None, journal_id=None, context=None):
-        invoice_data = super(account_invoice, self)._prepare_refund(cr, uid, invoice, date_invoice, date,
-                                                                    description, journal_id, context=context)
-        #for anglo-saxon accounting
-        if invoice.company_id.anglo_saxon_accounting and invoice.type == 'in_invoice':
-            fiscal_position = self.pool.get('account.fiscal.position')
-            for dummy, dummy, line_dict in invoice_data['invoice_line_ids']:
-                if line_dict.get('product_id'):
-                    product = self.pool.get('product.product').browse(cr, uid, line_dict['product_id'], context=context)
-                    counterpart_acct_id = product.property_stock_account_output and \
-                            product.property_stock_account_output.id
-                    if not counterpart_acct_id:
-                        counterpart_acct_id = product.categ_id.property_stock_account_output_categ_id and \
-                                product.categ_id.property_stock_account_output_categ_id.id
-                    if counterpart_acct_id:
-                        fpos = invoice.fiscal_position_id or False
-                        line_dict['account_id'] = fiscal_position.map_account(cr, uid,
-                                                                              fpos,
-                                                                              counterpart_acct_id)
-        return invoice_data
-
 
 #----------------------------------------------------------
 # Stock Location
@@ -155,10 +133,13 @@ class stock_location(osv.osv):
 class stock_quant(osv.osv):
     _inherit = "stock.quant"
 
-    def _get_inventory_value(self, cr, uid, quant, context=None):
-        if quant.product_id.cost_method in ('real'):
-            return quant.cost * quant.qty
-        return super(stock_quant, self)._get_inventory_value(cr, uid, quant, context=context)
+    @api.multi
+    def _compute_inventory_value(self):
+        real_value_quants = self.filtered(lambda quant: quant.product_id.cost_method == 'real')
+        for quant in real_value_quants:
+            quant.inventory_value = quant.cost * quant.qty
+        other = self - real_value_quants
+        return super(stock_quant, other)._compute_inventory_value()
 
     @api.cr_uid_ids_context
     def _price_update(self, cr, uid, quant_ids, newprice, context=None):
@@ -169,7 +150,7 @@ class stock_quant(osv.osv):
         account_move_obj = self.pool['account.move']
         super(stock_quant, self)._price_update(cr, uid, quant_ids, newprice, context=context)
         for quant in self.browse(cr, uid, quant_ids, context=context):
-            move = self._get_latest_move(cr, uid, quant, context=context)
+            move = quant._get_latest_move()
             valuation_update = newprice - quant.cost
             # this is where we post accounting entries for adjustment, if needed
             if not quant.company_id.currency_id.is_zero(valuation_update):
@@ -184,22 +165,26 @@ class stock_quant(osv.osv):
             if quant.product_id.cost_method == 'real' and quant.location_id.usage != 'internal':
                 self.pool.get('stock.move')._store_average_cost_price(cr, uid, move, context=context)
 
-    def _account_entry_move(self, cr, uid, quants, move, context=None):
+    def _account_entry_move(self, cr, uid, ids, move, context=None):
         """
         Accounting Valuation Entries
 
         quants: browse record list of Quants to create accounting valuation entries for. Unempty and all quants are supposed to have the same location id (thay already moved in)
         move: Move to use. browse record
         """
+        quants = self.browse(cr, uid, ids, context=context)
         if context is None:
             context = {}
         location_obj = self.pool.get('stock.location')
         location_from = move.location_id
         location_to = quants[0].location_id
-        company_from = location_obj._location_owner(cr, uid, location_from, context=context)
-        company_to = location_obj._location_owner(cr, uid, location_to, context=context)
+        company_from = location_from and (location_from.usage == 'internal') and location_from.company_id or False
+        company_to = location_to and (location_to.usage == 'internal') and location_to.company_id or False
 
         if move.product_id.valuation != 'real_time':
+            return False
+        if move.product_id.type != 'product':
+            #No stock valuation for consumable products
             return False
         for q in quants:
             if q.owner_id:
@@ -234,12 +219,11 @@ class stock_quant(osv.osv):
             else:
                 self._create_account_move_line(cr, uid, quants, move, acc_valuation, acc_dest, journal_id, context=ctx)
 
-    def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False, context=None):
+    def _quant_create_from_move(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False, context=None):
         quant_obj = self.pool.get('stock.quant')
-        quant = super(stock_quant, self)._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to, context=context)
+        quant = super(stock_quant, self)._quant_create_from_move(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to, context=context)
+        quant._account_entry_move(move)
         if move.product_id.valuation == 'real_time':
-            self._account_entry_move(cr, uid, [quant], move, context)
-
             # If the precision required for the variable quant cost is larger than the accounting
             # precision, inconsistencies between the stock valuation and the accounting entries
             # may arise.
@@ -258,16 +242,16 @@ class stock_quant(osv.osv):
                     and float_compare(quant.qty, 2.0, precision_rounding=quant.product_id.uom_id.rounding) >= 0:
                 qty = quant.qty
                 cost = quant.cost
-                quant_correct = quant_obj._quant_split(cr, uid, quant, quant.qty - 1.0, context=context)
+                quant_correct = quant._quant_split(quant.qty - 1.0)
                 cost_correct += (qty * cost) - (qty * cost_rounded)
                 quant_obj.write(cr, SUPERUSER_ID, [quant.id], {'cost': cost_rounded}, context=context)
                 quant_obj.write(cr, SUPERUSER_ID, [quant_correct.id], {'cost': cost_correct}, context=context)
         return quant
 
-    def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False, context=None):
-        res = super(stock_quant, self).move_quants_write(cr, uid, quants, move, location_dest_id, dest_package_id, lot_id=lot_id, entire_pack=entire_pack, context=context)
-        if move.product_id.valuation == 'real_time':
-            self._account_entry_move(cr, uid, quants, move, context=context)
+    @api.multi
+    def _quant_update_from_move(self, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False):
+        res = super(stock_quant, self)._quant_update_from_move(move, location_dest_id, dest_package_id, lot_id=lot_id, entire_pack=entire_pack)
+        self._account_entry_move(move)
         return res
 
     def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):
@@ -317,15 +301,28 @@ class stock_quant(osv.osv):
             valuation_amount = context.get('force_valuation_amount')
         else:
             if move.product_id.cost_method == 'average':
-                valuation_amount = cost if move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal' else move.product_id.standard_price
+                valuation_amount = cost if move.location_id.usage == 'supplier' and move.location_dest_id.usage == 'internal' else move.product_id.standard_price
             else:
                 valuation_amount = cost if move.product_id.cost_method == 'real' else move.product_id.standard_price
         #the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
         #the company currency... so we need to use round() before creating the accounting entries.
-        valuation_amount = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
+        debit_value = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
         #check that all data is correct
-        if move.company_id.currency_id.is_zero(valuation_amount):
+        if move.company_id.currency_id.is_zero(debit_value):
             raise UserError(_("The found valuation amount for product %s is zero. Which means there is probably a configuration error. Check the costing method and the standard price") % (move.product_id.name,))
+        credit_value = debit_value
+
+        if move.product_id.cost_method == 'average' and move.company_id.anglo_saxon_accounting:
+            #in case of a supplier return in anglo saxon mode, for products in average costing method, the stock_input
+            #account books the real purchase price, while the stock account books the average price. The difference is
+            #booked in the dedicated price difference account.
+            if move.location_dest_id.usage == 'supplier' and move.origin_returned_move_id and move.origin_returned_move_id.purchase_line_id:
+                debit_value = move.origin_returned_move_id.price_unit * qty
+            #in case of a customer return in anglo saxon mode, for products in average costing method, the stock valuation
+            #is made using the original average price to negate the delivery effect.
+            if move.location_id.usage == 'customer' and move.origin_returned_move_id:
+                debit_value = move.origin_returned_move_id.price_unit * qty
+                credit_value = debit_value
         partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
         debit_line_vals = {
                     'name': move.name,
@@ -334,8 +331,8 @@ class stock_quant(osv.osv):
                     'product_uom_id': move.product_id.uom_id.id,
                     'ref': move.picking_id and move.picking_id.name or False,
                     'partner_id': partner_id,
-                    'debit': valuation_amount > 0 and valuation_amount or 0,
-                    'credit': valuation_amount < 0 and -valuation_amount or 0,
+                    'debit': debit_value,
+                    'credit': 0,
                     'account_id': debit_account_id,
         }
         credit_line_vals = {
@@ -345,11 +342,32 @@ class stock_quant(osv.osv):
                     'product_uom_id': move.product_id.uom_id.id,
                     'ref': move.picking_id and move.picking_id.name or False,
                     'partner_id': partner_id,
-                    'credit': valuation_amount > 0 and valuation_amount or 0,
-                    'debit': valuation_amount < 0 and -valuation_amount or 0,
+                    'credit': credit_value,
+                    'debit': 0,
                     'account_id': credit_account_id,
         }
-        return [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
+        res = [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
+        if credit_value != debit_value:
+            #for supplier returns of product in average costing method, in anglo saxon mode
+            diff_amount = debit_value - credit_value
+            price_diff_account = move.product_id.property_account_creditor_price_difference
+            if not price_diff_account:
+                price_diff_account = move.product_id.categ_id.property_account_creditor_price_difference_categ
+            if not price_diff_account:
+                raise UserError(_('Configuration error. Please configure the price difference account on the product or its category to process this operation.'))
+            price_diff_line = {
+                    'name': move.name,
+                    'product_id': move.product_id.id,
+                    'quantity': qty,
+                    'product_uom_id': move.product_id.uom_id.id,
+                    'ref': move.picking_id and move.picking_id.name or False,
+                    'partner_id': partner_id,
+                    'credit': diff_amount > 0 and diff_amount or 0,
+                    'debit': diff_amount < 0 and -diff_amount or 0,
+                    'account_id': price_diff_account.id,
+            }
+            res.append((0, 0, price_diff_line))
+        return res
 
     def _create_account_move_line(self, cr, uid, quants, move, credit_account_id, debit_account_id, journal_id, context=None):
         #group quants by cost
@@ -421,7 +439,7 @@ class stock_move(osv.osv):
                     tmpl_dict[product_id] = 0
                     product_avail = qty_available
                 # if the incoming move is for a purchase order with foreign currency, need to call this to get the same value that the quant will use.
-                price_unit = self.pool.get('stock.move').get_price_unit(cr, uid, move, context=context)
+                price_unit = move.get_price_unit()
                 if product_avail <= 0:
                     new_std_price = price_unit
                 else:

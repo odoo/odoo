@@ -103,7 +103,7 @@ var Translate = Widget.extend({
         'click [data-action="save"]': 'save_and_reload',
         'click [data-action="cancel"]': 'cancel',
     },
-    template: 'web_editor.translator',
+    template: 'web_editor.editorbar',
     init: function (parent, $target, lang) {
         this.parent = parent;
         this.ir_translation = new Model('ir.translation');
@@ -115,8 +115,8 @@ var Translate = Widget.extend({
         this.rte.on('change', this, this.rte_changed);
     },
     start: function () {
-        this._super();
-        this.$('button[data-action=save]').prop('disabled', true);
+        this._super.apply(this, arguments);
+        this.$('#web_editor-toolbars').remove();
         return this.edit();
     },
     setTarget: function ($target) {
@@ -158,7 +158,7 @@ var Translate = Widget.extend({
     },
     edit: function () {
         var flag = false;
-        window.onbeforeunload = function(event) {
+        window.onbeforeunload = function (event) {
             if ($('.o_editable.o_dirty').length && !flag) {
                 flag = true;
                 setTimeout(function () {flag=false;},0);
@@ -179,7 +179,6 @@ var Translate = Widget.extend({
         var $node = $(node);
         var trans = this.getTranlationObject($node[0]);
         $node.toggleClass('o_dirty', trans.value !== $node.html().replace(/[ \t\n\r]+/, ' '));
-        this.$('button[data-action=save]').prop('disabled', !$('.o_editable.o_dirty').length);
     },
     getTranlationObject: function (node) {
         var $node = $(node);

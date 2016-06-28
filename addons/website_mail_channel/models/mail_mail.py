@@ -1,24 +1,21 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv
-from openerp import tools
-from openerp.tools.translate import _
-from openerp.addons.website.models.website import slug
+from odoo import api, models, tools, _
+from odoo.addons.website.models.website import slug
 
 
-class MailMail(osv.Model):
+class MailMail(models.Model):
     _inherit = 'mail.mail'
 
-    def send_get_mail_body(self, cr, uid, ids, partner=None, context=None):
+    @api.multi
+    def send_get_mail_body(self, partner=None):
         """ Short-circuit parent method for mail groups, replace the default
             footer with one appropriate for mailing-lists."""
-        # TDE: temporary addition (mail was parameter) due to semi-new-API
-        mail = self.browse(cr, uid, ids[0], context=context)
-
-        if mail.model == 'mail.channel' and mail.res_id:
+        if self.model == 'mail.channel' and self.res_id:
             # no super() call on purpose, no private links that could be quoted!
-            channel = self.pool['mail.channel'].browse(cr, uid, mail.res_id, context=context)
-            base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
+            channel = self.env['mail.channel'].browse(self.res_id)
+            base_url = self.env['ir.config_parameter'].get_param('web.base.url')
             vals = {
                 'maillist': _('Mailing-List'),
                 'post_to': _('Post to'),
@@ -32,7 +29,7 @@ class MailMail(osv.Model):
                         %(post_to)s: %(mailto)s
                         %(unsub)s: %(unsub_url)s
                     """ % vals
-            body = tools.append_content_to_html(mail.body, footer, container_tag='div')
+            body = tools.append_content_to_html(self.body, footer, container_tag='div')
             return body
         else:
-            return super(MailMail, self).send_get_mail_body(cr, uid, ids, partner=partner, context=context)
+            return super(MailMail, self).send_get_mail_body(partner=partner)

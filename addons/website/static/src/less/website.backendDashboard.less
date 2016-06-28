@@ -1,0 +1,113 @@
+.o_website_dashboard {
+
+    background-color: @odoo-webclient-background-color;
+
+    svg {
+        padding-top: 2px;
+        float: left;
+    }
+
+    div.o_box {
+        .clearfix();
+        padding: 10px;
+        color: @odoo-main-text-color;
+        background-color: @odoo-view-background-color;
+        background-size: cover;
+        margin-top: @odoo-horizontal-padding;
+        margin-bottom: @odoo-horizontal-padding;
+        position: relative;
+    }
+
+    .o_dashboard_visits {
+
+        .o_demo_background {
+
+            margin-top: 16px;
+            height: 300px;
+            background: url("/website/static/src/img/website_dashboard_visit_demo.png");
+            position: relative;
+
+            > button {
+                position: absolute;
+                top: 50%;
+                left: 40%;
+            }
+
+            .o_layer {
+                background-color: rgba(0,0,0,.4);
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        .o_properties_selection {
+            .o-flex-display();
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .gapi-analytics-auth-styles-signinbutton {
+            cursor: pointer;
+        }
+
+        .ActiveUsers {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: hsl(30,10%,95%);
+            border: 1px solid #d4d2d0;
+            border-radius: 4px;
+            font-weight: 300;
+            white-space: nowrap;
+            padding: .5em 1.5em;
+            margin: .5em;
+        }
+
+        .ActiveUsers-value {
+          display: inline-block;
+          font-weight: 600;
+          margin-right: -.25em;
+        }
+
+        .ActiveUsers.is-increasing {
+          animation: increase 3s;
+        }
+
+        .ActiveUsers.is-decreasing {
+          animation: decrease 3s;
+        }
+
+        @keyframes increase {
+          0% {}
+          10% {
+            background-color: hsl(120, 100%, 96%);
+            border-color: hsla(120, 100%, 25%, .5);
+            color: hsla(120, 100%, 25%, 1);
+          }
+          100% {}
+        }
+
+        @keyframes decrease {
+          0% {}
+          10% {
+            background-color: hsl(0, 100%, 96%);
+            border-color: hsla(0, 100%, 50%, .5);
+            color: hsl(0, 100%, 50%);
+          }
+          100% {}
+        }
+    }
+
+    tr.o_product_template {
+        cursor: pointer;
+    }
+
+    .o_loader {
+        text-align: center;
+        width: 100%;
+        height: 20em;
+    }
+}

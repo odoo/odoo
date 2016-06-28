@@ -31,6 +31,7 @@ var Dialog = Widget.extend({
     */
     init: function (parent, options) {
         this._super(parent);
+        this._opened = $.Deferred();
 
         options = _.defaults(options || {}, {
             title: _t('Odoo'), subtitle: '',
@@ -96,7 +97,7 @@ var Dialog = Widget.extend({
     
     set_title: function(title, subtitle) {
         this.title = title || "";
-        if(subtitle !== undefined) {
+        if (subtitle !== undefined) {
             this.subtitle = subtitle || "";
         }
 
@@ -108,6 +109,10 @@ var Dialog = Widget.extend({
         return this;
     },
 
+    opened: function(handler) {
+        return (handler)? this._opened.then(handler) : this._opened;
+    },
+
     open: function() {
         $('.tooltip').remove(); // remove open tooltip if any to prevent them staying when modal is opened
 
@@ -115,6 +120,7 @@ var Dialog = Widget.extend({
         this.replace(this.$modal.find(".modal-body")).then(function() {
             self.$el.addClass('modal-body ' + self.dialogClass);
             self.$modal.modal('show');
+            self._opened.resolve();
         });
         
         return self;
@@ -125,8 +131,9 @@ var Dialog = Widget.extend({
     },
 
     destroy: function() {
-        if(this.isDestroyed())
+        if (this.isDestroyed()) {
             return;
+        }
 
         this.trigger("closed");
 

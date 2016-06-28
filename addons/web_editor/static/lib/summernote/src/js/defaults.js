@@ -357,7 +357,7 @@ define('summernote/defaults', function () {
         },
         style: {
           style: 'Style',
-          normal: 'Normal',
+          normal: 'Paragraph',
           blockquote: 'Quote',
           pre: 'Code',
           h1: 'Header 1',

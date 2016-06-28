@@ -4,6 +4,7 @@
 import delivery_carrier
 import delivery_price_rule
 import product_template
+import product_packaging
 import sale_order
 import partner
 import stock_picking

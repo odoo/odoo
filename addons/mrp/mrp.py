@@ -51,6 +51,7 @@ class mrp_workcenter(osv.osv):
     _description = 'Work Center'
     _inherits = {'resource.resource':"resource_id"}
     _columns = {
+        'active': fields.boolean('Active'),
         'note': fields.text('Description', help="Description of the Work Center. Explain here what's a cycle according to this Work Center."),
         'capacity_per_cycle': fields.float('Capacity per Cycle', help="Number of operations this Work Center can do in parallel. If this Work Center represents a team of 5 workers, the capacity per cycle is 5."),
         'time_cycle': fields.float('Time for 1 cycle (hour)', help="Time in hours for doing one cycle."),
@@ -58,15 +59,16 @@ class mrp_workcenter(osv.osv):
         'time_stop': fields.float('Time after prod.', help="Time in hours for the cleaning."),
         'costs_hour': fields.float('Cost per hour', help="Specify Cost of Work Center per hour."),
         'costs_hour_account_id': fields.many2one('account.analytic.account', 'Hour Account',
-            help="Fill this only if you want automatic analytic accounting entries on production orders.", domain=[('account_type', '=', 'normal')]),
+            help="Fill this only if you want automatic analytic accounting entries on production orders."),
         'costs_cycle': fields.float('Cost per cycle', help="Specify Cost of Work Center per cycle."),
         'costs_cycle_account_id': fields.many2one('account.analytic.account', 'Cycle Account',
-            help="Fill this only if you want automatic analytic accounting entries on production orders.", domain=[('account_type', '=', 'normal')]),
+            help="Fill this only if you want automatic analytic accounting entries on production orders."),
         'costs_general_account_id': fields.many2one('account.account', 'General Account', domain=[('deprecated', '=', False)]),
         'resource_id': fields.many2one('resource.resource','Resource', ondelete='cascade', required=True),
         'product_id': fields.many2one('product.product','Work Center Product', help="Fill this product to easily track your production costs in the analytic accounting."),
     }
     _defaults = {
+        'active': True,
         'capacity_per_cycle': 1.0,
         'resource_type': 'material',
      }
@@ -603,7 +605,7 @@ class mrp_production(osv.osv):
         'user_id': fields.many2one('res.users', 'Responsible'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'ready_production': fields.function(_moves_assigned, type='boolean', string="Ready for production", store={'stock.move': (_mrp_from_move, ['state'], 10)}),
-        'product_tmpl_id': fields.related('product_id', 'product_tmpl_id', type='many2one', relation='product.template', string='Product'),
+        'product_tmpl_id': fields.related('product_id', 'product_tmpl_id', type='many2one', relation='product.template', string='Product Template'),
     }
 
     _defaults = {
@@ -831,17 +833,6 @@ class mrp_production(osv.osv):
                 res = False
         return res
 
-    def _get_subproduct_factor(self, cr, uid, production_id, move_id=None, context=None):
-        """ Compute the factor to compute the qty of procucts to produce for the given production_id. By default,
-            it's always equal to the quantity encoded in the production order or the production wizard, but if the
-            module mrp_subproduct is installed, then we must use the move_id to identify the product to produce
-            and its quantity.
-        :param production_id: ID of the mrp.order
-        :param move_id: ID of the stock move that needs to be produced. Will be used in mrp_subproduct.
-        :return: The factor to apply to the quantity that we should produce for the given production order.
-        """
-        return 1
-
     def _get_produced_qty(self, cr, uid, production, context=None):
         ''' returns the produced quantity of product 'production.product_id' for the given production, in the product UoM
         '''
@@ -944,6 +935,16 @@ class mrp_production(osv.osv):
                 consume_lines.append({'product_id': prod, 'product_qty': qty, 'lot_id': lot})
         return consume_lines
 
+    def _calculate_produce_line_qty(self, cr, uid, move, quantity, context=None):
+        """ Compute the quantity and remainig quantity of products to produce.
+        :param move: Record set of stock move that needs to be produced, identify the product to produce.
+        :param quantity: specify quantity to produce in the uom of the production order.
+        :return: The quantity and remaining quantity of product produce.
+        """
+        qty = min(quantity, move.product_qty)
+        remaining_qty = quantity - qty
+        return qty, remaining_qty
+
     def _calculate_total_cost(self, cr, uid, total_consume_moves, context=None):
         total_cost = 0
         for consumed_move in self.pool['stock.move'].browse(cr, uid, total_consume_moves, context=context):
@@ -1028,17 +1029,15 @@ class mrp_production(osv.osv):
                     production_cost = self._calculate_workcenter_cost(cr, uid, production_id, context=context)
                     price_unit = (total_cost + production_cost) / production_qty_uom
 
-                subproduct_factor = self._get_subproduct_factor(cr, uid, production.id, produce_product.id, context=context)
                 lot_id = False
                 if wiz:
                     lot_id = wiz.lot_id.id
-                qty = min(subproduct_factor * production_qty_uom, produce_product.product_qty) #Needed when producing more than maximum quantity
+                qty, remaining_qty = self._calculate_produce_line_qty(cr, uid, produce_product, production_qty_uom, context=context)
                 if is_main_product and price_unit:
                     stock_mov_obj.write(cr, uid, [produce_product.id], {'price_unit': price_unit}, context=context)
                 new_moves = stock_mov_obj.action_consume(cr, uid, [produce_product.id], qty,
                                                          location_id=produce_product.location_id.id, restrict_lot_id=lot_id, context=context)
                 stock_mov_obj.write(cr, uid, new_moves, {'production_id': production_id}, context=context)
-                remaining_qty = subproduct_factor * production_qty_uom - qty
                 if not float_is_zero(remaining_qty, precision_digits=precision):
                     # In case you need to make more than planned
                     #consumed more in wizard than previously planned
@@ -1149,7 +1148,9 @@ class mrp_production(osv.osv):
             'group_id': procurement and procurement.group_id.id,
         }
         move_id = stock_move.create(cr, uid, data, context=context)
-        return stock_move.action_confirm(cr, uid, [move_id], context=context)[0]
+        # TDE FIXME: necessary return ?
+        stock_move.action_confirm(cr, uid, [move_id], context=context)
+        return move_id
 
     def _get_raw_material_procure_method(self, cr, uid, product, location_id=False, location_dest_id=False, context=None):
         '''This method returns the procure_method to use when creating the stock move for the production raw materials
@@ -1190,12 +1191,12 @@ class mrp_production(osv.osv):
         move = stock_move.browse(cr, uid, move_id, context=context)
         src_loc = loc_obj.browse(cr, uid, source_location_id, context=context)
         dest_loc = loc_obj.browse(cr, uid, dest_location_id, context=context)
-        code = stock_move.get_code_from_locs(cr, uid, move, src_loc, dest_loc, context=context)
+        code = stock_move.get_code_from_locs(cr, uid, [move.id], src_loc, dest_loc, context=context)
         if code == 'outgoing':
             check_loc = src_loc
         else:
             check_loc = dest_loc
-        wh = loc_obj.get_warehouse(cr, uid, check_loc, context=context)
+        wh = loc_obj.get_warehouse(cr, uid, [check_loc.id], context=context)
         domain = [('code', '=', code)]
         if wh: 
             domain += [('warehouse_id', '=', wh)]
@@ -1242,7 +1243,7 @@ class mrp_production(osv.osv):
             #this saves us a browse in create()
             'price_unit': product.standard_price,
             'origin': production.name,
-            'warehouse_id': loc_obj.get_warehouse(cr, uid, production.location_src_id, context=context),
+            'warehouse_id': loc_obj.get_warehouse(cr, uid, [production.location_src_id.id], context=context),
             'group_id': production.move_prod_id.group_id.id,
         }, context=context)
         

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <!-- Attachment -->
         <record id="view_attachment_form" model="ir.ui.view">
             <field name="model">ir.attachment</field>
@@ -67,8 +66,8 @@
                 <search string="Attachments">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('datas_fname','ilike',self)]" string="Attachment"/>
                     <field name="create_date"/>
-                    <filter string="URL" domain="[('type','=','url')]"/>
-                    <filter string="Binary" domain="[('type','=','binary')]"/>
+                    <filter name="url_filter" string="URL" domain="[('type','=','url')]"/>
+                    <filter name="binary_filter" string="Binary" domain="[('type','=','binary')]"/>
                     <separator/>
                     <filter name="my_documents_filter"
                         string="My Document(s)"
@@ -81,6 +80,7 @@
                         <filter string="Type" domain="[]" context="{'group_by':'type'}" groups="base.group_no_one"/>
                         <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Creation Month" domain="[]" context="{'group_by':'create_date'}"/>
+                        <filter string="Attached Document Name" domain="[]" context="{'group_by': 'res_name'}"/>
                     </group>
                 </search>
             </field>
@@ -103,5 +103,4 @@
         </record>
         <menuitem action="action_attachment" id="menu_action_attachment" parent="base.next_id_9"/>
 
-    </data>
-</openerp>
+</odoo>

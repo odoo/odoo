@@ -4,7 +4,7 @@
 
         <!-- Users -->
         <record id="base.user_demo" model="res.users">
-            <field name="groups_id" eval="[(4, ref('base.group_sale_salesman')),(4, ref('group_project_manager'))]"/>
+            <field name="groups_id" eval="[(4, ref('group_project_manager'))]"/>
         </record>
 
         <!-- Categories -->
@@ -21,12 +21,27 @@
             <field name="name">Usability</field>
         </record>
 
+        <!-- Email templates -->
+        <record id="mail_template_data_project_task" model="mail.template">
+            <field name="name">Task: Reception Acknowledgment</field>
+            <field name="subject">Reception of ${object.name}</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="use_default_to" eval="True"/>
+            <field name="body_html"><![CDATA[
+<p>Dear ${object.partner_id.name or 'customer'},</p>
+<p>Thank you for your enquiry.<br /></p>
+<p>If you have any questions, please let us know.</p>
+<p>Best regards,</p>]]></field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
         <!-- Stages -->
         <record id="project_stage_0" model="project.task.type">
             <field name="sequence">1</field>
             <field name="name">To Do</field>
             <field name="legend_blocked">Not validated</field>
             <field name="legend_priority">Use the priority for tasks related to gold customers</field>
+            <field name="mail_template_id" ref="project.mail_template_data_project_task"/>
         </record>
         <record id="project_stage_1" model="project.task.type">
             <field name="sequence">10</field>
@@ -48,7 +63,6 @@
 
         <record id="project_project_1" model="project.project">
             <field name="date_start" eval="time.strftime('%Y-%m-01 10:00:00')"/>
-            <field name="state">open</field>
             <field name="name">Website for Sales &amp; WMS</field>
             <field name="color">3</field>
             <field name="partner_id" ref="portal.partner_demo_portal"/>
@@ -98,6 +112,19 @@
             <field name="type_ids" eval="[(4, ref('project_stage_0')), (4, ref('project_stage_1')), (4, ref('project_stage_2')), (4, ref('project_stage_3'))]"/>
             <field name="privacy_visibility">followers</field>
         </record>
+
+        <!-- Channel -->
+        <record id="mail_channel_project_task" model="mail.channel">
+            <field name="name">Projects &amp; Tasks</field>
+            <field name="group_public_id" ref="group_project_user"/>
+            <field name="group_ids" eval="[(4, ref('group_project_user'))]"/>
+        </record>
+
+        <!-- Channel follows all above projects -->
+        <function model="project.project" name="message_subscribe"
+            eval="[ref('project_project_1'), ref('project_project_2'),
+            ref('project_project_3'), ref('project_project_4'),
+            ref('project_project_5')], None, [ref('mail_channel_project_task')]"/>
 
         <!-- Tasks -->
         <record id="project_task_1" model="project.task">

@@ -68,7 +68,7 @@ class Project(models.Model):
         activity = project_issue.rating_get_grades()
         self.percentage_satisfaction_issue = activity['great'] * 100 / sum(activity.values()) if sum(activity.values()) else -1
 
-    percentage_satisfaction_issue = fields.Integer(compute='_compute_percentage_satisfaction_issue', string='% Happy', store=True, default=-1)
+    percentage_satisfaction_issue = fields.Integer(compute='_compute_percentage_satisfaction_issue', string="Happy % on Issue", store=True, default=-1)
 
     @api.multi
     def action_view_issue_rating(self):

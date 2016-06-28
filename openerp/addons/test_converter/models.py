@@ -17,7 +17,7 @@ class test_model(orm.Model):
             (1, "réponse A"),
             (2, "réponse B"),
             (3, "réponse C"),
-            (4, "réponse D"),
+            (4, "réponse <D>"),
         ]),
         'selection_str': fields.selection([
             ('A', "Qu'il n'est pas arrivé à Toronto"),

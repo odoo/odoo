@@ -17,9 +17,9 @@ Tour.register({
         },
         {
             title:     _t("Add Content"),
-            element:   '#content-menu-button',
-            placement: 'left',
-            content:   _t("Use this <em>'Content'</em> menu to create a new forum like any other document (page, menu, products, event, ...)."),
+            element:   '#oe_main_menu_navbar a[data-action=new_page]',
+            placement: 'bottom',
+            content:   _t("Use this button to create a new forum like any other document (page, menu, products, event, ...)."),
             popover:   { fixed: true },
         },
         {
@@ -34,7 +34,7 @@ Tour.register({
             element:   '.modal #editor_new_forum input[type=text]',
             sampleText:'New Forum',
             placement: 'right',
-            content:   _t("Enter a name for your new forum then click 'Continue'."),
+            content:   _t("Enter a name for your new forum."),
         },
         {
             title:     _t("Create Forum"),
@@ -45,7 +45,7 @@ Tour.register({
         },
         {
             title:     _t("New Forum Created"),
-            waitFor:   'body:not(.modal-open)',
+            waitNot:   '.modal:visible',
             content:   _t("This page contains all the information related to the new forum."),
             popover:   { next: _t("Continue") },
         },
@@ -72,7 +72,7 @@ Tour.register({
         },
         {
             title:     _t("Give Tag"),
-            waitFor:   '.note-editable:not(:has(br))',
+            waitNot:   '.note-editable p:containsExact("<br>")',
             element:   '.select2-choices',
             placement: 'top',
             content:   _t("Insert tags related to your question."),
@@ -86,8 +86,8 @@ Tour.register({
         },
         {
             title:     _t("New Question Created"),
-            waitFor:   'body:has(".fa-star")',
-            content:   _t("This page contain new created question."),
+            waitFor:   '.fa-star',
+            content:   _t("This page contains the newly created questions."),
             popover:   { next: _t("Continue") },
         },
         {
@@ -99,15 +99,15 @@ Tour.register({
         },
         {
             title:     _t("Post Answer"),
-            waitFor:   '.note-editable:not(:has(br))',
+            waitNot:   '.note-editable p:containsExact("<br>")',
             element:   'button:contains("Post Answer")',
             placement: 'bottom',
             content:   _t("Click to post your answer."),
         },
         {
             title:     _t("Answer Posted"),
-            waitFor:   'body:has(".fa-check-circle")',
-            content:   _t("This page contain new created question and its answer."),
+            waitFor:   '.fa-check-circle',
+            content:   _t("This page contains the newly created questions and its answers."),
             popover:   { next: _t("Continue") },
         },
         {
@@ -118,7 +118,7 @@ Tour.register({
         },
         {
             title:     _t("Congratulations"),
-            waitFor:   'body:has(".oe_answer_true")',
+            waitFor:   '.oe_answer_true',
             content:   _t("Congratulations! You just created and post your first question and answer."),
             popover:   { next: _t("Close Tutorial") },
         },

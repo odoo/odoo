@@ -10,7 +10,7 @@
      -->
 
     <t t-name="website.gallery.dialog.upload">
-        <div class="modal fade" >
+        <div class="modal o_website_modal fade" >
             <div class="modal-dialog" style="max-width: 50%;">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -69,9 +69,9 @@
             <a class="carousel-control right" t-attf-href="##{id}" data-slide="next"><span class="fa fa-chevron-right" /></a>
         </div> <!-- carousel-id -->
         <script type="text/javascript">
-            (function() {
+            (function () {
             $(".slideshow").css("height", Math.round(window.innerHeight*0.7));
-            $(window).on("resize", function() { $(".slideshow").css("height", Math.round(window.innerHeight*0.7)); });
+            $(window).on("resize", function () { $(".slideshow").css("height", Math.round(window.innerHeight*0.7)); });
             })();
         </script>
     </t>
@@ -88,7 +88,7 @@
     -->
     <t t-name="website.gallery.slideshow.lightbox">
 
-        <div class="modal fade" aria-labbelledby="Image Gallery Dialog" aria-hidden="true">
+        <div class="modal o_website_modal fade" aria-labbelledby="Image Gallery Dialog" aria-hidden="true">
 
             <div class="modal-dialog modal-lg" role="Picture Gallery"
                 t-attf-style="min-width: #{dim.min_width}px ; min-height: #{dim.min_height}px ; max-width: #{dim.max_width}px ; max-height: #{dim.max_height}px ; height: #{dim.height}px ;">

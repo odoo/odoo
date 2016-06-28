@@ -6,7 +6,6 @@
         <menuitem name="Purchases"
             id="base.menu_purchase_root"
             groups="group_purchase_manager,group_purchase_user"
-            icon="fa-shopping-cart"
             web_icon="purchase,static/description/icon.png"
             sequence="25"/>
 
@@ -14,11 +13,11 @@
             parent="base.menu_purchase_root" sequence="1" />
 
         <!--Supplier menu-->
-        <menuitem id="base.menu_procurement_management_supplier_name" name="Vendors"
+        <menuitem id="menu_procurement_management_supplier_name" name="Vendors"
             parent="menu_procurement_management"
             action="base.action_partner_supplier_form" sequence="15"/>
 
-        <menuitem id="menu_purchase_config" name="Configuration" parent="base.menu_purchase_root" sequence="100" groups="group_purchase_manager,base.group_configuration"/>
+        <menuitem id="menu_purchase_config" name="Configuration" parent="base.menu_purchase_root" sequence="100" groups="group_purchase_manager"/>
 
         <menuitem
             id="menu_purchase_config_pricelist" name="Pricelists"
@@ -78,7 +77,7 @@
           </p><p>
             You must define a product for everything you purchase, whether
             it's a physical product, a consumable or services you buy to
-            subcontractants.
+            subcontractors.
           </p><p>
             The product form contains detailed information to improve the
             purchase process: prices, procurement logistics, accounting data,
@@ -90,6 +89,33 @@
       <!-- Product menu-->
       <menuitem name="Products" id="menu_procurement_partner_contact_form" action="product_normal_action_puchased"
           parent="menu_procurement_management" sequence="20"/>
+
+      <menuitem name="Purchasable Products" id="menu_product_normal_action_puchased" action="product_normal_action_puchased"
+          parent="account.menu_finance_payables" sequence="110"/>
+
+        <record id="product_product_action" model="ir.actions.act_window">
+            <field name="name">Product Variants</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_type">form</field>
+            <field name="context">{"search_default_filter_to_purchase": 1}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new product.
+              </p><p>
+                You must define a product for everything you purchase, whether
+                it's a physical product, a consumable or services you buy to
+                subcontractors.
+              </p><p>
+                The product form contains detailed information to improve the
+                purchase process: prices, procurement logistics, accounting data,
+                available vendors, etc.
+              </p>
+            </field>
+        </record>
+
+        <menuitem id="product_product_menu" name="Product Variants" action="product_product_action"
+            parent="menu_procurement_management" sequence="21" groups="product.group_product_variant"/>
 
         <record model="ir.ui.view" id="purchase_order_calendar">
             <field name="name">purchase.order.calendar</field>
@@ -141,17 +167,16 @@
                     <button name="action_rfq_send" states="draft" string="Send RFQ by Email" type="object" context="{'send_rfq':True}" class="oe_highlight"/>
                     <button name="action_rfq_send" states="sent" string="Re-Send RFQ by Email" type="object" context="{'send_rfq':True}"/>
                     <button name="print_quotation" string="Print RFQ" type="object" states="draft" class="oe_highlight" groups="base.group_user"/>
-                    <button name="print_quotation" string="Re-Print RFQ" type="object" states="sent" groups="base.group_user"/>
+                    <button name="print_quotation" string="Print RFQ" type="object" states="sent" groups="base.group_user"/>
                     <button name="button_confirm" type="object" states="draft" string="Confirm Order" id="draft_confirm"/>
                     <button name="button_confirm" type="object" states="sent" string="Confirm Order" class="oe_highlight" id="bid_confirm"/>
                     <button name="button_approve" type="object" states='to approve' string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager"/>
                     <button name="action_rfq_send" states="purchase" string="Send PO by Email" type="object" context="{'send_rfq':False}"/>
-                    <button name="action_view_picking" string="Receive Products" type="object" attrs="{'invisible': ['|', ('state','not in', ('purchase','done')), ('picking_count', '=', 0)]}"/>
+                    <button name="action_view_picking" string="Receive Products" class="oe_highlight" type="object" attrs="{'invisible': ['|', '|' , ('is_shipped', '=', True), ('state','not in', ('purchase','done')), ('picking_count', '=', 0)]}"/>
                     <button name="button_draft" states="cancel" string="Set to Draft" type="object" />
                     <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel" type="object" />
-                    <button name="button_done" type="object" string="Set to Done" states="purchase"
-                        help="If a purchase order is done, you cannot modify it manually anymore. You will not be able to receive invoices anymore for this purchase order."/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase,done" readonly="1" />
+                    <button name="button_done" type="object" string="Lock Bills" states="purchase"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase" readonly="1"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box" attrs="{'invisible': [('state', 'not in', ('purchase', 'done', 'cancel'))]}">
@@ -179,6 +204,7 @@
                             <field name="partner_id" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]"/>
                             <field name="partner_ref"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="is_shipped" invisible="1"/>
                         </group>
                         <group>
                             <field name="date_order"/>
@@ -195,6 +221,7 @@
                                     <field name="date_planned"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                     <field name="account_analytic_id" context="{'default_partner_id':parent.partner_id}" groups="purchase.group_analytic_accounting"/>
+                                    <field name="analytic_tag_ids" groups="purchase.group_analytic_accounting" widget="many2many_tags"/>
                                     <field name="product_qty"/>
                                     <field name="qty_received" invisible="not context.get('show_purchase', False)"/>
                                     <field name="qty_invoiced" invisible="not context.get('show_purchase', False)"/>
@@ -249,9 +276,9 @@
                         <page string="Deliveries &amp; Invoices">
                             <group>
                                 <group>
-                                    <field name="date_planned"/>
-                                    <field name="picking_type_id" domain="[('code','=','incoming')]" options="{'no_create': True}" context="{'special_shortened_wh_name': True}" groups="stock.group_locations"/>
-                                    <field name="dest_address_id" groups="stock.group_locations" attrs="{'invisible': [('default_location_dest_id_usage', '!=', 'customer')], 'required': [('default_location_dest_id_usage', '=', 'customer')]}"/>
+                                    <field name="date_planned" required="1"/>
+                                    <field name="picking_type_id" domain="[('code','=','incoming')]" options="{'no_create': True}" context="{'special_shortened_wh_name': True}" groups="stock.group_stock_multi_locations"/>
+                                    <field name="dest_address_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('default_location_dest_id_usage', '!=', 'customer')], 'required': [('default_location_dest_id_usage', '=', 'customer')]}"/>
                                     <field name="default_location_dest_id_usage" invisible="1"/>
                                     <field name="incoterm_id"/>
                                 </group>
@@ -284,6 +311,7 @@
                     <field name="create_uid"/>
                     <filter name="draft" string="Quotations" domain="[('state','in',('draft','sent','to approve'))]"/>
                     <filter name="approved" string="Purchase Orders" domain="[('state','in',('purchase','done'))]"/>
+                    <filter name="to_approve" string="To Approve" domain="[('state', '=', 'to approve')]"/>
                     <separator/>
                     <filter name="not_invoiced" string="Not Invoiced" domain="[('invoice_status','=', 'to invoice')]" help="Purchase orders that include lines not invoiced."/>
                     <filter name="invoiced" string="Invoiced" domain="[('invoice_status','=', 'invoiced')]" help="Purchase orders that include lines not invoiced."/>
@@ -291,7 +319,7 @@
                     <group expand="0" string="Group By">
                         <filter string="Vendor" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Order Date" domain="[]" context="{'group_by':'date_order'}"/>
-                        <!-- FORWARDPORT UP TO SAAS-10 -->
+                        <filter string="Expected Date" domain="[]" context="{'group_by':'date_planned'}"/>
                     </group>
                 </search>
             </field>
@@ -326,7 +354,9 @@
                                         <span><t t-esc="record.name.value"/> <t t-esc="record.date_order.value and record.date_order.value.split(' ')[0] or False"/></span>
                                     </div>
                                     <div class="col-xs-6">
-                                        <span t-attf-class="pull-right text-right label #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'label-default' : ['approved'].indexOf(record.state.raw_value) > -1 ? 'label-warning' : ['done'].indexOf(record.state.raw_value) > -1 ? 'label-success' : 'label-primary'}"><t t-esc="record.state.value"/></span>
+                                        <span class="pull-right text-right">
+                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'done': 'success', 'approved': 'warning'}}"/>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -351,6 +381,7 @@
                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary"/>
                     <field name="amount_total" sum="Total amount" widget="monetary"/>
                     <field name="state"/>
+                    <field name="invoice_status" invisible="not context.get('show_purchase', False)"/>
                 </tree>
             </field>
         </record>
@@ -509,6 +540,13 @@
                 <field name="uom_po_id" position="after">
                     <field name="purchase_method" widget="radio" groups="purchase.group_purchase_manager"/>
                 </field>
+                <group name="description" position="after">
+                    <group string="Warning when Purchasing this Product" colspan="2" groups="purchase.group_warning_purchase">
+                        <field name="purchase_line_warn" nolabel="1"/>
+                        <field name="purchase_line_warn_msg" colspan="3" nolabel="1"
+                                attrs="{'required':[('purchase_line_warn','!=','no-message')],'readonly':[('purchase_line_warn','=','no-message')]}"/>
+                    </group>
+                </group>
             </field>
         </record>
 
@@ -536,7 +574,7 @@
 
         <record model="ir.actions.act_window" id="action_purchase_line_product_tree">
             <field name="context">{}</field>
-            <field name="domain">[('product_id.product_tmpl_id','in',active_ids)]</field>
+            <field name="domain">[('product_id.product_tmpl_id','in',active_ids), ('state', 'in', ['purchase', 'done'])]</field>
             <field name="name">Purchases</field>
             <field name="res_model">purchase.order.line</field>
             <field name="view_id" ref="purchase_order_line_tree"/>

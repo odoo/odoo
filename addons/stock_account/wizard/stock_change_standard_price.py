@@ -13,8 +13,8 @@ class change_standard_price(osv.osv_memory):
             help="If cost price is increased, stock variation account will be debited "
             "and stock output account will be credited with the value = (difference of amount * quantity available).\n"
             "If cost price is decreased, stock variation account will be creadited and stock input account will be debited."),
+        'counterpart_account_id': fields.many2one('account.account', string="Counter-Part Account", required=True, domain=[('deprecated', '=', False)]),
     }
-
 
 
     def default_get(self, cr, uid, fields, context=None):
@@ -40,6 +40,10 @@ class change_standard_price(osv.osv_memory):
 
         if 'new_price' in fields:
             res.update({'new_price': price})
+        if 'counterpart_account_id' in fields:
+            default_account = product_obj.property_account_expense_id or product_obj.categ_id.property_account_expense_categ_id
+            if default_account:
+                res.update({'counterpart_account_id': default_account.id})
         return res
 
     def change_price(self, cr, uid, ids, context=None):

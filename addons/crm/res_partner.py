@@ -16,13 +16,20 @@ class res_partner(osv.osv):
                     operator = 'child_of'
                 else:
                     operator = '='
-                opp_ids = self.pool['crm.lead'].search(cr, uid, [('partner_id', operator, partner.id), ('type', '=', 'opportunity'), ('probability', '<', '100')], context=context)
+                opp_ids = self.pool['crm.lead'].search(cr, uid, [('partner_id', operator, partner.id), ('type', '=', 'opportunity')], context=context)
                 res[partner.id] = {
                     'opportunity_count': len(opp_ids),
                     'meeting_count': len(partner.meeting_ids),
                 }
         except:
             pass
+        return res
+
+    def _compute_activities_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, None)
+        activities = self.pool['crm.activity.report'].read_group(cr, uid, [('partner_id', 'in', ids)], ['partner_id'], ['partner_id'], context=context)
+        for activity in activities:
+            res[activity['partner_id'][0]] = activity['partner_id_count']
         return res
 
     _columns = {
@@ -33,6 +40,7 @@ class res_partner(osv.osv):
             'Meetings'),
         'opportunity_count': fields.function(_opportunity_meeting_count, string="Opportunity", type='integer', multi='opp_meet'),
         'meeting_count': fields.function(_opportunity_meeting_count, string="# Meetings", type='integer', multi='opp_meet'),
+        'activities_count': fields.function(_compute_activities_count, string="Activities", type="integer"),
     }
 
     def redirect_partner_form(self, cr, uid, partner_id, context=None):

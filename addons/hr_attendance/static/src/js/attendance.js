@@ -4,7 +4,7 @@ odoo.define('hr_attendance.hr_attendance', function(require) {
 var core = require('web.core');
 var data = require('web.data');
 var formats = require('web.formats');
-var Model = require('web.DataModel');
+var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var time = require('web.time');
 var Widget = require('web.Widget');
@@ -34,7 +34,7 @@ var AttendanceSlider = Widget.extend({
             title: function() {
                 var last_text = formats.format_value(self.last_sign, {type: "datetime"});
                 var current_text = formats.format_value(new Date(), {type: "datetime"});
-                var duration = self.last_sign ? $.timeago(self.last_sign) : "none";
+                var duration = self.last_sign ? moment(self.last_sign).fromNow() : "none";
                 if (self.get("signed_in")) {
                     return _.str.sprintf(_t("Last sign in: %s,<br />%s.<br />Click to sign out."), last_text, duration);
                 } else {
@@ -57,7 +57,7 @@ var AttendanceSlider = Widget.extend({
     check_attendance: function () {
         var self = this;
         self.employee = false;
-        this.$el.hide();
+        this.do_hide();
         var employee = new data.DataSetSearch(self, 'hr.employee', self.session.user_context, [
             ['user_id', '=', self.session.uid]
         ]);
@@ -67,7 +67,7 @@ var AttendanceSlider = Widget.extend({
             if (res[0].attendance_access === false){
                 return;
             }
-            self.$el.show();
+            self.do_show();
             self.employee = res[0];
             self.last_sign = time.str_to_datetime(self.employee.last_sign);
             self.set({"signed_in": self.employee.state !== "absent"});
@@ -75,10 +75,9 @@ var AttendanceSlider = Widget.extend({
     },
 });
 
-// Put the AttendanceSlider widget in the systray menu if the user is an employee
-var Users = new Model('res.users');
-Users.call('has_group', ['base.group_user']).done(function(is_employee) {
-    if (is_employee) {
+session.is_bound.then(function () {
+    // Put the AttendanceSlider widget in the systray menu if the user is an employee
+    if (session.is_employee) {
         SystrayMenu.Items.push(AttendanceSlider);
     }
 });

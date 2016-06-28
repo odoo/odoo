@@ -162,6 +162,19 @@ var KanbanSelection = AbstractField.extend({
     },
 });
 
+var KanbanLabelSelection = AbstractField.extend({
+
+    init: function(parent, field, $node) {
+        this._super.apply(this, arguments);
+        this.classes = this.options && this.options.classes || {};
+    },
+    renderElement: function() {
+        this._super.apply(this, arguments);
+        var lbl_class = this.classes[this.field.raw_value] || 'primary';
+        this.$el.addClass('label label-' + lbl_class).text(this.field.value);
+    },
+});
+
 var KanbanAttachmentImage =  AbstractField.extend({
     template: 'KanbanAttachmentImage',
 });
@@ -270,6 +283,7 @@ fields_registry
     .add('progress', KanbanProgressBar)
     .add('float_time', FormatChar)
     .add('monetary', KanbanMonetary)
+    .add('kanban_label_selection', KanbanLabelSelection)
     ;
 
 return {

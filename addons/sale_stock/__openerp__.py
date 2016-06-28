@@ -34,6 +34,7 @@ You can choose flexible invoicing methods:
         'stock_view.xml',
         'res_config_view.xml',
         'account_invoice_view.xml',
+        'views/report_deliveryslip.xml',
     ],
     'demo': ['sale_stock_demo.xml'],
     'installable': True,

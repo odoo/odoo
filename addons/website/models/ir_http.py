@@ -11,7 +11,7 @@ import werkzeug.utils
 
 import openerp
 from openerp.addons.base import ir
-from openerp.addons.base.ir import ir_qweb
+from odoo.exceptions import QWebException
 from openerp.addons.website.models.website import slug, url_for, _UNSLUG_RE
 from openerp.http import request
 from openerp.tools import config
@@ -168,27 +168,9 @@ class ir_http(orm.AbstractModel):
             # bind modified context
             request.website = request.website.with_context(request.context)
 
-        # cache for auth public
-        cache_time = getattr(func, 'routing', {}).get('cache')
-        cache_enable = cache_time and request.httprequest.method == "GET" and request.website.user_id.id == request.uid
-        cache_response = None
-        if cache_enable:
-            key = self.get_page_key()
-            try:
-                r = self.pool.cache[key]
-                if r['time'] + cache_time > time.time():
-                    cache_response = openerp.http.Response(r['content'], mimetype=r['mimetype'])
-                else:
-                    del self.pool.cache[key]
-            except KeyError:
-                pass
-
-        if cache_response:
-            request.cache_save = False
-            resp = cache_response
-        else:
-            request.cache_save = key if cache_enable else False
-            resp = super(ir_http, self)._dispatch()
+        # removed cache for auth public
+        request.cache_save = False
+        resp = super(ir_http, self)._dispatch()
 
         if request.website_enabled and cook_lang != request.lang and hasattr(resp, 'set_cookie'):
             resp.set_cookie('website_lang', request.lang)
@@ -247,7 +229,7 @@ class ir_http(orm.AbstractModel):
                     # if parent excplicitely returns a plain response, then we don't touch it
                     return response
             except Exception, e:
-                if openerp.tools.config['dev_mode'] and (not isinstance(exception, ir_qweb.QWebException) or not exception.qweb.get('cause')):
+                if 'werkzeug' in config['dev_mode'] and (not isinstance(exception, QWebException) or not exception.qweb.get('cause')):
                     raise
                 exception = e
 
@@ -267,7 +249,7 @@ class ir_http(orm.AbstractModel):
             if isinstance(exception, openerp.exceptions.AccessError):
                 code = 403
 
-            if isinstance(exception, ir_qweb.QWebException):
+            if isinstance(exception, QWebException):
                 values.update(qweb_exception=exception)
                 if isinstance(exception.qweb.get('cause'), openerp.exceptions.AccessError):
                     code = 403

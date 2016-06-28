@@ -17,9 +17,10 @@ var SystrayMenu = Widget.extend({
         var self = this;
         self._super.apply(this, arguments);
         self.load_items();
-        return $.when.apply($, self.items).done(function () {
+        $.when.apply($, self.items).always(function () {
             self.load.resolve();
         });
+        return self.load;
     },
     load_items: function() {
         var self = this;

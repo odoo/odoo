@@ -77,7 +77,7 @@
         }
     }
 
-    .o_chat_input {
+    .o_chat_composer {
         .o-flex(0, 0, auto);
         > input {
             padding: 5px;
@@ -134,25 +134,4 @@
 }
 .o_no_chat_window .o_chat_window {
     display: none;
-}
-
-// FIXME: move this to its own file in master
-.o_chat_window.o_thread_less {
-    .o_chat_search_input {
-        .o-flex-display();
-        padding: 5px;
-        > span {
-            .o-flex(0, 0, auto);
-        }
-        > input {
-            margin-left: 5px;
-            .o-flex(1, 1, 100%);
-        }
-    }
-    .o_mail_thread {
-        background-color: lightgray;
-    }
-    .o_chat_input {
-        display: none;
-    }
 }

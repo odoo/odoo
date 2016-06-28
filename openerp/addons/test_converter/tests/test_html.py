@@ -1,13 +1,9 @@
 # -*- encoding: utf-8 -*-
-import json
 import os
 import datetime
 
-from lxml import etree
-
 from openerp.tests import common
 from openerp.tools import html_escape as e
-from openerp.addons.base.ir import ir_qweb
 
 directory = os.path.dirname(__file__)
 
@@ -34,8 +30,8 @@ class TestExport(common.TransactionCase):
                 break
             except KeyError: pass
 
-        return lambda value, options=None, context=None: e(model.value_to_html(
-            self.cr, self.uid, value, field, options=options, context=context))
+        return lambda value, options=None, context=None: model.value_to_html(
+            self.cr, self.uid, value, field, options=options, context=context)
 
 class TestBasicExport(TestExport):
     _model = 'test_converter.test_model'
@@ -106,17 +102,9 @@ class TestCurrencyExport(TestExport):
         converter = self.registry('ir.qweb.field.monetary')
         options = {
             'widget': 'monetary',
-            'display_currency': 'c2'
+            'display_currency': dest,
         }
-        context = dict(inherit_branding=True)
-        converted = converter.to_html(
-            self.cr, self.uid, 'value', obj, options,
-            etree.Element('span'),
-            {'field': 'obj.value', 'field-options': json.dumps(options)},
-            '', ir_qweb.QWebContext(self.cr, self.uid, {'obj': obj, 'c2': dest, }),
-            context=context,
-        )
-        return converted
+        return converter.record_to_html(self.cr, self.uid, obj, 'value', options, {'obj': obj})
 
     def test_currency_post(self):
         currency = self.create(self.Currency, name="Test", symbol=u"test")
@@ -125,15 +113,11 @@ class TestCurrencyExport(TestExport):
         converted = self.convert(obj, dest=currency)
 
         self.assertEqual(
-            converted,
-            '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
-                  'data-oe-field="value" data-oe-type="monetary" '
-                  'data-oe-expression="obj.value">'
-                      '<span class="oe_currency_value">0.12</span>'
-                      u'\N{NO-BREAK SPACE}{symbol}</span>'.format(
+            converted, '<span class="oe_currency_value">0.12</span>'
+                      u'\N{NO-BREAK SPACE}{symbol}'.format(
                 obj=obj,
                 symbol=currency.symbol.encode('utf-8')
-            ).encode('utf-8'),)
+            ),)
 
     def test_currency_pre(self):
         currency = self.create(
@@ -144,15 +128,11 @@ class TestCurrencyExport(TestExport):
 
         self.assertEqual(
             converted,
-            '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
-                  'data-oe-field="value" data-oe-type="monetary" '
-                  'data-oe-expression="obj.value">'
                       u'{symbol}\N{NO-BREAK SPACE}'
-                      '<span class="oe_currency_value">0.12</span>'
-                      '</span>'.format(
+                      '<span class="oe_currency_value">0.12</span>'.format(
                 obj=obj,
                 symbol=currency.symbol.encode('utf-8')
-            ).encode('utf-8'),)
+            ),)
 
     def test_currency_precision(self):
         """ Precision should be the currency's, not the float field's
@@ -164,14 +144,11 @@ class TestCurrencyExport(TestExport):
 
         self.assertEqual(
             converted,
-            '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
-                  'data-oe-field="value" data-oe-type="monetary" '
-                  'data-oe-expression="obj.value">'
                       '<span class="oe_currency_value">0.12</span>'
-                      u'\N{NO-BREAK SPACE}{symbol}</span>'.format(
+                      u'\N{NO-BREAK SPACE}{symbol}'.format(
                 obj=obj,
                 symbol=currency.symbol.encode('utf-8')
-            ).encode('utf-8'),)
+            ),)
 
 class TestTextExport(TestBasicExport):
     def test_text(self):
@@ -221,8 +198,9 @@ class TestMany2OneExport(TestBasicExport):
         })
 
         def converter(record):
-            model = self.registry('ir.qweb.field.many2one')
-            return e(model.record_to_html(self.cr, self.uid, 'many2one', record))
+            converter = self.registry('ir.qweb.field.many2one')
+            field_name = 'many2one'
+            return converter.record_to_html(self.cr, self.uid, record, field_name, {})
 
         value = converter(self.Model.browse(self.cr, self.uid, id0))
         self.assertEqual(value, "Foo")
@@ -239,8 +217,8 @@ class TestBinaryExport(TestBasicExport):
             content = f.read()
 
         encoded_content = content.encode('base64')
-        value = e(converter.value_to_html(
-            self.cr, self.uid, encoded_content, field))
+        value = converter.value_to_html(self.cr, self.uid, encoded_content, field)
+
         self.assertEqual(
             value, '<img src="data:image/jpeg;base64,%s">' % (
                 encoded_content
@@ -250,32 +228,32 @@ class TestBinaryExport(TestBasicExport):
             content = f.read()
 
         with self.assertRaises(ValueError):
-            e(converter.value_to_html(
-                self.cr, self.uid, 'binary', content.encode('base64'), field))
+            converter.value_to_html(
+                self.cr, self.uid, 'binary', content.encode('base64'), field)
 
         with open(os.path.join(directory, 'test_vectors', 'pptx'), 'rb') as f:
             content = f.read()
 
         with self.assertRaises(ValueError):
-            e(converter.value_to_html(
-                self.cr, self.uid, 'binary', content.encode('base64'), field))
+            converter.value_to_html(
+                self.cr, self.uid, 'binary', content.encode('base64'), field)
 
 class TestSelectionExport(TestBasicExport):
     def test_selection(self):
         [record] = self.Model.browse(self.cr, self.uid, [self.Model.create(self.cr, self.uid, {
-            'selection': 2,
+            'selection': 4,
             'selection_str': 'C',
         })])
 
         converter = self.registry('ir.qweb.field.selection')
 
         field_name = 'selection'
-        value = converter.record_to_html(self.cr, self.uid, field_name, record)
-        self.assertEqual(value, "réponse B")
+        value = converter.record_to_html(self.cr, self.uid, record, field_name, {})
+        self.assertEqual(value, e(u"réponse <D>"))
 
         field_name = 'selection_str'
-        value = converter.record_to_html(self.cr, self.uid, field_name, record)
-        self.assertEqual(value, "Qu'est-ce qu'il fout ce maudit pancake, tabernacle ?")
+        value = converter.record_to_html(self.cr, self.uid, record, field_name, {})
+        self.assertEqual(value, u"Qu'est-ce qu'il fout ce maudit pancake, tabernacle ?")
 
 class TestHTMLExport(TestBasicExport):
     def test_html(self):

@@ -16,11 +16,11 @@ It allows the manager to quickly check the issues, assign them and decide on the
     """,
     'website': 'https://www.odoo.com/page/project-management',
     'depends': [
-        'sales_team',
         'project',
     ],
     'data': [
         'project_issue_view.xml',
+        'project_issue_config_settings_views.xml',
         'project_issue_menu.xml',
         'report/project_issue_report_view.xml',
         'security/project_issue_security.xml',

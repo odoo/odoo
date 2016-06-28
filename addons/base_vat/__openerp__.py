@@ -20,7 +20,7 @@ There are two different levels of VAT number validation:
       rules for the country, usually a simple check digit. This is quick and 
       always available, but allows numbers that are perhaps not truly allocated,
       or not valid anymore.
-      
+
     * When the "VAT VIES Check" option is enabled (in the configuration of the user's
       Company), VAT numbers will be instead submitted to the online EU VIES
       database, which will truly verify that the number is valid and currently
@@ -36,7 +36,8 @@ only the country code will be validated.
     """,
     'depends': ['account'],
     'website': 'https://www.odoo.com/page/accounting',
-    'data': ['base_vat_view.xml'],
-    'installable': True,
-    'auto_install': False,
+    'data': [
+        'views/res_partner_views.xml',
+        'views/res_company_views.xml',
+    ],
 }

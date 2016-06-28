@@ -25,7 +25,7 @@
                             <label for="module_hr_payroll_account"/>
                             <div name="hr_payroll">
                                 <button name="%(open_payroll_modules)d" type="action"
-                                    string="Install your country's payroll" icon="gtk-go-forward"
+                                    string="Install your country's payroll" icon="fa-arrow-right text-success"
                                     class="oe_link"/>
                             </div>
                         </div>
@@ -42,6 +42,6 @@
         </record>
 
         <menuitem id="menu_hr_payroll_global_settings" name="Settings" 
-            parent="menu_hr_payroll_configuration" sequence="0" action="action_hr_payroll_configuration"/>
+            parent="menu_hr_payroll_configuration" sequence="0" action="action_hr_payroll_configuration" groups="base.group_no_one"/>
     </data>
 </openerp>

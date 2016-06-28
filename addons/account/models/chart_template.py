@@ -192,6 +192,7 @@ class AccountChartTemplate(models.Model):
                 'default_credit_account_id': _get_default_account(journal, 'credit'),
                 'default_debit_account_id': _get_default_account(journal, 'debit'),
                 'show_on_dashboard': journal['favorite'],
+                'sequence': journal['sequence']
             }
             journal_data.append(vals)
         return journal_data
@@ -332,6 +333,16 @@ class AccountChartTemplate(models.Model):
         return account_ref, taxes_ref
 
     @api.multi
+    def create_record_with_xmlid(self, company, template, model, vals):
+        # Create a record for the given model with the given vals and 
+        # also create an entry in ir_model_data to have an xmlid for the newly created record
+        # xmlid is the concatenation of company_id and template_xml_id
+        ir_model_data = self.env['ir.model.data']
+        template_xmlid = ir_model_data.search([('model', '=', str(template._model)), ('res_id', '=', template.id)])
+        new_xml_id = str(company.id)+'_'+template_xmlid.name
+        return ir_model_data._update(model, template_xmlid.module, vals, xml_id=new_xml_id, store=True, noupdate=True, mode='init', res_id=False)
+
+    @api.multi
     def generate_account(self, tax_template_ref, acc_template_ref, code_digits, company):
         """ This method for generating accounts from templates.
 
@@ -365,8 +376,8 @@ class AccountChartTemplate(models.Model):
                 'company_id': company.id,
                 'tag_ids': [(6, 0, [t.id for t in account_template.tag_ids])],
             }
-            new_account = self.env['account.account'].create(vals)
-            acc_template_ref[account_template.id] = new_account.id
+            new_account = self.create_record_with_xmlid(company, account_template, 'account.account', vals)
+            acc_template_ref[account_template.id] = new_account
         return acc_template_ref
 
     @api.multi
@@ -382,18 +393,18 @@ class AccountChartTemplate(models.Model):
         self.ensure_one()
         positions = self.env['account.fiscal.position.template'].search([('chart_template_id', '=', self.id)])
         for position in positions:
-            new_fp = self.env['account.fiscal.position'].create({'company_id': company.id, 'name': position.name, 'note': position.note})
+            new_fp = self.create_record_with_xmlid(company, position, 'account.fiscal.position', {'company_id': company.id, 'name': position.name, 'note': position.note})
             for tax in position.tax_ids:
-                self.env['account.fiscal.position.tax'].create({
+                self.create_record_with_xmlid(company, tax, 'account.fiscal.position.tax', {
                     'tax_src_id': tax_template_ref[tax.tax_src_id.id],
                     'tax_dest_id': tax.tax_dest_id and tax_template_ref[tax.tax_dest_id.id] or False,
-                    'position_id': new_fp.id
+                    'position_id': new_fp
                 })
             for acc in position.account_ids:
-                self.env['account.fiscal.position.account'].create({
+                self.create_record_with_xmlid(company, acc, 'account.fiscal.position.account', {
                     'account_src_id': acc_template_ref[acc.account_src_id.id],
                     'account_dest_id': acc_template_ref[acc.account_dest_id.id],
-                    'position_id': new_fp.id
+                    'position_id': new_fp
                 })
         return True
 
@@ -427,6 +438,8 @@ class AccountTaxTemplate(models.Model):
         help="If set, taxes which are computed after this one will be computed based on the price tax included.")
     analytic = fields.Boolean(string="Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
     tag_ids = fields.Many2many('account.account.tag', string='Account tag', help="Optional tags you may want to assign for custom reporting")
+    tax_group_id = fields.Many2one('account.tax.group', string="Tax Group")
+    tax_adjustment = fields.Boolean(default=False)
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, type_tax_use)', 'Tax names must be unique !'),
@@ -445,7 +458,7 @@ class AccountTaxTemplate(models.Model):
         """ This method generates a dictionnary of all the values for the tax that will be created.
         """
         self.ensure_one()
-        return {
+        val = {
             'name': self.name,
             'type_tax_use': self.type_tax_use,
             'amount_type': self.amount_type,
@@ -458,7 +471,11 @@ class AccountTaxTemplate(models.Model):
             'include_base_amount': self.include_base_amount,
             'analytic': self.analytic,
             'tag_ids': [(6, 0, [t.id for t in self.tag_ids])],
+            'tax_adjustment': self.tax_adjustment,
         }
+        if self.tax_group_id:
+            val['tax_group_id'] = self.tax_group_id.id
+        return val
 
     @api.multi
     def _generate_tax(self, company):
@@ -480,10 +497,10 @@ class AccountTaxTemplate(models.Model):
                     children_ids.append(tax_template_to_tax[child_tax.id])
             vals_tax = tax._get_tax_vals(company)
             vals_tax['children_tax_ids'] = children_ids and [(6, 0, children_ids)] or []
-            new_tax = self.env['account.tax'].create(vals_tax)
-            tax_template_to_tax[tax.id] = new_tax.id
+            new_tax = self.env['account.chart.template'].create_record_with_xmlid(company, tax, 'account.tax', vals_tax)
+            tax_template_to_tax[tax.id] = new_tax
             # Since the accounts have not been created yet, we have to wait before filling these fields
-            todo_dict[new_tax.id] = {
+            todo_dict[new_tax] = {
                 'account_id': tax.account_id.id,
                 'refund_account_id': tax.refund_account_id.id,
             }
@@ -780,6 +797,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
                 'type': acc.account_type,
                 'company_id': company.id,
                 'currency_id': acc.currency_id.id,
+                'sequence': 10
             })
 
 

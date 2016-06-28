@@ -3,31 +3,35 @@
 
 import logging
 
-from openerp import models
+from odoo import api, models
 
 _logger = logging.getLogger(__name__)
 
-class AutoVacuum(models.TransientModel):
+
+class AutoVacuum(models.AbstractModel):
     """ Expose the vacuum method to the cron jobs mechanism. """
     _name = 'ir.autovacuum'
 
-
-    def _gc_transient_models(self, cr, uid, *args, **kwargs):
-        for model in self.pool.itervalues():
+    @api.model
+    def _gc_transient_models(self):
+        for mname in self.env:
+            model = self.env[mname]
             if model.is_transient():
-                model._transient_vacuum(cr, uid, force=True)
+                model._transient_vacuum(force=True)
 
-    def _gc_user_logs(self, cr, uid, *args, **kwargs):
-        cr.execute("""
+    @api.model
+    def _gc_user_logs(self):
+        self._cr.execute("""
             DELETE FROM res_users_log log1 WHERE EXISTS (
                 SELECT 1 FROM res_users_log log2
                 WHERE log1.create_uid = log2.create_uid
                 AND log1.create_date < log2.create_date
             )
         """)
-        _logger.info("GC'd %d user log entries", cr.rowcount)
+        _logger.info("GC'd %d user log entries", self._cr.rowcount)
 
-    def power_on(self, cr, uid, *args, **kwargs):
-        self._gc_transient_models(cr, uid, *args, **kwargs)
-        self._gc_user_logs(cr, uid, *args, **kwargs)
+    @api.model
+    def power_on(self):
+        self._gc_transient_models()
+        self._gc_user_logs()
         return True

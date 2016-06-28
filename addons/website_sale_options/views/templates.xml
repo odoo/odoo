@@ -15,7 +15,7 @@
     <attribute name="t-if">not line.linked_line_id</attribute>
   </xpath>
   <xpath expr="//table[@id='cart_products']/tbody//tr" position="attributes">
-    <attribute name="t-att-class">'optional_product info' if line.linked_line_id else ''</attribute>
+    <attribute name="t-att-class">'optional_product info' if line.linked_line_id else None</attribute>
   </xpath>
   <xpath expr="//table[@id='cart_products']/tbody//td[@id='td-qty']" position="inside">
     <t t-if="line.linked_line_id">
@@ -59,15 +59,15 @@
                     t-field="product.lst_price"
                     t-field-options='{
                       "widget": "monetary",
-                      "from_currency": "product.currency_id",
-                      "display_currency": "website.currency_id"
+                      "from_currency": product.currency_id,
+                      "display_currency": website.currency_id
                    }'/>
                   <span class="oe_price" style="white-space: nowrap;"
                     t-att-data-product-id="product.id"
                     t-field="product.price"
                     t-field-options='{
                        "widget": "monetary",
-                       "display_currency": "website.currency_id"
+                       "display_currency": website.currency_id
                    }'/>
                 </td>
                 <td>
@@ -106,14 +106,14 @@
                     t-field="product.lst_price"
                     t-field-options='{
                       "widget": "monetary",
-                      "from_currency": "product.currency_id",
-                      "display_currency": "website.currency_id"
+                      "from_currency": product.currency_id,
+                      "display_currency": website.currency_id
                    }'/><br/>
                   <span class="oe_price" style="white-space: nowrap;"
                     t-field="product.price"
                     t-field-options='{
                        "widget": "monetary",
-                       "display_currency": "website.currency_id"
+                       "display_currency": website.currency_id
                    }'/>
                   <p class="css_not_available_msg bg-danger" style="position:absolute; padding: 15px;">Product not available</p>
                 </td>

@@ -1,0 +1,75 @@
+<odoo>
+    <template id="report_timesheet">
+        <t t-call="report.html_container">
+            <t t-call="report.external_layout">
+                <t t-set="show_task" t-value="bool(docs.mapped('task_id'))"/>
+                <t t-set="show_project" t-value="len(docs.mapped('project_id')) > 1"/>
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2>
+                                <span>Timesheet Entries</span>
+                            </h2>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Responsible</th>
+                                        <th>Description</th>
+                                        <th t-if="show_task"><t t-if="show_project">Project - </t>Task</th>
+                                        <th class="text-right">Time</th>
+                                    </tr>
+                               </thead>
+                               <tbody>
+                                    <t t-foreach="docs" t-as="l">
+                                        <tr>
+                                            <td>
+                                               <span t-field="l.date"/>
+                                            </td>
+                                            <td>
+                                               <span t-field="l.user_id.partner_id.name"/>
+                                            </td>
+                                            <td >
+                                                <span t-field="l.name"/>
+                                            </td>
+                                            <td t-if="show_task or show_project">
+                                                <t t-if="show_project"><span t-field="l.project_id.name"/></t>
+                                                <t t-if="show_project and l.task_id"> - </t>
+                                                <t t-if="l.task_id"><span t-field="l.task_id.name"/></t>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'%s:%02.0f' % tuple(int(round(x)) for x in divmod(l.unit_amount*60,60))"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr>
+                                        <td />
+                                        <td />
+                                        <td t-if="show_task"/>
+                                        <td class="text-right"><strong>Total</strong></td>
+                                        <td class="text-right"><strong t-esc="'%s:%02.0f' % tuple(int(round(x)) for x in divmod(sum(docs.mapped('unit_amount'))*60,60))"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <report id="timesheet_report"
+            model="account.analytic.line"
+            string="Timesheet Entries"
+            report_type="qweb-pdf"
+            name="hr_timesheet.report_timesheet"
+            file="report_timesheet"
+    />
+</odoo>

@@ -1,10 +1,11 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'Password Encryption',
     'version': '2.0',
     'author': ['Odoo SA', 'FS3'],
-    'maintainer': 'OpenERP SA',
+    'maintainer': 'Odoo SA',
     'category': 'Tools',
     'description': """
 Encrypted passwords
@@ -34,7 +35,5 @@ necessarily have to be enabled).
 
 """,
     'depends': ['base'],
-    'data': [],
     'auto_install': True,
-    'installable': True,
 }

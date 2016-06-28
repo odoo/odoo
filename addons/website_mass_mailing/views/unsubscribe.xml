@@ -22,7 +22,7 @@
                                     <t t-foreach="contacts" t-as="contact">
                                         <li class="list-group-item">
                                             <input type="checkbox" class="mail_list_checkbox" name="contact_ids" 
-                                                t-att-value="contact['id']" t-att-checked="'checked' if contact['opt_out'] == False else ''"/> 
+                                                t-att-value="contact['id']" t-att-checked="'checked' if contact['opt_out'] == False else None"/> 
                                             <t t-esc="contact.list_id.name"/>
                                         </li>
                                     </t>

@@ -11,6 +11,7 @@ class sale_report(osv.osv):
     _rec_name = 'date'
 
     _columns = {
+        'name': fields.char('Order Reference', readonly=True),
         'date': fields.datetime('Date Order', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', readonly=True),
@@ -38,6 +39,8 @@ class sale_report(osv.osv):
                 ('done', 'Sales Done'),
                 ('cancel', 'Cancelled'),
             ], string='Status', readonly=True),
+        'weight': fields.float('Gross Weight', readonly=True),
+        'volume': fields.float('Volume', readonly=True),
     }
     _order = 'date desc'
 
@@ -54,6 +57,7 @@ class sale_report(osv.osv):
                     sum(l.price_total / COALESCE(cr.rate, 1.0)) as price_total,
                     sum(l.price_subtotal / COALESCE(cr.rate, 1.0)) as price_subtotal,
                     count(*) as nbr,
+                    s.name as name,
                     s.date_order as date,
                     s.state as state,
                     s.partner_id as partner_id,
@@ -66,7 +70,9 @@ class sale_report(osv.osv):
                     s.team_id as team_id,
                     p.product_tmpl_id,
                     partner.country_id as country_id,
-                    partner.commercial_partner_id as commercial_partner_id
+                    partner.commercial_partner_id as commercial_partner_id,
+                    sum(p.weight * l.product_uom_qty / u.factor * u2.factor) as weight,
+                    sum(p.volume * l.product_uom_qty / u.factor * u2.factor) as volume
         """ % self.pool['res.currency']._select_companies_rates()
         return select_str
 
@@ -93,6 +99,7 @@ class sale_report(osv.osv):
                     l.order_id,
                     t.uom_id,
                     t.categ_id,
+                    s.name,
                     s.date_order,
                     s.partner_id,
                     s.user_id,

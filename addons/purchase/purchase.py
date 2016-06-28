@@ -9,6 +9,8 @@ from openerp.tools.translate import _
 from openerp.tools.float_utils import float_is_zero, float_compare
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import UserError, AccessError
+from openerp.tools.misc import formatLang
+from openerp.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 class PurchaseOrder(models.Model):
     _name = "purchase.order"
@@ -87,6 +89,12 @@ class PurchaseOrder(models.Model):
             order.picking_ids = pickings
             order.picking_count = len(pickings)
 
+    @api.depends('picking_ids', 'picking_ids.state')
+    def _compute_is_shipped(self):
+        for order in self:
+            if order.picking_ids and all([x.state == 'done' for x in order.picking_ids]):
+                order.is_shipped = True
+
     READONLY_STATES = {
         'purchase': [('readonly', True)],
         'done': [('readonly', True)],
@@ -112,11 +120,11 @@ class PurchaseOrder(models.Model):
     currency_id = fields.Many2one('res.currency', 'Currency', required=True, states=READONLY_STATES,\
         default=lambda self: self.env.user.company_id.currency_id.id)
     state = fields.Selection([
-        ('draft', 'Draft PO'),
+        ('draft', 'RFQ'),
         ('sent', 'RFQ Sent'),
         ('to approve', 'To Approve'),
         ('purchase', 'Purchase Order'),
-        ('done', 'Done'),
+        ('done', 'Locked'),
         ('cancel', 'Cancelled')
         ], string='Status', readonly=True, select=True, copy=False, default='draft', track_visibility='onchange')
     order_line = fields.One2many('purchase.order.line', 'order_id', string='Order Lines', states=READONLY_STATES, copy=True)
@@ -133,7 +141,7 @@ class PurchaseOrder(models.Model):
     picking_count = fields.Integer(compute='_compute_picking', string='Receptions', default=0)
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking', string='Receptions', copy=False)
 
-    date_planned = fields.Datetime(string='Scheduled Date', compute='_compute_date_planned', inverse='_inverse_date_planned', required=True, select=True, oldname='minimum_planned_date')
+    date_planned = fields.Datetime(string='Scheduled Date', compute='_compute_date_planned', inverse='_inverse_date_planned', store=True, select=True, oldname='minimum_planned_date')
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', track_visibility='always')
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
@@ -152,6 +160,7 @@ class PurchaseOrder(models.Model):
     default_location_dest_id_usage = fields.Selection(related='picking_type_id.default_location_dest_id.usage', string='Destination Location Type',\
         help="Technical field used to display the Drop Ship Address", readonly=True)
     group_id = fields.Many2one('procurement.group', string="Procurement Group")
+    is_shipped = fields.Boolean(compute="_compute_is_shipped")
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
@@ -170,6 +179,8 @@ class PurchaseOrder(models.Model):
             name = po.name
             if po.partner_ref:
                 name += ' ('+po.partner_ref+')'
+            if po.amount_total:
+                name += ': ' + formatLang(self.env, po.amount_total, currency_obj=po.currency_id)
             result.append((po.id, name))
         return result
 
@@ -217,6 +228,35 @@ class PurchaseOrder(models.Model):
             self.fiscal_position_id = self.env['account.fiscal.position'].with_context(company_id=self.company_id.id).get_fiscal_position(self.partner_id.id)
             self.payment_term_id = self.partner_id.property_supplier_payment_term_id.id
             self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.user.company_id.currency_id.id
+        return {}
+
+    @api.onchange('partner_id')
+    def onchange_partner_id_warning(self):
+        if not self.partner_id:
+            return
+        warning = {}
+        title = False
+        message = False
+
+        partner = self.partner_id
+
+        # If partner has no warning, check its company
+        if partner.purchase_warn == 'no-message' and partner.parent_id:
+            partner = partner.parent_id
+
+        if partner.purchase_warn != 'no-message':
+            # Block if partner only has warning but parent company is blocked
+            if partner.purchase_warn != 'block' and partner.parent_id and partner.parent_id.purchase_warn == 'block':
+                partner = partner.parent_id
+            title = _("Warning for %s") % partner.name
+            message = partner.purchase_warn_msg
+            warning = {
+                'title': title,
+                'message': message
+                }
+            if partner.purchase_warn == 'block':
+                self.update({'partner_id': False})
+            return {'warning': warning}
         return {}
 
     @api.onchange('picking_type_id')
@@ -300,10 +340,11 @@ class PurchaseOrder(models.Model):
                     raise UserError(_('Unable to cancel purchase order %s as some receptions have already been done.') % (order.name))
             for inv in order.invoice_ids:
                 if inv and inv.state not in ('cancel', 'draft'):
-                    raise UserError(_("Unable to cancel this purchase order.i You must first cancel related vendor bills."))
+                    raise UserError(_("Unable to cancel this purchase order. You must first cancel related vendor bills."))
 
             for pick in order.picking_ids.filtered(lambda r: r.state != 'cancel'):
                 pick.action_cancel()
+            # TDE FIXME: I don' think context key is necessary, as actions are not related / called from each other
             if not self.env.context.get('cancel_procurement'):
                 procurements = order.order_line.mapped('procurement_ids')
                 procurements.filtered(lambda r: r.state not in ('cancel', 'exception') and r.rule_id.propagate).write({'state': 'cancel'})
@@ -349,9 +390,11 @@ class PurchaseOrder(models.Model):
                 res = order._prepare_picking()
                 picking = self.env['stock.picking'].create(res)
                 moves = order.order_line.filtered(lambda r: r.product_id.type in ['product', 'consu'])._create_stock_moves(picking)
-                move_ids = moves.action_confirm()
-                moves = self.env['stock.move'].browse(move_ids)
+                moves.action_confirm()
                 moves.force_assign()
+                picking.message_post_with_view('mail.message_origin_link',
+                    values={'self': picking, 'origin': order},
+                    subtype_id=self.env.ref('mail.mt_note').id)
         return True
 
     @api.multi
@@ -513,7 +556,6 @@ class PurchaseOrderLine(models.Model):
         return bom_delivered
 
 
-
     name = fields.Text(string='Description', required=True)
     product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True)
     date_planned = fields.Datetime(string='Scheduled Date', required=True, select=True)
@@ -528,9 +570,10 @@ class PurchaseOrderLine(models.Model):
     price_tax = fields.Monetary(compute='_compute_amount', string='Tax', store=True)
 
     order_id = fields.Many2one('purchase.order', string='Order Reference', select=True, required=True, ondelete='cascade')
-    account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account', domain=[('account_type', '=', 'normal')])
+    account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     company_id = fields.Many2one('res.company', related='order_id.company_id', string='Company', store=True, readonly=True)
-    state = fields.Selection(related='order_id.state', stored=True)
+    state = fields.Selection(related='order_id.state', store=True)
 
     invoice_lines = fields.One2many('account.invoice.line', 'purchase_line_id', string="Invoice Lines", readonly=True, copy=False)
 
@@ -666,6 +709,26 @@ class PurchaseOrderLine(models.Model):
 
         return result
 
+    @api.onchange('product_id')
+    def onchange_product_id_warning(self):
+        if not self.product_id:
+            return
+        warning = {}
+        title = False
+        message = False
+
+        product_info = self.product_id
+
+        if product_info.purchase_line_warn != 'no-message':
+            title = _("Warning for %s") % product_info.name
+            message = product_info.purchase_line_warn_msg
+            warning['title'] = title
+            warning['message'] = message
+            if product_info.purchase_line_warn == 'block':
+                self.product_id = False
+            return {'warning': warning}
+        return {}
+
     @api.onchange('product_qty', 'product_uom')
     def _onchange_quantity(self):
         if not self.product_id:
@@ -762,19 +825,19 @@ class ProcurementOrder(models.Model):
 
         return result
 
-    @api.model
-    def _run(self, procurement):
-        if procurement.rule_id and procurement.rule_id.action == 'buy':
-            return procurement.make_po()
-        return super(ProcurementOrder, self)._run(procurement)
+    @api.multi
+    def _run(self):
+        if self.rule_id and self.rule_id.action == 'buy':
+            return self.make_po()
+        return super(ProcurementOrder, self)._run()
 
-    @api.model
-    def _check(self, procurement):
-        if procurement.purchase_line_id:
-            if not procurement.move_ids:
+    @api.multi
+    def _check(self):
+        if self.purchase_line_id:
+            if not self.move_ids:
                 return False
-            return all(move.state == 'done' for move in procurement.move_ids)
-        return super(ProcurementOrder, self)._check(procurement)
+            return all(move.state == 'done' for move in self.move_ids)
+        return super(ProcurementOrder, self)._check()
 
     @api.v8
     def _get_purchase_schedule_date(self):
@@ -917,6 +980,9 @@ class ProcurementOrder(models.Model):
             if not po:
                 vals = procurement._prepare_purchase_order(partner)
                 po = self.env['purchase.order'].create(vals)
+                name = (procurement.group_id and (procurement.group_id.name + ":") or "") + (procurement.name != "/" and procurement.name or procurement.move_dest_id.raw_material_production_id and procurement.move_dest_id.raw_material_production_id.name or "")
+                message = _("This purchase order has been created from: <a href=# data-oe-model=procurement.order data-oe-id=%d>%s</a>") % (procurement.id, name)
+                po.message_post(body=message)
                 cache[domain] = po
             elif not po.origin or procurement.origin not in po.origin.split(', '):
                 # Keep track of all procurements
@@ -927,6 +993,9 @@ class ProcurementOrder(models.Model):
                         po.write({'origin': po.origin})
                 else:
                     po.write({'origin': procurement.origin})
+                name = (self.group_id and (self.group_id.name + ":") or "") + (self.name != "/" and self.name or self.move_dest_id.raw_material_production_id and self.move_dest_id.raw_material_production_id.name or "")
+                message = _("This purchase order has been modified from: <a href=# data-oe-model=procurement.order data-oe-id=%d>%s</a>") % (procurement.id, name)
+                po.message_post(body=message)
             if po:
                 res += [procurement.id]
 
@@ -983,8 +1052,12 @@ class ProductTemplate(models.Model):
     purchase_method = fields.Selection([
         ('purchase', 'On ordered quantities'),
         ('receive', 'On received quantities'),
-        ], string="Control Purchase Bills", default="receive")
+        ], string="Control Purchase Bills",
+        help="On ordered quantities: Invoice this product based on ordered quantities.\n"
+        "On received quantities: Invoice this product based on received quantity.", default="receive")
     route_ids = fields.Many2many(default=lambda self: self._get_buy_route())
+    purchase_line_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order Line', help=WARNING_HELP, required=True, default="no-message")
+    purchase_line_warn_msg = fields.Text('Message for Purchase Order Line')
 
 
 class ProductProduct(models.Model):
@@ -998,8 +1071,8 @@ class ProductProduct(models.Model):
             ('product_id', 'in', self.mapped('id')),
         ]
         r = {}
-        for group in self.env['purchase.report'].read_group(domain, ['product_id', 'quantity'], ['product_id']):
-            r[group['product_id'][0]] = group['quantity']
+        for group in self.env['purchase.report'].read_group(domain, ['product_id', 'unit_quantity'], ['product_id']):
+            r[group['product_id'][0]] = group['unit_quantity']
         for product in self:
             product.purchase_count = r.get(product.id, 0)
         return True
@@ -1020,7 +1093,8 @@ class MailComposeMessage(models.Model):
 
     @api.multi
     def send_mail(self, auto_commit=False):
-        if self._context.get('default_model') == 'purchase.order' and self._context.get('default_res_id'):
+        compose_internal = self.filtered('subtype_id.internal')
+        if self._context.get('default_model') == 'purchase.order' and self._context.get('default_res_id') and not compose_internal:
             order = self.env['purchase.order'].browse([self._context['default_res_id']])
             if order.state == 'draft':
                 order.state = 'sent'

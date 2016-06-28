@@ -6,9 +6,8 @@
     'description': """
 Add your sales document in the frontend portal. Your customers will be able to connect to their portal to see the list (and the state) of their invoices (pdf report), sales orders and quotations (web pages).
         """,
-    'website': 'https://www.odoo.com/',
     'depends': [
-        'sale',
+        'portal_sale',
         'website_portal',
         'website_payment',
     ],

@@ -150,6 +150,14 @@ class website(osv.osv):
             res[id] = menu_ids and menu_ids[0] or False
         return res
 
+    def _active_languages(self, cr, uid, context=None):
+        return self.pool['res.lang'].search(cr, uid, [], context=context)
+
+    def _default_language(self, cr, uid, context=None):
+        lang_code = self.pool['ir.values'].get_default(cr, uid, 'res.partner', 'lang')
+        def_langs = self.pool['res.lang'].search(cr, uid, [('code', '=', lang_code)], context=context)
+        return def_langs[0] if def_langs else self._active_languages(cr, uid, context=context)[0]
+
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
     _description = "Website"
     _columns = {
@@ -172,7 +180,8 @@ class website(osv.osv):
         'cdn_url': fields.char('CDN Base URL'),
         'cdn_filters': fields.text('CDN Filters', help="URL matching those filters will be rewritten using the CDN Base URL"),
         'partner_id': fields.related('user_id','partner_id', type='many2one', relation='res.partner', string='Public Partner'),
-        'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu')
+        'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu'),
+        'favicon': fields.binary(string="Website Favicon", help="This field holds the image used to display a favicon on the website."),
     }
     _defaults = {
         'user_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
@@ -181,6 +190,8 @@ class website(osv.osv):
         'cdn_activated': False,
         'cdn_url': '',
         'cdn_filters': '\n'.join(DEFAULT_CDN_FILTERS),
+        'language_ids': _active_languages,
+        'default_lang_id': _default_language,
     }
 
     # cf. Wizard hack in website_views.xml
@@ -414,7 +425,7 @@ class website(osv.osv):
 
     def _render(self, cr, uid, ids, template, values=None, context=None):
         # TODO: remove this. (just kept for backward api compatibility for saas-3)
-        return self.pool['ir.ui.view'].render(cr, uid, template, values=values, context=context)
+        return self.pool['ir.ui.view'].render_template(cr, uid, template, values=values, context=context)
 
     def render(self, cr, uid, ids, template, values=None, status_code=None, context=None):
         # TODO: remove this. (just kept for backward api compatibility for saas-3)
@@ -711,7 +722,7 @@ class base_language_install(osv.osv_memory):
             }
         return action
 
-class website_seo_metadata(osv.Model):
+class website_seo_metadata(osv.AbstractModel):
     _name = 'website.seo.metadata'
     _description = 'SEO metadata'
 

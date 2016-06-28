@@ -1,3 +1,4 @@
 # -*- coding: utf-8 -*-
 
-import documentation
+import forum_documentation_toc
+import forum_post

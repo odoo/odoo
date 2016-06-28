@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import sets
 
 from openerp import models, fields, api, _
 
@@ -11,12 +10,9 @@ _logger = logging.getLogger(__name__)
 class barcode_rule(models.Model):
     _inherit = 'barcode.rule'
 
-    def _get_type_selection(self):
-        types = sets.Set(super(barcode_rule, self)._get_type_selection())
-        types.update([
+    type = fields.Selection(selection_add=[
             ('credit', _('Credit Card'))
         ])
-        return list(types)
 
 
 class pos_mercury_payment_data(models.Model):
@@ -36,7 +32,7 @@ class account_bank_statement_line(models.Model):
     mercury_card_owner_name = fields.Char(string='Card Owner Name', help='The name of the card owner')
     mercury_ref_no = fields.Char(string='Mercury reference number', help='Payment reference number from Mercury Pay')
     mercury_record_no = fields.Char(string='Mercury record number', help='Payment record number from Mercury Pay')
-    mercury_invoice_no = fields.Float(string='Mercury invoice number', help='Invoice number from Mercury Pay')
+    mercury_invoice_no = fields.Char(string='Mercury invoice number', help='Invoice number from Mercury Pay')
 
     @api.one
     def _compute_prefixed_card_number(self):
@@ -68,11 +64,10 @@ class pos_order_card(models.Model):
 
         return fields
 
-    @api.model
-    def add_payment(self, order_id, data):
-        statement_id = super(pos_order_card, self).add_payment(order_id, data)
+    def add_payment(self, data):
+        statement_id = super(pos_order_card, self).add_payment(data)
         statement_lines = self.env['account.bank.statement.line'].search([('statement_id', '=', statement_id),
-                                                                         ('pos_statement_id', '=', order_id),
+                                                                         ('pos_statement_id', '=', self.id),
                                                                          ('journal_id', '=', data['journal']),
                                                                          ('amount', '=', data['amount'])])
 
@@ -93,3 +88,11 @@ class pos_order_card(models.Model):
                 break
 
         return statement_id
+
+class AutoVacuum(models.AbstractModel):
+    _inherit = 'ir.autovacuum'
+
+    @api.model
+    def power_on(self, *args, **kwargs):
+        self.env['pos_mercury.mercury_transaction'].cleanup_old_tokens()
+        return super(AutoVacuum, self).power_on(*args, **kwargs)

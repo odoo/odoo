@@ -11,7 +11,7 @@
 Module for defining analytic accounting object.
 ===============================================
 
-In OpenERP, analytic accounts are linked to general accounts but are treated
+In Odoo, analytic accounts are linked to general accounts but are treated
 totally independently. So, you can enter various different analytic operations
 that have no counterpart in the general financial accounts.
     """,
@@ -19,7 +19,6 @@ that have no counterpart in the general financial accounts.
         'security/analytic_security.xml',
         'security/ir.model.access.csv',
         'views/analytic_view.xml',
-        'wizard/account_analytic_chart_view.xml',
     ],
     'demo': [
         'data/analytic_demo.xml',

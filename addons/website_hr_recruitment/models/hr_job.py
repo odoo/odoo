@@ -13,9 +13,9 @@ class hr_job(osv.osv):
             res[job.id] = "/jobs/detail/%s" % job.id
         return res
 
-    def job_open(self, cr, uid, ids, context=None):
+    def set_open(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'website_published': False}, context=context)
-        return super(hr_job, self).job_open(cr, uid, ids, context)
+        return super(hr_job, self).set_open(cr, uid, ids, context)
 
     _columns = {
         'website_description': fields.html('Website description', translate=True),

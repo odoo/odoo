@@ -10,8 +10,8 @@
                     <group name="name">
                         <field name="name" widget="radio"/>
                     </group>
-                    <group string="Assign these opportunities to">
-                        <field name="user_id" on_change="on_change_user(user_id, team_id, context)"/>
+                    <group string="Assign this opportunity to">
+                        <field name="user_id" on_change="on_change_user(user_id, team_id, context)" domain="[('share', '=', False)]"/>
                         <field name="team_id" widget="selection"/>
                     </group>
                     <group string="Opportunities" attrs="{'invisible': [('name', '!=', 'merge')]}">
@@ -33,7 +33,7 @@
                     <group name="action" attrs="{'invisible': [('name', '!=', 'convert')]}" string="Customers" col="1">
                         <field name="action" nolabel="1" widget="radio" on_change="onchange_action(action, context)" />
                         <group col="2">
-                            <field name="partner_id" attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"/>
+                            <field name="partner_id" domain="[('customer', '=', True)]" context="{'search_default_customer': 1}" attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"/>
                         </group>
                     </group>
                     <footer>
@@ -54,9 +54,9 @@
                         <field name="name" class="oe_inline" widget="radio"/>
                         <field name="deduplicate" class="oe_inline" on_change="on_change_deduplicate(deduplicate, context)"/>
                     </group>
-                    <group string="Assign opportunities to">
+                    <group string="Assign these opportunities to">
                         <field name="team_id"/>
-                        <field name="user_ids" widget="many2many_tags"/>
+                        <field name="user_ids" widget="many2many_tags" domain="[('share', '=', False)]"/>
                         <!-- Uncomment me in trunk -->
                         <!-- <field name="force_assignation" /> -->
                     </group>
@@ -109,7 +109,7 @@
             view_mode="form" target="new" view_type="form"
             context="{'mass_convert' : True}"
             view_id="view_crm_lead2opportunity_partner_mass"
-            groups="base.group_sale_salesman"
+            groups="sales_team.group_sale_salesman"
         />
 
     </data>

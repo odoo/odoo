@@ -23,32 +23,23 @@ website.TopBar.include({
     },
     start: function () {
         var self = this;
-        $("#wrapwrap").on('click', '.o_editable, [data-oe-model]', function (event) {
-            var $this = $(event.srcElement);
-            var tag = $this[0] && $this[0].tagName.toLowerCase();
-            if (!(tag === 'a' || tag === "button") && !$this.parents("a, button").length) {
-                self.$('[data-action="edit"]').parent().effect('bounce', {distance: 18, times: 5}, 250);
-            }
-        });
-
         $("#wrapwrap").find("[data-oe-model] .oe_structure.oe_empty, [data-oe-model].oe_structure.oe_empty, [data-oe-type=html]:empty")
             .filter(".oe_not_editable")
             .filter(".oe_no_empty")
-            .addClass("oe_empty")
-            .attr("data-oe-placeholder", _t("Press The Top-Left Edit Button"));
+            .addClass("oe_empty");
 
         if (location.search.indexOf("enable_editor") >= 0 && $('html').attr('lang') === "en_US") {
-            this.$el.hide();
+            this.$el.addClass('editing_mode');
         }
 
-        return this._super();
+        return this._super.apply(this, arguments);
     },
     edit: function () {
         this.$('button[data-action=edit]').prop('disabled', true);
-        this.$el.hide();
+        this.$el.addClass('editing_mode');
         editor.editor_bar = new editor.Class(this);
         editor.editor_bar.prependTo(document.body);
-    }
+    },
 });
 
 /* ----- Customize Template ---- */
@@ -58,7 +49,7 @@ website.TopBarCustomize = Widget.extend({
         'mousedown a.dropdown-toggle': 'load_menu',
         'click ul a[data-view-id]': 'do_customize',
     },
-    start: function() {
+    start: function () {
         var self = this;
         this.$menu = self.$el.find('ul');
         this.view_name = $(document.documentElement).data('view-xmlid');
@@ -72,32 +63,36 @@ website.TopBarCustomize = Widget.extend({
         if(this.loaded) {
             return;
         }
-        ajax.jsonRpc('/website/customize_template_get', 'call', { 'key': this.view_name }).then(
-            function(result) {
-                _.each(result, function (item) {
-                    if (item.key === "website.debugger" && !window.location.search.match(/[&?]debug(&|$)/)) return;
-                    if (item.header) {
-                        self.$menu.append('<li class="dropdown-header">' + item.name + '</li>');
-                    } else {
-                        self.$menu.append(_.str.sprintf('<li role="presentation"><a href="#" data-view-id="%s" role="menuitem"><strong class="fa fa%s-square-o"></strong> %s</a></li>',
-                            item.id, item.active ? '-check' : '', item.name));
-                    }
-                });
-                self.loaded = true;
-            }
-        );
+        ajax.jsonRpc('/website/customize_template_get', 'call', {
+            key: this.view_name,
+        }).then(function (result) {
+            _.each(result, function (item) {
+                if (item.key === "website.debugger" && !window.location.search.match(/[&?]debug(&|$)/)) return;
+                if (item.header) {
+                    self.$menu.append('<li class="dropdown-header">' + item.name + '</li>');
+                } else {
+                    var $li = $('<li/>', {role: 'presentation'})
+                                .append($('<a/>', {href: '#', 'data-view-id': item.id, role: 'menuitem'})
+                                    .append(qweb.render('web_editor.components.switch', {id: 'switch-' + item.id, label: item.name})));
+                    $li.find('input').prop('checked', !!item.active);
+                    self.$menu.append($li);
+                }
+            });
+            self.loaded = true;
+        });
     },
-    do_customize: function (event) {
-        var view_id = $(event.currentTarget).data('view-id');
+    do_customize: function (e) {
+        e.preventDefault();
+        var view_id = $(e.currentTarget).data('view-id');
         return ajax.jsonRpc('/web/dataset/call_kw', 'call', {
             model: 'ir.ui.view',
             method: 'toggle',
             args: [],
             kwargs: {
                 ids: [parseInt(view_id, 10)],
-                context: base.get_context()
+                context: base.get_context(),
             }
-        }).then( function() {
+        }).then(function () {
             window.location.reload();
         });
     },
@@ -117,7 +112,7 @@ widget.LinkDialog.include({
         var self = this;
         var href = this.data.url;
         var last;
-        
+
         this.$('#link-page').select2({
             minimumInputLength: 1,
             placeholder: _t("New or existing page"),

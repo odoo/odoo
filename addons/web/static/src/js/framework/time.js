@@ -238,6 +238,18 @@ function strftime_to_moment_format (value) {
     return _normalize_format_cache[value];
 }
 
+/**
+ * Convert moment.js format to python strftime
+ *
+ * @param {String} value original format
+ */
+function moment_to_strftime_format(value) {
+    var regex = /(MMMM|DDDD|dddd|YYYY|MMM|ddd|mm|ss|ww|WW|MM|YY|hh|HH|DD|A|d)/g;
+    return value.replace(regex, function(val){
+        return '%'+inverse_normalize_format_table[val];
+    });
+}
+
 var _normalize_format_cache = {};
 var normalize_format_table = {
     // Python strftime to moment.js conversion table
@@ -265,6 +277,7 @@ var normalize_format_table = {
     'x': 'MM/DD/YY',
     'X': 'HH:mm:ss'
 };
+var inverse_normalize_format_table = _.invert(normalize_format_table);
 
 
 
@@ -279,6 +292,7 @@ return {
     auto_str_to_date: auto_str_to_date,
     auto_date_to_str: auto_date_to_str,
     strftime_to_moment_format: strftime_to_moment_format,
+    moment_to_strftime_format: moment_to_strftime_format,
 };
 
 });

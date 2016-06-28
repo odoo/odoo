@@ -1,5 +1,5 @@
 {
-    'name': 'OpenERP Web Diagram',
+    'name': 'Odoo Web Diagram',
     'category': 'Hidden',
     'description': """
 Openerp Web Diagram view.

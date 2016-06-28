@@ -6,6 +6,7 @@ odoo.define('web.PivotView', function (require) {
 
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
+var data_manager = require('web.data_manager');
 var formats = require('web.formats');
 var framework = require('web.framework');
 var Model = require('web.DataModel');
@@ -19,28 +20,27 @@ var _t = core._t;
 var QWeb = core.qweb;
 
 var PivotView = View.extend({
-    template: 'PivotView',
-    icon: 'fa-table',
-    display_name: _lt('Pivot'),
-    view_type: 'pivot',
     events: {
-        'click .oe-opened': 'on_open_header_click',
-        'click .oe-closed': 'on_closed_header_click',
-        'click .o-field-menu': 'on_field_menu_selection',
+        'click .o_pivot_header_cell_opened': 'on_open_header_click',
+        'click .o_pivot_header_cell_closed': 'on_closed_header_click',
+        'click .o_pivot_field_menu': 'on_field_menu_selection',
         'click td': 'on_cell_click',
-        'click .measure-row': 'on_measure_row_click',
+        'click .o_pivot_measure_row': 'on_measure_row_click',
     },
+    display_name: _lt('Pivot'),
+    icon: 'fa-table',
+    require_fields: true,
+    template: 'PivotView',
 
-    init: function(parent, dataset, view_id, options) {
-        this._super(parent, dataset, view_id, options);
-        this.model = new Model(dataset.model, {group_by_no_leaf: true});
+    init: function() {
+        this._super.apply(this, arguments);
+        this._model = new Model(this.model, {group_by_no_leaf: true});
 
-        this.fields = {};
         this.measures = {};
         this.groupable_fields = {};
         this.ready = false; // will be ready after the first do_search
         this.data_loaded = $.Deferred();
-        this.title = options.title;
+        this.title = this.options.title || this.fields_view.arch.attrs.string;
 
         this.main_row = {
             root: undefined,
@@ -62,30 +62,73 @@ var PivotView = View.extend({
         this.sorted_column = {};
 
         this.numbering = {};
+        this.widgets = [];
+
+        this.enable_linking = !this.fields_view.arch.attrs.disable_linking;
     },
     willStart: function () {
         var self = this;
-        return session.rpc('/web/pivot/check_xlwt').then(function(result) {
+
+        var fields_def = data_manager.load_fields(this.dataset);
+        var xlwt_def = session.rpc('/web/pivot/check_xlwt').then(function(result) {
             self.xlwt_installed = result;
+        });
+
+        this.fields_view.arch.children.forEach(function (field) {
+            var name = field.attrs.name;
+            if (field.attrs.interval) {
+                name += ':' + field.attrs.interval;
+            }
+            //noinspection FallThroughInSwitchStatementJS
+            switch (field.attrs.type) {
+            case 'measure':
+                self.widgets.push(field.attrs.widget || "");
+                self.active_measures.push(name);
+                break;
+            case 'col':
+                self.initial_col_groupby.push(name);
+                break;
+            default:
+                if ('operator' in field.attrs) {
+                    self.active_measures.push(name);
+                    break;
+                }
+            case 'row':
+                self.initial_row_groupby.push(name);
+            }
+        });
+        if ((!this.active_measures.length) || this.fields_view.arch.attrs.display_quantity) {
+            this.active_measures.push('__count__');
+        }
+
+        return $.when(fields_def, xlwt_def, this._super()).then(function (fields) {
+            self.prepare_fields(fields);
+            // add active measures to the measure list.  This is very rarely necessary, but it
+            // can be useful if one is working with a functional field non stored, but in a
+            // model with an overrided read_group method.  In this case, the pivot view could
+            // work, and the measure should be allowed.  However, be careful if you define a
+            // measure in your pivot view: non stored functional fields will probably not work
+            // (their aggregate will always be 0).
+            _.each(self.active_measures, function (m) {
+                if (!(m in self.measures)) {
+                    self.measures[m] = self.fields[m];
+                }
+            });
         });
     },
     start: function () {
-        this.$table_container = this.$('.o-pivot-table');
-
-        var load_fields = this.model.call('fields_get', [], {context: this.dataset.get_context()})
-                .then(this.prepare_fields.bind(this));
-
-        return $.when(this._super(), load_fields).then(this.render_field_selection.bind(this));
-    },
-    render_field_selection: function () {
-        var self = this;
-
-        var context = {fields: _.chain(this.groupable_fields).pairs().sortBy(function(f){return f[1].string;}).value()};
-        this.$field_selection = this.$('.o-field-selection');
+        this.$el.toggleClass('o_enable_linking', this.enable_linking);
+        var context = {
+            fields: _.chain(this.groupable_fields).pairs().sortBy(function(f) {
+                return f[1].string;
+            }).value(),
+        };
+        this.$field_selection = this.$('.o_field_selection');
         this.$field_selection.html(QWeb.render('PivotView.FieldSelection', context));
-        core.bus.on('click', self, function () {
-            self.$field_selection.find('ul').first().hide();
+        core.bus.on('click', this, function () {
+            this.$field_selection.find('ul').first().hide();
         });
+        return this._super();
     },
     /**
      * Render the buttons according to the PivotView.buttons template and
@@ -118,55 +161,8 @@ var PivotView = View.extend({
     render_sidebar: function($node) {
         if (this.xlwt_installed && $node && this.options.sidebar) {
             this.sidebar = new Sidebar(this, {editable: this.is_action_enabled('edit')});
-            this.sidebar.add_items('other', [{
-                label: _t("Download xls"),
-                callback: this.download_table.bind(this),
-            }]);
-
             this.sidebar.appendTo($node);
         }
-    },
-    view_loading: function (fvg) {
-        var self = this;
-        this.title = this.title || fvg.arch.attrs.string;
-        this.enable_linking = !fvg.arch.attrs.disable_linking;
-        this.$el.toggleClass('oe-enable-linking', this.enable_linking);
-        fvg.arch.children.forEach(function (field) {
-            var name = field.attrs.name;
-            if (field.attrs.interval) {
-                name += ':' + field.attrs.interval;
-            }
-            //noinspection FallThroughInSwitchStatementJS
-            switch (field.attrs.type) {
-            case 'measure':
-                self.active_measures.push(name);
-                break;
-            case 'col':
-                self.initial_col_groupby.push(name);
-                break;
-            default:
-                if ('operator' in field.attrs) {
-                    self.active_measures.push(name);
-                    break;
-                }
-            case 'row':
-                self.initial_row_groupby.push(name);
-            }
-        });
-        if ((!self.active_measures.length) || fvg.arch.attrs.display_quantity){
-            self.active_measures.push('__count__');
-        }
-        // add active measures to the measure list.  This is very rarely necessary, but it
-        // can be useful if one is working with a functional field non stored, but in a
-        // model with an overrided read_group method.  In this case, the pivot view could
-        // work, and the measure should be allowed.  However, be careful if you define a
-        // measure in your pivot view: non stored functional fields will probably not work
-        // (their aggregate will always be 0).
-        _.each(this.active_measures, function (m) {
-            if (!(m in self.measures)) {
-                self.measures[m] = self.fields[m];
-            }
-        });
     },
     prepare_fields: function (fields) {
         var self = this,
@@ -206,11 +202,12 @@ var PivotView = View.extend({
     },
     do_show: function () {
         var self = this;
+        var _super = this._super.bind(this);
         this.do_push_state({});
-        this.data_loaded.done(function () {
+        return this.data_loaded.done(function () {
             self.display_table(); 
+            _super();
         });
-        return this._super();
     },
     get_context: function () {
         return !this.ready ? {} : {
@@ -221,16 +218,17 @@ var PivotView = View.extend({
     },
     on_button_click: function (event) {
         var $target = $(event.target);
-        if ($target.hasClass('oe-pivot-flip')) { return this.flip();}
-        if ($target.hasClass('oe-pivot-expand-all')) {return this.expand_all();}
-        if ($target.parents('.oe-measure-list').length) {
-            var parent = $target.parent(),
-                field = parent.data('field');
+        if ($target.hasClass('o_pivot_flip_button')) { return this.flip(); }
+        if ($target.hasClass('o_pivot_expand_button')) { return this.expand_all(); }
+        if ($target.parents('.o_pivot_measures_list').length) {
+            var parent = $target.parent();
+            var field = parent.data('field');
             parent.toggleClass('selected');
+            event.preventDefault();
             event.stopPropagation();
             return this.toggle_measure(field);
         }
-        if ($target.hasClass('oe-pivot-download')) {
+        if ($target.hasClass('o_pivot_download')) {
             return this.download_table();
         }
     },
@@ -251,21 +249,23 @@ var PivotView = View.extend({
             this.expand_header(header, groupbys[header.path.length - 1])
                 .then(this.proxy('display_table'));
         } else {
-            var $test = $(event.target);
-            var pos = $test.position();
             this.last_header_selected = id;
+            var $test = $(event.target);
             var $menu = this.$field_selection.find('ul').first();
-            $menu.css('top', pos.top + $test.parent().height() - 2);
-            $menu.css('left', pos.left + event.offsetX);
+            var position = $test.position();
+            $menu.css({
+                top: position.top + $test.height(),
+                left: position.left + event.offsetX,
+            });
             $menu.show();
             event.stopPropagation();            
         }
     },
     on_cell_click: function (event) {
         var $target = $(event.target);
-        if ($target.hasClass('oe-closed') 
-            || $target.hasClass('oe-opened') 
-            || $target.hasClass('oe-empty')
+        if ($target.hasClass('o_pivot_header_cell_closed') 
+            || $target.hasClass('o_pivot_header_cell_opened') 
+            || $target.hasClass('o_empty')
             || !this.enable_linking) {
             return;
         }
@@ -275,15 +275,14 @@ var PivotView = View.extend({
             col_domain = this.headers[col_id].domain,
             context = _.omit(_.clone(this.context), 'group_by');
 
-        var views = [
-            [this.options.action_views_ids.list || false, 'list'],
-            [this.options.action_views_ids.form || false, 'form']
-        ];
+        var views = _.filter(this.options.action.views, function (view) {
+            return view[1] === 'form' || view[1] === 'list';
+        });
 
         return this.do_action({
             type: 'ir.actions.act_window',
             name: this.title,
-            res_model: this.model.name,
+            res_model: this.model,
             views: views,
             view_type : "list",
             view_mode : "list",
@@ -297,11 +296,10 @@ var PivotView = View.extend({
             col_id = $target.data('id'),
             measure = $target.data('measure');
 
-        this.sort_rows(col_id, measure, $target.hasClass('o-sorted-asc'));
+        this.sort_rows(col_id, measure, $target.hasClass('o_pivot_measure_row_sorted_asc'));
         this.display_table();
     },
     sort_rows: function (col_id, measure, descending) {
-        console.log('order', descending);
         var self = this;
         traverse_tree(this.main_row.root, function (header) { 
             header.children.sort(compare);
@@ -321,6 +319,7 @@ var PivotView = View.extend({
         }
     },
     on_field_menu_selection: function (event) {
+        event.preventDefault();
         var field = $(event.target).parent().data('field'),
             interval = $(event.target).data('interval'),
             header = this.headers[this.last_header_selected];
@@ -343,7 +342,7 @@ var PivotView = View.extend({
             groupbys.push([field].concat(other_groupbys.slice(0,i)));
         }
         return $.when.apply(null, groupbys.map(function (groupby) {
-            return self.model.query(fields)
+            return self._model.query(fields)
                 .filter(header.domain.length ? header.domain : self.domain)
                 .context(self.context)
                 .lazy(false)
@@ -396,7 +395,7 @@ var PivotView = View.extend({
             }
         }
         return $.when.apply(null, groupbys.map(function (groupby) {
-            return self.model.query(fields)
+            return self._model.query(fields)
                 .filter(self.domain)
                 .context(self.context)
                 .lazy(false)
@@ -550,13 +549,22 @@ var PivotView = View.extend({
         }
         return find_path_in_tree(root, path);
     },
+    _clean_table: function () {
+        return this.$el
+                .find('table')
+                    .remove()
+                    .end()
+                .find('.oe_view_nocontent')
+                    .remove()
+                    .end();
+    },
     display_table: function () {
         if (!this.active_measures.length || !this.has_data) {
-            return this.$table_container.empty().append(QWeb.render('PivotView.nodata'));
+            return this._clean_table().append(QWeb.render('PivotView.nodata'));
         }
         var $fragment = $(document.createDocumentFragment()),
             $table = $('<table>')
-                .addClass('table table-hover table-condensed')
+                .addClass('table table-hover table-condensed table-bordered')
                 .appendTo($fragment),
             $thead = $('<thead>').appendTo($table),
             $tbody = $('<tbody>').appendTo($table),
@@ -572,8 +580,8 @@ var PivotView = View.extend({
         $table.on('hover', 'td', function () {
             $table.find('col:eq(' + $(this).index()+')').toggleClass('hover');
         });
-        this.$table_container.empty().append($fragment);
-        this.$table_container.find('.oe-opened,.oe-closed').tooltip();
+        this._clean_table().append($fragment);
+        this.$('.o_pivot_header_cell_opened,.o_pivot_header_cell_closed').tooltip();
     },
     draw_headers: function ($thead, headers) {
         var self = this,
@@ -591,26 +599,27 @@ var PivotView = View.extend({
                     .text(cell.title)
                     .attr('rowspan', cell.height)
                     .attr('colspan', cell.width);
-                if (cell.total) {
-                    $cell.addClass('oe-total');
-                }
                 if (i > 0) {
                     $cell.attr('title', groupby_labels[i-1]);
                 }
                 if (cell.expanded !== undefined) {
-                    $cell.addClass(cell.expanded ? 'oe-opened' : 'oe-closed');
+                    $cell.addClass(cell.expanded ? 'o_pivot_header_cell_opened' : 'o_pivot_header_cell_closed');
                     $cell.data('id', cell.id);
                 }
                 if (cell.measure) {
-                    $cell.addClass('measure-row text-muted')
-                        .text(this.measures[cell.measure].string)
-                        .toggleClass('oe-total', cell.is_bold);
+                    $cell.addClass('o_pivot_measure_row text-muted')
+                        .text(this.measures[cell.measure].string);
                     $cell.data('id', cell.id).data('measure', cell.measure);
                     if (cell.id === this.sorted_column.id && cell.measure === this.sorted_column.measure) {
-                        $cell.addClass('o-sorted o-sorted-' + this.sorted_column.order);
+                        $cell.addClass('o_pivot_measure_row_sorted_' + this.sorted_column.order);
                     }
                 }
                 $row.append($cell);
+
+                $cell.toggleClass('hidden-xs', (cell.expanded !== undefined) || (cell.measure !== undefined && j < headers[i].length - this.active_measures.length));
+                if (cell.height > 1) {
+                    $cell.css('padding', 0);
+                }
             }
             $thead.append($row);
         }
@@ -628,26 +637,30 @@ var PivotView = View.extend({
         var measure_types = this.active_measures.map(function (name) {
             return self.measures[name].type;
         });
+        var widgets = this.widgets;
         for (i = 0; i < rows.length; i++) {
             $row = $('<tr>');
             $header = $('<td>')
                 .text(rows[i].title)
                 .data('id', rows[i].id)
                 .css('padding-left', (5 + rows[i].indent * 30) + 'px')
-                .addClass(rows[i].expanded ? 'oe-opened' : 'oe-closed');
+                .addClass(rows[i].expanded ? 'o_pivot_header_cell_opened' : 'o_pivot_header_cell_closed');
             if (rows[i].indent > 0) $header.attr('title', groupby_labels[rows[i].indent - 1]);
             $header.appendTo($row);
             for (j = 0; j < length; j++) {
-                value = formats.format_value(rows[i].values[j], {type: measure_types[j % nbr_measures]});
+                value = formats.format_value(rows[i].values[j], {type: measure_types[j % nbr_measures], widget: widgets[j % nbr_measures]});
                 $cell = $('<td>')
                             .data('id', rows[i].id)
                             .data('col_id', rows[i].col_ids[Math.floor(j / nbr_measures)])
-                            .toggleClass('oe-empty', !value)
-                            .text(value);
+                            .toggleClass('o_empty', !value)
+                            .text(value)
+                            .addClass('o_pivot_cell_value text-right');
                 if (((j >= length - this.active_measures.length) && display_total) || i === 0){
                     $cell.css('font-weight', 'bold');
                 }
                 $row.append($cell);
+
+                $cell.toggleClass('hidden-xs', j < length - this.active_measures.length);
             }
             $tbody.append($row);
         }

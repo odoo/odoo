@@ -106,6 +106,7 @@ class HrEquipment(models.Model):
         return recs.name_get()
 
     name = fields.Char('Asset Name', required=True, translate=True)
+    active = fields.Boolean(default=True)
     user_id = fields.Many2one('res.users', string='Technician', track_visibility='onchange')
     employee_id = fields.Many2one('hr.employee', string='Assigned to Employee', track_visibility='onchange')
     department_id = fields.Many2one('hr.department', string='Assigned to Department', track_visibility='onchange')
@@ -212,6 +213,7 @@ class HrEquipmentRequest(models.Model):
     _name = 'hr.equipment.request'
     _inherit = ['mail.thread']
     _description = 'Maintenance Requests'
+    _order = "id desc"
 
     @api.returns('self')
     def _default_employee_get(self):

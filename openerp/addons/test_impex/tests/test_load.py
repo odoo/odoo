@@ -76,15 +76,7 @@ class ImporterCase(common.TransactionCase):
         return '__test__.' + name
 
     def add_translations(self, name, type, code, *tnx):
-        Lang = self.registry('res.lang')
-        if not Lang.search(self.cr, openerp.SUPERUSER_ID, [('code', '=', code)]):
-            Lang.create(self.cr, openerp.SUPERUSER_ID, {
-                'name': code,
-                'code': code,
-                'translatable': True,
-                'date_format': '%d.%m.%Y',
-                'decimal_point': ',',
-            })
+        self.registry('res.lang').load_lang(self.cr, openerp.SUPERUSER_ID, code)
         Translations = self.registry('ir.translation')
         for source, value in tnx:
             Translations.create(self.cr, openerp.SUPERUSER_ID, {

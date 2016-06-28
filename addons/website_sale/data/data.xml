@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data noupdate="1">
+<odoo noupdate="1">
 
         <record id="menu_shop" model="website.menu">
             <field name="name">Shop</field>
@@ -29,7 +28,6 @@
 
         <record model="crm.team" id="website.salesteam_website_sales">
             <field name="name">Website Sales</field>
-            <field name="code">WS</field>
             <field name="use_quotations" eval="False"/>
         </record>
 
@@ -44,5 +42,5 @@
             <field name="country_group_ids" eval="[(6,0,[ref('base.europe')])]" />
 
         </record>
-    </data>
-</openerp>
+
+</odoo>

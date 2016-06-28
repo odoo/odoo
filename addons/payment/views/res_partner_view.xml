@@ -10,9 +10,9 @@
                 <field name="arch" type="xml">
                     <xpath expr='//group[@name="banks"]' position="inside">
                         <button type="action" class="btn-link"
-                            name="%(payment.payment_method_action)d"
+                            name="%(payment.payment_token_action)d"
                             context="{'search_default_partner_id': active_id}">
-                            <field name="payment_method_count" widget="statinfo" string="Credit card(s)"/>
+                            <field name="payment_token_count" widget="statinfo" string="Credit card(s)"/>
                         </button>
                     </xpath>
                 </field>

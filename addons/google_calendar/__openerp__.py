@@ -7,7 +7,7 @@
     'version': '1.0',
     'category': 'Tools',
     'description': """
-The module adds the possibility to synchronize Google Calendar with OpenERP
+The module adds the possibility to synchronize Google Calendar with Odoo
 ===========================================================================
 """,
     'website': 'https://www.odoo.com/page/crm',

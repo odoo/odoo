@@ -10,7 +10,7 @@
     'website': 'http://www.openglobe.pl',
     'category' : 'Localization/Account Charts',
     'description': """
-This is the module to manage the accounting chart and taxes for Poland in OpenERP.
+This is the module to manage the accounting chart and taxes for Poland in Odoo.
 ==================================================================================
 
 To jest moduł do tworzenia wzorcowego planu kont, podatków, obszarów podatkowych i

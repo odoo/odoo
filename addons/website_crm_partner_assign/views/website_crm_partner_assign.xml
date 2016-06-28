@@ -41,7 +41,7 @@
                 <ul id="reseller_grades" class="nav nav-pills nav-stacked mt16">
                     <li class="nav-header"><h3>Filter by Level</h3></li>
                     <t t-foreach="grades" t-as="grade">
-                        <li t-att-class="grade['active'] and 'active' or ''">
+                        <li t-att-class="grade['active'] and 'active' or None">
                             <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % grade['grade_id'][0] or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') }">
                                 <span class="badge pull-right" t-esc="grade['grade_id_count'] or ''"/>
                                 <t t-esc="grade['grade_id'][1]"/>
@@ -53,7 +53,7 @@
                 <ul id="reseller_countries" class="nav nav-pills nav-stacked mt16">
                     <li class="nav-header"><h3>Filter by Country</h3></li>
                     <t t-foreach="countries" t-as="country">
-                        <li t-if="country['country_id']" t-att-class="country['active'] and 'active' or ''">
+                        <li t-if="country['country_id']" t-att-class="country['active'] and 'active' or None">
                             <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % country['country_id'][0] or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}">
                                 <span class="badge pull-right" t-esc="country['country_id_count'] or ''"/>
                                 <t t-esc="country['country_id'][1]"/>

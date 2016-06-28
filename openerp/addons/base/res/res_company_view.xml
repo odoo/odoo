@@ -30,9 +30,9 @@
                                         <field name="street" placeholder="Street..." class="o_address_street"/>
                                         <field name="street2" placeholder="Street 2..." class="o_address_street"/>
                                         <field name="city" placeholder="City" class="o_address_city"/>
-                                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' on_change="onchange_state(state_id)"/>
+                                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
                                         <field name="zip" placeholder="ZIP" class="o_address_zip"/>
-                                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True}' on_change="on_change_country(country_id)"/>
+                                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True}'/>
                                     </div>
                                     <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
                                 </group>
@@ -42,15 +42,15 @@
                                     <field name="email"/>
                                     <field name="vat"/>
                                     <field name="company_registry"/>
+                                    <field name="currency_id" options="{'no_create': True}" id="company_currency"/>
                                     <field name="parent_id"  groups="base.group_multi_company"/>
+                                    <field name="sequence" invisible="1"/>
                                 </group>
                             </group>
                         </page>
                         <page name="configuration" string="Configuration">
                             <group>
-                                <group name="account_grp" string="Accounting">
-                                    <field name="currency_id"/>
-                                </group>
+                                <group name="account_grp" string="Accounting"/>
                             </group>
                         </page>
                         <page name="report" string="Report Configuration">
@@ -65,10 +65,10 @@
                             <group string="Configuration (RML)" groups="base.group_no_one">
                                 <group col="2" colspan="2">
                                     <button name="%(preview_rml_report)d" string="Preview RML Report" type="action" colspan="2"/>
-                                    <field name="rml_paper_format" on_change="onchange_rml_paper_format(rml_paper_format)"/>
+                                    <field name="rml_paper_format"/>
                                 </group>
                                 <group col="3" colspan="2">
-                                    <field name="font" class="oe_inline" on_change="onchange_font_name(font, rml_header, rml_header2, rml_header3)"/>
+                                    <field name="font" class="oe_inline"/>
                                     <button string="(reload fonts)" name="act_discover_fonts" type="object" class="oe_link"/>
                                 </group>
                                 <group col="1" colspan="2">
@@ -89,6 +89,7 @@
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Companies">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="partner_id"/>
                 </tree>
@@ -109,7 +110,7 @@
             <field name="view_type">form</field>
             <field name="help">Create and manage the companies that will be managed by Odoo from here. Shops or subsidiaries can be created and maintained from here.</field>
         </record>
-        <menuitem action="action_res_company_form" id="menu_action_res_company_form" parent="base.menu_users" groups="base.group_light_multi_company"/>
+        <menuitem action="action_res_company_form" id="menu_action_res_company_form" parent="base.menu_users"/>
 
         <record id="ir_open_company" model="ir.values">
             <field eval="'tree_but_open'" name="key2"/>

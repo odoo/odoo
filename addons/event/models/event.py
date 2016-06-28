@@ -3,7 +3,7 @@
 import pytz
 
 from openerp import _, api, fields, models
-from openerp.exceptions import AccessError, UserError
+from openerp.exceptions import AccessError, UserError, ValidationError
 
 class event_type(models.Model):
     """ Event Type """
@@ -47,7 +47,7 @@ class event_event(models.Model):
         readonly=False, states={'done': [('readonly', True)]},
         oldname='type')
     color = fields.Integer('Kanban Color Index')
-    event_mail_ids = fields.One2many('event.mail', 'event_id', string='Mail Schedule', default=lambda self: self._default_event_mail_ids())
+    event_mail_ids = fields.One2many('event.mail', 'event_id', string='Mail Schedule', default=lambda self: self._default_event_mail_ids(), copy=True)
 
     @api.model
     def _default_event_mail_ids(self):
@@ -72,7 +72,7 @@ class event_event(models.Model):
         oldname='register_current', string='Reserved Seats',
         store=True, readonly=True, compute='_compute_seats')
     seats_available = fields.Integer(
-        oldname='register_avail', string='Maximum Attendees',
+        oldname='register_avail', string='Available Seats',
         store=True, readonly=True, compute='_compute_seats')
     seats_unconfirmed = fields.Integer(
         oldname='register_prospect', string='Unconfirmed Seat Reservations',
@@ -118,7 +118,7 @@ class event_event(models.Model):
         'event.registration', 'event_id', string='Attendees',
         readonly=False, states={'done': [('readonly', True)]})
     # Date fields
-    date_tz = fields.Selection('_tz_get', string='Timezone', default=lambda self: self.env.user.tz)
+    date_tz = fields.Selection('_tz_get', string='Timezone', required=True, default=lambda self: self.env.user.tz)
     date_begin = fields.Datetime(
         string='Start Date', required=True,
         track_visibility='onchange', states={'done': [('readonly', True)]})
@@ -176,7 +176,7 @@ class event_event(models.Model):
     # badge fields
     badge_front = fields.Html(string='Badge Front')
     badge_back = fields.Html(string='Badge Back')
-    badge_innerleft = fields.Html(string='Badge Innner Left')
+    badge_innerleft = fields.Html(string='Badge Inner Left')
     badge_innerright = fields.Html(string='Badge Inner Right')
     event_logo = fields.Html(string='Event Logo')
 
@@ -196,13 +196,13 @@ class event_event(models.Model):
     @api.constrains('seats_max', 'seats_available')
     def _check_seats_limit(self):
         if self.seats_availability == 'limited' and self.seats_max and self.seats_available < 0:
-            raise UserError(_('No more available seats.'))
+            raise ValidationError(_('No more available seats.'))
 
     @api.one
     @api.constrains('date_begin', 'date_end')
     def _check_closing_date(self):
         if self.date_end < self.date_begin:
-            raise UserError(_('Closing Date cannot be set before Beginning Date.'))
+            raise ValidationError(_('Closing Date cannot be set before Beginning Date.'))
 
     @api.model
     def create(self, vals):
@@ -296,7 +296,7 @@ class event_registration(models.Model):
     @api.constrains('event_id', 'state')
     def _check_seats_limit(self):
         if self.event_id.seats_availability == 'limited' and self.event_id.seats_max and self.event_id.seats_available < (1 if self.state == 'draft' else 0):
-            raise UserError(_('No more seats available for this event.'))
+            raise ValidationError(_('No more seats available for this event.'))
 
     @api.multi
     def _check_auto_confirmation(self):

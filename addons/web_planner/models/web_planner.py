@@ -25,12 +25,12 @@ class Planner(models.Model):
     name = fields.Char(string='Name', required=True)
     menu_id = fields.Many2one('ir.ui.menu', string='Menu', required=True)
     view_id = fields.Many2one('ir.ui.view', string='Template', required=True)
-    progress = fields.Integer(string="Progress Percentage")
+    progress = fields.Integer(string="Progress Percentage", company_dependent=True)
     # data field is used to store the data filled by user in planner(JSON Data)
-    data = fields.Text(string='Data')
+    data = fields.Text(string="Data", company_dependent=True)
     tooltip_planner = fields.Html(string='Planner Tooltips', translate=True)
     planner_application = fields.Selection('_get_planner_application', string='Planner Application', required=True)
-    active = fields.Boolean(string="Active", default=True, help="If the active field is set to False, it will allow you to hide the planner. This change requires a refreshing a your page.")
+    active = fields.Boolean(string="Active", default=True, help="If the active field is set to False, it will allow you to hide the planner. This change requires a refresh of your page.")
 
     @api.model
     def render(self, template_id, planner_app):
@@ -70,3 +70,7 @@ class Planner(models.Model):
     @api.model
     def is_module_installed(self, module_name=None):
         return module_name in self.env['ir.module.module']._installed()
+
+    @api.model
+    def get_planner_progress(self, planner_application):
+        return self.search([('planner_application', '=', planner_application)]).progress

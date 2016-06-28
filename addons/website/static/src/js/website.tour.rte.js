@@ -2,6 +2,7 @@ odoo.define('website.tour.rte', function (require) {
 'use strict';
 
 var Tour = require('web.Tour');
+var local_storage = require('web.local_storage');
 
 Tour.register({
     id:   'rte_translator',
@@ -27,16 +28,17 @@ Tour.register({
             waitFor:   'html[lang*="fr"]',
             element:   '.js_language_selector a[data-lang="en_US"]',
             onload: function () {
-                localStorage.removeItem('website_translator_nodialog');
+                local_storage.removeItem('website_translator_nodialog');
             }
         },
         {
-            title:     "Open content menu",
-            element:   '#content-menu-button',
+            waitFor:   'a[data-action="edit"]',
+            title:     "Open new page menu",
+            element:   '#oe_main_menu_navbar a[data-action=new_page]',
         },
         {
             title:     "click on new page",
-            element:   '[data-action="new_page"]',
+            element:   '.modal a[data-action="new_page"]',
         },
         {
             title:     "insert page name",
@@ -77,7 +79,7 @@ Tour.register({
         {
             title:     "translate",
             waitNot:   '#wrap p span',
-            element:   '#oe_editzone button[data-action="translate"]',
+            element:   '.o_menu_systray a[data-action="translate"]',
         },
         {
             title:     "check if translation is activate",
@@ -144,7 +146,7 @@ Tour.register({
         {
             title:     "edit english version",
             waitNot:   '#wrap p font:first:containsExact(paragraphs <b>describing</b>)',
-            element:   'button[data-action=edit]',
+            element:   'a[data-action=edit]',
         },
         {
             title:     "select text",

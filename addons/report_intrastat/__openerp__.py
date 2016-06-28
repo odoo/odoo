@@ -3,7 +3,6 @@
 
 {
     'name': 'Intrastat Reporting',
-    'version': '1.0',
     'category': 'Accounting & Finance',
     'description': """
 A module that adds intrastat reports.
@@ -13,15 +12,12 @@ This module gives the details of the goods traded between the countries of
 European Union.""",
     'depends': ['base', 'product', 'delivery', 'stock', 'sale', 'purchase'],
     'data': [
+        'data/report_intrastat_data.xml',
+        'report/report_intrastat_invoice_template.xml',
+        'report/report_intrastat_report.xml',
         'security/ir.model.access.csv',
         'security/report_intrastat_security.xml',
-        'report_intrastat_view.xml',
-        'intrastat_report.xml',
-        'report_intrastat_data.xml',
-        'views/report_intrastatinvoice.xml',
+        'views/report_intrastat_views.xml',
     ],
-    'demo': [],
-    'test': ['../account/test/account_minimal_test.xml', 'test/report_intrastat_report.yml'],
-    'installable': True,
-    'auto_install': False,
+    'tests': ['../account/test/account_minimal_test.xml'],
 }

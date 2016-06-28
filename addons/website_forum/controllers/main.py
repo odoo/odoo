@@ -198,6 +198,7 @@ class WebsiteForum(http.Controller):
         tags = request.env['forum.tag'].search(domain, limit=None, order=order_by)
         # prepare values and render template
         values = self._prepare_forum_values(forum=forum, searches={'tags': True}, **post)
+
         values.update({
             'tags': tags,
             'pager_tag_chars': first_char_list,
@@ -714,16 +715,6 @@ class WebsiteForum(http.Controller):
             'badges': badges,
         })
         return request.website.render("website_forum.badge", values)
-
-    @http.route(['''/forum/<model("forum.forum"):forum>/badge/<model("gamification.badge"):badge>'''], type='http', auth="public", website=True)
-    def badge_users(self, forum, badge, **kwargs):
-        users = [badge_user.user_id for badge_user in badge.sudo().owner_ids]
-        values = self._prepare_forum_values(forum=forum, searches={'badges': True})
-        values.update({
-            'badge': badge,
-            'users': users,
-        })
-        return request.website.render("website_forum.badge_user", values)
 
     # Messaging
     # --------------------------------------------------

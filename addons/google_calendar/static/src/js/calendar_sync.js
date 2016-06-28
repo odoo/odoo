@@ -11,12 +11,14 @@ var _t = core._t;
 var QWeb = core.qweb;
 
 CalendarView.include({
-    view_loading: function(r) {
+    init: function(parent, dataset, fields_view, options){
         var self = this;
-        this.$el.on('click', '.o_google_sync_button', function() {
-            self.sync_calendar(r);
+        this._super.apply(this, arguments);
+        this.events = _.extend(this.events || {}, {
+            'click .o_google_sync_button': function() {
+                self.sync_calendar(self.fields_view);
+            },
         });
-        return this._super(r);
     },
     sync_calendar: function(res, button) {
         var self = this;

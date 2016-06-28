@@ -28,6 +28,14 @@ if(!$('.website_forum').length) {
         }
     });
 
+    $('.o_js_forum_tag_follow').hover(
+        function(event) {
+            $(this).find('.o_forum_tag_follow_box').stop().fadeIn().css('display','block');
+        },
+        function(event) {
+            $(this).find('.o_forum_tag_follow_box').stop().fadeOut().css('display','none');
+    });
+
     // Extended user biography toogle
     $('.o_forum_user_info').hover(
         function () {
@@ -167,7 +175,7 @@ if(!$('.website_forum').length) {
     $('.comment_delete').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        ajax.jsonRpc($link.parent('form').attr('action'), 'call', {}).then(function () {
+        ajax.jsonRpc($link.closest('form').attr('action'), 'call', {}).then(function () {
             $link.parents('.comment').first().remove();
         });
     });
@@ -249,7 +257,7 @@ if(!$('.website_forum').length) {
         createSearchChoice: function (term) {
             if ($(lastsearch).filter(function () { return this.text.localeCompare(term) === 0;}).length === 0) {
                 //check Karma
-                if (parseInt($("#karma").val()) >= parseInt($("#karma_retag").val())) {
+                if (parseInt($("#karma").val()) >= parseInt($("#karma_edit_retag").val())) {
                     return {
                         id: "_" + $.trim(term),
                         text: $.trim(term) + ' *',

@@ -1,23 +1,22 @@
 # -*- coding: utf-8 -*-
 
-
-from openerp import fields, models
-from openerp import tools
+from odoo import api, fields, models, tools
 
 
-class report_stock_forecast(models.Model):
+class ReportStockForecat(models.Model):
     _name = 'report.stock.forecast'
     _auto = False
 
     date = fields.Date(string='Date')
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
-    product_tmpl_id = fields.Many2one('product.template', string='Product', related='product_id.product_tmpl_id', readonly=True)
+    product_tmpl_id = fields.Many2one('product.template', string='Product Template', related='product_id.product_tmpl_id', readonly=True)
     cumulative_quantity = fields.Float(string='Cumulative Quantity', readonly=True)
     quantity = fields.Float(readonly=True)
 
-    def init(self, cr):
-        tools.drop_view_if_exists(cr, 'report_stock_forecast')
-        cr.execute("""CREATE or REPLACE VIEW report_stock_forecast AS (SELECT
+    @api.model_cr
+    def init(self):
+        tools.drop_view_if_exists(self._cr, 'report_stock_forecast')
+        self._cr.execute("""CREATE or REPLACE VIEW report_stock_forecast AS (SELECT
         MIN(id) as id,
         product_id as product_id,
         date as date,

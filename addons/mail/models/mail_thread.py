@@ -13,6 +13,8 @@ import re
 import socket
 import time
 import xmlrpclib
+
+from collections import namedtuple
 from email.message import Message
 from email.utils import formataddr
 from werkzeug import url_encode
@@ -82,6 +84,7 @@ class MailThread(models.AbstractModel):
     _mail_flat_thread = True  # flatten the discussino history
     _mail_post_access = 'write'  # access required on the document to post on it
     _mail_mass_mailing = False  # enable mass mailing on this model
+    _Attachment = namedtuple('Attachment', ('fname', 'content', 'info'))
 
     message_is_follower = fields.Boolean(
         'Is Follower', compute='_compute_is_follower', search='_search_is_follower')
@@ -372,13 +375,6 @@ class MailThread(models.AbstractModel):
                 options = eval(node.get('options', '{}'))
                 is_employee = self.env.user.has_group('base.group_user')
                 options['display_log_button'] = is_employee
-                if is_employee:
-                    Subtype = self.env['mail.message.subtype'].sudo()
-                    # fetch internal subtypes
-                    internal_subtypes = Subtype.search_read([
-                        ('res_model', 'in', [False, self._name]),
-                        ('internal', '=', True)], ['name', 'description', 'sequence'])
-                    options['internal_subtypes'] = internal_subtypes
                 # emoji list
                 options['emoji_list'] = self.env['mail.shortcode'].search([('shortcode_type', '=', 'image')]).read(['source', 'description', 'substitution'])
                 # save options on the node
@@ -421,7 +417,38 @@ class MailThread(models.AbstractModel):
         return False
 
     @api.multi
+    def _track_template(self, tracking):
+        return dict()
+
+    @api.multi
+    def _message_track_post_template(self, tracking):
+        if not any(change for rec_id, (change, tracking_value_ids) in tracking.iteritems()):
+            return True
+        templates = self._track_template(tracking)
+        for field_name, (template, post_kwargs) in templates.iteritems():
+            if not template:
+                continue
+            if isinstance(template, basestring):
+                self.message_post_with_view(template, **post_kwargs)
+            else:
+                self.message_post_with_template(template.id, **post_kwargs)
+        return True
+
+    @api.multi
+    def _message_track_get_changes(self, tracked_fields, initial_values):
+        """ Batch method of _message_track. """
+        result = dict()
+        for record in self:
+            result[record.id] = record._message_track(tracked_fields, initial_values[record.id])
+        return result
+
+    @api.multi
     def _message_track(self, tracked_fields, initial):
+        """ For a given record, fields to check (tuple column name, column info)
+        and initial values, return a structure that is a tuple containing :
+
+         - a set of updated column names
+         - a list of changes (initial value, new value, column name, column info) """
         self.ensure_one()
         changes = set()
         tracking_value_ids = []
@@ -442,11 +469,16 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     def message_track(self, tracked_fields, initial_values):
+        """ Track updated values. Comparing the initial and current values of
+        the fields given in tracked_fields, it generates a message containing
+        the updated values. This message can be linked to a mail.message.subtype
+        given by the ``_track_subtype`` method. """
         if not tracked_fields:
             return True
 
+        tracking = self._message_track_get_changes(tracked_fields, initial_values)
         for record in self:
-            changes, tracking_value_ids = record._message_track(tracked_fields, initial_values[record.id])
+            changes, tracking_value_ids = tracking[record.id]
             if not changes:
                 continue
 
@@ -473,6 +505,8 @@ class MailThread(models.AbstractModel):
                 record.message_post(subtype=subtype_xmlid, tracking_value_ids=tracking_value_ids)
             elif tracking_value_ids:
                 record.message_post(tracking_value_ids=tracking_value_ids)
+
+        self._message_track_post_template(tracking)
 
         return True
 
@@ -737,8 +771,11 @@ class MailThread(models.AbstractModel):
         """ Get specific notification email values to store on the notification
         mail_mail. Void method, inherit it to add custom values. """
         self.ensure_one()
-        res = dict()
-        return res
+        database_uuid = self.env['ir.config_parameter'].get_param('database.uuid')
+        return {'headers': repr({
+            'X-Odoo-Objects': "%s-%s" % (self._model, self.id),
+            'X-Odoo-db-uuid': database_uuid
+        })}
 
     @api.multi
     def message_get_recipient_values(self, notif_message=None, recipient_ids=None):
@@ -1261,8 +1298,8 @@ class MailThread(models.AbstractModel):
         """ Perform some cleaning / postprocess in the body and attachments
         extracted from the email. Note that this processing is specific to the
         mail module, and should not contain security or generic html cleaning.
-        Indeed those aspects should be covered by html_email_clean and
-        html_sanitize methods located in tools. """
+        Indeed those aspects should be covered by the html_sanitize method
+        located in tools. """
         root = lxml.html.fromstring(body)
         postprocessed = False
         to_remove = []
@@ -1271,6 +1308,13 @@ class MailThread(models.AbstractModel):
                 postprocessed = True
                 if node.getparent() is not None:
                     to_remove.append(node)
+            if node.tag == 'img' and node.get('src', '').startswith('cid:'):
+                cid = node.get('src').split(':', 1)[1]
+                related_attachment = [attach for attach in attachments if len(attach) == 2 and attach[2] == cid]
+                if related_attachment:
+                    node.set('data-filename', related_attachment[0])
+                    postprocessed = True
+
         for node in to_remove:
             node.getparent().remove(node)
         if postprocessed:
@@ -1282,7 +1326,7 @@ class MailThread(models.AbstractModel):
         attachments = []
         body = u''
         if save_original:
-            attachments.append(('original_email.eml', message.as_string()))
+            attachments.append(self._Attachment('original_email.eml', message.as_string(), {}))
 
         # Be careful, content-type may contain tricky content like in the
         # following example so test the MIME type with startswith()
@@ -1312,19 +1356,25 @@ class MailThread(models.AbstractModel):
                 # original get_filename is not able to decode iso-8859-1 (for instance).
                 # therefore, iso encoded attachements are not able to be decoded properly with get_filename
                 # code here partially copy the original get_filename method, but handle more encoding
-                filename=part.get_param('filename', None, 'content-disposition')
+                filename = part.get_param('filename', None, 'content-disposition')
                 if not filename:
-                    filename=part.get_param('name', None)
+                    filename = part.get_param('name', None)
                 if filename:
                     if isinstance(filename, tuple):
                         # RFC2231
-                        filename=email.utils.collapse_rfc2231_value(filename).strip()
+                        filename = email.utils.collapse_rfc2231_value(filename).strip()
                     else:
-                        filename=decode(filename)
+                        filename = decode(filename)
                 encoding = part.get_content_charset()  # None if attachment
+
+                # 0) Inline Attachments -> attachments, with a third part in the tuple to match cid / attachment
+                if filename and part.get('content-id'):
+                    inner_cid = part.get('content-id').strip('><')
+                    attachments.append(self._Attachment(filename, part.get_payload(decode=True), {'cid': inner_cid}))
+                    continue
                 # 1) Explicit Attachments -> attachments
                 if filename or part.get('content-disposition', '').strip().startswith('attachment'):
-                    attachments.append((filename or 'attachment', part.get_payload(decode=True)))
+                    attachments.append(self._Attachment(filename or 'attachment', part.get_payload(decode=True), {}))
                     continue
                 # 2) text/plain -> <pre/>
                 if part.get_content_type() == 'text/plain' and (not alternative or not body):
@@ -1342,7 +1392,7 @@ class MailThread(models.AbstractModel):
                         body = tools.append_content_to_html(body, html, plaintext=False)
                 # 4) Anything else -> attachment
                 else:
-                    attachments.append((filename or 'attachment', part.get_payload(decode=True)))
+                    attachments.append(self._Attachment(filename or 'attachment', part.get_payload(decode=True), {}))
 
         body, attachments = self._message_extract_payload_postprocess(message, body, attachments)
         return body, attachments
@@ -1569,7 +1619,6 @@ class MailThread(models.AbstractModel):
                 ]).write({'author_id': partner_info['partner_id']})
         return result
 
-    @api.model
     def _message_preprocess_attachments(self, attachments, attachment_ids, attach_model, attach_res_id):
         """ Preprocess attachments for mail_thread.message_post() or mail_mail.create().
 
@@ -1579,17 +1628,30 @@ class MailThread(models.AbstractModel):
         :param str attach_model: the model of the attachments parent record
         :param integer attach_res_id: the id of the attachments parent record
         """
+        return self._message_post_process_attachments(attachments, attachment_ids, {'model': attach_model, 'res_id': attach_res_id})
+
+    def _message_post_process_attachments(self, attachments, attachment_ids, message_data):
+        IrAttachment, parameter_attachments = self.env['ir.attachment'], self.env['ir.attachment']
         m2m_attachment_ids = []
+        cid_mapping = {}
         if attachment_ids:
             filtered_attachment_ids = self.env['ir.attachment'].sudo().search([
                 ('res_model', '=', 'mail.compose.message'),
                 ('create_uid', '=', self._uid),
                 ('id', 'in', attachment_ids)])
             if filtered_attachment_ids:
-                filtered_attachment_ids.write({'res_model': attach_model, 'res_id': attach_res_id})
+                filtered_attachment_ids.write({'res_model': message_data['model'], 'res_id': message_data['res_id']})
             m2m_attachment_ids += [(4, id) for id in attachment_ids]
         # Handle attachments parameter, that is a dictionary of attachments
-        for name, content in attachments:
+        for attachment in attachments:
+            if len(attachment) == 2:
+                name, content = attachment
+            elif len(attachment) == 3:
+                name, content, info = attachment
+                if info and info.get('cid'):
+                    cid_mapping[info['cid']] = name
+            else:
+                continue
             if isinstance(content, unicode):
                 content = content.encode('utf-8')
             data_attach = {
@@ -1597,10 +1659,26 @@ class MailThread(models.AbstractModel):
                 'datas': base64.b64encode(str(content)),
                 'datas_fname': name,
                 'description': name,
-                'res_model': attach_model,
-                'res_id': attach_res_id,
+                'res_model': message_data['model'],
+                'res_id': message_data['res_id'],
             }
-            m2m_attachment_ids.append((0, 0, data_attach))
+            parameter_attachments |= IrAttachment.create(data_attach)
+        m2m_attachment_ids += [(4, attach.id) for attach in parameter_attachments]
+
+        if cid_mapping and message_data.get('body'):
+            root = lxml.html.fromstring(tools.ustr(message_data['body']))
+            postprocessed = False
+            for node in root.iter('img'):
+                if node.get('src', '').startswith('cid:'):
+                    fname = cid_mapping.get(node.get('src').split('cid:')[1], node.get('data-filename', ''))
+                    attachment = parameter_attachments.filtered(lambda attachment: attachment.name == fname)
+                    if attachment:
+                        node.set('src', '/web/image/%s' % attachment.ids[0])
+                        postprocessed = True
+            if postprocessed:
+                body = lxml.html.tostring(root, pretty_print=False, encoding='UTF-8')
+                message_data['body'] = body
+
         return m2m_attachment_ids
 
     @api.multi
@@ -1674,11 +1752,6 @@ class MailThread(models.AbstractModel):
             private_followers -= set([author_id])
             partner_ids |= private_followers
 
-        # 3. Attachments
-        #   - HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
-        attachment_ids = self._message_preprocess_attachments(
-            attachments, kwargs.pop('attachment_ids', []), model, self.ids and self.ids[0] or None)
-
         # 4: mail.message.subtype
         subtype_id = kwargs.get('subtype_id', False)
         if not subtype_id:
@@ -1722,10 +1795,14 @@ class MailThread(models.AbstractModel):
             'subject': subject or False,
             'message_type': message_type,
             'parent_id': parent_id,
-            'attachment_ids': attachment_ids,
             'subtype_id': subtype_id,
             'partner_ids': [(4, pid) for pid in partner_ids],
         })
+
+        # 3. Attachments
+        #   - HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
+        attachment_ids = self._message_post_process_attachments(attachments, kwargs.pop('attachment_ids', []), values)
+        values['attachment_ids'] = attachment_ids
 
         # Avoid warnings about non-existing fields
         for x in ('from', 'to', 'cc'):
@@ -1748,21 +1825,48 @@ class MailThread(models.AbstractModel):
         return new_message
 
     @api.multi
+    def message_post_with_view(self, views_or_xmlid, **kwargs):
+        """ Helper method to send a mail / post a message using a view_id to
+        render using the ir.qweb engine. This method is stand alone, because
+        there is nothing in template and composer that allows to handle
+        views in batch. This method should probably disappear when templates
+        handle ir ui views. """
+        values = kwargs.pop('values', None) or dict()
+        try:
+            from openerp.addons.website.models.website import slug
+            values['slug'] = slug
+        except ImportError:
+            values['slug'] = lambda self: self.id
+        if isinstance(views_or_xmlid, basestring):
+            views = self.env.ref(views_or_xmlid, raise_if_not_found=False)
+        else:
+            views = views_or_xmlid
+        if not views:
+            return
+        for record in self:
+            values['object'] = record
+            rendered_template = views.render(values, engine='ir.qweb')
+            kwargs['body'] = rendered_template
+            record.message_post_with_template(False, **kwargs)
+
+    @api.multi
     def message_post_with_template(self, template_id, **kwargs):
         """ Helper method to send a mail with a template
             :param template_id : the id of the template to render to create the body of the message
             :param **kwargs : parameter to create a mail.compose.message woaerd (which inherit from mail.message)
         """
         # Get composition mode, or force it according to the number of record in self
-        composition_mode = kwargs.get('composition_mode')
-        if not composition_mode:
-            composition_mode = 'comment' if len(self.ids) == 1 else 'mass_mail'
+        if not kwargs.get('composition_mode'):
+            kwargs['composition_mode'] = 'comment' if len(self.ids) == 1 else 'mass_mail'
+        if not kwargs.get('message_type'):
+            kwargs['message_type'] = 'notification'
         res_id = self.ids[0] or 0
+
         # Create the composer
         composer = self.env['mail.compose.message'].with_context(
             active_ids=self.ids,
             active_model=self._name,
-            default_composition_mode=composition_mode,
+            default_composition_mode=kwargs['composition_mode'],
             default_model=self._name,
             default_res_id=self.ids[0] or 0,
             default_template_id=template_id,
@@ -1770,7 +1874,7 @@ class MailThread(models.AbstractModel):
         # Simulate the onchange (like trigger in form the view) only
         # when having a template in single-email mode
         if template_id:
-            update_values = composer.onchange_template_id(template_id, composition_mode, self._name, res_id)['value']
+            update_values = composer.onchange_template_id(template_id, kwargs['composition_mode'], self._name, res_id)['value']
             composer.write(update_values)
         return composer.send_mail()
 
@@ -1784,10 +1888,7 @@ class MailThread(models.AbstractModel):
             provided, subscribe uid instead. """
         if user_ids is None:
             user_ids = [self._uid]
-        result = self.message_subscribe(self.env['res.users'].browse(user_ids).mapped('partner_id').ids, subtype_ids=subtype_ids)
-        if user_ids and result:
-            self.pool['ir.ui.menu'].clear_caches()
-        return result
+        return self.message_subscribe(self.env['res.users'].browse(user_ids).mapped('partner_id').ids, subtype_ids=subtype_ids)
 
     @api.multi
     def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, force=True):
@@ -1828,10 +1929,7 @@ class MailThread(models.AbstractModel):
         if user_ids is None:
             user_ids = [self._uid]
         partner_ids = [user.partner_id.id for user in self.env['res.users'].browse(user_ids)]
-        result = self.message_unsubscribe(partner_ids)
-        if partner_ids and result:
-            self.pool['ir.ui.menu'].clear_caches()
-        return result
+        return self.message_unsubscribe(partner_ids)
 
     @api.multi
     def message_unsubscribe(self, partner_ids=None, channel_ids=None):

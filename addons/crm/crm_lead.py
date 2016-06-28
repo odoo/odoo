@@ -9,7 +9,7 @@ from werkzeug import url_encode
 
 from openerp import SUPERUSER_ID
 from openerp import tools, api
-from openerp.addons.base.res.res_partner import format_address
+from openerp.addons.base.res.res_partner import FormatAddress
 from openerp.addons.crm import crm_stage
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -51,7 +51,7 @@ CRM_LEAD_FIELDS_TO_MERGE = ['name',
     'partner_name']
 
 
-class crm_lead(format_address, osv.osv):
+class crm_lead(FormatAddress, osv.osv):
     """ CRM Lead Case """
     _name = "crm.lead"
     _description = "Lead/Opportunity"
@@ -72,14 +72,6 @@ class crm_lead(format_address, osv.osv):
         team_id = self.pool['crm.team']._get_default_team_id(cr, SUPERUSER_ID, context=context, user_id=uid)
         return self.stage_find(cr, uid, [], team_id, [('fold', '=', False)], context=context)
 
-    def _resolve_type_from_context(self, cr, uid, context=None):
-        """ Returns the type (lead or opportunity) from the type context
-            key. Returns None if it cannot be resolved.
-        """
-        if context is None:
-            context = {}
-        return context.get('default_type')
-
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         access_rights_uid = access_rights_uid or uid
         stage_obj = self.pool.get('crm.stage')
@@ -91,17 +83,11 @@ class crm_lead(format_address, osv.osv):
         # - ('id', 'in', 'ids'): add columns that should be present
         # - OR ('fold', '=', False): add default columns that are not folded
         # - OR ('team_ids', '=', team_id), ('fold', '=', False) if team_id: add team columns that are not folded
-        search_domain = []
         team_id = context and context.get('default_team_id') or False
         if team_id:
-            search_domain += ['|', ('team_ids', '=', team_id)]
-            search_domain += [('id', 'in', ids)]
+            search_domain = ['|', ('id', 'in', ids), '|', ('team_id', '=', False), ('team_id', '=', team_id)]
         else:
-            search_domain += [('id', 'in', ids)]
-        # retrieve type from the context (if set: choose 'type' or 'both')
-        type = self._resolve_type_from_context(cr, uid, context=context)
-        if type:
-            search_domain += ['|', ('type', '=', type), ('type', '=', 'both')]
+            search_domain = ['|', ('id', 'in', ids), ('team_id', '=', False)]
         # perform search
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
@@ -127,6 +113,19 @@ class crm_lead(format_address, osv.osv):
         'stage_id': _read_group_stage_ids
     }
 
+    def _compute_kanban_state(self, cr, uid, ids, fields, args, context=None):
+        result = {}
+        today = date.today()
+        for lead in self.browse(cr, uid, ids, context=context):
+            result[lead.id] = 'red'
+            if lead.date_action:
+                lead_date = datetime.strptime(lead.date_action, tools.DEFAULT_SERVER_DATE_FORMAT).date()
+                if lead_date >= today:
+                    result[lead.id] = 'green'
+                elif lead_date < today:
+                    result[lead.id] = 'grey'
+        return result
+
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
         :return dict: difference between current date and log date
@@ -151,6 +150,7 @@ class crm_lead(format_address, osv.osv):
                     duration = abs(int(ans.days))
                 res[lead.id][field] = duration
         return res
+
     def _meeting_count(self, cr, uid, ids, field_name, arg, context=None):
         Event = self.pool['calendar.event']
         return {
@@ -158,8 +158,13 @@ class crm_lead(format_address, osv.osv):
             for opp_id in ids
         }
 
+    def _get_company_currency(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        return self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id.id
+
     _columns = {
-        'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null', track_visibility='onchange',
+        'partner_id': fields.many2one('res.partner', 'Customer', ondelete='set null', track_visibility='onchange',
             select=True, help="Linked partner (optional). Usually created when converting the lead."),
 
         'id': fields.integer('ID', readonly=True),
@@ -170,6 +175,9 @@ class crm_lead(format_address, osv.osv):
         'email_from': fields.char('Email', size=128, help="Email address of the contact", select=1),
         'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id',
                         select=True, track_visibility='onchange', help='When sending mails, the default email address is taken from the sales team.'),
+        'kanban_state': fields.function(
+            _compute_kanban_state, string='Activity State', type="selection",
+            selection=[('grey', 'No next activity planned'), ('red', 'Next activity late'), ('green', 'Next activity is planned')]),
         'create_date': fields.datetime('Creation Date', readonly=True),
         'email_cc': fields.text('Global CC', help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'description': fields.text('Notes'),
@@ -185,9 +193,9 @@ class crm_lead(format_address, osv.osv):
             string='Type', select=True, required=True,
             help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm_stage.AVAILABLE_PRIORITIES, 'Rating', select=True),
-        'date_closed': fields.datetime('Closed', readonly=True, copy=False),
+        'date_closed': fields.datetime('Closed Date', readonly=True, copy=False),
         'stage_id': fields.many2one('crm.stage', 'Stage', track_visibility='onchange', select=True,
-                        domain="['&', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
+                        domain="['|', ('team_id', '=', False), ('team_id', '=', team_id)]"),
         'user_id': fields.many2one('res.users', 'Salesperson', select=True, track_visibility='onchange'),
         'referred': fields.char('Referred By'),
         'date_open': fields.datetime('Assigned', readonly=True),
@@ -207,11 +215,7 @@ class crm_lead(format_address, osv.osv):
         'planned_revenue': fields.float('Expected Revenue', track_visibility='always'),
         'date_deadline': fields.date('Expected Closing', help="Estimate of the date on which the opportunity will be won."),
         # CRM Actions
-        'last_activity_id': fields.many2one("crm.activity", "Last Activity", select=True),
         'next_activity_id': fields.many2one("crm.activity", "Next Activity", select=True),
-        'next_activity_1': fields.related("last_activity_id", "activity_1_id", "name", type="char", string="Next Activity 1"),
-        'next_activity_2': fields.related("last_activity_id", "activity_2_id", "name", type="char", string="Next Activity 2"),
-        'next_activity_3': fields.related("last_activity_id", "activity_3_id", "name", type="char", string="Next Activity 3"),
         'date_action': fields.date('Next Activity Date', select=True),
         'title_action': fields.char('Next Activity Summary'),
 
@@ -232,7 +236,7 @@ class crm_lead(format_address, osv.osv):
         'phone': fields.char('Phone'),
         'fax': fields.char('Fax'),
         'mobile': fields.char('Mobile'),
-        'function': fields.char('Function'),
+        'function': fields.char('Job Position'),
         'title': fields.many2one('res.partner.title', 'Title'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'meeting_count': fields.function(_meeting_count, string='# Meetings', type='integer'),
@@ -242,6 +246,7 @@ class crm_lead(format_address, osv.osv):
     _defaults = {
         'active': 1,
         'type': lambda s, cr, uid, c: 'lead' if s.pool['res.users'].has_group(cr, uid, 'crm.group_use_lead') else 'opportunity',
+        'company_currency': _get_company_currency,
         'user_id': lambda s, cr, uid, c: uid,
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, SUPERUSER_ID, context=c, user_id=uid),
@@ -311,30 +316,18 @@ class crm_lead(format_address, osv.osv):
             cases = self.browse(cr, uid, cases, context=context)
         if context is None:
             context = {}
-        # check whether we should try to add a condition on type
-        avoid_add_type_term = any([term for term in domain if len(term) == 3 if term[0] == 'type'])
         # collect all team_ids
         team_ids = set()
-        types = ['both']
-        if not cases and context.get('default_type'):
-            ctx_type = context.get('default_type')
-            types += [ctx_type]
         if team_id:
             team_ids.add(team_id)
         for lead in cases:
             if lead.team_id:
                 team_ids.add(lead.team_id.id)
-            if lead.type not in types:
-                types.append(lead.type)
         # OR all team_ids
-        search_domain = []
         if team_ids:
-            search_domain += [('|')] * (len(team_ids) - 1)
-            for team_id in team_ids:
-                search_domain.append(('team_ids', '=', team_id))
-        # AND with cases types
-        if not avoid_add_type_term:
-            search_domain.append(('type', 'in', types))
+            search_domain = ['|', ('team_id', '=', False), ('team_id', 'in', list(team_ids))]
+        else:
+            search_domain = [('team_id', '=', False)]
         # AND with the domain in parameter
         search_domain += list(domain)
         # perform search, return the first found
@@ -371,62 +364,9 @@ class crm_lead(format_address, osv.osv):
     # Backward compatibility
     case_mark_won = action_set_won
 
-    def log_next_activity_1(self, cr, uid, ids, context=None):
-        return self.set_next_activity(cr, uid, ids, next_activity_name='activity_1_id', context=context)
-
-    def log_next_activity_2(self, cr, uid, ids, context=None):
-        return self.set_next_activity(cr, uid, ids, next_activity_name='activity_2_id', context=context)
-
-    def log_next_activity_3(self, cr, uid, ids, context=None):
-        return self.set_next_activity(cr, uid, ids, next_activity_name='activity_3_id', context=context)
-
-    def set_next_activity(self, cr, uid, ids, next_activity_name, context=None):
-        for lead in self.browse(cr, uid, ids, context=context):
-            if not lead.last_activity_id:
-                continue
-            next_activity = next_activity_name and getattr(lead.last_activity_id, next_activity_name, False) or False
-            if next_activity:
-                date_action = False
-                if next_activity.days:
-                    date_action = (datetime.now() + timedelta(days=next_activity.days)).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
-                lead.write({
-                    'next_activity_id': next_activity.id,
-                    'date_action': date_action,
-                    'title_action': next_activity.description,
-                })
-        return True
-
-    def log_next_activity_done(self, cr, uid, ids, context=None, next_activity_name=False):
-        to_clear_ids = []
-        for lead in self.browse(cr, uid, ids, context=context):
-            if not lead.next_activity_id:
-                continue
-            body_html = """<div><b>${object.next_activity_id.name}</b></div>
-%if object.title_action:
-<div>${object.title_action}</div>
-%endif"""
-            body_html = self.pool['mail.template'].render_template(cr, uid, body_html, 'crm.lead', lead.id, context=context)
-            msg_id = lead.message_post(body_html, subtype_id=lead.next_activity_id.subtype_id.id)
-            to_clear_ids.append(lead.id)
-            self.write(cr, uid, [lead.id], {'last_activity_id': lead.next_activity_id.id}, context=context)
-
-        if to_clear_ids:
-            self.cancel_next_activity(cr, uid, to_clear_ids, context=context)
-        return True
-
-    def cancel_next_activity(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids,  {
-            'next_activity_id': False,
-            'date_action': False,
-            'title_action': False,
-        }, context=context)
-
     def onchange_next_activity_id(self, cr, uid, ids, next_activity_id, context=None):
         if not next_activity_id:
             return {'value': {
-                'next_action1': False,
-                'next_action2': False,
-                'next_action3': False,
                 'title_action': False,
                 'date_action': False,
             }}
@@ -435,12 +375,8 @@ class crm_lead(format_address, osv.osv):
         if activity.days:
             date_action = (datetime.now() + timedelta(days=activity.days)).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
         return {'value': {
-            'next_activity_1': activity.activity_1_id and activity.activity_1_id.name or False,
-            'next_activity_2': activity.activity_2_id and activity.activity_2_id.name or False,
-            'next_activity_3': activity.activity_3_id and activity.activity_3_id.name or False,
             'title_action': activity.description,
             'date_action': date_action,
-            'last_activity_id': False,
         }}
 
     def _merge_get_result_type(self, cr, uid, opps, context=None):
@@ -676,7 +612,8 @@ class crm_lead(format_address, osv.osv):
 
         # Check if the stage is in the stages of the sales team. If not, assign the stage with the lowest sequence
         if merged_data.get('team_id'):
-            team_stage_ids = self.pool.get('crm.stage').search(cr, uid, [('team_ids', 'in', merged_data['team_id']), ('type', 'in', [merged_data.get('type'), 'both'])], order='sequence', context=context)
+            team_stage_ids = self.pool.get('crm.stage').search(cr, uid, ['|', ('team_id', '=', merged_data['team_id']), ('team_id', '=', False)], order='sequence', context=context)
+
             if merged_data.get('stage_id') not in team_stage_ids:
                 merged_data['stage_id'] = team_stage_ids and team_stage_ids[0] or False
         # Write merged data into first opportunity
@@ -688,10 +625,6 @@ class crm_lead(format_address, osv.osv):
         return highest.id
 
     def _convert_opportunity_data(self, cr, uid, lead, customer, team_id=False, context=None):
-        crm_stage = self.pool.get('crm.stage')
-        contact_id = False
-        if customer:
-            contact_id = self.pool.get('res.partner').address_get(cr, uid, [customer.id])['contact']
         if not team_id:
             team_id = lead.team_id and lead.team_id.id or False
         val = {
@@ -705,8 +638,8 @@ class crm_lead(format_address, osv.osv):
             'phone': customer and customer.phone or lead.phone,
             'date_conversion': fields.datetime.now(),
         }
-        if not lead.stage_id or lead.stage_id.type=='lead':
-            stage_id = self.stage_find(cr, uid, [lead], team_id, [('type', 'in', ['opportunity', 'both'])], context=context)
+        if not lead.stage_id:
+            stage_id = self.stage_find(cr, uid, [lead], team_id, [], context=context)
             val['stage_id'] = stage_id
             if stage_id:
                 val['probability'] = self.pool['crm.stage'].browse(cr, uid, stage_id, context=context).probability
@@ -962,7 +895,7 @@ Update your business card, phone book, social media,... Send an email right now 
     def _notification_group_recipients(self, cr, uid, ids, message, recipients, done_ids, group_data, context=None):
         """ Override the mail.thread method to handle salesman recipients.
         Indeed those will have specific action in their notification emails. """
-        group_sale_salesman = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'base.group_sale_salesman')
+        group_sale_salesman = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'sales_team.group_sale_salesman')
         for recipient in recipients:
             if recipient.id in done_ids:
                 continue
@@ -1234,6 +1167,8 @@ Update your business card, phone book, social media,... Send an email right now 
         else:
             raise UserError(_('This target does not exist.'))
 
+    def close_dialog(self, cr, uid, ids, context=None):
+        return {'type': 'ir.actions.act_window_close'}
 
 class crm_lead_tag(osv.Model):
     _name = "crm.lead.tag"
@@ -1251,12 +1186,10 @@ class crm_lead_tag(osv.Model):
 class crm_lost_reason(osv.Model):
     _name = "crm.lost.reason"
     _description = 'Reason for loosing leads'
-
     _columns = {
-        'name': fields.char('Name', required=True),
+        'name': fields.char('Name', required=True, translate=True),
         'active': fields.boolean('Active'),
     }
-
     _defaults = {
         'active': True,
     }

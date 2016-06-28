@@ -10,9 +10,8 @@ from openerp.tools.convert import _eval_xml
 Field = E.field
 Value = E.value
 class TestEvalXML(common.TransactionCase):
-    def eval_xml(self, node, obj=None, idref=None):
-        return _eval_xml(obj, node, pool=None, cr=self.cr, uid=self.uid,
-                         idref=idref, context=None)
+    def eval_xml(self, node, obj=None):
+        return _eval_xml(obj, node, self.env)
 
     def test_char(self):
         self.assertEqual(
@@ -63,8 +62,8 @@ class TestEvalXML(common.TransactionCase):
             ["foo", 5, 4.76, None])
 
     def test_file(self):
-        Obj = collections.namedtuple('Obj', 'module')
-        obj = Obj('test_convert')
+        Obj = collections.namedtuple('Obj', ['module', 'idref'])
+        obj = Obj('test_convert', None)
         self.assertEqual(
             self.eval_xml(Field('test_file.txt', type='file'), obj),
             'test_convert,test_file.txt')

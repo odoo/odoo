@@ -153,7 +153,7 @@ class Message(models.Model):
     display_name = fields.Char(string='Abstract', compute='_compute_display_name')
     size = fields.Integer(compute='_compute_size', search='_search_size')
     double_size = fields.Integer(compute='_compute_double_size')
-    discussion_name = fields.Char(related='discussion.name')
+    discussion_name = fields.Char(related='discussion.name', string="Discussion Name")
     author_partner = fields.Many2one(
         'res.partner', compute='_compute_author_partner',
         search='_search_author_partner')
@@ -163,7 +163,7 @@ class Message(models.Model):
     @api.constrains('author', 'discussion')
     def _check_author(self):
         if self.discussion and self.author not in self.discussion.participants:
-            raise ValueError(_("Author must be among the discussion participants."))
+            raise ValidationError(_("Author must be among the discussion participants."))
 
     @api.one
     @api.depends('author.name', 'discussion.name')
@@ -259,6 +259,13 @@ class MixedModel(models.Model):
     lang = fields.Selection(string='Language', selection='_get_lang')
     reference = fields.Reference(string='Related Document',
         selection='_reference_models')
+    comment1 = fields.Html(sanitize=False)
+    comment2 = fields.Html(sanitize=True, strip_classes=False)
+    comment3 = fields.Html(sanitize=True, strip_classes=True)
+    comment4 = fields.Html(sanitize=True, strip_style=True)
+
+    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.ref('base.EUR'))
+    amount = fields.Monetary()
 
     @api.one
     def _compute_now(self):
@@ -267,8 +274,7 @@ class MixedModel(models.Model):
 
     @api.model
     def _get_lang(self):
-        langs = self.env['res.lang'].search([])
-        return [(lang.code, lang.name) for lang in langs]
+        return self.env['res.lang'].get_installed()
 
     @api.model
     def _reference_models(self):

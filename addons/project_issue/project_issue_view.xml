@@ -25,8 +25,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="user_id"
-                                context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}"/>
+                            <field name="user_id"/>
                             <field name="priority" groups="base.group_user" widget="priority"/>
                             <field name="tag_ids" widget="many2many_tags"/>
                         </group>
@@ -100,7 +99,7 @@
                     <field name="project_id" groups="base.group_user"/>
                     <field name="tag_ids"/>
                     <field name="stage_id" domain="[]"/>
-                    <filter string="My Issues" domain="[('user_id','=',uid)]"/>
+                    <filter string="My Issues" name="my_issues" domain="[('user_id','=',uid)]"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                     <separator/>
                     <filter string="New" name="draft" domain="[('stage_id.sequence', '=', 1)]"/>
@@ -272,9 +271,9 @@
                 </xpath>
                 <xpath expr='//div[@name="options_active"]' position='inside'>
                     <div>
-                        <field name="use_issues" class="oe_inline" string="Use Issues"
+                        <field name="use_issues" class="oe_inline"
                                 on_change="on_change_use_tasks_or_issues(use_tasks, use_issues)"/>
-                        <label for="use_issues" class="oe_inline"/>
+                        <label for="use_issues" class="oe_inline" string="Issues"/>
                         <span attrs="{'invisible':[('use_issues', '=', False)]}">as </span>
                         <field name="label_issues" class="oe_inline oe_input_align" attrs="{'invisible': [('use_issues', '=', False)]}"/>
                     </div>
@@ -298,8 +297,8 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <xpath expr='//div[@name="project"]' position='inside'>
-                    <field name="use_issues"/>
-                    <label for="use_issues"/>
+                    <field name="use_issues" groups="base.group_no_one"/>
+                    <label for="use_issues" groups="base.group_no_one"/>
                 </xpath>
             </field>
         </record>

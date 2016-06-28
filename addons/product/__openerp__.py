@@ -12,11 +12,11 @@
         'product_image_demo.xml',
     ],
     'description': """
-This is the base module for managing products and pricelists in OpenERP.
+This is the base module for managing products and pricelists in Odoo.
 ========================================================================
 
 Products support variants, different pricing methods, vendors information,
-make to stock/order, different unit of measures, packaging and properties.
+make to stock/order, different units of measure, packaging and properties.
 
 Pricelists support:
 -------------------
@@ -42,7 +42,8 @@ Print product labels with barcode.
         'pricelist_view.xml',
         'partner_view.xml',
         'views/report_pricelist.xml',
-        'views/report_productlabel.xml'
+        'views/report_productlabel.xml',
+        'views/report_producttemplatelabel.xml',
     ],
     'test': [
         'product_pricelist_demo.yml',

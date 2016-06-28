@@ -134,9 +134,6 @@ def main(args):
         except openerp.service.db.DatabaseExists:
             pass
 
-    if config["test_file"]:
-        config["test_enable"] = True
-
     if config["translate_out"]:
         export_translation()
         sys.exit(0)

@@ -2,7 +2,7 @@
 <openerp>
     <data noupdate="1">
 
-        <record id="payment_acquirer_paypal" model="payment.acquirer">
+        <record id="payment.payment_acquirer_paypal" model="payment.acquirer">
             <field name="name">Paypal</field>
             <field name="image" type="base64" file="payment_paypal/static/description/icon.png"/>
             <field name="provider">paypal</field>
@@ -17,6 +17,5 @@
             <field name="paypal_api_password">dummy</field>
         </record>
 
-        <function model="payment.acquirer" name="_migrate_paypal_account"/>
     </data>
 </openerp>

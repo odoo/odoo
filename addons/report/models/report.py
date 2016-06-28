@@ -115,7 +115,7 @@ class Report(osv.Model):
             res_company=user.company_id,
             website=website,
         )
-        return view_obj.render(cr, uid, template, values, context=context)
+        return view_obj.render_template(cr, uid, template, values, context=context)
 
     #--------------------------------------------------------------------------
     # Main report methods
@@ -139,7 +139,7 @@ class Report(osv.Model):
                 'doc_model': report.model,
                 'docs': docs,
             }
-            return self.render(cr, uid, [], report.report_name, docargs, context=context)
+            return self.render(cr, uid, [], report.report_name, docargs, context=context).encode('utf-8')
 
     @api.v8
     def get_html(self, records, report_name, data=None):
@@ -174,8 +174,6 @@ class Report(osv.Model):
         if isinstance(cr, TestCursor):
             return html
 
-        html = html.decode('utf-8')  # Ensure the current document is utf-8 encoded.
-
         # Get the ir.actions.report.xml record we are working on.
         report = self._get_report_from_name(cr, uid, report_name)
         # Check if we have to save the report or if we have to get one from the db.
@@ -196,7 +194,7 @@ class Report(osv.Model):
 
         # Minimal page renderer
         view_obj = self.pool['ir.ui.view']
-        render_minimal = partial(view_obj.render, cr, uid, 'report.minimal_layout', context=context)
+        render_minimal = partial(view_obj.render_template, cr, uid, 'report.minimal_layout', context=context)
 
         # The received html report must be simplified. We convert it in a xml tree
         # in order to extract headers, bodies and footers.
@@ -499,8 +497,9 @@ class Report(osv.Model):
         report_obj = self.pool['ir.actions.report.xml']
         qwebtypes = ['qweb-pdf', 'qweb-html']
         conditions = [('report_type', 'in', qwebtypes), ('report_name', '=', report_name)]
-        idreport = report_obj.search(cr, uid, conditions)[0]
-        return report_obj.browse(cr, uid, idreport)
+        context = self.pool['res.users'].context_get(cr, uid)
+        idreport = report_obj.search(cr, uid, conditions, context=context)[0]
+        return report_obj.browse(cr, uid, idreport, context=context)
 
     def _build_wkhtmltopdf_args(self, paperformat, specific_paperformat_args=None):
         """Build arguments understandable by wkhtmltopdf from a report.paperformat record.

@@ -81,16 +81,17 @@ var LivechatButton = Widget.extend({
         return this._super();
     },
 
-    load_qweb_template: function () {
-        var xml_files = ['/mail/static/src/xml/chat_window.xml',
-                         '/mail/static/src/xml/thread.xml',
-                         '/im_livechat/static/src/xml/im_livechat.xml'];
-        var defs = _.map(xml_files, function (tmpl) {
-            return session.rpc('/web/proxy/load', {path: tmpl}).then(function (xml) {
-                QWeb.add_template(xml);
-            });
+    load_qweb_template: function(){
+        return $.when(
+            $.get('/mail/static/src/xml/chat_window.xml'),
+            $.get('/mail/static/src/xml/thread.xml'),
+            $.get('/im_livechat/static/src/xml/im_livechat.xml')
+        ).then(function (chat_window, mail_thread, livechat) {
+            // results are triplets of [dom: XMLDocument, status: String, xhr: jqXHR]
+            QWeb.add_template(chat_window[0]);
+            QWeb.add_template(mail_thread[0]);
+            QWeb.add_template(livechat[0]);
         });
-        return $.when.apply($, defs);
     },
 
     open_chat: _.debounce(function () {
@@ -144,7 +145,7 @@ var LivechatButton = Widget.extend({
             self.$el.hide();
         });
         this.chat_window.on("close_chat_session", this, function () {
-            var input_disabled = this.chat_window.$(".o_chat_input input").prop('disabled');
+            var input_disabled = this.chat_window.$(".o_chat_composer input").prop('disabled');
             var ask_fb = !input_disabled && _.find(this.messages, function (msg) {
                 return msg.id !== '_welcome';
             });
@@ -238,7 +239,7 @@ var LivechatButton = Widget.extend({
     },
 
     ask_feedback: function () {
-        this.chat_window.$(".o_chat_input input").prop('disabled', true);
+        this.chat_window.$(".o_chat_composer input").prop('disabled', true);
 
         var feedback = new Feedback(this, this.channel.uuid);
         feedback.replace(this.chat_window.thread.$el);

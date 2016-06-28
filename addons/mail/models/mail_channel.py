@@ -2,15 +2,14 @@
 
 from email.utils import formataddr
 
-import datetime
+import re
 import uuid
 
 from openerp import _, api, fields, models, modules, tools
-from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.exceptions import UserError
 from openerp.osv import expression
+from openerp.tools import ormcache
 
-from openerp.addons.bus.models.bus_presence import AWAY_TIMER
 
 
 class ChannelPartner(models.Model):
@@ -23,7 +22,7 @@ class ChannelPartner(models.Model):
     channel_id = fields.Many2one('mail.channel', string='Channel', ondelete='cascade')
     seen_message_id = fields.Many2one('mail.message', string='Last Seen')
     fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='open')
-    is_minimized = fields.Boolean("Conversation is minimied")
+    is_minimized = fields.Boolean("Conversation is minimized")
     is_pinned = fields.Boolean("Is pinned on the interface", default=True)
 
 
@@ -83,6 +82,13 @@ class Channel(models.Model):
     alias_id = fields.Many2one(
         'mail.alias', 'Alias', ondelete="restrict", required=True,
         help="The email address associated with this group. New emails received will automatically create new topics.")
+    is_subscribed = fields.Boolean(
+        'Is Subscribed', compute='_compute_is_subscribed')
+
+    @api.one
+    @api.depends('channel_partner_ids')
+    def _compute_is_subscribed(self):
+        self.is_subscribed = self.env.user.partner_id in self.channel_partner_ids
 
     @api.multi
     def _compute_is_member(self):
@@ -209,8 +215,6 @@ class Channel(models.Model):
     def message_post(self, body='', subject=None, message_type='notification', subtype=None, parent_id=False, attachments=None, content_subtype='html', **kwargs):
         # auto pin 'direct_message' channel partner
         self.filtered(lambda channel: channel.channel_type == 'chat').mapped('channel_last_seen_partner_ids').write({'is_pinned': True})
-        # apply shortcode (text only) subsitution
-        body = self.env['mail.shortcode'].apply_shortcode(body, shortcode_type='text')
         message = super(Channel, self.with_context(mail_create_nosubscribe=True)).message_post(body=body, subject=subject, message_type=message_type, subtype=subtype, parent_id=parent_id, attachments=attachments, content_subtype=content_subtype, **kwargs)
         return message
 
@@ -462,40 +466,6 @@ class Channel(models.Model):
     # Instant Messaging View Specific (Slack Client Action)
     #------------------------------------------------------
     @api.model
-    def get_init_notifications(self):
-        """ Get unread messages and old messages received less than AWAY_TIMER
-            ago of minimized channel ONLY. This aims to set the minimized channel
-            when refreshing the page.
-            Note : the user need to be logged
-        """
-        # get current user's minimzed channel
-        minimized_channels = self.env['mail.channel.partner'].search([('is_minimized', '=', True), ('partner_id', '=', self.env.user.partner_id.id)]).mapped('channel_id')
-
-        # get the message since the AWAY_TIMER
-        threshold = datetime.datetime.now() - datetime.timedelta(seconds=AWAY_TIMER)
-        threshold = threshold.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        domain = [('channel_ids', 'in', minimized_channels.ids), ('create_date', '>', threshold)]
-
-        # get the message since the last poll of the user
-        presence = self.env['bus.presence'].search([('user_id', '=', self._uid)], limit=1)
-        if presence:
-            domain.append(('create_date', '>', presence.last_poll))
-
-        # do the message search
-        message_values = self.env['mail.message'].message_fetch(domain=domain)
-
-        # create the notifications (channel infos first, then messages)
-        notifications = []
-        for channel_info in minimized_channels.channel_info():
-            notifications.append([(self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_info])
-        for message_value in message_values:
-            for channel_id in message_value['channel_ids']:
-                if channel_id in minimized_channels.ids:
-                    message_value['channel_ids'] = [channel_id]
-                    notifications.append([(self._cr.dbname, 'mail.channel', channel_id), dict(message_value)])
-        return notifications
-
-    @api.model
     def channel_fetch_slot(self):
         """ Return the channels of the user grouped by 'slot' (channel, direct_message or private_group), and
             the mapping between partner_id/channel_id for direct_message channels.
@@ -610,3 +580,85 @@ class Channel(models.Model):
             del(channel['message_id'])
             channel['last_message'] = message
         return channels_preview.values()
+
+    #------------------------------------------------------
+    # Commands
+    #------------------------------------------------------
+    @api.model
+    @ormcache()
+    def get_mention_commands(self):
+        """ Returns the allowed commands in channels """
+        commands = []
+        for n in dir(self):
+            match = re.search('^_define_command_(.+?)$', n)
+            if match:
+                command = getattr(self, n)()
+                command['name'] = match.group(1)
+                commands.append(command)
+        return commands
+
+    @api.multi
+    def execute_command(self, command='', **kwargs):
+        """ Executes a given command """
+        self.ensure_one()
+        command_callback = getattr(self, '_execute_command_' + command, False)
+        if command_callback:
+            command_callback(**kwargs)
+
+    def _send_transient_message(self, partner_to, content):
+        """ Notifies partner_to that a message (not stored in DB) has been
+            written in this channel """
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner_to.id), {
+            'body': "<span class='o_mail_notification'>" + content + "</span>",
+            'channel_ids': [self.id],
+            'info': 'transient_message',
+        })
+
+    def _define_command_help(self):
+        return {'help': _("Show an helper message")}
+
+    def _execute_command_help(self, **kwargs):
+        partner = self.env.user.partner_id
+        if self.channel_type == 'channel':
+            msg = _("You are in channel <b>#%s</b>.") % self.name
+            if self.public == 'private':
+                msg += _(" This channel is private. People must be invited to join it.")
+        else:
+            channel_partners = self.env['mail.channel.partner'].search([('partner_id', '!=', partner.id), ('channel_id', '=', self.id)])
+            msg = _("You are in a private conversation with <b>@%s</b>.") % channel_partners[0].partner_id.name
+        msg += _("""<br><br>
+            You can mention someone by typing <b>@username</b>, this will grab its attention.<br>
+            You can mention a channel by typing <b>#channel</b>.<br>
+            You can execute a command by typing <b>/command</b>.<br>
+            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>""")
+
+        self._send_transient_message(partner, msg)
+
+    def _define_command_leave(self):
+        return {'help': _("Leave this channel")}
+
+    def _execute_command_leave(self, **kwargs):
+        if self.channel_type == 'channel':
+            self.action_unfollow()
+        else:
+            self.channel_pin(self.uuid, False)
+
+    def _define_command_who(self):
+        return {
+            'channel_types': ['channel', 'chat'],
+            'help': _("List users in the current channel")
+        }
+
+    def _execute_command_who(self, **kwargs):
+        partner = self.env.user.partner_id
+        members = [
+            '<a href="#" data-oe-id='+str(p.id)+' data-oe-model="res.partner">@'+p.name+'</a>'
+            for p in self.channel_partner_ids[:30] if p != partner
+        ]
+        if len(members) == 0:
+            msg = _("You are alone in this channel.")
+        else:
+            dots = "..." if len(members) != len(self.channel_partner_ids) - 1 else ""
+            msg = _("Users in this channel: %s %s and you.") % (", ".join(members), dots)
+
+        self._send_transient_message(partner, msg)

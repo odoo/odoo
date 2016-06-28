@@ -115,7 +115,7 @@ class MailTemplate(models.Model):
         return res
 
     name = fields.Char('Name')
-    model_id = fields.Many2one('ir.model', 'Applies to', help="The kind of document with with this template can be used")
+    model_id = fields.Many2one('ir.model', 'Applies to', help="The type of document this template can be used with")
     model = fields.Char('Related Document Model', related='model_id.model', select=True, store=True, readonly=True)
     lang = fields.Char('Language',
                        help="Optional translation language (ISO code) to select when sending out an email. "
@@ -144,7 +144,7 @@ class MailTemplate(models.Model):
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
                                      help="Optional preferred server for outgoing mails. If not set, the highest "
                                           "priority one will be used.")
-    body_html = fields.Html('Body', translate=True, sanitize=False, help="Rich-text/HTML version of the message (placeholders may be used here)")
+    body_html = fields.Html('Body', translate=True, sanitize=False)
     report_name = fields.Char('Report Filename', translate=True,
                               help="Name to use for the generated report file (may contain placeholders)\n"
                                    "The extension can be omitted and will then come from the report type.")
@@ -174,6 +174,7 @@ class MailTemplate(models.Model):
                                                   "destination document model (sub-model).")
     null_value = fields.Char('Default Value', help="Optional value to use if the target field is empty")
     copyvalue = fields.Char('Placeholder Expression', help="Final placeholder expression, to be copy-pasted in the desired template field.")
+    scheduled_date = fields.Char('Scheduled Date', help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Jinja2 placeholders may be used.")
 
     @api.onchange('model_id')
     def onchange_model_id(self):
@@ -259,7 +260,7 @@ class MailTemplate(models.Model):
                 'view_mode': 'form,tree',
                 'view_id': view.id,
                 'target': 'new',
-                'auto_refresh': 1})
+            })
             ir_value = IrValuesSudo.create({
                 'name': button_name,
                 'model': src_obj,
@@ -448,7 +449,7 @@ class MailTemplate(models.Model):
             res_ids = [res_ids]
             multi_mode = False
         if fields is None:
-            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to']
+            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'scheduled_date']
 
         res_ids_to_templates = self.get_email_template_batch(res_ids)
 

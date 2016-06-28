@@ -1,19 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import calendar
-from datetime import datetime,date
-from dateutil import relativedelta
-import json
-import time
+from datetime import datetime
+
 from openerp import api
 from openerp import SUPERUSER_ID
 from openerp import tools
-from openerp.osv import fields, osv, orm
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools import html2plaintext
-from openerp.tools.translate import _
 from openerp.exceptions import UserError, AccessError
+from openerp.osv import fields, osv
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import _
 
 
 class project_issue(osv.Model):
@@ -47,7 +44,7 @@ class project_issue(osv.Model):
         # lame hack to allow reverting search, should just work in the trivial case
         if read_group_order == 'stage_id desc':
             order = "%s desc" % order
-        # retrieve team_id from the context, add them to already fetched columns (ids)
+        # retrieve project_id from the context, add them to already fetched columns (ids)
         if 'default_project_id' in context:
             search_domain = ['|', ('project_ids', '=', context['default_project_id']), ('id', 'in', ids)]
         else:
@@ -136,9 +133,6 @@ class project_issue(osv.Model):
                                                multi='compute_day', type="integer", help="Difference in days between creation date and current date",
                                                groups='base.group_user'),
         'date_deadline': fields.date('Deadline'),
-        'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id',\
-                        select=True, help='Sales team to which Case belongs to.\
-                             Define Responsible user and Email account for mail gateway.'),
         'partner_id': fields.many2one('res.partner', 'Contact', select=1),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Private Note'),
@@ -197,7 +191,6 @@ class project_issue(osv.Model):
 
     _defaults = {
         'active': 1,
-        'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, uid, context=c),
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool['res.users']._get_company(cr, uid, context=c),
         'priority': '0',
@@ -278,28 +271,28 @@ class project_issue(osv.Model):
             return {'value': {'date_closed': fields.datetime.now()}}
         return {'value': {'date_closed': False}}
 
-    def stage_find(self, cr, uid, cases, team_id, domain=[], order='sequence', context=None):
+    def stage_find(self, cr, uid, cases, project_id, domain=[], order='sequence', context=None):
         """ Override of the base.stage method
             Parameter of the stage search taken from the issue:
             - type: stage type must be the same or 'both'
-            - team_id: if set, stages must belong to this team or
+            - project_id: if set, stages must belong to this project or
               be a default case
         """
         if isinstance(cases, (int, long)):
             cases = self.browse(cr, uid, cases, context=context)
-        # collect all team_ids
-        team_ids = []
-        if team_id:
-            team_ids.append(team_id)
+        # collect all project_ids
+        project_ids = []
+        if project_id:
+            project_ids.append(project_id)
         for task in cases:
             if task.project_id:
-                team_ids.append(task.project_id.id)
-        # OR all team_ids and OR with case_default
+                project_ids.append(task.project_id.id)
+        # OR all project_ids and OR with case_default
         search_domain = []
-        if team_ids:
-            search_domain += [('|')] * (len(team_ids)-1)
-            for team_id in team_ids:
-                search_domain.append(('project_ids', '=', team_id))
+        if project_ids:
+            search_domain += [('|')] * (len(project_ids) - 1)
+            for project_id in project_ids:
+                search_domain.append(('project_ids', '=', project_id))
         search_domain += list(domain)
         # perform search, return the first found
         stage_ids = self.pool.get('project.task.type').search(cr, uid, search_domain, order=order, context=context)
@@ -310,6 +303,15 @@ class project_issue(osv.Model):
     # -------------------------------------------------------
     # Mail gateway
     # -------------------------------------------------------
+
+    @api.multi
+    def _track_template(self, tracking):
+        res = super(project_issue, self)._track_template(tracking)
+        test_issue = self[0]
+        changes, dummy = tracking[test_issue.id]
+        if 'stage_id' in changes and test_issue.stage_id.mail_template_id:
+            res['stage_id'] = (test_issue.stage_id.mail_template_id, {'composition_mode': 'mass_mail'})
+        return res
 
     def _track_subtype(self, cr, uid, ids, init_values, context=None):
         record = self.browse(cr, uid, ids[0], context=context)
@@ -438,6 +440,24 @@ class project_issue(osv.Model):
             self.write(cr, SUPERUSER_ID, thread_id, {'date_action_last': fields.datetime.now()}, context=context)
         return res
 
+    def message_get_email_values(self, cr, uid, ids, notif_mail=None, context=None):
+        res = super(project_issue, self).message_get_email_values(cr, uid, ids, notif_mail=notif_mail, context=context)
+        current_issue = self.browse(cr, uid, ids[0], context=context)
+        headers = {}
+        if res.get('headers'):
+            try:
+                headers.update(eval(res['headers']))
+            except Exception:
+                pass
+        if current_issue.project_id:
+            current_objects = filter(None, headers.get('X-Odoo-Objects', '').split(','))
+            current_objects.insert(0, 'project.project-%s, ' % current_issue.project_id.id)
+            headers['X-Odoo-Objects'] = ','.join(current_objects)
+        if current_issue.tag_ids:
+            headers['X-Odoo-Tags'] = ','.join([tag.name for tag in current_issue.tag_ids])
+        res['headers'] = repr(headers)
+        return res
+
 
 class project(osv.Model):
     _inherit = "project.project"
@@ -483,7 +503,7 @@ class account_analytic_account(osv.Model):
     _description = 'Analytic Account'
 
     _columns = {
-        'use_issues': fields.boolean('Issues', help="Check this box to manage customer activities through this project"),
+        'use_issues': fields.boolean('Use Issues', help="Check this box to manage customer activities through this project"),
     }
 
     def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):

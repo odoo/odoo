@@ -20,11 +20,10 @@ Allows to automatically select analytic accounts based on criterions:
     'website': 'https://www.odoo.com/page/accounting',
     'depends': ['sale_stock'],
     'data': [
-        'security/ir.model.access.csv', 
-        'security/account_analytic_default_security.xml', 
-        'account_analytic_default_view.xml'
+        'security/ir.model.access.csv',
+        'security/account_analytic_default_security.xml',
+        'views/account_analytic_default_view.xml',
+        'views/product_views.xml'
     ],
-    'demo': [],
     'installable': True,
-    'auto_install': False,
 }

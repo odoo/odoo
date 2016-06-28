@@ -11,7 +11,8 @@ import threading
 
 import openerp
 from .. import SUPERUSER_ID
-from openerp.tools import assertion_report, lazy_property, classproperty, config, topological_sort
+from openerp.tools import assertion_report, classproperty, config, \
+                          lazy_property, topological_sort, OrderedSet
 from openerp.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
@@ -159,7 +160,13 @@ class Registry(Mapping):
         """
         from .. import models
 
-        models_to_load = [] # need to preserve loading order
+        loaded_models = OrderedSet()
+        def mark_loaded(model):
+            # recursively mark model and its children
+            loaded_models.add(model._name)
+            for child_name in model._inherit_children:
+                mark_loaded(self[child_name])
+
         lazy_property.reset_all(self)
 
         # Instantiate registered classes (via the MetaModel automatic discovery
@@ -167,11 +174,9 @@ class Registry(Mapping):
         for cls in models.MetaModel.module_to_models.get(module.name, []):
             # models register themselves in self.models
             model = cls._build_model(self, cr)
-            if model._name not in models_to_load:
-                # avoid double-loading models whose declaration is split
-                models_to_load.append(model._name)
+            mark_loaded(model)
 
-        return [self.models[m] for m in models_to_load]
+        return map(self, loaded_models)
 
     def setup_models(self, cr, partial=False):
         """ Complete the setup of models.
@@ -183,9 +188,9 @@ class Registry(Mapping):
 
         # load custom models
         ir_model = self['ir.model']
-        cr.execute('select model, transient from ir_model where state=%s', ('manual',))
-        for (model_name, transient) in cr.fetchall():
-            ir_model.instanciate(cr, SUPERUSER_ID, model_name, transient, {})
+        cr.execute('SELECT * FROM ir_model WHERE state=%s', ('manual',))
+        for model_data in cr.dictfetchall():
+            ir_model._instanciate(cr, SUPERUSER_ID, model_data, {})
 
         # prepare the setup on all models
         for model in self.models.itervalues():

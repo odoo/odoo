@@ -58,7 +58,10 @@
                                         <span><t t-esc="record.number.value"/> <t t-esc="record.date.value"/></span>
                                     </div>
                                     <div class="col-xs-6">
-                                        <span t-attf-class="pull-right text-right label #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'label-default' : ['none'].indexOf(record.state.raw_value) > -1 ? 'label-danger' : ['proforma'].indexOf(record.state.raw_value) > -1 ? 'label-warning' : ['posted'].indexOf(record.state.raw_value) > -1 ? 'label-success' : 'label-primary'}"><t t-esc="record.state.value"/></span>
+                                        <span class="pull-right text-right">
+                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'none': 'danger', 'proforma': 'warning',
+                                            'posted': 'success'}}"/>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -83,7 +86,7 @@
                         <group>
                             <field name="account_id"/>
                             <field name="tax_ids" widget="many2many_tags"/>
-                            <field name="account_analytic_id" domain="[('account_type','=','normal'), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
+                            <field name="account_analytic_id" domain="[('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                         </group>
                     </group>
@@ -102,7 +105,7 @@
                         on_change="product_id_change(product_id, parent.partner_id, price_unit, company_id, parent.currency_id, parent.voucher_type)" />
                     <field name="name"/>
                     <field name="account_id"/>
-                    <field name="account_analytic_id" domain="[('account_type','=','normal'), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
+                    <field name="account_analytic_id" domain="[('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
                     <field name="quantity"/>
                     <field name="price_unit"/>
                     <field name="tax_ids" widget="many2many_tags"/>
@@ -164,20 +167,6 @@
             <field name="domain">[('state','=','posted')]</field>
             <field name="context">{'state':'posted', 'voucher_type': voucher_type}</field>
             <field name="search_view_id" ref="view_voucher_filter"/>
-        </record>
-
-    </data>
-    <data noupdate="1">
-
-        <!-- After installation of the module, open the related menu -->
-        <record id="action_client_invoice_menu" model="ir.actions.client">
-            <field name="name">Open Invoicing Menu</field>
-            <field name="tag">reload</field>
-            <field name="params" eval="{'menu_id': ref('account.menu_finance')}"/>
-        </record>
-        <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_client_invoice_menu"/>
-            <field name="state">open</field>
         </record>
 
     </data>

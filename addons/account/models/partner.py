@@ -6,7 +6,7 @@ import time
 from openerp import api, fields, models, _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.exceptions import ValidationError
-
+from openerp.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 class AccountFiscalPosition(models.Model):
     _name = 'account.fiscal.position'
@@ -45,7 +45,7 @@ class AccountFiscalPosition(models.Model):
         return True
 
     @api.v7
-    def map_tax(self, cr, uid, fposition_id, taxes, context=None):
+    def map_tax(self, cr, uid, fposition_id, taxes, product=None, partner=None, context=None):
         if not taxes:
             return []
         if not fposition_id:
@@ -63,7 +63,7 @@ class AccountFiscalPosition(models.Model):
         return list(result)
 
     @api.v8     # noqa
-    def map_tax(self, taxes):
+    def map_tax(self, taxes, product=None, partner=None):
         result = self.env['account.tax'].browse()
         for tax in taxes:
             tax_count = 0
@@ -447,6 +447,9 @@ class ResPartner(models.Model):
     invoice_ids = fields.One2many('account.invoice', 'partner_id', string='Invoices', readonly=True, copy=False)
     contract_ids = fields.One2many('account.analytic.account', 'partner_id', string='Contracts', readonly=True)
     bank_account_count = fields.Integer(compute='_compute_bank_count', string="Bank")
+    trust = fields.Selection([('good', 'Good Debtor'), ('normal', 'Normal Debtor'), ('bad', 'Bad Debtor')], string='Degree of trust you have in this debtor', default='normal', company_dependent=True)
+    invoice_warn = fields.Selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP, required=True, default="no-message")
+    invoice_warn_msg = fields.Text('Message for Invoice')
 
     @api.multi
     def _compute_bank_count(self):

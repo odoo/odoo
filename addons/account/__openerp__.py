@@ -15,7 +15,7 @@ You could use this simplified accounting in case you work with an (external) acc
     'category' : 'Accounting & Finance',
     'website': 'https://www.odoo.com/page/billing',
     'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],
-    'depends' : ['base_setup', 'product', 'analytic', 'report', 'web_tip', 'web_planner'],
+    'depends' : ['base_setup', 'product', 'analytic', 'report', 'web_planner'],
     'data': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
@@ -51,6 +51,10 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/web_planner_data.xml',
         'views/report_overdue.xml',
         'wizard/account_report_common_view.xml',
+        'wizard/account_report_print_journal_view.xml',
+        'views/report_journal.xml',
+        'wizard/account_report_partner_ledger_view.xml',
+        'views/report_partnerledger.xml',
         'wizard/account_report_general_ledger_view.xml',
         'views/report_generalledger.xml',
         'wizard/account_report_trial_balance_view.xml',
@@ -60,6 +64,8 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/report_financial.xml',
         'wizard/account_report_aged_partner_balance_view.xml',
         'views/report_agedpartnerbalance.xml',
+        'views/tax_adjustments.xml',
+        'wizard/wizard_tax_adjustments_view.xml',
     ],
     'demo': [
         'demo/account_demo.xml',

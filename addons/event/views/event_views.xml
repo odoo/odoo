@@ -12,12 +12,14 @@
             <field name="model">event.type</field>
             <field name="arch" type="xml">
                 <form string="Event Type">
-                    <group>
-                        <field name="name"/>
-                        <field name="default_reply_to"/>
-                        <field name="default_registration_min"/>
-                        <field name="default_registration_max"/>
-                    </group>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="default_reply_to"/>
+                            <field name="default_registration_min"/>
+                            <field name="default_registration_max"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -33,14 +35,14 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_event_type">
-            <field name="name">Events Types</field>
+            <field name="name">Event Types</field>
             <field name="res_model">event.type</field>
             <field name="view_type">form</field>
         </record>
 
         <menuitem id="menu_event_configuration" name="Configuration" parent="event_main_menu"
-            sequence="100" groups="base.group_configuration"/>
-        <menuitem name="Events Types" id="menu_event_type" action="action_event_type" parent="menu_event_configuration"/>
+            sequence="100"/>
+        <menuitem name="Event Categories" id="menu_event_type" action="action_event_type" parent="menu_event_configuration"/>
 
         <!-- EVENT.REGISTRATION ACTIONS -->
         <record id="act_event_registration_from_event" model="ir.actions.act_window">
@@ -91,7 +93,7 @@
                             </group>
                             <group>
                                 <field name="user_id"/>
-                                <field name="event_type_id"/>
+                                <field name="event_type_id" options="{'no_create':True}"/>
                                 <field name="date_begin"/>
                                 <field name="date_end"/>
                                 <field name="date_tz" />
@@ -254,7 +256,7 @@
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Responsible" context="{'group_by': 'user_id'}"/>
-                        <filter string="Event Type" context="{'group_by':'event_type_id'}"/>
+                        <filter string="Event Category" context="{'group_by':'event_type_id'}"/>
                         <filter string="Status" context="{'group_by':'state'}"/>
                         <filter string="Start Month" domain="[]" context="{'group_by':'date_begin'}"/>
                     </group>
@@ -274,7 +276,7 @@
     Click to add a new event.
 </p><p>
     Odoo helps you schedule and efficiently organize your events:
-    track subscriptions and participations, automate the confirmation emails,
+    track registrations and participations, automate the confirmation emails,
     sell tickets, etc.
 </p></field>
         </record>
@@ -303,9 +305,9 @@
                     <field name="event_id" />
                     <field name="state"/>
                     <field name="message_needaction" invisible="1"/>
-                    <button name="confirm_registration" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-                    <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="gtk-jump-to"/>
-                    <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
+                    <button name="confirm_registration" string="Confirm Registration" states="draft" type="object" icon="fa-check text-success"/>
+                    <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="fa-level-down text-success"/>
+                    <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="fa-times-circle text-danger"/>
                 </tree>
             </field>
         </record>
@@ -467,7 +469,7 @@
             <field name="view_type">form</field>
         </record>
 
-        <menuitem name="Mail Schedulers" id="menu_event_type" action="action_event_mail" parent="menu_event_configuration" groups="base.group_no_one"/>
+        <menuitem name="Mail Schedulers" id="menu_event_mail_schedulers" action="action_event_mail" parent="menu_event_configuration" groups="base.group_no_one"/>
 
     </data>
 </openerp>

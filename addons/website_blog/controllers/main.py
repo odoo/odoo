@@ -50,17 +50,27 @@ class WebsiteBlog(http.Controller):
     _post_comment_per_page = 10
 
     def nav_list(self, blog=None):
-        blog_post_obj = request.registry['blog.post']
-        domain = blog and [('blog_id', '=', blog.id)] or []
-        groups = blog_post_obj.read_group(
-            request.cr, request.uid, domain, ['name', 'create_date'],
-            groupby="create_date", orderby="create_date desc", context=request.context)
+        blog_post_obj = request.env['blog.post']
+        groups = blog_post_obj._read_group_raw(
+            blog and [('blog_id', '=', blog.id)] or [],
+            ['name', 'create_date'],
+            groupby=["create_date"], orderby="create_date desc")
         for group in groups:
-            begin_date = datetime.datetime.strptime(group['__domain'][0][2], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
-            end_date = datetime.datetime.strptime(group['__domain'][1][2], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
-            group['date_begin'] = '%s' % datetime.date.strftime(begin_date, tools.DEFAULT_SERVER_DATE_FORMAT)
-            group['date_end'] = '%s' % datetime.date.strftime(end_date, tools.DEFAULT_SERVER_DATE_FORMAT)
+            (r, label) = group['create_date']
+            start, end = r.split('/')
+            group['create_date'] = label
+            group['date_begin'] = self._to_date(start)
+            group['date_end'] = self._to_date(end)
         return groups
+
+    def _to_date(self, dt):
+        """ create_date is a datetime so start and end are datetime strings,
+        but we just want date strings
+        """
+        return (datetime.datetime
+            .strptime(dt, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            .date() # may be unnecessary?
+            .strftime(tools.DEFAULT_SERVER_DATE_FORMAT))
 
     @http.route([
         '/blog',
@@ -102,11 +112,13 @@ class WebsiteBlog(http.Controller):
          - 'active_tag_ids' :  list of active tag ids,
          - 'tags_list' : function to built the comma-separated tag list ids (for the url),
          - 'tags': all tags, for navigation
+         - 'state_info': state of published/unpublished filter
          - 'nav_list': a dict [year][month] for archives navigation
          - 'date': date_begin optional parameter, used in archives navigation
          - 'blog_url': help object to create URLs
         """
-        date_begin, date_end = opt.get('date_begin'), opt.get('date_end')
+        date_begin, date_end, state = opt.get('date_begin'), opt.get('date_end'), opt.get('state')
+        published_count, unpublished_count = 0, 0
 
         cr, uid, context = request.cr, request.uid, request.context
         blog_post_obj = request.registry['blog.post']
@@ -126,11 +138,21 @@ class WebsiteBlog(http.Controller):
         if date_begin and date_end:
             domain += [("create_date", ">=", date_begin), ("create_date", "<=", date_end)]
 
+        if request.env.user.has_group('base.group_website_designer'):
+            for group in request.env['blog.post'].read_group(domain, ['website_published'], groupby=["website_published"]):
+                if group['website_published']:
+                    published_count = group['website_published_count']
+                else:
+                    unpublished_count = group['website_published_count']
+            if state == "published":
+                domain += [("website_published", "=", True)]
+            elif state == "unpublished":
+                domain += [("website_published", "=", False)]
+
         blog_url = QueryURL('', ['blog', 'tag'], blog=blog, tag=tag, date_begin=date_begin, date_end=date_end)
 
-        blog_post_ids = blog_post_obj.search(cr, uid, domain, order="create_date desc", context=context)
+        blog_post_ids = blog_post_obj.search(cr, uid, domain, order="published_date desc, create_date desc", context=context)
         blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context)
-
         pager = request.website.pager(
             url=blog_url(),
             total=len(blog_posts),
@@ -159,6 +181,7 @@ class WebsiteBlog(http.Controller):
             'blogs': blogs,
             'main_object': blog,
             'tags': all_tags,
+            'state_info': {"state": state, "published": published_count, "unpublished": unpublished_count},
             'active_tag_ids': active_tag_ids,
             'tags_list' : tags_list,
             'blog_posts': blog_posts,

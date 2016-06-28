@@ -28,6 +28,7 @@ class TestEventCommon(common.TransactionCase):
             'login': 'Armande',
             'alias_name': 'armande',
             'email': 'armande.eventuser@example.com',
+            'tz': 'Europe/Brussels',
             'groups_id': [(6, 0, [self.group_employee_id, self.group_event_user_id])]
         })
         self.user_eventmanager = self.Users.with_context({'no_reset_password': True}).create({
@@ -35,5 +36,6 @@ class TestEventCommon(common.TransactionCase):
             'login': 'bastien',
             'alias_name': 'bastien',
             'email': 'bastien.eventmanager@example.com',
+            'tz': 'Europe/Brussels',
             'groups_id': [(6, 0, [self.group_employee_id, self.group_event_manager_id])]
         })

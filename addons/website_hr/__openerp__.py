@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Team Page',
     'category': 'Website',
     'summary': 'Present Your Team',
-    'version': '1.0',
     'description': """
 Our Team Page
 =============
@@ -10,15 +11,13 @@ Our Team Page
         """,
     'depends': ['website', 'hr'],
     'demo': [
-        'data/website_hr_demo.xml',
+        'data/hr_employee_demo.xml',
     ],
     'data': [
-        'data/website_hr_data.xml',
-        'views/website_hr.xml',
-        'views/website_hr_view.xml',
+        'security/hr_employee_security.xml',
         'security/ir.model.access.csv',
-        'security/website_hr.xml',
+        'data/website_hr_data.xml',
+        'views/website_hr_templates.xml',
+        'views/hr_employee_views.xml',
     ],
-    'qweb': ['static/src/xml/*.xml'],
-    'installable': True,
 }

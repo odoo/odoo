@@ -4,6 +4,9 @@ import openerp.http as http
 from openerp.http import request
 import openerp.addons.web.controllers.main as webmain
 import json
+import werkzeug
+
+from odoo.api import Environment
 
 
 class meeting_invitation(http.Controller):
@@ -31,31 +34,27 @@ class meeting_invitation(http.Controller):
     @http.route('/calendar/meeting/view', type='http', auth="calendar")
     def view(self, db, token, action, id, view='calendar'):
         registry = openerp.modules.registry.RegistryManager.get(db)
-        meeting_pool = registry.get('calendar.event')
-        attendee_pool = registry.get('calendar.attendee')
-        partner_pool = registry.get('res.partner')
         with registry.cursor() as cr:
-            attendee = attendee_pool.search_read(cr, openerp.SUPERUSER_ID, [('access_token', '=', token)], [])
+            # Since we are in auth=none, create an env with SUPERUSER_ID
+            env = Environment(cr, openerp.SUPERUSER_ID, {})
+            attendee = env['calendar.attendee'].search([('access_token', '=', token)])
+            timezone = attendee.partner_id.tz
+            event = env['calendar.event'].with_context(tz=timezone).browse(int(id))
 
-            if attendee and attendee[0] and attendee[0].get('partner_id'):
-                partner_id = int(attendee[0].get('partner_id')[0])
-                tz = partner_pool.read(cr, openerp.SUPERUSER_ID, partner_id, ['tz'])['tz']
-            else:
-                tz = False
+            # If user is logged, redirect to form view of event
+            # otherwise, display the simplifyed web page with event informations
+            if request.session.uid:
+                return werkzeug.utils.redirect('/web?db=%s#id=%s&view_type=form&model=calendar.event' % (db, id))
 
-            attendee_data = meeting_pool.get_attendee(cr, openerp.SUPERUSER_ID, id, dict(tz=tz))
-
-        if attendee:
-            attendee_data['current_attendee'] = attendee[0]
-
-        values = dict(
-            init = """
-                odoo.define('calendar.invitation_page', function (require) {
-                    require('base_calendar.base_calendar').showCalendarInvitation('%s', '%s', '%s', '%s', '%s');
-                });
-            """ % (db, action, id, 'form', json.dumps(attendee_data))
-        )
-        return request.render('web.webclient_bootstrap', values)
+            # NOTE : calling render return a lazy response. The rendering result will be done when the
+            # cursor will be closed. So it is requried to call `flatten` to make the redering before
+            # existing the `with` clause
+            response = request.render('calendar.invitation_page_anonymous', {
+                'event': event,
+                'attendee': attendee,
+            })
+            response.flatten()
+            return response
 
     # Function used, in RPC to check every 5 minutes, if notification to do for an event or not
     @http.route('/calendar/notify', type='json', auth="none")

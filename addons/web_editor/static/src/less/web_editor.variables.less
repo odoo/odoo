@@ -1,0 +1,77 @@
+
+@o-we-color-dark: #2c2c36;
+@o-we-color-darker: darken(@o-we-color-dark, 2%);
+@o-we-color-divider: #33363e;
+@o-we-color-light: #4e525b;
+@o-we-color-normal: #50545d;
+@o-we-color-paper: #fbfbfd;
+@o-we-color-text-normal: #999999;
+@o-we-color-text-light: #d4d5d7;
+@o-we-color-danger: #e6586c;
+
+@o-we-sidebar-width: 210px;
+
+@o-we-tab-active-bg: #3D4048;
+
+// Transitions
+@o-we-md-ease: cubic-bezier(0.19, 1, 0.22, 1);
+
+// Animations
+@-webkit-keyframes fadeInDownSmall {
+    0% {
+        opacity: 0;
+        .translate(0, -5px);
+    }
+    100% {
+        opacity: 1;
+        .translate(0, 0);
+    }
+}
+@keyframes fadeInDownSmall {
+    0% {
+        opacity: 0;
+        .translate(0, -5px);
+    }
+    100% {
+        opacity: 1;
+        .translate(0, 0);
+    }
+}
+
+@-webkit-keyframes fadeInOut {
+    0% {
+        opacity: 0;
+    }
+    25% {
+        opacity: 1;
+    }
+    75% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+    }
+    25% {
+        opacity: 1;
+    }
+    75% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes inputHighlighter {
+    from { background: @odoo-brand-optional; }
+    to   { width: 0; background: transparent; }
+}
+@keyframes inputHighlighter {
+    from { background: @odoo-brand-optional; }
+    to   { width: 0; background: transparent; }
+}

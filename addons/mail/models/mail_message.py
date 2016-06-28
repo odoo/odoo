@@ -49,12 +49,12 @@ class Message(models.Model):
     # content
     subject = fields.Char('Subject')
     date = fields.Datetime('Date', default=fields.Datetime.now)
-    body = fields.Html('Contents', default='', help='Automatically sanitized HTML contents')
+    body = fields.Html('Contents', default='', strip_classes=True)
     attachment_ids = fields.Many2many(
         'ir.attachment', 'message_attachment_rel',
         'message_id', 'attachment_id',
         string='Attachments',
-        help='Attachments are linked to a document through model / res_id and to the message'
+        help='Attachments are linked to a document through model / res_id and to the message '
              'through this field.')
     parent_id = fields.Many2one(
         'mail.message', 'Parent Message', select=True, ondelete='set null',
@@ -102,7 +102,7 @@ class Message(models.Model):
     tracking_value_ids = fields.One2many(
         'mail.tracking.value', 'mail_message_id',
         string='Tracking values',
-        help='Tracked values are stored in a separate model. This field allow to reconstruct'
+        help='Tracked values are stored in a separate model. This field allow to reconstruct '
              'the tracking and to generate statistics on the model.')
     # mail gateway
     no_auto_thread = fields.Boolean(
@@ -118,6 +118,11 @@ class Message(models.Model):
         my_messages = self.sudo().filtered(lambda msg: self.env.user.partner_id in msg.needaction_partner_ids)
         for message in self:
             message.needaction = message in my_messages
+
+    @api.multi
+    def _is_accessible(self):
+        self.ensure_one()
+        return False
 
     @api.model
     def _search_needaction(self, operator, operand):
@@ -237,14 +242,13 @@ class Message(models.Model):
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
 
     @api.multi
-    def set_message_starred(self, starred):
-        """ Set messages as (un)starred. Technically, the notifications related
+    def toggle_message_starred(self):
+        """ Toggle messages as (un)starred. Technically, the notifications related
             to uid are set to (un)starred.
-
-            :param bool starred: set notification as (un)starred
         """
         # a user should always be able to star a message he can read
         self.check_access_rule('read')
+        starred = not self.starred
         if starred:
             self.sudo().write({'starred_partner_ids': [(4, self.env.user.partner_id.id)]})
         else:
@@ -332,9 +336,6 @@ class Message(models.Model):
                 'attachment_ids': attachment_ids,
                 'tracking_value_ids': tracking_value_ids,
             })
-            body_short = tools.html_email_clean(message_dict['body'], shorten=True, remove=True)
-            message_dict['body'] = tools.html_email_clean(message_dict['body'], shorten=False, remove=False)
-            message_dict['body_short'] = body_short != message_dict['body'] and body_short or False
 
         return True
 

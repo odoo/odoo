@@ -4,7 +4,6 @@
     'category': 'Theme/Hidden',
     'sequence': 1000,
     'version': '1.0',
-    'author': 'Odoo S.A.',
     'depends': ['website'],
     'data': [
         'views/templates.xml',

@@ -44,8 +44,7 @@ class AccountChartTemplate(models.Model):
 
     @api.multi
     def process_coa_translations(self):
-        installed_lang_ids = self.env['res.lang'].search([])
-        installed_langs = [x.code for x in installed_lang_ids]
+        installed_langs = dict(self.env['res.lang'].get_installed())
         company_obj = self.env['res.company']
         for chart_template_id in self:
             langs = []

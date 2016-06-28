@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!-- Create a transporter -->
-        <record id="res_partner_delivery" model="res.partner">
-            <field name="name">Transporter (Delivery provider)</field>
-            <field name="is_company" eval="True"/>
-            <field name="supplier" eval="True"/>
-            <field name="customer" eval="False"/>
-        </record>
 
         <record id="free_delivery_carrier" model="delivery.carrier">
             <field name="name">Free delivery charges</field>
@@ -18,7 +11,6 @@
             <field name="delivery_type">fixed</field>
             <field name="product_type">service</field>
             <field name="product_sale_ok" eval="False"/>
-            <field name="partner_id" ref="res_partner_delivery"/>
         </record>
 
         <record forcecreate="True" id="property_delivery_carrier" model="ir.property">

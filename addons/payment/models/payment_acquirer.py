@@ -1,4 +1,4 @@
-# -*- coding: utf-'8' "-*-"
+# coding: utf-8
 import logging
 
 import openerp
@@ -54,14 +54,24 @@ class PaymentAcquirer(osv.Model):
     _order = 'sequence'
 
     def _get_providers(self, cr, uid, context=None):
-        return []
+        return [('manual', 'Manual Configuration')]
+
+    def _compute_fees_implemented(self, cr, uid, ids, field_names, arg, context=None):
+        acquirer_model = self.pool['payment.acquirer']
+        res = {}
+
+        for acquirer in acquirer_model.browse(cr, uid, ids, context=context):
+            custom_method_name = '%s_compute_fees' % acquirer.provider
+            res[acquirer.id] = hasattr(acquirer_model, custom_method_name)
+
+        return res
 
     # indirection to ease inheritance
     _provider_selection = lambda self, *args, **kwargs: self._get_providers(*args, **kwargs)
 
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
-        'provider': fields.selection(_provider_selection, string='Provider', required=True),
+        'provider': fields.selection(_provider_selection, string='Provider', required=True, default='manual'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'pre_msg': fields.html('Help Message', translate=True,
                                help='Message displayed to explain and help the payment process.'),
@@ -73,26 +83,31 @@ class PaymentAcquirer(osv.Model):
                                                          help="Template for method registration"),
         'environment': fields.selection(
             [('test', 'Test'), ('prod', 'Production')],
-            string='Environment', oldname='env'),
+            string='Environment', required=True, oldname='env'),
         'website_published': fields.boolean(
             'Visible in Portal / Website', copy=False,
             help="Make this payment acquirer available (Customer invoices, etc.)"),
         'auto_confirm': fields.selection(
             [('none', 'No automatic confirmation'),
-             ('at_pay_confirm', 'At payment with acquirer confirmation'),
-             ('at_pay_now', 'At payment no acquirer confirmation needed')],
+             ('confirm_so', 'Confirm the SO on acquirer confirmation'),
+             ('generate_and_pay_invoice', 'On acquirer confirmation, confirm the SO, generate the invoice and pay it')],
             string='Order Confirmation', required=True),
         'pending_msg': fields.html('Pending Message', translate=True, help='Message displayed, if order is in pending state after having done the payment process.'),
         'done_msg': fields.html('Done Message', translate=True, help='Message displayed, if order is done successfully after having done the payment process.'),
         'cancel_msg': fields.html('Cancel Message', translate=True, help='Message displayed, if order is cancel during the payment process.'),
         'error_msg': fields.html('Error Message', translate=True, help='Message displayed, if error is occur during the payment process.'),
         # Fees
+        'fees_implemented': fields.function(_compute_fees_implemented, type="boolean"),
         'fees_active': fields.boolean('Add Extra Fees'),
         'fees_dom_fixed': fields.float('Fixed domestic fees'),
         'fees_dom_var': fields.float('Variable domestic fees (in percents)'),
         'fees_int_fixed': fields.float('Fixed international fees'),
         'fees_int_var': fields.float('Variable international fees (in percents)'),
         'sequence': fields.integer('Sequence', help="Determine the display order"),
+        'module_id': fields.many2one('ir.module.module', string='Corresponding Module'),
+        'module_state': fields.related('module_id', 'state', type='char', string='Installation State'),
+        'description': fields.html('Description'),
+        'journal_id': fields.many2one('account.journal', 'Accounting Journal', help="Account journal used for automatic payment reconciliation."),
     }
 
     image = openerp.fields.Binary("Image", attachment=True,
@@ -108,9 +123,9 @@ class PaymentAcquirer(osv.Model):
 
     _defaults = {
         'company_id': lambda self, cr, uid, obj, ctx=None: self.pool['res.users'].browse(cr, uid, uid).company_id.id,
-        'environment': 'prod',
+        'environment': 'test',
         'website_published': False,
-        'auto_confirm': 'at_pay_confirm',
+        'auto_confirm': 'confirm_so',
         'pending_msg': '<i>Pending,</i> Your online payment has been successfully processed. But your order is not validated yet.',
         'done_msg': '<i>Done,</i> Your online payment has been successfully processed. Thank you for your order.',
         'cancel_msg': '<i>Cancel,</i> Your payment has been cancelled.',
@@ -126,7 +141,7 @@ class PaymentAcquirer(osv.Model):
         return True
 
     _constraints = [
-        (_check_required_if_provider, 'Required fields not filled', ['required for this provider']),
+        (_check_required_if_provider, 'Required fields not filled', []),
     ]
 
     @openerp.api.model
@@ -271,8 +286,7 @@ class PaymentAcquirer(osv.Model):
         })
         values.setdefault('return_url', False)
 
-        # because render accepts view ids but not qweb -> need to use the xml_id
-        return self.pool['ir.ui.view'].render(cr, uid, acquirer.view_template_id.xml_id, values, engine='ir.qweb', context=context)
+        return acquirer.view_template_id.render(values, engine='ir.qweb')
 
     def _registration_render(self, cr, uid, id, partner_id, qweb_context=None, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
@@ -283,7 +297,7 @@ class PaymentAcquirer(osv.Model):
         if hasattr(self, method_name):
             method = getattr(self, method_name)
             qweb_context.update(method(cr, uid, id, qweb_context, context=context))
-        return self.pool['ir.ui.view'].render(cr, uid, acquirer.registration_view_template_id.xml_id, qweb_context, engine='ir.qweb', context=context)
+        return acquirer.registration_view_template_id.render(qweb_context, engine='ir.qweb')
 
     def s2s_process(self, cr, uid, id, data, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
@@ -302,6 +316,27 @@ class PaymentAcquirer(osv.Model):
             method = getattr(self, cust_method_name)
             return method(cr, uid, id, data, context=context)
         return True
+
+    def toggle_enviroment_value(self, cr, uid, ids, context=None):
+        acquirers = self.browse(cr, uid, ids, context=context)
+        prod_ids = [acquirer.id for acquirer in acquirers if acquirer.environment == 'prod']
+        test_ids = [acquirer.id for acquirer in acquirers if acquirer.environment == 'test']
+        self.write(cr, uid, prod_ids, {'environment': 'test'}, context=context)
+        self.write(cr, uid, test_ids, {'environment': 'prod'}, context=context)
+
+    def button_immediate_install(self, cr, uid, ids, context=None):
+        acquirer_id = self.browse(cr, uid, ids, context=context)
+        if acquirer_id.module_id and acquirer_id.module_state != 'installed':
+            acquirer_id.module_id.button_immediate_install()
+            context['active_id'] = ids[0]
+            return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'payment.acquirer',
+                'type': 'ir.actions.act_window',
+                'res_id': ids[0],
+                'context': context,
+            }
 
 
 class PaymentTransaction(osv.Model):
@@ -326,9 +361,7 @@ class PaymentTransaction(osv.Model):
     _rec_name = 'reference'
 
     def _lang_get(self, cr, uid, context=None):
-        lang_ids = self.pool['res.lang'].search(cr, uid, [], context=context)
-        languages = self.pool['res.lang'].browse(cr, uid, lang_ids, context=context)
-        return [(language.code, language.name) for language in languages]
+        return self.pool['res.lang'].get_installed(cr, uid, context=context)
 
     def _default_partner_country_id(self, cr, uid, context=None):
         comp = self.pool['res.company'].browse(cr, uid, context.get('company_id', 1), context=context)
@@ -380,7 +413,7 @@ class PaymentTransaction(osv.Model):
         'callback_eval': fields.char('S2S Callback', help="""\
             Will be safe_eval with `self` being the current transaction. i.e.:
                 self.env['my.model'].payment_validated(self)""", oldname="s2s_cb_eval"),
-        'payment_method_id': fields.many2one('payment.method', 'Payment Method', domain="[('acquirer_id', '=', acquirer_id)]"),
+        'payment_token_id': fields.many2one('payment.token', 'Payment Token', domain="[('acquirer_id', '=', acquirer_id)]"),
     }
 
     def _check_reference(self, cr, uid, ids, context=None):
@@ -554,17 +587,17 @@ class PaymentTransaction(osv.Model):
         return True
 
 
-class PaymentMethod(osv.Model):
-    _name = 'payment.method'
+class PaymentToken(osv.Model):
+    _name = 'payment.token'
     _order = 'partner_id'
 
     _columns = {
-        'name': fields.char('Name', help='Name of the payment method'),
+        'name': fields.char('Name', help='Name of the payment token'),
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
         'acquirer_id': fields.many2one('payment.acquirer', 'Acquirer Account', required=True),
         'acquirer_ref': fields.char('Acquirer Ref.', required=True),
         'active': fields.boolean('Active'),
-        'payment_ids': fields.one2many('payment.transaction', 'payment_method_id', 'Payment Transactions'),
+        'payment_ids': fields.one2many('payment.transaction', 'payment_token_id', 'Payment Transactions'),
     }
 
     _defaults = {
@@ -581,4 +614,4 @@ class PaymentMethod(osv.Model):
             if hasattr(self, custom_method_name):
                 values.update(getattr(self, custom_method_name)(cr, uid, values, context=context))
 
-        return super(PaymentMethod, self).create(cr, uid, values, context=context)
+        return super(PaymentToken, self).create(cr, uid, values, context=context)

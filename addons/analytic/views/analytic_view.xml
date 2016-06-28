@@ -1,6 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record id="account_analytic_tag_tree_view" model="ir.ui.view">
+            <field name="name">account.analytic.tag.tree</field>
+            <field name="model">account.analytic.tag</field>
+            <field name="arch" type="xml">
+                <tree string="Analytic Accounts Tags">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="account_analytic_tag_form_view" model="ir.ui.view">
+            <field name="name">account.analytic.tag.form</field>
+            <field name="model">account.analytic.tag</field>
+            <field name="arch" type="xml">
+                <form string="Analytic Accounts Tags">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_analytic_tag_action" model="ir.actions.act_window">
+            <field name="name">Analytic Accounts Tags</field>
+            <field name="res_model">account.analytic.tag</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new tag.
+              </p>
+            </field>
+        </record>
+
         <record id="view_account_analytic_line_tree" model="ir.ui.view">
             <field name="name">account.analytic.line.tree</field>
             <field name="model">account.analytic.line</field>
@@ -44,31 +78,6 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="account_analytic_line_action_entries">
-            <field name="name">Analytic Entries</field>
-            <field name="res_model">account.analytic.line</field>
-            <field name="view_mode">tree,form,graph,pivot</field>
-            <field name="view_id" ref="view_account_analytic_line_tree"/>
-            <field name="view_type">form</field>
-            <field name="help" type="html">
-              <p>
-                No activity yet.
-              </p><p>
-                In Odoo, sale orders and projects are implemented using
-                analytic accounts. You can track costs and revenues to analyse
-                your margins easily.
-              </p><p>
-                Costs will be created automatically when you register supplier
-                invoices, expenses or timesheets.
-              </p><p>
-                Revenues will be created automatically when you create customer
-                invoices. Customer invoices can be created based on sale orders
-                (fixed price invoices), on timesheets (based on the work done) or
-                on expenses (e.g. reinvoicing of travel costs).
-              </p>
-            </field>
-        </record>
-
         <record id="view_account_analytic_account_form" model="ir.ui.view">
             <field name="name">analytic.analytic.account.form</field>
             <field name="model">account.analytic.account</field>
@@ -76,11 +85,15 @@
                 <form string="Analytic Account">
                     <sheet string="Analytic Account">
                         <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                options='{"terminology": "archive"}'/>
+                            </button>
                             <button class="oe_stat_button" type="action" name="%(account_analytic_line_action)d"
                         icon="fa-usd"  string="Cost/Revenue" widget="statinfo"/>
                         </div>
                         <div class="oe_title">
-                            <label for="name"/>
+                            <label for="name" class="oe_edit_only"/>
                             <h1>
                                 <field name="name" class="oe_inline" placeholder="e.g. Project XYZ"/>
                             </h1>
@@ -93,13 +106,10 @@
                             </group>
                             <group>
                                 <field name="tag_ids" widget="many2many_tags"/>
-                                <field name="account_type"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                             </group>
                         </group>
-                        <notebook>
-                        </notebook>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
@@ -118,7 +128,7 @@
                     <field name="display_name"/>
                     <field name="code"/>
                     <field name="partner_id"/>
-                    <field name="account_type" invisible="1"/>
+                    <field name="active" invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="debit"/>
                     <field name="credit"/>
@@ -135,7 +145,7 @@
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Analytic Account"/>
                     <field name="tag_ids"/>
                     <field name="partner_id"/>
-                    <filter string="Active" domain="[('account_type','=','normal')]" name="active"/>
+                    <filter string="Archived" domain="[('active', '=', False)]" name="inactive"/>
                     <group expand="0" string="Group By...">
                         <filter string="Associated Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                     </group>
@@ -179,7 +189,7 @@
                         <group>
                             <group>
                                 <field name="name"/>
-                                <field name="account_id" domain="[('account_type', '=', 'normal')]"/>
+                                <field name="account_id"/>
                                 <field name="date"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
@@ -229,6 +239,32 @@
                     <field name="unit_amount" type="measure"/>
                     <field name="amount" type="measure"/>
                 </pivot>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="account_analytic_line_action_entries">
+            <field name="name">Analytic Entries</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+            <field name="view_id" ref="view_account_analytic_line_tree"/>
+            <field name="view_type">form</field>
+            <field name="search_view_id" ref="analytic.view_account_analytic_line_filter"/>
+            <field name="help" type="html">
+              <p>
+                No activity yet.
+              </p><p>
+                In Odoo, sale orders and projects are implemented using
+                analytic accounts. You can track costs and revenues to analyse
+                your margins easily.
+              </p><p>
+                Costs will be created automatically when you register supplier
+                invoices, expenses or timesheets.
+              </p><p>
+                Revenues will be created automatically when you create customer
+                invoices. Customer invoices can be created based on sale orders
+                (fixed price invoices), on timesheets (based on the work done) or
+                on expenses (e.g. reinvoicing of travel costs).
+              </p>
             </field>
         </record>
 

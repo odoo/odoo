@@ -9,6 +9,7 @@ import datetime
 
 import openerp.addons.decimal_precision as dp
 from openerp import SUPERUSER_ID
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools.translate import _
 
 
@@ -26,6 +27,7 @@ class sale_quote_template(osv.osv):
             (0, 'Not mandatory on website quote validation'),
             (1, 'Immediate after website order validation')
             ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote"),
+        'mail_template_id': fields.many2one('mail.template', 'Confirmation Mail', help="This e-mail template will be sent on confirmation. Leave empty to send nothing.")
     }
     def open_template(self, cr, uid, quote_id, context=None):
         return {
@@ -33,6 +35,7 @@ class sale_quote_template(osv.osv):
             'target': 'self',
             'url': '/quote/template/%d' % quote_id[0]
         }
+
 
 class sale_quote_line(osv.osv):
     _name = "sale.quote.line"
@@ -42,6 +45,7 @@ class sale_quote_line(osv.osv):
         'quote_id': fields.many2one('sale.quote.template', 'Quotation Template Reference', required=True, ondelete='cascade', select=True),
         'name': fields.text('Description', required=True, translate=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True),
+        'layout_category_id': fields.many2one('sale.layout_category', string='Section'),
         'website_description': fields.related('product_id', 'product_tmpl_id', 'quote_description', string='Line Description', type='html', translate=True),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
@@ -129,6 +133,16 @@ class sale_order_line(osv.osv):
         values = self._inject_quote_description(cr, uid, values, context)
         return super(sale_order_line, self).write(cr, uid, ids, values, context=context)
 
+    # The overrided onchange was written in new api, sorry
+    # Take the description on the order template if the product is present in it
+    @api.multi
+    @api.onchange('product_id')
+    def product_id_change(self):
+        domain = super(sale_order_line, self).product_id_change()
+        if self.order_id.template_id:
+            self.name = next((quote_line.name for quote_line in self.order_id.template_id.quote_line if quote_line.product_id.id == self.product_id.id), self.name) 
+        return domain
+
 
 class sale_order(osv.osv):
     _inherit = 'sale.order'
@@ -164,7 +178,7 @@ class sale_order(osv.osv):
 
     _defaults = {
         'access_token': lambda self, cr, uid, ctx={}: str(uuid.uuid4()),
-        'template_id' : _get_template_id,
+        'template_id': _get_template_id,
     }
 
     def open_quotation(self, cr, uid, quote_id, context=None):
@@ -182,7 +196,7 @@ class sale_order(osv.osv):
 
         if partner:
             context = dict(context or {})
-            context['lang'] = self.pool['res.partner'].browse(cr, uid, partner, context).lang
+            context['lang'] = self.pool['res.partner'].browse(cr, uid, partner, context=context).lang
 
         pricelist_obj = self.pool['product.pricelist']
 
@@ -213,6 +227,7 @@ class sale_order(osv.osv):
                 'discount': line.discount,
                 'product_uom_qty': line.product_uom_qty,
                 'product_id': line.product_id.id,
+                'layout_category_id': line.layout_category_id,
                 'product_uom': line.product_uom_id.id,
                 'website_description': line.website_description,
                 'state': 'draft',
@@ -229,6 +244,7 @@ class sale_order(osv.osv):
                 price = option.price_unit
             options.append((0, 0, {
                 'product_id': option.product_id.id,
+                'layout_category_id': option.layout_category_id,
                 'name': option.name,
                 'quantity': option.quantity,
                 'uom_id': option.uom_id.id,
@@ -238,7 +254,7 @@ class sale_order(osv.osv):
             }))
         date = False
         if quote_template.number_of_days > 0:
-            date = (datetime.datetime.now() + datetime.timedelta(quote_template.number_of_days)).strftime("%Y-%m-%d")
+            date = (datetime.datetime.now() + datetime.timedelta(quote_template.number_of_days)).strftime(DEFAULT_SERVER_DATE_FORMAT)
         data = {
             'order_line': lines,
             'website_description': quote_template.website_description,
@@ -266,27 +282,10 @@ class sale_order(osv.osv):
             return super(sale_order, self).get_access_action(cr, uid, ids, context=context)
         return {
             'type': 'ir.actions.act_url',
-            'url': '/quote/%s' % quote.id,
+            'url': '/quote/%s/%s' % (quote.id, quote.access_token),
             'target': 'self',
             'res_id': quote.id,
         }
-
-    def action_quotation_send(self, cr, uid, ids, context=None):
-        action = super(sale_order, self).action_quotation_send(cr, uid, ids, context=context)
-        ir_model_data = self.pool.get('ir.model.data')
-        quote_template_id = self.read(cr, uid, ids, ['template_id'], context=context)[0]['template_id']
-        if quote_template_id:
-            try:
-                template_id = ir_model_data.get_object_reference(cr, uid, 'website_quote', 'email_template_edi_sale')[1]
-            except ValueError:
-                pass
-            else:
-                action['context'].update({
-                    'default_template_id': template_id,
-                    'default_use_template': True
-                })
-
-        return action
 
     def _confirm_online_quote(self, cr, uid, order_id, tx, context=None):
         """ Payment callback: validate the order and write tx details in chatter """
@@ -296,7 +295,7 @@ class sale_order(osv.osv):
         if tx and tx.state == 'done':
             if order.state in ['draft', 'sent']:
                 self.action_confirm(cr, SUPERUSER_ID, order.id, context=context)
-            message = _('Order payed by %s. Transaction: %s. Amount: %s.') % (tx.partner_id.name, tx.acquirer_reference, tx.amount)
+            message = _('Order paid by %s. Transaction: %s. Amount: %s.') % (tx.partner_id.name, tx.acquirer_reference, tx.amount)
             self.message_post(cr, uid, order_id, body=message, context=context)
             return True
         return False
@@ -308,6 +307,13 @@ class sale_order(osv.osv):
             values = dict(template_values, **values)
         return super(sale_order, self).create(cr, uid, values, context=context)
 
+    def action_confirm(self, cr, uid, ids, context=None):
+        res = super(sale_order, self).action_confirm(cr, uid, ids, context=context)
+        for order in self.browse(cr, uid, ids, context=context):
+            if order.template_id and order.template_id.mail_template_id:
+                self.pool['mail.template'].send_mail(cr, uid, order.template_id.mail_template_id.id, order.id, context=context)
+        return res
+
     def _get_payment_type(self, cr, uid, ids, context=None):
         return 'form'
 
@@ -318,6 +324,7 @@ class sale_quote_option(osv.osv):
         'template_id': fields.many2one('sale.quote.template', 'Quotation Template Reference', ondelete='cascade', select=True, required=True),
         'name': fields.text('Description', required=True, translate=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True),
+        'layout_category_id': fields.many2one('sale.layout_category', string='Section'),
         'website_description': fields.html('Option Description', translate=True),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
@@ -382,17 +389,20 @@ class sale_quote_option(osv.osv):
 class sale_order_option(osv.osv):
     _name = "sale.order.option"
     _description = "Sale Options"
+    _order = 'sequence, id'
     _columns = {
         'order_id': fields.many2one('sale.order', 'Sale Order Reference', ondelete='cascade', select=True),
         'line_id': fields.many2one('sale.order.line', on_delete="set null"),
         'name': fields.text('Description', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)]),
+        'layout_category_id': fields.many2one('sale.layout_category', string='Section'),
         'website_description': fields.html('Line Description'),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure ', required=True),
         'quantity': fields.float('Quantity', required=True,
             digits_compute= dp.get_precision('Product UoS')),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of suggested product."),
     }
 
     _defaults = {
@@ -447,6 +457,37 @@ class sale_order_option(osv.osv):
             self.price_unit = pricelist.with_context(uom=self.uom_id.id).price_get(product.id, self.quantity, partner_id)[pricelist.id]
         domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
         return {'domain': domain}
+
+    @api.multi
+    def button_add_to_order(self):
+        order = self.order_id
+        if order.state not in ['draft', 'sent']:
+            return False
+        option = self
+
+        if option.product_id in [line.product_id for line in order.order_line]:
+            line = [line for line in order.order_line if line.product_id == option.product_id][0]
+            vals = {
+                'product_uom_qty': line.product_uom_qty + 1,
+            }
+            line.write(vals)
+        else:
+            vals = {
+                'price_unit': option.price_unit,
+                'website_description': option.website_description,
+                'name': option.name,
+                'order_id': order.id,
+                'product_id': option.product_id.id,
+                'layout_category_id': option.layout_category_id.id,
+                'product_uom_qty': option.quantity,
+                'product_uom': option.uom_id.id,
+                'discount': option.discount,
+            }
+            line = self.env['sale.order.line'].create(vals)
+
+        self.env['sale.order.line']._compute_tax_id()
+        self.env['sale.order.option'].write({'line_id': line})
+        return {'type':'ir.actions.client', 'tag':'reload'}
 
 
 class product_template(osv.Model):

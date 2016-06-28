@@ -31,6 +31,7 @@ define([
       var title = options.title;
       var className = options.className;
       var dropdown = options.dropdown;
+      var no_caret = options.no_caret;
       var hide = options.hide;
 
       return (dropdown ? '<div class="btn-group' +
@@ -47,7 +48,7 @@ define([
                  (hide ? ' data-hide=\'' + hide + '\'' : '') +
                  ' tabindex="-1">' +
                  label +
-                 (dropdown ? ' <span class="caret"></span>' : '') +
+                 ((dropdown && !no_caret)? ' <span class="caret"></span>' : '') +
                '</button>' +
                (dropdown || '') +
              (dropdown ? '</div>' : '');
@@ -216,36 +217,60 @@ define([
       color: function (lang, options) {
         var colorButtonLabel = '<i class="' +
                                   options.iconPrefix + options.icons.color.recent +
-                                '" style="color:black;background-color:yellow;"></i>';
-
+                                '" id="colors_preview" style="color:white;background-color:#B35E9B"></i>';
         var colorButton = tplButton(colorButtonLabel, {
           className: 'note-recent-color',
           title: lang.color.recent,
           event: 'color',
-          value: '{"backColor":"yellow"}'
+          value: '{"backColor":"#B35E9B"}'
         });
 
-        var items = [
-          '<li><div class="btn-group">',
-          '<div class="note-palette-title">' + lang.color.background + '</div>',
-          '<div class="note-color-reset" data-event="backColor"',
-          ' data-value="inherit" title="' + lang.color.transparent + '">' + lang.color.setTransparent + '</div>',
-          '<div class="note-color-palette" data-target-event="backColor"></div>',
-          '</div><div class="btn-group">',
-          '<div class="note-palette-title">' + lang.color.foreground + '</div>',
-          '<div class="note-color-reset" data-event="foreColor" data-value="inherit" title="' + lang.color.reset + '">',
-          lang.color.resetToDefault,
-          '</div>',
-          '<div class="note-color-palette" data-target-event="foreColor"></div>',
-          '</div></li>'
-        ];
+        // This is a copy of web_editor.snippet.option.colorpicker qweb template
+        var colorpicker_template = '' +
+          '<div class="dropdown-menu">' +
+            '<div class="colorpicker">' +
+              '<div class="note-palette-title">{0}</div>' +
+              '<div class="btn-group palette-reset">' +
+                '<div class="note-color-reset" data-event="{2}" data-value="inherit" title="{1}">' +
+                  '<i class="fa fa-ban"></i>' +
+                '</div>' +
+              '</div>' +
+              '<div class="o_colorpicker_sections">' +
+                '<ul class="nav nav-pills o_colorpicker_section_menu">' +
+                  '<li><a href="#o_palette_spectrum"><i class="fa fa-eyedropper"></i></a></li>' +
+                '</ul>' +
+                '<div class="tab-content o_colorpicker_section_tabs">' +
+                  '<div class="tab-pane" id="o_palette_spectrum">' +
+                    '<div class="note-color-palette" data-target-event="{2}"></div>' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
 
-        var moreButton = tplButton('', {
-          title: lang.color.more,
-          dropdown: tplDropdown(items)
+        var foreground = formatStr(colorpicker_template, [lang.color.foreground, lang.color.reset, 'foreColor']);
+        var background = formatStr(colorpicker_template, [lang.color.background, lang.color.transparent, 'backColor']);
+
+        var foregroundButton = tplButton('', {
+          title: lang.color.foreground,
+          className: 'o_foreground_toggle',
+          dropdown: foreground,
+          no_caret: true,
+        });
+        var backgroundButton = tplButton('', {
+          title: lang.color.background,
+          className: 'o_background_toggle',
+          dropdown: background,
+          no_caret: true,
         });
 
-        return colorButton + moreButton;
+        return colorButton + foregroundButton + backgroundButton;
+
+        function formatStr(str, values) {
+          return str.replace(/{(\d+)}/g, function (match, number) { 
+            return (values[number] !== undefined)? values[number] : match;
+          });
+        };
       },
       bold: function (lang, options) {
         return tplIconButton(options.iconPrefix + options.icons.font.bold, {
@@ -793,12 +818,13 @@ define([
       });
 
       var body = document.body;
+      var $container = $('#web_editor-toolbars')
 
       // create Popover
       var $popover = $(this.tplPopovers(langInfo, options)); // ODOO: user (maybe) overrided method
       $popover.addClass('note-air-layout');
       $popover.attr('id', 'note-popover-' + id);
-      $popover.appendTo(body);
+      $popover.appendTo($container);
       createTooltip($popover, keyMap);
       this.createPalette($popover, options); // ODOO: use (maybe) overrided method
 
@@ -806,7 +832,7 @@ define([
       var $handle = $(tplHandles(options));
       $handle.addClass('note-air-layout');
       $handle.attr('id', 'note-handle-' + id);
-      $handle.appendTo(body);
+      $handle.appendTo($container);
 
       // create Dialog
       var $dialog = $(tplDialogs(langInfo, options));
@@ -815,7 +841,7 @@ define([
       $dialog.find('button.close, a.modal-close').click(function () {
         $(this).closest('.modal').modal('hide');
       });
-      $dialog.appendTo(body);
+      $dialog.appendTo($container);
     };
 
     /**

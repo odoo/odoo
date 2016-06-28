@@ -324,6 +324,8 @@ class WebRequest(object):
         """ Indicates whether the current request is in "debug" mode
         """
         debug = 'debug' in self.httprequest.args
+        if debug and self.httprequest.args.get('debug') == 'assets':
+            debug = 'assets'
 
         # check if request from rpc in debug mode
         if not debug:
@@ -1432,9 +1434,8 @@ class Response(werkzeug.wrappers.Response):
         view_obj = request.registry["ir.ui.view"]
         uid = self.uid or request.uid or openerp.SUPERUSER_ID
         self.qcontext['request'] = request
-        return view_obj.render(
-            request.cr, uid, self.template, self.qcontext,
-            context=request.context)
+        return view_obj.render_template(request.cr, uid, self.template,
+                                        self.qcontext, context=request.context)
 
     def flatten(self):
         """ Forces the rendering of the response's template, sets the result

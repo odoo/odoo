@@ -2,17 +2,21 @@
 <odoo>
 
     <template id="event_registration_report_template_badge" inherit_id="event.event_registration_report_template_badge">
-        <xpath expr="//div[@id='o_event_name']" position="after">
-            <div t-if="o.event_ticket_id" class="col-xs-12 mt32 text-center" style="background: lightgrey; height: 65px">
-                <h3><span t-field="o.event_ticket_id"/></h3>
+        <xpath expr="//div[@id='o_event_name']" position="inside">
+            <div t-if="o.event_ticket_id" class="col-xs-12 text-center" style="padding:0px;">
+                <div style="background: lightgrey; height: 65px;" class="mt16 text-center">
+                    <h3><span t-field="o.event_ticket_id"/></h3>
+                </div>
             </div>
         </xpath>
     </template>
 
     <template id="event_event_report_template_badge" inherit_id="event.event_event_report_template_badge">
-        <xpath expr="//div[@id='o_event_attendee_name']" position="after">
-            <div t-if="bool(len(event.event_ticket_ids))" class="col-xs-12 mt16 text-center" style="background: lightgrey; height: 65px;" t-ignore="true">
-                <h3>Ticket Type</h3>
+        <xpath expr="//div[@id='o_event_attendee_name']" position="inside">
+            <div t-if="bool(len(event.event_ticket_ids))" class="col-xs-12" style="padding: 0px;" t-ignore="true">
+                <div style="background: lightgrey; height: 65px;" class="mt16 text-center">
+                    <h3>Ticket Type</h3>
+                </div>
             </div>
         </xpath>
     </template>

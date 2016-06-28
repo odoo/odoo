@@ -16,7 +16,11 @@ class product_template(osv.osv):
 
     _columns = {
         'landed_cost_ok': fields.boolean('Landed Costs'),
-        'split_method': fields.selection(SPLIT_METHOD, 'Split Method'),
+        'split_method': fields.selection(SPLIT_METHOD, 'Split Method', help="Equal : Cost will be equally divided.\n"\
+            "By Quantity : Cost will be divided according to product's quantity.\n"\
+            "By Current cost : Cost will be divided according to product's current cost.\n"\
+            "By Weight : Cost will be divided depending on its weight.\n"\
+            "By Volume : Cost will be divided depending on its volume."),
     }
 
     _defaults = {

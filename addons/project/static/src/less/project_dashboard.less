@@ -23,11 +23,28 @@
         .o_project_kanban_manage {
             .o-position-absolute(@bottom: 0, @left: 0);
             padding: @odoo-horizontal-padding/2 @odoo-horizontal-padding;
+            .o_kanban_manage_toggle_button:not(:hover) {
+                color: @odoo-main-text-color;
+            }
         }
         .o_kanban_card_manage_pane .o_kanban_card_manage_title {
             margin: 0;
         }
     }
+
+    .o_dashboard_star {
+            font-size: 12px;
+
+            &.fa-star-o {
+                color: @odoo-main-color-muted;
+                &:hover {
+                    color: gold;
+                }
+            }
+            &.fa-star {
+                color: gold;
+            }
+        }
 
     .o_project_kanban_boxes {
         width: 30%;

@@ -43,11 +43,7 @@ class account_analytic_account(models.Model):
 
     name = fields.Char(string='Analytic Account', index=True, required=True, track_visibility='onchange')
     code = fields.Char(string='Reference', index=True, track_visibility='onchange')
-    # FIXME: we reused account_type to implement the closed accounts (feature removed by mistake on release of v9) without modifying the schemas on already released v9, but it would be more clean to rename it
-    account_type = fields.Selection([
-        ('normal', 'Active'),
-        ('closed', 'Archived')
-        ], string='State', required=True, default='normal')
+    active = fields.Boolean('Active', help="If the active field is set to False, it will allow you to hide the account without removing it.", default=True)
 
     tag_ids = fields.Many2many('account.analytic.tag', 'account_analytic_account_tag_rel', 'account_id', 'tag_id', string='Tags', copy=True)
     line_ids = fields.One2many('account.analytic.line', 'account_id', string="Analytic Lines")
@@ -55,7 +51,7 @@ class account_analytic_account(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
 
     # use auto_join to speed up name_search call
-    partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True)
+    partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, track_visibility='onchange')
 
     balance = fields.Monetary(compute='_compute_debit_credit_balance', string='Balance')
     debit = fields.Monetary(compute='_compute_debit_credit_balance', string='Debit')

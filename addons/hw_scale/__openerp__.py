@@ -3,14 +3,14 @@
 
 
 {
-    'name': 'Weighting Scale Hardware Driver',
+    'name': 'Weighing Scale Hardware Driver',
     'version': '1.0',
     'category': 'Hardware Drivers',
     'sequence': 6,
-    'summary': 'Hardware Driver for Weighting Scales',
+    'summary': 'Hardware Driver for Weighing Scales',
     'website': 'https://www.odoo.com/page/point-of-sale',
     'description': """
-Weighting Scale Hardware Driver
+Weighing Scale Hardware Driver
 ================================
 
 This module allows the point of sale to connect to a scale using a USB HSM Serial Scale Interface,

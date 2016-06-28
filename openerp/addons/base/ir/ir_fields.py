@@ -1,22 +1,20 @@
 # -*- coding: utf-8 -*-
-import datetime
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import functools
 import itertools
-import time
 
 import psycopg2
 import pytz
 
-from openerp import models, fields, api, _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, ustr
+from odoo import api, fields, models, _
+from odoo.tools import ustr
 
 REFERENCING_FIELDS = {None, 'id', '.id'}
 def only_ref_fields(record):
-    return {k: v for k, v in record.iteritems()
-            if k in REFERENCING_FIELDS}
+    return {k: v for k, v in record.iteritems() if k in REFERENCING_FIELDS}
 def exclude_ref_fields(record):
-    return {k: v for k, v in record.iteritems()
-            if k not in REFERENCING_FIELDS}
+    return {k: v for k, v in record.iteritems() if k not in REFERENCING_FIELDS}
 
 CREATE = lambda values: (0, False, values)
 UPDATE = lambda id, values: (1, id, values)
@@ -30,10 +28,11 @@ class ImportWarning(Warning):
     """ Used to send warnings upwards the stack during the import process """
     pass
 
-class ConversionNotFound(ValueError): pass
+class ConversionNotFound(ValueError):
+    pass
 
 
-class ir_fields_converter(models.AbstractModel):
+class IrFieldsConverter(models.AbstractModel):
     _name = 'ir.fields.converter'
 
     @api.model
@@ -200,8 +199,8 @@ class ir_fields_converter(models.AbstractModel):
     @api.model
     def _str_to_date(self, model, field, value):
         try:
-            time.strptime(value, DEFAULT_SERVER_DATE_FORMAT)
-            return value, []
+            parsed_value = fields.Date.from_string(value)
+            return fields.Date.to_string(parsed_value), []
         except ValueError:
             raise self._format_import_error(
                 ValueError,
@@ -245,7 +244,7 @@ class ir_fields_converter(models.AbstractModel):
         input_tz = self._input_tz()# Apply input tz to the parsed naive datetime
         dt = input_tz.localize(parsed_value, is_dst=False)
         # And convert to UTC before reformatting for writing
-        return dt.astimezone(pytz.UTC).strftime(DEFAULT_SERVER_DATETIME_FORMAT), []
+        return fields.Datetime.to_string(dt.astimezone(pytz.UTC)), []
 
     @api.model
     def _get_translations(self, types, src):
@@ -389,8 +388,7 @@ class ir_fields_converter(models.AbstractModel):
 
         subfield, w1 = self._referencing_subfield(record)
 
-        reference = record[subfield]
-        id, _, w2 = self.db_id_for(model, field, subfield, reference)
+        id, _, w2 = self.db_id_for(model, field, subfield, record[subfield])
         return id, w1 + w2
 
     @api.model
@@ -435,8 +433,7 @@ class ir_fields_converter(models.AbstractModel):
             if refs:
                 subfield, w1 = self._referencing_subfield(refs)
                 warnings.extend(w1)
-                reference = record[subfield]
-                id, _, w2 = self.db_id_for(model, field, subfield, reference)
+                id, _, w2 = self.db_id_for(model, field, subfield, record[subfield])
                 warnings.extend(w2)
 
             writable = convert(exclude_ref_fields(record), log)

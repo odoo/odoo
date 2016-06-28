@@ -13,7 +13,7 @@ class SaleOrder(models.Model):
     carrier_id = fields.Many2one("delivery.carrier", string="Delivery Method", help="Fill this field if you plan to invoice the shipping based on picking.")
     invoice_shipping_on_delivery = fields.Boolean(string="Invoice Shipping on Delivery")
 
-    @api.depends('carrier_id', 'partner_id', 'order_line')
+    @api.depends('carrier_id', 'order_line')
     def _compute_delivery_price(self):
         for order in self:
             if order.state != 'draft':
@@ -65,7 +65,8 @@ class SaleOrder(models.Model):
                     if order.company_id.currency_id.id != order.pricelist_id.currency_id.id:
                         price_unit = order.company_id.currency_id.with_context(date=order.date_order).compute(price_unit, order.pricelist_id.currency_id)
 
-                order._create_delivery_line(carrier, price_unit)
+                final_price = price_unit * (1.0 + (float(self.carrier_id.margin) / 100.0))
+                order._create_delivery_line(carrier, final_price)
 
             else:
                 raise UserError(_('No carrier set for this order.'))
@@ -79,7 +80,7 @@ class SaleOrder(models.Model):
         taxes = carrier.product_id.taxes_id.filtered(lambda t: t.company_id.id == self.company_id.id)
         taxes_ids = taxes.ids
         if self.partner_id and self.fiscal_position_id:
-            taxes_ids = self.fiscal_position_id.map_tax(taxes).ids
+            taxes_ids = self.fiscal_position_id.map_tax(taxes, carrier.product_id, self.partner_id).ids
 
         # Create the sale order line
         values = {

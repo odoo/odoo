@@ -43,7 +43,7 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
         with closing(db.cursor()) as cr:
             # TODO this should be removed as it is done by RegistryManager.new().
             openerp.modules.db.initialize(cr)
-            openerp.tools.config['lang'] = lang
+            openerp.tools.config['load_language'] = lang
             cr.commit()
 
         registry = openerp.modules.registry.RegistryManager.new(

@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
-        <!-- After installation of the module, open the related menu -->
-        <record id="action_client_project_menu" model="ir.actions.client">
-            <field name="name">Open Project Menu</field>
-            <field name="tag">reload</field>
-            <field name="params" eval="{'menu_id': ref('base.menu_main_pm')}"/>
-        </record>
-        <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_client_project_menu"/>
-            <field name="state">open</field>
-        </record>
-    </data>
     <data>
         <record id="view_config_settings" model="ir.ui.view">
             <field name="name">project settings</field>
@@ -24,25 +12,17 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <group string="Project Management" name="project_management">
-                        <field name="module_sale_service" widget="radio"/>
                         <field name="module_pad" widget="radio"/>
-                        <field name="group_time_work_estimation_tasks" on_change="onchange_time_estimation_project_timesheet(group_time_work_estimation_tasks)" widget="radio"/>
                         <label for="id" string="Forecasts"/>
                         <div>
                               <div>
                                   <field name="module_project_forecast" widget="upgrade_boolean"/>
                                   <label for="module_project_forecast"/>
+                                  <a href="https://www.youtube.com/watch?v=PWKez0gn6Ts" target="_blank"> More Info </a>
                               </div>
                          </div>
                     </group>
-                    <group string="Timesheets">
-                        <label for="id" string="Extra features"/>
-                        <div>
-                            <field name="module_project_timesheet_synchro" widget="upgrade_boolean"/>
-                            <label for="module_project_timesheet_synchro"/>
-                        </div>
-                        <field name="module_project_issue_sheet" widget="radio"/>
-                    </group>
+                    <group name="timesheets"/>
                     <group string="Helpdesk &amp; Support">
                         <field name="module_rating_project" widget="radio"/>
                     </group>
@@ -59,6 +39,6 @@
         </record>
 
         <menuitem id="base.menu_project_general_settings" name="Settings" parent="menu_project_config"
-            sequence="0" action="action_config_settings"/>
+            sequence="0" action="action_config_settings" groups="base.group_system"/>
     </data>
 </openerp>

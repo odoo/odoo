@@ -1,0 +1,258 @@
+<odoo>
+    <record id="action_dummy" model="ir.actions.server">
+        <field name="name">Dummy Python Code</field>
+        <field name="model_id" ref="crm.model_crm_lead"/>
+        <field name="state">code</field>
+        <field name="code">True</field>
+        <field name="sequence" eval="5"/>
+        <field name="condition" eval="True"/>
+    </record>
+
+    <!-- Email template -->
+    <record id="email_template_1" model="mail.template">
+        <field name="name">Lead Automation: For Odoo OnDemand Free Trial 2015</field>
+        <field name="subject">Thanks for showing interest in Odoo</field>
+        <field name="model_id" ref="crm.model_crm_lead"/>
+        <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>Thanks for the genuine interest you have shown in Odoo.</p>
+<p>If any further information is required, do not hesitate to reply to this message.</p>
+<p>Regards,</p>]]></field>
+    </record>
+    <record id="email_template_2" model="mail.template">
+        <field name="name">Lead Automation: For Odoo Discovery Day on May 2015</field>
+        <field name="subject">Propose to subscribe to the Odoo Discovery Day on May 2015</field>
+        <field name="model_id" ref="crm.model_crm_lead"/>
+        <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>We have very good offer that might suit you. We suggest you subscribe to the
+Odoo Discovery Day on May 2015.</p>
+<p>If any further information is required, do not hesitate to reply to this message.</p>
+<p>Regards,</p>]]></field>
+    </record>
+
+    <record id="email_template_3" model="mail.template">
+        <field name="subject">Lead Automation: Thanks for subscribing to the Odoo Discovery Day</field>
+        <field name="model_id" ref="crm.model_crm_lead"/>
+        <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>Thanks for showing interest and for subscribing to the Odoo Discovery Day.</p>
+<p>If any further information is required, do not hesitate to reply to this message.</p>
+<p>Regards,</p>]]></field>
+        <field name="name">For Odoo Discovery Day</field>
+    </record>
+
+    <record id="email_template_4" model="mail.template">
+        <field name="name">Lead Automation: For Odoo book</field>
+        <field name="subject">Thanks for buying the Odoo book</field>
+        <field name="model_id" ref="crm.model_crm_lead"/>
+        <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>Thanks for showing interest and buying the Odoo book.</p>
+<p>If any further information is required, do not hesitate to reply to this message.</p>
+<p>Regards,</p>]]></field>
+    </record>
+
+     <record id="email_template_5" model="mail.template">
+        <field name="name">Lead Automation: technical training to gold partners</field>
+        <field name="subject">Propose a free technical training to Gold partners</field>
+        <field name="model_id" ref="crm.model_crm_lead"/>
+        <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>We have very good offer that might suit you. For our gold partners we are
+arranging free technical training on June 2016.</p>
+<p>If any further information is required, do not hesitate to reply to this message.</p>
+<p>Regards,</p>]]></field>
+    </record>
+
+      <record id="email_template_6" model="mail.template">
+        <field name="name">Lead Automation: training to silver partners</field>
+        <field name="subject">Propose paid training to Silver partners</field>
+        <field name="model_id" ref="crm.model_crm_lead"/>
+        <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>We have very good offer that might suit you. For our silver partners we are 
+arranging a paid technical training on June 2016.</p>
+<p>If any further information is required, do not hesitate to reply to this message.</p>
+<p>Regards,</p>]]></field>
+    </record>
+
+    <record id="email_template_7" model="mail.template">
+        <field name="name">Lead Automation: gold partnership to silver partners</field>
+        <field name="subject">Propose gold partnership to silver partners</field>
+        <field name="model_id" ref="crm.model_crm_lead"/>
+        <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>We have very good offer that might suit you. For our silver partners, we are
+offering Gold partnership.</p>
+<p>If any further information is required, do not hesitate to reply to this message.</p>
+<p>Regards,</p>]]></field>
+    </record>
+
+    <record id="email_template_8" model="mail.template">
+        <field name="name">Lead Automation: subscribing to technical training</field>
+        <field name="subject">Thanks for subscribing to technical training</field>
+        <field name="model_id" ref="crm.model_crm_lead"/>
+        <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>Thanks for showing interest and for subscribing to technical training.</p>
+<p>If any further information is required, do not hesitate to reply to this message.</p>
+<p>Regards,</p>]]></field>
+    </record>
+
+    <record id="email_template_9" model="mail.template">
+        <field name="name">Lead Automation: Propose 1 month OnDemand trial</field>
+        <field name="subject">1 month free trial for an OnDemand offer</field>
+        <field name="model_id" ref="crm.model_crm_lead"/>
+        <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>It seems Odoo could do a lot for you. Would you be interested in a free trial of our OnDemand offer?</p>
+<p>If any further information is required, do not hesitate to reply to this message.</p>
+<p>Regards,</p>]]></field>
+    </record>
+
+    <record id="email_template_10" model="mail.template">
+        <field name="name">Lead Automation: Propose Odoo Book</field>
+        <field name="subject">Odoo Book</field>
+        <field name="model_id" ref="crm.model_crm_lead"/>
+        <field name="body_html"><![CDATA[
+<p>Hello,</p>
+<p>Would you be interested in buying our book? It contains a lot of useful
+functionnal information to perfect your Odoo training.</p>
+<p>If any further information is required, do not hesitate to reply to this message.</p>
+<p>Regards,</p>]]></field>
+    </record>
+
+    <!-- Campaign -->
+    <record id="marketing_campaign_openerpondemandfreetrial0" model="marketing.campaign">
+        <field name="name">Odoo OnDemand Free Trial 2015</field>
+        <field name="object_id" ref="crm.model_crm_lead"/>
+        <field name="mode">active</field>
+        <field name="partner_field_id" ref="crm.field_crm_lead_partner_id"/>
+    </record>
+
+    <!-- Activity -->
+    <record id="marketing_campaign_activity_0" model="marketing.campaign.activity">
+        <field name="name">Propose a 1 month free trial for an OnDemand offer</field>
+        <field name="server_action_id" ref="action_dummy"/>
+        <field name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+        <field name="email_template_id" ref="email_template_9"/>
+        <field name="start" eval="1"/>
+    </record>
+    <record id="marketing_campaign_activity_1" model="marketing.campaign.activity">
+        <field name="name">Thanks for showing interest</field>
+        <field name="server_action_id" ref="action_dummy"/>
+        <field name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+        <field name="email_template_id" ref="email_template_1"/>
+    </record>
+
+    <record id="marketing_campaign_activity_2" model="marketing.campaign.activity">
+        <field name="name">Propose to subscribe to the Odoo Discovery Day on May 2015</field>
+        <field name="server_action_id" ref="action_dummy"/>
+        <field name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+         <field name="email_template_id" ref="email_template_2"/>
+    </record>
+
+    <record id="marketing_campaign_activity_3" model="marketing.campaign.activity">
+        <field name="name">Thanks for subscribing to the Odoo Discovery Day</field>
+        <field name="server_action_id" ref="action_dummy"/>
+        <field name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+        <field name="email_template_id" ref="email_template_3"/>
+    </record>
+    <record id="marketing_campaign_activity_4" model="marketing.campaign.activity">
+        <field name="name">Propose to buy the Odoo Book</field>
+       <field name="server_action_id" ref="action_dummy"/>
+        <field name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+        <field name="email_template_id" ref="email_template_10"/>
+    </record>
+
+    <record id="marketing_campaign_activity_5" model="marketing.campaign.activity">
+        <field name="name">Thanks for buying the Odoo book</field>
+        <field name="server_action_id" ref="action_dummy"/>
+        <field name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+        <field name="email_template_id" ref="email_template_4"/>
+    </record>
+    <record id="marketing_campaign_activity_6" model="marketing.campaign.activity">
+        <field name="name">Propose a free technical training to Gold partners</field>
+        <field name="server_action_id" ref="action_dummy"/>
+        <field name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+        <field name="email_template_id" ref="email_template_5"/>
+    </record>
+    <record id="marketing_campaign_activity_7" model="marketing.campaign.activity">
+        <field name="name">Propose paid training to Silver partners</field>
+        <field name="server_action_id" ref="action_dummy"/>
+        <field name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+        <field name="email_template_id" ref="email_template_6"/>
+    </record>
+
+    <record id="marketing_campaign_activity_8" model="marketing.campaign.activity">
+        <field name="name">Propose gold partnership to silver partners</field>
+        <field name="server_action_id" ref="action_dummy"/>
+        <field name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+        <field name="email_template_id" ref="email_template_7"/>
+    </record>
+
+     <record id="marketing_campaign_activity_9" model="marketing.campaign.activity">
+        <field name="name">Thanks for subscribing to technical training</field>
+        <field name="server_action_id" ref="action_dummy"/>
+        <field name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+    <field name="email_template_id" ref="email_template_8"/>
+    </record>
+
+    <!-- Tranisition -->
+    <record id="marketing_campaign_transition_0" model="marketing.campaign.transition">
+        <field name="activity_from_id" ref="marketing_campaign_activity_0"/>
+        <field name="activity_to_id" ref="marketing_campaign_activity_1"/>
+    </record>
+
+    <record id="marketing_campaign_transition_1" model="marketing.campaign.transition">
+        <field name="activity_from_id" ref="marketing_campaign_activity_0"/>
+        <field name="activity_to_id" ref="marketing_campaign_activity_2"/>
+    </record>
+    <record id="marketing_campaign_transition_2" model="marketing.campaign.transition">
+        <field name="activity_from_id" ref="marketing_campaign_activity_2"/>
+        <field name="activity_to_id" ref="marketing_campaign_activity_3"/>
+    </record>
+    <record id="marketing_campaign_transition_3" model="marketing.campaign.transition">
+        <field name="activity_from_id" ref="marketing_campaign_activity_2"/>
+        <field name="activity_to_id" ref="marketing_campaign_activity_4"/>
+    </record>
+    <record id="marketing_campaign_transition_4" model="marketing.campaign.transition">
+        <field name="activity_from_id" ref="marketing_campaign_activity_4"/>
+        <field name="activity_to_id" ref="marketing_campaign_activity_5"/>
+    </record>
+    <record id="marketing_campaign_transition_5" model="marketing.campaign.transition">
+        <field name="activity_from_id" ref="marketing_campaign_activity_4"/>
+        <field name="activity_to_id" ref="marketing_campaign_activity_6"/>
+    </record>
+    <record id="marketing_campaign_transition_6" model="marketing.campaign.transition">
+        <field name="activity_from_id" ref="marketing_campaign_activity_4"/>
+        <field name="activity_to_id" ref="marketing_campaign_activity_7"/>
+    </record>
+    <record id="marketing_campaign_transition_7" model="marketing.campaign.transition">
+        <field name="activity_from_id" ref="marketing_campaign_activity_6"/>
+        <field name="activity_to_id" ref="marketing_campaign_activity_9"/>
+    </record>
+    <record id="marketing_campaign_transition_8" model="marketing.campaign.transition">
+        <field name="activity_from_id" ref="marketing_campaign_activity_7"/>
+        <field name="activity_to_id" ref="marketing_campaign_activity_8"/>
+    </record>
+    <record id="marketing_campaign_transition_9" model="marketing.campaign.transition">
+        <field name="activity_from_id" ref="marketing_campaign_activity_7"/>
+        <field name="activity_to_id" ref="marketing_campaign_activity_9"/>
+    </record>
+    <record id="marketing_campaign_transition_10" model="marketing.campaign.transition">
+        <field name="activity_from_id" ref="marketing_campaign_activity_9"/>
+        <field name="activity_to_id" ref="marketing_campaign_activity_1"/>
+    </record>
+
+    <!-- Segment -->
+    <record id="marketing_campaign_segment_bosslistusassociationslist0" model="marketing.campaign.segment">
+        <field name="date_run" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="name">BossList US Associations List-0/90</field>
+        <field name="sync_mode">create_date</field>
+        <field name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+        <field name="state">draft</field>
+    </record>
+
+</odoo>
