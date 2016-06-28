@@ -25,6 +25,7 @@ _logger = logging.getLogger(__name__)
 
 VIRTUALID_DATETIME_FORMAT = "%Y%m%d%H%M%S"
 
+
 def calendar_id2real_id(calendar_id=None, with_date=False):
     """ Convert a "virtual/recurring event id" (type string) into a real event id (type int).
         E.g. virtual/recurring event id is 4-20091201100000, so it will return 4.
@@ -643,60 +644,21 @@ class Meeting(models.Model):
             display_time = _("%s at %s To\n %s at %s (%s)") % (date_str, time_str, date_deadline.strftime(format_date), date_deadline.strftime(format_time), timezone)
         return display_time
 
-    @api.model
-    def _set_date(self, values, id=False):
-        if values.get('start_datetime') or values.get('start_date') or values.get('start') \
-                or values.get('stop_datetime') or values.get('stop_date') or values.get('stop'):
-            allday = values.get("allday", None)
-            event = self.browse(id)
-
-            if allday is None:
-                if id:
-                    allday = event.allday
-                else:
-                    allday = False
-                    _logger.debug("Calendar - All day is not specified, arbitrarily set to False")
-
-            key = "date" if allday else "datetime"
-            notkey = "datetime" if allday else "date"
-
-            for fld in ('start', 'stop'):
-                if values.get('%s_%s' % (fld, key)) or values.get(fld):
-                    values['%s_%s' % (fld, key)] = values.get('%s_%s' % (fld, key)) or values.get(fld)
-                    values['%s_%s' % (fld, notkey)] = None
-                    if fld not in values.keys():
-                        values[fld] = values['%s_%s' % (fld, key)]
-
-            diff = False
-            if allday and (values.get('stop_date') or values.get('start_date')):
-                stop_date = values.get('stop_date') or event.stop_date
-                start_date = values.get('start_date') or event.start_date
-                if stop_date and start_date:
-                    diff = fields.Date.from_string(stop_date) - fields.Date.from_string(start_date)
-            elif values.get('stop_datetime') or values.get('start_datetime'):
-                stop_datetime = values.get('stop_datetime') or event.stop_datetime
-                start_datetime = values.get('start_datetime') or event.start_datetime
-                if stop_datetime and start_datetime:
-                    diff = fields.Datetime.from_string(stop_datetime) - fields.Datetime.from_string(start_datetime)
-            if diff:
-                duration = float(diff.days) * 24 + (float(diff.seconds) / 3600)
-                values['duration'] = round(duration, 2)
-
     name = fields.Char('Meeting Subject', required=True, states={'done': [('readonly', True)]})
     state = fields.Selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', readonly=True, track_visibility='onchange', default='draft')
 
     is_attendee = fields.Boolean('Attendee', compute='_compute_attendee')
     attendee_status = fields.Selection(Attendee.STATE_SELECTION, string='Attendee Status', compute='_compute_attendee')
     display_time = fields.Char('Event Time', compute='_compute_display_time')
-    display_start = fields.Date('Date', compute='_compute_dates', store=True)
-    start = fields.Datetime('Start', compute='_compute_dates', store=True, required=True, help="Start date of an event, without time for full days events")
-    stop = fields.Datetime('Stop', compute='_compute_dates', store=True, required=True, help="Stop date of an event, without time for full days events")
+    display_start = fields.Date('Date', compute='_compute_display_start', store=True)
+    start = fields.Datetime('Start', required=True, help="Start date of an event, without time for full days events")
+    stop = fields.Datetime('Stop', required=True, help="Stop date of an event, without time for full days events")
 
     allday = fields.Boolean('All Day', states={'done': [('readonly', True)]}, default=False)
-    start_date = fields.Date('Start Date', states={'done': [('readonly', True)]}, track_visibility='onchange')
-    start_datetime = fields.Datetime('Start DateTime', states={'done': [('readonly', True)]}, track_visibility='onchange')
-    stop_date = fields.Date('End Date', states={'done': [('readonly', True)]}, track_visibility='onchange')
-    stop_datetime = fields.Datetime('End Datetime', states={'done': [('readonly', True)]}, track_visibility='onchange')  # old date_deadline
+    start_date = fields.Date('Start Date', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, track_visibility='onchange')
+    start_datetime = fields.Datetime('Start DateTime', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, track_visibility='onchange')
+    stop_date = fields.Date('End Date', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, track_visibility='onchange')
+    stop_datetime = fields.Datetime('End Datetime', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, track_visibility='onchange')  # old date_deadline
     duration = fields.Float('Duration', states={'done': [('readonly', True)]})
     description = fields.Text('Description', states={'done': [('readonly', True)]})
     privacy = fields.Selection([('public', 'Everyone'), ('private', 'Only me'), ('confidential', 'Only internal users')], 'Privacy', default='public', states={'done': [('readonly', True)]}, oldname="class")
@@ -772,16 +734,57 @@ class Meeting(models.Model):
         for meeting in self:
             meeting.display_time = self._get_display_time(meeting.start, meeting.stop, meeting.duration, meeting.allday)
 
-    # TODO JEM : Add depends when rco will have fixed the stored computed field recomputing problem.
-    # Also, remove `_onchange_start_date` and `_onchange_stop_date` since they will be done with this
-    # computed field. Normally, the `_set_dates` method should be removed to (adapt something for the
-    # duration computation).
     @api.multi
-    def _compute_dates(self):
+    @api.depends('allday', 'start_date', 'start_datetime')
+    def _compute_display_start(self):
         for meeting in self:
             meeting.display_start = meeting.start_date if meeting.allday else meeting.start_datetime
-            meeting.start = meeting.start_date if meeting.allday else meeting.start_datetime
-            meeting.stop = meeting.stop_date if meeting.allday else meeting.stop_datetime
+
+    @api.multi
+    @api.depends('allday', 'start', 'stop')
+    def _compute_dates(self):
+        """ Adapt the value of start_date(time)/stop_date(time) according to start/stop fields and allday. Also, compute
+            the duration for not allday meeting ; otherwise the duration is set to zero, since the meeting last all the day.
+        """
+        for meeting in self:
+            if meeting.allday:
+                meeting.start_date = meeting.start
+                meeting.start_datetime = False
+                meeting.stop_date = meeting.stop
+                meeting.stop_datetime = False
+
+                meeting.duration = 0
+            else:
+                meeting.start_date = False
+                meeting.start_datetime = meeting.start
+                meeting.stop_date = False
+                meeting.stop_datetime = meeting.stop
+
+                diff = fields.Datetime.from_string(meeting.stop) - fields.Datetime.from_string(meeting.start)
+                if diff:
+                    duration = float(diff.days) * 24 + (float(diff.seconds) / 3600)
+                    meeting.duration = round(duration, 2)
+
+    @api.multi
+    def _inverse_dates(self):
+        for meeting in self:
+            if meeting.allday:
+                tz = pytz.timezone(self.env.user.tz) if self.env.user.tz else pytz.utc
+
+                enddate = fields.Datetime.from_string(meeting.stop_date)
+                enddate = tz.localize(enddate)
+                enddate = enddate.replace(hour=18)
+                enddate = enddate.astimezone(pytz.utc)
+                meeting.stop = fields.Datetime.to_string(enddate)
+
+                startdate = fields.Datetime.from_string(meeting.start_date)
+                startdate = tz.localize(startdate)  # Add "+hh:mm" timezone
+                startdate = startdate.replace(hour=8)  # Set 8 AM in localtime
+                startdate = startdate.astimezone(pytz.utc)  # Convert to UTC
+                meeting.start = fields.Datetime.to_string(startdate)
+            else:
+                meeting.start = meeting.start_datetime
+                meeting.stop = meeting.stop_datetime
 
     @api.depends('byday', 'recurrency', 'final_date', 'rrule_type', 'month_by', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'day', 'week_list')
     def _compute_rrule(self):
@@ -816,73 +819,12 @@ class Meeting(models.Model):
             if meeting.start_date and meeting.stop_date and meeting.stop_date < meeting.start_date:
                 raise ValidationError(_('Ending date cannot be set before starting date.'))
 
-    @api.onchange('allday')
-    def _onchange_allday(self):
-        # TODO JEM : it is still requried ?
-        if not ((self.start_date and self.stop_date) or (self.start and self.stop)):  # At first intialize, we have not datetime
-            return
-
-        if self.allday:  # from datetime to date
-            startdatetime = self.start_datetime or self.start
-            if startdatetime:
-                start_datetime = fields.Datetime.from_string(startdatetime)
-                self.start_date = fields.Date.to_string(start_datetime)
-
-            enddatetime = self.stop_datetime or self.stop
-            if enddatetime:
-                stop_datetime = fields.Datetime.from_string(enddatetime)
-                self.stop_date = fields.Date.to_string(stop_datetime)
-
-        else:  # from date to datetime
-            tz = pytz.timezone(self.env.user.tz) if self.env.user.tz else pytz.utc
-
-            if self.start_date:
-                start = fields.Datetime.from_string(self.start_date)
-                startdate = tz.localize(start)  # Add "+hh:mm" timezone
-                startdate = startdate.replace(hour=8)  # Set 8 AM in localtime
-                startdate = startdate.astimezone(pytz.utc)  # Convert to UTC
-                self.start_datetime = fields.Datetime.to_string(startdate)
-            elif self.start:
-                self.start_datetime = self.start
-
-            if self.stop_date:
-                end = fields.Datetime.from_string(self.stop_date)
-                enddate = tz.localize(end).replace(hour=18).astimezone(pytz.utc)
-                self.stop_datetime = fields.Datetime.to_string(enddate)
-            elif self.stop:
-                self.stop_datetime = self.stop
-
     @api.onchange('start_datetime', 'duration')
     def _onchange_duration(self):
-        if not (self.start_datetime and self.duration):
-            return
-
-        duration = self.duration
-        start_dt = fields.Datetime.from_string(self.start_datetime)
-
-        self.start = fields.Datetime.to_string(start_dt)
-        self.stop = fields.Datetime.to_string(start_dt + timedelta(hours=duration))
-        self.start_date = fields.Date.to_string(start_dt)
-        self.stop_date = fields.Date.to_string(start_dt + timedelta(hours=duration))
-        self.stop_datetime = fields.Datetime.to_string(start_dt + timedelta(hours=duration))
-
-    @api.onchange('start_date')
-    def _onchange_start_date(self):
-        if self.allday:
-
-            if self.start_date:
-                start = fields.Date.from_string(self.start_date)
-                self.start_datetime = fields.Datetime.from_string(self.start)
-                self.start = fields.Datetime.to_string(start)
-
-    @api.onchange('stop_date')
-    def _onchange_stop_date(self):
-        if self.allday:
-
-            if self.stop_date:
-                end = fields.Date.from_string(self.stop_date)
-                self.stop_datetime = fields.Datetime.to_string(end)
-                self.stop = fields.Datetime.to_string(end)
+        if self.start_datetime:
+            start = fields.Datetime.from_string(self.start_datetime)
+            self.start = self.start_datetime
+            self.stop = fields.Datetime.to_string(start + timedelta(hours=self.duration))
 
     ####################################################
     # Calendar Business, Reccurency, ...
@@ -1383,14 +1325,8 @@ class Meeting(models.Model):
 
     @api.multi
     def write(self, values):
-        initial_values = values
-
         # process events one by one
         for meeting in self:
-            # make a copy, since _set_date() modifies values depending on event
-            values = dict(initial_values)
-            self._set_date(values, meeting.id)
-
             # special write of complex IDS
             real_ids = []
             new_ids = []
@@ -1450,7 +1386,6 @@ class Meeting(models.Model):
 
     @api.model
     def create(self, values):
-        self._set_date(values, id=False)
         if not 'user_id' in values:  # Else bug with quick_create when we are filter on an other user
             values['user_id'] = self.env.user.id
 
@@ -1598,5 +1533,4 @@ class Meeting(models.Model):
     def copy(self, default=None):
         self.ensure_one()
         default = default or {}
-        self._set_date(default, id=default.get('id'))
         return super(Meeting, self.browse(calendar_id2real_id(self.id))).copy(default)
