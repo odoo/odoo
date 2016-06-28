@@ -218,10 +218,7 @@ class PosOrder(models.Model):
             def insert_data(data_type, values):
                 # if have_to_group_by:
                 values.update({
-                    'ref': order.name,
                     'partner_id': partner_id,
-                    'journal_id': order.sale_journal.id,
-                    'date': fields.Date.context_today(self),
                     'move_id': move.id,
                 })
 

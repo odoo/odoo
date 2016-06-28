@@ -36,7 +36,7 @@ class Currency(models.Model):
     @api.multi
     def _compute_current_rate(self):
         date = self._context.get('date') or fields.Datetime.now()
-        company_id = self._context.get('company_id') or self.env.user._get_company().id
+        company_id = self._context.get('company_id') or self.env['res.users']._get_company().id
         # the subquery selects the last rate before 'date' for the given currency/company
         query = """SELECT c.id, (SELECT r.rate FROM res_currency_rate r
                                   WHERE r.currency_id = c.id AND r.name <= %s

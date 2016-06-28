@@ -949,11 +949,11 @@ class product_product(osv.osv):
 
     def _get_pricelist_items(self, cr, uid, ids, field_name, args, context=None):
         res = {}
-        for prod_id in ids:
-            prod = self.browse(cr, uid, [prod_id], context=context)
-            item_ids = self.pool['product.pricelist.item'].search(cr, uid, ['|', ('product_id', '=', prod_id), ('product_tmpl_id', '=', prod.product_tmpl_id.id)], context=context)
-            res[prod_id] = item_ids
+        for prod in self.browse(cr, uid, ids, context=context):
+            item_ids = self.pool['product.pricelist.item'].search(cr, uid, ['|', ('product_id', '=', prod.id), ('product_tmpl_id', '=', prod.product_tmpl_id.id)], context=context)
+            res[prod.id] = item_ids
         return res
+
 
     _columns = {
         'price': fields.function(_product_price, fnct_inv=_set_product_lst_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
