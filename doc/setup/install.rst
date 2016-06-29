@@ -236,7 +236,7 @@ Execute the following commands to install Odoo 9.0 Community on your server:
 Enterprise
 ''''''''''
 
-To install Odoo 9.0 Enterprise, execute these commands:
+For Odoo 9.0 Enterprise, get the package from the Download_ page. Then run:
 
 .. code-block:: console
 
@@ -244,8 +244,7 @@ To install Odoo 9.0 Enterprise, execute these commands:
     $ sudo postgresql-setup initdb
     $ sudo systemctl enable postgresql
     $ sudo systemctl start postgresql
-    $ sudo yum-config-manager --add-repo=https://nightly.odoo.com/9.0/nightly/rpm/odoo.repo
-    $ sudo yum install -y odoo
+    $ sudo yum localinstall odoo_9.0.latest.noarch.rpm
     $ sudo systemctl enable odoo
     $ sudo systemctl start odoo
 
