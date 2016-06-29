@@ -40,8 +40,6 @@
                 <field name="date_action" invisible="context.get('invisible_next_date', True)"/>
                 <field name="medium_id"/>
                 <field name="source_id"/>
-                <field name="survey" invisible="1"/>
-                <field name="response_id" invisible="1"/>
                 <field name="priority"/>
                 <field name="type_id" invisible="1"/>
                 <field name="availability" invisible="1"/>
@@ -70,29 +68,6 @@
                         <div class="o_form_field o_stat_info">
                             <span class="o_stat_text">Meetings</span>
                          </div>
-                    </button>
-                    <button name="action_start_survey"
-                        class="oe_stat_button"
-                        icon="fa-user"
-                        type="object"
-                        help="Answer related job question"
-                        context="{'survey_id': survey}"
-                        attrs="{'invisible':[('survey','=',False)]}">
-                        <div class="o_form_field o_stat_info">
-                            <span class="o_stat_text">Start</span>
-                            <span class="o_stat_text">Interview</span>
-                        </div>
-                    </button>
-                    <button name="action_print_survey"
-                        class="oe_stat_button"
-                        icon="fa-print"
-                        type="object"
-                        help="Print interview report"
-                        attrs="{'invisible':[('survey','=',False)]}">
-                        <div class="o_form_field o_stat_info">
-                            <span class="o_stat_text">Print</span>
-                            <span class="o_stat_text">Interview</span>
-                        </div>
                     </button>
                     <button name="action_get_attachment_tree_view"
                         class="oe_stat_button"
@@ -149,8 +124,6 @@
                         <field name="reference"/>
                     </group>
                     <group string="Job">
-                        <field name="survey" invisible="1"/>
-                        <field name="response_id" invisible="1"/>
                         <field name="job_id"/>
                         <field name="department_id"/>
                         <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}' />
@@ -263,7 +236,6 @@
                 <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Requirements"}}'/>
                 <field name="color"/>
                 <field name="priority"/>
-                <field name="survey"/>
                 <field name="user_id"/>
                 <field name="user_email"/>
                 <field name="partner_name"/>
@@ -433,11 +405,6 @@
         <field name="arch" type="xml">
             <group name="employee_data" position="inside">
                 <group>
-                    <label for="survey_id" groups="base.group_user"/>
-                    <div groups="base.group_user" class="o_row">
-                        <field name="survey_id"/>
-                        <button string="Display Interview Form" name="action_print_survey" type="object" attrs="{'invisible':[('survey_id','=',False)]}" class="oe_link"/>
-                    </div>
                     <field name="address_id" context="{'show_address': 1}" domain= "[('is_company', '=', True )]" options="{'always_reload': True}"/>
                 </group>
             </group>

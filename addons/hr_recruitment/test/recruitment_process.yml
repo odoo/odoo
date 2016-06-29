@@ -47,10 +47,3 @@
 -
   !python {model: hr.applicant, id: hr_case_programmer}: |
      self.action_makeMeeting()
--
-  I print Applicant fill up the interview quetion
--
-  !python {model: hr.applicant, id: False}: |
-    context = self.env.context.copy()
-    context.update({'active_model': 'hr.applicant', 'active_ids': [ref("hr_recruitment.hr_case_programmer")], 'active_id': ref("hr_recruitment.hr_case_programmer")})
-    self.browse(ref('hr_case_programmer')).with_context(context).action_print_survey()

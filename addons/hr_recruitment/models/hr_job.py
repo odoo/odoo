@@ -22,9 +22,6 @@ class Job(models.Model):
     user_id = fields.Many2one('res.users', "Recruitment Responsible", track_visibility='onchange')
     document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Applications")
     documents_count = fields.Integer(compute='_compute_document_ids', string="Documents")
-    survey_id = fields.Many2one(
-        'survey.survey', "Interview Form",
-        help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job")
     alias_id = fields.Many2one(
         'mail.alias', "Alias", ondelete="restrict", required=True,
         help="Email alias for this job position. New emails will automatically create new applicants for this job position.")
@@ -72,10 +69,6 @@ class Job(models.Model):
         if 'state' in init_values and self.state == 'open':
             return 'hr_recruitment.mt_job_new'
         return super(Job, self)._track_subtype(init_values)
-
-    @api.multi
-    def action_print_survey(self):
-        return self.survey_id.action_print_survey()
 
     @api.multi
     def action_get_attachment_tree_view(self):
