@@ -148,8 +148,6 @@ class Applicant(models.Model):
     partner_mobile = fields.Char("Mobile", size=32)
     type_id = fields.Many2one('hr.recruitment.degree', "Degree")
     department_id = fields.Many2one('hr.department', "Department")
-    survey = fields.Many2one('survey.survey', related='job_id.survey_id', string="Survey")  # TDE FIXME: rename to survey_id
-    response_id = fields.Many2one('survey.user_input', "Response", ondelete="set null", oldname="response")
     reference = fields.Char("Referred By")
     day_open = fields.Float(compute='_compute_day', string="Days to Open")
     day_close = fields.Float(compute='_compute_day', string="Days to Close")
@@ -323,27 +321,6 @@ class Applicant(models.Model):
         }
         return res
 
-    @api.multi
-    def action_start_survey(self):
-        self.ensure_one()
-        # create a response and link it to this applicant
-        if not self.response_id:
-            response = self.env['survey.user_input'].create({'survey_id': self.survey.id, 'partner_id': self.partner_id.id})
-            self.response_id = response.id
-        else:
-            response = self.response_id
-        # grab the token of the response and start surveying
-        return self.survey.with_context(survey_token=response.token).action_start_survey()
-
-    @api.multi
-    def action_print_survey(self):
-        """ If response is available then print this response otherwise print survey form (print template of the survey) """
-        self.ensure_one()
-        if not self.response_id:
-            return self.survey.action_print_survey()
-        else:
-            response = self.response_id
-            return self.survey.with_context(survey_token=response.token).action_print_survey()
 
     @api.multi
     def action_get_attachment_tree_view(self):
