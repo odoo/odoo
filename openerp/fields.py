@@ -3,7 +3,7 @@
 
 """ High-level objects for fields. """
 
-from collections import OrderedDict, defaultdict
+from collections import OrderedDict, defaultdict, namedtuple
 from datetime import date, datetime
 from functools import partial
 from operator import attrgetter
@@ -342,6 +342,7 @@ class Field(object):
         'deprecated': None,             # whether the field is deprecated
 
         'related_field': None,          # corresponding related field
+        'group_operator': None,         # operator for aggregating values
     }
 
     def __init__(self, string=Default, **kwargs):
@@ -612,6 +613,7 @@ class Field(object):
     _related_help = property(attrgetter('help'))
     _related_readonly = property(attrgetter('readonly'))
     _related_groups = property(attrgetter('groups'))
+    _related_group_operator = property(attrgetter('group_operator'))
 
     @property
     def base_field(self):
@@ -751,6 +753,7 @@ class Field(object):
     _column_groups = property(attrgetter('groups'))
     _column_change_default = property(attrgetter('change_default'))
     _column_deprecated = property(attrgetter('deprecated'))
+    _column_group_operator = property(attrgetter('group_operator'))
 
     ############################################################################
     #
@@ -1062,12 +1065,11 @@ class Boolean(Field):
 
 class Integer(Field):
     type = 'integer'
-    _slots = {
-        'group_operator': None,         # operator for aggregating values
-    }
 
-    _related_group_operator = property(attrgetter('group_operator'))
-    _column_group_operator = property(attrgetter('group_operator'))
+    def _setup_regular_base(self, model):
+        super(Integer, self)._setup_regular_base(model)
+        if not self.group_operator:
+            self.group_operator = 'sum'
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, dict):
@@ -1101,11 +1103,15 @@ class Float(Field):
     type = 'float'
     _slots = {
         '_digits': None,                # digits argument passed to class initializer
-        'group_operator': None,         # operator for aggregating values
     }
 
     def __init__(self, string=Default, digits=Default, **kwargs):
         super(Float, self).__init__(string=string, _digits=digits, **kwargs)
+
+    def _setup_regular_base(self, model):
+        super(Float, self)._setup_regular_base(model)
+        if not self.group_operator:
+            self.group_operator = 'sum'
 
     @property
     def digits(self):
@@ -1116,13 +1122,11 @@ class Float(Field):
             return self._digits
 
     _related__digits = property(attrgetter('_digits'))
-    _related_group_operator = property(attrgetter('group_operator'))
 
     _description_digits = property(attrgetter('digits'))
 
     _column_digits = property(lambda self: not callable(self._digits) and self._digits)
     _column_digits_compute = property(lambda self: callable(self._digits) and self._digits)
-    _column_group_operator = property(attrgetter('group_operator'))
 
     def convert_to_cache(self, value, record, validate=True):
         # apply rounding here, otherwise value in cache may be wrong!
@@ -1147,24 +1151,23 @@ class Monetary(Field):
     type = 'monetary'
     _slots = {
         'currency_field': None,
-        'group_operator': None,         # operator for aggregating values
     }
 
     def __init__(self, string=Default, currency_field=Default, **kwargs):
         super(Monetary, self).__init__(string=string, currency_field=currency_field, **kwargs)
 
     _related_currency_field = property(attrgetter('currency_field'))
-    _related_group_operator = property(attrgetter('group_operator'))
 
     _description_currency_field = property(attrgetter('currency_field'))
 
     _column_currency_field = property(attrgetter('currency_field'))
-    _column_group_operator = property(attrgetter('group_operator'))
 
     def _setup_regular_base(self, model):
         super(Monetary, self)._setup_regular_base(model)
         if not self.currency_field:
             self.currency_field = 'currency_id'
+        if not self.group_operator:
+            self.group_operator = 'sum'
 
     def _setup_regular_full(self, model):
         super(Monetary, self)._setup_regular_full(model)
@@ -2067,6 +2070,11 @@ class Id(Field):
     def __set__(self, record, value):
         raise TypeError("field 'id' cannot be assigned")
 
+# null object for fields, extend as necessary for use in context
+MissingField = namedtuple('MissingField', 'group_operator')
+missing_field = MissingField(
+    group_operator=None,
+)
 
 # imported here to avoid dependency cycle issues
 from openerp import SUPERUSER_ID
