@@ -670,6 +670,15 @@ class AccountInvoice(models.Model):
     def tax_line_move_line_get(self):
         res = []
         for tax_line in self.tax_line_ids:
+            apply_line_tax = set()
+            if tax_line.tax_id.include_base_amount:
+                for tx in self.tax_line_ids.mapped('tax_id').filtered(lambda t: t.id != tax_line.tax_id.id):
+                    if tx.amount_type == "group":
+                        for child_tx in tx.children_tax_ids:
+                            if child_tx.id != tax_line.tax_id.id:
+                                apply_line_tax.add(child_tx.id)
+                    else:
+                        apply_line_tax.add(tx.id)
             if tax_line.amount:
                 res.append({
                     'invoice_tax_line_id': tax_line.id,
@@ -682,6 +691,7 @@ class AccountInvoice(models.Model):
                     'account_id': tax_line.account_id.id,
                     'account_analytic_id': tax_line.account_analytic_id.id,
                     'invoice_id': self.id,
+                    'tax_ids': [(6, 0, list(apply_line_tax))],
                 })
         return res
 
