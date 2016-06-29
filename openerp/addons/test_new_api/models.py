@@ -312,3 +312,23 @@ class Bar(models.Model):
     def _compute_foo(self):
         for bar in self:
             bar.foo = self.env['test_new_api.foo'].search([('name', '=', bar.name)], limit=1)
+
+
+class ComputeInverse(models.Model):
+    _name = 'test_new_api.compute.inverse'
+
+    counts = {'compute': 0, 'inverse': 0}
+
+    foo = fields.Char()
+    bar = fields.Char(compute='_compute_bar', inverse='_inverse_bar', store=True)
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        self.counts['compute'] += 1
+        for record in self:
+            record.bar = record.foo
+
+    def _inverse_bar(self):
+        self.counts['inverse'] += 1
+        for record in self:
+            record.foo = record.bar

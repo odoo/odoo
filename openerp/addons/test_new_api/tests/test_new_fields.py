@@ -186,6 +186,34 @@ class TestNewFields(common.TransactionCase):
         self.assertEqual(ewan.parent, cath)
         self.assertEqual(ewan.name, "Erwan")
 
+        record = self.env['test_new_api.compute.inverse']
+
+        # create/write on 'foo' should only invoke the compute method
+        record.counts.update(compute=0, inverse=0)
+        record = record.create({'foo': 'Hi'})
+        self.assertEqual(record.foo, 'Hi')
+        self.assertEqual(record.bar, 'Hi')
+        self.assertEqual(record.counts, {'compute': 1, 'inverse': 0})
+
+        record.counts.update(compute=0, inverse=0)
+        record.write({'foo': 'Ho'})
+        self.assertEqual(record.foo, 'Ho')
+        self.assertEqual(record.bar, 'Ho')
+        self.assertEqual(record.counts, {'compute': 1, 'inverse': 0})
+
+        # create/write on 'bar' should only invoke the inverse method
+        record.counts.update(compute=0, inverse=0)
+        record = record.create({'bar': 'Hi'})
+        self.assertEqual(record.foo, 'Hi')
+        self.assertEqual(record.bar, 'Hi')
+        self.assertEqual(record.counts, {'compute': 0, 'inverse': 1})
+
+        record.counts.update(compute=0, inverse=0)
+        record.write({'bar': 'Ho'})
+        self.assertEqual(record.foo, 'Ho')
+        self.assertEqual(record.bar, 'Ho')
+        self.assertEqual(record.counts, {'compute': 0, 'inverse': 1})
+
     def test_14_search(self):
         """ test search on computed fields """
         discussion = self.env.ref('test_new_api.discussion_0')

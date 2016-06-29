@@ -862,9 +862,9 @@ class Environment(Mapping):
         self = object.__new__(cls)
         self.cr, self.uid, self.context = self.args = (cr, uid, frozendict(context))
         self.registry = RegistryManager.get(cr.dbname)
-        self.cache = defaultdict(dict)      # {field: {id: value, ...}, ...}
-        self.computed = defaultdict(set)    # {field: set(id), ...}
-        self.dirty = defaultdict(set)       # {record: set(field_name), ...}
+        self.cache = defaultdict(dict)              # {field: {id: value, ...}, ...}
+        self._protected = defaultdict(frozenset)    # {field: ids, ...}
+        self.dirty = defaultdict(set)               # {record: set(field_name), ...}
         self.all = envs
         envs.add(self)
         return self
@@ -983,7 +983,7 @@ class Environment(Mapping):
         """ Clear the cache of all environments. """
         for env in list(self.all):
             env.cache.clear()
-            env.computed.clear()
+            env._protected.clear()
             env.dirty.clear()
 
     def clear(self):
@@ -1003,6 +1003,22 @@ class Environment(Mapping):
         except Exception:
             self.clear()
             raise
+
+    def protected(self, field):
+        """ Return the recordset for which ``field`` should not be invalidated or recomputed. """
+        return self[field.model_name].browse(self._protected.get(field, ()))
+
+    @contextmanager
+    def protecting(self, fields, records):
+        """ Prevent the invalidation or recomputation of ``fields`` on ``records``. """
+        saved = {}
+        try:
+            for field in fields:
+                ids = saved[field] = self._protected[field]
+                self._protected[field] = ids.union(records._ids)
+            yield
+        finally:
+            self._protected.update(saved)
 
     def field_todo(self, field):
         """ Return a recordset with all records to recompute for ``field``. """

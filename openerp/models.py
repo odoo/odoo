@@ -3882,22 +3882,18 @@ class BaseModel(object):
         if unknown:
             _logger.warning("%s.write() with unknown fields: %s", self._name, ', '.join(sorted(unknown)))
 
-        # write old-style fields with (low-level) method _write
-        if old_vals:
-            self._write(old_vals)
+        protected_fields = map(self._fields.get, new_vals)
+        with self.env.protecting(protected_fields, self):
+            # write old-style fields with (low-level) method _write
+            if old_vals:
+                self._write(old_vals)
 
-        if new_vals:
-            # put the values of pure new-style fields into cache
-            for record in self:
-                record._cache.update(record._convert_to_cache(new_vals, update=True))
-            # mark the fields as being computed, to avoid their invalidation
-            for key in new_vals:
-                self.env.computed[self._fields[key]].update(self._ids)
-            # inverse the fields
-            for key in new_vals:
-                self._fields[key].determine_inverse(self)
-            for key in new_vals:
-                self.env.computed[self._fields[key]].difference_update(self._ids)
+            if new_vals:
+                # put the values of pure new-style fields into cache, and inverse them
+                for record in self:
+                    record._cache.update(record._convert_to_cache(new_vals, update=True))
+                for key in new_vals:
+                    self._fields[key].determine_inverse(self)
 
         return True
 
@@ -4181,16 +4177,12 @@ class BaseModel(object):
         # create record with old-style fields
         record = self.browse(self._create(old_vals))
 
-        # put the values of pure new-style fields into cache
+        # put the values of pure new-style fields into cache, and inverse them
         record._cache.update(record._convert_to_cache(new_vals))
-        # mark the fields as being computed, to avoid their invalidation
-        for key in new_vals:
-            self.env.computed[self._fields[key]].add(record.id)
-        # inverse the fields
-        for key in new_vals:
-            self._fields[key].determine_inverse(record)
-        for key in new_vals:
-            self.env.computed[self._fields[key]].discard(record.id)
+        protected_fields = map(self._fields.get, new_vals)
+        with self.env.protecting(protected_fields, record):
+            for key in new_vals:
+                self._fields[key].determine_inverse(record)
 
         return record
 
@@ -4217,6 +4209,7 @@ class BaseModel(object):
 
         upd_todo = []
         unknown_fields = []
+        protected_fields = []
         for name, val in vals.items():
             field = self._fields.get(name)
             if not field:
@@ -4227,6 +4220,8 @@ class BaseModel(object):
                 del vals[name]
             elif not field.column:
                 del vals[name]
+            elif field.inverse:
+                protected_fields.append(field)
         if unknown_fields:
             _logger.warning('No such field(s) in model %s: %s.', self._name, ', '.join(unknown_fields))
 
@@ -4337,46 +4332,46 @@ class BaseModel(object):
                            (pleft, pleft + 1, id_new))
                 self.invalidate_cache(['parent_left', 'parent_right'])
 
-        # invalidate and mark new-style fields to recompute; do this before
-        # setting other fields, because it can require the value of computed
-        # fields, e.g., a one2many checking constraints on records
-        self.modified(self._fields)
+        with self.env.protecting(protected_fields, self):
+            # invalidate and mark new-style fields to recompute; do this before
+            # setting other fields, because it can require the value of computed
+            # fields, e.g., a one2many checking constraints on records
+            self.modified(self._fields)
 
+            # defaults in context must be removed when call a one2many or many2many
+            rel_context = {key: val
+                           for key, val in self._context.iteritems()
+                           if not key.startswith('default_')}
 
-        # defaults in context must be removed when call a one2many or many2many
-        rel_context = {key: val
-                       for key, val in self._context.iteritems()
-                       if not key.startswith('default_')}
+            # call the 'set' method of fields which are not classic_write
+            result_store = []
+            for name in sorted(upd_todo, key=lambda name: self._columns[name].priority):
+                column = self._columns[name]
+                result_store += column.set(self._cr, self._model, id_new, name, vals[name],
+                                           self._uid, context=rel_context) or []
 
-        # call the 'set' method of fields which are not classic_write
-        result_store = []
-        for name in sorted(upd_todo, key=lambda name: self._columns[name].priority):
-            column = self._columns[name]
-            result_store += column.set(self._cr, self._model, id_new, name, vals[name],
-                                       self._uid, context=rel_context) or []
+            # for recomputing new-style fields
+            self.modified(upd_todo)
 
-        # for recomputing new-style fields
-        self.modified(upd_todo)
+            # check Python constraints
+            self._validate_fields(vals)
 
-        # check Python constraints
-        self._validate_fields(vals)
+            result_store += self._store_get_values(list(set(vals.keys() + self._inherits.values())))
+            self.env.recompute_old.extend(result_store)
 
-        result_store += self._store_get_values(list(set(vals.keys() + self._inherits.values())))
-        self.env.recompute_old.extend(result_store)
+            if self.env.recompute and self._context.get('recompute', True):
+                done = []
+                while self.env.recompute_old:
+                    sorted_recompute_old = sorted(self.env.recompute_old)
+                    self.env.clear_recompute_old()
+                    for order, model_name, ids, fnames in sorted_recompute_old:
+                        if (model_name, ids, fnames) not in done:
+                            recs = self.env[model_name].browse(ids)
+                            recs._store_set_values(fnames)
+                            done.append((model_name, ids, fnames))
 
-        if self.env.recompute and self._context.get('recompute', True):
-            done = []
-            while self.env.recompute_old:
-                sorted_recompute_old = sorted(self.env.recompute_old)
-                self.env.clear_recompute_old()
-                for order, model_name, ids, fnames in sorted_recompute_old:
-                    if (model_name, ids, fnames) not in done:
-                        recs = self.env[model_name].browse(ids)
-                        recs._store_set_values(fnames)
-                        done.append((model_name, ids, fnames))
-
-            # recompute new-style fields
-            self.recompute()
+                # recompute new-style fields
+                self.recompute()
 
         self.check_access_rule('create')
         self.create_workflow()
