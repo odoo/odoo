@@ -340,7 +340,8 @@ class TestSaleMrpFlow(common.TransactionCase):
         """ Test delivered quantity on SO based on delivered quantity in pickings."""
         # intial so
         self.partner = self.env.ref('base.res_partner_1')
-        self.product = self.env.ref('product.product_product_5')
+        self.product = self.env.ref('mrp.product_product_build_kit')
+        self.product.invoice_policy = 'delivery'
         so_vals = {
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
