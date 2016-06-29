@@ -1,20 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, fields, models, _
-from openerp.exceptions import UserError
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class AccountAnalyticLine(models.Model):
     _inherit = "account.analytic.line"
-    
-    sheet_id = fields.Many2one('hr_timesheet_sheet.sheet', string='Sheet', compute='_compute_sheet', index=True, ondelete='cascade',
-        store=True, search='_search_sheet')
 
-    # dependency TO TEST
-    # shouldn't work ... the search won't be called since store=True, so it'll look up in the column
-    # will probably need to create a 2nd non-stored related variable.
-    @api.depends('date', 'user_id', 'project_id', 'sheet_id.date_to', 'sheet_id.date_from', 'sheet_id.employee_id')
+    sheet_id_computed = fields.Many2one('hr_timesheet_sheet.sheet', string='Sheet', compute='_compute_sheet', index=True, ondelete='cascade',
+        search='_search_sheet')
+    sheet_id = fields.Many2one('hr_timesheet_sheet.sheet', compute='_compute_sheet', string='Sheet', store=True)
+
+    @api.depends('date', 'user_id', 'project_id', 'sheet_id_computed.date_to', 'sheet_id_computed.date_from', 'sheet_id_computed.employee_id')
     def _compute_sheet(self):
         """Links the timesheet line to the corresponding sheet
         """
@@ -23,10 +21,11 @@ class AccountAnalyticLine(models.Model):
                 continue
             sheets = self.env['hr_timesheet_sheet.sheet'].search(
                 [('date_to', '>=', ts_line.date), ('date_from', '<=', ts_line.date),
-                 ('employee_id.user_id', '=', ts_line.user_id.id),
+                 ('employee_id.user_id.id', '=', ts_line.user_id.id),
                  ('state', 'in', ['draft', 'new'])])
             if sheets:
                 # [0] because only one sheet possible for an employee between 2 dates
+                ts_line.sheet_id_computed = sheets[0]
                 ts_line.sheet_id = sheets[0]
 
     def _search_sheet(self, operator, value):

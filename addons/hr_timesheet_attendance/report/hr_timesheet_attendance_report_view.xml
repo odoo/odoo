@@ -5,11 +5,12 @@
             <field name="model">hr.timesheet.attendance.report</field>
             <field name="arch" type="xml">
                 <search string="timesheet attendance">
+                    <field name="user_id"/>
                     <filter name="week" string="This Week"
                             domain="[
                                 '&amp;',
-                                ('date', '>=', (context_today() + relativedelta(weekday=0)).strftime('%Y-%m-%d')),
-                                ('date', '&lt;=', (context_today() + relativedelta(weekday=6)).strftime('%Y-%m-%d')) ,
+                                ('date', '>=', (context_today() + relativedelta(weeks=-1,days=1,weekday=0)).strftime('%Y-%m-%d')),
+                                ('date', '&lt;=', (context_today() + relativedelta(weekday=6)).strftime('%Y-%m-%d')),
                             ]"/>
                     <filter name="month" string="This Month"
                             domain="[
@@ -38,7 +39,6 @@
             <field name="view_mode">pivot</field>
             <field name="context">{'search_default_week': True}</field>
         </record>
-
 
         <menuitem id="menu_hr_timesheet_attendance_report"
                   parent="hr_timesheet.menu_timesheets_reports"
