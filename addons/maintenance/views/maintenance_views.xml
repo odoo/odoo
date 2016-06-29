@@ -11,10 +11,10 @@
                 <field name="category_id"/>
                 <field name="user_id"/>
                 <field name="equipment_id"/>
-                <field name="employee_id"/>
+                <field name="owner_user_id"/>
                 <field name="stage_id"/>
                 <separator/>
-                <filter string="My Requests" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
+                <filter string="My Requests" name="my_requests" domain="[('owner_user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
@@ -23,7 +23,7 @@
                     <filter string='Users' domain="[]" context="{'group_by': 'user_id'}"/>
                     <filter string='Category' domain="[]" context="{'group_by' : 'category_id'}"/>
                     <filter string='Stages' domain="[]" context="{'group_by' : 'stage_id'}"/>
-                    <filter string='Employee' domain="[]" context="{'group_by': 'employee_id'}"/>
+                    <filter string='Created By' name='created_by' domain="[]" context="{'group_by': 'owner_user_id'}"/>
                 </group>
             </search>
         </field>
@@ -54,7 +54,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="employee_id" string="Sender"/>
+                            <field name="owner_user_id" string="Requested By"/>
                             <field name="equipment_id"  context="{'default_category_id':category_id}"/>
                             <field name="category_id" groups="base.group_hr_manager"/>
                             <field name="request_date" groups="base.group_no_one"/>
@@ -83,7 +83,9 @@
                 <field name="stage_id"/>
                 <field name="color"/>
                 <field name="priority"/>
+                <field name="equipment_id"/>
                 <field name="user_id"/>
+                <field name="owner_user_id"/>
                 <field name="category_id"/>
                 <field name="kanban_state"/>
                 <field name="message_needaction_counter"/>
@@ -110,8 +112,7 @@
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
                                 <div>
                                     <b><field name="name"/></b> <br/>
-                                    <span t-if="record.employee_id.raw_value"><field name="employee_id"/><br/></span>
-                                    <span t-if="record.department_id.raw_value"><field name="department_id"/><br/></span>
+                                    <span name="owner_user_id" t-if="record.owner_user_id.raw_value"><field name="owner_user_id"/><br/></span>
                                     <span class="oe_grey" t-if="record.equipment_id.raw_value"><field name="equipment_id"/><br/></span>
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:2px;">
@@ -121,7 +122,7 @@
                                     <span t-if="record.category_id.raw_value"><field name="category_id"/></span>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.owner_user_id.raw_value)" t-att-title="record.owner_user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                     <div class="pull-left" groups="base.group_user">
                                         <field name="kanban_state" widget="kanban_state_selection"/>
                                         <field name="priority" widget="priority"/>
@@ -145,7 +146,7 @@
                 <field name="name"/>
                 <field name="active" invisible="1"/>
                 <field name="request_date" groups="base.group_no_one"/>
-                <field name="employee_id"/>
+                <field name="owner_user_id"/>
                 <field name="user_id"/>
                 <field name="category_id" groups="base.group_hr_manager"/>
                 <field name="stage_id"/>
@@ -226,9 +227,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="equipment_assign_to" widget="radio"/>
-                            <field name="employee_id" string="Employee" attrs="{'invisible': ['|', ('equipment_assign_to', '=', 'department'), ('equipment_assign_to', '=', False)]}"/>
-                            <field name="department_id" string="Department" attrs="{'invisible': ['|', ('equipment_assign_to', '=', 'employee'), ('equipment_assign_to', '=', False)]}"/>
+                            <field name="owner_user_id" string="Owner"/>
                         </group>
                         <group>
                             <field name="user_id"/>
@@ -271,6 +270,7 @@
                 <field name="name"/>
                 <field name="color"/>
                 <field name="user_id"/>
+                <field name="owner_user_id"/>
                 <field name="category_id"/>
                 <field name="serial_no"/>
                 <field name="model"/>
@@ -300,12 +300,11 @@
                                 <div><b><field name="name"/><span t-if="record.model.raw_value"> (<field name="model"/>)</span></b></div>
                                 <div class="mt4">
                                     <div t-if="record.serial_no.raw_value"><field name="serial_no"/></div>
-                                    <div t-if="!record.employee_id.raw_value and !record.department_id.raw_value">Unassigned</div>
-                                    <div t-if="record.employee_id.raw_value"><field name="employee_id"/></div>
-                                    <div t-if="record.department_id.raw_value"><field name="department_id"/></div>
+                                    <div t-if="!record.owner_user_id.raw_value">Unassigned</div>
+                                    <div t-if="record.owner_user_id.raw_value"><field name="owner_user_id"/></div>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <img t-att-src="kanban_image('hr.employee', 'image_small', record.employee_id.raw_value)" t-att-title="record.employee_id.value" width="27" height="27" class="oe_kanban_avatar"/>
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.owner_user_id.raw_value)" t-att-title="record.owner_user_id.value" width="27" height="27" class="oe_kanban_avatar"/>
                                 </div>
                                 <div class="oe_kanban_footer_left mt4 label label-danger" t-if="record.maintenance_open_count.raw_value" >
                                     <t t-raw="record.maintenance_open_count.raw_value"/> Request
@@ -327,8 +326,7 @@
                 <field name="message_needaction" invisible="1"/>
                 <field name="name"/>
                 <field name="active" invisible="1"/>
-                <field name="employee_id" string="Employee"/>
-                <field name="department_id" string="Department"/>
+                <field name="owner_user_id" string="Owner"/>
                 <field name="assign_date" groups="base.group_no_one"/>
                 <field name="serial_no"/>
                 <field name="user_id"/>
@@ -345,14 +343,13 @@
             <search string="Search">
                 <field name="name"  filter_domain="['|','|','|',('name','ilike',self),('model','ilike',self),('serial_no','ilike',self),('partner_ref', 'ilike', self)]"/>
                 <field name="category_id"/>
-                <field name="employee_id"/>
-                <field name="department_id"/>
+                <field name="owner_user_id"/>
                 <filter string="Under Maintenance"  domain="[('maintenance_open_count', '&gt;', 0)]"/>
                 <separator/>
-                <filter string="Assigned" domain="['|', ('employee_id', '!=', False), ('department_id', '!=', False)]"/>
-                <filter string="Available" domain="[('employee_id', '=', False), ('department_id', '=', False)]"/>
+                <filter string="Assigned" name="assigned" domain="[('owner_user_id', '!=', False)]"/>
+                <filter string="Available" name="available" domain="[('owner_user_id', '=', False)]"/>
                 <separator/>
-                <filter string="My Equipments" domain="[('employee_id.user_id', '=', uid)]"/>
+                <filter string="My Equipments" name="my" domain="[('owner_user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
@@ -360,9 +357,7 @@
                 <group  expand='0' string='Group by...'>
                     <filter string='Users' domain="[]" context="{'group_by': 'user_id'}"/>
                     <filter string='Category' domain="[]" context="{'group_by': 'category_id'}"/>
-                    <filter string='Assigned to' help="Assigned to Employees and Departments" domain="[]" context="{'group_by': 'equipment_assign_to'}"/>
-                    <filter string='Department' help="Assigned to Departments" domain="[]" context="{'group_by': 'department_id'}"/>
-                    <filter string='Employee' help="Assigned to Employees" domain="[]" context="{'group_by': 'employee_id'}"/>
+                    <filter string='Owner' domain="[]" context="{'group_by': 'owner_user_id'}"/>
                     <filter string='Vendor' domain="[]" context="{'group_by': 'partner_id'}"/>
                 </group>
             </search>
