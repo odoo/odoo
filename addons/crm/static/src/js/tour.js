@@ -10,7 +10,7 @@ tour.register('crm_tour', {
     'skip_enabled': true,
 }, [{
     trigger: '.o_app[data-menu-xmlid="sales_team.menu_base_partner"], .oe_menu_toggler[data-menu-xmlid="sales_team.menu_base_partner"]',
-    content: _t("Ready to boost you sales? It starts with the <b>CRM app</b>."),
+    content: _t("Ready to boost you sales? Your <b>sales pipeline</b> can be found here, under this app."),
     position: 'bottom',
 }, {
     trigger: ".o_welcome_content .o_dashboard_action",
@@ -20,7 +20,7 @@ tour.register('crm_tour', {
 }, {
     trigger: ".o-kanban-button-new",
     extra_trigger: '.o_opportunity_kanban',
-    content: _t("Create your first business opportunity."),
+    content: _t("Click here to <b>create your first opportunity</b> and add it to your pipeline."),
     position: "right"
 }, {
     trigger: ".o_opportunity_kanban .o_kanban_record:nth-child(2)",
