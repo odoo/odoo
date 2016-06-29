@@ -1,4 +1,3 @@
-@charset "utf-8";
 /* ---- Default Styles ---- */
 .oe_product {
   border: 1px solid rgba(100, 100, 100, 0.2);
@@ -412,6 +411,13 @@
   display: block;
 }
 
+.css_quantity {
+  max-width: 125px;
+}
+.css_quantity input[name="add_qty"] {
+  text-align: center;
+}
+
 option.css_not_available {
   color: #ccc;
 }
@@ -557,3 +563,22 @@ ul.wizard li:first-child {
 .mycart-popover .cart_line {
   border-bottom: 1px #EEE solid;
 }
+
+td.noborder {
+  border: none !important;
+}
+
+.border_primary {
+  border: 1px solid #337ab7;
+}
+
+.js_change_shipping {
+  cursor: pointer;
+}
+
+a.no-decoration {
+  cursor: pointer;
+  text-decoration: none !important;
+}
+
+/*# sourceMappingURL=website_sale.css.map */
