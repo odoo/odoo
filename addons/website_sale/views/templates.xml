@@ -1099,7 +1099,7 @@
                                         </h3>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row all_shipping">
                                     <div class="col-md-12">
                                         <div class="row mt8">
                                             <div class="col-sm-12 col-md-12 one_kanban">
@@ -1152,9 +1152,16 @@
                     <t t-raw="format(contact, 'htmlcontact', dict(fields=['name', 'address'], no_marker=True))"/>
                 </div>
                 <div class='panel-footer' t-if='not readonly'>
-                    <a t-att-class="'btn btn-block js_change_shipping %s' % (selected and 'btn-primary' or 'btn-default')">
-                        <t t-raw="selected and '&lt;i class=\'fa fa-check\'&gt;&lt;/i&gt; Ship to this address' or 'Select this address'"/>
-                    </a> 
+                    <span class='btn-ship' t-att-style="'' if selected else 'display:none;'">
+                        <a class="btn btn-block btn-primary">
+                            <i class='fa fa-check'></i> Ship to this address
+                        </a>
+                    </span>
+                    <span class='btn-ship' t-att-style="'' if not selected else 'display:none;'">
+                        <a class="btn btn-block btn-default">
+                            Select this address
+                        </a>
+                    </span>
                 </div>
             </div>
     </template>
@@ -1262,7 +1269,7 @@
                                             <span class="fa fa-long-arrow-left" /> Back
                                         </a>
                                         <a class="btn btn-default btn-primary pull-right mb32 a-submit">
-                                            <span>Next</span><span class="fa fa-long-arrow-right" />
+                                            <span>Next </span><span class="fa fa-long-arrow-right" />
                                         </a>
                                     </div>
                                 </form>

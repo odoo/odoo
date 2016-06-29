@@ -408,7 +408,7 @@ class WebsiteSale(http.Controller):
     def checkout_values(self, **kw):
         order = request.website.sale_get_order(force_create=1)
         shippings = []
-        if order.partner_id != request.website.user_id.partner_id.id:
+        if order.partner_id != request.website.user_id.partner_id:
             Partner = order.partner_id.with_context(show_address=1).sudo()
             shippings = Partner.search([
                 ("id", "child_of", order.partner_id.commercial_partner_id.ids),
@@ -614,6 +614,8 @@ class WebsiteSale(http.Controller):
 
         values = self.checkout_values(**post)
 
+        if post.get('xhr'):
+            return 'ok'
         return request.website.render("website_sale.checkout", values)
 
     @http.route(['/shop/confirm_order'], type='http', auth="public", website=True)
