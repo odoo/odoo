@@ -441,7 +441,7 @@ class Holidays(models.Model):
                 if holiday.user_id and holiday.user_id.partner_id:
                     meeting_values['partner_ids'] = [(4, holiday.user_id.partner_id.id)]
 
-                meeting = self.env['calendar.event'].with_context(no_email=True).create(meeting_values)
+                meeting = self.env['calendar.event'].with_context(no_mail_to_attendees=True).create(meeting_values)
                 holiday._create_resource_leave()
                 holiday.write({'meeting_id': meeting.id})
             elif holiday.holiday_type == 'category':
