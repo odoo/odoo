@@ -56,24 +56,3 @@ class TestMoveExplode(common.TransactionCase):
         #self.assertEqual(len(move_ids), len(bom_component_length[0]))
         # We should have same amount of move as the component in the phatom bom
         #self.assertEqual(len(move_ids), 5)
-
-    # def test_00_bom_find(self):
-    #     """Check that _bom_find searches the bom corresponding to the properties passed or takes the bom with the smallest
-    #         sequence."""
-    #     bom = self.MrpBom._bom_find(product_tmpl_id=self.template.id, product_id=None, properties=[self.mrp_property.id])
-    #     self.assertEqual(bom, self.bom_prop)
-
-    # def test_00_bom_find(self):
-    #     """Check that _bom_find searches the bom corresponding to the properties passed or takes the bom with the smallest
-    #         sequence."""
-    #     res = self.MrpBom._bom_find(product_tmpl=self.template)
-    #     self.assertEqual(res.id, self.bom_prop.id)
-
-
-    # def test_00_explode(self):
-    #     """Check that explode only takes the lines with the right properties."""
-    #     bom = self.bom_prop_line
-    #     product = self.product_bom_prop
-    #     res = bom.explode_data(product, 1, properties=self.mrp_property)
-    #     res = set([p['product_id'] for p in res[0]])
-    #     self.assertEqual(res, set([self.product_A.id, self.product_B.id]))

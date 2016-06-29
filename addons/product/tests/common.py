@@ -17,51 +17,76 @@ class TestProductCommon(common.SavepointCase):
 
         # Product environment related data
         Uom = cls.env['product.uom']
-        categ_unit = cls.env.ref('product.product_uom_categ_unit')
-        weight_unit = cls.env.ref('product.product_uom_categ_kgm')
-        cls.uom_unit = Uom.create({
-            'name': 'TestUnit',
-            'category_id': categ_unit.id,
-            'factor_inv': 1.0,
-            'factor': 1.0,
-            'uom_type': 'reference',
-            'rounding': 0.000001})
-        cls.uom_kunit = Uom.create({
-            'name': 'KTestUnit',
-            'category_id': categ_unit.id,
-            'factor_inv': 1000.0,
-            'factor': 0.001,
-            'uom_type': 'bigger',
-            'rounding': 0.001})
-        cls.uom_munit = Uom.create({
-            'name': 'mTestUnit',
-            'category_id': categ_unit.id,
-            'factor_inv': 0.001,
-            'factor': 1000.0,
+        cls.uom_unit = cls.env.ref('product.product_uom_unit')
+        cls.uom_dozen = cls.env.ref('product.product_uom_dozen')
+        cls.uom_dunit = Uom.create({
+            'name': 'DeciUnit',
+            'category_id': cls.uom_unit.category_id.id,
+            'factor_inv': 0.1,
+            'factor': 10.0,
             'uom_type': 'smaller',
             'rounding': 0.001})
-        cls.uom_weight = Uom.create({
-            'name': 'TestWeight',
-            'category_id': weight_unit.id,
-            'factor_inv': 1.0,
-            'factor': 1.0,
-            'uom_type': 'reference',
-            'rounding': 0.000001
-        })
+        cls.uom_weight = cls.env.ref('product.product_uom_kgm')
         Product = cls.env['product.product']
-        cls.product_1 = Product.create({
-            'name': 'TestProduct 1',
+        cls.product_0 = Product.create({
+            'name': 'Work',
+            'type': 'service',
             'uom_id': cls.uom_unit.id,
             'uom_po_id': cls.uom_unit.id})
+        cls.product_1 = Product.create({
+            'name': 'Courage',
+            'type': 'consu',
+            'uom_id': cls.uom_dunit.id,
+            'uom_po_id': cls.uom_dunit.id})
+
         cls.product_2 = Product.create({
-            'name': 'TestProduct 2',
+            'name': 'Wood',
             'uom_id': cls.uom_unit.id,
             'uom_po_id': cls.uom_unit.id})
         cls.product_3 = Product.create({
-            'name': 'TestProduct 3 (KTestUnit)',
-            'uom_id': cls.uom_kunit.id,
-            'uom_po_id': cls.uom_kunit.id})
+            'name': 'Stone',
+            'uom_id': cls.uom_dozen.id,
+            'uom_po_id': cls.uom_dozen.id})
+
         cls.product_4 = Product.create({
-            'name': 'TestProduct 4 (mTestUnit)',
-            'uom_id': cls.uom_munit.id,
-            'uom_po_id': cls.uom_munit.id})
+            'name': 'Stick',
+            'uom_id': cls.uom_dozen.id,
+            'uom_po_id': cls.uom_dozen.id})
+        cls.product_5 = Product.create({
+            'name': 'Stone Tools',
+            'uom_id': cls.uom_unit.id,
+            'uom_po_id': cls.uom_unit.id})
+
+        cls.product_6 = Product.create({
+            'name': 'Door',
+            'uom_id': cls.uom_unit.id,
+            'uom_po_id': cls.uom_unit.id})
+
+        cls.prod_att_1 = cls.env['product.attribute'].create({'name': 'Color'})
+        cls.prod_attr1_v1 = cls.env['product.attribute.value'].create({'name': 'red', 'attribute_id': cls.prod_att_1.id})
+        cls.prod_attr1_v2 = cls.env['product.attribute.value'].create({'name': 'blue', 'attribute_id': cls.prod_att_1.id})
+
+        cls.product_7_template = cls.env['product.template'].create({
+            'name': 'Sofa',
+            'uom_id': cls.uom_unit.id,
+            'uom_po_id': cls.uom_unit.id,
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': cls.prod_att_1.id,
+            })]
+        })
+        cls.product_7 = Product.create({
+            'product_tmpl_id': cls.product_7_template.id,
+        })
+        cls.product_7_1 = Product.create({
+            'product_tmpl_id': cls.product_7_template.id,
+            'attribute_value_ids': [(6, 0, [cls.prod_attr1_v1.id])],
+        })
+        cls.product_7_2 = Product.create({
+            'product_tmpl_id': cls.product_7_template.id,
+            'attribute_value_ids': [(6, 0, [cls.prod_attr1_v2.id])],
+        })
+
+        cls.product_8 = Product.create({
+            'name': 'House',
+            'uom_id': cls.uom_unit.id,
+            'uom_po_id': cls.uom_unit.id})
