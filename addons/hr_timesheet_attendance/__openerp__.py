@@ -8,6 +8,6 @@
 
     # any module necessary for this one to work correctly
     'depends': ['hr_timesheet', 'hr_attendance'],
-    'data': ['report/hr_timesheet_attendance_report_view.xml'],
-    'auto_install': True,
+    'data': [],#'report/hr_timesheet_attendance_report_view.xml'],
+    #'auto_install': True,
 }
