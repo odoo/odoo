@@ -1,24 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
+from odoo import api, fields, models
 
 
-class hr_employee(osv.osv):
-    '''
-    Employee
-    '''
-
+class HrEmployee(models.Model):
     _inherit = 'hr.employee'
     _description = 'Employee'
 
-    def _timesheet_count(self, cr, uid, ids, field_name, arg, context=None):
-        Sheet = self.pool['hr_timesheet_sheet.sheet']
-        return {
-            employee_id: Sheet.search_count(cr,uid, [('employee_id', '=', employee_id)], context=context)
-            for employee_id in ids
-        }
+    timesheet_count = fields.Integer(compute='_compute_timesheet_count', string='Timesheets')
 
-    _columns = {
-        'timesheet_count': fields.function(_timesheet_count, type='integer', string='Timesheets'),
-    }
+    @api.multi
+    def _compute_timesheet_count(self):
+        for employee in self:
+            employee.timesheet_count = employee.env['hr_timesheet_sheet.sheet'].search_count([('employee_id', '=', employee.id)])

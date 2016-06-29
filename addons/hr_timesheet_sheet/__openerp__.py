@@ -28,14 +28,13 @@ The validation can be configured in the company:
     'website': 'https://www.odoo.com/page/employees',
     'depends': ['hr_timesheet', 'hr_attendance'],
     'data': [
-        'security/ir.model.access.csv',
-        'security/hr_timesheet_sheet_security.xml',
-        'hr_timesheet_workflow.xml',
-        'hr_timesheet_sheet_data.xml',
-        'views/hr_timesheet_sheet.xml',
-        'hr_timesheet_sheet_view.xml',
-        'hr_timesheet_sheet_config_settings_views.xml',
-        'hr_dashboard.xml',
+        # 'security/ir.model.access.csv',
+        # 'security/hr_timesheet_sheet_security.xml',
+        # 'views/hr_timesheet_workflow.xml',
+        # 'data/hr_timesheet_sheet_data.xml',
+        # 'views/hr_timesheet_sheet_template.xml',
+        # 'views/hr_timesheet_sheet_view.xml',
+        # 'views/hr_department_views.xml',
     ],
     'test': [
         # '../account/test/account_minimal_test.xml',
@@ -44,5 +43,5 @@ The validation can be configured in the company:
     'installable': True,
     'auto_install': False,
     'application': True,
-    'qweb': ['static/src/xml/timesheet.xml',],
+    'qweb': ['static/src/xml/timesheet.xml', ],
 }

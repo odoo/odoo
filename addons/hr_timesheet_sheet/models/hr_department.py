@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from openerp import api, fields, models
+from odoo import api, fields, models
 
 
-class hr_department(models.Model):
+class HrDepartment(models.Model):
     _inherit = 'hr.department'
 
     @api.multi
