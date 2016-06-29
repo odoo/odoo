@@ -7,7 +7,7 @@
     'category': 'Human Resources',
     'description': """
         Track employees' equipment and manage maintenance requests.""",
-    'depends': ['hr'],
+    'depends': ['mail'],
     'summary': 'Equipments, Assets, Internal Hardware, Allocation Tracking',
     'data': [
         'security/maintenance.xml',
