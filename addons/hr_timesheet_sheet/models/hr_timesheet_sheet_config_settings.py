@@ -3,6 +3,7 @@
 
 from odoo import fields, models
 
+
 class HrTimesheetConfiguration(models.TransientModel):
     _inherit = 'project.config.settings'
 

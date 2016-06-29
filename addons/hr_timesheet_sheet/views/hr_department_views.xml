@@ -14,7 +14,7 @@
                 <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="inside">
                     <div t-if="record.timesheet_to_approve_count.raw_value > 0" class="row">
                         <div class="col-xs-9">
-                            <a name="%(hr_timesheet_action_from_department)d" type="action">
+                            <a name="%(hr_timesheet_sheet.hr_timesheet_action_from_department)d" type="action">
                                 Timesheets
                             </a>
                         </div>
@@ -27,7 +27,7 @@
                 <xpath expr="//div[contains(@class, 'o_kanban_manage_to_approve')]" position="inside">
                     <div class="row">
                         <div class="col-xs-12 text-left">
-                            <a name="%(hr_timesheet_action_from_department)d" type="action">
+                            <a name="%(hr_timesheet_sheet.hr_timesheet_action_from_department)d" type="action">
                                 <t t-esc="record.timesheet_to_approve_count.raw_value or 0"/> Timesheets
                             </a>
                         </div>

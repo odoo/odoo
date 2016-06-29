@@ -14,33 +14,38 @@ from odoo.exceptions import UserError
 class HrAttendance(models.Model):
     _inherit = "hr.attendance"
 
+    sheet_id_computed = fields.Many2one('hr_timesheet_sheet.sheet', string='Sheet', compute='_compute_sheet', index=True, ondelete='cascade',
+        search='_search_sheet')
     sheet_id = fields.Many2one('hr_timesheet_sheet.sheet', compute='_compute_sheet', string='Sheet', store=True)
 
-    # Same problem as in account.analytic.line for dependance, need to define a search function.
-    # No need to migrate correctly, hr.attendance will be removed from this module anyways.
+    @api.depends('employee_id', 'check_in', 'check_out', 'sheet_id_computed.date_to', 'sheet_id_computed.date_from', 'sheet_id_computed.employee_id')
+    def _compute_sheet(self):
+        """Links the attendance to the corresponding sheet
+        """
+        for attendance in self:
+            corresponding_sheet = self.env['hr_timesheet_sheet.sheet'].search(
+                [('date_to', '>=', attendance.check_in), ('date_from', '<=', attendance.check_in),
+                 ('employee_id', '=', attendance.employee_id.id),
+                 ('state', 'in', ['draft', 'new'])], limit=1)
+            if corresponding_sheet:
+                attendance.sheet_id_computed = corresponding_sheet[0]
+                attendance.sheet_id = corresponding_sheet[0]
 
-    # def _get_hr_timesheet_sheet(self, cr, uid, ids, context=None):
-    #     attendance_ids = []
-    #     for ts in self.browse(cr, uid, ids, context=context):
-    #         cr.execute("""
-    #                     SELECT a.id
-    #                       FROM hr_attendance a
-    #                      INNER JOIN hr_employee e
-    #                            INNER JOIN resource_resource r
-    #                                    ON (e.resource_id = r.id)
-    #                         ON (a.employee_id = e.id)
-    #                      LEFT JOIN res_users u
-    #                      ON r.user_id = u.id
-    #                      LEFT JOIN res_partner p
-    #                      ON u.partner_id = p.id
-    #                      WHERE %(date_to)s >= date_trunc('day', a.name AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))
-    #                           AND %(date_from)s <= date_trunc('day', a.name AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))
-    #                           AND %(user_id)s = r.user_id
-    #                      GROUP BY a.id""", {'date_from': ts.date_from,
-    #                                         'date_to': ts.date_to,
-    #                                         'user_id': ts.employee_id.user_id.id,})
-    #         attendance_ids.extend([row[0] for row in cr.fetchall()])
-    #     return attendance_ids
+    def _search_sheet(self, operator, value):
+        assert operator == 'in'
+        ids = []
+        for ts in self.env['hr_timesheet_sheet.sheet'].browse(value):
+            self._cr.execute("""
+                    SELECT a.id
+                        FROM hr_attendance a
+                    WHERE %(date_to)s >= a.check_in
+                        AND %(date_from)s <= a.check_in
+                        AND %(employee_id)s = a.employee_id
+                    GROUP BY a.id""", {'date_from': ts.date_from,
+                                       'date_to': ts.date_to,
+                                       'employee_id': ts.employee_id.id, })
+            ids.extend([row[0] for row in self._cr.fetchall()])
+        return [('id', 'in', ids)]
 
     def _get_attendance_employee_tz(self, employee_id, date):
         """ Simulate timesheet in employee timezone
@@ -49,11 +54,9 @@ class HrAttendance(models.Model):
         tz converted from utc timezone as we consider date of employee
         timesheet is in employee timezone
         """
-        employee_obj = self.env['hr.employee']
-
         tz = False
         if employee_id:
-            employee = employee_obj.browse(employee_id)
+            employee = self.env['hr.employee'].browse(employee_id)
             tz = employee.user_id.partner_id.tz
 
         if not date:
@@ -81,20 +84,17 @@ class HrAttendance(models.Model):
              ('employee_id', '=', employee_id)], limit=1)
         return sheet or False
 
-    @api.depends('employee_id', 'name', 'day', 'sheet_id.employee_id', 'sheet_id.date_from', 'sheet_id.date_to')
-    def _compute_sheet(self, name, args):
-        for attendance in self:
-            attendance.sheet_id = self._get_current_sheet(attendance.employee_id.id, attendance.name)
-
     @api.model
     def create(self, vals):
-        sheet_id = self.env.context.get('sheet_id') or self._get_current_sheet(vals.get('employee_id'), vals.get('name'))
-        if sheet_id:
-            att_tz_date_str = self._get_attendance_employee_tz(vals.get('employee_id'), date=vals.get('name'))
-            ts = self.env['hr_timesheet_sheet.sheet'].browse(sheet_id)
-            if ts.state not in ('draft', 'new'):
+        if self.env.context.get('sheet_id'):
+            sheet = self.env['hr_timesheet_sheet.sheet'].browse(self.env.context.get('sheet_id'))
+        else:
+            sheet = self._get_current_sheet(vals.get('employee_id'), vals.get('check_in'))
+        if sheet:
+            att_tz_date_str = self._get_attendance_employee_tz(vals.get('employee_id'), date=vals.get('check_in'))
+            if sheet.state not in ('draft', 'new'):
                 raise UserError(_('You can not enter an attendance in a submitted timesheet. Ask your manager to reset it before adding attendance.'))
-            elif ts.date_from > att_tz_date_str or ts.date_to < att_tz_date_str:
+            elif sheet.date_from > att_tz_date_str or sheet.date_to < att_tz_date_str:
                 raise UserError(_('You can not enter an attendance date outside the current timesheet dates.'))
         return super(HrAttendance, self).create(vals)
 
