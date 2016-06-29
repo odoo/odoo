@@ -5,6 +5,7 @@ import werkzeug
 from odoo import http, tools, _
 from odoo.http import request
 from odoo.addons.website.models.website import slug
+from odoo.addons.website.controllers.main import QueryURL
 
 PPG = 20  # Products Per Page
 PPR = 4   # Products Per Row
@@ -80,26 +81,6 @@ class TableCompute(object):
         # TODO keep with input type hidden
 
 
-class QueryURL(object):
-    def __init__(self, path='', **args):
-        self.path = path
-        self.args = args
-
-    def __call__(self, path=None, **kw):
-        if not path:
-            path = self.path
-        for k, v in self.args.items():
-            kw.setdefault(k, v)
-        l = []
-        for k, v in kw.items():
-            if v:
-                if isinstance(v, list) or isinstance(v, set):
-                    l.append(werkzeug.url_encode([(k, i) for i in v]))
-                else:
-                    l.append(werkzeug.url_encode([(k, v)]))
-        if l:
-            path += '?' + '&'.join(l)
-        return path
 
 
 class WebsiteSale(http.Controller):
