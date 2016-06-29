@@ -79,12 +79,12 @@
             <field name="email_to">${(object.user_id != False and object.user_id.email)|safe}</field>
             <field name="subject">Reminder: Lead ${object.name} from ${object.partner_id != False and object.partner_id.name or object.contact_name}</field>
             <field name="body_html"><![CDATA[
-<p>Hello ${object.user_id and object.user_id.name or ''},</p>
-<p>The opportunity <strong>${object.name}</strong> did not have any activity since at least 5 days.</p>
-%if object.description:
-<p>Here is the description about the opportunity : </p><p><i>${object.description}</i>
-%endif
-</p><p>Thank you!</p>
+<p>Hello <t t-esc="record.user_id and record.user_id.name or ''"/>,</p>
+<p>The opportunity <strong><t t-esc="record.name"/></strong> did not have any activity since at least 5 days.</p>
+<t t-if="record.description">
+<p>Here is the description about the opportunity : </p><p><i t-field="record.description"/>
+</p></t>
+<p>Thank you!</p>
 ]]></field>
         </record>
 

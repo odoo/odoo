@@ -48,33 +48,31 @@
             <field name="lang">${object.user_id.lang}</field>
             <field name="body_html" type="xml">
 <div>
-    <p>Congratulations ${object.user_id.name} !</p>
-    <p>You just received badge <strong>${object.badge_id.name}</strong> !</p>
+    <p>Congratulations <t t-esc="record.user_id.name"/> !</p>
+    <p>You just received badge <strong><t t-esc="record.badge_id.name"/></strong> !</p>
 </div>
 <div>
-% if object.badge_id.description
-<table cellspacing="0" cellpadding="0" border="0" style="width: 600px; margin-top: 5px;">
+<table t-if="record.badge_id.description" cellspacing="0" cellpadding="0" border="0" style="width: 600px; margin-top: 5px;">
 <tbody><tr>
     <td valign="center">
-        <img src="/web/image/gamification.badge/${object.badge_id.id}/image/80x80" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}"/>
+        <img t-attf-src="/web/image/gamification.badge/#{record.badge_id.id}/image/80x80" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="user.company_id.name"/>
     </td>
     <td valign="center">
-        <cite>${object.badge_id.description}</cite>
+        <cite><t t-esc="record.badge_id.description"/></cite>
     </td>
 </tr></tbody>
 </table>
-% endif
 </div>
 <div>
     <p>
-% if object.sender_id
-        This badge was granted by <strong>${object.sender_id.name}</strong>.
-% endif
+<t t-if="record.sender_id">
+        This badge was granted by <strong><t t-esc="record.sender_id.name"/></strong>.
+</t>
     </p>
     <p>
-% if object.comment
-        <em>${object.comment}</em>
-% endif
+<t t-if="record.comment">
+        <em><t t-esc="record.comment"/></em>
+</t>
     </p>
 </div>
 </field>

@@ -23,31 +23,29 @@
 <p>Hello,</p>
 
 
-<p>We have been contacted by those prospects that are in your region. Thus, the following leads have been assigned to ${ctx['partner_id'].name}:</p>
+<p>We have been contacted by those prospects that are in your region. Thus, the following leads have been assigned to <t t-esc="ctx.get('partner_id').name"/>:</p>
 
 <ol>
-% for lead in ctx['partner_leads']:
-     <li><a href="${lead.lead_link}">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li><br/>
-% endfor
+<t t-foreach="ctx['partner_leads']" t-as="lead">
+     <li><a t-att-href="lead.lead_link" t-esc="lead.lead_id.name or 'Subject Undefined'"/>,
+     <t t-esc="lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'"/>, <t t-esc="lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' "/>, <t t-esc="lead.lead_id.email_from or 'Email Undefined'"/>, <t t-esc="lead.lead_id.phone or ''"/> </li></br>
+</t>
 </ol>
 
-% if ctx.get('partner_in_portal'):
-<p>Please connect to your <a href="${object.get_portal_url()}">Partner Portal</a> to get details. On each lead are two buttons on the top left corner that you should press after having contacted the lead: "I'm interested" & "I'm not interested".</p>
-% else:
-<p>
+<p t-if="ctx.get('partner_in_portal')">Please connect to your <a t-att-href="record.get_portal_url()">Partner Portal</a> to get details. On each lead are two buttons on the top left corner that you should press after having contacted the lead: "I'm interested" & "I'm not interested".</p>
+<p t-if="not ctx.get('partner_in_portal')">
     You do not have yet a portal access to our database. Please contact 
-    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.
+    <t t-esc="ctx.get('partner_id').user_id and ctx.gwt('partner_id').user_id.email and 'your account manager %s (%s)' % (ctx.get('partner_id').user_id.name,ctx.get('partner_id').user_id.email) or 'us'"/>.
 </p>
-% endif
 <p>The lead will be sent to another partner if you do not contact the lead before 20 days.</p>
 
 <p>Thanks,</p>
 
-${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or '' | safe}
+<t t-esc="ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature"/>
 
-% if not ctx['partner_id'].user_id:
+<t t-if="not ctx['partner_id'].user_id">
 PS: It looks like you do not have an account manager assigned to you, please contact us.
-% endif
+</t>
             ]]></field>
         </record>
 </odoo>

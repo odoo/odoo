@@ -17,7 +17,7 @@
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="user_signature" eval="False"/>
         <field name="body_html"><![CDATA[
-<p>Dear ${object.partner_name or 'applicant'},</p>
+<p>Dear <t t-esc="record.partner_name or 'applicant'"/>,</p>
 <p>Thank you for your enquiry.<br />
 Unfortunately, your profile does not match with our needs</p>
 <p>If you have any questions, please let us know.</p>
@@ -33,7 +33,7 @@ Unfortunately, your profile does not match with our needs</p>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="user_signature" eval="False"/>
         <field name="body_html"><![CDATA[
-<p>Dear ${object.partner_name or 'applicant'},</p>
+<p>Dear <t t-esc="record.partner_name or 'applicant'"/>,</p>
 <p>Thank you for your enquiry.<br />
 Your resume got our interest. I will contact you as soon as possible to plan
 next steps of the recruitment process.</p>
@@ -46,12 +46,13 @@ next steps of the recruitment process.</p>
         <field name="subject">Welcome ${object.name} </field>
         <field name="model_id" ref="hr.model_hr_employee"/>
         <field name="body_html"><![CDATA[
+<meta charset="utf-8">
 <p>Dear all,</p>
-<p>I’m very pleased to announce that <strong> ${object.name} </strong> will be
-joining us as a ${object.job_id.name}
-%if object.department_id:
-    in ${object.department_id.name}.
-%endif
+<p>I’m very pleased to announce that <strong> <t t-esc="record.name"/> </strong> will be
+joining us as a <t t-esc="record.job_id.name"/>
+<t t-if="record.department_id">
+    in <t t-esc="record.department_id.name"/>.
+</t>
 .</p>
 <p>Please welcome him/her and help him/her finding his/her marks.</p>]]></field>
     </record>

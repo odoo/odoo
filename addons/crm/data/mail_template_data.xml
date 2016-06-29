@@ -12,9 +12,9 @@
             <field name="auto_delete" eval="True"/>
             <field name="scheduled_date">${(datetime.datetime.now() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M')}</field>
             <field name="body_html" ><![CDATA[
-
+            <meta charset="utf-8">
             <div style="margin: 10px auto;">
-            % set last_created_team = user.env['crm.team'].search([], order="create_date desc")[0]
+            <t t-set="last_created_team" t-value="user.env['crm.team'].search([], order='create_date desc')[0]"/>
             <table cellspacing="0" cellpadding="0" style="width:100%;">
                 <tbody>
                     <tr>
@@ -27,7 +27,7 @@
                     </tr>
                 </tbody>
             </table>
-            <table style="width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray"">
+            <table style="width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray;">
                 <tbody>
                     <tr>
                         <td style="padding:15px 10px;font-size:20px">
@@ -40,8 +40,9 @@
                                 <li dir="ltr">
                                     <p dir="ltr" style="margin-top:0pt;margin-bottom:0pt;">
                                         <span>Try creating a lead by sending an email to </span>
-                                        <a href="mailto:${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}">
-                                            <span style="font-weight:bold; text-decoration:underline;">${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}</span>
+                                        <a t-attf-href="mailto:#{last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}">
+                                            <t t-if="last_created_team.alias_id.alias_domain"><span style="font-weight:bold; text-decoration:underline;"><t t-esc="last_created_team.alias_id.name_get()[0][1]"/></span></t>
+                                            <span t-if="not last_created_team.alias_id.alias_domain" style="font-weight:bold; text-decoration:underline;"><t t-esc="user.company_id.email"/></span>
                                         </a>
                                     </p>
                                 </li>
@@ -50,13 +51,13 @@
                                         <span>Track your opportunities in your sale funnel by simply dragging and dropping the cards from one column to another</span>
                                     </p>
                                 </li>
-                            </ul> <br>
+                            </ul> <br/>
                             <p dir="ltr" style="font-size:13px;margin-top:0pt;margin-bottom:8pt;">
                                 <span style="font-weight:bold;">Discover the </span>
                                 <span><a href="/web#view_type=list&model=crm.lead&action=crm.crm_lead_all_leads">
                                     <span style="font-weight:bold; text-decoration:underline;">CRM planner</span></a></span>
                                 <span> to activate extra features</span>
-                                <span style="color:#875A7B;margin:0;font-weight:bold">(${user.env['web.planner'].get_planner_progress('planner_crm')}% done)</span>
+                                <span style="color:#875A7B;margin:0;font-weight:bold;">(<t t-esc="user.env['web.planner'].get_planner_progress('planner_crm')"/>% done)</span>
                             </p>
                             <ul style="margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;">
                                 <li dir="ltr">

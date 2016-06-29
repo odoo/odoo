@@ -7,7 +7,7 @@
         <!--Email template -->
         <record id="email_template_edi_invoice" model="mail.template">
             <field name="name">Invoice - Send by Email</field>
-            <field name="email_from">${(object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '')|safe}</field>
+            <field name="email_from">${object.user_id.name} ${('&lt;%s&gt;' % ((object.user_id.email) if object.user_id.email else '')|safe)}</field>
             <field name="subject">${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})</field>
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="model_id" ref="account.model_account_invoice"/>
@@ -16,47 +16,39 @@
             <field name="report_name">Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html"><![CDATA[
-<p>Dear ${object.partner_id.name}
-% set access_action = object.with_context(force_website=True).get_access_action()
-% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'
-% set access_url = is_online and '/mail/view?model=account.invoice&res_id=%d' % (object.id) or '/report/pdf/account.report_invoice/' + str(object.id)
-
-% if object.partner_id.parent_id:
-    (<i>${object.partner_id.parent_id.name}</i>)
-% endif
+<p>Dear <t t-esc="record.partner_id.name"/> 
+<t t-set="access_action" t-value="record.with_context(force_website=True).get_access_action()"/>
+<t t-set="is_online" t-value="access_action and access_action['type'] == 'ir.actions.act_url'"/>
+<t t-set="access_url" t-value="is_online and '/mail/view?model=account.invoice&res_id=%d' % (record.id) or '/report/pdf/account.report_invoice/' + str(record.id)"/>
+<t t-if="record.partner_id.parent_id">
+    (<i t-esc="record.partner_id.parent_id.name"/>)
+</t>
 ,</p>
 <p>Here is, in attachment, your 
-% if object.number:
-invoice <strong>${object.number}</strong>
-% else:
-invoice
-% endif
-% if object.origin:
-(with reference: ${object.origin})
-% endif
-amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>
-from ${object.company_id.name}.
+<t t-if="record.number"> invoice <strong t-esc="record.number"/></t>
+<t t-if="not record.number"> invoice </t>
+<t t-if="record.origin">
+(with reference: <t t-esc="record.origin"/>)
+</t>
+amounting in <strong t-esc="'%s %s' % (record.amount_total, record.currency_id.name)"/>
+from <t t-esc="record.company_id.name"/>.
 </p>
 
-% if is_online:
+<t t-if="is_online">
     <br/><br/>
     <center>
-      <a href="${access_url}" style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;" class="o_default_snippet_text">View Invoice</a>
+    <a t-att-href="access_url" style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;" class="o_default_snippet_text">View Invoice</a>
     </center>
-% endif
+</t>
     <br/><br/>
 
-% if object.state=='paid':
-    <p>This invoice is already paid.</p>
-% else:
-    <p>Please remit payment at your earliest convenience.</p>
-% endif
-
+<p t-if="record.state == 'paid'">This invoice is already paid.</p>
+<p t-if="not record.state == 'paid'">Please remit payment at your earliest convenience.</p>
 <p>Thank you,</p>
 <p style="color:#888888">
-% if object.user_id and object.user_id.signature:
+<t t-if="record.user_id and record.user_id.signature">
     ${object.user_id.signature | safe}
-% endif
+</t>
 </p>
 ]]></field>
         </record>
@@ -69,8 +61,8 @@ from ${object.company_id.name}.
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[<html>
                 <head></head>
-                % set record = ctx.get('record')
-                % set company = record and record.company_id or user.company_id
+                <t t-set="record" t-value="ctx.get('record')"/>
+                <t t-set="company" t-value="record and record.company_id or user.company_id"/>
                 <body style="margin: 0; padding: 0;">
                 <table border="0" width="100%" cellpadding="0" bgcolor="#ededed" style="padding: 20px; background-color: #ededed" summary="o_mail_notification">
                     <tbody>
@@ -82,11 +74,11 @@ from ${object.company_id.name}.
                             <tr>
                               <td valign="middle">
                                   <span style="font-size:20px; color:white; font-weight: bold;">
-                                      Invoice ${object.record_name}
+                                      Invoice <t t-esc="record.record_name"/>
                                   </span>
                               </td>
                               <td valign="middle" align="right">
-                                  <img src="/logo.png?company=${company.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${company.name}">
+                                  <img t-att-src="/logo.png?company=%s" % (company)" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="user.company_id.name">
                               </td>
                             </tr>
                           </table>
@@ -98,9 +90,7 @@ from ${object.company_id.name}.
                         <td align="center" style="min-width: 590px;">
                           <table width="590" border="0" cellpadding="0" bgcolor="#ffffff" style="min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;">
                             <tbody>
-                              <td valign="top" style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;">
-                                ${object.body | safe}
-                              </td>
+                              <td valign="top" style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;" t-raw="record.body or safe"/>
                             </tbody>
                           </table>
                         </td>
@@ -112,18 +102,12 @@ from ${object.company_id.name}.
                           <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px;">
                             <tr>
                               <td valign="middle" align="left" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
-                                ${company.name}<br/>
-                                ${company.phone or ''}
+                                <t t-esc="company.name"/><br/>
+                                <t t-esc="company.phone or ''"/>
                               </td>
                               <td valign="middle" align="right" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
-                                % if company.email:
-                                <a href="mailto:${company.email}" style="text-decoration:none; color: white;">${company.email}</a><br/>
-                                % endif
-                                % if company.website:
-                                    <a href="${company.website}" style="text-decoration:none; color: white;">
-                                        ${company.website}
-                                    </a>
-                                % endif
+                                <a t-if="company.email" t-attf-href="mailto:#{company.email}" style="text-decoration:none; color: white;" t-esc="company.email"/><br/>
+                                <a t-if="company.website" t-att-href="company.website" style="text-decoration:none; color: white;" t-esc="company.website"/>
                               </td>
                             </tr>
                           </table>

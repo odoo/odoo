@@ -19,6 +19,7 @@
             <field name="auto_delete" eval="True"/>
             <field name="scheduled_date">${(datetime.datetime.now() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')}</field>
             <field name="body_html" ><![CDATA[
+            <meta charset="utf-8">
             <div style="margin: 10px auto;">
             <table cellspacing="0" cellpadding="0" style="width:100%;">
                 <tbody>
@@ -58,7 +59,7 @@
                                 <span><a href="/web#view_type=kanban&model=project.project&action=project.open_view_project_all">
                                     <span style="font-weight:bold; text-decoration:underline;">Website planner</span></a></span>
                                 <span> to activate extra features</span>
-                                <span style="color:#875A7B;margin:0;font-weight:bold">(${user.env['web.planner'].get_planner_progress('planner_website')}% done)</span>
+                                <span style="color:#875A7B;margin:0;font-weight:bold">(<t t-esc="user.env['web.planner'].get_planner_progress('planner_website')"/>% done)</span>
                             </p>
                             <ul style="margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;">
                                 <li dir="ltr">

@@ -82,17 +82,17 @@
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[
 <div summary="o_mail_template" style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
-% set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}
+<t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}"/>
     <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
         <tbody><tr>
             <td valign="center" width="200" style="padding:10px 10px 10px 5px;font-size: 12px">
-                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
+                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="user.company_id.name">
             </td>
             <td valign="center" align="right" width="340" style="padding:10px 10px 10px 5px; font-size: 12px;">
                 <p>
-                    <a href="/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Accept</a>
-                    <a href="/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or '' }&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Decline</a>
-                    <a href="/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">View</a>
+                    <a t-attf-href="/calendar/meeting/accept?db=#{'dbname' in ctx and ctx['dbname'] or ''}&token=#{record.access_token}&action=#{'action_id' in ctx and ctx['action_id'] or ''}&id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Accept</a>
+                    <a t-attf-href="/calendar/meeting/decline?db=#{'dbname' in ctx and ctx['dbname'] or '' }&token=#{record.access_token}&action=#{'action_id' in ctx and ctx['action_id'] or ''}&id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Decline</a>
+                    <a t-attf-href="/calendar/meeting/view?db=#{'dbname' in ctx and ctx['dbname'] or ''}&token=#{record.access_token}&action=#{'action_id' in ctx and ctx['action_id'] or ''}&id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">View</a>
                 </p>
             </td>
         </tr></tbody>
@@ -111,48 +111,32 @@
     <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
         <tbody><tr>
             <td style="padding:10px 10px 10px 5px;font-size: 14px;">
-                <p style="font-size: 20px; text-align: center;">Invitation to <strong>${object.event_id.name}</strong></p>
+                <p style="font-size: 20px; text-align: center;">Invitation to <strong t-esc="record.event_id.name"/></p>
                 <p>
-                    <strong>Dear ${object.common_name}</strong>,<br />
-                    ${object.event_id.user_id.partner_id.name} invited you for the ${object.event_id.name} meeting of ${object.event_id.user_id.company_id.name}.</p>
+                    <strong>Dear <t t-esc="record.common_name"/></strong>,<br />
+                    <t t-esc="record.event_id.user_id.partner_id.name"/> invited you for the <t t-esc="record.event_id.name"/> meeting of <t t-esc="record.event_id.user_id.company_id.name"/>.</p> 
                 <table style="margin-top: 20px;"><tr>
                     <td>
-                        <div style="border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;background:#875A7B;padding-top: 4px;">
-                            ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}
-                        </div>
-                        <div style="font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #F8F8F8;width: 130px;border:1px solid #875A7B;">
-                            ${object.event_id.get_interval('day', tz=object.partner_id.tz if not object.event_id.allday else None)}
-                        </div>
-                        <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#875A7B'>${object.event_id.get_interval('month', tz=object.partner_id.tz if not object.event_id.allday else None)}</div>
-                        <div style="border-collapse:separate;color: #5F5F5F;text-align:center;width: 130px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid #875A7B;border-bottom-left-radius:3px;">${not object.event_id.allday and object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}</div>
+                        <div style="border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;background:#875A7B;padding-top: 4px;" t-esc="record.event_id.get_interval('dayname', tz=record.partner_id.tz if not record.event_id.allday else None)"/>
+                        <div style="font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #F8F8F8;width: 130px;border:1px solid #875A7B;" t-esc="record.event_id.get_interval('day', tz=record.partner_id.tz if not record.event_id.allday else None)"/>
+                        <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#875A7B' t-esc="record.event_id.get_interval('month', tz=record.partner_id.tz if not record.event_id.allday else None)"/>
+                        <div style="border-collapse:separate;color: #5F5F5F;text-align:center;width: 130px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid #875A7B;border-bottom-left-radius:3px;" t-esc="not record.event_id.allday and record.event_id.get_interval('time', tz=record.partner_id.tz) or ''"/>
                     </td>
                     <td width="20px;"/>
                     <td>
                         <p>Details of the event</p>
                         <ul>
-                        % if object.event_id.location:
-                            <li>Location: ${object.event_id.location}
-                            (<a target="_blank" href="http://maps.google.com/maps?oi=map&q=${object.event_id.location}">View Map</a>)
+                            <li t-if="record.event_id.location">Location: <t t-esc="record.event_id.location"
+                            (<a target="_blank" t-attf-href="http://maps.google.com/maps?oi=map&q=#{record.event_id.location}">View Map</a>)
                             </li>
-                        % endif
-                        % if object.event_id.description :
-                            <li>Description: ${object.event_id.description}</li>
-                        % endif
-                        % if not object.event_id.allday and object.event_id.duration
-                            <li>Duration: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>
-                        % endif
+                            <li t-if="record.event_id.description">Description: <t t-esc="record.event_id.description"/></li>
+                            <li t-if="not record.event_id.allday and record.event_id.duration">Duration: <t t-esc="('%dH%02d' % (record.event_id.duration,(record.event_id.duration*60)%60))"/></li>
                         <li>Attendees
                         <ul>
-                        % for attendee in object.event_id.attendee_ids:
-                            <li>
-                                <div style="display:inline-block; border-radius: 50%; width:10px; height:10px;background:${colors[attendee.state] or 'white'};"></div>
-                                % if attendee.common_name != object.common_name:
-                                <span style="margin-left:5px">${attendee.common_name}</span>
-                                % else:
-                                <span style="margin-left:5px">You</span>
-                                % endif
+                            <li t-foreach="record.event_id.attendee_ids" t-as="attendee">
+                                <div t-attf-style="display:inline-block; border-radius: 50%; width:10px; height:10px;background:#{colors[attendee.state] or 'white'};"></div>
+                                <span style="margin-left:5px"><t t-esc="attendee.common_name if attendee.common_name != record.common_name else 'You'"/></span>
                             </li>
-                        % endfor
                         </ul></li>
                         </ul>
                     </td>
@@ -173,17 +157,17 @@
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[
 <div summary="o_mail_template" style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
-% set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}
+<t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}"/>
     <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
         <tbody><tr>
             <td valign="center" width="200" style="padding:10px 10px 10px 5px;font-size: 12px">
-                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
+                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="user.company_id.name">
             </td>
             <td valign="center" align="right" width="340" style="padding:10px 10px 10px 5px; font-size: 12px;">
                 <p>
-                    <a href="/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Accept</a>
-                    <a href="/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or '' }&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Decline</a>
-                    <a href="/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">View</a>
+                    <a t-attf-href="/calendar/meeting/accept?db=#{'dbname' in ctx and ctx['dbname'] or ''}&token=#{record.access_token}&action=#{'action_id' in ctx and ctx['action_id'] or ''}&id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Accept</a>
+                    <a t-attf-href="/calendar/meeting/decline?db=#{'dbname' in ctx and ctx['dbname'] or '' }&token=#{record.access_token}&action=#{'action_id' in ctx and ctx['action_id'] or ''}&id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Decline</a>
+                    <a t-attf-href="/calendar/meeting/view?db=#{'dbname' in ctx and ctx['dbname'] or ''}&token=#{record.access_token}&action=#{'action_id' in ctx and ctx['action_id'] or ''}&id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">View</a>
                 </p>
             </td>
         </tr></tbody>
@@ -202,49 +186,37 @@
     <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
         <tbody><tr>
             <td style="padding:10px 10px 10px 5px;font-size: 14px;">
-                <p style="font-size: 20px; text-align: center;"><strong>${object.event_id.name} date updated</strong></p>
+                <p style="font-size: 20px; text-align: center;"><strong><t t-esc="record.event_id.name"/> date updated</strong></p>
                 <p>
-                    <strong>Dear ${object.common_name}</strong>,<br />
-                    The date of the meeting has been upated. The meeting  ${object.event_id.name} created by ${object.event_id.user_id.partner_id.name} is now scheduled for ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.
-                </p>
+                    <strong>Dear <t t-esc="record.common_name"/></strong>,<br />
+                    The date of the meeting has been upated. The meeting  <t t-esc="record.event_id.name"/> created by <t t-esc="record.event_id.user_id.partner_id.name"/> is now scheduled for <t t-esc="record.event_id.get_display_time_tz(tz=record.partner_id.tz)"/>.
+                </p> 
                 <table style="margin-top: 20px;"><tr>
                     <td>
-                        <div style="border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;background:#875A7B;padding-top: 4px;">
-                            ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}
-                        </div>
-                        <div style="font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #F8F8F8;width: 130px;border:1px solid #875A7B;">
-                            ${object.event_id.get_interval('day', tz=object.partner_id.tz if not object.event_id.allday else None)}
-                        </div>
-                        <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#875A7B'>${object.event_id.get_interval('month', tz=object.partner_id.tz if not object.event_id.allday else None)}</div>
-                        <div style="border-collapse:separate;color: #5F5F5F;text-align:center;width: 130px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid #875A7B;border-bottom-left-radius:3px;">${not object.event_id.allday and object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}</div>
+                        <div style="border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;background:#875A7B;padding-top: 4px;" t-esc="record.event_id.get_interval('dayname', tz=record.partner_id.tz if not record.event_id.allday else None)"/>
+                        <div style="font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #F8F8F8;width: 130px;border:1px solid #875A7B;" t-esc="record.event_id.get_interval('day', tz=record.partner_id.tz if not record.event_id.allday else None)"/>
+                        <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#875A7B' t-esc="record.event_id.get_interval('month', tz=record.partner_id.tz if not record.event_id.allday else None)"/>
+                        <div style="border-collapse:separate;color: #5F5F5F;text-align:center;width: 130px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid #875A7B;border-bottom-left-radius:3px;" t-esc="not record.event_id.allday and record.event_id.get_interval('time', tz=record.partner_id.tz) or ''"/>
                     </td>
                     <td width="20px;"/>
                     <td>
                         <p>Details of the event</p>
                         <ul>
-                        % if object.event_id.location:
-                            <li>Location: ${object.event_id.location}
-                            (<a target="_blank" href="http://maps.google.com/maps?oi=map&q=${object.event_id.location}">View Map</a>)
+                            <li t-if="record.event_id.location">Location: <t t-esc="record.event_id.location"/>
+                            (<a target="_blank" t-attf-href="http://maps.google.com/maps?oi=map&q=#{record.event_id.location}">View Map</a>)
                             </li>
-                        % endif
-                        % if object.event_id.description :
-                            <li>Description: ${object.event_id.description}</li>
-                        % endif
-                        % if not object.event_id.allday and object.event_id.duration
-                            <li>Duration: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>
-                        % endif
+                            <li t-if ="record.event_id.description">Description: <t t-esc="record.event_id.description"/>
+                            </li>
+                            <li t-if="not record.event_id.allday and record.event_id.duration">Duration: <t t-esc="('%dH%02d' % (record.event_id.duration,(record.event_id.duration*60)%60))"/>
+                            </li>
                         <li>Attendees
                         <ul>
-                        % for attendee in object.event_id.attendee_ids:
-                            <li>
-                                <div style="display:inline-block; border-radius: 50%; width:10px; height:10px;background:${colors[attendee.state] or 'white'};"></div>
-                                % if attendee.common_name != object.common_name:
-                                <span style="margin-left:5px">${attendee.common_name}</span>
-                                % else:
-                                <span style="margin-left:5px">You</span>
-                                % endif
+                            <li t-foreach="record.event_id.attendee_ids" t-as="attendee">
+                                <div t-attf-style="display:inline-block; border-radius: 50%; width:10px; height:10px;background:#{colors[attendee.state] or 'white'};"></div>
+                                <span style="margin-left:5px">
+                                    <t t-esc="attendee.common_name if attendee.common_name != record.common_name else 'You'"/>
+                                </span>
                             </li>
-                        % endfor
                         </ul></li>
                         </ul>
                     </td>
@@ -265,17 +237,17 @@
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[
 <div summary="o_mail_template" style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
-% set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}
+<t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}"/>
     <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
         <tbody><tr>
             <td valign="center" width="200" style="padding:10px 10px 10px 5px;font-size: 12px">
-                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
+                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="user.company_id.name">
             </td>
             <td valign="center" align="right" width="340" style="padding:10px 10px 10px 5px; font-size: 12px;">
                 <p>
-                    <a href="/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Accept</a>
-                    <a href="/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or '' }&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Decline</a>
-                    <a href="/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">View</a>
+                    <a t-attf-href="/calendar/meeting/accept?db=#{'dbname' in ctx and ctx['dbname'] or ''}&token=#{record.access_token}&action=#{'action_id' in ctx and ctx['action_id'] or ''}&id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Accept</a>
+                    <a t-attf-href="/calendar/meeting/decline?db=#{'dbname' in ctx and ctx['dbname'] or '' }&token=#{record.access_token}&action=#{'action_id' in ctx and ctx['action_id'] or ''}&id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Decline</a>
+                    <a t-attf-href="/calendar/meeting/view?db=#{'dbname' in ctx and ctx['dbname'] or ''}&token=#{record.access_token}&action=#{'action_id' in ctx and ctx['action_id'] or ''}&id=#{record.event_id.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">View</a>
                 </p>
             </td>
         </tr></tbody>
@@ -294,49 +266,36 @@
     <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
         <tbody><tr>
             <td style="padding:10px 10px 10px 5px;font-size: 14px;">
-                <p style="font-size: 20px; text-align: center;">Reminder for <strong>${object.event_id.name}</strong></p>
+                <p style="font-size: 20px; text-align: center;">Reminder for <strong t-esc="record.event_id.name"/></p>
                 <p>
-                    <strong>Dear ${object.common_name}</strong>,<br />
+                    <strong>Dear <t t-esc="record.common_name"/></strong>,<br />
                     This is a reminder for the below event :
                 </p>
                 <table style="margin-top: 20px;"><tr>
                     <td>
-                        <div style="border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;background:#875A7B;padding-top: 4px;">
-                            ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}
-                        </div>
-                        <div style="font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #F8F8F8;width: 130px;border:1px solid #875A7B;">
-                            ${object.event_id.get_interval('day', tz=object.partner_id.tz if not object.event_id.allday else None)}
-                        </div>
-                        <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#875A7B'>${object.event_id.get_interval('month', tz=object.partner_id.tz if not object.event_id.allday else None)}</div>
-                        <div style="border-collapse:separate;color: #5F5F5F;text-align:center;width: 130px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid #875A7B;border-bottom-left-radius:3px;">${not object.event_id.allday and object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}</div>
+                        <div style="border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;background:#875A7B;padding-top: 4px;" t-esc="record.event_id.get_interval('dayname', tz=record.partner_id.tz if not record.event_id.allday else None)"/>
+                        <div style="font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #F8F8F8;width: 130px;border:1px solid #875A7B;" t-esc="record.event_id.get_interval('day', tz=record.partner_id.tz if not record.event_id.allday else None)"/>
+                        <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#875A7B' t-esc="record.event_id.get_interval('month', tz=record.partner_id.tz if not record.event_id.allday else None)"></div>
+                        <div style="border-collapse:separate;color: #5F5F5F;text-align:center;width: 130px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid #875A7B;border-bottom-left-radius:3px;" t-esc="not record.event_id.allday and record.event_id.get_interval('time', tz=record.partner_id.tz) or ''"></div>
                     </td>
                     <td width="20px;"/>
                     <td>
                         <p>Details of the event</p>
                         <ul>
-                        % if object.event_id.location:
-                            <li>Location: ${object.event_id.location}
-                            (<a target="_blank" href="http://maps.google.com/maps?oi=map&q=${object.event_id.location}">View Map</a>)
+                            <li t-if="record.event_id.location">Location: <t t-esc="record.event_id.location"
+                            (<a target="_blank" t-attf-href="http://maps.google.com/maps?oi=map&q=#{record.event_id.location}">View Map</a>)
                             </li>
-                        % endif
-                        % if object.event_id.description :
-                            <li>Description: ${object.event_id.description}</li>
-                        % endif
-                        % if not object.event_id.allday and object.event_id.duration
-                            <li>Duration: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>
-                        % endif
+                            <li t-if="record.event_id.description">Description: <t t-esc="record.event_id.description"/></li>
+                            <li t-if="not record.event_id.allday and record.event_id.duration">Duration: <t t-esc="('%dH%02d' % (record.event_id.duration,(record.event_id.duration*60)%60))"/></li>
                         <li>Attendees
                         <ul>
-                        % for attendee in object.event_id.attendee_ids:
-                            <li>
-                                <div style="display:inline-block; border-radius: 50%; width:10px; height:10px;background:${colors[attendee.state] or 'white'};"></div>
-                                % if attendee.common_name != object.common_name:
-                                <span style="margin-left:5px">${attendee.common_name}</span>
-                                % else:
-                                <span style="margin-left:5px">You</span>
-                                % endif
+                            <li t-foreach="record.event_id.attendee_ids" t-as="attendee">
+                                <div t-attf-style="display:inline-block; border-radius: 50%; width:10px; height:10px;background:#{colors[attendee.state] or 'white'};"></div>
+                                <span style="margin-left:5px">
+                                    <t t-esc="attendee.common_name if attendee.common_name != record.common_name else 'You'"/>
+                                </span>
+
                             </li>
-                        % endfor
                         </ul></li>
                         </ul>
                     </td>
