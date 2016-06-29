@@ -46,6 +46,14 @@ tour.register('project_tour', {
     content: _t("<b>Star tasks</b> to mark team priorities."),
     position: "bottom"
 }, {
+    trigger: ".o_kanban_record",
+    content: _t("Open a task by clicking on the card"),
+    position: "bottom"
+}, {
+    trigger: ".o_form_sheet .o_group:first",
+    content: 'Assign the task to one of your colleague to collaborate',
+    position: "left"
+}, {
     trigger: ".breadcrumb li:not(.active):last",
     extra_trigger: '.o_form_project_tasks',
     content: _t("Click on layers in the path to easily <b>return to tasks</b>."),
