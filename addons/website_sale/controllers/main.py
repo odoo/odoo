@@ -427,6 +427,8 @@ class WebsiteSale(http.Controller):
 
         values = {
             'order': order,
+            'countries': [],  # need to be overridable
+            'states': [],  # need to be overridable
             'shippings': shippings,
             'only_services': order and order.only_services or False
         }
@@ -559,7 +561,7 @@ class WebsiteSale(http.Controller):
                     values = Partner.browse(partner_id)
             elif partner_id == -1:
                 mode = ('new', 'shipping')
-            else: # no mode - refresh without post? 
+            else: # no mode - refresh without post?
                 return request.redirect('/shop/checkout')
 
         # IF POSTED
@@ -590,12 +592,14 @@ class WebsiteSale(http.Controller):
                     print errors
 
         country = 'country_id' in values and values['country_id'] != '' and request.env['res.country'].browse(int(values['country_id']))
-
+        countries = request.env['res.country'].sudo().search([])
         render_values = {
             'partner_id': partner_id,
             'mode': mode,
             'checkout': values,
             'country': country and country.exists() or def_country_id,
+            'countries': countries,  # need to be overridable
+            "states": (country and country.exists() or def_country_id).state_ids,
             'error': errors,
             'callback': kw.get('callback'),
         }

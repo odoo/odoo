@@ -25,8 +25,8 @@ class WebsiteSaleDelivery(WebsiteSale):
         order_lines_not_delivery = order_lines.filtered(lambda line: not line.is_delivery)
         return super(WebsiteSaleDelivery, self).order_lines_2_google_api(order_lines_not_delivery)
 
-    def checkout_values(self, data=None):
-        values = super(WebsiteSaleDelivery, self).checkout_values(data)
+    def checkout_values(self):
+        values = super(WebsiteSaleDelivery, self).checkout_values()
         return request.env['sale.order']._get_shipping_country(values)
 
     def order_2_return_dict(self, order):
