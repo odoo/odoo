@@ -138,7 +138,7 @@ class Attendee(models.Model):
 
         res = False
 
-        if self.env['ir.config_parameter'].get_param('calendar.block_mail', self._context.get("no_mail_to_attendees")):
+        if self.env['ir.config_parameter'].get_param('calendar.block_mail') or self._context.get("no_mail_to_attendees"):
             return res
 
         calendar_view = self.env.ref('calendar.view_calendar_event_calendar')
@@ -509,7 +509,11 @@ class MeetingType(models.Model):
 
 
 class Meeting(models.Model):
-    """ Model for Calendar Event """
+    """ Model for Calendar Event
+
+        Special context keys :
+            - `no_mail_to_attendees` : disabled sending email to attendees when creating/editing a meeting
+    """
 
     _name = 'calendar.event'
     _description = "Event"
@@ -914,8 +918,7 @@ class Meeting(models.Model):
 
                 if current_user.email != partner.email:
                     mail_from = current_user.email or tools.config.get('email_from', False)
-                    if not self._context.get('no_email'):
-                        attendee._send_mail_to_attendees(email_from=mail_from)
+                    attendee._send_mail_to_attendees(email_from=mail_from)
 
             if meeting_attendees:
                 meeting.write({'attendee_ids': [(4, attendee.id) for attendee in meeting_attendees]})
