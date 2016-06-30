@@ -69,18 +69,7 @@ base.ready().done(function () {
             },
             {
                 title:     "Complete the checkout",
-                element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
-                onload: function () {
-                    if ($("input[name='name']").val() === "")
-                        $("input[name='name']").val("website_sale-test-shoptest");
-                    if ($("input[name='email']").val() === "")
-                        $("input[name='email']").val("website_event_sale_test_shoptest@websiteeventsaletest.odoo.com");
-                    $("input[name='phone']").val("123");
-                    $("input[name='street2']").val("123");
-                    $("input[name='city']").val("123");
-                    $("input[name='zip']").val("123");
-                    $("select[name='country_id']").val("21");
-                },
+                element:   'a[href="/shop/confirm_order"]:contains("Confirm")',
             },
             {
                 title:     "Check that the subtotal is 5,500.00",
