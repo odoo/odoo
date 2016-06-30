@@ -3,14 +3,15 @@
 # * auth_signup
 # 
 # Translators:
+# Arash Tarighati <arash.tgi@gmail.com>, 2016
 # elaheh pourrezaie <elaheh.pourrezaie@hotmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2016-03-01 05:04+0000\n"
-"Last-Translator: elaheh pourrezaie <elaheh.pourrezaie@hotmail.com>\n"
+"PO-Revision-Date: 2016-06-08 20:31+0000\n"
+"Last-Translator: Arash Tarighati <arash.tgi@gmail.com>\n"
 "Language-Team: Persian (http://www.transifex.com/odoo/odoo-7/language/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,12 +24,12 @@ msgstr ""
 msgid ""
 "A password reset has been requested for this user. An email containing the "
 "following link has been sent:"
-msgstr ""
+msgstr "بازنشانی رمز برای این کاربر درخواست شد. یک ایمیل حاوی لینک ارسال گردید."
 
 #. module: auth_signup
 #: field:res.partner,signup_type:0
 msgid "Signup Token Type"
-msgstr ""
+msgstr "نوع ثبت نام"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_uninvited:0
@@ -40,22 +41,22 @@ msgstr "اجازه دادن به کاربر خارجی برای ورود"
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:19
 #, python-format
 msgid "Confirm Password"
-msgstr ""
+msgstr "تائید رمز"
 
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_uninvited:0
 msgid "If unchecked, only invited users may sign up."
-msgstr ""
+msgstr "اگر فعال نباشد، تنها کاربران دعوت شده قادر به ثبت نام خواهند بود."
 
 #. module: auth_signup
 #: view:res.users:0
 msgid "Send an invitation email"
-msgstr ""
+msgstr "ارسال ایمیل فعالسازی"
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Activated"
-msgstr ""
+msgstr "فعال گردید"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_base_config_settings
@@ -66,7 +67,7 @@ msgstr "base.config.settings"
 #: code:addons/auth_signup/res_users.py:266
 #, python-format
 msgid "Cannot send email: user has no email address."
-msgstr ""
+msgstr "ایمیل ارسال نگردید : کاربر هیچ ایمیل ادرسی ندارد"
 
 #. module: auth_signup
 #. openerp-web
@@ -74,29 +75,29 @@ msgstr ""
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:31
 #, python-format
 msgid "Reset password"
-msgstr ""
+msgstr "بازنشانی رمز "
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_template_user_id:0
 msgid "Template user for new users created through signup"
-msgstr ""
+msgstr "کاربری موقت برای کاربران جدید از طریق ثبت نام انجام شد."
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr ""
+msgstr "بازنشانی رمز عبور"
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/js/auth_signup.js:121
 #, python-format
 msgid "Please enter a password and confirm it."
-msgstr ""
+msgstr "خواهشمند است رمز عبور را وارد کرده و انرا تائید نمائید."
 
 #. module: auth_signup
 #: view:res.users:0
 msgid "Send reset password link by email"
-msgstr ""
+msgstr "ارسال لینک بازیابی رمز توسط ایمیل"
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.reset_password_email
@@ -107,14 +108,14 @@ msgid ""
 "<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr ""
+msgstr "\n\n<p>یک لینک بازیابی رمز درخواست شد برای: OpenERP account linked to this email.</p>\n\n\n\n<p>شما میتوانید با کلیک بروی لینک زیر رمز خود را تغییر دهید <a href=\"${object.signup_url}\">this link</a>.</p>\n\n\n\n<p>توجه: اگر شما این درخواست را ندادید این پیام را نادیده بگیریداین ایمیل.</p>"
 
 #. module: auth_signup
 #: view:res.users:0
 msgid ""
 "An invitation email containing the following subscription link has been "
 "sent:"
-msgstr ""
+msgstr "یک ایمیل حاوی لینک عضویت روبرو ارسال گردید:"
 
 #. module: auth_signup
 #: field:res.users,state:0
@@ -124,14 +125,14 @@ msgstr "وضعیت"
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr ""
+msgstr "هیچ وقت متصل نبوده"
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/js/auth_signup.js:115
 #, python-format
 msgid "Please enter a name."
-msgstr ""
+msgstr "لطفا یک نام وارد کنید."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -141,7 +142,7 @@ msgstr "کاربران"
 #. module: auth_signup
 #: field:res.partner,signup_url:0
 msgid "Signup URL"
-msgstr ""
+msgstr "لینک ثبت نام"
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.set_password_email
@@ -171,14 +172,14 @@ msgid ""
 "                    </pre>\n"
 "                \n"
 "            "
-msgstr ""
+msgstr "\n<p>\n\n${مورد.نام},\n\n</p>\n\n<p>\n\nشما دعوت شده اید به\n \"${شیئ.شرکت_ای دی.نام}\" جهت دسترسی به اسناد OpenERP.\n\n</p>\n\n<p>\n\nجهت قبول دعوت نامه روی لینک زیر کلیک کنید:\n\n</p>\n\n<ul>\n\n<li><a href=\"${object.signup_url}\">قبول دعوت به \"${مورد.شرکت_ای دی.نام}\"</a></li>\n\n</ul>\n\n<p>\n\nبا سپاس,\n\n</p>\n\n<pre>\n\n--\n${مورد.شرکت_id.name or ''}\n\n${object.company_id.email or ''}\n\n${object.company_id.phone or ''}\n\n</pre>"
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/js/auth_signup.js:118
 #, python-format
 msgid "Please enter a username."
-msgstr ""
+msgstr "لطفا یک نام کاربری وارد کنید."
 
 #. module: auth_signup
 #: code:addons/auth_signup/res_users.py:270
@@ -186,14 +187,14 @@ msgstr ""
 msgid ""
 "Cannot send email: no outgoing email server configured.\n"
 "You can configure it under Settings/General Settings."
-msgstr ""
+msgstr "ارسال ایمیل ناموفق بود : هیچ ادرس سرور ایمیل خروجی تعریف نشده.\nشما میتوانید در منو تنظیمات و زیر شاخه تنظیمات عمومی آنرا تنظیم نمائید."
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/js/auth_signup.js:178
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr ""
+msgstr "یک ایمیل حاوی اطلاعات کاربری جهت تغییر رمز ارسال گردید."
 
 #. module: auth_signup
 #. openerp-web
@@ -214,24 +215,24 @@ msgstr "نام"
 #: code:addons/auth_signup/static/src/js/auth_signup.js:174
 #, python-format
 msgid "Please enter a username or email address."
-msgstr ""
+msgstr "لطفا نام کاربری یا ایمیل خود را وارد کنید."
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:13
 #, python-format
 msgid "Username (Email)"
-msgstr ""
+msgstr "نام کاربری (ایمیل)."
 
 #. module: auth_signup
 #: field:res.partner,signup_expiration:0
 msgid "Signup Expiration"
-msgstr ""
+msgstr "تاریخ انقضاء ثبت نام"
 
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_reset_password:0
 msgid "This allows users to trigger a password reset from the Login page."
-msgstr ""
+msgstr "این به کاربران اجازه میدهد تا قادر به تغییر رمز عبور خود را از صفحه ورود تغییر دهند."
 
 #. module: auth_signup
 #. openerp-web
@@ -243,7 +244,7 @@ msgstr "ورود"
 #. module: auth_signup
 #: field:res.partner,signup_valid:0
 msgid "Signup Token is Valid"
-msgstr ""
+msgstr "عملیات ثبت نام فعال است."
 
 #. module: auth_signup
 #. openerp-web
@@ -263,14 +264,14 @@ msgstr "ورود"
 #: code:addons/auth_signup/static/src/js/auth_signup.js:98
 #, python-format
 msgid "Invalid signup token"
-msgstr ""
+msgstr "رمز ثبت نام غیر مجاز"
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/js/auth_signup.js:124
 #, python-format
 msgid "Passwords do not match; please retype them."
-msgstr ""
+msgstr "رمز های عبور همخوانی ندارند؛ لطفا مجددا تایپ کنید."
 
 #. module: auth_signup
 #. openerp-web
@@ -278,17 +279,17 @@ msgstr ""
 #: code:addons/auth_signup/static/src/js/auth_signup.js:171
 #, python-format
 msgid "No database selected !"
-msgstr ""
+msgstr "هیچ پایگاه داده ای انتخاب نشده !"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_reset_password:0
 msgid "Enable password reset from Login page"
-msgstr ""
+msgstr "فعالسازی درخواست تجدید رمز عبور از صفحه ورود."
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on OpenERP"
-msgstr ""
+msgstr "${مورد.شرکت_ای دی.نام} دعوت نامه برای اتصال OpenERP"
 
 #. module: auth_signup
 #. openerp-web
@@ -305,7 +306,7 @@ msgstr "همکار"
 #. module: auth_signup
 #: field:res.partner,signup_token:0
 msgid "Signup Token"
-msgstr ""
+msgstr "رمز ثبت نام"
 
 #. module: auth_signup
 #. openerp-web
@@ -313,4 +314,4 @@ msgstr ""
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:29
 #, python-format
 msgid "Sign Up"
-msgstr ""
+msgstr "ثبت نام"
