@@ -8,7 +8,6 @@ OpenERP Contact Form
 ====================
 
         """,
-    'author': 'OpenERP SA',
     'depends': ['website_form','project_issue'],
     'data': [
         'data/website_issue_data.xml',

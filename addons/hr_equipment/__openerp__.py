@@ -6,7 +6,6 @@
     'sequence': 125,
     'description': """
         Track employees' equipment and manage maintenance requests.""",
-    'author': 'Odoo S.A.',
     'depends': ['hr'],
     'summary': 'Equipments, Assets, Internal Hardware, Allocation Tracking',
     'data': [
