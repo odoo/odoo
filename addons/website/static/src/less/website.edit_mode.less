@@ -1,6 +1,18 @@
 
 .o_homepage_editor_welcome_message {
     font-family: Roboto, @font-family-sans-serif;
+
+    .o_tooltip_container {
+        .o-inline-flex-display();
+        .o-align-items(center);
+
+        > .o_tooltip {
+            .o-position-absolute();
+            position: relative;
+            display: inline-block;
+            margin: 0 8px;
+        }
+    }
 }
 
 .o_editable {
