@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'French Payroll',
-    'category': 'Localization/Payroll',
+    'category': 'Localization',
     'author': 'Yannick Buron (SYNERPGY)',
     'depends': ['hr_payroll', 'l10n_fr'],
     'version': '1.0',

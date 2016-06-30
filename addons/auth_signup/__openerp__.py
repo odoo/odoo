@@ -8,7 +8,7 @@ Allow users to sign up and reset their password
 ===============================================
     """,
     'version': '1.0',
-    'category': 'Authentication',
+    'category': 'Extra Tools',
     'installable': True,
     'auto_install': True,
     'depends': [

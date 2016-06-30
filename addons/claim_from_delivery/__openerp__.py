@@ -2,7 +2,7 @@
 {
     'name' : 'Claim on Deliveries',
     'version' : '1.0',
-    'category' : 'Warehouse Management',
+    'category' : 'Warehouse',
     'depends' : ['base', 'crm_claim', 'stock'],
     'demo' : [],
     'description': """

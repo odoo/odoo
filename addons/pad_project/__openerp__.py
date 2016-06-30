@@ -4,7 +4,7 @@
 {
     'name': 'Pad on tasks',
     'version': '1.0',
-    'category': 'Project Management',
+    'category': 'Project',
     'description': """
 This module adds a PAD in all project form views.
 =================================================

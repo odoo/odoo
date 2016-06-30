@@ -3,7 +3,7 @@
 {
     'name': 'Turkey - Accounting',
     'version': '1.0',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'description': """
 Türkiye için Tek düzen hesap planı şablonu OpenERP Modülü.
 ==========================================================

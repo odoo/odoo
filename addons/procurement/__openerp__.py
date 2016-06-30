@@ -6,7 +6,7 @@
     'name' : 'Procurements',
     'version' : '1.0',
     'website': 'https://www.odoo.com/page/manufacturing',
-    'category' : 'Hidden/Dependency',
+    'category' : 'Hidden',
     'depends' : ['base', 'product'],
     'description': """
 This is the module for computing Procurements.
