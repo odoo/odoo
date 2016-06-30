@@ -78,7 +78,7 @@ class Attendee(models.Model):
     """ Calendar Attendee Information """
 
     _name = 'calendar.attendee'
-    _rec_name = 'cn'
+    _rec_name = 'common_name'
     _description = 'Attendee information'
 
     def _default_access_token(self):
@@ -93,7 +93,7 @@ class Attendee(models.Model):
 
     state = fields.Selection(STATE_SELECTION, string='Status', readonly=True, default='needsAction',
         help="Status of the attendee's participation")
-    cn = fields.Char('Common name', compute='_compute_common_name', store=True)
+    common_name = fields.Char('Common name', compute='_compute_common_name', store=True)
     partner_id = fields.Many2one('res.partner', 'Contact', readonly="True")
     email = fields.Char('Email', help="Email of Invited Person")
     availability = fields.Selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly="True")
@@ -103,7 +103,7 @@ class Attendee(models.Model):
     @api.depends('partner_id', 'partner_id.name', 'email')
     def _compute_common_name(self):
         for attendee in self:
-            attendee.cn = attendee.partner_id.name or attendee.email
+            attendee.common_name = attendee.partner_id.name or attendee.email
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -112,11 +112,11 @@ class Attendee(models.Model):
 
     @api.model
     def create(self, values):
-        if not values.get("email") and values.get("cn"):
-            cnval = values.get("cn").split(':')
-            email = filter(lambda x: x.__contains__('@'), cnval)  # TODO JEM : should be refactored
+        if not values.get("email") and values.get("common_name"):
+            common_nameval = values.get("common_name").split(':')
+            email = filter(lambda x: x.__contains__('@'), common_nameval)  # TODO JEM : should be refactored
             values['email'] = email and email[0] or ''
-            values['cn'] = values.get("cn")
+            values['common_name'] = values.get("common_name")
         return super(Attendee, self).create(values)
 
     @api.multi
@@ -188,7 +188,7 @@ class Attendee(models.Model):
         """ Marks event invitation as Accepted. """
         result = self.write({'state': 'accepted'})
         for attendee in self:
-            attendee.event_id.message_post(body=_("%s has accepted invitation") % (attendee.cn), subtype="calendar.subtype_invitation")
+            attendee.event_id.message_post(body=_("%s has accepted invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
         return result
 
     @api.multi
@@ -196,7 +196,7 @@ class Attendee(models.Model):
         """ Marks event invitation as Declined. """
         res = self.write({'state': 'declined'})
         for attendee in self:
-            attendee.event_id.message_post(body=_("%s has declined invitation") % (attendee.cn), subtype="calendar.subtype_invitation")
+            attendee.event_id.message_post(body=_("%s has declined invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
         return res
 
 
