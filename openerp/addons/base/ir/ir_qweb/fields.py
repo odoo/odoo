@@ -82,7 +82,7 @@ class FieldConverter(models.AbstractModel):
         return data
 
     @api.model
-    def value_to_html(self, value, field, options=None):
+    def value_to_html(self, value, options):
         """ value_to_html(value, field, options=None)
 
         Converts a single value to its HTML version/output
@@ -97,15 +97,8 @@ class FieldConverter(models.AbstractModel):
         Converts the specified field of the browse_record ``record`` to HTML
         :rtype: unicode
         """
-        field = record._fields[field_name]
-
-        try:
-            value = record[field_name]
-            return False if value is False else record.env[self._name].value_to_html(value, field, options=options)
-        except Exception:
-            _logger.warning("Could not get field %s for model %s",
-                            field_name, record._name, exc_info=True)
-        return None
+        value = record[field_name]
+        return False if value is False else record.env[self._name].value_to_html(value, options=options)
 
     @api.model
     def user_lang(self):
@@ -126,7 +119,7 @@ class IntegerConverter(models.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     @api.model
-    def value_to_html(self, value, field, options=None):
+    def value_to_html(self, value, options):
         return unicodifier(self.user_lang().format('%d', value, grouping=True))
 
 
@@ -135,15 +128,15 @@ class FloatConverter(models.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     @api.model
-    def precision(self, field, options=None):
-        _, precision = field.digits or (None, None)
-        return precision
+    def value_to_html(self, value, options):
+        if 'decimal_precision' in options:
+            precision = self.env['decimal.precision'].search([('name', '=', options['decimal_precision'])]).digits
+        else:
+            precision = options['precision']
 
-    @api.model
-    def value_to_html(self, value, field, options=None):
-        precision = self.precision(field, options=options)
         fmt = '%f' if precision is None else '%.{precision}f'
         lang = self.user_lang()
+
         formatted = lang.format(fmt.format(precision=precision), value, grouping=True)
 
         # %f does not strip trailing zeroes. %g does but its precision causes
@@ -152,7 +145,15 @@ class FloatConverter(models.AbstractModel):
         # strip trailing 0.
         if precision is None:
             formatted = re.sub(r'(?:(0|\d+?)0+)$', r'\1', formatted)
+
         return unicodifier(formatted)
+
+    @api.model
+    def record_to_html(self, record, field_name, options, values=None):
+        if 'precision' not in options and 'decimal_precision' not in options:
+            _, precision = record._fields[field_name].digits or (None, None)
+            options = dict(options, precision=precision)
+        return super(FloatConverter, self).record_to_html(record, field_name, options, values=values)
 
 
 class DateConverter(models.AbstractModel):
@@ -160,7 +161,7 @@ class DateConverter(models.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     @api.model
-    def value_to_html(self, value, field, options=None):
+    def value_to_html(self, value, options):
         if not value or len(value) < 10:
             return ''
         lang = self.user_lang()
@@ -183,7 +184,7 @@ class DateTimeConverter(models.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     @api.model
-    def value_to_html(self, value, field, options=None):
+    def value_to_html(self, value, options):
         if not value:
             return ''
         lang = self.user_lang()
@@ -211,7 +212,7 @@ class TextConverter(models.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     @api.model
-    def value_to_html(self, value, field, options=None):
+    def value_to_html(self, value, options):
         """
         Escapes the value and converts newlines to br. This is bullshit.
         """
@@ -223,11 +224,16 @@ class SelectionConverter(models.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     @api.model
-    def value_to_html(self, value, field, options=None):
+    def value_to_html(self, value, options):
         if not value:
             return ''
-        selection = dict(field.get_description(self.env)['selection'])
-        return html_escape(unicodifier(selection[value]) or u'', options)
+        return html_escape(unicodifier(options['selection'][value]) or u'', options)
+
+    @api.model
+    def record_to_html(self, record, field_name, options, values=None):
+        if 'selection' not in options:
+            options = dict(options, selection=dict(record._fields[field_name].get_description(self.env)['selection']))
+        return super(SelectionConverter, self).record_to_html(record, field_name, options, values=values)
 
 
 class ManyToOneConverter(models.AbstractModel):
@@ -235,8 +241,7 @@ class ManyToOneConverter(models.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     @api.model
-    def record_to_html(self, record, field_name, options, values=None):
-        value = record[field_name]
+    def value_to_html(self, value, options):
         if not value:
             return False
         value = value.sudo().display_name
@@ -250,7 +255,7 @@ class HTMLConverter(models.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     @api.model
-    def value_to_html(self, value, field, options=None):
+    def value_to_html(self, value, options):
         return unicodifier(value) or u''
 
 
@@ -267,7 +272,7 @@ class ImageConverter(models.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     @api.model
-    def value_to_html(self, value, field, options=None):
+    def value_to_html(self, value, options):
         try:
             image = Image.open(StringIO(value.decode('base64')))
             image.verify()
@@ -297,27 +302,9 @@ class MonetaryConverter(models.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     @api.model
-    def record_to_html(self, record, field_name, options, values=None):
-        # for backward compatibility to remove after v10
-        if isinstance(options.get('display_currency'), str):
-            _logger.warning("Use new syntax for '%s' monetary widget 'display_currency' option (instead of deprecated JSON syntax) to improve speed." % options['display_currency'])
-            options['display_currency'] = safe_eval.safe_eval(options['display_currency'], mode='eval', globals_dict=values)
-        if isinstance(options.get('from_currency'), str):
-            _logger.warning("Use new syntax for '%s' monetary widget 'from_currency' option (instead of deprecated JSON syntax) to improve speed." % options['from_currency'])
-            options['from_currency'] = safe_eval.safe_eval(options['from_currency'], mode='eval', globals_dict=values)
-        # end backward
+    def value_to_html(self, value, options):
+        display_currency = options['display_currency']
 
-        field = record._fields[field_name]
-        from_amount = record[field_name]
-
-        #currency should be specified by monetary field
-        if not options.get('display_currency') and field.type == 'monetary' and field.currency_field:
-            options['display_currency'] = record[field.currency_field]
-
-        pre, value, post = self._format_func_monetary(from_amount, options['display_currency'], options.get('from_currency'))
-        return u'{pre}<span class="oe_currency_value">{0}</span>{post}'.format(value, pre=pre, post=post)
-
-    def _format_func_monetary(self, from_amount, display_currency, from_currency=None):
         # lang.format mandates a sprintf-style format. These formats are non-
         # minimal (they have a default fixed precision instead), and
         # lang.format will not set one by default. currency.round will not
@@ -325,11 +312,11 @@ class MonetaryConverter(models.AbstractModel):
         # (integer > 0) from the currency's rounding (a float generally < 1.0).
         fmt = "%.{0}f".format(display_currency.decimal_places)
 
-        if from_currency:
-            from_amount = from_currency.compute(from_amount, display_currency)
+        if options.get('from_currency'):
+            value = options['from_currency'].compute(value, display_currency)
 
         lang = self.user_lang()
-        formatted_amount = lang.format(fmt, display_currency.round(from_amount),
+        formatted_amount = lang.format(fmt, display_currency.round(value),
                                 grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}')
 
         pre = post = u''
@@ -338,8 +325,17 @@ class MonetaryConverter(models.AbstractModel):
         else:
             post = u'\N{NO-BREAK SPACE}{symbol}'.format(symbol=display_currency.symbol)
 
-        return pre, formatted_amount, post
+        return u'{pre}<span class="oe_currency_value">{0}</span>{post}'.format(formatted_amount, pre=pre, post=post)
 
+    @api.model
+    def record_to_html(self, record, field_name, options, values=None):
+        options = dict(options)
+        #currency should be specified by monetary field
+        field = record._fields[field_name]
+        if not options.get('display_currency') and field.type == 'monetary' and field.currency_field:
+            options['display_currency'] = record[field.currency_field]
+
+        return self.value_to_html(record[field_name], options)
 
 TIMEDELTA_UNITS = (
     ('year',   3600 * 24 * 365),
@@ -368,10 +364,12 @@ class DurationConverter(models.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     @api.model
-    def value_to_html(self, value, field, options=None):
+    def value_to_html(self, value, options):
         units = dict(TIMEDELTA_UNITS)
+
         if value < 0:
             raise ValueError(_("Durations can't be negative"))
+
         if not options or options.get('unit') not in units:
             raise ValueError(_("A unit must be provided to duration widgets"))
 
@@ -396,16 +394,22 @@ class RelativeDatetimeConverter(models.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     @api.model
-    def value_to_html(self, value, field, options=None):
+    def value_to_html(self, value, options):
         locale = babel.Locale.parse(self.user_lang().code)
 
         if isinstance(value, basestring):
             value = fields.Datetime.from_string(value)
 
         # value should be a naive datetime in UTC. So is fields.Datetime.now()
-        reference = fields.Datetime.from_string(field.now())
+        reference = fields.Datetime.from_string(options['now'])
 
         return unicodifier(babel.dates.format_timedelta(value - reference, add_direction=True, locale=locale))
+
+    @api.model
+    def record_to_html(self, record, field_name, options, values=None):
+        if 'now' not in options:
+            options = dict(options, now=record._fields[field_name].now())
+        return super(RelativeDatetimeConverter, self).record_to_html(record, field_name, options, values=values)
 
 
 class Contact(models.AbstractModel):
@@ -413,31 +417,29 @@ class Contact(models.AbstractModel):
     _inherit = 'ir.qweb.field.many2one'
 
     @api.model
-    def record_to_html(self, record, field_name, options, values=None):
-        opf = options and options.get('fields') or ["name", "address", "phone", "mobile", "fax", "email"]
+    def value_to_html(self, value, options):
+        if not value.exists():
+            return False
 
-        value_rec = record[field_name]
-        if not value_rec:
-            return None
-        value_rec = value_rec.sudo().with_context(show_address=True)
-        value = value_rec.name_get()[0][1]
+        opf = options and options.get('fields') or ["name", "address", "phone", "mobile", "fax", "email"]
+        value = value.sudo().with_context(show_address=True)
+        name_get = value.name_get()[0][1]
 
         val = {
-            'name': value.split("\n")[0],
-            'address': escape("\n".join(value.split("\n")[1:])).strip(),
-            'phone': value_rec.phone,
-            'mobile': value_rec.mobile,
-            'fax': value_rec.fax,
-            'city': value_rec.city,
-            'country_id': value_rec.country_id.display_name,
-            'website': value_rec.website,
-            'email': value_rec.email,
+            'name': name_get.split("\n")[0],
+            'address': escape("\n".join(name_get.split("\n")[1:])).strip(),
+            'phone': value.phone,
+            'mobile': value.mobile,
+            'fax': value.fax,
+            'city': value.city,
+            'country_id': value.country_id.display_name,
+            'website': value.website,
+            'email': value.email,
             'fields': opf,
-            'object': value_rec,
+            'object': value,
             'options': options
         }
-
-        return unicodifier(self.env.ref('base.contact').render(val, engine='ir.qweb'))
+        return self.env['ir.qweb'].render('base.contact', val)
 
 
 class QwebView(models.AbstractModel):

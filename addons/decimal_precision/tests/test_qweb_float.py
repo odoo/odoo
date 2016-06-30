@@ -7,11 +7,14 @@ class TestFloatExport(common.TransactionCase):
         self.Model = self.registry('decimal.precision.test')
 
     def get_converter(self, name):
-        converter = self.registry('ir.qweb.field.float')
-        field = self.Model._fields[name]
+        float_obj = self.registry('ir.qweb.field.float')
+        _, precision = self.Model._fields[name].digits or (None, None)
 
-        return lambda value, options=None: converter.value_to_html(
-            self.cr, self.uid, value, field, options=options, context=None)
+        def converter(value, options=None):
+            record = self.Model.new(self.cr, self.uid, {name: value}, context=None)
+            return float_obj.record_to_html(
+                self.cr, self.uid, record, name, options or {}, context=None)
+        return converter
 
     def test_basic_float(self):
         converter = self.get_converter('float')
@@ -30,12 +33,12 @@ class TestFloatExport(common.TransactionCase):
             converter(42.12345),
             "42.12")
 
-        converter = self.get_converter('float_4')
+        converter = self.get_converter('float') # don't use float_4 because the field value 42.12345 is orm converted to 42.1235
         self.assertEqual(
-            converter(42.0),
+            converter(42.0, {'precision': 4}),
             '42.0000')
         self.assertEqual(
-            converter(42.12345),
+            converter(42.12345, {'precision': 4}),
             '42.1234')
 
     def test_precision_domain(self):
@@ -57,7 +60,7 @@ class TestFloatExport(common.TransactionCase):
             converter(42.0, {'decimal_precision': 'B'}),
             '42.000000')
 
-        converter = self.get_converter('float_4')
+        converter = self.get_converter('float') # don't use float_4 because the field value 42.12345 is orm converted to 42.1235
         self.assertEqual(
             converter(42.12345, {'decimal_precision': 'A'}),
             '42.12')
