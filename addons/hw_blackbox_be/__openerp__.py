@@ -18,7 +18,6 @@ This module does **not** turn an Odoo Point Of Sale module into a certified
 Belgian cash register. It allows the communication on with a certified Fiscal
 Data Module but will not modify the behaviour of the Point of Sale.
 """,
-    'author': 'OpenERP SA',
     'depends': ['hw_proxy'],
     'external_dependencies': {'python': ['serial']},
     'test': [

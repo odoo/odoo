@@ -4,7 +4,6 @@
 Add a snippet in the website builder to subscribe a mass_mailing list
     """,
     'version': '1.0',
-    'author': 'Odoo',
     'category': 'Hidden',
     'depends': ['website', 'mass_mailing'],
     'data': [

@@ -14,7 +14,6 @@ Manage secondary units of sale
 Sell products in one unit of measure that is different from the one
 you manage the inventory.
     """,
-    'author': 'Odoo',
     'website': 'https://www.odoo.com',
     'depends': ['sale'],
     'data': [
