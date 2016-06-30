@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012
+# Nicoletta Fornaro <nickyfornaro@libero.it>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-14 00:10+0000\n"
-"PO-Revision-Date: 2016-03-27 15:49+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-06-30 10:10+0000\n"
+"Last-Translator: Nicoletta Fornaro <nickyfornaro@libero.it>\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-7/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -654,7 +655,7 @@ msgid ""
 "the last unreconciled debit/credit entry of this partner was reconciled, "
 "either the user pressed the button \"Nothing more to reconcile\" during the "
 "manual reconciliation process."
-msgstr ""
+msgstr "Data in cui le note del bilancio del partner sono state completamente riconciliate. Differisce dall'ultima data in cui una conciliazione è stata fatta con questo partner, in quanto a questa data non vi era null'altro da riconciliare. Ciò può essere ottenuto in 2 modi diversi: o l'ultimo debito/credito non riconciliato di questo partner è stato riconciliato oppure l'utente ha cliccato \"Null'altro da riconciliare\" durante il processo di riconciliazione manuale. "
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_type_sales
@@ -705,7 +706,7 @@ msgstr "Periodo del Sezionale"
 msgid ""
 "The amount expressed in the secondary currency must be positive when the "
 "journal item is a debit and negative when if it is a credit."
-msgstr ""
+msgstr "Il valore espresso nella valuta secondaria deve essere positivo se il conto è addebitato, negativo se il conto è accreditato."
 
 #. module: account
 #: constraint:account.move:0
@@ -1491,7 +1492,7 @@ msgstr "%s (copia)"
 #, python-format
 msgid ""
 "Selected Entry Lines does not have any account move entries in draft state."
-msgstr ""
+msgstr "Le voci selezionate non hanno registrato alcun movimento in bozze."
 
 #. module: account
 #: report:account.account.balance:0
@@ -3037,7 +3038,7 @@ msgstr "Solo Un Piano dei Conti Disponibile"
 msgid ""
 "Please verify the price of the invoice!\n"
 "The encoded total does not match the computed total."
-msgstr ""
+msgstr "Per cortesia, verifichi il prezzo della fattura! Il secondo importo non corrisponde a quello calcolato."
 
 #. module: account
 #: view:account.chart.template:0
@@ -3153,7 +3154,7 @@ msgstr "Fattura cliente"
 #: code:addons/account/installer.py:115
 #, python-format
 msgid "No unconfigured company!"
-msgstr ""
+msgstr "Nessuna Azienda non configurata! "
 
 #. module: account
 #: view:account.config.settings:0 view:account.installer:0
@@ -3597,7 +3598,7 @@ msgstr "Fattura Aperta"
 msgid ""
 "Opening Entries have already been generated.  Please run \"Cancel Closing "
 "Entries\" wizard to cancel those entries and then run this wizard."
-msgstr ""
+msgstr "Le prime note del bilancio sono già state generate. Per piacere fai partire il wizard \"Annulla note coclusive bilancio\" per annullare gli quei dati e far funzionare questo wizard.  "
 
 #. module: account
 #: view:account.invoice.report:0 selection:account.subscription,period_type:0
@@ -4696,7 +4697,7 @@ msgstr "Annullato"
 #: code:addons/account/account.py:1878
 #, python-format
 msgid " (Copy)"
-msgstr ""
+msgstr "(Copia)"
 
 #. module: account
 #: help:account.config.settings,group_proforma_invoices:0
@@ -6013,7 +6014,7 @@ msgstr "Fattore di moltiplicazione per l'imponibile"
 #: code:addons/account/account_move_line.py:1196
 #, python-format
 msgid "No Piece Number!"
-msgstr ""
+msgstr "Nessun numero di articolo!"
 
 #. module: account
 #: help:account.journal,company_id:0
@@ -6125,7 +6126,7 @@ msgstr "Imposta di vendita(%)"
 #: code:addons/account/account_invoice.py:1474
 #, python-format
 msgid "No Partner Defined!"
-msgstr ""
+msgstr "Nessun partner definito!"
 
 #. module: account
 #: view:account.tax.code:0
@@ -6259,7 +6260,7 @@ msgstr "Non è possibile creare registrazioni contabili su conti chiusi."
 #: code:addons/account/account_invoice.py:640
 #, python-format
 msgid "Invoice line account's company and invoice's company does not match."
-msgstr ""
+msgstr "La nota sulla fattura dell'azienda e la fattura dell'azienda non corrispondono."
 
 #. module: account
 #: view:account.invoice:0
@@ -7874,7 +7875,7 @@ msgstr "Registrazione Automatica"
 #: constraint:account.move.line:0
 msgid ""
 "You cannot create journal items on an account of type view or consolidation."
-msgstr ""
+msgstr "Non è possibile effettuare registrazioni contabili su un conto chiuso. "
 
 #. module: account
 #: help:account.account,reconcile:0
@@ -9281,7 +9282,7 @@ msgstr "Indica che la fattura è stata pagata e che le relative registrazioni co
 #: code:addons/account/account_move_line.py:786
 #, python-format
 msgid "Journal Item '%s' (id: %s), Move '%s' is already reconciled!"
-msgstr ""
+msgstr "Voce del bilancio % (id: %), Sposta % è già stato riconciliato!"
 
 #. module: account
 #: view:account.invoice:0 view:account.invoice.report:0
@@ -9294,7 +9295,7 @@ msgstr "Fatture bozza"
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:31
 #, python-format
 msgid "Nothing more to reconcile"
-msgstr ""
+msgstr "Nulla da riconciliare."
 
 #. module: account
 #: view:cash.box.in:0
@@ -9522,7 +9523,7 @@ msgstr "Tasso di cambio"
 #. module: account
 #: view:account.config.settings:0
 msgid "e.g. sales@openerp.com"
-msgstr ""
+msgstr "es. sales@openerp.com"
 
 #. module: account
 #: field:account.account,tax_ids:0 view:account.account.template:0
@@ -9960,7 +9961,7 @@ msgstr "Transazioni riconciliate"
 #: code:addons/account/account_invoice.py:929
 #, python-format
 msgid "Bad Total!"
-msgstr ""
+msgstr "Totale errato!"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_receivable
@@ -10135,7 +10136,7 @@ msgstr "Novembre"
 #: code:addons/account/account_invoice.py:908
 #, python-format
 msgid "No Invoice Lines!"
-msgstr ""
+msgstr "Nessuna voce fattura!"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_moves_all_a
