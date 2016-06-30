@@ -372,7 +372,8 @@ class purchase_order(osv.osv):
                     cr, uid, line.id, po.pricelist_id.id, line.product_id.id, line.product_qty,
                     line.product_uom.id, po.partner_id.id, date_order=po.date_order, context=context
                 )
-                line.write({'date_planned': vals['value']['date_planned']})
+                if vals.get('value', {}).get('date_planned'):
+                    line.write({'date_planned': vals['value']['date_planned']})
         return new_id
 
     def set_order_line_status(self, cr, uid, ids, status, context=None):
