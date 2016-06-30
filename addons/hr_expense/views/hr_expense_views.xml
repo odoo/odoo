@@ -27,7 +27,7 @@
             <field name="arch" type="xml">
                 <form string="Expenses">
                 <header>
-                    <button name="submit_expenses" states="draft" string="Submit to Manager" type="object" class="oe_highlight"/>
+                    <button name="submit_expenses" states="draft" string="Submit to Manager" type="object" class="oe_highlight o_expense_submit"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,reported,done" statusbar_colors='{"reported":"blue"}'/>
                     <button name="view_sheet" type="object" string="View Report" class="oe_highlight" attrs="{'invisible': [('state', '=','draft')]}"/>
                 </header>
@@ -409,8 +409,8 @@
             <field name="model">hr.expense.sheet</field>
             <field name="arch" type="xml">
                 <tree string="Expense Reports" decoration-warning="state=='draft'" decoration-bf="message_unread == True">
-                    <field name="accounting_date"/>
                     <field name="name" string="Expense Sheet"/>
+                    <field name="accounting_date"/>
                     <field name="employee_id"/>
                     <field name="total_amount" sum="Total Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     <field name="state"/>
@@ -424,11 +424,11 @@
             <field name="model">hr.expense.sheet</field>
             <field eval="25" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Expense Reports">
+                <form string="Expense Reports" class="o_expense_sheet">
                  <header>
-                    <button name="approve_expense_sheets" states="submit" string="Approve" type="object" groups="base.group_hr_user" class="oe_highlight"/>
-                    <button name="action_sheet_move_create" states="approve" string="Post Journal Entries" type="object" groups="account.group_account_user" class="oe_highlight"/>
-                    <button name="%(hr_expense.hr_expense_register_payment_wizard_action)d" type="action" string="Register Payment" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'post')]}" context="{'default_amount': total_amount, 'partner_id': address_id}" groups="account.group_account_user"/>
+                    <button name="approve_expense_sheets" states="submit" string="Approve" type="object" groups="base.group_hr_user" class="oe_highlight o_expense_sheet_approve"/>
+                    <button name="action_sheet_move_create" states="approve" string="Post Journal Entries" type="object" groups="account.group_account_user" class="oe_highlight o_expense_sheet_post"/>
+                    <button name="%(hr_expense.hr_expense_register_payment_wizard_action)d" type="action" string="Register Payment" class="oe_highlight o_expense_sheet_pay" attrs="{'invisible': [('state', '!=', 'post')]}" context="{'default_amount': total_amount, 'partner_id': address_id}" groups="account.group_account_user"/>
                     <button name="reset_expense_sheets" states="cancel" string="Resubmit" type="object"/>
                     <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="submit" string="Refuse" type="action" groups="base.group_hr_user" />
                     <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="approve" string="Refuse" type="action" groups="account.group_account_user"/>
@@ -786,7 +786,7 @@
         <menuitem id="menu_hr_expense_sheet_my_reports" name="My Reports" sequence="15" parent="menu_hr_expense_root"/>
         <menuitem id="menu_hr_expense_sheet_my_to_approve" name="To Approve" sequence="1" parent="menu_hr_expense_sheet_my_reports" action="action_hr_expense_sheet_my_to_approve"/>
 
-        <menuitem id="menu_hr_expense_sheet_my_all" name="All Reports" sequence="2" parent="menu_hr_expense_sheet_my_reports" action="action_hr_expense_sheet_my_all"/>
+        <menuitem id="menu_hr_expense_sheet_my_all" name="All Reports" sequence="2" parent="menu_hr_expense_sheet_my_reports" action="action_hr_expense_sheet_my_all" load_xmlid="True"/>
         <menuitem id="menu_hr_expense_sheet_all" name="All Reports" sequence="20" parent="menu_hr_expense_root"/>
         <menuitem id="menu_hr_expense_sheet_all_to_approve" name="Reports To Approve" sequence="1" parent="menu_hr_expense_sheet_all"
             action="action_hr_expense_sheet_all_to_approve" groups="base.group_hr_user"/>
