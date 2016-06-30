@@ -481,7 +481,7 @@ msgid ""
 "          "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Bấm để định nghĩa mức độ theo dõi và hành động liên "
+"                Bấm để định nghĩa cấp độ theo dõi và hành động liên "
 "quan.\n"
 "              </p><p>\n"
 "                Đối với mỗi bước, chỉ ra hành động được thực hiện và trì "
@@ -521,7 +521,7 @@ msgstr ""
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid "After"
-msgstr "Sau khi"
+msgstr "Sau"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:260
@@ -593,7 +593,7 @@ msgstr "Hủy bỏ"
 #. module: account_followup
 #: help:account_followup.print,test_print:0
 msgid "Check if you want to print follow-ups without changing follow-up level."
-msgstr "Đánh dấu nếu bạn muốn in theo dõi mà không thay đổi mức độ theo dõi."
+msgstr "Đánh dấu nếu bạn muốn in theo dõi mà không thay đổi cấp độ theo dõi."
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
@@ -616,7 +616,7 @@ msgstr "Công ty"
 #. module: account_followup
 #: view:account.config.settings:account_followup.view_account_config_settings_inherit
 msgid "Configure your follow-up levels"
-msgstr "Cấu hình mức độ theo dõi"
+msgstr "Cấu hình cấp độ theo dõi"
 
 #. module: account_followup
 #: field:account_followup.followup,create_uid:0
@@ -662,7 +662,7 @@ msgstr "Ngày:"
 #. module: account_followup
 #: sql_constraint:account_followup.followup.line:0
 msgid "Days of the follow-up levels must be different"
-msgstr "Ngày của các mức độ theo dõi phải khác nhau"
+msgstr "Ngày của các cấp độ theo dõi phải khác nhau"
 
 #. module: account_followup
 #: field:account_followup.stat,debit:0
@@ -793,12 +793,12 @@ msgstr "Bút toán theo dõi với kỳ kế toán trong năm hiện tại"
 #: field:account.move.line,followup_line_id:0
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 msgid "Follow-up Level"
-msgstr "Mức độ theo dõi"
+msgstr "Cấp độ theo dõi"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_menu
 msgid "Follow-up Levels"
-msgstr "Mức độ theo dõi"
+msgstr "Cấp độ theo dõi"
 
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.action_report_followup
@@ -857,7 +857,7 @@ msgstr "Theo dõi cần làm"
 #. module: account_followup
 #: view:res.partner:account_followup.customer_followup_search_view
 msgid "Followup Level"
-msgstr "Mức độ theo dõi"
+msgstr "Cấp độ theo dõi"
 
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
@@ -956,7 +956,7 @@ msgstr "Ngày theo dõi gần nhất"
 #. module: account_followup
 #: field:res.partner,latest_followup_level_id:0
 msgid "Latest Follow-up Level"
-msgstr "Mức độ theo dõi gần nhất"
+msgstr "Cấp độ theo dõi gần nhất"
 
 #. module: account_followup
 #: field:res.partner,latest_followup_level_id_without_lit:0
@@ -971,7 +971,7 @@ msgstr "Tháng theo dõi gần nhất"
 #. module: account_followup
 #: help:res.partner,latest_followup_date:0
 msgid "Latest date that the follow-up level of the partner was changed"
-msgstr "Ngày gần nhất mà mức độ theo dõi của dối tác được thay đổi"
+msgstr "Ngày gần nhất mà Cấp độ theo dõi của dối tác được thay đổi"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,date_followup:0
@@ -1018,7 +1018,7 @@ msgstr "Ngày đáo hạn"
 #. module: account_followup
 #: field:account_followup.stat.by.partner,max_followup_id:0
 msgid "Max Follow Up Level"
-msgstr "Mức đội theo dõi cao nhất"
+msgstr "Cấp độ theo dõi cao nhất"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_customer_my_followup
@@ -1277,7 +1277,7 @@ msgstr ""
 #. module: account_followup
 #: help:res.partner,latest_followup_level_id:0
 msgid "The maximum follow-up level"
-msgstr "Mức độ theo dõi cao nhất"
+msgstr "Cấp độ theo dõi cao nhất"
 
 #. module: account_followup
 #: help:res.partner,latest_followup_level_id_without_lit:0
@@ -1328,7 +1328,7 @@ msgid ""
 msgstr ""
 "Hành động này sẽ gửi email, in thư theo dõi và thiết lập hành động thủ công "
 "cho khách hàng\n"
-"                        tùy thuộc vào mức độ theo dõi được định nghĩa."
+"                        tùy thuộc vào Cấp độ theo dõi được định nghĩa."
 
 #. module: account_followup
 #: help:account_followup.print,date:0
@@ -1343,7 +1343,7 @@ msgid ""
 "partner gets a follow-up level that requires a manual action. "
 msgstr ""
 "Đây là hành động tiếp theo được thực hiện. Nó sẽ được thiết lập tự động khi "
-"đối tác nhận một mức độ theo dõi mà yêu cầu một hành động thủ công "
+"đối tác nhận một Cấp độ theo dõi mà yêu cầu một hành động thủ công "
 
 #. module: account_followup
 #: help:res.partner,payment_next_action_date:0
@@ -1375,7 +1375,7 @@ msgstr ""
 "Để nhắc nhở khách hàng thanh toán hoá đơn, bạn có thể\n"
 "                        định nghĩa các hành động phụ thuộc vào mức độ quá "
 "hạn của khách hàng \n"
-"                        Các hành động này được đóng gói thành các mức độ "
+"                        Các hành động này được đóng gói thành các Cấp độ "
 "theo dõi\n"
 "                        mà được kích hoạt khi ngày đến hạn của hoá đơn vượt "
 "quá\n"
@@ -1401,12 +1401,12 @@ msgstr "Tổng:"
 #. module: account_followup
 #: help:account_followup.followup.line,send_letter:0
 msgid "When processing, it will print a letter"
-msgstr "Trong khi đang xử lý, nó sẽ in một bức thư"
+msgstr "Trong quá trình xử lý, nó sẽ in một bức thư"
 
 #. module: account_followup
 #: help:account_followup.followup.line,send_email:0
 msgid "When processing, it will send an email"
-msgstr "Trong khi đang xử lý, nó sẽ gửi một email"
+msgstr "Trong quá trình xử lý, nó sẽ gửi một email"
 
 #. module: account_followup
 #: help:account_followup.followup.line,manual_action:0
@@ -1414,8 +1414,8 @@ msgid ""
 "When processing, it will set the manual action to be taken for that "
 "customer. "
 msgstr ""
-".Trong khi đang xử lý, nó sẽ thiết lập hành động thủ công cần thực hiện cho "
-"khách hàng đó "
+"Trong quá trình xử lý, Odoo sẽ thiết lập hành động thủ công cần thực hiện cho "
+"khách hàng đó."
 
 #. module: account_followup
 #: field:res.partner,payment_earliest_due_date:0
@@ -1433,7 +1433,7 @@ msgid ""
 "installed\n"
 "                            using to top right icon."
 msgstr ""
-"Giới thiệu trong thư tùy thuộc vào mức độ theo dõi.\n"
+"Giới thiệu trong thư tùy thuộc vào Cấp độ theo dõi.\n"
 "                            Bạn có thể sử dụng các từ khóa sau trong nội "
 "dung\n"
 "                            Đừng quên dịch theo ngôn ngữ mà bạn đã cài đặt "
@@ -1461,17 +1461,17 @@ msgstr ""
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_config_settings
 msgid "account.config.settings"
-msgstr "account.config.settings"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid "days overdue, do the following actions:"
-msgstr "ngày quá hạn, thực hiện hành động theo dõi:"
+msgstr "ngày quá hạn, thực hiện hành động sau:"
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
 msgid "e.g. Call the customer, check if it's paid, ..."
-msgstr "ví dụ: Gọi cho khách hàng, nếu nó được thanh toán, ..."
+msgstr "ví dụ: Gọi cho khách hàng, kiểm tra xem đã thanh toán chưa, ..."
 
 #. module: account_followup
 #: view:account_followup.print:account_followup.view_account_followup_print
@@ -1481,7 +1481,7 @@ msgstr "hoặc"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_report_account_followup_report_followup
 msgid "report.account_followup.report_followup"
-msgstr "report.account_followup.report_followup"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.print,company_id:0
