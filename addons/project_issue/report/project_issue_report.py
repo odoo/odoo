@@ -1,38 +1,33 @@
-
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
-from openerp import tools
+from odoo import fields, models, tools
 
 
-class project_issue_report(osv.osv):
+class ProjectIssueReport(models.Model):
     _name = "project.issue.report"
     _auto = False
 
-    _columns = {
-        'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'opening_date': fields.datetime('Date of Opening', readonly=True),
-        'create_date': fields.datetime('Create Date', readonly=True),
-        'date_closed': fields.datetime('Date of Closing', readonly=True),
-        'date_last_stage_update': fields.datetime('Last Stage Update', readonly=True),
-        'stage_id': fields.many2one('project.task.type', 'Stage'),
-        'nbr': fields.integer('# of Issues', readonly=True),  # TDE FIXME master: rename into nbr_issues
-        'working_hours_open': fields.float('Avg. Working Hours to Open', readonly=True, group_operator="avg"),
-        'working_hours_close': fields.float('Avg. Working Hours to Close', readonly=True, group_operator="avg"),
-        'delay_open': fields.float('Avg. Delay to Open', digits=(16,2), readonly=True, group_operator="avg",
-                                       help="Number of Days to open the project issue."),
-        'delay_close': fields.float('Avg. Delay to Close', digits=(16,2), readonly=True, group_operator="avg",
-                                       help="Number of Days to close the project issue"),
-        'company_id' : fields.many2one('res.company', 'Company'),
-        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
-        'project_id':fields.many2one('project.project', 'Project',readonly=True),
-        'user_id' : fields.many2one('res.users', 'Assigned to',readonly=True),
-        'partner_id': fields.many2one('res.partner','Contact'),
-        'channel': fields.char('Channel', readonly=True, help="Communication Channel."),
-        'task_id': fields.many2one('project.task', 'Task'),
-        'email': fields.integer('# Emails', size=128, readonly=True),
-    }
+    company_id = fields.Many2one('res.company', 'Company', readonly=True)
+    opening_date = fields.Datetime('Date of Opening', readonly=True)
+    create_date = fields.Datetime('Create Date', readonly=True)
+    date_closed = fields.Datetime('Date of Closing', readonly=True)
+    date_last_stage_update = fields.Datetime('Last Stage Update', readonly=True)
+    stage_id = fields.Many2one('project.task.type', 'Stage')
+    nbr_issues = fields.Integer('# of Issues', readonly=True)
+    working_hours_open = fields.Float('Avg. Working Hours to Open', readonly=True, group_operator="avg")
+    working_hours_close = fields.Float('Avg. Working Hours to Close', readonly=True, group_operator="avg")
+    delay_open = fields.Float('Avg. Delay to Open', digits=(16, 2), readonly=True, group_operator="avg",
+                              help="Number of Days to open the project issue.")
+    delay_close = fields.Float('Avg. Delay to Close', digits=(16, 2), readonly=True, group_operator="avg",
+                               help="Number of Days to close the project issue")
+    priority = fields.Selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')])
+    project_id = fields.Many2one('project.project', 'Project', readonly=True)
+    user_id = fields.Many2one('res.users', 'Assigned to', readonly=True)
+    partner_id = fields.Many2one('res.partner', 'Contact')
+    channel = fields.Char('Channel', readonly=True, help="Communication Channel.")
+    task_id = fields.Many2one('project.task', 'Task')
+    email = fields.Integer('# Emails', readonly=True)
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'project_issue_report')
@@ -51,7 +46,7 @@ class project_issue_report(osv.osv):
                     c.company_id as company_id,
                     c.priority as priority,
                     c.project_id as project_id,
-                    1 as nbr,
+                    1 as nbr_issues,
                     c.partner_id,
                     c.channel,
                     c.task_id,

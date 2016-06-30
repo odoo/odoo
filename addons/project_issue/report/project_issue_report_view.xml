@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <record id="view_project_issue_report_pivot" model="ir.ui.view">
             <field name="name">project.issue.report.pivot</field>
             <field name="model">project.issue.report</field>
@@ -8,7 +7,7 @@
                 <pivot string="Project Issue" disable_linking="True">
                     <field name="project_id" type="row"/>
                     <field name="create_date" interval="month" type="col"/>
-                    <field name="nbr" type="measure"/>
+                    <field name="nbr_issues" type="measure"/>
                 </pivot>
             </field>
         </record>
@@ -20,7 +19,7 @@
                 <graph string="Project Issue">
                     <field name="project_id" type="row"/>
                     <field name="create_date" interval="month" type="col"/>
-                    <field name="nbr" type="measure"/>
+                    <field name="nbr_issues" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -93,9 +92,6 @@
             <field name="help">This report on the project issues allows you to analyse the quality of your support or after-sales services. You can track the issues per age. You can analyse the time required to open or close an issue, the number of email to exchange and the time spent on average by issues.</field>
         </record>
 
-        <menuitem action="action_project_issue_report" id="menu_project_issue_report_tree"
+        <menuitem id="menu_project_issue_report_tree" action="action_project_issue_report"
             parent="base.menu_project_report"/>
-
-
-  </data>
-</openerp>
+</odoo>
