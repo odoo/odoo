@@ -5,7 +5,7 @@
 {
     'name': 'Claims Management',
     'version': '1.0',
-    'category': 'Customer Relationship Management',
+    'category': 'Sales',
     'description': """
 
 Manage Customer Claims.
