@@ -340,7 +340,7 @@ odoo.define('website_sale.website_sale', function (require) {
             $(oe_website_sale).on('change', "select[name='country_id']", function () {
                 clickwatch(function() {
                     if ($("#country_id").val()) {
-                        ajax.jsonRpc("/website/country_infos/" + $("#country_id").val(), 'call', {}).then(
+                        ajax.jsonRpc("/shop/country_infos/" + $("#country_id").val(), 'call', {mode: 'shipping'}).then(
                             function(data) {
                                 // placeholder phone_code
                                 //$("input[name='phone']").attr('placeholder', data.phone_code !== 0 ? '+'+ data.phone_code : '');

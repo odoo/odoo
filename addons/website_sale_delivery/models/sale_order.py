@@ -6,12 +6,14 @@ from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
+
 class DeliveryCarrier(models.Model):
     _name = 'delivery.carrier'
     _inherit = ['delivery.carrier', 'website.published.mixin']
 
     website_description = fields.Text(related='product_id.description_sale', string='Description for Online Quotations')
     website_published = fields.Boolean(default=False)
+
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
@@ -123,7 +125,7 @@ class SaleOrder(models.Model):
         """ Override to update carrier quotation if quantity changed """
 
         self._delivery_unset()
-        
+
         # When you update a cart, it is not enouf to remove the "delivery cost" line
         # The carrier might also be invalid, eg: if you bought things that are too heavy
         # -> this may cause a bug if you go to the checkout screen, choose a carrier,
@@ -138,23 +140,37 @@ class SaleOrder(models.Model):
 
         return values
 
-    def _get_shipping_country(self, values):
-        countries = self.env['res.country']
+
+class ResCountry(models.Model):
+    _inherit = 'res.country'
+
+    def get_website_sale_countries(self, mode='billing'):
+        res = super(ResCountry, self).get_website_sale_countries(mode=mode)
+        if mode == 'shipping':
+            countries = self.env['res.country']
+
+            delivery_carriers = self.env['delivery.carrier'].sudo().search([('website_published', '=', True)])
+            for carrier in delivery_carriers:
+                if not carrier.country_ids and not carrier.state_ids:
+                    countries = res
+                    break
+                countries |= carrier.country_ids
+
+            res = res & countries
+        return res
+
+    def get_website_sale_states(self, mode='billing'):
+        res = super(ResCountry, self).get_website_sale_states(mode=mode)
+
         states = self.env['res.country.state']
-        values['shipping_countries'] = values['countries']
-        values['shipping_states'] = values['states']
+        if mode == 'shipping':
+            dom = ['|', ('country_ids', 'in', self.id), ('country_ids', '=', False), ('website_published', '=', True)]
+            delivery_carriers = self.env['delivery.carrier'].sudo().search(dom)
 
-        delivery_carriers = self.env['delivery.carrier'].sudo().search([('website_published', '=', True)])
-        for carrier in delivery_carriers:
-            if not carrier.country_ids and not carrier.state_ids:
-                return values
-            # Authorized shipping countries
-            countries |= carrier.country_ids
-            # Authorized shipping countries without any state restriction
-            state_countries = carrier.country_ids - carrier.state_ids.mapped('country_id')
-            # Authorized shipping states + all states from shipping countries without any state restriction
-            states |= carrier.state_ids | values['states'].filtered(lambda state: state.country_id in state_countries)
-
-        values['shipping_countries'] = values['countries'] & countries
-        values['shipping_states'] = values['states'] & states
-        return values
+            for carrier in delivery_carriers:
+                if not carrier.country_ids and not carrier.state_ids:
+                    states = res
+                    break
+                states |= carrier.state_ids
+            res = res & states
+        return res

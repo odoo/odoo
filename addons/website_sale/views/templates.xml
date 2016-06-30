@@ -1116,7 +1116,7 @@
                                         <label class="control-label" for="country_id">Country</label>
                                         <select id="country_id" name="country_id" class="form-control">
                                             <option value="">Country...</option>
-                                            <t t-foreach="request.env['res.country'].sudo().search([])" t-as="c">
+                                            <t t-foreach="countries" t-as="c">
                                                 <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
                                                     <t t-esc="c.name" />
                                                 </option>

@@ -426,6 +426,16 @@ class WebsitePricelist(models.Model):
         return res
 
 
+class ResCountry(models.Model):
+    _inherit = 'res.country'
+
+    def get_website_sale_countries(self, mode='billing'):
+        return self.sudo().search([])
+
+    def get_website_sale_states(self, mode='billing'):
+        return self.sudo().state_ids
+
+
 class ResCountryGroup(models.Model):
     _inherit = 'res.country.group'
 
