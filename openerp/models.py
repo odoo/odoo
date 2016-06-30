@@ -689,6 +689,7 @@ class BaseModel(object):
             attrs = {
                 'manual': True,
                 'string': field['field_description'],
+                'help': field['help'],
                 'index': bool(field['index']),
                 'copy': bool(field['copy']),
                 'related': field['related'],
@@ -909,10 +910,10 @@ class BaseModel(object):
                         if lines2:
                             # merge first line with record's main line
                             for j, val in enumerate(lines2[0]):
-                                if val:
+                                if val or isinstance(val, bool):
                                     current[j] = val
                             # check value of current field
-                            if not current[i]:
+                            if not current[i] and not isinstance(current[i], bool):
                                 # assign xml_ids, and forget about remaining lines
                                 xml_ids = [item[1] for item in value.name_get()]
                                 current[i] = ','.join(xml_ids)
@@ -2084,7 +2085,7 @@ class BaseModel(object):
             self._inherits_join_calc(cr, uid, self._table, f, query, context=context),
             f,
         )
-        select_terms = ["%s(%s) AS %s" % field_formatter(f) for f in aggregated_fields]
+        select_terms = ['%s(%s) AS "%s" ' % field_formatter(f) for f in aggregated_fields]
 
         for gb in annotated_groupbys:
             select_terms.append('%s as "%s" ' % (gb['qualified_field'], gb['groupby']))
@@ -3033,17 +3034,32 @@ class BaseModel(object):
         cls._setup_done = True
 
     @api.model
-    def _setup_fields(self):
+    def _setup_fields(self, partial):
         """ Setup the fields, except for recomputation triggers. """
         cls = type(self)
 
         # set up fields, and determine their corresponding column
         cls._columns = {}
+        bad_fields = []
         for name, field in cls._fields.iteritems():
-            field.setup_full(self)
+            try:
+                field.setup_full(self)
+            except Exception:
+                if partial and field.manual:
+                    # Something goes wrong when setup a manual field.
+                    # This can happen with related fields using another manual many2one field
+                    # that hasn't been loaded because the comodel does not exist yet.
+                    # This can also be a manual function field depending on not loaded fields yet.
+                    bad_fields.append(name)
+                    continue
+                raise
             column = field.to_column()
             if column:
                 cls._columns[name] = column
+
+        for name in bad_fields:
+            del cls._fields[name]
+            delattr(cls, name)
 
         # map each field to the fields computed with the same method
         groups = defaultdict(list)
@@ -3059,7 +3075,10 @@ class BaseModel(object):
 
         # set up field triggers
         for field in cls._fields.itervalues():
-            field.setup_triggers(self.env)
+            # dependencies of custom fields may not exist; ignore that case
+            exceptions = (Exception,) if field.manual else ()
+            with tools.ignore(*exceptions):
+                field.setup_triggers(self.env)
 
         # add invalidation triggers on model dependencies
         if cls._depends:
@@ -3948,7 +3967,8 @@ class BaseModel(object):
                         src_trans = vals[f]
                         context_wo_lang = dict(context, lang=None)
                         self.write(cr, user, ids, {f: vals[f]}, context=context_wo_lang)
-                    self.pool['ir.translation']._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
+                    translation_value = self._columns[f]._symbol_set[1](vals[f])
+                    self.pool['ir.translation']._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, translation_value, src_trans)
 
         # invalidate and mark new-style fields to recompute; do this before
         # setting other fields, because it can require the value of computed
@@ -4585,7 +4605,7 @@ class BaseModel(object):
         :return: the qualified field name (or expression) to use for ``field``
         """
         lang = self._context.get('lang')
-        if lang and lang != 'en_US':
+        if lang:
             # Sub-select to return at most one translation per record.
             # Even if it shoud probably not be the case,
             # this is possible to have multiple translations for a same record in the same language.

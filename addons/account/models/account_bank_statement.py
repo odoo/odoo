@@ -86,7 +86,7 @@ class AccountBankStatement(models.Model):
     @api.one
     @api.depends('journal_id')
     def _compute_currency(self):
-        self.currency_id = self.journal_id.currency_id or self.env.user.company_id.currency_id
+        self.currency_id = self.journal_id.currency_id or self.company_id.currency_id
 
     @api.one
     @api.depends('line_ids.journal_entry_ids')
@@ -818,7 +818,6 @@ class AccountBankStatementLine(models.Model):
             move_name = (self.statement_id.name or self.name) + "/" + str(self.sequence)
             move_vals = self._prepare_reconciliation_move(move_name)
             move = self.env['account.move'].create(move_vals)
-            move.post()
             counterpart_moves = (counterpart_moves | move)
 
             # Complete dicts to create both counterpart move lines and write-offs
@@ -849,11 +848,6 @@ class AccountBankStatementLine(models.Model):
                     aml_dict['amount_currency'] = prorata_factor * self.amount
                     aml_dict['currency_id'] = statement_currency.id
 
-            # Create the move line for the statement line using the total credit/debit of the counterpart
-            # This leaves out the amount already reconciled and avoids rounding errors from currency conversion
-            st_line_amount = sum(aml_dict['credit'] - aml_dict['debit'] for aml_dict in to_create)
-            aml_obj.with_context(check_move_validity=False).create(self._prepare_reconciliation_move_line(move, st_line_amount))
-
             # Create write-offs
             for aml_dict in new_aml_dicts:
                 aml_obj.with_context(check_move_validity=False).create(aml_dict)
@@ -869,7 +863,14 @@ class AccountBankStatementLine(models.Model):
                     aml_dict['currency_id'] = counterpart_move_line.currency_id.id
                     aml_dict['amount_currency'] = company_currency.with_context(ctx).compute(aml_dict['debit'] - aml_dict['credit'], counterpart_move_line.currency_id)
                 new_aml = aml_obj.with_context(check_move_validity=False).create(aml_dict)
+
                 (new_aml | counterpart_move_line).reconcile()
 
+            # Create the move line for the statement line using the bank statement line as the remaining amount
+            # This leaves out the amount already reconciled and avoids rounding errors from currency conversion
+            st_line_amount = -sum([x.balance for x in move.line_ids])
+            aml_obj.with_context(check_move_validity=False).create(self._prepare_reconciliation_move_line(move, st_line_amount))
+
+            move.post()
         counterpart_moves.assert_balanced()
         return counterpart_moves

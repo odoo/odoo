@@ -117,7 +117,7 @@
                                     </a>
                                 </div>
                                 <div>
-                                    <a type="object" name="open_action" context="{'use_domain': [('type','in',('out_refund','in_refund'))]}">
+                                    <a type="object" name="open_action" context="{'use_domain': [('type','in',('out_refund','in_refund'))], 'invoice_type': 'refund'}">
                                         <span t-if="journal_type == 'sale'">Refunds</span>
                                         <span t-if="journal_type == 'purchase'">Refunds</span>
                                     </a>
@@ -234,7 +234,7 @@
                         <div class="col-xs-6 o_kanban_primary_right">
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <span title="Balance in Odoo">Balance in Odoo</span>
+                                    <span title="Balance in Odoo">Balance in GL</span>
                                 </div>
                                 <div class="col-xs-6 text-right">
                                     <span><t t-esc="dashboard.account_balance"/></span>

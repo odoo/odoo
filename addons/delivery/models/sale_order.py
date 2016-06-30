@@ -93,11 +93,6 @@ class SaleOrder(models.Model):
         if self.order_line:
             values['sequence'] = self.order_line[-1].sequence + 1
         sol = SaleOrderLine.create(values)
-        if hasattr(sol, 'product_id_change_margin'):
-            # if `sale_margin` module is installed, force computation of field `purchase_price`
-            # As there is not dependency between modules (nor a bridge module), this is the only
-            # place we can get the value for this field
-            sol.product_id_change_margin()
         return sol
 
 

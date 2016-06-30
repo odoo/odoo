@@ -197,6 +197,8 @@ class ir_import(orm.TransientModel):
 
     def _read_xls(self, record, options):
         book = xlrd.open_workbook(file_contents=record.file)
+        return self._read_xls_book(book)
+    def _read_xls_book(self, book):
         sheet = book.sheet_by_index(0)
         # emulate Sheet.get_rows for pre-0.9.4
         for row in itertools.imap(sheet.row, range(sheet.nrows)):
@@ -248,15 +250,21 @@ class ir_import(orm.TransientModel):
         :throws csv.Error: if an error is detected during CSV parsing
         :throws UnicodeDecodeError: if ``options.encoding`` is incorrect
         """
-        csv_iterator = csv.reader(
-            StringIO(record.file),
-            quotechar=str(options['quoting']),
-            delimiter=str(options['separator']))
+        csv_data = record.file
 
         # TODO: guess encoding with chardet? Or https://github.com/aadsm/jschardet
         encoding = options.get('encoding', 'utf-8')
+        if encoding != 'utf-8':
+            # csv module expect utf-8, see http://docs.python.org/2/library/csv.html
+            csv_data = csv_data.decode(encoding).encode('utf-8')
+
+        csv_iterator = csv.reader(
+            StringIO(csv_data),
+            quotechar=str(options['quoting']),
+            delimiter=str(options['separator']))
+
         return (
-            [item.decode(encoding) for item in row]
+            [item.decode('utf-8') for item in row]
             for row in csv_iterator
             if any(x for x in row if x.strip())
         )

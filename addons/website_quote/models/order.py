@@ -216,6 +216,7 @@ class sale_order(osv.osv):
                 'product_uom': line.product_uom_id.id,
                 'website_description': line.website_description,
                 'state': 'draft',
+                'customer_lead': self._get_customer_lead(cr, uid, line.product_id.product_tmpl_id),
             })
             lines.append((0, 0, data))
         options = []
@@ -307,6 +308,8 @@ class sale_order(osv.osv):
             values = dict(template_values, **values)
         return super(sale_order, self).create(cr, uid, values, context=context)
 
+    def _get_payment_type(self, cr, uid, ids, context=None):
+        return 'form'
 
 class sale_quote_option(osv.osv):
     _name = "sale.quote.option"
@@ -324,6 +327,29 @@ class sale_quote_option(osv.osv):
     _defaults = {
         'quantity': 1,
     }
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if not self.product_id:
+            return
+        product = self.product_id
+        self.price_unit = product.list_price
+        self.website_description = product.product_tmpl_id.quote_description
+        self.name = product.name
+        self.uom_id = product.uom_id
+        domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
+        return {'domain': domain}
+
+    @api.onchange('uom_id')
+    def _onchange_product_uom(self):
+        if not self.product_id:
+            return
+        if not self.uom_id:
+            self.price_unit = 0.0
+            return
+        if self.uom_id.id != self.product_id.uom_id.id:
+            new_price = self.product_id.uom_id._compute_price(self.product_id.uom_id.id, self.price_unit, self.uom_id.id)
+            self.price_unit = new_price
 
     def on_change_product_id(self, cr, uid, ids, product, uom_id=None, context=None):
         vals, domain = {}, []

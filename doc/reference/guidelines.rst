@@ -11,12 +11,20 @@ aim to improve the quality of the code (better readability of source,
 ...) and  Odoo Apps. Indeed, proper code ought ease maintenance, aid
 debugging, lower complexity and promote reliability.
 
+.. warning::
+
+    These guidelines are written with new modules and new files in mind. When
+    modifying existing files, the original style of the file strictly supersedes
+    any other style guidelines. In other words, never modify existing files in
+    order to apply these guidelines, to avoid disrupting the revision history of
+    each line. For more details, see our `pull request guide <https://odoo.com/submit-pr>`_.
+
 Module structure
 ================
 
 Directories
 -----------
-A module is organised in a few directory :
+A module is organised in a few directories :
 
 - *data/* : demo and data xml
 - *models/* : models definition
@@ -129,7 +137,7 @@ When declaring a record in XML,
         <field name="arch" type="xml">
             <tree>
                 <field name="my_field_1"/>
-                <field name="my_field_2" string="My Label" widget="statusbar" statusbar_visible="draft,sent,progress,done" statusbar_colors='{"invoice_except":"red","waiting_date":"blue"}' />
+                <field name="my_field_2" string="My Label" widget="statusbar" statusbar_visible="draft,sent,progress,done" />
             </tree>
         </field>
     </record>
@@ -266,12 +274,12 @@ Inside these 3 groups, the imported lines are alphabetically sorted.
 Idioms
 ------
 
-- Prefer ``%`` over ``.format()``, prefer ``%(varname)`` instead of position (This is better for translation)
+- Prefer ``%`` over ``.format()``, prefer ``%(varname)`` instead of position (This is better for translations)
 - Try to avoid generators and decorators
 - Always favor *Readability* over *conciseness* or using the language features or idioms.
 - Use list comprehension, dict comprehension, and basic manipulation using ``map``, ``filter``, ``sum``, ... They make the code easier to read.
 - The same applies for recordset methods : use ``filtered``, ``mapped``, ``sorted``, ...
-- Each python file should have ``# -*- coding: utf-8 -*-`` as first line
+- Each python file should have ``# coding: utf-8 `` as first line
 - Use the ``UserError`` defined in ``openerp.exceptions`` instead of overriding ``Warning``, or find a more appropriate exception in *exceptions.py*
 - Document your code (docstring on methods, simple comments for the tricky part of the code)
 - Use meaningful variable/class/method names

@@ -20,6 +20,7 @@
         
         <record id="simple_report_template" model="mail.template">
             <field name="name">Simple Challenge Report Progress</field>
+            <field name="model_id" ref="gamification.model_gamification_challenge"/>
             <field name="body_html"><![CDATA[
 <header>
     <strong>${object.name}</strong>

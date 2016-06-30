@@ -706,8 +706,11 @@ class MailThread(models.AbstractModel):
                     ('alias_parent_model_id.model', '=', model_name),
                     ('alias_parent_thread_id', 'in', res_ids),
                     ('alias_name', '!=', False)])
-                aliases.update(
-                    dict((alias.alias_parent_thread_id, '%s@%s' % (alias.alias_name, alias_domain)) for alias in mail_aliases))
+                # take only first found alias for each thread_id, to match
+                # order (1 found -> limit=1 for each res_id)
+                for alias in mail_aliases:
+                    if alias.alias_parent_thread_id not in aliases:
+                        aliases[alias.alias_parent_thread_id] = '%s@%s' % (alias.alias_name, alias_domain)
                 doc_names.update(
                     dict((ng_res[0], ng_res[1])
                          for ng_res in self.env[model_name].sudo().browse(aliases.keys()).name_get()))
@@ -795,15 +798,20 @@ class MailThread(models.AbstractModel):
         record_set = None
 
         def _create_bounce_email():
-            self.env['mail.mail'].create({
+            bounce_to = decode_header(message, 'Return-Path') or email_from
+            bounce_mail_values = {
                 'body_html': '<div><p>Hello,</p>'
                              '<p>The following email sent to %s cannot be accepted because this is '
                              'a private email address. Only allowed people can contact us at this address.</p></div>'
                              '<blockquote>%s</blockquote>' % (message.get('to'), message_dict.get('body')),
                 'subject': 'Re: %s' % message.get('subject'),
-                'email_to': message.get('from'),
+                'email_to': bounce_to,
                 'auto_delete': True,
-            }).send()
+            }
+            bounce_from = self.env['ir.mail_server']._get_default_bounce_address()
+            if bounce_from:
+                bounce_mail_values['email_from'] = 'MAILER-DAEMON <%s>' % bounce_from
+            self.env['mail.mail'].create(bounce_mail_values).send()
 
         def _warn(message):
             _logger.info('Routing mail with Message-Id %s: route %s: %s',

@@ -61,7 +61,7 @@ class crm_lead(format_address, osv.osv):
 
     def _get_default_probability(self, cr, uid, context=None):
         """ Gives default probability """
-        stage_id = self._get_default_stage_id(cr, uid, context=None)
+        stage_id = self._get_default_stage_id(cr, uid, context=context)
         if stage_id:
             return self.pool['crm.stage'].browse(cr, uid, stage_id, context=context).probability
         else:
@@ -290,6 +290,8 @@ class crm_lead(format_address, osv.osv):
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         """ When changing the user, also set a team_id or restrict team id
             to the ones user_id is member of. """
+        if not context:
+            context = {}
         if user_id and context.get('team_id'):
             team = self.pool['crm.team'].browse(cr, uid, context['team_id'], context=context)
             if user_id in team.member_ids.ids:
@@ -704,7 +706,10 @@ class crm_lead(format_address, osv.osv):
             'date_conversion': fields.datetime.now(),
         }
         if not lead.stage_id or lead.stage_id.type=='lead':
-            val['stage_id'] = self.stage_find(cr, uid, [lead], team_id, [('type', 'in', ('opportunity', 'both'))], context=context)
+            stage_id = self.stage_find(cr, uid, [lead], team_id, [('type', 'in', ['opportunity', 'both'])], context=context)
+            val['stage_id'] = stage_id
+            if stage_id:
+                val['probability'] = self.pool['crm.stage'].browse(cr, uid, stage_id, context=context).probability
         return val
 
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, team_id=False, context=None):
@@ -901,6 +906,8 @@ class crm_lead(format_address, osv.osv):
             vals.update(onchange_stage_values)
         if vals.get('probability') >= 100 or not vals.get('active', True):
             vals['date_closed'] = fields.datetime.now()
+        elif vals.get('probability') < 100:
+            vals['date_closed'] = False
         return super(crm_lead, self).write(cr, uid, ids, vals, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -1017,6 +1024,12 @@ Update your business card, phone book, social media,... Send an email right now 
             through message_process.
             This override updates the document according to the email.
         """
+        # remove default author when going through the mail gateway. Indeed we
+        # do not want to explicitly set user_id to False; however we do not
+        # want the gateway user to be responsible if no other responsible is
+        # found.
+        create_context = dict(context or {})
+        create_context['default_user_id'] = False
         if custom_values is None:
             custom_values = {}
         defaults = {
@@ -1024,14 +1037,13 @@ Update your business card, phone book, social media,... Send an email right now 
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'partner_id': msg.get('author_id', False),
-            'user_id': False,
         }
         if msg.get('author_id'):
             defaults.update(self.on_change_partner_id(cr, uid, None, msg.get('author_id'), context=context)['value'])
         if msg.get('priority') in dict(crm_stage.AVAILABLE_PRIORITIES):
             defaults['priority'] = msg.get('priority')
         defaults.update(custom_values)
-        return super(crm_lead, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
+        return super(crm_lead, self).message_new(cr, uid, msg, custom_values=defaults, context=create_context)
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
         """ Overrides mail_thread message_update that is called by the mailgateway

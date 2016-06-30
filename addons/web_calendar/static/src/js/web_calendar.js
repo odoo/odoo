@@ -36,6 +36,9 @@ function get_fc_defaultOptions() {
         dayNames: moment.weekdays(),
         dayNamesShort: moment.weekdaysShort(),
         firstDay: moment._locale._week.dow,
+        weekNumberCalculation: function(date) {
+            return moment(date).week();
+        },
         weekNumbers: true,
         titleFormat: {
             month: 'MMMM yyyy',
@@ -83,6 +86,9 @@ var CalendarView = View.extend({
         this.title = (this.options.action)? this.options.action.name : '';
 
         this.shown = $.Deferred();
+        self.current_start = null;
+        self.current_end = null;
+        self.previous_ids = [];
     },
 
     set_default_options: function(options) {
@@ -727,11 +733,25 @@ var CalendarView = View.extend({
                             );
                         }
                     }
+
+                // read_slice is launched uncoditionally, when quickly
+                // changing the range in the calender view, all of
+                // these RPC calls will race each other. Because of
+                // this we keep track of the current range of the
+                // calendar view.
+                self.current_start = start;
+                self.current_end = end;
                 self.dataset.read_slice(_.keys(self.fields), {
                     offset: 0,
                     domain: event_domain,
                     context: context,
                 }).done(function(events) {
+                    // undo the read_slice if it the range has changed since it launched
+                    if (self.current_start.getTime() != start.getTime() || self.current_end.getTime() != end.getTime()) {
+                        self.dataset.ids = self.previous_ids;
+                        return;
+                    }
+                    self.previous_ids = self.dataset.ids.slice();
                     if (self.dataset.index === null) {
                         if (events.length) {
                             self.dataset.index = 0;

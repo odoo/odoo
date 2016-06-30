@@ -106,7 +106,7 @@ class AccountInvoice(models.Model):
     def _get_outstanding_info_JSON(self):
         self.outstanding_credits_debits_widget = json.dumps(False)
         if self.state == 'open':
-            domain = [('journal_id.type', 'in', ('bank', 'cash')), ('account_id', '=', self.account_id.id), ('partner_id', '=', self.env['res.partner']._find_accounting_partner(self.partner_id).id), ('reconciled', '=', False), ('amount_residual', '!=', 0.0)]
+            domain = [('account_id', '=', self.account_id.id), ('partner_id', '=', self.env['res.partner']._find_accounting_partner(self.partner_id).id), ('reconciled', '=', False), ('amount_residual', '!=', 0.0)]
             if self.type in ('out_invoice', 'in_refund'):
                 domain.extend([('credit', '>', 0), ('debit', '=', 0)])
                 type_payment = _('Outstanding credits')
@@ -115,18 +115,16 @@ class AccountInvoice(models.Model):
                 type_payment = _('Outstanding debits')
             info = {'title': '', 'outstanding': True, 'content': [], 'invoice_id': self.id}
             lines = self.env['account.move.line'].search(domain)
+            currency_id = self.currency_id
             if len(lines) != 0:
                 for line in lines:
                     # get the outstanding residual value in invoice currency
-                    # get the outstanding residual value in its currency. We don't want to show it
-                    # in the invoice currency since the exchange rate between the invoice date and
-                    # the payment date might have changed.
-                    if line.currency_id:
-                        currency_id = line.currency_id
+                    if line.currency_id and line.currency_id == self.currency_id:
                         amount_to_show = abs(line.amount_residual_currency)
                     else:
-                        currency_id = line.company_id.currency_id
-                        amount_to_show = abs(line.amount_residual)
+                        amount_to_show = line.company_id.currency_id.with_context(date=line.date).compute(abs(line.amount_residual), self.currency_id)
+                    if float_is_zero(amount_to_show, precision_rounding=self.currency_id.rounding):
+                        continue
                     info['content'].append({
                         'journal_name': line.ref or line.move_id.name,
                         'amount': amount_to_show,
@@ -145,25 +143,24 @@ class AccountInvoice(models.Model):
         self.payments_widget = json.dumps(False)
         if self.payment_move_line_ids:
             info = {'title': _('Less Payment'), 'outstanding': False, 'content': []}
+            currency_id = self.currency_id
             for payment in self.payment_move_line_ids:
-                #we don't take into account the movement created due to a change difference
-                if payment.currency_id and payment.move_id.rate_diff_partial_rec_id:
-                    continue
                 if self.type in ('out_invoice', 'in_refund'):
                     amount = sum([p.amount for p in payment.matched_debit_ids if p.debit_move_id in self.move_id.line_ids])
                     amount_currency = sum([p.amount_currency for p in payment.matched_debit_ids if p.debit_move_id in self.move_id.line_ids])
                 elif self.type in ('in_invoice', 'out_refund'):
                     amount = sum([p.amount for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_ids])
                     amount_currency = sum([p.amount_currency for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_ids])
-                # Get the payment value in its currency. We don't want to show it in the invoice
-                # currency since the exchange rate between the invoice date and the payment date
-                # might have changed.
-                if payment.currency_id and amount_currency != 0:
-                    currency_id = payment.currency_id
-                    amount_to_show = -amount_currency
+                # get the payment value in invoice currency
+                if payment.currency_id and payment.currency_id == self.currency_id:
+                    amount_to_show = amount_currency
                 else:
-                    currency_id = payment.company_id.currency_id
-                    amount_to_show = -amount
+                    amount_to_show = payment.company_id.currency_id.with_context(date=payment.date).compute(amount, self.currency_id)
+                if float_is_zero(amount_to_show, precision_rounding=self.currency_id.rounding):
+                    continue
+                payment_ref = payment.move_id.name
+                if payment.move_id.ref:
+                    payment_ref += ' (' + payment.move_id.ref + ')'
                 info['content'].append({
                     'name': payment.name,
                     'journal_name': payment.journal_id.name,
@@ -174,7 +171,7 @@ class AccountInvoice(models.Model):
                     'date': payment.date,
                     'payment_id': payment.id,
                     'move_id': payment.move_id.id,
-                    'ref': payment.move_id.ref,
+                    'ref': payment_ref,
                 })
             self.payments_widget = json.dumps(info)
 
@@ -495,10 +492,20 @@ class AccountInvoice(models.Model):
     @api.multi
     def action_cancel_draft(self):
         # go from canceled state to draft state
-        self.write({'state': 'draft'})
+        self.write({'state': 'draft', 'date': False})
         self.delete_workflow()
         self.create_workflow()
+        # Delete attachments now since an invoice can also be generated when the invoice is cancelled
+        self.env['ir.attachment'].search([('res_model', '=', self._name), ('res_id', 'in', self.ids)]).unlink()
         return True
+
+    @api.multi
+    def get_formview_id(self):
+        """ Update form view id of action to open the invoice """
+        if self.type == 'in_invoice':
+            return self.env.ref('account.invoice_supplier_form').id
+        else:
+            return self.env.ref('account.invoice_form').id
 
     @api.multi
     def get_taxes_values(self):
@@ -543,9 +550,14 @@ class AccountInvoice(models.Model):
     @api.v7
     def assign_outstanding_credit(self, cr, uid, id, credit_aml_id, context=None):
         credit_aml = self.pool.get('account.move.line').browse(cr, uid, credit_aml_id, context=context)
+        inv = self.browse(cr, uid, id, context=context)
+        if not credit_aml.currency_id and inv.currency_id != inv.company_id.currency_id:
+            credit_aml.with_context(allow_amount_currency=True).write({
+                'amount_currency': inv.company_id.currency_id.with_context(date=credit_aml.date).compute(credit_aml.balance, inv.currency_id),
+                'currency_id': inv.currency_id.id})
         if credit_aml.payment_id:
             credit_aml.payment_id.write({'invoice_ids': [(4, id, None)]})
-        return self.browse(cr, uid, id, context=context).register_payment(credit_aml)
+        return inv.register_payment(credit_aml)
 
     @api.multi
     def action_date_assign(self):
@@ -633,6 +645,7 @@ class AccountInvoice(models.Model):
                     'price': tax_line.amount,
                     'account_id': tax_line.account_id.id,
                     'account_analytic_id': tax_line.account_analytic_id.id,
+                    'invoice_id': self.id,
                 })
         return res
 
@@ -659,6 +672,7 @@ class AccountInvoice(models.Model):
                     am = line2[tmp]['debit'] - line2[tmp]['credit'] + (l['debit'] - l['credit'])
                     line2[tmp]['debit'] = (am > 0) and am or 0.0
                     line2[tmp]['credit'] = (am < 0) and -am or 0.0
+                    line2[tmp]['amount_currency'] += l['amount_currency']
                     line2[tmp]['analytic_line_ids'] += l['analytic_line_ids']
                 else:
                     line2[tmp] = l
@@ -986,6 +1000,17 @@ class AccountInvoice(models.Model):
         res = map(lambda l: (l[0].name, formatLang(self.env, l[1], currency_obj=currency)), res)
         return res
 
+    @api.multi
+    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
+        for recipient in recipients:
+            if recipient.id in done_ids:
+                continue
+            if not recipient.user_ids:
+                group_data['partner'] |= recipient
+            else:
+                group_data['user'] |= recipient
+            done_ids.add(recipient.id)
+        return super(AccountInvoice, self)._notification_group_recipients(message, recipients, done_ids, group_data)
 
 class AccountInvoiceLine(models.Model):
     _name = "account.invoice.line"
@@ -1045,7 +1070,7 @@ class AccountInvoiceLine(models.Model):
         required=True, domain=[('deprecated', '=', False)],
         default=_default_account,
         help="The income or expense account related to the selected product.")
-    price_unit = fields.Monetary(string='Unit Price', required=True)
+    price_unit = fields.Float(string='Unit Price', required=True, digits=dp.get_precision('Product Price'))
     price_subtotal = fields.Monetary(string='Amount',
         store=True, readonly=True, compute='_compute_price')
     price_subtotal_signed = fields.Monetary(string='Amount Signed', currency_field='company_currency_id',
@@ -1103,7 +1128,8 @@ class AccountInvoiceLine(models.Model):
 
         fix_price = self.env['account.tax']._fix_tax_included_price
         if self.invoice_id.type in ('in_invoice', 'in_refund'):
-            if not self.price_unit or float_compare(self.price_unit, self.product_id.standard_price, precision_digits=self.currency_id.rounding) == 0:
+            prec = self.env['decimal.precision'].precision_get('Product Price')
+            if not self.price_unit or float_compare(self.price_unit, self.product_id.standard_price, precision_digits=prec) == 0:
                 self.price_unit = fix_price(self.product_id.standard_price, taxes, fp_taxes)
         else:
             self.price_unit = fix_price(self.product_id.lst_price, taxes, fp_taxes)

@@ -8,6 +8,7 @@
 # Eric Geens <ericgeens@yahoo.com>, 2015
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2015
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2015-2016
+# Martin Trigaux, 2016
 # Volluta <volluta@tutanota.com>, 2015
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015-2016
 msgid ""
@@ -15,8 +16,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-02-11 22:47+0000\n"
-"Last-Translator: Eric Geens <eric.geens@vitabiz.be>\n"
+"PO-Revision-Date: 2016-04-20 13:22+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -435,7 +436,7 @@ msgstr "<strong>Controleer de belastingconfiguratie:</strong>"
 msgid ""
 "<strong>Check unpaid invoices</strong><br/>\n"
 "                                         Run an <i>Aged Receivable report</i> and check which customers still owe you money."
-msgstr "<strong>Controleer onbetaalde facturen</strong><br/>\n                                         Print een <i>te late betalers rapport</i> en controleer klanten die u nog geld schuldig zijn."
+msgstr "<strong>Controleer onbetaalde facturen</strong><br/>\n                                         Druk een <i>vervallen facturen rapportage</i> af en controleer klanten die u nog geld schuldig zijn."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -837,7 +838,7 @@ msgstr "Een typisch bedrijf mag één dagboek per betaalmethode gebruiken (conta
 #: model:ir.ui.view,arch_db:account.view_account_search
 #, python-format
 msgid "Account"
-msgstr "Rekening"
+msgstr "Grootboekrekening"
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
@@ -1266,12 +1267,12 @@ msgstr "Auditeur"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_include_base_amount
 msgid "Affect Base of Subsequent Taxes"
-msgstr "Beïnvloed grondslag van subsequenties belastingen"
+msgstr "Beïnvloed grondslag van daarop volgende belastingen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template_include_base_amount
 msgid "Affect Subsequent Taxes"
-msgstr "Beïnvloed subsequenties belastingen"
+msgstr "Beïnvloed opvolgende belastingen"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_aged_balance_view
@@ -1410,7 +1411,7 @@ msgstr "Sta kasbasis belastingen toe"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_l10n_us_check_printing
 msgid "Allow check printing and deposits"
-msgstr "Printen van cheques en stortingsbewijzen toestaan"
+msgstr "Afdrukken van cheques en stortingsbewijzen toestaan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_group_multi_currency
@@ -1715,7 +1716,7 @@ msgstr "Wachten op betalingen"
 #: code:addons/account/models/chart_template.py:156
 #, python-format
 msgid "BILL"
-msgstr "LFCT"
+msgstr "LF"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -3507,7 +3508,7 @@ msgstr "Er werd een dubbele leveranciersreferentie gevonden. Vermoedelijk hebt u
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_invoice_action_report_duplicate
 msgid "Duplicates"
-msgstr "Duplicaten"
+msgstr "Kopie factuur"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:135
@@ -3752,7 +3753,7 @@ msgstr "Filter..."
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_general_account_id
 #: model:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "Financial Account"
-msgstr "Financiële administratie"
+msgstr "Grootboekrekening"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report
@@ -4205,7 +4206,7 @@ msgstr "ID"
 #: code:addons/account/models/chart_template.py:155
 #, python-format
 msgid "INV"
-msgstr "KFCT"
+msgstr "F"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:394
@@ -4349,7 +4350,7 @@ msgstr "Bij het gebruik van betalingscondities zal de vervaldatum automatisch be
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "If you want to be able to send customer statements from Odoo, you must:"
-msgstr "Indien u klantoverzichten wil verzenden vanuit Odoo, dan moet u:"
+msgstr "Indien u rekeningoverzichten wil verzenden vanuit Odoo, dan moet u:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4364,14 +4365,6 @@ msgstr "Als u uw klanten hun betaaloverzichten wil versturen vanuit Odoo,\ndan m
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "If you want to do it yourself:"
 msgstr "Indien u dit zelf wenst te doen:"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.account_planner
-msgid ""
-"If you'd like some assistance on any of the above, please do not hesitate \n"
-"                        to contact our accounting experts by using the \n"
-"                        <span class=\"fa fa-question-circle\"/> icon on the top bar."
-msgstr "Indien u hulp nodig hebt bij één van de onderwerpen, aarzel dan niet om onze \n                        boekkhoudexperten te contacteren door bovenaan op het <span class=\"fa fa-question-circle\"/>\n                        icoon te klikken."
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -4439,7 +4432,7 @@ msgstr "Om meerdere facturen in één keer te kunnen betalen, moeten ze dezelfde
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "In your old accounting software, print a trial balance"
-msgstr "Print een proefbalans in uwe oude boekhoudingssoftware"
+msgstr "Druk een proefbalans af in uw oude boekhoudingssoftware"
 
 #. module: account
 #: selection:account.payment.method,payment_type:0
@@ -4547,7 +4540,7 @@ msgstr "Interne notities"
 #: selection:account.payment,payment_type:0
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Internal Transfer"
-msgstr "Interne verplaatsing"
+msgstr "Interne mutatie"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_template_form
@@ -4864,7 +4857,7 @@ msgstr "Boekingen per maand"
 #: model:ir.model.fields,field_description:account.field_account_move_line_move_id
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Journal Entry"
-msgstr "Dagboek invoer"
+msgstr "Boeking"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line
@@ -4923,7 +4916,7 @@ msgstr "Naam dagboek"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
 msgid "Journal and Partner"
-msgstr "Dagboek & Relatie"
+msgstr "Dagboek en Relatie"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -5387,7 +5380,7 @@ msgstr "Handmatig"
 #: model:ir.ui.view,arch_db:account.view_invoice_tax_form
 #: model:ir.ui.view,arch_db:account.view_invoice_tax_tree
 msgid "Manual Invoice Taxes"
-msgstr "Beheer factuurbelastingen"
+msgstr "Handmatige Factuur Belasting"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5942,7 +5935,7 @@ msgstr "Begin aantal"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_operation_template_form
 msgid "Operation Templates"
-msgstr "Operatie sjablonen"
+msgstr "Bewerkingsjablonen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_nocreate
@@ -6352,7 +6345,7 @@ msgstr "Overeenkomende betalingen"
 msgid ""
 "Payments are used to register liquidity movements (send, collect or transfer money).\n"
 "                  You can then process those payments by your own means or by using installed facilities."
-msgstr "Betalingen worden gebruikt om bewegingen in liquiditeiten te registreren (verzenden, innen en overmaken van geld).\nU kunt de betalingen op uw manier verwerken, of door gebruik te maken van één van de voorgeïnstalleerde mogelijkheden."
+msgstr "Betalingen worden gebruikt om bewegingen in liquiditeiten te registreren (betalen, innen en overmaken van geld).\nU kunt de betalingen op uw manier verwerken, of door gebruik te maken van één van de voorgeïnstalleerde mogelijkheden."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -6587,12 +6580,12 @@ msgstr "Prijs"
 #: model:ir.ui.view,arch_db:account.account_common_report_view
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Print"
-msgstr "Print"
+msgstr "Afdrukken"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Print Invoice"
-msgstr "Print factuur"
+msgstr "Factuur afdrukken"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -6797,7 +6790,7 @@ msgstr "Debiteuren en crediteuren rekeningen"
 #: selection:account.register.payments,payment_type:0
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Receive Money"
-msgstr "Ontvang geld"
+msgstr "Ontvangen"
 
 #. module: account
 #. openerp-web
@@ -7283,7 +7276,7 @@ msgstr "Relatie selecteren"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:234
 #, python-format
 msgid "Select a partner or choose a counterpart"
-msgstr "Selecteer een relatie of kies een tegenhanger"
+msgstr "Selecteer een relatie of kies een tegenrekening"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line_value
@@ -7312,7 +7305,7 @@ msgstr "Geselecteerde facturen kunnen niet bevestigd worden omdat deze zich niet
 #: selection:account.register.payments,payment_type:0
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Send Money"
-msgstr "Verzend geld"
+msgstr "Betalen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -7324,7 +7317,7 @@ msgstr "Verzenden via e-mail"
 msgid ""
 "Sending customer statements (outstanding invoices) manually during the "
 "transition period"
-msgstr "Handmatig klantoverzichten (met uitstaande facturen) verzenden tijdens de overgangsperiode"
+msgstr "Handmatig rekeningoverzichten (met uitstaande facturen) verzenden tijdens de overgangsperiode"
 
 #. module: account
 #: selection:account.payment,state:0
@@ -8436,7 +8429,7 @@ msgid ""
 "This technical field can be used at the statement line creation/import time "
 "in order to avoid the reconciliation process on it later on. The statement "
 "line will simply create a counterpart on this account"
-msgstr "Dit technisch veld kan bij het maken van een regel op een afschrift worden gebruikt om het proces van afletteren te vermijden. De regel zal gewoon een tegenhanger van deze rekening"
+msgstr "Dit technisch veld kan bij het maken van een regel op een afschrift worden gebruikt om het proces van afletteren te vermijden. Het afschrift zal gewoon een tegeboeking maken op deze rekening"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_validate_account_move
@@ -9234,6 +9227,14 @@ msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
 msgstr "Het is niet mogelijk om deze aanpassing te doen op een reeds afgeletterde boeking. Het is alleen mogelijk om enkele, niet wettelijke velden, te wijzigen. Anders dient u het afletteren eerst ongedaan te maken!\n%s."
+
+#. module: account
+#: code:addons/account/models/account.py:329
+#, python-format
+msgid ""
+"You cannot empty the account number once set.\n"
+"If you would like to delete the account number, you can do it from the Bank Accounts list."
+msgstr "U kan het rekeningnummer niet leegmaken eenmaal het ingesteld is.\nIndien u het rekeningnummer wilt verwijderen kan u dit doen vanuit de bankrekeningen lijst."
 
 #. module: account
 #: code:addons/account/models/account.py:96

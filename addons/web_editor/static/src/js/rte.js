@@ -205,7 +205,7 @@ var history = new History();
 $.extend($.expr[':'],{
     o_editable: function(node,i,m){
         while (node) {
-            if (node.className) {
+            if (node.className && _.isString(node.className)) {
                 if (node.className.indexOf('o_not_editable')!==-1 ) {
                     return false;
                 }

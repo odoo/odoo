@@ -97,6 +97,7 @@ class stock_landed_cost(osv.osv):
         Afterwards, for the goods that are already out of stock, we should create the out moves
         """
         aml_obj = self.pool.get('account.move.line')
+        user_obj = self.pool.get('res.users')
         if context is None:
             context = {}
         ctx = context.copy()
@@ -122,11 +123,11 @@ class stock_landed_cost(osv.osv):
         
         #Create account move lines for quants already out of stock
         if qty_out > 0:
-            debit_line = dict(debit_line,
+            debit_line = dict(base_line,
                               name=(line.name + ": " + str(qty_out) + _(' already out')),
                               quantity=qty_out,
                               account_id=already_out_account_id)
-            credit_line = dict(credit_line,
+            credit_line = dict(base_line,
                               name=(line.name + ": " + str(qty_out) + _(' already out')),
                               quantity=qty_out,
                               account_id=debit_account_id)
@@ -140,6 +141,27 @@ class stock_landed_cost(osv.osv):
                 credit_line['debit'] = -diff
             aml_obj.create(cr, uid, debit_line, context=ctx)
             aml_obj.create(cr, uid, credit_line, context=ctx)
+
+            if user_obj.browse(cr, uid, [uid], context=context).company_id.anglo_saxon_accounting:
+                debit_line = dict(base_line,
+                                  name=(line.name + ": " + str(qty_out) + _(' already out')),
+                                  quantity=qty_out,
+                                  account_id=credit_account_id)
+                credit_line = dict(base_line,
+                                  name=(line.name + ": " + str(qty_out) + _(' already out')),
+                                  quantity=qty_out,
+                                  account_id=already_out_account_id)
+
+                if diff > 0:
+                    debit_line['debit'] = diff
+                    credit_line['credit'] = diff
+                else:
+                    # negative cost, reverse the entry
+                    debit_line['credit'] = -diff
+                    credit_line['debit'] = -diff
+                aml_obj.create(cr, uid, debit_line, context=ctx)
+                aml_obj.create(cr, uid, credit_line, context=ctx)
+
         self.pool.get('account.move').assert_balanced(cr, uid, [move_id], context=context)
         return True
 
@@ -187,13 +209,41 @@ class stock_landed_cost(osv.osv):
                     continue
                 per_unit = line.final_cost / line.quantity
                 diff = per_unit - line.former_cost_per_unit
-                quants = [quant for quant in line.move_id.quant_ids]
+
+                # If the precision required for the variable diff is larger than the accounting
+                # precision, inconsistencies between the stock valuation and the accounting entries
+                # may arise.
+                # For example, a landed cost of 15 divided in 13 units. If the products leave the
+                # stock one unit at a time, the amount related to the landed cost will correspond to
+                # round(15/13, 2)*13 = 14.95. To avoid this case, we split the quant in 12 + 1, then
+                # record the difference on the new quant.
+                # We need to make sure to able to extract at least one unit of the product. There is
+                # an arbitrary minimum quantity set to 2.0 from which we consider we can extract a
+                # unit and adapt the cost.
+                curr_rounding = line.move_id.company_id.currency_id.rounding
+                diff_rounded = float_round(diff, precision_rounding=curr_rounding)
+                diff_correct = diff_rounded
+                quants = line.move_id.quant_ids.sorted(key=lambda r: r.qty, reverse=True)
+                quant_correct = False
+                if quants\
+                        and float_compare(quants[0].product_id.uom_id.rounding, 1.0, precision_digits=1) == 0\
+                        and float_compare(line.quantity * diff, line.quantity * diff_rounded, precision_rounding=curr_rounding) != 0\
+                        and float_compare(quants[0].qty, 2.0, precision_rounding=quants[0].product_id.uom_id.rounding) >= 0:
+                    # Search for existing quant of quantity = 1.0 to avoid creating a new one
+                    quant_correct = quants.filtered(lambda r: float_compare(r.qty, 1.0, precision_rounding=quants[0].product_id.uom_id.rounding) == 0)
+                    if not quant_correct:
+                        quant_correct = quant_obj._quant_split(cr, uid, quants[0], quants[0].qty - 1.0, context=context)
+                    else:
+                        quant_correct = quant_correct[0]
+                        quants = quants - quant_correct
+                    diff_correct += (line.quantity * diff) - (line.quantity * diff_rounded)
+                    diff = diff_rounded
+
                 quant_dict = {}
                 for quant in quants:
-                    if quant.id not in quant_dict:
-                        quant_dict[quant.id] = quant.cost + diff
-                    else:
-                        quant_dict[quant.id] += diff
+                    quant_dict[quant.id] = quant.cost + diff
+                if quant_correct:
+                    quant_dict[quant_correct.id] = quant_correct.cost + diff_correct
                 for key, value in quant_dict.items():
                     quant_obj.write(cr, SUPERUSER_ID, key, {'cost': value}, context=context)
                 qty_out = 0

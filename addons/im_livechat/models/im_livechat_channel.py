@@ -48,13 +48,11 @@ class ImLivechatChannel(models.Model):
     # images fields
     image = fields.Binary('Image', default=_default_image, attachment=True,
         help="This field holds the image used as photo for the group, limited to 1024x1024px.")
-    image_medium = fields.Binary('Medium',
-        compute='_compute_image', store=True, attachment=True,
+    image_medium = fields.Binary('Medium', attachment=True,
         help="Medium-sized photo of the group. It is automatically "\
              "resized as a 128x128px image, with aspect ratio preserved. "\
              "Use this field in form views or some kanban views.")
-    image_small = fields.Binary('Thumbnail',
-        compute='_compute_image', store=True, attachment=True,
+    image_small = fields.Binary('Thumbnail', attachment=True,
         help="Small-sized photo of the group. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
@@ -68,12 +66,6 @@ class ImLivechatChannel(models.Model):
     @api.one
     def _are_you_inside(self):
         self.are_you_inside = bool(self.env.uid in [u.id for u in self.user_ids])
-
-    @api.one
-    @api.depends('image')
-    def _compute_image(self):
-        self.image_medium = tools.image_resize_image_medium(self.image)
-        self.image_small = tools.image_resize_image_small(self.image)
 
     @api.multi
     def _compute_script_external(self):
@@ -110,6 +102,16 @@ class ImLivechatChannel(models.Model):
                 record.rating_percentage_satisfaction = ((happy*100) / total) if happy > 0 else 0
             else:
                 record.rating_percentage_satisfaction = -1
+
+    @api.model
+    def create(self, vals):
+        tools.image_resize_images(vals)
+        return super(ImLivechatChannel, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        tools.image_resize_images(vals)
+        return super(ImLivechatChannel, self).write(vals)
 
     # --------------------------
     # Action Methods
@@ -174,7 +176,7 @@ class ImLivechatChannel(models.Model):
             'anonymous_name': anonymous_name,
             'channel_type': 'livechat',
             'name': ', '.join([anonymous_name, user.name]),
-            'public': 'public',
+            'public': 'private',
             'email_send': False,
         })
         return mail_channel.sudo().with_context(im_livechat_operator_partner_id=operator_partner_id).channel_info()[0]

@@ -47,7 +47,7 @@ class MassMailingList(osv.Model):
             _get_contact_nbr, type='integer',
             string='Number of Contacts',
         ),
-        'popup_content': fields.html("Website Popup Content", translate=True, required=True, sanitize=False),
+        'popup_content': fields.html("Website Popup Content", translate=True, sanitize=False),
         'popup_redirect_url': fields.char("Website Popup Redirect URL"),
     }
 

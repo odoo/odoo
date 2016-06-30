@@ -2,7 +2,7 @@
 <openerp>
     <menuitem id="account_reports_nl_statements_menu" name="Dutch Statements" parent="account.menu_finance_reports" sequence="3" groups="account.group_account_user"/>
 
-    <data noupdate="True">
+    <data>
     
     <record id="transfer_account_id" model="account.account.template">
        <field name="name">Overschrijvingen</field>
@@ -3135,134 +3135,162 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 
 -->
 <!-- Account Tags -->
-    <record id="tax_tag_1" model="account.account.tag">
-        <field name="name">0% BTW</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_2" model="account.account.tag">
-        <field name="name">6% BTW verkopen</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_3" model="account.account.tag">
-        <field name="name">21% BTW verkopen</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_4" model="account.account.tag">
-        <field name="name">variabel BTW verkopen</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_5" model="account.account.tag">
-        <field name="name">6% BTW inkopen</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_6" model="account.account.tag">
-        <field name="name">21% BTW inkopen</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_7" model="account.account.tag">
-        <field name="name">variabel BTW inkopen</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_8" model="account.account.tag">
-        <field name="name">0% BTW verlegd</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_9" model="account.account.tag">
-        <field name="name">BTW te vorderen verlegd (inkopen1)</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_10" model="account.account.tag">
-        <field name="name">BTW af te dragen verlegd (inkopen2)</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_11" model="account.account.tag">
-        <field name="name">21% BTW verlegd</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_12" model="account.account.tag">
-        <field name="name">Inkopen import binnen EU laag(1)</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_13" model="account.account.tag">
-        <field name="name">Inkopen import binnen EU laag(2)</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_14" model="account.account.tag">
-        <field name="name">6% BTW import binnen EU</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_15" model="account.account.tag">
-        <field name="name">Inkopen import binnen EU hoog(1)</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_16" model="account.account.tag">
-        <field name="name">Inkopen import binnen EU hoog(2)</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_17" model="account.account.tag">
-        <field name="name">21% BTW import binnen EU</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_18" model="account.account.tag">
-        <field name="name">Inkopen import binnen EU overig(1)</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_19" model="account.account.tag">
-        <field name="name">Inkopen import binnen EU overig(2)</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_20" model="account.account.tag">
-        <field name="name">0% BTW import binnen EU</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_21" model="account.account.tag">
-        <field name="name">BTW export binnen EU</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_22" model="account.account.tag">
-        <field name="name">Inst./afst.verkopen binnen EU</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_23" model="account.account.tag">
-        <field name="name">Inkopen import buiten EU laag(1)</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_24" model="account.account.tag">
-        <field name="name">Inkopen import buiten EU laag(2)</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_25" model="account.account.tag">
-        <field name="name">BTW import buiten EU laag inkopen</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_26" model="account.account.tag">
-        <field name="name">Inkopen import buiten EU hoog(1)</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_27" model="account.account.tag">
-        <field name="name">Inkopen import buiten EU hoog(2)</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_28" model="account.account.tag">
-        <field name="name">BTW import buiten EU hoog inkopen</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_29" model="account.account.tag">
-        <field name="name">Inkopen import buiten EU overig(1)</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_30" model="account.account.tag">
-        <field name="name">Inkopen import buiten EU overig(2)</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_31" model="account.account.tag">
-        <field name="name">BTW import buiten EU overig inkopen</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_32" model="account.account.tag">
-        <field name="name">BTW export buiten EU</field>
-        <field name="applicability">taxes</field>
-    </record>
+        <record id="tag_nl_01" model="account.account.tag">
+            <field name="name">Gegevens omzet</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_02" model="account.account.tag">
+            <field name="name">Rubriek 1: Prestaties binnenland</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_03" model="account.account.tag">
+            <field name="name">1a. Leveringen/diensten belast met hoog tarief (omzet)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_04" model="account.account.tag">
+            <field name="name">Leveringen/diensten belast met hoog tarief (omzet)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_05" model="account.account.tag">
+            <field name="name">1b. Leveringen/diensten belast met laag tarief (omzet)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_06" model="account.account.tag">
+            <field name="name">1c. Leveringen/diensten belast met overige tarieven behalve 0% (omzet)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_07" model="account.account.tag">
+            <field name="name">1d. Privégebruik (omzet)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_08" model="account.account.tag">
+            <field name="name">1e. Leveringen/diensten belast met 0% of niet bij u belast (omzet)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_09" model="account.account.tag">
+            <field name="name">Rubriek 2: Verleggingsregelingen binnenland (omzet)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_10" model="account.account.tag">
+            <field name="name">2a. Leveringen/diensten waarbij de heffing van omzetbelasting naar u is verlegd (omzet)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_11" model="account.account.tag">
+            <field name="name">Rubriek 3: Prestaties naar of in het buitenland (omzet)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_12" model="account.account.tag">
+            <field name="name">3a. Leveringen naar landen buiten de EU (uitvoer) (omzet)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_13" model="account.account.tag">
+            <field name="name">3b. Leveringen naar/diensten in landen binnen de EU (omzet)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_14" model="account.account.tag">
+            <field name="name">3c. Installatie/afstandsverkopen binnen de EU (omzet)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_15" model="account.account.tag">
+            <field name="name">Rubriek 4: Prestaties vanuit het buitenland aan u verricht (omzet)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_16" model="account.account.tag">
+            <field name="name">4a. Leveringen/diensten uit landen buiten de EU (invoer) (omzet)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_17" model="account.account.tag">
+            <field name="name">4b. Leveringen/diensten uit landen binnen de EU (omzet)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_18" model="account.account.tag">
+            <field name="name">Gegevens omzetbelasting (BTW)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_19" model="account.account.tag">
+            <field name="name">Rubriek 1: Prestaties binnenland (BTW)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_20" model="account.account.tag">
+            <field name="name">1a. Leveringen/diensten belast met 21% (BTW)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_21" model="account.account.tag">
+            <field name="name">Leveringen/diensten belast met hoog tarief (BTW)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_22" model="account.account.tag">
+            <field name="name">1b. Leveringen/diensten belast met laag tarief (BTW)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_23" model="account.account.tag">
+            <field name="name">1c. Leveringen/diensten belast met overige tarieven behalve 0% (BTW)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_24" model="account.account.tag">
+            <field name="name">1d. Privégebruik (BTW)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_25" model="account.account.tag">
+            <field name="name">1e. Leveringen/diensten belast met 0% of niet bij u belast (BTW)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_26" model="account.account.tag">
+            <field name="name">Rubriek 2: Verleggingsregelingen binnenland (BTW)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_27" model="account.account.tag">
+            <field name="name">2a. Leveringen/diensten waarbij de heffing van Heffing van omzetbelasting naar u is verlegd (BTW)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_28" model="account.account.tag">
+            <field name="name">Rubriek 4: Prestaties vanuit het buitenland aan u verricht (BTW)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_29" model="account.account.tag">
+            <field name="name">4a. Leveringen/diensten uit landen buiten de EU (BTW)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_30" model="account.account.tag">
+            <field name="name">4b. Leveringen/diensten uit landen binnen de EU (BTW)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_31" model="account.account.tag">
+            <field name="name">Rubriek 5: Voorbelasting, kleineondernemersregeling en totaal (BTW)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_32" model="account.account.tag">
+            <field name="name">5a. Verschuldigde omzetbelasting (rubrieken 1a t/m 4b) (BTW)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_33" model="account.account.tag">
+            <field name="name">5b. Voorbelasting (BTW)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_34" model="account.account.tag">
+            <field name="name">Voorbelasting (BTW) bis</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_35" model="account.account.tag">
+            <field name="name">5c. Subtotaal (rubriek 5a min 5b) (BTW)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_36" model="account.account.tag">
+            <field name="name">5d. Vermindering volgens de kleineondernemersregeling (BTW)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_37" model="account.account.tag">
+            <field name="name">5e. Schatting vorige aangifte(n) (BTW)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_38" model="account.account.tag">
+            <field name="name">5f. Schatting deze aangifte (BTW)</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_nl_39" model="account.account.tag">
+            <field name="name">5g. Totaal te betalen/terug te vragen (BTW)</field>
+            <field name="applicability">taxes</field>
+        </record>
 <!-- Binnen Nederland -->
 <!-- Verkoop BTW -->
 
@@ -3276,7 +3304,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="refund_account_id" ref="vat_payable0"/>
             <field name="account_id" ref="vat_payable0"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_1')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_08')])]"/>
         </record>
         <record id="btw_6" model="account.tax.template">
             <field name="sequence">10</field>
@@ -3288,7 +3316,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="refund_account_id" ref="vat_payable_low"/>
             <field name="account_id" ref="vat_payable_low"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_2')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_05'),ref('tag_nl_22')])]"/>
         </record>
         <record id="btw_21" model="account.tax.template">
             <field name="sequence">5</field>
@@ -3300,7 +3328,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="refund_account_id" ref="vat_payable_high"/>
             <field name="account_id" ref="vat_payable_high"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_3')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_03'),ref('tag_nl_20')])]"/>
         </record>
 <!-- TODO - nakijken btw overig op percentage-->
         <record id="btw_overig" model="account.tax.template">
@@ -3313,7 +3341,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="refund_account_id" ref="vat_payable_high"/>
             <field name="account_id" ref="vat_payable_high"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_4')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_04'),ref('tag_nl_06'),ref('tag_nl_21'),ref('tag_nl_23')])]"/>
         </record>
 
 <!--Inkoop BTW -->
@@ -3327,7 +3355,20 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="refund_account_id" ref="vat_refund_low"/>
             <field name="account_id" ref="vat_refund_low"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_5')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+        </record>
+        <record id="btw_6_buy_incl" model="account.tax.template">
+            <field name="sequence">10</field>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="name">BTW te vorderen laag (inkopen incl. BTW)</field>
+            <field name="description">6% BTW Incl.</field>
+            <field eval="6" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="price_include">True</field>
+            <field name="refund_account_id" ref="vat_refund_low"/>
+            <field name="account_id" ref="vat_refund_low"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
         </record>
         <record id="btw_21_buy" model="account.tax.template">
             <field name="sequence">5</field>
@@ -3339,7 +3380,20 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="refund_account_id" ref="vat_refund_high"/>
             <field name="account_id" ref="vat_refund_high"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_6')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+        </record>
+        <record id="btw_21_buy_incl" model="account.tax.template">
+            <field name="sequence">5</field>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="name">BTW te vorderen hoog (inkopen incl. BTW)</field>
+            <field name="description">21% BTW Incl.</field>
+            <field eval="21" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="price_include">True</field>
+            <field name="refund_account_id" ref="vat_refund_high"/>
+            <field name="account_id" ref="vat_refund_high"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
         </record>
         <record id="btw_overig_buy" model="account.tax.template">
             <field name="sequence">15</field>
@@ -3351,7 +3405,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="refund_account_id" ref="vat_refund_high"/>
             <field name="account_id" ref="vat_refund_high"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_7')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
         </record>
 <!--BTW verlegd-->
         <record id="btw_verk_0" model="account.tax.template">
@@ -3364,7 +3418,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="refund_account_id" ref="vat_payable_verlegd"/>
             <field name="account_id" ref="vat_payable_verlegd"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_8')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_08')])]"/>
         </record>
         <record id="btw_ink_0_1" model="account.tax.template">
             <field name="sequence">98</field>
@@ -3376,7 +3430,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="refund_account_id" ref="vat_payable_verlegd"/>
             <field name="account_id" ref="vat_payable_verlegd"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_9')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_27')])]"/>
         </record>
         <record id="btw_ink_0_2" model="account.tax.template">
             <field name="sequence">99</field>
@@ -3388,7 +3442,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="refund_account_id" ref="vat_payable_verlegd"/>
             <field name="account_id" ref="vat_payable_verlegd"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_10')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_34')])]"/>
         </record>
         <record id="btw_ink_0" model="account.tax.template">
             <field name="sequence">15</field>
@@ -3400,7 +3454,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="refund_account_id" ref="vat_payable_verlegd"/>
             <field name="account_id" ref="vat_payable_verlegd"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_11')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_10')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_ink_0_1'), ref('btw_ink_0_2')])]"/>
         </record>
 <!-- Binnen de EU -->
@@ -3415,7 +3469,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="refund_account_id" ref="vat_payable_low"/>
             <field name="account_id" ref="vat_payable_low"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_12')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_30')])]"/>
         </record>
         <record id="btw_I_6_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -3427,7 +3481,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="refund_account_id" ref="vat_refund_low"/>
             <field name="account_id" ref="vat_refund_low"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_13')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
         </record>
         <record id="btw_I_6" model="account.tax.template">
             <field name="sequence">20</field>
@@ -3437,7 +3491,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="6" name="amount"/>
             <field name="amount_type">group</field>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_14')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_17')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_I_6_1'), ref('btw_I_6_2')])]"/>
         </record>
         <record id="btw_I_21_1" model="account.tax.template">
@@ -3450,7 +3504,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="refund_account_id" ref="vat_payable_high"/>
             <field name="account_id" ref="vat_payable_high"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_15')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_30')])]"/>
         </record>
         <record id="btw_I_21_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -3462,7 +3516,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="refund_account_id" ref="vat_refund_high"/>
             <field name="account_id" ref="vat_refund_high"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_16')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
         </record>
         <record id="btw_I_21" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -3472,7 +3526,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="21" name="amount"/>
             <field name="amount_type">group</field>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_17')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_17')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_I_21_1'), ref('btw_I_21_2')])]"/>
         </record>
         <record id="btw_I_overig_1" model="account.tax.template">
@@ -3485,7 +3539,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="refund_account_id" ref="vat_payable_high"/>
             <field name="account_id" ref="vat_payable_high"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_18')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_30')])]"/>
         </record>
         <record id="btw_I_overig_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -3497,7 +3551,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="account_id" ref="vat_refund_high"/>
             <field name="sequence">98</field>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_19')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
         </record>
         <record id="btw_I_overig" model="account.tax.template">
             <field name="sequence">20</field>
@@ -3507,7 +3561,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="0" name="amount"/>
             <field name="amount_type">group</field>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_20')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_17')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_I_overig_1'), ref('btw_I_overig_2')])]"/>
         </record>
 <!-- BTW verkoop -->                        
@@ -3521,7 +3575,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="refund_account_id" ref="vat_payable0"/>
             <field name="account_id" ref="vat_payable0"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_21')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_13')])]"/>
         </record>
         <record id="btw_X2" model="account.tax.template">
             <field name="sequence">20</field>
@@ -3533,7 +3587,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="refund_account_id" ref="vat_payable0"/>
             <field name="account_id" ref="vat_payable0"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_22')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_14')])]"/>
         </record>
 
 <!-- Buiten de EU -->
@@ -3548,7 +3602,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="account_id" ref="vat_payable_low"/>
             <field name="sequence">21</field>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_23')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_29')])]"/>
         </record>
         <record id="btw_E1_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -3560,7 +3614,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="account_id" ref="vat_refund_low"/>
             <field name="sequence">22</field>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_24')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
         </record>
         <record id="btw_E1" model="account.tax.template">
             <field name="sequence">20</field>
@@ -3570,7 +3624,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="6" name="amount"/>
             <field name="amount_type">group</field>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_25')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_16')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_E1_1'), ref('btw_E1_2')])]"/>
         </record>
         <record id="btw_E2_1" model="account.tax.template">
@@ -3583,7 +3637,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="sequence">21</field>
             <field name="account_id" ref="vat_payable_high"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_26')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_29')])]"/>
         </record>
         <record id="btw_E2_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -3595,7 +3649,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="refund_account_id" ref="vat_refund_high"/>
             <field name="account_id" ref="vat_refund_high"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_27')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_34')])]"/>
         </record>
         <record id="btw_E2" model="account.tax.template">
             <field name="sequence">20</field>
@@ -3605,7 +3659,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="21" name="amount"/>
             <field name="amount_type">group</field>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_28')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_16')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_E2_1'), ref('btw_E2_2')])]"/>
         </record>
         <record id="btw_E_overig_1" model="account.tax.template">
@@ -3618,7 +3672,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="account_id" ref="vat_payable_high"/>
             <field name="type_tax_use">none</field>
             <field name="sequence">21</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_29')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_29')])]"/>
         </record>
         <record id="btw_E_overig_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -3630,7 +3684,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="account_id" ref="vat_refund_high"/>
             <field name="type_tax_use">none</field>
             <field name="sequence">22</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_30')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
         </record>
         <record id="btw_E_overig" model="account.tax.template">
             <field name="sequence">20</field>
@@ -3640,7 +3694,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="21" name="amount"/>
             <field name="amount_type">group</field>
             <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_31')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_16')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_E_overig_1'), ref('btw_E_overig_2')])]"/>
         </record>
 <!-- BTW Verkoop -->
@@ -3654,7 +3708,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="refund_account_id" ref="vat_payable0"/>
             <field name="account_id" ref="vat_payable0"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_32')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_12')])]"/>
         </record>
     </data>
 </openerp>

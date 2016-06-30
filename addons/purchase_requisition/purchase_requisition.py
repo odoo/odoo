@@ -143,7 +143,7 @@ class purchase_requisition(osv.osv):
         qty = product_uom._compute_qty(cr, uid, requisition_line.product_uom_id.id, requisition_line.product_qty, default_uom_po_id)
 
         taxes = product.supplier_taxes_id
-        fpos = supplier.property_account_position_id.id
+        fpos = supplier.property_account_position_id
         taxes_id = fpos.map_tax(taxes).ids if fpos else []
 
         po = po_obj.browse(cr, uid, [purchase_id], context=context)
@@ -431,6 +431,7 @@ class procurement_order(osv.osv):
                 self.message_post(cr, uid, [procurement.id], body=_("Purchase Requisition created"), context=context)
                 procurement.write({'requisition_id': requisition_id})
                 req_ids += [procurement.id]
+                res += [procurement.id]
         set_others = set(ids) - set(req_ids)
         if set_others:
             res += super(procurement_order, self).make_po(cr, uid, list(set_others), context=context)

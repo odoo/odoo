@@ -6,6 +6,7 @@ var gui = require('point_of_sale.gui');
 var keyboard = require('point_of_sale.keyboard');
 var models = require('point_of_sale.models');
 var core = require('web.core');
+var ajax = require('web.ajax');
 var CrashManager = require('web.CrashManager');
 
 
@@ -478,7 +479,13 @@ var Chrome = PosBaseWidget.extend({
     build_chrome: function() { 
         var self = this;
         FastClick.attach(document.body);
-        core.bus.trigger('set_full_screen', true);
+
+        if ($.browser.chrome) {
+            var chrome_version = $.browser.version.split('.')[0];
+            if (parseInt(chrome_version, 10) >= 50) {
+                ajax.loadCSS('/point_of_sale/static/src/css/chrome50.css');
+            }
+        }
 
         this.renderElement();
 
@@ -752,14 +759,19 @@ var Chrome = PosBaseWidget.extend({
 
     destroy: function() {
         this.pos.destroy();
-        core.bus.trigger('set_full_screen', false);
         this._super();
     }
 });
 
 return {
     Chrome: Chrome,
+    DebugWidget: DebugWidget,
+    HeaderButtonWidget: HeaderButtonWidget,
     OrderSelectorWidget: OrderSelectorWidget,
+    ProxyStatusWidget: ProxyStatusWidget,
+    StatusWidget: StatusWidget,
+    SynchNotificationWidget: SynchNotificationWidget,
+    UsernameWidget: UsernameWidget,
 };
 });
 

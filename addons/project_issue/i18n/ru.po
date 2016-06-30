@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Gennady Marchenko <gennadym@gmail.com>, 2016
+# Viktor Pogrebniak <vp@aifil.ru>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:25+0000\n"
-"PO-Revision-Date: 2016-01-30 19:34+0000\n"
-"Last-Translator: Gennady Marchenko <gennadym@gmail.com>\n"
+"PO-Revision-Date: 2016-04-17 22:57+0000\n"
+"Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +27,7 @@ msgstr "# эл. писем"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_res_partner_issue_count
 msgid "# Issues"
-msgstr "# Проблемные моменты"
+msgstr "# Запросы"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_nbr
@@ -61,12 +62,12 @@ msgid ""
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
 " * Ready for next stage indicates the issue is ready to be pulled to the next stage"
-msgstr "Состояние канбана проблемного момента указывает на определенные положения, влияющие на его:\n * Нормальный - положение по умолчанию\n * Заблокирован - указывает на то, что что-то мешает прогрессу данного проблемного момента\n * Готов к следующему этапу - указывает на то, что проблемный момент может быть выдвинут на следующий этап"
+msgstr "Канбан-статус запроса отражает его состояние:\n * Нормальный: состояние по умолчанию\n * Блокирован: что-то мешает прогрессу данного запроса\n * Готов к следующему этапу: запрос готов к переходу на следующий этап"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_needaction
 msgid "Action Needed"
-msgstr "Требуется реакция"
+msgstr "Требует внимания"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_active
@@ -86,7 +87,7 @@ msgstr "Счёт аналитики"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Archived"
-msgstr "Помещено в архив"
+msgstr "В архиве"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_open
@@ -146,7 +147,7 @@ msgstr "Установите этот флажок, чтобы управлят�
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.open_view_issue
 msgid "Click to create an issue."
-msgstr "Кликните, чтобы создать проблему"
+msgstr "Нажмите, чтобы создать заявку."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_closed
@@ -220,7 +221,7 @@ msgstr "Email заказчика"
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_project_label_issues
 msgid "Customize the issues label, for example to call them cases."
-msgstr ""
+msgstr "Настройте пункт &quot;Заявки&quot;, например, можете назвать его &quot;Задачи&quot;."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date
@@ -296,7 +297,7 @@ msgstr "Разница в днях между последним действи�
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_display_name
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_display_name
 msgid "Display Name"
-msgstr "Отображаемое Имя"
+msgstr "Отображаемое имя"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_duration
@@ -375,7 +376,7 @@ msgstr "Если отмечено, новые сообщения требуют 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Если отмечено - новые сообщения требуют Вашего внимания !"
+msgstr "Если отмечено, новые сообщения требуют вашего внимания."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_is_follower
@@ -387,7 +388,7 @@ msgstr "Подписчик"
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Issue"
-msgstr "Проблема"
+msgstr "Заявка"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
@@ -405,7 +406,7 @@ msgstr "Проблема открыта"
 #: model:mail.message.subtype,name:project_issue.mt_issue_ready
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_ready
 msgid "Issue Ready"
-msgstr "Проблема готова"
+msgstr "Проблема решена"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
@@ -415,12 +416,12 @@ msgstr "Стадия проблемы изменена"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 msgid "Issue Summary..."
-msgstr ""
+msgstr "Описание проблемы..."
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Issue Tracker Search"
-msgstr "Поиск по проблемам"
+msgstr "Поиск по заявкам"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
@@ -430,17 +431,17 @@ msgstr "Дерево инцидентов"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_blocked
 msgid "Issue blocked"
-msgstr "Проблема заблокирована"
+msgstr "Заявка блокирована"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
 msgid "Issue opened"
-msgstr "Проблема открыта"
+msgstr "Заявка открыта"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
 msgid "Issue ready for next sStage"
-msgstr "Проблема готова к следующему этапу"
+msgstr "Заявка готова к следующему этапу"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
@@ -470,12 +471,12 @@ msgstr "Анализ проблемы"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr "Канбан Заблокированное Объяснение"
+msgstr "Канбан блокированное объяснение"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr "Канбан Текущее Объяснение"
+msgstr "Канбан текущее объяснение"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_kanban_state
@@ -485,7 +486,7 @@ msgstr "Канбан статус"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_done
 msgid "Kanban Valid Explanation"
-msgstr ""
+msgstr "Канбан: верное объяснение"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_last
@@ -605,7 +606,7 @@ msgstr "Контрагент"
 msgid ""
 "Please remove existing issues in the project linked to the accounts you want"
 " to delete."
-msgstr ""
+msgstr "Пожалуйста, удалите из проекта существующие задачи, связанные с аккаунтами, которые вы собираетесь удалить."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_priority
@@ -709,7 +710,7 @@ msgid ""
 "The Odoo issues tacker allows you to efficiently manage things\n"
 "                    like internal requests, software development bugs, customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
-msgstr ""
+msgstr "Трекер задач Odoo позволяет вам эффективно управлять такими процессами, как внутренние запросы, баги в разработке ПО, жалобы клиентов, проблемы с проектом, порча материалов и т. п."
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
@@ -717,7 +718,7 @@ msgid ""
 "The Odoo issues tacker allows you to efficiently manage things\n"
 "                like internal requests, software development bugs, customer\n"
 "                complaints, project troubles, material breakdowns, etc."
-msgstr ""
+msgstr "Трекер задач Odoo позволяет вам эффективно управлять такими процессами, как внутренние запросы, баги в разработке ПО, жалобы клиентов, проблемы с проектом, порча материалов и т. п."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
@@ -817,7 +818,7 @@ msgstr "Вы можете привязать эту проблему к суще
 msgid ""
 "You can track your issues from this menu and the action we     \n"
 "                will take."
-msgstr ""
+msgstr "Вы можете отслеживать ваши задачи и наши действия в этом меню."
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:260

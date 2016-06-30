@@ -961,7 +961,9 @@ class calendar_event(osv.Model):
 
     def _check_closing_date(self, cr, uid, ids, context=None):
         for event in self.browse(cr, uid, ids, context=context):
-            if event.stop < event.start:
+            if event.start_datetime and event.stop_datetime < event.start_datetime:
+                return False
+            if event.start_date and event.stop_date < event.start_date:
                 return False
         return True
 
@@ -1381,6 +1383,30 @@ class calendar_event(osv.Model):
             ('user_id', '=', uid),
         ]
 
+    @api.multi
+    def _get_message_unread(self):
+        id_map = {x: calendar_id2real_id(x) for x in self.ids}
+        real = self.browse(set(id_map.values()))
+        super(calendar_event, real)._get_message_unread()
+        for event in self:
+            if event.id == id_map[event.id]:
+                continue
+            rec = self.browse(id_map[event.id])
+            event.message_unread_counter = rec.message_unread_counter
+            event.message_unread = rec.message_unread
+
+    @api.multi
+    def _get_message_needaction(self):
+        id_map = {x: calendar_id2real_id(x) for x in self.ids}
+        real = self.browse(set(id_map.values()))
+        super(calendar_event, real)._get_message_needaction()
+        for event in self:
+            if event.id == id_map[event.id]:
+                continue
+            rec = self.browse(id_map[event.id])
+            event.message_needaction_counter = rec.message_needaction_counter
+            event.message_needaction = rec.message_needaction
+
     @api.cr_uid_ids_context
     def message_post(self, cr, uid, thread_id, context=None, **kwargs):
         if isinstance(thread_id, basestring):
@@ -1681,7 +1707,9 @@ class calendar_event(osv.Model):
                     continue
             if r['class'] == 'private':
                 for f in r.keys():
-                    if f not in ('id', 'allday', 'start', 'stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date', 'rrule'):
+                    recurrent_fields = self._get_recurrent_fields(cr, uid, context=context)
+                    public_fields = list(set(recurrent_fields + ['id', 'allday', 'start', 'stop', 'display_start', 'display_stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date', 'rrule']))
+                    if f not in public_fields:
                         if isinstance(r[f], list):
                             r[f] = []
                         else:
@@ -1731,10 +1759,11 @@ class mail_message(osv.Model):
         '''
         convert the search on real ids in the case it was asked on virtual ids, then call super()
         '''
+        args = list(args)
         for index in range(len(args)):
             if args[index][0] == "res_id":
                 if isinstance(args[index][2], basestring):
-                    args[index][2] = get_real_ids(args[index][2])
+                    args[index] = (args[index][0], args[index][1], get_real_ids(args[index][2]))
                 elif isinstance(args[index][2], list):
                     args[index] = (args[index][0], args[index][1], map(lambda x: get_real_ids(x), args[index][2]))
         return super(mail_message, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
@@ -1756,9 +1785,10 @@ class ir_attachment(osv.Model):
         '''
         convert the search on real ids in the case it was asked on virtual ids, then call super()
         '''
+        args = list(args)
         for index in range(len(args)):
             if args[index][0] == "res_id" and isinstance(args[index][2], basestring):
-                args[index][2] = get_real_ids(args[index][2])
+                args[index] = (args[index][0], args[index][1], get_real_ids(args[index][2]))
         return super(ir_attachment, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
     def write(self, cr, uid, ids, vals, context=None):

@@ -320,6 +320,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
         this.index = null;
         this._sort = [];
         this._model = new Model(model, context);
+        this.orderer = new utils.DropMisordered();
     },
     previous: function () {
         this.index -= 1;
@@ -408,10 +409,11 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
     read_slice: function (fields, options) {
         var self = this;
         options = options || {};
-        return this._model.query(fields)
+        var query = this._model.query(fields)
                 .limit(options.limit || false)
                 .offset(options.offset || 0)
-                .all().done(function (records) {
+                .all();
+        return this.orderer.add(query).done(function (records) {
             self.ids = _(records).pluck('id');
         });
     },
@@ -833,9 +835,10 @@ var BufferedDataSet = DataSetStatic.extend({
             });
         }
         this.delete_all = false;
-        _.each(_.clone(this.running_reads), function(el) {
-            el.reject();
-        });
+        this.cancel_read();
+    },
+    cancel_read: function () {
+        _.invoke(_.clone(this.running_reads), 'reject');
     },
     read_ids: function (ids, fields, options) {
         // read what is necessary from the server to have ids and the given
@@ -897,11 +900,8 @@ var BufferedDataSet = DataSetStatic.extend({
             });
             var _super = this._super;
             this.mutex.exec(function () {
-                _super.call(self, to_get, fields, options).then(function() {
-                    def.resolve.apply(def, arguments);
-                }, function() {
-                    def.reject.apply(def, arguments);
-                });
+                if (def.state() !== "pending") return;
+                _super.call(self, to_get, fields, options).then(_.bind(def.resolve, def), _.bind(def.reject, def));
                 return def;
             });
             return def.then(function(records) {
@@ -942,11 +942,11 @@ var BufferedDataSet = DataSetStatic.extend({
         this.evict_record(id);
         return this._super(id, signal);
     },
-    alter_ids: function(n_ids) {
+    alter_ids: function(n_ids, options) {
         var dirty = !_.isEqual(this.ids, n_ids);
-        this._super(n_ids);
+        this._super(n_ids, options);
         if (dirty) {
-            this.trigger("dataset_changed", n_ids);
+            this.trigger("dataset_changed", n_ids, options);
         }
     },
 });

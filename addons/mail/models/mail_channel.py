@@ -72,13 +72,11 @@ class Channel(models.Model):
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary("Photo", default=_get_default_image, attachment=True,
         help="This field holds the image used as photo for the group, limited to 1024x1024px.")
-    image_medium = fields.Binary('Medium-sized photo',
-        compute='_get_image', inverse='_set_image_medium', store=True, attachment=True,
+    image_medium = fields.Binary('Medium-sized photo', attachment=True,
         help="Medium-sized photo of the group. It is automatically "
              "resized as a 128x128px image, with aspect ratio preserved. "
              "Use this field in form views or some kanban views.")
-    image_small = fields.Binary('Small-sized photo',
-        compute='_get_image', inverse='_set_image_small', store=True, attachment=True,
+    image_small = fields.Binary('Small-sized photo', attachment=True,
         help="Small-sized photo of the group. It is automatically "
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
@@ -96,20 +94,9 @@ class Channel(models.Model):
         for record in self:
             record.is_member = record in membership_ids
 
-    @api.one
-    @api.depends('image')
-    def _get_image(self):
-        self.image_medium = tools.image_resize_image_medium(self.image)
-        self.image_small = tools.image_resize_image_small(self.image)
-
-    def _set_image_medium(self):
-        self.image = tools.image_resize_image_big(self.image_medium)
-
-    def _set_image_small(self):
-        self.image = tools.image_resize_image_big(self.image_small)
-
     @api.model
     def create(self, vals):
+        tools.image_resize_images(vals)
         # Create channel and alias
         channel = super(Channel, self.with_context(
             alias_model_name=self._name, alias_parent_model_name=self._name, mail_create_nolog=True, mail_create_nosubscribe=True)
@@ -143,6 +130,7 @@ class Channel(models.Model):
 
     @api.multi
     def write(self, vals):
+        tools.image_resize_images(vals)
         result = super(Channel, self).write(vals)
         if vals.get('group_ids'):
             self._subscribe_users()
@@ -225,6 +213,11 @@ class Channel(models.Model):
         body = self.env['mail.shortcode'].apply_shortcode(body, shortcode_type='text')
         message = super(Channel, self.with_context(mail_create_nosubscribe=True)).message_post(body=body, subject=subject, message_type=message_type, subtype=subtype, parent_id=parent_id, attachments=attachments, content_subtype=content_subtype, **kwargs)
         return message
+
+    def init(self, cr):
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('mail_channel_partner_seen_message_id_idx',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX mail_channel_partner_seen_message_id_idx ON mail_channel_partner (channel_id,partner_id,seen_message_id)')
 
     #------------------------------------------------------
     # Instant Messaging API
