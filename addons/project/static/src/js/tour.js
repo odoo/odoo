@@ -59,7 +59,7 @@ tour.register('project_tour', {
     content: _t("Configuration options are available in the Settings app."),
     position: "bottom"
 }, {
-    trigger: ".o_web_settings_dashboard .o_web_settings_dashboard_invitations",
+    trigger: ".o_web_settings_dashboard textarea#user_emails",
     content: _t("<b>Invite collegues</b> via email.<br/><i>Enter one email per line.</i>"),
     position: "bottom"
 }]);
