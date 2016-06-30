@@ -2103,7 +2103,8 @@ class BaseModel(object):
             f for f in fields
             if f != 'sequence'
             if f not in groupby_fields
-            if self._fields.get(f, missing_field).group_operator
+            if f in self._fields
+            if self._fields[f].group_operator
             if getattr(self._fields[f].base_field.column, '_classic_write', False)
         ]
 
@@ -6248,4 +6249,4 @@ def _normalize_ids(arg, atoms=set(IdType)):
 
 # keep those imports here to avoid dependency cycle errors
 from .osv import expression
-from .fields import Field, SpecialValue, FailedValue, missing_field
+from .fields import Field, SpecialValue, FailedValue
