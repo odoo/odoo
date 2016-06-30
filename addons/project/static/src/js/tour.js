@@ -51,15 +51,20 @@ tour.register('project_tour', {
     content: _t("Click on a card to get the details of the task."),
     position: "bottom"
 }, {
-    trigger: ".o_form_sheet .o_form_button_edit:visible",
+    trigger: ".o_form_button_edit:visible",
     extra_trigger: '.o_form_project_tasks',
     content: _t('Click on this button to modify the task.'),
     position: "bottom"
 }, {
-    trigger: ".o_form_sheet .o_task_user_field",
+    trigger: ".o_form_field.o_task_user_field",
     extra_trigger: '.o_form_project_tasks.o_form_editable',
     content: _t('<b>Assign the task</b> to someone. <i>You can create and invite a new user on the fly.</i>'),
-    position: "right"
+    position: "bottom"
+}, {
+    trigger: ".o_form_button_save",
+    extra_trigger: '.o_form_project_tasks.o_form_editable',
+    content: _t('<b>Click the save button</b> to apply your changes to the task.'),
+    position: "bottom"
 }, {
     trigger: ".breadcrumb li:not(.active):last",
     extra_trigger: '.o_form_project_tasks',
