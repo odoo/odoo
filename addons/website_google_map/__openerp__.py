@@ -10,7 +10,7 @@ Odoo Website Google Map
 ==========================
 
         """,
-    'depends': ['base_geolocalize', 'website_partner', 'crm_partner_assign'],
+    'depends': ['base_geolocalize', 'website_partner'],
     'data': [
         'views/google_map_templates.xml',
     ],

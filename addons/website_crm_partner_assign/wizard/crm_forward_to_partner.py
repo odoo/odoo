@@ -35,7 +35,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
         lead_obj = self.pool.get('crm.lead')
         email_template_obj = self.pool.get('mail.template')
         try:
-            template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', 'email_template_lead_forward_mail')[1]
+            template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'website_crm_partner_assign', 'email_template_lead_forward_mail')[1]
         except ValueError:
             template_id = False
         res = super(crm_lead_forward_to_partner, self).default_get(cr, uid, fields, context=context)
@@ -64,7 +64,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
         record = self.browse(cr, uid, ids[0], context=context)
         email_template_obj = self.pool.get('mail.template')
         try:
-            template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', 'email_template_lead_forward_mail')[1]
+            template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'website_crm_partner_assign', 'email_template_lead_forward_mail')[1]
         except ValueError:
             raise UserError(_('The Forward Email Template is not in the database'))
         try:
@@ -118,7 +118,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
     def get_lead_portal_url(self, cr, uid, lead_id, type, context=None):
         action = type == 'opportunity' and 'action_portal_opportunities' or 'action_portal_leads'
         try:
-            action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', action)[1]
+            action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'website_crm_partner_assign', action)[1]
         except ValueError:
             action_id = False
         portal_link = "%s/?db=%s#id=%s&action=%s&view_type=form" % (self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url'), cr.dbname, lead_id, action_id)
