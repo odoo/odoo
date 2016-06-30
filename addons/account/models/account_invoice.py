@@ -1278,6 +1278,8 @@ class AccountInvoiceTax(models.Model):
             for line in tax.invoice_id.invoice_line_ids:
                 if tax.tax_id in line.invoice_line_tax_ids:
                     base += line.price_subtotal
+                    # To add include base amount taxes
+                    base += sum((line.invoice_line_tax_ids.filtered(lambda t: t.include_base_amount) - tax.tax_id).mapped('amount'))
             tax.base = base
 
     invoice_id = fields.Many2one('account.invoice', string='Invoice', ondelete='cascade', index=True)
