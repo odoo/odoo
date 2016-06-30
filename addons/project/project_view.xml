@@ -255,6 +255,7 @@
                             <field name="project_id" domain="[('active','=',False)]" on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
                             <field name="user_id"
                                 on_change="onchange_user_id(user_id, context)"
+                                class="o_task_user_field"
                                 options='{"no_open": True}'/>
                             <field name="legend_blocked" invisible="1"/>
                             <field name="legend_normal" invisible="1"/>
