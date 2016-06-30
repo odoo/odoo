@@ -10,7 +10,7 @@ tour.register('mail_tour', {
     'skip_enabled': true,
 }, [{
     trigger: '.o_mail_chat .o_mail_chat_sidebar .o_add[data-type="public"]',
-    content: _t("<p>Channels help organize information across different topics and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, marketing, product XYZ, after work party...).</p>"),
+    content: _t("<p>Channels make it easy to organize information across different topics and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, marketing, product XYZ, after work party, etc).</p>"),
     position: 'bottom',
 }, {
     trigger: '.o_mail_chat .o_composer_text_field',
@@ -19,12 +19,16 @@ tour.register('mail_tour', {
     width: 350,
 }, {
     trigger: ".o_mail_chat .o_mail_thread .o_thread_message_star",
-    content: _t("You can <b>star a message</b> to remember yourself you should do something about it later."),
+    content: _t("Messages can be <b>starred</b> to remind you to check back later."),
     position: "right",
 }, {
     trigger: '.o_mail_chat .o_mail_chat_channel_item[data-channel-id="channel_starred"]',
-    content: _t("Get all your <b>starred messages</b> here."),
+    content: _t("Once a message has been starred, you can come back and review it at any time here."),
     position: "bottom",
+}, {
+    trigger: '.o_mail_chat .o_mail_chat_sidebar .o_add[data-type="dm"]',
+    content: _t("<p><b>Chat with collegues</b> in real-time using direct messages.</p><p><i>You might need to invite users from the Settings app first.</i></p>"),
+    position: 'bottom',
 }]);
 
 });
