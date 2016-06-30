@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Project Management',
+    'name': 'Project',
     'version': '1.1',
     'website': 'https://www.odoo.com/page/project-management',
     'category': 'Project Management',

@@ -12,7 +12,7 @@ Piano dei conti italiano di un'impresa generica.
 
 Italian accounting chart and localization.
     """,
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'website': 'http://www.openerp-italia.org/',
     'data': [
         'data/account_chart.xml',

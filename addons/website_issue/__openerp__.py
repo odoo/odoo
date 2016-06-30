@@ -1,6 +1,6 @@
 {
     'name': 'Issues Form',
-    'category': 'Bridge',
+    'category': 'Project',
     'summary': 'Create Issues From Contact Form',
     'version': '1.0',
     'description': """
