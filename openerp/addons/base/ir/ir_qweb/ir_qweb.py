@@ -2,11 +2,11 @@
 import ast
 from urlparse import urlparse
 from lxml import html
-import math
 
 from .qweb import QWeb, Contextifier
 from .assetsbundle import AssetsBundle
 from lxml import etree
+from collections import OrderedDict
 
 from openerp import api, models, tools
 from openerp.tools import safe_eval
@@ -144,6 +144,34 @@ class IrQWeb(models.AbstractModel, QWeb):
             ))
         ]
 
+    # for backward compatibility to remove after v10
+    def _compile_widget_options(self, el, directive_type):
+        field_options = super(IrQWeb, self)._compile_widget_options(el, directive_type)
+
+        if ('t-%s-options' % directive_type) in el.attrib:
+            if tools.config['dev_mode']:
+                _logger.warning("Use new syntax t-options instead of t-%s-options" % directive_type)
+            if not field_options:
+                field_options = el.attrib.pop('t-%s-options' % directive_type)
+
+        if field_options and 'monetary' in field_options:
+            try:
+                options = "{'widget': 'monetary'"
+                for k, v in json.loads(field_options).iteritems():
+                    print k, v
+                    if k in ('display_currency', 'from_currency'):
+                        options = "%s, '%s': %s" % (options, k, v)
+                    else:
+                        options = "%s, '%s': '%s'" % (options, k, v)
+                options = "%s}" % options
+                field_options = options
+                _logger.warning("Use new syntax for '%s' monetary widget t-options (python dict instead of deprecated JSON syntax)." % etree.tostring(el))
+            except ValueError:
+                pass
+
+        return field_options
+    # end backward
+
     # method called by computing code
 
     @tools.conditional(
@@ -231,16 +259,35 @@ class IrQWeb(models.AbstractModel, QWeb):
         converter = self.env[model] if model in self.env else self.env['ir.qweb.field']
 
         # get content
-        content = converter.record_to_html(record, field_name, field_options, values)
+        content = converter.record_to_html(record, field_name, field_options, values=values)
         attributes = converter.attributes(record, field_name, field_options, values)
 
         return (attributes, content, inherit_branding or translate)
 
+    def _get_widget(self, value, expression, tagName, field_options, options, values):
+        field_options['type'] = field_options['widget']
+        field_options['tagName'] = tagName
+        field_options['expression'] = expression
+
+        # field converter
+        model = 'ir.qweb.field.' + field_options['type']
+        converter = self.env[model] if model in self.env else self.env['ir.qweb.field']
+
+        # get content
+        content = converter.value_to_html(value, field_options)
+        attributes = OrderedDict()
+        attributes['data-oe-type'] = field_options['type']
+        attributes['data-oe-expression'] = field_options['expression']
+
+        return (attributes, content, None)
+
     # formating methods
 
     def _format_func_monetary(self, value, display_currency, from_currency=None):
-        pre, value, post = self.env['ir.qweb.field.monetary']._format_func_monetary(value, display_currency, from_currency)
-        return u'{pre}{0}{post}'.format(value, pre=pre, post=post)
+        options = {}
+        options['display_currency'] = display_currency
+        options['from_currency'] = from_currency
+        return self.env['ir.qweb.field.monetary'].value_to_html(value, options)
 
     def _format_func_htmlcontact(self, value, options, values=None):
         return self.pool['ir.qweb.field.contact'].record_to_html(

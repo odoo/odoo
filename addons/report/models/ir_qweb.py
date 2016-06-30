@@ -12,7 +12,7 @@ class BarcodeConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.barcode'
     _inherit = 'ir.qweb.field'
 
-    def value_to_html(self, cr, uid, value, field, options=None, context=None):
+    def value_to_html(self, cr, uid, value, options, context=None):
         options = options or {}
         barcode_type = options.get('type', 'Code128')
         barcode = self.pool['report'].barcode(

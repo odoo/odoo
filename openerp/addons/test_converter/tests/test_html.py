@@ -30,8 +30,11 @@ class TestExport(common.TransactionCase):
                 break
             except KeyError: pass
 
-        return lambda value, options=None, context=None: model.value_to_html(
-            self.cr, self.uid, value, field, options=options, context=context)
+        def converter(value, options=None, context=None):
+            record = self.Model.new(self.cr, self.uid, {name: value}, context=context)
+            return model.record_to_html(
+                self.cr, self.uid, record, name, options or {}, context=context)
+        return converter
 
 class TestBasicExport(TestExport):
     _model = 'test_converter.test_model'
@@ -188,36 +191,23 @@ class TestTextExport(TestBasicExport):
 class TestMany2OneExport(TestBasicExport):
     def test_many2one(self):
         Sub = self.registry('test_converter.test_model.sub')
+        converter = self.get_converter('many2one')
 
-
-        id0 = self.Model.create(self.cr, self.uid, {
-            'many2one': Sub.create(self.cr, self.uid, {'name': "Foo"})
-        })
-        id1 = self.Model.create(self.cr, self.uid, {
-            'many2one': Sub.create(self.cr, self.uid, {'name': "Fo<b>o</b>"})
-        })
-
-        def converter(record):
-            converter = self.registry('ir.qweb.field.many2one')
-            field_name = 'many2one'
-            return converter.record_to_html(self.cr, self.uid, record, field_name, {})
-
-        value = converter(self.Model.browse(self.cr, self.uid, id0))
+        value = converter(Sub.create(self.cr, self.uid, {'name': "Foo"}))
         self.assertEqual(value, "Foo")
 
-        value = converter(self.Model.browse(self.cr, self.uid, id1))
+        value = converter(Sub.create(self.cr, self.uid, {'name': "Fo<b>o</b>"}))
         self.assertEqual(value, "Fo&lt;b&gt;o&lt;/b&gt;")
 
 class TestBinaryExport(TestBasicExport):
     def test_image(self):
-        field = self.get_field('binary')
         converter = self.registry('ir.qweb.field.image')
 
         with open(os.path.join(directory, 'test_vectors', 'image'), 'rb') as f:
             content = f.read()
 
         encoded_content = content.encode('base64')
-        value = converter.value_to_html(self.cr, self.uid, encoded_content, field)
+        value = converter.value_to_html(self.cr, self.uid, encoded_content, {})
 
         self.assertEqual(
             value, '<img src="data:image/jpeg;base64,%s">' % (
@@ -229,30 +219,23 @@ class TestBinaryExport(TestBasicExport):
 
         with self.assertRaises(ValueError):
             converter.value_to_html(
-                self.cr, self.uid, 'binary', content.encode('base64'), field)
+                self.cr, self.uid, 'binary', content.encode('base64'), {})
 
         with open(os.path.join(directory, 'test_vectors', 'pptx'), 'rb') as f:
             content = f.read()
 
         with self.assertRaises(ValueError):
             converter.value_to_html(
-                self.cr, self.uid, 'binary', content.encode('base64'), field)
+                self.cr, self.uid, 'binary', content.encode('base64'), {})
 
 class TestSelectionExport(TestBasicExport):
     def test_selection(self):
-        [record] = self.Model.browse(self.cr, self.uid, [self.Model.create(self.cr, self.uid, {
-            'selection': 4,
-            'selection_str': 'C',
-        })])
-
-        converter = self.registry('ir.qweb.field.selection')
-
-        field_name = 'selection'
-        value = converter.record_to_html(self.cr, self.uid, record, field_name, {})
+        converter = self.get_converter('selection')
+        value = converter(4)
         self.assertEqual(value, e(u"réponse <D>"))
 
-        field_name = 'selection_str'
-        value = converter.record_to_html(self.cr, self.uid, record, field_name, {})
+        converter = self.get_converter('selection_str')
+        value = converter('C')
         self.assertEqual(value, u"Qu'est-ce qu'il fout ce maudit pancake, tabernacle ?")
 
 class TestHTMLExport(TestBasicExport):
