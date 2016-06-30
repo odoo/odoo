@@ -518,7 +518,8 @@ class WebsiteSale(http.Controller):
     def address(self, **kw):
         Partner = request.env['res.partner'].with_context(show_address=1).sudo()
         order = request.website.sale_get_order(force_create=1)
-        mode, def_country_id = False, False
+        mode = (False, False)
+        def_country_id = order.partner_id.country_id
         values, errors = {}, {}
 
         partner_id = int(kw.get('partner_id', -1))
@@ -537,7 +538,6 @@ class WebsiteSale(http.Controller):
                 def_country_id = request.website.user_id.sudo().country_id
         # IF ORDER LINKED TO A PARTNER
         else:
-            def_country_id = order.partner_id.country_id
             if partner_id > 0:
                 if partner_id == order.partner_id.id:
                         mode = ('edit', 'billing')
@@ -551,7 +551,7 @@ class WebsiteSale(http.Controller):
                     values = Partner.browse(partner_id)
             elif partner_id == -1:
                 mode = ('new', 'shipping')
-            else: # no mode - refresh without post? 
+            else: # no mode - refresh without post?
                 return request.redirect('/shop/checkout')
 
         # IF POSTED
@@ -580,12 +580,14 @@ class WebsiteSale(http.Controller):
                     return request.redirect(kw.get('callback') or '/shop/checkout')
 
         country = 'country_id' in values and values['country_id'] != '' and request.env['res.country'].browse(int(values['country_id']))
-
+        country = country and country.exists() or def_country_id
         render_values = {
             'partner_id': partner_id,
             'mode': mode,
             'checkout': values,
-            'country': country and country.exists() or def_country_id,
+            'country': country,
+            'countries': country.get_website_sale_countries(mode=mode[1]),
+            "states": country.get_website_sale_states(mode=mode[1]),
             'error': errors,
             'callback': kw.get('callback'),
         }
@@ -962,3 +964,11 @@ class WebsiteSale(http.Controller):
             },
             'lines': self.order_lines_2_google_api(order.order_line)
         }
+
+    @http.route(['/shop/country_infos/<model("res.country"):country>'], type='json', auth="public", methods=['POST'], website=True)
+    def country_infos(self, country, mode, **kw):
+        return dict(
+            fields=country.get_address_fields(),
+            states=[(st.id, st.name, st.code) for st in country.get_website_sale_states(mode=mode)],
+            phone_code=country.phone_code
+        )
