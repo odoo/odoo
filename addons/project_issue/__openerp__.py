@@ -27,6 +27,7 @@ It allows the manager to quickly check the issues, assign them and decide on the
         'security/ir.model.access.csv',
         'project_issue_data.xml',
         'project_dashboard.xml',
+        'project_config_settings_views.xml'
      ],
     'demo': ['project_issue_demo.xml'],
     'test': [

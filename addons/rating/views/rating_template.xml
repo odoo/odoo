@@ -98,16 +98,44 @@
         <template id="rating_external_page_view">
             <head>
                 <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+                <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
             </head>
-            <div class='well' t-if="not is_rated">
-                <h1>Thanks for voting !</h1>
-                <div class="oe_right">
-                    <p>Your vote has been taken into account.</p>
-                    <p>It was <img t-attf-src='../../../rating/static/src/img/rating_#{rating}.png'/></p>
+            <div class="container">
+                <div clas="row" t-if="is_rated">
+                    <h1 class="text-center"><i class="fa fa-frown-o fa-2x text-danger" /></h1>
+                    <h1 class="text-center">Sorry you have already voted!</h1>
+                </div>
+                <div clas="row" t-if="is_public">
+                    <h1 class="text-center"><i class="fa fa-check-circle fa-2x text-success" /></h1>
+                    <h1 class="text-center">Thank you for submitting your feedback!</h1>
                 </div>
             </div>
-            <div class='well' t-if="is_rated">
-                <h1>Sorry you have already voted !</h1>
+        </template>
+
+        <!-- External page: rate and submit feedback -->
+        <template id="rating_external_page_submit">
+            <head>
+                <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+            </head>
+            <div class="container">
+                <div clas="row">
+                    <h1 class="text-center">Please submit your rating</h1>
+                    <h4 class="text-center">You selected <img t-attf-src='/rating/static/src/img/rating_#{rating}.png'/></h4>
+                    <form class="form-horizontal" t-attf-action="/rating/#{token}/#{rating}/submit_feedback" method="post">
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-3">
+                                <h5>Do you want to give additional explanation? (Optional)</h5>
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <textarea class="form-control" name="feedback" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-3">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </template>
 

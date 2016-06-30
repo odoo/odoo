@@ -19,9 +19,9 @@ class project_configuration(osv.osv_memory):
                  '-This installs the module pad.'),
         'module_rating_project': fields.selection([
             (0, "No customer rating"),
-            (1, 'Allow activating customer rating on projects, at issue completion')
-            ], "Rating",
-            help="This allows customers to give rating on provided services"),
+            (1, "Track customer satisfaction on tasks")
+            ], "Rating on task",
+            help="This allows customers to give rating on task"),
         'generate_project_alias': fields.selection([
             (0, "Do not create an email alias automatically"),
             (1, "Automatically generate an email alias at the project creation")
