@@ -125,6 +125,12 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         return request.render(page, values)
 
+    @http.route(['/website/country_infos/<model("res.country"):country>'], type='json', auth="public", methods=['POST'], website=True)
+    def change_country(self, country, **kw):
+        fields = country.get_address_fields()
+        return dict(fields=fields, states=[(st.id, st.name, st.code) for st in country.state_ids], phone_code=country.phone_code)
+
+
     @http.route(['/robots.txt'], type='http', auth="public")
     def robots(self):
         return request.render('website.robots', {'url_root': request.httprequest.url_root}, mimetype='text/plain')
