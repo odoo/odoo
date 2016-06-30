@@ -3,7 +3,7 @@
 
 """ High-level objects for fields. """
 
-from collections import OrderedDict, defaultdict, namedtuple
+from collections import OrderedDict, defaultdict
 from datetime import date, datetime
 from functools import partial
 from operator import attrgetter
@@ -2069,12 +2069,6 @@ class Id(Field):
 
     def __set__(self, record, value):
         raise TypeError("field 'id' cannot be assigned")
-
-# null object for fields, extend as necessary for use in context
-MissingField = namedtuple('MissingField', 'group_operator')
-missing_field = MissingField(
-    group_operator=None,
-)
 
 # imported here to avoid dependency cycle issues
 from openerp import SUPERUSER_ID
