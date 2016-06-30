@@ -167,7 +167,7 @@ var Menu = Widget.extend({
         if ($main_menu !== $clicked_menu) {
             $clicked_menu.parents().removeClass('o_hidden');
             if ($clicked_menu.is('.oe_menu_toggler')) {
-                $clicked_menu.toggleClass('oe_menu_opened').siblings('.oe_secondary_submenu:first').toggle();
+                $clicked_menu.toggleClass('oe_menu_opened').siblings('.oe_secondary_submenu:first').toggleClass('o_hidden');
             } else {
                 $clicked_menu.parent().addClass('active');
             }
