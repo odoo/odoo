@@ -184,15 +184,16 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         with self.assertRaises(ValidationError):
             hol2_manager_group.signal_workflow('confirm')
 
+        employee_id = self.ref('hr.employee_fp')
         # cl can be of maximum 20 days for employee_fp
-        hol3_status = self.env.ref('hr_holidays.holiday_status_cl')
+        hol3_status = self.env.ref('hr_holidays.holiday_status_cl').with_context(employee_id=employee_id)
         # I assign the dates in the holiday request for 1 day
         hol3 = Holidays.create({
             'name': 'Sick Leave',
             'holiday_status_id': hol3_status.id,
             'date_from': datetime.today().strftime('%Y-%m-10 10:00:00'),
             'date_to': datetime.today().strftime('%Y-%m-11 19:00:00'),
-            'employee_id': self.ref('hr.employee_fp'),
+            'employee_id': employee_id,
             'type': 'remove',
             'number_of_days_temp': 1
         })
