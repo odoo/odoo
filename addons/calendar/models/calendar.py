@@ -124,25 +124,21 @@ class Attendee(models.Model):
         raise UserError(_('You cannot duplicate a calendar attendee.'))
 
     @api.multi
-    def _send_mail_to_attendees(self, email_from=False, template_xmlid=False, force=False):
+    def _send_mail_to_attendees(self, template_xmlid, force_send=False):
         """ Send mail for event invitation to event attendees.
-            :param email_from: email address for user sending the mail
             :param template_xmlid: xml id of the email template to use to send the invitation
-            :param force: If set to True, email will be sent to user himself. Usefull for alert, ...
+            :param force_send: If set to True, email will be sent to user himself. Usefull for alert, ...
         """
-        # default values
-        if not email_from:
-            email_from = tools.config.get('email_from', False)
-        if not template_xmlid:
-            template_xmlid = 'calendar_template_meeting_invitation'
-
         res = False
 
         if self.env['ir.config_parameter'].get_param('calendar.block_mail') or self._context.get("no_mail_to_attendees"):
             return res
 
         calendar_view = self.env.ref('calendar.view_calendar_event_calendar')
-        invitation_template = self.env.ref('calendar.%s' % (template_xmlid,))
+        invitation_template = self.env.ref(template_xmlid)
+
+        # get ics file for all meetings
+        ics_files = self.mapped('event_id').get_ics_file()
 
         # prepare rendering context for mail template
         colors = {
@@ -163,8 +159,8 @@ class Attendee(models.Model):
         # send email with attachments
         mails_to_send = self.env['mail.mail']
         for attendee in self:
-            if attendee.email and email_from and (attendee.email != email_from or force):
-                ics_file = attendee.event_id.get_ics_file()
+            if attendee.email or attendee.partner_id.email:
+                ics_file = ics_files[attendee.event_id.id]
                 mail_id = invitation_template.send_mail(attendee.id)
 
                 vals = {}
@@ -177,7 +173,7 @@ class Attendee(models.Model):
                 current_mail.mail_message_id.write(vals)
                 mails_to_send |= current_mail
 
-        if mails_to_send:
+        if force_send and mails_to_send:
             res = mails_to_send.send()
 
         return res
@@ -404,12 +400,7 @@ class AlarmManager(models.AbstractModel):
 
         result = False
         if alarm.type == 'email':
-            result = event.attendee_ids._send_mail_to_attendees(
-                email_from=event.user_id.partner_id.email,
-                template_xmlid='calendar_template_meeting_reminder',
-                force=True,
-            )
-            result = meeting.attendee_ids._send_mail_to_attendees('calendar_template_meeting_reminder', force_send=True)
+            result = meeting.attendee_ids._send_mail_to_attendees('calendar.calendar_template_meeting_reminder', force_send=True)
         return result
 
     def do_notif_reminder(self, alert):
@@ -837,9 +828,9 @@ class Meeting(models.Model):
     @api.multi
     def get_ics_file(self):
         """ Returns iCalendar file for the event invitation.
-            :returns the .ics file content
+            :returns a dict of .ics file content for each meeting
         """
-        result = None
+        result = {}
 
         def ics_datetime(idate, allday=False):
             if idate:
@@ -855,41 +846,43 @@ class Meeting(models.Model):
         except ImportError:
             return result
 
-        cal = vobject.iCalendar()
-        event = cal.add('vevent')
+        for meeting in self:
+            cal = vobject.iCalendar()
+            event = cal.add('vevent')
 
-        if not self.start or not self.stop:
-            raise UserError(_("First you have to specify the date of the invitation."))
-        event.add('created').value = ics_datetime(time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
-        event.add('dtstart').value = ics_datetime(self.start, self.allday)
-        event.add('dtend').value = ics_datetime(self.stop, self.allday)
-        event.add('summary').value = self.name
-        if self.description:
-            event.add('description').value = self.description
-        if self.location:
-            event.add('location').value = self.location
-        if self.rrule:
-            event.add('rrule').value = self.rrule
+            if not meeting.start or not meeting.stop:
+                raise UserError(_("First you have to specify the date of the invitation."))
+            event.add('created').value = ics_datetime(time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+            event.add('dtstart').value = ics_datetime(meeting.start, meeting.allday)
+            event.add('dtend').value = ics_datetime(meeting.stop, meeting.allday)
+            event.add('summary').value = meeting.name
+            if meeting.description:
+                event.add('description').value = meeting.description
+            if meeting.location:
+                event.add('location').value = meeting.location
+            if meeting.rrule:
+                event.add('rrule').value = meeting.rrule
 
-        if self.alarm_ids:
-            for alarm in self.alarm_ids:
-                valarm = event.add('valarm')
-                interval = alarm.interval
-                duration = alarm.duration
-                trigger = valarm.add('TRIGGER')
-                trigger.params['related'] = ["START"]
-                if interval == 'days':
-                    delta = timedelta(days=duration)
-                elif interval == 'hours':
-                    delta = timedelta(hours=duration)
-                elif interval == 'minutes':
-                    delta = timedelta(minutes=duration)
-                trigger.value = delta
-                valarm.add('DESCRIPTION').value = alarm.name or 'Odoo'
-        for attendee in self.attendee_ids:
-            attendee_add = event.add('attendee')
-            attendee_add.value = 'MAILTO:' + (attendee.email or '')
-        result = cal.serialize()
+            if meeting.alarm_ids:
+                for alarm in meeting.alarm_ids:
+                    valarm = event.add('valarm')
+                    interval = alarm.interval
+                    duration = alarm.duration
+                    trigger = valarm.add('TRIGGER')
+                    trigger.params['related'] = ["START"]
+                    if interval == 'days':
+                        delta = timedelta(days=duration)
+                    elif interval == 'hours':
+                        delta = timedelta(hours=duration)
+                    elif interval == 'minutes':
+                        delta = timedelta(minutes=duration)
+                    trigger.value = delta
+                    valarm.add('DESCRIPTION').value = alarm.name or 'Odoo'
+            for attendee in meeting.attendee_ids:
+                attendee_add = event.add('attendee')
+                attendee_add.value = 'MAILTO:' + (attendee.email or '')
+            result[meeting.id] = cal.serialize()
+
         return result
 
     @api.multi
@@ -917,8 +910,7 @@ class Meeting(models.Model):
                 meeting_partners |= partner
 
                 if current_user.email != partner.email:
-                    mail_from = current_user.email or tools.config.get('email_from', False)
-                    attendee._send_mail_to_attendees(email_from=mail_from)
+                    attendee._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
 
             if meeting_attendees:
                 meeting.write({'attendee_ids': [(4, attendee.id) for attendee in meeting_attendees]})
@@ -1242,7 +1234,7 @@ class Meeting(models.Model):
         email = self.env.user.email
         if email:
             for meeting in self:
-                meeting.attendee_ids._send_mail_to_attendees(email_from=email)
+                meeting.attendee_ids._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
         return True
 
     ####################################################
@@ -1384,7 +1376,7 @@ class Meeting(models.Model):
                         attendee_to_email = current_meeting.attendee_ids
 
                     if attendee_to_email:
-                        attendee_to_email._send_mail_to_attendees(template_xmlid='calendar_template_meeting_changedate', email_from=self.env.user.email)
+                        attendee_to_email._send_mail_to_attendees('calendar.calendar_template_meeting_changedate')
         return True
 
     @api.model
