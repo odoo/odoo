@@ -12,7 +12,7 @@ Odoo Customer References
 ===========================
 """,
     'depends': [
-        'crm_partner_assign',
+        'website_crm_partner_assign',
         'website_partner',
         'website_google_map',
     ],
