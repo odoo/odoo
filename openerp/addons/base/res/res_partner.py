@@ -225,7 +225,7 @@ class Partner(models.Model, FormatAddress):
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name.'),
     ]
 
-    @api.depends('is_company', 'name', 'parent_id.name', 'type', 'commercial_company_name')
+    @api.depends('is_company', 'name', 'parent_id.name', 'type', 'display_company_name')
     def _compute_display_name(self):
         diff = dict(show_address=None, show_address_only=None, show_email=None)
         names = dict(self.with_context(**diff).name_get())
@@ -253,9 +253,8 @@ class Partner(models.Model, FormatAddress):
     @api.depends('display_company_name', 'parent_id.is_company', 'commercial_partner_id.name')
     def _compute_commercial_company_name(self):
         for partner in self:
-            partner.commercial_company_name = (partner.commercial_partner_id.is_company and \
-                partner.commercial_partner_id.id != partner.id and \
-                partner.commercial_partner_id.name or partner.display_company_name) or ''
+            p = partner.commercial_partner_id
+            partner.commercial_company_name = p.is_company and p.name or partner.display_company_name
 
     @api.model
     def _get_default_image(self, partner_type, is_company, parent_id):
@@ -562,10 +561,12 @@ class Partner(models.Model, FormatAddress):
         res = []
         for partner in self:
             name = partner.name or ''
+
             if partner.commercial_company_name:
                 if not name and partner.type in ['invoice', 'delivery', 'other']:
                     name = dict(self.fields_get(['type'])['type']['selection'])[partner.type]
-                name = "%s, %s" % (partner.commercial_company_name, name)
+                if not partner.is_company:
+                    name = "%s, %s" % (partner.commercial_company_name, name)
             if self._context.get('show_address_only'):
                 name = partner._display_address(without_company=True)
             if self._context.get('show_address'):
