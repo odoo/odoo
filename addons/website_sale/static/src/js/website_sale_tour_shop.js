@@ -77,7 +77,7 @@ base.ready().done(function () {
                 }
             },
             {
-                element:   '.modal .btn.save',
+                element:   '.modal .btn.o_save_button',
                 placement: 'right',
                 waitFor:   '.o_existing_attachment_cell.o_selected',
                 title:       _t("Save"),

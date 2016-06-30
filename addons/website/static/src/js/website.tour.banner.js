@@ -37,16 +37,14 @@ base.ready().done(function () {
             },
             {
                 waitFor:   '.oe_overlay_options .oe_options:visible',
-                element:   '#wrapwrap .carousel:first div.carousel-content h3',
+                element:   '#wrapwrap .s_text_block_image_fw h2',
                 placement: 'top',
                 title:     _t("Customize banner's text"),
-                content:   _t("Click in the text and start editing it."),
+                content:   _t("Click in the title text and start editing it."),
                 sampleText: 'Here, a customized text',
             },
             {
-                waitNot:   '#wrap .carousel:first div.carousel-content:has(h2:'+
-                    'containsExact('+_t('Your Banner Title')+')):has(h3:'+
-                    'containsExact('+_t('Click to customize this text')+'))',
+                waitFor:   '#wrapwrap .s_text_block_image_fw h2:not(:containsExact(\"Headline\"))',
                 element:   '.oe_snippet_parent:visible',
                 placement: 'bottom',
                 title:     _t("Get banner properties"),

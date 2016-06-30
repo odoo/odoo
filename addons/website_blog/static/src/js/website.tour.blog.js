@@ -71,7 +71,7 @@ base.ready().done(function () {
             },
             {
                 waitFor:   '.o_existing_attachment_cell.o_selected',
-                element:   '.modal-content button.save',
+                element:   '.modal-content button.o_save_button',
                 placement: 'top',
                 title:     _t("Save"),
                 content:   _t("Click on '<em>Save</em>' to set the picture as cover."),
