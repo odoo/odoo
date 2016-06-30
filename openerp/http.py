@@ -770,9 +770,9 @@ class HttpRequest(WebRequest):
 
     def __init__(self, *args):
         super(HttpRequest, self).__init__(*args)
-        params = self.httprequest.args.to_dict()
-        params.update(self.httprequest.form.to_dict())
-        params.update(self.httprequest.files.to_dict())
+        params = collections.OrderedDict(self.httprequest.args)
+        params.update(self.httprequest.form)
+        params.update(self.httprequest.files)
         params.pop('session_id', None)
         self.params = params
 
@@ -1617,6 +1617,7 @@ class Root(object):
         try:
             httprequest = werkzeug.wrappers.Request(environ)
             httprequest.app = self
+            httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableOrderedMultiDict
 
             explicit_session = self.setup_session(httprequest)
             self.setup_db(httprequest)
