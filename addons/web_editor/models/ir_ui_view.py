@@ -22,7 +22,7 @@ class view(osv.osv):
                     if '.' not in id_or_xml_id:
                         raise ValueError('Invalid template id: %r' % (id_or_xml_id,))
                     id_or_xml_id = self.get_view_id(cr, uid, id_or_xml_id, context=context)
-
+                self.check_access_rights(cr, uid, 'write')
                 self.check_access_rule(cr, uid, [id_or_xml_id], 'write', context=context)
 
             except AccessError:
