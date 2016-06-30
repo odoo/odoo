@@ -9,15 +9,15 @@ class HrExpenseConfigSettings(models.TransientModel):
 
     alias_expense_open = fields.Selection([
         ('open', "Accept expenses from any email address"),
-        ('restricted', "Accept expenses from employee email address only")
+        ('restricted', "Accept expenses from employee email addresses only")
         ], "Mail Gateway")
 
     alias_prefix = fields.Char('Default Alias Name for Expenses')
     alias_domain = fields.Char('Alias Domain', default=lambda self: self.env["ir.config_parameter"].get_param("mail.catchall.domain"))
 
     @api.model
-    def get_default_alias_expense_open(self):
-        return {'alias_expense_open': self.env['ir.config_parameter'].get_param("hr_expense.email.gateway")}
+    def get_default_alias_expense_open(self, fields):
+        return {'alias_expense_open': self.env['ir.config_parameter'].get_param("hr_expense.email.gateway") or 'open'}
 
     @api.multi
     def set_default_alias_expense_open(self):

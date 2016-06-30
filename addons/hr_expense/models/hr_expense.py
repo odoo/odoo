@@ -308,6 +308,11 @@ class HrExpense(models.Model):
         if not employee:
             employee = self.env['hr.employee'].search([('user_id.email', 'ilike', email_address)], limit=1)
         if not employee:
+            access = self.env['ir.config_parameter'].get_param("hr_expense.email.gateway") or 'open'
+            if access == 'open':
+                # Open access is mostly used during the on boarding flow, should not be used in production
+                employee = self.env['hr.employee'].search([('user_id','<>',False)], limit=1)
+        if not employee:
             # Send back an email to explain why the expense has not been created
             mail_template = self.env.ref('hr_expense.mail_template_data_expense_unknown_email_address')
             mail_template.with_context(email_to=email_address).send_mail(self.env.ref('base.module_hr_expense').id)

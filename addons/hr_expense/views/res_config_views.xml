@@ -12,6 +12,7 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <group string="Expenses" name="config_alias">
+                        <field name="alias_expense_open" widget="radio"/>
                         <label for="id" string="Expense Email Alias"/>
                         <div>
                             <div attrs="{'invisible': [('alias_domain', 'in', ['localhost', '', False])]}">
@@ -32,7 +33,6 @@
                                     name="base_setup.action_general_configuration"
                                     string="Setup your domain alias" class="oe_link"/>
                             </div>
-                            <field name="alias_expense_open" widget="radio"/>
                         </div>
                     </group>
                 </form>

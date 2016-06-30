@@ -41,7 +41,7 @@ tour.register('sale_tour', {
     position: "bottom"
 }, {
     trigger: ".o_web_settings_dashboard textarea#user_emails",
-    content: _t("<b>Invite collegues</b> via email.<br/><i>Enter one email per line.</i>"),
+    content: _t("<b>Invite salespeople or managers</b> via email.<br/><i>Enter one email per line.</i>"),
     position: "right"
 }]);
 
