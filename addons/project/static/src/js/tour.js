@@ -47,12 +47,19 @@ tour.register('project_tour', {
     position: "bottom"
 }, {
     trigger: ".o_kanban_record",
-    content: _t("Open a task by clicking on the card"),
+    extra_trigger: '.o_kanban_project_tasks',
+    content: _t("Click on a card to get the details of the task."),
     position: "bottom"
 }, {
-    trigger: ".o_form_sheet .o_group:first",
-    content: 'Assign the task to one of your colleague to collaborate',
-    position: "left"
+    trigger: ".o_form_sheet .o_form_button_edit:visible",
+    extra_trigger: '.o_form_project_tasks',
+    content: _t('Click on this button to modify the task.'),
+    position: "bottom"
+}, {
+    trigger: ".o_form_sheet .o_task_user_field",
+    extra_trigger: '.o_form_project_tasks.o_form_editable',
+    content: _t('<b>Assign the task</b> to someone. <i>You can create and invite a new user on the fly.</i>'),
+    position: "right"
 }, {
     trigger: ".breadcrumb li:not(.active):last",
     extra_trigger: '.o_form_project_tasks',
@@ -69,7 +76,7 @@ tour.register('project_tour', {
 }, {
     trigger: ".o_web_settings_dashboard .o_web_settings_dashboard_invitations",
     content: _t("<b>Invite collegues</b> via email.<br/><i>Enter one email per line.</i>"),
-    position: "bottom"
+    position: "right"
 }]);
 
 });
