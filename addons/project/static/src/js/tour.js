@@ -58,6 +58,18 @@ tour.register('project_tour', {
     extra_trigger: '.o_form_project_tasks',
     content: _t("Click on layers in the path to easily <b>return to tasks</b>."),
     position: "bottom"
+}, {
+    trigger: ".o_main_navbar .o_menu_toggle",
+    content: _t('Click the <i>Home icon</i> to navigate across apps.'),
+    position: "bottom"
+}, {
+    trigger: ".o_apps .o_app:last",
+    content: _t("Configuration options are available in the Settings app."),
+    position: "bottom"
+}, {
+    trigger: ".o_web_settings_dashboard .o_web_settings_dashboard_invitations",
+    content: _t("<b>Invite collegues</b> via email.<br/><i>Enter one email per line.</i>"),
+    position: "bottom"
 }]);
 
 });
