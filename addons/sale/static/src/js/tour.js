@@ -31,6 +31,18 @@ tour.register('sale_tour', {
     trigger: 'li a[data-menu-xmlid="base.menu_sales"], .oe_secondary_menu_section[data-menu-xmlid="base.menu_sales"]',
     content: _t("Use this menu to access quotations, sales orders and customers."),
     position: "bottom"
+}, {
+    trigger: ".o_main_navbar .o_menu_toggle",
+    content: _t('Click the <i>Home icon</i> to navigate across apps.'),
+    position: "bottom"
+}, {
+    trigger: ".o_apps .o_app:last",
+    content: _t("Configuration options are available in the Settings app."),
+    position: "bottom"
+}, {
+    trigger: ".o_web_settings_dashboard textarea#user_emails",
+    content: _t("<b>Invite collegues</b> via email.<br/><i>Enter one email per line.</i>"),
+    position: "right"
 }]);
 
 });
