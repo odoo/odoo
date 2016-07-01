@@ -12,3 +12,8 @@ class ProjectIssueConfiguration(models.TransientModel):
             ], string="Timesheets on Issues",
             help='Provides timesheet support for the issues/bugs management in project.\n'
                  '-This installs the module project_issue_sheet.')
+    module_rating_project_issue = fields.Selection([
+        (0, "No customer rating"),
+        (1, 'Track customer satisfaction on issues')
+        ], "Rating on issue",
+        help="This allows customers to give rating on issue")
