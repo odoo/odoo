@@ -4,7 +4,7 @@
 {
     'name': 'Sale - Secondary UoM',
     'version': '1.0',
-    'category': 'Sales Management',
+    'category': 'Sales',
     'sequence': 14,
     'summary': 'Unit of Sale',
     'description': """
