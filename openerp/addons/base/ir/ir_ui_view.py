@@ -1028,7 +1028,10 @@ actual arch.
             return '[]'
         qcontext['get_modules_order'] = get_modules_order
 
-        return self.env[engine].render(self.id, qcontext, loader=self.read_template)
+        def loader(name, env=self.env):
+            return self.with_env(env).read_template(name)
+
+        return self.env[engine].render(self.id, qcontext, loader=loader)
 
     #------------------------------------------------------
     # Misc
