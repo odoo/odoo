@@ -97,7 +97,7 @@ class report_paperformat(osv.Model):
 class res_company(osv.Model):
     _inherit = 'res.company'
 
-    _columns = {'paperformat_id': fields.many2one('report.paperformat', 'Paper format')}
+    _columns = {'paperformat_id': fields.many2one('report.paperformat', 'Paper Format')}
 
     def init(self, cr):
         # set a default paperformat based on rml one.

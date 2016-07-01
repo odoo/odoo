@@ -127,7 +127,7 @@ class Company(models.Model):
     rml_header3 = fields.Text(string='RML Internal Header for Landscape Reports', required=True, default=_header3)
     rml_footer = fields.Text(string='Custom Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
     rml_footer_readonly = fields.Text(related='rml_footer', string='Report Footer', readonly=True)
-    custom_footer = fields.Boolean(help="Check this to define the report footer manually. Otherwise it will be filled in automatically.")
+    custom_footer = fields.Boolean(string="Custom Footer", help="Check this to define the report footer manually. Otherwise it will be filled in automatically.")
     font = fields.Many2one('res.font', string="Font", default=lambda self: self._get_font(),
                            domain=[('mode', 'in', ('Normal', 'Regular', 'all', 'Book'))],
                            help="Set the font into the report header, it will be used as default font in the RML reports of the user company")
@@ -206,6 +206,7 @@ class Company(models.Model):
         for company in self:
             company.logo_web = tools.image_resize_image(company.partner_id.image, (180, None))
 
+    @api.multi
     @api.onchange('custom_footer', 'phone', 'fax', 'email', 'website', 'vat', 'company_registry')
     def onchange_footer(self):
         if not self.custom_footer:
