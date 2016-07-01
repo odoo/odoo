@@ -1,65 +1,54 @@
 # -*- coding: utf-8 -*-
+from datetime import timedelta
 from openerp import api, fields, models
 
 
 class ProjectIssue(models.Model):
-
     _name = "project.issue"
     _inherit = ['project.issue', 'rating.mixin']
 
     @api.multi
     def write(self, values):
+        res = super(ProjectIssue, self).write(values)
         if 'stage_id' in values and values.get('stage_id'):
-            template = self.env['project.task.type'].browse(values.get('stage_id')).rating_template_id
-            if template:
-                rated_partner_id = self.user_id.partner_id
-                partner_id = self.partner_id
-                if partner_id and rated_partner_id:
-                    self.rating_send_request(template, partner_id, rated_partner_id)
-        return super(ProjectIssue, self).write(values)
+            self.filtered(lambda x: x.project_id.rating_status == 'stage')._send_issue_rating_mail()
+        return res
+
+    def _send_issue_rating_mail(self):
+        for issue in self:
+            rating_template = issue.stage_id.rating_template_id
+            if rating_template:
+                issue.rating_send_request(rating_template, reuse_rating=False)
+
+    @api.multi
+    def rating_apply(self, rate, token=None, feedback=None, subtype=None):
+        return super(ProjectIssue, self).rating_apply(rate, token=token, feedback=feedback, subtype="rating_project_issue.mt_issue_rating")
 
 
 class Project(models.Model):
 
     _inherit = "project.project"
 
-    @api.multi
+    def _send_rating_mail(self):
+        super(Project, self)._send_rating_mail()
+        for project in self:
+            project.issue_ids._send_issue_rating_mail()
+
     @api.depends('percentage_satisfaction_task', 'percentage_satisfaction_issue')
     def _compute_percentage_satisfaction_project(self):
         super(Project, self)._compute_percentage_satisfaction_project()
-        Rating = self.env['rating.rating']
-        Issue = self.env['project.issue']
-        for record in self.filtered(lambda record: record.use_tasks or record.use_issues):
-            if record.use_tasks or record.use_issues:
-                # built the domain according the project parameters (use tasks and/or issues)
-                res_models = []
-                domain = []
-                if record.use_tasks:
-                    res_models.append('project.task')
-                    domain += ['&', ('res_model', '=', 'project.task'), ('res_id', 'in', record.tasks.ids)]
-                if record.use_issues:
-                    # TODO: if performance issue, compute the satisfaction with a custom request joining rating and task/issue.
-                    issues = Issue.search([('project_id', '=', record.id)])
-                    res_models.append('project.issue')
-                    domain += ['&', ('res_model', '=', 'project.issue'), ('res_id', 'in', issues.ids)]
-                if len(res_models) == 2:
-                    domain = ['|'] + domain
-                domain = ['&', ('rating', '>=', 0)] + domain
-                # get the number of rated tasks and issues with a read_group (more perfomant !)
-                grouped_data = Rating.read_group(domain, ['res_model'], ['res_model'])
-                # compute the number of each model and total number
-                res = dict.fromkeys(res_models, 0)
-                for data in grouped_data:
-                    res[data['res_model']] += data['res_model_count']
-                nbr_rated_task = res.get('project.task', 0)
-                nbr_rated_issue = res.get('project.issue', 0)
-                nbr_project_rating = nbr_rated_issue + nbr_rated_task
-                # compute the weighted arithmetic average
-                ratio_task = float(nbr_rated_task) / float(nbr_project_rating) if nbr_project_rating else 0
-                ratio_issue = float(nbr_rated_issue) / float(nbr_project_rating) if nbr_project_rating else 0
-                record.percentage_satisfaction_project = round((ratio_task*record.percentage_satisfaction_task)+(ratio_issue*record.percentage_satisfaction_issue)) if nbr_project_rating else -1
-            else:
-                record.percentage_satisfaction_project = -1
+        for project in self:
+            domain = [('create_date', '>=', fields.Datetime.to_string(fields.datetime.now() - timedelta(days=30)))]
+            activity_great, activity_sum = 0, 0
+            if project.use_tasks:
+                activity_task = project.tasks.rating_get_grades(domain)
+                activity_great = activity_task['great']
+                activity_sum = sum(activity_task.values())
+            if project.use_issues:
+                activity_issue = project.issue_ids.rating_get_grades(domain)
+                activity_great += activity_issue['great']
+                activity_sum += sum(activity_issue.values())
+            project.percentage_satisfaction_project = activity_great * 100 / activity_sum if activity_sum else -1
 
     @api.one
     @api.depends('issue_ids.rating_ids.rating')
@@ -80,7 +69,7 @@ class Project(models.Model):
     @api.multi
     def action_view_all_rating(self):
         action = super(Project, self).action_view_all_rating()
-        task_domain = action['domain'][1:] # remove the (rating != -1) condition
+        task_domain = action['domain']
         domain = []
         if self.use_tasks: # add task domain, if neeeded
             domain = ['&'] + task_domain
@@ -89,26 +78,4 @@ class Project(models.Model):
             domain = domain + ['&', ('res_id', 'in', issues.ids), ('res_model', '=', 'project.issue')]
         if self.use_tasks and self.use_issues:
             domain = ['|'] + domain
-        domain = [('rating', '!=', -1)] + domain # prepend the condition to avoid empty rating
         return dict(action, domain=domain)
-
-
-
-class Rating(models.Model):
-
-    _inherit = "rating.rating"
-
-    @api.model
-    def apply_rating(self, rate, res_model=None, res_id=None, token=None):
-        """ check if the auto_validation_kanban_state is activated. If so, apply the modification of the
-            kanban state according to the given rating.
-        """
-        rating = super(Rating, self).apply_rating(rate, res_model, res_id, token)
-        if rating.res_model == 'project.issue':
-            issue = self.env[rating.res_model].sudo().browse(rating.res_id)
-            if issue.stage_id.auto_validation_kanban_state:
-                if rating.rating > 5:
-                    issue.write({'kanban_state' : 'done'})
-                else:
-                    issue.write({'kanban_state' : 'blocked'})
-        return rating
