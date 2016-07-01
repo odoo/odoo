@@ -15,14 +15,6 @@ class Invoice(models.Model):
         ]).write({'date_cancel': fields.Date.today()})
         return super(Invoice, self).action_cancel()
 
-    # TODO master: replace by ondelete='cascade'
-    @api.multi
-    def unlink(self):
-        self.env['membership.membership_line'].search([
-            ('account_invoice_line', 'in', self.mapped('invoice_line_ids').ids)
-        ]).unlink()
-        return super(Invoice, self).unlink()
-
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
@@ -52,16 +44,6 @@ class AccountInvoiceLine(models.Model):
                 # Product line has changed to a non membership product
                 member_lines.unlink()
         return res
-
-    # TODO master: replace by ondelete='cascade'
-    @api.multi
-    def unlink(self):
-        """Remove Membership Line Record for Account Invoice Line
-        """
-        self.env['membership.membership_line'].search([
-            ('account_invoice_line', 'in', self.ids)
-        ]).unlink()
-        return super(AccountInvoiceLine, self).unlink()
 
     @api.model
     def create(self, vals):

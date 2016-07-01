@@ -30,7 +30,7 @@ class MembershipLine(models.Model):
     member_price = fields.Float(string='Membership Fee',
         digits_compute=dp.get_precision('Product Price'), required=True,
         help='Amount for the membership')
-    account_invoice_line = fields.Many2one('account.invoice.line', string='Account Invoice line', readonly=True)
+    account_invoice_line = fields.Many2one('account.invoice.line', string='Account Invoice line', readonly=True, ondelete='cascade')
     account_invoice_id = fields.Many2one('account.invoice', related='account_invoice_line.invoice_id', string='Invoice', readonly=True)
     company_id = fields.Many2one('res.company', related='account_invoice_line.invoice_id.company_id', string="Company", readonly=True, store=True)
     state = fields.Selection(STATE, compute='_compute_state', string='Membership Status', store=True,
