@@ -25,14 +25,14 @@ class account_analytic_account(models.Model):
             WHERE account_id IN %s
             AND company_id = %s
         """
-        sql_params = (tuple(self.ids),
-                      self.env.user.company_id.id)
+        sql_params = [tuple(self.ids),
+                      self.env.user.company_id.id]
         if self._context.get('from_date', False):
             sql_query += " AND date >= %s"
-            sql_params += (self._context['from_date'],)
+            sql_params.append(self._context['from_date'])
         if self._context.get('to_date', False):
             sql_query += " AND date <= %s"
-            sql_params += (self._context['to_date'],)
+            sql_params.append(self._context['to_date'])
         sql_query += " GROUP BY account_id"
         self.env.cr.execute(sql_query, sql_params)
         amounts = dict(self.env.cr.fetchall())
@@ -40,8 +40,8 @@ class account_analytic_account(models.Model):
         for account in self:
             amount = amounts.get(account.id, 0.0)
             account.balance = amount
-            account.credit = amount > 0.0 and amount or 0.0
-            account.debit = amount < 0.0 and -amount or 0.0
+            account.credit = amount if amount > 0.0 else 0.0
+            account.debit = -amount if amount < 0.0 else 0.0
 
     name = fields.Char(string='Analytic Account', index=True, required=True, track_visibility='onchange')
     code = fields.Char(string='Reference', index=True, track_visibility='onchange')
