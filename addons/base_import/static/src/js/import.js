@@ -318,7 +318,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
         this.$('.oe_import_file_show').val(file !== undefined && file.name || '');
         this.$buttons.filter('.o_import_button').add(this.$('.oe_import_file_reload'))
                 .prop('disabled', true);
-        if (!this.$('input.oe_import_file').val()) { return; }
+        if (!this.$('input.oe_import_file').val()) { return this['settings_changed'](); }
         this.$('.oe_import_date_format').val('');
 
         this.$el.removeClass('oe_import_preview oe_import_error');
