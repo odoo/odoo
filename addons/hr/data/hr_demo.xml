@@ -136,16 +136,13 @@ If you have development competencies, we can propose you specific traineeships</
     <!--Employees-->
 
       <record id="employee_fp" model="hr.employee">
-          <field name="name">Pieter Parker</field>
-          <field name="user_id" ref="base.user_root"/>
-          <field name="department_id" ref="dep_management"/>
-          <field name="job_id" ref="hr.job_ceo"/>
-          <field name="category_ids" eval="[(6, 0, [ref('employee_category_4'), ref('employee_category_3')])]"/>
+          <field name="calendar_id" ref="resource.timesheet_group1"/>
           <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3281813700</field>
           <field name="work_email">pieter@openerp.com</field>
-          <field name="image" type="base64" file="hr/static/img/employee_fp-image.jpg"/>
-          <field name="calendar_id" ref="resource.timesheet_group1"/>
+          <field name="category_ids" eval="[(6, 0, [ref('employee_category_4'), ref('employee_category_3')])]"/>
+          <field name="job_id" ref="hr.job_ceo"/>
+          <field name="department_id" ref="dep_management"/>
       </record>
 
       <record id="employee_al" model="hr.employee">
