@@ -4,7 +4,7 @@
 {
     'name': 'Accounting Tax Adjustments',
     'version': '1.1',
-    'category': 'Accounting & Finance',
+    'category': 'Accounting',
     'description': """
 Accounting Tax Adjustments.
 ===========================

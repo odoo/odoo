@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 {
     'name': 'Account Bank Statement Import',
-    'category': 'Accounting & Finance',
+    'category': 'Accounting',
     'version': '1.0',
     'depends': ['account'],
     'description': """Generic Wizard to Import Bank Statements. Includes the import of files in .OFX format""",

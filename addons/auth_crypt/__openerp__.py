@@ -6,7 +6,7 @@
     'version': '2.0',
     'author': ['Odoo SA', 'FS3'],
     'maintainer': 'Odoo SA',
-    'category': 'Tools',
+    'category': 'Extra Tools',
     'description': """
 Encrypted passwords
 ===================

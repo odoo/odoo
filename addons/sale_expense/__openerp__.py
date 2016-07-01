@@ -4,7 +4,7 @@
 {
     'name': 'Sales Expense',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Sales',
     'summary': 'Quotation, Sale Orders, Delivery & Invoicing Control',
     'description': """
 Module used for demo data
