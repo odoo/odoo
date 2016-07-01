@@ -439,8 +439,9 @@ class QWeb(orm.AbstractModel):
         d = qwebcontext.copy()
 
         if 'lang' in template_attributes:
+            init_lang = d.context.get('lang', 'en_US')
             lang = template_attributes['lang']
-            d.context = dict(d.context, lang=self.eval(lang, d) or lang)
+            d.context['lang'] = self.eval(lang, d) or lang
             if not self.pool['res.lang'].search(d.cr, d.uid, [('code', '=', d.context['lang'])], count=True, context=d.context):
                 _logger.info("'%s' is not a valid language code, is an empty field or is not installed, falling back to en_US", lang)
 
@@ -456,6 +457,10 @@ class QWeb(orm.AbstractModel):
 
         d['generated_attributes'] = generated_attributes
         res = self.render(cr, uid, template, d)
+
+        # we need to reset the lang after the rendering
+        if 'lang' in template_attributes:
+            d.context['lang'] = init_lang
 
         return res
 
