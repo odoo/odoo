@@ -75,7 +75,7 @@ class FileSystemLoader(object):
             if name:
                 yield name
 
-    def __call__(self, name):
+    def __call__(self, name, env=None):
         for node in self.doc:
             if node.get('t-name') == name:
                 root = etree.Element('templates')
@@ -161,7 +161,7 @@ class QWeb(models.AbstractModel):
     def get_template(self, name, qwebcontext):
         origin_template = qwebcontext.get('__caller__') or qwebcontext['__stack__'][0]
         try:
-            document = qwebcontext.loader(name)
+            document = qwebcontext.loader(name, env=qwebcontext.env)
         except ValueError:
             raise_qweb_exception(QWebTemplateNotFound, message="Loader could not find template %r" % name, template=origin_template)
 
@@ -439,7 +439,7 @@ class QWeb(models.AbstractModel):
                 lang_eval = lang
                 lang = qwebcontext.get('res_company') and qwebcontext['res_company'].partner_id.lang or 'en_US'
                 _logger.info("'%s' is not a valid language code, is an empty field or is not installed, falling back to %s", lang_eval, lang)
-                d.env = d.env(context=dict(d.context, lang=lang))
+            d.env = d.env(context=dict(d.context, lang=lang))
 
         d[0] = self.render_element(element, template_attributes, generated_attributes, d)
 
