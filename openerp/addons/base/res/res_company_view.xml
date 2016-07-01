@@ -49,12 +49,8 @@
                             </group>
                         </page>
                         <page name="configuration" string="Configuration">
-                            <group>
-                                <group name="account_grp" string="Accounting"/>
-                            </group>
-                        </page>
-                        <page name="report" string="Report Configuration">
-                            <group string="Configuration">
+                            <group name="account_grp" string="Accounting" invisible="1"/>
+                            <group string="Report Configuration" name="report_configuration">
                                 <group col="2" colspan="2">
                                     <field name="custom_footer"/>
                                     <field name="rml_footer" attrs="{'invisible': [('custom_footer','=',False)]}"/>

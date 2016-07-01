@@ -62,6 +62,8 @@ Administrator</span>]]></field>
             <field name="company_id" ref="main_company"/>
         </record>
 
+        <function name="onchange_footer" model="res.company" eval="[ref('main_company')]"/>
+
         <record id="ir_mail_server_localhost0" model="ir.mail_server">
             <field name="name">localhost</field>
             <field name="smtp_host">localhost</field>
