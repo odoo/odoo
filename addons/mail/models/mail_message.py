@@ -299,6 +299,7 @@ class Message(models.Model):
             'changed_field': tracking.field_desc,
             'old_value': tracking.get_old_display_value()[0],
             'new_value': tracking.get_new_display_value()[0],
+            'field_type': tracking.field_type,
         }) for tracking in trackings)
 
         # 4. Update message dictionaries

@@ -18,6 +18,7 @@ from openerp.tools import float_is_zero
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
+from openerp import api, fields as Fields
 
 _logger = logging.getLogger(__name__)
 
@@ -502,6 +503,7 @@ class pos_session(osv.osv):
         jobj = self.pool.get('pos.config')
         pos_config = jobj.browse(cr, uid, config_id, context=context)
         context.update({'company_id': pos_config.company_id.id})
+        is_pos_user = self.pool['res.users'].has_group(cr, uid, 'point_of_sale.group_pos_user')
         if not pos_config.journal_id:
             jid = jobj.default_get(cr, uid, ['journal_id'], context=context)['journal_id']
             if jid:
@@ -522,7 +524,7 @@ class pos_session(osv.osv):
             jobj.write(cr, SUPERUSER_ID, [pos_config.id], {'journal_ids': [(6,0, cashids)]})
 
         statements = []
-        create_statement = partial(self.pool['account.bank.statement'].create, cr, uid)
+        create_statement = partial(self.pool['account.bank.statement'].create, cr, is_pos_user and SUPERUSER_ID or uid)
         for journal in pos_config.journal_ids:
             # set the journal_id which should be used by
             # account.bank.statement to set the opening balance of the
@@ -540,7 +542,7 @@ class pos_session(osv.osv):
             'config_id': config_id
         })
 
-        return super(pos_session, self).create(cr, uid, values, context=context)
+        return super(pos_session, self).create(cr, is_pos_user and SUPERUSER_ID or uid, values, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
@@ -841,37 +843,11 @@ class pos_order(osv.osv):
         pricelist = self.pool.get('res.partner').browse(cr, uid, part, context=context).property_product_pricelist.id
         return {'value': {'pricelist_id': pricelist}}
 
-    def _amount_all(self, cr, uid, ids, name, args, context=None):
-        cur_obj = self.pool.get('res.currency')
-        res = {}
-        for order in self.browse(cr, uid, ids, context=context):
-            res[order.id] = {
-                'amount_paid': 0.0,
-                'amount_return':0.0,
-                'amount_tax':0.0,
-            }
-            val1 = val2 = 0.0
-            cur = order.pricelist_id.currency_id
-            for payment in order.statement_ids:
-                res[order.id]['amount_paid'] +=  payment.amount
-                res[order.id]['amount_return'] += (payment.amount < 0 and payment.amount or 0)
-            for line in order.lines:
-                val1 += self._amount_line_tax(cr, uid, line, order.fiscal_position_id, context=context)
-                val2 += line.price_subtotal
-            res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val1)
-            amount_untaxed = cur_obj.round(cr, uid, cur, val2)
-            res[order.id]['amount_total'] = res[order.id]['amount_tax'] + amount_untaxed
-        return res
-
     _columns = {
         'name': fields.char('Order Ref', required=True, readonly=True, copy=False),
         'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True),
         'date_order': fields.datetime('Order Date', readonly=True, select=True),
         'user_id': fields.many2one('res.users', 'Salesman', help="Person who uses the cash register. It can be a reliever, a student or an interim employee."),
-        'amount_tax': fields.function(_amount_all, string='Taxes', digits=0, multi='all'),
-        'amount_total': fields.function(_amount_all, string='Total', digits=0,  multi='all'),
-        'amount_paid': fields.function(_amount_all, string='Paid', states={'draft': [('readonly', False)]}, readonly=True, digits=0, multi='all'),
-        'amount_return': fields.function(_amount_all, string='Returned', digits=0, multi='all'),
         'lines': fields.one2many('pos.order.line', 'order_id', 'Order Lines', states={'draft': [('readonly', False)]}, readonly=True, copy=True),
         'statement_ids': fields.one2many('account.bank.statement.line', 'pos_statement_id', 'Payments', states={'draft': [('readonly', False)]}, readonly=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, states={'draft': [('readonly', False)]}, readonly=True),
@@ -903,6 +879,24 @@ class pos_order(osv.osv):
         'sale_journal': fields.related('session_id', 'config_id', 'journal_id', relation='account.journal', type='many2one', string='Sale Journal', store=True, readonly=True),
         'fiscal_position_id': fields.many2one('account.fiscal.position', 'Fiscal Position')
     }
+
+    amount_tax = Fields.Float(compute='_compute_amount_all', string='Taxes', digits=0)
+    amount_total = Fields.Float(compute='_compute_amount_all', string='Total', digits=0)
+    amount_paid = Fields.Float(compute='_compute_amount_all', string='Paid', states={'draft': [('readonly', False)]}, readonly=True, digits=0)
+    amount_return = Fields.Float(compute='_compute_amount_all', string='Returned', digits=0)
+
+
+    @api.depends('statement_ids', 'lines.price_subtotal_incl', 'lines.discount')
+    def _compute_amount_all(self):
+        for order in self:
+            order.amount_paid = order.amount_return = order.amount_tax = 0.0
+            currency = order.pricelist_id.currency_id
+            order.amount_paid = sum(payment.amount for payment in order.statement_ids)
+            order.amount_return = sum(payment.amount < 0 and payment.amount or 0 for payment in order.statement_ids)
+            order.amount_tax = currency.round(sum(self._amount_line_tax(line, order.fiscal_position_id) for line in order.lines))
+            amount_untaxed = currency.round(sum(line.price_subtotal for line in order.lines))
+            order.amount_total = order.amount_tax + amount_untaxed
+
 
     def _default_session(self, cr, uid, context=None):
         so = self.pool.get('pos.session')
@@ -1277,15 +1271,10 @@ class pos_order(osv.osv):
             def insert_data(data_type, values):
                 # if have_to_group_by:
 
-                sale_journal_id = order.sale_journal.id
-
                 # 'quantity': line.qty,
                 # 'product_id': line.product_id.id,
                 values.update({
-                    'ref': order.name,
                     'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False,
-                    'journal_id' : sale_journal_id,
-                    'date' : fields.date.context_today(self, cr, uid, context=context),
                     'move_id' : move_id,
                 })
 
@@ -1432,29 +1421,6 @@ class pos_order_line(osv.osv):
             line[2]['tax_ids'] = [(6, 0, [x.id for x in product.taxes_id])]
         return line
 
-    def _amount_line_all(self, cr, uid, ids, field_names, arg, context=None):
-        res = dict([(i, {}) for i in ids])
-        account_tax_obj = self.pool.get('account.tax')
-        cur_obj = self.pool.get('res.currency')
-        for line in self.browse(cr, uid, ids, context=context):
-            cur = line.order_id.pricelist_id.currency_id
-            taxes = [ tax for tax in line.tax_ids if tax.company_id.id == line.order_id.company_id.id ]
-            fiscal_position_id = line.order_id.fiscal_position_id
-            if fiscal_position_id:
-                taxes = fiscal_position_id.map_tax(taxes)
-            taxes_ids = [ tax.id for tax in taxes ]
-            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            res[line.id]['price_subtotal'] = res[line.id]['price_subtotal_incl'] = price * line.qty
-            if taxes_ids:
-                taxes = account_tax_obj.browse(cr, uid, taxes_ids, context).compute_all(price, cur, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
-                res[line.id]['price_subtotal'] = taxes['total_excluded']
-                res[line.id]['price_subtotal_incl'] = taxes['total_included']
-
-            res[line.id]['price_subtotal'] = cur_obj.round(cr, uid, cur, res[line.id]['price_subtotal'])
-            res[line.id]['price_subtotal_incl'] = cur_obj.round(cr, uid, cur, res[line.id]['price_subtotal_incl'])
-
-        return res
-
     def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False, context=None):
         context = context or {}
         if not product_id:
@@ -1508,14 +1474,34 @@ class pos_order_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True, change_default=True),
         'price_unit': fields.float(string='Unit Price', digits=0),
         'qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
-        'price_subtotal': fields.function(_amount_line_all, multi='pos_order_line_amount', digits=0, string='Subtotal w/o Tax'),
-        'price_subtotal_incl': fields.function(_amount_line_all, multi='pos_order_line_amount', digits=0, string='Subtotal'),
         'discount': fields.float('Discount (%)', digits=0),
         'order_id': fields.many2one('pos.order', 'Order Ref', ondelete='cascade'),
         'create_date': fields.datetime('Creation Date', readonly=True),
         'tax_ids': fields.many2many('account.tax', string='Taxes'),
         'tax_ids_after_fiscal_position': fields.function(_get_tax_ids_after_fiscal_position, type='many2many', relation='account.tax', string='Taxes')
     }
+
+    price_subtotal = Fields.Float(compute='_compute_amount_line_all', digits=0, string='Subtotal w/o Tax')
+    price_subtotal_incl = Fields.Float(compute='_compute_amount_line_all', digits=0, string='Subtotal')
+
+    @api.depends('price_unit', 'tax_ids', 'qty', 'discount', 'product_id')
+    def _compute_amount_line_all(self):
+        for line in self:
+            currency = line.order_id.pricelist_id.currency_id
+            taxes = line.tax_ids.filtered(lambda tax: tax.company_id.id == line.order_id.company_id.id)
+            fiscal_position_id = line.order_id.fiscal_position_id
+            if fiscal_position_id:
+                taxes = fiscal_position_id.map_tax(taxes)
+            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            line.price_subtotal = line.price_subtotal_incl = price * line.qty
+            if taxes:
+                taxes = taxes.compute_all(price, currency, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
+                line.price_subtotal = taxes['total_excluded']
+                line.price_subtotal_incl = taxes['total_included']
+
+            line.price_subtotal = currency.round(line.price_subtotal)
+            line.price_subtotal_incl = currency.round(line.price_subtotal_incl)
+
 
     _defaults = {
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').next_by_code(cr, uid, 'pos.order.line', context=context),

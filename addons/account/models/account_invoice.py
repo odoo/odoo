@@ -148,14 +148,17 @@ class AccountInvoice(models.Model):
             info = {'title': _('Less Payment'), 'outstanding': False, 'content': []}
             currency_id = self.currency_id
             for payment in self.payment_move_line_ids:
+                payment_currency_id = False
                 if self.type in ('out_invoice', 'in_refund'):
                     amount = sum([p.amount for p in payment.matched_debit_ids if p.debit_move_id in self.move_id.line_ids])
                     amount_currency = sum([p.amount_currency for p in payment.matched_debit_ids if p.debit_move_id in self.move_id.line_ids])
-                    payment_currency_id = all([p.currency_id == payment.matched_debit_ids[0].currency_id for p in payment.matched_debit_ids]) and payment.matched_debit_ids[0].currency_id or False
+                    if payment.matched_debit_ids:
+                        payment_currency_id = all([p.currency_id == payment.matched_debit_ids[0].currency_id for p in payment.matched_debit_ids]) and payment.matched_debit_ids[0].currency_id or False
                 elif self.type in ('in_invoice', 'out_refund'):
                     amount = sum([p.amount for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_ids])
                     amount_currency = sum([p.amount_currency for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_ids])
-                    payment_currency_id = all([p.currency_id == payment.matched_credit_ids[0].currency_id for p in payment.matched_credit_ids]) and payment.matched_credit_ids[0].currency_id or False
+                    if payment.matched_credit_ids:
+                        payment_currency_id = all([p.currency_id == payment.matched_credit_ids[0].currency_id for p in payment.matched_credit_ids]) and payment.matched_credit_ids[0].currency_id or False
                 # get the payment value in invoice currency
                 if payment_currency_id and payment_currency_id == self.currency_id:
                     amount_to_show = amount_currency
@@ -517,8 +520,18 @@ class AccountInvoice(models.Model):
         self.write({'state': 'draft', 'date': False})
         self.delete_workflow()
         self.create_workflow()
-        # Delete attachments now since an invoice can also be generated when the invoice is cancelled
-        self.env['ir.attachment'].search([('res_model', '=', self._name), ('res_id', 'in', self.ids)]).unlink()
+        # Delete former printed invoice
+        try:
+            report_invoice = self.env['report']._get_report_from_name('account.report_invoice')
+        except IndexError:
+            report_invoice = False
+        if report_invoice:
+            for invoice in self:
+                with invoice.env.do_in_draft():
+                    invoice.number, invoice.state = invoice.move_name, 'open'
+                    attachment = self.env['report']._attachment_stored(invoice, report_invoice)[invoice.id]
+                if attachment:
+                    attachment.unlink()
         return True
 
     @api.multi
@@ -554,7 +567,7 @@ class AccountInvoice(models.Model):
                 if not val.get('account_analytic_id') and line.account_analytic_id and val['account_id'] == line.account_id.id:
                     val['account_analytic_id'] = line.account_analytic_id.id
 
-                key = tax['id']
+                key = str(tax['id']) + '-' + str(val['account_id'])
                 if key not in tax_grouped:
                     tax_grouped[key] = val
                 else:
@@ -659,6 +672,7 @@ class AccountInvoice(models.Model):
         for tax_line in self.tax_line_ids:
             if tax_line.amount:
                 res.append({
+                    'invoice_tax_line_id': tax_line.id,
                     'tax_line_id': tax_line.tax_id.id,
                     'type': 'tax',
                     'name': tax_line.name,
@@ -696,6 +710,9 @@ class AccountInvoice(models.Model):
                     line2[tmp]['credit'] = (am < 0) and -am or 0.0
                     line2[tmp]['amount_currency'] += l['amount_currency']
                     line2[tmp]['analytic_line_ids'] += l['analytic_line_ids']
+                    qty = l.get('quantity')
+                    if qty:
+                        line2[tmp]['quantity'] = line2[tmp].get('quantity', 0.0) + qty
                 else:
                     line2[tmp] = l
             line = []
@@ -1104,7 +1121,7 @@ class AccountInvoiceLine(models.Model):
         default=0.0)
     invoice_line_tax_ids = fields.Many2many('account.tax',
         'account_invoice_line_tax', 'invoice_line_id', 'tax_id',
-        string='Taxes', domain=[('type_tax_use','!=','none')], oldname='invoice_line_tax_id')
+        string='Taxes', domain=[('type_tax_use','!=','none'), '|', ('active', '=', False), ('active', '=', True)], oldname='invoice_line_tax_id')
     account_analytic_id = fields.Many2one('account.analytic.account',
         string='Analytic Account')
     company_id = fields.Many2one('res.company', string='Company',
@@ -1261,11 +1278,13 @@ class AccountInvoiceTax(models.Model):
             for line in tax.invoice_id.invoice_line_ids:
                 if tax.tax_id in line.invoice_line_tax_ids:
                     base += line.price_subtotal
+                    # To add include base amount taxes
+                    base += sum((line.invoice_line_tax_ids.filtered(lambda t: t.include_base_amount) - tax.tax_id).mapped('amount'))
             tax.base = base
 
     invoice_id = fields.Many2one('account.invoice', string='Invoice', ondelete='cascade', index=True)
     name = fields.Char(string='Tax Description', required=True)
-    tax_id = fields.Many2one('account.tax', string='Tax')
+    tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict')
     account_id = fields.Many2one('account.account', string='Tax Account', required=True, domain=[('deprecated', '=', False)])
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic account')
     amount = fields.Monetary()
@@ -1355,7 +1374,7 @@ class AccountPaymentTermLine(models.Model):
     days = fields.Integer(string='Number of Days', required=True, default=0)
     option = fields.Selection([
             ('day_after_invoice_date', 'Day(s) after the invoice date'),
-            ('fix_day_following_month', 'Fixed day of the following month'),
+            ('fix_day_following_month', 'Day(s) after the end of the invoice month (Net EOM)'),
             ('last_day_following_month', 'Last day of following month'),
             ('last_day_current_month', 'Last day of current month'),
         ],

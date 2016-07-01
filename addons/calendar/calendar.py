@@ -1407,7 +1407,13 @@ class calendar_event(osv.Model):
             event.message_needaction_counter = rec.message_needaction_counter
             event.message_needaction = rec.message_needaction
 
+    @api.multi
+    def get_metadata(self):
+        real = self.browse(set({x: calendar_id2real_id(x) for x in self.ids}.values()))
+        return super(calendar_event, real).get_metadata()
+
     @api.cr_uid_ids_context
+    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, cr, uid, thread_id, context=None, **kwargs):
         if isinstance(thread_id, basestring):
             thread_id = get_real_ids(thread_id)

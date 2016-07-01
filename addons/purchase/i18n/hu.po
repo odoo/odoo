@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-04-12 10:04+0000\n"
+"PO-Revision-Date: 2016-06-22 12:22+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -855,7 +855,7 @@ msgstr "Utoljára frissítve, által"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_write_date
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve ekkor"
+msgstr "Utoljára frissítve "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_double_validation
@@ -1814,6 +1814,12 @@ msgid ""
 "            it's a physical product, a consumable or services you buy to\n"
 "            subcontractants."
 msgstr "Mindenre amit beszerez arra egy terméket kell meghatároznia, akár \n            egy fizikai termék egy fogyó termék vagy szolgáltatás melyet viszonteladásra \n            vásárol."
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:335
+#, python-format
+msgid "You must set a Vendor Location for this partner %s"
+msgstr "Hozzá kell rendelnie egy Beszálítót ehhez a partnerhez %s"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_config_settings

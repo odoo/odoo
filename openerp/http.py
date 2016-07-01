@@ -140,8 +140,11 @@ def local_redirect(path, query=None, keep_hash=False, forward_debug=True, code=3
     url = path
     if not query:
         query = {}
-    if forward_debug and request and request.debug:
-        query['debug'] = None
+    if request and request.debug:
+        if forward_debug:
+            query['debug'] = ''
+        else:
+            query['debug'] = None
     if query:
         url += '?' + werkzeug.url_encode(query)
     if keep_hash:
@@ -1376,6 +1379,8 @@ def session_gc(session_store):
 mimetypes.add_type('application/font-woff', '.woff')
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 mimetypes.add_type('application/x-font-ttf', '.ttf')
+# Add potentially missing (detected on windows) svg mime types
+mimetypes.add_type('image/svg+xml', '.svg')
 
 class Response(werkzeug.wrappers.Response):
     """ Response object passed through controller route chain.

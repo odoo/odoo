@@ -5,7 +5,7 @@
     'sequence': 120,
     'version': '1.0',
     'depends': ['base', 'web', 'decimal_precision'],
-    'category': 'Tools',
+    'category': 'Human Resources',
     'summary': 'Lunch Order, Meal, Food',
     'description': """
 The base module to manage lunch.

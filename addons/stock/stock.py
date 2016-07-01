@@ -913,7 +913,8 @@ class stock_picking(models.Model):
                 location_dest_id = picking_type.default_location_dest_id.id
 
             res['value'] = {'location_id': location_id,
-                            'location_dest_id': location_dest_id,}
+                            'location_dest_id': location_dest_id,
+                            'picking_type_code': picking_type.code,}
         return res
 
     def _default_location_destination(self):
@@ -927,6 +928,15 @@ class stock_picking(models.Model):
         picking_type_id = self._context.get('default_picking_type_id')
         picking_type = self.env['stock.picking.type'].browse(picking_type_id)
         return picking_type.default_location_src_id
+
+    @api.model
+    def default_get(self, fields):
+        res = super(stock_picking, self).default_get(fields)
+        if self._context.get('default_picking_type_id') and 'picking_type_id' in fields:
+            picking_type = self.env['stock.picking.type'].browse(res['picking_type_id'])
+            res['picking_type_code'] = picking_type.code
+        return res
+
 
     _columns = {
         'name': fields.char('Reference', select=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=False),
@@ -1430,10 +1440,11 @@ class stock_picking(models.Model):
                 #Check moves with same product
                 product_qty = ops.qty_done if done_qtys else ops.product_qty
                 qty_to_assign = uom_obj._compute_qty_obj(cr, uid, ops.product_uom_id, product_qty, ops.product_id.uom_id, context=context)
+                precision_rounding = ops.product_id.uom_id.rounding
                 for move_dict in prod2move_ids.get(ops.product_id.id, []):
                     move = move_dict['move']
                     for quant in move.reserved_quant_ids:
-                        if not qty_to_assign > 0:
+                        if float_compare(qty_to_assign, 0, precision_rounding=precision_rounding) != 1:
                             break
                         if quant.id in quants_in_package_done:
                             continue
@@ -1456,7 +1467,7 @@ class stock_picking(models.Model):
                                     qty_to_assign -= qty_on_link
                                     lot_qty[quant.lot_id.id] -= qty_on_link
 
-                qty_assign_cmp = float_compare(qty_to_assign, 0, precision_rounding=ops.product_id.uom_id.rounding)
+                qty_assign_cmp = float_compare(qty_to_assign, 0, precision_rounding=precision_rounding)
                 if qty_assign_cmp > 0:
                     #qty reserved is less than qty put in operations. We need to create a link but it's deferred after we processed
                     #all the quants (because they leave no choice on their related move and needs to be processed with higher priority)
@@ -1675,7 +1686,7 @@ class stock_picking(models.Model):
                         self.rereserve_quants(cr, uid, picking, move_ids=todo_move_ids, context=context)
                     self.do_recompute_remaining_quantities(cr, uid, [picking.id], context=context)
                 if todo_move_ids and not context.get('do_only_split'):
-                    self.pool.get('stock.move').action_done(cr, uid, todo_move_ids, context=notrack_context)
+                    self.pool.get('stock.move').action_done(cr, uid, todo_move_ids, context=context)
                 elif context.get('do_only_split'):
                     context = dict(context, split=todo_move_ids)
             self._create_backorder(cr, uid, picking, context=context)
@@ -2552,8 +2563,9 @@ class stock_move(osv.osv):
             move_rec = self.pool['stock.move'].browse(cr, uid, move, context=context)
             # Assign quants already reserved with lot to the correct
             for quant in quants_taken:
-                move_quants_dict.setdefault(quant[0].lot_id.id, [])
-                move_quants_dict[quant[0].lot_id.id] += [quant]
+                if quant[0] <= move_rec.reserved_quant_ids:
+                    move_quants_dict.setdefault(quant[0].lot_id.id, [])
+                    move_quants_dict[quant[0].lot_id.id] += [quant]
             false_quants_move = [x for x in false_quants if x[0].reservation_id.id == move]
             for lot in lot_qty:
                 move_quants_dict.setdefault(lot, [])
@@ -4097,6 +4109,7 @@ class stock_location_path(osv.osv):
                 'propagate': rule.propagate,
                 'push_rule_id': rule.id,
                 'warehouse_id': rule.warehouse_id and rule.warehouse_id.id or False,
+                'procurement_id': False,
             }
 
     def _apply(self, cr, uid, rule, move, context=None):

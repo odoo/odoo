@@ -98,7 +98,7 @@ class SaleOrder(models.Model):
         for order in self:
             order.order_line._compute_tax_id()
 
-    name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, index=True, default=lambda self: _('New'))
+    name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, states={'draft': [('readonly', False)]}, index=True, default=lambda self: _('New'))
     origin = fields.Char(string='Source Document', help="Reference of the document that generated this sales order request.")
     client_order_ref = fields.Char(string='Customer Reference', copy=False)
 
@@ -323,6 +323,9 @@ class SaleOrder(models.Model):
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
                 elif line.qty_to_invoice < 0 and final:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
+
+        if not invoices:
+            raise UserError(_('There is no invoicable line.'))
 
         for invoice in invoices.values():
             if not invoice.invoice_line_ids:
@@ -649,7 +652,7 @@ class SaleOrderLine(models.Model):
     price_total = fields.Monetary(compute='_compute_amount', string='Total', readonly=True, store=True)
 
     price_reduce = fields.Monetary(compute='_get_price_reduce', string='Price Reduce', readonly=True, store=True)
-    tax_id = fields.Many2many('account.tax', string='Taxes')
+    tax_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
 
     discount = fields.Float(string='Discount (%)', digits=dp.get_precision('Discount'), default=0.0)
 

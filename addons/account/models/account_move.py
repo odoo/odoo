@@ -102,6 +102,10 @@ class AccountMove(models.Model):
         return move
 
     @api.multi
+    def copy(self, default=None):
+        return super(AccountMove, self.with_context(dont_create_taxes=True)).copy(default)
+
+    @api.multi
     def write(self, vals):
         if 'line_ids' in vals:
             res = super(AccountMove, self.with_context(check_move_validity=False)).write(vals)
@@ -173,7 +177,11 @@ class AccountMove(models.Model):
             if self.user_has_groups('account.group_account_manager'):
                 lock_date = move.company_id.fiscalyear_lock_date
             if move.date <= lock_date:
-                raise UserError(_("You cannot add/modify entries prior to and inclusive of the lock date %s. Check the company settings or ask someone with the 'Adviser' role") % (lock_date))
+                if self.user_has_groups('account.group_account_manager'):
+                    message = _("You cannot add/modify entries prior to and inclusive of the lock date %s") % (lock_date)
+                else:
+                    message = _("You cannot add/modify entries prior to and inclusive of the lock date %s. Check the company settings or ask someone with the 'Adviser' role") % (lock_date)
+                raise UserError(message)
         return True
 
     @api.multi
@@ -375,7 +383,7 @@ class AccountMoveLine(models.Model):
     date = fields.Date(related='move_id.date', string='Date', required=True, index=True, default=fields.Date.context_today, store=True, copy=False)
     analytic_line_ids = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines', oldname="analytic_lines")
     tax_ids = fields.Many2many('account.tax', string='Taxes')
-    tax_line_id = fields.Many2one('account.tax', string='Originator tax')
+    tax_line_id = fields.Many2one('account.tax', string='Originator tax', ondelete='restrict')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     company_id = fields.Many2one('res.company', related='account_id.company_id', string='Company', store=True)
     counterpart = fields.Char("Counterpart", compute='_get_counterpart', help="Compute the counter part accounts of this journal item for this journal entry. This can be needed in reports.")
@@ -575,7 +583,14 @@ class AccountMoveLine(models.Model):
             ]
             try:
                 amount = float(str)
-                amount_domain = ['|', ('amount_residual', '=', amount), '|', ('amount_residual_currency', '=', amount), '|', ('amount_residual', '=', -amount), ('amount_residual_currency', '=', -amount)]
+                amount_domain = [
+                    '|', ('amount_residual', '=', amount),
+                    '|', ('amount_residual_currency', '=', amount),
+                    '|', ('amount_residual', '=', -amount),
+                    '|', ('amount_residual_currency', '=', -amount),
+                    '&', ('account_id.internal_type', '=', 'liquidity'),
+                    '|', '|', ('debit', '=', amount), ('credit', '=', amount), ('amount_currency', '=', amount),
+                ]
                 str_domain = expression.OR([str_domain, amount_domain])
             except:
                 pass
@@ -660,7 +675,7 @@ class AccountMoveLine(models.Model):
             line_currency = (line.currency_id and line.amount_currency) and line.currency_id or company_currency
             amount_currency_str = ""
             total_amount_currency_str = ""
-            if line_currency != company_currency:
+            if line_currency != company_currency and target_currency != company_currency:
                 total_amount = line.amount_currency
                 actual_debit = debit > 0 and amount_currency or 0.0
                 actual_credit = credit > 0 and -amount_currency or 0.0
@@ -668,7 +683,7 @@ class AccountMoveLine(models.Model):
                 total_amount = abs(debit - credit)
                 actual_debit = debit > 0 and amount or 0.0
                 actual_credit = credit > 0 and -amount or 0.0
-            if line_currency != target_currency:
+            if line_currency != target_currency and target_currency != company_currency:
                 amount_currency_str = formatLang(self.env, abs(actual_debit or actual_credit), currency_obj=line_currency)
                 total_amount_currency_str = formatLang(self.env, total_amount, currency_obj=line_currency)
                 ctx = context.copy()
@@ -926,10 +941,10 @@ class AccountMoveLine(models.Model):
             if aml.currency_id and aml.currency_id == currency:
                 total_amount_currency += aml.amount_currency
         if currency and aml_to_balance_currency:
-            aml = aml_to_balance_currency
+            aml = aml_to_balance_currency[0]
             #eventually create journal entries to book the difference due to foreign currency's exchange rate that fluctuates
             partial_rec = aml.credit and aml.matched_debit_ids[0] or aml.matched_credit_ids[0]
-            aml_id, partial_rec_id = partial_rec.create_exchange_rate_entry(aml, 0.0, total_amount_currency, currency, maxdate)
+            aml_id, partial_rec_id = partial_rec.with_context(skip_full_reconcile_check=True).create_exchange_rate_entry(aml_to_balance_currency, 0.0, total_amount_currency, currency, maxdate)
 
     @api.multi
     def remove_move_reconcile(self):
@@ -1042,24 +1057,30 @@ class AccountMoveLine(models.Model):
                 if vals['debit'] != 0.0: vals['debit'] = res['total_excluded']
                 if vals['credit'] != 0.0: vals['credit'] = -res['total_excluded']
                 if vals.get('amount_currency'):
-                    vals['amount_currency'] = self.env['res.currency'].browse(vals['currency_id']).round(vals['amount_currency'] * (amount / res['total_excluded']))
+                    vals['amount_currency'] = self.env['res.currency'].browse(vals['currency_id']).round(vals['amount_currency'] * (res['total_excluded']/amount))
             # Create tax lines
             for tax_vals in res['taxes']:
                 if tax_vals['amount']:
                     account_id = (amount > 0 and tax_vals['account_id'] or tax_vals['refund_account_id'])
                     if not account_id: account_id = vals['account_id']
-                    tax_lines_vals.append({
+                    temp = {
                         'account_id': account_id,
                         'name': vals['name'] + ' ' + tax_vals['name'],
                         'tax_line_id': tax_vals['id'],
                         'move_id': vals['move_id'],
-                        'date': vals['date'],
                         'partner_id': vals.get('partner_id'),
-                        'ref': vals.get('ref'),
                         'statement_id': vals.get('statement_id'),
                         'debit': tax_vals['amount'] > 0 and tax_vals['amount'] or 0.0,
                         'credit': tax_vals['amount'] < 0 and -tax_vals['amount'] or 0.0,
-                    })
+                    }
+                    bank = self.env["account.bank.statement"].browse(vals.get('statement_id'))
+                    if bank.currency_id != bank.company_id.currency_id:
+                        ctx = {}
+                        if 'date' in vals:
+                            ctx['date'] = vals['date']
+                        temp['currency_id'] = bank.currency_id.id
+                        temp['amount_currency'] = bank.company_id.currency_id.with_context(ctx).compute(tax_vals['amount'], bank.currency_id, round=True)
+                    tax_lines_vals.append(temp)
 
         new_line = super(AccountMoveLine, self).create(vals)
         for tax_line_vals in tax_lines_vals:
@@ -1101,10 +1122,11 @@ class AccountMoveLine(models.Model):
             msg = _('New expected payment date: ') + vals['expected_pay_date'] + '.\n' + vals.get('internal_note', '')
             self.invoice_id.message_post(body=msg) #TODO: check it is an internal note (not a regular email)!
         #when making a reconciliation on an existing liquidity journal item, mark the payment as reconciled
-        if 'statement_id' in vals and self.payment_id:
-            # In case of an internal transfer, there are 2 liquidity move lines to match with a bank statement
-            if all(line.statement_id for line in self.payment_id.move_line_ids.filtered(lambda r: r.id != self.id and r.account_id.internal_type=='liquidity')):
-                self.payment_id.state = 'reconciled'
+        for record in self:
+            if 'statement_id' in vals and record.payment_id:
+                # In case of an internal transfer, there are 2 liquidity move lines to match with a bank statement
+                if all(line.statement_id for line in record.payment_id.move_line_ids.filtered(lambda r: r.id != record.id and r.account_id.internal_type=='liquidity')):
+                    record.payment_id.state = 'reconciled'
 
         result = super(AccountMoveLine, self).write(vals)
         if self._context.get('check_move_validity', True):
@@ -1186,7 +1208,7 @@ class AccountMoveLine(models.Model):
             'unit_amount': self.quantity,
             'product_id': self.product_id and self.product_id.id or False,
             'product_uom_id': self.product_uom_id and self.product_uom_id.id or False,
-            'amount': self.company_currency_id.with_context(date=self.date or fields.Date.context_today(self)).compute(amount, self.currency_id) if self.currency_id else amount,
+            'amount': self.company_currency_id.with_context(date=self.date or fields.Date.context_today(self)).compute(amount, self.analytic_account_id.currency_id) if self.analytic_account_id.currency_id else amount,
             'general_account_id': self.account_id.id,
             'ref': self.ref,
             'move_id': self.id,
@@ -1356,6 +1378,9 @@ class AccountPartialReconcile(models.Model):
                     partial_rec_set[x] = None
         #then, if the total debit and credit are equal, or the total amount in currency is 0, the reconciliation is full
         if currency and aml_to_balance and (float_is_zero(total_amount_currency, precision_rounding=currency.rounding) or float_compare(total_debit, total_credit, precision_rounding=currency.rounding) == 0):
+            # If both condition are satisfied, no need to create exchange rate entry
+            if float_is_zero(total_amount_currency, precision_rounding=currency.rounding) and float_compare(total_debit, total_credit, precision_rounding=currency.rounding) == 0:
+                return res
             #eventually create a journal entry to book the difference due to foreign currency's exchange rate that fluctuates
             aml_id, partial_rec_id = partial_rec.create_exchange_rate_entry(aml_to_balance, total_debit - total_credit, total_amount_currency, currency, maxdate)
         return res

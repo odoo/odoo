@@ -419,17 +419,29 @@ class AccountBankStatementLine(models.Model):
 
     @api.multi
     def button_cancel_reconciliation(self):
-        # TOCKECK : might not behave as expected in case of reconciliations (match statement line with already
-        # registered payment) or partial reconciliations : it will completely remove the existing payment.
-        move_recs = self.env['account.move']
+        moves_to_unbind = self.env['account.move']
+        moves_to_cancel = self.env['account.move']
+        payment_to_unreconcile = self.env['account.payment']
         for st_line in self:
-            move_recs = (move_recs | st_line.journal_entry_ids)
-        if move_recs:
-            for move in move_recs:
+            moves_to_unbind |= st_line.journal_entry_ids
+            for move in st_line.journal_entry_ids:
+                if any(line.payment_id for line in move.line_ids):
+                    for line in move.line_ids:
+                        payment_to_unreconcile |= line.payment_id
+                    continue
+                moves_to_cancel |= st_line.journal_entry_ids
+        if moves_to_unbind:
+            moves_to_unbind.write({'statement_line_id': False})
+            moves_to_unbind.line_ids.filtered(lambda x:x.statement_id == st_line.statement_id).write({'statement_id': False})
+
+        if moves_to_cancel:
+            for move in moves_to_cancel:
                 move.line_ids.remove_move_reconcile()
-            move_recs.write({'statement_line_id': False})
-            move_recs.button_cancel()
-            move_recs.unlink()
+            moves_to_cancel.button_cancel()
+            moves_to_cancel.unlink()
+
+        if payment_to_unreconcile:
+            payment_to_unreconcile.write({'state': 'posted'})
 
     ####################################################
     # Reconciliation interface methods
@@ -562,7 +574,18 @@ class AccountBankStatementLine(models.Model):
                 else:
                     domain = [(f, '>', 0), (f, '<', amount)]
             elif comparator == '=':
-                domain = [(f, '=', float_round(amount, precision_digits=p))]
+                if f == 'amount_residual':
+                    domain = [
+                        '|', (f, '=', float_round(amount, precision_digits=p)),
+                        '&', ('account_id.internal_type', '=', 'liquidity'),
+                        '|', ('debit', '=', amount), ('credit', '=', amount),
+                    ]
+                else:
+                    domain = [
+                        '|', (f, '=', float_round(amount, precision_digits=p)),
+                        '&', ('account_id.internal_type', '=', 'liquidity'),
+                        ('amount_currency', '=', amount),
+                    ]
             else:
                 raise UserError(_("Programmation error : domain_maker_move_line_amount requires comparator '=' or '<'"))
             domain += [('currency_id', '=', c)]
@@ -711,8 +734,11 @@ class AccountBankStatementLine(models.Model):
             elif st_line_currency == company_currency:
                 total_amount = self.amount_currency
             else:
-                total_amount = statement_currency.with_context({'date': self.date}).compute(self.amount, company_currency)
-            ratio = total_amount / amount
+                total_amount = statement_currency.with_context({'date': self.date}).compute(self.amount, company_currency, round=False)
+            if float_compare(total_amount, amount, precision_digits=company_currency.rounding) == 0:
+                ratio = 1.0
+            else:
+                ratio = total_amount / amount
             # Then use it to adjust the statement.line field that correspond to the move.line amount_currency
             if statement_currency != company_currency:
                 amount_currency = self.amount * ratio

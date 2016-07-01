@@ -212,7 +212,7 @@ class product_product(osv.osv):
         return res
 
     def _compute_nbr_reordering_rules(self, cr, uid, ids, field_names=None, arg=None, context=None):
-        res = dict.fromkeys(ids, {'nbr_reordering_rules': 0, 'reordering_min_qty': 0, 'reordering_max_qty': 0})
+        res = {id : {'nbr_reordering_rules': 0, 'reordering_min_qty': 0, 'reordering_max_qty': 0} for id in ids}
         product_data = self.pool['stock.warehouse.orderpoint'].read_group(cr, uid, [('product_id', 'in', ids)], ['product_id', 'product_min_qty', 'product_max_qty'], ['product_id'], context=context)
         for data in product_data:
             res[data['product_id'][0]]['nbr_reordering_rules'] = int(data['product_id_count'])
@@ -385,7 +385,7 @@ class product_template(osv.osv):
         return res
 
     def _compute_nbr_reordering_rules(self, cr, uid, ids, field_names=None, arg=None, context=None):
-        res = dict.fromkeys(ids, {'nbr_reordering_rules': 0, 'reordering_min_qty': 0, 'reordering_max_qty': 0})
+        res = {id : {'nbr_reordering_rules': 0, 'reordering_min_qty': 0, 'reordering_max_qty': 0} for id in ids}
         product_data = self.pool['stock.warehouse.orderpoint'].read_group(cr, uid, [('product_id.product_tmpl_id', 'in', ids)], ['product_id', 'product_min_qty', 'product_max_qty'], ['product_id'], context=context)
         for data in product_data:
             product_tmpl_id = data['__domain'][1][2][0]
