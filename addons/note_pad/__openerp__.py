@@ -4,7 +4,7 @@
 {
     'name': 'Memos pad',
     'version': '0.1',
-    'category': 'Tools',
+    'category': 'Productivity',
     'description': """
 This module update memos inside Odoo for using an external pad
 =================================================================

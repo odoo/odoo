@@ -4,7 +4,6 @@
     'version': '0.1',
     'category': 'Tests',
     'description': """A module to verify the inheritance.""",
-    'maintainer': 'OpenERP SA',
     'depends': ['base'],
     'data': [
         'ir.model.access.csv',

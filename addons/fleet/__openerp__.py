@@ -4,7 +4,7 @@
     'name' : 'Fleet Management',
     'version' : '0.1',
     'sequence': 165,
-    'category': 'Managing vehicles and contracts',
+    'category': 'Human Resources',
     'website' : 'https://www.odoo.com/page/fleet',
     'summary' : 'Vehicle, leasing, insurances, costs',
     'description' : """

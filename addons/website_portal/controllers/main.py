@@ -7,7 +7,7 @@ from openerp.tools.translate import _
 
 class website_account(http.Controller):
     @http.route(['/my', '/my/home'], type='http', auth="public", website=True)
-    def account(self):
+    def account(self, **kw):
         partner = request.env.user.partner_id
 
         # get customer sales rep

@@ -40,7 +40,7 @@ Izvori podataka:
 """,
     "version": "13.0",
     "author": "OpenERP Croatian Community",
-    "category": 'Localization/Account Charts',
+    'category': 'Localization',
     "website": "https://code.launchpad.net/openobject-croatia",
 
     'depends': [

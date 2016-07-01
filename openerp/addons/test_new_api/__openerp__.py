@@ -4,7 +4,6 @@
     'version': '1.0',
     'category': 'Tests',
     'description': """A module to test the API.""",
-    'maintainer': 'OpenERP SA',
     'depends': ['base', 'web'],
     'installable': True,
     'auto_install': False,

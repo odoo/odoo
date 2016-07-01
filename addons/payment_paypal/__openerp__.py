@@ -2,7 +2,7 @@
 
 {
     'name': 'Paypal Payment Acquirer',
-    'category': 'Hidden',
+    'category': 'Accounting',
     'summary': 'Payment Acquirer: Paypal Implementation',
     'version': '1.0',
     'description': """Paypal Payment Acquirer""",
