@@ -6,7 +6,7 @@
 {
     'name': 'Australian - Accounting',
     'version': '1.1',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'description': """
 Australian Accounting Module
 ============================

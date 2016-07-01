@@ -1076,7 +1076,7 @@ class ProductCategory(models.Model):
         help="This account will be used to value price difference between purchase price and accounting cost.")
 
 
-class MailComposeMessage(models.Model):
+class MailComposeMessage(models.TransientModel):
     _inherit = 'mail.compose.message'
 
     @api.multi

@@ -3,7 +3,7 @@
 {
     'name': 'Website Rating Project Issue',
     'version': '0.1',
-    'category': 'Website',
+    'category': 'Project',
     'complexity': 'easy',
     'description': """
 This module display project customer satisfaction on your website.

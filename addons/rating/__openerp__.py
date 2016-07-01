@@ -2,7 +2,7 @@
 {
     'name': 'Customer Rating',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Productivity',
     'description': """
 This module allows a customer to give rating.
 """,

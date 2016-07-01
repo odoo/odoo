@@ -22,7 +22,7 @@ class WebsiteForm(http.Controller):
             return json.dumps(False)
 
         try:
-            data = self.extract_data(model_record, ** kwargs)
+            data = self.extract_data(model_record, request.params)
         # If we encounter an issue while extracting data
         except ValidationError, e:
             # I couldn't find a cleaner way to pass data to an exception
@@ -101,7 +101,7 @@ class WebsiteForm(http.Controller):
 
 
     # Extract all data sent by the form and sort its on several properties
-    def extract_data(self, model, **kwargs):
+    def extract_data(self, model, values):
 
         data = {
             'record': {},        # Values to create record
@@ -112,7 +112,8 @@ class WebsiteForm(http.Controller):
         authorized_fields = model.sudo()._get_form_writable_fields()
         error_fields = []
 
-        for field_name, field_value in kwargs.items():
+
+        for field_name, field_value in values.items():
             # If the value of the field if a file
             if hasattr(field_value, 'filename'):
                 # Undo file upload field name indexing

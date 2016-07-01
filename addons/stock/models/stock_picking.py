@@ -873,7 +873,7 @@ class Picking(models.Model):
 
             # TDE FIXME: do_only_split does not seem used anymore
             if todo_moves and not self.env.context.get('do_only_split'):
-                todo_moves.with_context(mail_notrack=True).action_done()
+                todo_moves.action_done()
             elif self.env.context.get('do_only_split'):
                 picking = picking.with_context(split=todo_moves.ids)
 
