@@ -25,7 +25,8 @@ class sale_quote_template(osv.osv):
         'number_of_days': fields.integer('Quotation Duration', help='Number of days for the validity date computation of the quotation'),
         'require_payment': fields.selection([
             (0, 'Not mandatory on website quote validation'),
-            (1, 'Immediate after website order validation')
+            (1, 'Immediate after website order validation'),
+            (2, 'Immediate after website order validation and save a token'),
             ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote"),
         'mail_template_id': fields.many2one('mail.template', 'Confirmation Mail', help="This e-mail template will be sent on confirmation. Leave empty to send nothing.")
     }
@@ -165,7 +166,8 @@ class sale_order(osv.osv):
         'quote_viewed': fields.boolean('Quotation Viewed'),
         'require_payment': fields.selection([
             (0, 'Not mandatory on website quote validation'),
-            (1, 'Immediate after website order validation')
+            (1, 'Immediate after website order validation'),
+            (2, 'Immediate after website order validation and save a token'),
             ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote"),
     }
 
@@ -315,7 +317,12 @@ class sale_order(osv.osv):
         return res
 
     def _get_payment_type(self, cr, uid, ids, context=None):
-        return 'form'
+        order = self.browse(cr, uid, ids, context=context)
+
+        if order.require_payment == 2:
+            return 'form_save'
+        else:
+            return 'form'
 
 class sale_quote_option(osv.osv):
     _name = "sale.quote.option"
