@@ -17,7 +17,7 @@ class ProjectConfiguration(models.TransientModel):
              '-This installs the module pad.')
     module_rating_project = fields.Selection([
         (0, "No customer rating"),
-        (1, 'Allow activating customer rating on projects, at issue completion')
+        (1, 'Allow customer ratings on tasks or issues')
         ], string="Rating",
         help="This allows customers to give rating on provided services")
     generate_project_alias = fields.Selection([

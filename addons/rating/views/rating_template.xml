@@ -101,13 +101,12 @@
                 <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
             </head>
             <div class="container">
-                <div clas="row" t-if="is_rated">
-                    <h1 class="text-center"><i class="fa fa-frown-o fa-2x text-danger" /></h1>
-                    <h1 class="text-center">Sorry you have already voted!</h1>
+                <div class="text-center" style="margin-top:128px">
+                    <i class="fa fa-check-circle fa-5x text-success" />
                 </div>
-                <div clas="row" t-if="is_public">
-                    <h1 class="text-center"><i class="fa fa-check-circle fa-2x text-success" /></h1>
-                    <h1 class="text-center">Thank you for submitting your feedback!</h1>
+                <h2 class="text-center">We appreciate your feedback!</h2>
+                <div class="text-center">
+                    <a href="https://www.odoo.com" class="btn btn-primary">Go to Odoo</a>
                 </div>
             </div>
         </template>
@@ -119,21 +118,24 @@
             </head>
             <div class="container">
                 <div clas="row">
-                    <h1 class="text-center">Please submit your rating</h1>
-                    <h4 class="text-center">You selected <img t-attf-src='/rating/static/src/img/rating_#{rating}.png'/></h4>
-                    <form class="form-horizontal" t-attf-action="/rating/#{token}/#{rating}/submit_feedback" method="post">
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-3">
-                                <h5>Do you want to give additional explanation? (Optional)</h5>
-                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                <textarea class="form-control" name="feedback" rows="3"></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-3">
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                            </div>
-                        </div>
+                    <h1 class="text-center">Thanks! We appreciate your feedback.</h1>
+                    <h4 class="text-center text-muted" style="margin-bottom: 32px;">Your rating has been submitted.</h4>
+                    <div class="pull-left">
+                        <img t-attf-src='/rating/static/src/img/rating_#{rate}.png'/>
+                    </div>
+                    <div style="margin-left: 80px;">
+                        you are <b t-esc="rate_name"></b><br/>
+                        on our services on "<b t-esc="rating.res_name"></b>"<br/>
+                        <t t-if="rating.rated_partner_id">by <b t-esc="rating.rated_partner_id.name"></b>.</t>
+                    </div>
+                    <div class="clearfix"></div>
+                    <p style="margin-top:32px;">
+                        Would be great if you can provide more informaion:
+                    </p>
+                    <form class="form-horizontal" t-attf-action="/rating/#{token}/#{rate}/submit_feedback" method="post">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <textarea class="form-control" name="feedback" rows="8" t-esc="rating.feedback"></textarea>
+                        <button type="submit" class="btn btn-primary" style="margin-top:8px;">Send Feedback</button>
                     </form>
                 </div>
             </div>
