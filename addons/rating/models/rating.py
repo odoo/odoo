@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+
 import uuid
 from odoo import api, fields, models
+from openerp import tools
+
 
 
 class Rating(models.Model):
@@ -105,22 +108,23 @@ class RatingMixin(models.AbstractModel):
         """
         Rating, rating = self.env['rating.rating'], None
         if token:
-            rating = self.env['rating.rating'].search([('access_token', '=', token), ('consumed', '=', False)], limit=1)
+            rating = self.env['rating.rating'].search([('access_token', '=', token)], limit=1)
         else:
-            rating = Rating.search([('res_model', '=', self._name), ('res_id', '=', self.ids[0]), ('consumed', '=', False)], limit=1)
+            rating = Rating.search([('res_model', '=', self._name), ('res_id', '=', self.ids[0])], limit=1)
         if rating:
             rating.write({'rating': rate, 'feedback': feedback, 'consumed': True})
             if hasattr(self, 'message_post'):
+                feedback = tools.plaintext2html(feedback or '')
                 self.message_post(
-                    body="<img src='/rating/static/src/img/rating_%s.png' style='width:20px;height:20px'/>%s"
-                    % (rate, '<br/>' + feedback if feedback else ''),
+                    body="<img src='/rating/static/src/img/rating_%s.png' style='width:20px;height:20px;float:left;margin-right: 5px;'/>%s"
+                    % (rate, feedback),
                     subtype=subtype or "mail.mt_comment",
                     author_id=rating.partner_id and rating.partner_id.id or None  # None will set the default author in mail_thread.py
                 )
             if hasattr(self, 'stage_id') and self.stage_id and hasattr(self.stage_id, 'auto_validation_kanban_state') and self.stage_id.auto_validation_kanban_state:
                 if rating.rating > 5:
                     self.write({'kanban_state': 'done'})
-                else:
+                if rating.rating < 5:
                     self.write({'kanban_state': 'blocked'})
         return rating
 

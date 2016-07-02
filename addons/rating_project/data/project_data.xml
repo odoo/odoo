@@ -57,8 +57,9 @@
                     <tr>
                         <td style="text-align:center;">
                             <h2 style="font-weight:300;font-size:18px;">
-                                Tell us how you feel about our service
+                                Tell us how you feel about our service:
                             </h2>
+                            <div style="text-color: #888888">(click on one of these smileys)</div>
                         </td>
                     </tr>
                     <tr>
@@ -67,17 +68,17 @@
                                 <tr>
                                     <td>
                                         <a href="/rating/${access_token}/10">
-                                            <img alt="Great" src="/rating/static/src/img/rating_10.png" title="It was great"/>
+                                            <img alt="Satisfied" src="/rating/static/src/img/rating_10.png" title="Satisfied"/>
                                         </a>
                                     </td>
                                     <td>
                                         <a href="/rating/${access_token}/5">
-                                            <img alt="Okay" src="/rating/static/src/img/rating_5.png" title="It was okay"/>
+                                            <img alt="Not satisfied" src="/rating/static/src/img/rating_5.png" title="Not satisfied"/>
                                         </a>
                                     </td>
                                     <td>
                                         <a href="/rating/${access_token}/1">
-                                            <img alt="Bad" src="/rating/static/src/img/rating_1.png" title="It wasn't good"/>
+                                            <img alt="Highly Dissatisfied" src="/rating/static/src/img/rating_1.png" title="Highly Dissatisfied"/>
                                         </a>
                                     </td>
                                 </tr>
@@ -96,7 +97,7 @@
                     <p>This customer survey has been sent because your task has been moved to the stage <b>${object.stage_id.name}</b></p>
                 % endif
                 % if object.project_id.rating_status == 'periodic':
-                    <p>This customer survey has been sent <b>${object.project_id.rating_status_period}</b> as long as the task is in the <b>${object.stage_id.name}</b> stage.
+                    <p>This customer survey is send <b>${object.project_id.rating_status_period}</b> as long as the task is in the <b>${object.stage_id.name}</b> stage.
                 % endif
                 <p>Email automatically sent by <a href="https://www.odoo.com/page/project-management" style="color:#a24689;text-decoration:none;">Odoo Project</a> for <a href="${object.project_id.company_id.website}" style="color:#a24689;text-decoration:none;">${object.project_id.company_id.name}</a></p>
             </td></tr>

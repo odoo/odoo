@@ -21,6 +21,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='button_box']" position="inside">
                     <button name="%(rating_rating_action_task)d" type="action"
+                            attrs="{'invisible': [('rating_count', '=', 0)]}"
                             class="oe_stat_button" icon="fa-smile-o">
                         <field name="rating_count" string="Rating" widget="statinfo"/>
                     </button>
@@ -39,9 +40,9 @@
                 </xpath>
                 <xpath expr="//div[@class='oe_kanban_bottom_left']" position="inside">
                     <b t-if="record.rating_ids.raw_value.length">
-                        <span class="fa fa-fw mt4 fa-thumbs-up text-success" t-if="record.rating_last_value.value == 10" title="Latest Rating: Happy"/>
-                        <span class="fa fa-fw mt4 fa-thumbs-down text-warning" t-if="record.rating_last_value.value == 5" title="Latest Rating: Average"/>
-                        <span class="fa fa-fw mt4 fa-thumbs-down text-danger" t-if="record.rating_last_value.value == 1" title="Latest Rating: Not Happy"/>
+                        <span style="font-weight:bold;" class="fa fa-fw mt4 fa-smile-o text-success" t-if="record.rating_last_value.value == 10" title="Latest Rating: Satisfied"/>
+                        <span style="font-weight:bold;" class="fa fa-fw mt4 fa-meh-o text-warning" t-if="record.rating_last_value.value == 5" title="Latest Rating: Not Satisfied"/>
+                        <span style="font-weight:bold;" class="fa fa-fw mt4 fa-frown-o text-danger" t-if="record.rating_last_value.value == 1" title="Latest Rating: Higly Dissatisfied"/>
                     </b>
                 </xpath>
             </field>
@@ -56,7 +57,7 @@
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button name="action_view_task_rating"
-                        attrs="{'invisible': ['|', '|', ('rating_status', '=', False), ('use_tasks','=', False), ('percentage_satisfaction_task', '=', -1)]}"
+                        attrs="{'invisible': ['|', '|', ('rating_status', '=', 'no'), ('use_tasks','=', False), ('percentage_satisfaction_task', '=', -1)]}"
                         class="oe_stat_button oe_percent"
                         type="object"
                         icon="fa-smile-o">
@@ -66,11 +67,14 @@
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <label for="rating_status"/>
                     <div>
-                        <field name="rating_status" class="oe_inline"/>
-                        <span attrs="{'invisible': [('rating_status','!=','periodic')]}"> - 
-                            <field name="rating_status_period" attrs="{'required': [('rating_status','=','periodic')]}" class="oe_inline"/>
-                        </span>
+                        <field name="rating_status" widget="radio"/>
+                        <p attrs="{'invisible': [('rating_status','not in',('periodic','stage'))]}" class="text-muted oe_edit_only">
+                            Edit project's stages and set an email template
+                            on the stages on which you want to activate the rating.
+                        </p>
                     </div>
+                    <field name="rating_status_period"  class="oe_inline"
+                        attrs="{'required': [('rating_status','=','periodic')], 'invisible': [('rating_status','!=','periodic')]}"/>
                 </xpath>
             </field>
         </record>
