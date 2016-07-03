@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-06-23 10:06+0000\n"
+"PO-Revision-Date: 2016-07-01 09:47+0000\n"
 "Last-Translator: RGB Consulting <odoo@rgbconsulting.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-8/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -83,7 +83,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Hola ${object.partner_id.name},</p>\n    \n    <p>Aquesta és una ${object.state in ('draft', 'sent') and 'sol·licitud de pressupost' or 'confirmació de comanda de compra'} de ${object.company_id.name}: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCIES</strong><br />\n       &nbsp;&nbsp;Núm. de comanda: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Total de la comanda: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Data de la comanda: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Referència de la comanda: ${object.origin}<br />\n       % endif\n       % if object.partner_ref:\n       &nbsp;&nbsp;La seva referència: ${object.partner_ref}<br />\n       % endif\n       % if object.validator:\n       &nbsp;&nbsp;El seu contacte: <a href=\"mailto:${object.validator.email or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n       % endif\n    </p>\n\n    <br/>\n    <p>Si té algun dubte, no dubti en contactar-nos.</p>\n    <p>Gràcies!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telèfon:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: purchase
 #: model:email.template,body_html:purchase.email_template_edi_purchase
@@ -148,7 +148,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Hola ${object.partner_id.name},</p>\n    \n    <p>Aquesta és una${object.state in ('draft', 'sent') and 'sol·licitud de pressupost' or 'confirmació de comanda de compra'} de ${object.company_id.name}: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCIES</strong><br />\n       &nbsp;&nbsp;Núm. de comanda: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Data de la comanda: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Referència de la comanda: ${object.origin}<br />\n       % endif\n       % if object.partner_ref:\n       &nbsp;&nbsp;La seva referència: ${object.partner_ref}<br />\n       % endif\n       % if object.validator:\n       &nbsp;&nbsp;El seu contacte: <a href=\"mailto:${object.validator.email or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n       % endif\n    </p>\n\n    <br/>\n    <p>Si té algun dubte, no dubti en contactar-nos.</p>\n    <p>Gràcies!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telèfon:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: purchase
 #: help:purchase.config.settings,module_stock_dropshipping:0
@@ -164,13 +164,13 @@ msgid ""
 "* The 'Confirmed' status is set automatically as confirm when purchase order in confirm status.                                        \n"
 "* The 'Done' status is set automatically when purchase order is set as done.                                        \n"
 "* The 'Cancelled' status is set automatically when user cancel purchase order."
-msgstr ""
+msgstr "* L'estat 'Esborrany' s'estableix automàticament quan es creï la comanda de compra.\n* L'estat 'Confirmat' s'estableix quan es confirma la comanda de compra.\n* L'estat 'Realitzat' s'estableix automàticament quan la comanda de compra es realitza.\n* L'estat 'Cancel·lat' s'estableix quan l'usuari cancel·la la comanda de compra."
 
 #. module: purchase
 #: code:addons/purchase/stock.py:198
 #, python-format
 msgid " Buy"
-msgstr ""
+msgstr "Compra"
 
 #. module: purchase
 #: field:product.product,purchase_count:0
@@ -181,7 +181,7 @@ msgstr "# Compres"
 #. module: purchase
 #: field:res.partner,supplier_invoice_count:0
 msgid "# Supplier Invoices"
-msgstr ""
+msgstr "Nº factures proveïdor"
 
 #. module: purchase
 #: field:purchase.report,nbr:0
@@ -196,12 +196,12 @@ msgstr "# de la comanda de compra "
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase
 msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} Comanda (Ref ${object.name or 'n/a' })"
 
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase_done
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} Comanda (Ref ${object.name or 'n/a' })"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -220,7 +220,7 @@ msgid ""
 "                    document in Odoo.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per registrar una factura de proveïdor.\n</p><p>\nLes factures de proveïdor poden ser pregenerades basades en les comandes o als rebuts. Això permet acarar les factures que reben del seu proveïdor amb els documents esborrany d'Odoo.\n</p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -233,7 +233,7 @@ msgid ""
 "                    of the products and the supplier invoice.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nAquest proveïdor no té cap comanda de venda. Premi per crear un nou SdP.\n</p><p>\nLa sol·licitud de pressupost és el primer pas del flux de compres. Una vegada convertit en una comanda de compra, serà capaç de controlar la recepció dels productes i de la factura de proveïdor.\n</p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_pricelist_version_action
@@ -247,7 +247,7 @@ msgid ""
 "                etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per afegir una versió de tarifa.\n</p><p>\nPot haver-hi més d'una versió de tarifa, que serà vàlid durant un cert període de temps. Alguns exemples de versions són: preus principals, 2010, 2011, vendes d'estiu, etc.\n</p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_picking_tree_picking_to_invoice
@@ -261,7 +261,7 @@ msgid ""
 "                You can generate a supplier invoice based on those receipts.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per crear una recepció.\n</p><p> \nAquí pot gestionar totes les recepcions de productes de les comandes de compra on el mètode de facturació és 'Basat en les recepcions' i per les que encara no ha generat cap factura.\nPot generar una factura de proveïdor basada en aquests rebuts.\n</p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -275,7 +275,7 @@ msgid ""
 "                the products received and control the supplier invoices.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per crear un pressupost que serà convertit en una comanda de venda.\n</p><p>\nUtilitzi aquest menú per buscar les seves comandes de compra per referència, proveïdor, productes, etc. Per cada comanda de venda, pot controlar la discussió relativa amb el proveïdor, controlar els productes rebuts i controlar les factures de proveïdor.\n</p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -291,7 +291,7 @@ msgid ""
 "                by Odoo based on inventory needs.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per a crear una nova sol·licitud de pressupost.\n</p><p>\nEl pressupost conte l'historial de la discussió/negociació que ha tingut amb el seu proveïdor. Una vegada confirmada, la sol·licitud de pressupost es converteix en una comanda de compra.\n</p><p>\nLa majoria dels pressupostos de comandes de compra es creen automàticament per Odoo basats en les necessitats d'inventari.\n</p>"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -307,7 +307,7 @@ msgid ""
 "            draft invoice and validate it.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per crear una factura esborrany.\n</p><p>\nUtilitzi aquest menú per controlar les factures a ser rebudes dels seus proveïdors. Odoo genera factures esborrany des de les seves comandes de compra o de les recepcions, dependent de la seva configuració.\n</p><p>\nUna vegada rebuda una factura d'un proveïdor, pot casar-la amb la factura esborrany i validar-la.\n</p>"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -324,7 +324,7 @@ msgid ""
 "            available suppliers, etc.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per a definir un nou producte.\n</p><p>\nHauria de definir un producte per cada cosa que compra, tant si és un producte físic, un consumible o un servei a subcontractistes.\n</p><p>\nEl formulari de producte conté informació detallada per millorar el procés de compra: preus, logística d'abastiment, dades de comptabilitat, proveïdors disponibles, etc.\n</p>\n        "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
@@ -336,7 +336,7 @@ msgid ""
 "                draft supplier invoice based on the lines from this list.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\nAquí pot seguir totes les línies de les comandes de compra on la seva facturació sigui \"Basada en les línies de comanda de compra\", i per les quals encara no ha rebut factura de proveïdor. Pot generar factures de compra esborrany basades en línies d'aquesta llista.\n</p>\n            "
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_partner_cat
@@ -346,12 +346,12 @@ msgstr "Llibreta d'adreces"
 #. module: purchase
 #: model:res.groups,name:purchase.group_advance_bidding
 msgid "Advance bidding process"
-msgstr ""
+msgstr "Procés de licitació avançat"
 
 #. module: purchase
 #: field:purchase.config.settings,module_warning:0
 msgid "Alerts by products or supplier"
-msgstr ""
+msgstr "Avisos per producte o proveïdor"
 
 #. module: purchase
 #: help:purchase.config.settings,module_warning:0
@@ -359,7 +359,7 @@ msgid ""
 "Allow to configure notification on products and trigger them when a user wants to purchase a given product or a given supplier.\n"
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "Supplier: don't forget to ask for an express delivery."
-msgstr ""
+msgstr "Permet configurar notificacions al producte i llençar-les quan un usuari vulgui comprar el producte corresponent o al proveïdor concret.\nExemples: Producte: aquest producte és obsolet. No vendre'n més de 5. Proveïdor: no oblidar preguntar per l'entrega ràpida."
 
 #. module: purchase
 #: help:account.config.settings,module_purchase_analytic_plans:0
@@ -367,19 +367,19 @@ msgstr ""
 msgid ""
 "Allows the user to maintain several analysis plans. These let you split lines on a purchase order between several accounts and analytic plans.\n"
 "-This installs the module purchase_analytic_plans."
-msgstr ""
+msgstr "Permet a l'usuari mantenir diversos plans analítics. Això li deixa dividir les línies d'una comanda de compra entre diversos comptes i plans analítics.\n- Això instal·la el mòdul purchase_analytic_plans."
 
 #. module: purchase
 #: help:purchase.config.settings,group_purchase_pricelist:0
 msgid ""
 "Allows to manage different prices based on rules per category of Supplier.\n"
 "Example: 10% for retailers, promotion of 5 EUR on this product, etc."
-msgstr ""
+msgstr "Permet gestionar diferents preus basats en regles per categoria de proveïdor.\nExemple: 10% per distribuïdors, promoció de 5 € en aquest producte, etc."
 
 #. module: purchase
 #: help:purchase.config.settings,group_costing_method:0
 msgid "Allows you to compute product cost price based on average cost."
-msgstr ""
+msgstr "Permet calcular el preu del cost del producte basat al preu mitjà."
 
 #. module: purchase
 #: help:purchase.config.settings,group_uom:0
@@ -391,7 +391,7 @@ msgstr "Ens permet seleccionar i mantenir diferents unitats de mesura per als pr
 #: help:account.config.settings,group_analytic_account_for_purchases:0
 #: help:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Allows you to specify an analytic account on purchase orders."
-msgstr ""
+msgstr "Permet assignar un compte analític específic a les comandes de compra."
 
 #. module: purchase
 #: field:purchase.order.line,account_analytic_id:0
@@ -401,13 +401,13 @@ msgstr "Compte analític"
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
 msgid "Analytic Accounting for Purchases"
-msgstr ""
+msgstr "Comptabilitat analítica per les compres"
 
 #. module: purchase
 #: field:account.config.settings,group_analytic_account_for_purchases:0
 #: field:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Analytic accounting for purchases"
-msgstr ""
+msgstr "Comptabilitat analítica per les compres"
 
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
@@ -417,7 +417,7 @@ msgstr "Aplica"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Approve Order"
-msgstr ""
+msgstr "Aprovar comanda"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_request_for_quotation_filter
@@ -428,7 +428,7 @@ msgstr "Aprovada"
 #. module: purchase
 #: view:purchase.order.group:purchase.view_purchase_order_group
 msgid "Are you sure you want to merge these orders?"
-msgstr ""
+msgstr "Està segur que desitja ajuntar aquestes comandes?"
 
 #. module: purchase
 #: field:purchase.order.line,procurement_ids:0
@@ -461,7 +461,7 @@ msgid ""
 "Based on Purchase Order lines: place individual lines in 'Invoice Control / On Purchase Order lines' from where you can selectively create an invoice.\n"
 "Based on generated invoice: create a draft invoice you can validate later.\n"
 "Based on incoming shipments: let you create an invoice when receipts are validated."
-msgstr ""
+msgstr "Basada en línies de comanda de compra: col·loca línies individuals en 'Control de factures / a les línies de comandes de compra', des d'on es podrà crear selectivament una factura.\nBasada en les factures generades: crea una factura esborrany que pot ser validat més tard.\nBasada en les recepcions: li deixa crear una factura que es valida quan ho fa la recepció."
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
