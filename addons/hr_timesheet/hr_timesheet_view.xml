@@ -66,9 +66,9 @@
         <record id="act_hr_timesheet_line" model="ir.actions.act_window">
             <field name="name">Activities</field>
             <field name="res_model">account.analytic.line</field>
-            <field name="view_ids" eval="[
-                (0, False, {'view_mode': 'tree', 'view_id': ref('hr_timesheet.hr_timesheet_line_tree')}),
-                (0, False, {'view_mode': 'form', 'view_id': ref('hr_timesheet.hr_timesheet_line_form')})
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('hr_timesheet.hr_timesheet_line_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('hr_timesheet.hr_timesheet_line_form')})
             ]"/>
             <field name="domain">[('project_id', '!=', False)]</field>
             <field name="context">{"search_default_today":1}</field>
