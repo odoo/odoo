@@ -54,6 +54,14 @@
             <field name="model">ir.actions.report.xml</field>
             <field name="arch" type="xml">
                 <form string="Report">
+                    <field name="ir_values_id" invisible="1"/>
+                    <button name="create_action" string="Add in the 'Print' menu" type="object"
+                            attrs="{'invisible':[('ir_values_id','!=',False)]}"
+                            help="Display an option on related documents to print this report"/>
+                    <button name="unlink_action" string="Remove from the 'Print' menu" type="object"
+                            attrs="{'invisible':[('ir_values_id','=',False)]}"
+                            help="Remove the contextual action related this report"/>
+
                     <group>
                         <group>
                             <field name="name"/>
