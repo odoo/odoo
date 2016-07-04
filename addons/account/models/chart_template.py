@@ -330,6 +330,9 @@ class AccountChartTemplate(models.Model):
         # Generate Fiscal Position , Fiscal Position Accounts and Fiscal Position Taxes from templates
         self.generate_fiscal_position(taxes_ref, account_ref, company)
 
+        # Generate account operation template templates
+        self.generate_account_reconcile_model(taxes_ref, account_ref, company)
+
         return account_ref, taxes_ref
 
     @api.multi
@@ -379,6 +382,31 @@ class AccountChartTemplate(models.Model):
             new_account = self.create_record_with_xmlid(company, account_template, 'account.account', vals)
             acc_template_ref[account_template.id] = new_account
         return acc_template_ref
+
+    @api.multi
+    def generate_account_reconcile_model(self, tax_template_ref, acc_template_ref, company):
+        """ This method for generating accounts from templates.
+
+            :param tax_template_ref: Taxes templates reference for write taxes_id in account_account.
+            :param acc_template_ref: dictionary with the mappping between the account templates and the real accounts.
+            :param company_id: company_id selected from wizard.multi.charts.accounts.
+            :returns: return new_account_reconcile_model for reference purpose.
+            :rtype: dict
+        """
+        self.ensure_one()
+        account_reconcile_models = self.env['account.reconcile.model.template'].search([])
+        for account_reconcile_model in account_reconcile_models:
+            vals = {
+                'name': account_reconcile_model.name,
+                'account_id': acc_template_ref[account_reconcile_model.account_id.id],
+                'amount_type': account_reconcile_model.amount_type,
+                'amount': account_reconcile_model.amount,
+                'label': account_reconcile_model.label,
+                'tax_id': account_reconcile_model.tax_id and tax_template_ref[account_reconcile_model.tax_id.id] or False,
+                'company_id': company.id,
+            }
+            self.create_record_with_xmlid(company, account_reconcile_model, 'account.reconcile.model', vals)
+        return True
 
     @api.multi
     def generate_fiscal_position(self, tax_template_ref, acc_template_ref, company):
@@ -809,3 +837,18 @@ class AccountBankAccountsWizard(models.TransientModel):
     currency_id = fields.Many2one('res.currency', string='Account Currency',
         help="Forces all moves for this account to have this secondary currency.")
     account_type = fields.Selection([('cash', 'Cash'), ('bank', 'Bank')])
+
+
+class AccountReconcileModelTemplate(models.Model):
+    _name = "account.reconcile.model.template"
+
+    name = fields.Char(string='Button Label', required=True)
+    account_id = fields.Many2one('account.account.template', string='Account', ondelete='cascade', domain=[('deprecated', '=', False)])
+    journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation.")
+    label = fields.Char(string='Journal Item Label')
+    amount_type = fields.Selection([
+        ('fixed', 'Fixed'),
+        ('percentage', 'Percentage of balance')
+        ], required=True, default='percentage')
+    amount = fields.Float(digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    tax_id = fields.Many2one('account.tax.template', string='Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])

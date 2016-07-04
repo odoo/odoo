@@ -48,6 +48,7 @@ Wizards provided by this module:
         'l10n_be_sequence.xml',
         'fiscal_templates.xml',
         'account_fiscal_position_tax_template.xml',
+        'account_reconcile_model_template.xml',
         'account_chart_template.yml',
         'security/ir.model.access.csv',
         'menuitem.xml'
