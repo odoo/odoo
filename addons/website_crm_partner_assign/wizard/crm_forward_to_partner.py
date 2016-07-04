@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
-from openerp.exceptions import UserError
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
-class crm_lead_forward_to_partner(osv.TransientModel):
+class CrmLeadForwardToPartner(models.TransientModel):
     """ Forward info history to partners. """
     _name = 'crm.lead.forward.to.partner'
 
-    def _convert_to_assignation_line(self, cr, uid, lead, partner, context=None):
+    @api.model
+    def _convert_to_assignation_line(self, lead, partner):
         lead_location = []
         partner_location = []
         if lead.country_id:
@@ -26,66 +26,54 @@ class crm_lead_forward_to_partner(osv.TransientModel):
                 'lead_location': ", ".join(lead_location),
                 'partner_assigned_id': partner and partner.id or False,
                 'partner_location': ", ".join(partner_location),
-                'lead_link': self.get_lead_portal_url(cr, uid, lead.id, lead.type, context=context),
+                'lead_link': self.get_lead_portal_url(lead.id, lead.type),
                 }
 
-    def default_get(self, cr, uid, fields, context=None):
-        if context is None:
-            context = {}
-        lead_obj = self.pool.get('crm.lead')
-        email_template_obj = self.pool.get('mail.template')
-        try:
-            template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'website_crm_partner_assign', 'email_template_lead_forward_mail')[1]
-        except ValueError:
-            template_id = False
-        res = super(crm_lead_forward_to_partner, self).default_get(cr, uid, fields, context=context)
-        active_ids = context.get('active_ids')
-        default_composition_mode = context.get('default_composition_mode')
+    @api.model
+    def default_get(self, fields):
+        template = self.env.ref('website_crm_partner_assign.email_template_lead_forward_mail', False)
+
+        res = super(CrmLeadForwardToPartner, self).default_get(fields)
+        active_ids = self.env.context.get('active_ids')
+        default_composition_mode = self.env.context.get('default_composition_mode')
         res['assignation_lines'] = []
-        if template_id:
-            res['body'] = email_template_obj.get_email_template(cr, uid, template_id, 0).body_html
+        if template:
+            res['body'] = template.body_html
         if active_ids:
-            lead_ids = lead_obj.browse(cr, uid, active_ids, context=context)
+            leads = self.env['crm.lead'].browse(active_ids)
             if default_composition_mode == 'mass_mail':
-                partner_assigned_ids = lead_obj.search_geo_partner(cr, uid, active_ids, context=context)
+                partner_assigned_dict = leads.search_geo_partner()
             else:
-                partner_assigned_ids = dict((lead.id, lead.partner_assigned_id and lead.partner_assigned_id.id or False) for lead in lead_ids)
-                res['partner_id'] = lead_ids[0].partner_assigned_id.id
-            for lead in lead_ids:
-                partner_id = partner_assigned_ids.get(lead.id) or False
-                partner = False
-                if partner_id:
-                    partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-                res['assignation_lines'].append((0, 0, self._convert_to_assignation_line(cr, uid, lead, partner)))
+                partner_assigned_dict = {lead.id: lead.partner_assigned_id.id for lead in leads}
+                res['partner_id'] = leads[0].partner_assigned_id.id
+            for lead in leads:
+                partner_id = partner_assigned_dict.get(lead.id) or False
+                partner = self.env['res.partner'].browse(partner_id)
+                res['assignation_lines'].append((0, 0, self._convert_to_assignation_line(lead, partner)))
         return res
 
-    def action_forward(self, cr, uid, ids, context=None):
-        lead_obj = self.pool.get('crm.lead')
-        record = self.browse(cr, uid, ids[0], context=context)
-        email_template_obj = self.pool.get('mail.template')
-        try:
-            template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'website_crm_partner_assign', 'email_template_lead_forward_mail')[1]
-        except ValueError:
+    @api.multi
+    def action_forward(self):
+        self.ensure_one()
+        template = self.env.ref('website_crm_partner_assign.email_template_lead_forward_mail', False)
+        if not template:
             raise UserError(_('The Forward Email Template is not in the database'))
-        try:
-            portal_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_portal')[1]
-        except ValueError:
-            pass
+        portal_group = self.env.ref('base.group_portal')
 
-        local_context = context.copy()
-        if not (record.forward_type == 'single'):
+        local_context = self.env.context.copy()
+        if not (self.forward_type == 'single'):
             no_email = set()
-            for lead in record.assignation_lines:
+            for lead in self.assignation_lines:
                 if lead.partner_assigned_id and not lead.partner_assigned_id.email:
                     no_email.add(lead.partner_assigned_id.name)
             if no_email:
                 raise UserError(_('Set an email address for the partner(s): %s') % ", ".join(no_email))
-        if record.forward_type == 'single' and not record.partner_id.email:
-            raise UserError(_('Set an email address for the partner %s') % record.partner_id.name)
+        if self.forward_type == 'single' and not self.partner_id.email:
+            raise UserError(_('Set an email address for the partner %s') % self.partner_id.name)
 
         partners_leads = {}
-        for lead in record.assignation_lines:
-            partner = record.forward_type == 'single' and record.partner_id or lead.partner_assigned_id
+        for lead in self.assignation_lines:
+            partner = self.forward_type == 'single' and self.partner_id or lead.partner_assigned_id
             lead_details = {
                 'lead_link': lead.lead_link,
                 'lead_id': lead.lead_id,
@@ -99,80 +87,77 @@ class crm_lead_forward_to_partner(osv.TransientModel):
 
         for partner_id, partner_leads in partners_leads.items():
             in_portal = False
-            if portal_id:
-                for contact in (partner.child_ids or [partner]):
-                    if contact.user_ids:
-                        in_portal = portal_id in [g.id for g in contact.user_ids[0].groups_id]
+            if portal_group:
+                for contact in (partner.child_ids or partner).filtered(lambda contact: contact.user_ids):
+                    in_portal = portal_group.id in [g.id for g in contact.user_ids[0].groups_id]
 
             local_context['partner_id'] = partner_leads['partner']
             local_context['partner_leads'] = partner_leads['leads']
             local_context['partner_in_portal'] = in_portal
-            email_template_obj.send_mail(cr, uid, template_id, ids[0], context=local_context)
-            lead_ids = [lead['lead_id'].id for lead in partner_leads['leads']]
+            template.with_context(local_context).send_mail(self.id)
+            leads = self.env['crm.lead']
+            for lead_data in partner_leads['leads']:
+                leads |= lead_data['lead_id']
             values = {'partner_assigned_id': partner_id, 'user_id': partner_leads['partner'].user_id.id}
-            lead_obj.write(cr, uid, lead_ids, values)
-
-            self.pool.get('crm.lead').message_subscribe(cr, uid, lead_ids, [partner_id], context=context)
+            leads.write(values)
+            self.env['crm.lead'].message_subscribe([partner_id])
         return True
 
-    def get_lead_portal_url(self, cr, uid, lead_id, type, context=None):
+    def get_lead_portal_url(self, lead_id, type):
         action = type == 'opportunity' and 'action_portal_opportunities' or 'action_portal_leads'
-        try:
-            action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'website_crm_partner_assign', action)[1]
-        except ValueError:
-            action_id = False
-        portal_link = "%s/?db=%s#id=%s&action=%s&view_type=form" % (self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url'), cr.dbname, lead_id, action_id)
+        action_ref = self.env.ref('website_crm_partner_assign.%s' % (action,), False)
+        portal_link = "%s/?db=%s#id=%s&action=%s&view_type=form" % (
+            self.env['ir.config_parameter'].get_param('web.base.url'),
+            self.env.cr.dbname,
+            lead_id,
+            action_ref and action_ref.id or False)
         return portal_link
 
-    def get_portal_url(self, cr, uid, ids, context=None):
-        portal_link = "%s/?db=%s" % (self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url'), cr.dbname)
+    def get_portal_url(self):
+        portal_link = "%s/?db=%s" % (self.env['ir.config_parameter'].get_param('web.base.url'), self.env.cr.dbname)
         return portal_link
 
-    _columns = {
-        'forward_type': fields.selection([('single', 'a single partner: manual selection of partner'), ('assigned', "several partners: automatic assignation, using GPS coordinates and partner's grades"), ], 'Forward selected leads to'),
-        'partner_id': fields.many2one('res.partner', 'Forward Leads To'),
-        'assignation_lines': fields.one2many('crm.lead.assignation', 'forward_id', 'Partner Assignation'),
-        'body': fields.html('Contents', help='Automatically sanitized HTML contents'),
-    }
-
-    _defaults = {
-        'forward_type': lambda self, cr, uid, c: c.get('forward_type') or 'single',
-    }
+    forward_type = fields.Selection([
+        ('single', 'a single partner: manual selection of partner'),
+        ('assigned', "several partners: automatic assignation, using GPS coordinates and partner's grades")
+    ], 'Forward selected leads to', default=lambda self: self.env.context.get('forward_type') or 'single')
+    partner_id = fields.Many2one('res.partner', 'Forward Leads To')
+    assignation_lines = fields.One2many('crm.lead.assignation', 'forward_id', 'Partner Assignation')
+    body = fields.Html('Contents', help='Automatically sanitized HTML contents')
 
 
-class crm_lead_assignation (osv.TransientModel):
+class CrmLeadAssignation(models.TransientModel):
     _name = 'crm.lead.assignation'
-    _columns = {
-        'forward_id': fields.many2one('crm.lead.forward.to.partner', 'Partner Assignation'),
-        'lead_id': fields.many2one('crm.lead', 'Lead'),
-        'lead_location': fields.char('Lead Location', size=128),
-        'partner_assigned_id': fields.many2one('res.partner', 'Assigned Partner'),
-        'partner_location': fields.char('Partner Location', size=128),
-        'lead_link': fields.char('Lead  Single Links', size=128),
-    }
 
-    def on_change_lead_id(self, cr, uid, ids, lead_id, context=None):
-        if not context:
-            context = {}
-        if not lead_id:
-            return {'value': {'lead_location': False}}
-        lead = self.pool.get('crm.lead').browse(cr, uid, lead_id, context=context)
-        lead_location = []
-        if lead.country_id:
-            lead_location.append(lead.country_id.name)
-        if lead.city:
-            lead_location.append(lead.city)
-        return {'value': {'lead_location': ", ".join(lead_location)}}
+    forward_id = fields.Many2one('crm.lead.forward.to.partner', 'Partner Assignation')
+    lead_id = fields.Many2one('crm.lead', 'Lead')
+    lead_location = fields.Char('Lead Location')
+    partner_assigned_id = fields.Many2one('res.partner', 'Assigned Partner')
+    partner_location = fields.Char('Partner Location')
+    lead_link = fields.Char('Lead Single Links')
 
-    def on_change_partner_assigned_id(self, cr, uid, ids, partner_assigned_id, context=None):
-        if not context:
-            context = {}
-        if not partner_assigned_id:
-            return {'value': {'lead_location': False}}
-        partner = self.pool.get('res.partner').browse(cr, uid, partner_assigned_id, context=context)
-        partner_location = []
-        if partner.country_id:
-            partner_location.append(partner.country_id.name)
-        if partner.city:
-            partner_location.append(partner.city)
-        return {'value': {'partner_location': ", ".join(partner_location)}}
+    @api.onchange('lead_id')
+    def _onchange_lead_id(self):
+        lead = self.lead_id
+        if not lead:
+            self.lead_location = False
+        else:
+            lead_location = []
+            if lead.country_id:
+                lead_location.append(lead.country_id.name)
+            if lead.city:
+                lead_location.append(lead.city)
+            self.lead_location = ", ".join(lead_location)
+
+    @api.onchange('partner_assigned_id')
+    def _onchange_partner_assigned_id(self):
+        partner = self.partner_assigned_id
+        if not partner:
+            self.lead_location = False
+        else:
+            partner_location = []
+            if partner.country_id:
+                partner_location.append(partner.country_id.name)
+            if partner.city:
+                partner_location.append(partner.city)
+            self.partner_location = ", ".join(partner_location)

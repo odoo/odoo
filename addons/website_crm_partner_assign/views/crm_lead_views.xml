@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
         <record id="view_crm_opportunity_geo_assign_form" model="ir.ui.view">
             <field name="name">crm.lead.geo_assign.inherit</field>
             <field name="model">crm.lead</field>
@@ -22,7 +21,7 @@
                             </div>
                             <button string="Automatic Assignation" name="action_assign_partner" type="object" class="btn-link"/>
 
-                            <field name="partner_assigned_id" on_change="onchange_assign_id(partner_assigned_id)" domain="[('grade_id','&lt;&gt;',False)]"/>
+                            <field name="partner_assigned_id" domain="[('grade_id','&lt;&gt;',False)]"/>
                             <button string="Send Email" type="action" class="btn-link"
                                 attrs="{'invisible':[('partner_assigned_id','=',False)]}"
                                 name="%(crm_lead_forward_to_partner_act)d"
@@ -83,7 +82,7 @@
                             </div>
                             <button string="Automatic Assignation" name="action_assign_partner" type="object" class="btn-link"/>
 
-                            <field name="partner_assigned_id" on_change="onchange_assign_id(partner_assigned_id)" domain="[('grade_id','&lt;&gt;',False)]"/>
+                            <field name="partner_assigned_id" domain="[('grade_id','&lt;&gt;',False)]"/>
                             <button string="Send Email" type="action" class="btn-link"
                                 attrs="{'invisible':[('partner_assigned_id','=',False)]}"
                                 name="%(crm_lead_forward_to_partner_act)d"
@@ -127,14 +126,14 @@
             <field name="model_id" ref="model_crm_lead"/>
             <field name="state">code</field>
             <field name="code">
-                if context.get('active_model') == 'crm.lead':
-                    ids = []
-                    if context.get('active_domain'):
-                        ids = self.search(cr, uid, context['active_domain'], context=context)
-                    elif context.get('active_ids'):
-                        ids = context['active_ids']
-                    if ids:
-                        self.assign_salesman_of_assigned_partner(cr, uid, ids, context=context)
+                if object.env.context.get('active_model') == 'crm.lead':
+                    leads = model
+                    if object.env.context.get('active_domain'):
+                        leads = model.search(object.env.context['active_domain'])
+                    elif object.env.context.get('active_ids'):
+                        leads = model.browse(object.env.context['active_ids'])
+                    if leads:
+                        leads.assign_salesman_of_assigned_partner()
             </field>
         </record>
 
@@ -147,5 +146,4 @@
             <field name="model">crm.lead</field>
         </record>
 
-    </data>
-</openerp>
+</odoo>
