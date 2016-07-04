@@ -30,11 +30,10 @@ contentMenu.TopBar.include({
         });
     },
 });
-
 });
 
 odoo.define('website_blog.editor', function (require) {
-"use strict";
+    "use strict";
 
     var ajax = require('web.ajax');
     var widget = require('web_editor.widget');
@@ -97,8 +96,7 @@ odoo.define('website_blog.editor', function (require) {
         change : function(type, value, $li) {
             if (type !== 'click') return;
             var self = this;
-            var editor  = new widget.MediaDialog(this.$image, this.$image[0], {only_images: true});
-            editor.appendTo('body');
+            var editor  = new widget.MediaDialog(null, {only_images: true}, this.$image, this.$image[0]).open();
             editor.on('saved', self, function (event, img) {
                 var url = self.$image.attr('src');
                 self.$cover.css({"background-image": url ? 'url(' + url + ')' : "", 'min-height': $(window).height()-this.$cover.offset().top});
@@ -128,5 +126,4 @@ odoo.define('website_blog.editor', function (require) {
             this.$el.find('[data-bgcolor="' + this.background + '"], [data-opacity="' + parseFloat(this.value).toFixed(1) + '"], [data-cover_class*="' + ((this.class||'').indexOf('cover_full') === -1 ? 'container' : 'cover_full') + '"]').addClass("active");
         },
     });
-
 });

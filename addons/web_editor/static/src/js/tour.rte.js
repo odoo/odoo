@@ -182,7 +182,7 @@ Tour.register({
         },
         {
             waitFor:   '#editor-media-icon.active span.o_selected',
-            element:   '.modal button.save',
+            element:   '.modal button.o_save_button',
             title:     "save pictogram",
         },
         {
@@ -236,7 +236,7 @@ Tour.register({
         },
         {
             waitFor:   '.modal a#link-preview.btn:containsRegex(/^ABC<span [^>]+><\\/span> DEF$/)',
-            element:   '.modal button.save',
+            element:   '.modal button.o_save_button',
             title:     "save link",
         },
         {
@@ -267,7 +267,7 @@ Tour.register({
         },
         {
             waitFor:   '.modal a#link-preview.btn[href="mailto:test@test.test"]',
-            element:   '.modal button.save',
+            element:   '.modal button.o_save_button',
             title:     "save link",
         },
         {

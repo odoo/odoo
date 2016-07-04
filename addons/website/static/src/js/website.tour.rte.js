@@ -111,17 +111,17 @@ Tour.register({
         },
         {
             title:     "translate placeholder",
-            element:   '.modal.web_editor-dialog input:first',
+            element:   '.modal input:first',
             sampleText: 'test french placeholder',
         },
         {
             title:     "close modal",
-            waitFor:   '.web_editor-dialog input:propValue(test french placeholder)',
-            element:   '.web_editor-dialog button',
+            waitFor:   '.modal input:propValue(test french placeholder)',
+            element:   '.modal button',
         },
         {
             title:     "close modal",
-            waitNot:   '.web_editor-dialog',
+            waitNot:   '.modal:visible',
             element:   'button[data-action=save]',
         },
         {

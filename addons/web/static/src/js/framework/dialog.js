@@ -60,7 +60,7 @@ var Dialog = Widget.extend({
         this.$footer = this.$modal.find(".modal-footer");
 
         this.set_buttons(options.buttons);
-        
+
         this.$modal.on('hidden.bs.modal', _.bind(this.destroy, this));
     },
 
@@ -94,7 +94,7 @@ var Dialog = Widget.extend({
             self.$footer.append($b);
         });
     },
-    
+
     set_title: function(title, subtitle) {
         this.title = title || "";
         if (subtitle !== undefined) {
@@ -122,7 +122,7 @@ var Dialog = Widget.extend({
             self.$modal.modal('show');
             self._opened.resolve();
         });
-        
+
         return self;
     },
 

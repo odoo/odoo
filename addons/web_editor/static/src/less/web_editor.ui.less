@@ -180,6 +180,10 @@ html[lang] > body.editor_enable{
                         opacity: 0.8;
                     }
                 }
+
+                &:nth-child(2n+1) {
+                    clear: left;
+                }
             }
         }
     }
@@ -289,7 +293,7 @@ html[lang] > body.editor_enable{
 // MANIPULATORS
 #oe_manipulators {
     @odoo-handle-edge-size: 8px;
-    @odoo-handle-border-width: 3px;
+    @odoo-handle-border-width: 1px;
 
     // SNIPPET MANIPULATORS
     .oe_overlay {
@@ -342,6 +346,9 @@ html[lang] > body.editor_enable{
                         &:hover {
                             background-color: darken(@o-we-color-danger, 20%);
                         }
+                    }
+                    &.oe_snippet_parent > i {
+                        .scaleX(-1);
                     }
                 }
 
@@ -440,6 +447,34 @@ html[lang] > body.editor_enable{
                                     color: @odoo-brand-optional;
                                 }
                             }
+                            &.dropdown-header {
+                                color: wheat;
+                                font-weight: bold;
+
+                                &:hover {
+                                    background-color: initial;
+                                }
+
+                                &.o_main_header {
+                                    padding-left: 4px;
+                                }
+                                &.o_parent_editor_header {
+                                    &::before {
+                                        content: "\f148";
+                                        .o-position-absolute(@top: 0, @left: 5px);
+                                        font-family: FontAwesome;
+                                        .scaleX(-1);
+                                    }
+                                    ~ li:not(.dropdown-header) {
+                                        padding-left: 16px;
+                                    }
+                                }
+                            }
+
+                            > a > i {
+                                width: 16px;
+                                margin-right: 4px;
+                            }
                         }
                     }
                 }
@@ -495,7 +530,7 @@ html[lang] > body.editor_enable{
                     cursor: e-resize;
                     width: @odoo-handle-edge-size;
                     .o-position-absolute(@o-handles-offset-to-hide, auto, -@o-handles-offset-to-hide, 0);
-                
+
                     &:after {
                         .o-position-absolute(@top: 50%, @left: -@odoo-handle-border-width);
                         margin-top: -@o-handle-size/2;
@@ -506,7 +541,7 @@ html[lang] > body.editor_enable{
                     cursor: w-resize;
                     width: @odoo-handle-edge-size;
                     .o-position-absolute(@o-handles-offset-to-hide, 0, -@o-handles-offset-to-hide, auto);
-                
+
                     &:after {
                         .o-position-absolute(@top: 50%, @right: -@odoo-handle-border-width);
                         margin-top: -@o-handle-size/2;
@@ -546,6 +581,7 @@ html[lang] > body.editor_enable{
                     margin-left: -125px;
 
                     > .oe_handle_button {
+                        position: relative;
                         display: block;
                         width: 100px;
                         height: @o-handle-size-height;
@@ -566,6 +602,13 @@ html[lang] > body.editor_enable{
                         &.size {
                             cursor: row-resize;
                             float: right;
+                        }
+                        &.active:before {
+                            content: "\f00c";
+                            font-family: "FontAwesome";
+                            color: @odoo-brand-optional;
+                            .o-position-absolute(@top: 0, @left: 3px);
+                            font-size: 11px;
                         }
                     }
                 }
@@ -657,7 +700,7 @@ html[lang] > body.editor_enable{
     width: auto;
     text-align: center;
     box-shadow: none;
-    
+
     .popover-content {
         height: @odoo-navbar-height;
 
@@ -785,7 +828,7 @@ table.colorpicker {
             padding: 0;
             list-style: none;
             text-align: center;
-            
+
             > li {
                 display: block;
                 float: none;
@@ -944,7 +987,7 @@ body.editor_enable {
         padding-top: @odoo-navbar-height;
         > main {
             height: 100%;
-            #editable_area {  
+            #editable_area {
                 position: relative;
                 overflow: hidden;
                 max-width: 600px;
