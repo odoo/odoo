@@ -6,9 +6,7 @@ var tour = require('web_tour.tour');
 
 var _t = core._t;
 
-tour.register('project_tour', {
-    'skip_enabled': true,
-}, [{
+tour.register('project_tour', [{
     trigger: '.o_app[data-menu-xmlid="base.menu_main_pm"], .oe_menu_toggler[data-menu-xmlid="base.menu_main_pm"]',
     content: _t('Want a better way to <b>manage your projects</b>? <i>It starts here.</i>'),
     position: 'bottom',

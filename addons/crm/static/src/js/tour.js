@@ -6,9 +6,7 @@ var tour = require('web_tour.tour');
 
 var _t = core._t;
 
-tour.register('crm_tour', {
-    'skip_enabled': true,
-}, [{
+tour.register('crm_tour', [{
     trigger: '.o_app[data-menu-xmlid="sales_team.menu_base_partner"], .oe_menu_toggler[data-menu-xmlid="sales_team.menu_base_partner"]',
     content: _t("Ready to boost you sales? Your <b>sales pipeline</b> can be found here, under this app."),
     position: 'bottom',
