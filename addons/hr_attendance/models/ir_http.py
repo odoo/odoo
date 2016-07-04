@@ -1,6 +1,6 @@
 from openerp import models, service
 
-class Http(models.Model):
+class Http(models.AbstractModel):
     _inherit = 'ir.http'
 
     def session_info(self):
