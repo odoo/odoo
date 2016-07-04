@@ -166,6 +166,7 @@ class AccountFrFec(models.TransientModel):
 
         sql_query += '''
         GROUP BY aml.account_id
+        HAVING sum(aml.balance) != 0
         '''
         formatted_date_from = self.date_from.replace('-', '')
         self._cr.execute(
