@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <!--     Opportunity tree view  -->
         <record id="view_report_crm_partner_assign_filter" model="ir.ui.view">
@@ -35,7 +34,7 @@
             <field name="arch" type="xml">
                 <graph string="Opportunities Assignment Analysis" type="pivot" stacked="True">
                     <field name="grade_id" type="row"/>
-                    <field name="opp" type="measure"/>
+                    <field name="nbr_opportunities" type="measure"/>
                     <field name="turnover" type="measure"/>
                 </graph>
             </field>
@@ -54,5 +53,4 @@
        <menuitem name="Partnerships" id="menu_report_crm_partner_assign_tree"
            parent="base.menu_sale_report" action="action_report_crm_partner_assign" sequence="25"/>
 
-    </data>
-</openerp>
+</odoo>

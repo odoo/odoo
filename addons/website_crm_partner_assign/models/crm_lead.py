@@ -3,94 +3,93 @@
 
 import random
 
-from openerp import SUPERUSER_ID
-from openerp.addons.base_geolocalize.models.res_partner import geo_find, geo_query_address
-from openerp.osv import osv
-from openerp.osv import fields
-from openerp.tools.translate import _
+from odoo.addons.base_geolocalize.models.res_partner import geo_find, geo_query_address
+from odoo import api, fields, models, _
 
 
-class crm_lead(osv.osv):
+class CrmLead(models.Model):
     _inherit = "crm.lead"
-    _columns = {
-        'partner_latitude': fields.float('Geo Latitude', digits=(16, 5)),
-        'partner_longitude': fields.float('Geo Longitude', digits=(16, 5)),
-        'partner_assigned_id': fields.many2one('res.partner', 'Assigned Partner',track_visibility='onchange' , help="Partner this case has been forwarded/assigned to.", select=True),
-        'partner_declined_ids': fields.many2many(
-            'res.partner',
-            'crm_lead_declined_partner',
-            'lead_id',
-            'partner_id',
-            string='Partner not interested'),
-        'date_assign': fields.date('Assignation Date', help="Last date this case was forwarded/assigned to a partner"),
-    }
+    partner_latitude = fields.Float('Geo Latitude', digits=(16, 5))
+    partner_longitude = fields.Float('Geo Longitude', digits=(16, 5))
+    partner_assigned_id = fields.Many2one('res.partner', 'Assigned Partner', track_visibility='onchange', help="Partner this case has been forwarded/assigned to.", select=True)
+    partner_declined_ids = fields.Many2many(
+        'res.partner',
+        'crm_lead_declined_partner',
+        'lead_id',
+        'partner_id',
+        string='Partner not interested')
+    date_assign = fields.Date('Assignation Date', help="Last date this case was forwarded/assigned to a partner")
 
-    def _merge_data(self, cr, uid, ids, fields, context=None):
+    def _merge_data(self, oldest, fields):
         fields += ['partner_latitude', 'partner_longitude', 'partner_assigned_id', 'date_assign']
-        return super(crm_lead, self)._merge_data(cr, uid, ids, fields, context=context)
+        return super(CrmLead, self)._merge_data(oldest, fields)
 
-    def onchange_assign_id(self, cr, uid, ids, partner_assigned_id, context=None):
+    @api.onchange("partner_assigned_id")
+    def onchange_assign_id(self):
         """This function updates the "assignation date" automatically, when manually assign a partner in the geo assign tab
         """
-
-        if not partner_assigned_id:
-            return {'value':{'date_assign': False}}
+        partner_assigned = self.partner_assigned_id
+        if not partner_assigned:
+            self.date_assign = False
         else:
-            partners = self.pool.get('res.partner').browse(cr, uid, [partner_assigned_id], context=context)
-            user_id = partners[0] and partners[0].user_id.id or False
-            return {'value':
-                        {'date_assign': fields.date.context_today(self,cr,uid,context=context),
-                         'user_id' : user_id}
-                   }
+            self.write({
+                'date_assign': fields.Date.context_today(self),
+                'user_id': partner_assigned.user_id,
+            })
 
-    def assign_salesman_of_assigned_partner(self, cr, uid, ids, context=None):
+    @api.multi
+    def assign_salesman_of_assigned_partner(self):
         salesmans_leads = {}
-        for lead in self.browse(cr, uid, ids, context=context):
-            if (lead.stage_id.probability > 0 and lead.stage_id.probability < 100) or lead.stage_id.sequence == 1: 
-                if lead.partner_assigned_id and lead.partner_assigned_id.user_id and lead.partner_assigned_id.user_id != lead.user_id:
-                    salesman_id = lead.partner_assigned_id.user_id.id
+        for lead in self:
+            if (lead.stage_id.probability > 0 and lead.stage_id.probability < 100) or lead.stage_id.sequence == 1:
+                partner_assigned_related_user = self.env['res.users'].search([('partner_id', '=', lead.partner_assigned_id.id)], limit=1)
+                if lead.partner_assigned_id and partner_assigned_related_user and partner_assigned_related_user != lead.user_id:
+                    salesman_id = partner_assigned_related_user.id
                     if salesmans_leads.get(salesman_id):
                         salesmans_leads[salesman_id].append(lead.id)
                     else:
-                        salesmans_leads[salesman_id] = [lead.id]
+                        salesmans_leads[salesman_id] = lead.ids
         for salesman_id, lead_ids in salesmans_leads.items():
-            salesteam_id = self.on_change_user(cr, uid, lead_ids, salesman_id, context=None)['value'].get('team_id')
-            self.write(cr, uid, lead_ids, {'user_id': salesman_id, 'team_id': salesteam_id}, context=context)
+            leads = self.browse(lead_ids)
+            leads.write({'user_id': salesman_id})
+            for lead in leads:
+                lead._onchange_user_id()
 
-    def action_assign_partner(self, cr, uid, ids, context=None):
-        return self.assign_partner(cr, uid, ids, partner_id=False, context=context)
+    @api.multi
+    def action_assign_partner(self):
+        return self.assign_partner(partner_id=False)
 
-    def assign_partner(self, cr, uid, ids, partner_id=False, context=None):
-        partner_ids = {}
+    @api.multi
+    def assign_partner(self, partner_id=False):
+        partner_dict = {}
         res = False
-        res_partner = self.pool.get('res.partner')
         if not partner_id:
-            partner_ids = self.search_geo_partner(cr, uid, ids, context=context)
-        for lead in self.browse(cr, uid, ids, context=context):
+            partner_dict = self.search_geo_partner()
+        for lead in self:
             if not partner_id:
-                partner_id = partner_ids.get(lead.id, False)
+                partner_id = partner_dict.get(lead.id, False)
             if not partner_id:
-                tag_to_add = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'website_crm_partner_assign', 'tag_portal_lead_partner_unavailable')[1]       
-                self.write(cr, uid, [lead.id], {'tag_ids': [(4, tag_to_add, False)]}, context=context)
+                tag_to_add = self.env.ref('website_crm_partner_assign.tag_portal_lead_partner_unavailable', False)
+                lead.write({'tag_ids': [(4, tag_to_add.id, False)]})
                 continue
-            self.assign_geo_localize(cr, uid, [lead.id], lead.partner_latitude, lead.partner_longitude, context=context)
-            partner = res_partner.browse(cr, uid, partner_id, context=context)
+            lead.assign_geo_localize(lead.partner_latitude, lead.partner_longitude,)
+            partner = self.env['res.partner'].browse(partner_id)
             if partner.user_id:
-                salesteam_id = partner.team_id and partner.team_id.id or False
-                self.allocate_salesman(cr, uid, [lead.id], [partner.user_id.id], team_id=salesteam_id, context=context)
-            values = {'date_assign': fields.date.context_today(self,cr,uid,context=context), 'partner_assigned_id': partner_id}
-            self.write(cr, uid, [lead.id], values, context=context)
+                lead.allocate_salesman(partner.user_id.ids, team_id=partner.team_id.id)
+            values = {'date_assign': fields.Date.context_today(lead), 'partner_assigned_id': partner_id}
+            lead.write(values)
         return res
 
-    def assign_geo_localize(self, cr, uid, ids, latitude=False, longitude=False, context=None):
+    @api.multi
+    def assign_geo_localize(self, latitude=False, longitude=False):
         if latitude and longitude:
-            self.write(cr, uid, ids, {
+            self.write({
                 'partner_latitude': latitude,
                 'partner_longitude': longitude
-            }, context=context)
+            })
             return True
         # Don't pass context to browse()! We need country name in english below
-        for lead in self.browse(cr, uid, ids):
+        for lead in self:
             if lead.partner_latitude and lead.partner_longitude:
                 continue
             if lead.country_id:
@@ -100,17 +99,18 @@ class crm_lead(osv.osv):
                                                     state=lead.state_id.name,
                                                     country=lead.country_id.name))
                 if result:
-                    self.write(cr, uid, [lead.id], {
+                    lead.write({
                         'partner_latitude': result[0],
                         'partner_longitude': result[1]
-                    }, context=context)
+                    })
         return True
 
-    def search_geo_partner(self, cr, uid, ids, context=None):
-        res_partner = self.pool.get('res.partner')
+    @api.multi
+    def search_geo_partner(self):
+        Partner = self.env['res.partner']
         res_partner_ids = {}
-        self.assign_geo_localize(cr, uid, ids, context=context)
-        for lead in self.browse(cr, uid, ids, context=context):
+        self.assign_geo_localize()
+        for lead in self:
             partner_ids = []
             if not lead.country_id:
                 continue
@@ -118,47 +118,47 @@ class crm_lead(osv.osv):
             longitude = lead.partner_longitude
             if latitude and longitude:
                 # 1. first way: in the same country, small area
-                partner_ids = res_partner.search(cr, uid, [
+                partner_ids = Partner.search([
                     ('partner_weight', '>', 0),
                     ('partner_latitude', '>', latitude - 2), ('partner_latitude', '<', latitude + 2),
                     ('partner_longitude', '>', longitude - 1.5), ('partner_longitude', '<', longitude + 1.5),
                     ('country_id', '=', lead.country_id.id),
                     ('id', 'not in', lead.partner_declined_ids.mapped('id')),
-                ], context=context)
+                ])
 
                 # 2. second way: in the same country, big area
                 if not partner_ids:
-                    partner_ids = res_partner.search(cr, uid, [
+                    partner_ids = Partner.search([
                         ('partner_weight', '>', 0),
                         ('partner_latitude', '>', latitude - 4), ('partner_latitude', '<', latitude + 4),
-                        ('partner_longitude', '>', longitude - 3), ('partner_longitude', '<' , longitude + 3),
+                        ('partner_longitude', '>', longitude - 3), ('partner_longitude', '<', longitude + 3),
                         ('country_id', '=', lead.country_id.id),
                         ('id', 'not in', lead.partner_declined_ids.mapped('id')),
-                    ], context=context)
+                    ])
 
                 # 3. third way: in the same country, extra large area
                 if not partner_ids:
-                    partner_ids = res_partner.search(cr, uid, [
-                        ('partner_weight','>', 0),
-                        ('partner_latitude','>', latitude - 8), ('partner_latitude','<', latitude + 8),
-                        ('partner_longitude','>', longitude - 8), ('partner_longitude','<', longitude + 8),
+                    partner_ids = Partner.search([
+                        ('partner_weight', '>', 0),
+                        ('partner_latitude', '>', latitude - 8), ('partner_latitude', '<', latitude + 8),
+                        ('partner_longitude', '>', longitude - 8), ('partner_longitude', '<', longitude + 8),
                         ('country_id', '=', lead.country_id.id),
                         ('id', 'not in', lead.partner_declined_ids.mapped('id')),
-                    ], context=context)
+                    ])
 
                 # 5. fifth way: anywhere in same country
                 if not partner_ids:
                     # still haven't found any, let's take all partners in the country!
-                    partner_ids = res_partner.search(cr, uid, [
+                    partner_ids = Partner.search([
                         ('partner_weight', '>', 0),
                         ('country_id', '=', lead.country_id.id),
                         ('id', 'not in', lead.partner_declined_ids.mapped('id')),
-                    ], context=context)
+                    ])
 
                 # 6. sixth way: closest partner whatsoever, just to have at least one result
                 if not partner_ids:
                     # warning: point() type takes (longitude, latitude) as parameters in this order!
-                    cr.execute("""SELECT id, distance
+                    self._cr.execute("""SELECT id, distance
                                   FROM  (select id, (point(partner_longitude, partner_latitude) <-> point(%s,%s)) AS distance FROM res_partner
                                   WHERE active
                                         AND partner_longitude is not null
@@ -167,17 +167,17 @@ class crm_lead(osv.osv):
                                         AND id not in (select partner_id from crm_lead_declined_partner where lead_id = %s)
                                         ) AS d
                                   ORDER BY distance LIMIT 1""", (longitude, latitude, lead.id))
-                    res = cr.dictfetchone()
+                    res = self._cr.dictfetchone()
                     if res:
                         partner_ids.append(res['id'])
 
                 total_weight = 0
                 toassign = []
-                for partner in res_partner.browse(cr, uid, partner_ids, context=context):
+                for partner in partner_ids:
                     total_weight += partner.partner_weight
-                    toassign.append( (partner.id, total_weight) )
+                    toassign.append((partner.id, total_weight))
 
-                random.shuffle(toassign) # avoid always giving the leads to the first ones in db natural order!
+                random.shuffle(toassign)  # avoid always giving the leads to the first ones in db natural order!
                 nearest_weight = random.randint(0, total_weight)
                 for partner_id, weight in toassign:
                     if nearest_weight <= weight:
@@ -185,61 +185,56 @@ class crm_lead(osv.osv):
                         break
         return res_partner_ids
 
-    def partner_interested(self, cr, uid, ids, comment=False, context=None):
-        self.check_access_rights(cr, uid, 'write')
+    @api.multi
+    def partner_interested(self, comment=False):
+        self.check_access_rights('write')
         message = _('<p>I am interested by this lead.</p>')
         if comment:
             message += '<p>%s</p>' % comment
-        for active_id in map(int, ids):
-            self.message_post(cr, uid, active_id, body=message, subtype="mail.mt_note", context=context)
-            lead = self.browse(cr, uid, active_id, context=context)
-            self.convert_opportunity(cr, SUPERUSER_ID, [lead.id], lead.partner_id and lead.partner_id.id or None, context=None)
+        for lead in self:
+            lead.message_post(body=message, subtype="mail.mt_note")
+            lead.sudo().convert_opportunity(lead.partner_id.id)
 
-    def partner_desinterested(self, cr, uid, ids, comment=False, contacted=False, context=None):
-        self.check_access_rights(cr, uid, 'write')
-        ids = map(int, ids)
+    @api.multi
+    def partner_desinterested(self, comment=False, contacted=False):
+        self.check_access_rights('write')
         if contacted:
             message = _('<p>I am not interested by this lead. I contacted the lead.</p>')
         else:
             message = _('<p>I am not interested by this lead. I have not contacted the lead.</p>')
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        partner_ids = self.pool.get('res.partner').search(
-            cr, SUPERUSER_ID,
-            [('id', 'child_of', user.partner_id.commercial_partner_id.id)],
-            context=context)
-        self.message_unsubscribe(cr, SUPERUSER_ID, ids, partner_ids, context=None)
+        partner_ids = self.env['res.partner'].search(
+            [('id', 'child_of', self.env.uid.partner_id.commercial_partner_id.id)])
+        self.sudo().message_unsubscribe(partner_ids)
         if comment:
             message += '<p>%s</p>' % comment
-        for active_id in ids:
-            self.message_post(cr, uid, active_id, body=message, subtype="mail.mt_note", context=context)
+        self.message_post(body=message, subtype="mail.mt_note")
         values = {
             'partner_assigned_id': False
         }
         if partner_ids:
             values['partner_declined_ids'] = map(lambda p: (4, p, 0), partner_ids)
-        self.write(cr, SUPERUSER_ID, ids, values, context=context)
+        self.write(values)
 
-    def update_lead_portal(self, cr, uid, ids, values, context=None):
-        self.check_access_rights(cr, uid, 'write')
-        for active_id in map(int, ids):
-            lead = self.browse(cr, uid, active_id, context=context)
+    @api.multi
+    def update_lead_portal(self, values):
+        # YTI FIXME : Use the standard workflow defined in crm_activity
+        self.check_access_rights('write')
+        for lead in self:
             if values['date_action'] == '':
                 values['date_action'] = False
             if lead.next_activity_id.id != values['activity_id'] or lead.title_action != values['title_action']\
                or lead.date_action != values['date_action']:
-                activity = self.pool.get('crm.activity').browse(cr, SUPERUSER_ID, [lead.next_activity_id.id], context=context)
+                activity = lead.sudo().next_activity_id
                 body_html = "<div><b>%(title)s</b>: %(next_activity)s</div>%(description)s" % {
                     'title': _('Activity Done'),
                     'next_activity': activity.name,
                     'description': lead.title_action and '<p><em>%s</em></p>' % lead.title_action or '',
                 }
-                self.message_post(
-                    cr, uid, active_id,
+                lead.message_post(
                     body=body_html,
                     subject=lead.title_action,
-                    subtype="mail.mt_note",
-                    context=context)
-            self.write(cr, uid, active_id, {
+                    subtype="mail.mt_note")
+            lead.write({
                 'planned_revenue': values['planned_revenue'],
                 'probability': values['probability'],
                 'next_activity_id': values['activity_id'],
@@ -247,4 +242,4 @@ class crm_lead(osv.osv):
                 'date_action': values['date_action'] if values['date_action'] else False,
                 'priority': values['priority'],
                 'date_deadline': values['date_deadline'] if values['date_deadline'] else False,
-            }, context=context)
+            })
