@@ -1,2 +1,2 @@
-import crm_partner_assign
+import crm_lead
 import res_partner
