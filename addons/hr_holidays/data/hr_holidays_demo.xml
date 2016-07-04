@@ -7,7 +7,7 @@
         <field name="holiday_status_id" ref="holiday_status_cl"/>
         <field name="type">add</field>
         <field name="number_of_days_temp">20</field>
-        <field name="employee_id" ref="hr.employee_fp"/>
+        <field name="employee_id" ref="hr.employee_root"/>
     </record>
 
     <record id="hr_holidays_employee1_int_tour" model="hr.holidays">
@@ -17,7 +17,7 @@
         <field eval="time.strftime('%Y-%m-28')" name="date_to"/>
         <field name="type">add</field>
         <field name="number_of_days_temp">7</field>
-        <field name="employee_id" ref="hr.employee_fp"/>
+        <field name="employee_id" ref="hr.employee_root"/>
     </record>
 
     <record id="hr_holidays_employee1_vc" model="hr.holidays">
@@ -28,7 +28,7 @@
         <field name="type">add</field>
         <field name="state">draft</field>
         <field name="number_of_days_temp">7</field>
-        <field name="employee_id" ref="hr.employee_fp"/>
+        <field name="employee_id" ref="hr.employee_root"/>
     </record>
 
     <workflow action="validate" model="hr.holidays" ref="hr_holidays_employee1_allocation_cl"/>
@@ -41,7 +41,7 @@
         <field eval="time.strftime('%Y-%m-03')" name="date_to"/>
         <field name="type">remove</field>
         <field name="number_of_days_temp">3</field>
-        <field name="employee_id" ref="hr.employee_fp"/>
+        <field name="employee_id" ref="hr.employee_root"/>
     </record>
 
     <record id="hr_holidays_employee1_sl" model="hr.holidays">
@@ -52,7 +52,7 @@
         <field name="type">remove</field>
         <field name="state">draft</field>
         <field name="number_of_days_temp">3</field>
-        <field name="employee_id" ref="hr.employee_fp"/>
+        <field name="employee_id" ref="hr.employee_root"/>
     </record>
 
     <workflow action="validate" model="hr.holidays" ref="hr_holidays_employee1_sl"/>
