@@ -771,6 +771,21 @@ Andrew</p>]]></field>
             <field name="source_id" ref="utm.utm_source_search_engine"/>
         </record>
 
+        <!-- Create Log activity record -->
+        <record  id="crm_case_25_activity_log_1" model="crm.activity.log">
+            <field name="lead_id" ref="crm_case_25"/>
+            <field name="next_activity_id" ref="crm_activity_data_call"/>
+            <field name="title_action" ref="crm_case_25"/>
+            <field name="planned_revenue">5000</field>
+            <field name="note"><![CDATA[<div>
+            <p>Hello,</p>
+            <p>We will discuss with our technical team and revert back to you as soon as possible.</p>]]></field>
+        </record>
+
+        <!-- Call Function for action the log activity -->
+        <function model="crm.activity.log" name="action_log"
+            eval="[ref('crm_case_25_activity_log_1')]"/>
+
         <record id="crm_case_26" model="crm.lead">
             <field name="type">opportunity</field>
             <field name="name">Would appreciate more information about your products</field>
@@ -796,6 +811,21 @@ Andrew</p>]]></field>
             <field name="medium_id" ref="utm.utm_medium_website"/>
             <field name="source_id" ref="utm.utm_source_search_engine"/>
         </record>
+
+        <!-- Create Log activity record -->
+        <record  id="crm_case_26_activity_log_1" model="crm.activity.log">
+            <field name="lead_id" ref="crm_case_26"/>
+            <field name="next_activity_id" ref="crm_activity_data_email"/>
+            <field name="title_action" ref="crm_case_26"/>
+            <field name="planned_revenue">10000</field>
+            <field name="note"><![CDATA[<div>
+            <p>Hello,</p>
+            <p>We will give live demostration of our product in office.</p>]]></field>
+        </record>
+
+        <!-- Call Function for action the log activity -->
+        <function model="crm.activity.log" name="action_log"
+            eval="[ref('crm_case_26_activity_log_1')]"/>
 
         <record id="crm_case_27" model="crm.lead">
             <field name="type">opportunity</field>

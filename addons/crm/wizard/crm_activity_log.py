@@ -18,7 +18,7 @@ class ActivityLog(models.TransientModel):
     note = fields.Html('Note')
     date_action = fields.Date('Next Activity Date')
     lead_id = fields.Many2one(
-        'crm.lead', 'Lead', required=True,
+        'crm.lead', 'Lead', required=True, ondelete='cascade',
         default=lambda self: self._context.get('default_lead_id',
                                                self._context.get('active_model') == 'crm.lead' and self._context.get('active_id') or False))
     team_id = fields.Many2one(
