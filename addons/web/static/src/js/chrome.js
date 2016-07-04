@@ -809,6 +809,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         _.each(this.needaction_data, function (item, menu_id) {
             var $item = self.$secondary_menus.find('a[data-menu="' + menu_id + '"]');
             $item.find('.badge').remove();
+            $item.data('needaction_enabled', item.needaction_enabled);
             if (item.needaction_counter && item.needaction_counter > 0) {
                 $item.append(QWeb.render("Menu.needaction_counter", { widget : item }));
             }
@@ -859,6 +860,9 @@ instance.web.Menu =  instance.web.Widget.extend({
         if (this.$secondary_menus.has($clicked_menu).length) {
             $sub_menu = $clicked_menu.parents('.oe_secondary_menu');
             $main_menu = this.$el.find('a[data-menu=' + $sub_menu.data('menu-parent') + ']');
+            if ($clicked_menu.data('needaction_enabled') === true) {
+                this.do_load_needaction([id]);
+            }
         } else {
             $sub_menu = this.$secondary_menus.find('.oe_secondary_menu[data-menu-parent=' + $clicked_menu.attr('data-menu') + ']');
             $main_menu = $clicked_menu;
