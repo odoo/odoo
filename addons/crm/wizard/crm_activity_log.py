@@ -43,6 +43,7 @@ class ActivityLog(models.TransientModel):
     def onchange_next_activity_id(self):
         if not self.title_action:
             self.title_action = self.next_activity_id.description
+        date_action = False
         if self.next_activity_id and self.next_activity_id.days:
             date_action = (datetime.now() + timedelta(days=self.next_activity_id.days)).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
         self.date_action = date_action
