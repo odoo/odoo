@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 <template id="report_budget">
     <t t-call="report.html_container">
         <t t-foreach="docs" t-as="o">
@@ -14,20 +13,19 @@
                         </div>
                         <div class="col-xs-3">
                             <strong>Printed at:</strong>
-                            <p><span t-esc="formatLang(time.strftime('%Y-%m-%d'), date=True)"/> at
+                            <p><span t-esc="time.strftime('%Y-%m-%d')"/> at
                             <span t-esc="time.strftime('%H:%M:%S')"/></p>
                         </div>
                         <div class="col-xs-3">
                             <strong>Analysis from:</strong>
-                            <p><span t-esc="formatLang(data['form']['date_from'], date=True)"/> to
-                            <span t-esc="formatLang(data['form']['date_to'], date=True)"/></p>
+                            <p><span t-esc="date_from"/> to
+                            <span t-esc="date_to"/></p>
                         </div>
                         <div class="col-xs-3">
                             <strong>Budget:</strong>
                             <p t-field="o.name"/>
                         </div>
                     </div>
-
                     <table class="table table-condensed">
                         <thead>
                             <tr>
@@ -39,32 +37,33 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-foreach="funct(o, data['form'])" t-as="line">
+                            <t t-foreach="account_budget_posts[o.id]['lines']" t-as="line">
                                 <t t-if="line['status'] == 1">
                                     <tr>
                                         <td><strong t-esc="line['name']"/></td>
                                         <td class="text-right">
-                                            <strong t-esc="formatLang(line['theo'], dp='Account', currency_obj = res_company.currency_id)"/>
+                                            <strong t-esc="line['theo']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                         </td>
-                                        <td class="text-right"><strong t-esc="formatLang(line['pln'], dp='Account', currency_obj=res_company.currency_id)"/></td>
-                                        <td class="text-right"><strong t-esc="formatLang(line['prac'], dp='Account', currency_obj=res_company.currency_id)"/></td>
-                                        <td class="text-right"><strong t-esc="formatLang(line['perc'],digits=2)"/> %</td>
+                                        <td class="text-right"><strong t-esc="line['pln']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                                        <td class="text-right"><strong t-esc="line['prac']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                                        <td class="text-right"><strong t-esc="line['perc']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/> %</td>
                                     </tr>
                                 </t>
                                 <tr t-if="line['status'] != 1">
                                     <td><span style="color: white;" t-esc="'.....'*(line['status'] - 1)"/><span t-esc="line['name']"/></td>
-                                    <td class="text-right"><span t-esc="formatLang(line['theo'], dp='Account', currency_obj=res_company.currency_id)"/></td>
-                                    <td class="text-right"><span t-esc="formatLang(line['pln'], dp='Account', currency_obj=res_company.currency_id)"/></td>
-                                    <td class="text-right"><span t-esc="formatLang(line['prac'], dp='Account', currency_obj=res_company.currency_id)"/></td>
-                                    <td class="text-right"><span t-esc="formatLang(line['perc'],digits=2)"/> % </td>
+                                    <td class="text-right"><span t-esc="line['theo']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                                    <td class="text-right"><span t-esc="line['pln']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                                    <td class="text-right"><span t-esc="line['prac']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                                    <td class="text-right"><span t-esc="line['perc']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/> % </td>
                                 </tr>
                             </t>
-                            <tr t-foreach="funct_total(data['form'])" t-as="tot">
+                            <tr>
                                 <td><strong>Total:</strong></td>
-                                <td class="text-right"><strong t-esc="formatLang(tot['tot_theo'], dp='Account',  currency_obj = res_company.currency_id)"/></td>
-                                <td class="text-right"><strong t-esc="formatLang(tot['tot_pln'], dp='Account', currency_obj = res_company.currency_id)"/></td>
-                                <td class="text-right"><strong t-esc="formatLang(tot['tot_prac'], dp='Account', currency_obj=res_company.currency_id)"/></td>
-                                <td class="text-right"><strong t-esc="formatLang(tot['tot_perc'], digits=2)"/> %</td>
+                                <t t-set="budget_total" t-value="account_budget_posts[o.id]['budget_total']" />
+                                <td class="text-right"><strong t-esc="budget_total['tot_theo']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                                <td class="text-right"><strong t-esc="budget_total['tot_pln']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                                <td class="text-right"><strong t-esc="budget_total['tot_prac']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                                <td class="text-right"><strong t-esc="budget_total['tot_perc']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/> %</td>
                             </tr>
                         </tbody>
                     </table>
@@ -73,5 +72,4 @@
         </t>
     </t>
 </template>
-</data>
-</openerp>
+</odoo>
