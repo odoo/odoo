@@ -1,0 +1,22 @@
+<templates>
+    <t t-name="fixed-literal">
+        <div t-att-foo="'bar'"/>
+    </t>
+    <t t-name="fixed-variable">
+        <div t-att-foo="value"/>
+    </t>
+
+    <t t-name="tuple-literal">
+        <div t-att="['foo', 'bar']"/>
+    </t>
+    <t t-name="tuple-variable">
+        <div t-att="att"/>
+    </t>
+
+    <t t-name="format-literal">
+        <div t-attf-foo="bar"/>
+    </t>
+    <t t-name="format-value">
+        <div t-attf-foo="b#{value}r"/>
+    </t>
+</templates>

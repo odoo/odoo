@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+         <record id="view_forum_configuration" model="ir.ui.view">
+            <field name="model">website.config.settings</field>
+            <field name="inherit_id" ref="website.view_website_config_settings"/>
+            <field name="arch" type="xml">
+                <field name="cdn_filters" position="after">
+                    <field name="module_website_forum_chrome"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
+                    
+                 
+       

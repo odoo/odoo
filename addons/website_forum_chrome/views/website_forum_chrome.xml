@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Layout add nav and footer -->
+        <template id="header_chrome_plugin" inherit_id="website_forum.header"
+            name="Download Plugin">
+            <xpath expr="//div[@id='about_forum']" position="after">
+                <div t-if="is_allow_chrome_extension" class="panel panel-default" id="about_forum">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Chrome Plugin</h3>
+                    </div>
+                    <div class="panel-body">
+                        <a class="o_menu_toggler" id="o_install_guideline">Post your link in one click</a>
+                        <ul style="display: none;">
+                            <li>Download the plugin</li>
+                            <li>Unzip the archive(.zip)</li>
+                            <li>Now open Google Chrome, visit Chrome://extensions in your browser(or go to Settings > Extensions).</li>
+                            <li>Ensure that the Developer mode checkbox in the top right-hand corner is checked.</li>
+                            <li>Click Load unpacked extension and select extracted contents folder.</li>
+                            <li>That's it, ready to go.</li>
+                        </ul>
+                        <div>
+                            <a class="o_download_plugin" t-attf-href="/forum/#{ slug(forum) }/download_plugin" ><i class="fa fa-download"></i> Download Chrome Plugin</a>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</openerp>
