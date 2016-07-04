@@ -5,7 +5,7 @@
 {
     'name': 'Products & Pricelists',
     'version': '1.2',
-    'category': 'Sales Management',
+    'category': 'Sales',
     'depends': ['base', 'decimal_precision', 'mail', 'report'],
     'demo': [
         'product_demo.xml',

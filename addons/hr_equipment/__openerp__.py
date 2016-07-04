@@ -4,6 +4,7 @@
     'name': 'Equipments',
     'version': '1.0',
     'sequence': 125,
+    'category': 'Human Resources',
     'description': """
         Track employees' equipment and manage maintenance requests.""",
     'depends': ['hr'],

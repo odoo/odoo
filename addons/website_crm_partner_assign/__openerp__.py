@@ -1,6 +1,6 @@
 {
     'name': 'Resellers',
-    'category': 'Website',
+    'category': 'Sales',
     'website': 'https://www.odoo.com/page/website-builder',
     'summary': 'Publish Your Channel of Resellers',
     'version': '1.0',
