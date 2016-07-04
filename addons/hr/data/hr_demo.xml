@@ -135,7 +135,8 @@ If you have development competencies, we can propose you specific traineeships</
 
     <!--Employees-->
 
-      <record id="employee_fp" model="hr.employee">
+      <record id="employee_root" model="hr.employee">
+          <field name="name">Pieter Parker</field>
           <field name="calendar_id" ref="resource.timesheet_group1"/>
           <field name="work_location">Building 1, Second Floor</field>
           <field name="work_phone">+3281813700</field>
@@ -143,6 +144,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="category_ids" eval="[(6, 0, [ref('employee_category_4'), ref('employee_category_3')])]"/>
           <field name="job_id" ref="hr.job_ceo"/>
           <field name="department_id" ref="dep_management"/>
+          <field name="image" type="base64" file="hr/static/img/employee_fp-image.jpg"/>
       </record>
 
       <record id="employee_al" model="hr.employee">
@@ -233,7 +235,7 @@ If you have development competencies, we can propose you specific traineeships</
       <record id="employee_fpi" model="hr.employee">
           <field name="name">Martin Lawrence</field>
           <field name="department_id" ref="dep_ps"/>
-          <field name="parent_id" ref="employee_fp"/>
+          <field name="parent_id" ref="employee_root"/>
           <field name="job_id" ref="hr.job_consultant"/>
           <field name="category_ids" eval="[(6, 0, [ref('employee_category_4'), ref('employee_category_5')])]"/>
           <field name="work_location">Building 1, Second Floor</field>
@@ -245,7 +247,7 @@ If you have development competencies, we can propose you specific traineeships</
       <record id="employee_jth" model="hr.employee">
           <field name="name">Jimmy Kosikin</field>
           <field name="department_id" ref="dep_ps"/>
-          <field name="parent_id" ref="employee_fp"/>
+          <field name="parent_id" ref="employee_root"/>
           <field name="job_id" ref="hr.job_consultant"/>
           <field name="category_ids" eval="[(6, 0, [ref('employee_category_4'), ref('employee_category_5')])]"/>
           <field name="work_location">Building 1, Second Floor</field>
@@ -257,7 +259,7 @@ If you have development competencies, we can propose you specific traineeships</
       <record id="employee_ngh" model="hr.employee">
           <field name="name">Famke Jenssens</field>
           <field name="department_id" ref="dep_sales"/>
-          <field name="parent_id" ref="employee_fp"/>
+          <field name="parent_id" ref="employee_root"/>
           <field name="job_id" ref="hr.job_marketing"/>
           <field name="category_ids" eval="[(6, 0, [ref('employee_category_4'), ref('employee_category_2')])]"/>
           <field name="work_location">Building 1, Second Floor</field>
@@ -269,7 +271,7 @@ If you have development competencies, we can propose you specific traineeships</
       <record id="employee_vad" model="hr.employee">
           <field name="name">Ashley Presley</field>
           <field name="department_id" ref="dep_administration"/>
-          <field name="parent_id" ref="employee_fp"/>
+          <field name="parent_id" ref="employee_root"/>
           <field name="job_id" ref="hr.job_hrm"/>
           <field name="category_ids" eval="[(6, 0, [ref('employee_category_4')])]"/>
           <field name="work_location">Building 1, Second Floor</field>
