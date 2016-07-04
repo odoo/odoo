@@ -5,7 +5,7 @@ from openerp import models
 from openerp.http import request
 
 
-class Http(models.Model):
+class Http(models.AbstractModel):
     _inherit = 'ir.http'
 
     def webclient_rendering_context(self):
