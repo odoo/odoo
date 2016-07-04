@@ -147,6 +147,7 @@ var KanbanView = View.extend({
                 self.data = data;
             })
             .then(this.proxy('render'))
+            .then(this.proxy('update_buttons'))
             .then(this.proxy('update_pager'));
     },
 
@@ -326,7 +327,7 @@ var KanbanView = View.extend({
                 if (self.grouped && self.widgets.length && self.on_create === 'quick_create') {
                     // Activate the quick create in the first column
                     self.widgets[0].add_quick_create();
-                } else if (self.on_create) {
+                } else if (self.on_create && self.on_create !== 'quick_create') {
                     // Execute the given action
                     self.do_action(self.on_create, {
                         on_close: self.do_reload.bind(self),
@@ -336,16 +337,17 @@ var KanbanView = View.extend({
                     self.add_record();
                 }
             });
-
-            // Set 'Create' button as btn-default if there is no column
-            if (this.grouped && this.widgets.length === 0) {
-                var $button_new = this.$buttons.find('.o-kanban-button-new');
-                $button_new.removeClass('btn-primary').addClass('btn-default');
-                this.once('new_column_added', this, function () {
-                    $button_new.removeClass('btn-default').addClass('btn-primary');
-                });
-            }
+            this.update_buttons();
             this.$buttons.appendTo($node);
+        }
+    },
+    update_buttons: function() {
+        if (this.$buttons) {
+            // In grouped mode, set 'Create' button as btn-default if there is no column
+            var create_muted = !!this.grouped && this.widgets.length === 0;
+            this.$buttons.find('.o-kanban-button-new')
+                .toggleClass('btn-primary', !create_muted)
+                .toggleClass('btn-default', create_muted);
         }
     },
 
@@ -639,6 +641,7 @@ var KanbanView = View.extend({
                 var index = self.widgets.indexOf(column);
                 self.widgets.splice(index,1);
                 column.destroy();
+                self.update_buttons();
             } else {
                 self.do_reload();
             }
@@ -753,7 +756,7 @@ var KanbanView = View.extend({
             var column = new KanbanColumn(self, group_data, options, record_options);
             column.insertBefore(self.$('.o_column_quick_create'));
             self.widgets.push(column);
-            self.trigger('new_column_added', column);
+            self.update_buttons();
             self.trigger_up('scrollTo', {selector: '.o_column_quick_create'});
         });
     },
