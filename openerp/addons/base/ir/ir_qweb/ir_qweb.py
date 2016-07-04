@@ -281,20 +281,8 @@ class IrQWeb(models.AbstractModel, QWeb):
 
         return (attributes, content, None)
 
-    # formating methods
-
-    def _format_func_monetary(self, value, display_currency, from_currency=None):
-        options = {}
-        options['display_currency'] = display_currency
-        options['from_currency'] = from_currency
-        return self.env['ir.qweb.field.monetary'].value_to_html(value, options)
-
-    def _format_func_htmlcontact(self, value, options, values=None):
-        return self.pool['ir.qweb.field.contact'].record_to_html(
-            self.env.cr, self.env.uid, dict(contact=value), 'contact', dict(options or {}), context=self.env.context
-        )
-
     # compile expression add safe_eval
+
     def _compile_expr(self, expr):
         """ Compiles a purported Python expression to ast, verifies that it's safe
         (according to safe_eval's semantics) and alter its variable references to

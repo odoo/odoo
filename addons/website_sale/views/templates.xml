@@ -97,9 +97,9 @@
                     <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
                         <b>
                             <t t-if="(compute_currency(product.lst_price)  - product.price ) &gt; 0.1">
-                                <del class="text-danger mr8" style="white-space: nowrap;" t-esc="format(compute_currency(request.website.get_product_price(product, public=True)), 'monetary', website.get_current_pricelist().currency_id, website.currency_id)" />
+                                <del class="text-danger mr8" style="white-space: nowrap;" t-esc="compute_currency(request.website.get_product_price(product, public=True))" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
                             </t>
-                            <span t-esc="format(request.website.get_product_price(product), 'monetary', website.currency_id)" />
+                            <span t-esc="request.website.get_product_price(product)" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                             <span itemprop="price" style="display:none;" t-esc="product.price" />
                             <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
                         </b>
@@ -495,9 +495,9 @@
       <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price mt16">
           <h4 class="oe_price_h4 css_editable_mode_hidden">
               <span class="text-danger oe_default_price" style="text-decoration: line-through; white-space: nowrap;"
-                t-esc="format(compute_currency(request.website.get_product_price(product, public=True)), 'monetary', website.get_current_pricelist().currency_id, website.currency_id)"
+                t-esc="compute_currency(request.website.get_product_price(product, public=True))" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}"
               />
-              <b class="oe_price" style="white-space: nowrap;" t-esc="format(request.website.get_product_price(product), 'monetary', website.currency_id)"/>
+              <b class="oe_price" style="white-space: nowrap;" t-esc="request.website.get_product_price(product)" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
               <span itemprop="price" style="display:none;" t-esc="product.price"/>
               <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
           </h4>
@@ -786,7 +786,7 @@
                         </td>
                         <td class="text-center" id="td-price" name="price">
                             <t t-if="(compute_currency(line.product_id.lst_price)  - line.price_reduce ) &gt; 0.1">
-                                <del class="text-danger mr8" style="white-space: nowrap;" t-esc="format(compute_currency(website.get_product_price(line.product_id, public=True)), 'monetary', website.get_current_pricelist().currency_id, website.currency_id)" />
+                                <del class="text-danger mr8" style="white-space: nowrap;" t-esc="compute_currency(website.get_product_price(line.product_id, public=True))" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
                             </t>
                             <span t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-field-options="{'widget': 'monetary', 'from_currency': line.company_id.currency_id, 'display_currency': website.currency_id}" groups="sale.group_show_price_subtotal" />
                             <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-field-options="{'widget': 'monetary', 'from_currency': line.company_id.currency_id, 'display_currency': website.currency_id}" groups="sale.group_show_price_total" />
@@ -1028,7 +1028,7 @@
             <a class='btn btn-link pull-right fa fa-edit js_edit_address no-decoration' title="Edit this address"></a>
             <div t-att-class="'panel panel-default %s' % (selected and 'border_primary' or 'js_change_shipping')">
                 <div class='panel-body' style='min-height: 130px;'>
-                    <t t-raw="format(contact, 'htmlcontact', dict(fields=['name', 'address'], no_marker=True))"/>
+                    <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
                 </div>
                 <div class='panel-footer' t-if='not readonly'>
                     <span class='btn-ship' t-att-style="'' if selected else 'display:none;'">

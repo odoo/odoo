@@ -44,10 +44,10 @@
                                 <span t-esc="line['ref']"/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="format(line['debit'], 'monetary', currency)"/>
+                                <span t-esc="line['debit']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="format(line['credit'], 'monetary', currency)"/>
+                                <span t-esc="line['credit']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                             </td>
                             <td class="text-center">
                                 <span t-if="line['blocked']">x</span>
@@ -56,16 +56,16 @@
                         <tr>
                             <td colspan="3"></td>
                             <td><strong>Subtotal :</strong></td>
-                            <td class="text-right"><span t-esc="format(Totals[o.id][currency]['due'], 'monetary', currency)"/></td>
-                            <td class="text-right"><span t-esc="format(Totals[o.id][currency]['paid'], 'monetary', currency)"/></td>
-                            <td class="text-right"><span t-esc="format(Totals[o.id][currency]['mat'], 'monetary', currency)"/></td>
+                            <td class="text-right"><span t-esc="Totals[o.id][currency]['due']" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
+                            <td class="text-right"><span t-esc="Totals[o.id][currency]['paid']" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
+                            <td class="text-right"><span t-esc="Totals[o.id][currency]['mat']" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
                             <td></td>
                         </tr>
                         <tr>
                             <td colspan="3"></td>
                             <td><strong>Balance :</strong></td>
                             <td class="text-right">
-                                <span t-esc="format(Totals[o.id][currency]['due'] - Totals[o.id][currency]['paid'], 'monetary', currency)"/>
+                                <span t-esc="Totals[o.id][currency]['due'] - Totals[o.id][currency]['paid']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                             </td>
                         </tr>
                     </table>
