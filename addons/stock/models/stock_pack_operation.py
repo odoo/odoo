@@ -185,9 +185,10 @@ class PackOperation(models.Model):
     def action_split_lots(self):
         action_ctx = dict(self.env.context)
         picking_type = self.picking_id.picking_type_id
+        returned_lots = self.linked_move_operation_ids.move_id.origin_returned_move_id.linked_move_operation_ids.mapped('operation_id').pack_lot_ids.mapped('lot_id')
         action_ctx.update({
             'serial': self.product_id.tracking == 'serial',
-            'only_create': picking_type.use_create_lots and not picking_type.use_existing_lots,
+            'only_create': picking_type.use_create_lots and not picking_type.use_existing_lots and not returned_lots,
             'create_lots': picking_type.use_create_lots,
             'state_done': self.picking_id.state == 'done',
             'show_reserved': any([lot for lot in self.pack_lot_ids if lot.qty_todo > 0.0])})
@@ -241,9 +242,18 @@ class PackOperationLot(models.Model):
     _name = "stock.pack.operation.lot"
     _description = "Lot/Serial number for pack ops"
 
+    def _domain_lot_id(self):
+        operation_id = self.env['stock.pack.operation'].browse(self.env.context.get('active_id'))
+        returned_lots = operation_id.linked_move_operation_ids.mapped('move_id').origin_returned_move_id.linked_move_operation_ids.mapped('operation_id').pack_lot_ids.mapped('lot_id')
+        if returned_lots:
+            domain = [('id', 'in', returned_lots.ids)]
+        else:
+            domain = [('product_id', '=', operation_id.product_id.id)]
+        return domain
+
     operation_id = fields.Many2one('stock.pack.operation')
     qty = fields.Float('Done', default=1.0)
-    lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')
+    lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number', domain=_domain_lot_id)
     lot_name = fields.Char('Lot/Serial Number')
     qty_todo = fields.Float('To Do', default=0.0)
     plus_visible = fields.Boolean(compute='_compute_plus_visible', default=True)
