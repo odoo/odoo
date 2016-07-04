@@ -30,6 +30,16 @@ class SaleOrder(models.Model):
             order.cart_quantity = int(sum(order.mapped('website_order_line.product_uom_qty')))
             order.only_services = all(l.product_id.type in ('service', 'digital') for l in order.website_order_line)
 
+    @api.multi
+    def action_quotation_send(self):
+        ''' Override to use a modified template related to website_sale '''
+        self.ensure_one()
+        action_dict = super(SaleOrder, self).action_quotation_send()
+        template_id = self.env.ref('website_sale.order_placed_mail_template').id
+        if template_id:
+            action_dict['context']['default_template_id'] = template_id
+        return action_dict
+
     @api.model
     def _get_errors(self, order):
         return []

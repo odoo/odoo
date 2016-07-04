@@ -42,5 +42,69 @@
             <field name="country_group_ids" eval="[(6,0,[ref('base.europe')])]" />
 
         </record>
-
+        <record id="order_placed_mail_template" model="mail.template">
+            <field name="name">Order successfully placed</field>
+            <field name="email_from">${(object.user_id.email or object.company_id.email or 'noreply@localhost')|safe}</field>
+            <field name="subject">Your order ${object.name} is confirmed</field>
+            <field name="partner_to">${object.partner_invoice_id.id}</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html" type="xml">
+<div summary="o_mail_template" style="padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777">
+    <table cellspacing="0" cellpadding="0" style="width:600px; border-collapse:collapse; background:inherit; color:inherit">
+        <tbody><tr>
+            <td valign="center" width="200" style="padding:0px 10px 5px 5px;font-size: 12px">
+                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}"/>
+            </td>
+        </tr></tbody>
+    </table>
+    <table cellspacing="0" cellpadding="0" style="width:600px; border-collapse:collapse; background:inherit; color:inherit">
+        <tbody><tr>
+            <td valign="top" style="width:600px; padding:0px 10px 5px 5px;">
+                <div>
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0"/>
+                </div>
+            </td>
+        </tr></tbody>
+    </table>
+</div>
+<div style="padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777">
+    <table cellspacing="0" cellpadding="0" style="width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit">
+        <tbody><tr>
+            <td style="padding:0px 10px 5px 5px;font-size: 14px;">
+                <p>Dear ${object.partner_id.name},</p>
+                <p>Thanks for shopping with us.<br/>
+                Here is your Order number <strong>${object.name}</strong>
+                amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>
+                from ${object.company_id.name}.<br/>
+                % if object.payment_acquirer_id.post_msg:
+                    ${object.payment_acquirer_id.post_msg | safe}
+                % endif
+                </p>
+                <p>You can access this document and download your digital products on your online account :</p>
+                <p>
+                    <a style="text-decoration: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px" class="o_default_snippet_text" href="${object.partner_id.signup_url or object.get_signup_url()}&amp;redirect=/my/orders/${object.id}">Log In to My Account</a>
+                </p>
+                <p>If you have any question, do not hesitate to contact us.</p>
+                <p>Best regards,</p>
+            </td>
+        </tr><tr>
+            <td style="padding:0px 10px 5px 5px;font-size: 14px;">
+                % if user.signature
+                <p style="font-size: 14px;">${user.signature | safe}
+                </p>
+                % endif
+                <p style="font-size: 11px;"><strong>Sent by
+                <a href="${user.company_id.website}" style="text-decoration:none; color: #a24689;">
+                    <strong>${user.company_id.name}</strong>
+                </a> using <a href="www.odoo.com" style="text-decoration:none; color: #a24689;"><strong>Odoo
+                </strong></a>
+                </strong></p>
+            </td>
+        </tr></tbody>
+    </table>
+</div>
+</field>
+        </record>
 </odoo>
