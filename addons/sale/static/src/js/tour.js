@@ -6,9 +6,7 @@ var tour = require('web_tour.tour');
 
 var _t = core._t;
 
-tour.register('sale_tour', {
-    'skip_enabled': true,
-}, [{
+tour.register('sale_tour', [{
     trigger: '.o_app[data-menu-xmlid="sales_team.menu_base_partner"], .oe_menu_toggler[data-menu-xmlid="sales_team.menu_base_partner"]',
     content: _t('Organize your sales activities with the <b>Sales app</b>.'),
     position: 'bottom',

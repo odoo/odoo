@@ -6,9 +6,7 @@ var tour = require('web_tour.tour');
 
 var _t = core._t;
 
-tour.register('hr_expense_tour', {
-    'skip_enabled': true,
-}, [{
+tour.register('hr_expense_tour', [{
     trigger: '.o_app[data-menu-xmlid="hr_expense.menu_hr_expense_root"], .oe_menu_toggler[data-menu-xmlid="hr_expense.menu_hr_expense_root"]',
     content: _t("Want to manage your employee expenses and receipts? <i>Start here</i>."),
     position: 'bottom',
