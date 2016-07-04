@@ -79,7 +79,7 @@ class Query(object):
             mapping[statement] = table
         return mapping
 
-    def add_join(self, connection, implicit=True, outer=False):
+    def add_join(self, connection, implicit=True, outer=False, lhs_alias=False):
         """ Join a destination table to the current table.
 
             :param implicit: False if the join is an explicit join. This allows
@@ -110,6 +110,8 @@ class Query(object):
         if implicit:
             if alias_statement not in self.tables:
                 self.tables.append(alias_statement)
+                if lhs_alias:
+                    lhs = lhs_alias
                 condition = '("%s"."%s" = "%s"."%s")' % (lhs, lhs_col, alias, col)
                 self.where_clause.append(condition)
             else:
