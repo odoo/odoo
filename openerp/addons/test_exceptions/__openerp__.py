@@ -4,7 +4,6 @@
     'version': '0.1',
     'category': 'Tests',
     'description': """A module to generate exceptions.""",
-    'maintainer': 'OpenERP SA',
     'depends': ['base'],
     'data': ['view.xml', 'ir.model.access.csv'],
     'installable': True,

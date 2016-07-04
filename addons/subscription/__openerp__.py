@@ -4,7 +4,7 @@
 
 {
     'name': 'Recurring Documents',
-    'category': 'Tools',
+    'category': 'Extra Tools',
     'description': """
 Create recurring documents.
 ===========================

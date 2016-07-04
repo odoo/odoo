@@ -3,7 +3,7 @@
 {
     'name': 'Partners Geolocation',
     'version': '2.0',
-    'category': 'Customer Relationship Management',
+    'category': 'Sales',
     'description': """
 Partners Geolocation
 ========================

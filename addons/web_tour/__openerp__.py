@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Tours',
-    'category': 'Usability',
+    'category': 'Hidden',
     'description': """
 Odoo Web tours.
 ========================

@@ -24,7 +24,7 @@ class SaleOrderLine(models.Model):
        help="Choose an event and it will automatically create a registration for this event.")
     event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket', help="Choose "
         "an event ticket and it will automatically create a registration for this event ticket.")
-    event_ok = fields.Boolean(related='product_id.event_ok')
+    event_ok = fields.Boolean(related='product_id.event_ok', readonly=True)
 
     @api.multi
     def _prepare_invoice_line(self, qty):
@@ -33,13 +33,6 @@ class SaleOrderLine(models.Model):
         if self.event_id:
             res['name'] = '%s: %s' % (res.get('name', ''), self.event_id.name)
         return res
-
-    @api.onchange('product_id')
-    def _onchange_product_id_event(self):
-        values = {'event_ok': False}
-        if self.product_id.event_ok:
-            values['event_ok'] = self.product_id.event_ok
-        self.update(values)
 
     @api.multi
     def _update_registrations(self, confirm=True, registration_data=None):

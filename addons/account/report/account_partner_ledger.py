@@ -31,7 +31,7 @@ class ReportPartnerLedger(models.AbstractModel):
         lang_code = self.env.context.get('lang') or 'en_US'
         lang = self.env['res.lang']
         lang_id = lang._lang_get(lang_code)
-        date_format = lang.browse(lang_id).date_format
+        date_format = lang_id.date_format
         for r in res:
             r['date'] = datetime.strptime(r['date'], DEFAULT_SERVER_DATE_FORMAT).strftime(date_format)
             r['displayed_name'] = '-'.join(

@@ -307,7 +307,8 @@ class BaseModel(object):
     __metaclass__ = MetaModel
     _auto = False               # don't create any database backend
     _register = False           # not visible in ORM registry
-    _transient = False          # not transient
+    _abstract = True            # whether model is abstract
+    _transient = False          # whether model is transient
 
     _name = None                # the model name
     _description = None         # the model's informal name
@@ -606,6 +607,8 @@ class BaseModel(object):
             if name not in pool:
                 raise TypeError("Model %r does not exist in registry." % name)
             ModelClass = type(pool[name])
+            ModelClass._build_model_check_base(cls)
+            check_parent = ModelClass._build_model_check_parent
         else:
             ModelClass = type(name, (BaseModel,), {
                 '_name': name,
@@ -615,6 +618,7 @@ class BaseModel(object):
                 '_fields': {},                          # populated in _setup_base()
                 '_defaults': {},                        # populated in _setup_base()
             })
+            check_parent = cls._build_model_check_parent
 
         # determine all the classes the model should inherit from
         bases = LastOrderedSet([cls])
@@ -626,6 +630,7 @@ class BaseModel(object):
                 for base in parent_class.__bases__:
                     bases.add(base)
             else:
+                check_parent(cls, parent_class)
                 bases.add(parent_class)
                 parent_class._inherit_children.add(name)
         ModelClass.__bases__ = tuple(bases)
@@ -637,6 +642,29 @@ class BaseModel(object):
         model = object.__new__(ModelClass)
         model.__init__(pool, cr)
         return model
+
+    @classmethod
+    def _build_model_check_base(model_class, cls):
+        """ Check whether ``model_class`` can be extended with ``cls``. """
+        if model_class._abstract and not cls._abstract:
+            msg = ("%s transforms the abstract model %r into a non-abstract model. "
+                   "That class should either inherit from AbstractModel, or set a different '_name'.")
+            raise TypeError(msg % (cls, model_class._name))
+        if model_class._transient != cls._transient:
+            if model_class._transient:
+                msg = ("%s transforms the transient model %r into a non-transient model. "
+                       "That class should either inherit from TransientModel, or set a different '_name'.")
+            else:
+                msg = ("%s transforms the model %r into a transient model. "
+                       "That class should either inherit from Model, or set a different '_name'.")
+            raise TypeError(msg % (cls, model_class._name))
+
+    @classmethod
+    def _build_model_check_parent(model_class, cls, parent_class):
+        """ Check whether ``model_class`` can inherit from ``parent_class``. """
+        if model_class._abstract and not parent_class._abstract:
+            msg = ("In %s, the abstract model %r cannot inherit from the non-abstract model %r.")
+            raise TypeError(msg % (cls, model_class._name, parent_class._name))
 
     @classmethod
     def _build_model_attributes(cls, pool):
@@ -6150,6 +6178,7 @@ class Model(AbstractModel):
     """
     _auto = True                # automatically create database backend
     _register = False           # not visible in ORM registry, meant to be python-inherited only
+    _abstract = False           # not abstract
     _transient = False          # not transient
 
 class TransientModel(Model):
@@ -6162,6 +6191,7 @@ class TransientModel(Model):
     """
     _auto = True                # automatically create database backend
     _register = False           # not visible in ORM registry, meant to be python-inherited only
+    _abstract = False           # not abstract
     _transient = True           # transient
 
 def itemgetter_tuple(items):

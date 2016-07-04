@@ -820,7 +820,7 @@ var FieldX2Many = AbstractManyField.extend({
         self.is_loaded = self.is_loaded.then(function() {
             var view = self.get_active_view();
             if (view.type === "list") {
-                view.controller.page = 0;
+                view.controller.current_min = 1;
                 return view.controller.reload_content();
             } else if (view.controller.do_search) {
                 return view.controller.do_search(self.build_domain(), self.dataset.get_context(), []);
