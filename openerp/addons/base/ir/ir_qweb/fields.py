@@ -5,7 +5,7 @@ from odoo import api, fields, models, _
 from PIL import Image
 from cStringIO import StringIO
 import babel
-from openerp.tools import html_escape as escape, posix_to_ldml, safe_eval
+from openerp.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils
 from .qweb import unicodifier
 
 import logging
@@ -134,10 +134,13 @@ class FloatConverter(models.AbstractModel):
         else:
             precision = options['precision']
 
-        fmt = '%f' if precision is None else '%.{precision}f'
-        lang = self.user_lang()
+        if precision is None:
+            fmt = '%f'
+        else:
+            value = float_utils.float_round(value, precision_digits=precision)
+            fmt = '%.{precision}f'.format(precision=precision)
 
-        formatted = lang.format(fmt.format(precision=precision), value, grouping=True)
+        formatted = self.user_lang().format(fmt, value, grouping=True)
 
         # %f does not strip trailing zeroes. %g does but its precision causes
         # it to switch to scientific notation starting at a million *and* to
