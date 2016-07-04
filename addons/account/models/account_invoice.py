@@ -669,8 +669,17 @@ class AccountInvoice(models.Model):
     @api.model
     def tax_line_move_line_get(self):
         res = []
-        for tax_line in self.tax_line_ids:
+        # keep track of taxes already processed
+        done_taxes = []
+        # loop the invoice.tax.line in reversal sequence
+        for tax_line in sorted(self.tax_line_ids, key=lambda x: -x.sequence):
             if tax_line.amount:
+                tax = tax_line.tax_id
+                if tax.amount_type == "group":
+                    for child_tax in tax.children_tax_ids:
+                        done_taxes.append(tax.id)
+                else:
+                    done_taxes.append(tax.id)
                 res.append({
                     'invoice_tax_line_id': tax_line.id,
                     'tax_line_id': tax_line.tax_id.id,
@@ -682,6 +691,7 @@ class AccountInvoice(models.Model):
                     'account_id': tax_line.account_id.id,
                     'account_analytic_id': tax_line.account_analytic_id.id,
                     'invoice_id': self.id,
+                    'tax_ids': [(6, 0, done_taxes)] if tax_line.tax_id.include_base_amount else []
                 })
         return res
 
