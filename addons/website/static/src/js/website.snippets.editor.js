@@ -1,7 +1,6 @@
 odoo.define('website.snippets.editor', function (require) {
 'use strict';
 
-var widget = require('web_editor.widget');
 var animation = require('web_editor.snippets.animation');
 var options = require('web_editor.snippets.options');
 var snippet_editor = require('web_editor.snippet.editor');
@@ -11,24 +10,6 @@ snippet_editor.Class.include({
         return '/website/snippets';
     }
 });
-
-var preventParentEmpty = {
-    hide_remove_button: function () {
-        this.$overlay.find('.oe_snippet_remove, .oe_snippet_move').toggleClass("hidden", !this.$target.siblings().length);
-    },
-    on_focus : function () {
-        this._super();
-        this.hide_remove_button();
-    },
-    on_clone: function ($clone) {
-        this._super($clone);
-        this.hide_remove_button();
-    },
-    on_remove: function () {
-        this._super();
-        this.hide_remove_button();
-    },
-};
 
 options.registry.slider = options.Class.extend({
     drop_and_build_snippet: function () {
@@ -58,8 +39,7 @@ options.registry.slider = options.Class.extend({
             .first().addClass("active");
     },
     start : function () {
-        var self = this;
-        this._super();
+        this._super.apply(this, arguments);
         this.$target.carousel({interval: false});
         this.id = this.$target.attr("id");
         this.$inner = this.$target.find('.carousel-inner');
@@ -67,7 +47,7 @@ options.registry.slider = options.Class.extend({
         this.$target.carousel('pause');
         this.rebind_event();
     },
-    add_slide: function (type, value) {
+    add_slide: function (type) {
         if(type !== "click") return;
 
         var self = this;
@@ -93,7 +73,7 @@ options.registry.slider = options.Class.extend({
             });
         }
         else {
-            var s_class = selection.attr('class').split(' ').filter(function (o) { return _.str.startsWith(o, "s_") })[0]
+            var s_class = selection.attr('class').split(' ').filter(function (o) { return _.str.startsWith(o, "s_"); })[0];
             selection = $snippets.find("." + s_class);
         }
         var $clone = $(selection).find('.item:first').clone();
@@ -106,14 +86,13 @@ options.registry.slider = options.Class.extend({
         },0);
         return $clone;
     },
-    remove_slide: function (type, value) {
+    remove_slide: function (type) {
         if(type !== "click") return;
 
         if (this.remove_process) {
             return;
         }
         var self = this;
-        var new_index = 0;
         var cycle = this.$inner.find('.item').length - 1;
         var index = this.$inner.find('.item.active').index();
 
@@ -126,7 +105,7 @@ options.registry.slider = options.Class.extend({
                 self.$target.off('slid.bs.carousel');
                 self.rebind_event();
                 self.remove_process = false;
-                if (cycle == 1) {
+                if (cycle === 1) {
                     self.on_remove_slide(event);
                 }
             });
@@ -165,43 +144,25 @@ options.registry.carousel = options.registry.slider.extend({
         this._super();
 
         // set background and prepare to clean for save
-        var add_class = function (c) {
-            if (c) self._class = (self._class || "").replace(new RegExp("[ ]+" + c.replace(" ", "|[ ]+")), '') + ' ' + c;
-            return self._class || "";
-        };
         this.$target.on('slid.bs.carousel', function () {
             if(self.editor && self.editor.styles.background) {
                 self.editor.styles.background.$target = self.$target.find(".item.active");
+                self.editor.styles.background_position.$target = self.editor.styles.background.$target;
                 self.editor.styles.background.set_active();
+                self.editor.styles.background_position.set_active();
+                self.editor.styles.background.$target.trigger("snippet-option-change", [self.editor.styles.background]);
             }
             self.$target.carousel("pause");
         });
         this.$target.trigger('slid.bs.carousel');
     },
-    add_slide: function (type, data) {
-        if(type !== "click") return;
-
-        var $clone = this._super(type, data);
-        // choose an other background
-        var bg = this.$target.data("snippet-option-ids").background;
-        if (!bg) return $clone;
-
-        var $styles = bg.$el.find("li[data-background]");
-        var $select = $styles.filter(".active").removeClass("active").next("li[data-background]");
-        if (!$select.length) {
-            $select = $styles.first();
-        }
-        $select.addClass("active");
-        $clone.css("background-image", $select.data("background") ? "url('"+ $select.data("background") +"')" : "");
-
-        return $clone;
-    },
     // rebind event to active carousel on edit mode
     rebind_event: function () {
         var self = this;
         this.$target.find('.carousel-control').off('click').on('click', function () {
-            self.$target.carousel( $(this).data('slide')); });
-        this._super();
+            self.$target.carousel($(this).data('slide'));
+        });
+        this._super.apply(this, arguments);
 
         /* Fix: backward compatibility saas-3 */
         this.$target.find('.item.text_image, .item.image_text, .item.text_only').find('.container > .carousel-caption > div, .container > img.carousel-image').attr('contentEditable', 'true');
@@ -209,6 +170,8 @@ options.registry.carousel = options.registry.slider.extend({
 });
 
 options.registry.marginAndResize = options.Class.extend({
+    preventChildPropagation: true,
+
     start: function () {
         var self = this;
         this._super();
@@ -220,7 +183,14 @@ options.registry.marginAndResize = options.Class.extend({
         if (resize_values.w) this.$overlay.find(".oe_handle.w").removeClass("readonly");
         if (resize_values.size) this.$overlay.find(".oe_handle.size").removeClass("readonly");
 
-        this.$overlay.find(".oe_handle:not(.size), .oe_handle.size .size").on('mousedown', function (event) {
+        var $auto_size = this.$overlay.find(".oe_handle.size .auto_size");
+        var $fixed_size = this.$overlay.find(".oe_handle.size .size");
+
+        var auto_sized = isNaN(parseInt(self.$target.prop("style").height));
+        $fixed_size.toggleClass("active", !auto_sized);
+        $auto_size.toggleClass("active", auto_sized);
+
+        $fixed_size.add(this.$overlay.find(".oe_handle:not(.size)")).on('mousedown', function (event) {
             event.preventDefault();
 
             var $handle = $(this);
@@ -304,7 +274,7 @@ options.registry.marginAndResize = options.Class.extend({
                     current = next;
                     change = true;
                 }
-                if (prev != current && dd < (2*resize[1][prev] + resize[1][current])/3) {
+                if (prev !== current && dd < (2*resize[1][prev] + resize[1][current])/3) {
                     self.$target.attr("class", (self.$target.attr("class")||'').replace(regClass, ''));
                     self.$target.addClass(resize[0][prev]);
                     current = prev;
@@ -324,19 +294,28 @@ options.registry.marginAndResize = options.Class.extend({
                 setTimeout(function () {
                     self.buildingBlock.editor_busy = false;
                     if (begin !== current) {
-                        self.buildingBlock.parent.rte.historyRecordUndo(self.$target, 'resize_' + XY);
+                        self.buildingBlock.getParent().rte.historyRecordUndo(self.$target, 'resize_' + XY);
                     }
                 },0);
                 self.$target.removeClass("resize_editor_busy");
+
+                if (compass === "size") {
+                    $fixed_size.addClass("active");
+                    $auto_size.removeClass("active");
+                }
             };
             $body.mousemove(body_mousemove);
             $body.mouseup(body_mouseup);
         });
-        this.$overlay.find(".oe_handle.size .auto_size").on('click', function (event) {
+        $auto_size.on('click', function () {
             self.$target.css("height", "");
             self.$target.css("overflow", "");
-            self.buildingBlock.parent.rte.historyRecordUndo(self.$target, 'resize_Y');
+            self.buildingBlock.getParent().rte.historyRecordUndo(self.$target, 'resize_Y');
             self.buildingBlock.cover_target(self.$overlay, self.$target);
+
+            $fixed_size.removeClass("active");
+            $auto_size.addClass("active");
+
             return false;
         });
     },
@@ -376,19 +355,21 @@ options.registry.marginAndResize = options.Class.extend({
 
         this.$overlay.attr("class", overlay_class);
     },
-    
+
     /* on_resize
     *  called when the box is resizing and the class change, before the cover_target
     *  @compass: resize direction : 'n', 's', 'e', 'w'
     *  @beginClass: attributes class at the begin
     *  @current: curent increment in this.grid
     */
-    on_resize: function (compass, beginClass, current) {
+    on_resize: function () {
         this.change_cursor();
     }
 });
 
 options.registry["margin-y"] = options.registry.marginAndResize.extend({
+    preventChildPropagation: true,
+
     getSize: function () {
         this.grid = this._super();
         var grid = [0,4,8,16,32,48,64,92,128];
@@ -403,7 +384,9 @@ options.registry["margin-y"] = options.registry.marginAndResize.extend({
     },
 });
 
-options.registry["margin-x"] = options.registry.marginAndResize.extend(preventParentEmpty).extend({
+options.registry["margin-x"] = options.registry.marginAndResize.extend({
+    preventChildPropagation: true,
+
     getSize: function () {
         this.grid = this._super();
         var width = this.$target.parents(".row:first").first().outerWidth();
@@ -411,7 +394,7 @@ options.registry["margin-x"] = options.registry.marginAndResize.extend(preventPa
         var grid = [1,2,3,4,5,6,7,8,9,10,11,12];
         this.grid.e = [_.map(grid, function (v) {return 'col-md-'+v;}), _.map(grid, function (v) {return width/12*v;})];
 
-        var grid = [-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11];
+        grid = [-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11];
         this.grid.w = [_.map(grid, function (v) {return 'col-md-offset-'+v;}), _.map(grid, function (v) {return width/12*v;}), 12];
 
         return this.grid;
@@ -475,6 +458,8 @@ options.registry["margin-x"] = options.registry.marginAndResize.extend(preventPa
 });
 
 options.registry.resize = options.registry.marginAndResize.extend({
+    preventChildPropagation: true,
+
     getSize: function () {
         this.grid = this._super();
         this.grid.size = 8;
@@ -488,7 +473,7 @@ options.registry.parallax = options.Class.extend({
         this.grid.size = 8;
         return this.grid;
     },
-    on_resize: function (compass, beginClass, current) {
+    on_resize: function () {
         this.$target.data("snippet-view").set_values();
     },
     start : function () {
@@ -512,7 +497,6 @@ options.registry.parallax = options.Class.extend({
         this.$target.data("snippet-view").set_values();
     },
     set_active: function () {
-        var value = this.$target.attr('data-scroll-background-ratio') || 0;
         this.$el.find('[data-scroll]').removeClass("active")
             .filter('[data-scroll="' + (this.$target.attr('data-scroll-background-ratio') || 0) + '"]').addClass("active");
     },
@@ -521,118 +505,6 @@ options.registry.parallax = options.Class.extend({
         this.$target.find(".parallax")
             .css("background-position", '')
             .removeAttr("data-scroll-background-offset");
-    }
-});
-
-
-// to remove after 9.0 (keep for compatibility without update with -u)
-options.registry.transform = options.Class.extend({
-    start: function () {
-        var self = this;
-        this._super();
-        this.$overlay.find('.oe_snippet_clone, .oe_handles').addClass('hidden');
-        this.$overlay.find('[data-toggle="dropdown"]')
-            .on("mousedown", function () {
-                self.$target.transfo("hide");
-            });
-        this.$target.on('attributes_change', function () {
-            self.resetTransfo();
-        });
-
-        // don't unactive transform if rotation and mouseup on an other container
-        var cursor_mousedown = false;
-        $(document).on('mousedown', function (event) {
-            if (self.$overlay.hasClass('oe_active') && $(event.target).closest(".transfo-controls").length) {
-                cursor_mousedown = event;
-            }
-        });
-        $(document).on('mouseup', function (event) {
-            if (cursor_mousedown) {
-                event.preventDefault();
-
-                var dx = event.clientX-cursor_mousedown.clientX;
-                var dy = event.clientY-cursor_mousedown.clientY;
-                setTimeout(function () {
-                    self.$target.focusIn().activateBlock();
-                    if (10 < Math.pow(dx, 2)+Math.pow(dy, 2)) {
-                        setTimeout(function () {
-                            self.$target.transfo({ 'hide': false });
-                        },0);
-                    }
-                },0);
-                cursor_mousedown = false;
-            }
-        });
-    },
-    style: function (type, value) {
-        if (type !== 'click') return;
-        var settings = this.$target.data("transfo").settings;
-        this.$target.transfo({ 'hide': (settings.hide = !settings.hide) });
-    },
-    clear_style: function (type, value) {
-        if (type !== 'click') return;
-        this.$target.removeClass("fa-spin").attr("style", "");
-        this.resetTransfo();
-    },
-    move_summernote_select: function () {
-        var self = this;
-        var transfo = this.$target.data("transfo");
-        $('body > .note-handle')
-            .attr('style', transfo.$markup.attr('style'))
-            .css({
-                'z-index': 0,
-                'pointer-events': 'none'
-            })
-            .off('mousedown mouseup')
-            .on('mousedown mouseup', function (event) {
-                self.$target.trigger( jQuery.Event( event.type, event ) );
-            })
-            .find('.note-control-selection').attr('style', transfo.$markup.find('.transfo-controls').attr('style'))
-                .css({
-                    'display': 'block',
-                    'cursor': 'auto'
-                });
-    },
-    resetTransfo: function () {
-        var self = this;
-        this.$overlay.css('width', '');
-        this.$overlay.data('not-cover_target', true);
-        this.$target.transfo("destroy");
-        this.$target.transfo({
-            hide: true,
-            callback: function () {
-                var pos = $(this).data("transfo").$center.offset();
-                self.$overlay.css({
-                    'top': pos.top | 0,
-                    'left': pos.left | 0,
-                    'position': 'absolute',
-                });
-                self.$overlay.find(".oe_overlay_options").attr("style", "width:0; left:0!important; top:0;");
-                self.$overlay.find(".oe_overlay_options > .btn-group").attr("style", "width:160px; left:-80px;");
-
-                self.move_summernote_select();
-            }});
-        this.$target.data('transfo').$markup
-            .on("mouseover", function () {
-                self.$target.trigger("mouseover");
-            })
-            .mouseover();
-    },
-    on_focus : function () {
-        var self = this;
-        setTimeout(function () {
-            self.$target.css({"-webkit-animation": "none", "animation": "none"});
-            self.resetTransfo();
-        },0);
-    },
-    on_blur : function () {
-        this.$target.transfo("hide");
-        $('.note-handle').hide(); // hide selection of summernote
-        this.$target.css({"-webkit-animation-play-state": "", "animation-play-state": "", "-webkit-transition": "", "transition": "", "-webkit-animation": "", "animation": ""});
-    },
-    clean_for_save: function () {
-        this.on_blur();
-        this._super();
     }
 });
 
@@ -651,15 +523,15 @@ options.registry.ul = options.Class.extend({
         this.$target.find('.o_ul_toggle_self, .o_ul_toggle_next').remove();
 
         this.$target.find('li:has(>ul,>ol)').map(function () {
-                // get if the li contain a text label
-                var texts = _.filter(_.toArray(this.childNodes), function (a) { return a.nodeType == 3;});
-                if (!texts.length || !texts.reduce(function (a,b) { return a.textContent + b.textContent;}).match(/\S/)) {
-                    return;
-                }
-                $(this).children('ul,ol').addClass('o_close');
-                return $(this).children(':not(ul,ol)')[0] || this;
-            })
-            .prepend('<a href="#" class="o_ul_toggle_self fa" />');
+            // get if the li contain a text label
+            var texts = _.filter(_.toArray(this.childNodes), function (a) { return a.nodeType == 3;});
+            if (!texts.length || !texts.reduce(function (a,b) { return a.textContent + b.textContent;}).match(/\S/)) {
+                return;
+            }
+            $(this).children('ul,ol').addClass('o_close');
+            return $(this).children(':not(ul,ol)')[0] || this;
+        })
+        .prepend('<a href="#" class="o_ul_toggle_self fa" />');
 
         var $li = this.$target.find('li:has(+li:not(>.o_ul_toggle_self)>ul, +li:not(>.o_ul_toggle_self)>ol)');
         $li.map(function () { return $(this).children()[0] || this; })
@@ -685,7 +557,7 @@ options.registry.ul = options.Class.extend({
     }
 });
 
-options.registry.collapse = options.Class.extend(preventParentEmpty).extend({
+options.registry.collapse = options.Class.extend({
     start: function () {
         var self = this;
         this._super();
@@ -747,7 +619,6 @@ options.registry.collapse = options.Class.extend(preventParentEmpty).extend({
 });
 
 return options;
-
 });
 
 
@@ -755,7 +626,6 @@ odoo.define('website.rte.summernote', function (require) {
 'use strict';
 
 var core = require('web.core');
-var options = require('website.snippets.editor');
 require('web_editor.rte.summernote');
 
 var eventHandler = $.summernote.eventHandler;
@@ -776,7 +646,6 @@ renderer.tplPopovers = function (lang, options) {
 
 
 $.summernote.pluginEvents.transform = function (event, editor, layoutInfo, sorted) {
-    var $editable = layoutInfo.editable();
     var $selection = layoutInfo.handle().find('.note-control-selection');
     var $image = $($selection.data('target'));
 
@@ -805,7 +674,6 @@ $.summernote.pluginEvents.transform = function (event, editor, layoutInfo, sorte
     $(document).on('mousedown', mousedown);
 };
 
-
 var fn_boutton_update = eventHandler.modules.popover.button.update;
 eventHandler.modules.popover.button.update = function ($container, oStyle) {
     fn_boutton_update.call(this, $container, oStyle);
@@ -813,6 +681,4 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
         .toggleClass('active', $(oStyle.image).is('[style*="transform"]'))
         .toggleClass('hidden', !$(oStyle.image).is('img'));
 };
-
-
 });

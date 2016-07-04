@@ -27,7 +27,6 @@ var TopBarContent = Widget.extend({
         return this._super();
     },
     edit_menu: function () {
-        var self = this;
         var context = base.get_context();
         var def = $.Deferred();
         if ($("[data-content_menu_id]").length) {
@@ -49,8 +48,7 @@ var TopBarContent = Widget.extend({
                     context: context
                 },
             }).then(function (menu) {
-                var result = new EditMenuDialog(menu).appendTo(document.body);
-                return result;
+                return new EditMenuDialog(this, {}, menu).open();
             });
         });
     },
@@ -92,7 +90,7 @@ var TopBarContent = Widget.extend({
         }).then(function (deps) {
             website.prompt({
                 id: "editor_rename_page",
-                window_title: _t("Rename Page"),
+                window_title: _t("Rename This Page"),
                 dependencies: deps,
             }, 'website.rename_page').then(function (val, field, $dialog) {
                 ajax.jsonRpc('/web/dataset/call_kw', 'call', {
@@ -128,7 +126,7 @@ var TopBarContent = Widget.extend({
                 id: "editor_delete_page",
                 window_title: _t("Delete Page"),
                 dependencies: deps,
-                    init: function () { $('.btn-continue').prop("disabled", true)},
+                    init: function () { $('.btn-continue').prop("disabled", true); },
             }, 'website.delete_page').then(function (val, field, $dialog) {
 
                 if ($dialog.find('input[type="checkbox"]').is(':checked')) {
@@ -170,13 +168,16 @@ website.TopBar.include({
 
 var SelectEditMenuDialog = widget.Dialog.extend({
     template: 'website.contentMenu.dialog.select',
-    init: function () {
+    init: function (parent, options) {
         var self = this;
         self.roots = [{id: null, name: _t("Top Menu")}];
         $("[data-content_menu_id]").each(function () {
             self.roots.push({id: $(this).data("content_menu_id"), name: $(this).attr("name")});
         });
-        this._super();
+        this._super(parent, _.extend({}, {
+            title: _t("Select a Menu"),
+            save_text: _t("Continue")
+        }, options || {}));
     },
     save: function () {
         this.trigger("save", parseInt(this.$el.find("select").val() || null));
@@ -191,12 +192,14 @@ var EditMenuDialog = widget.Dialog.extend({
         'click button.js_edit_menu': 'edit_menu',
         'click button.js_delete_menu': 'delete_menu',
     }),
-    init: function (menu) {
+    init: function (parent, options, menu) {
         this.menu = menu;
         this.root_menu_id = menu.id;
         this.flat = this.flatenize(menu);
         this.to_delete = [];
-        this._super();
+        this._super(parent, _.extend({}, {
+            title: _t("Edit Menu")
+        }, options || {}));
     },
     start: function () {
         var r = this._super.apply(this, arguments);
@@ -226,7 +229,7 @@ var EditMenuDialog = widget.Dialog.extend({
     },
     add_menu: function () {
         var self = this;
-        var dialog = new MenuEntryDialog(undefined, {});
+        var dialog = new MenuEntryDialog(this, {}, undefined, {});
         dialog.on('save', this, function (link) {
             var new_menu = {
                 id: _.uniqueId('new-'),
@@ -241,14 +244,14 @@ var EditMenuDialog = widget.Dialog.extend({
             self.$('.oe_menu_editor').append(
                 qweb.render('website.contentMenu.dialog.submenu', { submenu: new_menu }));
         });
-        dialog.appendTo(document.body);
+        dialog.open();
     },
     edit_menu: function (ev) {
         var self = this;
         var menu_id = $(ev.currentTarget).closest('[data-menu-id]').data('menu-id');
         var menu = self.flat[menu_id];
         if (menu) {
-            var dialog = new MenuEntryDialog(undefined, menu);
+            var dialog = new MenuEntryDialog(this, {}, undefined, menu);
             dialog.on('save', this, function (link) {
                 var id = link.id;
                 var menu_obj = self.flat[id];
@@ -260,13 +263,12 @@ var EditMenuDialog = widget.Dialog.extend({
                 var $menu = self.$('[data-menu-id="' + id + '"]');
                 $menu.find('.js_menu_label').first().text(menu_obj.name);
             });
-            dialog.appendTo(document.body);
+            dialog.open();
         } else {
             alert("Could not find menu entry");
         }
     },
     delete_menu: function (ev) {
-        var self = this;
         var $menu = $(ev.currentTarget).closest('[data-menu-id]');
         var mid = $menu.data('menu-id')|0;
         if (mid) {
@@ -307,7 +309,7 @@ var EditMenuDialog = widget.Dialog.extend({
 
 var MenuEntryDialog = widget.LinkDialog.extend({
     template: 'website.contentMenu.dialog.add',
-    init: function (editor, data) {
+    init: function (parent, options, editor, data) {
         data.text = data.name || '';
         data.isNewWindow = data.new_window;
         this.data = data;
@@ -337,10 +339,7 @@ var MenuEntryDialog = widget.LinkDialog.extend({
             return;
         }
         return this._super.apply(this, arguments);
-    },
-    destroy: function () {
-        this._super.apply(this, arguments);
-    },
+    }
 });
 
 return {

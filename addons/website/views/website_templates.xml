@@ -149,7 +149,7 @@
             <link rel="shortcut icon" type="image/x-icon" t-attf-href="/web/image/website/{{website.id}}/favicon/"/>
         </head>
         <body>
-            <div id="wrapwrap">
+            <div id="wrapwrap" t-att-class="pageName or ''">
                 <header>
                     <div class="navbar navbar-default navbar-static-top">
                         <div class="container">
@@ -896,7 +896,8 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 <!-- Actual pages -->
 <template id="homepage" name="Homepage" page="True" priority="29">
     <t t-call="website.layout">
-      <div id="wrap" class="oe_structure oe_empty"></div>
+        <t t-set="pageName" t-value="'homepage'"/>
+        <div id="wrap" class="oe_structure oe_empty"/>
     </t>
 </template>
 
