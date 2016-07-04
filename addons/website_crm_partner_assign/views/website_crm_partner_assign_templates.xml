@@ -329,7 +329,7 @@
                                 <a t-attf-href="/my/opportunity/#{opp.id}"><span t-field="opp.name"/></a>
                             </td>
                             <td>
-                                <span class="text-nowrap" t-esc="format(opp.planned_revenue, 'monetary', opp.company_currency)"/> at <span t-field="opp.probability" />%
+                                <span class="text-nowrap" t-esc="opp.planned_revenue" t-options="{'widget': 'monetary', 'display_currency': opp.company_currency}"/> at <span t-field="opp.probability" />%
                             </td>
                             <td><span t-field="opp.contact_name" /></td>
                             <td>
@@ -559,7 +559,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4">
-                                            <strong><span class="text-nowrap" t-esc="format(opportunity.planned_revenue, 'monetary', opportunity.company_currency)"/> at <span t-field="opportunity.probability"/>%</strong>
+                                            <strong><span class="text-nowrap" t-esc="opportunity.planned_revenue" t-options="{'widget': 'monetary', 'display_currency': opportunity.company_currency}"/> at <span t-field="opportunity.probability"/>%</strong>
                                     </div>
                                     <div class="col-md-4">
                                             <strong>Expected Closing: <span t-field="opportunity.date_deadline" /></strong>

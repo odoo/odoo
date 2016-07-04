@@ -63,7 +63,7 @@
                                 <td colspan="6">
                                     <strong>Subtotal: </strong>
                                     <t t-set="subtotal" t-value="sum(line.price_subtotal for line in layout_category['lines'])"/>
-                                    <span t-esc="format(subtotal, 'monetary', o.currency_id)"/>
+                                    <span t-esc="subtotal" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                                 </td>
                             </tr>
                         </t>
