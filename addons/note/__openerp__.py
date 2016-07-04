@@ -48,6 +48,7 @@ Notes can be found in the 'Home' menu.
         'security/ir.model.access.csv',
         'note_data.xml',
         'note_view.xml',
+        'res_config_view.xml',
     ],
     'demo': [
         'note_demo.xml',

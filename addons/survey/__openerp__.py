@@ -43,6 +43,7 @@ user name and password for the invitation of the survey.
         'security/survey_security.xml',
         'security/ir.model.access.csv',
         'survey_view.xml',
+        'res_config_view.xml',
         'wizard/survey_print_statistics.xml',
         'wizard/survey_print_answer.xml',
         'wizard/survey_browse_answer.xml',
