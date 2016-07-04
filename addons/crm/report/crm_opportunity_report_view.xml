@@ -71,6 +71,13 @@
             <field name="user_id" eval="False"/>
             <field name="context">{'col_group_by': ['create_date:month'], 'group_by': ['user_id'], 'measures': ['__count']}</field>
         </record>
+        <record id="filter_opportunity_city" model="ir.filters">
+            <field name="name">Won By City</field>
+            <field name="model_id">crm.opportunity.report</field>
+            <field name="user_id" eval="False"/>
+            <field name="domain">[('probability', '=', 100)]</field>
+            <field name="context">{'col_group_by': ['create_date:month'], 'group_by': ['city']}</field>
+        </record>
         <record id="filter_opportunity_country" model="ir.filters">
             <field name="name">Won By Country</field>
             <field name="model_id">crm.opportunity.report</field>
