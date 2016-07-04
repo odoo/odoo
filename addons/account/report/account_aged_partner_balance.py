@@ -206,7 +206,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         else:
             account_type = ['payable', 'receivable']
 
-        movelines, total = self._get_partner_move_lines(account_type, date_from, target_move, data['form']['period_length'])
+        movelines, total, dummy = self._get_partner_move_lines(account_type, date_from, target_move, data['form']['period_length'])
         docargs = {
             'doc_ids': self.ids,
             'doc_model': model,
