@@ -756,6 +756,8 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
                             sign = -1;
                             field = field.slice(1);
                         }
+                        if(!a[field] && a[field] !== 0){ return sign}
+                        if(!b[field] && b[field] !== 0){ return (sign == -1) ? 1 : -1}
                         return sign * compare(a[field], b[field]);
                     }, 0);
                 });
