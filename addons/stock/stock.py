@@ -4526,7 +4526,7 @@ class stock_pack_operation(osv.osv):
         picking_type = pack.picking_id.picking_type_id
         serial = (pack.product_id.tracking == 'serial')
         view = data_obj.xmlid_to_res_id(cr, uid, 'stock.view_pack_operation_lot_form')
-        only_create = picking_type.use_create_lots and not picking_type.use_existing_lots
+        only_create = picking_type.use_create_lots and not picking_type.use_existing_lots and not pack.pack_lot_ids
         show_reserved = any([x for x in pack.pack_lot_ids if x.qty_todo > 0.0])
         ctx.update({'serial': serial,
                     'only_create': only_create,
