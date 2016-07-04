@@ -61,8 +61,9 @@ class ReportAgedPartnerBalance(models.AbstractModel):
 
         # Build a string like (1,2,3) for easy use in SQL query
         partner_ids = [partner['partner_id'] for partner in partners if partner['partner_id']]
+        lines = dict([(partner['partner_id'], []) for partner in partners if partner['partner_id']])
         if not partner_ids:
-            return [], []
+            return [], [], []
 
         # This dictionary will store the not due amount of all partners
         undue_amounts = {}
@@ -92,6 +93,11 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 if partial_line.create_date[:10] <= date_from:
                     line_amount -= partial_line.amount
             undue_amounts[partner_id] += line_amount
+            lines[partner_id].append({
+                'line': line,
+                'amount': line_amount,
+                'period': 6,
+                })
 
         # Use one query per period and store results in history (a list variable)
         # Each history will contain: history[1] = {'<partner_id>': <partner_debit-credit>}
@@ -139,6 +145,11 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                         line_amount -= partial_line.amount
 
                 partners_amount[partner_id] += line_amount
+                lines[partner_id].append({
+                    'line': line,
+                    'amount': line_amount,
+                    'period': i,
+                    })
             history.append(partners_amount)
 
         for partner in partners:
@@ -177,7 +188,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             if at_least_one_amount:
                 res.append(values)
 
-        return res, total
+        return res, total, lines
 
     @api.multi
     def render_html(self, data):
@@ -195,7 +206,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         else:
             account_type = ['payable', 'receivable']
 
-        movelines, total = self._get_partner_move_lines(account_type, date_from, target_move, data['form']['period_length'])
+        movelines, total, dummy = self._get_partner_move_lines(account_type, date_from, target_move, data['form']['period_length'])
         docargs = {
             'doc_ids': self.ids,
             'doc_model': model,
