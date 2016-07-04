@@ -380,7 +380,7 @@ class product_template(osv.osv):
     _name = "product.template"
     _inherit = ['mail.thread']
     _description = "Product Template"
-    _order = "name"
+    _order = "sequence, name"
 
     def _is_product_variant(self, cr, uid, ids, name, arg, context=None):
         return self._is_product_variant_impl(cr, uid, ids, name, arg, context=context)
