@@ -51,24 +51,16 @@
         </xpath>
     </template>
 
-    <template id="country_state_shipping" name="Shipping Country and states" inherit_id="website_sale.checkout">
+    <template id="country_state_shipping" name="Shipping Country and states" inherit_id="website_sale.address">
         <!-- By default, with 'ship to the same address', we can only ship to restricted countries & states -->
-        <xpath expr="//select[@name='country_id']" position="attributes">
-            <attribute name="t-att-disabled">not shipping_id and 'disabled' or None</attribute>
-            <attribute name="t-att-style">not shipping_id and 'display: none' or None</attribute>
+        <xpath expr="//select[@name='country_id']/t[@t-foreach]" position="attributes">
+            <attribute name="t-foreach">mode[1] == 'shipping' and shipping_countries or countries</attribute>
         </xpath>
-        <xpath expr="//select[@name='country_id']" position="after">
-            <select name="country_id" class="form-control o_provider_restricted" t-att-style="shipping_id and 'display:none' or None" t-att-disabled="shipping_id and 'disabled' or None">
-                <option value="">Country...</option>
-                <t t-foreach="shipping_countries or []" t-as="country">
-                    <option t-att-value="country.id" t-att-selected="country.id == checkout.get('country_id')"><t t-esc="country.name"/></option>
-                </t>
-            </select>
+        <xpath expr="//select[@name='state_id']/t[@t-foreach]" position="attributes">
+            <attribute name="t-foreach">mode[1] == 'shipping' and shipping_states or states</attribute>
         </xpath>
-        <xpath expr="//select[@name='state_id']" position="attributes">
-            <attribute name="t-att-disabled">not shipping_id and 'disabled' or None</attribute>
-            <attribute name="t-att-style">not shipping_id and 'display: none' or None</attribute>
-        </xpath>
+
+        <!-- TO DO : move to change_coutnry_info 
         <xpath expr="//select[@name='state_id']" position="after">
             <select name="state_id" class="form-control o_provider_restricted" t-att-style="shipping_id and 'display:none' or None" t-att-disabled="shipping_id and 'disabled' or None">
                 <option value="">Select...</option>
@@ -83,6 +75,7 @@
         <xpath expr="//select[@name='shipping_state_id']/t[@t-foreach]" position="attributes">
             <attribute name="t-foreach">shipping_states</attribute>
         </xpath>
+        -->
     </template>
 
     <template id="shipping_tracking" name="Shipping tracking on orders followup" inherit_id="website_sale_stock.orders_followup_shipping">

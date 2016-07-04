@@ -1,7 +1,7 @@
 odoo.define('website_sale.tour', function (require) {
 'use strict';
 
-var Tour = require('web.Tour');
+var Tour =  require('web.Tour');
 
 Tour.register({
     id:   'shop_buy_product',
@@ -56,28 +56,33 @@ Tour.register({
             waitFor:   '#cart_products input.js_quantity:propValue(1)',
             element:   'a[href="/shop/checkout"]',
         },
+        // {
+        //     title:     "test with input error",
+        //     element:   'form[action="/shop/address"] .btn:contains("Next")',
+        //     onload: function (tour) {
+        //         $("input[name='phone']").val("");
+        //     },
+        // },
+        // {
+        //     title:     "test without input error",
+        //     waitFor:   '#div_phone .has-error',
+        //     element:   'form[action="/shop/checkout"] .btn:contains("Next")',
+        //     onload: function (tour) {
+        //         if ($("input[name='name']").val() === "")
+        //             $("input[name='name']").val("website_sale-test-shoptest");
+        //         if ($("input[name='email']").val() === "")
+        //             $("input[name='email']").val("website_sale_test_shoptest@websitesaletest.odoo.com");
+        //         $("input[name='phone']").val("123");
+        //         $("input[name='street']").val("123");
+        //         $("input[name='city']").val("123");
+        //         $("input[name='zip']").val("123");
+        //         $("select[name='country_id']").val("21");
+        //     },
+        // },
         {
-            title:     "test with input error",
-            element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
-            onload: function (tour) {
-                $("input[name='phone']").val("");
-            },
-        },
-        {
-            title:     "test without input error",
-            waitFor:   'form[action="/shop/confirm_order"] .has-error',
-            element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
-            onload: function (tour) {
-                if ($("input[name='name']").val() === "")
-                    $("input[name='name']").val("website_sale-test-shoptest");
-                if ($("input[name='email']").val() === "")
-                    $("input[name='email']").val("website_sale_test_shoptest@websitesaletest.odoo.com");
-                $("input[name='phone']").val("123");
-                $("input[name='street2']").val("123");
-                $("input[name='city']").val("123");
-                $("input[name='zip']").val("123");
-                $("select[name='country_id']").val("21");
-            },
+            title:     "Confirm checkout",
+            //waitFor:   "div.all_shipping .panel",
+            element:   'a[href="/shop/confirm_order"]',
         },
         {
             title:     "select payment",

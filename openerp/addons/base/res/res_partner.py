@@ -14,6 +14,7 @@ from odoo import api, fields, models, tools, _
 from odoo.modules import get_module_resource
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
+from odoo.osv.orm import browse_record
 
 # Global variables used for the warning fields declared on the res.partner
 # in the following modules : sale, purchase, account, stock 
@@ -204,6 +205,9 @@ class Partner(models.Model, FormatAddress):
     # technical field used for managing commercial fields
     commercial_partner_id = fields.Many2one('res.partner', compute='_compute_commercial_partner',
                                              string='Commercial Entity', store=True)
+    commercial_company_name = fields.Char('Company name Computed', compute='_compute_commercial_company_name',
+                                          store=True)
+    display_company_name = fields.Char('Company name')
 
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary("Image", attachment=True,
@@ -221,7 +225,7 @@ class Partner(models.Model, FormatAddress):
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name.'),
     ]
 
-    @api.depends('is_company', 'name', 'parent_id.name', 'type')
+    @api.depends('is_company', 'name', 'parent_id.name', 'type', 'display_company_name')
     def _compute_display_name(self):
         diff = dict(show_address=None, show_address_only=None, show_email=None)
         names = dict(self.with_context(**diff).name_get())
@@ -245,6 +249,12 @@ class Partner(models.Model, FormatAddress):
                 partner.commercial_partner_id = partner
             else:
                 partner.commercial_partner_id = partner.parent_id.commercial_partner_id
+
+    @api.depends('display_company_name', 'parent_id.is_company', 'commercial_partner_id.name')
+    def _compute_commercial_company_name(self):
+        for partner in self:
+            p = partner.commercial_partner_id
+            partner.commercial_company_name = p.is_company and p.name or partner.display_company_name
 
     @api.model
     def _get_default_image(self, partner_type, is_company, parent_id):
@@ -469,6 +479,8 @@ class Partner(models.Model, FormatAddress):
         # company)
         if vals.get('website'):
             vals['website'] = self._clean_website(vals['website'])
+        if vals.get('parent_id'):
+            vals['display_company_name'] = False
         if vals.get('company_id'):
             company = self.env['res.company'].browse(vals['company_id'])
             for partner in self:
@@ -489,6 +501,8 @@ class Partner(models.Model, FormatAddress):
     def create(self, vals):
         if vals.get('website'):
             vals['website'] = self._clean_website(vals['website'])
+        if vals.get('parent_id'):
+            vals['display_company_name'] = False
         # compute default image in create, because computing gravatar in the onchange
         # cannot be easily performed if default images are in the way
         if not vals.get('image'):
@@ -498,6 +512,25 @@ class Partner(models.Model, FormatAddress):
         partner._fields_sync(vals)
         partner._handle_first_contact_creation()
         return partner
+
+    @api.multi
+    def create_company(self):
+        self.ensure_one()
+        if self.display_company_name:
+            # move info from partner to company
+            values = dict(name=self.display_company_name, is_company=True)
+            values.update(self._update_fields_values(self._address_fields()))
+            myself = dict.fromkeys(values, False) # copy before the crate which will alter the dict values
+            new_company = self.create(values)
+            myself.pop('name')
+            myself.update({
+                'parent_id': new_company.id,
+                'child_ids': [(1, _id, dict(parent_id=new_company.id)) for _id in self.child_ids.ids]
+            })
+            #self.child_ids.write(dict(parent_id=new_company.id))
+            print myself
+            self.write(myself)
+        return True
 
     @api.multi
     def open_commercial_entity(self):
@@ -528,10 +561,12 @@ class Partner(models.Model, FormatAddress):
         res = []
         for partner in self:
             name = partner.name or ''
-            if partner.parent_id and not partner.is_company:
+
+            if partner.commercial_company_name:
                 if not name and partner.type in ['invoice', 'delivery', 'other']:
                     name = dict(self.fields_get(['type'])['type']['selection'])[partner.type]
-                name = "%s, %s" % (partner.parent_name, name)
+                if not partner.is_company:
+                    name = "%s, %s" % (partner.commercial_company_name, name)
             if self._context.get('show_address_only'):
                 name = partner._display_address(without_company=True)
             if self._context.get('show_address'):

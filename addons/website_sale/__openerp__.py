@@ -10,7 +10,7 @@ Odoo E-Commerce
 ==================
 
         """,
-    'depends': ['website', 'sale', 'payment', 'website_payment', 'website_portal_sale', 'website_mail', 'rating'],
+    'depends': ['website', 'sale', 'payment', 'website_payment', 'website_portal_sale', 'website_mail', 'website_form', 'rating'],
     'data': [
         'data/data.xml',
         'data/web_planner_data.xml',
