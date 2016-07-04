@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="website_quote_layout_pricing" inherit_id="website_quote.pricing" name="Website quote layout pricing">
+        <xpath expr="//section/table" position="replace">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Products</th>
+                        <th>Quantity</th>
+                        <th>Taxes</th>
+                        <th>Discount</th>
+                        <th class="text-right">Unit Price</th>
+                        <th class="text-right">Price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="quotation.sale_layout_lines(order_id = quotation.id)" t-as="p">
+                        <t t-call="website_quote_layout.category_template" />
+                        <t t-foreach="p['lines']" t-as="line">
+                            <tr>
+                                <td>
+                                    <div t-field="line.product_id.name"/>
+                                    <div t-field="line.name" class="text-muted"/>
+                                </td>
+                                <td>
+                                    <div id="quote_qty">
+                                        <span t-field="line.product_uom_qty"/>
+                                        <span t-field="line.product_uom"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div t-foreach="line.tax_id" t-as="tax">
+                                        <t t-esc="tax.name"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <strong t-if="line.discount" class="text-info">
+                                        <t t-esc="((line.discount % 1) and '%s' or '%d') % line.discount"/>% discount
+                                    </strong>
+                                </td>
+                                <td class="text-nowrap">
+                                    <strong class="text-right">
+                                        <div t-field="line.price_unit"
+                                          t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'
+                                          t-att-style="line.discount and 'text-decoration: line-through' or ''"
+                                          t-att-class="line.discount and 'text-danger' or ''"/>
+                                        <div t-if="line.discount">
+                                            <t t-esc="'%.2f' % ((1-line.discount / 100.0) * line.price_unit)"/>
+                                        </div>
+                                    </strong>
+                                </td>
+                                <td class="text-nowrap">
+                                    <div class="text-right"
+                                      t-field="line.price_subtotal"
+                                      t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
+                                </td>
+                                <td t-if="line.option_line_id">
+                                    <a t-attf-href="/update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json pull-right hidden-print">
+                                        <span class="fa fa-trash-o"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </t>
+                        <t t-call="website_quote_layout.subtotal_template" />
+                        <t t-call="sale_layout.separator_template" />
+                        <t t-if="'pagebreak' in p['category'] and p['category'].pagebreak is True">
+                            <t t-if="p_index &lt; p_size - 1">
+                                <![CDATA[
+                                    </tbody>
+                                </table>
+                                <table class="table table-condensed">
+                                ]]>
+                                <thead>
+                                    <tr>
+                                        <th>Products</th>
+                                        <th>Quantity</th>
+                                        <th>Taxes</th>
+                                        <th>Discount</th>
+                                        <th class="text-right">Unit Price</th>
+                                        <th class="text-right">Price</th>
+                                        <th></th>
+                                    </tr>
+                               </thead>
+                                <![CDATA[
+                                    <tbody>
+                                ]]>
+                            </t>
+                        </t>
+                    </t>
+                    <tr>
+                        <td class="text-right" colspan="5"><strong>Subtotal:</strong></td>
+                        <td class="text-right text-nowrap">
+                            <strong data-id="total_amount" t-field="quotation.amount_untaxed" t-field-options='{"widget": "monetary","display_currency": "quotation.pricelist_id.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" colspan="5">Taxes:</td>
+                        <td class="text-right text-nowrap">
+                            <span data-id="total_amount" t-field="quotation.amount_tax" t-field-options='{"widget": "monetary","display_currency": "quotation.pricelist_id.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" colspan="5"><strong>Total:</strong></td>
+                        <td class="text-right text-nowrap">
+                            <strong data-id="total_amount" t-field="quotation.amount_total" t-field-options='{"widget": "monetary","display_currency": "quotation.pricelist_id.currency_id"}'/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </xpath>
+   </template>
+</odoo>

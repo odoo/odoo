@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Website quote layout frontend assets">
+        <xpath expr="." position="inside">
+            <link rel='stylesheet' href='/website_quote_layout/static/src/less/website_quote_layout.less'/>
+        </xpath>
+    </template>
+    <template id="category_template" name="Category template">
+        <t t-if="p['category']">
+            <tr>
+                <td colspan="7" class="active o_website_quote_layout_border_bottom">
+                    <t t-if="p['category'].name">
+                        <t t-esc="p['category'].name"></t>
+                    </t>
+                    <t t-if="not p['category'].name">
+                        Uncategorized
+                    </t>
+                </td>
+            </tr>
+        </t>
+    </template>
+    <template id="subtotal_template" name="Subtotal template">
+        <t t-if="'subtotal' in p['category'] and p['category'].subtotal is True">
+            <tr>
+                <td class="text-right" colspan="5"><strong>Subtotal:</strong></td>
+                <td class="text-right">
+                    <strong t-esc="p['subtotal']" t-esc-options='{"widget": "monetary","display_currency": "quotation.pricelist_id.currency_id"}'/>
+                </td>
+            </tr>
+        </t>
+    </template>
+</odoo>
