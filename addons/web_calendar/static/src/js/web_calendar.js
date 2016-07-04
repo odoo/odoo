@@ -332,6 +332,13 @@ var CalendarView = View.extend({
                 self.proxy('update_record')(event._id, data);
             },
             eventRender: function (event, element, view) {
+                // List of event ids passed as 'highlight_event_ids' inside context will be high-lighted.
+                // This will provied developer the flexibility to high-light events based on custom
+                // requirements whenever displaying the calendar from any other view.
+                var event_id = _.isNumber(event.id) ? event.id : parseInt(event.id.split("-")[0]);
+                if (_.contains(self.dataset.context.highlight_event_ids, event_id)) {
+                    element.addClass("o_event_hightlight");
+                }
                 element.find('.fc-event-title').html(event.title);
             },
             eventAfterRender: function (event, element, view) {
@@ -969,15 +976,17 @@ var CalendarView = View.extend({
          */
         this.dataset.ids = this.dataset.ids.concat([id]);
         this.dataset.trigger("dataset_changed", id);
+        this.dataset.context.highlight_event_ids = _.union(this.dataset.context.highlight_event_ids, [id]);
         this.refresh_event(id);
     },
-    slow_created: function () {
+    slow_created: function (id) {
         // refresh all view, because maybe some recurrents item
         var self = this;
         if (self.sidebar) {
             // force filter refresh
             self.sidebar.filter.is_loaded = false;
         }
+        self.dataset.context.highlight_event_ids = _.union(self.dataset.context.highlight_event_ids, [id]);
         self.$calendar.fullCalendar('refetchEvents');
     },
 

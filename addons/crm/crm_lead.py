@@ -800,12 +800,13 @@ class crm_lead(FormatAddress, osv.osv):
         :return dict: dictionary value for created Meeting view
         """
         lead = self.browse(cr, uid, ids[0], context)
+        highlight_event_ids = self.pool['calendar.event'].search(cr, uid, [('opportunity_id', '=', lead.id)], context=context) if lead.type == 'opportunity' else False
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'calendar', 'action_calendar_event', context)
         partner_ids = [self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id.id]
         if lead.partner_id:
             partner_ids.append(lead.partner_id.id)
         res['context'] = {
-            'search_default_opportunity_id': lead.type == 'opportunity' and lead.id or False,
+            'highlight_event_ids': highlight_event_ids,
             'default_opportunity_id': lead.type == 'opportunity' and lead.id or False,
             'default_partner_id': lead.partner_id and lead.partner_id.id or False,
             'default_partner_ids': partner_ids,

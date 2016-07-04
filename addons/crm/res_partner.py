@@ -77,11 +77,12 @@ class res_partner(osv.osv):
         return opportunity_ids
 
     def schedule_meeting(self, cr, uid, ids, context=None):
+        meeting_ids = self.browse(cr, uid, ids[0], context=context).meeting_ids.ids
         partner_ids = list(ids)
         partner_ids.append(self.pool.get('res.users').browse(cr, uid, uid).partner_id.id)
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'calendar', 'action_calendar_event', context)
         res['context'] = {
-            'search_default_partner_ids': context['partner_name'],
+            'highlight_event_ids': meeting_ids,
             'default_partner_ids': partner_ids,
         }
         return res
