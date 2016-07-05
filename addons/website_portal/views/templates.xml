@@ -19,7 +19,7 @@
                 </t>
                 <t t-if="group['date_begin'] != date">
                     <li>
-                        <a t-ignore="True" t-attf-href="#{default_url}?date_begin=#{group['date_begin']}&amp;date_end=#{group['date_end']}"><t t-esc="group['name']"/><span class="pull-right badge" t-esc="group['item_count']"/></a>
+                        <a t-ignore="True" t-attf-href="#{default_url}?#{keep_query()}&amp;date_begin=#{group['date_begin']}&amp;date_end=#{group['date_end']}"><t t-esc="group['name']"/><span class="pull-right badge" t-esc="group['item_count']"/></a>
                     </li>
                 </t>
             </t>
@@ -77,7 +77,7 @@
         </t>
     </template>
 
-    <template id="website_portal.custom_panel" inherit_id='website_portal.portal_layout' customize_show="True" name="Editable Panel" active="False">
+    <template id="custom_panel" inherit_id="portal_layout" customize_show="True" name="Portal Editable Panel" active="False">
         <xpath expr="//div[@id='o_my_sidebar']" position="inside">
             <div class="oe_structure">
               <h3 class="page-header">Custom Panel</h3>
@@ -197,4 +197,5 @@
             <li><a href="/my/home" role="menuitem">My Account</a></li>
         </xpath>
     </template>
+
 </odoo>

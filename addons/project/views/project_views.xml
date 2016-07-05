@@ -107,8 +107,7 @@
                         <page string="Settings">
                             <group>
                                 <field name="privacy_visibility" widget="radio"/>
-                                <field name="partner_id" string="Customer"
-                                        attrs="{'invisible':[('privacy_visibility','in',['employees', 'followers'])]}"/>
+                                <field name="partner_id" string="Customer"/>
                                 <field name="user_id" string="Project Manager"
                                         attrs="{'readonly':[('active','=',False)]}"
                                         groups="base.group_no_one"/>
@@ -743,10 +742,6 @@
             </field>
         </record>
         <menuitem action="project_tags_action" id="menu_project_tags_act" parent="menu_project_config" groups="base.group_no_one"/>
-
-        <!-- Portal menuitems -->
-        <menuitem name="Projects" id="portal_services_projects" parent="portal.portal_projects"
-                  action="open_view_project_all" sequence="10"/>
 
         <!-- Reporting menus -->
         <menuitem id="base.menu_project_report" name="Reports"
