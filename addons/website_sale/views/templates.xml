@@ -30,7 +30,7 @@
     <template id="header" inherit_id="website.layout" name="Header Shop My Cart Link">
         <xpath expr="//header//ul[@id='top_menu']/li" position="before">
             <t t-set="website_sale_order" t-value="website.sale_get_order()" />
-            <li t-att-class="'' if website_sale_order and website_sale_order.cart_quantity else 'hidden'">
+            <li t-att-class="'' if website_sale_order and website_sale_order.cart_quantity else 'hidden'" t-ignore="True">
                 <a href="/shop/cart">
                     <i class="fa fa-shopping-cart"></i>
                     My cart <sup t-attf-class="my_cart_quantity label label-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or ''" />
@@ -68,7 +68,7 @@
 
     <!-- Product item used by /shop and /shop/cart -->
     <template id="products_item" name="Products item">
-        <form action="/shop/cart/update" method="post">
+        <form action="/shop/cart/update" method="post" t-ignore="True">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
             <div itemscope="itemscope" itemtype="http://schema.org/Product">
                 <div class="ribbon-wrapper">
@@ -135,7 +135,7 @@
 
     <template id="pricelist_list" name="Pricelists Dropdown">
         <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
-        <div t-attf-class="#{website_sale_pricelists and len(website_sale_pricelists)&gt;1 and 'dropdown' or 'hidden'} btn-group">
+        <div t-attf-class="#{website_sale_pricelists and len(website_sale_pricelists)&gt;1 and 'dropdown' or 'hidden'} btn-group" t-ignore="True">
             <t t-set="curr_pl" t-value="website.get_current_pricelist()" />
             <a href="#" class="dropdown-toggle btn btn-default" data-toggle="dropdown">
                 <t t-esc="curr_pl and curr_pl.name or ' - '" />
@@ -157,7 +157,7 @@
             <t t-set="additional_title">Shop</t>
             <div id="wrap" class="js_sale">
                 <div class="oe_structure" />
-                <div class="container oe_website_sale">
+                <div class="container oe_website_sale" t-ignore="True">
                     <div class="products_pager">
                         <div class="row" style="width: 100%;">
                             <t t-call="website_sale.search">
@@ -809,7 +809,7 @@
                     </t>
                     <h1 class="mb32">Shopping Cart</h1>
                     <div class="row">
-                        <div class="col-md-8 col-sm-9 oe_cart">
+                        <div class="col-md-8 col-sm-9 oe_cart" t-ignore="True">
                             <t t-call="website_sale.cart_lines" />
                             <div class="clearfix" />
                             <a t-if="not optional_products and website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32" href="/shop/checkout">
@@ -870,7 +870,7 @@
 
     <template id="suggested_products_list" inherit_id="website_sale.cart_lines" customize_show="True" name="Suggested Products in my cart">
         <xpath expr="//table[@id='cart_products']" position="after">
-            <table t-if="suggested_products" class="js_cart_lines table table-striped table-condensed">
+            <table t-if="suggested_products" t-ignore="True" class="js_cart_lines table table-striped table-condensed">
                 <colgroup>
                     <col width="80" />
                     <col />
@@ -917,7 +917,7 @@
 
     <template id="continue_shopping" inherit_id="website_sale.cart" customize_show="True" name="Continue Shopping Button">
         <xpath expr="//a[@href='/shop/checkout']" position="before">
-            <a href="/shop" class="btn btn-default mb32">
+            <a href="/shop" class="btn btn-default mb32" t-ignore="True">
                 <span class="fa fa-long-arrow-left" />
                 <span class="hidden-xs">Continue Shopping</span>
                 <span class="visible-xs-inline">Continue</span>
@@ -949,7 +949,7 @@
     <template id="checkout">
         <t t-call="website.layout">
             <t t-set="additional_title">Shop - Checkout</t>
-            <div id="wrap">
+            <div id="wrap" t-ignore="True">
                 <div class="container oe_website_sale">
                     <t t-call="website_sale.wizard_checkout">
                         <t t-set="step" t-value="20" />
@@ -1020,13 +1020,13 @@
     </template>
 
     <template id="address_kanban" name="Kanban address">
-            <form action="/shop/checkout" method="POST" class='hide'>
+            <form action="/shop/checkout" method="POST" class='hide' t-ignore="True">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                 <input type="hidden" name="partner_id" t-att-value="contact.id" />
                 <input type='submit'/>
             </form>
-            <a class='btn btn-link pull-right fa fa-edit js_edit_address no-decoration' title="Edit this address"></a>
-            <div t-att-class="'panel panel-default %s' % (selected and 'border_primary' or 'js_change_shipping')">
+            <a class='btn btn-link pull-right fa fa-edit js_edit_address no-decoration' title="Edit this address" t-ignore="True"></a>
+            <div t-ignore="True" t-att-class="'panel panel-default %s' % (selected and 'border_primary' or 'js_change_shipping')">
                 <div class='panel-body' style='min-height: 130px;'>
                     <t t-raw="format(contact, 'htmlcontact', dict(fields=['name', 'address'], no_marker=True))"/>
                 </div>
@@ -1168,14 +1168,14 @@
     <template id="payment">
         <t t-call="website.layout">
             <t t-set="additional_title">Shop - Select Payment Method</t>
-            <div id="wrap">
+            <div id="wrap" t-ignore="True">
                 <div class="container oe_website_sale">
                     <t t-call="website_sale.wizard_checkout">
                         <t t-set="step" t-value="40" />
                     </t>
                     <h1 class="mb32">Confirm Order</h1>
                     <div class="row">
-                        <div class="col-lg-8 col-sm-9">
+                        <div class="col-lg-8 col-sm-9" t-ignore="True">
                             <t t-foreach="errors" t-as="error">
                                 <div class="alert alert-danger" t-if="error">
                                     <h4>
@@ -1186,7 +1186,7 @@
                             </t>
                         </div>
                         <div class="col-lg-8 col-sm-9 oe_cart">
-                            <table class="table table-striped table-condensed" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
+                            <table t-ignore="True" class="table table-striped table-condensed" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
                                 <thead>
                                     <tr>
                                         <th colspan="2" width="80">Product</th>
@@ -1217,10 +1217,10 @@
                             <div class="pull-right">
                                 <t t-call="website_sale.total" />
                             </div>
-                            <div class="clearfix" />
+                            <div class="clearfix" t-ignore="True"/>
                             <div class="oe_structure" />
                         </div>
-                        <div class="col-lg-3 col-lg-offset-1 col-sm-3 text-muted" id="right_column">
+                        <div t-ignore="True" class="col-lg-3 col-lg-offset-1 col-sm-3 text-muted" id="right_column">
                             <div class="panel panel-info">
                               <div class="panel-heading">Bill To:</div>
                               <div class="panel-body">
@@ -1238,7 +1238,7 @@
                             </t>
                         </div>
                     </div>
-                    <div class="js_payment mb64 row" t-if="acquirers and website_sale_order.amount_total" id="payment_method">
+                    <div t-ignore="True" class="js_payment mb64 row" t-if="acquirers and website_sale_order.amount_total" id="payment_method">
                         <div class="col-lg-5 col-sm-6">
                             <h4>Payment Method:</h4>
                             <ul class="list-unstyled">
@@ -1261,7 +1261,7 @@
                             </t>
                         </div>
                     </div>
-                    <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
+                    <div t-ignore="True" class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
                         <div class="col-lg-8 col-sm-8">
                             <form target="_self" action="/shop/payment/validate" method="post" class="pull-right">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
@@ -1282,7 +1282,7 @@
         <xpath expr="//t[@id='acquirers_list']" position="before">
             <t t-set="sale_note" t-value="website_sale_order.note" />
             <t t-if="sale_note and sale_note != ''">
-                <div class="oe_accept_cgv_button">
+                <div class="oe_accept_cgv_button" t-ignore="True">
                     <label>
                         <input type="checkbox" checked="checked" id="checkbox_cgv" />
                         <t t-esc="sale_note" />
@@ -1300,20 +1300,20 @@
                     <t t-call="website_sale.wizard_checkout">
                         <t t-set="step" t-value="50" />
                     </t>
-                    <h1 class="mb32">Order <em t-field="order.name" /> Confirmed</h1>
+                    <h1 class="mb32" t-ignore="True">Order <em t-field="order.name" /> Confirmed</h1>
                     <div class="row">
                         <div class="col-md-8">
-                            <div class="thanks_msg">
+                            <div class="thanks_msg" t-ignore="True">
                                 <h2>Thank you for your order.
                                           <a class="btn btn-primary pull-right" href="/shop/print" target="_blank"><i class="fa fa-print"></i> Print
                                           </a></h2>
                                 <div class="oe_website_sale_tx_status" t-att-data-order-id="order.id"></div>
                             </div>
                             <div class="oe_cart">
-                                <h3 class="mt32 text-left">
+                                <h3 class="mt32 text-left" t-ignore="True">
                                     <strong>Order Details:</strong>
                                 </h3>
-                                <table class="table">
+                                <table class="table" t-ignore="True">
                                     <thead>
                                         <tr>
                                             <th>Products</th>
@@ -1376,12 +1376,12 @@
                                       </tr>
                                   </tfooter>
                                 </table>
-                                <div class="clearfix" />
+                                <div class="clearfix" t-ignore="True"/>
                                 <div class="oe_structure" />
-                                <h3 class="text-left">
+                                <h3 class="text-left" t-ignore="True">
                                     <strong>Payment information:</strong>
                                 </h3>
-                                <table class="table">
+                                <table class="table" t-ignore="True">
                                     <tbody>
                                         <tr>
                                             <td colspan="2">
@@ -1400,7 +1400,7 @@
                                 <t t-call="website_sale.payment_confirmation_status" />
                             </div>
                         </div>
-                        <div class="col-md-3 col-md-offset-1 text-muted">
+                        <div class="col-md-3 col-md-offset-1 text-muted" t-ignore="True">
                             <div class="panel panel-info">
                               <div class="panel-heading">Bill To:</div>
                               <div class="panel-body">
@@ -1455,7 +1455,7 @@
     </template>
 
     <template id="total">
-        <div id="cart_total" t-if="website_sale_order">
+        <div id="cart_total" t-if="website_sale_order" t-ignore="True">
             <div class="row" id="order_total_untaxed">
                 <span class="col-xs-6 text-right text-muted">Subtotal:</span>
                 <span class="col-xs-6 text-left text-muted">
@@ -1477,7 +1477,7 @@
         </div>
     </template>
 
-    <template id="payment_confirmation_status">
+    <template id="payment_confirmation_status" t-ignore="True">
         <t t-if="order.payment_acquirer_id.auto_confirm == 'none'">
             <div class="panel panel-info">
                 <div class="panel-heading" t-raw="order.payment_acquirer_id.pending_msg" />
