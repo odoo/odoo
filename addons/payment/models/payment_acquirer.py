@@ -565,10 +565,6 @@ class PaymentTransaction(osv.Model):
     # --------------------------------------------------
     # SERVER2SERVER RELATED METHODS
     # --------------------------------------------------
-    def s2s_create(self, cr, uid, values, cc_values, context=None):
-        tx_id, tx_result = self.s2s_send(cr, uid, values, cc_values, context=context)
-        self.s2s_feedback(cr, uid, tx_id, tx_result, context=context)
-        return tx_id
 
     def s2s_do_transaction(self, cr, uid, ids, context=None, **kwargs):
         tx = self.browse(cr, uid, ids, context=context)[0]
