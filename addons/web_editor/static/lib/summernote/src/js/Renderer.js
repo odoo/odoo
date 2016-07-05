@@ -267,7 +267,7 @@ define([
         return colorButton + foregroundButton + backgroundButton;
 
         function formatStr(str, values) {
-          return str.replace(/{(\d+)}/g, function (match, number) { 
+          return str.replace(/{(\d+)}/g, function (match, number) {
             return (values[number] !== undefined)? values[number] : match;
           });
         };
@@ -437,6 +437,10 @@ define([
       };
 
       var tplImagePopover = function () {
+        var autoButton = tplButton('<span class="note-fontsize-10">Auto</span>', {
+          event: 'resize',
+          value: 'auto'
+        });
         var fullButton = tplButton('<span class="note-fontsize-10">100%</span>', {
           title: lang.image.resizeFull,
           event: 'resize',
@@ -496,7 +500,7 @@ define([
           value: 'none'
         });
 
-        var content = (options.disableResizeImage ? '' : '<div class="btn-group">' + fullButton + halfButton + quarterButton + '</div>') +
+        var content = (options.disableResizeImage ? '' : '<div class="btn-group">' + autoButton + fullButton + halfButton + quarterButton + '</div>') +
                       '<div class="btn-group">' + leftButton + rightButton + justifyButton + '</div>' +
                       '<div class="btn-group">' + roundedButton + circleButton + thumbnailButton + noneButton + '</div>' +
                       '<div class="btn-group">' + removeButton + '</div>';
@@ -869,7 +873,7 @@ define([
       //03. create editable
       var isContentEditable = !$holder.is(':disabled');
       var $editable = $('<div class="note-editable panel-body" contentEditable="' + isContentEditable + '"></div>').prependTo($editingArea);
-      
+
       if (options.height) {
         $editable.height(options.height);
       }
