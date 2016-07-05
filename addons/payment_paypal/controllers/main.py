@@ -6,8 +6,8 @@ import pprint
 import urllib2
 import werkzeug
 
-from openerp import http, SUPERUSER_ID
-from openerp.http import request
+from odoo import http
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -37,21 +37,18 @@ class PaypalController(http.Controller):
         Once data is validated, process it. """
         res = False
         new_post = dict(post, cmd='_notify-validate')
-        cr, uid, context = request.cr, request.uid, request.context
         reference = post.get('item_number')
         tx = None
         if reference:
-            tx_ids = request.registry['payment.transaction'].search(cr, uid, [('reference', '=', reference)], context=context)
-            if tx_ids:
-                tx = request.registry['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
-        paypal_urls = request.registry['payment.acquirer']._get_paypal_urls(cr, uid, tx and tx.acquirer_id and tx.acquirer_id.environment or 'prod', context=context)
+            tx = request.env['payment.transaction'].search([('reference', '=', reference)])
+        paypal_urls = tx.acquirer_id._get_paypal_urls(tx.acquirer_id.environment or 'prod')
         validate_url = paypal_urls['paypal_form_url']
         urequest = urllib2.Request(validate_url, werkzeug.url_encode(new_post))
         uopen = urllib2.urlopen(urequest)
         resp = uopen.read()
         if resp == 'VERIFIED':
             _logger.info('Paypal: validated data')
-            res = request.registry['payment.transaction'].form_feedback(cr, SUPERUSER_ID, post, 'paypal', context=context)
+            res = request.env['payment.transaction'].sudo().form_feedback(post, 'paypal')
         elif resp == 'INVALID':
             _logger.warning('Paypal: answered INVALID on data verification')
         else:
@@ -76,7 +73,6 @@ class PaypalController(http.Controller):
     @http.route('/payment/paypal/cancel', type='http', auth="none", csrf=False)
     def paypal_cancel(self, **post):
         """ When the user cancels its Paypal payment: GET on this route """
-        cr, uid, context = request.cr, SUPERUSER_ID, request.context
         _logger.info('Beginning Paypal cancel with post data %s', pprint.pformat(post))  # debug
         return_url = self._get_return_url(**post)
         return werkzeug.utils.redirect(return_url)
