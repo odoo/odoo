@@ -31,7 +31,6 @@ from openerp.osv import orm, fields
 from openerp.tools import ustr, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools import html_escape as escape
 from openerp.addons.base.ir import ir_qweb
-from openerp.tools.translate import translate
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
 
@@ -296,7 +295,7 @@ class Image(orm.AbstractModel):
     _inherit = 'ir.qweb.field.image'
 
     @api.model
-    def record_to_html(self, record, field_name, options, values=None):
+    def record_to_html(self, record, field_name, options):
         assert options['tagName'] != 'img',\
             "Oddly enough, the root tag of an image field can not be img. " \
             "That is because the image goes into the tag, or it gets the " \

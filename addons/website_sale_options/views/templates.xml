@@ -45,7 +45,7 @@
           <tbody>
               <tr id="product_confirmation">
                 <td width="100">
-                  <span t-field="product.image_medium" t-field-options='{"widget": "image" }'/>
+                  <span t-field="product.image_medium" t-options='{"widget": "image" }'/>
                 </td>
                 <td colspan="2">
                   <strong t-field="product.display_name"/>
@@ -57,7 +57,7 @@
                 <td>
                   <span t-attf-class="text-danger oe_default_price" t-att-style="'' if (compute_currency(product.lst_price) - product.price) &gt; 0.1 else 'display: none;'" style="text-decoration: line-through; white-space: nowrap;"
                     t-field="product.lst_price"
-                    t-field-options='{
+                    t-options='{
                       "widget": "monetary",
                       "from_currency": product.currency_id,
                       "display_currency": website.currency_id
@@ -65,7 +65,7 @@
                   <span class="oe_price" style="white-space: nowrap;"
                     t-att-data-product-id="product.id"
                     t-field="product.price"
-                    t-field-options='{
+                    t-options='{
                        "widget": "monetary",
                        "display_currency": website.currency_id
                    }'/>
@@ -88,7 +88,7 @@
               <tr class="js_product" t-foreach="product.optional_product_ids" t-as="product">
                 <td width="100">
                   <input type="hidden" class="product_id" t-attf-name="optional-product-#{option_inc}" t-att-value="int(product.product_variant_ids[0]) if len(product.product_variant_ids) == 1 else '0'"/>
-                  <span t-field="product.image_small" t-field-options='{"widget": "image"}'/>
+                  <span t-field="product.image_small" t-options='{"widget": "image"}'/>
                 </td>
                 <td>
                   <div class="pull-left">
@@ -104,14 +104,14 @@
                 <td>
                   <span class="text-danger oe_optional" t-att-style="'' if (compute_currency(product.lst_price) - product.price) &gt; 0.1 else 'display: none;'" style="text-decoration: line-through; white-space: nowrap;"
                     t-field="product.lst_price"
-                    t-field-options='{
+                    t-options='{
                       "widget": "monetary",
                       "from_currency": product.currency_id,
                       "display_currency": website.currency_id
                    }'/><br/>
                   <span class="oe_price" style="white-space: nowrap;"
                     t-field="product.price"
-                    t-field-options='{
+                    t-options='{
                        "widget": "monetary",
                        "display_currency": website.currency_id
                    }'/>

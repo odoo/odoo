@@ -334,7 +334,7 @@ The ``t-field`` directive can only be used when performing field access
 to automatically format based on field type, and is integrated in the
 website's rich text edition.
 
-``t-field-options`` can be used to customize fields, the most common option
+``t-options`` can be used to customize fields, the most common option
 is ``widget``, other options are field- or widget-dependent.
 
 debugging

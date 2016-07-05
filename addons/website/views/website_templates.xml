@@ -904,7 +904,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 <template id="company_description" name="Company Description">
     <address itemscope="itemscope" itemtype="http://schema.org/Organization">
         <!-- TODO widget contact must add itemprop attributes -->
-        <div t-field="res_company.partner_id" t-field-options='{
+        <div t-field="res_company.partner_id" t-options='{
                 "widget": "contact",
                 "fields": ["name", "address", "phone", "mobile", "fax", "email"]}'/>
     </address>

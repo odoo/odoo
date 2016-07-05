@@ -46,13 +46,13 @@
                                         - <strong t-esc="o.name"/>
                                 </td>
                                 <td class="text-right">
-                                    <strong t-esc="format(sum_partner(data, o, 'debit'), 'monetary', res_company.currency_id)"/>
+                                    <strong t-esc="sum_partner(data, o, 'debit')" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <strong t-esc="format(sum_partner(data, o, 'credit'), 'monetary', res_company.currency_id)"/>
+                                    <strong t-esc="sum_partner(data, o, 'credit')" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <strong t-esc="format(sum_partner(data, o, 'debit - credit'), 'monetary', res_company.currency_id)"/>
+                                    <strong t-esc="sum_partner(data, o, 'debit - credit')" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                             </tr>
                             <tr t-foreach="lines(data, o)" t-as="line">
@@ -69,16 +69,16 @@
                                     <span t-esc="line['displayed_name']"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="format(line['debit'], 'monetary', res_company.currency_id)"/>
+                                    <span t-esc="line['debit']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="format(line['credit'], 'monetary', res_company.currency_id)"/>
+                                    <span t-esc="line['credit']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="format(line['progress'], 'monetary', res_company.currency_id)"/>
+                                    <span t-esc="line['progress']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td t-if="amount_currency">
-                                    <span t-esc="format(line['amount_currency'], 'monetary', line['currency_id'])"/>
+                                    <span t-esc="line['amount_currency']" t-options="{'widget': 'monetary', 'display_currency': line['currency_id']}"/>
                                 </td>
                             </tr>
                         </tbody>

@@ -344,7 +344,6 @@ class Website(openerp.addons.web.controllers.main.Home):
         """
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         view = pool["ir.ui.view"]
-        qweb = pool["ir.qweb"]
 
         context = dict(request.context or {}, active_test=True)
 
@@ -356,7 +355,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         set_active(enable, True)
 
         if get_bundle:
-            return qweb._get_asset(cr, uid, 'web.assets_frontend', context)
+            return request.env["ir.qweb"]._get_asset('web.assets_frontend', options=context)
 
         return True
 

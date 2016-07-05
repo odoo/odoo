@@ -90,7 +90,7 @@
                         <div class="media">
                             <a class="pull-left" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}"
                                t-field="partner.image"
-                               t-field-options='{"widget": "image", "class": "media-object", "max_width": 128}'
+                               t-options='{"widget": "image", "class": "media-object", "max_width": 128}'
                             ></a>
                             <div class="media-body o_partner_body" style="min-height: 64px;">
                                 <a class="media-heading" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}">
@@ -171,7 +171,7 @@
         <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="media">
           <t t-if="reference.website_published">
             <a class="pull-left" t-attf-href="/customers/#{slug(reference)}">
-                <span t-field="reference.image_small" t-field-options='{"widget": "image", "class": "center-block"}'/>
+                <span t-field="reference.image_small" t-options='{"widget": "image", "class": "center-block"}'/>
             </a>
             <div class="media-body" style="min-height: 64px;">
                 <a class="media-heading" t-attf-href="/customers/#{slug(reference)}">
@@ -329,7 +329,7 @@
                                 <a t-attf-href="/my/opportunity/#{opp.id}"><span t-field="opp.name"/></a>
                             </td>
                             <td>
-                                <span class="text-nowrap" t-esc="format(opp.planned_revenue, 'monetary', opp.company_currency)"/> at <span t-field="opp.probability" />%
+                                <span class="text-nowrap" t-esc="opp.planned_revenue" t-options="{'widget': 'monetary', 'display_currency': opp.company_currency}"/> at <span t-field="opp.probability" />%
                             </td>
                             <td><span t-field="opp.contact_name" /></td>
                             <td>
@@ -433,7 +433,7 @@
                                     </div>
                                     <div class="row mt16" t-if="lead.partner_assigned_id">
                                         <label class="col-xs-4">Assigned Partner</label>
-                                        <address class="col-xs-8" t-field="lead.partner_assigned_id" t-field-options='{"widget": "contact", "fields": ["name", "email", "phone"], "no_marker": True}'/>
+                                        <address class="col-xs-8" t-field="lead.partner_assigned_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"], "no_marker": True}'/>
                                     </div>
                                     <div class="row mt16" t-if="lead.campaign_id">
                                         <label class="col-xs-4">Campaign</label>
@@ -559,7 +559,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4">
-                                            <strong><span class="text-nowrap" t-esc="format(opportunity.planned_revenue, 'monetary', opportunity.company_currency)"/> at <span t-field="opportunity.probability"/>%</strong>
+                                            <strong><span class="text-nowrap" t-esc="opportunity.planned_revenue" t-options="{'widget': 'monetary', 'display_currency': opportunity.company_currency}"/> at <span t-field="opportunity.probability"/>%</strong>
                                     </div>
                                     <div class="col-md-4">
                                             <strong>Expected Closing: <span t-field="opportunity.date_deadline" /></strong>
