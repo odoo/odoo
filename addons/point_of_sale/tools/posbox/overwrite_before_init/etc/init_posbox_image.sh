@@ -11,6 +11,8 @@ __base="$(basename ${__file} .sh)"
 # Recommends: antiword, graphviz, ghostscript, postgresql, python-gevent, poppler-utils
 export DEBIAN_FRONTEND=noninteractive
 
+mount /dev/sda1 /boot
+
 apt-get update
 apt-get -y dist-upgrade
 
