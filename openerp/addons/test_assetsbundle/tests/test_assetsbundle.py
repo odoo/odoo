@@ -20,7 +20,7 @@ class TestJavascriptAssetsBundle(TransactionCase):
 
     def _get_asset(self, xmlid, env=None):
         env = (env or self.env)
-        files, remains = env['ir.qweb']._get_asset_content(xmlid, {})
+        files, remains = env['ir.qweb']._get_asset_content(xmlid, env.context)
         return AssetsBundle(xmlid, files, remains, env=env)
 
     def _any_ira_for_bundle(self, type):

@@ -157,8 +157,7 @@ class IrQWeb(models.AbstractModel, QWeb):
 
     @tools.ormcache('xmlid', 'options.get("lang", "en_US")')
     def _get_asset_content(self, xmlid, options):
-        options = dict(self.env.context)
-        options.update(options,
+        options = dict(options,
             inherit_branding=False, inherit_branding_auto=False,
             edit_translations=False, translatable=False,
             rendering_bundle=True)
