@@ -16,6 +16,7 @@ _logger = logging.getLogger(__name__)
 class PaymentAcquirerPayumoney(models.Model):
     _inherit = 'payment.acquirer'
 
+    provider = fields.Selection(selection_add=[('payumoney', 'PayUmoney')])
     payumoney_merchant_key = fields.Char(string='Merchant Key', required_if_provider='payumoney')
     payumoney_merchant_salt = fields.Char(string='Merchant Salt', required_if_provider='payumoney')
 
@@ -25,12 +26,6 @@ class PaymentAcquirerPayumoney(models.Model):
             return {'payumoney_form_url': 'https://secure.payu.in/_payment'}
         else:
             return {'payumoney_form_url': 'https://test.payu.in/_payment'}
-
-    @api.model
-    def _get_providers(self):
-        providers = super(PaymentAcquirerPayumoney, self)._get_providers()
-        providers.append(['payumoney', 'PayUmoney'])
-        return providers
 
     def _payumoney_generate_sign(self, inout, values):
         """ Generate the shasign for incoming or outgoing communications.
