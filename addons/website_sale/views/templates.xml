@@ -76,7 +76,7 @@
                 </div>
                 <div class="oe_product_image">
                     <a itemprop="url" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))">
-                        <span itemprop="image" t-field="product.image" t-field-options="{'widget': 'image', 'resize': None if product_image_big else '300x300'}" t-att-alt="product.name" />
+                        <span itemprop="image" t-field="product.image" t-options="{'widget': 'image', 'resize': None if product_image_big else '300x300'}" t-att-alt="product.name" />
                     </a>
                 </div>
                 <t t-if="show_publish">
@@ -366,7 +366,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-7 col-md-7 col-lg-7">
-                            <span itemprop="image" t-field="product.image" t-field-options="{'widget': 'image', 'class': 'product_detail_img', 'alt-field': 'name'}" />
+                            <span itemprop="image" t-field="product.image" t-options="{'widget': 'image', 'class': 'product_detail_img', 'alt-field': 'name'}" />
                         </div>
                         <div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1" id="product_details">
                             <h1 itemprop="name" t-field="product.name">Product Name</h1>
@@ -420,7 +420,7 @@
                     <t t-foreach="product.alternative_product_ids" t-as="alt_product">
                         <div class="col-md-2 thumbnail" style="width: 170px; height:130px; float:left; display:inline; margin-right: 10px; overflow:hidden;">
                             <div class="mt16 text-center" style="height: 100%;">
-                                <div t-field="alt_product.image_small" t-field-options="{'widget': 'image', 'class': 'img-rounded shadow o_alternative_product' }" />
+                                <div t-field="alt_product.image_small" t-options="{'widget': 'image', 'class': 'img-rounded shadow o_alternative_product' }" />
                                 <h5>
                                     <a t-attf-href="/shop/product/#{ slug(alt_product) }" style="display: block">
                                         <span t-att-title="alt_product.name" t-field="alt_product.name" style="display: block;" />
@@ -504,7 +504,7 @@
           <h4 class="css_non_editable_mode_hidden">
             <!-- keep field for editor -->
             <span t-field="product.lst_price"
-                t-field-options='{
+                t-options='{
                    "widget": "monetary",
                    "display_currency": product.currency_id
                }'/>
@@ -524,7 +524,7 @@
             <input type="radio" name="product_id" class="js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-att-value="variant_id.id" t-att-data-lst_price="variant_id.lst_price" t-att-data-price="variant_id.price"/>
             <span t-esc="variant_id.name_get()[0][1]"/>
             <span class="badge" t-if="variant_id.price_extra">
-              <t t-esc="variant_id.price_extra > 0 and '+' or ''"/><span t-field="variant_id.price_extra" style="white-space: nowrap;" t-field-options='{
+              <t t-esc="variant_id.price_extra > 0 and '+' or ''"/><span t-field="variant_id.price_extra" style="white-space: nowrap;" t-options='{
                     "widget": "monetary",
                     "from_currency": product.currency_id,
                     "display_currency": website.currency_id
@@ -549,7 +549,7 @@
                   <option t-att-value="value_id.id">
                       <span t-field="value_id.name"/>
                       <span t-if="value_id.price_extra">
-                          <t t-esc="value_id.price_extra > 0 and '+' or ''"/><span t-field="value_id.price_extra" style="white-space: nowrap;" t-field-options='{
+                          <t t-esc="value_id.price_extra > 0 and '+' or ''"/><span t-field="value_id.price_extra" style="white-space: nowrap;" t-options='{
                                    "widget": "monetary",
                                     "from_currency": product.currency_id,
                                    "display_currency": website.currency_id
@@ -569,7 +569,7 @@
                               <input type="radio" class="js_variant_change" t-att-checked="'checked' if not inc else None" t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)" t-att-value="value_id.id" style="vertical-align: top; margin-right: 10px;"/>
                               <span t-field="value_id.name"/>
                               <span class="badge" t-if="value_id.price_extra">
-                                  <t t-esc="value_id.price_extra > 0 and '+' or ''"/><span t-field="value_id.price_extra" style="white-space: nowrap;" t-field-options='{
+                                  <t t-esc="value_id.price_extra > 0 and '+' or ''"/><span t-field="value_id.price_extra" style="white-space: nowrap;" t-options='{
                                           "widget": "monetary",
                                           "from_currency": product.currency_id,
                                           "display_currency": website.currency_id
@@ -762,7 +762,7 @@
                     <tr>
                         <td colspan="2" t-if="not line.product_id.product_tmpl_id"></td>
                         <td align="center" t-if="line.product_id.product_tmpl_id">
-                            <span t-field="line.product_id.image_small" t-field-options="{'widget': 'image', 'class': 'img-rounded'}" />
+                            <span t-field="line.product_id.image_small" t-options="{'widget': 'image', 'class': 'img-rounded'}" />
                         </td>
                         <td t-if="line.product_id.product_tmpl_id">
                             <div>
@@ -788,8 +788,8 @@
                             <t t-if="(compute_currency(line.product_id.lst_price)  - line.price_reduce ) &gt; 0.1">
                                 <del class="text-danger mr8" style="white-space: nowrap;" t-esc="compute_currency(website.get_product_price(line.product_id, public=True))" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
                             </t>
-                            <span t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-field-options="{'widget': 'monetary', 'from_currency': line.company_id.currency_id, 'display_currency': website.currency_id}" groups="sale.group_show_price_subtotal" />
-                            <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-field-options="{'widget': 'monetary', 'from_currency': line.company_id.currency_id, 'display_currency': website.currency_id}" groups="sale.group_show_price_total" />
+                            <span t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': line.company_id.currency_id, 'display_currency': website.currency_id}" groups="sale.group_show_price_subtotal" />
+                            <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': line.company_id.currency_id, 'display_currency': website.currency_id}" groups="sale.group_show_price_total" />
                         </td>
                     </tr>
                 </t>
@@ -846,7 +846,7 @@
             <t t-foreach="website_sale_order.website_order_line" t-as="line">
                 <div class="row mb8 cart_line">
                     <div class="col-xs-3">
-                        <span t-field="line.product_id.image_small" t-field-options="{'widget': 'image', 'class': 'img-rounded'}" />
+                        <span t-field="line.product_id.image_small" t-options="{'widget': 'image', 'class': 'img-rounded'}" />
                     </div>
                     <div class="col-xs-9">
                         <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
@@ -886,7 +886,7 @@
                     <tr t-foreach="suggested_products" t-as="product">
                         <td>
                             <a t-attf-href="/shop/product/#{ slug(product.product_tmpl_id) }">
-                                <span t-field="product.image_small" t-field-options="{'widget': 'image', 'class': 'img-rounded'}" />
+                                <span t-field="product.image_small" t-options="{'widget': 'image', 'class': 'img-rounded'}" />
                             </a>
                         </td>
                         <td>
@@ -899,9 +899,9 @@
                         </td>
                         <td>
                             <t t-if="(compute_currency(product.lst_price) - product.price) &gt; 0.1">
-                                <del class="text-danger mr8" style="white-space: nowrap;" t-field="product.lst_price" t-field-options="{'widget': 'monetary','from_currency': product.currency_id, 'display_currency': website.currency_id}" />
+                                <del class="text-danger mr8" style="white-space: nowrap;" t-field="product.lst_price" t-options="{'widget': 'monetary','from_currency': product.currency_id, 'display_currency': website.currency_id}" />
                             </t>
-                            <span t-field="product.price" style="white-space: nowrap;" t-field-options="{'widget': 'monetary','display_currency': website.currency_id}" />
+                            <span t-field="product.price" style="white-space: nowrap;" t-options="{'widget': 'monetary','display_currency': website.currency_id}" />
                         </td>
                         <td class="text-center">
                             <input class="js_quantity" name="product_id" t-att-data-product-id="product.id" type="hidden" />
@@ -1199,7 +1199,7 @@
                                         <td colspan="2" t-if="not line.product_id.product_tmpl_id"></td>
                                         <td t-if="line.product_id.product_tmpl_id">
                                             <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
-                                                <span t-field="line.product_id.image_small" t-field-options="{'widget': 'image', 'class': 'img-rounded'}" />
+                                                <span t-field="line.product_id.image_small" t-options="{'widget': 'image', 'class': 'img-rounded'}" />
                                             </a>
                                         </td>
                                         <td t-if="line.product_id.product_tmpl_id">
@@ -1209,7 +1209,7 @@
                                             <div t-esc="line.product_uom_qty" />
                                         </td>
                                         <td class="text-center">
-                                            <span t-field="line.price_unit" style="white-space: nowrap;" t-field-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
+                                            <span t-field="line.price_unit" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
                                         </td>
                                     </tr>
                                 </tbody>
@@ -1224,14 +1224,14 @@
                             <div class="panel panel-info">
                               <div class="panel-heading">Bill To:</div>
                               <div class="panel-body">
-                                <div t-field="order.partner_invoice_id" t-field-options="{'widget': 'contact','fields': ['address', 'name', 'phone', 'email']}" />
+                                <div t-field="order.partner_invoice_id" t-options="{'widget': 'contact','fields': ['address', 'name', 'phone', 'email']}" />
                               </div>
                             </div>                            
                             <t t-if="website_sale_order and not website_sale_order.only_services">
                                 <div class="panel panel-info">
                                     <div class="panel-heading">Ship To:</div>
                                     <div class="panel-body">
-                                            <div t-field="order.partner_shipping_id" t-field-options="{'widget': 'contact', 'fields': ['address', 'name', 'phone']}" />
+                                            <div t-field="order.partner_shipping_id" t-options="{'widget': 'contact', 'fields': ['address', 'name', 'phone']}" />
                                         
                                     </div>
                                 </div>
@@ -1341,13 +1341,13 @@
                                           <td>
                                               <span class="text-right">
                                                   <div t-field="line.price_unit"
-                                                      t-field-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
+                                                      t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                                               </span>
                                           </td>
                                           <td>
                                               <div class="text-right"
                                                   t-field="line.price_subtotal"
-                                                  t-field-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
+                                                  t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                                           </td>
                                       </tr>
                                     </tbody>
@@ -1356,14 +1356,14 @@
                                           <td colspan="2"></td>
                                           <td class="text-right">Subtotal:</td>
                                           <td class="text-right">
-                                              <span t-field="order.amount_untaxed" style="white-space: nowrap;" t-field-options="{'widget': 'monetary','from_currency': order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
+                                              <span t-field="order.amount_untaxed" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
                                           </td>
                                       </tr>
                                       <tr>
                                           <td class='noborder' colspan="2"></td>
                                           <td class="text-right noborder">Taxes:</td>
                                           <td class="text-right noborder">
-                                               <span t-field="order.amount_tax" style="white-space: nowrap;" t-field-options="{'widget': 'monetary', 'from_currency': order.pricelist_id.currency_id, 'display_currency': website.currency_id}" />
+                                               <span t-field="order.amount_tax" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': order.pricelist_id.currency_id, 'display_currency': website.currency_id}" />
                                           </td>
                                       </tr>
                                       <tr>
@@ -1371,7 +1371,7 @@
                                           <td class="text-right"><strong>Total:</strong></td>
                                           <td class="text-right">
                                               <strong t-field="order.amount_total"
-                                                  t-field-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
+                                                  t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                                           </td>
                                       </tr>
                                   </tfooter>
@@ -1392,7 +1392,7 @@
                                                 <strong>Total:</strong>
                                             </td>
                                             <td class="text-right" width="100">
-                                                <strong t-field="order.amount_total" t-field-options="{'widget': 'monetary', 'display_currency': order.pricelist_id.currency_id}" />
+                                                <strong t-field="order.amount_total" t-options="{'widget': 'monetary', 'display_currency': order.pricelist_id.currency_id}" />
                                             </td>
                                         </tr>
                                     </tbody>
@@ -1404,14 +1404,14 @@
                             <div class="panel panel-info">
                               <div class="panel-heading">Bill To:</div>
                               <div class="panel-body">
-                                <div t-field="order.partner_invoice_id" t-field-options="{'widget': 'contact','fields': ['address', 'name', 'phone', 'email']}" />
+                                <div t-field="order.partner_invoice_id" t-options="{'widget': 'contact','fields': ['address', 'name', 'phone', 'email']}" />
                               </div>
                             </div>
                             <t t-if="not order.only_services">
                                 <div class="panel panel-info">
                                   <div class="panel-heading">Ship To:</div>
                                   <div class="panel-body">
-                                    <div t-field="order.partner_shipping_id" t-field-options="{'widget': 'contact','fields': ['address', 'name', 'phone']}" />
+                                    <div t-field="order.partner_shipping_id" t-options="{'widget': 'contact','fields': ['address', 'name', 'phone']}" />
                                   </div>
                                 </div>
                             </t>
@@ -1459,19 +1459,19 @@
             <div class="row" id="order_total_untaxed">
                 <span class="col-xs-6 text-right text-muted">Subtotal:</span>
                 <span class="col-xs-6 text-left text-muted">
-                    <span t-field="website_sale_order.amount_untaxed" style="white-space: nowrap;" t-field-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
+                    <span t-field="website_sale_order.amount_untaxed" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
                 </span>
             </div>
             <div class="row" id="order_total_taxes">
                 <span class="col-xs-6 text-right text-muted" title="Taxes may be updated after providing shipping address"> Taxes:</span>
                 <span class="col-xs-6 text-left text-muted">
-                    <span t-field="website_sale_order.amount_tax" style="white-space: nowrap;" t-field-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" />
+                    <span t-field="website_sale_order.amount_tax" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" />
                 </span>
             </div>
             <div class="row" id="order_total">
                 <span class="col-xs-6 text-right h4">Total:</span>
                 <span class="col-xs-6 text-left h4" style="white-space: nowrap;">
-                    <span t-field="website_sale_order.amount_total" style="white-space: nowrap;" t-field-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
+                    <span t-field="website_sale_order.amount_total" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
                 </span>
             </div>
         </div>

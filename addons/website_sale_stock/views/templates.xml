@@ -12,7 +12,7 @@
             <div id='picking_info'>
               <a t-att-href="report_url"><span class="fa fa-download"/></a>
               <a t-att-href="report_url"><span t-field="i.name"/></a>
-              <span class="text-muted" t-field="i.date" t-field-options='{"widget": "date"}'/>
+              <span class="text-muted" t-field="i.date" t-options='{"widget": "date"}'/>
               <t t-if="i.state == 'done'">
                 <span class="label label-success label-text-align"><i class="fa fa-fw fa-truck"/> Shipped</span>
               </t>
