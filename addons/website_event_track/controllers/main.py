@@ -124,4 +124,10 @@ class WebsiteEventTrackController(http.Controller):
             'user_id': False,
             'description': escape(post['description'])
         })
+        if request.env.user != request.website.user_id:
+            track.sudo().message_subscribe_users(user_ids=request.env.user.ids)
+        else:
+            partner = request.env['res.partner'].sudo().search([('email', '=', post['email_from'])])
+            if partner:
+                track.sudo().message_subscribe(partner_ids=partner.ids)
         return request.website.render("website_event_track.event_track_proposal_success", {'track': track, 'event': event})
