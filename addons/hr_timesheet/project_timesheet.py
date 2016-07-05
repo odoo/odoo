@@ -34,7 +34,7 @@ class task(osv.osv):
             res[task.id] = {
                 'effective_hours': 0.0,
                 'remaining_hours': task.planned_hours,
-                'progress': 0.0,
+                'progress': 100.0 if task.stage_id and task.stage_id.fold else 0.0,
                 'total_hours': task.planned_hours,
                 'delay_hours': 0.0,
                 'children_hours' : 0.0

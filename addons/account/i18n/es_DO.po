@@ -7,6 +7,8 @@
 # Alejandro Santana <alejandrosantana@anubia.es>, 2015
 # Carlos Liébana Anero <carlosliebana@gmail.com>, 2015
 # Eneldo Serrata <eneldoserrata@gmail.com>, 2015-2016
+# Gustavo Valverde, 2016
+# Gustavo Valverde, 2016
 # Javier Ramirez <elbomba887@gmail.com>, 2015
 # José Vicente <txusev@gmail.com>, 2015
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2015
@@ -19,8 +21,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-06-21 16:50+0000\n"
-"Last-Translator: Eneldo Serrata <eneldoserrata@gmail.com>\n"
+"PO-Revision-Date: 2016-06-27 22:11+0000\n"
+"Last-Translator: Gustavo Valverde\n"
 "Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/odoo-9/language/es_DO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -94,14 +96,14 @@ msgid ""
 " * The 'Open' status is used when user create invoice, an invoice number is generated. Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr "* El estado 'Borrador' se usa cuando un usuario está introduciendo una nueva factura no confirmada.\n* El estado 'Pro-forma' se usa cuando la factura no tiene un número asignado.\n* El estado 'Abierta' se usa cuando el usuario crea la factura y la confirma. Se genera un número de factura y su estado permanecerá así hasta que el usuario pague la factura.\n* El estado 'Pagada' se establece automáticamente cuando se paga la factura. Sus correspondientes asientos pueden o no estar conciliados.\n* El estado 'Cancelada' se usa cuando el usuario cancela la factura."
+msgstr "* El estatus \"Borrador\" se utiliza cuando el usuario introduce una factura nueva, aún no confirmada. *  El estatus  \"Pro-forma\" se utiliza cuando una factura no tiene asignada un número de factura. *  El estatus  \"Abierta\" se utiliza cuando un usuario emite una factura, generándose un número de factura. El estatus se mentiene en \"Abierta\" mientras la factura esté pendiente de pago. *  El estatus \"Pagada\" se asigna automáticamente cuando se paga la factura. Sus correspondientes entradas de diario pueden o no estar conciliadas. *  El estatus \"Cancelada\" se utiliza cuando una factura es cancelada por un usuario."
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1500
 #, python-format
 msgid " seconds"
-msgstr "Segundos"
+msgstr "segundos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
@@ -135,7 +137,7 @@ msgstr "%d transacciones se conciliaron automáticamente."
 #: code:addons/account/models/account.py:528
 #, python-format
 msgid "%s (Copy)"
-msgstr "%s (copia)"
+msgstr "%s (Copia)"
 
 #. module: account
 #: code:addons/account/models/account.py:152
@@ -159,7 +161,7 @@ msgstr ", si los módulos de contabilidad o compras están instalados"
 #: code:addons/account/models/account_bank_statement.py:321
 #, python-format
 msgid "1 transaction was automatically reconciled."
-msgstr "1 transacción se concilió automáticamente."
+msgstr "1 transacción fue conciliada automáticamente."
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -189,7 +191,7 @@ msgstr ": Libro mayor"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid ": Trial Balance"
-msgstr ": Balance de sumas y saldos"
+msgstr "Balanza de Comprobación"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -308,7 +310,7 @@ msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <strong>Reconcile Bank Statements</strong>\n"
 "                                    </span>"
-msgstr "<span class=\"panel-title\">\n<strong>Conciliar extractos bancarios</strong>\n</span>"
+msgstr "<span class=\"panel-title\">\n<strong>Conciliar estados de cuenta de banco</strong>\n</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -326,7 +328,7 @@ msgstr "<span title=\"Balance in Odoo\">Saldo en Odoo</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Latest Statement\">Latest Statement</span>"
-msgstr "<span title=\"Latest Statement\">Último extracto</span>"
+msgstr "<span title=\"Latest Statement\">Último estado de cuenta</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form
@@ -420,7 +422,7 @@ msgstr "<strong>Saldo :</strong>"
 msgid ""
 "<strong>Banking interface:</strong> with live bank feed synchronization and "
 "bank statement importation."
-msgstr "<strong>Interfaz bancario:</strong> con sincronización bancaria en tiempo real e importación de extractos bancarios."
+msgstr "<strong>Interfaz bancaria:</strong> con sincronización bancaria en tiempo real e importación del estado de cuenta bancario."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -592,19 +594,19 @@ msgstr "<strong>Compras</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Reconcile Bank Statement</strong>"
-msgstr "<strong>Conciliar la cuenta bancaria</strong>"
+msgstr "<strong>Conciliar el estado de cuenta de banco</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Reconcile with existing transaction</strong><br/>\n"
 "                                        In this case, Odoo should automatically match the bank statement with the previously recorded check transaction."
-msgstr "<strong>Reconcíliate con la transacción existente </strong><br/>\nEn este caso, Odoo debe coincidir automáticamente el estado de cuenta con la transacción de verificación previamente grabado."
+msgstr "<strong>Conciliar con transacción existente</strong><br/>\nEn este caso, Odoo debe emparejar automáticamente el estado de cuenta de banco con la transacción de verificación previamente grabada."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Reconcile your Bank Statements</strong>"
-msgstr "<strong>Conciliar sus extractos bancarios</strong>"
+msgstr "<strong>Conciliar sus estados de cuenta de banco</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -616,7 +618,7 @@ msgstr "<strong> Declaración de Registro de Banco (o archivo de importación) <
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Record Bank Statement</strong>"
-msgstr "<strong>Anotar extracto bancario</strong>"
+msgstr "<strong>Registrar Estado de Cuenta de Banco</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -744,26 +746,26 @@ msgid ""
 "A bank statement is a summary of all financial transactions\n"
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodicaly from your bank."
-msgstr "Un extracto bancario es un resúmen de todas las transacciones financieras en una cuenta bancaria durante un período dado de tiempo. Debería recibirlo de su banco periódicamente."
+msgstr "Un estado de cuenta de banco es un resúmen de todas las transacciones financieras en una cuenta bancaria durante un período dado de tiempo. Debería recibirlo de su banco periódicamente."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
 msgid "A bank statement line is a financial transaction on a bank account."
-msgstr "Una línea de extracto bancario es una transacción financiera sobre una cuenta bancaria."
+msgstr "Una línea del estado de cuenta de banco es una transacción financiera en una cuenta bancaria."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
 msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
-msgstr "Un asiento contable está compuesto de entradas de diario, cada una de las cuales es una transacción de débito o crédito."
+msgstr "Un asiento consiste de múltiples anotaciones, cada una de las cuales es una transacción de débito o crédito."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
 msgid ""
 "A journal is used to record transactions of all accounting data\n"
 "                related to the day-to-day business."
-msgstr "Un diario se usa para anotar transacciones de los datos contables asociados a los negocios diarios."
+msgstr "Un diario se usa para anotar las transacciones de todos los datos \ncontables asociados al día a día del negocio."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -800,7 +802,7 @@ msgstr "Alguna de las líneas a mover ya fue conciliada."
 #: code:addons/account/models/account_bank_statement.py:224
 #, python-format
 msgid "A statement cannot be canceled when its lines are reconciled."
-msgstr "No se puede cancelar un extracto si sus líneas están conciliadas."
+msgstr "No se puede cancelar un estado de cuenta si sus líneas están conciliadas."
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
@@ -846,7 +848,7 @@ msgstr "Cuenta"
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
-msgstr "Informe de balance de comprobación de vencimientos"
+msgstr "Reporte de balance de comprobación anterior"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -861,7 +863,7 @@ msgstr "Detalles de caja"
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_closebalance
 msgid "Account Bank Statement closing balance"
-msgstr "Balance de cierre"
+msgstr "Balance de cierre del estado de cuenta de banco"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
@@ -1374,14 +1376,14 @@ msgid ""
 "journal. In that case, they will behave as journal entries automatically "
 "created by the system on document validation (invoices, bank statements...) "
 "and will be created in 'Posted' status."
-msgstr "Todos los asientos creados manualmente suelen estar en el estado 'Sin asentar', salvo cuando se establece la opción de saltar ese estado en el diario relacionado. En ese caso, se comportarán como los asientos creados automáticamente por el sistema en la validación de documentos (facturas, extractos bancarios...) y serán creados en el estado 'Asentado'."
+msgstr "Todos los asientos creados manualmente suelen estar en el estado 'Sin asentar', salvo que elija la opción para omitir ese estado el respectivo diario. En ese caso, se comportarán como los asientos creados automáticamente por el sistema en la validación de documentos (facturas, estados de cuenta de banco...) y serán creados con el estado 'Asentado'."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.validate_account_move_view
 msgid ""
 "All selected journal entries will be validated and posted. You won't be able"
 " to modify them afterwards."
-msgstr "Se validarán y publicarán todas las entradas de diario seleccionadas. No podrá modificarlas a posteriori."
+msgstr "Se validarán y asentarán todos los asientos seleccionados. Luego de esto no podrá modificarlos."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:246
@@ -1521,7 +1523,7 @@ msgid ""
 "                balance sheet and the income statement (profit and loss\n"
 "                account). The annual accounts of a company are required by law\n"
 "                to disclose a certain amount of information."
-msgstr "Una cuenta es la parte de un libro contable que permite a tu compañía registrar todo tipo de transacciones de débito y crédito. Las compañías presentan sus cuentas anuales principalmente en dos partes: el balance y el estado de pérdidas y ganancias (cuenta de resultados). Las cuentas anuales son requeridas por ley a las compañías para revelar cierta cantidad de información sobre las mismas."
+msgstr "Una cuenta es parte de un Libro Mayor permitiéndole a su\ncompañía registrar todo tipo de transacciones de débito y crédito.\nLas compañías presentan sus cuentas anuales en dos partes\nprincipales: el estado de situación y el estado de resultados\n(cuentas de pérdidas y ganancias). Las cuentas anuales son\nrequeridas por ley a las compañías, para revelar cierta cantidad\nde información sobre las mismas."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
@@ -1531,7 +1533,7 @@ msgid ""
 "                the process for the annual closing. Reports such as the Balance\n"
 "                Sheet and the Profit and Loss report use the category\n"
 "                (profit/loss or balance sheet)."
-msgstr "Los tipos de cuenta se utilizan para determinar la forma en que se usa una cuenta en cada diario. El método diferido de un tipo de cuenta determina el proceso de cierre anual. Informes como el Balance y el Informe de pérdidas y ganancias utilizan esta categoría (pérdidas/ganancias o balance)."
+msgstr "Los tipos de cuenta se utilizan para determinar la forma en que se usa una cuenta \nen cada diario. El método diferido de un tipo de cuenta determina el proceso de \ncierre anual. Reportes como el Estado de Situación y Reporte de Ganancias y Pérdidas\nutilizan la categoría (pérdidas/ganancias o estado de situación)."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -1837,24 +1839,24 @@ msgstr "Preconfiguración del asiento de conciliación bancaria"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
-msgstr "Extracto bancario"
+msgstr "Estado de Cuenta de Banco"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "Línea de extracto bancario"
+msgstr "Línea de Estado de Cuenta de Banco"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_line
 msgid "Bank Statement Lines"
-msgstr "Líneas de extracto bancario"
+msgstr "Líneas de Estado de Cuenta de Banco"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Bank Statements"
-msgstr "Extractos bancarios"
+msgstr "Estados de Cuenta de Banco"
 
 #. module: account
 #: selection:account.journal,bank_statements_source:0
@@ -1884,19 +1886,19 @@ msgstr "Banco y caja"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_statement_line_id
 msgid "Bank statement line reconciled with this entry"
-msgstr "Línea de extracto bancario reconciada con esta entrada"
+msgstr "Línea de estado de cuenta de banco conciliada con esta entrada"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_bank_statement
 msgid "Bank statements"
-msgstr "Extractos bancarios"
+msgstr "Estados de cuentas de banco"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:204
 #, python-format
 msgid "Bank statements are fully reconciled."
-msgstr "Los extractos bancarios han sido completamente conciliados"
+msgstr "Los estados de cuenta de banco están completamente conciliados."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2060,7 +2062,7 @@ msgstr "Cancelar facturas seleccionadas"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "Cancel Statement"
-msgstr "Cancelar extracto"
+msgstr "Cancelar Estado de Cuenta"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_cancel
@@ -2396,7 +2398,7 @@ msgstr "Pulse para grabar una nueva factura de proveedor."
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
 msgid "Click to register a bank statement."
-msgstr "Pulse para registrar un extracto bancario."
+msgstr "Haga clic para registrar un estado de cuenta de banco. "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_payments
@@ -2416,7 +2418,7 @@ msgstr "Cerrar"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:226
 #, python-format
 msgid "Close the statement"
-msgstr "Cerrar el extracto"
+msgstr "Cerrar el Estado de Cuenta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_date_done
@@ -2603,7 +2605,7 @@ msgstr "¡Error de configuración!\nLa divisa del diario debería ser la misama 
 msgid ""
 "Configuration error!\n"
 "The currency of the journal should be the same than the default debit account."
-msgstr "¡Error de configuración!\nLa divisa del diario debería ser la misma que la de la cuenta de débito por defecto."
+msgstr "¡Error de configuración!\nLa divisa del diario debería ser la misma que la cuenta de débito por defecto."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2746,7 +2748,7 @@ msgstr "Crear una Nota de Crédito en Borrador"
 #: code:addons/account/models/account_journal_dashboard.py:227
 #, python-format
 msgid "Create cash statement"
-msgstr "Crear extracto de caja"
+msgstr "Crear una declaración en efectivo"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:213
@@ -3099,7 +3101,7 @@ msgstr "Día(s) tras la fecha factura"
 #: model:ir.ui.view,arch_db:account.report_generalledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "Debit"
-msgstr "Debe"
+msgstr "Débito"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_inbound_payment_method_ids
@@ -3109,17 +3111,17 @@ msgstr "Métodos de débito"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_debit
 msgid "Debit amount"
-msgstr "Importe debe"
+msgstr "Importe en el débito"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_debit_cash_basis
 msgid "Debit cash basis"
-msgstr "Débito de la base del efectivo"
+msgstr "Debitar de la base del efectivo"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_matched_debit_ids
 msgid "Debit journal items that are matched with this journal item."
-msgstr "Registros de diario de débito que coinciden con este registro de diario."
+msgstr "Debitar registros de diario que coincidan con este registro de diario."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_debit_move_id
@@ -3144,7 +3146,7 @@ msgstr "Cuenta acreedora por defecto"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_default_debit_account_id
 msgid "Default Debit Account"
-msgstr "Cuenta deudora por defecto"
+msgstr "Cuenta de débito por defecto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_default_purchase_tax_id
@@ -3300,7 +3302,7 @@ msgstr "Mostrar cuentas"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_debit_credit
 msgid "Display Debit/Credit Columns"
-msgstr "Mostrar columnas debe/haber"
+msgstr "Mostrar Columnas Débito/Crédito"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_display_name
@@ -3876,7 +3878,7 @@ msgstr "Activos fijos"
 msgid ""
 "Fixed amount will count as a debit if it is negative, as a credit if it is "
 "positive."
-msgstr "La cantidad fijada figurará como débito si es negativa y como crédito si es positiva."
+msgstr "El importe fijo figurará como débito si es negativo y como crédito si es positivo."
 
 #. module: account
 #: selection:account.payment.term.line,option:0
@@ -3909,7 +3911,7 @@ msgid ""
 "the sign of the balance; e.g.: Expense account. The same applies for "
 "accounts that are typically more credited than debited and that you would "
 "like to print as positive amounts in your reports; e.g.: Income account."
-msgstr "Para cuentas que tipicamente tienen más débito que crédito y que desea imprimir con importes negativos en sus informes, debería revertir el signo en el balance;p.e: cuenta de gasto. La misma aplica para cuentas que tipicamente tienen más crédito que débito y que desea imprimir con importes positivos en sus informes. p.e: cuenta de ingresos."
+msgstr "Para cuentas que tipicamente tienen más débitos que crédito y que desee imprimir con importes negativos en sus informes, deberá revertir el signo en el balance; p.e: Cuenta de Gasto. Lo misma aplica para cuentas que tipicamente tienen más crédito que débito y que desea imprimir con importes positivos en sus informes. p.e: Cuenta de Ingresos."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line_value_amount
@@ -4435,7 +4437,7 @@ msgstr "Para pagar múltiples facturas a la vez tienen que utilizar la misma div
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "In your old accounting software, print a trial balance"
-msgstr "Imprima un balance de prueba en su antiguo programa de contabilidad"
+msgstr "En su antiguo programa de contabilidad, imprima una balanza de comprobación"
 
 #. module: account
 #: selection:account.payment.method,payment_type:0
@@ -4746,7 +4748,7 @@ msgstr "Actúa como una cuenta por defecto para los importes en el haber."
 #: model:ir.model.fields,help:account.field_account_journal_default_debit_account_id
 #: model:ir.model.fields,help:account.field_res_company_expense_currency_exchange_account_id
 msgid "It acts as a default account for debit amount"
-msgstr "Actúa como una cuenta por defecto para importes en el debe."
+msgstr "Actúa como una cuenta por defecto para montos en débito."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_reconciled
@@ -4852,7 +4854,7 @@ msgstr "Asientos contables"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Journal Entries by Month"
-msgstr "Asientos por mes en diario"
+msgstr "Asientos contables por mes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_move_id
@@ -4919,7 +4921,7 @@ msgstr "Nombre del diario"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
 msgid "Journal and Partner"
-msgstr "Diario y asociado"
+msgstr "Diario y Empresa"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -6017,7 +6019,7 @@ msgstr "Créditos pendientes"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_outstanding_credits_debits_widget
 msgid "Outstanding credits debits widget"
-msgstr "Creditos debitos pendientes widget"
+msgstr "Widget de créditos/débitos pendientes"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:111
@@ -6528,17 +6530,17 @@ msgstr "Publicar asientos"
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Posted"
-msgstr "Publicado"
+msgstr "Asentado"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr "Asientos publicados"
+msgstr "Asientos asentados"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Posted Journal Items"
-msgstr "Apuntes contables publicados"
+msgstr "Apuntes contables asentados"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_bank_account_code_prefix
@@ -8635,12 +8637,12 @@ msgstr "Transferencias"
 #: model:ir.actions.report.xml,name:account.action_report_trial_balance
 #: model:ir.ui.menu,name:account.menu_general_Balance_report
 msgid "Trial Balance"
-msgstr "Balance de sumas y saldos"
+msgstr "Balanza de Comprobación"
 
 #. module: account
 #: model:ir.model,name:account.model_account_balance_report
 msgid "Trial Balance Report"
-msgstr "Informe de sumas y saldos"
+msgstr "Reporte de la Balance de Comprobación"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_internal_type
@@ -8698,12 +8700,12 @@ msgstr "No asentado"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
-msgstr "Asientos no publicados"
+msgstr "Asientos no asentados"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted Journal Items"
-msgstr "Apuntes no publicados"
+msgstr "Apuntes no asentados"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_unread
@@ -9138,7 +9140,7 @@ msgstr "No puede cambiar la unidad de medida de un producto que ya se ha utiliza
 #: code:addons/account/models/account_payment.py:297
 #, python-format
 msgid "You can not delete a payment that is already posted"
-msgstr "No puede borrar un pago que ya ha sido publicado."
+msgstr "No puede borrar un pago que ya ha sido asentado."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:122
@@ -9221,7 +9223,7 @@ msgstr "No puede hacer esto en una cuenta que contiene apuntes de diario."
 msgid ""
 "You cannot do this modification on a posted journal entry, you can just change some non legal fields. You must revert the journal entry to cancel it.\n"
 "%s."
-msgstr "No puede hacer esta modificación en un asiento de diario publicado, sólo puede cambiar algunos campos no lelgales. Tiene que revertir el asiento de diario para cancelarlo.\n%s."
+msgstr "No puede hacer esta modificación en un asiento de diario asentado, sólo puede cambiar algunos campos no legales. Tiene que revertir el asiento de diario para cancelarlo.\n%s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1030
@@ -9266,7 +9268,7 @@ msgstr "No puede mezclar apuntes de cuentas pendientes de cobro y pendientes de 
 msgid ""
 "You cannot modify a posted entry of this journal.\n"
 "First you should set the journal to allow cancelling entries."
-msgstr "No puede modificar un asiento publicado de este diario.\nAntes tendrá que configurar el diario para que permita cancelar asientos."
+msgstr "No puede modificar un asiento de este diario que ya ha sido asentado.\nAntes tendrá que configurar el diario para que permita cancelar asientos."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:36
