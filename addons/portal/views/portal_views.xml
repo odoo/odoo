@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <!-- Top menu item -->
-        <menuitem name="Portal"
-            id="portal_menu"
-            groups="base.group_portal"
-            web_icon="portal,static/description/icon.png"
-            sequence="15"/>
-
-        <!--
-            Create menu items that we'll leave empty for now - they'll be
-            filled up by other portal modules.
-        -->
-        <menuitem name="Billing" id="portal_orders" parent="portal_menu" sequence="20"/>
-        <menuitem name="After Sale Services" id="portal_after_sales" parent="portal_menu" sequence="30"/>
-        <menuitem name="Projects" id="portal_projects" parent="portal_menu" sequence="40"/>
 
         <!-- extend res.groups search view -->
         <record id="group_search_view" model="ir.ui.view">
