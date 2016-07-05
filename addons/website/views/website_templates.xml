@@ -150,7 +150,7 @@
         </head>
         <body>
             <div id="wrapwrap" t-att-class="pageName or ''">
-                <header>
+                <header t-ignore="True">
                     <div class="navbar navbar-default navbar-static-top">
                         <div class="container">
                             <div class="navbar-header">
@@ -167,8 +167,8 @@
                                     <t t-foreach="website.menu_id.child_id" t-as="submenu">
                                         <t t-call="website.submenu"/>
                                     </t>
-                                    <li class="divider" t-ignore="true" t-if="website.user_id != user_id"/>
-                                    <li class="dropdown" t-ignore="true" t-if="website.user_id != user_id">
+                                    <li class="divider" t-if="website.user_id != user_id"/>
+                                    <li class="dropdown" t-if="website.user_id != user_id">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                             <b>
                                                 <span t-esc="(len(user_id.name)&gt;25) and (user_id.name[:23]+'...') or user_id.name"/>
@@ -184,7 +184,7 @@
                         </div>
                     </div>
                 </header>
-                <main>
+                <main t-ignore="True">
                     <t t-raw="0"/>
                 </main>
                 <footer>
@@ -351,7 +351,7 @@
 </template>
 
 <template id="language_selector">
-    <ul class="list-inline js_language_selector mt16" t-if="(request and request.website_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
+    <ul class="list-inline js_language_selector mt16" t-ignore="True" t-if="(request and request.website_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
         <li t-foreach="languages" t-as="lg">
           <a
             t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
@@ -376,20 +376,20 @@
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="container hidden-print">
             <div class="row">
-                <div class="col-md-4 col-lg-3">
+                <div class="col-md-4 col-lg-3" t-ignore="True">
                     <h4>Our Products &amp; Services</h4>
                     <ul class="list-unstyled" id="products">
                         <li><a href="/">Home</a></li>
                     </ul>
                 </div>
-                <div class="col-md-4  col-lg-3" id="info">
+                <div class="col-md-4  col-lg-3" id="info" t-ignore="True">
                     <h4>Connect with us</h4>
                     <ul class="list-unstyled">
                         <li><a href="/page/website.contactus">Contact us</a></li>
                     </ul>
                     <ul class="list-unstyled">
-                        <li t-ignore="true"><i class="fa fa-phone"></i> <span t-field="res_company.phone"></span></li>
-                        <li t-ignore="true"><i class="fa fa-envelope"></i>  <span t-field="res_company.email"></span></li>
+                        <li><i class="fa fa-phone"></i> <span t-field="res_company.phone"></span></li>
+                        <li><i class="fa fa-envelope"></i>  <span t-field="res_company.email"></span></li>
                     </ul>
                     <h2>
                         <a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="fa fa-facebook-square"/></a>
@@ -401,7 +401,7 @@
                     </h2>
                 </div>
                 <div class="col-md-4 col-lg-5 col-lg-offset-1">
-                    <h4>
+                    <h4 t-ignore="True">
                         <span t-field="res_company.name" />
                         <small> - <a href="/page/website.aboutus">About us</a></small>
                     </h4>
@@ -453,7 +453,7 @@
 </template>
 
 <template id="pager" name="Pager">
-    <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination" t-att-style="style or None">
+    <ul t-ignore="True" t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination" t-att-style="style or None">
         <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else None ">
             <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None">Prev</a>
         </li>
