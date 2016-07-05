@@ -23,7 +23,7 @@ class TestPortalProject(TestPortalProjectBase):
         self.assertRaises(AccessError, pigs.sudo(self.user_noone).read, ['user_id'])
         # Test: no project task searchable
         self.assertRaises(AccessError, self.env['project.task'].sudo(self.user_noone).search, [('project_id', '=', pigs.id)])
-
+        
         # Data: task follower
         pigs.sudo(self.user_projectmanager).message_subscribe_users(user_ids=[self.user_portal.id])
         self.task_1.sudo(self.user_projectuser).message_subscribe_users(user_ids=[self.user_portal.id])
