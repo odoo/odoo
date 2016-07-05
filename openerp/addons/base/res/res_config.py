@@ -436,9 +436,9 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             ('state', 'in', ['to install', 'installed', 'to upgrade'])])
 
         if modules and not field_value:
-            dep_ids = modules.downstream_dependencies()
-            dep_name = (ModuleSudo.browse(dep_ids) + modules).mapped('shortdesc')
-            message = '\n'.join(dep_name)
+            deps = modules.downstream_dependencies()
+            dep_names = (deps | modules).mapped('shortdesc')
+            message = '\n'.join(dep_names)
             return {
                 'warning': {
                     'title': _('Warning!'),

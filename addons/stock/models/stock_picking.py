@@ -846,6 +846,13 @@ class Picking(models.Model):
             if not all_op_processed:
                 todo_moves |= picking._create_extra_moves()
 
+            if need_rereserve or not all_op_processed:
+                moves_reassign = any(x.origin_returned_move_id or x.move_orig_ids for x in picking.move_lines if x.state not in ['done', 'cancel'])
+                if moves_reassign and picking.location_id.usage not in ("supplier", "production", "inventory"):
+                    # unnecessary to assign other quants than those involved with pack operations as they will be unreserved anyways.
+                    picking.with_context(reserve_only_ops=True).rereserve_quants(move_ids=todo_moves.ids)
+                picking.do_recompute_remaining_quantities()
+
             # split move lines if needed
             for move in picking.move_lines:
                 rounding = move.product_id.uom_id.rounding
@@ -865,11 +872,6 @@ class Picking(models.Model):
                     todo_moves |= move
                     # Assign move as it was assigned before
                     toassign_moves |= new_move
-
-            if need_rereserve or not all_op_processed:
-                if picking.location_id.usage not in ("supplier", "production", "inventory"):
-                    picking.rereserve_quants(move_ids=todo_moves.ids)
-                picking.do_recompute_remaining_quantities()
 
             # TDE FIXME: do_only_split does not seem used anymore
             if todo_moves and not self.env.context.get('do_only_split'):
