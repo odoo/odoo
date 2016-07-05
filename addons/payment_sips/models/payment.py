@@ -4,13 +4,12 @@ import json
 import logging
 from hashlib import sha256
 import urlparse
-import unicodedata
 
-from openerp import models, fields, api
-from openerp.tools.float_utils import float_compare
-from openerp.tools.translate import _
-from openerp.addons.payment.models.payment_acquirer import ValidationError
-from openerp.addons.payment_sips.controllers.main import SipsController
+from odoo import models, fields, api
+from odoo.tools.float_utils import float_compare
+from odoo.tools.translate import _
+from odoo.addons.payment.models.payment_acquirer import ValidationError
+from odoo.addons.payment_sips.controllers.main import SipsController
 
 _logger = logging.getLogger(__name__)
 
@@ -36,12 +35,11 @@ CURRENCY_CODES = {
 
 class AcquirerSips(models.Model):
     _inherit = 'payment.acquirer'
-    # Fields
-    sips_merchant_id = fields.Char('SIPS API User Password',
-                                   required_if_provider='sips')
+
+    provider = fields.Selection(selection_add=[('sips', 'Sips')])
+    sips_merchant_id = fields.Char('SIPS API User Password', required_if_provider='sips')
     sips_secret = fields.Char('SIPS Secret', size=64, required_if_provider='sips')
 
-    # Methods
     def _get_sips_urls(self, environment):
         """ Worldline SIPS URLS """
         url = {
@@ -49,12 +47,6 @@ class AcquirerSips(models.Model):
             'test': 'https://payment-webinit.simu.sips-atos.com/paymentInit', }
 
         return {'sips_form_url': url.get(environment, url['test']), }
-
-    @api.model
-    def _get_providers(self):
-        providers = super(AcquirerSips, self)._get_providers()
-        providers.append(['sips', 'Sips'])
-        return providers
 
     def _sips_generate_shasign(self, values):
         """ Generate the shasign for incoming or outgoing communications.
@@ -124,7 +116,6 @@ class AcquirerSips(models.Model):
 class TxSips(models.Model):
     _inherit = 'payment.transaction'
 
-    # sips status
     _sips_valid_tx_status = ['00']
     _sips_wait_tx_status = ['90', '99']
     _sips_refused_tx_status = ['05', '14', '34', '54', '75', '97']
@@ -135,6 +126,7 @@ class TxSips(models.Model):
     # --------------------------------------------------
     # FORM RELATED METHODS
     # --------------------------------------------------
+
     def _sips_data_to_object(self, data):
         res = {}
         for element in data.split('|'):
