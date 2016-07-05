@@ -8,8 +8,8 @@
     'description': """Transfer Payment Acquirer""",
     'depends': ['payment'],
     'data': [
-        'views/transfer.xml',
-        'data/transfer.xml',
+        'views/payment_transfer_templates.xml',
+        'data/payment_acquirer_data.xml',
     ],
     'installable': True,
     'auto_install': True,
