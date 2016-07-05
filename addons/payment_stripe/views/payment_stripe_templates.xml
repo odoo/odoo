@@ -64,5 +64,11 @@
                 </button>
             </form>
         </template>
+
+        <template id="payment_stripe_redirect" name="Payment Stripe">
+            <script type="text/javascript">
+                window.location.href = '<t t-esc="return_url"/>';
+            </script>
+        </template>
     </data>
 </odoo>
