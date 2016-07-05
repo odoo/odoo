@@ -58,7 +58,7 @@ return Widget.extend({
         this.$tooltip_content = this.$(".o_tooltip_content");
         this.init_width = this.$el.innerWidth();
         this.init_height = this.$el.innerHeight();
-        this.border_width = (this.$el.outerWidth() - this.init_width)/2;
+        this.double_border_width = this.$el.outerWidth() - this.init_width;
         this.content_width = this.$tooltip_content.outerWidth(true);
         this.content_height = this.$tooltip_content.outerHeight(true);
         this.$window = $(window);
@@ -142,8 +142,8 @@ return Widget.extend({
         var offset = this.$el.offset();
         this.$tooltip_overlay.css({
             top: -Math.min((this.info.position === "bottom" ? this.info.space : this.info.overlay.y), offset.top),
-            right: -Math.min((this.info.position === "left" ? this.info.space : this.info.overlay.x), this.$window.width() - (offset.left + this.init_width)),
-            bottom: -Math.min((this.info.position === "top" ? this.info.space : this.info.overlay.y), this.$window.height() - (offset.top + this.init_height)),
+            right: -Math.min((this.info.position === "left" ? this.info.space : this.info.overlay.x), this.$window.width() - (offset.left + this.init_width + this.double_border_width)),
+            bottom: -Math.min((this.info.position === "top" ? this.info.space : this.info.overlay.y), this.$window.height() - (offset.top + this.init_height + this.double_border_width)),
             left: -Math.min((this.info.position === "right" ? this.info.space : this.info.overlay.x), offset.left),
         });
 
@@ -212,9 +212,9 @@ return Widget.extend({
         var overflow = false;
         var posVertical = (this.info.position === "top" || this.info.position === "bottom");
         if (posVertical) {
-            overflow = (offset.left + this.content_width + 2 * this.border_width + this.info.overlay.x > this.$window.width());
+            overflow = (offset.left + this.content_width + this.double_border_width + this.info.overlay.x > this.$window.width());
         } else {
-            overflow = (offset.top + this.content_height + 2 * this.border_width + this.info.overlay.y > this.$window.height());
+            overflow = (offset.top + this.content_height + this.double_border_width + this.info.overlay.y > this.$window.height());
         }
         if (posVertical && overflow || this.info.position === "left") {
             mbLeft -= (this.content_width - this.init_width);
