@@ -62,7 +62,7 @@ class AcquirerPaypal(osv.Model):
         'paypal_api_enabled': False,
     }
 
-    def paypal_compute_fees(self, cr, uid, id, amount, currency_id, country_id, context=None):
+    def paypal_compute_fees(self, cr, uid, ids, amount, currency_id, country_id, context=None):
         """ Compute paypal fees.
 
             :param float amount: the amount to pay
@@ -71,7 +71,7 @@ class AcquirerPaypal(osv.Model):
                                        the acquirer company country.
             :return float fees: computed fees
         """
-        acquirer = self.browse(cr, uid, id, context=context)
+        acquirer = self.browse(cr, uid, ids, context=context)[0]
         if not acquirer.fees_active:
             return 0.0
         country = self.pool['res.country'].browse(cr, uid, country_id, context=context)
@@ -81,12 +81,12 @@ class AcquirerPaypal(osv.Model):
         else:
             percentage = acquirer.fees_int_var
             fixed = acquirer.fees_int_fixed
-        fees = (percentage / 100.0 * amount + fixed ) / (1 - percentage / 100.0)
+        fees = (percentage / 100.0 * amount + fixed) / (1 - percentage / 100.0)
         return fees
 
-    def paypal_form_generate_values(self, cr, uid, id, values, context=None):
+    def paypal_form_generate_values(self, cr, uid, ids, values, context=None):
         base_url = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'web.base.url')
-        acquirer = self.browse(cr, uid, id, context=context)
+        acquirer = self.browse(cr, uid, ids, context=context)[0]
 
         paypal_tx_values = dict(values)
         paypal_tx_values.update({
@@ -112,8 +112,8 @@ class AcquirerPaypal(osv.Model):
         })
         return paypal_tx_values
 
-    def paypal_get_form_action_url(self, cr, uid, id, context=None):
-        acquirer = self.browse(cr, uid, id, context=context)
+    def paypal_get_form_action_url(self, cr, uid, ids, context=None):
+        acquirer = self.browse(cr, uid, ids, context=context)[0]
         return self._get_paypal_urls(cr, uid, acquirer.environment, context=context)['paypal_form_url']
 
     def _paypal_s2s_get_access_token(self, cr, uid, ids, context=None):
@@ -177,7 +177,8 @@ class TxPaypal(osv.Model):
             raise ValidationError(error_msg)
         return self.browse(cr, uid, tx_ids[0], context=context)
 
-    def _paypal_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
+    def _paypal_form_get_invalid_parameters(self, cr, uid, ids, data, context=None):
+        tx = self.browse(cr, uid, ids, context=context)[0]
         invalid_parameters = []
         _logger.info('Received a notification from Paypal with IPN version %s', data.get('notify_version'))
         if data.get('test_ipn'):
@@ -213,7 +214,8 @@ class TxPaypal(osv.Model):
 
         return invalid_parameters
 
-    def _paypal_form_validate(self, cr, uid, tx, data, context=None):
+    def _paypal_form_validate(self, cr, uid, ids, data, context=None):
+        tx = self.browse(cr, uid, ids, context=context)[0]
         status = data.get('payment_status')
         res = {
             'acquirer_reference': data.get('txn_id'),

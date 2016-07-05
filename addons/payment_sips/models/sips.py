@@ -165,25 +165,25 @@ class TxSips(models.Model):
             raise ValidationError(error_msg)
         return payment_tx
 
-    @api.model
-    def _sips_form_get_invalid_parameters(self, tx, data):
+    @api.multi
+    def _sips_form_get_invalid_parameters(self, data):
         invalid_parameters = []
 
         data = self._sips_data_to_object(data.get('Data'))
 
         # TODO: txn_id: should be false at draft, set afterwards, and verified with txn details
-        if tx.acquirer_reference and data.get('transactionReference') != tx.acquirer_reference:
-            invalid_parameters.append(('transactionReference', data.get('transactionReference'), tx.acquirer_reference))
+        if self.acquirer_reference and data.get('transactionReference') != self.acquirer_reference:
+            invalid_parameters.append(('transactionReference', data.get('transactionReference'), self.acquirer_reference))
         # check what is bought
-        if float_compare(float(data.get('amount', '0.0')) / 100, tx.amount, 2) != 0:
-            invalid_parameters.append(('amount', data.get('amount'), '%.2f' % tx.amount))
-        if tx.partner_reference and data.get('customerId') != tx.partner_reference:
-            invalid_parameters.append(('customerId', data.get('customerId'), tx.partner_reference))
+        if float_compare(float(data.get('amount', '0.0')) / 100, self.amount, 2) != 0:
+            invalid_parameters.append(('amount', data.get('amount'), '%.2f' % self.amount))
+        if self.partner_reference and data.get('customerId') != self.partner_reference:
+            invalid_parameters.append(('customerId', data.get('customerId'), self.partner_reference))
 
         return invalid_parameters
 
-    @api.model
-    def _sips_form_validate(self, tx, data):
+    @api.multi
+    def _sips_form_validate(self, data):
         data = self._sips_data_to_object(data.get('Data'))
         status = data.get('responseCode')
         data = {
@@ -195,35 +195,35 @@ class TxSips(models.Model):
         res = False
         if status in self._sips_valid_tx_status:
             msg = 'Payment for tx ref: %s, got response [%s], set as done.' % \
-                  (tx.reference, status)
+                  (self.reference, status)
             _logger.info(msg)
             data.update(state='done', state_message=msg)
             res = True
         elif status in self._sips_error_tx_status:
             msg = 'Payment for tx ref: %s, got response [%s], set as ' \
-                  'error.' % (tx.reference, status)
+                  'error.' % (self.reference, status)
             data.update(state='error', state_message=msg)
         elif status in self._sips_wait_tx_status:
             msg = 'Received wait status for payment ref: %s, got response ' \
-                  '[%s], set as error.' % (tx.reference, status)
+                  '[%s], set as error.' % (self.reference, status)
             data.update(state='error', state_message=msg)
         elif status in self._sips_refused_tx_status:
             msg = 'Received refused status for payment ref: %s, got response' \
-                  ' [%s], set as error.' % (tx.reference, status)
+                  ' [%s], set as error.' % (self.reference, status)
             data.update(state='error', state_message=msg)
         elif status in self._sips_pending_tx_status:
             msg = 'Payment ref: %s, got response [%s] set as pending.' \
-                  % (tx.reference, status)
+                  % (self.reference, status)
             data.update(state='pending', state_message=msg)
         elif status in self._sips_cancel_tx_status:
             msg = 'Received notification for payment ref: %s, got response ' \
-                  '[%s], set as cancel.' % (tx.reference, status)
+                  '[%s], set as cancel.' % (self.reference, status)
             data.update(state='cancel', state_message=msg)
         else:
             msg = 'Received unrecognized status for payment ref: %s, got ' \
-                  'response [%s], set as error.' % (tx.reference, status)
+                  'response [%s], set as error.' % (self.reference, status)
             data.update(state='error', state_message=msg)
 
         _logger.info(msg)
-        tx.write(data)
+        self.write(data)
         return res

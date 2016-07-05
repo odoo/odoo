@@ -147,9 +147,9 @@ class PaymentAcquirerOgone(osv.Model):
         shasign = sha1(sign).hexdigest()
         return shasign
 
-    def ogone_form_generate_values(self, cr, uid, id, values, context=None):
+    def ogone_form_generate_values(self, cr, uid, ids, values, context=None):
         base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
-        acquirer = self.browse(cr, uid, id, context=context)
+        acquirer = self.browse(cr, uid, ids, context=context)[0]
         ogone_tx_values = dict(values)
         temp_ogone_tx_values = {
             'PSPID': acquirer.ogone_pspid,
@@ -180,11 +180,11 @@ class PaymentAcquirerOgone(osv.Model):
         ogone_tx_values.update(temp_ogone_tx_values)
         return ogone_tx_values
 
-    def ogone_get_form_action_url(self, cr, uid, id, context=None):
-        acquirer = self.browse(cr, uid, id, context=context)
+    def ogone_get_form_action_url(self, cr, uid, ids, context=None):
+        acquirer = self.browse(cr, uid, ids, context=context)[0]
         return self._get_ogone_urls(cr, uid, acquirer.environment, context=context)['ogone_standard_order_url']
 
-    def ogone_s2s_form_validate(self, cr, uid, id, data, context=None):
+    def ogone_s2s_form_validate(self, cr, uid, ids, data, context=None):
         error = dict()
         error_message = []
 
@@ -269,7 +269,8 @@ class PaymentTxOgone(osv.Model):
 
         return tx
 
-    def _ogone_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
+    def _ogone_form_get_invalid_parameters(self, cr, uid, ids, data, context=None):
+        tx = self.browse(cr, uid, ids, context=context)[0]
         invalid_parameters = []
 
         # TODO: txn_id: should be false at draft, set afterwards, and verified with txn details
@@ -283,7 +284,8 @@ class PaymentTxOgone(osv.Model):
 
         return invalid_parameters
 
-    def _ogone_form_validate(self, cr, uid, tx, data, context=None):
+    def _ogone_form_validate(self, cr, uid, ids, data, context=None):
+        tx = self.browse(cr, uid, ids, context=context)[0]
         if tx.state == 'done':
             _logger.info('Ogone: trying to validate an already validated tx (ref %s)', tx.reference)
             return True
@@ -334,9 +336,9 @@ class PaymentTxOgone(osv.Model):
     # --------------------------------------------------
     # S2S RELATED METHODS
     # --------------------------------------------------
-    def ogone_s2s_do_transaction(self, cr, uid, id, context=None, **kwargs):
+    def ogone_s2s_do_transaction(self, cr, uid, ids, context=None, **kwargs):
         # TODO: create tx with s2s type
-        tx = self.browse(cr, uid, id, context=context)
+        tx = self.browse(cr, uid, ids, context=context)[0]
         account = tx.acquirer_id
         reference = tx.reference or "ODOO-%s-%s" % (datetime.datetime.now().strftime('%y%m%d_%H%M%S'), tx.partner_id.id)
 
@@ -384,11 +386,13 @@ class PaymentTxOgone(osv.Model):
 
         return self._ogone_s2s_validate_tree(tx, tree)
 
-    def _ogone_s2s_validate(self, tx):
+    def _ogone_s2s_validate(self, cr, uid, ids, context=None):
+        tx = self.browse(cr, uid, ids, context=context)[0]
         tree = self._ogone_s2s_get_tx_status(tx)
         return self._ogone_s2s_validate_tree(tx, tree)
 
-    def _ogone_s2s_validate_tree(self, tx, tree, tries=2):
+    def _ogone_s2s_validate_tree(self, cr, uid, ids, tree, tries=2, context=None):
+        tx = self.browse(cr, uid, ids, context=context)[0]
         if tx.state not in ('draft', 'pending'):
             _logger.info('Ogone: trying to validate an already validated tx (ref %s)', tx.reference)
             return True
@@ -441,7 +445,8 @@ class PaymentTxOgone(osv.Model):
             })
             return False
 
-    def _ogone_s2s_get_tx_status(self, tx):
+    def _ogone_s2s_get_tx_status(self, cr, uid, ids, context=None):
+        tx = self.browse(cr, uid, ids, context=context)[0]
         account = tx.acquirer_id
         #reference = tx.reference or "ODOO-%s-%s" % (datetime.datetime.now().strftime('%Y%m%d_%H%M%S'), tx.partner_id.id)
 
