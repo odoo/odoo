@@ -3,7 +3,7 @@
     'name': 'Events Organisation',
     'version': '0.1',
     'website': 'https://www.odoo.com/page/events',
-    'category': 'Tools',
+    'category': 'Marketing',
     'summary': 'Trainings, Conferences, Meetings, Exhibitions, Registrations',
     'description': """
 Organization and management of Events.

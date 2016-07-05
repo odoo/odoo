@@ -8,7 +8,7 @@
     'version': '1.0',
     'author': 'Tech Receptives',
     'website': 'http://www.techreceptives.com',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'description': """
 Singapore accounting chart and localization.
 =======================================================
