@@ -6,10 +6,10 @@ import logging
 import time
 import urlparse
 
-from openerp import api, fields, models
-from openerp.addons.payment.models.payment_acquirer import ValidationError
-from openerp.addons.payment_authorize.controllers.main import AuthorizeController
-from openerp.tools.float_utils import float_compare
+from odoo import api, fields, models
+from odoo.addons.payment.models.payment_acquirer import ValidationError
+from odoo.addons.payment_authorize.controllers.main import AuthorizeController
+from odoo.tools.float_utils import float_compare
 
 _logger = logging.getLogger(__name__)
 
@@ -17,21 +17,16 @@ _logger = logging.getLogger(__name__)
 class PaymentAcquirerAuthorize(models.Model):
     _inherit = 'payment.acquirer'
 
+    provider = fields.Selection(selection_add=[('authorize', 'Authorize.Net')])
+    authorize_login = fields.Char(string='API Login Id', required_if_provider='authorize')
+    authorize_transaction_key = fields.Char(string='API Transaction Key', required_if_provider='authorize')
+
     def _get_authorize_urls(self, environment):
         """ Authorize URLs """
         if environment == 'prod':
             return {'authorize_form_url': 'https://secure2.authorize.net/gateway/transact.dll'}
         else:
             return {'authorize_form_url': 'https://test.authorize.net/gateway/transact.dll'}
-
-    @api.model
-    def _get_providers(self):
-        providers = super(PaymentAcquirerAuthorize, self)._get_providers()
-        providers.append(['authorize', 'Authorize.Net'])
-        return providers
-
-    authorize_login = fields.Char(string='API Login Id', required_if_provider='authorize')
-    authorize_transaction_key = fields.Char(string='API Transaction Key', required_if_provider='authorize')
 
     def _authorize_generate_hashing(self, values):
         data = '^'.join([
