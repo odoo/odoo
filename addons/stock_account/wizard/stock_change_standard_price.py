@@ -36,7 +36,7 @@ class change_standard_price(osv.osv_memory):
 
         res = super(change_standard_price, self).default_get(cr, uid, fields, context=context)
 
-        price = product_obj.standard_price
+        price = context.get('default_new_price') or product_obj.standard_price
 
         if 'new_price' in fields:
             res.update({'new_price': price})
