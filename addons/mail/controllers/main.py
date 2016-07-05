@@ -222,7 +222,10 @@ class MailController(http.Controller):
                 # if the current user has access to the document, get the partner avatar as sudo()
                 request.env[res_model].browse(res_id).check_access_rule('read')
                 if partner_id in request.env[res_model].browse(res_id).sudo().exists().message_ids.mapped('author_id').ids:
-                    status, headers, content = binary_content(model='res.partner', id=partner_id, field='image_medium', default_mimetype='image/png', env=request.env(user=openerp.SUPERUSER_ID))
+                    status, headers, _content = binary_content(model='res.partner', id=partner_id, field='image_medium', default_mimetype='image/png', env=request.env(user=openerp.SUPERUSER_ID))
+                    # binary content return an empty string and not a placeholder if obj[field] is False
+                    if _content != '':
+                        content = _content
                     if status == 304:
                         return werkzeug.wrappers.Response(status=304)
             except AccessError:

@@ -163,9 +163,15 @@ function parse_value (value, descriptor, value_if_empty) {
             var datetime = moment(value, [date_pattern + ' ' + time_pattern, date_pattern_wo_zero + ' ' + time_pattern_wo_zero, moment.ISO_8601], true);
             if (datetime.isValid())
                 return time.datetime_to_str(datetime.toDate());
+            datetime = moment(value, [date_pattern + ' ' + time_pattern, date_pattern_wo_zero + ' ' + time_pattern_wo_zero, moment.ISO_8601]);
+            if (datetime.isValid())
+                return time.datetime_to_str(datetime.toDate());
             throw new Error(_.str.sprintf(_t("'%s' is not a correct datetime"), value));
         case 'date':
             var date = moment(value, [date_pattern, date_pattern_wo_zero, moment.ISO_8601], true);
+            if (date.isValid())
+                return time.date_to_str(date.toDate());
+            date = moment(value, [date_pattern, date_pattern_wo_zero, moment.ISO_8601]);
             if (date.isValid())
                 return time.date_to_str(date.toDate());
             throw new Error(_.str.sprintf(_t("'%s' is not a correct date"), value));

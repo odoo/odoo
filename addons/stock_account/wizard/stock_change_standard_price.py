@@ -66,6 +66,6 @@ class change_standard_price(osv.osv_memory):
             rec_ids = prod_obj.browse(cr, uid, rec_id, context=context).product_variant_ids.mapped('id')
         else:
             rec_ids = [rec_id]
-        prod_obj = self.pool.get('product.product')
-        prod_obj.do_change_standard_price(cr, uid, rec_ids, new_price, context)
+        res = self.browse(cr, uid, ids, context=context)[0]
+        self.pool.get('product.product').do_change_standard_price(cr, uid, rec_ids, new_price, res.counterpart_account_id.id, context=context)
         return {'type': 'ir.actions.act_window_close'}
