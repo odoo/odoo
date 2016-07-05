@@ -1,26 +1,41 @@
 # coding: utf-8
 
-import base64
 import json
 import logging
 import urlparse
-import werkzeug.urls
-import urllib2
 
-from openerp.addons.payment.models.payment_acquirer import ValidationError
-from openerp.addons.payment_paypal.controllers.main import PaypalController
-from openerp.osv import osv, fields
-from openerp.tools.float_utils import float_compare
-from openerp import SUPERUSER_ID
-from openerp.tools.translate import _
+from odoo import api, fields, models, _
+from odoo.addons.payment.models.payment_acquirer import ValidationError
+from odoo.addons.payment_paypal.controllers.main import PaypalController
+from odoo.tools.float_utils import float_compare
+
 
 _logger = logging.getLogger(__name__)
 
 
-class AcquirerPaypal(osv.Model):
+class AcquirerPaypal(models.Model):
     _inherit = 'payment.acquirer'
 
-    def _get_paypal_urls(self, cr, uid, environment, context=None):
+    provider = fields.Selection(selection_add=[('paypal', 'Paypal')])
+    paypal_email_account = fields.Char('Paypal Email ID', required_if_provider='paypal')
+    paypal_seller_account = fields.Char(
+        'Paypal Merchant ID',
+        help='The Merchant ID is used to ensure communications coming from Paypal are valid and secured.')
+    paypal_use_ipn = fields.Boolean('Use IPN', default=True, help='Paypal Instant Payment Notification')
+    # Server 2 server
+    paypal_api_enabled = fields.Boolean('Use Rest API', default=False)
+    paypal_api_username = fields.Char('Rest API Username')
+    paypal_api_password = fields.Char('Rest API Password')
+    paypal_api_access_token = fields.Char('Access Token')
+    paypal_api_access_token_validity = fields.Datetime('Access Token Validity')
+    # Default paypal fees
+    fees_dom_fixed = fields.Float(default=0.35)
+    fees_dom_var = fields.Float(default=3.4)
+    fees_int_fixed = fields.Float(default=0.35)
+    fees_int_var = fields.Float(default=3.9)
+
+    @api.model
+    def _get_paypal_urls(self, environment):
         """ Paypal URLS """
         if environment == 'prod':
             return {
@@ -33,36 +48,8 @@ class AcquirerPaypal(osv.Model):
                 'paypal_rest_url': 'https://api.sandbox.paypal.com/v1/oauth2/token',
             }
 
-    def _get_providers(self, cr, uid, context=None):
-        providers = super(AcquirerPaypal, self)._get_providers(cr, uid, context=context)
-        providers.append(['paypal', 'Paypal'])
-        return providers
-
-    _columns = {
-        'paypal_email_account': fields.char('Paypal Email ID', required_if_provider='paypal'),
-        'paypal_seller_account': fields.char(
-            'Paypal Merchant ID',
-            help='The Merchant ID is used to ensure communications coming from Paypal are valid and secured.'),
-        'paypal_use_ipn': fields.boolean('Use IPN', help='Paypal Instant Payment Notification'),
-        # Server 2 server
-        'paypal_api_enabled': fields.boolean('Use Rest API'),
-        'paypal_api_username': fields.char('Rest API Username'),
-        'paypal_api_password': fields.char('Rest API Password'),
-        'paypal_api_access_token': fields.char('Access Token'),
-        'paypal_api_access_token_validity': fields.datetime('Access Token Validity'),
-    }
-
-    _defaults = {
-        'paypal_use_ipn': True,
-        'fees_active': False,
-        'fees_dom_fixed': 0.35,
-        'fees_dom_var': 3.4,
-        'fees_int_fixed': 0.35,
-        'fees_int_var': 3.9,
-        'paypal_api_enabled': False,
-    }
-
-    def paypal_compute_fees(self, cr, uid, ids, amount, currency_id, country_id, context=None):
+    @api.multi
+    def paypal_compute_fees(self, amount, currency_id, country_id):
         """ Compute paypal fees.
 
             :param float amount: the amount to pay
@@ -71,28 +58,27 @@ class AcquirerPaypal(osv.Model):
                                        the acquirer company country.
             :return float fees: computed fees
         """
-        acquirer = self.browse(cr, uid, ids, context=context)[0]
-        if not acquirer.fees_active:
+        if not self.fees_active:
             return 0.0
-        country = self.pool['res.country'].browse(cr, uid, country_id, context=context)
-        if country and acquirer.company_id.country_id.id == country.id:
-            percentage = acquirer.fees_dom_var
-            fixed = acquirer.fees_dom_fixed
+        country = self.env['res.country'].browse(country_id)
+        if country and self.company_id.country_id.id == country.id:
+            percentage = self.fees_dom_var
+            fixed = self.fees_dom_fixed
         else:
-            percentage = acquirer.fees_int_var
-            fixed = acquirer.fees_int_fixed
+            percentage = self.fees_int_var
+            fixed = self.fees_int_fixed
         fees = (percentage / 100.0 * amount + fixed) / (1 - percentage / 100.0)
         return fees
 
-    def paypal_form_generate_values(self, cr, uid, ids, values, context=None):
-        base_url = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'web.base.url')
-        acquirer = self.browse(cr, uid, ids, context=context)[0]
+    @api.multi
+    def paypal_form_generate_values(self, values):
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
         paypal_tx_values = dict(values)
         paypal_tx_values.update({
             'cmd': '_xclick',
-            'business': acquirer.paypal_email_account,
-            'item_name': '%s: %s' % (acquirer.company_id.name, values['reference']),
+            'business': self.paypal_email_account,
+            'item_name': '%s: %s' % (self.company_id.name, values['reference']),
             'item_number': values['reference'],
             'amount': values['amount'],
             'currency_code': values['currency'] and values['currency'].name or '',
@@ -107,28 +93,27 @@ class AcquirerPaypal(osv.Model):
             'paypal_return': '%s' % urlparse.urljoin(base_url, PaypalController._return_url),
             'notify_url': '%s' % urlparse.urljoin(base_url, PaypalController._notify_url),
             'cancel_return': '%s' % urlparse.urljoin(base_url, PaypalController._cancel_url),
-            'handling': '%.2f' % paypal_tx_values.pop('fees', 0.0) if acquirer.fees_active else False,
+            'handling': '%.2f' % paypal_tx_values.pop('fees', 0.0) if self.fees_active else False,
             'custom': json.dumps({'return_url': '%s' % paypal_tx_values.pop('return_url')}) if paypal_tx_values.get('return_url') else False,
         })
         return paypal_tx_values
 
-    def paypal_get_form_action_url(self, cr, uid, ids, context=None):
-        acquirer = self.browse(cr, uid, ids, context=context)[0]
-        return self._get_paypal_urls(cr, uid, acquirer.environment, context=context)['paypal_form_url']
+    @api.multi
+    def paypal_get_form_action_url(self):
+        return self._get_paypal_urls(self.environment)['paypal_form_url']
 
 
-class TxPaypal(osv.Model):
+class TxPaypal(models.Model):
     _inherit = 'payment.transaction'
 
-    _columns = {
-        'paypal_txn_type': fields.char('Transaction type'),
-    }
+    paypal_txn_type = fields.Char('Transaction type')
 
     # --------------------------------------------------
     # FORM RELATED METHODS
     # --------------------------------------------------
 
-    def _paypal_form_get_tx_from_data(self, cr, uid, data, context=None):
+    @api.model
+    def _paypal_form_get_tx_from_data(self, data):
         reference, txn_id = data.get('item_number'), data.get('txn_id')
         if not reference or not txn_id:
             error_msg = _('Paypal: received data with missing reference (%s) or txn_id (%s)') % (reference, txn_id)
@@ -136,19 +121,19 @@ class TxPaypal(osv.Model):
             raise ValidationError(error_msg)
 
         # find tx -> @TDENOTE use txn_id ?
-        tx_ids = self.pool['payment.transaction'].search(cr, uid, [('reference', '=', reference)], context=context)
-        if not tx_ids or len(tx_ids) > 1:
+        txs = self.env['payment.transaction'].search([('reference', '=', reference)])
+        if not txs or len(txs) > 1:
             error_msg = 'Paypal: received data for reference %s' % (reference)
-            if not tx_ids:
+            if not txs:
                 error_msg += '; no order found'
             else:
                 error_msg += '; multiple order found'
             _logger.info(error_msg)
             raise ValidationError(error_msg)
-        return self.browse(cr, uid, tx_ids[0], context=context)
+        return txs[0]
 
-    def _paypal_form_get_invalid_parameters(self, cr, uid, ids, data, context=None):
-        tx = self.browse(cr, uid, ids, context=context)[0]
+    @api.multi
+    def _paypal_form_get_invalid_parameters(self, data):
         invalid_parameters = []
         _logger.info('Received a notification from Paypal with IPN version %s', data.get('notify_version'))
         if data.get('test_ipn'):
@@ -157,50 +142,50 @@ class TxPaypal(osv.Model):
             ),
 
         # TODO: txn_id: shoudl be false at draft, set afterwards, and verified with txn details
-        if tx.acquirer_reference and data.get('txn_id') != tx.acquirer_reference:
-            invalid_parameters.append(('txn_id', data.get('txn_id'), tx.acquirer_reference))
+        if self.acquirer_reference and data.get('txn_id') != self.acquirer_reference:
+            invalid_parameters.append(('txn_id', data.get('txn_id'), self.acquirer_reference))
         # check what is buyed
-        if float_compare(float(data.get('mc_gross', '0.0')), (tx.amount + tx.fees), 2) != 0:
-            invalid_parameters.append(('mc_gross', data.get('mc_gross'), '%.2f' % tx.amount))  # mc_gross is amount + fees
-        if data.get('mc_currency') != tx.currency_id.name:
-            invalid_parameters.append(('mc_currency', data.get('mc_currency'), tx.currency_id.name))
-        if 'handling_amount' in data and float_compare(float(data.get('handling_amount')), tx.fees, 2) != 0:
-            invalid_parameters.append(('handling_amount', data.get('handling_amount'), tx.fees))
+        if float_compare(float(data.get('mc_gross', '0.0')), (self.amount + self.fees), 2) != 0:
+            invalid_parameters.append(('mc_gross', data.get('mc_gross'), '%.2f' % self.amount))  # mc_gross is amount + fees
+        if data.get('mc_currency') != self.currency_id.name:
+            invalid_parameters.append(('mc_currency', data.get('mc_currency'), self.currency_id.name))
+        if 'handling_amount' in data and float_compare(float(data.get('handling_amount')), self.fees, 2) != 0:
+            invalid_parameters.append(('handling_amount', data.get('handling_amount'), self.fees))
         # check buyer
-        if tx.payment_token_id and data.get('payer_id') != tx.payment_token_id.acquirer_ref:
-            invalid_parameters.append(('payer_id', data.get('payer_id'), tx.payment_token_id.acquirer_ref))
+        if self.payment_token_id and data.get('payer_id') != self.payment_token_id.acquirer_ref:
+            invalid_parameters.append(('payer_id', data.get('payer_id'), self.payment_token_id.acquirer_ref))
         # check seller
-        if data.get('receiver_id') and tx.acquirer_id.paypal_seller_account and data['receiver_id'] != tx.acquirer_id.paypal_seller_account:
-            invalid_parameters.append(('receiver_id', data.get('receiver_id'), tx.acquirer_id.paypal_seller_account))
-        if not data.get('receiver_id') or not tx.acquirer_id.paypal_seller_account:
+        if data.get('receiver_id') and self.acquirer_id.paypal_seller_account and data['receiver_id'] != self.acquirer_id.paypal_seller_account:
+            invalid_parameters.append(('receiver_id', data.get('receiver_id'), self.acquirer_id.paypal_seller_account))
+        if not data.get('receiver_id') or not self.acquirer_id.paypal_seller_account:
             # Check receiver_email only if receiver_id was not checked.
             # In Paypal, this is possible to configure as receiver_email a different email than the business email (the login email)
             # In Odoo, there is only one field for the Paypal email: the business email. This isn't possible to set a receiver_email
             # different than the business email. Therefore, if you want such a configuration in your Paypal, you are then obliged to fill
             # the Merchant ID in the Paypal payment acquirer in Odoo, so the check is performed on this variable instead of the receiver_email.
             # At least one of the two checks must be done, to avoid fraudsters.
-            if data.get('receiver_email') != tx.acquirer_id.paypal_email_account:
-                invalid_parameters.append(('receiver_email', data.get('receiver_email'), tx.acquirer_id.paypal_email_account))
+            if data.get('receiver_email') != self.acquirer_id.paypal_email_account:
+                invalid_parameters.append(('receiver_email', data.get('receiver_email'), self.acquirer_id.paypal_email_account))
 
         return invalid_parameters
 
-    def _paypal_form_validate(self, cr, uid, ids, data, context=None):
-        tx = self.browse(cr, uid, ids, context=context)[0]
+    @api.multi
+    def _paypal_form_validate(self, data):
         status = data.get('payment_status')
         res = {
             'acquirer_reference': data.get('txn_id'),
             'paypal_txn_type': data.get('payment_type'),
         }
         if status in ['Completed', 'Processed']:
-            _logger.info('Validated Paypal payment for tx %s: set as done' % (tx.reference))
+            _logger.info('Validated Paypal payment for tx %s: set as done' % (self.reference))
             res.update(state='done', date_validate=data.get('payment_date', fields.datetime.now()))
-            return tx.write(res)
+            return self.write(res)
         elif status in ['Pending', 'Expired']:
-            _logger.info('Received notification for Paypal payment %s: set as pending' % (tx.reference))
+            _logger.info('Received notification for Paypal payment %s: set as pending' % (self.reference))
             res.update(state='pending', state_message=data.get('pending_reason', ''))
-            return tx.write(res)
+            return self.write(res)
         else:
-            error = 'Received unrecognized status for Paypal payment %s: %s, set as error' % (tx.reference, status)
+            error = 'Received unrecognized status for Paypal payment %s: %s, set as error' % (self.reference, status)
             _logger.info(error)
             res.update(state='error', state_message=error)
-            return tx.write(res)
+            return self.write(res)
