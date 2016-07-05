@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-
         <template id="authorize_acquirer_button">
             <form t-if="acquirer" t-att-action="tx_url" method="post" target="_self">
                 <input type='hidden' name='x_login' t-att-value='x_login'/>
@@ -48,5 +47,10 @@
             </form>
         </template>
 
+        <template id="payment_authorize_redirect" name="Payment Authorize">
+            <script type="text/javascript">
+                window.location.href = '<t t-esc="return_url"/>';
+            </script>
+        </template>
     </data>
 </odoo>
