@@ -337,7 +337,7 @@ class AccountMoveLine(models.Model):
             if (line.account_id.code != self.account_id.code):
                 counterpart.add(line.account_id.code)
         if len(counterpart) > 2:
-            counterpart = counterpart[0:2] + ["..."]
+            counterpart = list(counterpart)[0:2] + ["..."]
         self.counterpart = ",".join(counterpart)
 
     name = fields.Char(required=True, string="Label")
