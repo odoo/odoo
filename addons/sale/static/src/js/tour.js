@@ -32,9 +32,10 @@ tour.register('sale_tour', [{
 }, {
     trigger: ".o_main_navbar .o_menu_toggle",
     content: _t('Click the <i>Home icon</i> to navigate across apps.'),
+    edition: "enterprise",
     position: "bottom"
 }, {
-    trigger: ".o_apps .o_app:last",
+    trigger: '.o_app[data-menu-xmlid="base.menu_administration"], .oe_menu_toggler[data-menu-xmlid="base.menu_administration"]',
     content: _t("Configuration options are available in the Settings app."),
     position: "bottom"
 }, {
